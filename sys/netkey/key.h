@@ -366,6 +366,10 @@ name|type
 decl_stmt|;
 comment|/* Type of association */
 name|u_int8_t
+name|vers
+decl_stmt|;
+comment|/* Version of association (AH/ESP) */
+name|u_int8_t
 name|state
 decl_stmt|;
 comment|/* State of the association */
@@ -381,6 +385,10 @@ name|u_int8_t
 name|keylen
 decl_stmt|;
 comment|/* Key length */
+name|u_int8_t
+name|ekeylen
+decl_stmt|;
+comment|/* Extra key length */
 name|u_int8_t
 name|ivlen
 decl_stmt|;
@@ -401,6 +409,10 @@ name|caddr_t
 name|key
 decl_stmt|;
 comment|/* Key */
+name|caddr_t
+name|ekey
+decl_stmt|;
+comment|/* Extra key */
 name|u_int32_t
 name|lifetime1
 decl_stmt|;
@@ -427,6 +439,22 @@ modifier|*
 name|from
 decl_stmt|;
 comment|/* Originator of association */
+name|int
+name|antireplay
+decl_stmt|;
+comment|/*anti replay flag*/
+name|u_int32_t
+name|sequence
+decl_stmt|;
+comment|/*send: sequence number*/
+name|u_int32_t
+name|replayright
+decl_stmt|;
+comment|/*receive: replay window, right*/
+name|u_int64_t
+name|replaywindow
+decl_stmt|;
+comment|/*receive: replay window*/
 block|}
 struct|;
 end_struct
@@ -468,6 +496,10 @@ name|type
 decl_stmt|;
 comment|/* type of security association */
 name|u_int8_t
+name|vers
+decl_stmt|;
+comment|/* version of security association (AH/ESP) */
+name|u_int8_t
 name|state
 decl_stmt|;
 comment|/* state of security association */
@@ -488,6 +520,10 @@ name|keylen
 decl_stmt|;
 comment|/* key length */
 name|u_int8_t
+name|ekeylen
+decl_stmt|;
+comment|/* extra key length */
+name|u_int8_t
 name|ivlen
 decl_stmt|;
 comment|/* iv length */
@@ -507,6 +543,10 @@ name|u_int32_t
 name|lifetime2
 decl_stmt|;
 comment|/* lifetime value 2 */
+name|int
+name|antireplay
+decl_stmt|;
+comment|/* anti replay flag */
 block|}
 struct|;
 end_struct
@@ -541,6 +581,10 @@ name|caddr_t
 name|key
 decl_stmt|;
 comment|/* key */
+name|caddr_t
+name|ekey
+decl_stmt|;
+comment|/* extra key */
 name|int
 name|ivlen
 decl_stmt|;
@@ -549,6 +593,10 @@ name|int
 name|keylen
 decl_stmt|;
 comment|/* iv length */
+name|int
+name|ekeylen
+decl_stmt|;
+comment|/* extra key length */
 block|}
 struct|;
 end_struct
@@ -744,17 +792,15 @@ block|{
 name|int
 name|ip4_count
 decl_stmt|;
-comment|/* IPv4 */
 ifdef|#
 directive|ifdef
 name|INET6
 name|int
 name|ip6_count
 decl_stmt|;
-comment|/* IPv6 */
 endif|#
 directive|endif
-comment|/* INET6 */
+comment|/*INET6*/
 name|int
 name|any_count
 decl_stmt|;
@@ -770,18 +816,7 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-name|int
-name|key_inittables
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|extern
 name|int
 name|key_secassoc2msghdr
 name|__P
@@ -804,6 +839,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|key_msghdr2secassoc
 name|__P
@@ -826,6 +862,37 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|key_inittables
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|key_sodelete
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|key_add
 name|__P
@@ -840,6 +907,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|key_delete
 name|__P
@@ -854,6 +922,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|key_get
 name|__P
@@ -881,6 +950,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|void
 name|key_flush
 name|__P
@@ -893,6 +963,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|key_dump
 name|__P
@@ -907,11 +978,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|key_getspi
 name|__P
 argument_list|(
 operator|(
+name|u_int
+operator|,
 name|u_int
 operator|,
 expr|struct
@@ -934,6 +1008,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|key_update
 name|__P
@@ -948,6 +1023,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|key_register
 name|__P
@@ -964,6 +1040,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|void
 name|key_unregister
 name|__P
@@ -982,6 +1059,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|key_acquire
 name|__P
@@ -1002,6 +1080,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|getassocbyspi
 name|__P
@@ -1029,6 +1108,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|getassocbysocket
 name|__P
@@ -1060,6 +1140,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|void
 name|key_free
 name|__P
@@ -1074,6 +1155,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|key_parse
 name|__P

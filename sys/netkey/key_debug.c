@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * modified by Jun-ichiro itojun Itoh<itojun@itojun.org>, 1997  */
+end_comment
+
+begin_comment
 comment|/*  * in6_debug.c  --  Insipired by Craig Metz's Net/2 in6_debug.c, but  *                  not quite as heavyweight (initially, anyway).  *  * The idea is to have globals here, and dump netinet6/ data structures.  *  * Copyright 1995 by Dan McDonald, Bao Phan, and Randall Atkinson,  *	All Rights Reserved.    *      All Rights under this copyright have been assigned to NRL.  */
 end_comment
 
@@ -16,8 +20,28 @@ end_define
 begin_include
 include|#
 directive|include
-file|<netkey/osdep_44bsd.h>
+file|"opt_key.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KEY
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KEY_DEBUG
+end_ifdef
+
+begin_comment
+comment|/*wraps the whole code*/
+end_comment
+
+begin_comment
+comment|/*#include<netkey/osdep_44bsd.h>*/
+end_comment
 
 begin_include
 include|#
@@ -46,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -59,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -100,19 +136,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/ipv6.h>
+file|<netinet6/ip6.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet6/ipv6_var.h>
+file|<netinet6/ip6_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet6/ipv6_icmp.h>
+file|<netinet6/icmp6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_pcb.h>
 end_include
 
 begin_else
@@ -176,6 +218,12 @@ directive|include
 file|<netkey/key.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netkey/key_debug.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -223,40 +271,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DEFARGS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DEFARGS
-parameter_list|(
-name|arglist
-parameter_list|,
-name|args
-parameter_list|)
-value|arglist args;
-end_define
-
-begin_define
-define|#
-directive|define
-name|AND
-value|;
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEFARGS */
-end_comment
-
 begin_comment
 comment|/*  * Globals  */
 end_comment
@@ -284,20 +298,14 @@ begin_comment
 comment|/*  * Functions and macros.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|in6_debug_init
-name|DEFARGS
-argument_list|(
-operator|(
-operator|)
-argument_list|,
-name|void
-argument_list|)
+parameter_list|()
 block|{
 comment|/* For now, nothing. */
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * dump_* dumps various data structures.  These should be called within  * the context of a DDO() macro.  They assume address and port fields  * are in network order.  ----------------------------------------------------------------------*/
@@ -313,20 +321,17 @@ begin_comment
 comment|/*----------------------------------------------------------------------  * Dump an IPv6 address.  Don't compress 0's out because of debugging.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
-name|dump_in_addr6
-name|DEFARGS
-argument_list|(
-operator|(
-name|in_addr6
-operator|)
-argument_list|,
-expr|struct
-name|in_addr6
-operator|*
-name|in_addr6
-argument_list|)
+name|dump_in6_addr
+parameter_list|(
+name|in6_addr
+parameter_list|)
+name|struct
+name|in6_addr
+modifier|*
+name|in6_addr
+decl_stmt|;
 block|{
 name|u_short
 modifier|*
@@ -336,7 +341,7 @@ operator|(
 name|u_short
 operator|*
 operator|)
-name|in_addr6
+name|in6_addr
 decl_stmt|;
 name|int
 name|i
@@ -346,12 +351,12 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|in_addr6
+name|in6_addr
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Dereference a NULL in_addr6? I don't think so.\n"
+literal|"Dereference a NULL in6_addr? I don't think so.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -395,7 +400,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_endif
 endif|#
@@ -410,20 +415,17 @@ begin_comment
 comment|/*----------------------------------------------------------------------  * Dump and IPv4 address in x.x.x.x form.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_in_addr
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|in_addr
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|in_addr
-operator|*
+modifier|*
 name|in_addr
-argument_list|)
+decl_stmt|;
 block|{
 name|u_char
 modifier|*
@@ -481,7 +483,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_ifdef
 ifdef|#
@@ -493,20 +495,17 @@ begin_comment
 comment|/*----------------------------------------------------------------------  * Dump an IPv6 socket address.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_sockaddr_in6
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|sin6
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|sockaddr_in6
-operator|*
+modifier|*
 name|sin6
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -562,7 +561,7 @@ argument_list|(
 literal|"sin6_addr = "
 argument_list|)
 expr_stmt|;
-name|dump_in_addr6
+name|dump_in6_addr
 argument_list|(
 operator|&
 name|sin6
@@ -571,7 +570,7 @@ name|sin6_addr
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_endif
 endif|#
@@ -586,20 +585,17 @@ begin_comment
 comment|/*----------------------------------------------------------------------  * Dump an IPv4 socket address.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_sockaddr_in
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|sin
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|sockaddr_in
-operator|*
+modifier|*
 name|sin
-argument_list|)
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -704,25 +700,23 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump a generic socket address.  Use if no family-specific routine is  * available.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_sockaddr
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|sa
-operator|)
-argument_list|,
-name|SOCKADDR
-operator|*
+parameter_list|)
+name|struct
+name|sockaddr
+modifier|*
 name|sa
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -816,26 +810,23 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump a link-layer socket address.  (Not that there are user-level link  * layer sockets, but there are plenty of link-layer addresses in the kernel.)  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_sockaddr_dl
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|sdl
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|sockaddr_dl
-operator|*
+modifier|*
 name|sdl
-argument_list|)
+decl_stmt|;
 block|{
 name|char
 name|buf
@@ -1051,25 +1042,23 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump a socket address, calling a family-specific routine if available.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_smart_sockaddr
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|sa
-operator|)
-argument_list|,
-name|SOCKADDR
-operator|*
+parameter_list|)
+name|struct
+name|sockaddr
+modifier|*
 name|sa
-argument_list|)
+decl_stmt|;
 block|{
 name|DPRINTF
 argument_list|(
@@ -1157,7 +1146,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_ifdef
 ifdef|#
@@ -1169,43 +1158,48 @@ begin_comment
 comment|/*----------------------------------------------------------------------  * Dump an IPv6 header.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_ipv6
-name|DEFARGS
-argument_list|(
-operator|(
-name|ipv6
-operator|)
-argument_list|,
-expr|struct
-name|ipv6
-operator|*
-name|ipv6
-argument_list|)
+parameter_list|(
+name|ip6
+parameter_list|)
+name|struct
+name|ip6
+modifier|*
+name|ip6
+decl_stmt|;
 block|{
 if|if
 condition|(
 operator|!
-name|ipv6
+name|ip6
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Dereference a NULL ipv6? I don't think so.\n"
+literal|"Dereference a NULL ip6? I don't think so.\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 name|printf
 argument_list|(
-literal|"Vers& flow label (conv to host order) 0x%x\n"
+literal|"Vers = %d, pri = 0x%x, flow label = 0x%x\n"
+argument_list|,
+name|ip6
+operator|->
+name|ip6_v
+argument_list|,
+name|ip6
+operator|->
+name|ip6_pri
 argument_list|,
 name|htonl
 argument_list|(
-name|ipv6
+name|ip6
 operator|->
-name|ipv6_versfl
+name|ip6_flbl
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1215,18 +1209,18 @@ literal|"Length (conv) = %d, nexthdr = %d, hoplimit = %d.\n"
 argument_list|,
 name|htons
 argument_list|(
-name|ipv6
+name|ip6
 operator|->
-name|ipv6_length
+name|ip6_len
 argument_list|)
 argument_list|,
-name|ipv6
+name|ip6
 operator|->
-name|ipv6_nexthdr
+name|ip6_nh
 argument_list|,
-name|ipv6
+name|ip6
 operator|->
-name|ipv6_hoplimit
+name|ip6_hlim
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1234,12 +1228,12 @@ argument_list|(
 literal|"Src: "
 argument_list|)
 expr_stmt|;
-name|dump_in_addr6
+name|dump_in6_addr
 argument_list|(
 operator|&
-name|ipv6
+name|ip6
 operator|->
-name|ipv6_src
+name|ip6_src
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1247,34 +1241,32 @@ argument_list|(
 literal|"Dst: "
 argument_list|)
 expr_stmt|;
-name|dump_in_addr6
+name|dump_in6_addr
 argument_list|(
 operator|&
-name|ipv6
+name|ip6
 operator|->
-name|ipv6_dst
+name|ip6_dst
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump an ICMPv6 header.  This function is not very smart beyond the  * type, code, and checksum.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
+name|void
 name|dump_ipv6_icmp
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|icp
-operator|)
-argument_list|,
-expr|struct
-name|ipv6_icmp
-operator|*
+parameter_list|)
+name|struct
+name|icmp6
+modifier|*
 name|icp
-argument_list|)
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -1298,17 +1290,17 @@ literal|"type %d, code %d, cksum (conv) = 0x%x\n"
 argument_list|,
 name|icp
 operator|->
-name|icmp_type
+name|icmp6_type
 argument_list|,
 name|icp
 operator|->
-name|icmp_code
+name|icmp6_code
 argument_list|,
 name|htons
 argument_list|(
 name|icp
 operator|->
-name|icmp_cksum
+name|icmp6_cksum
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1320,38 +1312,8 @@ name|htonl
 argument_list|(
 name|icp
 operator|->
-name|icmp_unused
+name|icmp6_flags
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Next four bytes: 0x"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|4
-condition|;
-name|i
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"%x"
-argument_list|,
-name|icp
-operator|->
-name|icmp_echodata
-index|[
-name|i
-index|]
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1360,7 +1322,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_endif
 endif|#
@@ -1375,20 +1337,17 @@ begin_comment
 comment|/*----------------------------------------------------------------------  * Dump only the header fields of a single mbuf.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_mbuf_hdr
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|m
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1488,26 +1447,23 @@ name|m_nextpkt
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump the entire contents of a single mbuf.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_mbuf
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|m
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-argument_list|)
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -1581,26 +1537,23 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump the contents of an mbuf chain.  (WARNING:  Lots of text may  * result.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_mchain
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|m
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-argument_list|)
+decl_stmt|;
 block|{
 name|struct
 name|mbuf
@@ -1645,26 +1598,23 @@ name|walker
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump an mbuf chain's data in a format similar to tcpdump(8).  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_tcpdump
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|m
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-argument_list|)
+decl_stmt|;
 block|{
 name|struct
 name|mbuf
@@ -1760,7 +1710,7 @@ argument_list|(
 literal|"%02x"
 argument_list|,
 call|(
-name|u_int8
+name|u_int8_t
 call|)
 argument_list|(
 name|m
@@ -1775,89 +1725,25 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_decl_stmt
+end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump an IPv6 header index table, which is terminated by an entry with  * a NULL mbuf pointer.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
-name|void
-name|dump_ihitab
-name|DEFARGS
-argument_list|(
-operator|(
-name|ihi
-operator|)
-argument_list|,
-expr|struct
-name|in6_hdrindex
-operator|*
-name|ihi
-argument_list|)
-block|{
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|ihi
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Dereference a NULL hdrindex/ihi? I don't think so.\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+begin_comment
+unit|void dump_ihitab(ihi)      struct in6_hdrindex *ihi; {   int i=0;    if (!ihi) {     printf("Dereference a NULL hdrindex/ihi? I don't think so.\n");     return;   }
 comment|/* This is dangerous, make sure ihitab was bzeroed. */
-while|while
-condition|(
-name|ihi
-index|[
-name|i
-index|]
-operator|.
-name|ihi_mbuf
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ihi_nexthdr = %d, ihi_mbuf = 0x%x.\n"
-argument_list|,
-name|ihi
-index|[
-name|i
-index|]
-operator|.
-name|ihi_nexthdr
-argument_list|,
-name|ihi
-index|[
-name|i
-index|]
-operator|.
-name|ihi_mbuf
-argument_list|)
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-block|}
-block|}
-end_decl_stmt
+end_comment
 
 begin_endif
+unit|while (ihi[i].ihi_mbuf)     {       printf("ihi_nexthdr = %d, ihi_mbuf = 0x%x.\n",ihi[i].ihi_nexthdr, 	     ihi[i].ihi_mbuf);       i++;     } }
 endif|#
 directive|endif
 end_endif
@@ -1870,20 +1756,17 @@ begin_comment
 comment|/*----------------------------------------------------------------------  * Dump an interface address.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_ifa
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|ifa
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|ifaddr
-operator|*
+modifier|*
 name|ifa
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1924,26 +1807,23 @@ name|ifa_netmask
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump an interface structure.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_ifp
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|ifp
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1986,26 +1866,23 @@ name|if_mtu
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump a route structure (sockaddr/rtentry pair).  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_route
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|ro
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|route
-operator|*
+modifier|*
 name|ro
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -2038,26 +1915,23 @@ name|ro_dst
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump a routing entry.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_rtentry
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|rt
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|rtentry
-operator|*
+modifier|*
 name|rt
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -2161,26 +2035,23 @@ name|rt_ifa
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/*----------------------------------------------------------------------  * Dump an Internet (v4/v6) protocol control block.  ----------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------  * Dump an Internet v4 protocol control block.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_inpcb
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|inp
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|inpcb
-operator|*
+modifier|*
 name|inp
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -2195,23 +2066,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|"inp_next = 0x%x, inp_prev = 0x%x, inp_head = 0x%x.\n"
-argument_list|,
-name|inp
-operator|->
-name|inp_next
-argument_list|,
-name|inp
-operator|->
-name|inp_prev
-argument_list|,
-name|inp
-operator|->
-name|inp_head
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("inp_next = 0x%x, inp_prev = 0x%x, inp_head = 0x%x.\n", 	inp->inp_next, inp->inp_prev, inp->inp_head);
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"inp_socket = 0x%x, inp_ppcb\n"
@@ -2225,54 +2085,6 @@ operator|->
 name|inp_ppcb
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
-name|printf
-argument_list|(
-literal|"faddr, faddr6:\n"
-argument_list|)
-expr_stmt|;
-name|dump_in_addr
-argument_list|(
-operator|&
-name|inp
-operator|->
-name|inp_faddr
-argument_list|)
-expr_stmt|;
-name|dump_in_addr6
-argument_list|(
-operator|&
-name|inp
-operator|->
-name|inp_faddr6
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"laddr, laddr6:\n"
-argument_list|)
-expr_stmt|;
-name|dump_in_addr
-argument_list|(
-operator|&
-name|inp
-operator|->
-name|inp_laddr
-argument_list|)
-expr_stmt|;
-name|dump_in_addr6
-argument_list|(
-operator|&
-name|inp
-operator|->
-name|inp_laddr6
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* INET6 */
 name|printf
 argument_list|(
 literal|"faddr:\n"
@@ -2299,9 +2111,6 @@ operator|->
 name|inp_laddr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* INET6 */
 name|printf
 argument_list|(
 literal|"inp_route: "
@@ -2315,25 +2124,6 @@ operator|->
 name|inp_route
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
-name|printf
-argument_list|(
-literal|"inp_ipv6:"
-argument_list|)
-expr_stmt|;
-name|dump_ipv6
-argument_list|(
-operator|&
-name|inp
-operator|->
-name|inp_ipv6
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* INET6 */
 name|printf
 argument_list|(
 literal|"inp_ip:"
@@ -2378,7 +2168,7 @@ name|inp_lport
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_ifdef
 ifdef|#
@@ -2387,69 +2177,182 @@ name|INET6
 end_ifdef
 
 begin_comment
-comment|/*----------------------------------------------------------------------  * Dump an IPv6 discovery queue structure.  ----------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------  * Dump an Internet v6 protocol control block.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
-name|dump_discq
-name|DEFARGS
-argument_list|(
-operator|(
-name|dq
-operator|)
-argument_list|,
-expr|struct
-name|discq
-operator|*
-name|dq
-argument_list|)
+name|dump_in6pcb
+parameter_list|(
+name|in6p
+parameter_list|)
+name|struct
+name|in6pcb
+modifier|*
+name|in6p
+decl_stmt|;
 block|{
 if|if
 condition|(
 operator|!
-name|dq
+name|in6p
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Dereference a NULL discq? I don't think so.\n"
+literal|"Dereference a NULL in6pcb? I don't think so.\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 name|printf
 argument_list|(
-literal|"dq_next = 0x%x, dq_prev = 0x%x, dq_rt = 0x%x,\n"
+literal|"in6p_next = 0x%x, in6p_prev = 0x%x, in6p_head = 0x%x.\n"
 argument_list|,
-name|dq
+name|in6p
 operator|->
-name|dq_next
+name|in6p_next
 argument_list|,
-name|dq
+name|in6p
 operator|->
-name|dq_prev
+name|in6p_prev
 argument_list|,
-name|dq
+name|in6p
 operator|->
-name|dq_rt
+name|in6p_head
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"dq_queue = 0x%x.\n"
+literal|"in6p_socket = 0x%x, in6p_ppcb\n"
 argument_list|,
-name|dq
+name|in6p
 operator|->
-name|dq_queue
+name|in6p_socket
+argument_list|,
+name|in6p
+operator|->
+name|in6p_ppcb
 argument_list|)
 expr_stmt|;
-comment|/* Dump first mbuf chain? */
-comment|/*printf("dq_expire = %d (0x%x).\n",dq->dq_expire,dq->dq_expire);*/
+name|printf
+argument_list|(
+literal|"faddr:\n"
+argument_list|)
+expr_stmt|;
+name|dump_in6_addr
+argument_list|(
+operator|&
+name|in6p
+operator|->
+name|in6p_faddr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"laddr:\n"
+argument_list|)
+expr_stmt|;
+name|dump_in6_addr
+argument_list|(
+operator|&
+name|in6p
+operator|->
+name|in6p_laddr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"in6p_route: "
+argument_list|)
+expr_stmt|;
+name|dump_route
+argument_list|(
+operator|&
+name|in6p
+operator|->
+name|in6p_route
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"in6p_ip6:"
+argument_list|)
+expr_stmt|;
+name|dump_ipv6
+argument_list|(
+operator|&
+name|in6p
+operator|->
+name|in6p_ip6
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"in6p_options = 0x%x, in6p_moptions{6,} = 0x%x,\n"
+argument_list|,
+name|in6p
+operator|->
+name|in6p_options
+argument_list|,
+name|in6p
+operator|->
+name|in6p_moptions
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"in6p_flags = 0x%x, in6p_fport = %d, in6p_lport = %d.\n"
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|in6p
+operator|->
+name|in6p_flags
+argument_list|,
+name|in6p
+operator|->
+name|in6p_fport
+argument_list|,
+name|in6p
+operator|->
+name|in6p_lport
+argument_list|)
+expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*INET6*/
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*----------------------------------------------------------------------  * Dump an IPv6 discovery queue structure.  ----------------------------------------------------------------------*/
+end_comment
+
+begin_comment
+unit|void dump_discq(dq)      struct discq *dq; {   if (!dq) {     printf("Dereference a NULL discq? I don't think so.\n");     return;   }    printf("dq_next = 0x%x, dq_prev = 0x%x, dq_rt = 0x%x,\n",dq->dq_next, 	 dq->dq_prev, dq->dq_rt);   printf("dq_queue = 0x%x.\n",dq->dq_queue);
+comment|/* Dump first mbuf chain? */
+end_comment
+
+begin_comment
+comment|/*printf("dq_expire = %d (0x%x).\n",dq->dq_expire,dq->dq_expire);*/
+end_comment
+
+begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
@@ -2462,24 +2365,21 @@ begin_comment
 comment|/*----------------------------------------------------------------------  * Dump a data buffer   ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_buf
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|buf
-operator|,
+parameter_list|,
 name|len
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|buf
-name|AND
+decl_stmt|;
 name|int
 name|len
-argument_list|)
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -2516,7 +2416,7 @@ argument_list|(
 literal|"0x%x "
 argument_list|,
 operator|(
-name|u_int8
+name|u_int8_t
 operator|)
 operator|*
 operator|(
@@ -2533,26 +2433,23 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump a key_tblnode structrue  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_keytblnode
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|ktblnode
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|key_tblnode
-operator|*
+modifier|*
 name|ktblnode
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -2607,28 +2504,25 @@ name|next
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump an ipsec_assoc structure  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_secassoc
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|seca
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|key_secassoc
-operator|*
+modifier|*
 name|seca
-argument_list|)
+decl_stmt|;
 block|{
-name|u_int8
+name|u_int8_t
 modifier|*
 name|p
 decl_stmt|;
@@ -2741,7 +2635,7 @@ expr_stmt|;
 name|p
 operator|=
 operator|(
-name|u_int8
+name|u_int8_t
 operator|*
 operator|)
 operator|(
@@ -2793,7 +2687,7 @@ expr_stmt|;
 name|p
 operator|=
 operator|(
-name|u_int8
+name|u_int8_t
 operator|*
 operator|)
 operator|(
@@ -2884,26 +2778,23 @@ literal|"can't dump null secassoc pointer!\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump a key_msghdr structure  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_keymsghdr
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|km
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|key_msghdr
-operator|*
+modifier|*
 name|km
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -3090,26 +2981,23 @@ literal|"key_msghdr pointer is NULL!\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------  * Dump a key_msgdata structure  ----------------------------------------------------------------------*/
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|dump_keymsginfo
-name|DEFARGS
-argument_list|(
-operator|(
+parameter_list|(
 name|kp
-operator|)
-argument_list|,
-expr|struct
+parameter_list|)
+name|struct
 name|key_msgdata
-operator|*
+modifier|*
 name|kp
-argument_list|)
+decl_stmt|;
 block|{
 name|int
 name|i
@@ -3208,7 +3096,25 @@ literal|"key_msgdata point is NULL!\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*KEY_DEBUG*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*KEY*/
+end_comment
 
 end_unit
 
