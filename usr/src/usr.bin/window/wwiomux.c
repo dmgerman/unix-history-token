@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwiomux.c	3.20 (Berkeley) %G%"
+literal|"@(#)wwiomux.c	3.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,8 @@ name|tv
 decl_stmt|;
 name|char
 name|noblock
+init|=
+literal|0
 decl_stmt|;
 for|for
 control|(
@@ -112,10 +114,6 @@ argument_list|(
 operator|&
 name|imask
 argument_list|)
-expr_stmt|;
-name|noblock
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(
@@ -251,8 +249,15 @@ name|tv_sec
 operator|=
 literal|30
 expr_stmt|;
+name|tv
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
+block|{
 name|tv
 operator|.
 name|tv_sec
@@ -263,8 +268,9 @@ name|tv
 operator|.
 name|tv_usec
 operator|=
-literal|0
+literal|10000
 expr_stmt|;
+block|}
 name|wwnselect
 operator|++
 expr_stmt|;
@@ -294,6 +300,10 @@ name|tv
 argument_list|)
 expr_stmt|;
 name|wwsetjmp
+operator|=
+literal|0
+expr_stmt|;
+name|noblock
 operator|=
 literal|0
 expr_stmt|;
@@ -672,6 +682,10 @@ operator|=
 name|w
 operator|->
 name|ww_ob
+expr_stmt|;
+name|noblock
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
