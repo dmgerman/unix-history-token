@@ -2704,6 +2704,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|mbuflen
+name|__P
+argument_list|(
+operator|(
+name|mb_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
