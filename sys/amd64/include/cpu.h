@@ -257,7 +257,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Return contents of in-cpu fast counter as a sort of "bogo-time"  * for non-critical timing.  */
+comment|/*  * Return contents of in-cpu fast counter as a sort of "bogo-time"  * for random-harvesting purposes.  */
 end_comment
 
 begin_function
@@ -281,8 +281,8 @@ argument_list|(
 name|I486_CPU
 argument_list|)
 name|struct
-name|timespec
-name|tv
+name|bintime
+name|bt
 decl_stmt|;
 if|if
 condition|(
@@ -290,26 +290,21 @@ operator|!
 name|tsc_present
 condition|)
 block|{
-name|nanotime
+name|binuptime
 argument_list|(
 operator|&
-name|tv
+name|bt
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|tv
+name|bt
 operator|.
-name|tv_sec
-operator|*
-operator|(
-name|u_int64_t
-operator|)
-literal|1000000000
-operator|+
-name|tv
+name|frac
+operator|^
+name|bt
 operator|.
-name|tv_nsec
+name|sec
 operator|)
 return|;
 block|}
