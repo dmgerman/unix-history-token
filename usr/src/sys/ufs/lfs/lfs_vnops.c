@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.70 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.71 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -211,7 +211,7 @@ comment|/* readlink */
 name|ufs_abortop
 block|,
 comment|/* abortop */
-name|ufs_inactive
+name|lfs_inactive
 block|,
 comment|/* inactive */
 name|ufs_reclaim
@@ -223,7 +223,7 @@ comment|/* lock */
 name|ufs_unlock
 block|,
 comment|/* unlock */
-name|ufs_bmap
+name|lfs_bmap
 block|,
 comment|/* bmap */
 name|ufs_strategy
@@ -238,9 +238,305 @@ comment|/* islocked */
 name|ufs_advlock
 block|,
 comment|/* advlock */
+name|lfs_blkatoff
+block|,
+comment|/* blkatoff */
+name|lfs_vget
+block|,
+comment|/* vget */
+name|lfs_valloc
+block|,
+comment|/* valloc */
+name|lfs_vfree
+block|,
+comment|/* vfree */
+name|lfs_truncate
+block|,
+comment|/* truncate */
+name|lfs_update
+block|,
+comment|/* update */
+name|lfs_bwrite
+block|,
+comment|/* bwrite */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnodeops
+name|lfs_specops
+init|=
+block|{
+name|spec_lookup
+block|,
+comment|/* lookup */
+name|spec_create
+block|,
+comment|/* create */
+name|spec_mknod
+block|,
+comment|/* mknod */
+name|spec_open
+block|,
+comment|/* open */
+name|ufsspec_close
+block|,
+comment|/* close */
+name|ufs_access
+block|,
+comment|/* access */
+name|ufs_getattr
+block|,
+comment|/* getattr */
+name|ufs_setattr
+block|,
+comment|/* setattr */
+name|ufsspec_read
+block|,
+comment|/* read */
+name|ufsspec_write
+block|,
+comment|/* write */
+name|spec_ioctl
+block|,
+comment|/* ioctl */
+name|spec_select
+block|,
+comment|/* select */
+name|spec_mmap
+block|,
+comment|/* mmap */
+name|spec_fsync
+block|,
+comment|/* fsync */
+name|spec_seek
+block|,
+comment|/* seek */
+name|spec_remove
+block|,
+comment|/* remove */
+name|spec_link
+block|,
+comment|/* link */
+name|spec_rename
+block|,
+comment|/* rename */
+name|spec_mkdir
+block|,
+comment|/* mkdir */
+name|spec_rmdir
+block|,
+comment|/* rmdir */
+name|spec_symlink
+block|,
+comment|/* symlink */
+name|spec_readdir
+block|,
+comment|/* readdir */
+name|spec_readlink
+block|,
+comment|/* readlink */
+name|spec_abortop
+block|,
+comment|/* abortop */
+name|lfs_inactive
+block|,
+comment|/* inactive */
+name|ufs_reclaim
+block|,
+comment|/* reclaim */
+name|ufs_lock
+block|,
+comment|/* lock */
+name|ufs_unlock
+block|,
+comment|/* unlock */
+name|spec_bmap
+block|,
+comment|/* bmap */
+name|spec_strategy
+block|,
+comment|/* strategy */
+name|ufs_print
+block|,
+comment|/* print */
+name|ufs_islocked
+block|,
+comment|/* islocked */
+name|spec_advlock
+block|,
+comment|/* advlock */
+name|spec_blkatoff
+block|,
+comment|/* blkatoff */
+name|spec_vget
+block|,
+comment|/* vget */
+name|spec_valloc
+block|,
+comment|/* valloc */
+name|spec_vfree
+block|,
+comment|/* vfree */
+name|spec_truncate
+block|,
+comment|/* truncate */
+name|lfs_update
+block|,
+comment|/* update */
+name|lfs_bwrite
+block|,
+comment|/* bwrite */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FIFO
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|vnodeops
+name|lfs_fifoops
+init|=
+block|{
+name|fifo_lookup
+block|,
+comment|/* lookup */
+name|fifo_create
+block|,
+comment|/* create */
+name|fifo_mknod
+block|,
+comment|/* mknod */
+name|fifo_open
+block|,
+comment|/* open */
+name|ufsfifo_close
+block|,
+comment|/* close */
+name|ufs_access
+block|,
+comment|/* access */
+name|ufs_getattr
+block|,
+comment|/* getattr */
+name|ufs_setattr
+block|,
+comment|/* setattr */
+name|ufsfifo_read
+block|,
+comment|/* read */
+name|ufsfifo_write
+block|,
+comment|/* write */
+name|fifo_ioctl
+block|,
+comment|/* ioctl */
+name|fifo_select
+block|,
+comment|/* select */
+name|fifo_mmap
+block|,
+comment|/* mmap */
+name|fifo_fsync
+block|,
+comment|/* fsync */
+name|fifo_seek
+block|,
+comment|/* seek */
+name|fifo_remove
+block|,
+comment|/* remove */
+name|fifo_link
+block|,
+comment|/* link */
+name|fifo_rename
+block|,
+comment|/* rename */
+name|fifo_mkdir
+block|,
+comment|/* mkdir */
+name|fifo_rmdir
+block|,
+comment|/* rmdir */
+name|fifo_symlink
+block|,
+comment|/* symlink */
+name|fifo_readdir
+block|,
+comment|/* readdir */
+name|fifo_readlink
+block|,
+comment|/* readlink */
+name|fifo_abortop
+block|,
+comment|/* abortop */
+name|lfs_inactive
+block|,
+comment|/* inactive */
+name|ufs_reclaim
+block|,
+comment|/* reclaim */
+name|ufs_lock
+block|,
+comment|/* lock */
+name|ufs_unlock
+block|,
+comment|/* unlock */
+name|fifo_bmap
+block|,
+comment|/* bmap */
+name|fifo_strategy
+block|,
+comment|/* strategy */
+name|ufs_print
+block|,
+comment|/* print */
+name|ufs_islocked
+block|,
+comment|/* islocked */
+name|fifo_advlock
+block|,
+comment|/* advlock */
+name|fifo_blkatoff
+block|,
+comment|/* blkatoff */
+name|fifo_vget
+block|,
+comment|/* vget */
+name|fifo_valloc
+block|,
+comment|/* valloc */
+name|fifo_vfree
+block|,
+comment|/* vfree */
+name|fifo_truncate
+block|,
+comment|/* truncate */
+name|lfs_update
+block|,
+comment|/* update */
+name|lfs_bwrite
+block|,
+comment|/* bwrite */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FIFO */
+end_comment
 
 begin_comment
 comment|/*  * Vnode op for reading.  */
@@ -1285,7 +1581,7 @@ name|void
 operator|)
 name|lfs_itrunc
 argument_list|(
-name|ip
+name|vp
 argument_list|,
 name|osize
 argument_list|,
@@ -1447,6 +1743,279 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Last reference to an inode, write the inode out and if necessary,  * truncate and deallocate the file.  */
+end_comment
+
+begin_function
+name|int
+name|lfs_inactive
+parameter_list|(
+name|vp
+parameter_list|,
+name|p
+parameter_list|)
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+block|{
+specifier|register
+name|struct
+name|inode
+modifier|*
+name|ip
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|,
+name|error
+decl_stmt|;
+specifier|extern
+name|int
+name|prtactive
+decl_stmt|;
+if|if
+condition|(
+name|prtactive
+operator|&&
+name|vp
+operator|->
+name|v_usecount
+operator|!=
+literal|0
+condition|)
+name|vprint
+argument_list|(
+literal|"lfs_inactive: pushing active"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+comment|/* Get rid of inodes related to stale file handles. */
+name|ip
+operator|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_mode
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VXLOCK
+operator|)
+operator|==
+literal|0
+condition|)
+name|vgone
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|ILOCK
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_nlink
+operator|<=
+literal|0
+operator|&&
+operator|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_RDONLY
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|QUOTA
+if|if
+condition|(
+operator|!
+name|getinoquota
+argument_list|(
+name|ip
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|chkiq
+argument_list|(
+name|ip
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|NOCRED
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|error
+operator|=
+name|lfs_truncate
+argument_list|(
+name|vp
+argument_list|,
+operator|(
+name|u_long
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|mode
+operator|=
+name|ip
+operator|->
+name|i_mode
+expr_stmt|;
+name|ip
+operator|->
+name|i_mode
+operator|=
+literal|0
+expr_stmt|;
+name|ip
+operator|->
+name|i_rdev
+operator|=
+literal|0
+expr_stmt|;
+name|ip
+operator|->
+name|i_flag
+operator||=
+name|IUPD
+operator||
+name|ICHG
+expr_stmt|;
+name|lfs_vfree
+argument_list|(
+name|vp
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+operator|(
+name|IUPD
+operator||
+name|IACC
+operator||
+name|ICHG
+operator||
+name|IMOD
+operator|)
+condition|)
+name|lfs_update
+argument_list|(
+name|vp
+argument_list|,
+operator|&
+name|time
+argument_list|,
+operator|&
+name|time
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|IUNLOCK
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|i_flag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * If we are done with the inode, reclaim it 	 * so that it can be reused immediately. 	 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_usecount
+operator|==
+literal|0
+operator|&&
+name|ip
+operator|->
+name|i_mode
+operator|==
+literal|0
+condition|)
+name|vgone
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
