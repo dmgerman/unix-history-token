@@ -1945,7 +1945,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"adding type 0x%02x file %s size %d KB %d blocks %s\n"
+literal|"adding type 0x%02x file %s size %jd KB %d blocks %s\n"
 argument_list|,
 name|tracks
 index|[
@@ -1957,7 +1957,7 @@ argument_list|,
 name|name
 argument_list|,
 operator|(
-name|int
+name|intmax_t
 operator|)
 name|sb
 operator|.
