@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.24 (Berkeley) %G%"
+literal|"@(#)main.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -689,6 +689,23 @@ operator||=
 name|DEBUG_VAR
 expr_stmt|;
 break|break;
+default|default:
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"make: illegal argument to d option -- %c\n"
+argument_list|,
+operator|*
+name|modules
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
 block|}
 name|Var_Append
 argument_list|(
@@ -2546,7 +2563,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: make [-eiknqrst] [-D variable] [-d flags] [-f makefile ]\n\t\ [-I directory] [-j max_jobs] [variable=value]\n"
+literal|"usage: make [-eiknqrst] [-D variable] [-d flags] [-f makefile ]\n\             [-I directory] [-j max_jobs] [variable=value]\n"
 argument_list|)
 expr_stmt|;
 name|exit
