@@ -979,9 +979,6 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-name|load_module
-argument_list|()
-expr_stmt|;
 name|strlcpy
 argument_list|(
 name|md
@@ -1315,6 +1312,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|load_module
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 name|status
