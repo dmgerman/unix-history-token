@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -522,6 +522,17 @@ end_comment
 
 begin_function_decl
 name|int
+name|asc_resume_in
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* resume data in after a message */
+end_comment
+
+begin_function_decl
+name|int
 name|asc_resume_dma_in
 parameter_list|()
 function_decl|;
@@ -551,6 +562,17 @@ end_function_decl
 
 begin_comment
 comment|/* cleanup after all data is written */
+end_comment
+
+begin_function_decl
+name|int
+name|asc_resume_out
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* resume data out after a message */
 end_comment
 
 begin_function_decl
@@ -588,13 +610,24 @@ end_comment
 
 begin_function_decl
 name|int
-name|asc_recvmsg
+name|asc_msg_in
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_comment
 comment|/* process a message byte */
+end_comment
+
+begin_function_decl
+name|int
+name|asc_disconnect
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* process an expected disconnect */
 end_comment
 
 begin_comment
@@ -611,49 +644,49 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCRIPT_DATA_OUT
+name|SCRIPT_CONTINUE_IN
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCRIPT_SIMPLE
-value|4
+name|SCRIPT_DATA_OUT
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCRIPT_GET_STATUS
+name|SCRIPT_CONTINUE_OUT
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCRIPT_MSG_IN
+name|SCRIPT_SIMPLE
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCRIPT_GET_STATUS
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCRIPT_REPLY_SYNC
+name|SCRIPT_MSG_IN
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCRIPT_RESUME_IN
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCRIPT_RESUME_OUT
+name|SCRIPT_REPLY_SYNC
 value|11
 end_define
 
@@ -667,22 +700,50 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCRIPT_RESEL
+name|SCRIPT_DISCONNECT
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCRIPT_RESUME_DMA_IN
+name|SCRIPT_RESEL
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCRIPT_RESUME_DMA_OUT
+name|SCRIPT_RESUME_IN
 value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCRIPT_RESUME_DMA_IN
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCRIPT_RESUME_OUT
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCRIPT_RESUME_DMA_OUT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCRIPT_RESUME_NO_DATA
+value|21
 end_define
 
 begin_comment
@@ -695,7 +756,7 @@ name|asc_scripts
 index|[]
 init|=
 block|{
-comment|/* data in */
+comment|/* start data in */
 block|{
 name|SCRIPT_MATCH
 argument_list|(
@@ -742,7 +803,32 @@ name|SCRIPT_GET_STATUS
 index|]
 block|}
 block|,
-comment|/* data out */
+comment|/* continue data in after a chuck is finished */
+block|{
+name|SCRIPT_MATCH
+argument_list|(
+name|ASC_INT_BS
+argument_list|,
+name|ASC_PHASE_DATAI
+argument_list|)
+block|,
+comment|/*  2 */
+name|asc_dma_in
+block|,
+name|ASC_CMD_XFER_INFO
+operator||
+name|ASC_CMD_DMA
+block|,
+operator|&
+name|asc_scripts
+index|[
+name|SCRIPT_DATA_IN
+operator|+
+literal|1
+index|]
+block|}
+block|,
+comment|/* start data out */
 block|{
 name|SCRIPT_MATCH
 argument_list|(
@@ -753,7 +839,7 @@ argument_list|,
 name|ASC_PHASE_DATAO
 argument_list|)
 block|,
-comment|/*  2 */
+comment|/*  3 */
 name|asc_dma_out
 block|,
 name|ASC_CMD_XFER_INFO
@@ -777,7 +863,7 @@ argument_list|,
 name|ASC_PHASE_STATUS
 argument_list|)
 block|,
-comment|/*  3 */
+comment|/*  4 */
 name|asc_last_dma_out
 block|,
 name|ASC_CMD_I_COMPLETE
@@ -786,6 +872,31 @@ operator|&
 name|asc_scripts
 index|[
 name|SCRIPT_GET_STATUS
+index|]
+block|}
+block|,
+comment|/* continue data out after a chuck is finished */
+block|{
+name|SCRIPT_MATCH
+argument_list|(
+name|ASC_INT_BS
+argument_list|,
+name|ASC_PHASE_DATAO
+argument_list|)
+block|,
+comment|/*  5 */
+name|asc_dma_out
+block|,
+name|ASC_CMD_XFER_INFO
+operator||
+name|ASC_CMD_DMA
+block|,
+operator|&
+name|asc_scripts
+index|[
+name|SCRIPT_DATA_OUT
+operator|+
+literal|1
 index|]
 block|}
 block|,
@@ -800,7 +911,7 @@ argument_list|,
 name|ASC_PHASE_STATUS
 argument_list|)
 block|,
-comment|/*  4 */
+comment|/*  6 */
 name|script_nop
 block|,
 name|ASC_CMD_I_COMPLETE
@@ -821,7 +932,7 @@ argument_list|,
 name|ASC_PHASE_MSG_IN
 argument_list|)
 block|,
-comment|/*  5 */
+comment|/*  7 */
 name|asc_get_status
 block|,
 name|ASC_CMD_MSG_ACPT
@@ -843,7 +954,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/*  6 */
+comment|/*  8 */
 name|asc_end
 block|,
 name|ASC_CMD_NOP
@@ -866,8 +977,8 @@ argument_list|,
 name|ASC_PHASE_MSG_IN
 argument_list|)
 block|,
-comment|/*  7 */
-name|asc_recvmsg
+comment|/*  9 */
+name|asc_msg_in
 block|,
 name|ASC_CMD_MSG_ACPT
 block|,
@@ -888,7 +999,7 @@ argument_list|,
 name|ASC_PHASE_MSG_IN
 argument_list|)
 block|,
-comment|/*  8 */
+comment|/* 10 */
 name|script_nop
 block|,
 name|ASC_CMD_XFER_INFO
@@ -909,7 +1020,7 @@ argument_list|,
 name|ASC_PHASE_MSG_OUT
 argument_list|)
 block|,
-comment|/*  9 */
+comment|/* 11 */
 name|asc_replysync
 block|,
 name|ASC_CMD_XFER_INFO
@@ -918,56 +1029,6 @@ operator|&
 name|asc_scripts
 index|[
 name|SCRIPT_REPLY_SYNC
-index|]
-block|}
-block|,
-comment|/* resume data in after a message */
-block|{
-name|SCRIPT_MATCH
-argument_list|(
-name|ASC_INT_BS
-argument_list|,
-name|ASC_PHASE_DATAI
-argument_list|)
-block|,
-comment|/* 10 */
-name|asc_dma_in
-block|,
-name|ASC_CMD_XFER_INFO
-operator||
-name|ASC_CMD_DMA
-block|,
-operator|&
-name|asc_scripts
-index|[
-name|SCRIPT_DATA_IN
-operator|+
-literal|1
-index|]
-block|}
-block|,
-comment|/* resume data out after a message */
-block|{
-name|SCRIPT_MATCH
-argument_list|(
-name|ASC_INT_BS
-argument_list|,
-name|ASC_PHASE_DATAO
-argument_list|)
-block|,
-comment|/* 11 */
-name|asc_dma_out
-block|,
-name|ASC_CMD_XFER_INFO
-operator||
-name|ASC_CMD_DMA
-block|,
-operator|&
-name|asc_scripts
-index|[
-name|SCRIPT_DATA_OUT
-operator|+
-literal|1
 index|]
 block|}
 block|,
@@ -1023,7 +1084,7 @@ name|ASC_PHASE_MSG_IN
 argument_list|)
 block|,
 comment|/* 14 */
-name|asc_recvmsg
+name|asc_msg_in
 block|,
 name|ASC_CMD_MSG_ACPT
 block|,
@@ -1031,6 +1092,27 @@ operator|&
 name|asc_scripts
 index|[
 name|SCRIPT_GET_STATUS
+index|]
+block|}
+block|,
+comment|/* handle a disconnect */
+block|{
+name|SCRIPT_MATCH
+argument_list|(
+name|ASC_INT_DISC
+argument_list|,
+name|ASC_PHASE_DATAO
+argument_list|)
+block|,
+comment|/* 15 */
+name|asc_disconnect
+block|,
+name|ASC_CMD_ENABLE_SEL
+block|,
+operator|&
+name|asc_scripts
+index|[
+name|SCRIPT_RESEL
 index|]
 block|}
 block|,
@@ -1043,7 +1125,7 @@ argument_list|,
 name|ASC_PHASE_MSG_IN
 argument_list|)
 block|,
-comment|/* 15 */
+comment|/* 16 */
 name|script_nop
 block|,
 name|ASC_CMD_MSG_ACPT
@@ -1055,7 +1137,7 @@ name|SCRIPT_RESEL
 index|]
 block|}
 block|,
-comment|/* resume data in after a disconnect */
+comment|/* resume data in after a message */
 block|{
 name|SCRIPT_MATCH
 argument_list|(
@@ -1064,7 +1146,32 @@ argument_list|,
 name|ASC_PHASE_DATAI
 argument_list|)
 block|,
-comment|/* 16 */
+comment|/* 17 */
+name|asc_resume_in
+block|,
+name|ASC_CMD_XFER_INFO
+operator||
+name|ASC_CMD_DMA
+block|,
+operator|&
+name|asc_scripts
+index|[
+name|SCRIPT_DATA_IN
+operator|+
+literal|1
+index|]
+block|}
+block|,
+comment|/* resume partial DMA data in after a message */
+block|{
+name|SCRIPT_MATCH
+argument_list|(
+name|ASC_INT_BS
+argument_list|,
+name|ASC_PHASE_DATAI
+argument_list|)
+block|,
+comment|/* 18 */
 name|asc_resume_dma_in
 block|,
 name|ASC_CMD_XFER_INFO
@@ -1080,7 +1187,7 @@ literal|1
 index|]
 block|}
 block|,
-comment|/* resume data out after a disconnect */
+comment|/* resume data out after a message */
 block|{
 name|SCRIPT_MATCH
 argument_list|(
@@ -1089,7 +1196,32 @@ argument_list|,
 name|ASC_PHASE_DATAO
 argument_list|)
 block|,
-comment|/* 17 */
+comment|/* 19 */
+name|asc_resume_out
+block|,
+name|ASC_CMD_XFER_INFO
+operator||
+name|ASC_CMD_DMA
+block|,
+operator|&
+name|asc_scripts
+index|[
+name|SCRIPT_DATA_OUT
+operator|+
+literal|1
+index|]
+block|}
+block|,
+comment|/* resume partial DMA data out after a message */
+block|{
+name|SCRIPT_MATCH
+argument_list|(
+name|ASC_INT_BS
+argument_list|,
+name|ASC_PHASE_DATAO
+argument_list|)
+block|,
+comment|/* 20 */
 name|asc_resume_dma_out
 block|,
 name|ASC_CMD_XFER_INFO
@@ -1102,6 +1234,27 @@ index|[
 name|SCRIPT_DATA_OUT
 operator|+
 literal|1
+index|]
+block|}
+block|,
+comment|/* resume after a message when there is no more data */
+block|{
+name|SCRIPT_MATCH
+argument_list|(
+name|ASC_INT_BS
+argument_list|,
+name|ASC_PHASE_STATUS
+argument_list|)
+block|,
+comment|/* 21 */
+name|script_nop
+block|,
+name|ASC_CMD_I_COMPLETE
+block|,
+operator|&
+name|asc_scripts
+index|[
+name|SCRIPT_GET_STATUS
 index|]
 block|}
 block|, }
@@ -2571,7 +2724,6 @@ name|regs
 operator|->
 name|asc_fifo
 operator|=
-comment|/* SCSI_IDENTIFY */
 name|SCSI_DIS_REC_IDENTIFY
 expr_stmt|;
 comment|/* start the asc */
@@ -2947,6 +3099,12 @@ goto|;
 case|case
 name|ASC_PHASE_STATUS
 case|:
+name|asc_DumpLog
+argument_list|(
+literal|"asc_intr: status"
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 comment|/* probably an error in the SCSI command */
 name|asc
 operator|->
@@ -3106,6 +3264,65 @@ name|flags
 operator|&
 name|DMA_IN
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|state
+operator|->
+name|flags
+operator|&
+name|FIRST_DMA
+operator|)
+condition|)
+block|{
+name|len
+operator|=
+name|state
+operator|->
+name|dmalen
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|state
+operator|->
+name|dmaBufAddr
+argument_list|,
+name|state
+operator|->
+name|buf
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|state
+operator|->
+name|buf
+operator|+=
+name|len
+expr_stmt|;
+name|state
+operator|->
+name|buflen
+operator|-=
+name|len
+expr_stmt|;
+block|}
+else|else
+name|state
+operator|->
+name|flags
+operator|&=
+operator|~
+name|FIRST_DMA
+expr_stmt|;
+if|if
+condition|(
+name|state
+operator|->
+name|buflen
+condition|)
 name|state
 operator|->
 name|script
@@ -3116,6 +3333,18 @@ index|[
 name|SCRIPT_RESUME_IN
 index|]
 expr_stmt|;
+else|else
+name|state
+operator|->
+name|script
+operator|=
+operator|&
+name|asc_scripts
+index|[
+name|SCRIPT_RESUME_NO_DATA
+index|]
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -3124,6 +3353,32 @@ operator|->
 name|flags
 operator|&
 name|DMA_OUT
+condition|)
+block|{
+comment|/* 				 * If this is the last chunk, the next expected 				 * state is to get status. 				 */
+name|len
+operator|=
+name|state
+operator|->
+name|dmalen
+expr_stmt|;
+name|state
+operator|->
+name|buf
+operator|+=
+name|len
+expr_stmt|;
+name|state
+operator|->
+name|buflen
+operator|-=
+name|len
+expr_stmt|;
+if|if
+condition|(
+name|state
+operator|->
+name|buflen
 condition|)
 name|state
 operator|->
@@ -3135,6 +3390,18 @@ index|[
 name|SCRIPT_RESUME_OUT
 index|]
 expr_stmt|;
+else|else
+name|state
+operator|->
+name|script
+operator|=
+operator|&
+name|asc_scripts
+index|[
+name|SCRIPT_RESUME_NO_DATA
+index|]
+expr_stmt|;
+block|}
 else|else
 name|state
 operator|->
@@ -3319,65 +3586,6 @@ operator|->
 name|target
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|state
-operator|->
-name|flags
-operator|&
-name|DISCONN
-condition|)
-block|{
-if|if
-condition|(
-name|state
-operator|->
-name|script
-condition|)
-goto|goto
-name|abort
-goto|;
-name|state
-operator|->
-name|script
-operator|=
-name|asc
-operator|->
-name|script
-expr_stmt|;
-name|asc
-operator|->
-name|target
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|asc
-operator|->
-name|state
-operator|=
-name|ASC_STATE_RESEL
-expr_stmt|;
-name|asc
-operator|->
-name|script
-operator|=
-operator|&
-name|asc_scripts
-index|[
-name|SCRIPT_RESEL
-index|]
-expr_stmt|;
-name|regs
-operator|->
-name|asc_cmd
-operator|=
-name|ASC_CMD_ENABLE_SEL
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
 switch|switch
 condition|(
 name|ASC_SS
@@ -4353,7 +4561,7 @@ operator|&=
 operator|~
 name|FIRST_DMA
 expr_stmt|;
-comment|/* setup to start reading next chunk */
+comment|/* setup to start reading the next chunk */
 name|len
 operator|=
 name|state
@@ -4399,6 +4607,29 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|asc_debug
+operator|>
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"asc_dma_in: buflen %d, len %d\n"
+argument_list|,
+name|state
+operator|->
+name|buflen
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* check for next chunk */
 if|if
 condition|(
 name|len
@@ -4423,7 +4654,7 @@ operator|=
 operator|&
 name|asc_scripts
 index|[
-name|SCRIPT_RESUME_IN
+name|SCRIPT_CONTINUE_IN
 index|]
 expr_stmt|;
 return|return
@@ -4519,6 +4750,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|#
+directive|if
+literal|0
+block|if (asc_debug> 2)
+else|#
+directive|else
 if|if
 condition|(
 name|asc_debug
@@ -4530,6 +4767,8 @@ operator|||
 name|fifo
 condition|)
 comment|/* XXX */
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"asc_last_dma_in: buflen %d dmalen %d tc %d fifo %d\n"
@@ -4554,6 +4793,7 @@ condition|(
 name|fifo
 condition|)
 block|{
+comment|/* device must be trying to send more than we expect */
 name|regs
 operator|->
 name|asc_cmd
@@ -4591,6 +4831,174 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|asc_resume_in
+parameter_list|(
+name|asc
+parameter_list|,
+name|status
+parameter_list|,
+name|ss
+parameter_list|,
+name|ir
+parameter_list|)
+specifier|register
+name|asc_softc_t
+name|asc
+decl_stmt|;
+specifier|register
+name|int
+name|status
+decl_stmt|,
+name|ss
+decl_stmt|,
+name|ir
+decl_stmt|;
+block|{
+specifier|register
+name|asc_regmap_t
+modifier|*
+name|regs
+init|=
+name|asc
+operator|->
+name|regs
+decl_stmt|;
+specifier|register
+name|State
+modifier|*
+name|state
+init|=
+operator|&
+name|asc
+operator|->
+name|st
+index|[
+name|asc
+operator|->
+name|target
+index|]
+decl_stmt|;
+specifier|register
+name|int
+name|len
+decl_stmt|;
+comment|/* setup to start reading the next chunk */
+name|len
+operator|=
+name|state
+operator|->
+name|buflen
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+name|state
+operator|->
+name|dmaBufSize
+condition|)
+name|len
+operator|=
+name|state
+operator|->
+name|dmaBufSize
+expr_stmt|;
+name|state
+operator|->
+name|dmalen
+operator|=
+name|len
+expr_stmt|;
+operator|*
+name|asc
+operator|->
+name|dmar
+operator|=
+name|ASC_DMA_ADDR
+argument_list|(
+name|state
+operator|->
+name|dmaBufAddr
+argument_list|)
+expr_stmt|;
+name|ASC_TC_PUT
+argument_list|(
+name|regs
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|asc_debug
+operator|>
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"asc_resume_in: buflen %d, len %d\n"
+argument_list|,
+name|state
+operator|->
+name|buflen
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* check for next chunk */
+if|if
+condition|(
+name|len
+operator|!=
+name|state
+operator|->
+name|buflen
+condition|)
+block|{
+name|regs
+operator|->
+name|asc_cmd
+operator|=
+name|ASC_CMD_XFER_INFO
+operator||
+name|ASC_CMD_DMA
+expr_stmt|;
+name|asc
+operator|->
+name|script
+operator|=
+operator|&
+name|asc_scripts
+index|[
+name|SCRIPT_CONTINUE_IN
+index|]
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|1
@@ -4734,6 +5142,35 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|asc_debug
+operator|>
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"asc_resume_dma_in: buflen %d dmalen %d len %d off %d\n"
+argument_list|,
+name|state
+operator|->
+name|dmalen
+argument_list|,
+name|state
+operator|->
+name|buflen
+argument_list|,
+name|len
+argument_list|,
+name|off
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* check for next chunk */
 if|if
 condition|(
 name|state
@@ -4760,7 +5197,7 @@ operator|=
 operator|&
 name|asc_scripts
 index|[
-name|SCRIPT_RESUME_IN
+name|SCRIPT_CONTINUE_IN
 index|]
 expr_stmt|;
 return|return
@@ -4976,32 +5413,6 @@ operator|&=
 operator|~
 name|FIRST_DMA
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|asc_debug
-operator|>
-literal|2
-condition|)
-name|printf
-argument_list|(
-literal|"asc_dma_out: dmalen %d fifo %d\n"
-argument_list|,
-name|state
-operator|->
-name|dmalen
-argument_list|,
-name|regs
-operator|->
-name|asc_flags
-operator|&
-name|ASC_FLAGS_FIFO_CNT
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|len
 operator|=
 name|state
@@ -5015,6 +5426,28 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|asc_debug
+operator|>
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"asc_dma_out: buflen %d, len %d\n"
+argument_list|,
+name|state
+operator|->
+name|buflen
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* check for next chunk */
 if|if
 condition|(
@@ -5040,7 +5473,7 @@ operator|=
 operator|&
 name|asc_scripts
 index|[
-name|SCRIPT_RESUME_OUT
+name|SCRIPT_CONTINUE_OUT
 index|]
 expr_stmt|;
 return|return
@@ -5117,12 +5550,6 @@ name|len
 decl_stmt|,
 name|fifo
 decl_stmt|;
-name|len
-operator|=
-name|state
-operator|->
-name|dmalen
-expr_stmt|;
 name|ASC_TC_GET
 argument_list|(
 name|regs
@@ -5141,33 +5568,25 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+if|#
+directive|if
+literal|0
+block|if (asc_debug> 2)
+else|#
+directive|else
 if|if
 condition|(
 name|asc_debug
 operator|>
 literal|2
-condition|)
-name|printf
-argument_list|(
-literal|"asc_last_dma_out: dmalen %d tc %d fifo %d\n"
-argument_list|,
-name|state
-operator|->
-name|dmalen
-argument_list|,
-name|len
-argument_list|,
-name|fifo
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
+operator|||
 name|len
 operator|||
 name|fifo
 condition|)
+comment|/* XXX */
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"asc_last_dma_out: buflen %d dmalen %d tc %d fifo %d\n"
@@ -5186,10 +5605,27 @@ name|fifo
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+endif|#
+directive|endif
+if|if
+condition|(
+name|fifo
+condition|)
+block|{
 name|len
 operator|+=
 name|fifo
 expr_stmt|;
+name|regs
+operator|->
+name|asc_cmd
+operator|=
+name|ASC_CMD_FLUSH
+expr_stmt|;
+name|MachEmptyWriteBuffer
+argument_list|()
+expr_stmt|;
+block|}
 name|len
 operator|=
 name|state
@@ -5204,6 +5640,189 @@ name|buflen
 operator|-=
 name|len
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|asc_resume_out
+parameter_list|(
+name|asc
+parameter_list|,
+name|status
+parameter_list|,
+name|ss
+parameter_list|,
+name|ir
+parameter_list|)
+specifier|register
+name|asc_softc_t
+name|asc
+decl_stmt|;
+specifier|register
+name|int
+name|status
+decl_stmt|,
+name|ss
+decl_stmt|,
+name|ir
+decl_stmt|;
+block|{
+specifier|register
+name|asc_regmap_t
+modifier|*
+name|regs
+init|=
+name|asc
+operator|->
+name|regs
+decl_stmt|;
+specifier|register
+name|State
+modifier|*
+name|state
+init|=
+operator|&
+name|asc
+operator|->
+name|st
+index|[
+name|asc
+operator|->
+name|target
+index|]
+decl_stmt|;
+specifier|register
+name|int
+name|len
+decl_stmt|;
+comment|/* setup for this chunck */
+name|len
+operator|=
+name|state
+operator|->
+name|buflen
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+name|state
+operator|->
+name|dmaBufSize
+condition|)
+name|len
+operator|=
+name|state
+operator|->
+name|dmaBufSize
+expr_stmt|;
+name|state
+operator|->
+name|dmalen
+operator|=
+name|len
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|state
+operator|->
+name|buf
+argument_list|,
+name|state
+operator|->
+name|dmaBufAddr
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+operator|*
+name|asc
+operator|->
+name|dmar
+operator|=
+name|ASC_DMAR_WRITE
+operator||
+name|ASC_DMA_ADDR
+argument_list|(
+name|state
+operator|->
+name|dmaBufAddr
+argument_list|)
+expr_stmt|;
+name|ASC_TC_PUT
+argument_list|(
+name|regs
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|asc_debug
+operator|>
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"asc_resume_out: buflen %d, len %d\n"
+argument_list|,
+name|state
+operator|->
+name|buflen
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* check for next chunk */
+if|if
+condition|(
+name|len
+operator|!=
+name|state
+operator|->
+name|buflen
+condition|)
+block|{
+name|regs
+operator|->
+name|asc_cmd
+operator|=
+name|ASC_CMD_XFER_INFO
+operator||
+name|ASC_CMD_DMA
+expr_stmt|;
+name|asc
+operator|->
+name|script
+operator|=
+operator|&
+name|asc_scripts
+index|[
+name|SCRIPT_CONTINUE_OUT
+index|]
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|1
@@ -5349,6 +5968,35 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|asc_debug
+operator|>
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|"asc_resume_dma_out: buflen %d dmalen %d len %d off %d\n"
+argument_list|,
+name|state
+operator|->
+name|dmalen
+argument_list|,
+name|state
+operator|->
+name|buflen
+argument_list|,
+name|len
+argument_list|,
+name|off
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* check for next chunk */
 if|if
 condition|(
 name|state
@@ -5375,7 +6023,7 @@ operator|=
 operator|&
 name|asc_scripts
 index|[
-name|SCRIPT_RESUME_OUT
+name|SCRIPT_CONTINUE_OUT
 index|]
 expr_stmt|;
 return|return
@@ -5677,7 +6325,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|asc_recvmsg
+name|asc_msg_in
 parameter_list|(
 name|asc
 parameter_list|,
@@ -5856,7 +6504,7 @@ literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"asc_recvmsg: msg %x %x %x\n"
+literal|"asc_msg_in: msg %x %x %x\n"
 argument_list|,
 name|state
 operator|->
@@ -6140,7 +6788,7 @@ literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"asc_recvmsg: msg %x\n"
+literal|"asc_msg_in: msg %x\n"
 argument_list|,
 name|msg
 argument_list|)
@@ -6223,7 +6871,27 @@ name|flags
 operator||=
 name|DISCONN
 expr_stmt|;
-break|break;
+name|regs
+operator|->
+name|asc_cmd
+operator|=
+name|ASC_CMD_MSG_ACPT
+expr_stmt|;
+name|asc
+operator|->
+name|script
+operator|=
+operator|&
+name|asc_scripts
+index|[
+name|SCRIPT_DISCONNECT
+index|]
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 default|default:
 name|printf
 argument_list|(
@@ -6283,14 +6951,14 @@ directive|ifdef
 name|DEBUG
 name|asc_DumpLog
 argument_list|(
-literal|"asc_recvmsg"
+literal|"asc_msg_in"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 name|panic
 argument_list|(
-literal|"asc_recvmsg"
+literal|"asc_msg_in"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6315,6 +6983,72 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|asc_disconnect
+parameter_list|(
+name|asc
+parameter_list|,
+name|status
+parameter_list|,
+name|ss
+parameter_list|,
+name|ir
+parameter_list|)
+specifier|register
+name|asc_softc_t
+name|asc
+decl_stmt|;
+specifier|register
+name|int
+name|status
+decl_stmt|,
+name|ss
+decl_stmt|,
+name|ir
+decl_stmt|;
+block|{
+specifier|register
+name|State
+modifier|*
+name|state
+init|=
+operator|&
+name|asc
+operator|->
+name|st
+index|[
+name|asc
+operator|->
+name|target
+index|]
+decl_stmt|;
+name|asc
+operator|->
+name|target
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|asc
+operator|->
+name|state
+operator|=
+name|ASC_STATE_RESEL
+expr_stmt|;
+return|return
+operator|(
+literal|1
 operator|)
 return|;
 block|}
