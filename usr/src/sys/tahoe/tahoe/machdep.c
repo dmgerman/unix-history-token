@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	1.9	86/12/15	*/
+comment|/*	machdep.c	1.10	87/02/16	*/
 end_comment
 
 begin_include
@@ -1263,6 +1263,13 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Enable interrupts from now on */
+comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
+name|bhinit
+argument_list|()
+expr_stmt|;
+name|binit
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Configure the system. 	 */
 name|configure
 argument_list|()
@@ -2386,6 +2393,15 @@ expr_stmt|;
 comment|/* TXDB_BOOT's itsself */
 comment|/*NOTREACHED*/
 block|}
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|CPBFLG
+operator|=
+name|howto
+expr_stmt|;
 name|tocons
 argument_list|(
 name|CPBOOT
@@ -2401,18 +2417,6 @@ asm|asm("halt");
 comment|/*NOTREACHED*/
 block|}
 end_block
-
-begin_decl_stmt
-name|struct
-name|cphdr
-modifier|*
-name|lasthdr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* defined in cons.c */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -2434,9 +2438,9 @@ end_macro
 
 begin_block
 block|{
-name|int
+specifier|register
 name|timeout
-decl_stmt|;
+expr_stmt|;
 name|cpcontrol
 operator|.
 name|cp_hdr
@@ -2505,7 +2509,7 @@ name|timeout
 operator|--
 operator|&&
 operator|(
-name|lasthdr
+name|cnlast
 operator|->
 name|cp_unit
 operator|&
@@ -2517,7 +2521,7 @@ condition|)
 name|uncache
 argument_list|(
 operator|&
-name|lasthdr
+name|cnlast
 operator|->
 name|cp_unit
 argument_list|)
