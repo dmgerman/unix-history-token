@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.6.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -332,12 +332,8 @@ begin_define
 define|#
 directive|define
 name|IOC_DIRMASK
-value|0xe0000000
+value|(IOC_IN|IOC_OUT|IOC_VOID)
 end_define
-
-begin_comment
-comment|/* mask for IN/OUT/VOID */
-end_comment
 
 begin_comment
 comment|/* the 0x20000000 is so we can distinguish new ioctl's from old */
@@ -399,6 +395,20 @@ parameter_list|,
 name|t
 parameter_list|)
 value|(IOC_INOUT|((sizeof(t)&IOCPARM_MASK)<<16)|(x<<8)|y)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IOWX
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|s
+parameter_list|)
+value|(IOC_IN|(((s)&IOCPARM_MASK)<<16)|(x<<8)|(y))
 end_define
 
 begin_endif
@@ -1504,6 +1514,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TIOCPKT_TIOC
+value|0x40
+end_define
+
+begin_comment
+comment|/* transparent ioctl packet */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TIOCSTOP
 value|_IO('t', 111)
 end_define
@@ -1603,6 +1624,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|UIOCCMD
+parameter_list|(
+name|n
+parameter_list|)
+value|_IO('u', n)
+end_define
+
+begin_comment
+comment|/* usr cntl op "n" */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TIOCUCNTL
 value|_IOW('t', 102, int)
 end_define
@@ -1614,15 +1649,37 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UIOCCMD
-parameter_list|(
-name|n
-parameter_list|)
-value|_IO('u', n)
+name|TIOCTIOC
+value|_IOW('t', 101, int)
 end_define
 
 begin_comment
-comment|/* usr cntl op "n" */
+comment|/* pty: set/clr transparent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCBLK
+value|_IOW('t', 100, int)
+end_define
+
+begin_comment
+comment|/* pty: block slave writes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCIOANS
+parameter_list|(
+name|s
+parameter_list|)
+value|_IOWX('t', 99, (s))
+end_define
+
+begin_comment
+comment|/* pty: reply to user ioctl */
 end_comment
 
 begin_define
