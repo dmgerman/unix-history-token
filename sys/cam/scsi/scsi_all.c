@@ -11413,7 +11413,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Table of syncrates that don't follow the "divisible by 4"  * rule. This table will be expanded in future SCSI specs.  * I believe that FAST-40 has already been defined...  */
+comment|/*  * Table of syncrates that don't follow the "divisible by 4"  * rule. This table will be expanded in future SCSI specs.  */
 end_comment
 
 begin_struct
@@ -11445,17 +11445,20 @@ block|,
 literal|250
 block|}
 block|,
+comment|/* FAST-40 40MHz */
 block|{
 literal|0x0b
 block|,
 literal|303
 block|}
 block|,
+comment|/* FAST-40 33MHz */
 block|{
 literal|0x0c
 block|,
 literal|500
 block|}
+comment|/* FAST-20 */
 block|}
 struct|;
 end_struct
