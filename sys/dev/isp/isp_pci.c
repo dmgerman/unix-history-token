@@ -2855,27 +2855,6 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__alpha__
-comment|/* 	 * THIS SHOULD NOT HAVE TO BE HERE 	 */
-name|alpha_register_pci_scsi
-argument_list|(
-name|cfid
-operator|->
-name|bus
-argument_list|,
-name|cfid
-operator|->
-name|slot
-argument_list|,
-name|isp
-operator|->
-name|isp_sim
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
