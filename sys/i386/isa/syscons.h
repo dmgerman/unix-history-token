@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.h,v 1.23.2.5 1997/06/29 15:13:47 yokota Exp $  */
+comment|/*-  * Copyright (c) 1995-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.h,v 1.23.2.6 1997/09/02 10:31:09 yokota Exp $  */
 end_comment
 
 begin_ifndef
@@ -121,57 +121,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|SWITCH_WAIT_REL
+name|KBD_CODE_MODE
 value|0x00040
 end_define
 
 begin_define
 define|#
 directive|define
-name|SWITCH_WAIT_ACQ
+name|SWITCH_WAIT_REL
 value|0x00080
 end_define
 
 begin_define
 define|#
 directive|define
-name|BUFFER_SAVED
+name|SWITCH_WAIT_ACQ
 value|0x00100
 end_define
 
 begin_define
 define|#
 directive|define
-name|CURSOR_ENABLED
+name|BUFFER_SAVED
 value|0x00200
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOUSE_ENABLED
+name|CURSOR_ENABLED
 value|0x00400
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOUSE_MOVED
+name|MOUSE_ENABLED
 value|0x00800
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOUSE_CUTTING
+name|MOUSE_MOVED
 value|0x01000
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOUSE_VISIBLE
+name|MOUSE_CUTTING
 value|0x02000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_VISIBLE
+value|0x04000
 end_define
 
 begin_comment
