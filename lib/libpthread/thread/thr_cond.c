@@ -1737,17 +1737,9 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|interrupted
-operator|==
-literal|0
-operator|)
 operator|||
-operator|(
 name|done
-operator|!=
-literal|0
-operator|)
 condition|)
 name|rval
 operator|=
