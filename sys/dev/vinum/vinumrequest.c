@@ -1668,6 +1668,12 @@ expr_stmt|;
 comment|/* one more active request group */
 block|}
 comment|/* Now fire off the requests */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+comment|/* lock out the interrupt routines */
 for|for
 control|(
 name|rqg
@@ -1965,12 +1971,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|rqe
 operator|->
 name|b
@@ -1981,12 +1981,6 @@ name|v_numoutput
 operator|++
 expr_stmt|;
 comment|/* one more output going */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
 name|rqe
 operator|->
 name|b
@@ -2010,6 +2004,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
