@@ -91,6 +91,19 @@ end_union_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|key_addref
+parameter_list|(
+name|struct
+name|secpolicy
+modifier|*
+name|sp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|key_havesp
 parameter_list|(
