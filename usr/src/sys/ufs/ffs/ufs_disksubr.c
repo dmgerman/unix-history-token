@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_disksubr.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_disksubr.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1368,7 +1368,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Disk error is the preface to plaintive error messages  * about failing disk transfers.  It prints messages of the form  *	"hp0g: hard error reading fsbn 12345 of 12344-12347 (hp0 bn 812345)"  * if the offset of the error in the transfer and a disk label  * are both available.  blkdone should be -1 if the position of the error  * is unknown; the disklabel pointer may be null from drivers that have not  * been converted to use them.  The message is printed with printf  * if pri is LOG_PRINTF, otherwise it uses log at the specified priority.  * The message should be completed (with at least a newline) with printf  * or addlog, respectively.  There is no trailing space.  */
+comment|/*  * Disk error is the preface to plaintive error messages  * about failing disk transfers.  It prints messages of the form  hp0g: hard error reading fsbn 12345 of 12344-12347 (hp0 bn %d cn %d tn %d sn %d)   * if the offset of the error in the transfer and a disk label  * are both available.  blkdone should be -1 if the position of the error  * is unknown; the disklabel pointer may be null from drivers that have not  * been converted to use them.  The message is printed with printf  * if pri is LOG_PRINTF, otherwise it uses log at the specified priority.  * The message should be completed (with at least a newline) with printf  * or addlog, respectively.  There is no trailing space.  */
 end_comment
 
 begin_expr_stmt
@@ -1644,16 +1644,47 @@ modifier|*
 name|pr
 call|)
 argument_list|(
-literal|" (%s%d bn %d) "
+literal|" (%s%d bn %d; cn %d"
 argument_list|,
 name|dname
 argument_list|,
 name|unit
 argument_list|,
 name|sn
+argument_list|,
+name|sn
+operator|/
+name|lp
+operator|->
+name|d_secpercyl
 argument_list|)
 expr_stmt|;
-comment|/* could log cyl/trk/sect */
+name|sn
+operator|%=
+name|lp
+operator|->
+name|d_secpercyl
+expr_stmt|;
+call|(
+modifier|*
+name|pr
+call|)
+argument_list|(
+literal|" tn %d sn %d)"
+argument_list|,
+name|sn
+operator|/
+name|lp
+operator|->
+name|d_ntracks
+argument_list|,
+name|sn
+operator|%
+name|lp
+operator|->
+name|d_ntracks
+argument_list|)
+expr_stmt|;
 block|}
 end_if
 
