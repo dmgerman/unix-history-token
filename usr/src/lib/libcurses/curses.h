@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.39 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -780,7 +780,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Controls whether tcsetattr will 					   ignore hardware settings */
+comment|/* If terminal hardware set. */
 end_comment
 
 begin_decl_stmt
