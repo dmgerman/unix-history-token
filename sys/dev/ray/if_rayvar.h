@@ -758,6 +758,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RAY_COM_FWOKEN
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Woken by detach	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RAY_COM_FLAGS_PRINTFB
 define|\
 value|"\020"			\ 	"\001WOK"		\ 	"\002RUNNING"		\ 	"\003COMPLETED"		\ 	"\004WAIT"		\ 	"\005CHKRUNNING"	\ 	"\006DETACHED"
@@ -922,6 +933,40 @@ name|flags
 parameter_list|)
 define|\
 value|ray_com_malloc((function), (flags), __STRING(function));
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_COM_FREE
+parameter_list|(
+name|com
+parameter_list|,
+name|ncom
+parameter_list|)
+value|do {					\     int i;								\     for (i = 0; i< ncom; i++)						\ 	    FREE(com[i], M_RAYCOM);					\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * This macro handles adding commands to the runq and quickly  * getting away when the card is detached. The macro returns  * from the current function with ENXIO.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_COM_RUNQ
+parameter_list|(
+name|sc
+parameter_list|,
+name|com
+parameter_list|,
+name|ncom
+parameter_list|,
+name|mesg
+parameter_list|,
+name|error
+parameter_list|)
+value|do {			\     (error) = ray_com_runq_add((sc), (com), (ncom), (mesg));		\     if ((error) == ENXIO) {						\ 	    RAY_COM_FREE((com), (ncom));				\ 	    return (error);						\     } else if ((error)&& ((error) != ENXIO))				\ 	    RAY_PRINTF(sc, "got error from runq 0x%x", (error));	\ } while (0)
 end_define
 
 begin_define
