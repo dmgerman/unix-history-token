@@ -3099,7 +3099,7 @@ index|[
 name|i
 index|]
 operator|=
-name|ntfs_u28
+name|NTFS_U28
 argument_list|(
 name|iep
 operator|->
