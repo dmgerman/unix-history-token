@@ -1269,7 +1269,7 @@ name|bundle
 operator|->
 name|radius
 operator|.
-name|routes
+name|ipv6routes
 argument_list|,
 operator|&
 name|ipv6cp
