@@ -1476,6 +1476,11 @@ name|mcur
 operator|=
 literal|0
 expr_stmt|;
+name|epstop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
