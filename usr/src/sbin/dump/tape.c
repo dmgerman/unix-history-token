@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.5 (Berkeley) %G%"
+literal|"@(#)tape.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,7 +50,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Pointer to malloc()ed buffer for tape */
+comment|/* pointer to malloc()ed buffer for tape */
 end_comment
 
 begin_decl_stmt
@@ -60,7 +60,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Size of malloc()ed buffer for tape */
+comment|/* size of malloc()ed buffer for tape */
+end_comment
+
+begin_decl_stmt
+name|long
+name|lastspclrec
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* tape block number of last written header */
 end_comment
 
 begin_decl_stmt
@@ -70,6 +83,10 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* next record to write in current block */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -400,6 +417,12 @@ operator|)
 name|dp
 expr_stmt|;
 comment|/* movc3 */
+name|lastspclrec
+operator|=
+name|spcl
+operator|.
+name|c_tapea
+expr_stmt|;
 name|trecno
 operator|++
 expr_stmt|;
@@ -1028,6 +1051,11 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 function_decl|;
+name|int
+name|blks
+decl_stmt|,
+name|i
+decl_stmt|;
 name|parentpid
 operator|=
 name|getpid
@@ -1369,6 +1397,61 @@ name|newtape
 operator|++
 expr_stmt|;
 comment|/* new tape signal */
+name|blks
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|spcl
+operator|.
+name|c_type
+operator|!=
+name|TS_END
+condition|)
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|spcl
+operator|.
+name|c_count
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|spcl
+operator|.
+name|c_addr
+index|[
+name|i
+index|]
+operator|!=
+literal|0
+condition|)
+name|blks
+operator|++
+expr_stmt|;
+name|spcl
+operator|.
+name|c_count
+operator|=
+name|blks
+operator|+
+literal|1
+operator|-
+name|spcl
+operator|.
+name|c_tapea
+operator|+
+name|lastspclrec
+expr_stmt|;
 name|spcl
 operator|.
 name|c_volume
