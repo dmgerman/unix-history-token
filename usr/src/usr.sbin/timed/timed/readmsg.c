@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readmsg.c	1.2 (Berkeley) %G%"
+literal|"@(#)readmsg.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1042,6 +1042,9 @@ name|TSP_TRACEON
 case|:
 case|case
 name|TSP_TRACEOFF
+case|:
+case|case
+name|TSP_QUIT
 case|:
 name|resp
 operator|=
