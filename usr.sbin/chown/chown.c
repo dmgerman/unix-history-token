@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chown.c,v 1.8 1997/09/04 11:55:45 charnier Exp $"
+literal|"$Id: chown.c,v 1.9 1997/09/21 09:13:57 wosch Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,6 +461,12 @@ block|{
 if|if
 condition|(
 name|hflag
+operator|&&
+operator|(
+name|Lflag
+operator|||
+name|Hflag
+operator|)
 condition|)
 name|errx
 argument_list|(
