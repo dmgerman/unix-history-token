@@ -1,13 +1,41 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.20	82/09/12	*/
+comment|/*	user.h	4.21	82/10/31	*/
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<sys/pcb.h>
+file|<vax/pcb.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sun/pcb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -219,8 +247,6 @@ comment|/* 0 means no sigstack */
 name|int
 name|u_onsigstack
 decl_stmt|;
-comment|/* on SIGILL code passes compatibility mode fault address  */
-comment|/* on SIGFPE code passes more specific kind of floating point fault */
 comment|/* 1.4 - descriptor management */
 name|struct
 name|file
@@ -241,18 +267,22 @@ comment|/* per-process flags of open files */
 define|#
 directive|define
 name|EXCLOSE
-value|01
+value|0x1
 comment|/* auto-close on exec */
 define|#
 directive|define
 name|RDLOCK
-value|02
+value|0x2
 comment|/* read lock present */
 define|#
 directive|define
 name|WRLOCK
-value|04
+value|0x4
 comment|/* write lock present */
+define|#
+directive|define
+name|UF_MAPPED
+value|0x8
 name|struct
 name|inode
 modifier|*
@@ -474,6 +504,13 @@ define|#
 directive|define
 name|SIMULATERTI
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|REALLYRETURN
+value|3
 end_define
 
 begin_comment
