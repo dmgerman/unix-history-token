@@ -112,10 +112,6 @@ directive|include
 file|<sys/disklabel.h>
 end_include
 
-begin_comment
-comment|/* YF - needed anyway for disksort() */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2825,7 +2821,6 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* YF - added vn */
 endif|#
 directive|endif
 name|vn
