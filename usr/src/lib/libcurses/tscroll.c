@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tscroll.c	8.1 (Berkeley) %G%"
+literal|"@(#)tscroll.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * Routine to perform scrolling.  Derived from tgoto.c in tercamp(3) library.  * Cap is a string containing printf type escapes to allow  * scrolling.  * The following escapes are defined for substituting n:  *  *	%d	as in printf  *	%2	like %2d  *	%3	like %3d  *	%.	gives %c hacking special case characters  *	%+x	like %c but adding x first  *  *	The codes below affect the state but don't use up a value.  *  *	%>xy	if value> x add y  *	%i	increments n  *	%%	gives %  *	%B	BCD (2 decimal digits encoded in one byte)  *	%D	Delta Data (backwards bcd)  *  * all other characters are ``self-inserting''.  */
+comment|/*  * Routine to perform scrolling.  Derived from tgoto.c in tercamp(3)  * library.  Cap is a string containing printf type escapes to allow  * scrolling.  The following escapes are defined for substituting n:  *  *	%d	as in printf  *	%2	like %2d  *	%3	like %3d  *	%.	gives %c hacking special case characters  *	%+x	like %c but adding x first  *  *	The codes below affect the state but don't use up a value.  *  *	%>xy	if value> x add y  *	%i	increments n  *	%%	gives %  *	%B	BCD (2 decimal digits encoded in one byte)  *	%D	Delta Data (backwards bcd)  *  * all other characters are ``self-inserting''.  */
 end_comment
 
 begin_function
@@ -70,18 +70,12 @@ index|[
 name|MAXRETURNSIZE
 index|]
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|dp
-decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
 name|char
 modifier|*
-name|cp
+name|dp
 decl_stmt|;
 if|if
 condition|(
@@ -89,36 +83,26 @@ name|cap
 operator|==
 name|NULL
 condition|)
-block|{
-name|toohard
-label|:
-comment|/* 		 * ``We don't do that under BOZO's big top'' 		 */
-return|return
-operator|(
-literal|"OOPS"
-operator|)
-return|;
-block|}
-name|cp
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|cap
-expr_stmt|;
+goto|goto
+name|err
+goto|;
+for|for
+control|(
 name|dp
 operator|=
 name|result
-expr_stmt|;
-while|while
-condition|(
+init|;
+operator|(
 name|c
 operator|=
 operator|*
-name|cp
+name|cap
 operator|++
-condition|)
+operator|)
+operator|!=
+literal|'\0'
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -140,7 +124,7 @@ condition|(
 name|c
 operator|=
 operator|*
-name|cp
+name|cap
 operator|++
 condition|)
 block|{
@@ -173,7 +157,7 @@ condition|)
 goto|goto
 name|two
 goto|;
-comment|/* fall into... */
+comment|/* FALLTHROUGH */
 case|case
 literal|'3'
 case|:
@@ -193,7 +177,7 @@ name|n
 operator|%=
 literal|100
 expr_stmt|;
-comment|/* fall into... */
+comment|/* FALLTHROUGH */
 case|case
 literal|'2'
 case|:
@@ -230,17 +214,17 @@ condition|(
 name|n
 operator|>
 operator|*
-name|cp
+name|cap
 operator|++
 condition|)
 name|n
 operator|+=
 operator|*
-name|cp
+name|cap
 operator|++
 expr_stmt|;
 else|else
-name|cp
+name|cap
 operator|++
 expr_stmt|;
 continue|continue;
@@ -250,10 +234,10 @@ case|:
 name|n
 operator|+=
 operator|*
-name|cp
+name|cap
 operator|++
 expr_stmt|;
-comment|/* fall into... */
+comment|/* FALLTHROUGH */
 case|case
 literal|'.'
 case|:
@@ -315,9 +299,17 @@ literal|16
 operator|)
 expr_stmt|;
 continue|continue;
+comment|/* 		 * XXX 		 * System V terminfo files have lots of extra gunk. 		 * The only one we've seen in scrolling strings is 		 * %pN, and it seems to work okay if we ignore it. 		 */
+case|case
+literal|'p'
+case|:
+operator|++
+name|cap
+expr_stmt|;
+continue|continue;
 default|default:
 goto|goto
-name|toohard
+name|err
 goto|;
 block|}
 block|}
@@ -329,6 +321,13 @@ expr_stmt|;
 return|return
 operator|(
 name|result
+operator|)
+return|;
+name|err
+label|:
+return|return
+operator|(
+literal|"curses: __tscroll failed"
 operator|)
 return|;
 block|}
