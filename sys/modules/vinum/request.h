@@ -1,0 +1,385 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: request.h,v 1.10 1998/08/03 07:15:26 grog Exp grog $  */
+end_comment
+
+begin_comment
+comment|/* Information needed to set up a transfer */
+end_comment
+
+begin_comment
+comment|/* struct buf is surprisingly big (about 300  * bytes), and it's part of the request, so this  * value is really important.  Most requests  * don't need more than 2 subrequests per  * plex. The table is automatically extended if  * this value is too small. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RQELTS
+value|2
+end_define
+
+begin_comment
+comment|/* default of 2 requests per transfer */
+end_comment
+
+begin_enum
+enum|enum
+name|xferinfo
+block|{
+name|XFR_NORMAL_READ
+init|=
+literal|1
+block|,
+name|XFR_NORMAL_WRITE
+init|=
+literal|2
+block|,
+comment|/* write request in normal mode */
+name|XFR_RECOVERY_READ
+init|=
+literal|4
+block|,
+name|XFR_DEGRADED_WRITE
+init|=
+literal|8
+block|,
+name|XFR_PARITYLESS_WRITE
+init|=
+literal|0x10
+block|,
+name|XFR_NO_PARITY_STRIPE
+init|=
+literal|0x20
+block|,
+comment|/* parity stripe is not available */
+name|XFR_DATA_BLOCK
+init|=
+literal|0x40
+block|,
+comment|/* data block in request */
+name|XFR_PARITY_BLOCK
+init|=
+literal|0x80
+block|,
+comment|/* parity block in request */
+name|XFR_BAD_SUBDISK
+init|=
+literal|0x100
+block|,
+comment|/* this subdisk is dead */
+name|XFR_MALLOCED
+init|=
+literal|0x200
+block|,
+comment|/* this buffer is malloced */
+if|#
+directive|if
+name|DEBUG
+name|XFR_PHASE2
+init|=
+literal|0x800
+block|,
+comment|/* documentation only: 2nd phase write */
+endif|#
+directive|endif
+name|XFR_REVIVECONFLICT
+init|=
+literal|0x1000
+block|,
+comment|/* possible conflict with a revive operation */
+comment|/* operations that need a parity block */
+name|XFR_PARITYOP
+init|=
+operator|(
+name|XFR_NORMAL_WRITE
+operator||
+name|XFR_RECOVERY_READ
+operator||
+name|XFR_DEGRADED_WRITE
+operator|)
+block|,
+comment|/* operations that use the group parameters */
+name|XFR_GROUPOP
+init|=
+operator|(
+name|XFR_DEGRADED_WRITE
+operator||
+name|XFR_RECOVERY_READ
+operator|)
+block|,
+comment|/* operations that that use the data parameters */
+name|XFR_DATAOP
+init|=
+operator|(
+name|XFR_NORMAL_READ
+operator||
+name|XFR_NORMAL_WRITE
+operator||
+name|XFR_PARITYLESS_WRITE
+operator|)
+block|,
+comment|/* operations requiring read before write */
+name|XFR_RBW
+init|=
+operator|(
+name|XFR_NORMAL_WRITE
+operator||
+name|XFR_DEGRADED_WRITE
+operator|)
+block|,
+comment|/* operations that need a malloced buffer */
+name|XFR_NEEDS_MALLOC
+init|=
+operator|(
+name|XFR_NORMAL_WRITE
+operator||
+name|XFR_RECOVERY_READ
+operator||
+name|XFR_DEGRADED_WRITE
+operator|)
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Describe one low-level request, part  * of a high-level request.  This is an  * extended struct buf buffer, and the first  * element *must* be a struct buf.  We pass this structure  * to the I/O routines instead of a struct buf in oder  * to be able to locate the high-level request when it  * completes.  *  * All offsets and lengths are in "blocks", i.e. sectors */
+end_comment
+
+begin_struct
+struct|struct
+name|rqelement
+block|{
+name|struct
+name|buf
+name|b
+decl_stmt|;
+comment|/* buf structure */
+name|struct
+name|rqgroup
+modifier|*
+name|rqg
+decl_stmt|;
+comment|/* pointer to our group */
+comment|/* Information about the transfer */
+name|daddr_t
+name|sdoffset
+decl_stmt|;
+comment|/* offset in subdisk */
+name|int
+name|useroffset
+decl_stmt|;
+comment|/* offset in user buffer of normal data */
+comment|/* dataoffset and datalen refer to "individual"      * data transfers (normal read, parityless write)      * and also degraded write.      *      * groupoffset and grouplen refer to the other      * "group" operations (normal write, recovery read)      * Both the offsets are relative to the start of the      * local buffer */
+name|int
+name|dataoffset
+decl_stmt|;
+comment|/* offset in buffer of the normal data */
+name|int
+name|groupoffset
+decl_stmt|;
+comment|/* offset in buffer of group data */
+name|short
+name|datalen
+decl_stmt|;
+comment|/* length of normal data (sectors) */
+name|short
+name|grouplen
+decl_stmt|;
+comment|/* length of group data (sectors) */
+name|short
+name|buflen
+decl_stmt|;
+comment|/* total buffer length to allocate */
+name|short
+name|flags
+decl_stmt|;
+comment|/* really enum xferinfo (see above) */
+comment|/* Ways to find other components */
+name|short
+name|sdno
+decl_stmt|;
+comment|/* subdisk number */
+name|short
+name|driveno
+decl_stmt|;
+comment|/* drive number */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* A group of requests built to satisfy a certain  * component of a user request */
+end_comment
+
+begin_struct
+struct|struct
+name|rqgroup
+block|{
+name|struct
+name|rqgroup
+modifier|*
+name|next
+decl_stmt|;
+comment|/* pointer to next group */
+name|struct
+name|request
+modifier|*
+name|rq
+decl_stmt|;
+comment|/* pointer to the request */
+name|short
+name|count
+decl_stmt|;
+comment|/* number of requests in this group */
+name|short
+name|active
+decl_stmt|;
+comment|/* and number active */
+name|short
+name|plexno
+decl_stmt|;
+comment|/* index of plex */
+name|int
+name|badsdno
+decl_stmt|;
+comment|/* index of bad subdisk or -1 */
+name|enum
+name|xferinfo
+name|flags
+decl_stmt|;
+comment|/* description of transfer */
+name|struct
+name|rqelement
+name|rqe
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* and the elements of this request */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Describe one high-level request and the  * work we have to do to satisfy it */
+end_comment
+
+begin_struct
+struct|struct
+name|request
+block|{
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+comment|/* pointer to the high-level request */
+name|int
+name|flags
+decl_stmt|;
+union|union
+block|{
+name|int
+name|volno
+decl_stmt|;
+comment|/* volume index */
+name|int
+name|plexno
+decl_stmt|;
+comment|/* or plex index */
+block|}
+name|volplex
+union|;
+name|int
+name|error
+decl_stmt|;
+comment|/* current error indication */
+name|short
+name|isplex
+decl_stmt|;
+comment|/* set if this is a plex request */
+name|short
+name|active
+decl_stmt|;
+comment|/* number of subrequests still active */
+name|struct
+name|rqgroup
+modifier|*
+name|rqg
+decl_stmt|;
+comment|/* pointer to the first group of requests */
+name|struct
+name|rqgroup
+modifier|*
+name|lrqg
+decl_stmt|;
+comment|/* and to the first group of requests */
+name|struct
+name|request
+modifier|*
+name|next
+decl_stmt|;
+comment|/* link of waiting requests */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Extended buffer header for subdisk I/O.  Includes  * a pointer to the user I/O request. */
+end_comment
+
+begin_struct
+struct|struct
+name|sdbuf
+block|{
+name|struct
+name|buf
+name|b
+decl_stmt|;
+comment|/* our buffer */
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+comment|/* and pointer to parent */
+name|short
+name|driveno
+decl_stmt|;
+comment|/* drive index */
+name|short
+name|sdno
+decl_stmt|;
+comment|/* and subdisk index */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Values returned by rqe and friends.  * Be careful with these: they are in order of increasing  * seriousness.  Some routines check for> REQUEST_RECOVERED  * to indicate a completely failed request. */
+end_comment
+
+begin_enum
+enum|enum
+name|requeststatus
+block|{
+name|REQUEST_OK
+block|,
+comment|/* request built OK */
+name|REQUEST_RECOVERED
+block|,
+comment|/* request OK, but involves RAID5 recovery */
+name|REQUEST_EOF
+block|,
+comment|/* request failed: outside plex */
+name|REQUEST_DOWN
+block|,
+comment|/* request failed: subdisk down  */
+name|REQUEST_ENOMEM
+comment|/* ran out of memory */
+block|}
+enum|;
+end_enum
+
+end_unit
+
