@@ -1039,7 +1039,7 @@ end_function_decl
 begin_decl_stmt
 name|pt_entry_t
 modifier|*
-name|pmap_pte
+name|pmap_pte_quick
 argument_list|(
 name|pmap_t
 argument_list|,

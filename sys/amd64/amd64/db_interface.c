@@ -861,7 +861,7 @@ condition|)
 block|{
 name|ptep0
 operator|=
-name|pmap_pte
+name|pmap_pte_quick
 argument_list|(
 name|kernel_pmap
 argument_list|,
@@ -914,7 +914,7 @@ condition|)
 block|{
 name|ptep1
 operator|=
-name|pmap_pte
+name|pmap_pte_quick
 argument_list|(
 name|kernel_pmap
 argument_list|,
@@ -958,7 +958,7 @@ condition|)
 block|{
 name|ptep1
 operator|=
-name|pmap_pte
+name|pmap_pte_quick
 argument_list|(
 name|kernel_pmap
 argument_list|,
