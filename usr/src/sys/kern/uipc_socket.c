@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket.c	6.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_socket.c	6.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1908,42 +1908,22 @@ operator|>=
 name|CLBYTES
 condition|)
 block|{
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|p
-decl_stmt|;
 name|MCLGET
 argument_list|(
-name|p
-argument_list|,
-literal|1
+name|m
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|==
-literal|0
+name|m
+operator|->
+name|m_len
+operator|!=
+name|CLBYTES
 condition|)
 goto|goto
 name|nopages
 goto|;
-name|m
-operator|->
-name|m_off
-operator|=
-operator|(
-name|int
-operator|)
-name|p
-operator|-
-operator|(
-name|int
-operator|)
-name|m
-expr_stmt|;
 name|len
 operator|=
 name|MIN

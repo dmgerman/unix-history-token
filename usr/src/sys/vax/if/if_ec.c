@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ec.c	6.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ec.c	6.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3798,25 +3798,19 @@ operator|>=
 name|NBPG
 condition|)
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|p
-decl_stmt|;
 name|MCLGET
 argument_list|(
-name|p
-argument_list|,
-literal|1
+name|m
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|!=
-literal|0
+name|m
+operator|->
+name|m_len
+operator|==
+name|CLBYTES
 condition|)
-block|{
 name|m
 operator|->
 name|m_len
@@ -3830,23 +3824,7 @@ argument_list|,
 name|CLBYTES
 argument_list|)
 expr_stmt|;
-name|m
-operator|->
-name|m_off
-operator|=
-operator|(
-name|int
-operator|)
-name|p
-operator|-
-operator|(
-name|int
-operator|)
-name|m
-expr_stmt|;
-block|}
 else|else
-block|{
 name|m
 operator|->
 name|m_len
@@ -3860,13 +3838,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|m
-operator|->
-name|m_off
-operator|=
-name|MMINOFF
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{

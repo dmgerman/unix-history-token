@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.c	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.c	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -808,6 +808,8 @@ operator|+
 name|ifu
 operator|->
 name|iff_hlen
+decl_stmt|,
+name|p
 decl_stmt|;
 name|top
 operator|=
@@ -909,11 +911,6 @@ name|NBPG
 condition|)
 block|{
 name|struct
-name|mbuf
-modifier|*
-name|p
-decl_stmt|;
-name|struct
 name|pte
 modifier|*
 name|cpte
@@ -945,16 +942,16 @@ goto|;
 block|}
 name|MCLGET
 argument_list|(
-name|p
-argument_list|,
-literal|1
+name|m
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
-operator|==
-literal|0
+name|m
+operator|->
+name|m_len
+operator|!=
+name|CLBYTES
 condition|)
 goto|goto
 name|nopage
@@ -970,20 +967,6 @@ argument_list|,
 name|CLBYTES
 argument_list|)
 expr_stmt|;
-name|m
-operator|->
-name|m_off
-operator|=
-operator|(
-name|int
-operator|)
-name|p
-operator|-
-operator|(
-name|int
-operator|)
-name|m
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -996,6 +979,16 @@ goto|goto
 name|copy
 goto|;
 comment|/* 			 * Switch pages mapped to UNIBUS with new page p, 			 * as quick form of copy.  Remap UNIBUS and invalidate. 			 */
+name|p
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
 name|cpte
 operator|=
 operator|&
@@ -1119,12 +1112,6 @@ expr_stmt|;
 name|p
 operator|+=
 name|NBPG
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
-name|p
-argument_list|)
 expr_stmt|;
 block|}
 goto|goto
