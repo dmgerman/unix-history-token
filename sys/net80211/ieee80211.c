@@ -1084,6 +1084,12 @@ name|struct
 name|ieee80211_rateset
 name|allrates
 decl_stmt|;
+comment|/* 	 * Do late attach work that must wait for any subclass 	 * (i.e. driver) work such as overriding methods. 	 */
+name|ieee80211_node_lateattach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Fill in media characteristics. 	 */
 name|ifmedia_init
 argument_list|(
