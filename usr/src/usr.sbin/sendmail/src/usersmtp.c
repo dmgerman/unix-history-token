@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.44 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.45 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.44 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.45 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1771,14 +1771,12 @@ name|r
 operator|<
 literal|0
 operator|||
-name|REPLYTYPE
-argument_list|(
 name|r
-argument_list|)
 operator|==
-literal|4
+literal|421
 condition|)
 block|{
+comment|/* communications failure/service shutting down */
 name|mci
 operator|->
 name|mci_exitstat
@@ -1807,6 +1805,21 @@ block|}
 elseif|else
 if|if
 condition|(
+name|REPLYTYPE
+argument_list|(
+name|r
+argument_list|)
+operator|==
+literal|4
+condition|)
+block|{
+return|return
+name|EX_TEMPFAIL
+return|;
+block|}
+elseif|else
+if|if
+condition|(
 name|r
 operator|==
 literal|250
@@ -1828,16 +1841,7 @@ operator|==
 literal|553
 condition|)
 block|{
-comment|/* syntax error in arguments */
-name|smtpquit
-argument_list|(
-name|m
-argument_list|,
-name|mci
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
+comment|/* syntax error in arguments/mailbox name not allowed */
 return|return
 name|EX_DATAERR
 return|;
@@ -1850,16 +1854,7 @@ operator|==
 literal|552
 condition|)
 block|{
-comment|/* signal service unavailable */
-name|smtpquit
-argument_list|(
-name|m
-argument_list|,
-name|mci
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
+comment|/* exceeded storage allocation */
 return|return
 name|EX_UNAVAILABLE
 return|;
