@@ -70,6 +70,8 @@ block|,
 name|VT_MFS
 block|,
 name|VT_PCFS
+block|,
+name|VT_ISOFS
 block|}
 enum|;
 end_enum

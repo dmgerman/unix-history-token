@@ -519,6 +519,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_ISOFSMNT
+value|48
+end_define
+
+begin_comment
+comment|/* isofs mount structures */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_TEMP
 value|49
 end_define
@@ -646,7 +657,9 @@ value|\ 	"proc",
 comment|/* 41 M_PROC */
 value|\ 	"subproc",
 comment|/* 42 M_PROC */
-value|\ 	0, 0, 0, 0, 0, 0, \ 	"temp",
+value|\ 	0, 0, 0, 0, 0, \ 	"isofs mount",
+comment|/* 48 M_ISOFSMNT */
+value|\ 	"temp",
 comment|/* 49 M_TEMP */
 value|\ 	"PCFS mount",
 comment|/* 50 M_PCFSMNT */

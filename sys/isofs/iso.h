@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  *	$Id: iso.h,v 1.3 1993/07/19 13:40:01 cgd Exp $  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -87,6 +91,13 @@ define|#
 directive|define
 name|ISO_STANDARD_ID
 value|"CD001"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISO_ECMA_ID
+value|"CDW01"
 end_define
 
 begin_struct
@@ -514,6 +525,7 @@ argument_list|)
 index|]
 decl_stmt|;
 comment|/* 711 */
+name|unsigned
 name|char
 name|extent
 index|[
@@ -526,6 +538,7 @@ argument_list|)
 index|]
 decl_stmt|;
 comment|/* 733 */
+name|unsigned
 name|char
 name|size
 index|[
@@ -619,6 +632,23 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* CD-ROM Fromat type */
+end_comment
+
+begin_enum
+enum|enum
+name|ISO_FTYPE
+block|{
+name|ISO_FTYPE_9660
+block|,
+name|ISO_FTYPE_RRIP
+block|,
+name|ISO_FTYPE_ECMA
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|iso_mnt
@@ -679,6 +709,10 @@ name|root_extent
 decl_stmt|;
 name|int
 name|root_size
+decl_stmt|;
+name|enum
+name|ISO_FTYPE
+name|iso_ftype
 decl_stmt|;
 block|}
 struct|;

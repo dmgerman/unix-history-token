@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * 	$Id: isofs_bmap.c,v 1.2 1993/05/20 03:30:44 cgd Exp $  */
+end_comment
+
 begin_include
 include|#
 directive|include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00151  * --------------------         -----   ----------------------  *  * 23 Apr 93	Jagane D Sundar		support nfs exported isofs  */
+comment|/*  *	$Id: isofs_vfsops.c,v 1.5 1993/07/19 13:40:09 cgd Exp $  */
 end_comment
 
 begin_include
@@ -848,6 +848,45 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+comment|/* Check the Rock Ridge Extention support */
+if|if
+condition|(
+name|args
+operator|.
+name|exflags
+operator|&
+name|ISOFSMNT_NORRIP
+condition|)
+block|{
+name|imp
+operator|->
+name|iso_ftype
+operator|=
+name|ISO_FTYPE_9660
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_flag
+operator||=
+name|ISOFSMNT_NORRIP
+expr_stmt|;
+block|}
+else|else
+block|{
+name|imp
+operator|->
+name|iso_ftype
+operator|=
+name|ISO_FTYPE_RRIP
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_flag
+operator|&=
+operator|~
+name|ISOFSMNT_NORRIP
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1405,7 +1444,7 @@ sizeof|sizeof
 expr|*
 name|isomp
 argument_list|,
-name|M_UFSMNT
+name|M_ISOFSMNT
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -1660,7 +1699,7 @@ name|caddr_t
 operator|)
 name|isomp
 argument_list|,
-name|M_UFSMNT
+name|M_ISOFSMNT
 argument_list|)
 expr_stmt|;
 name|mp
@@ -1909,7 +1948,7 @@ name|caddr_t
 operator|)
 name|isomp
 argument_list|,
-name|M_UFSMNT
+name|M_ISOFSMNT
 argument_list|)
 expr_stmt|;
 name|mp
@@ -2145,12 +2184,6 @@ operator|=
 name|imp
 operator|->
 name|root_extent
-expr_stmt|;
-name|ip
-operator|->
-name|i_diroff
-operator|=
-literal|0
 expr_stmt|;
 name|error
 operator|=
@@ -2422,7 +2455,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * File handle to vnode  *  * Less complicated than ufs file systems 'cos of read only.  *   * -Jagane D Sundar-  */
+comment|/*  * File handle to vnode  *  * Have to be really careful about stale file handles:  * - check that the inode number is in range  * - call iget() to get the locked inode  * - check for an unallocated inode (i_mode == 0)  * - check that the generation number matches  */
 end_comment
 
 begin_struct
@@ -2589,14 +2622,14 @@ name|ifhp
 operator|->
 name|ifid_offset
 operator|>>
-literal|12
+literal|11
 operator|)
 expr_stmt|;
 name|ifhp
 operator|->
 name|ifid_offset
 operator|&=
-literal|0x7fff
+literal|0x7ff
 expr_stmt|;
 if|if
 condition|(

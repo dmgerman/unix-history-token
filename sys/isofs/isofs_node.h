@@ -1,7 +1,51 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00151  * --------------------         -----   ----------------------  *  * 23 Apr 93	Jagane D Sundar		support nfs exported isofs  */
+comment|/*  *	$Id: isofs_node.h,v 1.5 1993/07/19 13:40:05 cgd Exp $  */
 end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|unsigned
+name|iso_cln
+decl_stmt|;
+comment|/* Child link */
+name|unsigned
+name|iso_pln
+decl_stmt|;
+comment|/* Parents link */
+name|struct
+name|timeval
+name|iso_atime
+decl_stmt|;
+comment|/* time of last access */
+name|struct
+name|timeval
+name|iso_mtime
+decl_stmt|;
+comment|/* time of last modification */
+name|struct
+name|timeval
+name|iso_ctime
+decl_stmt|;
+comment|/* time file changed */
+name|u_short
+name|iso_mode
+decl_stmt|;
+comment|/* files access mode and type */
+name|uid_t
+name|iso_uid
+decl_stmt|;
+comment|/* owner user id */
+name|gid_t
+name|iso_gid
+decl_stmt|;
+comment|/* owner group id */
+block|}
+name|ISO_RRIP_INODE
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -78,13 +122,6 @@ decl_stmt|;
 name|int
 name|i_size
 decl_stmt|;
-name|unsigned
-name|char
-name|iso_time
-index|[
-literal|7
-index|]
-decl_stmt|;
 name|int
 name|iso_flags
 decl_stmt|;
@@ -100,12 +137,17 @@ decl_stmt|;
 name|int
 name|iso_namelen
 decl_stmt|;
-comment|/* The following are reqd for NFS FH. -Jagane D Sundar- */
+comment|/* ISO9660/RRIP name len */
 name|int
 name|iso_parent
 decl_stmt|;
+comment|/* byte offset in beginning of dir record */
 name|int
 name|iso_parent_ext
+decl_stmt|;
+comment|/* block number of dir record */
+name|ISO_RRIP_INODE
+name|inode
 decl_stmt|;
 block|}
 struct|;
@@ -200,13 +242,6 @@ parameter_list|(
 name|ip
 parameter_list|)
 value|iso_iunlock(ip)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VT_ISOFS
-value|(VT_MFS+1)
 end_define
 
 begin_comment

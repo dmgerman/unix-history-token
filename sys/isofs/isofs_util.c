@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  *	$Id: isofs_util.c,v 1.3 1993/07/19 13:40:08 cgd Exp $  */
+end_comment
+
 begin_function
 name|int
 name|isonum_711
@@ -170,6 +174,7 @@ name|isonum_731
 parameter_list|(
 name|p
 parameter_list|)
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -235,6 +240,7 @@ name|isonum_732
 parameter_list|(
 name|p
 parameter_list|)
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -300,6 +306,7 @@ name|isonum_733
 parameter_list|(
 name|p
 parameter_list|)
+name|unsigned
 name|char
 modifier|*
 name|p
