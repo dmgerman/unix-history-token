@@ -10240,7 +10240,7 @@ condition|(
 name|newvp
 condition|)
 block|{
-name|vrele
+name|vput
 argument_list|(
 name|newvp
 argument_list|)
@@ -10310,7 +10310,7 @@ if|if
 condition|(
 name|newvp
 condition|)
-name|vrele
+name|vput
 argument_list|(
 name|newvp
 argument_list|)
