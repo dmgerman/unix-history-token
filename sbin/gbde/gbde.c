@@ -2230,7 +2230,7 @@ return|return
 operator|(
 operator|*
 name|oa
-operator|-
+operator|>
 operator|*
 name|ob
 operator|)
