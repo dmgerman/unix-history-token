@@ -1619,7 +1619,7 @@ name|request
 operator|.
 name|flags
 operator|&
-name|AR_F_ERROR
+name|ADR_F_ERROR
 condition|)
 return|return
 name|EIO
@@ -1890,7 +1890,7 @@ operator|&
 name|B_READ
 operator|)
 condition|?
-name|AR_F_READ
+name|ADR_F_READ
 else|:
 literal|0
 expr_stmt|;
@@ -2188,7 +2188,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|AR_F_DMA_USED
+name|ADR_F_DMA_USED
 expr_stmt|;
 if|if
 condition|(
@@ -2238,7 +2238,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_READ
+name|ADR_F_READ
 operator|)
 argument_list|)
 condition|)
@@ -2247,7 +2247,7 @@ name|request
 operator|->
 name|flags
 operator||=
-name|AR_F_DMA_USED
+name|ADR_F_DMA_USED
 expr_stmt|;
 name|cmd
 operator|=
@@ -2255,7 +2255,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_READ
+name|ADR_F_READ
 condition|?
 name|ATA_C_READ_DMA
 else|:
@@ -2286,11 +2286,11 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_READ
+name|ADR_F_READ
 condition|?
-name|ATA_C_READ_MULTI
+name|ATA_C_READ_MUL
 else|:
-name|ATA_C_WRITE_MULTI
+name|ATA_C_WRITE_MUL
 expr_stmt|;
 comment|/* just plain old single sector transfer */
 else|else
@@ -2300,7 +2300,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_READ
+name|ADR_F_READ
 condition|?
 name|ATA_C_READ
 else|:
@@ -2352,7 +2352,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_DMA_USED
+name|ADR_F_DMA_USED
 condition|)
 block|{
 name|ata_dmastart
@@ -2388,7 +2388,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_READ
+name|ADR_F_READ
 condition|)
 return|return;
 comment|/* ready to write PIO data ? */
@@ -2544,7 +2544,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_DMA_USED
+name|ADR_F_DMA_USED
 condition|)
 name|dma_stat
 operator|=
@@ -2621,7 +2621,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_DMA_USED
+name|ADR_F_DMA_USED
 operator|)
 operator|&&
 operator|(
@@ -2661,7 +2661,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_READ
+name|ADR_F_READ
 operator|)
 condition|?
 literal|"READ"
@@ -2688,7 +2688,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_DMA_USED
+name|ADR_F_DMA_USED
 operator|&&
 name|adp
 operator|->
@@ -2783,7 +2783,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_DMA_USED
+name|ADR_F_DMA_USED
 condition|)
 block|{
 name|untimeout
@@ -2827,7 +2827,7 @@ name|request
 operator|->
 name|flags
 operator||=
-name|AR_F_FORCE_PIO
+name|ADR_F_FORCE_PIO
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -2851,7 +2851,7 @@ name|request
 operator|->
 name|flags
 operator||=
-name|AR_F_ERROR
+name|ADR_F_ERROR
 expr_stmt|;
 name|printf
 argument_list|(
@@ -2878,7 +2878,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_FORCE_PIO
+name|ADR_F_FORCE_PIO
 condition|)
 name|printf
 argument_list|(
@@ -2898,7 +2898,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_DMA_USED
+name|ADR_F_DMA_USED
 operator|)
 operator|&&
 operator|(
@@ -2908,13 +2908,13 @@ operator|->
 name|flags
 operator|&
 operator|(
-name|AR_F_READ
+name|ADR_F_READ
 operator||
-name|AR_F_ERROR
+name|ADR_F_ERROR
 operator|)
 operator|)
 operator|==
-name|AR_F_READ
+name|ADR_F_READ
 operator|)
 condition|)
 block|{
@@ -3085,7 +3085,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_ERROR
+name|ADR_F_ERROR
 condition|)
 block|{
 name|request
@@ -3362,7 +3362,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_READ
+name|ADR_F_READ
 operator|)
 condition|?
 literal|"READ"
@@ -3376,7 +3376,7 @@ name|request
 operator|->
 name|flags
 operator|&
-name|AR_F_DMA_USED
+name|ADR_F_DMA_USED
 condition|)
 block|{
 name|ata_dmadone

@@ -1589,6 +1589,31 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+name|pci_write_config
+argument_list|(
+name|parent
+argument_list|,
+literal|0x53
+argument_list|,
+operator|(
+name|pci_read_config
+argument_list|(
+name|parent
+argument_list|,
+literal|0x53
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+operator|~
+literal|0x01
+operator|)
+operator||
+literal|0x02
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* we could set PIO mode timings, but we assume the BIOS did that */
 break|break;
 case|case
@@ -3548,7 +3573,8 @@ argument_list|(
 name|apiomode
 argument_list|)
 expr_stmt|;
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|bootverbose
@@ -3562,6 +3588,19 @@ argument_list|,
 literal|"using PIO mode set by BIOS\n"
 argument_list|)
 expr_stmt|;
+name|scp
+operator|->
+name|mode
+index|[
+name|ATA_DEV
+argument_list|(
+name|device
+argument_list|)
+index|]
+operator|=
+name|ATA_PIO
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -340,7 +340,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_C_READ_MULTI
+name|ATA_C_READ_MUL
 value|0xc4
 end_define
 
@@ -351,7 +351,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_C_WRITE_MULTI
+name|ATA_C_WRITE_MUL
 value|0xc5
 end_define
 

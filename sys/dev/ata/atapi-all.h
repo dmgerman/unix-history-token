@@ -1016,16 +1016,12 @@ decl_stmt|;
 comment|/* drive flags */
 define|#
 directive|define
-name|ATAPI_F_DMA_USED
+name|ATAPI_F_DSC_USED
 value|0x0001
 define|#
 directive|define
-name|ATAPI_F_DSC_USED
-value|0x0002
-define|#
-directive|define
 name|ATAPI_F_MEDIA_CHANGED
-value|0x0004
+value|0x0002
 block|}
 struct|;
 end_struct
@@ -1067,6 +1063,10 @@ name|u_int32_t
 name|bytecount
 decl_stmt|;
 comment|/* bytes to transfer */
+name|u_int32_t
+name|donecount
+decl_stmt|;
+comment|/* bytes transferred */
 name|int32_t
 name|timeout
 decl_stmt|;
@@ -1098,8 +1098,12 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|A_READ
+name|ATPR_F_READ
 value|0x0001
+define|#
+directive|define
+name|ATPR_F_DMA_USED
+value|0x0002
 name|int8_t
 modifier|*
 name|data
