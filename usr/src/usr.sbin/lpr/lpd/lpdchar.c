@@ -4,7 +4,7 @@ comment|/*  *	Bill Shannon	21 Dec 1978  *	removed from lpd.c so as to be easier 
 end_comment
 
 begin_comment
-comment|/*	lpdchar.c	4.1	81/05/09	*/
+comment|/*	lpdchar.c	4.2	83/01/05	*/
 end_comment
 
 begin_comment
