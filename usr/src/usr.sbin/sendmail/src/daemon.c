@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.9 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.10 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.9 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.10 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -470,6 +470,17 @@ end_escape
 
 begin_comment
 comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another machine. ** **	Parameters: **		host -- the name of the host. **		port -- the port number to connect to. **		mci -- a pointer to the mail connection information **			structure to be filled in. **		usesecureport -- if set, use a low numbered (reserved) **			port to provide some rudimentary authentication. ** **	Returns: **		An exit code telling whether the connection could be **			made and if not why not. ** **	Side Effects: **		none. */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|sockaddr_in
+name|CurHostAddr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* address of current host */
 end_comment
 
 begin_function
@@ -1174,6 +1185,11 @@ argument_list|)
 argument_list|,
 literal|"r"
 argument_list|)
+expr_stmt|;
+comment|/* save for logging */
+name|CurHostAddr
+operator|=
+name|addr
 expr_stmt|;
 return|return
 operator|(
