@@ -2360,6 +2360,7 @@ argument_list|)
 operator|<
 literal|0x128
 condition|)
+block|{
 name|sc
 operator|->
 name|proto
@@ -2368,7 +2369,9 @@ name|PROTO_UFI
 operator||
 name|PROTO_CBI
 expr_stmt|;
+block|}
 else|else
+block|{
 if|#
 directive|if
 name|CBI_I
@@ -2392,6 +2395,7 @@ name|PROTO_CBI
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 comment|/* 		 * Revisions< 1.28 do not have the TEST UNIT READY command 		 * Revisions == 1.28 have a broken TEST UNIT READY 		 */
 if|if
 condition|(
@@ -2424,7 +2428,7 @@ name|UMASS_FLOPPY_TRANSFER_SPEED
 expr_stmt|;
 return|return
 operator|(
-name|UMATCH_VENDOR_PRODUCT_REV
+name|UMATCH_VENDOR_PRODUCT
 operator|)
 return|;
 block|}
