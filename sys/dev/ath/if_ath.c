@@ -1839,14 +1839,6 @@ name|if_flags
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|)
-expr_stmt|;
 name|ath_stop
 argument_list|(
 name|ifp
@@ -4267,12 +4259,22 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+comment|/* 				 * Beware of being called during detach to 				 * reset promiscuous mode.  In that case we 				 * will still be marked UP but not RUNNING. 				 * However trying to re-init the interface 				 * is the wrong thing to do as we've already 				 * torn down much of our state.  There's 				 * probably a better way to deal with this. 				 */
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|sc_invalid
+condition|)
 name|ath_init
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* XXX lose error */
+block|}
 block|}
 else|else
 name|ath_stop
