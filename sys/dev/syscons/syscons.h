@@ -955,9 +955,14 @@ modifier|*
 name|rndr
 decl_stmt|;
 comment|/* renderer */
+ifndef|#
+directive|ifndef
+name|__sparc64__
 name|sc_vtb_t
 name|scr
 decl_stmt|;
+endif|#
+directive|endif
 name|sc_vtb_t
 name|vtb
 decl_stmt|;

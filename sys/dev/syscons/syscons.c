@@ -141,11 +141,33 @@ directive|include
 file|<machine/clock.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/sc_machdep.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<machine/pc/display.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -781,6 +803,8 @@ operator|||
 name|__ia64__
 operator|||
 name|__amd64__
+operator|||
+name|__sparc64__
 end_if
 
 begin_function_decl
@@ -2598,9 +2622,14 @@ name|scr_stat
 modifier|*
 name|scp
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__sparc64__
 name|keyarg_t
 name|key
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|error
 decl_stmt|;
@@ -2709,6 +2738,9 @@ argument_list|)
 expr_stmt|;
 comment|/* Use the current setting of the<-- key as default VERASE. */
 comment|/* If the Delete key is preferable, an stty is necessary     */
+ifndef|#
+directive|ifndef
+name|__sparc64__
 if|if
 condition|(
 name|sc
@@ -2756,6 +2788,8 @@ literal|0
 index|]
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|tp
 operator|->
 name|t_iflag
@@ -3139,6 +3173,9 @@ operator|->
 name|vtb
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__sparc64__
 name|sc_vtb_destroy
 argument_list|(
 operator|&
@@ -3147,6 +3184,8 @@ operator|->
 name|scr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sc_free_history_buffer
 argument_list|(
 name|scp
@@ -7850,6 +7889,8 @@ operator|||
 name|__ia64__
 operator|||
 name|__amd64__
+operator|||
+name|__sparc64__
 name|int
 name|unit
 decl_stmt|;
@@ -7921,7 +7962,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __i386__ || __ia64__ || __amd64__ */
+comment|/* __i386__ || __ia64__ || __amd64__ || __sparc64__ */
 if|#
 directive|if
 name|__alpha__
@@ -7956,6 +7997,8 @@ operator|||
 name|__ia64__
 operator|||
 name|__amd64__
+operator|||
+name|__sparc64__
 name|int
 name|unit
 decl_stmt|;
@@ -8003,7 +8046,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __i386__ || __ia64__ || __amd64__ */
+comment|/* __i386__ || __ia64__ || __amd64__ || __sparc64__ */
 if|#
 directive|if
 name|__alpha__
@@ -8041,6 +8084,8 @@ operator|||
 name|__ia64__
 operator|||
 name|__amd64__
+operator|||
+name|__sparc64__
 if|#
 directive|if
 literal|0
@@ -8066,7 +8111,7 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* __i386__ || __ia64__ || __amd64__ */
+comment|/* __i386__ || __ia64__ || __amd64__ || __sparc64__ */
 if|#
 directive|if
 name|__alpha__
@@ -12939,6 +12984,9 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__sparc64__
 else|else
 name|sc_vtb_init
 argument_list|(
@@ -12970,6 +13018,8 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|scp
 operator|->
 name|status
@@ -14660,6 +14710,9 @@ name|cur_scp
 operator|=
 name|scp
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__sparc64__
 comment|/* copy screen to temporary buffer */
 name|sc_vtb_init
 argument_list|(
@@ -14725,6 +14778,8 @@ operator|->
 name|ysize
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* move cursors to the initial positions */
 if|if
 condition|(
@@ -15298,6 +15353,8 @@ operator|||
 name|__ia64__
 operator|||
 name|__amd64__
+operator|||
+name|__sparc64__
 end_if
 
 begin_function
@@ -15567,7 +15624,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ || __ia64__ || __amd64__ */
+comment|/* __i386__ || __ia64__ || __amd64__ || __sparc64__ */
 end_comment
 
 begin_function
@@ -16267,6 +16324,9 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__sparc64__
 name|sc_vtb_init
 argument_list|(
 operator|&
@@ -16285,6 +16345,8 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|scp
 operator|->
 name|xoff
@@ -18444,6 +18506,9 @@ operator|->
 name|mode
 operator|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__sparc64__
 name|sc_vtb_init
 argument_list|(
 operator|&
@@ -18476,6 +18541,8 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|SC_NO_FONT_LOADING
