@@ -6264,7 +6264,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * FFS supports recursive locking. 	 */
+comment|/* 	 * FFS supports recursive and shared locking. 	 */
 name|vp
 operator|->
 name|v_vnlock
@@ -6272,6 +6272,15 @@ operator|->
 name|lk_flags
 operator||=
 name|LK_CANRECURSE
+expr_stmt|;
+name|vp
+operator|->
+name|v_vnlock
+operator|->
+name|lk_flags
+operator|&=
+operator|~
+name|LK_NOSHARE
 expr_stmt|;
 name|vp
 operator|->
