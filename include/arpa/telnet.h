@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_TELNET_H_
+name|_ARPA_TELNET_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_TELNET_H_
+name|_ARPA_TELNET_H_
 end_define
 
 begin_comment
