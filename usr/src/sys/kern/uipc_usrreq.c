@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	1.15	83/07/21	*/
+comment|/*	uipc_usrreq.c	1.16	83/07/25	*/
 end_comment
 
 begin_include
@@ -779,6 +779,10 @@ case|:
 break|break;
 case|case
 name|PRU_SOCKADDR
+case|:
+break|break;
+case|case
+name|PRU_PEERADDR
 case|:
 break|break;
 case|case

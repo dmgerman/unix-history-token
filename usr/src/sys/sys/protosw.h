@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.17	83/07/20	*/
+comment|/*	protosw.h	4.18	83/07/25	*/
 end_comment
 
 begin_comment
@@ -374,8 +374,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRU_CONNECT2
+name|PRU_PEERADDR
 value|16
+end_define
+
+begin_comment
+comment|/* fetch peer's address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRU_CONNECT2
+value|17
 end_define
 
 begin_comment
@@ -390,7 +401,7 @@ begin_define
 define|#
 directive|define
 name|PRU_FASTTIMO
-value|17
+value|18
 end_define
 
 begin_comment
@@ -401,7 +412,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SLOWTIMO
-value|18
+value|19
 end_define
 
 begin_comment
@@ -412,7 +423,7 @@ begin_define
 define|#
 directive|define
 name|PRU_PROTORCV
-value|19
+value|20
 end_define
 
 begin_comment
@@ -423,7 +434,7 @@ begin_define
 define|#
 directive|define
 name|PRU_PROTOSEND
-value|20
+value|21
 end_define
 
 begin_comment
@@ -434,7 +445,7 @@ begin_define
 define|#
 directive|define
 name|PRU_NREQ
-value|20
+value|21
 end_define
 
 begin_ifdef
@@ -481,6 +492,8 @@ block|,
 literal|"SENDOOB"
 block|,
 literal|"SOCKADDR"
+block|,
+literal|"PEERADDR"
 block|,
 literal|"CONNECT2"
 block|,

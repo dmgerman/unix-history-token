@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.30	83/06/30	*/
+comment|/*	raw_usrreq.c	4.31	83/07/25	*/
 end_comment
 
 begin_include
@@ -1190,6 +1190,44 @@ operator|&
 name|rp
 operator|->
 name|rcb_laddr
+argument_list|,
+name|mtod
+argument_list|(
+name|nam
+argument_list|,
+name|caddr_t
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|nam
+operator|->
+name|m_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PRU_PEERADDR
+case|:
+name|bcopy
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|rp
+operator|->
+name|rcb_faddr
 argument_list|,
 name|mtod
 argument_list|(

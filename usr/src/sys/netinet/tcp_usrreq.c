@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.80	83/06/20	*/
+comment|/*	tcp_usrreq.c	1.81	83/07/25	*/
 end_comment
 
 begin_include
@@ -957,6 +957,17 @@ case|case
 name|PRU_SOCKADDR
 case|:
 name|in_setsockaddr
+argument_list|(
+name|inp
+argument_list|,
+name|nam
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PRU_PEERADDR
+case|:
+name|in_setpeeraddr
 argument_list|(
 name|inp
 argument_list|,
