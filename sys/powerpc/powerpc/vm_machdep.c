@@ -357,11 +357,6 @@ name|p_stat
 operator|=
 name|SZOMB
 expr_stmt|;
-name|mp_fixme
-argument_list|(
-literal|"assumption: p_pptr won't change at this time"
-argument_list|)
-expr_stmt|;
 name|wakeup
 argument_list|(
 name|p
