@@ -12,13 +12,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|_PATH_FTPUSERS
-value|"/etc/ftpusers"
-end_define
-
-begin_define
-define|#
-directive|define
 name|_PATH_FTPWELCOME
 value|"/etc/ftpwelcome"
 end_define
@@ -27,7 +20,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_FTPLOGINMESG
-value|"/etc/motd"
+value|"/etc/ftpmotd"
 end_define
 
 end_unit
