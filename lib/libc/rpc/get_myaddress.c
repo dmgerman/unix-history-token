@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: get_myaddress.c,v 1.6 1996/12/30 14:26:28 peter Exp $"
+literal|"$Id: get_myaddress.c,v 1.11 1997/05/28 05:05:11 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,6 +295,7 @@ block|}
 if|if
 condition|(
 operator|(
+operator|(
 name|ifreq
 operator|.
 name|ifr_flags
@@ -309,7 +310,8 @@ operator|.
 name|sa_family
 operator|==
 name|AF_INET
-operator|&&
+operator|)
+operator|||
 operator|(
 name|loopback
 operator|==
