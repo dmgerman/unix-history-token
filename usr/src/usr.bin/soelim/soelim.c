@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)soelim.c	4.1 (Berkeley) %G%"
+literal|"@(#)soelim.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,6 +18,13 @@ end_include
 begin_comment
 comment|/*  * soelim - a filter to process n/troff input eliminating .so's  *  * Author: Bill Joy UCB July 8, 1977  *  * This program eliminates .so's from a n/troff input stream.  * It can be used to prepare safe input for submission to the  * phototypesetter since the software supporting the operator  * doesn't let him do chdir.  *  * This is a kludge and the operator should be given the  * ability to do chdir.  *  * This program is more generally useful, it turns out, because  * the program tbl doesn't understand ".so" directives.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|STDIN_NAME
+value|"-"
+end_define
 
 begin_function
 name|main
@@ -48,22 +55,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|process
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: %s file [ file ... ]\n"
-argument_list|,
-name|argv
-index|[
-operator|-
-literal|1
-index|]
+name|STDIN_NAME
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -134,6 +133,24 @@ name|FILE
 modifier|*
 name|soee
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|file
+argument_list|,
+name|STDIN_NAME
+argument_list|)
+condition|)
+block|{
+name|soee
+operator|=
+name|stdin
+expr_stmt|;
+block|}
+else|else
+block|{
 name|soee
 operator|=
 name|fopen
@@ -156,6 +173,7 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 for|for
 control|(
@@ -343,11 +361,19 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|soee
+operator|!=
+name|stdin
+condition|)
+block|{
 name|fclose
 argument_list|(
 name|soee
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
