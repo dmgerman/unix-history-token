@@ -717,11 +717,6 @@ operator|->
 name|p_siglist
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|timevalisset
@@ -740,6 +735,11 @@ operator|&
 name|p
 operator|->
 name|p_itcallout
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Reset any sigio structures pointing to us as a result of 	 * F_SETOWN with our pid. 	 */

@@ -1831,7 +1831,7 @@ name|struct
 name|itimerval
 name|p_realtimer
 decl_stmt|;
-comment|/* (h?/k?) Alarm timer. */
+comment|/* (c) Alarm timer. */
 name|struct
 name|bintime
 name|p_runtime
