@@ -95,11 +95,22 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -155,6 +166,12 @@ directive|include
 file|<sys/errno.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -167,34 +184,17 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<machine/intr.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<machine/dvcfg.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
 
 begin_include
 include|#
@@ -270,12 +270,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/cam_xpt_sim.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/cam_debug.h>
 end_include
 
@@ -289,12 +283,6 @@ begin_include
 include|#
 directive|include
 file|<cam/scsi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsi_message.h>
 end_include
 
 begin_include
@@ -338,12 +326,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
 
 begin_define
 define|#
