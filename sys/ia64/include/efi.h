@@ -24,14 +24,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int32_t
+name|int64_t
 name|INTN
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|u_int64_t
 name|UINTN
 typedef|;
 end_typedef
@@ -2068,6 +2068,7 @@ name|EFI_TABLE_HEADER
 name|Hdr
 decl_stmt|;
 name|CHAR16
+modifier|*
 name|FirmwareVendor
 decl_stmt|;
 name|UINT32
