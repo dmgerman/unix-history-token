@@ -135,6 +135,11 @@ operator|)
 name|dirp
 argument_list|)
 expr_stmt|;
+name|_reclaim_telldir
+argument_list|(
+name|dirp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|close
