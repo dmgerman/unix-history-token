@@ -5024,6 +5024,7 @@ literal|"<%s%s%s>"
 argument_list|,
 name|cp
 condition|?
+name|cp
 else|:
 literal|""
 argument_list|,
@@ -5047,6 +5048,7 @@ literal|""
 argument_list|,
 name|scp
 condition|?
+name|scp
 else|:
 literal|""
 argument_list|)
