@@ -599,7 +599,7 @@ end_function
 
 begin_function
 name|void
-name|softdep_increase_linkcnt
+name|softdep_change_linkcnt
 parameter_list|(
 name|ip
 parameter_list|)
@@ -611,7 +611,7 @@ decl_stmt|;
 block|{
 name|panic
 argument_list|(
-literal|"softdep_increase_linkcnt called"
+literal|"softdep_change_linkcnt called"
 argument_list|)
 expr_stmt|;
 block|}

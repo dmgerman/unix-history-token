@@ -761,7 +761,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|softdep_increase_linkcnt
+name|softdep_change_linkcnt
 name|__P
 argument_list|(
 operator|(

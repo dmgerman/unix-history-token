@@ -4184,6 +4184,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|bp
+operator|->
+name|b_xflags
+operator||=
+name|BX_BKGRDWRITE
+expr_stmt|;
 name|cgp
 operator|->
 name|cg_time
@@ -4596,6 +4602,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|bp
+operator|->
+name|b_xflags
+operator||=
+name|BX_BKGRDWRITE
+expr_stmt|;
 name|cgp
 operator|->
 name|cg_time
@@ -5755,6 +5767,12 @@ condition|)
 goto|goto
 name|fail
 goto|;
+name|bp
+operator|->
+name|b_xflags
+operator||=
+name|BX_BKGRDWRITE
+expr_stmt|;
 comment|/* 	 * Check to see if a cluster of the needed size (or bigger) is 	 * available in this cylinder group. 	 */
 name|lp
 operator|=
@@ -6339,6 +6357,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|bp
+operator|->
+name|b_xflags
+operator||=
+name|BX_BKGRDWRITE
+expr_stmt|;
 name|cgp
 operator|->
 name|cg_time
@@ -6970,6 +6994,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|bp
+operator|->
+name|b_xflags
+operator||=
+name|BX_BKGRDWRITE
+expr_stmt|;
 name|cgp
 operator|->
 name|cg_time
@@ -7660,6 +7690,12 @@ argument_list|(
 literal|"ffs_checkblk: cg magic mismatch"
 argument_list|)
 expr_stmt|;
+name|bp
+operator|->
+name|b_xflags
+operator||=
+name|BX_BKGRDWRITE
+expr_stmt|;
 name|bno
 operator|=
 name|dtogd
@@ -8042,6 +8078,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|bp
+operator|->
+name|b_xflags
+operator||=
+name|BX_BKGRDWRITE
+expr_stmt|;
 name|cgp
 operator|->
 name|cg_time

@@ -133,6 +133,38 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+name|void
+argument_list|(
+argument|*io_movedeps
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|,
+expr|struct
+name|buf
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*io_countdeps
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 name|bioops
 struct|;
@@ -484,12 +516,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_UNUSED1
+name|B_DEFERRED
 value|0x00000010
 end_define
 
 begin_comment
-comment|/* Old B_BUSY */
+comment|/* Skipped over for cleaning */
 end_comment
 
 begin_define
@@ -831,6 +863,39 @@ end_define
 
 begin_comment
 comment|/* On vnode clean list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BX_BKGRDWRITE
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Do writes in background */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BX_BKGRDINPROG
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Background write in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BX_BKGRDWAIT
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Background write waiting */
 end_comment
 
 begin_define
