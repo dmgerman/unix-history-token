@@ -65,6 +65,17 @@ begin_comment
 comment|/* Period must be matched by period. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FNM_NOSYS
+value|-1
+end_define
+
+begin_comment
+comment|/* Reserved */
+end_comment
+
 begin_if
 if|#
 directive|if
