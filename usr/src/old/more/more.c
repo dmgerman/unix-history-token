@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)more.c	4.15 (Berkeley) 83/07/07"
+literal|"@(#)more.c	4.16 (Berkeley) 83/08/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -7658,12 +7658,27 @@ end_macro
 
 begin_block
 block|{
+comment|/* ignore SIGTTOU so we don't get stopped if csh grabs the tty */
+name|signal
+argument_list|(
+name|SIGTTOU
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 name|reset_tty
 argument_list|()
 expr_stmt|;
 name|fflush
 argument_list|(
 name|stdout
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTTOU
+argument_list|,
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 comment|/* Send the TSTP signal to suspend our process group */
