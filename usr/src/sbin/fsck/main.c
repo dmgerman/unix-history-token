@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -360,11 +360,18 @@ name|hotroot
 operator|=
 literal|0
 expr_stmt|;
-name|checkfilesys
+name|name
+operator|=
+name|blockcheck
 argument_list|(
 operator|*
 name|argv
 operator|++
+argument_list|)
+expr_stmt|;
+name|checkfilesys
+argument_list|(
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -1275,10 +1282,14 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|stblock
 operator|.
 name|st_mode
 operator|&
+name|S_IFMT
+operator|)
+operator|==
 name|S_IFBLK
 condition|)
 block|{
@@ -1317,10 +1328,14 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|stchar
 operator|.
 name|st_mode
 operator|&
+name|S_IFMT
+operator|)
+operator|==
 name|S_IFCHR
 condition|)
 block|{
@@ -1371,10 +1386,14 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|stblock
 operator|.
 name|st_mode
 operator|&
+name|S_IFMT
+operator|)
+operator|==
 name|S_IFCHR
 condition|)
 block|{
