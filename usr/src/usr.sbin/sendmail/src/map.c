@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.60 (Berkeley) %G%"
+literal|"@(#)map.c	8.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7014,13 +7014,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\nnisplus_getcanoname(%s), qbuf=%s\n%s\n"
+literal|"\nnisplus_getcanoname(%s), qbuf=%s\n"
 argument_list|,
 name|name
 argument_list|,
 name|buf
-argument_list|,
-name|nis_path
 argument_list|)
 expr_stmt|;
 name|result

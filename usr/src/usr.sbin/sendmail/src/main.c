@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.108 (Berkeley) %G%"
+literal|"@(#)main.c	8.109 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3479,13 +3479,11 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|setenv
+name|setuserenv
 argument_list|(
 literal|"TZ"
 argument_list|,
 name|TimeZoneSpec
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 end_if
