@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_x25subr.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_x25subr.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3718,7 +3718,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pk_close
+name|pk_disconnect
 argument_list|(
 name|lcp
 argument_list|)
