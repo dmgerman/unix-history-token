@@ -17808,11 +17808,6 @@ name|cmd
 operator|->
 name|args
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|cmd
-decl_stmt|;
 name|unsigned
 name|keep
 decl_stmt|;
