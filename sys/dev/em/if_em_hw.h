@@ -29,6 +29,21 @@ directive|include
 file|<dev/em/if_em_osdep.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_VERSION_CONTROL
+end_ifndef
+
+begin_empty
+empty|#ident "@(#)$RCSfile: if_em_hw.h,v $$Revision: 1.37 $$Date: 2003/12/20 00:14:51 $"
+end_empty
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Forward declarations of structures used by the shared code */
 end_comment
@@ -1180,6 +1195,9 @@ name|mc_addr_count
 parameter_list|,
 name|uint32_t
 name|pad
+parameter_list|,
+name|uint32_t
+name|rar_used_count
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1471,7 +1489,8 @@ name|em_hw
 modifier|*
 name|hw
 parameter_list|,
-name|uint32_t
+name|unsigned
+name|long
 name|port
 parameter_list|)
 function_decl|;
@@ -1501,7 +1520,8 @@ name|em_hw
 modifier|*
 name|hw
 parameter_list|,
-name|uint32_t
+name|unsigned
+name|long
 name|port
 parameter_list|,
 name|uint32_t
@@ -5540,7 +5560,8 @@ decl_stmt|;
 name|em_ffe_config
 name|ffe_config_state
 decl_stmt|;
-name|uint32_t
+name|unsigned
+name|long
 name|io_base
 decl_stmt|;
 name|uint32_t
@@ -5674,6 +5695,9 @@ name|dsp_config_state
 decl_stmt|;
 name|boolean_t
 name|get_link_status
+decl_stmt|;
+name|boolean_t
+name|serdes_link_down
 decl_stmt|;
 name|boolean_t
 name|tbi_compatibility_en
@@ -8147,6 +8171,17 @@ end_define
 
 begin_comment
 comment|/* Buffer size extension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RCTL_SECRC
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Strip Ethernet CRC */
 end_comment
 
 begin_comment
