@@ -1620,6 +1620,19 @@ name|buf
 expr_stmt|;
 name|rewrite
 label|:
+if|if
+condition|(
+name|rem
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"descriptor too big"
+argument_list|)
+expr_stmt|;
 name|FD_ZERO
 argument_list|(
 operator|&
@@ -1810,6 +1823,23 @@ operator|)
 name|sigsetmask
 argument_list|(
 name|omask
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rfd2
+operator|>=
+name|FD_SETSIZE
+operator|||
+name|rem
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"descriptor too big"
 argument_list|)
 expr_stmt|;
 name|FD_ZERO
