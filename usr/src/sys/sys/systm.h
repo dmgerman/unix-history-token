@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -295,13 +295,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|caddr_t
-name|wmemall
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|swblk_t
 name|vtod
 parameter_list|()
@@ -368,6 +361,12 @@ begin_comment
 comment|/* reboot flags, from console subsystem */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KADB
+end_ifdef
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -378,6 +377,11 @@ end_decl_stmt
 begin_comment
 comment|/* end of symbol info from boot */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
