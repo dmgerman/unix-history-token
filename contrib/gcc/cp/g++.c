@@ -1720,7 +1720,7 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"No input files specified.\n"
+literal|"No input files specified"
 argument_list|)
 expr_stmt|;
 ifndef|#
