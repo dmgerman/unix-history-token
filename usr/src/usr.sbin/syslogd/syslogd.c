@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.14 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  *  syslogd -- log system messages  *  * This program implements a system log. It takes a series of lines.  * Each line may have a priority, signified as "<n>" as  * the first characters of the line.  If this is  * not present, a default priority is used.  *  * To kill syslogd, send a signal 15 (terminate).  A signal 1 (hup) will  * cause it to reread its configuration file.  *  * Defined Constants:  *  * MAXLINE -- the maximimum line length that can be handled.  * NLOGS   -- the maximum number of simultaneous log files.  * DEFUPRI -- the default priority for user messages  * DEFSPRI -- the default priority for kernel messages  *  * Author: Eric Allman  * extensive changes by Ralph Campbell  */
+comment|/*  *  syslogd -- log system messages  *  * This program implements a system log. It takes a series of lines.  * Each line may have a priority, signified as "<n>" as  * the first characters of the line.  If this is  * not present, a default priority is used.  *  * To kill syslogd, send a signal 15 (terminate).  A signal 1 (hup) will  * cause it to reread its configuration file.  *  * Defined Constants:  *  * MAXLINE -- the maximimum line length that can be handled.  * NLOGS   -- the maximum number of simultaneous log files.  * DEFUPRI -- the default priority for user messages  * DEFSPRI -- the default priority for kernel messages  *  * Author: Eric Allman  * extensive changes by Ralph Campbell  * more extensive changes by Eric Allman (again)  */
 end_comment
 
 begin_define
@@ -4734,6 +4734,10 @@ block|,
 literal|"lpr"
 block|,
 name|LOG_LPR
+block|,
+literal|"news"
+block|,
+name|LOG_NEWS
 block|,
 literal|"local0"
 block|,
