@@ -214,6 +214,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|WI_NLTV_KEYS
+value|4
+end_define
+
 begin_struct
 struct|struct
 name|wi_ltv_keys
@@ -228,7 +235,7 @@ name|struct
 name|wi_key
 name|wi_keys
 index|[
-literal|4
+name|WI_NLTV_KEYS
 index|]
 decl_stmt|;
 block|}
