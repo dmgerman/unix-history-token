@@ -1,6 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_define
+define|#
+directive|define
+name|IMPLOOP
+end_define
+
 begin_comment
-comment|/*	ip_output.c	1.16	81/11/20	*/
+comment|/*	ip_output.c	1.17	81/11/21	*/
 end_comment
 
 begin_include
