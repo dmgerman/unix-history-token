@@ -1102,14 +1102,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-name|line_format
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|start_symbol
 decl_stmt|;
