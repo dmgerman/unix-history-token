@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)varpush.c	5.4 (Berkeley) %G%"
+literal|"@(#)varpush.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_include
 include|#
@@ -402,7 +408,7 @@ name|strcmp
 argument_list|(
 name|buf
 argument_list|,
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|)
 operator|!=
 literal|0
