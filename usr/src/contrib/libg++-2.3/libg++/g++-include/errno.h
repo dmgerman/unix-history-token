@@ -24,8 +24,10 @@ directive|define
 name|errno_h
 value|1
 specifier|extern
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|sys_errlist
 index|[]
 decl_stmt|;
