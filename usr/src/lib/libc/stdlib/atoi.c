@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atoi.c	5.4 (Berkeley) %G%"
+literal|"@(#)atoi.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
 end_include
 
 begin_macro
@@ -59,10 +65,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|long
-name|strtol
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 operator|(

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atol.c	5.4 (Berkeley) %G%"
+literal|"@(#)atol.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_function
@@ -54,10 +60,6 @@ modifier|*
 name|str
 decl_stmt|;
 block|{
-name|long
-name|strtol
-parameter_list|()
-function_decl|;
 return|return
 operator|(
 name|strtol
