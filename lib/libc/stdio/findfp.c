@@ -207,8 +207,16 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT4_STDIO
+end_ifndef
+
 begin_decl_stmt
 specifier|static
+endif|#
+directive|endif
 name|FILE
 name|__sF
 index|[
