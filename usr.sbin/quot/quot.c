@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: quot.c,v 1.1.1.1 1995/11/03 15:06:04 peter Exp $"
+literal|"$Id: quot.c,v 1.2 1995/11/03 15:21:04 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2825,6 +2825,13 @@ name|statfs
 modifier|*
 name|mp
 decl_stmt|;
+name|struct
+name|vfsconf
+name|vfc
+decl_stmt|,
+modifier|*
+name|vfsp
+decl_stmt|;
 name|char
 name|dev
 index|[
@@ -2974,6 +2981,33 @@ argument_list|,
 name|MNT_NOWAIT
 argument_list|)
 expr_stmt|;
+name|vfsp
+operator|=
+name|getvfsbyname
+argument_list|(
+literal|"ufs"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vfsp
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"cannot find ufs/ffs filesystem type!\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -2992,7 +3026,9 @@ name|mp
 operator|->
 name|f_type
 operator|==
-name|MOUNT_UFS
+name|vfsp
+operator|->
+name|vfc_index
 condition|)
 block|{
 if|if
