@@ -4289,6 +4289,7 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 name|xfer
 operator|->
