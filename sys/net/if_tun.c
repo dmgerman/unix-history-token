@@ -2362,18 +2362,10 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-operator|(
 name|IFF_UP
-operator||
-name|IFF_RUNNING
-operator|)
 operator|)
 operator|!=
-operator|(
 name|IFF_UP
-operator||
-name|IFF_RUNNING
-operator|)
 condition|)
 block|{
 name|m_freem
@@ -3681,18 +3673,10 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
-operator|(
 name|IFF_UP
-operator||
-name|IFF_RUNNING
-operator|)
 operator|)
 operator|!=
-operator|(
 name|IFF_UP
-operator||
-name|IFF_RUNNING
-operator|)
 condition|)
 comment|/* ignore silently */
 return|return
