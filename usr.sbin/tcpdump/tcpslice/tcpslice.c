@@ -42,7 +42,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tcpslice.c,v 1.6 1999/01/15 05:46:28 imp Exp $"
+literal|"$Id: tcpslice.c,v 1.7 1999/01/15 07:37:00 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2154,7 +2154,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%ld.%ld"
+literal|"%lu.%06lu"
 argument_list|,
 name|timestamp
 operator|->
@@ -2218,6 +2218,20 @@ name|timestamp
 operator|->
 name|tv_sec
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|->
+name|tm_year
+operator|>=
+literal|100
+condition|)
+name|t
+operator|->
+name|tm_year
+operator|+=
+literal|1900
 expr_stmt|;
 name|sprintf
 argument_list|(
