@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: plist.c,v 1.13 1995/05/30 03:50:07 rgrimes Exp $"
+literal|"$Id: plist.c,v 1.14 1995/07/28 01:50:35 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1517,6 +1517,14 @@ name|fail
 init|=
 name|SUCCESS
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|p
+condition|)
+return|return
+name|FAIL
+return|;
 while|while
 condition|(
 name|p
@@ -1665,19 +1673,44 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Verbose
-condition|)
-name|printf
+name|isdir
 argument_list|(
-literal|"Delete%s %s\n"
-argument_list|,
+name|full_name
+argument_list|)
+operator|&&
 name|p
 operator|->
 name|type
 operator|==
 name|PLIST_FILE
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"Attempting to delete directory `%s' as a file\n"
+literal|"This packing list is incorrect - ignoring delete request.\n"
+argument_list|,
+name|full_name
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"Delete %s %s\n"
+argument_list|,
+operator|!
+name|isdir
+argument_list|(
+name|full_name
+argument_list|)
 condition|?
-literal|""
+literal|"file"
 else|:
 literal|" directory"
 argument_list|,
@@ -1718,6 +1751,7 @@ name|fail
 operator|=
 name|FAIL
 expr_stmt|;
+block|}
 block|}
 name|last_file
 operator|=

@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.30 1995/10/25 15:37:49 jkh Exp $"
+literal|"$Id: perform.c,v 1.31 1995/10/31 20:30:15 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -415,16 +415,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|pkg
-index|[
-literal|0
-index|]
-operator|==
-literal|'/'
-condition|)
-comment|/* full pathname? */
 name|strcpy
 argument_list|(
 name|pkg_fullname
@@ -432,72 +422,7 @@ argument_list|,
 name|pkg
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-name|char
-name|cwd
-index|[
-name|FILENAME_MAX
-index|]
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|pkg_fullname
-argument_list|,
-literal|"%s/%s"
-argument_list|,
-name|getwd
-argument_list|(
-name|cwd
-argument_list|)
-argument_list|,
-name|pkg
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|fexists
-argument_list|(
-name|pkg_fullname
-argument_list|)
-condition|)
-block|{
-name|cp
-operator|=
-name|fileFindByPath
-argument_list|(
-name|NULL
-argument_list|,
-name|pkg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cp
-condition|)
-block|{
-name|whinge
-argument_list|(
-literal|"Can't find package `%s'."
-argument_list|,
-name|pkg
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-name|strcpy
-argument_list|(
-name|pkg_fullname
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* copy for sanity's sake, could remove pkg_fullname */
 if|if
 condition|(
 name|stat
@@ -760,7 +685,7 @@ if|if
 condition|(
 name|min_free
 argument_list|(
-name|where_to
+name|playpen
 argument_list|)
 operator|<
 name|sb
@@ -1075,6 +1000,12 @@ name|isURL
 argument_list|(
 name|pkg
 argument_list|)
+operator|&&
+operator|!
+name|getenv
+argument_list|(
+literal|"PKG_ADD_BASE"
+argument_list|)
 condition|)
 block|{
 name|snprintf
@@ -1204,30 +1135,43 @@ if|if
 condition|(
 operator|!
 name|Fake
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|fexists
 argument_list|(
 literal|"+CONTENTS"
 argument_list|)
-operator|||
+condition|)
+name|whinge
+argument_list|(
+literal|"Autoloaded package %s has no +CONTENTS file?"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|vsystem
 argument_list|(
 literal|"(pwd; cat +CONTENTS) | pkg_add %s-S"
-argument_list|)
-operator|,
+argument_list|,
 name|Verbose
 condition|?
 literal|"-v "
 else|:
 literal|""
-operator|)
+argument_list|)
 condition|)
 block|{
 name|whinge
 argument_list|(
-literal|"Autoload of dependency `%s' failed%s"
+literal|"pkg_add of dependency `%s' failed%s"
 argument_list|,
 name|p
 operator|->
@@ -1263,6 +1207,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Nuke the temporary playpen */
 name|leave_playpen
 argument_list|(
