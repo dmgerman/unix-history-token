@@ -131,6 +131,53 @@ block|}
 struct|;
 end_struct
 
+begin_union
+union|union
+name|acpi_cmbat_ioctl_arg
+block|{
+name|int
+name|unit
+decl_stmt|;
+name|struct
+name|acpi_bif
+name|bif
+decl_stmt|;
+name|struct
+name|acpi_bst
+name|bst
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|ACPIIO_CMBAT_GET_UNITS
+value|_IOR('B', 1, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPIIO_CMBAT_GET_BIF
+value|_IOWR('B', 2, union acpi_cmbat_ioctl_arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPIIO_CMBAT_GET_BST
+value|_IOWR('B', 3, union acpi_cmbat_ioctl_arg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPIIO_ACAD_GET_STATUS
+value|_IOR('A', 1, int)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

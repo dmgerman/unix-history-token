@@ -4924,6 +4924,9 @@ name|error
 operator|=
 name|xerror
 expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 block|}
 block|}
@@ -5035,6 +5038,8 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+name|out
+label|:
 return|return
 operator|(
 name|error
