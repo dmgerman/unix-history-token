@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t10.c	2.1 (CWI) 85/07/18"
+literal|"@(#)t10.c	2.2 (CWI) 88/03/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -1411,6 +1411,14 @@ condition|(
 name|lead
 condition|)
 name|ptlead
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|esc
+condition|)
+comment|/* for psfig ???*/
+name|ptesc
 argument_list|()
 expr_stmt|;
 name|fdprintf
