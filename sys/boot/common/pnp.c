@@ -231,34 +231,24 @@ argument_list|(
 literal|"PNP scan summary:\n"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|pi
-operator|=
-name|pnp_devices
-operator|.
-name|stqh_first
-init|;
-name|pi
-operator|!=
-name|NULL
-condition|;
-name|pi
-operator|=
-name|pi
-operator|->
-name|pi_link
-operator|.
-name|stqe_next
-control|)
+name|STAILQ_FOREACH
+argument_list|(
+argument|pi
+argument_list|,
+argument|&pnp_devices
+argument_list|,
+argument|pi_link
+argument_list|)
 block|{
 name|pager_output
 argument_list|(
+name|STAILQ_FIRST
+argument_list|(
+operator|&
 name|pi
 operator|->
 name|pi_ident
-operator|.
-name|stqh_first
+argument_list|)
 operator|->
 name|id_ident
 argument_list|)
@@ -320,7 +310,7 @@ comment|/* find anything? */
 end_comment
 
 begin_comment
-unit|if (pnp_devices.stqh_first != NULL) {
+unit|if (STAILQ_FIRST(&pnp_devices) != NULL) {
 comment|/* check for kernel, assign modules handled by static drivers there */
 end_comment
 
@@ -335,7 +325,7 @@ comment|/* try to load any modules that have been nominated */
 end_comment
 
 begin_comment
-unit|for (pi = pnp_devices.stqh_first; pi != NULL; pi = pi->pi_link.stqe_next) {
+unit|STAILQ_FOREACH(pi,&pnp_devices, pi_link) {
 comment|/* Already loaded? */
 end_comment
 
@@ -345,7 +335,7 @@ comment|/* XXX implicit knowledge of KLD module filenames */
 end_comment
 
 begin_endif
-unit|if (mod_load(pi->pi_module, pi->pi_argc, pi->pi_argv)) 		    printf("Could not load module '%s' for device '%s'\n", modfname, pi->pi_ident.stqh_first->id_ident); 		free(modfname); 	    } 	}     }     return(CMD_OK); }
+unit|if (mod_load(pi->pi_module, pi->pi_argc, pi->pi_argv)) 		    printf("Could not load module '%s' for device '%s'\n", modfname, STAILQ_FIRST(&pi->pi_ident)->id_ident); 		free(modfname); 	    } 	}     }     return(CMD_OK); }
 endif|#
 directive|endif
 end_endif
@@ -369,18 +359,22 @@ name|pi
 decl_stmt|;
 while|while
 condition|(
+name|STAILQ_FIRST
+argument_list|(
+operator|&
 name|pnp_devices
-operator|.
-name|stqh_first
+argument_list|)
 operator|!=
 name|NULL
 condition|)
 block|{
 name|pi
 operator|=
+name|STAILQ_FIRST
+argument_list|(
+operator|&
 name|pnp_devices
-operator|.
-name|stqh_first
+argument_list|)
 expr_stmt|;
 name|STAILQ_REMOVE_HEAD
 argument_list|(
@@ -480,7 +474,7 @@ comment|/* 	     * Loop looking for module/bus that might match this, but aren't
 end_comment
 
 begin_comment
-unit|for (pi = pnp_devices.stqh_first; pi != NULL; pi = pi->pi_link.stqe_next) {
+unit|STAILQ_FOREACH(pi,&pnp_devices, pi_link) {
 comment|/* no driver assigned, bus matches OK */
 end_comment
 
@@ -490,7 +484,7 @@ comment|/* scan idents, take first match */
 end_comment
 
 begin_comment
-unit|for (id = pi->pi_ident.stqh_first; id != NULL; id = id->id_link.stqe_next) 			if (!strcmp(id->id_ident, ident)) 			    break;
+unit|STAILQ_FOREACH(id,&pi->pi_ident, id_link) 			if (!strcmp(id->id_ident, ident)) 			    break;
 comment|/* find a match? */
 end_comment
 
@@ -523,28 +517,14 @@ name|pnpident
 modifier|*
 name|id
 decl_stmt|;
-for|for
-control|(
-name|id
-operator|=
-name|pi
-operator|->
-name|pi_ident
-operator|.
-name|stqh_first
-init|;
-name|id
-operator|!=
-name|NULL
-condition|;
-name|id
-operator|=
-name|id
-operator|->
-name|id_link
-operator|.
-name|stqe_next
-control|)
+name|STAILQ_FOREACH
+argument_list|(
+argument|id
+argument_list|,
+argument|&pi->pi_ident
+argument_list|,
+argument|id_link
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -671,22 +651,25 @@ name|id
 decl_stmt|;
 while|while
 condition|(
+operator|!
+name|STAILQ_EMPTY
+argument_list|(
+operator|&
 name|pi
 operator|->
 name|pi_ident
-operator|.
-name|stqh_first
-operator|!=
-name|NULL
+argument_list|)
 condition|)
 block|{
 name|id
 operator|=
+name|STAILQ_FIRST
+argument_list|(
+operator|&
 name|pi
 operator|->
 name|pi_ident
-operator|.
-name|stqh_first
+argument_list|)
 expr_stmt|;
 name|STAILQ_REMOVE_HEAD
 argument_list|(
