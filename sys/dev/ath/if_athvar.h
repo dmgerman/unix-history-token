@@ -87,7 +87,7 @@ name|ath_node
 block|{
 name|struct
 name|ieee80211_node
-name|st_node
+name|an_node
 decl_stmt|;
 comment|/* base class */
 name|u_int
@@ -110,9 +110,23 @@ name|u_int
 name|an_tx_antenna
 decl_stmt|;
 comment|/* antenna for last good frame */
+name|u_int
+name|an_rx_antenna
+decl_stmt|;
+comment|/* antenna for last rcvd frame */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ATH_NODE
+parameter_list|(
+name|_n
+parameter_list|)
+value|((struct ath_node *)(_n))
+end_define
 
 begin_struct
 struct|struct

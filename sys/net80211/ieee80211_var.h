@@ -489,13 +489,15 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
 name|int
 parameter_list|,
 name|int
 parameter_list|,
 name|u_int32_t
-parameter_list|,
-name|u_int
 parameter_list|)
 function_decl|;
 name|int

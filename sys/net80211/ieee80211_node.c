@@ -953,12 +953,6 @@ name|ni_rstamp
 operator|=
 literal|0
 expr_stmt|;
-name|ni
-operator|->
-name|ni_rantenna
-operator|=
-literal|0
-expr_stmt|;
 name|memset
 argument_list|(
 name|ni
@@ -1344,7 +1338,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"\tmacaddr          bssid         chan  rssi rate ant flag  wep  essid\n"
+literal|"\tmacaddr          bssid         chan  rssi rate flag  wep  essid\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1714,15 +1708,6 @@ condition|?
 literal|'!'
 else|:
 literal|' '
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" %3d"
-argument_list|,
-name|ni
-operator|->
-name|ni_rantenna
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2507,6 +2492,19 @@ modifier|*
 name|ni
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|ni
+operator|!=
+name|ic
+operator|->
+name|ic_bss
+argument_list|,
+operator|(
+literal|"freeing bss node"
+operator|)
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2572,6 +2570,19 @@ modifier|*
 name|ni
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|ni
+operator|!=
+name|ic
+operator|->
+name|ic_bss
+argument_list|,
+operator|(
+literal|"freeing ic_bss"
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX need equivalent of atomic_dec_and_test */
 name|atomic_subtract_int
 argument_list|(
@@ -2732,22 +2743,10 @@ operator|++
 name|ni
 operator|->
 name|ni_inact
-operator|<=
+operator|>
 name|IEEE80211_INACT_MAX
 condition|)
 block|{
-name|ni
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|ni
-argument_list|,
-name|ni_list
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-comment|/* NB: don't honor reference count */
 name|IEEE80211_DPRINTF
 argument_list|(
 operator|(
@@ -2776,6 +2775,7 @@ argument_list|,
 name|ni_list
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Send a deauthenticate frame. 			 */
 name|IEEE80211_SEND_MGMT
 argument_list|(
 name|ic
@@ -2787,7 +2787,7 @@ argument_list|,
 name|IEEE80211_REASON_AUTH_EXPIRE
 argument_list|)
 expr_stmt|;
-name|_ieee80211_free_node
+name|ieee80211_free_node
 argument_list|(
 name|ic
 argument_list|,
@@ -2797,6 +2797,17 @@ expr_stmt|;
 name|ni
 operator|=
 name|nextbs
+expr_stmt|;
+block|}
+else|else
+name|ni
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|ni
+argument_list|,
+name|ni_list
+argument_list|)
 expr_stmt|;
 block|}
 if|if

@@ -140,18 +140,14 @@ name|u_int
 name|ni_refcnt
 decl_stmt|;
 comment|/* hardware */
-name|u_int8_t
-name|ni_rssi
-decl_stmt|;
-comment|/* recv ssi */
 name|u_int32_t
 name|ni_rstamp
 decl_stmt|;
 comment|/* recv timestamp */
 name|u_int8_t
-name|ni_rantenna
+name|ni_rssi
 decl_stmt|;
-comment|/* recv antenna */
+comment|/* recv ssi */
 comment|/* header */
 name|u_int8_t
 name|ni_macaddr
