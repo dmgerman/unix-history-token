@@ -165,12 +165,12 @@ name|uint32_t
 name|__uint16_swap_uint32
 parameter_list|(
 name|uint32_t
-name|x
+name|__x
 parameter_list|)
 block|{
-asm|__asm ("rorl $16, %1" : "=r" (x) : "0" (x));
+asm|__asm ("rorl $16, %1" : "=r" (__x) : "0" (__x));
 return|return
-name|x
+name|__x
 return|;
 block|}
 end_function
@@ -182,7 +182,7 @@ name|uint32_t
 name|__uint8_swap_uint32
 parameter_list|(
 name|uint32_t
-name|x
+name|__x
 parameter_list|)
 block|{
 if|#
@@ -214,19 +214,19 @@ name|defined
 argument_list|(
 name|I386_CPU
 argument_list|)
-asm|__asm ("bswap %0" : "=r" (x) : "0" (x));
+asm|__asm ("bswap %0" : "=r" (__x) : "0" (__x));
 else|#
 directive|else
 asm|__asm ("xchgb %h1, %b1\n\trorl $16, %1\n\txchgb %h1, %b1"
 block|:
 literal|"=q"
 operator|(
-name|x
+name|__x
 operator|)
 operator|:
 literal|"0"
 operator|(
-name|x
+name|__x
 operator|)
 block|)
 function|;
@@ -239,7 +239,7 @@ end_endif
 
 begin_return
 return|return
-name|x
+name|__x
 return|;
 end_return
 
@@ -250,12 +250,12 @@ name|uint16_t
 name|__uint8_swap_uint16
 parameter_list|(
 name|uint16_t
-name|x
+name|__x
 parameter_list|)
 block|{
-asm|__asm ("xchgb %h1, %b1" : "=q" (x) : "0" (x));
+asm|__asm ("xchgb %h1, %b1" : "=q" (__x) : "0" (__x));
 return|return
-name|x
+name|__x
 return|;
 block|}
 end_function
