@@ -922,33 +922,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BURN_BRIDGES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|g_access_rel
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|g_access(a, b, c, d)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|int
 name|g_attach
