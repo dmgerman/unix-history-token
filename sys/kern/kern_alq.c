@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -45,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1252,7 +1264,27 @@ argument_list|,
 name|LEASE_WRITE
 argument_list|)
 expr_stmt|;
-comment|/* XXX error ignored */
+comment|/* 	 * XXX: VOP_WRITE error checks are ignored. 	 */
+ifdef|#
+directive|ifdef
+name|MAC
+if|if
+condition|(
+name|mac_check_vnode_write
+argument_list|(
+name|alq
+operator|->
+name|aq_cred
+argument_list|,
+name|NOCRED
+argument_list|,
+name|vp
+argument_list|)
+operator|==
+literal|0
+condition|)
+endif|#
+directive|endif
 name|VOP_WRITE
 argument_list|(
 name|vp
