@@ -799,6 +799,10 @@ name|create_compression
 condition|)
 block|{
 case|case
+literal|0
+case|:
+break|break;
+case|case
 literal|'j'
 case|:
 case|case
