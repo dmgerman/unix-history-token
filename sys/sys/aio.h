@@ -12,7 +12,7 @@ name|_AIO_H_
 end_define
 
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: aio.h,v 1.1 1997/06/16 12:10:21 dyson Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: aio.h,v 1.2 1997/07/17 04:49:43 dyson Exp $  */
 end_comment
 
 begin_include
@@ -129,7 +129,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AIO_NOTCANCELLED
+name|AIO_NOTCANCELED
 value|0x2
 end_define
 
@@ -285,6 +285,7 @@ name|off_t
 name|aio_offset
 decl_stmt|;
 comment|/* File offset for I/O */
+specifier|volatile
 name|void
 modifier|*
 name|aio_buf
@@ -391,6 +392,7 @@ begin_function_decl
 name|int
 name|aio_error
 parameter_list|(
+specifier|const
 name|struct
 name|aiocb
 modifier|*
@@ -404,7 +406,7 @@ comment|/*  * Finish up I/O, releasing I/O resources and returns the value  *	th
 end_comment
 
 begin_function_decl
-name|int
+name|ssize_t
 name|aio_return
 parameter_list|(
 name|struct
@@ -442,6 +444,7 @@ begin_function_decl
 name|int
 name|aio_suspend
 parameter_list|(
+specifier|const
 name|struct
 name|aiocb
 modifier|*
@@ -452,6 +455,7 @@ parameter_list|,
 name|int
 name|nacb_listent
 parameter_list|,
+specifier|const
 name|struct
 name|timespec
 modifier|*
