@@ -91,9 +91,12 @@ control|)
 if|if
 condition|(
 operator|(
+name|DBREG_DRX
+argument_list|(
 name|d
-operator|->
-name|dr7
+argument_list|,
+literal|7
+argument_list|)
 operator|&
 name|mask
 operator|)
@@ -191,9 +194,12 @@ operator||=
 name|access
 expr_stmt|;
 comment|/* clear the bits we are about to affect */
+name|DBREG_DRX
+argument_list|(
 name|d
-operator|->
-name|dr7
+argument_list|,
+literal|7
+argument_list|)
 operator|&=
 operator|~
 operator|(
@@ -231,9 +237,12 @@ operator|=
 name|watchaddr
 expr_stmt|;
 comment|/* enable the watchpoint */
+name|DBREG_DRX
+argument_list|(
 name|d
-operator|->
-name|dr7
+argument_list|,
+literal|7
+argument_list|)
 operator||=
 operator|(
 literal|0x2
