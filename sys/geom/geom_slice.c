@@ -139,6 +139,27 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|g_orphan_t
+name|g_slice_orphan
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|g_access_t
+name|g_slice_access
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|g_start_t
+name|g_slice_start
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|struct
 name|g_slicer
@@ -217,6 +238,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|g_slice_access
 parameter_list|(
@@ -523,6 +545,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|g_slice_start
 parameter_list|(
@@ -1222,6 +1245,18 @@ name|start
 expr_stmt|;
 name|gp
 operator|->
+name|access
+operator|=
+name|g_slice_access
+expr_stmt|;
+name|gp
+operator|->
+name|orphan
+operator|=
+name|g_slice_orphan
+expr_stmt|;
+name|gp
+operator|->
 name|softc
 operator|=
 name|gsp
@@ -1332,6 +1367,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|g_slice_orphan
 parameter_list|(

@@ -611,14 +611,16 @@ name|KASSERT
 argument_list|(
 name|gp
 operator|->
-name|class
-operator|->
 name|orphan
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"g_new_consumer on class(%s) without orphan"
+literal|"g_new_consumer on geom(%s) (class %s) without orphan"
+operator|,
+name|gp
+operator|->
+name|name
 operator|,
 name|gp
 operator|->
@@ -1830,14 +1832,12 @@ name|pp
 operator|->
 name|geom
 operator|->
-name|class
-operator|->
 name|access
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"NULL class->access"
+literal|"NULL geom->access"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2155,8 +2155,6 @@ operator|=
 name|pp
 operator|->
 name|geom
-operator|->
-name|class
 operator|->
 name|access
 argument_list|(

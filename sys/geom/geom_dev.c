@@ -203,10 +203,6 @@ name|g_dev_taste
 block|,
 name|NULL
 block|,
-name|g_dev_orphan
-block|,
-name|NULL
-block|,
 name|G_CLASS_INITSTUFF
 block|}
 decl_stmt|;
@@ -468,6 +464,12 @@ name|pp
 operator|->
 name|name
 argument_list|)
+expr_stmt|;
+name|gp
+operator|->
+name|orphan
+operator|=
+name|g_dev_orphan
 expr_stmt|;
 name|cp
 operator|=

@@ -96,13 +96,6 @@ name|sbuf
 struct_decl|;
 end_struct_decl
 
-begin_define
-define|#
-directive|define
-name|G_CLASS_INITSTUFF
-value|{ 0, 0 }, { 0 }, 0
-end_define
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -256,7 +249,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * The g_class structure describes a transformation class.  In other words  * all BSD disklabel handlers share one g_class, all MBR handlers share  * one common g_class and so on.  * Certain operations are instantiated on the class, most notably the  * taste and create_geom functions.  * XXX: should access and orphan go into g_geom ?  * XXX: would g_class be a better and less confusing name ?  */
+comment|/*  * The g_class structure describes a transformation class.  In other words  * all BSD disklabel handlers share one g_class, all MBR handlers share  * one common g_class and so on.  * Certain operations are instantiated on the class, most notably the  * taste and create_geom functions.  */
 end_comment
 
 begin_struct
@@ -271,18 +264,11 @@ name|g_taste_t
 modifier|*
 name|taste
 decl_stmt|;
-name|g_access_t
-modifier|*
-name|access
-decl_stmt|;
-name|g_orphan_t
-modifier|*
-name|orphan
-decl_stmt|;
 name|g_create_geom_t
 modifier|*
 name|create_geom
 decl_stmt|;
+comment|/* 	 * The remaning elements are private and classes should use 	 * the G_CLASS_INITSTUFF macro to initialize them.          */
 name|LIST_ENTRY
 argument_list|(
 argument|g_class
@@ -304,6 +290,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|G_CLASS_INITSTUFF
+value|{ 0, 0 }, { 0 }, 0
+end_define
 
 begin_comment
 comment|/*  * The g_geom is an instance of a g_class.  */
@@ -363,6 +356,14 @@ decl_stmt|;
 name|g_dumpconf_t
 modifier|*
 name|dumpconf
+decl_stmt|;
+name|g_access_t
+modifier|*
+name|access
+decl_stmt|;
+name|g_orphan_t
+modifier|*
+name|orphan
 decl_stmt|;
 name|void
 modifier|*
@@ -1066,6 +1067,21 @@ name|struct
 name|bio
 modifier|*
 name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|g_io_fail
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|,
+name|int
+name|error
 parameter_list|)
 function_decl|;
 end_function_decl

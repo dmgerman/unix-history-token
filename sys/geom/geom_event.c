@@ -406,26 +406,24 @@ name|cp
 operator|->
 name|geom
 operator|->
-name|class
-operator|->
 name|orphan
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"class %s has no orphan, geom %s"
+literal|"geom %s has no orphan, class %s"
 operator|,
 name|cp
 operator|->
 name|geom
-operator|->
-name|class
 operator|->
 name|name
 operator|,
 name|cp
 operator|->
 name|geom
+operator|->
+name|class
 operator|->
 name|name
 operator|)
@@ -434,8 +432,6 @@ expr_stmt|;
 name|cp
 operator|->
 name|geom
-operator|->
-name|class
 operator|->
 name|orphan
 argument_list|(

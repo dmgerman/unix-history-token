@@ -875,10 +875,6 @@ name|PC98_CLASS_NAME
 block|,
 name|g_pc98_taste
 block|,
-name|g_slice_access
-block|,
-name|g_slice_orphan
-block|,
 name|NULL
 block|,
 name|G_CLASS_INITSTUFF
