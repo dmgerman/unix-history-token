@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.76
+literal|3.77
 operator|%
 name|G
 operator|%
@@ -2901,9 +2901,16 @@ name|NULL
 operator|)
 return|;
 block|}
-name|cataddr
+name|rewrite
 argument_list|(
 operator|++
+name|tv
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|cataddr
+argument_list|(
 name|tv
 argument_list|,
 name|buf
