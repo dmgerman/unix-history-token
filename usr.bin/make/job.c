@@ -111,6 +111,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -238,7 +244,7 @@ typedef|typedef
 struct|struct
 name|Job
 block|{
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 comment|/* The child's process ID */
@@ -1206,10 +1212,13 @@ argument_list|(
 name|JOB
 argument_list|,
 operator|(
-literal|"JobCondPassSig passing signal %d to child %d.\n"
+literal|"JobCondPassSig passing signal %d to child %jd.\n"
 operator|,
 name|signo
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|job
 operator|->
 name|pid
@@ -2383,8 +2392,11 @@ argument_list|(
 name|JOB
 argument_list|,
 operator|(
-literal|"Process %d exited.\n"
+literal|"Process %jd exited.\n"
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|job
 operator|->
 name|pid
@@ -2530,8 +2542,11 @@ argument_list|(
 name|JOB
 argument_list|,
 operator|(
-literal|"Process %d stopped.\n"
+literal|"Process %jd stopped.\n"
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|job
 operator|->
 name|pid
@@ -2679,9 +2694,12 @@ argument_list|(
 name|JOB
 argument_list|,
 operator|(
-literal|"Warning: process %d was not "
+literal|"Warning: process %jd was not "
 literal|"continuing.\n"
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|job
 operator|->
 name|pid
@@ -2726,8 +2744,11 @@ argument_list|(
 name|JOB
 argument_list|,
 operator|(
-literal|"Process %d is continuing locally.\n"
+literal|"Process %jd is continuing locally.\n"
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|job
 operator|->
 name|pid
@@ -3548,7 +3569,7 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|int
+name|pid_t
 name|cpid
 decl_stmt|;
 comment|/* ID of new child */
@@ -3684,14 +3705,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|Punt
 argument_list|(
 literal|"Cannot fork"
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|cpid
@@ -3699,6 +3717,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * Child 		 */
 if|if
 condition|(
 name|fifoFd
@@ -3903,8 +3922,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+comment|/* 	 * Parent 	 */
 name|job
 operator|->
 name|pid
@@ -3924,7 +3942,7 @@ name|JOB_FIRST
 operator|)
 condition|)
 block|{
-comment|/* 			 * The first time a job is run for a node, we set the 			 * current position in the buffer to the beginning and 			 * mark another stream to watch in the outputs mask. 			 */
+comment|/* 		 * The first time a job is run for a node, we set the 		 * current position in the buffer to the beginning and 		 * mark another stream to watch in the outputs mask. 		 */
 ifdef|#
 directive|ifdef
 name|USE_KQUEUE
@@ -4017,7 +4035,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * kevent() will fail if the job is already 				 * finished 				 */
+comment|/* 			 * kevent() will fail if the job is already 			 * finished 			 */
 if|if
 condition|(
 name|errno
@@ -4087,7 +4105,6 @@ name|cmdFILE
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Now the job is actually running, add it to the table. 	 */
 name|nJobs
@@ -6421,7 +6438,7 @@ name|Boolean
 name|block
 parameter_list|)
 block|{
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 comment|/* pid of dead child */
@@ -6486,8 +6503,11 @@ argument_list|(
 name|JOB
 argument_list|,
 operator|(
-literal|"Process %d exited or stopped.\n"
+literal|"Process %jd exited or stopped.\n"
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|pid
 operator|)
 argument_list|)
@@ -6563,8 +6583,12 @@ condition|)
 block|{
 name|Error
 argument_list|(
-literal|"Resumed child (%d) not in table"
+literal|"Resumed child (%jd) "
+literal|"not in table"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|pid
 argument_list|)
 expr_stmt|;
@@ -6585,8 +6609,11 @@ else|else
 block|{
 name|Error
 argument_list|(
-literal|"Child (%d) not in table?"
+literal|"Child (%jd) not in table?"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|pid
 argument_list|)
 expr_stmt|;
@@ -9260,8 +9287,11 @@ name|JOB
 argument_list|,
 operator|(
 literal|"JobInterrupt passing signal to child "
-literal|"%d.\n"
+literal|"%jd.\n"
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|job
 operator|->
 name|pid
@@ -9570,7 +9600,7 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-continue|continue;
+empty_stmt|;
 block|}
 end_function
 
