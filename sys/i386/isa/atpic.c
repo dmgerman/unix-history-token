@@ -172,6 +172,40 @@ value|1
 end_define
 
 begin_comment
+comment|/*  * PC-98 machines wire the slave 8259A to pin 7 on the master PIC, and  * PC-AT machines wire the slave PIC to pin 2 on the master PIC.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ICU_SLAVEID
+value|7
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ICU_SLAVEID
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Determine the base master and slave modes not including auto EOI support.  * All machines that FreeBSD supports use 8086 mode.  */
 end_comment
 
@@ -290,11 +324,21 @@ end_endif
 begin_define
 define|#
 directive|define
+name|IRQ_MASK
+parameter_list|(
+name|irq
+parameter_list|)
+value|(1<< (irq))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IMEN_MASK
 parameter_list|(
 name|ai
 parameter_list|)
-value|(1<< (ai)->at_irq)
+value|(IRQ_MASK((ai)->at_irq))
 end_define
 
 begin_define
@@ -1042,7 +1086,7 @@ index|]
 operator|.
 name|at_ioaddr
 argument_list|,
-name|ICU_EOI
+name|OCW2_EOI
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -1110,7 +1154,7 @@ index|]
 operator|.
 name|at_ioaddr
 argument_list|,
-name|ICU_EOI
+name|OCW2_EOI
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -1125,7 +1169,7 @@ index|]
 operator|.
 name|at_ioaddr
 argument_list|,
-name|ICU_EOI
+name|OCW2_EOI
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1743,16 +1787,17 @@ argument_list|,
 name|ICU_SLAVEID
 argument_list|)
 expr_stmt|;
-comment|/* my slave id is 7 */
 else|else
 name|outb
 argument_list|(
 name|imr_addr
 argument_list|,
-name|IRQ_SLAVE
+name|IRQ_MASK
+argument_list|(
+name|ICU_SLAVEID
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* slave on line 7 */
 comment|/* Set mode. */
 if|if
 condition|(
@@ -2276,7 +2321,7 @@ name|iframe
 operator|.
 name|if_vec
 operator|<
-name|ICU_LEN
+name|NUM_ISA_IRQS
 argument_list|,
 operator|(
 literal|"unknown int %d\n"
@@ -2388,7 +2433,10 @@ condition|(
 operator|(
 name|isr
 operator|&
-name|IRQ7
+name|IRQ_MASK
+argument_list|(
+literal|7
+argument_list|)
 operator|)
 operator|==
 literal|0
