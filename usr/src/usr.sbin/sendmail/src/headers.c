@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|4.5
+literal|4.6
 operator|%
 name|G
 operator|%
@@ -1370,6 +1370,10 @@ operator|=
 name|e
 operator|->
 name|e_msgsize
+operator|+
+name|e
+operator|->
+name|e_ctime
 operator|-
 name|e
 operator|->

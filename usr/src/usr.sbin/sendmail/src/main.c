@@ -33,7 +33,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.17
+literal|4.18
 operator|%
 name|G
 operator|%
@@ -201,12 +201,6 @@ name|readconfig
 init|=
 name|TRUE
 decl_stmt|;
-name|bool
-name|safecf
-init|=
-name|TRUE
-decl_stmt|;
-comment|/* this conf file is sys default */
 name|bool
 name|queuemode
 init|=
@@ -482,10 +476,6 @@ condition|)
 name|ConfFile
 operator|=
 literal|"sendmail.cf"
-expr_stmt|;
-name|safecf
-operator|=
-name|FALSE
 expr_stmt|;
 name|setgid
 argument_list|(
@@ -1446,9 +1436,6 @@ end_comment
 begin_if
 if|if
 condition|(
-operator|!
-name|safecf
-operator|||
 name|OpMode
 operator|==
 name|MD_FREEZE
@@ -1458,8 +1445,6 @@ condition|)
 name|readcf
 argument_list|(
 name|ConfFile
-argument_list|,
-name|safecf
 argument_list|)
 expr_stmt|;
 end_if

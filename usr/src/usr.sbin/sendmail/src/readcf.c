@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|4.11
+literal|4.12
 operator|%
 name|G
 operator|%
@@ -24,15 +24,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn p f s r a	Define mailer.  n - internal name, **				p - pathname, f - flags, s - rewriting **				ruleset for sender, s - rewriting ruleset **				for recipients, a - argument vector. **		Oxvalue		Set option x to value. **		Pname=value	Set precedence name to value. ** **	Parameters: **		cfname -- control file name. **		safe -- set if this is a system configuration file. **			Non-system configuration files can not do **			certain things (e.g., leave the SUID bit on **			when executing mailers). ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
+comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn p f s r a	Define mailer.  n - internal name, **				p - pathname, f - flags, s - rewriting **				ruleset for sender, s - rewriting ruleset **				for recipients, a - argument vector. **		Oxvalue		Set option x to value. **		Pname=value	Set precedence name to value. ** **	Parameters: **		cfname -- control file name. ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
 end_comment
 
 begin_macro
 name|readcf
 argument_list|(
 argument|cfname
-argument_list|,
-argument|safe
 argument_list|)
 end_macro
 
@@ -40,12 +38,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|cfname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|safe
 decl_stmt|;
 end_decl_stmt
 
@@ -790,8 +782,6 @@ name|buf
 index|[
 literal|1
 index|]
-argument_list|,
-name|safe
 argument_list|)
 expr_stmt|;
 break|break;
@@ -811,8 +801,6 @@ name|buf
 index|[
 literal|2
 index|]
-argument_list|,
-name|safe
 argument_list|,
 name|FALSE
 argument_list|)
@@ -1248,15 +1236,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAKEMAILER -- define a new mailer. ** **	Parameters: **		line -- description of mailer.  This is in labeled **			fields.  The fields are: **			   P -- the path to the mailer **			   F -- the flags associated with the mailer **			   A -- the argv for this mailer **			   S -- the sender rewriting set **			   R -- the recipient rewriting set **			   E -- the eol string **			The first word is the canonical name of the mailer. **		safe -- set if this is a safe configuration file. ** **	Returns: **		none. ** **	Side Effects: **		enters the mailer into the mailer table. */
+comment|/* **  MAKEMAILER -- define a new mailer. ** **	Parameters: **		line -- description of mailer.  This is in labeled **			fields.  The fields are: **			   P -- the path to the mailer **			   F -- the flags associated with the mailer **			   A -- the argv for this mailer **			   S -- the sender rewriting set **			   R -- the recipient rewriting set **			   E -- the eol string **			The first word is the canonical name of the mailer. ** **	Returns: **		none. ** **	Side Effects: **		enters the mailer into the mailer table. */
 end_comment
 
 begin_macro
 name|makemailer
 argument_list|(
 argument|line
-argument_list|,
-argument|safe
 argument_list|)
 end_macro
 
@@ -1264,12 +1250,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|line
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|safe
 decl_stmt|;
 end_decl_stmt
 
@@ -1546,20 +1526,6 @@ name|setbitn
 argument_list|(
 operator|*
 name|p
-argument_list|,
-name|m
-operator|->
-name|m_flags
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|safe
-condition|)
-name|clrbitn
-argument_list|(
-name|M_RESTR
 argument_list|,
 name|m
 operator|->
@@ -2193,7 +2159,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SETOPTION -- set global processing option ** **	Parameters: **		opt -- option name. **		val -- option value (as a text string). **		safe -- if set, this came from a system configuration file. **		sticky -- if set, don't let other setoptions override **			this value. ** **	Returns: **		none. ** **	Side Effects: **		Sets options as implied by the arguments. */
+comment|/* **  SETOPTION -- set global processing option ** **	Parameters: **		opt -- option name. **		val -- option value (as a text string). **		sticky -- if set, don't let other setoptions override **			this value. ** **	Returns: **		none. ** **	Side Effects: **		Sets options as implied by the arguments. */
 end_comment
 
 begin_decl_stmt
@@ -2238,8 +2204,6 @@ argument|opt
 argument_list|,
 argument|val
 argument_list|,
-argument|safe
-argument_list|,
 argument|sticky
 argument_list|)
 end_macro
@@ -2254,12 +2218,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|val
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|safe
 decl_stmt|;
 end_decl_stmt
 
@@ -2357,68 +2315,9 @@ directive|endif
 endif|DEBUG
 return|return;
 block|}
-comment|/* 	**  Check to see if this option can be specified by this user. 	*/
-if|if
-condition|(
-operator|!
-name|safe
-operator|&&
-operator|(
-name|getruid
-argument_list|()
-operator|==
-literal|0
-operator|||
-name|OpMode
-operator|==
-name|MD_TEST
-operator|)
-condition|)
-name|safe
-operator|=
-name|TRUE
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|safe
-operator|&&
-name|index
-argument_list|(
-literal|"deiLmorsv"
-argument_list|,
-name|opt
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|37
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|" (unsafe)\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
-return|return;
-block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-elseif|else
 if|if
 condition|(
 name|tTd
