@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)umap_vnops.c	8.3 (Berkeley) 1/5/94  * $Id: umap_vnops.c,v 1.10 1995/11/09 08:16:25 bde Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)umap_vnops.c	8.3 (Berkeley) 1/5/94  * $Id: umap_vnops.c,v 1.11 1995/12/03 14:54:41 bde Exp $  */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -74,6 +80,7 @@ file|<miscfs/umapfs/umap.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|umap_bug_bypass
 init|=
@@ -85,8 +92,29 @@ begin_comment
 comment|/* for debugging: enables bypass printf'ing */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|umapfs_bug_bypass
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|umap_bug_bypass
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|umap_bwrite
 name|__P
@@ -102,7 +130,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|umap_bypass
 name|__P
@@ -118,7 +146,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|umap_getattr
 name|__P
@@ -134,7 +162,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|umap_inactive
 name|__P
@@ -150,7 +178,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|umap_print
 name|__P
@@ -166,7 +194,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|umap_reclaim
 name|__P
@@ -182,7 +210,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|umap_rename
 name|__P
@@ -198,7 +226,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|umap_strategy
 name|__P
@@ -218,6 +246,7 @@ comment|/*  * This is the 10-Apr-92 bypass routine.  * See null_vnops.c:null_byp
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|umap_bypass
 parameter_list|(
@@ -1046,6 +1075,7 @@ comment|/*  *  We handle getattr to change the fsid.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|umap_getattr
 parameter_list|(
@@ -1371,6 +1401,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|umap_inactive
 parameter_list|(
@@ -1393,6 +1424,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|umap_reclaim
 parameter_list|(
@@ -1474,6 +1506,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|umap_strategy
 parameter_list|(
@@ -1544,6 +1577,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|umap_bwrite
 parameter_list|(
@@ -1614,6 +1648,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|umap_print
 parameter_list|(
@@ -1656,6 +1691,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|umap_rename
 parameter_list|(
@@ -1821,6 +1857,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|umap_vnodeop_entries
@@ -1925,6 +1962,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|umap_vnodeop_opv_desc

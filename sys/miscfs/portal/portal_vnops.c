@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)portal_vnops.c	8.8 (Berkeley) 1/21/94  *  * $Id: portal_vnops.c,v 1.8 1995/11/09 08:15:51 bde Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)portal_vnops.c	8.8 (Berkeley) 1/21/94  *  * $Id: portal_vnops.c,v 1.9 1995/12/03 14:54:29 bde Exp $  */
 end_comment
 
 begin_comment
@@ -139,7 +139,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_badop
 name|__P
@@ -192,7 +192,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_enotsupp
 name|__P
@@ -205,7 +205,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_getattr
 name|__P
@@ -221,7 +221,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_inactive
 name|__P
@@ -237,7 +237,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_lookup
 name|__P
@@ -253,7 +253,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_nullop
 name|__P
@@ -266,7 +266,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_open
 name|__P
@@ -282,7 +282,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_pathconf
 name|__P
@@ -298,7 +298,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_print
 name|__P
@@ -314,7 +314,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_readdir
 name|__P
@@ -330,7 +330,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_reclaim
 name|__P
@@ -346,7 +346,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_setattr
 name|__P
@@ -362,7 +362,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_vfree
 name|__P
@@ -444,6 +444,7 @@ comment|/*  * vp is the current namei directory  * cnp is the name to locate in 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|portal_lookup
 parameter_list|(
@@ -859,6 +860,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_open
 parameter_list|(
@@ -1799,6 +1801,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_getattr
 parameter_list|(
@@ -2065,6 +2068,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_setattr
 parameter_list|(
@@ -2106,6 +2110,7 @@ comment|/*  * Fake readdir, just return empty directory.  * It is hard to deal w
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|portal_readdir
 parameter_list|(
@@ -2127,6 +2132,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_inactive
 parameter_list|(
@@ -2148,6 +2154,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_reclaim
 parameter_list|(
@@ -2230,6 +2237,7 @@ comment|/*  * Return POSIX pathconf information applicable to special devices.  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|portal_pathconf
 parameter_list|(
@@ -2359,6 +2367,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|portal_print
 parameter_list|(
@@ -2389,6 +2398,7 @@ comment|/*void*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|portal_vfree
 parameter_list|(
@@ -2414,6 +2424,7 @@ comment|/*  * Portal vnode unsupported operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|portal_enotsupp
 parameter_list|()
@@ -2431,6 +2442,7 @@ comment|/*  * Portal "should never get here" operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|portal_badop
 parameter_list|()
@@ -2449,6 +2461,7 @@ comment|/*  * Portal vnode null operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|portal_nullop
 parameter_list|()
@@ -2686,6 +2699,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|portal_vnodeop_entries
@@ -3193,6 +3207,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|portal_vnodeop_opv_desc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)portal_vfsops.c	8.6 (Berkeley) 1/21/94  *  * $Id: portal_vfsops.c,v 1.8 1995/05/30 08:07:05 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)portal_vfsops.c	8.6 (Berkeley) 1/21/94  *  * $Id: portal_vfsops.c,v 1.9 1995/11/16 11:24:06 bde Exp $  */
 end_comment
 
 begin_comment
@@ -122,7 +122,7 @@ file|<miscfs/portal/portal.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_init
 name|__P
@@ -135,7 +135,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_mount
 name|__P
@@ -168,7 +168,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_start
 name|__P
@@ -192,7 +192,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_unmount
 name|__P
@@ -216,7 +216,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_root
 name|__P
@@ -238,7 +238,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_quotactl
 name|__P
@@ -268,7 +268,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_statfs
 name|__P
@@ -294,7 +294,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_sync
 name|__P
@@ -323,7 +323,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_vget
 name|__P
@@ -348,7 +348,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_fhtovp
 name|__P
@@ -390,7 +390,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|portal_vptofh
 name|__P
@@ -411,6 +411,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|portal_init
 parameter_list|()
@@ -428,6 +429,7 @@ comment|/*  * Mount the per-process file descriptors (/dev/fd)  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|portal_mount
 parameter_list|(
@@ -847,6 +849,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_start
 parameter_list|(
@@ -879,6 +882,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_unmount
 parameter_list|(
@@ -1080,6 +1084,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_root
 parameter_list|(
@@ -1138,6 +1143,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_quotactl
 parameter_list|(
@@ -1180,6 +1186,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_statfs
 parameter_list|(
@@ -1334,6 +1341,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_sync
 parameter_list|(
@@ -1373,6 +1381,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_vget
 parameter_list|(
@@ -1406,6 +1415,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_fhtovp
 parameter_list|(
@@ -1462,6 +1472,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|portal_vptofh
 parameter_list|(
@@ -1489,6 +1500,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vfsops
 name|portal_vfsops
