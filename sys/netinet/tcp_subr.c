@@ -1870,6 +1870,8 @@ expr_stmt|;
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|inp
@@ -6422,6 +6424,8 @@ decl_stmt|;
 if|if
 condition|(
 name|tp
+operator|!=
+name|NULL
 operator|&&
 name|tp
 operator|->
