@@ -65,6 +65,13 @@ name|COUNTER_FREQ
 value|1000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|COUNTER_QUALITY
+value|100
+end_define
+
 begin_comment
 comment|/* Bits in the limit register. */
 end_comment
@@ -319,6 +326,12 @@ operator|->
 name|tc_priv
 operator|=
 name|sc
+expr_stmt|;
+name|tc
+operator|->
+name|tc_quality
+operator|=
+name|COUNTER_QUALITY
 expr_stmt|;
 name|tc_init
 argument_list|(
