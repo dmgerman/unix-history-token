@@ -9,14 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)dir.c	8.8 (Berkeley) 4/28/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)dir.c	8.8 (Berkeley) 4/28/95"
+literal|"$Id: dir.c,v 1.12 1998/09/23 05:37:35 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2898,6 +2910,7 @@ operator|)
 name|parentdir
 argument_list|)
 expr_stmt|;
+comment|/* 			 * The parent directory, because of the ordering 			 * guarantees, has had the link count incremented 			 * for the child, but no entry was made.  This 			 * fixes the parent link count so that fsck does 			 * not need to be rerun. 			 */
 name|inoinfo
 argument_list|(
 name|parentdir

@@ -9,14 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)inode.c	8.8 (Berkeley) 4/28/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)inode.c	8.8 (Berkeley) 4/28/95"
+literal|"$Id: inode.c,v 1.16 1998/08/01 18:03:28 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3314,6 +3326,20 @@ operator|=
 name|dp
 operator|->
 name|di_atime
+expr_stmt|;
+name|dp
+operator|->
+name|di_mtimensec
+operator|=
+name|dp
+operator|->
+name|di_ctimensec
+operator|=
+name|dp
+operator|->
+name|di_atimensec
+operator|=
+literal|0
 expr_stmt|;
 name|dp
 operator|->

@@ -9,14 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)setup.c	8.10 (Berkeley) 5/9/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)setup.c	8.10 (Berkeley) 5/9/95"
+literal|"$Id: setup.c,v 1.12 1998/06/28 19:23:03 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
 end_include
 
 begin_include

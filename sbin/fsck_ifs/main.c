@@ -35,14 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)main.c	8.6 (Berkeley) 5/14/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)main.c	8.6 (Berkeley) 5/14/95"
+literal|"$Id: main.c,v 1.15 1998/11/05 03:26:36 mjacob Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,12 +119,6 @@ begin_include
 include|#
 directive|include
 file|<fstab.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -857,11 +863,65 @@ argument_list|(
 literal|"CAN'T CHECK FILE SYSTEM."
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 operator|-
 literal|1
 case|:
+name|pwarn
+argument_list|(
+literal|"clean, %ld free "
+argument_list|,
+name|sblock
+operator|.
+name|fs_cstotal
+operator|.
+name|cs_nffree
+operator|+
+name|sblock
+operator|.
+name|fs_frag
+operator|*
+name|sblock
+operator|.
+name|fs_cstotal
+operator|.
+name|cs_nbfree
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"(%d frags, %d blocks, %.1f%% fragmentation)\n"
+argument_list|,
+name|sblock
+operator|.
+name|fs_cstotal
+operator|.
+name|cs_nffree
+argument_list|,
+name|sblock
+operator|.
+name|fs_cstotal
+operator|.
+name|cs_nbfree
+argument_list|,
+name|sblock
+operator|.
+name|fs_cstotal
+operator|.
+name|cs_nffree
+operator|*
+literal|100.0
+operator|/
+name|sblock
+operator|.
+name|fs_dsize
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
