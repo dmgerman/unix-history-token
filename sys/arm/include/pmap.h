@@ -377,10 +377,6 @@ argument|pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
-name|vm_page_t
-name|pv_ptem
-decl_stmt|;
-comment|/* VM page for pte */
 name|int
 name|pv_flags
 decl_stmt|;
