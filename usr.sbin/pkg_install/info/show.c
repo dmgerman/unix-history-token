@@ -730,6 +730,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PLIST_CONFLICTS
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@conflicts %s\n"
+else|:
+literal|"Conflicts: %s\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|PLIST_MTREE
 case|:
 name|printf

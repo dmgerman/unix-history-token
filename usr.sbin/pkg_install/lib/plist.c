@@ -1036,6 +1036,20 @@ name|strcmp
 argument_list|(
 name|cmd
 argument_list|,
+literal|"conflicts"
+argument_list|)
+condition|)
+return|return
+name|PLIST_CONFLICTS
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|cmd
+argument_list|,
 literal|"mtree"
 argument_list|)
 condition|)
@@ -1618,6 +1632,23 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"%cpkgdep %s\n"
+argument_list|,
+name|CMD_CHAR
+argument_list|,
+name|plist
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_CONFLICTS
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%cconflicts %s\n"
 argument_list|,
 name|CMD_CHAR
 argument_list|,

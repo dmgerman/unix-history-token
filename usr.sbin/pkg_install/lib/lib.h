@@ -316,6 +316,36 @@ value|"PKG_PREFIX"
 end_define
 
 begin_comment
+comment|/*  * Version of the package tools - increase only when some  * functionality used by bsd.port.mk is changed, added or removed  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKG_INSTALL_VERSION
+value|20030417
+end_define
+
+begin_define
+define|#
+directive|define
+name|PKG_WRAPCONF_FNAME
+value|"/var/db/pkg_install.conf"
+end_define
+
+begin_define
+define|#
+directive|define
+name|main
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+value|real_main(argc, argv)
+end_define
+
+begin_comment
 comment|/* Version numbers to assist with changes in package file format */
 end_comment
 
@@ -362,6 +392,8 @@ block|,
 name|PLIST_DISPLAY
 block|,
 name|PLIST_PKGDEP
+block|,
+name|PLIST_CONFLICTS
 block|,
 name|PLIST_MTREE
 block|,
@@ -1271,6 +1303,19 @@ begin_function_decl
 name|int
 name|pkg_perform
 parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|real_main
+parameter_list|(
+name|int
+parameter_list|,
 name|char
 modifier|*
 modifier|*

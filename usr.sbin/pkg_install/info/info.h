@@ -65,112 +65,119 @@ begin_define
 define|#
 directive|define
 name|SHOW_COMMENT
-value|0x0001
+value|0x00001
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_DESC
-value|0x0002
+value|0x00002
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_PLIST
-value|0x0004
+value|0x00004
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_INSTALL
-value|0x0008
+value|0x00008
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_DEINSTALL
-value|0x0010
+value|0x00010
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_REQUIRE
-value|0x0020
+value|0x00020
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_PREFIX
-value|0x0040
+value|0x00040
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_INDEX
-value|0x0080
+value|0x00080
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_FILES
-value|0x0100
+value|0x00100
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_DISPLAY
-value|0x0200
+value|0x00200
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_REQBY
-value|0x0400
+value|0x00400
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_MTREE
-value|0x0800
+value|0x00800
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_SIZE
-value|0x1000
+value|0x01000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_ORIGIN
-value|0x2000
+value|0x02000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_CKSUM
-value|0x4000
+value|0x04000
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHOW_FMTREV
-value|0x8000
+value|0x08000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHOW_PTREV
+value|0x10000
 end_define
 
 begin_struct
