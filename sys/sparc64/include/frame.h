@@ -18,13 +18,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PTR_SHIFT
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|RW_SHIFT
 value|7
 end_define

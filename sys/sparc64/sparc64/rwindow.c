@@ -57,24 +57,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-operator|(
-literal|1
-operator|<<
-name|PTR_SHIFT
-operator|)
-operator|==
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 name|int
 name|rwindow_load
