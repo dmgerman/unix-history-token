@@ -456,7 +456,7 @@ name|_bf
 operator|.
 name|_base
 expr_stmt|;
-comment|/* curoff always>= 0 */
+comment|/* 'curoff' is always>= 0 */
 if|if
 condition|(
 name|offset
@@ -709,7 +709,7 @@ condition|)
 goto|goto
 name|dumb
 goto|;
-comment|/* st.st_size always>= 0 */
+comment|/* 'st.st_size' is always>= 0 */
 if|if
 condition|(
 name|offset
