@@ -275,9 +275,6 @@ name|sf_buf
 modifier|*
 name|sf
 decl_stmt|;
-name|vm_offset_t
-name|paddr
-decl_stmt|;
 name|vm_page_t
 name|pp
 decl_stmt|;
@@ -288,22 +285,11 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-name|paddr
-operator|=
-name|vtophys
-argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-name|addr
-argument_list|)
-expr_stmt|;
 name|pp
 operator|=
-name|PHYS_TO_VM_PAGE
-argument_list|(
-name|paddr
-argument_list|)
+name|sf
+operator|->
+name|m
 expr_stmt|;
 name|s
 operator|=
@@ -321,13 +307,6 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
-expr_stmt|;
-name|vm_object_deallocate
-argument_list|(
-name|pp
-operator|->
-name|object
-argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -513,14 +492,6 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
-expr_stmt|;
-comment|/* 	 * prevent the process from exiting on us. 	 */
-name|vm_object_reference
-argument_list|(
-name|pp
-operator|->
-name|object
-argument_list|)
 expr_stmt|;
 comment|/*  	 * attach to mbuf 	 */
 name|m0
