@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.9 (Berkeley) %G%"
+literal|"@(#)output.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -546,6 +546,26 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+comment|/* 			 * If only sending to ourselves, 			 * one packet is enough to monitor interface. 			 */
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|int_flags
+operator|&
+operator|(
+name|IFF_BROADCAST
+operator||
+name|IFF_POINTOPOINT
+operator||
+name|IFF_REMOTE
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|n
 operator|=
 name|msg
@@ -585,16 +605,9 @@ name|rip_metric
 operator|=
 name|htonl
 argument_list|(
-name|min
-argument_list|(
 name|rt
 operator|->
 name|rt_metric
-operator|+
-literal|1
-argument_list|,
-name|HOPCNT_INFINITY
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|n
