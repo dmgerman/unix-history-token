@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1505,19 +1505,6 @@ name|mi
 operator|->
 name|mi_drv
 expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|O_NDELAY
-condition|)
-name|sc
-operator|->
-name|sc_state
-operator|=
-name|WANTOPENRAW
-expr_stmt|;
-else|else
 name|sc
 operator|->
 name|sc_state
@@ -1551,6 +1538,15 @@ literal|32
 operator|*
 literal|20
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|O_NDELAY
+condition|)
+goto|goto
+name|raw
+goto|;
 comment|/* 	 * Map all ML11's to the same type.  Also calculate 	 * transfer rates based on device characteristics. 	 * Set up dummy label with all that's needed. 	 */
 if|if
 condition|(
@@ -1681,12 +1677,9 @@ name|sc
 operator|->
 name|sc_mlsize
 expr_stmt|;
-name|sc
-operator|->
-name|sc_state
-operator|=
-name|WANTOPENRAW
-expr_stmt|;
+goto|goto
+name|raw
+goto|;
 block|}
 comment|/* 	 * Preset, pack acknowledge will be done in hpstart 	 * during first read operation. 	 */
 if|if
@@ -1703,17 +1696,6 @@ name|lp
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_state
-operator|==
-name|OPENRAW
-condition|)
-goto|goto
-name|done
-goto|;
 if|if
 condition|(
 name|cold
@@ -1753,14 +1735,8 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|sc
-operator|->
-name|sc_state
-operator|=
-name|OPENRAW
-expr_stmt|;
 goto|goto
-name|done
+name|raw
 goto|;
 endif|#
 directive|endif
@@ -2018,6 +1994,27 @@ argument_list|)
 expr_stmt|;
 name|done
 label|:
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|sc
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|raw
+label|:
+name|sc
+operator|->
+name|sc_state
+operator|=
+name|OPENRAW
+expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
