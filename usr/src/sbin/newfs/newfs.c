@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.6 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -362,7 +362,7 @@ begin_decl_stmt
 name|int
 name|fsize
 init|=
-name|DFL_FRAGSIZE
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -374,7 +374,7 @@ begin_decl_stmt
 name|int
 name|bsize
 init|=
-name|DFL_BLKSIZE
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2215,6 +2215,7 @@ operator|!=
 name|DEV_BSIZE
 condition|)
 block|{
+comment|/* XXX */
 name|int
 name|secperblk
 init|=
