@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: log.c,v 1.19 1997/11/09 06:22:42 brian Exp $  */
+comment|/*  * $Id: log.c,v 1.20 1997/11/09 14:18:41 brian Exp $  */
 end_comment
 
 begin_include
@@ -644,6 +644,11 @@ argument_list|,
 name|nfmt
 argument_list|,
 name|ap
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|VarTerm
 argument_list|)
 expr_stmt|;
 block|}
