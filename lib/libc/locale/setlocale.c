@@ -790,14 +790,8 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|XPG4
-end_ifndef
-
 begin_comment
-comment|/* To be compatible with old binaries */
+comment|/* To be compatible with crt0 hack */
 end_comment
 
 begin_function
@@ -817,6 +811,9 @@ modifier|*
 name|locale
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|XPG4
 operator|(
 name|void
 operator|)
@@ -827,13 +824,10 @@ argument_list|,
 name|locale
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
 begin_function
 specifier|static
