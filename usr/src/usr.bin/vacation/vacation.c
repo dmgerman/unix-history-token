@@ -2,6 +2,12 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -23,39 +29,40 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"useful.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"userdbm.h"
-end_include
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|vacation
-operator|.
-name|c
-literal|4.1
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)vacation.c	4.2		%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* **  VACATION -- return a message to the sender when on vacation. ** **	This program could be invoked as a message receiver **	when someone is on vacation.  It returns a message **	specified by the user to whoever sent the mail, taking **	care not to return a message too often to prevent **	"I am on vacation" loops. ** **	For best operation, this program should run setuid to **	root or uucp or someone else that sendmail will believe **	a -f flag from.  Otherwise, the user must be careful **	to include a header on his .vacation.msg file. ** **	Positional Parameters: **		the user to collect the vacation message from. ** **	Flag Parameters: **		-I	initialize the database. **		-tT	set the timeout to T.  messages arriving more **			often than T will be ignored to avoid loops. ** **	Side Effects: **		A message is sent back to the sender. ** **	Author: **		Eric Allman **		UCB/INGRES */
+comment|/* **  VACATION -- return a message to the sender when on vacation. ** **	This program could be invoked as a message receiver **	when someone is on vacation.  It returns a message **	specified by the user to whoever sent the mail, taking **	care not to return a message too often to prevent **	"I am on vacation" loops. ** **	Positional Parameters: **		the user to collect the vacation message from. ** **	Flag Parameters: **		-I	initialize the database. ** **	Side Effects: **		A message is sent back to the sender. ** **	Author: **		Eric Allman **		UCB/INGRES */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|bool
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|0
+end_define
 
 begin_define
 define|#
@@ -108,6 +115,30 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|char
+modifier|*
+name|dptr
+decl_stmt|;
+name|int
+name|dsize
+decl_stmt|;
+block|}
+name|DATUM
+typedef|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|DATUM
+name|fetch
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|main
@@ -222,19 +253,6 @@ argument_list|(
 name|EX_OK
 argument_list|)
 expr_stmt|;
-case|case
-literal|'t'
-case|:
-comment|/* set timeout */
-name|Timeout
-operator|=
-name|convtime
-argument_list|(
-operator|++
-name|p
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
 name|usrerr
 argument_list|(
@@ -422,6 +440,12 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
 comment|/* read the from line */
 if|if
 condition|(
@@ -825,6 +849,12 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
 name|setgid
 argument_list|(
 name|getgid
@@ -1086,6 +1116,12 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
 name|p
 operator|=
 name|malloc
