@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -208,7 +208,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|caddr_t
+name|struct
+name|user
+modifier|*
 name|proc0paddr
 decl_stmt|;
 end_decl_stmt
@@ -616,16 +618,9 @@ operator|->
 name|p_stats
 operator|=
 operator|&
-operator|(
-operator|(
-expr|struct
-name|user
-operator|*
-operator|)
 name|p
 operator|->
 name|p_addr
-operator|)
 operator|->
 name|u_stats
 expr_stmt|;
@@ -634,16 +629,9 @@ operator|->
 name|p_sigacts
 operator|=
 operator|&
-operator|(
-operator|(
-expr|struct
-name|user
-operator|*
-operator|)
 name|p
 operator|->
 name|p_addr
-operator|)
 operator|->
 name|u_sigacts
 expr_stmt|;
@@ -1009,7 +997,7 @@ name|addr
 operator|=
 name|trunc_page
 argument_list|(
-name|VM_MAX_ADDRESS
+name|USRSTACK
 operator|-
 name|PAGE_SIZE
 argument_list|)
