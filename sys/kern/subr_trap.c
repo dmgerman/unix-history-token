@@ -591,6 +591,8 @@ operator||
 name|PS_NEEDSIGCHK
 operator||
 name|PS_PROFPEND
+operator||
+name|PS_XCPU
 operator|)
 expr_stmt|;
 name|ke
