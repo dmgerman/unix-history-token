@@ -153,13 +153,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Write a magic value to the thread structure to help 		 * identify valid ones: 		 */
-name|new_thread
-operator|->
-name|magic
-operator|=
-name|PTHREAD_MAGIC
-expr_stmt|;
 comment|/* Check if default thread attributes are required: */
 if|if
 condition|(
@@ -289,6 +282,13 @@ operator|->
 name|arg
 operator|=
 name|arg
+expr_stmt|;
+comment|/* 			 * Write a magic value to the thread structure 			 * to help identify valid ones: 			 */
+name|new_thread
+operator|->
+name|magic
+operator|=
+name|PTHREAD_MAGIC
 expr_stmt|;
 if|if
 condition|(
