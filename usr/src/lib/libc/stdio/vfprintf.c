@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.35 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,9 +115,11 @@ begin_define
 define|#
 directive|define
 name|ARG
-parameter_list|()
+parameter_list|(
+name|basetype
+parameter_list|)
 define|\
-value|_ulong = flags&LONGINT ? va_arg(argp, long) : \ 	    flags&SHORTINT ? va_arg(argp, short) : va_arg(argp, int);
+value|_ulong = flags&LONGINT ? va_arg(argp, long basetype) : \ 	    flags&SHORTINT ? (short basetype)va_arg(argp, int) : \ 	    va_arg(argp, int)
 end_define
 
 begin_define
@@ -897,7 +899,9 @@ case|case
 literal|'i'
 case|:
 name|ARG
-argument_list|()
+argument_list|(
+name|int
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1139,7 +1143,9 @@ case|case
 literal|'o'
 case|:
 name|ARG
-argument_list|()
+argument_list|(
+name|unsigned
+argument_list|)
 expr_stmt|;
 name|base
 operator|=
@@ -1275,7 +1281,9 @@ case|case
 literal|'u'
 case|:
 name|ARG
-argument_list|()
+argument_list|(
+name|unsigned
+argument_list|)
 expr_stmt|;
 name|base
 operator|=
@@ -1296,7 +1304,9 @@ case|case
 literal|'x'
 case|:
 name|ARG
-argument_list|()
+argument_list|(
+name|unsigned
+argument_list|)
 expr_stmt|;
 name|base
 operator|=
