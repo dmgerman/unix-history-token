@@ -337,17 +337,6 @@ directive|include
 file|"arp.h"
 end_include
 
-begin_comment
-comment|/*  * When we set our MP socket buffer size, we need some extra space  * for the kernel to use to transfer the file descriptors and their  * control structure.  In practice, this seems to be  *  *    sizeof(struct msghdr) + sizeof(int) * SEND_MAXFD  *  * (see bundle.c for SEND_MAXFD), but as this isn't actually documented,  * we just add ``a bit extra''  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SOCKET_OVERHEAD
-value|100
-end_define
-
 begin_function
 name|void
 name|peerid_Init
