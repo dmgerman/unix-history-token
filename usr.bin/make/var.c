@@ -2644,7 +2644,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Results:  *	The (possibly-modified) value of the variable or var_Error if the  *	specification is invalid. The length of the specification is  *	placed in *lengthPtr (for invalid specifications, this is just  *	2 to skip the '$' and the following letter, or 1 if '$' was the  *	last character in the string).  *	A Boolean in *freePtr telling whether the returned string should  *	be freed by the caller.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Results:  *	The (possibly-modified) value of the variable or var_Error if the  *	specification is invalid. The length of the specification is  *	placed in *lengthPtr (for invalid specifications, this is just  *	2 to skip the '$' and the following letter, or 1 if '$' was the  *	last character in the string).  *	A Boolean in *freePtr telling whether the returned string should  *	be freed by the caller.  *  * Side Effects:  *	None.  *  * Assumption:  *	It is assumed that Var_Parse() is called with str[0] == '$'.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
