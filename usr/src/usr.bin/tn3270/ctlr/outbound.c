@@ -664,12 +664,6 @@ name|char
 name|character
 decl_stmt|;
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
 define|#
 directive|define
 name|AddHostA
@@ -691,23 +685,6 @@ parameter_list|)
 define|\
 value|{								\ 	if (c != GetHost(p)) {					\ 	    SetHighestLowest(p);				\ 	}							\ 	AddHostA(p,c);						\     }
 comment|/* end of macro of AddHost */
-else|#
-directive|else
-comment|/* defined(SLOWSCREEN) */
-define|#
-directive|define
-name|AddHost
-parameter_list|(
-name|p
-parameter_list|,
-name|c
-parameter_list|)
-define|\
-value|{								\ 	if (IsStartField(p)) {					\ 	    DeleteField(p);					\ 	    Highest = HighestScreen();				\ 	    Lowest = LowestScreen();				\ 	    SetHost(p, c);					\ 	} else {						\ 	    SetHost(p, c);					\ 	    SetHighestLowest(p);				\ 	}							\     }
-comment|/* end of macro of AddHost */
-endif|#
-directive|endif
-comment|/* defined(SLOWSCREEN) */
 name|AddHost
 argument_list|(
 name|position
@@ -1980,26 +1957,6 @@ name|i
 operator|=
 name|BufferAddress
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
-name|AddHost
-argument_list|(
-name|i
-argument_list|,
-name|ebc_disp
-index|[
-name|c
-index|]
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* !defined(SLOWSCREEN) */
 name|AddHostA
 argument_list|(
 name|i
@@ -2015,9 +1972,6 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !defined(SLOWSCREEN) */
 name|i
 operator|=
 name|ScreenInc
@@ -2041,26 +1995,6 @@ name|c
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
-name|AddHost
-argument_list|(
-name|i
-argument_list|,
-name|ebc_disp
-index|[
-name|c
-index|]
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* !defined(SLOWSCREEN) */
 name|AddHostA
 argument_list|(
 name|i
@@ -2071,9 +2005,6 @@ name|c
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !defined(SLOWSCREEN) */
 name|i
 operator|=
 name|ScreenInc
@@ -2081,12 +2012,6 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
 if|if
 condition|(
 name|i
@@ -2102,9 +2027,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* defined(SLOWSCREEN) */
 name|count
 operator|--
 expr_stmt|;
@@ -2117,20 +2039,11 @@ operator|*
 name|buffer
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SLOWSCREEN
-argument_list|)
 name|SetHighestLowest
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(SLOWSCREEN) */
 name|BufferAddress
 operator|=
 name|i
