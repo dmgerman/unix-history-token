@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	psl.h	4.3	81/02/23	*/
+comment|/*	psl.h	4.4	81/04/22	*/
 end_comment
 
 begin_comment
@@ -186,13 +186,27 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PSL_USERCLR
-value|0x3c20ff00
+name|PSL_MBZ
+value|0x3020ff00
 end_define
 
 begin_comment
-comment|/* bits must be clear in user mode */
+comment|/* must be zero bits */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PSL_USERSET
+value|(PSL_PRVMOD|PSL_CURMOD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSL_USERCLR
+value|(PSL_IS|PSL_IPL|PSL_MBZ)
+end_define
 
 end_unit
 
