@@ -59,7 +59,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.2	%G%"
+literal|"@(#)recipient.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -765,6 +765,12 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|char
+modifier|*
+name|oldto
+init|=
+name|To
+decl_stmt|;
 name|fp
 operator|=
 name|fopen
@@ -841,7 +847,7 @@ condition|)
 continue|continue;
 name|To
 operator|=
-name|fname
+name|oldto
 expr_stmt|;
 if|if
 condition|(
