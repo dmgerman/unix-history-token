@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp.c,v 1.22 1999/06/02 15:59:06 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp.c,v 1.23 1999/06/02 23:06:21 brian Exp $  */
 end_comment
 
 begin_include
@@ -2086,13 +2086,20 @@ block|{
 comment|/* we're missing something :-( */
 if|if
 condition|(
+name|isbefore
+argument_list|(
+name|mp
+operator|->
+name|local_is12bit
+argument_list|,
+name|seq
+argument_list|,
 name|mp
 operator|->
 name|seq
 operator|.
 name|min_in
-operator|>
-name|seq
+argument_list|)
 condition|)
 block|{
 comment|/* we're never gonna get it */
@@ -2211,15 +2218,22 @@ operator|->
 name|inbufs
 operator|&&
 operator|(
-name|h
-operator|.
-name|seq
-operator|>=
+name|isbefore
+argument_list|(
+name|mp
+operator|->
+name|local_is12bit
+argument_list|,
 name|mp
 operator|->
 name|seq
 operator|.
 name|min_in
+argument_list|,
+name|h
+operator|.
+name|seq
+argument_list|)
 operator|||
 name|h
 operator|.
@@ -3717,7 +3731,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" (Have %lu - %lu, want %lu, lowest %lu)"
+literal|" (Have %lu - %lu, want %lu, lowest %lu)\n"
 argument_list|,
 name|first
 argument_list|,
@@ -3750,23 +3764,24 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" first is %d, %d"
+literal|"                First has %sbegin bit and "
+literal|"%send bit"
 argument_list|,
 name|mh
 operator|.
 name|begin
 condition|?
-literal|1
+literal|""
 else|:
-literal|0
+literal|"no "
 argument_list|,
 name|mh
 operator|.
 name|end
 condition|?
-literal|1
+literal|""
 else|:
-literal|0
+literal|"no "
 argument_list|)
 expr_stmt|;
 block|}
