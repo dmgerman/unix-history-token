@@ -916,8 +916,8 @@ name|refcnt
 decl_stmt|;
 comment|/* The number of raw opens */
 name|struct
-name|buf
-name|queue
+name|buf_queue_head
+name|buf_queue
 decl_stmt|;
 comment|/* Queue of i/o requests */
 name|struct
@@ -2529,10 +2529,6 @@ name|wcd
 modifier|*
 name|t
 decl_stmt|;
-name|struct
-name|atapires
-name|result
-decl_stmt|;
 comment|/* Check that the device number is legal 	 * and the ATAPI driver is loaded. */
 if|if
 condition|(
@@ -3008,12 +3004,12 @@ name|splbio
 argument_list|()
 expr_stmt|;
 comment|/* Place it in the queue of disk activities for this disk. */
-name|disksort
+name|tqdisksort
 argument_list|(
 operator|&
 name|t
 operator|->
-name|queue
+name|buf_queue
 argument_list|,
 name|bp
 argument_list|)
@@ -3052,11 +3048,13 @@ name|buf
 modifier|*
 name|bp
 init|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|t
 operator|->
-name|queue
-operator|.
-name|b_actf
+name|buf_queue
+argument_list|)
 decl_stmt|;
 name|u_long
 name|blkno
@@ -3071,15 +3069,17 @@ name|bp
 condition|)
 return|return;
 comment|/* Unqueue the request. */
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
 name|t
 operator|->
-name|queue
-operator|.
-name|b_actf
-operator|=
+name|buf_queue
+argument_list|,
 name|bp
-operator|->
-name|b_actf
+argument_list|,
+name|b_act
+argument_list|)
 expr_stmt|;
 comment|/* Should reject all queued entries if media have changed. */
 if|if
@@ -3719,10 +3719,6 @@ name|wcdtab
 index|[
 name|lun
 index|]
-decl_stmt|;
-name|struct
-name|atapires
-name|result
 decl_stmt|;
 name|int
 name|error
@@ -6075,8 +6071,6 @@ name|int
 name|ntracks
 decl_stmt|,
 name|len
-decl_stmt|,
-name|i
 decl_stmt|;
 name|struct
 name|atapires
