@@ -2448,9 +2448,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|shared
 init|=
 name|bdg_copy
