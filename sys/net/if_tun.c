@@ -99,22 +99,17 @@ directive|include
 file|<sys/signalvar.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -311,6 +306,7 @@ value|if (tundebug) printf
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tundebug
 init|=
@@ -318,7 +314,29 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|if_tun_debug
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|tundebug
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
+specifier|static
 name|struct
 name|tun_softc
 name|tunctl
@@ -329,6 +347,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tunoutput
 name|__P
@@ -356,6 +375,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tunifioctl
 name|__P
@@ -527,12 +547,6 @@ name|ifp
 decl_stmt|;
 name|dev_t
 name|dev
-decl_stmt|;
-name|char
-name|name
-index|[
-literal|32
-index|]
 decl_stmt|;
 if|if
 condition|(
@@ -794,8 +808,6 @@ name|unit
 decl_stmt|,
 name|error
 decl_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|suser
@@ -809,6 +821,10 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -1814,6 +1830,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|pfind
@@ -1823,6 +1840,9 @@ name|tp
 operator|->
 name|tun_pgrp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|psignal
 argument_list|(
