@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: popen.c,v 1.4.2.3 1997/12/12 07:20:37 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,6 +111,18 @@ begin_include
 include|#
 directive|include
 file|"pathnames.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
 end_include
 
 begin_endif
@@ -719,6 +731,10 @@ operator|=
 name|optopt
 operator|=
 literal|1
+expr_stmt|;
+comment|/* Close syslogging to remove pwd.db missing msgs */
+name|closelog
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
