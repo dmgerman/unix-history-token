@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SQRT.c 1.1 %G%"
+literal|"@(#)SQRT.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"h01errs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
 end_include
 
 begin_function
@@ -32,7 +38,7 @@ block|{
 if|if
 condition|(
 name|value
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{

@@ -9,9 +9,21 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SEED.c 1.1 %G%"
+literal|"@(#)SEED.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
 
 begin_macro
 name|SEED
