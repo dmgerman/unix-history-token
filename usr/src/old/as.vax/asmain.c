@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c 4.4 %G%"
+literal|"@(#)asmain.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|unix_lang_name
-value|"VAX/UNIX Assembler Vasmain.c"
+value|"VAX/UNIX Assembler V%G% 4.5"
 end_define
 
 begin_endif
@@ -120,10 +120,8 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
+modifier|*
 name|innames
-index|[
-literal|32
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -801,6 +799,28 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+name|innames
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|ClearCalloc
+argument_list|(
+name|argc
+operator|+
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|innames
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|dotsname
 operator|=
 literal|"<argv error>"
@@ -821,9 +841,21 @@ index|]
 index|[
 literal|0
 index|]
-operator|==
+operator|!=
 literal|'-'
 condition|)
+name|innames
+index|[
+name|ninfiles
+operator|++
+index|]
+operator|=
+name|argv
+index|[
+literal|1
+index|]
+expr_stmt|;
+else|else
 block|{
 name|cp
 operator|=
@@ -1045,39 +1077,6 @@ block|}
 comment|/*end of pulling out all arguments*/
 block|}
 comment|/*end of a flag argument*/
-else|else
-block|{
-comment|/*file name*/
-if|if
-condition|(
-name|ninfiles
-operator|>
-literal|32
-condition|)
-block|{
-name|yyerror
-argument_list|(
-literal|"More than 32 file names"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|3
-argument_list|)
-expr_stmt|;
-block|}
-name|innames
-index|[
-name|ninfiles
-operator|++
-index|]
-operator|=
-name|argv
-index|[
-literal|1
-index|]
-expr_stmt|;
-block|}
 operator|--
 name|argc
 expr_stmt|;
@@ -1088,6 +1087,7 @@ name|nextarg
 label|:
 empty_stmt|;
 block|}
+comment|/* innames[ninfiles] = 0; */
 block|}
 end_block
 
