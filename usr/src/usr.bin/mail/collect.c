@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	2.8 %G%"
+literal|"@(#)collect.c	2.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2333,6 +2333,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|sigchild
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|sig
@@ -2766,6 +2769,9 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * stdin = current message. 		 * stdout = new message. 		 */
+name|sigchild
+argument_list|()
+expr_stmt|;
 name|close
 argument_list|(
 literal|0

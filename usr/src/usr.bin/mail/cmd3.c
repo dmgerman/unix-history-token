@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	2.6 %G%"
+literal|"@(#)cmd3.c	2.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,6 +156,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|sigchild
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|t
@@ -370,6 +373,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|sigchild
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|t
