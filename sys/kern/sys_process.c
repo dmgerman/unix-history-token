@@ -1938,12 +1938,6 @@ name|p_xstat
 operator|=
 name|data
 expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|p_flag
@@ -1954,6 +1948,12 @@ name|P_STOPPED_TRACE
 operator||
 name|P_STOPPED_SIG
 operator|)
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
 expr_stmt|;
 name|thread_unsuspend
 argument_list|(
@@ -2585,8 +2585,6 @@ argument_list|(
 name|p
 argument_list|,
 name|MA_OWNED
-operator||
-name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
 name|p
