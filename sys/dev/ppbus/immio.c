@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: immio.c,v 1.4 1998/10/31 11:35:21 nsouch Exp $  *  */
+comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: immio.c,v 1.5 1999/01/10 12:04:54 nsouch Exp $  *  */
 end_comment
 
 begin_comment
@@ -163,9 +163,9 @@ value|struct ppb_microseq select_microseq[] = {				\ 	MS_CASS(0xc),							\
 comment|/* first, check there is nothing holding onto the bus */
 value|\ 	MS_SET(VP0_SELTMO),						\
 comment|/* _loop: */
-value|\ 	MS_BRCLEAR(0x8, 3
+value|\ 	MS_BRCLEAR(0x8, 2
 comment|/* _ready */
-value|),				\ 	MS_DBRA(-1
+value|),				\ 	MS_DBRA(-2
 comment|/* _loop */
 value|),					\ 	MS_RET(2),
 comment|/* bus busy */
@@ -177,9 +177,9 @@ value|),			\ 	MS_DELAY(1),							\ 	MS_CASS(0xc),							\ 	MS_CASS(0xd),							\
 comment|/* now, wait until the drive is ready */
 value|\ 	MS_SET(VP0_SELTMO),						\
 comment|/* loop: */
-value|\ 	MS_BRSET(0x8, 4
+value|\ 	MS_BRSET(0x8, 3
 comment|/* ready */
-value|),					\ 	MS_DBRA(-1
+value|),					\ 	MS_DBRA(-2
 comment|/* loop */
 value|),						\
 comment|/* error: */
@@ -282,7 +282,7 @@ name|DECLARE_NEGOCIATE_MICROSEQ
 define|\
 value|static struct ppb_microseq negociate_microseq[] = { 			\ 	MS_CASS(0x4),							\ 	MS_DELAY(5),							\ 	MS_DASS(MS_UNKNOWN
 comment|/* mode */
-value|),					\ 	MS_DELAY(100),							\ 	MS_CASS(0x6),							\ 	MS_DELAY(5),							\ 	MS_BRSET(0x20, 6
+value|),					\ 	MS_DELAY(100),							\ 	MS_CASS(0x6),							\ 	MS_DELAY(5),							\ 	MS_BRSET(0x20, 5
 comment|/* continue */
 value|),				\ 	MS_DELAY(5),							\ 	MS_CASS(0x7),							\ 	MS_DELAY(5),							\ 	MS_CASS(0x6),							\ 	MS_RET(VP0_ENEGOCIATE),						\
 comment|/* continue: */
@@ -502,7 +502,7 @@ block|,
 name|MS_DBRA
 argument_list|(
 operator|-
-literal|6
+literal|7
 comment|/* loop */
 argument_list|)
 block|,
@@ -558,7 +558,7 @@ block|,
 name|MS_DBRA
 argument_list|(
 operator|-
-literal|3
+literal|4
 comment|/* loop */
 argument_list|)
 block|,
@@ -602,7 +602,7 @@ argument_list|)
 block|,
 name|MS_DBRA
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 block|,
 comment|/* decrement counter */
@@ -621,7 +621,7 @@ block|,
 name|MS_DBRA
 argument_list|(
 operator|-
-literal|5
+literal|6
 comment|/* loop */
 argument_list|)
 block|,
@@ -660,7 +660,7 @@ name|MS_RASSERT_P
 argument_list|(
 name|MS_ACCUM
 argument_list|,
-name|MS_REG_EPP
+name|MS_REG_EPP_D
 argument_list|)
 block|,
 name|MS_CASS
@@ -695,7 +695,7 @@ name|MS_RFETCH_P
 argument_list|(
 name|MS_ACCUM
 argument_list|,
-name|MS_REG_EPP
+name|MS_REG_EPP_D
 argument_list|,
 name|MS_FETCH_ALL
 argument_list|)
