@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	6.4	84/02/02	*/
+comment|/*	autoconf.c	6.5	84/02/03	*/
 end_comment
 
 begin_comment
@@ -3506,12 +3506,23 @@ name|DMMIN
 value|32
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DMMAX
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|DMMAX
 value|1024
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
