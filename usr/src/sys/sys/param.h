@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -28,11 +28,23 @@ name|BSD4_4
 value|0.5
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/syslimits.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NULL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -52,40 +64,24 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Machine-independent constants (some used in following include files)  */
+comment|/*  * Machine-independent constants (some used in following include files).  * Redefined constants are from POSIX 1003.1 limits file.  *  * MAXCOMLEN should be>= sizeof(ac_comm) (see<acct.h>)  * MAXLOGNAME should be>= UT_NAMESIZE (see<utmp.h>)  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/syslimits.h>
+end_include
 
 begin_define
 define|#
 directive|define
-name|MAXUPRC
-value|CHILD_MAX
+name|MAXCOMLEN
+value|16
 end_define
 
 begin_comment
-comment|/* max processes per user */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOFILE
-value|OPEN_MAX
-end_define
-
-begin_comment
-comment|/* max open files per process */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NCARGS
-value|ARG_MAX
-end_define
-
-begin_comment
-comment|/* # characters in exec arglist */
+comment|/* max command name remembered */
 end_comment
 
 begin_define
@@ -102,6 +98,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAXLOGNAME
+value|12
+end_define
+
+begin_comment
+comment|/* max login name length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXUPRC
+value|CHILD_MAX
+end_define
+
+begin_comment
+comment|/* max simultaneous processes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCARGS
+value|ARG_MAX
+end_define
+
+begin_comment
+comment|/* max bytes for an exec function */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NGROUPS
 value|NGROUPS_MAX
 end_define
@@ -113,42 +142,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAXHOSTNAMELEN
-value|256
+name|NOFILE
+value|OPEN_MAX
 end_define
 
 begin_comment
-comment|/* maximum hostname size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXCOMLEN
-value|16
-end_define
-
-begin_comment
-comment|/* maximum command name remembered */
-end_comment
-
-begin_comment
-comment|/* MAXCOMLEN should be>= sizeof(ac_comm) (acct.h)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXLOGNAME
-value|12
-end_define
-
-begin_comment
-comment|/* maximum login name length */
-end_comment
-
-begin_comment
-comment|/* MAXLOGNAME must be>= UT_NAMESIZE (<utmp.h>) */
+comment|/* max open files per process */
 end_comment
 
 begin_define
@@ -162,8 +161,19 @@ begin_comment
 comment|/* marker for empty group set member */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAXHOSTNAMELEN
+value|256
+end_define
+
 begin_comment
-comment|/*  * More types and definitions used throughout the kernel  */
+comment|/* max hostname size */
+end_comment
+
+begin_comment
+comment|/* More types and definitions used throughout the kernel. */
 end_comment
 
 begin_ifdef
@@ -214,7 +224,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Signals  */
+comment|/* Signals. */
 end_comment
 
 begin_include
@@ -224,7 +234,7 @@ file|<sys/signal.h>
 end_include
 
 begin_comment
-comment|/*  * Machine type dependent parameters.  */
+comment|/* Machine type dependent parameters. */
 end_comment
 
 begin_include
@@ -246,7 +256,7 @@ file|<machine/limits.h>
 end_include
 
 begin_comment
-comment|/*  * Priorities.  Note that with 32 run queues,  * differences less than 4 are insignificant.  */
+comment|/*  * Priorities.  Note that with 32 run queues, differences less than 4 are  * insignificant.  */
 end_comment
 
 begin_define
@@ -299,7 +309,7 @@ value|25
 end_define
 
 begin_comment
-comment|/* No longer magic, shouldn't be here XXX */
+comment|/* No longer magic, shouldn't be here.  XXX */
 end_comment
 
 begin_define
@@ -338,7 +348,7 @@ value|127
 end_define
 
 begin_comment
-comment|/* priorities range from 0 through MAXPRI */
+comment|/* Priorities range from 0 through MAXPRI. */
 end_comment
 
 begin_define
@@ -356,7 +366,7 @@ value|0x100
 end_define
 
 begin_comment
-comment|/* or'd with pri for tsleep to check signals */
+comment|/* OR'd with pri for tsleep to check signals */
 end_comment
 
 begin_define
@@ -378,26 +388,8 @@ value|sizeof(int)
 end_define
 
 begin_comment
-comment|/* number of bytes in an integer */
+comment|/* number of bytes per word (integer) */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -407,7 +399,7 @@ value|022
 end_define
 
 begin_comment
-comment|/* default mask for file creation */
+comment|/* default file mask: S_IWGRP|S_IWOTH */
 end_comment
 
 begin_define
@@ -418,7 +410,11 @@ value|(dev_t)(-1)
 end_define
 
 begin_comment
-comment|/*  * Clustering of hardware pages on machines with ridiculously small  * page sizes is done here.  The paging subsystem deals with units of  * CLSIZE pte's describing NBPG (from machine/machparam.h) pages each.  *  * NOTE: SSIZE, SINCR and UPAGES must be multiples of CLSIZE  */
+comment|/* non-existent device */
+end_comment
+
+begin_comment
+comment|/*  * Clustering of hardware pages on machines with ridiculously small  * page sizes is done here.  The paging subsystem deals with units of  * CLSIZE pte's describing NBPG (from machine/machparam.h) pages each.  */
 end_comment
 
 begin_define
@@ -497,7 +493,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* give the base virtual address (first of CLSIZE) */
+comment|/* Give the base virtual address (first of CLSIZE). */
 end_comment
 
 begin_define
@@ -511,7 +507,7 @@ value|((i)&~ (CLSIZE-1))
 end_define
 
 begin_comment
-comment|/* round a number of clicks up to a whole cluster */
+comment|/* Round a number of clicks up to a whole cluster. */
 end_comment
 
 begin_define
@@ -529,16 +525,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* CBLOCK is the size of a clist block, must be power of 2 */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|CBLOCK
 value|64
 end_define
+
+begin_comment
+comment|/* Clist block size, must be a power of 2. */
+end_comment
 
 begin_define
 define|#
@@ -548,7 +544,11 @@ value|(CBLOCK/NBBY)
 end_define
 
 begin_comment
-comment|/* quote bytes/cblock - can do better */
+comment|/* Quote bytes/cblock - can do better. */
+end_comment
+
+begin_comment
+comment|/* Data chars/clist. */
 end_comment
 
 begin_define
@@ -558,10 +558,6 @@ name|CBSIZE
 value|(CBLOCK - sizeof(struct cblock *) - CBQSIZE)
 end_define
 
-begin_comment
-comment|/* data chars/clist */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -570,11 +566,11 @@ value|(CBLOCK - 1)
 end_define
 
 begin_comment
-comment|/* clist rounding */
+comment|/* Clist rounding. */
 end_comment
 
 begin_comment
-comment|/*  * File system parameters and macros.  *  * The file system is made out of blocks of at most MAXBSIZE units,  * with smaller units (fragments) only in the last direct block.  * MAXBSIZE primarily determines the size of buffers in the buffer  * pool. It may be made larger without any effect on existing  * file systems; however making it smaller make make some file  * systems unmountable.  */
+comment|/*  * File system parameters and macros.  *  * The file system is made out of blocks of at most MAXBSIZE units, with  * smaller units (fragments) only in the last direct block.  MAXBSIZE  * primarily determines the size of buffers in the buffer pool.  It may be  * made larger without any effect on existing file systems; however making  * it smaller make make some file systems unmountable.  */
 end_comment
 
 begin_define
@@ -592,7 +588,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  * MAXPATHLEN defines the longest permissable path length  * after expanding symbolic links. It is used to allocate  * a temporary buffer from the buffer pool in which to do the  * name expansion, hence should be a power of two, and must  * be less than or equal to MAXBSIZE.  * MAXSYMLINKS defines the maximum number of symbolic links  * that may be expanded in a path name. It should be set high  * enough to allow all legitimate uses, but halt infinite loops  * reasonably quickly.  */
+comment|/*  * MAXPATHLEN defines the longest permissable path length after expanding  * symbolic links. It is used to allocate a temporary buffer from the buffer  * pool in which to do the name expansion, hence should be a power of two,  * and must be less than or equal to MAXBSIZE.  MAXSYMLINKS defines the  * maximum number of symbolic links that may be expanded in a path name.  * It should be set high enough to allow all legitimate uses, but halt  * infinite loops reasonably quickly.  */
 end_comment
 
 begin_define
@@ -610,7 +606,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*  * bit map related macros  */
+comment|/* Bit map related macros. */
 end_comment
 
 begin_define
@@ -662,7 +658,7 @@ value|(((a)[(i)/NBBY]& (1<<((i)%NBBY))) == 0)
 end_define
 
 begin_comment
-comment|/*  * Macros for counting and rounding.  */
+comment|/* Macros for counting and rounding. */
 end_comment
 
 begin_ifndef
@@ -711,7 +707,7 @@ value|((((x)-1)&(x))==0)
 end_define
 
 begin_comment
-comment|/*  * Macros for fast min/max:  * with inline expansion, the "function" is faster.  */
+comment|/* Macros for fast min/max: with inline expansion, the "function" is faster. */
 end_comment
 
 begin_ifdef
@@ -779,7 +775,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Constants for setting the parameters of the kernel memory allocator.  *  * 2 ** MINBUCKET is the smallest unit of memory that will be  * allocated. It must be at least large enough to hold a pointer.  *  * Units of memory less or equal to MAXALLOCSAVE will permanently  * allocate physical memory; requests for these size pieces of  * memory are quite fast. Allocations greater than MAXALLOCSAVE must  * always allocate and free physical memory; requests for these  * size allocations should be done infrequently as they will be slow.  * Constraints: CLBYTES<= MAXALLOCSAVE<= 2 ** (MINBUCKET + 14)  * and MAXALLOCSIZE must be a power of two.  */
+comment|/*  * Constants for setting the parameters of the kernel memory allocator.  *  * 2 ** MINBUCKET is the smallest unit of memory that will be  * allocated. It must be at least large enough to hold a pointer.  *  * Units of memory less or equal to MAXALLOCSAVE will permanently  * allocate physical memory; requests for these size pieces of  * memory are quite fast. Allocations greater than MAXALLOCSAVE must  * always allocate and free physical memory; requests for these  * size allocations should be done infrequently as they will be slow.  *  * Constraints: CLBYTES<= MAXALLOCSAVE<= 2 ** (MINBUCKET + 14), and  * MAXALLOCSIZE must be a power of two.  */
 end_comment
 
 begin_define
