@@ -616,15 +616,7 @@ name|sigset_t
 name|td_siglist
 decl_stmt|;
 comment|/* (c) Sigs arrived, not delivered. */
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|thread
-argument_list|)
-name|td_umtxq
-expr_stmt|;
-comment|/* (c?) List of threads blocked by us. */
-name|STAILQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|thread
 argument_list|)
