@@ -2209,12 +2209,6 @@ name|gp
 operator|->
 name|softc
 expr_stmt|;
-name|gp
-operator|->
-name|softc
-operator|=
-name|NULL
-expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -2229,6 +2223,12 @@ name|gp
 operator|->
 name|softc
 argument_list|)
+expr_stmt|;
+name|gp
+operator|->
+name|softc
+operator|=
+name|NULL
 expr_stmt|;
 name|g_wither_geom
 argument_list|(
