@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.24 1995/05/21 18:24:34 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.25 1995/05/23 02:41:13 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -681,7 +681,7 @@ block|,
 block|{
 literal|"Other"
 block|,
-literal|"Specify another ftp site by URL (e.g. ftp://some.site/pub/FreeBSD/..)"
+literal|"Specify some other ftp site by URL"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
@@ -1735,7 +1735,7 @@ name|void
 operator|*
 operator|)
 operator|&
-name|MenuXF86
+name|MenuXF86Select
 block|,
 literal|0
 block|}
@@ -2056,73 +2056,6 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|DMenu
-name|MenuXF86
-init|=
-block|{
-name|DMENU_NORMAL_TYPE
-block|,
-literal|"XFree86 3.1.1u1 Distribution"
-block|,
-literal|"Welcome to the XFree86 3.1.1u1 distribution from The XFree86\n\ Project, Inc.  Our recommended sequence is to Select the desired\n\ release components, Configure XFree86 and then (optionally)\n\ Start it up!"
-block|,
-literal|"Press F1 to read the XFree86 release notes for FreeBSD"
-block|,
-literal|"XFree86.hlp"
-block|,
-block|{
-block|{
-literal|"Select"
-block|,
-literal|"Select and load components of the XFree86 distribution"
-block|,
-name|DMENU_SUBMENU
-block|,
-operator|&
-name|MenuXF86Select
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Configure"
-block|,
-literal|"Configure an installed XFree86 distribution"
-block|,
-name|DMENU_SYSTEM_COMMAND
-block|,
-literal|"PATH=/usr/bin:/bin:/usr/X11R6/bin xf86config"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Start"
-block|,
-literal|"Try to start the server up"
-block|,
-name|DMENU_SYSTEM_COMMAND
-block|,
-literal|"PATH=/usr/bin:/bin:/usr/X11R6/bin startx"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -3210,6 +3143,119 @@ name|void
 operator|*
 operator|)
 name|diskPartitionEditor
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Final configuration menu */
+end_comment
+
+begin_decl_stmt
+name|DMenu
+name|MenuConfigure
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+block|,
+literal|"FreeBSD Configuration Menu"
+block|,
+comment|/* title */
+literal|"Congradulations!  If you're seeing this menu, FreeBSD is now\n\ installed on your hard disk and just about ready to boot.  There\n\ are a last few things you may wish to set up at this point to make\n\ your FreeBSD system more generally usable and which may be selected\n\ from the menu below.  When you're done, select Cancel."
+block|,
+literal|"Press F1 for more information on these options"
+block|,
+literal|"configure.hlp"
+block|,
+block|{
+block|{
+literal|"Time Zone"
+block|,
+literal|"Set which time zone you're in"
+block|,
+name|DMENU_SYSTEM_COMMAND
+block|,
+literal|"tzsetup"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Add User"
+block|,
+literal|"Add users to the system"
+block|,
+name|DMENU_SYSTEM_COMMAND
+block|,
+literal|"adduser"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Root Pass"
+block|,
+literal|"Set the system manager's password"
+block|,
+name|DMENU_SYSTEM_COMMAND
+block|,
+literal|"passwd root"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Packages"
+block|,
+literal|"Install extra FreeBSD packaged software"
+block|,
+name|DMENU_CALL
+block|,
+name|config_packages
+block|,
+literal|0
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"Ports"
+block|,
+literal|"Enable the FreeBSD Ports Collection from CD"
+block|,
+name|DMENU_CALL
+block|,
+name|config_ports
+block|,
+literal|0
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"XFree86"
+block|,
+literal|"Configure XFree86 (if installed)"
+block|,
+name|DMENU_SYSTEM_COMMAND
+block|,
+literal|"PATH=/usr/bin:/bin:/usr/X11R6/bin xf86config"
 block|,
 literal|0
 block|,
