@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	4.27 (Berkeley) %G%"
+literal|"@(#)find.c	4.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -594,7 +594,7 @@ switch|switch
 condition|(
 name|entry
 operator|->
-name|info
+name|fts_info
 condition|)
 block|{
 case|case
@@ -611,7 +611,7 @@ literal|"find: %s: unable to read.\n"
 argument_list|,
 name|entry
 operator|->
-name|path
+name|fts_path
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -629,7 +629,7 @@ literal|"find: %s: unable to search.\n"
 argument_list|,
 name|entry
 operator|->
-name|path
+name|fts_path
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -647,7 +647,7 @@ literal|"find: %s: %s.\n"
 argument_list|,
 name|entry
 operator|->
-name|path
+name|fts_path
 argument_list|,
 name|strerror
 argument_list|(
@@ -679,7 +679,7 @@ literal|"find: directory cycle: %s.\n"
 argument_list|,
 name|entry
 operator|->
-name|path
+name|fts_path
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -716,7 +716,7 @@ literal|"find: can't stat: %s.\n"
 argument_list|,
 name|entry
 operator|->
-name|path
+name|fts_path
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -732,7 +732,7 @@ name|curdev
 operator|!=
 name|entry
 operator|->
-name|statb
+name|fts_statb
 operator|.
 name|st_dev
 operator|&&
@@ -762,7 +762,7 @@ literal|"find: %s: %s.\n"
 argument_list|,
 name|entry
 operator|->
-name|path
+name|fts_path
 argument_list|,
 name|strerror
 argument_list|(
@@ -807,7 +807,7 @@ name|curdev
 operator|=
 name|entry
 operator|->
-name|statb
+name|fts_statb
 operator|.
 name|st_dev
 expr_stmt|;
