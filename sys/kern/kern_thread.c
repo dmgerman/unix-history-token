@@ -4692,9 +4692,11 @@ name|td_kse
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ke
 operator|->
 name|ke_mailbox
+operator|)
 operator|!=
 name|NULL
 condition|)
@@ -5387,6 +5389,7 @@ name|p_singlethread
 operator|=
 name|td
 expr_stmt|;
+comment|/* XXXKSE Which lock protects the below values? */
 while|while
 condition|(
 operator|(
@@ -5432,17 +5435,17 @@ condition|)
 block|{
 if|if
 condition|(
-name|TD_IS_SUSPENDED
-argument_list|(
-name|td2
-argument_list|)
+name|force_exit
+operator|==
+name|SINGLE_EXIT
 condition|)
 block|{
 if|if
 condition|(
-name|force_exit
-operator|==
-name|SINGLE_EXIT
+name|TD_IS_SUSPENDED
+argument_list|(
+name|td2
+argument_list|)
 condition|)
 block|{
 name|thread_unsuspend_one
@@ -5450,11 +5453,6 @@ argument_list|(
 name|td2
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-continue|continue;
-block|}
 block|}
 if|if
 condition|(
@@ -5493,6 +5491,55 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|TD_IS_SUSPENDED
+argument_list|(
+name|td2
+argument_list|)
+condition|)
+continue|continue;
+comment|/* maybe other inhibitted states too? */
+if|if
+condition|(
+name|TD_IS_SLEEPING
+argument_list|(
+name|td2
+argument_list|)
+condition|)
+name|thread_suspend_one
+argument_list|(
+name|td2
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+comment|/*  		 * Maybe we suspended some threads.. was it enough?  		 */
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_numthreads
+operator|-
+name|p
+operator|->
+name|p_suspcount
+operator|)
+operator|==
+literal|1
+condition|)
+block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 comment|/* 		 * Wake us up when everyone else has suspended. 		 * In the mean time we suspend as well. 		 */
 name|thread_suspend_one
@@ -5960,7 +6007,7 @@ argument_list|,
 name|td_runq
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Hack: If we are suspending but are on the sleep queue 	 * then we are in msleep or the cv equivalent. We 	 * want to look like we have two Inhibitors. 	 */
+comment|/* 	 * Hack: If we are suspending but are on the sleep queue 	 * then we are in msleep or the cv equivalent. We 	 * want to look like we have two Inhibitors. 	 * May already be set.. doesn't matter. 	 */
 if|if
 condition|(
 name|TD_ON_SLEEPQ

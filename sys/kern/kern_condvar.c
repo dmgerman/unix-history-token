@@ -184,19 +184,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|cv_check_upcall
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Initialize a condition variable.  Must be called before use.  */
 end_comment
@@ -275,13 +262,14 @@ comment|/*  * Common code for cv_wait* functions.  All require sched_lock.  */
 end_comment
 
 begin_comment
-comment|/*  * Decide if we need to queue an upcall.  * This is copied from msleep(), perhaps this should be a common function.  */
+comment|/*  * Switch context.  */
 end_comment
 
 begin_function
 specifier|static
+name|__inline
 name|void
-name|cv_check_upcall
+name|cv_switch
 parameter_list|(
 name|struct
 name|thread
@@ -295,26 +283,16 @@ condition|(
 operator|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_flag
-operator|&
-name|P_KSES
-operator|)
-operator|&&
-name|td
-operator|->
-name|td_mailbox
-operator|&&
-operator|(
-name|td
-operator|->
 name|td_flags
 operator|&
+operator|(
+name|TDF_UNBOUND
+operator||
 name|TDF_INMSLEEP
 operator|)
+operator|)
 operator|==
-literal|0
+name|TDF_UNBOUND
 condition|)
 block|{
 comment|/* 		 * We don't need to upcall now, just queue it. 		 * The upcall will happen when other n-kernel work 		 * in this SKEGRP has completed. 		 * Don't recurse here! 		 */
@@ -341,30 +319,6 @@ operator|~
 name|TDF_INMSLEEP
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * Switch context.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|cv_switch
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-block|{
-name|cv_check_upcall
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|TD_SET_SLEEPING
 argument_list|(
 name|td
