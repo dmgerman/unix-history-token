@@ -1598,15 +1598,6 @@ case|case
 name|DIOCWDINFO
 case|:
 block|{
-name|label
-operator|=
-name|g_malloc
-argument_list|(
-name|LABELSIZE
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1621,6 +1612,15 @@ operator|(
 name|EPERM
 operator|)
 return|;
+name|label
+operator|=
+name|g_malloc
+argument_list|(
+name|LABELSIZE
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
 comment|/* The disklabel to set is the ioctl argument. */
 name|bsd_disklabel_le_enc
 argument_list|(
