@@ -4875,6 +4875,12 @@ literal|0
 block|int	i; 	int	mynor; 	int	typemynor; 	int	typesize;
 endif|#
 directive|endif
+specifier|static
+name|int
+name|cdevsw_add_done
+init|=
+literal|0
+decl_stmt|;
 name|fd
 operator|=
 name|device_get_softc
@@ -4882,6 +4888,12 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cdevsw_add_done
+condition|)
+block|{
 name|cdevsw_add
 argument_list|(
 operator|&
@@ -4889,6 +4901,10 @@ name|fd_cdevsw
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+name|cdevsw_add_done
+operator|++
+expr_stmt|;
+block|}
 name|make_dev
 argument_list|(
 operator|&
