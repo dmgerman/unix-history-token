@@ -2848,7 +2848,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: no terminating \";\""
+literal|"%s: no terminating \";\" or \"+\""
 argument_list|,
 name|option
 operator|->
