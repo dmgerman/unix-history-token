@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -64,6 +64,29 @@ end_decl_stmt
 begin_comment
 comment|/* XXX */
 end_comment
+
+begin_decl_stmt
+name|int
+name|lfs_balloc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+name|u_long
+operator|,
+name|daddr_t
+operator|,
+expr|struct
+name|buf
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
