@@ -346,25 +346,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MIP6
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|mobileip6
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|accept_rr
@@ -868,21 +849,6 @@ name|LOG_DAEMON
 argument_list|)
 expr_stmt|;
 comment|/* get command line options and arguments */
-ifdef|#
-directive|ifdef
-name|MIP6
-define|#
-directive|define
-name|OPTIONS
-value|"c:dDfM:mRs"
-else|#
-directive|else
-define|#
-directive|define
-name|OPTIONS
-value|"c:dDfM:Rs"
-endif|#
-directive|endif
 while|while
 condition|(
 operator|(
@@ -894,7 +860,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|OPTIONS
+literal|"c:dDfM:Rs"
 argument_list|)
 operator|)
 operator|!=
@@ -902,9 +868,6 @@ operator|-
 literal|1
 condition|)
 block|{
-undef|#
-directive|undef
-name|OPTIONS
 switch|switch
 condition|(
 name|ch
@@ -950,19 +913,6 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|MIP6
-case|case
-literal|'m'
-case|:
-name|mobileip6
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 case|case
 literal|'R'
 case|:
@@ -1006,15 +956,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-ifdef|#
-directive|ifdef
-name|MIP6
-literal|"usage: rtadvd [-dDfMmRs] [-c conffile] "
-else|#
-directive|else
 literal|"usage: rtadvd [-dDfMRs] [-c conffile] "
-endif|#
-directive|endif
 literal|"interfaces...\n"
 argument_list|)
 expr_stmt|;
