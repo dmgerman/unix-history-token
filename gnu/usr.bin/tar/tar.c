@@ -1138,6 +1138,17 @@ literal|1
 block|}
 block|,
 block|{
+literal|"unlink"
+block|,
+literal|0
+block|,
+operator|&
+name|f_unlink
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -2624,7 +2635,7 @@ expr_stmt|;
 comment|/* KLUDGE */
 name|fputs
 argument_list|(
-literal|"\ -W, --verify		attempt to verify the archive after writing it\n\ --exclude FILE		exclude file FILE\n\ -X, --exclude-from FILE	exclude files listed in FILE\n\ -Z, --compress,\n\     --uncompress      	filter the archive through compress\n\ -z, --gzip,\n\     --ungzip		filter the archive through gzip\n\ --use-compress-program PROG\n\ 			filter the archive through PROG (which must accept -d)\n\ --block-compress	block the output of compression program for tapes\n\ -[0-7][lmh]		specify drive and density\n\ "
+literal|"\ -W, --verify		attempt to verify the archive after writing it\n\ --exclude FILE		exclude file FILE\n\ -X, --exclude-from FILE	exclude files listed in FILE\n\ -Z, --compress,\n\     --uncompress      	filter the archive through compress\n\ -z, --gzip,\n\     --ungzip		filter the archive through gzip\n\ --use-compress-program PROG\n\ 			filter the archive through PROG (which must accept -d)\n\ --block-compress	block the output of compression program for tapes\n\ -[0-7][lmh]		specify drive and density\n\ --unlink		unlink files before creating them\n\ "
 argument_list|,
 name|stdout
 argument_list|)

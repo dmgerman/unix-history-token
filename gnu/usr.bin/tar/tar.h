@@ -1348,6 +1348,17 @@ begin_comment
 comment|/* --compress-block */
 end_comment
 
+begin_decl_stmt
+name|TAR_EXTERN
+name|int
+name|f_unlink
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* --unlink */
+end_comment
+
 begin_comment
 comment|/*  * We default to Unix Standard format rather than 4.2BSD tar format.  * The code can actually produce all three:  *	f_standard	ANSI standard  *	f_oldarch	V7  *	neither		4.2BSD  * but we don't bother, since 4.2BSD can read ANSI standard format anyway.  * The only advantage to the "neither" option is that we can cmp our  * output to the output of 4.2BSD tar, for debugging.  */
 end_comment
