@@ -489,6 +489,7 @@ name|fd
 argument_list|,
 name|VT_GETMODE
 argument_list|,
+operator|&
 name|mode
 argument_list|)
 operator|==
