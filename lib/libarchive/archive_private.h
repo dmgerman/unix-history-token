@@ -63,6 +63,17 @@ name|archive_entry
 modifier|*
 name|entry
 decl_stmt|;
+name|uid_t
+name|user_uid
+decl_stmt|;
+comment|/* UID of current user. */
+comment|/* Dev/ino of the archive being read/written. */
+name|dev_t
+name|skip_file_dev
+decl_stmt|;
+name|ino_t
+name|skip_file_ino
+decl_stmt|;
 comment|/* Utility:  Pointer to a block of nulls. */
 specifier|const
 name|char
@@ -87,10 +98,6 @@ decl_stmt|;
 name|size_t
 name|read_data_remaining
 decl_stmt|;
-name|uid_t
-name|user_uid
-decl_stmt|;
-comment|/* UID of current user. */
 comment|/* Callbacks to open/read/write/close archive stream. */
 name|archive_open_callback
 modifier|*

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"archive_entry.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive_private.h"
 end_include
 
@@ -632,6 +638,42 @@ name|a
 argument_list|)
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|archive_entry_dev
+argument_list|(
+name|entry
+argument_list|)
+operator|==
+name|a
+operator|->
+name|skip_file_dev
+operator|&&
+name|archive_entry_ino
+argument_list|(
+name|entry
+argument_list|)
+operator|==
+name|a
+operator|->
+name|skip_file_ino
+condition|)
+block|{
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+literal|0
+argument_list|,
+literal|"Can't add archive to itself."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ARCHIVE_WARN
+operator|)
+return|;
+block|}
 comment|/* Format and write header. */
 name|ret
 operator|=

@@ -2228,7 +2228,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * POSIX/SUSv3 doesn't provide a standard key for large device 	 * numbers.  I use the same keys here that Joerg Schilling used for 	 * 'star.'  No doubt, other implementations use other keys.  Note that 	 * there's no reason we can't write the same information into a number 	 * of different keys. 	 * 	 * Of course, this is only needed for block or char device entries. 	 */
+comment|/* 	 * POSIX/SUSv3 doesn't provide a standard key for large device 	 * numbers.  I use the same keys here that Joerg Schilling 	 * used for 'star.'  (Which, somewhat confusingly, are called 	 * "devXXX" even though they code "rdev" values.)  No doubt, 	 * other implementations use other keys.  Note that there's no 	 * reason we can't write the same information into a number of 	 * different keys. 	 * 	 * Of course, this is only needed for block or char device entries. 	 */
 if|if
 condition|(
 name|S_ISBLK
@@ -2246,13 +2246,13 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * If devmajor is too large, add 'SCHILY.devmajor' to 		 * extended attributes. 		 */
+comment|/* 		 * If rdevmajor is too large, add 'SCHILY.devmajor' to 		 * extended attributes. 		 */
 name|dev_t
-name|devmajor
+name|rdevmajor
 decl_stmt|,
-name|devminor
+name|rdevminor
 decl_stmt|;
-name|devmajor
+name|rdevmajor
 operator|=
 name|major
 argument_list|(
@@ -2261,7 +2261,7 @@ operator|->
 name|st_rdev
 argument_list|)
 expr_stmt|;
-name|devminor
+name|rdevminor
 operator|=
 name|minor
 argument_list|(
@@ -2272,7 +2272,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|devmajor
+name|rdevmajor
 operator|>=
 operator|(
 literal|1
@@ -2292,10 +2292,10 @@ operator|)
 argument_list|,
 literal|"SCHILY.devmajor"
 argument_list|,
-name|devmajor
+name|rdevmajor
 argument_list|)
 expr_stmt|;
-name|archive_entry_set_devmajor
+name|archive_entry_set_rdevmajor
 argument_list|(
 name|entry_main
 argument_list|,
@@ -2316,7 +2316,7 @@ block|}
 comment|/* 		 * If devminor is too large, add 'SCHILY.devminor' to 		 * extended attributes. 		 */
 if|if
 condition|(
-name|devminor
+name|rdevminor
 operator|>=
 operator|(
 literal|1
@@ -2336,10 +2336,10 @@ operator|)
 argument_list|,
 literal|"SCHILY.devminor"
 argument_list|,
-name|devminor
+name|rdevminor
 argument_list|)
 expr_stmt|;
-name|archive_entry_set_devminor
+name|archive_entry_set_rdevminor
 argument_list|(
 name|entry_main
 argument_list|,
@@ -2685,6 +2685,7 @@ name|wp
 argument_list|)
 expr_stmt|;
 comment|/* Include star-compatible metadata info. */
+comment|/* Note: "SCHILY.dev{major,minor}" are NOT the 		 * major/minor portions of "SCHILY.dev". */
 name|add_pax_attr_int
 argument_list|(
 operator|&

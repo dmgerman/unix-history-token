@@ -201,25 +201,25 @@ literal|32
 index|]
 decl_stmt|;
 name|char
-name|devmajor
+name|rdevmajor
 index|[
 literal|6
 index|]
 decl_stmt|;
 name|char
-name|devmajor_padding
+name|rdevmajor_padding
 index|[
 literal|2
 index|]
 decl_stmt|;
 name|char
-name|devminor
+name|rdevminor
 index|[
 literal|6
 index|]
 decl_stmt|;
 name|char
-name|devminor_padding
+name|rdevminor_padding
 index|[
 literal|2
 index|]
@@ -347,7 +347,7 @@ block|,
 literal|'\0'
 block|}
 block|,
-comment|/* devmajor, space-null termination */
+comment|/* rdevmajor, space-null termination */
 block|{
 literal|"000000"
 block|}
@@ -358,7 +358,7 @@ block|,
 literal|'\0'
 block|}
 block|,
-comment|/* devminor, space-null termination */
+comment|/* rdevminor, space-null termination */
 block|{ }
 block|,
 comment|/* prefix */
@@ -1458,13 +1458,13 @@ argument_list|)
 argument_list|,
 name|h
 operator|->
-name|devmajor
+name|rdevmajor
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|h
 operator|->
-name|devmajor
+name|rdevmajor
 argument_list|)
 argument_list|)
 condition|)
@@ -1496,13 +1496,13 @@ argument_list|)
 argument_list|,
 name|h
 operator|->
-name|devminor
+name|rdevminor
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|h
 operator|->
-name|devminor
+name|rdevminor
 argument_list|)
 argument_list|)
 condition|)

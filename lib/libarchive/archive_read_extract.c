@@ -2993,12 +2993,10 @@ argument_list|)
 argument_list|,
 name|mode
 argument_list|,
-name|archive_entry_stat
+name|archive_entry_rdev
 argument_list|(
 name|entry
 argument_list|)
-operator|->
-name|st_rdev
 argument_list|)
 expr_stmt|;
 comment|/* Might be a non-existent parent dir; try fixing that. */
@@ -3034,12 +3032,10 @@ argument_list|)
 argument_list|,
 name|mode
 argument_list|,
-name|archive_entry_stat
+name|archive_entry_rdev
 argument_list|(
 name|entry
 argument_list|)
-operator|->
-name|st_rdev
 argument_list|)
 expr_stmt|;
 block|}
@@ -3142,12 +3138,10 @@ decl_stmt|;
 name|mode
 operator|=
 operator|(
-name|archive_entry_stat
+name|archive_entry_mode
 argument_list|(
 name|entry
 argument_list|)
-operator|->
-name|st_mode
 operator|&
 operator|~
 name|S_IFMT
@@ -3197,12 +3191,10 @@ decl_stmt|;
 name|mode
 operator|=
 operator|(
-name|archive_entry_stat
+name|archive_entry_mode
 argument_list|(
 name|entry
 argument_list|)
-operator|->
-name|st_mode
 operator|&
 operator|~
 name|S_IFMT

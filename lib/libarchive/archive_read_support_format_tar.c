@@ -163,13 +163,13 @@ literal|32
 index|]
 decl_stmt|;
 name|char
-name|devmajor
+name|rdevmajor
 index|[
 literal|8
 index|]
 decl_stmt|;
 name|char
-name|devminor
+name|rdevminor
 index|[
 literal|8
 index|]
@@ -286,13 +286,13 @@ literal|32
 index|]
 decl_stmt|;
 name|char
-name|devmajor
+name|rdevmajor
 index|[
 literal|8
 index|]
 decl_stmt|;
 name|char
-name|devminor
+name|rdevminor
 index|[
 literal|8
 index|]
@@ -1726,7 +1726,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* TODO: Sanity test uid/gid/size/mtime/devmajor/devminor fields. */
+comment|/* TODO: Sanity test uid/gid/size/mtime/rdevmajor/rdevminor fields. */
 return|return
 operator|(
 name|bid
@@ -4725,13 +4725,13 @@ name|tar_atol
 argument_list|(
 name|header
 operator|->
-name|devmajor
+name|rdevmajor
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|header
 operator|->
-name|devmajor
+name|rdevmajor
 argument_list|)
 argument_list|)
 argument_list|,
@@ -4739,13 +4739,13 @@ name|tar_atol
 argument_list|(
 name|header
 operator|->
-name|devminor
+name|rdevminor
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|header
 operator|->
-name|devminor
+name|rdevminor
 argument_list|)
 argument_list|)
 argument_list|)
@@ -5297,7 +5297,7 @@ name|minor
 argument_list|(
 name|st
 operator|->
-name|st_dev
+name|st_rdev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5323,7 +5323,7 @@ name|major
 argument_list|(
 name|st
 operator|->
-name|st_dev
+name|st_rdev
 argument_list|)
 argument_list|,
 name|tar_atol10
@@ -6138,13 +6138,13 @@ name|tar_atol
 argument_list|(
 name|header
 operator|->
-name|devmajor
+name|rdevmajor
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|header
 operator|->
-name|devmajor
+name|rdevmajor
 argument_list|)
 argument_list|)
 argument_list|,
@@ -6152,13 +6152,13 @@ name|tar_atol
 argument_list|(
 name|header
 operator|->
-name|devminor
+name|rdevminor
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|header
 operator|->
-name|devminor
+name|rdevminor
 argument_list|)
 argument_list|)
 argument_list|)
@@ -6698,7 +6698,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Convert text->integer.  *  * Traditional tar formats (including POSIX) specify base-8 for  * all of the standard numeric fields.  This is a significant limitation  * in practice:  *   = file size is limited to 8GB  *   = devmajor and devminor are limited to 21 bits  *   = uid/gid are limited to 21 bits  *  * There are two workarounds for this:  *   = pax extended headers, which use variable-length string fields  *   = GNU tar and STAR both allow either base-8 or base-256 in  *      most fields.  The high bit is set to indicate base-256.  *  * On read, this implementation supports both extensions.  */
+comment|/*-  * Convert text->integer.  *  * Traditional tar formats (including POSIX) specify base-8 for  * all of the standard numeric fields.  This is a significant limitation  * in practice:  *   = file size is limited to 8GB  *   = rdevmajor and rdevminor are limited to 21 bits  *   = uid/gid are limited to 21 bits  *  * There are two workarounds for this:  *   = pax extended headers, which use variable-length string fields  *   = GNU tar and STAR both allow either base-8 or base-256 in  *      most fields.  The high bit is set to indicate base-256.  *  * On read, this implementation supports both extensions.  */
 end_comment
 
 begin_function
