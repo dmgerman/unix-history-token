@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tty.c	4.8	82/01/24	*/
+comment|/*	tty_tty.c	4.9	82/03/31	*/
 end_comment
 
 begin_comment
@@ -379,7 +379,9 @@ operator|.
 name|d_select
 operator|)
 operator|(
-name|dev
+name|u
+operator|.
+name|u_ttyd
 operator|,
 name|flag
 operator|)
