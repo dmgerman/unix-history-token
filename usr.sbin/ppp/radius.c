@@ -5865,7 +5865,6 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-expr|\
 name|rad_put_addr
 argument_list|(
 name|r
