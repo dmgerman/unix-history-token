@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)disklabel.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)disklabel.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -99,6 +99,26 @@ index|]
 decl_stmt|;
 comment|/* type name, e.g. "eagle" */
 comment|/*  	 * d_packname contains the pack identifier and is returned when 	 * the disklabel is read off the disk or in-core copy. 	 * d_boot0 and d_boot1 are the (optional) names of the 	 * primary (block 0) and secondary (block 1-15) bootstraps 	 * as found in /usr/mdec.  These are returned when using 	 * getdiskbyname(3) to retrieve the values from /etc/disktab. 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|STANDALONE
+argument_list|)
+name|char
+name|d_packname
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* pack identifier */
+else|#
+directive|else
 union|union
 block|{
 name|char
@@ -138,6 +158,9 @@ define|#
 directive|define
 name|d_boot1
 value|d_un.un_b.un_d_boot1
+endif|#
+directive|endif
+comment|/* ! KERNEL or STANDALONE */
 comment|/* disk geometry: */
 name|u_long
 name|d_secsize
@@ -846,6 +869,17 @@ end_define
 
 begin_comment
 comment|/* write en/disable label */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOCSBAD
+value|_IOW('d', 110, struct dkbad)
+end_define
+
+begin_comment
+comment|/* set kernel dkbad */
 end_comment
 
 begin_endif
