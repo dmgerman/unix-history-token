@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.19
+literal|3.20
 operator|%
 name|G
 operator|%
@@ -416,6 +416,21 @@ operator|->
 name|h_flags
 operator|)
 return|;
+comment|/* count Mail-From: lines to avoid loops (simulate hop counts) */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fname
+argument_list|,
+literal|"mail-from"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|HopCount
+operator|++
+expr_stmt|;
 comment|/* create/fill in a new node */
 if|if
 condition|(

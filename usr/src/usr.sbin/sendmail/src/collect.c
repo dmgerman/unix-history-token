@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -1000,6 +1000,20 @@ argument_list|)
 expr_stmt|;
 comment|/* we don't have a good way to do canonical conversion .... 		define('d', newstr(arpatounix(p))); 		.... so we will ignore the problem for the time being */
 block|}
+comment|/* check for hop count overflow */
+if|if
+condition|(
+name|HopCount
+operator|>
+name|MAXHOP
+condition|)
+name|syserr
+argument_list|(
+literal|"Too many hops (%d max); probably forwarding loop"
+argument_list|,
+name|MAXHOP
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
