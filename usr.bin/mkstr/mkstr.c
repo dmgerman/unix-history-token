@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mkstr.c,v 1.2 1997/07/24 07:05:02 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_define
