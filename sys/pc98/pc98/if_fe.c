@@ -4,7 +4,7 @@ comment|/*  * All Rights Reserved, Copyright (C) Fujitsu Limited 1995  *  * This
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_fe.c,v 1.22 1997/06/17 11:26:50 kato Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 2.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments for  * RE1000/RE1000+/ME1500 support.  It is incomplete, however, since the  * cards are not for AT-compatibles.  (They are for PC98 bus -- a  * proprietary bus architecture available only in Japan.)  Further  * work for PC98 version will be available as a part of FreeBSD(98)  * project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*  * $Id: if_fe.c,v 1.23 1997/07/21 13:11:04 kato Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 2.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments for  * RE1000/RE1000+/ME1500 support.  It is incomplete, however, since the  * cards are not for AT-compatibles.  (They are for PC98 bus -- a  * proprietary bus architecture available only in Japan.)  Further  * work for PC98 version will be available as a part of FreeBSD(98)  * project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
 end_comment
 
 begin_comment
@@ -19,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|"fe.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"crd.h"
 end_include
 
 begin_include
@@ -230,10 +224,16 @@ begin_comment
 comment|/* PCCARD suport */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"card.h"
+end_include
+
 begin_if
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 end_if
@@ -816,7 +816,7 @@ end_function_decl
 begin_if
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 end_if
@@ -1205,7 +1205,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 end_if
@@ -1217,17 +1217,17 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|fe_card_intr
+name|feinit
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Interrupt handler */
+comment|/* init device */
 end_comment
 
 begin_function_decl
@@ -1236,7 +1236,7 @@ name|void
 name|feunload
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1248,54 +1248,34 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
-name|fesuspend
+name|int
+name|fe_card_intr
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Suspend driver */
-end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|feinit
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* init device */
+comment|/* Interrupt handler */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|pccard_drv
+name|pccard_device
 name|fe_info
 init|=
 block|{
 literal|"fe"
 block|,
-name|fe_card_intr
+name|feinit
 block|,
 name|feunload
 block|,
-name|fesuspend
-block|,
-name|feinit
+name|fe_card_intr
 block|,
 literal|0
 block|,
@@ -1308,37 +1288,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  *	Called when a power down is requested. Shuts down the  *	device and configures the device as unavailable (but  *	still loaded...). A resume is done by calling  *	feinit with first=0. This is called when the user suspends  *	the system, or the APM code suspends the system.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|fesuspend
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-name|dp
-parameter_list|)
-block|{
-name|printf
+begin_expr_stmt
+name|DATA_SET
 argument_list|(
-literal|"fe%d: suspending\n"
+name|pccarddrv_set
 argument_list|,
-name|dp
-operator|->
-name|isahd
-operator|.
-name|id_unit
+name|fe_info
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
-comment|/*  *      Initialize the device - called from Slot manager.  *      if first is set, then initially check for  *      the device's existence before initializing it.  *      Once initialized, the device table may be set up.  */
+comment|/*  *	Initialize the device - called from Slot manager.  */
 end_comment
 
 begin_function
@@ -1347,28 +1308,20 @@ name|int
 name|feinit
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
-parameter_list|,
-name|int
-name|first
+name|devi
 parameter_list|)
 block|{
-comment|/* validate unit number. */
 name|struct
 name|fe_softc
 modifier|*
 name|sc
 decl_stmt|;
+comment|/* validate unit number. */
 if|if
 condition|(
-name|first
-condition|)
-block|{
-if|if
-condition|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1381,7 +1334,7 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-comment|/* 		 * Probe the device. If a value is returned, 		 * the device was found at the location. 		 */
+comment|/* 	 * Probe the device. If a value is returned, 	 * the device was found at the location. 	 */
 if|#
 directive|if
 name|FE_DEBUG
@@ -1400,7 +1353,7 @@ operator|=
 operator|&
 name|fe_softc
 index|[
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1411,7 +1364,7 @@ name|sc
 operator|->
 name|sc_unit
 operator|=
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1421,7 +1374,7 @@ name|sc
 operator|->
 name|iobase
 operator|=
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1431,7 +1384,7 @@ comment|/* Use Ethernet address got from CIS, if one is available.  */
 if|if
 condition|(
 operator|(
-name|dp
+name|devi
 operator|->
 name|misc
 index|[
@@ -1444,21 +1397,21 @@ operator|==
 literal|0x00
 operator|&&
 operator|(
-name|dp
+name|devi
 operator|->
 name|misc
 index|[
 literal|0
 index|]
 operator||
-name|dp
+name|devi
 operator|->
 name|misc
 index|[
 literal|1
 index|]
 operator||
-name|dp
+name|devi
 operator|->
 name|misc
 index|[
@@ -1472,7 +1425,7 @@ block|{
 comment|/* Yes, it looks like a valid Ether address.  */
 name|bcopy
 argument_list|(
-name|dp
+name|devi
 operator|->
 name|misc
 argument_list|,
@@ -1503,7 +1456,7 @@ condition|(
 name|fe_probe_tdk
 argument_list|(
 operator|&
-name|dp
+name|devi
 operator|->
 name|isahd
 argument_list|,
@@ -1515,7 +1468,7 @@ operator|&&
 name|fe_probe_mbh
 argument_list|(
 operator|&
-name|dp
+name|devi
 operator|->
 name|isahd
 argument_list|,
@@ -1546,7 +1499,7 @@ condition|(
 name|fe_attach
 argument_list|(
 operator|&
-name|dp
+name|devi
 operator|->
 name|isahd
 argument_list|)
@@ -1558,8 +1511,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
-comment|/* 	 * XXX TODO: 	 * If it was initialized before, the device structure 	 * should also be initialized.  We should 	 * reset (and possibly restart) the hardware, but 	 * I am not sure of the best way to do this... 	 */
 return|return
 operator|(
 literal|0
@@ -1578,9 +1529,9 @@ name|void
 name|feunload
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 parameter_list|)
 block|{
 name|struct
@@ -1591,7 +1542,7 @@ init|=
 operator|&
 name|fe_softc
 index|[
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1602,7 +1553,7 @@ name|printf
 argument_list|(
 literal|"fe%d: unload\n"
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1611,7 +1562,7 @@ argument_list|)
 expr_stmt|;
 name|fe_stop
 argument_list|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1631,14 +1582,14 @@ name|int
 name|fe_card_intr
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 parameter_list|)
 block|{
 name|feintr
 argument_list|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1659,7 +1610,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NCRD> 0 */
+comment|/* NCARD> 0 */
 end_comment
 
 begin_comment
@@ -1988,17 +1939,6 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-if|#
-directive|if
-name|NCRD
-operator|>
-literal|0
-specifier|static
-name|int
-name|fe_already_init
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|fe_softc
 modifier|*
@@ -2053,33 +1993,6 @@ name|proto_bmpr14
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|NCRD
-operator|>
-literal|0
-comment|/* 	 * If PC-Card probe required, then register driver with 	 * slot manager. 	 */
-if|if
-condition|(
-name|fe_already_init
-operator|!=
-literal|1
-condition|)
-block|{
-name|pccard_add_driver
-argument_list|(
-operator|&
-name|fe_info
-argument_list|)
-expr_stmt|;
-name|fe_already_init
-operator|=
-literal|1
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* NCRD> 0 */
 comment|/* Probe each possibility, one at a time.  */
 for|for
 control|(
@@ -8355,7 +8268,7 @@ return|;
 block|}
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 comment|/*  * Probe and initialization for Fujitsu MBH10302 PCMCIA Ethernet interface.  * Note that this is for 10302 only; MBH10304 is handled by fe_probe_tdk().  */
@@ -8837,14 +8750,6 @@ name|FE_MBH0_INTR_ENABLE
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* NCRD> 0 */
-if|#
-directive|if
-name|NCRD
-operator|>
-literal|0
 comment|/*  * Probe and initialization for TDK/CONTEC PCMCIA Ethernet interface.  * by MASUI Kenji<masui@cs.titech.ac.jp>  *  * (Contec uses TDK Ethenet chip -- hosokawa)  *  * This version of fe_probe_tdk has been rewrote to handle  * *generic* PC card implementation of Fujitsu MB8696x and compatibles.  * The name _tdk is just for a historical reason.<seki> :-)  */
 specifier|static
 name|int
@@ -9179,6 +9084,7 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* NCARD> 0 */
 comment|/*  * Install interface into kernel networking data structures  */
 specifier|static
 name|int
@@ -9191,7 +9097,7 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 specifier|static
@@ -9452,7 +9358,7 @@ block|}
 comment|/* Attach and stop the interface. */
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 if|if
@@ -9497,7 +9403,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NCRD> 0 */
 name|fe_stop
 argument_list|(
 name|sc
