@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: vidcontrol.c,v 1.15 1997/02/22 16:14:08 peter Exp $  */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -31,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"path.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"decode.h"
 end_include
 
 begin_decl_stmt
@@ -361,6 +379,8 @@ block|{
 name|FILE
 modifier|*
 name|fd
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i
@@ -438,8 +458,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|fd
 operator|=
 name|fopen
@@ -448,6 +466,10 @@ name|name
 argument_list|,
 literal|"r"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
 condition|)
 break|break;
 block|}
@@ -478,6 +500,10 @@ name|decode
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|scrnmap
 argument_list|)
@@ -514,7 +540,7 @@ argument_list|,
 literal|"bad scrnmap file\n"
 argument_list|)
 expr_stmt|;
-name|close
+name|fclose
 argument_list|(
 name|fd
 argument_list|)
@@ -541,7 +567,7 @@ argument_list|(
 literal|"can't load screenmap"
 argument_list|)
 expr_stmt|;
-name|close
+name|fclose
 argument_list|(
 name|fd
 argument_list|)
@@ -738,6 +764,8 @@ block|{
 name|FILE
 modifier|*
 name|fd
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i
@@ -817,8 +845,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|fd
 operator|=
 name|fopen
@@ -827,6 +853,10 @@ name|name
 argument_list|,
 literal|"r"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
 condition|)
 break|break;
 block|}
@@ -919,7 +949,7 @@ argument_list|(
 literal|"bad font size specification"
 argument_list|)
 expr_stmt|;
-name|close
+name|fclose
 argument_list|(
 name|fd
 argument_list|)
@@ -977,7 +1007,7 @@ argument_list|,
 literal|"bad font file\n"
 argument_list|)
 expr_stmt|;
-name|close
+name|fclose
 argument_list|(
 name|fd
 argument_list|)
@@ -1008,7 +1038,7 @@ argument_list|(
 literal|"can't load font"
 argument_list|)
 expr_stmt|;
-name|close
+name|fclose
 argument_list|(
 name|fd
 argument_list|)
@@ -1186,7 +1216,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|video_mode
 parameter_list|(
 name|int
@@ -1444,7 +1474,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|set_normal_colors
 parameter_list|(
 name|int
@@ -1552,18 +1582,22 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|set_reverse_colors
-argument_list|(
-argument|int argc
-argument_list|,
-argument|char **argv
-argument_list|,
-argument|int *index
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|,
+name|int
+modifier|*
+name|index
+parameter_list|)
 block|{
 name|int
 name|color
@@ -1648,16 +1682,114 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
-name|set_border_color
+begin_function
+name|void
+name|set_console
+parameter_list|(
+name|char
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|int
+name|n
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|arg
+operator|||
+name|strspn
 argument_list|(
-argument|char *arg
+name|arg
+argument_list|,
+literal|"0123456789"
 argument_list|)
-end_macro
+operator|!=
+name|strlen
+argument_list|(
+name|arg
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"vidcontrol: Bad console number\n"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+name|n
+operator|=
+name|atoi
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|1
+operator|||
+name|n
+operator|>
+literal|12
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"vidcontrol: Console number out of range\n"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|VT_ACTIVATE
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|n
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"ioctl(VT_ACTIVATE)"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
-begin_block
+begin_function
+name|void
+name|set_border_color
+parameter_list|(
+name|char
+modifier|*
+name|arg
+parameter_list|)
 block|{
 name|int
 name|color
@@ -1693,7 +1825,7 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -1765,12 +1897,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|test_frame
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -1880,10 +2010,10 @@ name|back
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|int
@@ -1936,11 +2066,9 @@ argument_list|(
 literal|"Must be on a virtual console"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
 literal|1
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 while|while
 condition|(
@@ -1953,7 +2081,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:df:l:Lm:r:t:x"
+literal|"b:c:df:l:Lm:r:s:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -2051,6 +2179,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'s'
+case|:
+name|set_console
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
 name|set_screensaver_timeout
@@ -2071,14 +2208,10 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
 literal|1
-argument_list|)
-expr_stmt|;
+return|;
 block|}
-if|if
-condition|(
 name|video_mode
 argument_list|(
 name|argc
@@ -2088,10 +2221,7 @@ argument_list|,
 operator|&
 name|optind
 argument_list|)
-condition|)
-empty_stmt|;
-if|if
-condition|(
+expr_stmt|;
 name|set_normal_colors
 argument_list|(
 name|argc
@@ -2101,8 +2231,7 @@ argument_list|,
 operator|&
 name|optind
 argument_list|)
-condition|)
-empty_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|optind
@@ -2146,17 +2275,13 @@ block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
 literal|1
-argument_list|)
-expr_stmt|;
+return|;
 block|}
-name|exit
-argument_list|(
+return|return
 literal|0
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
