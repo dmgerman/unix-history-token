@@ -783,6 +783,10 @@ argument_list|)
 operator|)
 operator|!=
 name|EOF
+operator|&&
+name|col
+operator|<
+name|MAXBUF
 condition|)
 switch|switch
 condition|(
