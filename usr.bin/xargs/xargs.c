@@ -94,6 +94,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -316,6 +322,8 @@ name|insingle
 decl_stmt|,
 name|indouble
 decl_stmt|,
+name|oflag
+decl_stmt|,
 name|pflag
 decl_stmt|,
 name|tflag
@@ -486,7 +494,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0E:I:J:L:n:pR:s:tx"
+literal|"0E:I:J:L:n:opR:s:tx"
 argument_list|)
 operator|)
 operator|!=
@@ -579,6 +587,14 @@ literal|1
 argument_list|,
 literal|"illegal argument count"
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|oflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1925,6 +1941,58 @@ expr_stmt|;
 case|case
 literal|0
 case|:
+name|close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|oflag
+condition|)
+block|{
+if|if
+condition|(
+name|open
+argument_list|(
+literal|"/dev/tty"
+argument_list|,
+name|O_RDONLY
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"open /dev/tty"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+name|O_RDONLY
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"open /dev/null"
+argument_list|)
+expr_stmt|;
+block|}
 name|execvp
 argument_list|(
 name|argv
@@ -2203,7 +2271,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: xargs [-0pt] [-E eofstr] [-I replstr [-R replacements]] [-J replstr]\n"
+literal|"usage: xargs [-0opt] [-E eofstr] [-I replstr [-R replacements]] [-J replstr]\n"
 literal|"             [-L number] [-n number [-x] [-s size] [utility [argument ...]]\n"
 argument_list|)
 expr_stmt|;
