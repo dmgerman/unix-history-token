@@ -2753,9 +2753,16 @@ name|af
 operator|!=
 name|AF_INET
 operator|&&
+operator|(
+operator|!
+name|probe
+operator|.
+name|ipv6_available
+operator|||
 name|af
 operator|!=
 name|AF_INET6
+operator|)
 condition|)
 else|#
 directive|else

@@ -272,6 +272,12 @@ directive|include
 file|"physical.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"probe.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1186,6 +1192,27 @@ name|ncp
 operator|.
 name|ipv6cp
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|probe
+operator|.
+name|ipv6_available
+condition|)
+block|{
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|"ipv6 not available\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|prompt_Printf
 argument_list|(
 name|arg
@@ -1401,6 +1428,10 @@ name|bundle
 argument_list|)
 operator|==
 name|PHASE_NETWORK
+operator|&&
+name|probe
+operator|.
+name|ipv6_available
 condition|)
 name|fsm_Input
 argument_list|(

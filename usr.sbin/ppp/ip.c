@@ -295,6 +295,12 @@ directive|include
 file|"tun.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"probe.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -5472,6 +5478,11 @@ name|nb
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|probe
+operator|.
+name|ipv6_available
+operator|||
 name|bundle
 operator|->
 name|ncp
