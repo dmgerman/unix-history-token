@@ -2161,6 +2161,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|T_LL
+value|&long_long_integer_type_node
+end_define
+
+begin_define
+define|#
+directive|define
 name|T_S
 value|&short_integer_type_node
 end_define
@@ -2177,6 +2184,13 @@ define|#
 directive|define
 name|T_UL
 value|&long_unsigned_type_node
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_ULL
+value|&long_long_unsigned_type_node
 end_define
 
 begin_define
@@ -2261,6 +2275,11 @@ name|tree
 modifier|*
 name|llen
 decl_stmt|;
+comment|/* Type of argument if length modifier `q' is used.      If NULL, then this modifier is not allowed.  */
+name|tree
+modifier|*
+name|qlen
+decl_stmt|;
 comment|/* Type of argument if length modifier `L' is used.      If NULL, then this modifier is not allowed.  */
 name|tree
 modifier|*
@@ -2294,6 +2313,8 @@ name|T_I
 block|,
 name|T_L
 block|,
+name|T_LL
+block|,
 name|NULL
 block|,
 literal|"-wp0 +"
@@ -2309,6 +2330,8 @@ block|,
 name|T_UI
 block|,
 name|T_UL
+block|,
+name|T_ULL
 block|,
 name|NULL
 block|,
@@ -2326,6 +2349,8 @@ name|T_UI
 block|,
 name|T_UL
 block|,
+name|T_ULL
+block|,
 name|NULL
 block|,
 literal|"-wp0"
@@ -2338,6 +2363,8 @@ block|,
 literal|0
 block|,
 name|T_ST
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -2361,6 +2388,8 @@ name|T_UL
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 literal|"-wp"
 block|}
 block|,
@@ -2370,6 +2399,8 @@ block|,
 literal|0
 block|,
 name|T_D
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -2393,6 +2424,8 @@ name|T_W
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 literal|"-w"
 block|}
 block|,
@@ -2402,6 +2435,8 @@ block|,
 literal|0
 block|,
 name|T_W
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -2425,6 +2460,8 @@ name|T_W
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 literal|"-wp"
 block|}
 block|,
@@ -2434,6 +2471,8 @@ block|,
 literal|1
 block|,
 name|T_W
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -2457,6 +2496,8 @@ name|NULL
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 literal|"-w"
 block|}
 block|,
@@ -2470,6 +2511,8 @@ block|,
 name|T_S
 block|,
 name|T_L
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -2501,6 +2544,8 @@ name|T_S
 block|,
 name|T_L
 block|,
+name|T_LL
+block|,
 name|NULL
 block|,
 literal|"*"
@@ -2517,6 +2562,8 @@ name|T_US
 block|,
 name|T_UL
 block|,
+name|T_ULL
+block|,
 name|NULL
 block|,
 literal|"*"
@@ -2532,6 +2579,8 @@ block|,
 name|NULL
 block|,
 name|T_D
+block|,
+name|NULL
 block|,
 name|T_LD
 block|,
@@ -2551,6 +2600,8 @@ name|T_W
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 literal|"*a"
 block|}
 block|,
@@ -2560,6 +2611,8 @@ block|,
 literal|1
 block|,
 name|T_C
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -2583,6 +2636,8 @@ name|NULL
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 literal|"*"
 block|}
 block|,
@@ -2592,6 +2647,8 @@ block|,
 literal|1
 block|,
 name|T_W
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -2615,6 +2672,8 @@ name|NULL
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 literal|"*"
 block|}
 block|,
@@ -2628,6 +2687,8 @@ block|,
 name|T_S
 block|,
 name|T_L
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -4009,6 +4070,11 @@ operator|||
 operator|*
 name|format_chars
 operator|==
+literal|'q'
+operator|||
+operator|*
+name|format_chars
+operator|==
 literal|'L'
 condition|)
 name|length_char
@@ -4519,6 +4585,25 @@ operator|(
 name|fci
 operator|->
 name|llen
+operator|)
+else|:
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|wanted_type
+operator|=
+name|fci
+operator|->
+name|qlen
+condition|?
+operator|*
+operator|(
+name|fci
+operator|->
+name|qlen
 operator|)
 else|:
 literal|0
