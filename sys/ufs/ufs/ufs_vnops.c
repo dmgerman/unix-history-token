@@ -2190,13 +2190,9 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|suser_xxx
+name|suser
 argument_list|(
-name|cred
-argument_list|,
 name|p
-argument_list|,
-name|PRISON_ROOT
 argument_list|)
 operator|)
 condition|)
