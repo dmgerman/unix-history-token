@@ -7928,8 +7928,6 @@ name|vm_page
 modifier|*
 name|m
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|sf
 operator|=
 name|dtosf
