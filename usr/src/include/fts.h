@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.21 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -69,38 +69,43 @@ function_decl|;
 comment|/* compare function */
 define|#
 directive|define
-name|FTS_LOGICAL
+name|FTS_COMFOLLOW
 value|0x001
+comment|/* follow command line symlinks */
+define|#
+directive|define
+name|FTS_LOGICAL
+value|0x002
 comment|/* logical walk */
 define|#
 directive|define
 name|FTS_NOCHDIR
-value|0x002
+value|0x004
 comment|/* don't change directories */
 define|#
 directive|define
 name|FTS_NOSTAT
-value|0x004
+value|0x008
 comment|/* don't get stat info */
 define|#
 directive|define
 name|FTS_PHYSICAL
-value|0x008
+value|0x010
 comment|/* physical walk */
 define|#
 directive|define
 name|FTS_SEEDOT
-value|0x010
+value|0x020
 comment|/* return dot and dot-dot */
 define|#
 directive|define
 name|FTS_STOP
-value|0x020
+value|0x040
 comment|/* (private) unrecoverable error */
 define|#
 directive|define
 name|FTS_XDEV
-value|0x040
+value|0x080
 comment|/* don't cross devices */
 name|int
 name|fts_options

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.29 (Berkeley) %G%"
+literal|"@(#)fts.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -564,7 +564,10 @@ name|sp
 argument_list|,
 name|p
 argument_list|,
-literal|0
+name|ISSET
+argument_list|(
+name|FTS_COMFOLLOW
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Command-line "." and ".." are real directories. */
