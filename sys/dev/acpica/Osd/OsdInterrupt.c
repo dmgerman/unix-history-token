@@ -102,6 +102,13 @@ name|sc
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
@@ -368,6 +375,13 @@ name|sc
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
