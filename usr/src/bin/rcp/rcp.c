@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.31 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,12 +65,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -89,13 +83,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<sys/wait.h>
 end_include
 
 begin_include
@@ -119,6 +113,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -137,7 +149,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -150,6 +162,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -233,7 +251,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"dfkprt"
+value|"dfk:prt"
 end_define
 
 begin_else
@@ -252,13 +270,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -337,6 +348,13 @@ name|BUF
 typedef|;
 end_typedef
 
+begin_function_decl
+name|void
+name|lostconn
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|main
 parameter_list|(
@@ -356,6 +374,11 @@ block|{
 specifier|extern
 name|int
 name|optind
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|optarg
 decl_stmt|;
 name|struct
 name|servent
@@ -380,16 +403,6 @@ modifier|*
 name|colon
 argument_list|()
 decl_stmt|;
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-parameter_list|()
-function_decl|;
-name|int
-name|lostconn
-parameter_list|()
-function_decl|;
 name|fflag
 operator|=
 name|tflag
@@ -444,8 +457,7 @@ name|strncpy
 argument_list|(
 name|dst_realm_buf
 argument_list|,
-operator|++
-name|argv
+name|optarg
 argument_list|,
 name|REALM_SZ
 argument_list|)
@@ -544,9 +556,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|msgbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msgbuf
+argument_list|)
 argument_list|,
 literal|"can't get entry for %s/tcp service"
 argument_list|,
@@ -744,9 +761,14 @@ name|KERBEROS
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|cmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmd
+argument_list|)
 argument_list|,
 literal|"rcp%s%s%s%s"
 argument_list|,
@@ -776,9 +798,14 @@ directive|else
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|cmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmd
+argument_list|)
 argument_list|,
 literal|"rcp%s%s%s"
 argument_list|,
@@ -906,6 +933,8 @@ begin_block
 block|{
 name|int
 name|i
+decl_stmt|,
+name|len
 decl_stmt|,
 name|tos
 decl_stmt|;
@@ -1086,14 +1115,8 @@ argument_list|,
 literal|'@'
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|bp
+name|len
 operator|=
-name|malloc
-argument_list|(
 name|strlen
 argument_list|(
 name|_PATH_RSH
@@ -1136,6 +1159,16 @@ operator|+
 name|CMDNEEDS
 operator|+
 literal|20
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|bp
+operator|=
+name|malloc
+argument_list|(
+name|len
 argument_list|)
 operator|)
 condition|)
@@ -1186,9 +1219,11 @@ continue|continue;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+name|len
 argument_list|,
 literal|"%s %s -l %s -n %s %s '%s%s%s:%s'"
 argument_list|,
@@ -1224,9 +1259,11 @@ else|else
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+name|len
 argument_list|,
 literal|"%s %s -n %s %s '%s%s%s:%s'"
 argument_list|,
@@ -1286,14 +1323,8 @@ operator|-
 literal|1
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|bp
+name|len
 operator|=
-name|malloc
-argument_list|(
 name|strlen
 argument_list|(
 name|targ
@@ -1302,6 +1333,16 @@ operator|+
 name|CMDNEEDS
 operator|+
 literal|20
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|bp
+operator|=
+name|malloc
+argument_list|(
+name|len
 argument_list|)
 operator|)
 condition|)
@@ -1311,9 +1352,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+name|len
 argument_list|,
 literal|"%s -t %s"
 argument_list|,
@@ -1500,6 +1543,8 @@ block|{
 name|int
 name|i
 decl_stmt|,
+name|len
+decl_stmt|,
 name|tos
 decl_stmt|;
 name|char
@@ -1553,14 +1598,8 @@ operator|)
 condition|)
 block|{
 comment|/* local to local */
-if|if
-condition|(
-operator|!
-operator|(
-name|bp
+name|len
 operator|=
-name|malloc
-argument_list|(
 name|strlen
 argument_list|(
 name|_PATH_CP
@@ -1585,6 +1624,16 @@ index|]
 argument_list|)
 operator|+
 literal|20
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|bp
+operator|=
+name|malloc
+argument_list|(
+name|len
 argument_list|)
 operator|)
 condition|)
@@ -1594,9 +1643,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+name|len
 argument_list|,
 literal|"%s%s%s %s %s"
 argument_list|,
@@ -1732,14 +1783,8 @@ operator|->
 name|pw_name
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-operator|(
-name|bp
+name|len
 operator|=
-name|malloc
-argument_list|(
 name|strlen
 argument_list|(
 name|src
@@ -1748,6 +1793,16 @@ operator|+
 name|CMDNEEDS
 operator|+
 literal|20
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|bp
+operator|=
+name|malloc
+argument_list|(
+name|len
 argument_list|)
 operator|)
 condition|)
@@ -1757,9 +1812,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+name|len
 argument_list|,
 literal|"%s -f %s"
 argument_list|,
@@ -2513,9 +2570,14 @@ comment|/* 			 * Make it compatible with possible future 			 * versions expectin
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"T%ld 0 %ld 0\n"
 argument_list|,
@@ -2568,9 +2630,14 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"C%04o %ld %s\n"
 argument_list|,
@@ -2814,10 +2881,10 @@ begin_block
 block|{
 name|DIR
 modifier|*
-name|d
+name|dirp
 decl_stmt|;
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;
@@ -2840,7 +2907,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|d
+name|dirp
 operator|=
 name|opendir
 argument_list|(
@@ -2894,9 +2961,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
 argument_list|,
 literal|"T%ld 0 %ld 0\n"
 argument_list|,
@@ -2937,7 +3009,7 @@ condition|)
 block|{
 name|closedir
 argument_list|(
-name|d
+name|dirp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2946,9 +3018,14 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
 argument_list|,
 literal|"D%04o %d %s\n"
 argument_list|,
@@ -2991,7 +3068,7 @@ condition|)
 block|{
 name|closedir
 argument_list|(
-name|d
+name|dirp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3002,7 +3079,7 @@ name|dp
 operator|=
 name|readdir
 argument_list|(
-name|d
+name|dirp
 argument_list|)
 condition|)
 block|{
@@ -3075,9 +3152,14 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|path
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -3105,7 +3187,7 @@ expr_stmt|;
 block|}
 name|closedir
 argument_list|(
-name|d
+name|dirp
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3299,12 +3381,10 @@ comment|/*NOTREACHED*/
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|lostconn
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -3327,7 +3407,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|sink
@@ -4073,9 +4153,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|namebuf
+argument_list|,
+name|need
 argument_list|,
 literal|"%s%s%s"
 argument_list|,
