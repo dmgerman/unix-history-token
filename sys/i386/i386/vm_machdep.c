@@ -691,6 +691,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Copy the LDT, if necessary. */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pcb2
@@ -732,8 +738,27 @@ operator|->
 name|ldt_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pcb2
+operator|->
+name|pcb_ldt
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"could not copy LDT"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Now, cpu_switch() can schedule the new process. 	 * pcb_esp is loaded pointing to the cpu_switch() stack frame 	 * containing the return address when exiting cpu_switch. 	 * This will normally be to fork_trampoline(), which will have 	 * %ebx loaded with the new proc's pointer.  fork_trampoline() 	 * will set up a stack to call fork_return(p, frame); to complete 	 * the return to user-mode. 	 */
 block|}
 end_block

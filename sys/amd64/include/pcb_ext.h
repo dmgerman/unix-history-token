@@ -95,6 +95,20 @@ name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
+name|int
+name|i386_extend_pcb
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|set_user_ldt
 name|__P
