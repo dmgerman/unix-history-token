@@ -4674,6 +4674,9 @@ literal|0
 condition|;
 name|f
 operator|++
+operator|,
+name|i
+operator|++
 control|)
 block|{
 name|sets
@@ -4725,16 +4728,11 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
 block|}
 operator|*
 name|count
 operator|=
 name|i
-operator|+
-literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -4851,7 +4849,7 @@ argument_list|,
 name|msr
 argument_list|)
 expr_stmt|;
-comment|/* Wait a short while for the new setting.  Is this necessary? */
+comment|/* Wait a short while for the new setting.  XXX Is this necessary? */
 name|DELAY
 argument_list|(
 name|EST_TRANS_LAT
