@@ -1597,6 +1597,52 @@ comment|/* #define	PCIC_RESERVED			0x3F */
 end_comment
 
 begin_comment
+comment|/* cardbus extensions - memory window page registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MEMREG_WIN_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_SYSMEM_ADDR0_WIN
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_SYSMEM_ADDR1_WIN
+value|0x41
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_SYSMEM_ADDR2_WIN
+value|0x42
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_SYSMEM_ADDR3_WIN
+value|0x43
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_SYSMEM_ADDR4_WIN
+value|0x44
+end_define
+
+begin_comment
 comment|/* vendor-specific registers */
 end_comment
 
