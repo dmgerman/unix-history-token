@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.1 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1076,7 +1076,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"user\t cmd\t      pid    fd\tdevice\tinode\t  size\ttype\n"
+literal|"USER\t CMD\t      PID    FD\tDEVICE\tINODE\t  SIZE\tTYPE\n"
 argument_list|)
 expr_stmt|;
 name|openfiles
