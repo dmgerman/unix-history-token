@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pps.c,v 1.13 1999/01/30 15:35:39 nsouch Exp $  *  * This driver implements a draft-mogul-pps-api-02.txt PPS source.  *  * The input pin is pin#10   * The echo output pin is pin#14  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pps.c,v 1.14 1999/03/11 15:09:51 phk Exp $  *  * This driver implements a draft-mogul-pps-api-02.txt PPS source.  *  * The input pin is pin#10   * The echo output pin is pin#14  *  */
 end_comment
 
 begin_include
@@ -116,14 +116,6 @@ name|int
 name|npps
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-specifier|static
-name|pps_devsw_installed
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Make ourselves visible as a ppbus driver  */
@@ -482,12 +474,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
-name|pps_devsw_installed
-condition|)
-block|{
 name|devt
 operator|=
 name|makedev
@@ -508,11 +494,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|pps_devsw_installed
-operator|=
-literal|1
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|1
