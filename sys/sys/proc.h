@@ -1766,7 +1766,7 @@ name|stack_t
 name|p_sigstk
 decl_stmt|;
 comment|/* (c) Stack ptr and on-stack flag. */
-name|int
+name|u_int
 name|p_magic
 decl_stmt|;
 comment|/* (b) Magic number. */
