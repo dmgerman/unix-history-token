@@ -9792,6 +9792,8 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|fp
 operator|->
 name|f_name
@@ -10659,12 +10661,16 @@ name|WORD
 condition|)
 name|db_printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|i_name
 argument_list|)
 expr_stmt|;
 else|else
 name|db_printf
 argument_list|(
+literal|"%s"
+argument_list|,
 operator|(
 specifier|const
 name|char
@@ -10680,6 +10686,8 @@ else|else
 block|{
 name|db_printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|i_name
 argument_list|)
 expr_stmt|;

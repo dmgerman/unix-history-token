@@ -3357,6 +3357,8 @@ name|MAX_TRAP_MSG
 condition|)
 name|panic
 argument_list|(
+literal|"%s"
+argument_list|,
 name|trap_msg
 index|[
 name|type

@@ -807,6 +807,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|sep
 argument_list|)
 expr_stmt|;

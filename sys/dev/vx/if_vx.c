@@ -1090,6 +1090,8 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|conn_tab
 index|[
 name|k
