@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002, 2003 Sam Leffler, Errno Consulting  * All rig
 end_comment
 
 begin_comment
-comment|/*  *	athstats [-i interface]  * (default interface is ath0).  */
+comment|/*  * 80211stats [-i interface]  * (default interface is ath0).  */
 end_comment
 
 begin_include
