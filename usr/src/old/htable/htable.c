@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)htable.c	5.4 (Berkeley) %G%"
+literal|"@(#)htable.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2740,6 +2740,11 @@ name|g_dst
 operator|=
 name|gp
 expr_stmt|;
+return|return
+operator|(
+name|gp
+operator|)
+return|;
 block|}
 end_function
 
