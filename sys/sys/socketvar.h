@@ -142,6 +142,14 @@ name|u_long
 name|so_oobmark
 decl_stmt|;
 comment|/* chars to oob mark */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|aiocblist
+argument_list|)
+name|so_aiojobq
+expr_stmt|;
+comment|/* AIO ops waiting on socket */
 comment|/*  * Variables for socket buffering.  */
 struct|struct
 name|sockbuf
@@ -230,6 +238,11 @@ directive|define
 name|SB_NOINTR
 value|0x40
 comment|/* operations not interruptible */
+define|#
+directive|define
+name|SB_AIO
+value|0x80
+comment|/* AIO operations queued */
 name|void
 argument_list|(
 argument|*so_upcall
@@ -532,7 +545,7 @@ name|sb_notify
 parameter_list|(
 name|sb
 parameter_list|)
-value|(((sb)->sb_flags& (SB_WAIT|SB_SEL|SB_ASYNC|SB_UPCALL)) != 0)
+value|(((sb)->sb_flags& (SB_WAIT | SB_SEL | SB_ASYNC | \     SB_UPCALL | SB_AIO)) != 0)
 end_define
 
 begin_comment

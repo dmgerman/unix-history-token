@@ -88,6 +88,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -291,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_AIO_PROCS
-value|0
+value|4
 end_define
 
 begin_endif
@@ -436,7 +448,12 @@ name|int
 name|max_aio_per_proc
 init|=
 name|MAX_AIO_PER_PROC
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|max_aio_queue_per_proc
 init|=
 name|MAX_AIO_QUEUE_PER_PROC
@@ -702,106 +719,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Job queue item  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AIOCBLIST_CANCELLED
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|AIOCBLIST_RUNDOWN
-value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
-name|AIOCBLIST_ASYNCFREE
-value|0x8
-end_define
-
-begin_define
-define|#
-directive|define
-name|AIOCBLIST_DONE
-value|0x10
-end_define
-
-begin_struct
-struct|struct
-name|aiocblist
-block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|aiocblist
-argument_list|)
-name|list
-expr_stmt|;
-comment|/* List of jobs */
-name|TAILQ_ENTRY
-argument_list|(
-argument|aiocblist
-argument_list|)
-name|plist
-expr_stmt|;
-comment|/* List of jobs for proc */
-name|int
-name|jobflags
-decl_stmt|;
-name|int
-name|jobstate
-decl_stmt|;
-name|int
-name|inputcharge
-decl_stmt|,
-name|outputcharge
-decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-comment|/* buffer pointer */
-name|struct
-name|proc
-modifier|*
-name|userproc
-decl_stmt|;
-comment|/* User process */
-name|struct
-name|aioproclist
-modifier|*
-name|jobaioproc
-decl_stmt|;
-comment|/* AIO process descriptor */
-name|struct
-name|aio_liojob
-modifier|*
-name|lio
-decl_stmt|;
-comment|/* optional lio job */
-name|struct
-name|aiocb
-modifier|*
-name|uuaiocb
-decl_stmt|;
-comment|/* pointer in userspace of aiocb */
-name|struct
-name|aiocb
-name|uaiocb
-decl_stmt|;
-comment|/* Kernel I/O control block */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * AIO process info  */
 end_comment
 
@@ -1015,6 +932,14 @@ argument_list|)
 name|kaio_bufdone
 expr_stmt|;
 comment|/* buffer done queue for process */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|aiocblist
+argument_list|)
+name|kaio_sockqueue
+expr_stmt|;
+comment|/* queue for aios waiting on sockets */
 block|}
 struct|;
 end_struct
@@ -1038,7 +963,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* wakeup process when there is a significant 								   event */
+comment|/* wakeup process when there is a significant event */
 end_comment
 
 begin_expr_stmt
@@ -1278,7 +1203,12 @@ decl_stmt|,
 name|aiol_zone
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|vm_zone_t
 name|aiolio_zone
 init|=
 literal|0
@@ -1442,7 +1372,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Init the per-process aioinfo structure.  * The aioinfo limits are set per-process for user limit (resource) management.  */
+comment|/*  * Init the per-process aioinfo structure.  The aioinfo limits are set  * per-process for user limit (resource) management.  */
 end_comment
 
 begin_function
@@ -1576,12 +1506,29 @@ operator|->
 name|kaio_liojoblist
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|ki
+operator|->
+name|kaio_sockqueue
+argument_list|)
+expr_stmt|;
 block|}
+while|while
+condition|(
+name|num_aio_procs
+operator|<
+name|target_aio_procs
+condition|)
+name|aio_newproc
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Free a job entry.  Wait for completion if it is currently  * active, but don't delay forever.  If we delay, we return  * a flag that says that we have to restart the queue scan.  */
+comment|/*  * Free a job entry.  Wait for completion if it is currently active, but don't  * delay forever.  If we delay, we return a flag that says that we have to  * restart the queue scan.  */
 end_comment
 
 begin_function
@@ -1991,7 +1938,6 @@ name|jobstate
 operator|==
 name|JOBST_JOBQGLOBAL
 condition|)
-block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2002,7 +1948,6 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2012,7 +1957,6 @@ name|jobstate
 operator|==
 name|JOBST_JOBFINISHED
 condition|)
-block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2025,7 +1969,6 @@ argument_list|,
 name|plist
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2190,6 +2133,21 @@ decl_stmt|,
 modifier|*
 name|aiocbn
 decl_stmt|;
+name|struct
+name|file
+modifier|*
+name|fp
+decl_stmt|;
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+decl_stmt|;
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
 name|ki
 operator|=
 name|p
@@ -2251,6 +2209,181 @@ argument_list|)
 condition|)
 break|break;
 block|}
+comment|/* 	 * Move any aio ops that are waiting on socket I/O to the normal job 	 * queues so they are cleaned up with any others. 	 */
+name|fdp
+operator|=
+name|p
+operator|->
+name|p_fd
+expr_stmt|;
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|aiocbe
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|ki
+operator|->
+name|kaio_sockqueue
+argument_list|)
+init|;
+name|aiocbe
+condition|;
+name|aiocbe
+operator|=
+name|aiocbn
+control|)
+block|{
+name|aiocbn
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|aiocbe
+argument_list|,
+name|plist
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|fdp
+operator|->
+name|fd_ofiles
+index|[
+name|aiocbe
+operator|->
+name|uaiocb
+operator|.
+name|aio_fildes
+index|]
+expr_stmt|;
+comment|/* 		 * Under some circumstances, the aio_fildes and the file 		 * structure don't match.  This would leave aiocbe's in the 		 * TAILQ associated with the socket and cause a panic later. 		 *  		 * Detect and fix. 		 */
+if|if
+condition|(
+operator|(
+name|fp
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|fp
+operator|!=
+name|aiocbe
+operator|->
+name|fd_file
+operator|)
+condition|)
+name|fp
+operator|=
+name|aiocbe
+operator|->
+name|fd_file
+expr_stmt|;
+if|if
+condition|(
+name|fp
+condition|)
+block|{
+name|so
+operator|=
+operator|(
+expr|struct
+name|socket
+operator|*
+operator|)
+name|fp
+operator|->
+name|f_data
+expr_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_aiojobq
+argument_list|,
+name|aiocbe
+argument_list|,
+name|list
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_aiojobq
+argument_list|)
+condition|)
+block|{
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_flags
+operator|&=
+operator|~
+name|SB_AIO
+expr_stmt|;
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_flags
+operator|&=
+operator|~
+name|SB_AIO
+expr_stmt|;
+block|}
+block|}
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|ki
+operator|->
+name|kaio_sockqueue
+argument_list|,
+name|aiocbe
+argument_list|,
+name|plist
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|aio_jobs
+argument_list|,
+name|aiocbe
+argument_list|,
+name|list
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|ki
+operator|->
+name|kaio_jobqueue
+argument_list|,
+name|aiocbe
+argument_list|,
+name|plist
+argument_list|)
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|restart1
 label|:
 for|for
@@ -2333,7 +2466,7 @@ goto|goto
 name|restart2
 goto|;
 block|}
-comment|/*  * Note the use of lots of splbio here, trying to avoid  * splbio for long chains of I/O.  Probably unnecessary.  */
+comment|/*  * Note the use of lots of splbio here, trying to avoid splbio for long chains  * of I/O.  Probably unnecessary.  */
 name|restart3
 label|:
 name|s
@@ -2510,15 +2643,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
-argument_list|)
 name|printf
 argument_list|(
-literal|"LIO job not cleaned up: B:%d, BF:%d, Q:%d, QF:%d\n"
+literal|"LIO job not cleaned up: B:%d, BF:%d, Q:%d, "
+literal|"QF:%d\n"
 argument_list|,
 name|lj
 operator|->
@@ -2558,7 +2689,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Select a job to run (called by an AIO daemon)  */
+comment|/*  * Select a job to run (called by an AIO daemon).  */
 end_comment
 
 begin_function
@@ -2574,10 +2705,23 @@ modifier|*
 name|aiop
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
 name|struct
 name|aiocblist
 modifier|*
 name|aiocbe
+decl_stmt|;
+name|struct
+name|kaioinfo
+modifier|*
+name|ki
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|userp
 decl_stmt|;
 name|aiocbe
 operator|=
@@ -2610,6 +2754,11 @@ return|return
 name|aiocbe
 return|;
 block|}
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|aiocbe
@@ -2632,16 +2781,6 @@ name|list
 argument_list|)
 control|)
 block|{
-name|struct
-name|kaioinfo
-modifier|*
-name|ki
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|userp
-decl_stmt|;
 name|userp
 operator|=
 name|aiocbe
@@ -2675,11 +2814,21 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|aiocbe
 return|;
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -2687,7 +2836,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The AIO processing activity.  This is the code that does the  * I/O request for the non-physio version of the operations.  The  * normal vn operations are used, and this code should work in  * all instances for every type of file, including pipes, sockets,  * fifos, and regular files.  */
+comment|/*  * The AIO processing activity.  This is the code that does the I/O request for  * the non-physio version of the operations.  The normal vn operations are used,  * and this code should work in all instances for every type of file, including  * pipes, sockets, fifos, and regular files.  */
 end_comment
 
 begin_function
@@ -2792,6 +2941,42 @@ index|[
 name|fd
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fp
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|fp
+operator|!=
+name|aiocbe
+operator|->
+name|fd_file
+operator|)
+condition|)
+block|{
+name|cb
+operator|->
+name|_aiocb_private
+operator|.
+name|error
+operator|=
+name|EBADF
+expr_stmt|;
+name|cb
+operator|->
+name|_aiocb_private
+operator|.
+name|status
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return;
+block|}
 name|aiov
 operator|.
 name|iov_base
@@ -2980,16 +3165,17 @@ name|oublock_st
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 name|auio
 operator|.
 name|uio_resid
 operator|!=
 name|cnt
+operator|)
 condition|)
 block|{
 if|if
@@ -3033,7 +3219,6 @@ argument_list|,
 name|SIGPIPE
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|cnt
 operator|-=
@@ -3079,19 +3264,48 @@ name|int
 name|s
 decl_stmt|;
 name|struct
+name|aio_liojob
+modifier|*
+name|lj
+decl_stmt|;
+name|struct
+name|aiocb
+modifier|*
+name|cb
+decl_stmt|;
+name|struct
+name|aiocblist
+modifier|*
+name|aiocbe
+decl_stmt|;
+name|struct
 name|aioproclist
 modifier|*
 name|aiop
 decl_stmt|;
 name|struct
-name|vmspace
+name|kaioinfo
 modifier|*
-name|myvm
+name|ki
 decl_stmt|;
 name|struct
 name|proc
 modifier|*
+name|curcp
+decl_stmt|,
+modifier|*
 name|mycp
+decl_stmt|,
+modifier|*
+name|userp
+decl_stmt|;
+name|struct
+name|vmspace
+modifier|*
+name|myvm
+decl_stmt|,
+modifier|*
+name|tmpvm
 decl_stmt|;
 comment|/* 	 * Local copies of curproc (cp) and vmspace (myvm) 	 */
 name|mycp
@@ -3125,7 +3339,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * Allocate and ready the aio control info.  There is one 	 * aiop structure per daemon. 	 */
+comment|/* 	 * Allocate and ready the aio control info.  There is one aiop structure 	 * per daemon. 	 */
 name|aiop
 operator|=
 name|zalloc
@@ -3153,7 +3367,12 @@ operator|->
 name|jobtorun
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Place thread (lightweight process) onto the AIO free thread list 	 */
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Place thread (lightweight process) onto the AIO free thread list. 	 */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -3178,7 +3397,12 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make up a name for the daemon 	 */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* Make up a name for the daemon. */
 name|strcpy
 argument_list|(
 name|mycp
@@ -3188,7 +3412,7 @@ argument_list|,
 literal|"aiod"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get rid of our current filedescriptors.  AIOD's don't need any 	 * filedescriptors, except as temporarily inherited from the client. 	 * Credentials are also cloned, and made equivalent to "root." 	 */
+comment|/* 	 * Get rid of our current filedescriptors.  AIOD's don't need any 	 * filedescriptors, except as temporarily inherited from the client. 	 * Credentials are also cloned, and made equivalent to "root". 	 */
 name|fdfree
 argument_list|(
 name|mycp
@@ -3238,7 +3462,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * The daemon resides in its own pgrp. 	 */
+comment|/* The daemon resides in its own pgrp. */
 name|enterpgrp
 argument_list|(
 name|mycp
@@ -3250,7 +3474,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Mark special process type 	 */
+comment|/* Mark special process type. */
 name|mycp
 operator|->
 name|p_flag
@@ -3265,21 +3489,12 @@ argument_list|(
 name|mycp
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
-name|struct
-name|proc
-modifier|*
-name|curcp
-decl_stmt|;
-name|struct
-name|aiocblist
-modifier|*
-name|aiocbe
-decl_stmt|;
 comment|/* 		 * curcp is the current daemon process context. 		 * userp is the current user process context. 		 */
 name|curcp
 operator|=
@@ -3295,6 +3510,11 @@ operator|&
 name|AIOP_FREE
 condition|)
 block|{
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3322,6 +3542,11 @@ operator|&=
 operator|~
 name|AIOP_FREE
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 name|aiop
 operator|->
@@ -3330,7 +3555,7 @@ operator|&=
 operator|~
 name|AIOP_SCHED
 expr_stmt|;
-comment|/* 		 * Check for jobs 		 */
+comment|/* 		 * Check for jobs. 		 */
 while|while
 condition|(
 operator|(
@@ -3345,26 +3570,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|struct
-name|proc
-modifier|*
-name|userp
-decl_stmt|;
-name|struct
-name|aiocb
-modifier|*
-name|cb
-decl_stmt|;
-name|struct
-name|kaioinfo
-modifier|*
-name|ki
-decl_stmt|;
-name|struct
-name|aio_liojob
-modifier|*
-name|lj
-decl_stmt|;
 name|cb
 operator|=
 operator|&
@@ -3384,7 +3589,7 @@ name|jobstate
 operator|=
 name|JOBST_JOBRUNNING
 expr_stmt|;
-comment|/* 			 * Connect to process address space for user program 			 */
+comment|/* 			 * Connect to process address space for user program. 			 */
 if|if
 condition|(
 name|userp
@@ -3392,19 +3597,14 @@ operator|!=
 name|curcp
 condition|)
 block|{
-name|struct
-name|vmspace
-modifier|*
-name|tmpvm
-decl_stmt|;
-comment|/* 				 * Save the current address space that we are connected to. 				 */
+comment|/* 				 * Save the current address space that we are 				 * connected to. 				 */
 name|tmpvm
 operator|=
 name|mycp
 operator|->
 name|p_vmspace
 expr_stmt|;
-comment|/* 				 * Point to the new user address space, and refer to it. 				 */
+comment|/* 				 * Point to the new user address space, and 				 * refer to it. 				 */
 name|mycp
 operator|->
 name|p_vmspace
@@ -3420,13 +3620,13 @@ operator|->
 name|vm_refcnt
 operator|++
 expr_stmt|;
-comment|/* 				 * Activate the new mapping. 				 */
+comment|/* Activate the new mapping. */
 name|pmap_activate
 argument_list|(
 name|mycp
 argument_list|)
 expr_stmt|;
-comment|/* 				 * If the old address space wasn't the daemons own address 				 * space, then we need to remove the daemon's reference from 				 * the other process that it was acting on behalf of. 				 */
+comment|/* 				 * If the old address space wasn't the daemons 				 * own address space, then we need to remove the 				 * daemon's reference from the other process 				 * that it was acting on behalf of. 				 */
 if|if
 condition|(
 name|tmpvm
@@ -3440,7 +3640,7 @@ name|tmpvm
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 				 * Disassociate from previous clients file descriptors, and 				 * associate to the new clients descriptors.  Note that 				 * the daemon doesn't need to worry about its orginal 				 * descriptors, because they were originally freed. 				 */
+comment|/* 				 * Disassociate from previous clients file 				 * descriptors, and associate to the new clients 				 * descriptors.  Note that the daemon doesn't 				 * need to worry about its orginal descriptors, 				 * because they were originally freed. 				 */
 if|if
 condition|(
 name|mycp
@@ -3478,13 +3678,13 @@ name|aiocbe
 operator|->
 name|lio
 expr_stmt|;
-comment|/* 			 * Account for currently active jobs 			 */
+comment|/* Account for currently active jobs. */
 name|ki
 operator|->
 name|kaio_active_count
 operator|++
 expr_stmt|;
-comment|/* 			 * Do the I/O function 			 */
+comment|/* Do the I/O function. */
 name|aiocbe
 operator|->
 name|jobaioproc
@@ -3496,13 +3696,13 @@ argument_list|(
 name|aiocbe
 argument_list|)
 expr_stmt|;
-comment|/* 			 * decrement the active job count 			 */
+comment|/* Decrement the active job count. */
 name|ki
 operator|->
 name|kaio_active_count
 operator|--
 expr_stmt|;
-comment|/* 			 * increment the completion count for wakeup/signal comparisons 			 */
+comment|/* 			 * Increment the completion count for wakeup/signal 			 * comparisons. 			 */
 name|aiocbe
 operator|->
 name|jobflags
@@ -3518,13 +3718,11 @@ if|if
 condition|(
 name|lj
 condition|)
-block|{
 name|lj
 operator|->
 name|lioj_queue_finished_count
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -3644,7 +3842,12 @@ name|jobstate
 operator|=
 name|JOBST_JOBFINISHED
 expr_stmt|;
-comment|/* 			 * If the I/O request should be automatically rundown, do the 			 * needed cleanup.  Otherwise, place the queue entry for 			 * the just finished I/O request into the done queue for the 			 * associated client. 			 */
+comment|/* 			 * If the I/O request should be automatically rundown, 			 * do the needed cleanup.  Otherwise, place the queue 			 * entry for the just finished I/O request into the done 			 * queue for the associated client. 			 */
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|aiocbe
@@ -3699,6 +3902,11 @@ name|plist
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|aiocbe
@@ -3745,7 +3953,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * Disconnect from user address space 		 */
+comment|/* 		 * Disconnect from user address space. 		 */
 if|if
 condition|(
 name|curcp
@@ -3753,43 +3961,36 @@ operator|!=
 name|mycp
 condition|)
 block|{
-name|struct
-name|vmspace
-modifier|*
-name|tmpvm
-decl_stmt|;
-comment|/* 			 * Get the user address space to disconnect from. 			 */
+comment|/* Get the user address space to disconnect from. */
 name|tmpvm
 operator|=
 name|mycp
 operator|->
 name|p_vmspace
 expr_stmt|;
-comment|/* 			 * Get original address space for daemon. 			 */
+comment|/* Get original address space for daemon. */
 name|mycp
 operator|->
 name|p_vmspace
 operator|=
 name|myvm
 expr_stmt|;
-comment|/* 			 * Activate the daemon's address space. 			 */
+comment|/* Activate the daemon's address space. */
 name|pmap_activate
 argument_list|(
 name|mycp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
-argument_list|)
 if|if
 condition|(
 name|tmpvm
 operator|==
 name|myvm
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"AIOD: vmspace problem -- %d\n"
@@ -3799,15 +4000,16 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
-comment|/* 			 * remove our vmspace reference. 			 */
+comment|/* Remove our vmspace reference. */
 name|vmspace_free
 argument_list|(
 name|tmpvm
 argument_list|)
 expr_stmt|;
-comment|/* 			 * disassociate from the user process's file descriptors. 			 */
+comment|/* 			 * Disassociate from the user process's file 			 * descriptors. 			 */
 if|if
 condition|(
 name|mycp
@@ -3831,6 +4033,11 @@ name|mycp
 expr_stmt|;
 block|}
 comment|/* 		 * If we are the first to be put onto the free queue, wakeup 		 * anyone waiting for a daemon. 		 */
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -3871,7 +4078,12 @@ name|aioprocflags
 operator||=
 name|AIOP_FREE
 expr_stmt|;
-comment|/* 		 * If daemon is inactive for a long time, allow it to exit, thereby 		 * freeing resources. 		 */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If daemon is inactive for a long time, allow it to exit, 		 * thereby freeing resources. 		 */
 if|if
 condition|(
 operator|(
@@ -3898,6 +4110,11 @@ name|aiod_lifetime
 argument_list|)
 condition|)
 block|{
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3950,6 +4167,11 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|zfree
 argument_list|(
 name|aiop_zone
@@ -3960,12 +4182,9 @@ expr_stmt|;
 name|num_aio_procs
 operator|--
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|DIAGNOSTIC
-argument_list|)
 if|if
 condition|(
 name|mycp
@@ -3976,9 +4195,11 @@ name|vm_refcnt
 operator|<=
 literal|1
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"AIOD: bad vm refcnt for exiting daemon: %d\n"
+literal|"AIOD: bad vm refcnt for"
+literal|" exiting daemon: %d\n"
 argument_list|,
 name|mycp
 operator|->
@@ -3987,6 +4208,7 @@ operator|->
 name|vm_refcnt
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|exit1
@@ -3998,13 +4220,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * Create a new AIO daemon.  This is mostly a kernel-thread fork routine.  * The AIO daemon modifies its environment itself.  */
+comment|/*  * Create a new AIO daemon.  This is mostly a kernel-thread fork routine.  The  * AIO daemon modifies its environment itself.  */
 end_comment
 
 begin_function
@@ -4061,7 +4288,7 @@ argument_list|,
 name|curproc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait until daemon is started, but continue on just in case (to 	 * handle error conditions. 	 */
+comment|/* 	 * Wait until daemon is started, but continue on just in case to 	 * handle error conditions. 	 */
 name|error
 operator|=
 name|tsleep
@@ -4085,27 +4312,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try the high-performance physio method for eligible VCHR devices.  This  * routine doesn't require the use of any additional threads, and have  * overhead.  */
+comment|/*  * Try the high-performance physio method for eligible VCHR devices.  This  * routine doesn't require the use of any additional threads, and have overhead.  */
 end_comment
 
 begin_function
 name|int
 name|aio_qphysio
 parameter_list|(
-name|p
-parameter_list|,
-name|aiocbe
-parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|aiocblist
 modifier|*
 name|aiocbe
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
@@ -4303,7 +4526,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* 	 * Physical I/O is charged directly to the process, so we don't have 	 * to fake it. 	 */
+comment|/* 	 * Physical I/O is charged directly to the process, so we don't have to 	 * fake it. 	 */
 name|aiocbe
 operator|->
 name|inputcharge
@@ -4331,14 +4554,12 @@ if|if
 condition|(
 name|lj
 condition|)
-block|{
 name|lj
 operator|->
 name|lioj_buffer_count
 operator|++
 expr_stmt|;
-block|}
-comment|/* create and build a buffer header for a transfer */
+comment|/* Create and build a buffer header for a transfer. */
 name|bp
 operator|=
 operator|(
@@ -4351,7 +4572,7 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * get a copy of the kva from the physical buffer 	 */
+comment|/* 	 * Get a copy of the kva from the physical buffer. 	 */
 name|bp
 operator|->
 name|b_caller1
@@ -4510,7 +4731,7 @@ name|doerror
 goto|;
 block|}
 block|}
-comment|/* bring buffer into kernel space */
+comment|/* Bring buffer into kernel space. */
 name|vmapbuf
 argument_list|(
 name|bp
@@ -4589,7 +4810,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* perform transfer */
+comment|/* Perform transfer. */
 name|BUF_STRATEGY
 argument_list|(
 name|bp
@@ -4602,7 +4823,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If we had an error invoking the request, or an error in processing 	 * the request before we have returned, we process it as an error 	 * in transfer.  Note that such an I/O error is not indicated immediately, 	 * but is returned using the aio_error mechanism.  In this case, aio_suspend 	 * will return immediately. 	 */
+comment|/* 	 * If we had an error invoking the request, or an error in processing 	 * the request before we have returned, we process it as an error in 	 * transfer.  Note that such an I/O error is not indicated immediately, 	 * but is returned using the aio_error mechanism.  In this case, 	 * aio_suspend will return immediately. 	 */
 if|if
 condition|(
 name|bp
@@ -4756,13 +4977,11 @@ if|if
 condition|(
 name|lj
 condition|)
-block|{
 name|lj
 operator|->
 name|lioj_buffer_count
 operator|--
 expr_stmt|;
-block|}
 name|aiocbe
 operator|->
 name|bp
@@ -4790,25 +5009,19 @@ begin_function
 name|int
 name|aio_fphysio
 parameter_list|(
-name|p
-parameter_list|,
-name|iocb
-parameter_list|,
-name|flgwait
-parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|aiocblist
 modifier|*
 name|iocb
-decl_stmt|;
+parameter_list|,
 name|int
 name|flgwait
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|s
@@ -4915,12 +5128,10 @@ name|EINPROGRESS
 return|;
 block|}
 else|else
-block|{
 break|break;
 block|}
 block|}
-block|}
-comment|/* release mapping into kernel space */
+comment|/* Release mapping into kernel space. */
 name|vunmapbuf
 argument_list|(
 name|bp
@@ -4936,7 +5147,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * check for an error 	 */
+comment|/* Check for an error. */
 if|if
 condition|(
 name|bp
@@ -4945,14 +5156,12 @@ name|b_flags
 operator|&
 name|B_ERROR
 condition|)
-block|{
 name|error
 operator|=
 name|bp
 operator|->
 name|b_error
 expr_stmt|;
-block|}
 name|relpbuf
 argument_list|(
 name|bp
@@ -4969,7 +5178,273 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Queue a new AIO request.  Choosing either the threaded or direct physio  * VCHR technique is done in this code.  */
+comment|/*  * Wake up aio requests that may be serviceable now.  */
+end_comment
+
+begin_function
+name|void
+name|aio_swake
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|)
+block|{
+name|struct
+name|aiocblist
+modifier|*
+name|cb
+decl_stmt|,
+modifier|*
+name|cbn
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|kaioinfo
+modifier|*
+name|ki
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|opcode
+decl_stmt|,
+name|wakecount
+init|=
+literal|0
+decl_stmt|;
+name|struct
+name|aioproclist
+modifier|*
+name|aiop
+decl_stmt|;
+if|if
+condition|(
+name|sb
+operator|==
+operator|&
+name|so
+operator|->
+name|so_snd
+condition|)
+block|{
+name|opcode
+operator|=
+name|LIO_WRITE
+expr_stmt|;
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_flags
+operator|&=
+operator|~
+name|SB_AIO
+expr_stmt|;
+block|}
+else|else
+block|{
+name|opcode
+operator|=
+name|LIO_READ
+expr_stmt|;
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_flags
+operator|&=
+operator|~
+name|SB_AIO
+expr_stmt|;
+block|}
+for|for
+control|(
+name|cb
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_aiojobq
+argument_list|)
+init|;
+name|cb
+condition|;
+name|cb
+operator|=
+name|cbn
+control|)
+block|{
+name|cbn
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|cb
+argument_list|,
+name|list
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|opcode
+operator|==
+name|cb
+operator|->
+name|uaiocb
+operator|.
+name|aio_lio_opcode
+condition|)
+block|{
+name|p
+operator|=
+name|cb
+operator|->
+name|userproc
+expr_stmt|;
+name|ki
+operator|=
+name|p
+operator|->
+name|p_aioinfo
+expr_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_aiojobq
+argument_list|,
+name|cb
+argument_list|,
+name|list
+argument_list|)
+expr_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|ki
+operator|->
+name|kaio_sockqueue
+argument_list|,
+name|cb
+argument_list|,
+name|plist
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|aio_jobs
+argument_list|,
+name|cb
+argument_list|,
+name|list
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|ki
+operator|->
+name|kaio_jobqueue
+argument_list|,
+name|cb
+argument_list|,
+name|plist
+argument_list|)
+expr_stmt|;
+name|wakecount
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|cb
+operator|->
+name|jobstate
+operator|!=
+name|JOBST_JOBQGLOBAL
+condition|)
+name|panic
+argument_list|(
+literal|"invalid queue value"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+while|while
+condition|(
+name|wakecount
+operator|--
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|aiop
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|aio_freeproc
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|aio_freeproc
+argument_list|,
+name|aiop
+argument_list|,
+name|list
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|aio_activeproc
+argument_list|,
+name|aiop
+argument_list|,
+name|list
+argument_list|)
+expr_stmt|;
+name|aiop
+operator|->
+name|aioprocflags
+operator|&=
+operator|~
+name|AIOP_FREE
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|aiop
+operator|->
+name|aioproc
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Queue a new AIO request.  Choosing either the threaded or direct physio VCHR  * technique is done in this code.  */
 end_comment
 
 begin_function
@@ -5010,6 +5485,14 @@ name|unsigned
 name|int
 name|fd
 decl_stmt|;
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -5045,7 +5528,6 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -5056,9 +5538,7 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|aiocbe
 operator|=
 name|zalloc
@@ -5066,7 +5546,6 @@ argument_list|(
 name|aiocb_zone
 argument_list|)
 expr_stmt|;
-block|}
 name|aiocbe
 operator|->
 name|inputcharge
@@ -5171,21 +5650,20 @@ return|return
 name|error
 return|;
 block|}
-comment|/* 	 * Save userspace address of the job info 	 */
+comment|/* Save userspace address of the job info. */
 name|aiocbe
 operator|->
 name|uuaiocb
 operator|=
 name|job
 expr_stmt|;
-comment|/* 	 * Get the opcode 	 */
+comment|/* Get the opcode. */
 if|if
 condition|(
 name|type
 operator|!=
 name|LIO_NOP
 condition|)
-block|{
 name|aiocbe
 operator|->
 name|uaiocb
@@ -5194,7 +5672,6 @@ name|aio_lio_opcode
 operator|=
 name|type
 expr_stmt|;
-block|}
 name|opcode
 operator|=
 name|aiocbe
@@ -5203,14 +5680,14 @@ name|uaiocb
 operator|.
 name|aio_lio_opcode
 expr_stmt|;
-comment|/* 	 * Get the fd info for process 	 */
+comment|/* Get the fd info for process. */
 name|fdp
 operator|=
 name|p
 operator|->
 name|p_fd
 expr_stmt|;
-comment|/* 	 * Range check file descriptor 	 */
+comment|/* 	 * Range check file descriptor. 	 */
 name|fd
 operator|=
 name|aiocbe
@@ -5244,7 +5721,6 @@ name|type
 operator|==
 literal|0
 condition|)
-block|{
 name|suword
 argument_list|(
 operator|&
@@ -5257,12 +5733,15 @@ argument_list|,
 name|EBADF
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|EBADF
 return|;
 block|}
 name|fp
+operator|=
+name|aiocbe
+operator|->
+name|fd_file
 operator|=
 name|fdp
 operator|->
@@ -5316,7 +5795,6 @@ name|type
 operator|==
 literal|0
 condition|)
-block|{
 name|suword
 argument_list|(
 operator|&
@@ -5329,7 +5807,6 @@ argument_list|,
 name|EBADF
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|EBADF
 return|;
@@ -5362,7 +5839,6 @@ name|type
 operator|==
 literal|0
 condition|)
-block|{
 name|suword
 argument_list|(
 operator|&
@@ -5375,7 +5851,6 @@ argument_list|,
 name|EINVAL
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|EINVAL
 return|;
@@ -5415,7 +5890,6 @@ name|type
 operator|==
 literal|0
 condition|)
-block|{
 name|suword
 argument_list|(
 operator|&
@@ -5428,7 +5902,6 @@ argument_list|,
 name|EINVAL
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|error
 return|;
@@ -5638,6 +6111,144 @@ name|p_aioinfo
 expr_stmt|;
 if|if
 condition|(
+name|fp
+operator|->
+name|f_type
+operator|==
+name|DTYPE_SOCKET
+condition|)
+block|{
+comment|/* 		 * Alternate queueing for socket ops: Reach down into the 		 * descriptor to get the socket data.  Then check to see if the 		 * socket is ready to be read or written (based on the requested 		 * operation). 		 * 		 * If it is not ready for io, then queue the aiocbe on the 		 * socket, and set the flags so we get a call when sbnotify() 		 * happens. 		 */
+name|so
+operator|=
+operator|(
+expr|struct
+name|socket
+operator|*
+operator|)
+name|fp
+operator|->
+name|f_data
+expr_stmt|;
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|opcode
+operator|==
+name|LIO_READ
+operator|)
+operator|&&
+operator|(
+operator|!
+name|soreadable
+argument_list|(
+name|so
+argument_list|)
+operator|)
+operator|)
+operator|||
+operator|(
+operator|(
+name|opcode
+operator|==
+name|LIO_WRITE
+operator|)
+operator|&&
+operator|(
+operator|!
+name|sowriteable
+argument_list|(
+name|so
+argument_list|)
+operator|)
+operator|)
+condition|)
+block|{
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_aiojobq
+argument_list|,
+name|aiocbe
+argument_list|,
+name|list
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|ki
+operator|->
+name|kaio_sockqueue
+argument_list|,
+name|aiocbe
+argument_list|,
+name|plist
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|opcode
+operator|==
+name|LIO_READ
+condition|)
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_flags
+operator||=
+name|SB_AIO
+expr_stmt|;
+else|else
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_flags
+operator||=
+name|SB_AIO
+expr_stmt|;
+name|aiocbe
+operator|->
+name|jobstate
+operator|=
+name|JOBST_JOBQGLOBAL
+expr_stmt|;
+comment|/* XXX */
+name|ki
+operator|->
+name|kaio_queue_count
+operator|++
+expr_stmt|;
+name|num_queue_count
+operator|++
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|error
 operator|=
@@ -5651,11 +6262,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 literal|0
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -5702,7 +6311,7 @@ return|return
 name|error
 return|;
 block|}
-comment|/* 	 * No buffer for daemon I/O 	 */
+comment|/* No buffer for daemon I/O. */
 name|aiocbe
 operator|->
 name|bp
@@ -5718,13 +6327,16 @@ if|if
 condition|(
 name|lj
 condition|)
-block|{
 name|lj
 operator|->
 name|lioj_queue_count
 operator|++
 expr_stmt|;
-block|}
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5747,6 +6359,11 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|aiocbe
 operator|->
 name|jobstate
@@ -5760,9 +6377,14 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * If we don't have a free AIO process, and we are below our 	 * quota, then start one.  Otherwise, depend on the subsequent 	 * I/O completions to pick-up this job.  If we don't sucessfully 	 * create the new process (thread) due to resource issues, we 	 * return an error for now (EAGAIN), which is likely not the 	 * correct thing to do. 	 */
+comment|/* 	 * If we don't have a free AIO process, and we are below our quota, then 	 * start one.  Otherwise, depend on the subsequent I/O completions to 	 * pick-up this job.  If we don't sucessfully create the new process 	 * (thread) due to resource issues, we return an error for now (EAGAIN), 	 * which is likely not the correct thing to do. 	 */
 name|retryproc
 label|:
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5876,6 +6498,11 @@ name|num_aio_resv_start
 operator|--
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
@@ -5918,13 +6545,11 @@ name|p_aioinfo
 operator|==
 name|NULL
 condition|)
-block|{
 name|aio_init_aioinfo
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|num_queue_count
@@ -5969,7 +6594,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Support the aio_return system call, as a side-effect, kernel  * resources are released.  */
+comment|/*  * Support the aio_return system call, as a side-effect, kernel resources are  * released.  */
 end_comment
 
 begin_function
@@ -6023,11 +6648,9 @@ name|ki
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 name|EINVAL
 return|;
-block|}
 name|ujob
 operator|=
 name|uap
@@ -6060,6 +6683,11 @@ condition|)
 return|return
 name|EINVAL
 return|;
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|cb
@@ -6102,6 +6730,11 @@ operator|==
 name|jobref
 condition|)
 block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ujob
@@ -6128,7 +6761,6 @@ name|status
 expr_stmt|;
 block|}
 else|else
-block|{
 name|p
 operator|->
 name|p_retval
@@ -6138,7 +6770,6 @@ index|]
 operator|=
 name|EFAULT
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cb
@@ -6210,6 +6841,11 @@ literal|0
 return|;
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splbio
@@ -6292,7 +6928,6 @@ name|status
 expr_stmt|;
 block|}
 else|else
-block|{
 name|p
 operator|->
 name|p_retval
@@ -6302,7 +6937,6 @@ index|]
 operator|=
 name|EFAULT
 expr_stmt|;
-block|}
 name|aio_free_entry
 argument_list|(
 name|cb
@@ -6327,7 +6961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allow a process to wakeup when any of the I/O requests are  * completed.  */
+comment|/*  * Allow a process to wakeup when any of the I/O requests are completed.  */
 end_comment
 
 begin_function
@@ -6418,7 +7052,7 @@ operator|->
 name|timeout
 condition|)
 block|{
-comment|/* 		 * Get timespec struct 		 */
+comment|/* Get timespec struct. */
 if|if
 condition|(
 operator|(
@@ -6442,11 +7076,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 name|error
 return|;
-block|}
 if|if
 condition|(
 name|ts
@@ -6636,10 +7268,11 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 for|for
 control|(
@@ -6925,7 +7558,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * aio_cancel at the kernel level is a NOOP right now.  It  * might be possible to support it partially in user mode, or  * in kernel mode later on.  */
+comment|/*  * aio_cancel at the kernel level is a NOOP right now.  It might be possible to  * support it partially in user mode, or in kernel mode later on.  */
 end_comment
 
 begin_function
@@ -6950,7 +7583,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * aio_error is implemented in the kernel level for compatibility  * purposes only.  For a user mode async implementation, it would be  * best to do it in a userland subroutine.  */
+comment|/*  * aio_error is implemented in the kernel level for compatibility purposes only.  * For a user mode async implementation, it would be best to do it in a userland  * subroutine.  */
 end_comment
 
 begin_function
@@ -7093,6 +7726,11 @@ literal|0
 return|;
 block|}
 block|}
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|cb
@@ -7144,11 +7782,21 @@ index|]
 operator|=
 name|EINPROGRESS
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splbio
@@ -7287,8 +7935,48 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Hack for lio 	 */
-comment|/* 	status = fuword(&uap->aiocbp->_aiocb_private.status); 	if (status == -1) { 		return fuword(&uap->aiocbp->_aiocb_private.error); 	} */
+if|#
+directive|if
+operator|(
+literal|0
+operator|)
+comment|/* 	 * Hack for lio. 	 */
+name|status
+operator|=
+name|fuword
+argument_list|(
+operator|&
+name|uap
+operator|->
+name|aiocbp
+operator|->
+name|_aiocb_private
+operator|.
+name|status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+name|fuword
+argument_list|(
+operator|&
+name|uap
+operator|->
+name|aiocbp
+operator|->
+name|_aiocb_private
+operator|.
+name|error
+argument_list|)
+return|;
+endif|#
+directive|endif
 return|return
 name|EINVAL
 return|;
@@ -7368,7 +8056,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 name|aio_aqueue
 argument_list|(
@@ -7386,8 +8073,7 @@ argument_list|,
 name|LIO_READ
 argument_list|)
 return|;
-block|}
-comment|/* 	 * Get control block 	 */
+comment|/* Get control block. */
 if|if
 condition|(
 operator|(
@@ -7418,14 +8104,14 @@ condition|)
 return|return
 name|error
 return|;
-comment|/* 	 * Get the fd info for process 	 */
+comment|/* Get the fd info for process. */
 name|fdp
 operator|=
 name|p
 operator|->
 name|p_fd
 expr_stmt|;
-comment|/* 	 * Range check file descriptor 	 */
+comment|/* 	 * Range check file descriptor. 	 */
 name|fd
 operator|=
 name|iocb
@@ -7523,7 +8209,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 name|aio_aqueue
 argument_list|(
@@ -7541,7 +8226,6 @@ argument_list|,
 name|LIO_READ
 argument_list|)
 return|;
-block|}
 name|aiov
 operator|.
 name|iov_base
@@ -7751,7 +8435,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 name|aio_aqueue
 argument_list|(
@@ -7769,7 +8452,6 @@ argument_list|,
 name|LIO_WRITE
 argument_list|)
 return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -7800,14 +8482,14 @@ condition|)
 return|return
 name|error
 return|;
-comment|/* 	 * Get the fd info for process 	 */
+comment|/* Get the fd info for process. */
 name|fdp
 operator|=
 name|p
 operator|->
 name|p_fd
 expr_stmt|;
-comment|/* 	 * Range check file descriptor 	 */
+comment|/* 	 * Range check file descriptor. 	 */
 name|fd
 operator|=
 name|iocb
@@ -8118,11 +8800,9 @@ operator|!=
 name|LIO_WAIT
 operator|)
 condition|)
-block|{
 return|return
 name|EINVAL
 return|;
-block|}
 name|nent
 operator|=
 name|uap
@@ -8135,11 +8815,9 @@ name|nent
 operator|>
 name|AIO_LISTIO_MAX
 condition|)
-block|{
 return|return
 name|EINVAL
 return|;
-block|}
 if|if
 condition|(
 name|p
@@ -8148,13 +8826,11 @@ name|p_aioinfo
 operator|==
 name|NULL
 condition|)
-block|{
 name|aio_init_aioinfo
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -8165,11 +8841,9 @@ operator|)
 operator|>
 name|max_queue_count
 condition|)
-block|{
 return|return
 name|EAGAIN
 return|;
-block|}
 name|ki
 operator|=
 name|p
@@ -8190,11 +8864,9 @@ name|ki
 operator|->
 name|kaio_qallowed_count
 condition|)
-block|{
 return|return
 name|EAGAIN
 return|;
-block|}
 name|lj
 operator|=
 name|zalloc
@@ -8207,11 +8879,9 @@ condition|(
 operator|!
 name|lj
 condition|)
-block|{
 return|return
 name|EAGAIN
 return|;
-block|}
 name|lj
 operator|->
 name|lioj_flags
@@ -8260,7 +8930,7 @@ argument_list|,
 name|lioj_list
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setup signal 	 */
+comment|/* 	 * Setup signal. 	 */
 if|if
 condition|(
 name|uap
@@ -8290,9 +8960,11 @@ operator|->
 name|lioj_signal
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|lj
 operator|->
 name|lioj_signal
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8317,7 +8989,6 @@ name|LIOJ_SIGNAL_POSTED
 expr_stmt|;
 block|}
 else|else
-block|{
 name|lj
 operator|->
 name|lioj_flags
@@ -8325,8 +8996,7 @@ operator|&=
 operator|~
 name|LIOJ_SIGNAL
 expr_stmt|;
-block|}
-comment|/*  * get pointers to the list of I/O requests  */
+comment|/* 	 * Get pointers to the list of I/O requests. 	 */
 name|nerror
 operator|=
 literal|0
@@ -8420,32 +9090,26 @@ name|error
 operator|==
 literal|0
 condition|)
-block|{
 name|nentqueued
 operator|++
 expr_stmt|;
-block|}
 else|else
-block|{
 name|nerror
 operator|++
 expr_stmt|;
 block|}
 block|}
-block|}
-comment|/* 	 * If we haven't queued any, then just return error 	 */
+comment|/* 	 * If we haven't queued any, then just return error. 	 */
 if|if
 condition|(
 name|nentqueued
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 literal|0
 return|;
-block|}
-comment|/* 	 * Calculate the appropriate error return 	 */
+comment|/* 	 * Calculate the appropriate error return. 	 */
 name|runningcode
 operator|=
 literal|0
@@ -8467,14 +9131,19 @@ operator|==
 name|LIO_WAIT
 condition|)
 block|{
-while|while
-condition|(
-literal|1
-condition|)
-block|{
 name|int
+name|command
+decl_stmt|,
 name|found
+decl_stmt|,
+name|jobref
 decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|found
 operator|=
 literal|0
@@ -8495,12 +9164,7 @@ name|i
 operator|++
 control|)
 block|{
-name|int
-name|jobref
-decl_stmt|,
-name|command
-decl_stmt|;
-comment|/* 				 * Fetch address of the control buf pointer in user space 				 */
+comment|/* 				 * Fetch address of the control buf pointer in 				 * user space. 				 */
 name|iocb
 operator|=
 operator|(
@@ -8545,7 +9209,7 @@ literal|0
 operator|)
 condition|)
 continue|continue;
-comment|/* 				 * Fetch the associated command from user space 				 */
+comment|/* 				 * Fetch the associated command from user space. 				 */
 name|command
 operator|=
 name|fuword
@@ -8748,18 +9412,16 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * If all I/Os have been disposed of, then we can return 			 */
+comment|/* 			 * If all I/Os have been disposed of, then we can 			 * return. 			 */
 if|if
 condition|(
 name|found
 operator|==
 name|nentqueued
 condition|)
-block|{
 return|return
 name|runningcode
 return|;
-block|}
 name|ki
 operator|->
 name|kaio_flags
@@ -8787,11 +9449,9 @@ name|error
 operator|==
 name|EINTR
 condition|)
-block|{
 return|return
 name|EINTR
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -8799,11 +9459,9 @@ name|error
 operator|==
 name|EWOULDBLOCK
 condition|)
-block|{
 return|return
 name|EAGAIN
 return|;
-block|}
 block|}
 block|}
 return|return
@@ -8813,7 +9471,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is a wierd hack so that we can post a signal.  It is safe  * to do so from a timeout routine, but *not* from an interrupt routine.  */
+comment|/*  * This is a wierd hack so that we can post a signal.  It is safe to do so from  * a timeout routine, but *not* from an interrupt routine.  */
 end_comment
 
 begin_function
@@ -8823,18 +9481,42 @@ name|process_signal
 parameter_list|(
 name|void
 modifier|*
-name|ljarg
+name|aioj
 parameter_list|)
 block|{
+name|struct
+name|aiocblist
+modifier|*
+name|aiocbe
+init|=
+name|aioj
+decl_stmt|;
 name|struct
 name|aio_liojob
 modifier|*
 name|lj
 init|=
-name|ljarg
+name|aiocbe
+operator|->
+name|lio
+decl_stmt|;
+name|struct
+name|aiocb
+modifier|*
+name|cb
+init|=
+operator|&
+name|aiocbe
+operator|->
+name|uaiocb
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|lj
+operator|)
+operator|&&
+operator|(
 name|lj
 operator|->
 name|lioj_signal
@@ -8842,10 +9524,9 @@ operator|.
 name|sigev_notify
 operator|==
 name|SIGEV_SIGNAL
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 name|lj
 operator|->
 name|lioj_queue_count
@@ -8853,6 +9534,7 @@ operator|==
 name|lj
 operator|->
 name|lioj_queue_finished_count
+operator|)
 condition|)
 block|{
 name|psignal
@@ -8877,12 +9559,34 @@ operator||=
 name|LIOJ_SIGNAL_POSTED
 expr_stmt|;
 block|}
-block|}
+if|if
+condition|(
+name|cb
+operator|->
+name|aio_sigevent
+operator|.
+name|sigev_notify
+operator|==
+name|SIGEV_SIGNAL
+condition|)
+name|psignal
+argument_list|(
+name|aiocbe
+operator|->
+name|userproc
+argument_list|,
+name|cb
+operator|->
+name|aio_sigevent
+operator|.
+name|sigev_signo
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Interrupt handler for physio, performs the necessary process wakeups,  * and signals.  */
+comment|/*  * Interrupt handler for physio, performs the necessary process wakeups, and  * signals.  */
 end_comment
 
 begin_function
@@ -8890,13 +9594,11 @@ specifier|static
 name|void
 name|aio_physwakeup
 parameter_list|(
-name|bp
-parameter_list|)
 name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|aiocblist
@@ -9011,7 +9713,6 @@ name|b_flags
 operator|&
 name|B_ERROR
 condition|)
-block|{
 name|aiocbe
 operator|->
 name|uaiocb
@@ -9024,7 +9725,6 @@ name|bp
 operator|->
 name|b_error
 expr_stmt|;
-block|}
 name|lj
 operator|=
 name|aiocbe
@@ -9041,7 +9741,7 @@ operator|->
 name|lioj_buffer_finished_count
 operator|++
 expr_stmt|;
-comment|/* 			 * wakeup/signal if all of the interrupt jobs are done 			 */
+comment|/* 			 * wakeup/signal if all of the interrupt jobs are done. 			 */
 if|if
 condition|(
 name|lj
@@ -9053,7 +9753,7 @@ operator|->
 name|lioj_buffer_count
 condition|)
 block|{
-comment|/* 				 * post a signal if it is called for 				 */
+comment|/* 				 * Post a signal if it is called for. 				 */
 if|if
 condition|(
 operator|(
@@ -9081,7 +9781,7 @@ name|timeout
 argument_list|(
 name|process_signal
 argument_list|,
-name|lj
+name|aiocbe
 argument_list|,
 literal|0
 argument_list|)
@@ -9139,7 +9839,7 @@ argument_list|,
 name|plist
 argument_list|)
 expr_stmt|;
-comment|/* 			 * and do the wakeup 			 */
+comment|/* Do the wakeup. */
 if|if
 condition|(
 name|ki
@@ -9167,12 +9867,444 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|aiocbe
+operator|->
+name|uaiocb
+operator|.
+name|aio_sigevent
+operator|.
+name|sigev_notify
+operator|==
+name|SIGEV_SIGNAL
+condition|)
+name|timeout
+argument_list|(
+name|process_signal
+argument_list|,
+name|aiocbe
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|aio_waitcomplete
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|aio_waitcomplete_args
+modifier|*
+name|uap
+parameter_list|)
+block|{
+name|struct
+name|timeval
+name|atv
+decl_stmt|;
+name|struct
+name|timespec
+name|ts
+decl_stmt|;
+name|struct
+name|aiocb
+modifier|*
+modifier|*
+name|cbptr
+decl_stmt|;
+name|struct
+name|kaioinfo
+modifier|*
+name|ki
+decl_stmt|;
+name|struct
+name|aiocblist
+modifier|*
+name|cb
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|s
+decl_stmt|,
+name|timo
+decl_stmt|;
+name|timo
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|uap
+operator|->
+name|timeout
+condition|)
+block|{
+comment|/* Get timespec struct. */
+name|error
+operator|=
+name|copyin
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|uap
+operator|->
+name|timeout
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ts
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ts
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+name|error
+return|;
+if|if
+condition|(
+operator|(
+name|ts
+operator|.
+name|tv_nsec
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|ts
+operator|.
+name|tv_nsec
+operator|>=
+literal|1000000000
+operator|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|TIMESPEC_TO_TIMEVAL
+argument_list|(
+operator|&
+name|atv
+argument_list|,
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|itimerfix
+argument_list|(
+operator|&
+name|atv
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|timo
+operator|=
+name|tvtohz
+argument_list|(
+operator|&
+name|atv
+argument_list|)
+expr_stmt|;
+block|}
+name|ki
+operator|=
+name|p
+operator|->
+name|p_aioinfo
+expr_stmt|;
+if|if
+condition|(
+name|ki
+operator|==
+name|NULL
+condition|)
+return|return
+name|EAGAIN
+return|;
+name|cbptr
+operator|=
+name|uap
+operator|->
+name|aiocbp
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|cb
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|ki
+operator|->
+name|kaio_jobdone
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|suword
+argument_list|(
+name|uap
+operator|->
+name|aiocbp
+argument_list|,
+operator|(
+name|int
+operator|)
+name|cb
+operator|->
+name|uuaiocb
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
+operator|=
+name|cb
+operator|->
+name|uaiocb
+operator|.
+name|_aiocb_private
+operator|.
+name|status
+expr_stmt|;
+if|if
+condition|(
+name|cb
+operator|->
+name|uaiocb
+operator|.
+name|aio_lio_opcode
+operator|==
+name|LIO_WRITE
+condition|)
+block|{
+name|curproc
+operator|->
+name|p_stats
+operator|->
+name|p_ru
+operator|.
+name|ru_oublock
+operator|+=
+name|cb
+operator|->
+name|outputcharge
+expr_stmt|;
+name|cb
+operator|->
+name|outputcharge
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cb
+operator|->
+name|uaiocb
+operator|.
+name|aio_lio_opcode
+operator|==
+name|LIO_READ
+condition|)
+block|{
+name|curproc
+operator|->
+name|p_stats
+operator|->
+name|p_ru
+operator|.
+name|ru_inblock
+operator|+=
+name|cb
+operator|->
+name|inputcharge
+expr_stmt|;
+name|cb
+operator|->
+name|inputcharge
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|aio_free_entry
+argument_list|(
+name|cb
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cb
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|ki
+operator|->
+name|kaio_bufdone
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|suword
+argument_list|(
+name|uap
+operator|->
+name|aiocbp
+argument_list|,
+operator|(
+name|int
+operator|)
+name|cb
+operator|->
+name|uuaiocb
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_retval
+index|[
+literal|0
+index|]
+operator|=
+name|cb
+operator|->
+name|uaiocb
+operator|.
+name|_aiocb_private
+operator|.
+name|status
+expr_stmt|;
+name|aio_free_entry
+argument_list|(
+name|cb
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|ki
+operator|->
+name|kaio_flags
+operator||=
+name|KAIO_WAKEUP
+expr_stmt|;
+name|error
+operator|=
+name|tsleep
+argument_list|(
+name|p
+argument_list|,
+name|PRIBIO
+operator||
+name|PCATCH
+argument_list|,
+literal|"aiowc"
+argument_list|,
+name|timo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|<
+literal|0
+condition|)
+return|return
+name|error
+return|;
+elseif|else
+if|if
+condition|(
+name|error
+operator|==
+name|EINTR
+condition|)
+return|return
+name|EINTR
+return|;
+elseif|else
+if|if
+condition|(
+name|error
+operator|==
+name|EWOULDBLOCK
+condition|)
+return|return
+name|EAGAIN
+return|;
+block|}
 block|}
 end_function
 

@@ -103,6 +103,16 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/aio.h>
+end_include
+
+begin_comment
+comment|/* for aio_swake proto */
+end_comment
+
 begin_decl_stmt
 name|int
 name|maxsockets
@@ -1276,6 +1286,21 @@ operator|->
 name|so_upcallarg
 argument_list|,
 name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sb
+operator|->
+name|sb_flags
+operator|&
+name|SB_AIO
+condition|)
+name|aio_swake
+argument_list|(
+name|so
+argument_list|,
+name|sb
 argument_list|)
 expr_stmt|;
 block|}

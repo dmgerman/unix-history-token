@@ -257,6 +257,14 @@ name|so_zone
 operator|=
 name|socket_zone
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_aiojobq
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|so
