@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.4 1994/09/16 13:33:56 davidg Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** **------------------------------------------------------------------------- */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.5 1994/09/24 02:42:11 rgrimes Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** **------------------------------------------------------------------------- */
 end_comment
 
 begin_ifndef
@@ -2596,6 +2596,12 @@ index|[
 literal|20
 index|]
 decl_stmt|;
+name|ncrcmd
+name|snooptest
+index|[
+literal|11
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2993,6 +2999,17 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|ncr_snooptest
+parameter_list|(
+name|ncb_p
+name|np
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|INT32
 name|ncr_start
 parameter_list|(
@@ -3151,17 +3168,17 @@ directive|ifdef
 name|DIRTY
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<i386/include/cpufunc.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
 
 begin_include
 include|#
@@ -3199,6 +3216,79 @@ include|#
 directive|include
 file|<i386/isa/isa.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ANCIENT
+end_ifdef
+
+begin_comment
+comment|/* **	Doch das ist alles nur geklaut .. **	aus:  386bsd:/sys/i386/include/pio.h ** ** Mach Operating System ** Copyright (c) 1990 Carnegie-Mellon University ** All rights reserved.  The CMU software License Agreement specifies ** the terms and conditions for use and redistribution. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|inb
+end_undef
+
+begin_define
+define|#
+directive|define
+name|inb
+parameter_list|(
+name|port
+parameter_list|)
+define|\
+value|({ unsigned char data; \ 	__asm __volatile("inb %1, %0": "=a" (data): "d" ((u_short)(port))); \ 	data; })
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|outb
+end_undef
+
+begin_define
+define|#
+directive|define
+name|outb
+parameter_list|(
+name|port
+parameter_list|,
+name|data
+parameter_list|)
+define|\
+value|{__asm __volatile("outb %0, %1"::"a" ((u_char)(data)), "d" ((u_short)(port)));}
+end_define
+
+begin_define
+define|#
+directive|define
+name|disable_intr
+parameter_list|()
+define|\
+value|{__asm __volatile("cli");}
+end_define
+
+begin_define
+define|#
+directive|define
+name|enable_intr
+parameter_list|()
+define|\
+value|{__asm __volatile("sti");}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ANCIENT */
+end_comment
 
 begin_escape
 end_escape
@@ -3423,6 +3513,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|ncr_cache
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* may _NOT_ be static */
+end_comment
+
 begin_comment
 comment|/* **	SCSI cmd to get the SCSI sense data */
 end_comment
@@ -3461,6 +3561,20 @@ end_escape
 begin_comment
 comment|/*========================================================== ** ** **      Global static data:	auto configure ** ** **========================================================== */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NCR_810_ID
+value|(0x00011000ul)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NCR_825_ID
+value|(0x00031000ul)
+end_define
 
 begin_ifdef
 ifdef|#
@@ -3512,7 +3626,7 @@ name|ncr_probe
 block|,
 name|ncr_attach
 block|,
-literal|0x00011000ul
+name|NCR_810_ID
 block|,
 literal|"ncr 53c810 scsi"
 block|,
@@ -3531,7 +3645,7 @@ name|ncr_probe
 block|,
 name|ncr_attach
 block|,
-literal|0x00031000ul
+name|NCR_825_ID
 block|,
 literal|"ncr 53c825 scsi"
 block|,
@@ -7545,6 +7659,65 @@ argument_list|(
 name|start
 argument_list|)
 block|, }
+comment|/*-------------------------< SNOOPTEST>-------------------*/
+block|,
+block|{
+comment|/* 	**	Read the variable. 	*/
+name|SCR_COPY
+argument_list|(
+literal|4
+argument_list|)
+block|,
+operator|(
+name|ncrcmd
+operator|)
+operator|&
+name|ncr_cache
+block|,
+name|RADDR
+argument_list|(
+name|scratcha
+argument_list|)
+block|,
+comment|/* 	**	Write the variable. 	*/
+name|SCR_COPY
+argument_list|(
+literal|4
+argument_list|)
+block|,
+name|RADDR
+argument_list|(
+name|temp
+argument_list|)
+block|,
+operator|(
+name|ncrcmd
+operator|)
+operator|&
+name|ncr_cache
+block|,
+comment|/* 	**	Read back the variable. 	*/
+name|SCR_COPY
+argument_list|(
+literal|4
+argument_list|)
+block|,
+operator|(
+name|ncrcmd
+operator|)
+operator|&
+name|ncr_cache
+block|,
+name|RADDR
+argument_list|(
+name|temp
+argument_list|)
+block|,
+comment|/* 	**	And stop. 	*/
+name|SCR_INT
+block|,
+literal|99
+block|, }
 comment|/*--------------------------------------------------------*/
 block|}
 decl_stmt|;
@@ -8645,16 +8818,17 @@ literal|0
 return|;
 if|if
 condition|(
-operator|(
 name|pa
 operator|->
 name|pa_id
-operator|&
-operator|~
-literal|0x20000
-operator|)
 operator|!=
-literal|0x00011000
+name|NCR_810_ID
+operator|&&
+name|pa
+operator|->
+name|pa_id
+operator|!=
+name|NCR_825_ID
 condition|)
 return|return
 literal|0
@@ -8993,7 +9167,19 @@ endif|#
 directive|endif
 comment|/* !__NetBSD__ */
 comment|/* 	**	Do chip dependent initialization. 	*/
-if|if
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+switch|switch
+condition|(
+name|pa
+operator|->
+name|pa_id
+condition|)
+block|{
+else|#
+directive|else
+switch|switch
 condition|(
 name|pci_conf_read
 argument_list|(
@@ -9001,15 +9187,31 @@ name|config_id
 argument_list|,
 name|PCI_ID_REG
 argument_list|)
-operator|==
-literal|0x00031000
 condition|)
+block|{
+endif|#
+directive|endif
+case|case
+name|NCR_810_ID
+case|:
+name|np
+operator|->
+name|maxwide
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|NCR_825_ID
+case|:
 name|np
 operator|->
 name|maxwide
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+block|}
 comment|/* 	**	Patch script to physical addresses 	*/
 name|ncr_script_fill
 argument_list|(
@@ -9110,6 +9312,27 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	**	Now check the cache handling of the pci chipset. 	*/
+if|if
+condition|(
+name|ncr_snooptest
+argument_list|(
+name|np
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"CACHE INCORRECTLY CONFIGURED.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+empty_stmt|;
 comment|/* 	**	After SCSI devices have been opened, we cannot 	**	reset the bus safely, so we do it here. 	**	Interrupt handler does the real work. 	*/
 name|OUTB
 argument_list|(
@@ -9146,7 +9369,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"%s scanning for targets 0..%d ($Revision: 1.4 $)\n"
+literal|"%s scanning for targets 0..%d ($Revision: 1.5 $)\n"
 argument_list|,
 name|ncr_name
 argument_list|(
@@ -10375,15 +10598,6 @@ operator|=
 name|np
 operator|->
 name|order
-expr_stmt|;
-name|cp
-operator|->
-name|scsi_smsg
-index|[
-name|msglen
-index|]
-operator|=
-name|M_ORDERED_TAG
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -20074,6 +20288,202 @@ empty_stmt|;
 return|return
 operator|(
 name|segment
+operator|)
+return|;
+block|}
+comment|/*========================================================== ** ** **	Test the pci bus snoop logic :-( ** **	Has to be called with disabled interupts. ** ** **========================================================== */
+specifier|static
+name|int
+name|ncr_snooptest
+parameter_list|(
+name|struct
+name|ncb
+modifier|*
+name|np
+parameter_list|)
+block|{
+name|u_long
+name|ncr_rd
+decl_stmt|,
+name|ncr_wr
+decl_stmt|,
+name|ncr_bk
+decl_stmt|,
+name|host_rd
+decl_stmt|,
+name|host_wr
+decl_stmt|,
+name|pc
+decl_stmt|,
+name|err
+init|=
+literal|0
+decl_stmt|;
+comment|/* 	**	init 	*/
+name|pc
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|np
+operator|->
+name|script
+operator|->
+name|snooptest
+argument_list|)
+expr_stmt|;
+name|host_wr
+operator|=
+literal|1
+expr_stmt|;
+name|ncr_wr
+operator|=
+literal|2
+expr_stmt|;
+comment|/* 	**	Set memory and register. 	*/
+name|ncr_cache
+operator|=
+name|host_wr
+expr_stmt|;
+name|OUTL
+argument_list|(
+name|nc_temp
+argument_list|,
+name|ncr_wr
+argument_list|)
+expr_stmt|;
+comment|/* 	**	Start script (exchange values) 	*/
+name|OUTL
+argument_list|(
+name|nc_dsp
+argument_list|,
+name|pc
+argument_list|)
+expr_stmt|;
+comment|/* 	**	Wait 'til done 	*/
+while|while
+condition|(
+operator|!
+operator|(
+name|INB
+argument_list|(
+name|nc_istat
+argument_list|)
+operator|&
+operator|(
+name|INTF
+operator||
+name|SIP
+operator||
+name|DIP
+operator|)
+operator|)
+condition|)
+empty_stmt|;
+comment|/* 	**	Read memory and register. 	*/
+name|host_rd
+operator|=
+name|ncr_cache
+expr_stmt|;
+name|ncr_rd
+operator|=
+name|INL
+argument_list|(
+name|nc_scratcha
+argument_list|)
+expr_stmt|;
+name|ncr_bk
+operator|=
+name|INL
+argument_list|(
+name|nc_temp
+argument_list|)
+expr_stmt|;
+comment|/* 	**	Reset ncr chip 	*/
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+name|SRST
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|nc_istat
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	**	Show results. 	*/
+if|if
+condition|(
+name|host_wr
+operator|!=
+name|ncr_rd
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"CACHE TEST FAILED: host wrote %d, ncr read %d.\n"
+argument_list|,
+name|host_wr
+argument_list|,
+name|ncr_rd
+argument_list|)
+expr_stmt|;
+name|err
+operator||=
+literal|1
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|host_rd
+operator|!=
+name|ncr_wr
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"CACHE TEST FAILED: ncr wrote %d, host read %d.\n"
+argument_list|,
+name|ncr_wr
+argument_list|,
+name|host_rd
+argument_list|)
+expr_stmt|;
+name|err
+operator||=
+literal|2
+expr_stmt|;
+block|}
+empty_stmt|;
+if|if
+condition|(
+name|ncr_bk
+operator|!=
+name|ncr_wr
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"CACHE TEST FAILED: ncr wrote %d, read back %d.\n"
+argument_list|,
+name|ncr_wr
+argument_list|,
+name|ncr_bk
+argument_list|)
+expr_stmt|;
+name|err
+operator||=
+literal|4
+expr_stmt|;
+block|}
+empty_stmt|;
+return|return
+operator|(
+name|err
 operator|)
 return|;
 block|}
