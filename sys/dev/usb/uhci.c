@@ -1691,6 +1691,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* disable interrupts */
+comment|/* PR1 The VIA 823C572 reset FLBASEADDR as well */
+name|uhci_busreset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Allocate and initialize real frame array. */
 name|r
 operator|=
@@ -1758,72 +1764,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* set frame list */
+comment|/* PR1 moved uhci_busreset up */
 ifdef|#
 directive|ifdef
 name|USB_DEBUG
 comment|/* PR1 */
-if|if
-condition|(
-name|UREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|UHCI_FLBASEADDR
-argument_list|)
-operator|!=
-name|DMAADDR
-argument_list|(
-operator|&
-name|dma
-argument_list|)
-condition|)
 name|printf
 argument_list|(
-literal|"PR1:before busreset: FLBASEADDR = 0x%08x != DMADDR(&dma) = 0x%08x\n"
-argument_list|,
-name|UREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|UHCI_FLBASEADDR
-argument_list|)
-argument_list|,
-name|DMAADDR
-argument_list|(
-operator|&
-name|dma
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|uhci_busreset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-comment|/* PR1 */
-if|if
-condition|(
-name|UREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|UHCI_FLBASEADDR
-argument_list|)
-operator|!=
-name|DMAADDR
-argument_list|(
-operator|&
-name|dma
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"PR1:after busreset: FLBASEADDR = 0x%08x != DMADDR(&dma) = 0x%08x\n"
+literal|"PR1:after busreset: FLBASEADDR=0x%08x, DMADDR(&dma)=0x%08x\n"
 argument_list|,
 name|UREAD4
 argument_list|(
@@ -4528,7 +4476,7 @@ name|ii
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
-literal|10
+literal|15
 argument_list|,
 operator|(
 literal|"uhci_waitintr: timeout = %ds\n"
