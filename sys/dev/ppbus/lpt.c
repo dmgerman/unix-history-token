@@ -1213,19 +1213,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|lpt_data
-modifier|*
-name|sc
-decl_stmt|;
-name|sc
-operator|=
-name|DEVTOSOFTC
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Now, try to detect the printer. 	 */
 if|if
 condition|(
 operator|!
