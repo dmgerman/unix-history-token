@@ -16,7 +16,7 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/iso_snpac.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)iso_snpac.c	7.9 (Berkeley) %G% */
+comment|/*	@(#)iso_snpac.c	7.10 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -422,6 +422,48 @@ block|,
 literal|0x00
 block|,
 literal|0x05
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|all_l1is_snpa
+index|[]
+init|=
+block|{
+literal|0x01
+block|,
+literal|0x80
+block|,
+literal|0xc2
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x14
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|all_l2is_snpa
+index|[]
+init|=
+block|{
+literal|0x01
+block|,
+literal|0x80
+block|,
+literal|0xc2
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x15
 block|}
 decl_stmt|;
 end_decl_stmt
