@@ -833,9 +833,13 @@ literal|"ia64"
 argument_list|)
 condition|)
 block|{
+name|labelsoffset
+operator|=
+literal|1
+expr_stmt|;
 name|labeloffset
 operator|=
-literal|512
+literal|0
 expr_stmt|;
 name|bbsize
 operator|=
