@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2757,6 +2757,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* 	 * If a drive's position was fully qualified (i.e. not wildcarded in 	 * any way, we allow root to open the device even though it wasn't 	 * found at autoconfig time.  This allows initial formatting of disks. 	 * However, if any part of the specification was wildcarded, we won't 	 * be able to locate the drive so there is nothing we can do. 	 */
 if|if
 condition|(
 operator|(
@@ -2769,6 +2770,7 @@ operator|)
 operator|==
 literal|0
 operator|&&
+operator|(
 name|suser
 argument_list|(
 name|p
@@ -2780,6 +2782,23 @@ name|p
 operator|->
 name|p_acflag
 argument_list|)
+operator|||
+name|sc
+operator|->
+name|sc_hd
+operator|->
+name|hp_ctlr
+operator|<
+literal|0
+operator|||
+name|sc
+operator|->
+name|sc_hd
+operator|->
+name|hp_slave
+operator|<
+literal|0
+operator|)
 condition|)
 return|return
 operator|(
