@@ -41,11 +41,11 @@ directive|if
 literal|0
 end_if
 
-begin_endif
+begin_else
 unit|static char sccsid[] = "@(#)main.c	8.3 (Berkeley) 3/19/94";
-endif|#
-directive|endif
-end_endif
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|static
@@ -54,9 +54,14 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.31 1999/07/31 20:40:23 hoek Exp $"
+literal|"$Id: main.c,v 1.32 1999/07/31 20:53:01 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -186,11 +191,11 @@ directive|include
 file|<sysexits.h>
 end_include
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -887,14 +892,15 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|errx
+name|warnx
 argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"illegal argument to -L -- %s"
+literal|"illegal number, -L argument -- %s"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|Var_Append
@@ -1287,14 +1293,15 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|errx
+name|warnx
 argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"illegal argument to -j -- %s"
+literal|"illegal number, -j argument -- %s"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 ifndef|#
@@ -2184,7 +2191,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * The object directory location is determined using the 	 * following order of preference: 	 * 	 *	1. MAKEOBJDIRPREFIX`cwd` 	 *	2. MAKEOBJDIR 	 *	3. _PATH_OBJDIR.${MACHINE} 	 *	4. _PATH_OBJDIR 	 *	5. _PATH_OBJDIRPREFIX${MACHINE} 	 * 	 * If all fails, use the current directory to build. 	 * 	 * Once things are initted, 	 * have to add the original directory to the search path, 	 * and modify the paths for the Makefiles apropriately.  The 	 * current directory is also placed as a variable for make scripts. 	 */
+comment|/* 	 * The object directory location is determined using the 	 * following order of preference: 	 * 	 *	1. MAKEOBJDIRPREFIX`cwd` 	 *	2. MAKEOBJDIR 	 *	3. _PATH_OBJDIR.${MACHINE} 	 *	4. _PATH_OBJDIR 	 *	5. _PATH_OBJDIRPREFIX`cwd` 	 * 	 * If one of the first two fails, use the current directory. 	 * If the remaining three all fail, use the current directory. 	 * 	 * Once things are initted, 	 * have to add the original directory to the search path, 	 * and modify the paths for the Makefiles apropriately.  The 	 * current directory is also placed as a variable for make scripts. 	 */
 if|if
 condition|(
 operator|!
@@ -2968,11 +2975,7 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
-name|free
+name|efree
 argument_list|(
 name|p1
 argument_list|)
@@ -3026,11 +3029,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|p1
-condition|)
-name|free
+name|efree
 argument_list|(
 name|p1
 argument_list|)
@@ -4102,8 +4101,8 @@ end_comment
 
 begin_function
 name|void
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|Error
 parameter_list|(
@@ -4126,8 +4125,8 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(
@@ -4207,8 +4206,8 @@ end_comment
 
 begin_function
 name|void
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|Fatal
 parameter_list|(
@@ -4231,8 +4230,8 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(
@@ -4337,8 +4336,8 @@ end_comment
 
 begin_function
 name|void
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|Punt
 parameter_list|(

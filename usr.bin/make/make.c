@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: make.c,v 1.8 1997/02/22 19:27:16 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -9,15 +9,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)make.c	8.1 (Berkeley) 6/6/93";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)make.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -29,7 +47,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*-  * make.c --  *	The functions which perform the examination of targets and  *	their suitability for creation  *  * Interface:  *	Make_Run 	    	Initialize things for the module and recreate  *	    	  	    	whatever needs recreating. Returns TRUE if  *	    	    	    	work was (or would have been) done and FALSE  *	    	  	    	otherwise.  *  *	Make_Update	    	Update all parents of a given child. Performs  *	    	  	    	various bookkeeping chores like the updating  *	    	  	    	of the cmtime field of the parent, filling  *	    	  	    	of the IMPSRC context variable, etc. It will  *	    	  	    	place the parent on the toBeMade queue if it  *	    	  	    	should be.  *  *	Make_TimeStamp	    	Function to set the parent's cmtime field  *	    	  	    	based on a child's modification time.  *  *	Make_DoAllVar	    	Set up the various local variables for a  *	    	  	    	target, including the .ALLSRC variable, making  *	    	  	    	sure that any variable that needs to exist  *	    	  	    	at the very least has the empty value.  *  *	Make_OODate 	    	Determine if a target is out-of-date.  *  *	Make_HandleUse	    	See if a child is a .USE node for a parent  *				and perform the .USE actions if so.  */
+comment|/*-  * make.c --  *	The functions which perform the examination of targets and  *	their suitability for creation  *  * Interface:  *	Make_Run 	    	Initialize things for the module and recreate  *	    	  	    	whatever needs recreating. Returns TRUE if  *	    	    	    	work was (or would have been) done and FALSE  *	    	  	    	otherwise.  *  *	Make_Update	    	Update all parents of a given child. Performs  *	    	  	    	various bookkeeping chores like the updating  *	    	  	    	of the cmtime field of the parent, filling  *	    	  	    	of the IMPSRC context variable, etc. It will  *	    	  	    	place the parent on the toBeMade queue if it  *	    	  	    	should be.  *  *	Make_TimeStamp	    	Function to set the parent's cmtime field  *	    	  	    	based on a child's modification time.  *  *	Make_DoAllVar	    	Set up the various local variables for a  *	    	  	    	target, including the .ALLSRC variable, making  *	    	  	    	sure that any variable that needs to exist  *	    	  	    	at the very least has the empty value.  *  *	Make_OODate 	    	Determine if a target is out-of-date.  *  *	Make_HandleUse		See if a child is a .USE node for a parent  *				and perform the .USE actions if so.  */
 end_comment
 
 begin_include
@@ -755,6 +773,9 @@ return|;
 block|}
 end_function
 
+begin_escape
+end_escape
+
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Make_HandleUse --  *	Function called by Make_Run and SuffApplyTransform on the downward  *	pass to handle .USE and transformation nodes. A callback function  *	for Lst_ForEach, it implements the .USE and transformation  *	functionality by copying the node's commands, type flags  *	and children to the parent node. Should be called before the  *	children are enqueued to be looked at by MakeAddChild.  *  *	A .USE node is much like an explicit transformation rule, except  *	its commands are always added to the target node, even if the  *	target already has commands.  *  * Results:  *	returns 0.  *  * Side Effects:  *	Children and commands may be added to the parent and the parent's  *	type may be changed.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -963,8 +984,7 @@ block|{
 name|pgn
 operator|->
 name|unmade
-operator|-=
-literal|1
+operator|--
 expr_stmt|;
 block|}
 block|}
@@ -1066,11 +1086,7 @@ operator|&
 name|p1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
-name|free
+name|efree
 argument_list|(
 name|p1
 argument_list|)
@@ -1509,11 +1525,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|p1
-condition|)
-name|free
+name|efree
 argument_list|(
 name|p1
 argument_list|)
@@ -1720,11 +1732,7 @@ name|pgn
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|p1
-condition|)
-name|free
+name|efree
 argument_list|(
 name|p1
 argument_list|)
@@ -1842,11 +1850,7 @@ argument_list|,
 name|gn
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
-name|free
+name|efree
 argument_list|(
 name|p1
 argument_list|)

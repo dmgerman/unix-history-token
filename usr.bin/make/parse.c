@@ -15,11 +15,11 @@ directive|if
 literal|0
 end_if
 
-begin_endif
+begin_else
 unit|static char sccsid[] = "@(#)parse.c	8.3 (Berkeley) 3/19/94";
-endif|#
-directive|endif
-end_endif
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|static
@@ -28,9 +28,14 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parse.c,v 1.19 1998/05/25 03:28:37 steve Exp $"
+literal|"$Id: parse.c,v 1.20 1999/01/08 18:37:34 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -45,11 +50,11 @@ begin_comment
 comment|/*-  * parse.c --  *	Functions to parse a makefile.  *  *	One function, Parse_Init, must be called before any functions  *	in this module are used. After that, the function Parse_File is the  *	main entry point and controls most of the other functions in this  *	module.  *  *	Most important structures are kept in Lsts. Directories for  *	the #include "..." function are kept in the 'parseIncPath' Lst, while  *	those for the #include<...> are kept in the 'sysIncPath' Lst. The  *	targets currently being defined are kept in the 'targets' Lst.  *  *	The variables 'fname' and 'lineno' are used to track the name  *	of the current file and the line number in that file so that error  *	messages can be more meaningful.  *  * Interface:  *	Parse_Init	    	    Initialization function which must be  *	    	  	    	    called before anything else in this module  *	    	  	    	    is used.  *  *	Parse_End		    Cleanup the module  *  *	Parse_File	    	    Function used to parse a makefile. It must  *	    	  	    	    be given the name of the file, which should  *	    	  	    	    already have been opened, and a function  *	    	  	    	    to call to read a character from the file.  *  *	Parse_IsVar	    	    Returns TRUE if the given line is a  *	    	  	    	    variable assignment. Used by MainParseArgs  *	    	  	    	    to determine if an argument is a target  *	    	  	    	    or a variable assignment. Used internally  *	    	  	    	    for pretty much the same thing...  *  *	Parse_Error	    	    Function called when an error occurs in  *	    	  	    	    parsing. Used by the variable and  *	    	  	    	    conditional modules.  *	Parse_MainName	    	    Returns a Lst of the main target to create.  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -1182,8 +1187,8 @@ end_comment
 
 begin_function
 name|void
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|Parse_Error
 parameter_list|(
@@ -1209,8 +1214,8 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(
@@ -1663,6 +1668,7 @@ comment|/*-  *------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ParseAddDep
 parameter_list|(
@@ -7812,10 +7818,10 @@ name|Parse_MainName
 parameter_list|()
 block|{
 name|Lst
-decl|main
+name|listmain
 decl_stmt|;
 comment|/* result list */
-expr|main
+name|listmain
 operator|=
 name|Lst_Init
 argument_list|(
@@ -7851,7 +7857,7 @@ name|void
 operator|)
 name|Lst_AtEnd
 argument_list|(
-expr|main
+name|listmain
 argument_list|,
 operator|(
 name|ClientData
@@ -7861,7 +7867,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Concat
 argument_list|(
-expr|main
+name|listmain
 argument_list|,
 name|mainNode
 operator|->
@@ -7877,7 +7883,7 @@ name|void
 operator|)
 name|Lst_AtEnd
 argument_list|(
-expr|main
+name|listmain
 argument_list|,
 operator|(
 name|ClientData
@@ -7887,7 +7893,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-expr|main
+name|listmain
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: compat.c,v 1.12 1998/09/09 05:15:38 jkoshy Exp $  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: compat.c,v 1.13 1999/07/31 20:38:22 hoek Exp $  */
 end_comment
 
 begin_ifndef
@@ -9,15 +9,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)compat.c	8.2 (Berkeley) 3/19/94";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)compat.c	8.2 (Berkeley) 3/19/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -293,11 +311,7 @@ name|file
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|p1
-condition|)
-name|free
+name|efree
 argument_list|(
 name|p1
 argument_list|)
@@ -627,7 +641,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/*      * brk_string will return an argv with a NULL in av[1], thus causing      * execvp to choke and die horribly. Besides, how can we execute a null      * command? In any case, we warn the user that the command expanded to      * nothing (is this the right thing to do?).      */
+comment|/*      * brk_string will return an argv with a NULL in av[0], thus causing      * execvp to choke and die horribly. Besides, how can we execute a null      * command? In any case, we warn the user that the command expanded to      * nothing (is this the right thing to do?).      */
 if|if
 condition|(
 operator|*
@@ -1519,11 +1533,7 @@ argument_list|,
 name|pgn
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
-name|free
+name|efree
 argument_list|(
 name|p1
 argument_list|)
@@ -1862,9 +1872,28 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|char
+modifier|*
+name|p1
+decl_stmt|;
 name|printf
 argument_list|(
-literal|"\n\nStop.\n"
+literal|"\n\nStop in %s.\n"
+argument_list|,
+name|Var_Value
+argument_list|(
+literal|".CURDIR"
+argument_list|,
+name|gn
+argument_list|,
+operator|&
+name|p1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|efree
+argument_list|(
+name|p1
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1929,11 +1958,7 @@ argument_list|,
 name|pgn
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
-name|free
+name|efree
 argument_list|(
 name|p1
 argument_list|)
