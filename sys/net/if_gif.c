@@ -1354,6 +1354,23 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* Bail on short packets */
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<
+sizeof|sizeof
+argument_list|(
+name|ip
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 comment|/* LINTED const cast */
 name|m_copydata
 argument_list|(
@@ -1826,7 +1843,7 @@ name|ifqueue
 modifier|*
 name|ifq
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -2083,6 +2100,15 @@ decl_stmt|,
 modifier|*
 name|src
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SIOCSIFMTU
+comment|/* xxx */
+name|u_long
+name|mtu
+decl_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|cmd
@@ -2120,10 +2146,6 @@ break|break;
 case|case
 name|SIOCSIFMTU
 case|:
-block|{
-name|u_long
-name|mtu
-decl_stmt|;
 name|mtu
 operator|=
 name|ifr
@@ -2140,27 +2162,29 @@ name|mtu
 operator|>
 name|GIF_MTU_MAX
 condition|)
-block|{
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 name|ifp
 operator|->
 name|if_mtu
 operator|=
 name|mtu
 expr_stmt|;
-block|}
 break|break;
 endif|#
 directive|endif
 comment|/* SIOCSIFMTU */
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|SIOCSIFPHYADDR
 case|:
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
