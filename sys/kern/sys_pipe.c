@@ -4081,9 +4081,10 @@ comment|/* 	 * detect loss of pipe read side, issue SIGPIPE if lost. 	 */
 if|if
 condition|(
 operator|(
+operator|!
 name|wpipe
-operator|==
-name|NULL
+operator|->
+name|pipe_present
 operator|)
 operator|||
 operator|(
@@ -5560,9 +5561,10 @@ operator|)
 condition|)
 if|if
 condition|(
+operator|!
 name|wpipe
-operator|==
-name|NULL
+operator|->
+name|pipe_present
 operator|||
 operator|(
 name|wpipe
@@ -5623,9 +5625,10 @@ name|PIPE_EOF
 operator|)
 operator|||
 operator|(
+operator|!
 name|wpipe
-operator|==
-name|NULL
+operator|->
+name|pipe_present
 operator|)
 operator|||
 operator|(
@@ -6469,9 +6472,10 @@ name|pipe_peer
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|cpipe
-operator|==
-name|NULL
+operator|->
+name|pipe_present
 condition|)
 comment|/* other end of pipe has been closed */
 return|return
@@ -6692,9 +6696,10 @@ name|PIPE_EOF
 operator|)
 operator|||
 operator|(
+operator|!
 name|wpipe
-operator|==
-name|NULL
+operator|->
+name|pipe_present
 operator|)
 operator|||
 operator|(
@@ -6786,9 +6791,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|!
 name|wpipe
-operator|==
-name|NULL
+operator|->
+name|pipe_present
 operator|)
 operator|||
 operator|(
