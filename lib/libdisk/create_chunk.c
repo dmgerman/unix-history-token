@@ -2286,7 +2286,7 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"MakeDev: Unit %d, Slice %d, Part %d\n"
+literal|"MakeDev: Unit %lu, Slice %lu, Part %lu\n"
 argument_list|,
 name|unit
 argument_list|,
