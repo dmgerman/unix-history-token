@@ -5701,6 +5701,30 @@ name|bp
 decl_stmt|;
 if|if
 condition|(
+name|blkno
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|expungetype
+operator|==
+name|BLK_NOCOPY
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|panic
+argument_list|(
+literal|"indiracct_ufs1: missing indir"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|error
 operator|=
@@ -5739,17 +5763,13 @@ index|]
 operator|.
 name|in_lbn
 operator|||
-name|blkno
-operator|==
-literal|0
-operator|||
 name|num
 operator|<
 literal|2
 condition|)
 name|panic
 argument_list|(
-literal|"indiracct: botched params"
+literal|"indiracct_ufs1: botched params"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We have to expand bread here since it will deadlock looking 	 * up the block number for any blocks that are not in the cache. 	 */
@@ -6403,7 +6423,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"snapacct: bad block"
+literal|"snapacct_ufs1: bad block"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -7422,6 +7442,30 @@ name|bp
 decl_stmt|;
 if|if
 condition|(
+name|blkno
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|expungetype
+operator|==
+name|BLK_NOCOPY
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|panic
+argument_list|(
+literal|"indiracct_ufs2: missing indir"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|error
 operator|=
@@ -7460,17 +7504,13 @@ index|]
 operator|.
 name|in_lbn
 operator|||
-name|blkno
-operator|==
-literal|0
-operator|||
 name|num
 operator|<
 literal|2
 condition|)
 name|panic
 argument_list|(
-literal|"indiracct: botched params"
+literal|"indiracct_ufs2: botched params"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We have to expand bread here since it will deadlock looking 	 * up the block number for any blocks that are not in the cache. 	 */
@@ -8124,7 +8164,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"snapacct: bad block"
+literal|"snapacct_ufs2: bad block"
 argument_list|)
 expr_stmt|;
 operator|*
