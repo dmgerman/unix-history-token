@@ -2149,7 +2149,7 @@ name|ifv_flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * If the parent supports the VLAN_MTU capability, 	 * i.e. can Tx/Rx larger than ETHER_MAX_LEN frames, 	 * enable it. 	 */
+comment|/* 	 * If the parent supports the VLAN_MTU capability, 	 * i.e. can Tx/Rx larger than ETHER_MAX_LEN frames, 	 * use it. 	 * First of all, enable Tx/Rx of such extended frames on the 	 * parent if it's disabled and we're the first to attach. 	 */
 name|p
 operator|->
 name|if_nvlans
@@ -2170,24 +2170,16 @@ name|if_capabilities
 operator|&
 name|IFCAP_VLAN_MTU
 operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 		 * Enable Tx/Rx of VLAN-sized frames. 		 */
+operator|&&
+operator|(
 name|p
 operator|->
 name|if_capenable
-operator||=
-name|IFCAP_VLAN_MTU
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|if_flags
 operator|&
-name|IFF_UP
+name|IFCAP_VLAN_MTU
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|struct
@@ -2199,11 +2191,13 @@ name|error
 decl_stmt|;
 name|ifr
 operator|.
-name|ifr_flags
+name|ifr_reqcap
 operator|=
 name|p
 operator|->
-name|if_flags
+name|if_capenable
+operator||
+name|IFCAP_VLAN_MTU
 expr_stmt|;
 name|error
 operator|=
@@ -2216,7 +2210,7 @@ call|)
 argument_list|(
 name|p
 argument_list|,
-name|SIOCSIFFLAGS
+name|SIOCSIFCAP
 argument_list|,
 operator|(
 name|caddr_t
@@ -2235,21 +2229,6 @@ operator|->
 name|if_nvlans
 operator|--
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|if_nvlans
-operator|==
-literal|0
-condition|)
-name|p
-operator|->
-name|if_capenable
-operator|&=
-operator|~
-name|IFCAP_VLAN_MTU
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2257,6 +2236,16 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|p
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_VLAN_MTU
+condition|)
+block|{
+comment|/* 		 * No need to fudge the MTU since the parent can 		 * handle extended frames. 		 */
 name|ifv
 operator|->
 name|ifv_mtufudge
@@ -2264,19 +2253,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|p
-operator|->
-name|if_capabilities
-operator|&
-name|IFCAP_VLAN_MTU
-operator|)
-operator|==
-literal|0
-condition|)
+else|else
 block|{
 comment|/* 		 * Fudge the MTU by the encapsulation size.  This 		 * makes us incompatible with strictly compliant 		 * 802.1Q implementations, but allows us to use 		 * the feature with other NetBSD implementations, 		 * which might still be useful. 		 */
 name|ifv
@@ -2662,34 +2639,21 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Disable Tx/Rx of VLAN-sized frames. 			 */
-name|p
-operator|->
-name|if_capenable
-operator|&=
-operator|~
-name|IFCAP_VLAN_MTU
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-condition|)
-block|{
 name|struct
 name|ifreq
 name|ifr
 decl_stmt|;
+comment|/* 			 * Try to disable Tx/Rx of VLAN-sized frames. 			 * This may have no effect for some interfaces, 			 * but only the parent driver knows that. 			 */
 name|ifr
 operator|.
-name|ifr_flags
+name|ifr_reqcap
 operator|=
 name|p
 operator|->
-name|if_flags
+name|if_capenable
+operator|&
+operator|~
+name|IFCAP_VLAN_MTU
 expr_stmt|;
 call|(
 modifier|*
@@ -2700,7 +2664,7 @@ call|)
 argument_list|(
 name|p
 argument_list|,
-name|SIOCSIFFLAGS
+name|SIOCSIFCAP
 argument_list|,
 operator|(
 name|caddr_t
@@ -2709,7 +2673,6 @@ operator|&
 name|ifr
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* Disconnect from parent. */
