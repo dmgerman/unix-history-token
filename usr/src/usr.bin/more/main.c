@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.11 (Berkeley) %G%"
+literal|"@(#)main.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -561,6 +561,9 @@ name|current_file
 operator|=
 name|filename
 expr_stmt|;
+name|pos_clear
+argument_list|()
+expr_stmt|;
 name|prev_pos
 operator|=
 name|position
@@ -676,9 +679,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Indicate there is nothing displayed yet. 		 */
-name|pos_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|initial_pos
