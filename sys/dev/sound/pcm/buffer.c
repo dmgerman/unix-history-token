@@ -1431,7 +1431,7 @@ block|{
 name|KASSERT
 argument_list|(
 name|ofs
-operator|<=
+operator|<
 name|b
 operator|->
 name|bufsize
