@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -D____386BSD____ -D__386BSD__ -DBSD_NET2"
+value|"-Dunix -Di386 -D__FreeBSD__ -D____386BSD____ -D__386BSD__ -DBSD_NET2"
 end_define
 
 begin_comment
