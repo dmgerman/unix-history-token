@@ -99,24 +99,21 @@ begin_comment
 comment|/* Prototypes */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|kbd_action
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|x
-operator|,
+parameter_list|,
 name|int
 name|y
-operator|,
+parameter_list|,
 name|char
 name|hotkey
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct
 struct|struct

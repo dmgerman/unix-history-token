@@ -158,25 +158,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|scsp_parse_atmarp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|Scsp_atmarp_csa
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Get a long ingeter  *  * This routine is provided to handle long integers that may not  * be word-aligned in the input buffer.  *  * Arguments:  *	cp	pointer to long int in message  *  * Returns:  *	int	long int in host order  *  */
