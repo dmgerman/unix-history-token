@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	utmp.h	4.1	83/05/03	*/
+comment|/*	utmp.h	4.2	83/05/22	*/
 end_comment
 
 begin_comment
@@ -25,6 +25,13 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* user id */
+name|char
+name|ut_host
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* host name, if remote */
 name|long
 name|ut_time
 decl_stmt|;
