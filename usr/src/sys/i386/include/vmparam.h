@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vmparam.h	5.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vmparam.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -22,18 +22,14 @@ begin_define
 define|#
 directive|define
 name|USRSTACK
-value|0xFDFFE000
+value|0xFDBFE000
 end_define
-
-begin_comment
-comment|/* Sysbase - UPAGES*NBPG */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|BTOPUSRSTACK
-value|(0xFE000-(UPAGES))
+value|(0xFDC00-(UPAGES))
 end_define
 
 begin_comment
@@ -44,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|P1PAGES
-value|0xFE000
+value|0xFDC00
 end_define
 
 begin_define
@@ -458,22 +454,57 @@ end_define
 begin_define
 define|#
 directive|define
+name|UPT_MIN_ADDRESS
+value|((vm_offset_t)0xFDC00000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPT_MAX_ADDRESS
+value|((vm_offset_t)0xFDFF7000)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_MAX_ADDRESS
-value|((vm_offset_t)0xFFFFF000)
+value|UPT_MAX_ADDRESS
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|((vm_offset_t)0xFE000000)
+value|((vm_offset_t)0xFDFF7000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPDT
+value|VM_MIN_KERNEL_ADDRESS
+end_define
+
+begin_define
+define|#
+directive|define
+name|KPT_MIN_ADDRESS
+value|((vm_offset_t)0xFDFF8000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KPT_MAX_ADDRESS
+value|((vm_offset_t)0xFDFFF000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|((vm_offset_t)0xFFFFF000)
+value|((vm_offset_t)0xFF7FF000)
 end_define
 
 begin_comment
@@ -552,6 +583,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -577,6 +614,11 @@ name|tlbflush
 parameter_list|()
 value|({ u_long val; \ 	val = u.u_pcb.pcb_ptd | I386_CR3PAT; \ 	asm ("movl %0,%%eax; movl %%eax,%%cr3" \ 		:  \ 		: "g" (val) \ 		: "ax"); \ })
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
