@@ -142,14 +142,14 @@ name|buf
 argument_list|,
 name|strlen
 argument_list|(
-name|word
+name|buffer
 argument_list|)
 argument_list|,
 operator|(
 name|Byte
 operator|*
 operator|)
-name|word
+name|buffer
 argument_list|)
 expr_stmt|;
 name|free
