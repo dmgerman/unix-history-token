@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.12 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -951,6 +951,19 @@ name|flags
 operator|&=
 operator|~
 name|__ISPASTEOL
+expr_stmt|;
+name|domvcur
+argument_list|(
+name|ly
+argument_list|,
+name|lx
+argument_list|,
+name|ly
+operator|+
+literal|1
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|ly
 operator|++
