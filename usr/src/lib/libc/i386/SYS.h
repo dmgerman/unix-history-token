@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)SYS.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)SYS.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -63,7 +63,17 @@ name|x
 parameter_list|)
 value|2: jmp cerror; ENTRY(x); lea SYS_
 comment|/**/
-value|x,%eax; LCALL(7,0); jb 2b; ret
+value|x,%eax; LCALL(7,0); jb 2b
+end_define
+
+begin_define
+define|#
+directive|define
+name|RSYSCALL
+parameter_list|(
+name|x
+parameter_list|)
+value|SYSCALL(x); ret
 end_define
 
 begin_define
