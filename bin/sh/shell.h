@@ -36,12 +36,6 @@ begin_comment
 comment|/* #define DEBUG 1 */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|void
@@ -49,68 +43,6 @@ modifier|*
 name|pointer
 typedef|;
 end_typedef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|(void *)0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not __STDC__ */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|pointer
-typedef|;
-end_typedef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  not __STDC__ */
-end_comment
 
 begin_define
 define|#
