@@ -204,6 +204,8 @@ block|,
 name|suspend
 block|,
 name|filled
+block|,
+name|inactive
 block|}
 enum|;
 end_enum

@@ -431,6 +431,25 @@ end_define
 begin_decl_stmt
 name|EXTERN
 name|struct
+name|slot
+modifier|*
+name|slots
+decl_stmt|,
+modifier|*
+name|current_slot
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|slen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
+name|struct
 name|allocblk
 modifier|*
 name|pool_ioblks
@@ -715,7 +734,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* file.c */
+comment|/* file.c functions */
 end_comment
 
 begin_function_decl
@@ -724,6 +743,39 @@ name|readfile
 parameter_list|(
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* server.c functions */
+end_comment
+
+begin_function_decl
+name|void
+name|set_socket
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|stat_changed
+parameter_list|(
+name|struct
+name|slot
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|process_client
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
