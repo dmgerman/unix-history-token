@@ -2450,7 +2450,7 @@ name|IPSEC
 ifdef|#
 directive|ifdef
 name|IPSEC_POLICY_IPSEC
-literal|"P"
+literal|"P:"
 else|#
 directive|else
 comment|/* IPSEC_POLICY_IPSEC */
