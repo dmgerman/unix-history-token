@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	6.6	84/11/14	*/
+comment|/*	ip_input.c	6.7	84/11/15	*/
 end_comment
 
 begin_include
@@ -774,53 +774,6 @@ goto|goto
 name|ours
 goto|;
 block|}
-comment|/* BEGIN GROT */
-include|#
-directive|include
-file|"nd.h"
-if|#
-directive|if
-name|NND
-operator|>
-literal|0
-comment|/* 	 * Diskless machines don't initially know 	 * their address, so take packets from them 	 * if we're acting as a network disk server. 	 */
-if|if
-condition|(
-name|in_netof
-argument_list|(
-name|ip
-operator|->
-name|ip_dst
-argument_list|)
-operator|==
-name|INADDR_ANY
-operator|&&
-operator|(
-name|in_netof
-argument_list|(
-name|ip
-operator|->
-name|ip_src
-argument_list|)
-operator|==
-name|INADDR_ANY
-operator|&&
-name|in_lnaof
-argument_list|(
-name|ip
-operator|->
-name|ip_src
-argument_list|)
-operator|!=
-name|INADDR_ANY
-operator|)
-condition|)
-goto|goto
-name|ours
-goto|;
-endif|#
-directive|endif
-comment|/* END GROT */
 name|ipaddr
 operator|.
 name|sin_addr
