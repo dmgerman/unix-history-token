@@ -1943,6 +1943,29 @@ name|struct
 name|mtx
 name|rl_mtx
 decl_stmt|;
+name|int
+name|suspended
+decl_stmt|;
+comment|/* 0 = normal  1 = suspended */
+name|u_int32_t
+name|saved_maps
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* pci data */
+name|u_int32_t
+name|saved_biosaddr
+decl_stmt|;
+name|u_int8_t
+name|saved_intline
+decl_stmt|;
+name|u_int8_t
+name|saved_cachelnsz
+decl_stmt|;
+name|u_int8_t
+name|saved_lattimer
+decl_stmt|;
 block|}
 struct|;
 end_struct
