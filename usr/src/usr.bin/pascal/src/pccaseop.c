@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c 1.3 %G%"
+literal|"@(#)pccaseop.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,6 +184,9 @@ name|int
 name|casecmp
 parameter_list|()
 function_decl|;
+name|bool
+name|dupcases
+decl_stmt|;
 name|goc
 operator|=
 name|gocnt
@@ -699,6 +702,10 @@ name|endlabel
 argument_list|)
 expr_stmt|;
 block|}
+name|noreach
+operator|=
+name|nr
+expr_stmt|;
 comment|/* 	 *	default action is to call error 	 */
 name|putlab
 argument_list|(
@@ -798,6 +805,10 @@ name|casecmp
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  check for duplicates 	 */
+name|dupcases
+operator|=
+name|FALSE
+expr_stmt|;
 for|for
 control|(
 name|ctp
@@ -839,7 +850,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Muliply defined label in case, lines %d and %d"
+literal|"Multiply defined label in case, lines %d and %d"
 argument_list|,
 name|ctp
 index|[
@@ -856,7 +867,18 @@ operator|.
 name|cline
 argument_list|)
 expr_stmt|;
+name|dupcases
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|dupcases
+condition|)
+block|{
+return|return;
 block|}
 comment|/* 	 *  choose a switch algorithm and implement it: 	 *	direct switch>= 1/3 full and>= 4 cases. 	 *	binary switch	not direct switch and> 8 cases. 	 *	ifthenelse	not direct or binary switch. 	 */
 name|putlab
@@ -927,10 +949,6 @@ name|putlab
 argument_list|(
 name|endlabel
 argument_list|)
-expr_stmt|;
-name|noreach
-operator|=
-name|nr
 expr_stmt|;
 if|if
 condition|(
