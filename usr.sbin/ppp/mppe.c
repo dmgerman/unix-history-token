@@ -472,6 +472,7 @@ expr_stmt|;
 case|case
 literal|128
 case|:
+break|break;
 block|}
 block|}
 end_function
