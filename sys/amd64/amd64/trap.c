@@ -332,6 +332,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|I386_CPU
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -345,6 +351,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -3229,6 +3240,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|I386_CPU
+end_ifdef
+
 begin_comment
 comment|/*  * Compensate for 386 brain damage (missing URKR).  * This is a little simpler than the pagefault handler in trap() because  * it the page tables have already been faulted in and high addresses  * are thrown out early for other reasons.  */
 end_comment
@@ -3380,6 +3397,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *	syscall -	system call request C handler  *  *	A system call is essentially treated as a trap.  */
