@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.12 (Berkeley) %G%"
+literal|"@(#)main.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -632,6 +632,11 @@ name|line_length
 operator|=
 literal|78
 expr_stmt|;
+name|line_length
+operator|-=
+literal|3
+expr_stmt|;
+comment|/* for the octal to break properly in 'l' */
 name|Start
 operator|=
 name|End
