@@ -4870,7 +4870,7 @@ name|sc
 operator|->
 name|fc
 operator|->
-name|dev
+name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
