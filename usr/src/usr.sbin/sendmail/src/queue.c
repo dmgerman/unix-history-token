@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.60
+literal|3.61
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.60
+literal|3.61
 operator|%
 name|G
 operator|%
@@ -1024,6 +1024,9 @@ directive|endif
 endif|LOG
 comment|/* 	**  Start making passes through the queue. 	**	First, read and sort the entire queue. 	**	Then, process the work in that order. 	**		But if you take too long, start over. 	*/
 comment|/* order the existing work requests */
+operator|(
+name|void
+operator|)
 name|orderq
 argument_list|()
 expr_stmt|;
@@ -1199,7 +1202,8 @@ decl_stmt|;
 name|int
 name|wn
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 extern|extern workcmpf(
 block|)
@@ -1291,7 +1295,11 @@ argument_list|,
 name|QueueDir
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_if
 
@@ -1302,10 +1310,6 @@ end_comment
 begin_while
 while|while
 condition|(
-name|wn
-operator|<
-name|WLSIZE
-operator|&&
 operator|(
 name|d
 operator|=
@@ -1383,7 +1387,15 @@ operator|!=
 literal|'f'
 condition|)
 continue|continue;
-comment|/* yes -- open control file */
+comment|/* yes -- open control file (if not too many files) */
+if|if
+condition|(
+operator|++
+name|wn
+operator|>=
+name|WLSIZE
+condition|)
+continue|continue;
 name|cf
 operator|=
 name|fopen
@@ -1475,9 +1487,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|wn
-operator|++
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1657,6 +1666,16 @@ endif|#
 directive|endif
 endif|DEBUG
 end_endif
+
+begin_return
+return|return
+operator|(
+name|wn
+operator|+
+literal|1
+operator|)
+return|;
+end_return
 
 begin_escape
 unit|}
@@ -2568,6 +2587,9 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
+name|int
+name|nrequests
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -2575,6 +2597,8 @@ name|MAXLINE
 index|]
 decl_stmt|;
 comment|/* 	**  Read and order the queue. 	*/
+name|nrequests
+operator|=
 name|orderq
 argument_list|()
 expr_stmt|;
@@ -2582,26 +2606,41 @@ comment|/* 	**  Print the work list that we have read. 	*/
 comment|/* first see if there is anything */
 if|if
 condition|(
-name|WorkQ
-operator|==
-name|NULL
+name|nrequests
+operator|<=
+literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nMail queue is empty\n"
+literal|"Mail queue is empty\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 name|printf
 argument_list|(
-literal|"\n\t\tMail Queue\n"
+literal|"\t\tMail Queue (%d requests"
+argument_list|,
+name|nrequests
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nrequests
+operator|>
+name|WLSIZE
+condition|)
+name|printf
+argument_list|(
+literal|", only %d printed"
+argument_list|,
+name|WLSIZE
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"--QID-- --Size-- -----Q Time----- --Sender/Recipient--\n"
+literal|")\n--QID-- --Size-- -----Q-Time----- ------------Sender/Recipient------------\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2625,6 +2664,24 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
+name|char
+name|lf
+index|[
+literal|20
+index|]
+decl_stmt|;
+specifier|auto
+name|time_t
+name|submittime
+init|=
+literal|0
+decl_stmt|;
+name|long
+name|dfsize
+init|=
+operator|-
+literal|1
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"%7s"
@@ -2635,6 +2692,49 @@ name|w_name
 operator|+
 literal|2
 argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|lf
+argument_list|,
+name|w
+operator|->
+name|w_name
+argument_list|)
+expr_stmt|;
+name|lf
+index|[
+literal|0
+index|]
+operator|=
+literal|'l'
+expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|lf
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|>=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"*"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 name|f
 operator|=
@@ -2659,31 +2759,12 @@ argument_list|(
 literal|" (finished)\n"
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 continue|continue;
 block|}
-operator|(
-name|void
-operator|)
-name|fstat
-argument_list|(
-name|fileno
-argument_list|(
-name|f
-argument_list|)
-argument_list|,
-operator|&
-name|st
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" %8ld"
-argument_list|,
-name|st
-operator|.
-name|st_size
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -2699,10 +2780,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|auto
-name|long
-name|ti
-decl_stmt|;
 name|fixcrlf
 argument_list|(
 name|buf
@@ -2724,7 +2801,15 @@ case|:
 comment|/* sender name */
 name|printf
 argument_list|(
-literal|" %.20s"
+literal|"%8d %.16s %.40s"
+argument_list|,
+name|dfsize
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|submittime
+argument_list|)
 argument_list|,
 operator|&
 name|buf
@@ -2740,7 +2825,7 @@ case|:
 comment|/* recipient name */
 name|printf
 argument_list|(
-literal|"\n\t\t\t\t  %.20s"
+literal|"\n\t\t\t\t  %.40s"
 argument_list|,
 operator|&
 name|buf
@@ -2765,23 +2850,53 @@ argument_list|,
 literal|"%ld"
 argument_list|,
 operator|&
-name|ti
+name|submittime
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" %.16s"
-argument_list|,
-name|ctime
+break|break;
+case|case
+literal|'D'
+case|:
+comment|/* data file name */
+if|if
+condition|(
+name|stat
 argument_list|(
 operator|&
-name|ti
+name|buf
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|st
 argument_list|)
-argument_list|)
+operator|>=
+literal|0
+condition|)
+name|dfsize
+operator|=
+name|st
+operator|.
+name|st_size
 expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|submittime
+operator|==
+operator|(
+name|time_t
+operator|)
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" (no control file)"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
