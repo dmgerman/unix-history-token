@@ -1425,6 +1425,29 @@ literal|0
 block|}
 block|,
 block|{
+comment|/* 		 * Maxtor Personal Storage 3000XT (Firewire) 		 * hangs upon serial number probing. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"Maxtor"
+block|,
+literal|"1394 storage"
+block|,
+literal|"*"
+block|}
+block|,
+name|CAM_QUIRK_NOSERIAL
+block|,
+comment|/*mintags*/
+literal|0
+block|,
+comment|/*maxtags*/
+literal|0
+block|}
+block|,
+block|{
 comment|/* 		 * Would repond to all LUNs if asked for. 		 */
 block|{
 name|T_SEQUENTIAL
