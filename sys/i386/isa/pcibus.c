@@ -180,6 +180,14 @@ literal|"Intel 82443BX host to PCI bridge (AGP disabled)"
 expr_stmt|;
 break|break;
 case|case
+literal|0x71948086
+case|:
+name|s
+operator|=
+literal|"Intel 82443MX host to PCI bridge"
+expr_stmt|;
+break|break;
+case|case
 literal|0x71a08086
 case|:
 name|s

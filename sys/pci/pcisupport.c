@@ -5623,6 +5623,14 @@ literal|"Intel 82371AB PCI to ISA bridge"
 operator|)
 return|;
 case|case
+literal|0x71988086
+case|:
+return|return
+operator|(
+literal|"Intel 82443MX PCI to ISA bridge"
+operator|)
+return|;
+case|case
 literal|0x24108086
 case|:
 return|return
@@ -6709,6 +6717,14 @@ literal|"Intel 82371AB Power management controller"
 operator|)
 return|;
 case|case
+literal|0x719b8086
+case|:
+return|return
+operator|(
+literal|"Intel 82443MX Power management controller"
+operator|)
+return|;
+case|case
 literal|0x12378086
 case|:
 name|fixwsc_natoma
@@ -7768,6 +7784,14 @@ case|:
 name|chip
 operator|=
 literal|"Mobility-1"
+expr_stmt|;
+break|break;
+case|case
+literal|0x4c52
+case|:
+name|chip
+operator|=
+literal|"RageMobility-P/M"
 expr_stmt|;
 break|break;
 case|case
