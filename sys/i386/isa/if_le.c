@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.12 1994/12/22 21:56:11 wollman Exp $  *  * $Log: if_le.c,v $  * Revision 1.12  1994/12/22  21:56:11  wollman  * Move ARP interface initialization into if_ether.c:arp_ifinit().  *  * Revision 1.10  1994/11/24  14:29:24  davidg  * Moved conversion of ether_type to host byte order out of ethernet drivers  * and into ether_input(). It was silly to have bpf want this one way and  * ether_input want it another way. Ripped out trailer support from the few  * remaining drivers that still had it.  *  * Revision 1.9  1994/10/23  21:27:22  wollman  * Finished device configuration database work for all ISA devices (except `ze')  * and all SCSI devices (except that it's not done quite the way I want).  New  * information added includes:  *  * -	A text description of the device  * -	A ``state''---unknown, unconfigured, idle, or busy  * -	A generic parent device (with support in the m.i. code)  * -	An interrupt mask type field (which will hopefully go away) so that  * .	  ``doconfig'' can be written  *  * This requires a new version of the `lsdev' program as well (next commit).  *  * Revision 1.8  1994/10/19  01:59:03  wollman  * Add support for devconf to a large number of device drivers, and do  * the right thing in dev_goawayall() when kdc_goaway is null.  *  * Revision 1.7  1994/10/12  11:39:37  se  * Submitted by:	Matt Thomas<thomas@lkg.dec.com>  * #ifdef MULTICAST removed.  *  * Revision 1.9  1994/08/16  20:40:56  thomas  * New README files (one per driver)  * Minor updates to drivers (DEPCA support and add pass to attach  * output)  *  * Revision 1.8  1994/08/05  20:20:54  thomas  * Enable change log  *  * Revision 1.7  1994/08/05  20:20:14  thomas  * *** empty log message ***  *  */
+comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.13 1995/03/28 07:55:32 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1355,10 +1355,13 @@ comment|/* parent */
 literal|0
 block|,
 comment|/* parentdata */
-name|DC_BUSY
+name|DC_UNCONFIGURED
 block|,
-comment|/* network interfaces are always busy */
-literal|"DEC EtherWorks II or EtherWorks III Ethernet adapter"
+comment|/* state */
+literal|"Ethernet adapter: DEC EtherWorks II or EtherWorks III"
+block|,
+name|DC_CLS_NETIF
+comment|/* class */
 block|}
 block|}
 decl_stmt|;
@@ -1489,6 +1492,11 @@ return|return
 literal|0
 return|;
 block|}
+name|le_registerdev
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|le_iobase
@@ -1710,18 +1718,12 @@ name|IFF_SIMPLEX
 operator||
 name|IFF_NOTRAILERS
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MULTICAST
 name|ifp
 operator|->
 name|if_flags
 operator||=
 name|IFF_MULTICAST
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MULTICAST */
 name|ifp
 operator|->
 name|if_output
@@ -1782,10 +1784,16 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|le_registerdev
-argument_list|(
+name|kdc_le
+index|[
 name|dvp
-argument_list|)
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
 expr_stmt|;
 while|while
 condition|(
@@ -2836,9 +2844,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|MULTICAST
 case|case
 name|SIOCADDMULTI
 case|:
@@ -2915,9 +2920,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-endif|#
-directive|endif
-comment|/* MULTICAST */
 default|default:
 block|{
 name|error
@@ -2930,6 +2932,27 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+name|kdc_le
+index|[
+name|ifp
+operator|->
+name|if_unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+condition|?
+name|DC_BUSY
+else|:
+name|DC_IDLE
 expr_stmt|;
 return|return
 name|error
@@ -3305,9 +3328,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|MULTICAST
 name|struct
 name|ether_multistep
 name|step
@@ -3317,8 +3337,6 @@ name|ether_multi
 modifier|*
 name|enm
 decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|ISO
@@ -3421,9 +3439,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MULTICAST
 name|ETHER_FIRST_MULTI
 argument_list|(
 name|step
@@ -3514,8 +3529,6 @@ operator|&=
 operator|~
 name|IFF_ALLMULTI
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

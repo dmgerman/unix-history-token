@@ -97,6 +97,60 @@ directive|include
 file|"b004.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|kern_devconf
+name|kdc_bqu
+index|[
+name|NBQU
+index|]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* filled in by dev_attach */
+literal|"bqu"
+block|,
+literal|0
+block|,
+block|{
+name|MDDT_ISA
+block|,
+literal|0
+block|}
+block|,
+name|isa_generic_externalize
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_UNCONFIGURED
+block|,
+comment|/* always start here */
+literal|"B004-compatible Transputer board"
+block|,
+name|DC_CLS_MISC
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -1639,6 +1693,15 @@ argument_list|)
 operator||=
 name|B004_BUSY
 expr_stmt|;
+name|kdc_bqu
+index|[
+name|dev_min
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
+expr_stmt|;
 name|B004_TIMEOUT
 argument_list|(
 name|dev_min
@@ -1712,6 +1775,15 @@ argument_list|)
 operator|&=
 operator|~
 name|B004_BUSY
+expr_stmt|;
+name|kdc_bqu
+index|[
+name|dev_min
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
 expr_stmt|;
 name|DEB
 argument_list|(
@@ -1981,58 +2053,6 @@ begin_comment
 comment|/* bquioctl() */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_bqu
-index|[
-name|NBQU
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"bqu"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNKNOWN
-block|,
-comment|/* we don't support this yet */
-literal|"B004-compatible Transputer board"
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -2111,10 +2131,16 @@ modifier|*
 name|idp
 parameter_list|)
 block|{
-name|bqu_registerdev
-argument_list|(
+name|kdc_bqu
+index|[
 name|idp
-argument_list|)
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
 expr_stmt|;
 return|return
 literal|1
@@ -2262,6 +2288,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Dangerous isa addres ) */
+ifndef|#
+directive|ifndef
+name|DEV_LKM
+name|bqu_registerdev
+argument_list|(
+name|idp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not DEV_LKM */
 for|for
 control|(
 name|test

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7770.c,v 1.11 1995/03/07 08:58:22 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7770.c,v 1.12 1995/03/31 13:36:57 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -271,10 +271,13 @@ comment|/* parent */
 literal|0
 block|,
 comment|/* parentdata */
-name|DC_BUSY
+name|DC_UNCONFIGURED
 block|,
-comment|/* host adapters are always ``in use'' */
+comment|/* always start out here */
 literal|"Adaptec aic7770 based SCSI host adapter"
+block|,
+name|DC_CLS_MISC
+comment|/* host adapters aren't special */
 block|}
 block|}
 decl_stmt|;
@@ -593,6 +596,17 @@ name|id_iobase
 operator|=
 name|port
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|DEV_LKM
+name|aic7770_registerdev
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEV_LKM */
 if|if
 condition|(
 name|ahcprobe
@@ -672,11 +686,16 @@ name|dev
 operator|->
 name|id_unit
 decl_stmt|;
-name|aic7770_registerdev
-argument_list|(
-name|dev
-argument_list|)
+name|kdc_aic7770
+index|[
+name|unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
 expr_stmt|;
+comment|/* host adapters always busy */
 return|return
 name|ahc_attach
 argument_list|(

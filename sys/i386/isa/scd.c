@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.1 1995/03/24 18:33:00 jkh Exp $ */
+comment|/* $Id: scd.c,v 1.2 1995/03/25 18:14:37 bde Exp $ */
 end_comment
 
 begin_comment
@@ -1053,11 +1053,14 @@ comment|/* parent */
 literal|0
 block|,
 comment|/* parentdata */
-name|DC_IDLE
+name|DC_UNCONFIGURED
 block|,
 comment|/* status */
 literal|"Sony CD-ROM drive"
+block|,
 comment|/* properly filled later */
+name|DC_CLS_RDISK
+comment|/* class */
 block|}
 block|}
 decl_stmt|;
@@ -1164,10 +1167,16 @@ operator|->
 name|id_iobase
 expr_stmt|;
 comment|/* Already set by probe, but ... */
-name|scd_registerdev
-argument_list|(
+name|kdc_scd
+index|[
 name|dev
-argument_list|)
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
 expr_stmt|;
 comment|/* name filled in probe */
 name|kdc_scd
@@ -3697,6 +3706,11 @@ sizeof|sizeof
 argument_list|(
 name|drive_config
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|scd_registerdev
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 name|again

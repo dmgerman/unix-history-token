@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.13 1995/04/10 07:54:34 root Exp root $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.25 1995/04/10 21:24:58 jkh Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -568,10 +568,13 @@ comment|/* parent */
 literal|0
 block|,
 comment|/* parentdata */
-name|DC_BUSY
+name|DC_UNCONFIGURED
 block|,
-comment|/* network interfaces are always ``open'' */
+comment|/* state */
 literal|"3Com 3C509 Ethernet adapter"
+block|,
+name|DC_CLS_NETIF
+comment|/* class */
 block|}
 block|}
 decl_stmt|;
@@ -1420,6 +1423,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|ep_registerdev
+argument_list|(
+name|is
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2019,10 +2027,16 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|ep_registerdev
-argument_list|(
+name|kdc_ep
+index|[
 name|is
-argument_list|)
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
 expr_stmt|;
 comment|/*      * Fill the hardware address into ifa_addr if we find an AF_LINK entry.      * We need to do this so bpf's can get the hardware addr of this card.      * netstat likes this too!      */
 name|ifa

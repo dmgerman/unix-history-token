@@ -504,6 +504,8 @@ comment|/* parentdata */
 name|DC_UNCONFIGURED
 block|,
 literal|""
+block|,
+name|DC_CLS_NETIF
 block|}
 decl_stmt|;
 end_decl_stmt

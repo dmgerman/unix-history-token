@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1993, 1994 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ft.c - QIC-40/80 floppy tape driver  *  $Id: ft.c,v 1.18 1995/04/06 07:20:16 rgrimes Exp $  *  *  01/19/95 ++sg  *  Cleaned up recalibrate/seek code at attach time for FreeBSD 2.x.  *  *  06/07/94 v0.9 ++sg  *  Tape stuck on segment problem should be gone.  Re-wrote buffering  *  scheme.  Added support for drives that do not automatically perform  *  seek load point.  Can handle more wakeup types now and should correctly  *  report most manufacturer names.  Fixed places where unit 0 was being  *  sent to the fdc instead of the actual unit number.  Added ioctl support  *  for an in-core badmap.  *  *  01/26/94 v0.3b - Jim Babb  *  Got rid of the hard coded device selection.  Moved (some of) the  *  static variables into a structure for support of multiple devices.  *  ( still has a way to go for 2 controllers - but closer )  *  Changed the interface with fd.c so we no longer 'steal' it's   *  driver routine vectors.  *   *  10/30/93 v0.3  *  Fixed a couple more bugs.  Reading was sometimes looping when an  *  an error such as address-mark-missing was encountered.  Both  *  reading and writing was having more backup-and-retries than was  *  necessary.  Added support to get hardware info.  Updated for use  *  with FreeBSD.  *  *  09/15/93 v0.2 pl01  *  Fixed a bunch of bugs:  extra isa_dmadone() in async_write() (shouldn't  *  matter), fixed double buffering in async_req(), changed tape_end() in  *  set_fdcmode() to reduce unexpected interrupts, changed end of track  *  processing in async_req(), protected more of ftreq_rw() with an  *  splbio().  Changed some of the ftreq_*() functions so that they wait  *  for inactivity and then go, instead of aborting immediately.  *  *  08/07/93 v0.2 release  *  Shifted from ftstrat to ioctl support for I/O.  Streaming is now much  *  more reliable.  Added internal support for error correction, QIC-40,  *  and variable length tapes.  Random access of segments greatly  *  improved.  Formatting and verification support is close but still  *  incomplete.  *  *  06/03/93 v0.1 Alpha release  *  Hopefully the last re-write.  Many bugs fixed, many remain.  */
+comment|/*  *  Copyright (c) 1993, 1994 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ft.c - QIC-40/80 floppy tape driver  *  $Id: ft.c,v 1.19 1995/04/09 06:23:12 rgrimes Exp $  *  *  01/19/95 ++sg  *  Cleaned up recalibrate/seek code at attach time for FreeBSD 2.x.  *  *  06/07/94 v0.9 ++sg  *  Tape stuck on segment problem should be gone.  Re-wrote buffering  *  scheme.  Added support for drives that do not automatically perform  *  seek load point.  Can handle more wakeup types now and should correctly  *  report most manufacturer names.  Fixed places where unit 0 was being  *  sent to the fdc instead of the actual unit number.  Added ioctl support  *  for an in-core badmap.  *  *  01/26/94 v0.3b - Jim Babb  *  Got rid of the hard coded device selection.  Moved (some of) the  *  static variables into a structure for support of multiple devices.  *  ( still has a way to go for 2 controllers - but closer )  *  Changed the interface with fd.c so we no longer 'steal' it's   *  driver routine vectors.  *   *  10/30/93 v0.3  *  Fixed a couple more bugs.  Reading was sometimes looping when an  *  an error such as address-mark-missing was encountered.  Both  *  reading and writing was having more backup-and-retries than was  *  necessary.  Added support to get hardware info.  Updated for use  *  with FreeBSD.  *  *  09/15/93 v0.2 pl01  *  Fixed a bunch of bugs:  extra isa_dmadone() in async_write() (shouldn't  *  matter), fixed double buffering in async_req(), changed tape_end() in  *  set_fdcmode() to reduce unexpected interrupts, changed end of track  *  processing in async_req(), protected more of ftreq_rw() with an  *  splbio().  Changed some of the ftreq_*() functions so that they wait  *  for inactivity and then go, instead of aborting immediately.  *  *  08/07/93 v0.2 release  *  Shifted from ftstrat to ioctl support for I/O.  Streaming is now much  *  more reliable.  Added internal support for error correction, QIC-40,  *  and variable length tapes.  Random access of segments greatly  *  improved.  Formatting and verification support is close but still  *  incomplete.  *  *  06/03/93 v0.1 Alpha release  *  Hopefully the last re-write.  Many bugs fixed, many remain.  */
 end_comment
 
 begin_include
@@ -1994,10 +1994,13 @@ comment|/* parent */
 literal|0
 block|,
 comment|/* parentdata */
-name|DC_UNKNOWN
+name|DC_IDLE
 block|,
 comment|/* state */
 literal|"floppy tape"
+block|,
+name|DC_CLS_TAPE
+comment|/* class */
 block|}
 block|}
 decl_stmt|;
@@ -2450,6 +2453,13 @@ name|flags
 operator||=
 name|FDC_HASFTAPE
 expr_stmt|;
+name|ft_registerdev
+argument_list|(
+name|fdcu
+argument_list|,
+name|ftu
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|hw
@@ -2468,10 +2478,21 @@ name|type
 operator|==
 name|FT_COLORADO
 condition|)
+block|{
 name|manu
 operator|=
 literal|"Colorado"
 expr_stmt|;
+name|kdc_ft
+index|[
+name|ftu
+index|]
+operator|.
+name|kdc_description
+operator|=
+literal|"Colorado floppy tape"
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2481,10 +2502,21 @@ name|type
 operator|==
 name|FT_INSIGHT
 condition|)
+block|{
 name|manu
 operator|=
 literal|"Insight"
 expr_stmt|;
+name|kdc_ft
+index|[
+name|ftu
+index|]
+operator|.
+name|kdc_description
+operator|=
+literal|"Insight floppy tape"
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2500,10 +2532,21 @@ name|hw_model
 operator|==
 literal|0x05
 condition|)
+block|{
 name|manu
 operator|=
 literal|"Archive"
 expr_stmt|;
+name|kdc_ft
+index|[
+name|ftu
+index|]
+operator|.
+name|kdc_description
+operator|=
+literal|"Archive floppy tape"
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2513,15 +2556,28 @@ name|type
 operator|==
 name|FT_MOUNTAIN
 condition|)
+block|{
 name|manu
 operator|=
 literal|"Mountain"
 expr_stmt|;
+name|kdc_ft
+index|[
+name|ftu
+index|]
+operator|.
+name|kdc_description
+operator|=
+literal|"Mountain floppy tape"
+expr_stmt|;
+block|}
 else|else
+block|{
 name|manu
 operator|=
 literal|"Unknown"
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|0x0001
@@ -2529,6 +2585,15 @@ case|:
 name|manu
 operator|=
 literal|"Colorado"
+expr_stmt|;
+name|kdc_ft
+index|[
+name|ftu
+index|]
+operator|.
+name|kdc_description
+operator|=
+literal|"Colorado floppy tape"
 expr_stmt|;
 break|break;
 case|case
@@ -2542,15 +2607,37 @@ name|hw_model
 operator|>=
 literal|0x09
 condition|)
+block|{
 name|manu
 operator|=
 literal|"Conner"
 expr_stmt|;
+name|kdc_ft
+index|[
+name|ftu
+index|]
+operator|.
+name|kdc_description
+operator|=
+literal|"Conner floppy tape"
+expr_stmt|;
+block|}
 else|else
+block|{
 name|manu
 operator|=
 literal|"Archive"
 expr_stmt|;
+name|kdc_ft
+index|[
+name|ftu
+index|]
+operator|.
+name|kdc_description
+operator|=
+literal|"Archive floppy tape"
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|0x0006
@@ -2558,6 +2645,15 @@ case|:
 name|manu
 operator|=
 literal|"Mountain"
+expr_stmt|;
+name|kdc_ft
+index|[
+name|ftu
+index|]
+operator|.
+name|kdc_description
+operator|=
+literal|"Mountain floppy tape"
 expr_stmt|;
 break|break;
 case|case
@@ -2567,6 +2663,15 @@ name|manu
 operator|=
 literal|"Wangtek"
 expr_stmt|;
+name|kdc_ft
+index|[
+name|ftu
+index|]
+operator|.
+name|kdc_description
+operator|=
+literal|"Wangtek floppy tape"
+expr_stmt|;
 break|break;
 case|case
 literal|0x0222
@@ -2574,6 +2679,15 @@ case|:
 name|manu
 operator|=
 literal|"IOMega"
+expr_stmt|;
+name|kdc_ft
+index|[
+name|ftu
+index|]
+operator|.
+name|kdc_description
+operator|=
+literal|"IOMega floppy tape"
 expr_stmt|;
 break|break;
 default|default:
@@ -2592,13 +2706,6 @@ operator|->
 name|id_unit
 argument_list|,
 name|manu
-argument_list|)
-expr_stmt|;
-name|ft_registerdev
-argument_list|(
-name|fdcu
-argument_list|,
-name|ftu
 argument_list|)
 expr_stmt|;
 block|}
@@ -10809,6 +10916,15 @@ name|flags
 operator||=
 name|FDC_TAPE_BUSY
 expr_stmt|;
+name|kdc_ft
+index|[
+name|ftu
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
+expr_stmt|;
 return|return
 operator|(
 name|set_fdcmode
@@ -10892,6 +11008,15 @@ name|ftreq_rewind
 argument_list|(
 name|ftu
 argument_list|)
+expr_stmt|;
+name|kdc_ft
+index|[
+name|ftu
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
 expr_stmt|;
 return|return
 operator|(

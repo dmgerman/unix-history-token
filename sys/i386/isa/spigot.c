@@ -171,6 +171,7 @@ name|NSPIGOT
 index|]
 init|=
 block|{
+block|{
 literal|0
 block|,
 comment|/* kdc_next -> filled in by dev_attach() */
@@ -215,11 +216,15 @@ comment|/* kdc_parent */
 literal|0
 block|,
 comment|/* kdc_parentdata */
-name|DC_UNKNOWN
+name|DC_UNCONFIGURED
 block|,
 comment|/* kdc_state - not supported */
 literal|"Video Spigot frame grabber"
+block|,
 comment|/* kdc_description */
+name|DC_CLS_MISC
+comment|/* class */
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -305,8 +310,19 @@ block|{
 name|int
 name|status
 decl_stmt|;
+name|spigot_registerdev
+argument_list|(
+name|devp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+name|devp
+operator|->
+name|id_iobase
+operator|!=
+literal|0xad6
+operator|||
 name|inb
 argument_list|(
 literal|0xad9
@@ -360,6 +376,17 @@ operator|->
 name|id_unit
 index|]
 decl_stmt|;
+name|kdc_spigot
+index|[
+name|devp
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_UNKNOWN
+expr_stmt|;
 name|ss
 operator|->
 name|flags
@@ -373,11 +400,6 @@ operator|=
 name|devp
 operator|->
 name|id_maddr
-expr_stmt|;
-name|spigot_registerdev
-argument_list|(
-name|devp
-argument_list|)
 expr_stmt|;
 return|return
 literal|1

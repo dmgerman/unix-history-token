@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.6 1995/03/01 22:30:47 dufault Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.7 1995/03/28 07:55:24 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -4155,10 +4155,13 @@ comment|/* parent */
 literal|0
 block|,
 comment|/* parentdata */
-name|DC_BUSY
+name|DC_UNCONFIGURED
 block|,
-comment|/* host adapters are always busy */
+comment|/* start out in unconfig state */
 literal|"Adaptec AIC-6360 SCSI host adapter chipset"
+block|,
+name|DC_CLS_MISC
+comment|/* host adapters aren't special */
 block|}
 block|}
 block|;
@@ -4428,6 +4431,17 @@ name|dev
 operator|->
 name|id_iobase
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|DEV_LKM
+name|aic_registerdev
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not DEV_LKM */
 if|if
 condition|(
 name|aic_find
@@ -4458,11 +4472,6 @@ return|;
 block|}
 name|aicunit
 operator|++
-expr_stmt|;
-name|aic_registerdev
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 return|return
 literal|0x20
@@ -5089,6 +5098,16 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 comment|/* 	 * ask the adapter what subunits are present 	 */
+name|kdc_aic
+index|[
+name|unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
+expr_stmt|;
+comment|/* host adapters are always busy */
 name|scsi_attachdevs
 argument_list|(
 operator|&

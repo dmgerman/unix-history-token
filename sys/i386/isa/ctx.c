@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.3 1994/10/21 01:19:05 wollman Exp $  */
+comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.4 1994/10/23 21:27:11 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -261,10 +261,12 @@ comment|/* parent */
 literal|0
 block|,
 comment|/* parentdata */
-name|DC_UNKNOWN
+name|DC_UNCONFIGURED
 block|,
-comment|/* not supported */
+comment|/* always start out here */
 literal|"CORTEX-I frame grabber"
+block|,
+name|DC_CLS_MISC
 block|}
 block|}
 decl_stmt|;
@@ -351,6 +353,11 @@ block|{
 name|int
 name|status
 decl_stmt|;
+name|ctx_registerdev
+argument_list|(
+name|devp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|inb
@@ -452,10 +459,16 @@ name|devp
 operator|->
 name|id_msize
 expr_stmt|;
-name|ctx_registerdev
-argument_list|(
+name|kdc_ctx
+index|[
 name|devp
-argument_list|)
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
 expr_stmt|;
 return|return
 operator|(
@@ -565,6 +578,15 @@ operator|->
 name|flag
 operator|=
 name|OPEN
+expr_stmt|;
+name|kdc_ctx
+index|[
+name|unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
 expr_stmt|;
 comment|/* 	Set up the shadow registers.  We don't actually write these 	values to the control ports until after we finish loading the 	lookup table. */
 name|sr
@@ -766,6 +788,15 @@ operator|.
 name|flag
 operator|=
 literal|0
+expr_stmt|;
+name|kdc_ctx
+index|[
+name|unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
 expr_stmt|;
 name|free
 argument_list|(

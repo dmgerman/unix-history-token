@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.67 1995/02/26 20:03:53 davidg Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.68 1995/03/16 18:12:01 bde Exp $  */
 end_comment
 
 begin_include
@@ -727,8 +727,12 @@ block|,
 comment|/* parentdata */
 name|DC_UNCONFIGURED
 block|,
+comment|/* state */
 literal|""
+block|,
 comment|/* description */
+name|DC_CLS_NETIF
+comment|/* class */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -821,6 +825,9 @@ block|{
 name|int
 name|nports
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|DEV_LKM
 name|ed_registerdev
 argument_list|(
 name|isa_dev
@@ -828,6 +835,9 @@ argument_list|,
 literal|"Ethernet adapter"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* not DEV_LKM */
 name|nports
 operator|=
 name|ed_probe_WD80x3

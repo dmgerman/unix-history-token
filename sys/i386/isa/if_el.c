@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *   * $Id: if_el.c,v 1.10 1994/12/22 21:56:06 wollman Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *   * $Id: if_el.c,v 1.11 1995/03/28 07:55:29 bde Exp $  */
 end_comment
 
 begin_comment
@@ -537,10 +537,13 @@ comment|/* parent */
 literal|0
 block|,
 comment|/* parentdata */
-name|DC_BUSY
+name|DC_UNCONFIGURED
 block|,
-comment|/* network interfaces are always busy */
-literal|"3Com 3C501 Ethernet adapter"
+comment|/* state */
+literal|"Ethernet adapter: 3Com 3C501"
+block|,
+name|DC_CLS_NETIF
+comment|/* class */
 block|}
 block|}
 decl_stmt|;
@@ -671,6 +674,16 @@ name|sc
 operator|->
 name|el_base
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|DEV_LKM
+name|el_registerdev
+argument_list|(
+name|idev
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* First check the base */
 if|if
 condition|(
@@ -1049,10 +1062,16 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|el_registerdev
-argument_list|(
+name|kdc_el
+index|[
 name|idev
-argument_list|)
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
 expr_stmt|;
 comment|/* Put the station address in the ifa address list's AF_LINK 	 * entry, if any. 	 */
 name|ifa

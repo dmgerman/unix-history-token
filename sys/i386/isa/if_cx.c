@@ -756,7 +756,9 @@ block|,
 name|DC_IDLE
 block|,
 name|cxdescription
-block|, }
+block|,
+name|DC_CLS_SERIAL
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, Garrett A. Wollman.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: devconf.h,v 1.3 1994/10/23 21:28:03 wollman Exp $  */
+comment|/*  * Copyright (c) 1994, Garrett A. Wollman.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: devconf.h,v 1.4 1995/03/17 04:18:07 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -61,6 +61,84 @@ block|}
 enum|;
 end_enum
 
+begin_define
+define|#
+directive|define
+name|DC_STATENAMES
+define|\
+value|{ \ 	    "unknown", "unconfigured", "idle", "busy" \ 	}
+end_define
+
+begin_enum
+enum|enum
+name|dc_class
+block|{
+name|DC_CLS_UNKNOWN
+init|=
+literal|0
+block|,
+comment|/* old drivers don't set class */
+name|DC_CLS_CPU
+init|=
+literal|1
+block|,
+comment|/* CPU devices */
+name|DC_CLS_BUS
+init|=
+literal|2
+block|,
+comment|/* busses */
+name|DC_CLS_DISK
+init|=
+literal|4
+block|,
+comment|/* disks */
+name|DC_CLS_TAPE
+init|=
+literal|8
+block|,
+comment|/* tapes */
+name|DC_CLS_RDISK
+init|=
+literal|16
+block|,
+comment|/* read-only disks */
+name|DC_CLS_DISPLAY
+init|=
+literal|32
+block|,
+comment|/* display devices */
+name|DC_CLS_SERIAL
+init|=
+literal|64
+block|,
+comment|/* serial I/O devices */
+name|DC_CLS_PARALLEL
+init|=
+literal|128
+block|,
+comment|/* parallel I/O devices */
+name|DC_CLS_NETIF
+init|=
+literal|256
+block|,
+comment|/* network interfaces */
+name|DC_CLS_MISC
+init|=
+literal|512
+comment|/* anything else */
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|DC_CLASSNAMES
+define|\
+value|{ \ 	    "unknown", "CPU", "bus", "disk", "tape", "read-only disk", \ 	    "display", "serial", "parallel", "network interface", \ 	    "miscellaneous" \ 	}
+end_define
+
 begin_struct
 struct|struct
 name|devconf
@@ -112,6 +190,11 @@ name|dc_state
 name|dc_state
 decl_stmt|;
 comment|/* state of the device (see above) */
+name|enum
+name|dc_class
+name|dc_class
+decl_stmt|;
+comment|/* type of device (see above) */
 name|size_t
 name|dc_datalen
 decl_stmt|;
@@ -294,6 +377,11 @@ modifier|*
 name|kdc_description
 decl_stmt|;
 comment|/* filled in by driver; maybe dyn. */
+name|enum
+name|dc_class
+name|kdc_class
+decl_stmt|;
+comment|/* filled in by driver */
 block|}
 struct|;
 end_struct
