@@ -2087,6 +2087,35 @@ name|sync
 operator|->
 name|to
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|flags
+operator|&
+name|GV_PLEX_SYNCING
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"GEOM_VINUM: plex '%s' is already syncing.\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|g_free
+argument_list|(
+name|sync
+argument_list|)
+expr_stmt|;
+name|kthread_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|p
 operator|->
 name|synced
@@ -2129,7 +2158,8 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"gvinum: sync from '%s' failed to access consumer: %d\n"
+literal|"GEOM_VINUM: sync from '%s' failed to access "
+literal|"consumer: %d\n"
 argument_list|,
 name|sync
 operator|->
@@ -2138,6 +2168,11 @@ operator|->
 name|name
 argument_list|,
 name|error
+argument_list|)
+expr_stmt|;
+name|g_free
+argument_list|(
+name|sync
 argument_list|)
 expr_stmt|;
 name|kthread_exit
@@ -2181,13 +2216,19 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"gvinum: sync to '%s' failed to access consumer: %d\n"
+literal|"GEOM_VINUM: sync to '%s' failed to access "
+literal|"consumer: %d\n"
 argument_list|,
 name|p
 operator|->
 name|name
 argument_list|,
 name|error
+argument_list|)
+expr_stmt|;
+name|g_free
+argument_list|(
+name|sync
 argument_list|)
 expr_stmt|;
 name|kthread_exit
@@ -2261,8 +2302,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"gvinum: sync read from '%s' failed at offset "
-literal|"%jd, errno: %d\n"
+literal|"GEOM_VINUM: sync read from '%s' failed at "
+literal|"offset %jd; errno: %d\n"
 argument_list|,
 name|sync
 operator|->
@@ -2292,8 +2333,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"gvinum: sync write to '%s' failed at offset "
-literal|"%jd, out of memory\n"
+literal|"GEOM_VINUM: sync write to '%s' failed at "
+literal|"offset %jd; out of memory\n"
 argument_list|,
 name|p
 operator|->
@@ -2383,8 +2424,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"gvinum: sync write to '%s' failed at offset "
-literal|"%jd, errno: %d\n"
+literal|"GEOM_VINUM: sync write to '%s' failed at "
+literal|"offset %jd; errno: %d\n"
 argument_list|,
 name|p
 operator|->
@@ -2450,14 +2491,6 @@ condition|(
 operator|!
 name|error
 condition|)
-block|{
-name|p
-operator|->
-name|flags
-operator|&=
-operator|~
-name|GV_PLEX_SYNCING
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"GEOM_VINUM: plex sync %s -> %s finished\n"
@@ -2475,7 +2508,19 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
+name|p
+operator|->
+name|flags
+operator|&=
+operator|~
+name|GV_PLEX_SYNCING
+expr_stmt|;
+name|p
+operator|->
+name|synced
+operator|=
+literal|0
+expr_stmt|;
 name|g_free
 argument_list|(
 name|sync
