@@ -22679,8 +22679,8 @@ argument_list|(
 name|request_ccb
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
+break|break;
 block|}
 name|xpt_setup_ccb
 argument_list|(
