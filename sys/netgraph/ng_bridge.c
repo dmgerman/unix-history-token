@@ -2110,9 +2110,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|meta_p
-name|meta
-decl_stmt|;
 name|struct
 name|ng_bridge_link
 modifier|*
@@ -2797,14 +2794,6 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* Distribute unknown, multicast, broadcast pkts to all other links */
-name|meta
-operator|=
-name|NGI_META
-argument_list|(
-name|item
-argument_list|)
-expr_stmt|;
-comment|/* peek.. */
 name|firstLink
 operator|=
 name|NULL
@@ -2831,11 +2820,6 @@ name|struct
 name|ng_bridge_link
 modifier|*
 name|destLink
-decl_stmt|;
-name|meta_p
-name|meta2
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|mbuf
@@ -2931,7 +2915,7 @@ name|destLink
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * It's usable link but not the reserved (first) one. 			 * Copy mbuf and meta info for sending. 			 */
+comment|/* 			 * It's usable link but not the reserved (first) one. 			 * Copy mbuf info for sending. 			 */
 name|m2
 operator|=
 name|m_dup
@@ -2969,52 +2953,6 @@ expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|meta
-operator|!=
-name|NULL
-operator|&&
-operator|(
-name|meta2
-operator|=
-name|ng_copy_meta
-argument_list|(
-name|meta
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|link
-operator|->
-name|stats
-operator|.
-name|memoryFailures
-operator|++
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m2
-argument_list|)
-expr_stmt|;
-name|NG_FREE_ITEM
-argument_list|(
-name|item
-argument_list|)
-expr_stmt|;
-name|NG_FREE_M
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
 operator|)
 return|;
 block|}
@@ -3101,7 +3039,7 @@ comment|/* always done last - not really needed. */
 block|}
 else|else
 block|{
-name|NG_SEND_DATA
+name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
 argument_list|,
@@ -3110,8 +3048,6 @@ operator|->
 name|hook
 argument_list|,
 name|m2
-argument_list|,
-name|meta2
 argument_list|)
 expr_stmt|;
 block|}

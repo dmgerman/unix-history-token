@@ -280,9 +280,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|meta_p
-name|meta
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1532,21 +1529,11 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|meta_p
-name|meta
-decl_stmt|;
 name|NGI_GET_M
 argument_list|(
 name|item
 argument_list|,
 name|m
-argument_list|)
-expr_stmt|;
-name|NGI_GET_META
-argument_list|(
-name|item
-argument_list|,
-name|meta
 argument_list|)
 expr_stmt|;
 name|NG_FREE_ITEM
@@ -1568,8 +1555,6 @@ argument_list|(
 name|node
 argument_list|,
 name|m
-argument_list|,
-name|meta
 argument_list|)
 return|;
 name|panic
@@ -1598,9 +1583,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|meta_p
-name|meta
 parameter_list|)
 block|{
 name|struct
@@ -1625,12 +1607,6 @@ sizeof|sizeof
 argument_list|(
 name|dst
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* We don't process metadata. */
-name|NG_FREE_META
-argument_list|(
-name|meta
 argument_list|)
 expr_stmt|;
 comment|/* Make sure header is fully pulled up */

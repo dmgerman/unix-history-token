@@ -1079,7 +1079,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Receive data, and do something with it.  * Actually we receive a queue item which holds the data.  * If we free the item it wil also froo the data and metadata unless  * we have previously disassociated them using the NGI_GET_xxx() macros.  * Possibly send it out on another link after processing.  * Possibly do something different if it comes from different  * hooks. the caller will never free m or meta, so  * if we use up this data or abort we must free BOTH of these.  *  * If we want, we may decide to force this data to be queued and reprocessed  * at the netgraph NETISR time.  * We would do that by setting the HK_QUEUE flag on our hook. We would do that  * in the connect() method.   */
+comment|/*  * Receive data, and do something with it.  * Actually we receive a queue item which holds the data.  * If we free the item it will also free the data unless we have  * previously disassociated it using the NGI_GET_M() macro.  * Possibly send it out on another link after processing.  * Possibly do something different if it comes from different  * hooks. The caller will never free m, so if we use up this data or  * abort we must free it.  *  * If we want, we may decide to force this data to be queued and reprocessed  * at the netgraph NETISR time.  * We would do that by setting the HK_QUEUE flag on our hook. We would do that  * in the connect() method.   */
 end_comment
 
 begin_function
@@ -1265,7 +1265,7 @@ name|ENETUNREACH
 operator|)
 return|;
 block|}
-comment|/* If we were called at splnet, use the following: 			 * NG_SEND_DATA(error, otherhook, m, meta); if this 			 * node is running at some SPL other than SPLNET 			 * then you should use instead: error = 			 * ng_queueit(otherhook, m, meta); m = NULL: meta = 			 * NULL; this queues the data using the standard 			 * NETISR system and schedules the data to be picked 			 * up again once the system has moved to SPLNET and 			 * the processing of the data can continue. after 			 * these are run 'm' and 'meta' should be considered 			 * as invalid and NG_SEND_DATA actually zaps them. */
+comment|/* If we were called at splnet, use the following: 			 * NG_SEND_DATA_ONLY(error, otherhook, m); if this 			 * node is running at some SPL other than SPLNET 			 * then you should use instead: error = 			 * ng_queueit(otherhook, m, NULL); m = NULL; 			 * This queues the data using the standard NETISR 			 * system and schedules the data to be picked 			 * up again once the system has moved to SPLNET and 			 * the processing of the data can continue. After 			 * these are run 'm' should be considered 			 * as invalid and NG_SEND_DATA actually zaps them. */
 name|NG_FWD_NEW_DATA
 argument_list|(
 name|error

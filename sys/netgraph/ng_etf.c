@@ -1248,7 +1248,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Receive data, and do something with it.  * Actually we receive a queue item which holds the data.  * If we free the item it wil also froo the data and metadata unless  * we have previously disassociated them using the NGI_GET_etf() macros.  * Possibly send it out on another link after processing.  * Possibly do something different if it comes from different  * hooks. the caller will never free m or meta, so  * if we use up this data or abort we must free BOTH of these.  *  * If we want, we may decide to force this data to be queued and reprocessed  * at the netgraph NETISR time.  * We would do that by setting the HK_QUEUE flag on our hook. We would do that  * in the connect() method.   */
+comment|/*  * Receive data, and do something with it.  * Actually we receive a queue item which holds the data.  * If we free the item it will also free the data unless we have previously  * disassociated it using the NGI_GET_etf() macro.  * Possibly send it out on another link after processing.  * Possibly do something different if it comes from different  * hooks. The caller will never free m , so if we use up this data  * or abort we must free it.  *  * If we want, we may decide to force this data to be queued and reprocessed  * at the netgraph NETISR time.  * We would do that by setting the HK_QUEUE flag on our hook. We would do that  * in the connect() method.   */
 end_comment
 
 begin_function

@@ -377,9 +377,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|meta_p
-name|meta
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -396,9 +393,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|meta_p
-name|meta
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1920,21 +1914,11 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|meta_p
-name|meta
-decl_stmt|;
 name|NGI_GET_M
 argument_list|(
 name|item
 argument_list|,
 name|m
-argument_list|)
-expr_stmt|;
-name|NGI_GET_META
-argument_list|(
-name|item
-argument_list|,
-name|meta
 argument_list|)
 expr_stmt|;
 name|NG_FREE_ITEM
@@ -1962,8 +1946,6 @@ argument_list|(
 name|node
 argument_list|,
 name|m
-argument_list|,
-name|meta
 argument_list|)
 return|;
 if|if
@@ -1980,8 +1962,6 @@ argument_list|(
 name|node
 argument_list|,
 name|m
-argument_list|,
-name|meta
 argument_list|)
 return|;
 name|panic
@@ -2019,9 +1999,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|meta_p
-name|meta
 parameter_list|)
 block|{
 specifier|const
@@ -2043,12 +2020,6 @@ name|priv
 operator|->
 name|ifp
 decl_stmt|;
-comment|/* Discard meta info */
-name|NG_FREE_META
-argument_list|(
-name|meta
-argument_list|)
-expr_stmt|;
 comment|/* Check whether interface is ready for packets */
 if|if
 condition|(
@@ -2237,9 +2208,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|meta_p
-name|meta
 parameter_list|)
 block|{
 specifier|const
@@ -2251,12 +2219,6 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
-comment|/* Discard meta info */
-name|NG_FREE_META
-argument_list|(
-name|meta
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr

@@ -3876,7 +3876,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Receive data, and do something with it.  * The caller will never free m or meta, so  * if we use up this data or abort we must free BOTH of these.  */
+comment|/*  * Receive data, and do something with it.  * The caller will never free m, so if we use up this data  * or abort we must free it.  */
 end_comment
 
 begin_function

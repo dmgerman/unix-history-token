@@ -6283,11 +6283,6 @@ name|session_id
 init|=
 literal|0
 decl_stmt|;
-name|meta_p
-name|meta
-init|=
-name|NULL
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -6611,7 +6606,7 @@ operator|->
 name|nr
 expr_stmt|;
 comment|/* Send packet */
-name|NG_SEND_DATA
+name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
 argument_list|,
@@ -6620,8 +6615,6 @@ operator|->
 name|lower
 argument_list|,
 name|m
-argument_list|,
-name|meta
 argument_list|)
 expr_stmt|;
 return|return

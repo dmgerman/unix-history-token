@@ -1210,9 +1210,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|meta_p
-name|meta
-decl_stmt|;
 name|m
 operator|=
 name|NGI_M
@@ -1220,14 +1217,6 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
-name|meta
-operator|=
-name|NGI_META
-argument_list|(
-name|item
-argument_list|)
-expr_stmt|;
-comment|/* leave these owned by the item */
 comment|/* Which hook? */
 if|if
 condition|(
@@ -1395,7 +1384,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Duplicate packet and meta info if requried */
+comment|/* Duplicate packet if requried */
 if|if
 condition|(
 name|dup
@@ -1409,9 +1398,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m2
-decl_stmt|;
-name|meta_p
-name|meta2
 decl_stmt|;
 comment|/* Copy packet (failure will not stop the original)*/
 name|m2
@@ -1428,28 +1414,6 @@ condition|(
 name|m2
 condition|)
 block|{
-comment|/* Copy meta info */
-comment|/* If we can't get a copy, tough.. */
-if|if
-condition|(
-name|meta
-operator|!=
-name|NULL
-condition|)
-block|{
-name|meta2
-operator|=
-name|ng_copy_meta
-argument_list|(
-name|meta
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|meta2
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* Deliver duplicate */
 name|dup
 operator|->
@@ -1470,7 +1434,7 @@ operator|.
 name|outFrames
 operator|++
 expr_stmt|;
-name|NG_SEND_DATA
+name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
 argument_list|,
@@ -1479,8 +1443,6 @@ operator|->
 name|hook
 argument_list|,
 name|m2
-argument_list|,
-name|meta2
 argument_list|)
 expr_stmt|;
 block|}

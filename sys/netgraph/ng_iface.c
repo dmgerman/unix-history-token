@@ -1677,11 +1677,6 @@ operator|->
 name|sa_family
 argument_list|)
 decl_stmt|;
-name|meta_p
-name|meta
-init|=
-name|NULL
-decl_stmt|;
 name|int
 name|len
 decl_stmt|,
@@ -1854,7 +1849,7 @@ operator|.
 name|len
 expr_stmt|;
 comment|/* Send packet; if hook is not connected, mbuf will get freed. */
-name|NG_SEND_DATA
+name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
 argument_list|,
@@ -1867,8 +1862,6 @@ name|iffam
 argument_list|)
 argument_list|,
 name|m
-argument_list|,
-name|meta
 argument_list|)
 expr_stmt|;
 comment|/* Update stats */
