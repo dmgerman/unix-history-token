@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_pcb.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_pcb.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -852,15 +852,11 @@ operator|*
 operator|)
 literal|0
 operator|||
-operator|(
-name|ifp
-operator|=
 name|ro
 operator|->
 name|ro_rt
 operator|->
 name|rt_ifp
-operator|)
 operator|==
 operator|(
 expr|struct
@@ -903,7 +899,8 @@ argument_list|(
 name|ro
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If we found a route, use the address 			 * corresponding to the outgoing interface 			 * unless it is the loopback (in case a route 			 * to our address on another net goes to loopback). 			 */
+block|}
+comment|/* 		 * If we found a route, use the address 		 * corresponding to the outgoing interface 		 * unless it is the loopback (in case a route 		 * to our address on another net goes to loopback). 		 */
 if|if
 condition|(
 name|ro
@@ -953,7 +950,6 @@ operator|==
 name|ifp
 condition|)
 break|break;
-block|}
 if|if
 condition|(
 name|ia
