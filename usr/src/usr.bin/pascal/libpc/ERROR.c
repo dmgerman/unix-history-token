@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ERROR.c 1.8 %G%"
+literal|"@(#)ERROR.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,18 +17,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h00vars.h"
 end_include
 
 begin_comment
@@ -65,33 +53,6 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|SETRACE
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Historical anomaly 	 */
-if|if
-condition|(
-operator|(
-name|int
-operator|)
-name|msg
-operator|==
-literal|5
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Label of %D not found in case\n"
-argument_list|,
-name|d1
-argument_list|)
-expr_stmt|;
-return|return
-name|d1
-return|;
-block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -102,6 +63,9 @@ name|d1
 argument_list|,
 name|d2
 argument_list|)
+expr_stmt|;
+name|SETRACE
+argument_list|()
 expr_stmt|;
 return|return
 name|d1
