@@ -483,6 +483,8 @@ name|Elf32_Brandinfo
 name|svr4_brand
 init|=
 block|{
+name|ELFOSABI_SYSV
+block|,
 literal|"SVR4"
 block|,
 literal|"/compat/svr4"
