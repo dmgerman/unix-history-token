@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.29 (Berkeley) %G%"
+literal|"@(#)err.c	8.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ file|<pwd.h>
 end_include
 
 begin_comment
-comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	If the first character of the syserr message is `!' it will **	log this as an ALERT message and exit immediately.  This can **	leave queue files in an indeterminate state, so it should not **	be used lightly. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
+comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	If the first character of the syserr message is `!' it will **	log this as an ALERT message and exit immediately.  This can **	leave queue files in an indeterminate state, so it should not **	be used lightly. ** **	Parameters: **		fmt -- the format string.  If it does not begin with **			a three-digit SMTP reply code, either 554 or **			451 is assumed depending on whether errno **			is set. **		(others) -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
 end_comment
 
 begin_decl_stmt
@@ -230,6 +230,40 @@ argument_list|(
 name|MsgBuf
 argument_list|)
 expr_stmt|;
+comment|/* save this message for mailq printing */
+if|if
+condition|(
+operator|!
+name|panic
+condition|)
+block|{
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|CurEnv
+operator|->
+name|e_message
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+name|MsgBuf
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* determine exit status if not already set */
 if|if
 condition|(
@@ -409,7 +443,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt, a, b, c, d -- printf strings ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. */
+comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt -- the format string.  If it does not begin with **			a three-digit SMTP reply code, 501 is assumed. **		(others) -- printf strings ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. */
 end_comment
 
 begin_comment
@@ -482,6 +516,59 @@ argument_list|(
 name|MsgBuf
 argument_list|)
 expr_stmt|;
+comment|/* save this message for mailq printing */
+if|if
+condition|(
+name|MsgBuf
+index|[
+literal|0
+index|]
+operator|==
+literal|'5'
+operator|||
+operator|(
+name|CurEnv
+operator|->
+name|e_message
+operator|==
+name|NULL
+operator|&&
+name|MsgBuf
+index|[
+literal|0
+index|]
+operator|==
+literal|'4'
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|CurEnv
+operator|->
+name|e_message
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+name|MsgBuf
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|LOG
@@ -539,7 +626,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MESSAGE -- print message (not necessarily an error) ** **	Parameters: **		msg -- the message (printf fmt) -- it can begin with **			an SMTP reply code.  If not, 050 is assumed. **		a, b, c, d, e -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
+comment|/* **  MESSAGE -- print message (not necessarily an error) ** **	Parameters: **		msg -- the message (printf fmt) -- it can begin with **			an SMTP reply code.  If not, 050 is assumed. **		(others) -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -613,6 +700,59 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* save this message for mailq printing */
+if|if
+condition|(
+name|MsgBuf
+index|[
+literal|0
+index|]
+operator|==
+literal|'5'
+operator|||
+operator|(
+name|CurEnv
+operator|->
+name|e_message
+operator|==
+name|NULL
+operator|&&
+name|MsgBuf
+index|[
+literal|0
+index|]
+operator|==
+literal|'4'
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|CurEnv
+operator|->
+name|e_message
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+name|MsgBuf
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -620,7 +760,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  NMESSAGE -- print message (not necessarily an error) ** **	Just like "message" except it never puts the to... tag on. ** **	Parameters: **		num -- the default ARPANET error number (in ascii) **		msg -- the message (printf fmt) -- if it begins **			with three digits, this number overrides num. **		a, b, c, d, e -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
+comment|/* **  NMESSAGE -- print message (not necessarily an error) ** **	Just like "message" except it never puts the to... tag on. ** **	Parameters: **		msg -- the message (printf fmt) -- if it begins **			with a three digit SMTP reply code, that is used, **			otherwise 050 is assumed. **		(others) -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -1365,56 +1505,6 @@ operator|+=
 name|strlen
 argument_list|(
 name|eb
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|num
-index|[
-literal|0
-index|]
-operator|==
-literal|'5'
-operator|||
-operator|(
-name|CurEnv
-operator|->
-name|e_message
-operator|==
-name|NULL
-operator|&&
-name|num
-index|[
-literal|0
-index|]
-operator|==
-literal|'4'
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|CurEnv
-operator|->
-name|e_message
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|CurEnv
-operator|->
-name|e_message
-argument_list|)
-expr_stmt|;
-name|CurEnv
-operator|->
-name|e_message
-operator|=
-name|newstr
-argument_list|(
-name|meb
 argument_list|)
 expr_stmt|;
 block|}
