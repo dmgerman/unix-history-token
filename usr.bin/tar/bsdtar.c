@@ -272,6 +272,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * The leading '+' here forces the GNU version of getopt() (as well as  * both the GNU and BSD versions of getopt_long) to stop at the first  * non-option.  Otherwise, GNU getopt() permutes the arguments and  * screws up -C processing.  */
 end_comment
@@ -349,6 +359,13 @@ define|#
 directive|define
 name|OPTION_ONE_FILE_SYSTEM
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_VERSION
+value|9
 end_define
 
 begin_decl_stmt
@@ -758,6 +775,16 @@ block|,
 name|NULL
 block|,
 literal|'v'
+block|}
+block|,
+block|{
+literal|"version"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_VERSION
 block|}
 block|,
 block|{
@@ -1613,6 +1640,13 @@ name|bsdtar
 operator|->
 name|verbose
 operator|++
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_VERSION
+case|:
+name|version
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -2652,6 +2686,42 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|version
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"bsdtar %s, "
+argument_list|,
+name|PACKAGE_VERSION
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|archive_version
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Copyright (C) 2003-2004 Tim Kientzle\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -2747,10 +2817,8 @@ literal|"(bsdtar)"
 else|:
 literal|""
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stdout
-argument_list|,
 literal|"%s%s: manipulate archive files\n"
 argument_list|,
 name|prog
@@ -2817,20 +2885,13 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|fprintf
+name|printf
 argument_list|(
-name|stdout
-argument_list|,
-literal|"\n%s\n"
-argument_list|,
-name|archive_version
-argument_list|()
+literal|"\n"
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
+name|version
+argument_list|()
 expr_stmt|;
 block|}
 end_function
