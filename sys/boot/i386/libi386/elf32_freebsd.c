@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: elf_freebsd.c,v 1.4 1998/10/04 09:12:15 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: elf_freebsd.c,v 1.5 1998/10/04 20:58:46 msmith Exp $  */
 end_comment
 
 begin_include
@@ -183,18 +183,6 @@ operator|->
 name|md_data
 operator|)
 expr_stmt|;
-comment|/* XXX allow override? */
-name|setenv
-argument_list|(
-literal|"kernelname"
-argument_list|,
-name|mp
-operator|->
-name|m_name
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -238,14 +226,85 @@ name|esym
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
+if|if
+condition|(
+operator|(
+name|md
+operator|=
+name|mod_findmetadata
+argument_list|(
+name|mp
+argument_list|,
+name|MODINFOMD_SSYM
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|ssym
+operator|=
+operator|*
+operator|(
+operator|(
+name|vm_offset_t
+operator|*
+operator|)
+operator|&
+operator|(
+name|md
+operator|->
+name|md_data
+operator|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|md
+operator|=
+name|mod_findmetadata
+argument_list|(
+name|mp
+argument_list|,
+name|MODINFOMD_ESYM
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|esym
+operator|=
+operator|*
+operator|(
+operator|(
+name|vm_offset_t
+operator|*
+operator|)
+operator|&
+operator|(
+name|md
+operator|->
+name|md_data
+operator|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ssym
+operator|==
 literal|0
-comment|/* XXX something wrong with the symbol tables */
-block|if ((md = mod_findmetadata(mp, MODINFOMD_ELFSSYM)) != NULL) 	ssym = *((vm_offset_t *)&(md->md_data));     if ((md = mod_findmetadata(mp, MODINFOMD_ELFESYM)) != NULL) 	esym = *((vm_offset_t *)&(md->md_data));     if (ssym == 0 || esym == 0) 	ssym = esym = 0;
+operator|||
+name|esym
+operator|==
+literal|0
+condition|)
+name|ssym
+operator|=
+name|esym
+operator|=
+literal|0
+expr_stmt|;
 comment|/* sanity */
-endif|#
-directive|endif
 name|bi
 operator|=
 operator|(
@@ -264,6 +323,7 @@ name|bi_symtab
 operator|=
 name|ssym
 expr_stmt|;
+comment|/* XXX this is only the primary kernel symtab */
 name|bi
 operator|->
 name|bi_esymtab
