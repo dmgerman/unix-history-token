@@ -2929,6 +2929,12 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|status
+operator|!=
+name|AE_NOT_FOUND
+condition|)
 name|device_printf
 argument_list|(
 name|sc
@@ -2950,7 +2956,6 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX silence this at some point */
 name|sc
 operator|->
 name|tz_flags
