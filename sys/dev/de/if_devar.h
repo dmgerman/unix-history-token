@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: if_devar.h,v 1.31 1998/09/29 22:40:52 matt Exp $	*/
+comment|/*	$NetBSD: if_devar.h,v 1.32 1999/04/01 14:55:25 tsubai Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_devar.h,v 1.13 1999/05/26 23:05:23 gallatin Exp $ */
+comment|/*	$Id: if_devar.h,v 1.14 1999/07/06 19:23:25 des Exp $ */
 end_comment
 
 begin_comment
@@ -4844,7 +4844,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TULUP_RESTORESPL
+name|TULIP_RESTORESPL
 end_ifndef
 
 begin_define
