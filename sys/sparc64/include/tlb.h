@@ -324,6 +324,22 @@ name|MMU_SFSR_W
 value|(1L<< MMU_SFSR_W_SHIFT)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|kernel_tlb_slots
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tte
+modifier|*
+name|kernel_ttes
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Some tlb operations must be atomical, so no interrupt or trap can be allowed  * while they are in progress. Traps should not happen, but interrupts need to  * be explicitely disabled. critical_enter() cannot be used here, since it only  * disables soft interrupts.  * XXX: is something like this needed elsewhere, too?  */
 end_comment
