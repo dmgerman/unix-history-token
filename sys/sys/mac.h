@@ -667,6 +667,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|timespec
 struct_decl|;
 end_struct_decl
@@ -1540,6 +1546,18 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mac_thread_userret
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1503,6 +1503,18 @@ modifier|*
 name|newlabel
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|mpo_thread_userret
+function_decl|)
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|thread
+parameter_list|)
+function_decl|;
 comment|/* 	 * Access control checks. 	 */
 name|int
 function_decl|(
@@ -2918,6 +2930,8 @@ block|,
 name|MAC_CREATE_PROC1
 block|,
 name|MAC_RELABEL_CRED
+block|,
+name|MAC_THREAD_USERRET
 block|,
 name|MAC_CHECK_BPFDESC_RECEIVE
 block|,
