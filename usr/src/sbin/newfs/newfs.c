@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	4.4 %G%"
+literal|"@(#)newfs.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * makefs: friendly front end to mkfs  */
+comment|/*  * newfs: friendly front end to mkfs  */
 end_comment
 
 begin_include
@@ -141,6 +141,26 @@ comment|/* cylinders/cylinder group */
 end_comment
 
 begin_decl_stmt
+name|int
+name|minfree
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* free space threshold */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rpm
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* revolutions/minute of drive */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|av
@@ -202,6 +222,24 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|a7
+index|[
+literal|20
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|a8
+index|[
+literal|20
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|a9
 index|[
 literal|20
 index|]
@@ -622,6 +660,100 @@ expr_stmt|;
 goto|goto
 name|next
 goto|;
+case|case
+literal|'m'
+case|:
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"-m: missing free space %%\n"
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+name|minfree
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|minfree
+operator|<
+literal|0
+operator|||
+name|minfree
+operator|>
+literal|99
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad free space %%\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+case|case
+literal|'r'
+case|:
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"-r: missing revs/minute\n"
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+name|rpm
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rpm
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad revs/minute\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
 default|default:
 name|fatal
 argument_list|(
@@ -651,7 +783,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: makefs [ -v ] [ mkfs-options ] %s\n"
+literal|"usage: newfs [ -v ] [ mkfs-options ] %s\n"
 argument_list|,
 literal|"special-device device-type"
 argument_list|)
@@ -696,6 +828,20 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-c cylinders/group\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-m minimum free space %%\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-r revolutions/minute\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -770,7 +916,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"makefs: "
+literal|"newfs: "
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1081,6 +1227,56 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|rpm
+operator|==
+literal|0
+condition|)
+block|{
+name|rpm
+operator|=
+name|dp
+operator|->
+name|d_rpm
+expr_stmt|;
+if|if
+condition|(
+name|rpm
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: no default revolutions/minute value"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|minfree
+operator|==
+literal|0
+condition|)
+name|minfree
+operator|=
+literal|10
+expr_stmt|;
+if|if
+condition|(
+name|cpg
+operator|==
+literal|0
+condition|)
+name|cpg
+operator|=
+literal|16
+expr_stmt|;
 name|i
 operator|=
 literal|0
@@ -1160,12 +1356,6 @@ argument_list|,
 name|fsize
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cpg
-operator|!=
-literal|0
-condition|)
 name|av
 index|[
 name|i
@@ -1179,6 +1369,38 @@ argument_list|,
 literal|"%d"
 argument_list|,
 name|cpg
+argument_list|)
+expr_stmt|;
+name|av
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|sprintf
+argument_list|(
+name|a8
+argument_list|,
+literal|"%d"
+argument_list|,
+name|minfree
+argument_list|)
+expr_stmt|;
+name|av
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|sprintf
+argument_list|(
+name|a9
+argument_list|,
+literal|"%d"
+argument_list|,
+name|rpm
+operator|/
+literal|60
 argument_list|)
 expr_stmt|;
 name|av
@@ -1451,7 +1673,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"makefs: "
+literal|"newfs: "
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1483,7 +1705,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"makefs: "
+literal|"newfs: "
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1522,7 +1744,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"makefs: "
+literal|"newfs: "
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1560,7 +1782,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"makefs: "
+literal|"newfs: "
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1599,7 +1821,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"makefs: "
+literal|"newfs: "
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1631,7 +1853,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"makefs: "
+literal|"newfs: "
 argument_list|)
 expr_stmt|;
 name|perror
@@ -1681,7 +1903,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"makefs: "
+literal|"newfs: "
 argument_list|)
 expr_stmt|;
 name|fprintf
