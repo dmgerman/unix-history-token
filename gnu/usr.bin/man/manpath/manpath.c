@@ -1143,9 +1143,6 @@ name|mandir
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|MAIN
 elseif|else
 if|if
 condition|(
@@ -1274,6 +1271,9 @@ literal|'\t'
 operator|)
 condition|)
 do|;
+ifdef|#
+directive|ifdef
+name|MAIN
 if|if
 condition|(
 name|man_locales
@@ -1309,6 +1309,9 @@ operator|-
 literal|1
 return|;
 block|}
+endif|#
+directive|endif
+comment|/* MAIN */
 if|if
 condition|(
 name|debug
@@ -1319,13 +1322,10 @@ name|stderr
 argument_list|,
 literal|"found man locales: %s\n"
 argument_list|,
-name|man_locales
+name|bp
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* MAIN */
 else|else
 block|{
 name|gripe_reading_mp_config
