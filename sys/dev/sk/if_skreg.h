@@ -5929,7 +5929,7 @@ begin_define
 define|#
 directive|define
 name|SK_JRAWLEN
-value|(SK_JUMBO_FRAMELEN + ETHER_ALIGN + sizeof(u_int64_t))
+value|(SK_JUMBO_FRAMELEN + ETHER_ALIGN)
 end_define
 
 begin_define
@@ -5937,13 +5937,6 @@ define|#
 directive|define
 name|SK_JLEN
 value|(SK_JRAWLEN + (sizeof(u_int64_t) - \ 	(SK_JRAWLEN % sizeof(u_int64_t))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SK_MCLBYTES
-value|(SK_JLEN - sizeof(u_int64_t))
 end_define
 
 begin_define
@@ -5966,17 +5959,6 @@ directive|define
 name|SK_JMEM
 value|((SK_JLEN * SK_JSLOTS) + SK_RESID)
 end_define
-
-begin_struct
-struct|struct
-name|sk_jslot
-block|{
-name|caddr_t
-name|sk_buf
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -6054,8 +6036,7 @@ name|int
 name|sk_rx_cnt
 decl_stmt|;
 comment|/* Stick the jumbo mem management stuff here too. */
-name|struct
-name|sk_jslot
+name|caddr_t
 name|sk_jslots
 index|[
 name|SK_JSLOTS

@@ -3685,11 +3685,16 @@ name|m_new
 argument_list|,
 name|buf
 argument_list|,
-name|SK_MCLBYTES
+name|SK_JLEN
 argument_list|,
 name|sk_jfree
 argument_list|,
-name|NULL
+operator|(
+expr|struct
+name|sk_if_softc
+operator|*
+operator|)
+name|sc_if
 argument_list|)
 expr_stmt|;
 name|m_new
@@ -3712,7 +3717,7 @@ name|m_new
 operator|->
 name|m_len
 operator|=
-name|SK_MCLBYTES
+name|SK_JLEN
 expr_stmt|;
 block|}
 else|else
@@ -3732,7 +3737,7 @@ name|m_pkthdr
 operator|.
 name|len
 operator|=
-name|SK_MCLBYTES
+name|SK_JLEN
 expr_stmt|;
 name|m_new
 operator|->
@@ -3892,7 +3897,7 @@ operator|->
 name|sk_jinuse_listhead
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now divide it up into 9K pieces and save the addresses 	 * in an array. Note that we play an evil trick here by using 	 * the first few bytes in the buffer to hold the the address 	 * of the softc structure for this interface. This is because 	 * sk_jfree() needs it, but it is called by the mbuf management 	 * code which will not pass it to us explicitly. 	 */
+comment|/* 	 * Now divide it up into 9K pieces and save the addresses 	 * in an array. 	 */
 name|ptr
 operator|=
 name|sc_if
@@ -3915,38 +3920,6 @@ name|i
 operator|++
 control|)
 block|{
-name|u_int64_t
-modifier|*
-modifier|*
-name|aptr
-decl_stmt|;
-name|aptr
-operator|=
-operator|(
-name|u_int64_t
-operator|*
-operator|*
-operator|)
-name|ptr
-expr_stmt|;
-name|aptr
-index|[
-literal|0
-index|]
-operator|=
-operator|(
-name|u_int64_t
-operator|*
-operator|)
-name|sc_if
-expr_stmt|;
-name|ptr
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|u_int64_t
-argument_list|)
-expr_stmt|;
 name|sc_if
 operator|->
 name|sk_cdata
@@ -3955,14 +3928,12 @@ name|sk_jslots
 index|[
 name|i
 index|]
-operator|.
-name|sk_buf
 operator|=
 name|ptr
 expr_stmt|;
 name|ptr
 operator|+=
-name|SK_MCLBYTES
+name|SK_JLEN
 expr_stmt|;
 name|entry
 operator|=
@@ -4142,8 +4113,6 @@ name|entry
 operator|->
 name|slot
 index|]
-operator|.
-name|sk_buf
 operator|)
 return|;
 block|}
@@ -4175,11 +4144,6 @@ name|sk_if_softc
 modifier|*
 name|sc_if
 decl_stmt|;
-name|u_int64_t
-modifier|*
-modifier|*
-name|aptr
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -4189,22 +4153,6 @@ modifier|*
 name|entry
 decl_stmt|;
 comment|/* Extract the softc struct pointer. */
-name|aptr
-operator|=
-operator|(
-name|u_int64_t
-operator|*
-operator|*
-operator|)
-operator|(
-name|buf
-operator|-
-sizeof|sizeof
-argument_list|(
-name|u_int64_t
-argument_list|)
-operator|)
-expr_stmt|;
 name|sc_if
 operator|=
 operator|(
@@ -4212,12 +4160,7 @@ expr|struct
 name|sk_if_softc
 operator|*
 operator|)
-operator|(
-name|aptr
-index|[
-literal|0
-index|]
-operator|)
+name|args
 expr_stmt|;
 if|if
 condition|(
@@ -4227,7 +4170,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"sk_jfree: can't find softc pointer!"
+literal|"sk_jfree: didn't get softc pointer!"
 argument_list|)
 expr_stmt|;
 comment|/* calculate the slot this buffer belongs to */
@@ -4237,7 +4180,7 @@ operator|(
 operator|(
 name|vm_offset_t
 operator|)
-name|aptr
+name|buf
 operator|-
 operator|(
 name|vm_offset_t
