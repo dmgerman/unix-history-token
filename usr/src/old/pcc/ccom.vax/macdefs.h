@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	macdefs.h	4.2	85/08/23	*/
+comment|/*	macdefs.h	4.3	87/12/11	*/
 end_comment
 
 begin_ifndef
@@ -314,6 +314,46 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ADDROREG
+end_define
+
+begin_comment
+comment|/* can unwind&o, where o is OREG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASSTRINGS
+end_define
+
+begin_comment
+comment|/* assembler handles string initializations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STABDOT
+end_define
+
+begin_comment
+comment|/* assembler understands .stabd */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCOMM
+end_define
+
+begin_comment
+comment|/* assembler supports .lcomm */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ENUMSIZE
 parameter_list|(
 name|high
@@ -330,17 +370,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ADDROREG
-end_define
-
-begin_define
-define|#
-directive|define
 name|FIXDEF
 parameter_list|(
 name|p
 parameter_list|)
-value|outstab(p)
+value|if (!nerrors) outstab(p); else
 end_define
 
 begin_define
@@ -350,7 +384,19 @@ name|FIXARG
 parameter_list|(
 name|p
 parameter_list|)
-value|fixarg(p)
+value|if (!nerrors) fixarg(p); else
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIXSTRUCT
+parameter_list|(
+name|p
+parameter_list|,
+name|q
+parameter_list|)
+value|if (!nerrors) outstruct(p,q); else
 end_define
 
 begin_ifndef
@@ -375,6 +421,39 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|aobeg
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|aocode
+parameter_list|(
+name|p
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|aoend
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|deflab
+parameter_list|(
+name|m
+parameter_list|)
+value|if (!nerrors) printf("L%d:\n", m); else
+end_define
 
 begin_endif
 endif|#
