@@ -2813,7 +2813,7 @@ name|int
 name|cnt
 parameter_list|,
 name|int
-name|swap
+name|be
 parameter_list|)
 block|{
 name|int
@@ -2911,12 +2911,12 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|swap
+name|be
 condition|)
 operator|*
 name|ptr
 operator|=
-name|ntohs
+name|be16toh
 argument_list|(
 name|word
 argument_list|)
@@ -2925,7 +2925,10 @@ else|else
 operator|*
 name|ptr
 operator|=
+name|le16toh
+argument_list|(
 name|word
+argument_list|)
 expr_stmt|;
 block|}
 block|}
