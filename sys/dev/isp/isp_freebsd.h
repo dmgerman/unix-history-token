@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
@@ -176,6 +170,14 @@ include|#
 directive|include
 file|"opt_isp.h"
 end_include
+
+begin_comment
+comment|/*  * Not quite yet  */
+end_comment
+
+begin_comment
+comment|/* #define	ISP_DAC_SUPPORTED	1 */
+end_comment
 
 begin_comment
 comment|/*  * Efficiency- get rid of SBus code&& tests unless we need them.  */
@@ -642,13 +644,6 @@ define|#
 directive|define
 name|SNPRINTF
 value|snprintf
-end_define
-
-begin_define
-define|#
-directive|define
-name|STRNCAT
-value|strncat
 end_define
 
 begin_define
