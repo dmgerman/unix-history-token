@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.13 (Berkeley) %G%"
+literal|"@(#)glob.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2207,12 +2207,23 @@ name|ok
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|k
 operator|=
 operator|*
 name|name
 operator|++
-expr_stmt|;
+operator|)
+operator|==
+name|EOS
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|negate_range
