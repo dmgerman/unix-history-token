@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.20 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -223,12 +223,6 @@ directive|include
 file|"err.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSMALLOC
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -272,64 +266,6 @@ name|p
 parameter_list|)
 value|Free(p)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|xmalloc
-parameter_list|(
-name|i
-parameter_list|)
-value|malloc(i)
-end_define
-
-begin_define
-define|#
-directive|define
-name|xrealloc
-parameter_list|(
-name|p
-parameter_list|,
-name|i
-parameter_list|)
-value|realloc(p, i)
-end_define
-
-begin_define
-define|#
-directive|define
-name|xcalloc
-parameter_list|(
-name|n
-parameter_list|,
-name|s
-parameter_list|)
-value|calloc(n, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|xfree
-parameter_list|(
-name|p
-parameter_list|)
-value|free(p)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SYSMALLOC */
-end_comment
 
 begin_include
 include|#
