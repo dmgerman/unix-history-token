@@ -1160,6 +1160,10 @@ operator|!=
 name|NULL
 operator|)
 condition|)
+block|{
+name|UMTX_UNLOCK
+argument_list|()
+expr_stmt|;
 name|old
 operator|=
 name|casuptr
@@ -1178,9 +1182,13 @@ argument_list|,
 name|UMTX_CONTESTED
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|UMTX_UNLOCK
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
