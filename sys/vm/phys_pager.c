@@ -151,6 +151,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 specifier|static
 name|vm_object_t
@@ -173,8 +177,6 @@ block|{
 name|vm_object_t
 name|object
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * Offset should be page aligned. 	 */
 if|if
 condition|(
@@ -201,6 +203,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Lock to prevent object creation race condition. 		 */
 while|while
 condition|(
@@ -341,6 +349,12 @@ name|phys_pager_alloc_lock
 operator|=
 literal|0
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -366,6 +380,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 specifier|static
