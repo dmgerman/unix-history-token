@@ -331,10 +331,6 @@ name|u_char
 name|sc_opening
 decl_stmt|;
 comment|/* lock during open */
-name|u_char
-name|sc_dying
-decl_stmt|;
-comment|/* disconnecting */
 name|int
 name|sc_ctl_notify
 decl_stmt|;
@@ -1683,12 +1679,6 @@ name|sc_dying
 operator|=
 literal|1
 expr_stmt|;
-name|sc
-operator|->
-name|sc_dying
-operator|=
-literal|1
-expr_stmt|;
 name|free
 argument_list|(
 name|devinfo
@@ -1955,6 +1945,8 @@ if|if
 condition|(
 name|sc
 operator|->
+name|sc_ucom
+operator|.
 name|sc_dying
 condition|)
 return|return;
@@ -2630,6 +2622,8 @@ if|if
 condition|(
 name|sc
 operator|->
+name|sc_ucom
+operator|.
 name|sc_dying
 condition|)
 return|return
@@ -3527,12 +3521,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|sc
-operator|->
-name|sc_dying
-operator|=
-literal|1
-expr_stmt|;
 name|sc
 operator|->
 name|sc_ucom
