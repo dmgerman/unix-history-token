@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.23 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -958,6 +958,10 @@ name|time_t
 name|bi_segcreate
 decl_stmt|;
 comment|/* origin segment create time */
+name|int
+name|bi_version
+decl_stmt|;
+comment|/* file version number */
 name|void
 modifier|*
 name|bi_bp
@@ -965,34 +969,6 @@ decl_stmt|;
 comment|/* data buffer */
 block|}
 name|BLOCK_INFO
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|inode_info
-block|{
-name|ino_t
-name|ii_inode
-decl_stmt|;
-comment|/* inode # */
-name|daddr_t
-name|ii_daddr
-decl_stmt|;
-comment|/* disk address of block */
-name|time_t
-name|ii_segcreate
-decl_stmt|;
-comment|/* origin segment create time */
-name|struct
-name|dinode
-modifier|*
-name|ii_dinode
-decl_stmt|;
-comment|/* data buffer */
-block|}
-name|INODE_INFO
 typedef|;
 end_typedef
 
