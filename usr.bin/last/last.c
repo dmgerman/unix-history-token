@@ -346,6 +346,17 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|yflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show year */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|snapfound
 init|=
 literal|0
@@ -548,7 +559,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: last [-#] [-d [[CC]YY][MMDD]hhmm[.SS]] [-f file] [-h hostname]\n"
+literal|"usage: last [-#] [-y] [-d [[CC]YY][MMDD]hhmm[.SS]] [-f file] [-h host]\n"
 literal|"\t[-t tty] [-s|w] [user ...]\n"
 argument_list|)
 expr_stmt|;
@@ -614,7 +625,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789d:f:h:st:w"
+literal|"0123456789d:f:h:st:wy"
 argument_list|)
 operator|)
 operator|!=
@@ -792,6 +803,13 @@ case|:
 name|width
 operator|=
 literal|8
+expr_stmt|;
+break|break;
+case|case
+literal|'y'
+case|:
+name|yflag
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -1625,6 +1643,10 @@ argument_list|(
 name|ct
 argument_list|)
 argument_list|,
+name|yflag
+condition|?
+literal|"%a %Ef %Y %R"
+else|:
 literal|"%a %Ef %R"
 argument_list|,
 name|tm
