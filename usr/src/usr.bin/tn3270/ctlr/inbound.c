@@ -3302,7 +3302,7 @@ name|i
 operator|=
 name|CursorAddress
 expr_stmt|;
-name|TurnOnMdt
+name|TurnOffMdt
 argument_list|(
 name|i
 argument_list|)
@@ -3364,7 +3364,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|TurnOnMdt
+name|TurnOffMdt
 argument_list|(
 name|i
 argument_list|)
