@@ -4428,7 +4428,7 @@ name|srandom
 argument_list|(
 call|(
 name|unsigned
-name|int
+name|long
 call|)
 argument_list|(
 name|save_seed
@@ -4462,7 +4462,7 @@ name|srandom
 argument_list|(
 call|(
 name|unsigned
-name|int
+name|long
 call|)
 argument_list|(
 name|save_seed
