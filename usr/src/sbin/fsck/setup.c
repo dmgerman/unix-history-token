@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.40 (Berkeley) %G%"
+literal|"@(#)setup.c	5.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -827,7 +827,8 @@ name|FS_44INODEFMT
 condition|)
 block|{
 name|newinofmt
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -849,6 +850,10 @@ operator|~
 name|sblock
 operator|.
 name|fs_fmask
+expr_stmt|;
+name|newinofmt
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_if
