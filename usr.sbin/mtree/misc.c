@@ -124,6 +124,14 @@ name|NEEDVALUE
 block|}
 block|,
 block|{
+literal|"md5digest"
+block|,
+name|F_MD5
+block|,
+name|NEEDVALUE
+block|}
+block|,
+block|{
 literal|"mode"
 block|,
 name|F_MODE

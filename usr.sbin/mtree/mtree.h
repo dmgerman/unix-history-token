@@ -68,6 +68,11 @@ decl_stmt|;
 comment|/* check sum */
 name|char
 modifier|*
+name|md5digest
+decl_stmt|;
+comment|/* MD5 digest */
+name|char
+modifier|*
 name|slink
 decl_stmt|;
 comment|/* symbolic link reference */
@@ -166,6 +171,11 @@ directive|define
 name|F_VISIT
 value|0x4000
 comment|/* file visited */
+define|#
+directive|define
+name|F_MD5
+value|0x8000
+comment|/* MD5 digest */
 name|u_short
 name|flags
 decl_stmt|;
