@@ -80,6 +80,16 @@ parameter_list|)
 value|do { \ 	tf->tf_tpc = tf->tf_tnpc; \ 	tf->tf_tnpc += 4; \ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TF_DONE
+parameter_list|(
+name|tf
+parameter_list|)
+value|do { \ 	tf->tf_tpc = tf->tf_tnpc; \ 	tf->tf_tnpc += 4; \ } while (0)
+end_define
+
 begin_struct
 struct|struct
 name|mmuframe
@@ -92,35 +102,6 @@ name|mf_sfsr
 decl_stmt|;
 name|u_long
 name|mf_tar
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|kdbframe
-block|{
-name|u_long
-name|kf_fp
-decl_stmt|;
-name|u_long
-name|kf_cfp
-decl_stmt|;
-name|u_long
-name|kf_canrestore
-decl_stmt|;
-name|u_long
-name|kf_cansave
-decl_stmt|;
-name|u_long
-name|kf_cleanwin
-decl_stmt|;
-name|u_long
-name|kf_cwp
-decl_stmt|;
-name|u_long
-name|kf_otherwin
 decl_stmt|;
 block|}
 struct|;

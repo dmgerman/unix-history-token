@@ -48,20 +48,6 @@ name|db_expr_t
 typedef|;
 end_typedef
 
-begin_struct
-struct|struct
-name|db_regs
-block|{
-name|u_long
-name|dr_global
-index|[
-literal|8
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -121,8 +107,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|FIXUP_PC_AFTER_BREAK
-value|do {					\ 	ddb_regs.tf_tpc = ddb_regs.tf_tnpc;				\ 	ddb_regs.tf_tnpc += BKPT_SIZE;					\ } while (0);
+name|BKPT_SKIP
+value|do {							\ 	ddb_regs.tf_tpc = ddb_regs.tf_tnpc + 4;				\ 	ddb_regs.tf_tnpc += 8;						\ } while (0)
 end_define
 
 begin_define
