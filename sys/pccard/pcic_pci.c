@@ -235,6 +235,7 @@ operator|&
 name|pcic_intr_path
 argument_list|,
 literal|0
+argument_list|,
 literal|"Which path to send the interrupts over."
 argument_list|)
 expr_stmt|;
