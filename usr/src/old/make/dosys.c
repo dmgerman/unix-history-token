@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dosys.c	4.11 (Berkeley) %G%"
+literal|"@(#)dosys.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,7 +233,7 @@ name|nohalt
 condition|?
 literal|"-c"
 else|:
-literal|"-ce"
+literal|"-ec"
 operator|)
 argument_list|,
 name|comstring
@@ -254,7 +254,7 @@ name|nohalt
 condition|?
 literal|"-c"
 else|:
-literal|"-ce"
+literal|"-ec"
 operator|)
 argument_list|,
 name|comstring
