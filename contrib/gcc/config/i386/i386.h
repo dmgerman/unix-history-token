@@ -2286,6 +2286,21 @@ value|do									\   {									\     if (flag_pic)							\       {									\ 	rt
 end_define
 
 begin_comment
+comment|/* Define this macro if a SYMBOL_REF representing a non-global    address must be marked specially.  This is called for    compiler-generated local symbols, such as "__EXCEPTION_TABLE__".     On i386, if using PIC, we use this to set the rtx's    SYMBOL_REF_FLAG, so that we may access it directly as    an offset from the GOT register. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MARK_LOCAL_ADDRESS
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|do									\   {									\     if (flag_pic&& GET_CODE (X) == SYMBOL_REF)				\       SYMBOL_REF_FLAG (X) = 1;						\   }									\ while (0)
+end_define
+
+begin_comment
 comment|/* Initialize data used by insn expanders.  This is called from    init_emit, once for each function, before code is generated.    For 386, clear stack slot assignments remembered from previous    functions. */
 end_comment
 
