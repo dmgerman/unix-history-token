@@ -2108,7 +2108,7 @@ name|sc
 operator|->
 name|sc_st0
 operator|!=
-name|NULL
+literal|0
 argument_list|,
 operator|(
 literal|"hifn_attach: null bar0 tag!"
@@ -2121,7 +2121,7 @@ name|sc
 operator|->
 name|sc_sh0
 operator|!=
-name|NULL
+literal|0
 argument_list|,
 operator|(
 literal|"hifn_attach: null bar0 handle!"
@@ -2134,7 +2134,7 @@ name|sc
 operator|->
 name|sc_st1
 operator|!=
-name|NULL
+literal|0
 argument_list|,
 operator|(
 literal|"hifn_attach: null bar1 tag!"
@@ -2147,7 +2147,7 @@ name|sc
 operator|->
 name|sc_sh1
 operator|!=
-name|NULL
+literal|0
 argument_list|,
 operator|(
 literal|"hifn_attach: null bar1 handle!"
