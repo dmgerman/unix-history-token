@@ -9,13 +9,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)trap.c	5.2 (Berkeley) 4/12/91";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)trap.c	5.2 (Berkeley) 4/12/91"
+literal|"trap.c,v 1.5 1993/08/06 21:50:18 mycroft Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,12 +76,6 @@ begin_include
 include|#
 directive|include
 file|"syntax.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"signames.h"
 end_include
 
 begin_include
@@ -183,9 +181,7 @@ name|char
 modifier|*
 name|trap
 index|[
-name|MAXSIG
-operator|+
-literal|1
+name|NSIG
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -199,7 +195,7 @@ name|MKINIT
 name|char
 name|sigmode
 index|[
-name|MAXSIG
+name|NSIG
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -212,7 +208,7 @@ begin_decl_stmt
 name|char
 name|gotsig
 index|[
-name|MAXSIG
+name|NSIG
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -280,8 +276,8 @@ operator|=
 literal|0
 init|;
 name|signo
-operator|<=
-name|MAXSIG
+operator|<
+name|NSIG
 condition|;
 name|signo
 operator|++
@@ -359,8 +355,8 @@ operator|<
 literal|0
 operator|||
 name|signo
-operator|>
-name|MAXSIG
+operator|>=
+name|NSIG
 condition|)
 name|error
 argument_list|(
@@ -449,11 +445,11 @@ operator|=
 name|trap
 init|;
 name|tp
-operator|<=
+operator|<
 operator|&
 name|trap
 index|[
-name|MAXSIG
+name|NSIG
 index|]
 condition|;
 name|tp
@@ -654,8 +650,6 @@ operator|&
 name|sigmode
 index|[
 name|signo
-operator|-
-literal|1
 index|]
 expr_stmt|;
 if|if
@@ -794,8 +788,6 @@ condition|(
 name|sigmode
 index|[
 name|signo
-operator|-
-literal|1
 index|]
 operator|!=
 name|S_IGN
@@ -803,8 +795,6 @@ operator|&&
 name|sigmode
 index|[
 name|signo
-operator|-
-literal|1
 index|]
 operator|!=
 name|S_HARD_IGN
@@ -821,8 +811,6 @@ block|}
 name|sigmode
 index|[
 name|signo
-operator|-
-literal|1
 index|]
 operator|=
 name|S_HARD_IGN
@@ -838,7 +826,13 @@ end_ifdef
 
 begin_expr_stmt
 name|INCLUDE
-literal|"signames.h"
+operator|<
+name|sys
+operator|/
+name|signal
+operator|.
+name|h
+operator|>
 name|INCLUDE
 literal|"trap.h"
 name|SHELLPROC
@@ -860,7 +854,7 @@ name|sm
 operator|<
 name|sigmode
 operator|+
-name|MAXSIG
+name|NSIG
 condition|;
 name|sm
 operator|++
@@ -930,8 +924,6 @@ block|}
 name|gotsig
 index|[
 name|signo
-operator|-
-literal|1
 index|]
 operator|=
 literal|1
@@ -976,29 +968,25 @@ control|)
 block|{
 if|if
 condition|(
-name|gotsig
-index|[
-name|i
-operator|-
-literal|1
-index|]
-condition|)
-break|break;
-if|if
-condition|(
 name|i
 operator|>=
-name|MAXSIG
+name|NSIG
 condition|)
 goto|goto
 name|done
 goto|;
+if|if
+condition|(
+name|gotsig
+index|[
+name|i
+index|]
+condition|)
+break|break;
 block|}
 name|gotsig
 index|[
 name|i
-operator|-
-literal|1
 index|]
 operator|=
 literal|0

@@ -33,13 +33,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)mknodes.c	5.1 (Berkeley) 3/7/91";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mknodes.c	5.1 (Berkeley) 3/7/91"
+literal|"mknodes.c,v 1.4 1993/08/01 18:58:08 mycroft Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -1513,7 +1517,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"      funcblock = (char *)funcblock + nodesize[n->type];\n"
+literal|"      funcblock += nodesize[n->type];\n"
 argument_list|,
 name|cfile
 argument_list|)
