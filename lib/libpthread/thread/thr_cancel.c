@@ -139,7 +139,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Take the scheduling lock while we change the cancel flags. 		 */
+comment|/* 		 * Take the thread's lock while we change the cancel flags. 		 */
 name|THR_THREAD_LOCK
 argument_list|(
 name|curthread
@@ -459,7 +459,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Release the thread's scheduling lock and remove the 		 * reference: 		 */
+comment|/* 		 * Release the thread's lock and remove the 		 * reference: 		 */
 name|THR_SCHED_UNLOCK
 argument_list|(
 name|curthread
@@ -584,7 +584,7 @@ name|need_exit
 init|=
 literal|0
 decl_stmt|;
-comment|/* Take the scheduling lock while fiddling with the thread's state: */
+comment|/* Take the thread's lock while fiddling with the state: */
 name|THR_THREAD_LOCK
 argument_list|(
 name|curthread
@@ -741,7 +741,7 @@ name|need_exit
 init|=
 literal|0
 decl_stmt|;
-comment|/* Take the scheduling lock while fiddling with the state: */
+comment|/* Take the thread's lock while fiddling with the state: */
 name|THR_THREAD_LOCK
 argument_list|(
 name|curthread
@@ -927,7 +927,6 @@ modifier|*
 name|curthread
 parameter_list|)
 block|{
-comment|/* Take the scheduling lock while fiddling with the state: */
 if|if
 condition|(
 name|checkcancel
