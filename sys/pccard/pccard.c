@@ -1971,7 +1971,7 @@ literal|1
 init|;
 name|irq
 operator|<
-literal|16
+name|ICU_LEN
 condition|;
 name|irq
 operator|++
