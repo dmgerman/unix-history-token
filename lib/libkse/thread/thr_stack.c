@@ -112,7 +112,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * Base address of the last stack allocated (including its red zone, if  * there is one).  Stacks are allocated contiguously, starting beyond the  * top of the main stack.  When a new stack is created, a red zone is  * typically created (actually, the red zone is simply left unmapped) above  * the top of the stack, such that the stack will not be able to grow all  * the way to the bottom of the next stack.  This isn't fool-proof.  It is  * possible for a stack to grow by a large amount, such that it grows into  * the next stack, and as long as the memory within the red zone is never  * accessed, nothing will prevent one thread stack from trouncing all over  * the next.  *  * low memory  *     . . . . . . . . . . . . . . . . . .   *    |                                   |  *    |             stack 3               | start of 3rd thread stack  *    +-----------------------------------+  *    |                                   |  *    |       Red Zone (guard page)       | red zone for 2nd thread  *    |                                   |  *    +-----------------------------------+  *    |  stack 2 - PTHREAD_STACK_DEFAULT  | top of 2nd thread stack  *    |                                   |  *    |                                   |  *    |                                   |  *    |                                   |  *    |             stack 2               |  *    +-----------------------------------+<-- start of 2nd thread stack  *    |                                   |  *    |       Red Zone                    | red zone for 1st thread  *    |                                   |  *    +-----------------------------------+  *    |  stack 1 - PTHREAD_STACK_DEFAULT  | top of 1st thread stack  *    |                                   |  *    |                                   |  *    |                                   |  *    |                                   |  *    |             stack 1               |  *    +-----------------------------------+<-- start of 1st thread stack  *    |                                   |   (initial value of last_stack)  *    |       Red Zone                    |  *    |                                   | red zone for main thread  *    +-----------------------------------+  *    | USRSTACK - PTHREAD_STACK_INITIAL  | top of main thread stack  *    |                                   | ^  *    |                                   | |  *    |                                   | |  *    |                                   | | stack growth  *    |                                   |  *    +-----------------------------------+<-- start of main thread stack  *                                              (USRSTACK)  * high memory  *  */
+comment|/**  * Base address of the last stack allocated (including its red zone, if  * there is one).  Stacks are allocated contiguously, starting beyond the  * top of the main stack.  When a new stack is created, a red zone is  * typically created (actually, the red zone is mapped with PROT_NONE) above  * the top of the stack, such that the stack will not be able to grow all  * the way to the bottom of the next stack.  This isn't fool-proof.  It is  * possible for a stack to grow by a large amount, such that it grows into  * the next stack, and as long as the memory within the red zone is never  * accessed, nothing will prevent one thread stack from trouncing all over  * the next.  *  * low memory  *     . . . . . . . . . . . . . . . . . .   *    |                                   |  *    |             stack 3               | start of 3rd thread stack  *    +-----------------------------------+  *    |                                   |  *    |       Red Zone (guard page)       | red zone for 2nd thread  *    |                                   |  *    +-----------------------------------+  *    |  stack 2 - PTHREAD_STACK_DEFAULT  | top of 2nd thread stack  *    |                                   |  *    |                                   |  *    |                                   |  *    |                                   |  *    |             stack 2               |  *    +-----------------------------------+<-- start of 2nd thread stack  *    |                                   |  *    |       Red Zone                    | red zone for 1st thread  *    |                                   |  *    +-----------------------------------+  *    |  stack 1 - PTHREAD_STACK_DEFAULT  | top of 1st thread stack  *    |                                   |  *    |                                   |  *    |                                   |  *    |                                   |  *    |             stack 1               |  *    +-----------------------------------+<-- start of 1st thread stack  *    |                                   |   (initial value of last_stack)  *    |       Red Zone                    |  *    |                                   | red zone for main thread  *    +-----------------------------------+  *    | USRSTACK - PTHREAD_STACK_INITIAL  | top of main thread stack  *    |                                   | ^  *    |                                   | |  *    |                                   | |  *    |                                   | | stack growth  *    |                                   |  *    +-----------------------------------+<-- start of main thread stack  *                                              (USRSTACK)  * high memory  *  */
 end_comment
 
 begin_decl_stmt
@@ -195,6 +195,10 @@ name|stacksize
 decl_stmt|;
 name|size_t
 name|guardsize
+decl_stmt|;
+name|char
+modifier|*
+name|stackaddr
 decl_stmt|;
 comment|/* 	 * Round up stack size to nearest multiple of _thr_page_size so 	 * that mmap() * will work.  If the stack size is not an even 	 * multiple, we end up initializing things such that there is 	 * unused space above the beginning of the stack, so the stack 	 * sits snugly against its guard. 	 */
 name|stacksize
@@ -384,13 +388,13 @@ operator|-
 name|_thr_guard_default
 expr_stmt|;
 comment|/* Allocate a new stack. */
-name|attr
-operator|->
-name|stackaddr_attr
+name|stackaddr
 operator|=
 name|last_stack
 operator|-
 name|stacksize
+operator|-
+name|guardsize
 expr_stmt|;
 comment|/* 		 * Even if stack allocation fails, we don't want to try to 		 * use this location again, so unconditionally decrement 		 * last_stack.  Under normal operating conditions, the most 		 * likely reason for an mmap() error is a stack overflow of 		 * the adjacent thread stack. 		 */
 name|last_stack
@@ -415,21 +419,19 @@ argument_list|(
 name|crit
 argument_list|)
 expr_stmt|;
-comment|/* Map the stack, but not the guard page: */
+comment|/* Map the stack and guard page together, and split guard 		   page from allocated space: */
 if|if
 condition|(
 operator|(
-name|attr
-operator|->
-name|stackaddr_attr
+name|stackaddr
 operator|=
 name|mmap
 argument_list|(
-name|attr
-operator|->
-name|stackaddr_attr
+name|stackaddr
 argument_list|,
 name|stacksize
+operator|+
+name|guardsize
 argument_list|,
 name|PROT_READ
 operator||
@@ -443,14 +445,59 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
+operator|!=
+name|MAP_FAILED
+operator|&&
+operator|(
+name|guardsize
 operator|==
+literal|0
+operator|||
+name|mprotect
+argument_list|(
+name|stackaddr
+argument_list|,
+name|guardsize
+argument_list|,
+name|PROT_NONE
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|stackaddr
+operator|+=
+name|guardsize
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|stackaddr
+operator|!=
 name|MAP_FAILED
 condition|)
+name|munmap
+argument_list|(
+name|stackaddr
+argument_list|,
+name|stacksize
+operator|+
+name|guardsize
+argument_list|)
+expr_stmt|;
+name|stackaddr
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|attr
 operator|->
 name|stackaddr_attr
 operator|=
-name|NULL
+name|stackaddr
 expr_stmt|;
 block|}
 if|if
