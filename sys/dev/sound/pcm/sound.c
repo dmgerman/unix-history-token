@@ -156,7 +156,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* PROPOSAL: each unit needs: status, mixer, dsp, dspW, audio, sequencer, midi-in, seq2, sndproc = 9 devices dspW and audio are deprecated. dsp needs min 64 channels, will give it 256  minor = (unit<< 12) + (dev<< 8) + channel currently minor = (channel<< 8) + (unit<< 4) + dev  nomenclature: 	/dev/pcmX/dsp.(0..255) 	/dev/pcmX/dspW 	/dev/pcmX/audio 	/dev/pcmX/status 	/dev/pcmX/mixer 	[etc.]  currently: minor = (channel<< 8) + (unit<< 4) + dev */
+comment|/* PROPOSAL: each unit needs: status, mixer, dsp, dspW, audio, sequencer, midi-in, seq2, sndproc = 9 devices dspW and audio are deprecated. dsp needs min 64 channels, will give it 256  minor = (unit<< 20) + (dev<< 16) + channel currently minor = (channel<< 16) + (unit<< 4) + dev  nomenclature: 	/dev/pcmX/dsp.(0..255) 	/dev/pcmX/dspW 	/dev/pcmX/audio 	/dev/pcmX/status 	/dev/pcmX/mixer 	[etc.] */
 end_comment
 
 begin_define
@@ -176,7 +176,7 @@ name|PCMCHAN
 parameter_list|(
 name|x
 parameter_list|)
-value|((PCMMINOR(x)& 0x0000ff00)>> 8)
+value|((PCMMINOR(x)& 0x0000ff00)>> 16)
 end_define
 
 begin_define
@@ -210,7 +210,7 @@ name|d
 parameter_list|,
 name|c
 parameter_list|)
-value|((((c)& 0xff)<< 8) | (((u)& 0x0f)<< 4) | ((d)& 0x0f))
+value|((((c)& 0xff)<< 16) | (((u)& 0x0f)<< 4) | ((d)& 0x0f))
 end_define
 
 begin_decl_stmt
