@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	5.5 (Berkeley) %G%"
+literal|"@(#)date.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,11 +316,6 @@ operator|)
 operator|&&
 name|settimeofday
 argument_list|(
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
 name|NULL
 argument_list|,
 operator|&
@@ -781,32 +776,6 @@ condition|)
 name|badformat
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|p
-operator|=
-name|getlogin
-argument_list|()
-operator|)
-condition|)
-comment|/* single-user or no tty */
-name|p
-operator|=
-literal|"root"
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_AUTH
-operator||
-name|LOG_NOTICE
-argument_list|,
-literal|"date set by %s"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 comment|/* set the time */
 if|if
 condition|(
@@ -846,11 +815,6 @@ argument_list|(
 operator|&
 name|tv
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
 name|NULL
 argument_list|)
 condition|)
@@ -876,6 +840,32 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|getlogin
+argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|p
+operator|=
+literal|"???"
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_AUTH
+operator||
+name|LOG_NOTICE
+argument_list|,
+literal|"date set by %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
