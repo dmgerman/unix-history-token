@@ -39,7 +39,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.4 1995/05/30 03:51:25 rgrimes Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.5 1995/07/18 21:35:32 wpaul Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3163,7 +3163,10 @@ name|ep
 operator|->
 name|ether_type
 operator|=
+name|htons
+argument_list|(
 name|ETHERTYPE_REVARP
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
