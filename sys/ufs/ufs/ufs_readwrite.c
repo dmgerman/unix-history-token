@@ -2995,7 +2995,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Vnode op for reading.  */
+comment|/*  * Vnode op for extended attribute reading.  */
 end_comment
 
 begin_comment
