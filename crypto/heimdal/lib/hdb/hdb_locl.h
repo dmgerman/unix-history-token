@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/* $Id: hdb_locl.h,v 1.18 2002/09/10 20:03:48 joda Exp $ */
+comment|/* $Id: hdb_locl.h,v 1.18.4.1 2003/09/10 22:04:39 lha Exp $ */
 end_comment
 
 begin_comment
@@ -114,6 +114,23 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIMITS_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_endif
