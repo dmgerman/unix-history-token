@@ -310,6 +310,8 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -326,6 +328,8 @@ directive|else
 name|syslog
 argument_list|(
 name|LOG_ERR
+argument_list|,
+literal|"%s"
 argument_list|,
 name|msg
 argument_list|)
