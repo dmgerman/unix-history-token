@@ -2818,12 +2818,6 @@ name|td_kse
 operator|=
 name|NULL
 expr_stmt|;
-name|td
-operator|->
-name|td_state
-operator|=
-name|TDS_INACTIVE
-expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -2858,6 +2852,12 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|td
+operator|->
+name|td_state
+operator|=
+name|TDS_INACTIVE
+expr_stmt|;
 comment|/* XXX Shouldn't cpu_throw() here. */
 name|mtx_assert
 argument_list|(
