@@ -6026,6 +6026,17 @@ operator|&&
 name|c
 operator|!=
 literal|'-'
+operator|&&
+operator|!
+operator|(
+name|c
+operator|==
+literal|'_'
+operator|&&
+name|i
+operator|>=
+literal|2
+operator|)
 condition|)
 block|{
 name|int
