@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.9	%G%"
+literal|"@(#)main.c	2.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,10 +471,7 @@ operator|-
 literal|1
 index|]
 decl_stmt|;
-comment|/* clear buffers, then print error message */
-name|f_exit
-argument_list|()
-expr_stmt|;
+comment|/* print error message, then flush buffers */
 if|if
 condition|(
 name|act
@@ -652,6 +649,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|f_exit
+argument_list|()
+expr_stmt|;
 name|_cleanup
 argument_list|()
 expr_stmt|;
