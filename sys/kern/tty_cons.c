@@ -180,6 +180,10 @@ name|cnkqfilter
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * XXX: We really want major #0, but zero here means  * XXX: allocate a major number automatically.  * XXX: kern_conf.c knows what to do when it sees 256.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -227,7 +231,6 @@ name|d_maj
 operator|=
 literal|256
 block|,
-comment|/* 			 * XXX: We really want major #0, but zero here means 			 * XXX: allocate a major number automatically. 			 * XXX: kern_conf.c knows what to do when it sees 256. 			 */
 operator|.
 name|d_flags
 operator|=
