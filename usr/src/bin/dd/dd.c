@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dd.c	4.9 (Berkeley) %G%"
+literal|"@(#)dd.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
 end_include
 
 begin_include
@@ -53,13 +47,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_define
@@ -1861,7 +1867,7 @@ name|chr
 block|,
 name|tape
 block|,
-name|pipe
+name|ispipe
 block|}
 name|iftype
 enum|;
@@ -2664,7 +2670,7 @@ name|skip
 operator|*
 name|ibs
 argument_list|,
-name|L_INCR
+name|SEEK_CUR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2711,12 +2717,12 @@ name|obs
 operator|*
 name|seekn
 argument_list|,
-name|L_INCR
+name|SEEK_CUR
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|pipe
+name|ispipe
 case|:
 name|fprintf
 argument_list|(
@@ -2741,7 +2747,7 @@ name|long
 operator|)
 name|obs
 argument_list|,
-name|L_INCR
+name|SEEK_CUR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4130,7 +4136,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|pipe
+name|ispipe
 operator|)
 return|;
 if|if
@@ -4212,12 +4218,12 @@ name|fd
 argument_list|,
 name|count
 argument_list|,
-name|L_INCR
+name|SEEK_CUR
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|pipe
+name|ispipe
 case|:
 case|case
 name|tape
