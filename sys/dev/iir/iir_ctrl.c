@@ -978,6 +978,9 @@ block|}
 case|case
 name|GDT_IOCTL_DRVERS
 case|:
+case|case
+name|GDT_IOCTL_DRVERS_OLD
+case|:
 operator|*
 operator|(
 name|int
@@ -996,6 +999,9 @@ expr_stmt|;
 break|break;
 case|case
 name|GDT_IOCTL_CTRTYPE
+case|:
+case|case
+name|GDT_IOCTL_CTRTYPE_OLD
 case|:
 block|{
 name|gdt_ctrt_t

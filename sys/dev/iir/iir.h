@@ -4,11 +4,11 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  *       Copyright (c) 2000-03 ICP vortex GmbH  *       Copyright (c) 2002-03 Intel Corporation  *       Copyright (c) 2003    Adaptec Inc.  *       All Rights Reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  *       Copyright (c) 2000-04 ICP vortex GmbH  *       Copyright (c) 2002-04 Intel Corporation  *       Copyright (c) 2003-04 Adaptec Inc.  *       All Rights Reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
-comment|/*  *  * iir.h:       Definitions/Constants used by the Intel Integrated RAID driver  *  * Written by: 	Achim Leubner<achim_leubner@adaptec.com>  * Fixes/Additions:	Boji Tony Kannanthanam<boji.t.kannanthanam@intel.com>  *  * credits:     Niklas Hallqvist;       OpenBSD driver for the ICP Controllers.  *              FreeBSD.ORG;            Great O/S to work on and for.  *  * $Id: iir.h 1.5 2003/08/26 12:28:21 achim Exp $"  */
+comment|/*  *  * iir.h:       Definitions/Constants used by the Intel Integrated RAID driver  *  * Written by: 	Achim Leubner<achim_leubner@adaptec.com>  * Fixes/Additions:	Boji Tony Kannanthanam<boji.t.kannanthanam@intel.com>  *  * credits:     Niklas Hallqvist;       OpenBSD driver for the ICP Controllers.  *              FreeBSD.ORG;            Great O/S to work on and for.  *  * $Id: iir.h 1.6 2004/03/30 10:19:44 achim Exp $"  */
 end_comment
 
 begin_ifndef
@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|IIR_DRIVER_SUBVERSION
-value|4
+value|5
 end_define
 
 begin_comment
@@ -892,7 +892,7 @@ begin_define
 define|#
 directive|define
 name|GDT_IOCTL_DRVERS
-value|_IOWR('J', 1, int)
+value|_IOR('J', 1, int)
 end_define
 
 begin_comment
@@ -903,6 +903,28 @@ begin_define
 define|#
 directive|define
 name|GDT_IOCTL_CTRTYPE
+value|_IOWR('J', 2, gdt_ctrt_t)
+end_define
+
+begin_comment
+comment|/* get ctr. type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GDT_IOCTL_DRVERS_OLD
+value|_IOWR('J', 1, int)
+end_define
+
+begin_comment
+comment|/* get driver version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GDT_IOCTL_CTRTYPE_OLD
 value|_IOR('J', 2, gdt_ctrt_t)
 end_define
 

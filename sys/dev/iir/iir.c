@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *       Copyright (c) 2000-03 ICP vortex GmbH  *       Copyright (c) 2002-03 Intel Corporation  *       Copyright (c) 2003    Adaptec Inc.  *       All Rights Reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  *       Copyright (c) 2000-04 ICP vortex GmbH  *       Copyright (c) 2002-04 Intel Corporation  *       Copyright (c) 2003-04 Adaptec Inc.  *       All Rights Reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * iir.c: SCSI dependant code for the Intel Integrated RAID Controller driver  *  * Written by: Achim Leubner<achim_leubner@adaptec.com>  * Fixes/Additions: Boji Tony Kannanthanam<boji.t.kannanthanam@intel.com>  *  * credits:     Niklas Hallqvist;       OpenBSD driver for the ICP Controllers.  *              Mike Smith;             Some driver source code.  *              FreeBSD.ORG;            Great O/S to work on and for.  *  * $Id: iir.c 1.4 2003/08/26 12:29:44 achim Exp $"  */
+comment|/*  * iir.c: SCSI dependant code for the Intel Integrated RAID Controller driver  *  * Written by: Achim Leubner<achim_leubner@adaptec.com>  * Fixes/Additions: Boji Tony Kannanthanam<boji.t.kannanthanam@intel.com>  *  * credits:     Niklas Hallqvist;       OpenBSD driver for the ICP Controllers.  *              Mike Smith;             Some driver source code.  *              FreeBSD.ORG;            Great O/S to work on and for.  *  * $Id: iir.c 1.5 2004/03/30 10:17:53 achim Exp $"  */
 end_comment
 
 begin_include
@@ -1511,53 +1511,6 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|!
-name|gdt_internal_cmd
-argument_list|(
-name|gdt
-argument_list|,
-name|gccb
-argument_list|,
-name|GDT_CACHESERVICE
-argument_list|,
-name|GDT_INIT
-argument_list|,
-name|GDT_LINUX_OS
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"iir%d: Cache service initialization error %d\n"
-argument_list|,
-name|gdt
-operator|->
-name|sc_hanum
-argument_list|,
-name|gdt
-operator|->
-name|sc_status
-argument_list|)
-expr_stmt|;
-name|gdt_free_ccb
-argument_list|(
-name|gdt
-argument_list|,
-name|gccb
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|gdt_internal_cmd
 argument_list|(
 name|gdt
@@ -1586,53 +1539,6 @@ name|gccb
 argument_list|,
 name|GDT_CACHESERVICE
 argument_list|,
-name|GDT_MOUNT
-argument_list|,
-literal|0xffff
-argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"iir%d: Cache service mount error %d\n"
-argument_list|,
-name|gdt
-operator|->
-name|sc_hanum
-argument_list|,
-name|gdt
-operator|->
-name|sc_status
-argument_list|)
-expr_stmt|;
-name|gdt_free_ccb
-argument_list|(
-name|gdt
-argument_list|,
-name|gccb
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-if|if
-condition|(
-operator|!
-name|gdt_internal_cmd
-argument_list|(
-name|gdt
-argument_list|,
-name|gccb
-argument_list|,
-name|GDT_CACHESERVICE
-argument_list|,
 name|GDT_INIT
 argument_list|,
 name|GDT_LINUX_OS
@@ -1645,7 +1551,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"iir%d: Cache service post-mount initialization error %d\n"
+literal|"iir%d: Cache service initialization error %d\n"
 argument_list|,
 name|gdt
 operator|->
