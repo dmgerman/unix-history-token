@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)socketvar.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)socketvar.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -50,16 +50,16 @@ modifier|*
 name|so_q0
 decl_stmt|;
 comment|/* queue of partial connections */
-name|short
-name|so_q0len
-decl_stmt|;
-comment|/* partials on so_q0 */
 name|struct
 name|socket
 modifier|*
 name|so_q
 decl_stmt|;
 comment|/* queue of incoming connections */
+name|short
+name|so_q0len
+decl_stmt|;
+comment|/* partials on so_q0 */
 name|short
 name|so_qlen
 decl_stmt|;
@@ -68,34 +68,46 @@ name|short
 name|so_qlimit
 decl_stmt|;
 comment|/* max number queued connections */
+name|short
+name|so_timeo
+decl_stmt|;
+comment|/* connection timeout */
+name|u_short
+name|so_error
+decl_stmt|;
+comment|/* error affecting connection */
+name|short
+name|so_pgrp
+decl_stmt|;
+comment|/* pgrp for signals */
+name|u_long
+name|so_oobmark
+decl_stmt|;
+comment|/* chars to oob mark */
 comment|/*  * Variables for socket buffering.  */
 struct|struct
 name|sockbuf
 block|{
-name|u_short
+name|u_long
 name|sb_cc
 decl_stmt|;
 comment|/* actual chars in buffer */
-name|u_short
+name|u_long
 name|sb_hiwat
 decl_stmt|;
 comment|/* max actual char count */
-name|u_short
+name|u_long
 name|sb_mbcnt
 decl_stmt|;
 comment|/* chars of mbufs used */
-name|u_short
+name|u_long
 name|sb_mbmax
 decl_stmt|;
 comment|/* max chars of mbufs to use */
-name|u_short
+name|u_long
 name|sb_lowat
 decl_stmt|;
 comment|/* low water mark (not used yet) */
-name|short
-name|sb_timeo
-decl_stmt|;
-comment|/* timeout (not used yet) */
 name|struct
 name|mbuf
 modifier|*
@@ -109,6 +121,10 @@ name|sb_sel
 decl_stmt|;
 comment|/* process selecting read/write */
 name|short
+name|sb_timeo
+decl_stmt|;
+comment|/* timeout (not used yet) */
+name|short
 name|sb_flags
 decl_stmt|;
 comment|/* flags, see below */
@@ -120,7 +136,7 @@ struct|;
 define|#
 directive|define
 name|SB_MAX
-value|65535
+value|(64*1024)
 comment|/* max chars in sockbuf */
 define|#
 directive|define
@@ -147,22 +163,6 @@ directive|define
 name|SB_COLL
 value|0x10
 comment|/* collision selecting */
-name|short
-name|so_timeo
-decl_stmt|;
-comment|/* connection timeout */
-name|u_short
-name|so_error
-decl_stmt|;
-comment|/* error affecting connection */
-name|u_short
-name|so_oobmark
-decl_stmt|;
-comment|/* chars to oob mark */
-name|short
-name|so_pgrp
-decl_stmt|;
-comment|/* pgrp for signals */
 block|}
 struct|;
 end_struct
@@ -297,7 +297,7 @@ parameter_list|(
 name|sb
 parameter_list|)
 define|\
-value|(MIN((int)((sb)->sb_hiwat - (sb)->sb_cc),\ 	 (int)((sb)->sb_mbmax - (sb)->sb_mbcnt)))
+value|(MIN((long)((sb)->sb_hiwat - (sb)->sb_cc),\ 	 (long)((sb)->sb_mbmax - (sb)->sb_mbcnt)))
 end_define
 
 begin_comment
