@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getinfo.c,v 8.18 2001/02/27 06:03:40 vixie Exp $"
+literal|"$Id: getinfo.c,v 8.20 2001/06/20 12:30:33 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,15 +125,6 @@ include|#
 directive|include
 file|"res.h"
 end_include
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|res_skip
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -325,6 +316,7 @@ modifier|*
 name|headerPtr
 decl_stmt|;
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|cp
@@ -375,6 +367,8 @@ name|buflen
 decl_stmt|;
 name|int
 name|origClass
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|numAliases
@@ -720,10 +714,6 @@ condition|(
 operator|(
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|Print_rr
 argument_list|(
 name|cp
@@ -1529,14 +1519,10 @@ expr_stmt|;
 block|}
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|res_skip
 argument_list|(
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&
@@ -1576,10 +1562,6 @@ condition|(
 operator|(
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|Print_rr
 argument_list|(
 name|cp
@@ -1990,14 +1972,10 @@ block|}
 comment|/*      * Additional resource records contain addresses of servers.      */
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|res_skip
 argument_list|(
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&
@@ -2033,10 +2011,6 @@ condition|(
 operator|(
 name|cp
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|Print_rr
 argument_list|(
 name|cp
@@ -2641,6 +2615,7 @@ decl_stmt|;
 name|int
 name|queryType
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3188,29 +3163,22 @@ decl_stmt|;
 name|int
 name|queryType
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|char
+modifier|*
 name|domain
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|HostInfo
 modifier|*
 name|hostPtr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|Boolean
 name|isServer
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|querybuf
 name|buf
@@ -3225,6 +3193,7 @@ operator|+
 literal|2
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|longname
@@ -3262,6 +3231,9 @@ literal|'.'
 operator|&&
 name|n
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|nbuf
@@ -3461,7 +3433,7 @@ name|n
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

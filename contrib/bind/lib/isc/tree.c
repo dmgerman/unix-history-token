@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tree.c,v 8.9 1999/01/08 19:25:47 vixie Exp $"
+literal|"$Id: tree.c,v 8.10 2001/11/01 05:33:46 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,7 +365,11 @@ function_decl|(
 modifier|*
 name|pfi_compare
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|tree_t
+parameter_list|,
+name|tree_t
+parameter_list|)
 parameter_list|,
 name|tree_t
 name|p_user
@@ -448,7 +452,11 @@ function_decl|(
 modifier|*
 name|pfi_compare
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|tree_t
+parameter_list|,
+name|tree_t
+parameter_list|)
 parameter_list|,
 name|tree_t
 name|p_user
@@ -512,7 +520,11 @@ function_decl|(
 modifier|*
 name|pfi_compare
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|tree_t
+parameter_list|,
+name|tree_t
+parameter_list|)
 parameter_list|,
 name|tree_t
 name|p_user
@@ -560,7 +572,9 @@ function_decl|(
 modifier|*
 name|pfi_uar
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|tree_t
+parameter_list|)
 parameter_list|)
 block|{
 name|ENTER
@@ -661,7 +675,9 @@ function_decl|(
 modifier|*
 name|pfv_uar
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|tree_t
+parameter_list|)
 parameter_list|)
 block|{
 name|ENTER
@@ -764,14 +780,20 @@ function_decl|(
 modifier|*
 name|pfi_compare
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|tree_t
+parameter_list|,
+name|tree_t
+parameter_list|)
 parameter_list|,
 name|void
 function_decl|(
 modifier|*
 name|pfv_delete
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|tree_t
+parameter_list|)
 parameter_list|)
 block|{
 name|tree
@@ -1523,7 +1545,11 @@ function_decl|(
 modifier|*
 name|pfi_compare
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|tree_t
+parameter_list|,
+name|tree_t
+parameter_list|)
 parameter_list|,
 name|tree_t
 name|p_user
@@ -1533,7 +1559,9 @@ function_decl|(
 modifier|*
 name|pfv_uar
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|tree_t
+parameter_list|)
 parameter_list|,
 name|int
 modifier|*
@@ -1851,7 +1879,9 @@ function_decl|(
 modifier|*
 name|pfv_uar
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|tree_t
+parameter_list|)
 parameter_list|,
 name|int
 modifier|*

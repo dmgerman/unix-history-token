@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nis_pr.c,v 1.13 1999/01/18 07:46:59 vixie Exp $"
+literal|"$Id: nis_pr.c,v 1.14 2001/05/29 05:49:16 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,11 +694,22 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
 name|nisfree
 argument_list|(
 name|pvt
 argument_list|,
 name|do_val
+argument_list|)
+expr_stmt|;
+name|DE_CONST
+argument_list|(
+name|name
+argument_list|,
+name|tmp
 argument_list|)
 expr_stmt|;
 name|r
@@ -711,15 +722,11 @@ name|nis_domain
 argument_list|,
 name|protocols_byname
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|name
+name|tmp
 argument_list|,
 name|strlen
 argument_list|(
-name|name
+name|tmp
 argument_list|)
 argument_list|,
 operator|&
@@ -1120,6 +1127,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 comment|/* NOOP */
 block|}
 end_function
@@ -1211,10 +1223,9 @@ name|p
 operator|!=
 literal|'#'
 condition|;
+control|)
 name|p
 operator|++
-control|)
-name|NULL
 expr_stmt|;
 while|while
 condition|(
@@ -1226,11 +1237,17 @@ name|prbuf
 operator|&&
 name|isspace
 argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|p
 index|[
 operator|-
 literal|1
 index|]
+argument_list|)
 argument_list|)
 condition|)
 name|p
@@ -1269,6 +1286,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1300,6 +1321,10 @@ name|p
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1326,6 +1351,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -1429,6 +1458,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)

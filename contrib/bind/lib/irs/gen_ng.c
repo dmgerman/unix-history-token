@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gen_ng.c,v 1.14 1999/10/13 16:39:29 vixie Exp $"
+literal|"$Id: gen_ng.c,v 1.15 2001/05/29 05:48:38 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,14 +168,17 @@ name|struct
 name|irs_ng
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -501,16 +504,19 @@ name|irs_ng
 modifier|*
 name|this
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|host
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|user
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*

@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: debug.c,v 8.17 2000/11/08 06:47:31 marka Exp $"
+literal|"$Id: debug.c,v 8.19 2001/09/25 04:50:26 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,6 +100,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -224,11 +230,14 @@ name|u_int
 name|class
 decl_stmt|,
 name|type
+init|=
+literal|0
 decl_stmt|;
 comment|/* 	 * Print header fields. 	 */
 name|hp
 operator|=
 operator|(
+specifier|const
 name|HEADER
 operator|*
 operator|)
@@ -546,6 +555,7 @@ operator|=
 name|ns_get16
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -561,6 +571,7 @@ operator|=
 name|ns_get16
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -814,6 +825,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|u_char
 modifier|*
@@ -1362,6 +1374,7 @@ argument_list|,
 name|ns_get16
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -1404,6 +1417,7 @@ argument_list|,
 name|ns_get16
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -1424,6 +1438,7 @@ argument_list|,
 name|ns_get16
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -1626,6 +1641,7 @@ argument_list|,
 name|ns_get16
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -1646,6 +1662,7 @@ argument_list|,
 name|ns_get16
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -1666,6 +1683,7 @@ argument_list|,
 name|ns_get16
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -1706,6 +1724,7 @@ argument_list|,
 name|ns_get16
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -1829,6 +1848,7 @@ argument_list|,
 name|ns_get16
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -1869,6 +1889,7 @@ argument_list|,
 name|ns_get16
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2281,6 +2302,7 @@ argument_list|,
 name|ns_get32
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2297,6 +2319,7 @@ operator|=
 name|ns_get32
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2326,6 +2349,7 @@ operator|=
 name|ns_get32
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2355,6 +2379,7 @@ operator|=
 name|ns_get32
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -2384,6 +2409,7 @@ operator|=
 name|ns_get32
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)

@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: send.c,v 8.10 2000/12/23 08:14:47 vixie Exp $"
+literal|"$Id: send.c,v 8.12 2001/07/03 06:27:12 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,7 +209,8 @@ decl_stmt|,
 name|v_circuit
 decl_stmt|,
 name|resplen
-decl_stmt|,
+decl_stmt|;
+name|ISC_SOCKLEN_T
 name|salen
 decl_stmt|;
 name|int
@@ -248,6 +249,7 @@ modifier|*
 name|hp
 init|=
 operator|(
+specifier|const
 name|HEADER
 operator|*
 operator|)
@@ -529,17 +531,17 @@ name|iov_len
 operator|=
 name|INT16SZ
 expr_stmt|;
+name|DE_CONST
+argument_list|(
+name|buf
+argument_list|,
 name|iov
 index|[
 literal|1
 index|]
 operator|.
 name|iov_base
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|buf
+argument_list|)
 expr_stmt|;
 name|iov
 index|[
@@ -722,6 +724,9 @@ name|cp
 argument_list|)
 operator|)
 operator|>
+operator|(
+name|int
+operator|)
 name|anslen
 condition|)
 block|{

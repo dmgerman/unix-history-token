@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_nw.c,v 1.19 1999/10/15 19:49:10 vixie Exp $"
+literal|"$Id: dns_nw.c,v 1.21 2001/11/30 00:36:53 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,37 +199,12 @@ name|MAXALIASES
 value|35
 end_define
 
-begin_if
-if|#
-directive|if
-name|PACKETSZ
-operator|>
-literal|1024
-end_if
-
 begin_define
 define|#
 directive|define
 name|MAXPACKET
-value|PACKETSZ
+value|(64*1024)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MAXPACKET
-value|1024
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -604,6 +579,11 @@ name|pvt
 modifier|*
 name|pvt
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1033,6 +1013,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -1052,6 +1037,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 comment|/* NOOP */
 block|}
 end_function
@@ -3139,12 +3129,20 @@ if|if
 condition|(
 name|isascii
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|t
 argument_list|)
 operator|&&
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|t
 argument_list|)

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dns_gr.c,v 1.19 1999/01/18 07:46:48 vixie Exp $"
+literal|"$Id: dns_gr.c,v 1.20 2001/05/29 05:48:27 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -683,6 +683,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -784,6 +789,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 comment|/* NOOP */
 block|}
 end_function
@@ -815,6 +825,26 @@ modifier|*
 name|ngroups
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|basegid
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|groups
+argument_list|)
+expr_stmt|;
 operator|*
 name|ngroups
 operator|=
@@ -841,6 +871,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 comment|/* NOOP */
 block|}
 end_function

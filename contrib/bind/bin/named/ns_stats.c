@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_stats.c,v 8.32.2.1 2001/08/09 14:04:49 marka Exp $"
+literal|"$Id: ns_stats.c,v 8.34 2001/08/09 13:17:21 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1618,6 +1618,26 @@ parameter_list|(
 name|tv
 parameter_list|)
 value|((tv).tv_sec + ((tv).tv_usec / 1000000.0))
+name|UNUSED
+argument_list|(
+name|ctx
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|uap
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|due
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|inter
+argument_list|)
+expr_stmt|;
 name|getrusage
 argument_list|(
 name|RUSAGE_SELF

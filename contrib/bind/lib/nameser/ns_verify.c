@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_verify.c,v 8.13 2000/03/29 15:55:00 bwelling Exp $"
+literal|"$Id: ns_verify.c,v 8.14 2001/05/29 05:49:40 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -1581,6 +1587,9 @@ if|if
 condition|(
 name|querysiglen
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|state
@@ -1659,6 +1668,7 @@ decl_stmt|,
 modifier|*
 name|sigstart
 decl_stmt|;
+name|unsigned
 name|int
 name|sigfieldlen
 decl_stmt|,

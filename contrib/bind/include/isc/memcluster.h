@@ -141,6 +141,13 @@ name|memstats
 value|__memstats
 end_define
 
+begin_define
+define|#
+directive|define
+name|memactive
+value|__memactive
+end_define
+
 begin_function_decl
 name|int
 name|meminit
@@ -248,6 +255,15 @@ name|memstats
 parameter_list|(
 name|FILE
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|memactive
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999 by Internet Software Consortium.  *  * Permissi
 end_comment
 
 begin_comment
-comment|/*  * $Id: irpmarshall.h,v 8.1 1999/01/18 07:46:47 vixie Exp $  */
+comment|/*  * $Id: irpmarshall.h,v 8.2 2001/05/29 05:47:10 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -379,16 +379,19 @@ begin_function_decl
 name|int
 name|irp_unmarshall_ng
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|host
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|user
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*

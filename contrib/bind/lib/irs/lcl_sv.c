@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcl_sv.c,v 1.20 1999/10/07 20:44:03 vixie Exp $"
+literal|"$Id: lcl_sv.c,v 1.22 2001/06/18 14:43:59 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,6 +423,11 @@ name|pvt
 modifier|*
 name|pvt
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1560,14 +1565,19 @@ condition|(
 name|pvt
 operator|->
 name|dbh
-operator|!=
+operator|==
+name|NULL
+operator|&&
+name|pvt
+operator|->
+name|sv
+operator|.
+name|fp
+operator|==
 name|NULL
 condition|)
-name|NULL
-expr_stmt|;
-elseif|else
-endif|#
-directive|endif
+else|#
+directive|else
 if|if
 condition|(
 name|pvt
@@ -1575,12 +1585,11 @@ operator|->
 name|sv
 operator|.
 name|fp
-operator|!=
+operator|==
 name|NULL
 condition|)
-name|NULL
-expr_stmt|;
-else|else
+endif|#
+directive|endif
 name|sv_rewind
 argument_list|(
 name|this
@@ -2312,6 +2321,9 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|n
 operator|>
 sizeof|sizeof

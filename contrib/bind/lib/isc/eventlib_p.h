@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995-1999 by Internet Software Consortium  *  * Perm
 end_comment
 
 begin_comment
-comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.28 2000/02/04 08:28:34 vixie Exp $  */
+comment|/* eventlib_p.h - private interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib_p.h,v 1.30 2001/11/01 05:35:50 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -114,7 +114,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ERR
+name|EV_ERR
 parameter_list|(
 name|e
 parameter_list|)
@@ -128,7 +128,7 @@ name|OK
 parameter_list|(
 name|x
 parameter_list|)
-value|if ((x)< 0) ERR(errno); else (void)NULL
+value|if ((x)< 0) EV_ERR(errno); else (void)NULL
 end_define
 
 begin_define
@@ -277,7 +277,7 @@ directive|endif
 block|}
 name|la
 union|;
-name|int
+name|ISC_SOCKLEN_T
 name|lalen
 decl_stmt|;
 union|union
@@ -302,7 +302,7 @@ directive|endif
 block|}
 name|ra
 union|;
-name|int
+name|ISC_SOCKLEN_T
 name|ralen
 decl_stmt|;
 name|int

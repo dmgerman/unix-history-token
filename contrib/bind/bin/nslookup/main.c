@@ -59,7 +59,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 8.16 2000/12/23 08:14:47 vixie Exp $"
+literal|"$Id: main.c,v 8.20 2001/06/20 12:40:06 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,7 +324,9 @@ begin_function_decl
 specifier|extern
 name|SIG_FN
 name|IntrHandler
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -346,6 +348,7 @@ comment|/*  * Browser command for help.  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|pager
@@ -356,7 +359,11 @@ begin_function_decl
 specifier|static
 name|void
 name|CvtAddrToPtr
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -364,7 +371,9 @@ begin_function_decl
 specifier|static
 name|void
 name|ReadRC
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -410,6 +419,16 @@ begin_function_decl
 specifier|static
 name|void
 name|Usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ShowOptions
 parameter_list|(
 name|void
 parameter_list|)
@@ -1051,6 +1070,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|LocalServer
 parameter_list|(
@@ -1216,6 +1236,7 @@ name|host
 parameter_list|,
 name|addrPtr
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|host
@@ -1228,6 +1249,7 @@ decl_stmt|;
 comment|/* If return TRUE, contains IP address */
 block|{
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -3647,6 +3669,7 @@ comment|/*  * Fake a reinitialization when the domain is changed.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|res_re_init
 parameter_list|(
@@ -3772,6 +3795,7 @@ value|'/'
 end_define
 
 begin_function
+specifier|static
 name|void
 name|res_dnsrch
 parameter_list|(
@@ -3965,9 +3989,12 @@ comment|/*  ********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ShowOptions
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -4259,7 +4286,9 @@ end_comment
 begin_function
 name|void
 name|PrintHelp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|cmd
@@ -4414,7 +4443,9 @@ begin_function
 specifier|static
 name|void
 name|ReadRC
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|FILE

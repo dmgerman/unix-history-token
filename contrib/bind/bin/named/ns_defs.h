@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.105 2001/04/01 22:41:24 marka Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.115 2002/01/29 03:59:35 marka Exp $  */
 end_comment
 
 begin_comment
@@ -348,6 +348,17 @@ name|MAX_SYNCSTORE
 value|500
 end_define
 
+begin_define
+define|#
+directive|define
+name|NS_MAX_DISTANCE
+value|3
+end_define
+
+begin_comment
+comment|/* maximum nameserver chaining before failure */
+end_comment
+
 begin_comment
 comment|/* maximum time to cache negative answers */
 end_comment
@@ -463,7 +474,7 @@ begin_define
 define|#
 directive|define
 name|OPTION_NORECURSE
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
@@ -474,7 +485,7 @@ begin_define
 define|#
 directive|define
 name|OPTION_NOFETCHGLUE
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
@@ -485,7 +496,7 @@ begin_define
 define|#
 directive|define
 name|OPTION_FORWARD_ONLY
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
@@ -496,7 +507,7 @@ begin_define
 define|#
 directive|define
 name|OPTION_FAKE_IQUERY
-value|0x0008
+value|0x00000008
 end_define
 
 begin_comment
@@ -513,11 +524,22 @@ begin_define
 define|#
 directive|define
 name|OPTION_NONOTIFY
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
 comment|/* Turn off notify */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTION_SUPNOTIFY_INITIAL
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Supress initial notify */
 end_comment
 
 begin_endif
@@ -529,7 +551,7 @@ begin_define
 define|#
 directive|define
 name|OPTION_NONAUTH_NXDOMAIN
-value|0x0020
+value|0x00000040
 end_define
 
 begin_comment
@@ -540,18 +562,18 @@ begin_define
 define|#
 directive|define
 name|OPTION_MULTIPLE_CNAMES
-value|0x0040
+value|0x00000080
 end_define
 
 begin_comment
-comment|/* Allow a name to have multiple 					 * CNAME RRs */
+comment|/* Allow a name to have multiple 					    * CNAME RRs */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|OPTION_HOSTSTATS
-value|0x0080
+value|0x00000100
 end_define
 
 begin_comment
@@ -562,7 +584,7 @@ begin_define
 define|#
 directive|define
 name|OPTION_DEALLOC_ON_EXIT
-value|0x0100
+value|0x00000200
 end_define
 
 begin_comment
@@ -573,7 +595,7 @@ begin_define
 define|#
 directive|define
 name|OPTION_NODIALUP
-value|0x0200
+value|0x00000400
 end_define
 
 begin_comment
@@ -584,18 +606,18 @@ begin_define
 define|#
 directive|define
 name|OPTION_NORFC2308_TYPE1
-value|0x0400
+value|0x00000800
 end_define
 
 begin_comment
-comment|/* Prevent type1 respones (RFC 2308) 					 * to cached negative respones */
+comment|/* Prevent type1 respones (RFC 2308) 					    * to cached negative respones */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|OPTION_USE_ID_POOL
-value|0x0800
+value|0x00001000
 end_define
 
 begin_comment
@@ -606,29 +628,29 @@ begin_define
 define|#
 directive|define
 name|OPTION_TREAT_CR_AS_SPACE
-value|0x1000
+value|0x00002000
 end_define
 
 begin_comment
-comment|/* Treat CR in zone files as space */
+comment|/* Treat CR in zone files as 					     * space */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|OPTION_USE_IXFR
-value|0x2000
+value|0x00004000
 end_define
 
 begin_comment
-comment|/* Use by delault ixfr in zone transfer */
+comment|/* Use by default ixfr in zone 					    * transfer */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|OPTION_MAINTAIN_IXFR_BASE
-value|0x4000
+value|0x00008000
 end_define
 
 begin_comment
@@ -639,11 +661,11 @@ begin_define
 define|#
 directive|define
 name|OPTION_HITCOUNT
-value|0x8000
+value|0x00010000
 end_define
 
 begin_comment
-comment|/* Keep track of each time an RR gets 					 * hit in the database */
+comment|/* Keep track of each time an 					    * RR gets hit in the database */
 end_comment
 
 begin_define
@@ -830,6 +852,18 @@ parameter_list|,
 name|b
 parameter_list|)
 value|((int32_t)((a)-(b))> 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEQ_LT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((int32_t)((a)-(b))< 0)
 end_define
 
 begin_define
@@ -1164,6 +1198,15 @@ name|NSMAX
 index|]
 decl_stmt|;
 comment|/* list of master servers for zone */
+name|struct
+name|dst_key
+modifier|*
+name|z_keys
+index|[
+name|NSMAX
+index|]
+decl_stmt|;
+comment|/* tsig key associated with master */
 name|u_char
 name|z_addrcnt
 decl_stmt|;
@@ -1904,9 +1947,16 @@ decl_stmt|;
 comment|/* this entry is for a forwarder */
 name|unsigned
 name|int
+name|noedns
+range|:
+literal|1
+decl_stmt|;
+comment|/* don't try edns */
+name|unsigned
+name|int
 name|nretry
 range|:
-literal|31
+literal|30
 decl_stmt|;
 comment|/* # of times addr retried */
 name|u_int32_t
@@ -1964,6 +2014,14 @@ name|int16_t
 name|q_dfd
 decl_stmt|;
 comment|/* UDP file descriptor */
+name|int16_t
+name|q_udpsize
+decl_stmt|;
+comment|/* UDP message size */
+name|int
+name|q_distance
+decl_stmt|;
+comment|/* distance this query is from the 					 * original query that the server 					 * received. */
 name|time_t
 name|q_time
 decl_stmt|;
@@ -2015,6 +2073,15 @@ decl_stmt|;
 comment|/* name servers */
 endif|#
 directive|endif
+name|struct
+name|dst_key
+modifier|*
+name|q_keys
+index|[
+name|NSMAX
+index|]
+decl_stmt|;
+comment|/* keys to use with this address */
 name|u_char
 name|q_naddr
 decl_stmt|;
@@ -2146,6 +2213,17 @@ end_define
 
 begin_comment
 comment|/* forward using tcp not udp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Q_EDNS
+value|0x10
+end_define
+
+begin_comment
+comment|/* add edns opt record to answer */
 end_comment
 
 begin_define
@@ -3085,8 +3163,12 @@ typedef|typedef
 struct|struct
 name|options
 block|{
-name|u_int
+name|u_int32_t
 name|flags
+decl_stmt|;
+name|char
+modifier|*
+name|hostname
 decl_stmt|;
 name|char
 modifier|*
@@ -3231,6 +3313,9 @@ name|lame_ttl
 decl_stmt|;
 name|int
 name|minroots
+decl_stmt|;
+name|u_int16_t
+name|preferred_glue
 decl_stmt|;
 block|}
 typedef|*
@@ -3437,6 +3522,7 @@ name|int
 name|number
 decl_stmt|;
 comment|/* Identifying number, like ns_log_default */
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3541,6 +3627,7 @@ begin_struct
 struct|struct
 name|map
 block|{
+specifier|const
 name|char
 modifier|*
 name|token
@@ -3679,6 +3766,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|EDNS_MESSAGE_SZ
+value|4096
+end_define
 
 end_unit
 

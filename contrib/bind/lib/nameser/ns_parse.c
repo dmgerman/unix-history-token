@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_parse.c,v 8.15 2000/12/23 08:14:55 vixie Exp $"
+literal|"$Id: ns_parse.c,v 8.17 2001/06/20 02:50:49 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,10 +694,6 @@ comment|/* Make section right. */
 if|if
 condition|(
 name|section
-operator|<
-literal|0
-operator|||
-name|section
 operator|>=
 name|ns_s_max
 condition|)
@@ -788,7 +784,7 @@ name|ns_skiprr
 argument_list|(
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 argument_list|,
 name|handle
 operator|->
@@ -817,7 +813,7 @@ operator|)
 return|;
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 operator|+=
 name|b
 expr_stmt|;
@@ -843,7 +839,7 @@ name|_eom
 argument_list|,
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 argument_list|,
 name|rr
 operator|->
@@ -866,7 +862,7 @@ operator|)
 return|;
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 operator|+=
 name|b
 expr_stmt|;
@@ -874,7 +870,7 @@ if|if
 condition|(
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 operator|+
 name|NS_INT16SZ
 operator|+
@@ -897,7 +893,7 @@ name|type
 argument_list|,
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 argument_list|)
 expr_stmt|;
 name|NS_GET16
@@ -908,7 +904,7 @@ name|rr_class
 argument_list|,
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 argument_list|)
 expr_stmt|;
 if|if
@@ -943,7 +939,7 @@ if|if
 condition|(
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 operator|+
 name|NS_INT32SZ
 operator|+
@@ -966,7 +962,7 @@ name|ttl
 argument_list|,
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 argument_list|)
 expr_stmt|;
 name|NS_GET16
@@ -977,14 +973,14 @@ name|rdlength
 argument_list|,
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 operator|+
 name|rr
 operator|->
@@ -1005,11 +1001,11 @@ name|rdata
 operator|=
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 expr_stmt|;
 name|handle
 operator|->
-name|_ptr
+name|_msg_ptr
 operator|+=
 name|rr
 operator|->
@@ -1098,7 +1094,7 @@ literal|1
 expr_stmt|;
 name|msg
 operator|->
-name|_ptr
+name|_msg_ptr
 operator|=
 name|NULL
 expr_stmt|;
@@ -1113,7 +1109,7 @@ literal|0
 expr_stmt|;
 name|msg
 operator|->
-name|_ptr
+name|_msg_ptr
 operator|=
 name|msg
 operator|->

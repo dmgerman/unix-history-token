@@ -25,12 +25,35 @@ begin_comment
 comment|/* Like SMTP. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_SOCKADDR_UN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX_NTOP
+value|PATH_MAX
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MAX_NTOP
 value|(sizeof "[255.255.255.255].65535")
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

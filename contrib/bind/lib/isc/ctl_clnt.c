@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ctl_clnt.c,v 8.15 2000/11/14 01:10:36 vixie Exp $"
+literal|"$Id: ctl_clnt.c,v 8.17 2001/06/06 00:33:35 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,7 +194,7 @@ name|arpacode_p
 parameter_list|(
 name|line
 parameter_list|)
-value|(isdigit(line[0])&& isdigit(line[1])&& \ 			  isdigit(line[2]))
+value|(isdigit((unsigned char)(line[0]))&& \ 			  isdigit((unsigned char)(line[1]))&& \ 			  isdigit((unsigned char)(line[2])))
 end_define
 
 begin_define
@@ -646,6 +646,11 @@ name|ctl_cctx
 modifier|*
 name|ctx
 decl_stmt|;
+name|struct
+name|sockaddr
+modifier|*
+name|captmp
+decl_stmt|;
 if|if
 condition|(
 name|logger
@@ -880,6 +885,7 @@ argument_list|,
 name|SO_REUSEADDR
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -913,6 +919,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|DE_CONST
+argument_list|(
+name|cap
+argument_list|,
+name|captmp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bind
@@ -921,7 +934,7 @@ name|ctx
 operator|->
 name|sock
 argument_list|,
-name|cap
+name|captmp
 argument_list|,
 name|cap_len
 argument_list|)
@@ -964,6 +977,7 @@ operator|->
 name|sock
 argument_list|,
 operator|(
+specifier|const
 expr|struct
 name|sockaddr
 operator|*
@@ -1146,6 +1160,7 @@ name|char
 modifier|*
 name|pc
 decl_stmt|;
+name|unsigned
 name|int
 name|n
 decl_stmt|;
@@ -1300,6 +1315,10 @@ condition|(
 operator|!
 name|isascii
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|pc
 argument_list|)
@@ -1307,6 +1326,10 @@ operator|||
 operator|!
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|pc
 argument_list|)
@@ -1488,6 +1511,10 @@ name|iovp
 init|=
 name|iov
 decl_stmt|;
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|ctx
@@ -1615,13 +1642,20 @@ operator|.
 name|used
 argument_list|)
 expr_stmt|;
+name|DE_CONST
+argument_list|(
+literal|"\r\n"
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
 operator|*
 name|iovp
 operator|++
 operator|=
 name|evConsIovec
 argument_list|(
-literal|"\r\n"
+name|tmp
 argument_list|,
 literal|2
 argument_list|)
@@ -2188,6 +2222,31 @@ name|ctl_tran
 modifier|*
 name|tran
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ev
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|la
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|lalen
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|ra
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|ralen
+argument_list|)
+expr_stmt|;
 name|ctx
 operator|->
 name|coID
@@ -2369,6 +2428,16 @@ name|tran
 operator|->
 name|ctx
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|lev
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|ctx
 operator|->
 name|wrID
@@ -2636,6 +2705,11 @@ name|char
 modifier|*
 name|eos
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ev
+argument_list|)
+expr_stmt|;
 name|REQUIRE
 argument_list|(
 name|ctx
@@ -3426,6 +3500,21 @@ name|ctx
 init|=
 name|uap
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|ev
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|due
+argument_list|)
+expr_stmt|;
+name|UNUSED
+argument_list|(
+name|itv
+argument_list|)
+expr_stmt|;
 name|ctx
 operator|->
 name|tiID

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_pton.c,v 1.7 1999/10/13 16:39:28 vixie Exp $"
+literal|"$Id: inet_pton.c,v 1.8 2001/07/16 03:22:24 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -328,6 +328,20 @@ operator|-
 name|digits
 operator|)
 decl_stmt|;
+if|if
+condition|(
+name|saw_digit
+operator|&&
+operator|*
+name|tp
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|new

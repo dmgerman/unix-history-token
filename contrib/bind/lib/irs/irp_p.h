@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1996 by Internet Software Consortium.  *  * Permissi
 end_comment
 
 begin_comment
-comment|/*  * $Id: irp_p.h,v 8.1 1999/01/18 07:46:54 vixie Exp $  */
+comment|/*  * $Id: irp_p.h,v 8.2 2001/08/10 02:40:52 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -310,8 +310,17 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 specifier|extern

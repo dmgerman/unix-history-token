@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_init.c,v 8.73 2001/04/20 00:21:40 vixie Exp $"
+literal|"$Id: ns_init.c,v 8.76 2001/12/19 01:41:51 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1050,6 +1050,33 @@ argument_list|(
 name|zp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|z_hint
+operator|||
+operator|(
+name|type
+operator|==
+name|z_stub
+operator|&&
+operator|*
+name|domain
+operator|==
+literal|0
+operator|)
+condition|)
+name|purge_zone
+argument_list|(
+name|domain
+argument_list|,
+name|fcachetab
+argument_list|,
+name|class
+argument_list|)
+expr_stmt|;
+else|else
 name|purge_zone
 argument_list|(
 name|domain
@@ -2178,6 +2205,9 @@ name|s
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|freestr
 argument_list|(
 name|s
@@ -2189,6 +2219,9 @@ name|o
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|freestr
 argument_list|(
 name|o

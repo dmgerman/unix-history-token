@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_sign.c,v 8.9 2000/12/23 08:14:57 vixie Exp $"
+literal|"$Id: ns_sign.c,v 8.10 2001/05/29 05:49:39 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1170,6 +1170,9 @@ if|if
 condition|(
 name|querysiglen
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|state

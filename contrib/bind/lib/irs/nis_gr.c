@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nis_gr.c,v 1.20 1999/01/30 00:53:16 vixie Exp $"
+literal|"$Id: nis_gr.c,v 1.21 2001/05/29 05:49:12 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -955,10 +955,6 @@ name|nis_domain
 argument_list|,
 name|group_byname
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|name
 argument_list|,
 name|strlen
@@ -1168,6 +1164,11 @@ modifier|*
 name|this
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 comment|/* NOOP */
 block|}
 end_function
@@ -1203,6 +1204,7 @@ name|this
 operator|->
 name|private
 decl_stmt|;
+name|unsigned
 name|int
 name|num_members
 init|=
