@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)id.c	8.1 (Berkeley) %G%"
+literal|"@(#)id.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -74,19 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
+file|<pwd.h>
 end_include
 
 begin_include
@@ -98,7 +86,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -850,7 +850,8 @@ decl_stmt|,
 name|lastid
 decl_stmt|,
 name|ngroups
-decl_stmt|,
+decl_stmt|;
+name|gid_t
 name|groups
 index|[
 name|NGROUPS
@@ -1359,7 +1360,8 @@ decl_stmt|,
 name|lastid
 decl_stmt|,
 name|ngroups
-decl_stmt|,
+decl_stmt|;
+name|gid_t
 name|groups
 index|[
 name|NGROUPS
