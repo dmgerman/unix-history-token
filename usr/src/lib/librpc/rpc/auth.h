@@ -92,6 +92,10 @@ operator|||
 name|vax
 operator|||
 name|i386
+operator|||
+name|tahoe
+operator|||
+name|hp300
 operator|)
 end_if
 
