@@ -2501,6 +2501,12 @@ name|v_maxio
 operator|=
 literal|0
 expr_stmt|;
+name|vp
+operator|->
+name|v_cache_dst_count
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 block|{

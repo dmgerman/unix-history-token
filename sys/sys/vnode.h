@@ -334,12 +334,17 @@ expr_stmt|;
 comment|/* Cache entries from us */
 name|TAILQ_HEAD
 argument_list|(
+argument|cdst
 argument_list|,
 argument|namecache
 argument_list|)
 name|v_cache_dst
 expr_stmt|;
 comment|/* Cache entries to us */
+name|int
+name|v_cache_dst_count
+decl_stmt|;
+comment|/* number of cache entries pointing to us */
 name|struct
 name|vnode
 modifier|*
