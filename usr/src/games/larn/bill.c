@@ -1,4 +1,69 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)bill.c	5.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -6,144 +71,268 @@ file|"header.h"
 end_include
 
 begin_comment
-comment|/* bill.c		 "Larn is copyrighted 1986 by Noah Morgan. */
+comment|/* bill.c		 Larn is copyrighted 1986 by Noah Morgan. */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
-name|mail600
-index|[
-literal|32
-index|]
+modifier|*
+name|mail
+index|[]
+init|=
+block|{
+literal|"From: the LRS (Larn Revenue Service)\n"
+block|,
+literal|"~s undeclared income\n"
+block|,
+literal|"\n   We have heard you survived the caverns of Larn.  Let me be the"
+block|,
+literal|"\nfirst to congratulate you on your success.  It was quite a feat."
+block|,
+literal|"\nIt was also very profitable for you..."
+block|,
+literal|"\n\n   The Dungeon Master has informed us that you brought"
+block|,
+literal|"1"
+block|,
+literal|"\ncounty of Larn is in dire need of funds, we have spared no time"
+block|,
+literal|"2"
+block|,
+literal|"\nof this notice, and is due within 5 days.  Failure to pay will"
+block|,
+literal|"\nmean penalties.  Once again, congratulations, We look forward"
+block|,
+literal|"\nto your future successful expeditions.\n"
+block|,
+name|NULL
+block|,
+literal|"From: His Majesty King Wilfred of Larndom\n"
+block|,
+literal|"~s a noble deed\n"
+block|,
+literal|"\n   I have heard of your magnificent feat, and I, King Wilfred,"
+block|,
+literal|"\nforthwith declare today to be a national holiday.  Furthermore,"
+block|,
+literal|"\nhence three days, ye be invited to the castle to receive the"
+block|,
+literal|"\nhonour of Knight of the realm.  Upon thy name shall it be written..."
+block|,
+literal|"\n\nBravery and courage be yours."
+block|,
+literal|"\n\nMay you live in happiness forevermore...\n"
+block|,
+name|NULL
+block|,
+literal|"From: Count Endelford\n"
+block|,
+literal|"~s You Bastard!\n"
+block|,
+literal|"\n   I have heard (from sources) of your journey.  Congratulations!"
+block|,
+literal|"\nYou Bastard!  With several attempts I have yet to endure the"
+block|,
+literal|" caves,\nand you, a nobody, makes the journey!  From this time"
+block|,
+literal|" onward, bewarned\nupon our meeting you shall pay the price!\n"
+block|,
+name|NULL
+block|,
+literal|"From: Mainair, Duke of Larnty\n"
+block|,
+literal|"~s High Praise\n"
+block|,
+literal|"\n   With certainty, a hero I declare to be amongst us!  A nod of"
+block|,
+literal|"\nfavour I send to thee.  Me thinks Count Endelford this day of"
+block|,
+literal|"\nright breath'eth fire as of dragon of whom ye are slayer.  I"
+block|,
+literal|"\nyearn to behold his anger and jealously.  Should ye choose to"
+block|,
+literal|"\nunleash some of thy wealth upon those who be unfortunate, I,"
+block|,
+literal|"\nDuke Mainair, shall equal thy gift also.\n"
+block|,
+name|NULL
+block|,
+literal|"From: St. Mary's Children's Home\n"
+block|,
+literal|"~s these poor children\n"
+block|,
+literal|"\n   News of your great conquests has spread to all of Larndom."
+block|,
+literal|"\nMight I have a moment of a great adventurers's time?  We here at"
+block|,
+literal|"\nSt. Mary's Children's Home are very poor, and many children are"
+block|,
+literal|"\nstarving.  Disease is widespread and very often fatal without"
+block|,
+literal|"\ngood food.  Could you possibly find it in your heart to help us"
+block|,
+literal|"\nin our plight?  Whatever you could give will help much."
+block|,
+literal|"\n(your gift is tax deductible)\n"
+block|,
+name|NULL
+block|,
+literal|"From: The National Cancer Society of Larn\n"
+block|,
+literal|"~s hope\n"
+block|,
+literal|"\nCongratulations on your successful expedition.  We are sure much"
+block|,
+literal|"\ncourage and determination were needed on your quest.  There are"
+block|,
+literal|"\nmany though, that could never hope to undertake such a journey"
+block|,
+literal|"\ndue to an enfeebling disease -- cancer.  We at the National"
+block|,
+literal|"\nCancer Society of Larn wish to appeal to your philanthropy in"
+block|,
+literal|"\norder to save many good people -- possibly even yourself a few"
+block|,
+literal|"\nyears from now.  Much work needs to be done in researching this"
+block|,
+literal|"\ndreaded disease, and you can help today.  Could you please see it"
+block|,
+literal|"\nin your heart to give generously?  Your continued good health"
+block|,
+literal|"\ncan be your everlasting reward.\n"
+block|,
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *	function to create the tax bill for the user  */
+comment|/*  *	function to mail the letters to the player if a winner  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|pid
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-specifier|static
-name|letter1
-argument_list|()
+begin_function
+name|void
+name|mailbill
+parameter_list|()
 block|{
-name|sprintf
+specifier|register
+name|int
+name|i
+decl_stmt|;
+name|char
+name|fname
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|cp
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+name|wait
 argument_list|(
-name|mail600
-argument_list|,
-literal|"/tmp/#%dmail600"
-argument_list|,
-name|pid
+literal|0
 argument_list|)
-block|;
-comment|/* prepare path */
+expr_stmt|;
 if|if
 condition|(
-name|lcreat
-argument_list|(
-name|mail600
-argument_list|)
-operator|<
+name|fork
+argument_list|()
+operator|==
 literal|0
 condition|)
 block|{
-name|write
+name|resetscroll
+argument_list|()
+expr_stmt|;
+name|cp
+operator|=
+name|mail
+expr_stmt|;
+name|sprintf
 argument_list|(
-literal|1
+name|fname
 argument_list|,
-literal|"can't write 600 letter\n"
+literal|"/tmp/#%dlarnmail"
 argument_list|,
-literal|23
+name|getpid
+argument_list|()
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+for|for
+control|(
+name|i
+operator|=
 literal|0
+init|;
+name|i
+operator|<
+literal|6
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|fname
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_TRUNC
+operator||
+name|O_CREAT
+argument_list|)
+operator|,
+literal|0666
 operator|)
-return|;
-block|}
-name|lprcat
+operator|==
+operator|-
+literal|1
+condition|)
+name|exit
 argument_list|(
-literal|"\n\n\n\n\n\n\n\n\n\n\n\n"
+literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|standout
+while|while
+condition|(
+operator|*
+name|cp
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|cp
+index|[
+literal|0
+index|]
+operator|==
+literal|'1'
+condition|)
+block|{
+name|sprintf
 argument_list|(
-literal|"From:"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"  the LRS (Larn Revenue Service)\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|standout
-argument_list|(
-literal|"\nSubject:"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"  undeclared income\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\n   We heard you survived the caverns of Larn.  Let me be the"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\nfirst to congratulate you on your success.  It is quite a feat."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\nIt must also have been very profitable for you."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\n\n   The Dungeon Master has informed us that you brought"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprintf
-argument_list|(
+name|buf
+argument_list|,
 literal|"\n%d gold pieces back with you from your journey.  As the"
 argument_list|,
 operator|(
@@ -155,19 +344,35 @@ name|GOLD
 index|]
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
+name|write
 argument_list|(
-literal|"\ncounty of Larn is in dire need of funds, we have spared no time"
+name|fd
+argument_list|,
+name|buf
+argument_list|,
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprintf
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|cp
+index|[
+literal|0
+index|]
+operator|==
+literal|'2'
+condition|)
+block|{
+name|sprintf
 argument_list|(
+name|buf
+argument_list|,
 literal|"\nin preparing your tax bill.  You owe %d gold pieces as"
 argument_list|,
 operator|(
@@ -181,785 +386,55 @@ operator|*
 name|TAXRATE
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\nof this notice, and is due within 5 days.  Failure to pay will"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\nmean penalties.  Once again, congratulations, We look forward"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\nto your future successful expeditions.\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lwclose
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-end_return
-
-begin_macro
-unit|}  static
-name|letter2
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|sprintf
-argument_list|(
-name|mail600
-argument_list|,
-literal|"/tmp/#%dmail600"
-argument_list|,
-name|pid
-argument_list|)
-expr_stmt|;
-comment|/* prepare path */
-if|if
-condition|(
-name|lcreat
-argument_list|(
-name|mail600
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
 name|write
 argument_list|(
-literal|1
+name|fd
 argument_list|,
-literal|"can't write 601 letter\n"
-argument_list|,
-literal|23
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|lprcat
-argument_list|(
-literal|"\n\n\n\n\n\n\n\n\n\n\n\n"
-argument_list|)
-expr_stmt|;
-name|standout
-argument_list|(
-literal|"From:"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"  His Majesty King Wilfred of Larndom\n"
-argument_list|)
-expr_stmt|;
-name|standout
-argument_list|(
-literal|"\nSubject:"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"  a noble deed\n"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\n   I have heard of your magnificent feat, and I, King Wilfred,"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nforthwith declare today to be a national holiday.  Furthermore,"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nhence three days, Ye be invited to the castle to receive the"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nhonour of Knight of the realm.  Upon thy name shall it be written. . ."
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nBravery and courage be yours."
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nMay you live in happiness forevermore . . .\n"
-argument_list|)
-expr_stmt|;
-name|lwclose
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_block
-
-begin_expr_stmt
-specifier|static
-name|letter3
-argument_list|()
-block|{
-name|sprintf
-argument_list|(
-name|mail600
-argument_list|,
-literal|"/tmp/#%dmail600"
-argument_list|,
-name|pid
-argument_list|)
-block|;
-comment|/* prepare path */
-if|if
-condition|(
-name|lcreat
-argument_list|(
-name|mail600
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|write
-argument_list|(
-literal|1
-argument_list|,
-literal|"can't write 602 letter\n"
-argument_list|,
-literal|23
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|lprcat
-argument_list|(
-literal|"\n\n\n\n\n\n\n\n\n\n\n\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|standout
-argument_list|(
-literal|"From:"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"  Count Endelford\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|standout
-argument_list|(
-literal|"\nSubject:"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"  You Bastard!\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\n   I heard (from sources) of your journey.  Congratulations!"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\nYou Bastard!  With several attempts I have yet to endure the"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|" caves,\nand you, a nobody, makes the journey!  From this time"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|" onward, bewarned\nupon our meeting you shall pay the price!\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lwclose
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-end_return
-
-begin_macro
-unit|}  static
-name|letter4
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|sprintf
-argument_list|(
-name|mail600
-argument_list|,
-literal|"/tmp/#%dmail600"
-argument_list|,
-name|pid
-argument_list|)
-expr_stmt|;
-comment|/* prepare path */
-if|if
-condition|(
-name|lcreat
-argument_list|(
-name|mail600
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|write
-argument_list|(
-literal|1
-argument_list|,
-literal|"can't write 603 letter\n"
-argument_list|,
-literal|23
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|lprcat
-argument_list|(
-literal|"\n\n\n\n\n\n\n\n\n\n\n\n"
-argument_list|)
-expr_stmt|;
-name|standout
-argument_list|(
-literal|"From:"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"  Mainair, Duke of Larnty\n"
-argument_list|)
-expr_stmt|;
-name|standout
-argument_list|(
-literal|"\nSubject:"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"  High Praise\n"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\n   With a certainty a hero I declare to be amongst us!  A nod of"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nfavour I send to thee.  Me thinks Count Endelford this day of"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nright breath'eth fire as of dragon of whom ye are slayer.  I"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nyearn to behold his anger and jealously.  Should ye choose to"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nunleash some of thy wealth upon those who be unfortunate, I,"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nDuke Mainair, Shall equal thy gift also.\n"
-argument_list|)
-expr_stmt|;
-name|lwclose
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_block
-
-begin_expr_stmt
-specifier|static
-name|letter5
-argument_list|()
-block|{
-name|sprintf
-argument_list|(
-name|mail600
-argument_list|,
-literal|"/tmp/#%dmail600"
-argument_list|,
-name|pid
-argument_list|)
-block|;
-comment|/* prepare path */
-if|if
-condition|(
-name|lcreat
-argument_list|(
-name|mail600
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|write
-argument_list|(
-literal|1
-argument_list|,
-literal|"can't write 604 letter\n"
-argument_list|,
-literal|23
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|lprcat
-argument_list|(
-literal|"\n\n\n\n\n\n\n\n\n\n\n\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|standout
-argument_list|(
-literal|"From:"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"  St. Mary's Children's Home\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|standout
-argument_list|(
-literal|"\nSubject:"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"  these poor children\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\n   News of your great conquests has spread to all of Larndom."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\nMight I have a moment of a great man's time.  We here at St."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\nMary's Children's Home are very poor, and many children are"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\nstarving.  Disease is widespread and very often fatal without"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\ngood food.  Could you possibly find it in your heart to help us"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\nin our plight?  Whatever you could give will help much."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lprcat
-argument_list|(
-literal|"\n(your gift is tax deductible)\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|lwclose
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-end_return
-
-begin_macro
-unit|}  static
-name|letter6
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|sprintf
-argument_list|(
-name|mail600
-argument_list|,
-literal|"/tmp/#%dmail600"
-argument_list|,
-name|pid
-argument_list|)
-expr_stmt|;
-comment|/* prepare path */
-if|if
-condition|(
-name|lcreat
-argument_list|(
-name|mail600
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|write
-argument_list|(
-literal|1
-argument_list|,
-literal|"can't write 605 letter\n"
-argument_list|,
-literal|23
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|lprcat
-argument_list|(
-literal|"\n\n\n\n\n\n\n\n\n\n\n\n"
-argument_list|)
-expr_stmt|;
-name|standout
-argument_list|(
-literal|"From:"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"  The National Cancer Society of Larn\n"
-argument_list|)
-expr_stmt|;
-name|standout
-argument_list|(
-literal|"\nSubject:"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"  hope\n"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nCongratulations on your successful expedition.  We are sure much"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\ncourage and determination were needed on your quest.  There are"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nmany though, that could never hope to undertake such a journey"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\ndue to an enfeebling disease -- cancer.  We at the National"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nCancer Society of Larn wish to appeal to your philanthropy in"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\norder to save many good people -- possibly even yourself a few"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nyears from now.  Much work needs to be done in researching this"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\ndreaded disease, and you can help today.  Could you please see it"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\nin your heart to give generously?  Your continued good health"
-argument_list|)
-expr_stmt|;
-name|lprcat
-argument_list|(
-literal|"\ncan be your everlasting reward.\n"
-argument_list|)
-expr_stmt|;
-name|lwclose
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  *	function to mail the letters to the player if a winner  */
-end_comment
-
-begin_function_decl
-specifier|static
-name|int
-function_decl|(
-modifier|*
-name|pfn
-index|[]
-function_decl|)
-parameter_list|()
-init|=
-block|{
-name|letter1
-operator|,
-function_decl|letter2
-operator|,
-function_decl|letter3
-operator|,
-function_decl|letter4
-operator|,
-function_decl|letter5
-operator|,
-function_decl|letter6
-end_function_decl
-
-begin_macro
-unit|};
-name|mailbill
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-name|char
 name|buf
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|wait
+argument_list|,
+name|strlen
 argument_list|(
-literal|0
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|pid
-operator|=
-name|getpid
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|fork
-argument_list|()
-operator|==
-literal|0
-condition|)
-block|{
-name|resetscroll
-argument_list|()
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-sizeof|sizeof
+block|}
+else|else
+name|write
 argument_list|(
-name|pfn
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|int
+name|fd
+argument_list|,
+operator|*
+name|cp
+argument_list|,
+name|strlen
 argument_list|(
 operator|*
+name|cp
 argument_list|)
-argument_list|()
 argument_list|)
-condition|;
-name|i
+expr_stmt|;
+name|cp
 operator|++
-control|)
-if|if
-condition|(
-call|(
-modifier|*
-name|pfn
-index|[
-name|i
-index|]
-call|)
-argument_list|()
-condition|)
-block|{
-name|sleep
+expr_stmt|;
+block|}
+name|cp
+operator|++
+expr_stmt|;
+name|close
 argument_list|(
-literal|20
+name|fd
 argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"mail %s< %s"
+literal|"mail -I %s< %s> /dev/null"
 argument_list|,
 name|loginname
 argument_list|,
-name|mail600
+name|fname
 argument_list|)
 expr_stmt|;
 name|system
@@ -969,16 +444,18 @@ argument_list|)
 expr_stmt|;
 name|unlink
 argument_list|(
-name|mail600
+name|fname
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|exit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_block
+end_function
 
 end_unit
 
