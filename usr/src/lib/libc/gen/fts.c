@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.14 (Berkeley) %G%"
+literal|"@(#)fts.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,24 +217,6 @@ begin_comment
 comment|/* from fts_read */
 end_comment
 
-begin_comment
-comment|/* fts_level values */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ROOTLEVEL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROOTPARENTLEVEL
-value|-1
-end_define
-
 begin_decl_stmt
 name|FTS
 modifier|*
@@ -389,7 +371,7 @@ name|parent
 operator|->
 name|fts_level
 operator|=
-name|ROOTPARENTLEVEL
+name|FTS_ROOTPARENTLEVEL
 expr_stmt|;
 comment|/* Allocate/initialize root(s). */
 name|maxlen
@@ -545,7 +527,7 @@ name|p
 operator|->
 name|fts_level
 operator|=
-name|ROOTLEVEL
+name|FTS_ROOTLEVEL
 expr_stmt|;
 name|p
 operator|->
@@ -876,10 +858,6 @@ name|need_to_cd
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Special case error condition -- if we can't find the root of the 	 * traversal, make sure the user notices the error. 	 */
-if|if
-condition|(
-operator|(
 name|p
 operator|->
 name|fts_info
@@ -892,15 +870,6 @@ name|p
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-operator|==
-name|FTS_NS
-condition|)
-name|p
-operator|->
-name|fts_info
-operator|=
-name|FTS_ERR
 expr_stmt|;
 return|return
 operator|(
@@ -957,7 +926,7 @@ name|p
 operator|->
 name|fts_level
 operator|>
-name|ROOTPARENTLEVEL
+name|FTS_ROOTPARENTLEVEL
 condition|;
 control|)
 block|{
@@ -1108,7 +1077,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|(p->fts_level == ROOTLEVEL&& p->fts_pathlen == 1&& \ 	    p->fts_path[0] == '/' ? 0 : p->fts_pathlen)
+value|(p->fts_level == FTS_ROOTLEVEL&& p->fts_pathlen == 1&& \ 	    p->fts_path[0] == '/' ? 0 : p->fts_pathlen)
 end_define
 
 begin_function
@@ -1465,7 +1434,7 @@ name|p
 operator|->
 name|fts_level
 operator|==
-name|ROOTLEVEL
+name|FTS_ROOTLEVEL
 condition|)
 block|{
 if|if
@@ -1605,7 +1574,7 @@ name|p
 operator|->
 name|fts_level
 operator|==
-name|ROOTPARENTLEVEL
+name|FTS_ROOTPARENTLEVEL
 condition|)
 block|{
 comment|/* 		 * Done; free everything up and set errno to 0 so the user 		 * can distinguish between error and EOF. 		 */
@@ -1674,7 +1643,7 @@ name|p
 operator|->
 name|fts_level
 operator|!=
-name|ROOTLEVEL
+name|FTS_ROOTLEVEL
 operator|&&
 name|CHDIR
 argument_list|(
@@ -1847,7 +1816,7 @@ name|p
 operator|->
 name|fts_level
 operator|!=
-name|ROOTLEVEL
+name|FTS_ROOTLEVEL
 operator|||
 name|p
 operator|->
@@ -2854,7 +2823,7 @@ name|t
 operator|->
 name|fts_level
 operator|>
-name|ROOTLEVEL
+name|FTS_ROOTLEVEL
 condition|;
 name|t
 operator|=
