@@ -467,6 +467,18 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* Allow two digit years 1969-2068 */
+if|if
+condition|(
+name|year
+operator|<
+literal|69
+condition|)
+name|year
+operator|+=
+literal|2000
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|year
@@ -480,8 +492,8 @@ expr_stmt|;
 if|if
 condition|(
 name|year
-operator|<=
-literal|1970
+operator|<
+literal|1969
 condition|)
 name|bad
 label|:
