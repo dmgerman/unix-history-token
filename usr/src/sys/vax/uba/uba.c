@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.7	%G%	*/
+comment|/*	uba.c	4.8	%G%	*/
 end_comment
 
 begin_include
@@ -813,6 +813,17 @@ condition|(
 name|bdp
 condition|)
 block|{
+switch|switch
+condition|(
+name|cpu
+condition|)
+block|{
+if|#
+directive|if
+name|VAX780
+case|case
+name|VAX_780
+case|:
 name|uh
 operator|->
 name|uh_uba
@@ -824,6 +835,34 @@ index|]
 operator||=
 name|UBA_BNE
 expr_stmt|;
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX750
+case|case
+name|VAX_750
+case|:
+name|uh
+operator|->
+name|uh_uba
+operator|->
+name|uba_dpr
+index|[
+name|bdp
+index|]
+operator||=
+name|UBA_PURGE
+operator||
+name|UBA_NXM
+operator||
+name|UBA_UCE
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+block|}
 name|uh
 operator|->
 name|uh_bdpfree
@@ -943,11 +982,6 @@ end_macro
 
 begin_block
 block|{
-name|struct
-name|uba_regs
-modifier|*
-name|up
-decl_stmt|;
 specifier|register
 name|struct
 name|cdevsw
@@ -1067,25 +1101,25 @@ end_comment
 begin_expr_stmt
 name|ubainit
 argument_list|(
-name|up
+name|uba
 argument_list|)
 specifier|register
 expr|struct
 name|uba_regs
 operator|*
-name|up
+name|uba
 expr_stmt|;
 end_expr_stmt
 
 begin_block
 block|{
-name|up
+name|uba
 operator|->
 name|uba_cr
 operator|=
 name|UBA_ADINIT
 expr_stmt|;
-name|up
+name|uba
 operator|->
 name|uba_cr
 operator|=
@@ -1100,7 +1134,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|up
+name|uba
 operator|->
 name|uba_cnfgr
 operator|&
@@ -1278,6 +1312,10 @@ begin_comment
 comment|/* called from locore.s; parameters here (i.e. uvec) are value-result! */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_expr_stmt
 name|ubaerror
 argument_list|(
@@ -1415,6 +1453,8 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"UBA%d ERROR SR %x FMER %x FUBAR %o\n"
+argument_list|,
+name|uban
 argument_list|,
 name|uba
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.9	%G%	*/
+comment|/*	tm.c	4.10	%G%	*/
 end_comment
 
 begin_include
@@ -170,33 +170,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|u_short
 name|tmstd
 index|[]
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|tmivec
-index|[]
-function_decl|)
-parameter_list|()
-init|=
-block|{
-name|tmintr
-operator|,
-function_decl|0
-end_function_decl
-
 begin_decl_stmt
-unit|};
 name|struct
 name|uba_driver
 name|tmdriver
@@ -208,15 +189,15 @@ name|tmslave
 block|,
 name|tmdgo
 block|,
-literal|0
+literal|4
 block|,
 literal|0
 block|,
 name|tmstd
 block|,
-name|tminfo
+literal|"tm"
 block|,
-name|tmivec
+name|tminfo
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -353,6 +334,10 @@ begin_comment
 comment|/* someone is waiting for a rewind */
 end_comment
 
+begin_comment
+comment|/*  * Determine if there is a controller for  * a tm at address reg.  Our goal is to make the  * device interrupt.  * THE ARGUMENT UI IS OBSOLETE  */
+end_comment
+
 begin_macro
 name|tmcntrlr
 argument_list|(
@@ -452,6 +437,18 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* 	 * Due to a design flaw, we cannot ascertain if the tape 	 * exists or not unless it is on line - ie: unless a tape is 	 * mounted. This is too servere a restriction to bear. 	 * As we can only handle one tape, we might just as well insist 	 * that it be slave #0, and just assume that it exists. 	 * Something better will have to be done if you have two 	 * tapes on one controller, or two controllers 	 */
+name|printf
+argument_list|(
+literal|"tm: sl %d - tmi %x\n"
+argument_list|,
+name|slaveno
+argument_list|,
+name|tminfo
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|slaveno
@@ -543,8 +540,8 @@ name|minor
 argument_list|(
 name|dev
 argument_list|)
-operator|>>
-literal|3
+operator|&
+literal|03
 index|]
 operator|)
 operator|->
@@ -743,8 +740,8 @@ name|minor
 argument_list|(
 name|dev
 argument_list|)
-operator|>>
-literal|3
+operator|&
+literal|03
 index|]
 operator|->
 name|ui_addr
@@ -1301,8 +1298,8 @@ name|bp
 operator|->
 name|b_dev
 argument_list|)
-operator|>>
-literal|3
+operator|&
+literal|03
 index|]
 expr_stmt|;
 name|addr
@@ -1928,7 +1925,6 @@ argument_list|(
 literal|"TM UBA late error\n"
 argument_list|)
 expr_stmt|;
-else|else
 name|t_blkno
 operator|++
 expr_stmt|;
@@ -2159,8 +2155,8 @@ name|bp
 operator|->
 name|b_dev
 argument_list|)
-operator|>>
-literal|3
+operator|&
+literal|03
 index|]
 operator|->
 name|ui_addr
@@ -2681,52 +2677,6 @@ end_macro
 
 begin_block
 block|{
-name|tmwall
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-argument_list|,
-name|maxfree
-argument_list|)
-expr_stmt|;
-comment|/* write out memory */
-name|tmeof
-argument_list|()
-expr_stmt|;
-name|tmeof
-argument_list|()
-expr_stmt|;
-name|tmrewind
-argument_list|()
-expr_stmt|;
-name|tmwait
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|tmwall
-argument_list|(
-argument|start
-argument_list|,
-argument|num
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|start
-decl_stmt|,
-name|num
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
 specifier|register
 name|struct
 name|uba_dinfo
@@ -2748,17 +2698,19 @@ decl_stmt|;
 name|int
 name|blk
 decl_stmt|,
-name|bdp
+name|num
 decl_stmt|;
-define|#
-directive|define
-name|phys1
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((b)((int)(a)&0x7fffffff))
+name|int
+name|start
+decl_stmt|;
+name|start
+operator|=
+literal|0
+expr_stmt|;
+name|num
+operator|=
+name|maxfree
+expr_stmt|;
 define|#
 directive|define
 name|phys
@@ -2767,7 +2719,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|phys1(*phys1(&a, b*), b)
+value|((b)((int)(a)&0x7fffffff))
 if|if
 condition|(
 name|tminfo
@@ -2901,19 +2853,30 @@ operator|-=
 name|blk
 expr_stmt|;
 block|}
-name|bdp
-operator|=
-literal|1
+name|tmwait
+argument_list|(
+name|addr
+argument_list|)
 expr_stmt|;
-comment|/* crud to fool c compiler */
-name|up
-operator|->
-name|uba_dpr
-index|[
-name|bdp
-index|]
-operator||=
-name|UBA_BNE
+name|tmeof
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
+name|tmeof
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
+name|tmrewind
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
+name|tmwait
+argument_list|(
+name|addr
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2970,27 +2933,10 @@ specifier|register
 name|int
 name|npf
 decl_stmt|;
-name|int
-name|bdp
-decl_stmt|;
 name|tmwait
 argument_list|(
 name|addr
 argument_list|)
-expr_stmt|;
-name|bdp
-operator|=
-literal|1
-expr_stmt|;
-comment|/* more dastardly tricks on pcc */
-name|up
-operator|->
-name|uba_dpr
-index|[
-name|bdp
-index|]
-operator||=
-name|UBA_BNE
 expr_stmt|;
 name|io
 operator|=

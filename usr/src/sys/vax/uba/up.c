@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.13	81/02/10	*/
+comment|/*	up.c	4.14	81/02/15	*/
 end_comment
 
 begin_include
@@ -149,6 +149,7 @@ decl_stmt|;
 name|int
 name|sc_wticks
 decl_stmt|;
+comment|/* struct uba_minfo sc_minfo; */
 block|}
 name|up_softc
 index|[
@@ -361,33 +362,14 @@ comment|/* there is no reason for this to be a global structure, it 	   is only 
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|u_short
 name|upstd
 index|[]
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|upivec
-index|[]
-function_decl|)
-parameter_list|()
-init|=
-block|{
-name|upintr
-operator|,
-function_decl|0
-end_function_decl
-
 begin_decl_stmt
-unit|};
 name|struct
 name|uba_driver
 name|updriver
@@ -405,9 +387,9 @@ literal|0
 block|,
 name|upstd
 block|,
-name|updinfo
+literal|"up"
 block|,
-name|upivec
+name|updinfo
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1637,8 +1619,6 @@ name|sn
 decl_stmt|,
 name|tn
 decl_stmt|,
-name|cn
-decl_stmt|,
 name|cmd
 decl_stmt|;
 name|loop
@@ -1906,6 +1886,10 @@ expr_stmt|;
 comment|/* A funny place to do this ... */
 name|ubarelse
 argument_list|(
+name|ui
+operator|->
+name|ui_ubanum
+argument_list|,
 operator|&
 name|up_softc
 index|[
@@ -1995,7 +1979,9 @@ name|upaddr
 operator|->
 name|updc
 operator|=
-name|cn
+name|bp
+operator|->
+name|b_cylin
 expr_stmt|;
 name|upaddr
 operator|->
@@ -2734,6 +2720,10 @@ operator|)
 expr_stmt|;
 name|ubarelse
 argument_list|(
+name|ui
+operator|->
+name|ui_ubanum
+argument_list|,
 operator|&
 name|up_softc
 index|[
@@ -3482,18 +3472,11 @@ name|sc21
 operator|,
 name|unit
 expr_stmt|;
-comment|/* we should really delay the printf& DELAY till we know 	 * that there is at least one sc21 on this UBA, but then 	 * we would have to remember we had done it before, or the 	 * msg would come twice(or whatever) - but perhaps that 	 * wouldn't be such a bad thing - too many delays would 	 * be annoying however 	 */
-name|printf
-argument_list|(
-literal|" up"
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|15000000
-argument_list|)
-expr_stmt|;
-comment|/* give it time to self-test */
+name|int
+name|any
+init|=
+literal|0
+decl_stmt|;
 for|for
 control|(
 name|sc21
@@ -3539,6 +3522,28 @@ operator|->
 name|um_alive
 condition|)
 continue|continue;
+if|if
+condition|(
+name|any
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" up"
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|15000000
+argument_list|)
+expr_stmt|;
+comment|/* give it time to self-test */
+name|any
+operator|++
+expr_stmt|;
+block|}
 name|um
 operator|->
 name|um_tab
@@ -3595,6 +3600,10 @@ argument_list|)
 expr_stmt|;
 name|ubarelse
 argument_list|(
+name|um
+operator|->
+name|um_ubanum
+argument_list|,
 operator|&
 name|up_softc
 index|[
@@ -3925,9 +3934,6 @@ name|struct
 name|upst
 modifier|*
 name|st
-decl_stmt|;
-name|int
-name|bdp
 decl_stmt|;
 name|unit
 operator|=
@@ -4301,20 +4307,6 @@ name|DBSIZE
 else|:
 name|num
 expr_stmt|;
-name|bdp
-operator|=
-literal|1
-expr_stmt|;
-comment|/* trick pcc */
-name|uba
-operator|->
-name|uba_dpr
-index|[
-name|bdp
-index|]
-operator||=
-name|UBA_BNE
-expr_stmt|;
 name|io
 operator|=
 name|uba
@@ -4536,20 +4528,6 @@ operator|-=
 name|blk
 expr_stmt|;
 block|}
-name|bdp
-operator|=
-literal|1
-expr_stmt|;
-comment|/* crud to fool c compiler */
-name|uba
-operator|->
-name|uba_dpr
-index|[
-name|bdp
-index|]
-operator||=
-name|UBA_BNE
-expr_stmt|;
 return|return
 operator|(
 literal|0

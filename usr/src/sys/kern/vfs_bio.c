@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	4.10	%G%	*/
+comment|/*	vfs_bio.c	4.11	%G%	*/
 end_comment
 
 begin_include
@@ -1446,12 +1446,6 @@ name|ep
 decl_stmt|;
 specifier|register
 name|int
-name|i
-decl_stmt|,
-name|x
-decl_stmt|;
-specifier|register
-name|int
 name|dblkno
 init|=
 name|fsbtodb
@@ -1459,6 +1453,15 @@ argument_list|(
 name|blkno
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DISKMON
+specifier|register
+name|int
+name|i
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
