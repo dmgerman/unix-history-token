@@ -4981,7 +4981,7 @@ name|sembuf
 modifier|*
 name|sops
 decl_stmt|;
-name|u_int
+name|size_t
 name|nsops
 decl_stmt|;
 block|}
@@ -5023,7 +5023,7 @@ name|uap
 operator|->
 name|semid
 decl_stmt|;
-name|u_int
+name|size_t
 name|nsops
 init|=
 name|uap
@@ -5064,11 +5064,12 @@ name|mtx
 modifier|*
 name|sema_mtxp
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|,
 name|j
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|int
