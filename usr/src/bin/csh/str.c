@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.7 (Berkeley) %G%"
+literal|"@(#)str.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,12 +38,6 @@ end_define
 begin_comment
 comment|/*  * tc.str.c: Short string package  * 	     This has been a lesson of how to write buggy code!  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SHORT_STRINGS
-end_ifdef
 
 begin_if
 if|#
@@ -84,6 +78,12 @@ include|#
 directive|include
 file|"extern.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SHORT_STRINGS
+end_ifdef
 
 begin_function
 name|Char
