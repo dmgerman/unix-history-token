@@ -59,7 +59,7 @@ operator|&&
 operator|!
 name|getenv
 argument_list|(
-literal|"hint.acpi.0.disable"
+literal|"hint.acpi.0.disabled"
 argument_list|)
 operator|)
 condition|)
