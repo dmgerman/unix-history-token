@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Copyright (c) 1993, 1994 by  *  jc@irbs.UUCP (John Capo)  *  vak@zebub.msk.su (Serge Vakulenko)  *  ache@astral.msk.su (Andrew A. Chernov)  *  * Copyright (c) 1993, 1994, 1995 by  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  dufault@hda.com (Peter Dufault)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  *	$Id: fd.c,v 1.53 1995/03/12 22:40:56 joerg Exp $  *  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Copyright (c) 1993, 1994 by  *  jc@irbs.UUCP (John Capo)  *  vak@zebub.msk.su (Serge Vakulenko)  *  ache@astral.msk.su (Andrew A. Chernov)  *  * Copyright (c) 1993, 1994, 1995 by  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  dufault@hda.com (Peter Dufault)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  *	$Id: fd.c,v 1.54 1995/03/16 18:11:59 bde Exp $  *  */
 end_comment
 
 begin_include
@@ -1995,7 +1995,7 @@ name|FDC_ERRMAX
 condition|)
 name|printf
 argument_list|(
-literal|"fdc%d: %s: "
+literal|"fdc%d: %s"
 argument_list|,
 name|fdcu
 argument_list|,
@@ -2280,7 +2280,7 @@ name|fdc
 operator|->
 name|fdcu
 argument_list|,
-literal|"Sense Drive Status failed.\n"
+literal|"Sense Drive Status failed\n"
 argument_list|)
 return|;
 block|}
@@ -2563,7 +2563,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fdc: same unit (%d) used multiple times\n"
+literal|"fdc%d: unit used multiple times\n"
 argument_list|,
 name|fdcu
 argument_list|)
@@ -2776,13 +2776,6 @@ operator|=
 literal|0
 operator|)
 operator|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"fdc%d: "
-argument_list|,
-name|fdcu
 argument_list|)
 expr_stmt|;
 comment|/* check for each floppy drive */
@@ -3004,6 +2997,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"fdc%d: "
+argument_list|,
+name|fdcu
+argument_list|)
+expr_stmt|;
 name|ic_type
 operator|=
 operator|(
@@ -3021,7 +3021,7 @@ literal|0x80
 case|:
 name|printf
 argument_list|(
-literal|"(NEC 765)"
+literal|"NEC 765\n"
 argument_list|)
 expr_stmt|;
 name|fdc
@@ -3036,7 +3036,7 @@ literal|0x81
 case|:
 name|printf
 argument_list|(
-literal|"(Intel 82077)"
+literal|"Intel 82077\n"
 argument_list|)
 expr_stmt|;
 name|fdc
@@ -3051,7 +3051,7 @@ literal|0x90
 case|:
 name|printf
 argument_list|(
-literal|"(NEC 72065B)"
+literal|"NEC 72065B\n"
 argument_list|)
 expr_stmt|;
 name|fdc
@@ -3064,7 +3064,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"(unknown IC type %02x)"
+literal|"unknown IC type %02x\n"
 argument_list|,
 name|ic_type
 argument_list|)
@@ -3327,7 +3327,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" [%d: fd%d: "
+literal|"fd%d: "
 argument_list|,
 name|fdsu
 argument_list|,
@@ -3344,7 +3344,7 @@ name|RTCFDT_12M
 case|:
 name|printf
 argument_list|(
-literal|"1.2MB 5.25in]"
+literal|"1.2MB 5.25in\n"
 argument_list|)
 expr_stmt|;
 name|fd
@@ -3359,7 +3359,7 @@ name|RTCFDT_144M
 case|:
 name|printf
 argument_list|(
-literal|"1.44MB 3.5in]"
+literal|"1.44MB 3.5in\n"
 argument_list|)
 expr_stmt|;
 name|fd
@@ -3374,7 +3374,7 @@ name|RTCFDT_288M
 case|:
 name|printf
 argument_list|(
-literal|"2.88MB 3.5in - 1.44MB mode]"
+literal|"2.88MB 3.5in - 1.44MB mode\n"
 argument_list|)
 expr_stmt|;
 name|fd
@@ -3389,7 +3389,7 @@ name|RTCFDT_360K
 case|:
 name|printf
 argument_list|(
-literal|"360KB 5.25in]"
+literal|"360KB 5.25in\n"
 argument_list|)
 expr_stmt|;
 name|fd
@@ -3404,7 +3404,7 @@ name|RTCFDT_720K
 case|:
 name|printf
 argument_list|(
-literal|"720KB 3.5in]"
+literal|"720KB 3.5in\n"
 argument_list|)
 expr_stmt|;
 name|fd
@@ -3417,7 +3417,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"unknown]"
+literal|"unknown\n"
 argument_list|)
 expr_stmt|;
 name|fd
@@ -3463,6 +3463,13 @@ argument_list|,
 name|fdu
 argument_list|)
 expr_stmt|;
+name|fd
+operator|->
+name|dkunit
+operator|=
+name|dk_ndrive
+operator|++
+expr_stmt|;
 comment|/* 			 * XXX assume rate is FDC_500KBPS. 			 */
 name|dk_wpms
 index|[
@@ -3474,13 +3481,6 @@ operator|/
 literal|8
 operator|/
 literal|2
-expr_stmt|;
-name|fd
-operator|->
-name|dkunit
-operator|=
-name|dk_ndrive
-operator|++
 expr_stmt|;
 block|}
 else|else
@@ -3494,11 +3494,6 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -4199,7 +4194,7 @@ name|fdc_err
 argument_list|(
 name|fdcu
 argument_list|,
-literal|"ready for output in input"
+literal|"ready for output in input\n"
 argument_list|)
 return|;
 if|if
@@ -4213,7 +4208,7 @@ name|fdc_err
 argument_list|(
 name|fdcu
 argument_list|,
-literal|"input ready timeout"
+literal|"input ready timeout\n"
 argument_list|)
 return|;
 ifdef|#
@@ -4334,7 +4329,7 @@ name|fdc_err
 argument_list|(
 name|fdcu
 argument_list|,
-literal|"ready for output in input"
+literal|"ready for output in input\n"
 argument_list|)
 return|;
 if|if
@@ -4348,7 +4343,7 @@ name|fdc_err
 argument_list|(
 name|fdcu
 argument_list|,
-literal|"input ready timeout"
+literal|"input ready timeout\n"
 argument_list|)
 return|;
 ifdef|#
@@ -4469,7 +4464,7 @@ name|fdc_err
 argument_list|(
 name|fdcu
 argument_list|,
-literal|"direction bit not set"
+literal|"direction bit not set\n"
 argument_list|)
 return|;
 comment|/* Check that the floppy controller is ready for a command */
@@ -4509,7 +4504,7 @@ name|fdc_err
 argument_list|(
 name|fdcu
 argument_list|,
-literal|"output ready timeout"
+literal|"output ready timeout\n"
 argument_list|)
 return|;
 comment|/* Send the command and return */
@@ -5171,7 +5166,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fdstrat: fd%d: bad request blkno = %lu, bcount = %ld\n"
+literal|"fd%d: fdstrat: bad request blkno = %lu, bcount = %ld\n"
 argument_list|,
 name|fdu
 argument_list|,
@@ -5878,7 +5873,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"unexpected valid fd pointer (fdu = %d)\n"
+literal|"fd%d: unexpected valid fd pointer\n"
 argument_list|,
 name|fdc
 operator|->
@@ -5960,7 +5955,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"confused fd pointers\n"
+literal|"fd%d: confused fd pointers\n"
+argument_list|,
+name|fdu
 argument_list|)
 expr_stmt|;
 block|}
