@@ -1166,6 +1166,12 @@ name|gd_current_asngen
 operator|=
 literal|1
 expr_stmt|;
+name|globaldata
+operator|->
+name|gd_cpuid
+operator|=
+name|cpuno
+expr_stmt|;
 name|cpuno_to_globaldata
 index|[
 name|cpuno
@@ -1371,6 +1377,17 @@ name|smp_rv_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* only 1 CPU can panic at a time :) */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|simplelock
+name|panic_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1383,6 +1400,12 @@ name|s_lock_init
 argument_list|(
 operator|&
 name|smp_rv_lock
+argument_list|)
+expr_stmt|;
+name|s_lock_init
+argument_list|(
+operator|&
+name|panic_lock
 argument_list|)
 expr_stmt|;
 block|}

@@ -161,6 +161,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|panic_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if

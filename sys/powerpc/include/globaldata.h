@@ -114,6 +114,9 @@ expr_stmt|;
 name|int
 name|gd_witness_spin_check
 decl_stmt|;
+name|u_int
+name|gd_cpuid
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KTR_PERCPU
