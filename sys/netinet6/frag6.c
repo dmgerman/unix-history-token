@@ -289,7 +289,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IP6Q_LOCK_CHECK
+name|IP6Q_LOCK_ASSERT
 parameter_list|()
 value|mtx_assert(&ip6qlock, MA_OWNED)
 end_define
@@ -2259,7 +2259,7 @@ decl_stmt|,
 modifier|*
 name|down6
 decl_stmt|;
-name|IP6Q_LOCK_CHECK
+name|IP6Q_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 for|for
@@ -2423,7 +2423,7 @@ end_function
 
 begin_block
 block|{
-name|IP6Q_LOCK_CHECK
+name|IP6Q_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|af6
@@ -2473,7 +2473,7 @@ modifier|*
 name|af6
 decl_stmt|;
 block|{
-name|IP6Q_LOCK_CHECK
+name|IP6Q_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|af6
@@ -2519,7 +2519,7 @@ end_function
 
 begin_block
 block|{
-name|IP6Q_LOCK_CHECK
+name|IP6Q_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|new
@@ -2565,7 +2565,7 @@ modifier|*
 name|p6
 decl_stmt|;
 block|{
-name|IP6Q_LOCK_CHECK
+name|IP6Q_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
 name|p6
