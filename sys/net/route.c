@@ -4060,6 +4060,14 @@ name|EDQUOT
 return|;
 comment|/* failure */
 block|}
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_gwroute
+operator|!=
+name|NULL
+condition|)
 name|RT_UNLOCK
 argument_list|(
 name|rt
