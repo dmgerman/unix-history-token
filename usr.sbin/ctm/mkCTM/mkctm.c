@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* Still missing:  *  * mkctm   *	-B regex	Bogus  *	-I regex	Ignore  *      -D int		Damage  *	-q		decrease verbosity  *	-v		increase verbosity  *      -l file		logfile  *	name		cvs-cur  *	prefix		src/secure  *	dir1		"Soll"  *	dir2		"Ist"  *  */
+comment|/* Still missing:  *  * mkctm   *	-B regex	Bogus  *	-I regex	Ignore  *      -D int		Damage  *	-q		decrease verbosity  *	-v		increase verbosity  *      -l file		logfile  *	name		cvs-cur  *	prefix		src/secure  *	dir1		"Soll"  *	dir2		"Ist"  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -3501,15 +3501,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 name|setbuf
 argument_list|(
