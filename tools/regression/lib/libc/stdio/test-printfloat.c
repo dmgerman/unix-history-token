@@ -801,6 +801,105 @@ argument_list|)
 expr_stmt|;
 name|testfmt
 argument_list|(
+literal|" 9.000000e+03"
+argument_list|,
+literal|"%13e"
+argument_list|,
+literal|9000.0
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
+literal|" 9000.000000"
+argument_list|,
+literal|"%12f"
+argument_list|,
+literal|9000.0
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
+literal|" 9000"
+argument_list|,
+literal|"%5g"
+argument_list|,
+literal|9000.0
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
+literal|" 900000."
+argument_list|,
+literal|"%#8g"
+argument_list|,
+literal|900000.0
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
+literal|" 9e+06"
+argument_list|,
+literal|"%6g"
+argument_list|,
+literal|9000000.0
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
+literal|" 9.000000e-04"
+argument_list|,
+literal|"%13e"
+argument_list|,
+literal|0.0009
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
+literal|" 0.000900"
+argument_list|,
+literal|"%9f"
+argument_list|,
+literal|0.0009
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
+literal|" 0.0009"
+argument_list|,
+literal|"%7g"
+argument_list|,
+literal|0.0009
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
+literal|" 9e-05"
+argument_list|,
+literal|"%6g"
+argument_list|,
+literal|0.00009
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
+literal|" 9.00000e-05"
+argument_list|,
+literal|"%#12g"
+argument_list|,
+literal|0.00009
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
+literal|" 9.e-05"
+argument_list|,
+literal|"%#7.1g"
+argument_list|,
+literal|0.00009
+argument_list|)
+expr_stmt|;
+name|testfmt
+argument_list|(
 literal|" 0.0"
 argument_list|,
 literal|"%4.1f"
