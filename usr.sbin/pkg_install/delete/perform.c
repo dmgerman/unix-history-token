@@ -238,7 +238,10 @@ name|tmp
 expr_stmt|;
 comment|/* 		 * Another iteration requred to check if new pkgs[i] 		 * itself has any packages that depend on it 		 */
 name|j
-operator|--
+operator|=
+name|i
+operator|+
+literal|1
 expr_stmt|;
 block|}
 block|}
