@@ -5008,6 +5008,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|sigset_t
+name|mask
+decl_stmt|;
 name|p
 operator|=
 name|line
@@ -5018,6 +5021,23 @@ name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1
+expr_stmt|;
+comment|/* 	 * Block all signals before clearing the utmp entry.  We don't want to 	 * be called again after calling logout() and then not add the wtmp 	 * entry because of not finding the corresponding entry in utmp. 	 */
+name|sigfillset
+argument_list|(
+operator|&
+name|mask
+argument_list|)
+expr_stmt|;
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|mask
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
