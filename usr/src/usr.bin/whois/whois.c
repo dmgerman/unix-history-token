@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whois.c	5.1 (Berkeley) %G%"
+literal|"@(#)whois.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|NICHOST
-value|"sri-nic"
+value|"sri-nic.arpa"
 end_define
 
 begin_function
