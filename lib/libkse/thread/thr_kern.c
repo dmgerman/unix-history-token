@@ -2130,6 +2130,7 @@ decl_stmt|;
 name|crit
 operator|=
 name|_ksd_readandclear_tmbx
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -7352,6 +7353,7 @@ block|{
 return|return
 operator|(
 name|_ksd_curthread
+argument_list|()
 operator|)
 return|;
 block|}
@@ -7373,6 +7375,7 @@ block|{
 return|return
 operator|(
 name|_ksd_curkse
+argument_list|()
 operator|)
 return|;
 block|}
