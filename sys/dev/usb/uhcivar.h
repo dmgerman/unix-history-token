@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhcivar.h,v 1.21 2000/01/18 20:11:01 augustss Exp $	*/
+comment|/*	$NetBSD: uhcivar.h,v 1.22 2000/01/26 10:04:39 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -386,6 +386,9 @@ name|sc_isreset
 decl_stmt|;
 name|char
 name|sc_suspend
+decl_stmt|;
+name|char
+name|sc_dying
 decl_stmt|;
 name|LIST_HEAD
 argument_list|(
