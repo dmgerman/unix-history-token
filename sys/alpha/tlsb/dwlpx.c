@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -455,14 +461,11 @@ name|hose
 index|]
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: already attached\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"already attached\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1353,7 +1356,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Register our interrupt service requirements with out parent. 	 */
+comment|/* 	 * Register our interrupt service requirements with our parent. 	 */
 name|i
 operator|=
 name|BUS_SETUP_INTR
@@ -4207,6 +4210,13 @@ argument_list|(
 name|pcib_write_config
 argument_list|,
 name|dwlpx_write_config
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_route_interrupt
+argument_list|,
+name|alpha_pci_route_interrupt
 argument_list|)
 block|,
 block|{
