@@ -495,7 +495,7 @@ name|sprintf
 argument_list|(
 name|mebuffer
 argument_list|,
-literal|"0x%-8.8x 0x%-8.8x %9d %9d %s %s %s\n"
+literal|"0x%-8.8x 0x%-8.8x %9d %9d %s%s%s %s %s\n"
 argument_list|,
 name|entry
 operator|->
@@ -514,12 +514,36 @@ name|entry
 operator|->
 name|protection
 operator|&
+name|VM_PROT_READ
+operator|)
+condition|?
+literal|"r"
+else|:
+literal|"-"
+argument_list|,
+operator|(
+name|entry
+operator|->
+name|protection
+operator|&
 name|VM_PROT_WRITE
 operator|)
 condition|?
-literal|"RW"
+literal|"w"
 else|:
-literal|"RO"
+literal|"-"
+argument_list|,
+operator|(
+name|entry
+operator|->
+name|protection
+operator|&
+name|VM_PROT_EXECUTE
+operator|)
+condition|?
+literal|"x"
+else|:
+literal|"-"
 argument_list|,
 name|entry
 operator|->
