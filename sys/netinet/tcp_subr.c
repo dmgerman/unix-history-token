@@ -754,7 +754,7 @@ specifier|static
 name|int
 name|tcp_inflight_min
 init|=
-literal|1024
+literal|6144
 decl_stmt|;
 end_decl_stmt
 
@@ -807,6 +807,36 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Upper-bound for TCP inflight window"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|tcp_inflight_stab
+init|=
+literal|20
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|inflight_stab
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tcp_inflight_stab
+argument_list|,
+literal|0
+argument_list|,
+literal|"Inflight Algorithm Stabilization 20 = 2 packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -7717,7 +7747,7 @@ name|snd_bandwidth
 operator|=
 name|bw
 expr_stmt|;
-comment|/* 	 * Calculate the semi-static bandwidth delay product, plus two maximal 	 * segments.  The additional slop puts us squarely in the sweet 	 * spot and also handles the bandwidth run-up case.  Without the 	 * slop we could be locking ourselves into a lower bandwidth. 	 * 	 * Situations Handled: 	 *	(1) Prevents over-queueing of packets on LANs, especially on 	 *	    high speed LANs, allowing larger TCP buffers to be 	 *	    specified, and also does a good job preventing  	 *	    over-queueing of packets over choke points like modems 	 *	    (at least for the transmit side). 	 * 	 *	(2) Is able to handle changing network loads (bandwidth 	 *	    drops so bwnd drops, bandwidth increases so bwnd 	 *	    increases). 	 * 	 *	(3) Theoretically should stabilize in the face of multiple 	 *	    connections implementing the same algorithm (this may need 	 *	    a little work). 	 */
+comment|/* 	 * Calculate the semi-static bandwidth delay product, plus two maximal 	 * segments.  The additional slop puts us squarely in the sweet 	 * spot and also handles the bandwidth run-up case and stabilization. 	 * Without the slop we could be locking ourselves into a lower 	 * bandwidth. 	 * 	 * Situations Handled: 	 *	(1) Prevents over-queueing of packets on LANs, especially on 	 *	    high speed LANs, allowing larger TCP buffers to be 	 *	    specified, and also does a good job preventing  	 *	    over-queueing of packets over choke points like modems 	 *	    (at least for the transmit side). 	 * 	 *	(2) Is able to handle changing network loads (bandwidth 	 *	    drops so bwnd drops, bandwidth increases so bwnd 	 *	    increases). 	 * 	 *	(3) Theoretically should stabilize in the face of multiple 	 *	    connections implementing the same algorithm (this may need 	 *	    a little work). 	 * 	 *	(4) Stability value (defaults to 20 = 2 maximal packets) can 	 *	    be adjusted with a sysctl but typically only needs to be 	 *	    on very slow connections.  A value no smaller then 5 	 *	    should be used, but only reduce this default if you have 	 *	    no other choice. 	 */
 define|#
 directive|define
 name|USERTT
@@ -7737,11 +7767,13 @@ operator|<<
 name|TCP_RTT_SHIFT
 operator|)
 operator|+
-literal|2
+name|tcp_inflight_stab
 operator|*
 name|tp
 operator|->
 name|t_maxseg
+operator|/
+literal|10
 expr_stmt|;
 undef|#
 directive|undef
