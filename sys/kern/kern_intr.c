@@ -2823,10 +2823,16 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|u_int
+specifier|volatile
+name|unsigned
+name|int
 name|netisr
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* scheduling bits for network */
+end_comment
 
 begin_function
 name|int
