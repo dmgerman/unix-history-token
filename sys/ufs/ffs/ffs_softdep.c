@@ -19143,8 +19143,6 @@ operator|&
 name|proc_waiting
 argument_list|,
 name|PPAUSE
-operator||
-name|PCATCH
 argument_list|,
 literal|"softupdate"
 argument_list|,
