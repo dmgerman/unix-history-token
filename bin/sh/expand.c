@@ -1955,6 +1955,8 @@ block|{
 if|if
 condition|(
 name|set
+operator|&&
+name|argbackq
 condition|)
 name|argbackq
 operator|=
