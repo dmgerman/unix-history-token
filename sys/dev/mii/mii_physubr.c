@@ -747,7 +747,7 @@ name|sc
 operator|->
 name|mii_anegticks
 operator|=
-literal|5
+literal|17
 expr_stmt|;
 if|if
 condition|(
@@ -1753,7 +1753,7 @@ name|sc
 operator|->
 name|mii_anegticks
 operator|=
-literal|10
+literal|17
 expr_stmt|;
 name|sc
 operator|->
@@ -1798,7 +1798,7 @@ name|sc
 operator|->
 name|mii_anegticks
 operator|=
-literal|10
+literal|17
 expr_stmt|;
 name|sc
 operator|->
@@ -1844,7 +1844,7 @@ name|sc
 operator|->
 name|mii_anegticks
 operator|=
-literal|10
+literal|17
 expr_stmt|;
 name|sc
 operator|->
@@ -1897,7 +1897,7 @@ name|sc
 operator|->
 name|mii_anegticks
 operator|=
-literal|10
+literal|17
 expr_stmt|;
 name|sc
 operator|->
