@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * upap.h - User/Password Authentication Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * upap.h - User/Password Authentication Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: upap.h,v 1.1 1993/11/11 03:54:25 paulus Exp $  */
 end_comment
 
 begin_comment
@@ -21,12 +21,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPAP_AUTH
+name|UPAP_AUTHREQ
 value|1
 end_define
 
 begin_comment
-comment|/* Authenticate */
+comment|/* Authenticate-Request */
 end_comment
 
 begin_define
@@ -37,7 +37,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Authenticate Ack */
+comment|/* Authenticate-Ack */
 end_comment
 
 begin_define
@@ -48,7 +48,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Authenticate Nak */
+comment|/* Authenticate-Nak */
 end_comment
 
 begin_comment
@@ -90,10 +90,6 @@ name|int
 name|us_serverstate
 decl_stmt|;
 comment|/* Server state */
-name|int
-name|us_flags
-decl_stmt|;
-comment|/* Flags */
 name|u_char
 name|us_id
 decl_stmt|;
@@ -103,9 +99,13 @@ name|us_timeouttime
 decl_stmt|;
 comment|/* Timeout time in milliseconds */
 name|int
-name|us_retransmits
+name|us_transmits
 decl_stmt|;
-comment|/* Number of retransmissions */
+comment|/* Number of auth-reqs sent */
+name|int
+name|us_maxtransmits
+decl_stmt|;
+comment|/* Maximum number of auth-reqs to send */
 block|}
 name|upap_state
 typedef|;
@@ -118,8 +118,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPAPCS_CLOSED
-value|1
+name|UPAPCS_INITIAL
+value|0
 end_define
 
 begin_comment
@@ -129,27 +129,71 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPAPCS_AUTHSENT
+name|UPAPCS_CLOSED
+value|1
+end_define
+
+begin_comment
+comment|/* Connection up, haven't requested auth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPAPCS_PENDING
 value|2
 end_define
 
 begin_comment
-comment|/* We've sent an Authenticate */
+comment|/* Connection down, have requested auth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPAPCS_AUTHREQ
+value|3
+end_define
+
+begin_comment
+comment|/* We've sent an Authenticate-Request */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UPAPCS_OPEN
-value|3
+value|4
 end_define
 
 begin_comment
 comment|/* We've received an Ack */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UPAPCS_BADAUTH
+value|5
+end_define
+
+begin_comment
+comment|/* We've received a Nak */
+end_comment
+
 begin_comment
 comment|/*  * Server states.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPAPSS_INITIAL
+value|0
+end_define
+
+begin_comment
+comment|/* Connection down */
 end_comment
 
 begin_define
@@ -160,14 +204,25 @@ value|1
 end_define
 
 begin_comment
-comment|/* Connection down */
+comment|/* Connection up, haven't requested auth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPAPSS_PENDING
+value|2
+end_define
+
+begin_comment
+comment|/* Connection down, have requested auth */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UPAPSS_LISTEN
-value|2
+value|3
 end_define
 
 begin_comment
@@ -178,70 +233,22 @@ begin_define
 define|#
 directive|define
 name|UPAPSS_OPEN
-value|3
+value|4
 end_define
 
 begin_comment
 comment|/* We've sent an Ack */
 end_comment
 
-begin_comment
-comment|/*  * Flags.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|UPAPF_LOWERUP
-value|1
+name|UPAPSS_BADAUTH
+value|5
 end_define
 
 begin_comment
-comment|/* The lower level is UP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UPAPF_AWPPENDING
-value|2
-end_define
-
-begin_comment
-comment|/* Auth with peer pending */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UPAPF_APPENDING
-value|4
-end_define
-
-begin_comment
-comment|/* Auth peer pending */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UPAPF_UPVALID
-value|8
-end_define
-
-begin_comment
-comment|/* User/passwd values valid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UPAPF_UPPENDING
-value|0x10
-end_define
-
-begin_comment
-comment|/* User/passwd values pending */
+comment|/* We've sent a Nak */
 end_comment
 
 begin_comment
@@ -286,6 +293,12 @@ name|__ARGS
 argument_list|(
 operator|(
 name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

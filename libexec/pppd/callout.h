@@ -15,6 +15,10 @@ begin_comment
 comment|/* ANSI C */
 end_comment
 
+begin_comment
+comment|/* $Id: callout.h,v 1.1 1993/11/11 03:54:25 paulus Exp $ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef

@@ -346,6 +346,42 @@ define|\
 value|{(a) += I ((b), (c), (d)) + (x) + (UINT4)(ac); \    (a) = ROTATE_LEFT ((a), (s)); \    (a) += (b); \   }
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|UL
+parameter_list|(
+name|x
+parameter_list|)
+value|x##U
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UL
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* The routine MD5Init initializes the message-digest context    mdContext. All fields are set to zero.  */
 end_comment
@@ -1131,7 +1167,10 @@ index|]
 argument_list|,
 name|S11
 argument_list|,
-literal|3614090360UL
+name|UL
+argument_list|(
+literal|3614090360
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 1 */
@@ -1152,7 +1191,10 @@ index|]
 argument_list|,
 name|S12
 argument_list|,
-literal|3905402710UL
+name|UL
+argument_list|(
+literal|3905402710
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 2 */
@@ -1173,7 +1215,10 @@ index|]
 argument_list|,
 name|S13
 argument_list|,
-literal|606105819UL
+name|UL
+argument_list|(
+literal|606105819
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 3 */
@@ -1194,7 +1239,10 @@ index|]
 argument_list|,
 name|S14
 argument_list|,
-literal|3250441966UL
+name|UL
+argument_list|(
+literal|3250441966
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 4 */
@@ -1215,7 +1263,10 @@ index|]
 argument_list|,
 name|S11
 argument_list|,
-literal|4118548399UL
+name|UL
+argument_list|(
+literal|4118548399
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 5 */
@@ -1236,7 +1287,10 @@ index|]
 argument_list|,
 name|S12
 argument_list|,
-literal|1200080426UL
+name|UL
+argument_list|(
+literal|1200080426
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 6 */
@@ -1257,7 +1311,10 @@ index|]
 argument_list|,
 name|S13
 argument_list|,
-literal|2821735955UL
+name|UL
+argument_list|(
+literal|2821735955
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 7 */
@@ -1278,7 +1335,10 @@ index|]
 argument_list|,
 name|S14
 argument_list|,
-literal|4249261313UL
+name|UL
+argument_list|(
+literal|4249261313
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 8 */
@@ -1299,7 +1359,10 @@ index|]
 argument_list|,
 name|S11
 argument_list|,
-literal|1770035416UL
+name|UL
+argument_list|(
+literal|1770035416
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 9 */
@@ -1320,7 +1383,10 @@ index|]
 argument_list|,
 name|S12
 argument_list|,
-literal|2336552879UL
+name|UL
+argument_list|(
+literal|2336552879
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 10 */
@@ -1341,7 +1407,10 @@ index|]
 argument_list|,
 name|S13
 argument_list|,
-literal|4294925233UL
+name|UL
+argument_list|(
+literal|4294925233
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 11 */
@@ -1362,7 +1431,10 @@ index|]
 argument_list|,
 name|S14
 argument_list|,
-literal|2304563134UL
+name|UL
+argument_list|(
+literal|2304563134
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 12 */
@@ -1383,7 +1455,10 @@ index|]
 argument_list|,
 name|S11
 argument_list|,
-literal|1804603682UL
+name|UL
+argument_list|(
+literal|1804603682
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 13 */
@@ -1404,7 +1479,10 @@ index|]
 argument_list|,
 name|S12
 argument_list|,
-literal|4254626195UL
+name|UL
+argument_list|(
+literal|4254626195
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 14 */
@@ -1425,7 +1503,10 @@ index|]
 argument_list|,
 name|S13
 argument_list|,
-literal|2792965006UL
+name|UL
+argument_list|(
+literal|2792965006
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 15 */
@@ -1446,7 +1527,10 @@ index|]
 argument_list|,
 name|S14
 argument_list|,
-literal|1236535329UL
+name|UL
+argument_list|(
+literal|1236535329
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 16 */
@@ -1484,7 +1568,10 @@ index|]
 argument_list|,
 name|S21
 argument_list|,
-literal|4129170786UL
+name|UL
+argument_list|(
+literal|4129170786
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 17 */
@@ -1505,7 +1592,10 @@ index|]
 argument_list|,
 name|S22
 argument_list|,
-literal|3225465664UL
+name|UL
+argument_list|(
+literal|3225465664
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 18 */
@@ -1526,7 +1616,10 @@ index|]
 argument_list|,
 name|S23
 argument_list|,
-literal|643717713UL
+name|UL
+argument_list|(
+literal|643717713
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 19 */
@@ -1547,7 +1640,10 @@ index|]
 argument_list|,
 name|S24
 argument_list|,
-literal|3921069994UL
+name|UL
+argument_list|(
+literal|3921069994
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 20 */
@@ -1568,7 +1664,10 @@ index|]
 argument_list|,
 name|S21
 argument_list|,
-literal|3593408605UL
+name|UL
+argument_list|(
+literal|3593408605
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 21 */
@@ -1589,7 +1688,10 @@ index|]
 argument_list|,
 name|S22
 argument_list|,
-literal|38016083UL
+name|UL
+argument_list|(
+literal|38016083
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 22 */
@@ -1610,7 +1712,10 @@ index|]
 argument_list|,
 name|S23
 argument_list|,
-literal|3634488961UL
+name|UL
+argument_list|(
+literal|3634488961
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 23 */
@@ -1631,7 +1736,10 @@ index|]
 argument_list|,
 name|S24
 argument_list|,
-literal|3889429448UL
+name|UL
+argument_list|(
+literal|3889429448
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 24 */
@@ -1652,7 +1760,10 @@ index|]
 argument_list|,
 name|S21
 argument_list|,
-literal|568446438UL
+name|UL
+argument_list|(
+literal|568446438
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 25 */
@@ -1673,7 +1784,10 @@ index|]
 argument_list|,
 name|S22
 argument_list|,
-literal|3275163606UL
+name|UL
+argument_list|(
+literal|3275163606
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 26 */
@@ -1694,7 +1808,10 @@ index|]
 argument_list|,
 name|S23
 argument_list|,
-literal|4107603335UL
+name|UL
+argument_list|(
+literal|4107603335
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 27 */
@@ -1715,7 +1832,10 @@ index|]
 argument_list|,
 name|S24
 argument_list|,
-literal|1163531501UL
+name|UL
+argument_list|(
+literal|1163531501
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 28 */
@@ -1736,7 +1856,10 @@ index|]
 argument_list|,
 name|S21
 argument_list|,
-literal|2850285829UL
+name|UL
+argument_list|(
+literal|2850285829
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 29 */
@@ -1757,7 +1880,10 @@ index|]
 argument_list|,
 name|S22
 argument_list|,
-literal|4243563512UL
+name|UL
+argument_list|(
+literal|4243563512
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 30 */
@@ -1778,7 +1904,10 @@ index|]
 argument_list|,
 name|S23
 argument_list|,
-literal|1735328473UL
+name|UL
+argument_list|(
+literal|1735328473
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 31 */
@@ -1799,7 +1928,10 @@ index|]
 argument_list|,
 name|S24
 argument_list|,
-literal|2368359562UL
+name|UL
+argument_list|(
+literal|2368359562
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 32 */
@@ -1837,7 +1969,10 @@ index|]
 argument_list|,
 name|S31
 argument_list|,
-literal|4294588738UL
+name|UL
+argument_list|(
+literal|4294588738
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 33 */
@@ -1858,7 +1993,10 @@ index|]
 argument_list|,
 name|S32
 argument_list|,
-literal|2272392833UL
+name|UL
+argument_list|(
+literal|2272392833
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 34 */
@@ -1879,7 +2017,10 @@ index|]
 argument_list|,
 name|S33
 argument_list|,
-literal|1839030562UL
+name|UL
+argument_list|(
+literal|1839030562
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 35 */
@@ -1900,7 +2041,10 @@ index|]
 argument_list|,
 name|S34
 argument_list|,
-literal|4259657740UL
+name|UL
+argument_list|(
+literal|4259657740
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 36 */
@@ -1921,7 +2065,10 @@ index|]
 argument_list|,
 name|S31
 argument_list|,
-literal|2763975236UL
+name|UL
+argument_list|(
+literal|2763975236
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 37 */
@@ -1942,7 +2089,10 @@ index|]
 argument_list|,
 name|S32
 argument_list|,
-literal|1272893353UL
+name|UL
+argument_list|(
+literal|1272893353
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 38 */
@@ -1963,7 +2113,10 @@ index|]
 argument_list|,
 name|S33
 argument_list|,
-literal|4139469664UL
+name|UL
+argument_list|(
+literal|4139469664
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 39 */
@@ -1984,7 +2137,10 @@ index|]
 argument_list|,
 name|S34
 argument_list|,
-literal|3200236656UL
+name|UL
+argument_list|(
+literal|3200236656
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 40 */
@@ -2005,7 +2161,10 @@ index|]
 argument_list|,
 name|S31
 argument_list|,
-literal|681279174UL
+name|UL
+argument_list|(
+literal|681279174
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 41 */
@@ -2026,7 +2185,10 @@ index|]
 argument_list|,
 name|S32
 argument_list|,
-literal|3936430074UL
+name|UL
+argument_list|(
+literal|3936430074
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 42 */
@@ -2047,7 +2209,10 @@ index|]
 argument_list|,
 name|S33
 argument_list|,
-literal|3572445317UL
+name|UL
+argument_list|(
+literal|3572445317
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 43 */
@@ -2068,7 +2233,10 @@ index|]
 argument_list|,
 name|S34
 argument_list|,
-literal|76029189UL
+name|UL
+argument_list|(
+literal|76029189
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 44 */
@@ -2089,7 +2257,10 @@ index|]
 argument_list|,
 name|S31
 argument_list|,
-literal|3654602809UL
+name|UL
+argument_list|(
+literal|3654602809
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 45 */
@@ -2110,7 +2281,10 @@ index|]
 argument_list|,
 name|S32
 argument_list|,
-literal|3873151461UL
+name|UL
+argument_list|(
+literal|3873151461
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 46 */
@@ -2131,7 +2305,10 @@ index|]
 argument_list|,
 name|S33
 argument_list|,
-literal|530742520UL
+name|UL
+argument_list|(
+literal|530742520
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 47 */
@@ -2152,7 +2329,10 @@ index|]
 argument_list|,
 name|S34
 argument_list|,
-literal|3299628645UL
+name|UL
+argument_list|(
+literal|3299628645
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 48 */
@@ -2190,7 +2370,10 @@ index|]
 argument_list|,
 name|S41
 argument_list|,
-literal|4096336452UL
+name|UL
+argument_list|(
+literal|4096336452
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 49 */
@@ -2211,7 +2394,10 @@ index|]
 argument_list|,
 name|S42
 argument_list|,
-literal|1126891415UL
+name|UL
+argument_list|(
+literal|1126891415
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 50 */
@@ -2232,7 +2418,10 @@ index|]
 argument_list|,
 name|S43
 argument_list|,
-literal|2878612391UL
+name|UL
+argument_list|(
+literal|2878612391
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 51 */
@@ -2253,7 +2442,10 @@ index|]
 argument_list|,
 name|S44
 argument_list|,
-literal|4237533241UL
+name|UL
+argument_list|(
+literal|4237533241
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 52 */
@@ -2274,7 +2466,10 @@ index|]
 argument_list|,
 name|S41
 argument_list|,
-literal|1700485571UL
+name|UL
+argument_list|(
+literal|1700485571
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 53 */
@@ -2295,7 +2490,10 @@ index|]
 argument_list|,
 name|S42
 argument_list|,
-literal|2399980690UL
+name|UL
+argument_list|(
+literal|2399980690
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 54 */
@@ -2316,7 +2514,10 @@ index|]
 argument_list|,
 name|S43
 argument_list|,
-literal|4293915773UL
+name|UL
+argument_list|(
+literal|4293915773
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 55 */
@@ -2337,7 +2538,10 @@ index|]
 argument_list|,
 name|S44
 argument_list|,
-literal|2240044497UL
+name|UL
+argument_list|(
+literal|2240044497
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 56 */
@@ -2358,7 +2562,10 @@ index|]
 argument_list|,
 name|S41
 argument_list|,
-literal|1873313359UL
+name|UL
+argument_list|(
+literal|1873313359
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 57 */
@@ -2379,7 +2586,10 @@ index|]
 argument_list|,
 name|S42
 argument_list|,
-literal|4264355552UL
+name|UL
+argument_list|(
+literal|4264355552
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 58 */
@@ -2400,7 +2610,10 @@ index|]
 argument_list|,
 name|S43
 argument_list|,
-literal|2734768916UL
+name|UL
+argument_list|(
+literal|2734768916
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 59 */
@@ -2421,7 +2634,10 @@ index|]
 argument_list|,
 name|S44
 argument_list|,
-literal|1309151649UL
+name|UL
+argument_list|(
+literal|1309151649
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 60 */
@@ -2442,7 +2658,10 @@ index|]
 argument_list|,
 name|S41
 argument_list|,
-literal|4149444226UL
+name|UL
+argument_list|(
+literal|4149444226
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 61 */
@@ -2463,7 +2682,10 @@ index|]
 argument_list|,
 name|S42
 argument_list|,
-literal|3174756917UL
+name|UL
+argument_list|(
+literal|3174756917
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 62 */
@@ -2484,7 +2706,10 @@ index|]
 argument_list|,
 name|S43
 argument_list|,
-literal|718787259UL
+name|UL
+argument_list|(
+literal|718787259
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 63 */
@@ -2505,7 +2730,10 @@ index|]
 argument_list|,
 name|S44
 argument_list|,
-literal|3951481745UL
+name|UL
+argument_list|(
+literal|3951481745
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 64 */

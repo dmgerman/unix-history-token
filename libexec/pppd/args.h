@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * neat macro from ka9q to "do the right thing" with ansi prototypes  */
+comment|/*  * neat macro from ka9q to "do the right thing" with ansi prototypes  * $Id: args.h,v 1.1 1993/11/11 03:54:25 paulus Exp $  */
 end_comment
 
 begin_ifndef

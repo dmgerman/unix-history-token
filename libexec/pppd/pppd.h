@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pppd.h - PPP daemon global declarations.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * pppd.h - PPP daemon global declarations.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pppd.h,v 1.1 1993/11/11 03:54:25 paulus Exp $  */
 end_comment
 
 begin_comment
@@ -25,6 +25,16 @@ directive|include
 file|"args.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_comment
+comment|/* for MAXPATHLEN and BSD4_4, if defined */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -36,6 +46,54 @@ begin_comment
 comment|/* One PPP interface supported (per process) */
 end_comment
 
+begin_comment
+comment|/*  * Limits.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXWORDLEN
+value|1024
+end_define
+
+begin_comment
+comment|/* max length of word in file (incl null) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXARGS
+value|1
+end_define
+
+begin_comment
+comment|/* max # args to a command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXNAMELEN
+value|256
+end_define
+
+begin_comment
+comment|/* max length of hostname or name for auth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXSECRETLEN
+value|256
+end_define
+
+begin_comment
+comment|/* max length of password or secret */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -45,6 +103,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Debug flag */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ifunit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Interface unit number */
 end_comment
 
 begin_decl_stmt
@@ -96,17 +165,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|u_char
-name|hostname_len
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* and its length */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_char
 name|outpacket_buf
 index|[]
 decl_stmt|;
@@ -114,17 +172,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* buffer for outgoing packets */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_HOSTNAME_LEN
-value|128
-end_define
-
-begin_comment
-comment|/* should be 255 - MAX_CHALLENGE_LEN + 1 */
 end_comment
 
 begin_decl_stmt
@@ -229,11 +276,13 @@ comment|/* Demultiplex a Protocol-Reject */
 end_comment
 
 begin_decl_stmt
-name|u_char
-name|login
+name|int
+name|check_passwd
 name|__ARGS
 argument_list|(
 operator|(
+name|int
+operator|,
 name|char
 operator|*
 operator|,
@@ -256,39 +305,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Login user */
+comment|/* Check peer-supplied username/password */
 end_comment
 
 begin_decl_stmt
-name|void
-name|logout
-name|__ARGS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Logout user */
-end_comment
-
-begin_decl_stmt
-name|void
+name|int
 name|get_secret
 name|__ARGS
 argument_list|(
 operator|(
-name|u_char
+name|int
+operator|,
+name|char
 operator|*
 operator|,
-name|u_char
+name|char
+operator|*
+operator|,
+name|char
 operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -313,13 +353,6 @@ end_decl_stmt
 begin_comment
 comment|/* get netmask for address */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Inline versions of get/put char/short/long.  * Pointer is advanced; we assume that both arguments  * are lvalues and will already be in registers.  * cp MUST be u_char *.  */
@@ -474,7 +507,19 @@ name|d
 parameter_list|,
 name|l
 parameter_list|)
-value|bcopy(s, d, l)
+value|memcpy(d, s, l)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BZERO
+parameter_list|(
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|memset(s, 0, n)
 end_define
 
 begin_define
@@ -490,61 +535,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|GETUSERPASSWD
-parameter_list|(
-name|u
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOGIN
-parameter_list|(
-name|n
-parameter_list|,
-name|u
-parameter_list|,
-name|ul
-parameter_list|,
-name|p
-parameter_list|,
-name|pl
-parameter_list|,
-name|m
-parameter_list|,
-name|ml
-parameter_list|)
-value|login(u, ul, p, pl, m, ml);
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOGOUT
-parameter_list|(
-name|n
-parameter_list|)
-value|logout()
-end_define
-
-begin_define
-define|#
-directive|define
-name|GETSECRET
-parameter_list|(
-name|n
-parameter_list|,
-name|s
-parameter_list|,
-name|sl
-parameter_list|)
-value|get_secret(n, s, sl)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PRINTMSG
 parameter_list|(
 name|m
@@ -555,21 +545,7 @@ value|{ m[l] = '\0'; syslog(LOG_INFO, "Remote message: %s", m); }
 end_define
 
 begin_comment
-comment|/*  * return a pointer to the beginning of the data part of a packet.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PACKET_DATA
-parameter_list|(
-name|p
-parameter_list|)
-value|(p + DLLHEADERLEN)
-end_define
-
-begin_comment
-comment|/*  * MAKEHEADER - Add Header fields to a packet.  (Should we do  * AC compression here?)  */
+comment|/*  * MAKEHEADER - Add Header fields to a packet.  */
 end_comment
 
 begin_define
@@ -584,427 +560,58 @@ parameter_list|)
 value|{ \     PUTCHAR(ALLSTATIONS, p); \     PUTCHAR(UI, p); \     PUTSHORT(t, p); }
 end_define
 
-begin_comment
-comment|/*  * SIFASYNCMAP - Config the interface async map.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|STREAMS
+name|DEBUGALL
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|SIFASYNCMAP
-parameter_list|(
-name|u
-parameter_list|,
-name|a
-parameter_list|)
-value|{ \      u_long x = a; \      if(ioctl(fd, SIOCSIFASYNCMAP, (caddr_t)&x)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCSIFASYNCMAP): %m"); \     } }
+name|DEBUGMAIN
+value|1
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
 directive|define
-name|SIFASYNCMAP
-parameter_list|(
-name|u
-parameter_list|,
-name|a
-parameter_list|)
-value|{ \     u_long x = a; \     if (ioctl(fd, PPPIOCSASYNCMAP, (caddr_t)&x)< 0) { \ 	syslog(LOG_ERR, "ioctl(PPPIOCSASYNCMAP): %m"); \ 	quit(); \     } }
+name|DEBUGFSM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUGLCP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUGIPCP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUGUPAP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUGCHAP
+value|1
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * SIFPCOMPRESSION - Config the interface for protocol compression.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STREAMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SIFPCOMPRESSION
-parameter_list|(
-name|u
-parameter_list|)
-value|{ \     char c = 1; \     if(ioctl(fd, SIOCSIFCOMPPROT,&c)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCSIFCOMPPROT): %m"); \     }}
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SIFPCOMPRESSION
-parameter_list|(
-name|u
-parameter_list|)
-value|{ \     u_int x; \     if (ioctl(fd, PPPIOCGFLAGS, (caddr_t)&x)< 0) { \ 	syslog(LOG_ERR, "ioctl (PPPIOCGFLAGS): %m"); \ 	quit(); \     } \     x |= SC_COMP_PROT; \     if (ioctl(fd, PPPIOCSFLAGS, (caddr_t)&x)< 0) { \ 	syslog(LOG_ERR, "ioctl(PPPIOCSFLAGS): %m"); \ 	quit(); \     } }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * CIFPCOMPRESSION - Config the interface for no protocol compression.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STREAMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CIFPCOMPRESSION
-parameter_list|(
-name|u
-parameter_list|)
-value|{ \     char c = 0; \     if(ioctl(fd, SIOCSIFCOMPPROT,&c)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCSIFCOMPPROT): %m"); \ 	quit(); \     }}
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CIFPCOMPRESSION
-parameter_list|(
-name|u
-parameter_list|)
-value|{ \     u_int x; \     if (ioctl(fd, PPPIOCGFLAGS, (caddr_t)&x)< 0) { \ 	syslog(LOG_ERR, "ioctl(PPPIOCGFLAGS): %m"); \ 	quit(); \     } \     x&= ~SC_COMP_PROT; \     if (ioctl(fd, PPPIOCSFLAGS, (caddr_t)&x)< 0) { \ 	syslog(LOG_ERR, "ioctl(PPPIOCSFLAGS): %m"); \ 	quit(); \     } }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * SIFACCOMPRESSION - Config the interface for address/control compression.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STREAMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SIFACCOMPRESSION
-parameter_list|(
-name|u
-parameter_list|)
-value|{ \    char c = 1; \     if(ioctl(fd, SIOCSIFCOMPAC,&c)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCSIFCOMPAC): %m"); \ 	quit(); \     }}
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SIFACCOMPRESSION
-parameter_list|(
-name|u
-parameter_list|)
-value|{ \     u_int x; \     if (ioctl(fd, PPPIOCGFLAGS, (caddr_t)&x)< 0) { \ 	syslog(LOG_ERR, "ioctl (PPPIOCGFLAGS): %m"); \ 	quit(); \     } \     x |= SC_COMP_AC; \     if (ioctl(fd, PPPIOCSFLAGS, (caddr_t)&x)< 0) { \ 	syslog(LOG_ERR, "ioctl(PPPIOCSFLAGS): %m"); \ 	quit(); \     } }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * CIFACCOMPRESSION - Config the interface for no address/control compression.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STREAMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CIFACCOMPRESSION
-parameter_list|(
-name|u
-parameter_list|)
-value|{ \     char c = 0; \     if(ioctl(fd, SIOCSIFCOMPAC,&c)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCSIFCOMPAC): %m"); \ 	quit(); \     }}
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CIFACCOMPRESSION
-parameter_list|(
-name|u
-parameter_list|)
-value|{ \     u_int x; \     if (ioctl(fd, PPPIOCGFLAGS, (caddr_t)&x)< 0) { \ 	syslog(LOG_ERR, "ioctl (PPPIOCGFLAGS): %m"); \ 	quit(); \     } \     x&= ~SC_COMP_AC; \     if (ioctl(fd, PPPIOCSFLAGS, (caddr_t)&x)< 0) { \ 	syslog(LOG_ERR, "ioctl(PPPIOCSFLAGS): %m"); \ 	quit(); \     } }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * SIFVJCOMP - config tcp header compression  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STREAMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SIFVJCOMP
-parameter_list|(
-name|u
-parameter_list|,
-name|a
-parameter_list|)
-value|{ \     char x = a;			\ 	if (debug) syslog(LOG_DEBUG, "SIFVJCOMP unit %d to value %d\n",u,x); \ 	if(ioctl(fd, SIOCSIFVJCOMP, (caddr_t)&x)< 0) { \ 		syslog(LOG_ERR, "ioctl(SIOCSIFVJCOMP): %m"); \ 		quit(); \ 	} \ }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SIFVJCOMP
-parameter_list|(
-name|u
-parameter_list|,
-name|a
-parameter_list|)
-value|{ \     u_int x; \     if (debug) \ 	syslog(LOG_DEBUG, "PPPIOCSFLAGS unit %d set %s\n",u,a?"on":"off"); \     if (ioctl(fd, PPPIOCGFLAGS, (caddr_t)&x)< 0) { \ 	syslog(LOG_ERR, "ioctl (PPPIOCGFLAGS): %m"); \ 	quit(); \     } \     x = (x& ~SC_COMP_TCP) | ((a) ? SC_COMP_TCP : 0); \     if(ioctl(fd, PPPIOCSFLAGS, (caddr_t)&x)< 0) { \ 	syslog(LOG_ERR, "ioctl(PPPIOCSFLAGS): %m"); \ 	quit(); \     } }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * SIFUP - Config the interface up.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIFUP
-parameter_list|(
-name|u
-parameter_list|)
-value|{ \     struct ifreq ifr; \     strncpy(ifr.ifr_name, ifname, sizeof (ifr.ifr_name)); \     if (ioctl(s, SIOCGIFFLAGS, (caddr_t)&ifr)< 0) { \ 	syslog(LOG_ERR, "ioctl (SIOCGIFFLAGS): %m"); \ 	quit(); \     } \     ifr.ifr_flags |= IFF_UP; \     if (ioctl(s, SIOCSIFFLAGS, (caddr_t)&ifr)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCSIFFLAGS): %m"); \ 	quit(); \     } }
-end_define
-
-begin_comment
-comment|/*  * SIFDOWN - Config the interface down.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIFDOWN
-parameter_list|(
-name|u
-parameter_list|)
-value|{ \     struct ifreq ifr; \     strncpy(ifr.ifr_name, ifname, sizeof (ifr.ifr_name)); \     if (ioctl(s, SIOCGIFFLAGS, (caddr_t)&ifr)< 0) { \ 	syslog(LOG_ERR, "ioctl (SIOCGIFFLAGS): %m"); \ 	quit(); \     } \     ifr.ifr_flags&= ~IFF_UP; \     if (ioctl(s, SIOCSIFFLAGS, (caddr_t)&ifr)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCSIFFLAGS): %m"); \ 	quit(); \     } }
-end_define
-
-begin_comment
-comment|/*  * SIFMTU - Config the interface MTU.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIFMTU
-parameter_list|(
-name|u
-parameter_list|,
-name|m
-parameter_list|)
-value|{ \     struct ifreq ifr; \     strncpy(ifr.ifr_name, ifname, sizeof (ifr.ifr_name)); \     ifr.ifr_mtu = m; \     if (ioctl(s, SIOCSIFMTU, (caddr_t)&ifr)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCSIFMTU): %m"); \ 	quit(); \     } }
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__386BSD__
-end_ifdef
-
-begin_comment
-comment|/* BSD>= 44 ? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SET_SA_FAMILY
-parameter_list|(
-name|addr
-parameter_list|,
-name|family
-parameter_list|)
-define|\
-value|bzero((char *)&(addr), sizeof(addr));	\     addr.sa_family = (family); 			\     addr.sa_len = sizeof(addr);
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SET_SA_FAMILY
-parameter_list|(
-name|addr
-parameter_list|,
-name|family
-parameter_list|)
-define|\
-value|bzero((char *)&(addr), sizeof(addr));	\     addr.sa_family = (family);
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * SIFADDR - Config the interface IP addresses.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIFADDR
-parameter_list|(
-name|u
-parameter_list|,
-name|o
-parameter_list|,
-name|h
-parameter_list|)
-value|{ \     struct ifreq ifr; \     strncpy(ifr.ifr_name, ifname, sizeof (ifr.ifr_name)); \     SET_SA_FAMILY(ifr.ifr_addr, AF_INET); \     ((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr.s_addr = o; \     if (ioctl(s, SIOCSIFADDR, (caddr_t)&ifr)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCSIFADDR): %m"); \     } \     ((struct sockaddr_in *)&ifr.ifr_dstaddr)->sin_addr.s_addr = h; \     if (ioctl(s, SIOCSIFDSTADDR, (caddr_t)&ifr)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCSIFDSTADDR): %m"); \ 	quit(); \     } }
-end_define
-
-begin_comment
-comment|/*  * CIFADDR - Clear the interface IP addresses.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|BSD
-operator|>
-literal|43
-end_if
-
-begin_define
-define|#
-directive|define
-name|CIFADDR
-parameter_list|(
-name|u
-parameter_list|,
-name|o
-parameter_list|,
-name|h
-parameter_list|)
-value|{ \     struct ortentry rt; \     SET_SA_FAMILY(rt.rt_dst, AF_INET); \     ((struct sockaddr_in *)&rt.rt_dst)->sin_addr.s_addr = h; \     SET_SA_FAMILY(rt.rt_gateway, AF_INET); \     ((struct sockaddr_in *)&rt.rt_gateway)->sin_addr.s_addr = o; \     rt.rt_flags |= RTF_HOST; \     syslog(LOG_INFO, "Deleting host route from %s to %s\n", \ 	   ip_ntoa(h), ip_ntoa(o)); \     if (ioctl(s, SIOCDELRT, (caddr_t)&rt)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCDELRT): %m"); \     } }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CIFADDR
-parameter_list|(
-name|u
-parameter_list|,
-name|o
-parameter_list|,
-name|h
-parameter_list|)
-value|{ \     struct rtentry rt; \     SET_SA_FAMILY(rt.rt_dst, AF_INET); \     ((struct sockaddr_in *)&rt.rt_dst)->sin_addr.s_addr = h; \     SET_SA_FAMILY(rt.rt_gateway, AF_INET); \     ((struct sockaddr_in *)&rt.rt_gateway)->sin_addr.s_addr = o; \     rt.rt_flags |= RTF_HOST; \     syslog(LOG_INFO, "Deleting host route from %s to %s\n", \ 	   ip_ntoa(h), ip_ntoa(o)); \     if (ioctl(s, SIOCDELRT, (caddr_t)&rt)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCDELRT): %m"); \     } }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * SIFMASK - Config the interface net mask  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIFMASK
-parameter_list|(
-name|u
-parameter_list|,
-name|m
-parameter_list|)
-value|{ \     struct ifreq ifr; \     strncpy(ifr.ifr_name, ifname, sizeof (ifr.ifr_name)); \     SET_SA_FAMILY(ifr.ifr_addr, AF_INET); \     ((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr.s_addr = m; \     syslog(LOG_INFO, "Setting interface mask to %s\n", ip_ntoa(m)); \     if (ioctl(s, SIOCSIFNETMASK, (caddr_t)&ifr)< 0) { \ 	syslog(LOG_ERR, "ioctl(SIOCSIFADDR): %m"); \     } }
-end_define
 
 begin_ifndef
 ifndef|#
@@ -1103,7 +710,7 @@ name|MAINDEBUG
 parameter_list|(
 name|x
 parameter_list|)
-value|if (debug) syslog x;
+value|if (debug) syslog x
 end_define
 
 begin_else
@@ -1138,7 +745,7 @@ name|FSMDEBUG
 parameter_list|(
 name|x
 parameter_list|)
-value|if (debug) syslog x;
+value|if (debug) syslog x
 end_define
 
 begin_else
@@ -1173,7 +780,7 @@ name|LCPDEBUG
 parameter_list|(
 name|x
 parameter_list|)
-value|if (debug) syslog x;
+value|if (debug) syslog x
 end_define
 
 begin_else
@@ -1208,7 +815,7 @@ name|IPCPDEBUG
 parameter_list|(
 name|x
 parameter_list|)
-value|if (debug) syslog x;
+value|if (debug) syslog x
 end_define
 
 begin_else
@@ -1243,7 +850,7 @@ name|UPAPDEBUG
 parameter_list|(
 name|x
 parameter_list|)
-value|if (debug) syslog x;
+value|if (debug) syslog x
 end_define
 
 begin_else
@@ -1278,7 +885,7 @@ name|CHAPDEBUG
 parameter_list|(
 name|x
 parameter_list|)
-value|if (debug) syslog x;
+value|if (debug) syslog x
 end_define
 
 begin_else
@@ -1361,6 +968,52 @@ end_endif
 begin_comment
 comment|/* SIGTYPE */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)< (b)? (a): (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)> (b)? (a): (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

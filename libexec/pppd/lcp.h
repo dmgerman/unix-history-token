@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * lcp.h - Link Control Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * lcp.h - Link Control Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.h,v 1.1 1993/11/11 03:54:25 paulus Exp $  */
 end_comment
 
 begin_comment
@@ -43,12 +43,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CI_NOTDEFINED
+name|CI_QUALITY
 value|4
 end_define
 
 begin_comment
-comment|/* not defined (used to be Encryption Type) */
+comment|/* Quality Protocol */
 end_comment
 
 begin_define
@@ -70,7 +70,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* Keep Alive Parameters */
+comment|/* Keep Alive Parameters - OBSOLETE */
 end_comment
 
 begin_define
@@ -109,7 +109,13 @@ name|passive
 range|:
 literal|1
 decl_stmt|;
-comment|/* Passives vs. active open */
+comment|/* Don't die if we don't get a response */
+name|int
+name|silent
+range|:
+literal|1
+decl_stmt|;
+comment|/* Wait for the other end to start first */
 name|int
 name|restart
 range|:
@@ -122,52 +128,30 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Negotiate the MRU? */
-name|u_short
-name|mru
-decl_stmt|;
-comment|/* Value of MRU */
 name|int
 name|neg_asyncmap
 range|:
 literal|1
 decl_stmt|;
-comment|/* Async map? */
-name|u_long
-name|asyncmap
-decl_stmt|;
+comment|/* Negotiate the async map? */
 name|int
 name|neg_upap
 range|:
 literal|1
 decl_stmt|;
-comment|/* UPAP authentication? */
+comment|/* Ask for UPAP authentication? */
 name|int
 name|neg_chap
 range|:
 literal|1
 decl_stmt|;
-comment|/* CHAP authentication? */
-name|char
-name|chap_mdtype
-decl_stmt|;
-comment|/* which MD type */
-name|char
-name|chap_callback
-decl_stmt|;
-comment|/* callback ? */
+comment|/* Ask for CHAP authentication? */
 name|int
 name|neg_magicnumber
 range|:
 literal|1
 decl_stmt|;
-comment|/* Magic number? */
-name|u_long
-name|magicnumber
-decl_stmt|;
-name|int
-name|numloops
-decl_stmt|;
-comment|/* Number loops during magic number negot. */
+comment|/* Ask for magic number? */
 name|int
 name|neg_pcompression
 range|:
@@ -180,6 +164,35 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* HDLC Address/Control Field Compression? */
+name|int
+name|neg_lqr
+range|:
+literal|1
+decl_stmt|;
+comment|/* Negotiate use of Link Quality Reports */
+name|u_short
+name|mru
+decl_stmt|;
+comment|/* Value of MRU */
+name|char
+name|chap_mdtype
+decl_stmt|;
+comment|/* which MD type (hashing algorithm) */
+name|u_long
+name|asyncmap
+decl_stmt|;
+comment|/* Value of async map */
+name|u_long
+name|magicnumber
+decl_stmt|;
+name|int
+name|numloops
+decl_stmt|;
+comment|/* Number of loops during magic number neg. */
+name|u_long
+name|lqr_period
+decl_stmt|;
+comment|/* Reporting period for link quality */
 block|}
 name|lcp_options
 typedef|;
@@ -247,6 +260,17 @@ begin_comment
 comment|/* No MRUs below this */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAXMRU
+value|16384
+end_define
+
+begin_comment
+comment|/* Normally limit MRU to this */
+end_comment
+
 begin_decl_stmt
 name|void
 name|lcp_init
@@ -261,19 +285,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|lcp_activeopen
-name|__ARGS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|lcp_passiveopen
+name|lcp_open
 name|__ARGS
 argument_list|(
 operator|(
@@ -364,6 +376,28 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|lcp_warnloops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn about a loopback this often */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFWARNLOOPS
+value|10
+end_define
+
+begin_comment
+comment|/* Default value for above */
+end_comment
 
 end_unit
 

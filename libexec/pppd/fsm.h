@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * fsm.h - {Link, IP} Control Protocol Finite State Machine definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * fsm.h - {Link, IP} Control Protocol Finite State Machine definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.h,v 1.1 1993/11/11 03:54:25 paulus Exp $  */
 end_comment
 
 begin_comment
@@ -191,7 +191,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* ACK our Configuration Information */
-name|void
+name|int
 function_decl|(
 modifier|*
 name|nakci
@@ -199,7 +199,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* NAK our Configuration Information */
-name|void
+name|int
 function_decl|(
 modifier|*
 name|rejci
@@ -207,7 +207,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* Reject our Configuration Information */
-name|u_char
+name|int
 function_decl|(
 modifier|*
 name|reqci
@@ -222,7 +222,7 @@ name|up
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* Called when fsm reaches OPEN state */
+comment|/* Called when fsm reaches OPENED state */
 name|void
 function_decl|(
 modifier|*
@@ -230,15 +230,23 @@ name|down
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* Called when fsm leaves OPEN state */
+comment|/* Called when fsm leaves OPENED state */
 name|void
 function_decl|(
 modifier|*
-name|closed
+name|starting
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* Called when fsm reaches CLOSED state */
+comment|/* Called when we want the lower layer */
+name|void
+function_decl|(
+modifier|*
+name|finished
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* Called when we don't want the lower layer */
 name|void
 function_decl|(
 modifier|*
@@ -255,6 +263,19 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* Retransmission is necessary */
+name|int
+function_decl|(
+modifier|*
+name|extcode
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* Called when unknown code received */
+name|char
+modifier|*
+name|proto_name
+decl_stmt|;
+comment|/* String name for protocol (for messages) */
 block|}
 name|fsm_callbacks
 typedef|;
@@ -269,7 +290,7 @@ name|int
 name|unit
 decl_stmt|;
 comment|/* Interface unit number */
-name|u_short
+name|int
 name|protocol
 decl_stmt|;
 comment|/* Data Link Layer Protocol field value */
@@ -280,7 +301,7 @@ comment|/* State */
 name|int
 name|flags
 decl_stmt|;
-comment|/* Flags */
+comment|/* Contains option bits */
 name|u_char
 name|id
 decl_stmt|;
@@ -300,7 +321,7 @@ comment|/* Maximum Configure-Request transmissions */
 name|int
 name|retransmits
 decl_stmt|;
-comment|/* Number of retransmissions */
+comment|/* Number of retransmissions left */
 name|int
 name|maxtermtransmits
 decl_stmt|;
@@ -308,7 +329,7 @@ comment|/* Maximum Terminate-Request transmissions */
 name|int
 name|nakloops
 decl_stmt|;
-comment|/* Number of nak loops since last timeout */
+comment|/* Number of nak loops since last ack */
 name|int
 name|maxnakloops
 decl_stmt|;
@@ -330,30 +351,74 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CLOSED
-value|1
+name|INITIAL
+value|0
 end_define
 
 begin_comment
-comment|/* Connection closed */
+comment|/* Down, hasn't been opened */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LISTEN
+name|STARTING
+value|1
+end_define
+
+begin_comment
+comment|/* Down, been opened */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOSED
 value|2
 end_define
 
 begin_comment
-comment|/* Listening for a Config Request */
+comment|/* Up, hasn't been opened */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STOPPED
+value|3
+end_define
+
+begin_comment
+comment|/* Open, waiting for down event */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOSING
+value|4
+end_define
+
+begin_comment
+comment|/* Terminating the connection, not open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STOPPING
+value|5
+end_define
+
+begin_comment
+comment|/* Terminating, but open */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|REQSENT
-value|3
+value|6
 end_define
 
 begin_comment
@@ -363,19 +428,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACKSENT
-value|4
-end_define
-
-begin_comment
-comment|/* We've sent a Config Ack */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ACKRCVD
-value|5
+value|7
 end_define
 
 begin_comment
@@ -385,60 +439,60 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OPEN
-value|6
+name|ACKSENT
+value|8
 end_define
 
 begin_comment
-comment|/* Connection open */
+comment|/* We've sent a Config Ack */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TERMSENT
-value|7
+name|OPENED
+value|9
 end_define
 
 begin_comment
-comment|/* We've sent a Terminate Request */
+comment|/* Connection available */
 end_comment
 
 begin_comment
-comment|/*  * Flags.  */
+comment|/*  * Flags - indicate options controlling FSM operation  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LOWERUP
+name|OPT_PASSIVE
 value|1
 end_define
 
 begin_comment
-comment|/* The lower level is UP */
+comment|/* Don't die if we don't get a response */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|AOPENDING
+name|OPT_RESTART
 value|2
 end_define
 
 begin_comment
-comment|/* Active Open pending timeout of request */
+comment|/* Treat 2nd OPEN as DOWN, UP */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|POPENDING
+name|OPT_SILENT
 value|4
 end_define
 
 begin_comment
-comment|/* Passive Open pending timeout of request */
+comment|/* Wait for peer to speak first */
 end_comment
 
 begin_comment
@@ -459,8 +513,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFMAXTERMTRANSMITS
-value|10
+name|DEFMAXTERMREQS
+value|2
 end_define
 
 begin_comment
@@ -470,7 +524,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEFMAXCONFIGREQS
+name|DEFMAXCONFREQS
 value|10
 end_define
 
@@ -489,48 +543,13 @@ begin_comment
 comment|/* Maximum number of nak loops */
 end_comment
 
+begin_comment
+comment|/*  * Prototypes  */
+end_comment
+
 begin_decl_stmt
 name|void
 name|fsm_init
-name|__ARGS
-argument_list|(
-operator|(
-name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|fsm_activeopen
-name|__ARGS
-argument_list|(
-operator|(
-name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|fsm_passiveopen
-name|__ARGS
-argument_list|(
-operator|(
-name|fsm
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|fsm_close
 name|__ARGS
 argument_list|(
 operator|(
@@ -569,7 +588,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|fsm_protreject
+name|fsm_open
+name|__ARGS
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|fsm_close
 name|__ARGS
 argument_list|(
 operator|(
@@ -600,6 +632,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|fsm_protreject
+name|__ARGS
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|fsm_sdata
 name|__ARGS
 argument_list|(
@@ -619,6 +664,22 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Variables  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|peer_mru
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* currently negotiated peer MRU (per unit) */
+end_comment
 
 end_unit
 

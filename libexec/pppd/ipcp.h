@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ipcp.h - IP Control Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * ipcp.h - IP Control Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.2 1994/02/08 23:49:37 paulus Exp $  */
 end_comment
 
 begin_comment
@@ -81,15 +81,7 @@ comment|/* "new-rfc"mode (option # = 0x002d, */
 end_comment
 
 begin_comment
-comment|/*  maxslot and slot number */
-end_comment
-
-begin_comment
-comment|/*  compression from Aug. 1991 */
-end_comment
-
-begin_comment
-comment|/*  ipcp draft RFC) */
+comment|/*  maxslot and slot number compression) */
 end_comment
 
 begin_define
@@ -124,46 +116,87 @@ struct|struct
 name|ipcp_options
 block|{
 name|int
-name|neg_addrs
-range|:
-literal|1
-decl_stmt|;
-comment|/* Negotiate IP Addresses? */
-name|int
 name|neg_addr
 range|:
 literal|1
 decl_stmt|;
 comment|/* Negotiate IP Address? */
 name|int
-name|got_addr
+name|old_addrs
 range|:
 literal|1
 decl_stmt|;
-comment|/* Got IP Address? */
-name|u_long
-name|ouraddr
-decl_stmt|,
-name|hisaddr
+comment|/* Use old (IP-Addresses) option? */
+name|int
+name|req_addr
+range|:
+literal|1
 decl_stmt|;
-comment|/* Addresses in NETWORK BYTE ORDER */
+comment|/* Ask peer to send IP address? */
+name|int
+name|default_route
+range|:
+literal|1
+decl_stmt|;
+comment|/* Assign default route through interface? */
+name|int
+name|proxy_arp
+range|:
+literal|1
+decl_stmt|;
+comment|/* Make proxy ARP entry for peer? */
 name|int
 name|neg_vj
 range|:
 literal|1
 decl_stmt|;
 comment|/* Van Jacobson Compression? */
+name|int
+name|old_vj
+range|:
+literal|1
+decl_stmt|;
+comment|/* use old (short) form of VJ option? */
+name|int
+name|accept_local
+range|:
+literal|1
+decl_stmt|;
+comment|/* accept peer's value for ouraddr */
+name|int
+name|accept_remote
+range|:
+literal|1
+decl_stmt|;
+comment|/* accept peer's value for hisaddr */
+name|u_short
+name|vj_protocol
+decl_stmt|;
+comment|/* protocol value to use in VJ option */
 name|u_char
 name|maxslotindex
 decl_stmt|,
 name|cflag
 decl_stmt|;
-comment|/* fields for Aug. 1991 Draft VJ */
-comment|/* compression negotiation */
+comment|/* values for RFC1332 VJ compression neg. */
+name|u_long
+name|ouraddr
+decl_stmt|,
+name|hisaddr
+decl_stmt|;
+comment|/* Addresses in NETWORK BYTE ORDER */
 block|}
 name|ipcp_options
 typedef|;
 end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|fsm
+name|ipcp_fsm
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -211,31 +244,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|ipcp_vj_setmode
-name|__ARGS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ipcp_activeopen
-name|__ARGS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|ipcp_passiveopen
+name|ipcp_open
 name|__ARGS
 argument_list|(
 operator|(

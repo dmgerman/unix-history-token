@@ -3,8 +3,29 @@ begin_comment
 comment|/*  * lcp.c - PPP Link Control Protocol.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: lcp.c,v 1.1 1993/11/11 03:54:25 paulus Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * TODO:  * Keepalive.  * Send NAKs for unsent CIs.  * Keep separate MTU, MRU.  * Option tracing.  * Extra data on authtype option.  * Test restart.  */
+comment|/*  * TODO:  * Option tracing.  * Test restart.  */
 end_comment
 
 begin_include
@@ -52,6 +73,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_ppp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -59,35 +86,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STREAMS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/stream.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ppp_str.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<net/if_ppp.h>
 end_include
 
 begin_include
@@ -99,7 +97,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/ppp.h>
+file|"ppp.h"
 end_include
 
 begin_include
@@ -191,7 +189,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Options that we allow peer to request */
+comment|/* Options we allow peer to request */
 end_comment
 
 begin_decl_stmt
@@ -208,7 +206,7 @@ comment|/* Options that we ack'd */
 end_comment
 
 begin_comment
-comment|/* local vars */
+comment|/*  * Callbacks for fsm code.  (CI = Configuration Information)  */
 end_comment
 
 begin_decl_stmt
@@ -226,7 +224,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Reset our Configuration Information */
+comment|/* Reset our CI */
 end_comment
 
 begin_decl_stmt
@@ -259,13 +257,16 @@ operator|*
 operator|,
 name|u_char
 operator|*
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Add our CIs */
+comment|/* Add our CI to pkt */
 end_comment
 
 begin_decl_stmt
@@ -288,12 +289,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Ack some CIs */
+comment|/* Peer ack'd our CI */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|void
+name|int
 name|lcp_nakci
 name|__ARGS
 argument_list|(
@@ -311,12 +312,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nak some CIs */
+comment|/* Peer nak'd our CI */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|void
+name|int
 name|lcp_rejci
 name|__ARGS
 argument_list|(
@@ -334,12 +335,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Reject some CIs */
+comment|/* Peer rej'd our CI */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|u_char
+name|int
 name|lcp_reqci
 name|__ARGS
 argument_list|(
@@ -352,13 +353,15 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Check the requested CIs */
+comment|/* Rcv peer CI */
 end_comment
 
 begin_decl_stmt
@@ -400,7 +403,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|void
-name|lcp_closed
+name|lcp_starting
 name|__ARGS
 argument_list|(
 operator|(
@@ -412,8 +415,68 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* We're CLOSED */
+comment|/* We need lower layer up */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|lcp_finished
+name|__ARGS
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* We need lower layer down */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lcp_extcode
+name|__ARGS
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|lcp_rprotrej
+name|__ARGS
+argument_list|(
+operator|(
+name|fsm
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -445,35 +508,32 @@ block|,
 comment|/* Request peer's Configuration Information */
 name|lcp_up
 block|,
-comment|/* Called when fsm reaches OPEN state */
+comment|/* Called when fsm reaches OPENED state */
 name|lcp_down
 block|,
-comment|/* Called when fsm leaves OPEN state */
-name|lcp_closed
+comment|/* Called when fsm leaves OPENED state */
+name|lcp_starting
 block|,
-comment|/* Called when fsm reaches CLOSED state */
+comment|/* Called when we want the lower layer up */
+name|lcp_finished
+block|,
+comment|/* Called when we want the lower layer down */
 name|NULL
 block|,
 comment|/* Called when Protocol-Reject received */
 name|NULL
+block|,
 comment|/* Retransmission is necessary */
+name|lcp_extcode
+block|,
+comment|/* Called to handle LCP-specific codes */
+literal|"LCP"
+comment|/* String name of protocol */
 block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|DEFWARNLOOPS
-value|10
-end_define
-
-begin_comment
-comment|/* XXX Move to lcp.h */
-end_comment
-
 begin_decl_stmt
-specifier|static
 name|int
 name|lcp_warnloops
 init|=
@@ -484,6 +544,71 @@ end_decl_stmt
 begin_comment
 comment|/* Warn about a loopback this often */
 end_comment
+
+begin_comment
+comment|/*  * Length of each type of configuration option (in octets)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CILEN_VOID
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CILEN_SHORT
+value|4
+end_define
+
+begin_comment
+comment|/* CILEN_VOID + sizeof(short) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CILEN_CHAP
+value|5
+end_define
+
+begin_comment
+comment|/* CILEN_VOID + sizeof(short) + 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CILEN_LONG
+value|6
+end_define
+
+begin_comment
+comment|/* CILEN_VOID + sizeof(long) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CILEN_LQR
+value|8
+end_define
+
+begin_comment
+comment|/* CILEN_VOID + sizeof(short) + sizeof(long) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CODENAME
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) == CONFACK ? "ACK" : \ 			 (x) == CONFNAK ? "NAK" : "REJ")
+end_define
 
 begin_comment
 comment|/*  * lcp_init - Initialize LCP.  */
@@ -543,38 +668,25 @@ name|LCP
 expr_stmt|;
 name|f
 operator|->
-name|timeouttime
-operator|=
-name|DEFTIMEOUT
-expr_stmt|;
-name|f
-operator|->
-name|maxconfreqtransmits
-operator|=
-name|DEFMAXCONFIGREQS
-expr_stmt|;
-name|f
-operator|->
-name|maxtermtransmits
-operator|=
-name|DEFMAXTERMTRANSMITS
-expr_stmt|;
-name|f
-operator|->
-name|maxnakloops
-operator|=
-name|DEFMAXNAKLOOPS
-expr_stmt|;
-name|f
-operator|->
 name|callbacks
 operator|=
 operator|&
 name|lcp_callbacks
 expr_stmt|;
+name|fsm_init
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 name|wo
 operator|->
 name|passive
+operator|=
+literal|0
+expr_stmt|;
+name|wo
+operator|->
+name|silent
 operator|=
 literal|0
 expr_stmt|;
@@ -625,6 +737,12 @@ expr_stmt|;
 comment|/* Set to 1 on server */
 name|wo
 operator|->
+name|chap_mdtype
+operator|=
+name|CHAP_DIGEST_MD5
+expr_stmt|;
+name|wo
+operator|->
 name|neg_magicnumber
 operator|=
 literal|1
@@ -641,11 +759,24 @@ name|neg_accompression
 operator|=
 literal|1
 expr_stmt|;
+name|wo
+operator|->
+name|neg_lqr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* no LQR implementation yet */
 name|ao
 operator|->
 name|neg_mru
 operator|=
 literal|1
+expr_stmt|;
+name|ao
+operator|->
+name|mru
+operator|=
+name|MAXMRU
 expr_stmt|;
 name|ao
 operator|->
@@ -655,11 +786,16 @@ literal|1
 expr_stmt|;
 name|ao
 operator|->
-name|neg_chap
+name|asyncmap
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Set to 1 on client */
+name|ao
+operator|->
+name|neg_chap
+operator|=
+literal|1
+expr_stmt|;
 name|ao
 operator|->
 name|chap_mdtype
@@ -668,17 +804,10 @@ name|CHAP_DIGEST_MD5
 expr_stmt|;
 name|ao
 operator|->
-name|chap_callback
-operator|=
-name|CHAP_NOCALLBACK
-expr_stmt|;
-name|ao
-operator|->
 name|neg_upap
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-comment|/* Set to 1 on client */
 name|ao
 operator|->
 name|neg_magicnumber
@@ -697,7 +826,81 @@ name|neg_accompression
 operator|=
 literal|1
 expr_stmt|;
-name|fsm_init
+name|ao
+operator|->
+name|neg_lqr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* no LQR implementation yet */
+block|}
+end_function
+
+begin_comment
+comment|/*  * lcp_open - LCP is allowed to come up.  */
+end_comment
+
+begin_function
+name|void
+name|lcp_open
+parameter_list|(
+name|unit
+parameter_list|)
+name|int
+name|unit
+decl_stmt|;
+block|{
+name|fsm
+modifier|*
+name|f
+init|=
+operator|&
+name|lcp_fsm
+index|[
+name|unit
+index|]
+decl_stmt|;
+name|lcp_options
+modifier|*
+name|wo
+init|=
+operator|&
+name|lcp_wantoptions
+index|[
+name|unit
+index|]
+decl_stmt|;
+name|f
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|wo
+operator|->
+name|passive
+condition|)
+name|f
+operator|->
+name|flags
+operator||=
+name|OPT_PASSIVE
+expr_stmt|;
+if|if
+condition|(
+name|wo
+operator|->
+name|silent
+condition|)
+name|f
+operator|->
+name|flags
+operator||=
+name|OPT_SILENT
+expr_stmt|;
+name|fsm_open
 argument_list|(
 name|f
 argument_list|)
@@ -706,59 +909,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * lcp_activeopen - Actively open LCP.  */
-end_comment
-
-begin_function
-name|void
-name|lcp_activeopen
-parameter_list|(
-name|unit
-parameter_list|)
-name|int
-name|unit
-decl_stmt|;
-block|{
-name|fsm_activeopen
-argument_list|(
-operator|&
-name|lcp_fsm
-index|[
-name|unit
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * lcp_passiveopen - Passively open LCP.  */
-end_comment
-
-begin_function
-name|void
-name|lcp_passiveopen
-parameter_list|(
-name|unit
-parameter_list|)
-name|int
-name|unit
-decl_stmt|;
-block|{
-name|fsm_passiveopen
-argument_list|(
-operator|&
-name|lcp_fsm
-index|[
-name|unit
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * lcp_close - Close LCP.  */
+comment|/*  * lcp_close - Take LCP down.  */
 end_comment
 
 begin_function
@@ -797,34 +948,43 @@ name|int
 name|unit
 decl_stmt|;
 block|{
-name|SIFDOWN
+name|sifdown
 argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-name|SIFMTU
+name|ppp_send_config
 argument_list|(
 name|unit
 argument_list|,
 name|MTU
+argument_list|,
+literal|0xffffffff
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|SIFASYNCMAP
+name|ppp_recv_config
 argument_list|(
 name|unit
 argument_list|,
-literal|0xffffffff
+name|MTU
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|CIFPCOMPRESSION
-argument_list|(
+name|peer_mru
+index|[
 name|unit
-argument_list|)
-expr_stmt|;
-name|CIFACCOMPRESSION
-argument_list|(
-name|unit
-argument_list|)
+index|]
+operator|=
+name|MTU
 expr_stmt|;
 name|fsm_lowerup
 argument_list|(
@@ -906,6 +1066,231 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * lcp_extcode - Handle a LCP-specific code.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|lcp_extcode
+parameter_list|(
+name|f
+parameter_list|,
+name|code
+parameter_list|,
+name|id
+parameter_list|,
+name|inp
+parameter_list|,
+name|len
+parameter_list|)
+name|fsm
+modifier|*
+name|f
+decl_stmt|;
+name|int
+name|code
+decl_stmt|,
+name|id
+decl_stmt|;
+name|u_char
+modifier|*
+name|inp
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|code
+condition|)
+block|{
+case|case
+name|PROTREJ
+case|:
+name|lcp_rprotrej
+argument_list|(
+name|f
+argument_list|,
+name|inp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ECHOREQ
+case|:
+if|if
+condition|(
+name|f
+operator|->
+name|state
+operator|!=
+name|OPENED
+condition|)
+break|break;
+name|LCPDEBUG
+argument_list|(
+operator|(
+name|LOG_INFO
+operator|,
+literal|"lcp: Echo-Request, Rcvd id %d"
+operator|,
+name|id
+operator|)
+argument_list|)
+expr_stmt|;
+name|fsm_sdata
+argument_list|(
+name|f
+argument_list|,
+name|ECHOREP
+argument_list|,
+name|id
+argument_list|,
+name|inp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ECHOREP
+case|:
+case|case
+name|DISCREQ
+case|:
+break|break;
+default|default:
+return|return
+literal|0
+return|;
+block|}
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * lcp_rprotrej - Receive an Protocol-Reject.  *  * Figure out which protocol is rejected and inform it.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|lcp_rprotrej
+parameter_list|(
+name|f
+parameter_list|,
+name|inp
+parameter_list|,
+name|len
+parameter_list|)
+name|fsm
+modifier|*
+name|f
+decl_stmt|;
+name|u_char
+modifier|*
+name|inp
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+block|{
+name|u_short
+name|prot
+decl_stmt|;
+name|LCPDEBUG
+argument_list|(
+operator|(
+name|LOG_INFO
+operator|,
+literal|"lcp_rprotrej."
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+sizeof|sizeof
+argument_list|(
+name|u_short
+argument_list|)
+condition|)
+block|{
+name|LCPDEBUG
+argument_list|(
+operator|(
+name|LOG_INFO
+operator|,
+literal|"lcp_rprotrej: Rcvd short Protocol-Reject packet!"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|GETSHORT
+argument_list|(
+name|prot
+argument_list|,
+name|inp
+argument_list|)
+expr_stmt|;
+name|LCPDEBUG
+argument_list|(
+operator|(
+name|LOG_INFO
+operator|,
+literal|"lcp_rprotrej: Rcvd Protocol-Reject packet for %x!"
+operator|,
+name|prot
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/*      * Protocol-Reject packets received in any state other than the LCP      * OPENED state SHOULD be silently discarded.      */
+if|if
+condition|(
+name|f
+operator|->
+name|state
+operator|!=
+name|OPENED
+condition|)
+block|{
+name|LCPDEBUG
+argument_list|(
+operator|(
+name|LOG_INFO
+operator|,
+literal|"Protocol-Reject discarded: LCP in state %d"
+operator|,
+name|f
+operator|->
+name|state
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|DEMUXPROTREJ
+argument_list|(
+name|f
+operator|->
+name|unit
+argument_list|,
+name|prot
+argument_list|)
+expr_stmt|;
+comment|/* Inform protocol */
+block|}
+end_function
+
+begin_comment
 comment|/*  * lcp_protrej - A Protocol-Reject was received.  */
 end_comment
 
@@ -926,10 +1311,22 @@ block|{
 comment|/*      * Can't reject LCP!      */
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_WARNING,
+operator|(
+name|LOG_WARNING
+operator|,
 literal|"lcp_protrej: Received Protocol-Reject for LCP!"
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
+name|fsm_protreject
+argument_list|(
+operator|&
+name|lcp_fsm
+index|[
+name|unit
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -958,7 +1355,7 @@ name|int
 name|len
 decl_stmt|;
 block|{
-comment|/* this is marginal, as rejected-info should be full frame,      * but at least we return the rejected-protocol      */
+comment|/*      * Send back the protocol and the information field of the      * rejected packet.  We only get here if LCP is in the OPENED state.      */
 name|p
 operator|+=
 literal|2
@@ -1046,6 +1443,15 @@ operator|->
 name|unit
 index|]
 expr_stmt|;
+name|peer_mru
+index|[
+name|f
+operator|->
+name|unit
+index|]
+operator|=
+name|MTU
+expr_stmt|;
 block|}
 end_function
 
@@ -1083,28 +1489,36 @@ name|LENCIVOID
 parameter_list|(
 name|neg
 parameter_list|)
-value|(neg ? 2 : 0)
+value|(neg ? CILEN_VOID : 0)
 define|#
 directive|define
 name|LENCICHAP
 parameter_list|(
 name|neg
 parameter_list|)
-value|(neg ? 6 : 0)
+value|(neg ? CILEN_CHAP : 0)
 define|#
 directive|define
 name|LENCISHORT
 parameter_list|(
 name|neg
 parameter_list|)
-value|(neg ? 4 : 0)
+value|(neg ? CILEN_SHORT : 0)
 define|#
 directive|define
 name|LENCILONG
 parameter_list|(
 name|neg
 parameter_list|)
-value|(neg ? 6 : 0)
+value|(neg ? CILEN_LONG : 0)
+define|#
+directive|define
+name|LENCILQR
+parameter_list|(
+name|neg
+parameter_list|)
+value|(neg ? CILEN_LQR: 0)
+comment|/*      * NB: we only ask for one of CHAP and UPAP, even if we will      * accept either.      */
 return|return
 operator|(
 name|LENCISHORT
@@ -1130,9 +1544,21 @@ argument_list|)
 operator|+
 name|LENCISHORT
 argument_list|(
+operator|!
+name|go
+operator|->
+name|neg_chap
+operator|&&
 name|go
 operator|->
 name|neg_upap
+argument_list|)
+operator|+
+name|LENCILQR
+argument_list|(
+name|go
+operator|->
+name|neg_lqr
 argument_list|)
 operator|+
 name|LENCILONG
@@ -1172,6 +1598,8 @@ parameter_list|(
 name|f
 parameter_list|,
 name|ucp
+parameter_list|,
+name|lenp
 parameter_list|)
 name|fsm
 modifier|*
@@ -1180,6 +1608,10 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|ucp
+decl_stmt|;
+name|int
+modifier|*
+name|lenp
 decl_stmt|;
 block|{
 name|lcp_options
@@ -1194,6 +1626,12 @@ operator|->
 name|unit
 index|]
 decl_stmt|;
+name|u_char
+modifier|*
+name|start_ucp
+init|=
+name|ucp
+decl_stmt|;
 define|#
 directive|define
 name|ADDCIVOID
@@ -1203,7 +1641,7 @@ parameter_list|,
 name|neg
 parameter_list|)
 define|\
-value|if (neg) { \ 	PUTCHAR(opt, ucp); \ 	PUTCHAR(2, ucp); \     }
+value|if (neg) { \ 	PUTCHAR(opt, ucp); \ 	PUTCHAR(CILEN_VOID, ucp); \     }
 define|#
 directive|define
 name|ADDCISHORT
@@ -1215,7 +1653,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (neg) { \ 	PUTCHAR(opt, ucp); \ 	PUTCHAR(2 + sizeof (short), ucp); \ 	PUTSHORT(val, ucp); \     }
+value|if (neg) { \ 	PUTCHAR(opt, ucp); \ 	PUTCHAR(CILEN_SHORT, ucp); \ 	PUTSHORT(val, ucp); \     }
 define|#
 directive|define
 name|ADDCICHAP
@@ -1227,11 +1665,9 @@ parameter_list|,
 name|val
 parameter_list|,
 name|digest
-parameter_list|,
-name|callback
 parameter_list|)
 define|\
-value|if (neg) { \ 	PUTCHAR(opt, ucp); \ 	PUTCHAR(6, ucp); \ 	PUTSHORT(val, ucp); \ 	PUTCHAR(digest, ucp); \ 	PUTCHAR(callback, ucp); \     }
+value|if (neg) { \ 	PUTCHAR(opt, ucp); \ 	PUTCHAR(CILEN_CHAP, ucp); \ 	PUTSHORT(val, ucp); \ 	PUTCHAR(digest, ucp); \     }
 define|#
 directive|define
 name|ADDCILONG
@@ -1243,68 +1679,144 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (neg) { \ 	PUTCHAR(opt, ucp); \ 	PUTCHAR(2 + sizeof (long), ucp); \ 	PUTLONG(val, ucp); \     }
+value|if (neg) { \ 	PUTCHAR(opt, ucp); \ 	PUTCHAR(CILEN_LONG, ucp); \ 	PUTLONG(val, ucp); \     }
+define|#
+directive|define
+name|ADDCILQR
+parameter_list|(
+name|opt
+parameter_list|,
+name|neg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|if (neg) { \ 	PUTCHAR(opt, ucp); \ 	PUTCHAR(CILEN_LQR, ucp); \ 	PUTSHORT(LQR, ucp); \ 	PUTLONG(val, ucp); \     }
 name|ADDCISHORT
 argument_list|(
-argument|CI_MRU
+name|CI_MRU
 argument_list|,
-argument|go->neg_mru
+name|go
+operator|->
+name|neg_mru
 argument_list|,
-argument|go->mru
+name|go
+operator|->
+name|mru
 argument_list|)
+expr_stmt|;
 name|ADDCILONG
 argument_list|(
-argument|CI_ASYNCMAP
+name|CI_ASYNCMAP
 argument_list|,
-argument|go->neg_asyncmap
+name|go
+operator|->
+name|neg_asyncmap
 argument_list|,
-argument|go->asyncmap
+name|go
+operator|->
+name|asyncmap
 argument_list|)
+expr_stmt|;
 name|ADDCICHAP
 argument_list|(
-argument|CI_AUTHTYPE
+name|CI_AUTHTYPE
 argument_list|,
-argument|go->neg_chap
+name|go
+operator|->
+name|neg_chap
 argument_list|,
-argument|CHAP
+name|CHAP
 argument_list|,
-argument|go->chap_mdtype
-argument_list|,
-argument|go->chap_callback
+name|go
+operator|->
+name|chap_mdtype
 argument_list|)
+expr_stmt|;
 name|ADDCISHORT
 argument_list|(
-argument|CI_AUTHTYPE
+name|CI_AUTHTYPE
 argument_list|,
-argument|go->neg_upap
+operator|!
+name|go
+operator|->
+name|neg_chap
+operator|&&
+name|go
+operator|->
+name|neg_upap
 argument_list|,
-argument|UPAP
+name|UPAP
 argument_list|)
+expr_stmt|;
+name|ADDCILQR
+argument_list|(
+name|CI_QUALITY
+argument_list|,
+name|go
+operator|->
+name|neg_lqr
+argument_list|,
+name|go
+operator|->
+name|lqr_period
+argument_list|)
+expr_stmt|;
 name|ADDCILONG
 argument_list|(
-argument|CI_MAGICNUMBER
+name|CI_MAGICNUMBER
 argument_list|,
-argument|go->neg_magicnumber
+name|go
+operator|->
+name|neg_magicnumber
 argument_list|,
-argument|go->magicnumber
+name|go
+operator|->
+name|magicnumber
 argument_list|)
+expr_stmt|;
 name|ADDCIVOID
 argument_list|(
-argument|CI_PCOMPRESSION
+name|CI_PCOMPRESSION
 argument_list|,
-argument|go->neg_pcompression
+name|go
+operator|->
+name|neg_pcompression
 argument_list|)
+expr_stmt|;
 name|ADDCIVOID
 argument_list|(
-argument|CI_ACCOMPRESSION
+name|CI_ACCOMPRESSION
 argument_list|,
-argument|go->neg_accompression
+name|go
+operator|->
+name|neg_accompression
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ucp
+operator|-
+name|start_ucp
+operator|!=
+operator|*
+name|lenp
+condition|)
+block|{
+comment|/* this should never happen, because peer_mtu should be 1500 */
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Bug in lcp_addci: wrong length"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * lcp_ackci - Ack our CIs.  *  * Returns:  *	0 - Ack was bad.  *	1 - Ack was good.  */
+comment|/*  * lcp_ackci - Ack our CIs.  * This should not modify any state if the Ack is bad.  *  * Returns:  *	0 - Ack was bad.  *	1 - Ack was good.  */
 end_comment
 
 begin_function
@@ -1365,7 +1877,7 @@ parameter_list|,
 name|neg
 parameter_list|)
 define|\
-value|if (neg) { \ 	if ((len -= 2)< 0) \ 	    goto bad; \ 	GETCHAR(citype, p); \ 	GETCHAR(cilen, p); \ 	if (cilen != 2 || \ 	    citype != opt) \ 	    goto bad; \     }
+value|if (neg) { \ 	if ((len -= CILEN_VOID)< 0) \ 	    goto bad; \ 	GETCHAR(citype, p); \ 	GETCHAR(cilen, p); \ 	if (cilen != CILEN_VOID || \ 	    citype != opt) \ 	    goto bad; \     }
 define|#
 directive|define
 name|ACKCISHORT
@@ -1377,7 +1889,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (neg) { \ 	if ((len -= 2 + sizeof (short))< 0) \ 	    goto bad; \ 	GETCHAR(citype, p); \ 	GETCHAR(cilen, p); \ 	if (cilen != 2 + sizeof (short) || \ 	    citype != opt) \ 	    goto bad; \ 	GETSHORT(cishort, p); \ 	if (cishort != val) \ 	    goto bad; \     }
+value|if (neg) { \ 	if ((len -= CILEN_SHORT)< 0) \ 	    goto bad; \ 	GETCHAR(citype, p); \ 	GETCHAR(cilen, p); \ 	if (cilen != CILEN_SHORT || \ 	    citype != opt) \ 	    goto bad; \ 	GETSHORT(cishort, p); \ 	if (cishort != val) \ 	    goto bad; \     }
 define|#
 directive|define
 name|ACKCICHAP
@@ -1389,11 +1901,9 @@ parameter_list|,
 name|val
 parameter_list|,
 name|digest
-parameter_list|,
-name|callback
 parameter_list|)
 define|\
-value|if (neg) { \ 	if ((len -= 4 + sizeof (short))< 0) \ 	    goto bad; \ 	GETCHAR(citype, p); \ 	GETCHAR(cilen, p); \ 	if (cilen != 4 + sizeof (short) || \ 	    citype != opt) \ 	    goto bad; \ 	GETSHORT(cishort, p); \ 	if (cishort != val) \ 	    goto bad; \ 	GETCHAR(cichar, p); \ 	if (cichar != digest) \ 	  goto bad; \ 	GETCHAR(cichar, p); \ 	if (cichar != callback) \ 	  goto bad; \     }
+value|if (neg) { \ 	if ((len -= CILEN_CHAP)< 0) \ 	    goto bad; \ 	GETCHAR(citype, p); \ 	GETCHAR(cilen, p); \ 	if (cilen != CILEN_CHAP || \ 	    citype != opt) \ 	    goto bad; \ 	GETSHORT(cishort, p); \ 	if (cishort != val) \ 	    goto bad; \ 	GETCHAR(cichar, p); \ 	if (cichar != digest) \ 	  goto bad; \     }
 define|#
 directive|define
 name|ACKCILONG
@@ -1405,63 +1915,120 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (neg) { \ 	if ((len -= 2 + sizeof (long))< 0) \ 	    goto bad; \ 	GETCHAR(citype, p); \ 	GETCHAR(cilen, p); \ 	if (cilen != 2 + sizeof (long) || \ 	    citype != opt) \ 	    goto bad; \ 	GETLONG(cilong, p); \ 	if (cilong != val) \ 	    goto bad; \     }
+value|if (neg) { \ 	if ((len -= CILEN_LONG)< 0) \ 	    goto bad; \ 	GETCHAR(citype, p); \ 	GETCHAR(cilen, p); \ 	if (cilen != CILEN_LONG || \ 	    citype != opt) \ 	    goto bad; \ 	GETLONG(cilong, p); \ 	if (cilong != val) \ 	    goto bad; \     }
+define|#
+directive|define
+name|ACKCILQR
+parameter_list|(
+name|opt
+parameter_list|,
+name|neg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|if (neg) { \ 	if ((len -= CILEN_LQR)< 0) \ 	    goto bad; \ 	GETCHAR(citype, p); \ 	GETCHAR(cilen, p); \ 	if (cilen != CILEN_LQR || \ 	    citype != opt) \ 	    goto bad; \ 	GETSHORT(cishort, p); \ 	if (cishort != LQR) \ 	    goto bad; \ 	GETLONG(cilong, p); \ 	if (cilong != val) \ 	  goto bad; \     }
 name|ACKCISHORT
 argument_list|(
-argument|CI_MRU
+name|CI_MRU
 argument_list|,
-argument|go->neg_mru
+name|go
+operator|->
+name|neg_mru
 argument_list|,
-argument|go->mru
+name|go
+operator|->
+name|mru
 argument_list|)
+expr_stmt|;
 name|ACKCILONG
 argument_list|(
-argument|CI_ASYNCMAP
+name|CI_ASYNCMAP
 argument_list|,
-argument|go->neg_asyncmap
+name|go
+operator|->
+name|neg_asyncmap
 argument_list|,
-argument|go->asyncmap
+name|go
+operator|->
+name|asyncmap
 argument_list|)
+expr_stmt|;
 name|ACKCICHAP
 argument_list|(
-argument|CI_AUTHTYPE
+name|CI_AUTHTYPE
 argument_list|,
-argument|go->neg_chap
+name|go
+operator|->
+name|neg_chap
 argument_list|,
-argument|CHAP
+name|CHAP
 argument_list|,
-argument|go->chap_mdtype
-argument_list|,
-argument|go->chap_callback
+name|go
+operator|->
+name|chap_mdtype
 argument_list|)
+expr_stmt|;
 name|ACKCISHORT
 argument_list|(
-argument|CI_AUTHTYPE
+name|CI_AUTHTYPE
 argument_list|,
-argument|go->neg_upap
+operator|!
+name|go
+operator|->
+name|neg_chap
+operator|&&
+name|go
+operator|->
+name|neg_upap
 argument_list|,
-argument|UPAP
+name|UPAP
 argument_list|)
+expr_stmt|;
+name|ACKCILQR
+argument_list|(
+name|CI_QUALITY
+argument_list|,
+name|go
+operator|->
+name|neg_lqr
+argument_list|,
+name|go
+operator|->
+name|lqr_period
+argument_list|)
+expr_stmt|;
 name|ACKCILONG
 argument_list|(
-argument|CI_MAGICNUMBER
+name|CI_MAGICNUMBER
 argument_list|,
-argument|go->neg_magicnumber
+name|go
+operator|->
+name|neg_magicnumber
 argument_list|,
-argument|go->magicnumber
+name|go
+operator|->
+name|magicnumber
 argument_list|)
+expr_stmt|;
 name|ACKCIVOID
 argument_list|(
-argument|CI_PCOMPRESSION
+name|CI_PCOMPRESSION
 argument_list|,
-argument|go->neg_pcompression
+name|go
+operator|->
+name|neg_pcompression
 argument_list|)
+expr_stmt|;
 name|ACKCIVOID
 argument_list|(
-argument|CI_ACCOMPRESSION
+name|CI_ACCOMPRESSION
 argument_list|,
-argument|go->neg_accompression
+name|go
+operator|->
+name|neg_accompression
 argument_list|)
+expr_stmt|;
 comment|/*      * If there are any remaining CIs, then this packet is bad.      */
 if|if
 condition|(
@@ -1481,10 +2048,13 @@ name|bad
 label|:
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_WARNING,
+operator|(
+name|LOG_WARNING
+operator|,
 literal|"lcp_acki: received bad Ack!"
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1494,12 +2064,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * lcp_nakci - NAK some of our CIs.  */
+comment|/*  * lcp_nakci - Peer has sent a NAK for some of our CIs.  * This should not modify any state if the Nak is bad  * or if LCP is in the OPENED state.  *  * Returns:  *	0 - Nak was bad.  *	1 - Nak was good.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|lcp_nakci
 parameter_list|(
 name|f
@@ -1544,12 +2114,51 @@ operator|->
 name|unit
 index|]
 decl_stmt|;
+name|u_char
+name|cilen
+decl_stmt|,
+name|citype
+decl_stmt|,
+name|cichar
+decl_stmt|,
+modifier|*
+name|next
+decl_stmt|;
 name|u_short
 name|cishort
 decl_stmt|;
 name|u_long
 name|cilong
 decl_stmt|;
+name|lcp_options
+name|no
+decl_stmt|;
+comment|/* options we've seen Naks for */
+name|lcp_options
+name|try
+decl_stmt|;
+comment|/* options to request next time */
+name|int
+name|looped_back
+init|=
+literal|0
+decl_stmt|;
+name|BZERO
+argument_list|(
+operator|&
+name|no
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|no
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|try
+operator|=
+operator|*
+name|go
+expr_stmt|;
 comment|/*      * Any Nak'd CIs must be in exactly the same order that we sent.      * Check packet length and CI length at each step.      * If we find any deviations, then this packet is bad.      */
 define|#
 directive|define
@@ -1562,7 +2171,7 @@ parameter_list|,
 name|code
 parameter_list|)
 define|\
-value|if (neg&& \ 	len>= 2&& \ 	p[1] == 2&& \ 	p[0] == opt) { \ 	len -= 2; \ 	INCPTR(2, p); \ 	code \     }
+value|if (go->neg&& \ 	len>= CILEN_VOID&& \ 	p[1] == CILEN_VOID&& \ 	p[0] == opt) { \ 	len -= CILEN_VOID; \ 	INCPTR(CILEN_VOID, p); \ 	no.neg = 1; \ 	code \     }
 define|#
 directive|define
 name|NAKCICHAP
@@ -1571,14 +2180,10 @@ name|opt
 parameter_list|,
 name|neg
 parameter_list|,
-name|digest
-parameter_list|,
-name|callback
-parameter_list|,
 name|code
 parameter_list|)
 define|\
-value|if (neg&& \ 	len>= 4 + sizeof (short)&& \ 	p[1] == 4 + sizeof (short)&& \ 	p[0] == opt) { \ 	len -= 4 + sizeof (short); \ 	INCPTR(2, p); \ 	GETSHORT(cishort, p); \ 	INCPTR(2, p); \ 	code \     }
+value|if (go->neg&& \ 	len>= CILEN_CHAP&& \ 	p[1] == CILEN_CHAP&& \ 	p[0] == opt) { \ 	len -= CILEN_CHAP; \ 	INCPTR(2, p); \ 	GETSHORT(cishort, p); \ 	GETCHAR(cichar, p); \ 	no.neg = 1; \ 	code \     }
 define|#
 directive|define
 name|NAKCISHORT
@@ -1590,7 +2195,7 @@ parameter_list|,
 name|code
 parameter_list|)
 define|\
-value|if (neg&& \ 	len>= 2 + sizeof (short)&& \ 	p[1] == 2 + sizeof (short)&& \ 	p[0] == opt) { \ 	len -= 2 + sizeof (short); \ 	INCPTR(2, p); \ 	GETSHORT(cishort, p); \ 	code \     }
+value|if (go->neg&& \ 	len>= CILEN_SHORT&& \ 	p[1] == CILEN_SHORT&& \ 	p[0] == opt) { \ 	len -= CILEN_SHORT; \ 	INCPTR(2, p); \ 	GETSHORT(cishort, p); \ 	no.neg = 1; \ 	code \     }
 define|#
 directive|define
 name|NAKCILONG
@@ -1602,106 +2207,401 @@ parameter_list|,
 name|code
 parameter_list|)
 define|\
-value|if (neg&& \ 	len>= 2 + sizeof (long)&& \ 	p[1] == 2 + sizeof (long)&& \ 	p[0] == opt) { \ 	len -= 2 + sizeof (long); \ 	INCPTR(2, p); \ 	GETLONG(cilong, p); \ 	code \     }
-comment|/*      * We don't care if they want to send us smaller packets than      * we want.  Therefore, accept any MRU less than what we asked for,      * but then ignore the new value when setting the MRU in the kernel.      * If they send us a bigger MRU than what we asked, reject it and      * let him decide to accept our value.      */
+value|if (go->neg&& \ 	len>= CILEN_LONG&& \ 	p[1] == CILEN_LONG&& \ 	p[0] == opt) { \ 	len -= CILEN_LONG; \ 	INCPTR(2, p); \ 	GETLONG(cilong, p); \ 	no.neg = 1; \ 	code \     }
+define|#
+directive|define
+name|NAKCILQR
+parameter_list|(
+name|opt
+parameter_list|,
+name|neg
+parameter_list|,
+name|code
+parameter_list|)
+define|\
+value|if (go->neg&& \ 	len>= CILEN_LQR&& \ 	p[1] == CILEN_LQR&& \ 	p[0] == opt) { \ 	len -= CILEN_LQR; \ 	INCPTR(2, p); \ 	GETSHORT(cishort, p); \ 	GETLONG(cilong, p); \ 	no.neg = 1; \ 	code \     }
+comment|/*      * We don't care if they want to send us smaller packets than      * we want.  Therefore, accept any MRU less than what we asked for,      * but then ignore the new value when setting the MRU in the kernel.      * If they send us a bigger MRU than what we asked, accept it, up to      * the limit of the default MRU we'd get if we didn't negotiate.      */
 name|NAKCISHORT
 argument_list|(
 argument|CI_MRU
 argument_list|,
-argument|go->neg_mru
+argument|neg_mru
 argument_list|,
-argument|if (cishort<= wo->mru) 		    go->mru = cishort; 	       else 		    goto bad;
+argument|if (cishort<= wo->mru || cishort< DEFMRU) 		   try.mru = cishort;
 argument_list|)
+empty_stmt|;
+comment|/*      * Add any characters they want to our (receive-side) asyncmap.      */
 name|NAKCILONG
 argument_list|(
 argument|CI_ASYNCMAP
 argument_list|,
-argument|go->neg_asyncmap
+argument|neg_asyncmap
 argument_list|,
-argument|go->asyncmap |= cilong;
+argument|try.asyncmap = go->asyncmap | cilong;
 argument_list|)
+empty_stmt|;
+comment|/*      * If they can't cope with our CHAP hash algorithm, we'll have      * to stop asking for CHAP.  We haven't got any other algorithm.      */
 name|NAKCICHAP
 argument_list|(
 argument|CI_AUTHTYPE
 argument_list|,
-argument|go->neg_chap
+argument|neg_chap
 argument_list|,
-argument|go->chap_mdtype
-argument_list|,
-argument|go->chap_callback
-argument_list|,
-argument|LCPDEBUG((LOG_WARNING,
-literal|"Peer refuses to authenticate chap!"
-argument|))
+argument|try.neg_chap =
+literal|0
+argument|;
 argument_list|)
+empty_stmt|;
+comment|/*      * Peer shouldn't send Nak for UPAP, protocol compression or      * address/control compression requests; they should send      * a Reject instead.  If they send a Nak, treat it as a Reject.      */
+if|if
+condition|(
+operator|!
+name|go
+operator|->
+name|neg_chap
+condition|)
+block|{
 name|NAKCISHORT
 argument_list|(
 argument|CI_AUTHTYPE
 argument_list|,
-argument|go->neg_upap
+argument|neg_upap
 argument_list|,
-argument|LCPDEBUG((LOG_WARNING,
-literal|"Peer refuses to authenticate pap!"
-argument|))
+argument|try.neg_upap =
+literal|0
+argument|;
 argument_list|)
+empty_stmt|;
+block|}
+comment|/*      * If they can't cope with our link quality protocol, we'll have      * to stop asking for LQR.  We haven't got any other protocol.      * If they Nak the reporting period, take their value XXX ?      */
+name|NAKCILONG
+argument_list|(
+argument|CI_QUALITY
+argument_list|,
+argument|neg_lqr
+argument_list|,
+argument|if (cishort != LQR) 		  try.neg_lqr =
+literal|0
+argument|; 	      else 	          try.lqr_period = cilong;
+argument_list|)
+empty_stmt|;
+comment|/*      * Check for a looped-back line.      */
 name|NAKCILONG
 argument_list|(
 argument|CI_MAGICNUMBER
 argument_list|,
-argument|go->neg_magicnumber
+argument|neg_magicnumber
 argument_list|,
-argument|go->magicnumber = magic(); 	      if (++go->numloops % lcp_warnloops ==
-literal|0
-argument|) 		  LCPDEBUG((LOG_INFO,
-literal|"The line appears to be looped back."
-argument|))
+argument|try.magicnumber = magic(); 	      ++try.numloops; 	      looped_back =
+literal|1
+argument|;
 argument_list|)
+empty_stmt|;
 name|NAKCIVOID
 argument_list|(
 argument|CI_PCOMPRESSION
 argument_list|,
-argument|go->neg_pcompression
+argument|neg_pcompression
 argument_list|,
-argument|go->neg_pcompression =
+argument|try.neg_pcompression =
 literal|0
 argument|;
 argument_list|)
+empty_stmt|;
 name|NAKCIVOID
 argument_list|(
 argument|CI_ACCOMPRESSION
 argument_list|,
-argument|go->neg_accompression
+argument|neg_accompression
 argument_list|,
-argument|go->neg_accompression =
+argument|try.neg_accompression =
 literal|0
 argument|;
 argument_list|)
-comment|/*      * If there are any remaining CIs, then this packet is bad.      */
+empty_stmt|;
+comment|/*      * There may be remaining CIs, if the peer is requesting negotiation      * on an option that we didn't include in our request packet.      * If we see an option that we requested, or one we've already seen      * in this packet, then this packet is bad.      * If we wanted to respond by starting to negotiate on the requested      * option(s), we could, but we don't, because except for the      * authentication type and quality protocol, if we are not negotiating      * an option, it is because we were told not to.      * For the authentication type, the Nak from the peer means      * `let me authenticate myself with you' which is a bit pointless.      * For the quality protocol, the Nak means `ask me to send you quality      * reports', but if we didn't ask for them, we don't want them.      */
+while|while
+condition|(
+name|len
+operator|>
+name|CILEN_VOID
+condition|)
+block|{
+name|GETCHAR
+argument_list|(
+name|citype
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|GETCHAR
+argument_list|(
+name|cilen
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|len
+operator|-=
+name|cilen
+operator|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
+name|next
+operator|=
+name|p
+operator|+
+name|cilen
+operator|-
+literal|2
+expr_stmt|;
+switch|switch
+condition|(
+name|citype
+condition|)
+block|{
+case|case
+name|CI_MRU
+case|:
+if|if
+condition|(
+name|go
+operator|->
+name|neg_mru
+operator|||
+name|no
+operator|.
+name|neg_mru
+operator|||
+name|cilen
+operator|!=
+name|CILEN_SHORT
+condition|)
+goto|goto
+name|bad
+goto|;
+break|break;
+case|case
+name|CI_ASYNCMAP
+case|:
+if|if
+condition|(
+name|go
+operator|->
+name|neg_asyncmap
+operator|||
+name|no
+operator|.
+name|neg_asyncmap
+operator|||
+name|cilen
+operator|!=
+name|CILEN_LONG
+condition|)
+goto|goto
+name|bad
+goto|;
+break|break;
+case|case
+name|CI_AUTHTYPE
+case|:
+if|if
+condition|(
+name|go
+operator|->
+name|neg_chap
+operator|||
+name|no
+operator|.
+name|neg_chap
+operator|||
+name|go
+operator|->
+name|neg_upap
+operator|||
+name|no
+operator|.
+name|neg_upap
+condition|)
+goto|goto
+name|bad
+goto|;
+break|break;
+case|case
+name|CI_MAGICNUMBER
+case|:
+if|if
+condition|(
+name|go
+operator|->
+name|neg_magicnumber
+operator|||
+name|no
+operator|.
+name|neg_magicnumber
+operator|||
+name|cilen
+operator|!=
+name|CILEN_LONG
+condition|)
+goto|goto
+name|bad
+goto|;
+break|break;
+case|case
+name|CI_PCOMPRESSION
+case|:
+if|if
+condition|(
+name|go
+operator|->
+name|neg_pcompression
+operator|||
+name|no
+operator|.
+name|neg_pcompression
+operator|||
+name|cilen
+operator|!=
+name|CILEN_VOID
+condition|)
+goto|goto
+name|bad
+goto|;
+break|break;
+case|case
+name|CI_ACCOMPRESSION
+case|:
+if|if
+condition|(
+name|go
+operator|->
+name|neg_accompression
+operator|||
+name|no
+operator|.
+name|neg_accompression
+operator|||
+name|cilen
+operator|!=
+name|CILEN_VOID
+condition|)
+goto|goto
+name|bad
+goto|;
+break|break;
+case|case
+name|CI_QUALITY
+case|:
+if|if
+condition|(
+name|go
+operator|->
+name|neg_lqr
+operator|||
+name|no
+operator|.
+name|neg_lqr
+operator|||
+name|cilen
+operator|!=
+name|CILEN_LQR
+condition|)
+goto|goto
+name|bad
+goto|;
+break|break;
+default|default:
+goto|goto
+name|bad
+goto|;
+block|}
+name|p
+operator|=
+name|next
+expr_stmt|;
+block|}
+comment|/* If there is still anything left, this packet is bad. */
 if|if
 condition|(
 name|len
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
+comment|/*      * OK, the Nak is good.  Now we can update state.      */
+if|if
+condition|(
+name|f
+operator|->
+name|state
+operator|!=
+name|OPENED
+condition|)
+block|{
+operator|*
+name|go
+operator|=
+name|try
+expr_stmt|;
+if|if
+condition|(
+name|looped_back
+operator|&&
+name|try
+operator|.
+name|numloops
+operator|%
+name|lcp_warnloops
 operator|==
 literal|0
 condition|)
-return|return;
+name|LCPDEBUG
+argument_list|(
+operator|(
+name|LOG_INFO
+operator|,
+literal|"The line appears to be looped back."
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+literal|1
+return|;
 name|bad
 label|:
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_WARNING,
+operator|(
+name|LOG_WARNING
+operator|,
 literal|"lcp_nakci: received bad Nak!"
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * lcp_rejci - Reject some of our CIs.  */
+comment|/*  * lcp_rejci - Peer has Rejected some of our CIs.  * This should not modify any state if the Reject is bad  * or if LCP is in the OPENED state.  *  * Returns:  *	0 - Reject was bad.  *	1 - Reject was good.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|lcp_rejci
 parameter_list|(
 name|f
@@ -1734,6 +2634,9 @@ operator|->
 name|unit
 index|]
 decl_stmt|;
+name|u_char
+name|cichar
+decl_stmt|;
 name|u_short
 name|cishort
 decl_stmt|;
@@ -1747,16 +2650,19 @@ init|=
 name|p
 decl_stmt|;
 name|int
-name|myopt
-decl_stmt|,
-name|myval
-decl_stmt|,
-name|xval
-decl_stmt|,
 name|plen
 init|=
 name|len
 decl_stmt|;
+name|lcp_options
+name|try
+decl_stmt|;
+comment|/* options to request next time */
+name|try
+operator|=
+operator|*
+name|go
+expr_stmt|;
 comment|/*      * Any Rejected CIs must be in exactly the same order that we sent.      * Check packet length and CI length at each step.      * If we find any deviations, then this packet is bad.      */
 define|#
 directive|define
@@ -1767,7 +2673,7 @@ parameter_list|,
 name|neg
 parameter_list|)
 define|\
-value|myopt = opt; \     if (neg&& \ 	len>= 2&& \ 	p[1] == 2&& \ 	p[0] == opt) { \ 	len -= 2; \ 	INCPTR(2, p); \ 	neg = 0; \ 	LCPDEBUG((LOG_INFO,"lcp_rejci rejected void opt %d",opt)) \     }
+value|if (go->neg&& \ 	len>= CILEN_VOID&& \ 	p[1] == CILEN_VOID&& \ 	p[0] == opt) { \ 	len -= CILEN_VOID; \ 	INCPTR(CILEN_VOID, p); \ 	try.neg = 0; \ 	LCPDEBUG((LOG_INFO, "lcp_rejci rejected void opt %d", opt)); \     }
 define|#
 directive|define
 name|REJCISHORT
@@ -1779,9 +2685,9 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|myopt = opt; myval = val; \     if (neg&& \ 	len>= 2 + sizeof (short)&& \ 	p[1] == 2 + sizeof (short)&& \ 	p[0] == opt) { \ 	len -= 2 + sizeof (short); \ 	INCPTR(2, p); \ 	GETSHORT(cishort, p); \
+value|if (go->neg&& \ 	len>= CILEN_SHORT&& \ 	p[1] == CILEN_SHORT&& \ 	p[0] == opt) { \ 	len -= CILEN_SHORT; \ 	INCPTR(2, p); \ 	GETSHORT(cishort, p); \
 comment|/* Check rejected value. */
-value|\   	xval = cishort; \ 	if (cishort != val) \ 	    goto bad; \ 	neg = 0; \ 	LCPDEBUG((LOG_INFO,"lcp_rejci rejected short opt %d", opt)) \     }
+value|\ 	if (cishort != val) \ 	    goto bad; \ 	try.neg = 0; \ 	LCPDEBUG((LOG_INFO,"lcp_rejci rejected short opt %d", opt)); \     }
 define|#
 directive|define
 name|REJCICHAP
@@ -1793,13 +2699,11 @@ parameter_list|,
 name|val
 parameter_list|,
 name|digest
-parameter_list|,
-name|callback
 parameter_list|)
 define|\
-value|myopt = opt; myval = val; \     if (neg&& \ 	len>= 4 + sizeof (short)&& \ 	p[1] == 4 + sizeof (short)&& \ 	p[0] == opt) { \ 	len -= 4 + sizeof (short); \ 	INCPTR(2, p); \ 	GETSHORT(cishort, p); \
+value|if (go->neg&& \ 	len>= CILEN_CHAP&& \ 	p[1] == CILEN_CHAP&& \ 	p[0] == opt) { \ 	len -= CILEN_CHAP; \ 	INCPTR(2, p); \ 	GETSHORT(cishort, p); \ 	GETCHAR(cichar, p); \
 comment|/* Check rejected value. */
-value|\   	xval = cishort; \ 	if (cishort != val) \ 	    goto bad; \ 	neg = 0; \ 	INCPTR(2, p); \ 	LCPDEBUG((LOG_INFO,"lcp_rejci rejected chap opt %d", opt)) \     }
+value|\ 	if (cishort != val || cichar != digest) \ 	    goto bad; \ 	try.neg = 0; \ 	LCPDEBUG((LOG_INFO,"lcp_rejci rejected chap opt %d", opt)); \     }
 define|#
 directive|define
 name|REJCILONG
@@ -1811,108 +2715,189 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|myopt = opt; myval = val; \     if (neg&& \ 	len>= 2 + sizeof (long)&& \ 	p[1] == 2 + sizeof (long)&& \ 	p[0] == opt) { \ 	len -= 2 + sizeof (long); \ 	INCPTR(2, p); \ 	GETLONG(cilong, p); \         xval = cilong; \
+value|if (go->neg&& \ 	len>= CILEN_LONG&& \ 	p[1] == CILEN_LONG&& \ 	p[0] == opt) { \ 	len -= CILEN_LONG; \ 	INCPTR(2, p); \ 	GETLONG(cilong, p); \
 comment|/* Check rejected value. */
-value|\ 	if (cilong != val) \ 	    goto bad; \ 	neg = 0; \ 	LCPDEBUG((LOG_INFO,"lcp_rejci rejected long opt %d", opt)) \     }
+value|\ 	if (cilong != val) \ 	    goto bad; \ 	try.neg = 0; \ 	LCPDEBUG((LOG_INFO,"lcp_rejci rejected long opt %d", opt)); \     }
+define|#
+directive|define
+name|REJCILQR
+parameter_list|(
+name|opt
+parameter_list|,
+name|neg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|if (go->neg&& \ 	len>= CILEN_LQR&& \ 	p[1] == CILEN_LQR&& \ 	p[0] == opt) { \ 	len -= CILEN_LQR; \ 	INCPTR(2, p); \ 	GETSHORT(cishort, p); \ 	GETLONG(cilong, p); \
+comment|/* Check rejected value. */
+value|\ 	if (cishort != LQR || cichar != val) \ 	    goto bad; \ 	try.neg = 0; \ 	LCPDEBUG((LOG_INFO,"lcp_rejci rejected LQR opt %d", opt)); \     }
 name|REJCISHORT
 argument_list|(
-argument|CI_MRU
+name|CI_MRU
 argument_list|,
-argument|go->neg_mru
+name|neg_mru
 argument_list|,
-argument|go->mru
+name|go
+operator|->
+name|mru
 argument_list|)
+expr_stmt|;
 name|REJCILONG
 argument_list|(
-argument|CI_ASYNCMAP
+name|CI_ASYNCMAP
 argument_list|,
-argument|go->neg_asyncmap
+name|neg_asyncmap
 argument_list|,
-argument|go->asyncmap
+name|go
+operator|->
+name|asyncmap
 argument_list|)
+expr_stmt|;
 name|REJCICHAP
 argument_list|(
-argument|CI_AUTHTYPE
+name|CI_AUTHTYPE
 argument_list|,
-argument|go->neg_chap
+name|neg_chap
 argument_list|,
-argument|CHAP
+name|CHAP
 argument_list|,
-argument|go->chap_mdtype
-argument_list|,
-argument|go->callback
+name|go
+operator|->
+name|chap_mdtype
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|go
+operator|->
+name|neg_chap
+condition|)
+block|{
 name|REJCISHORT
 argument_list|(
-argument|CI_AUTHTYPE
+name|CI_AUTHTYPE
 argument_list|,
-argument|go->neg_upap
+name|neg_upap
 argument_list|,
-argument|UPAP
+name|UPAP
 argument_list|)
+expr_stmt|;
+block|}
+name|REJCILQR
+argument_list|(
+name|CI_QUALITY
+argument_list|,
+name|neg_lqr
+argument_list|,
+name|go
+operator|->
+name|lqr_period
+argument_list|)
+expr_stmt|;
 name|REJCILONG
 argument_list|(
-argument|CI_MAGICNUMBER
+name|CI_MAGICNUMBER
 argument_list|,
-argument|go->neg_magicnumber
+name|neg_magicnumber
 argument_list|,
-argument|go->magicnumber
+name|go
+operator|->
+name|magicnumber
 argument_list|)
+expr_stmt|;
 name|REJCIVOID
 argument_list|(
-argument|CI_PCOMPRESSION
+name|CI_PCOMPRESSION
 argument_list|,
-argument|go->neg_pcompression
+name|neg_pcompression
 argument_list|)
+expr_stmt|;
 name|REJCIVOID
 argument_list|(
-argument|CI_ACCOMPRESSION
+name|CI_ACCOMPRESSION
 argument_list|,
-argument|go->neg_accompression
+name|neg_accompression
 argument_list|)
+expr_stmt|;
 comment|/*      * If there are any remaining CIs, then this packet is bad.      */
 if|if
 condition|(
 name|len
-operator|==
+operator|!=
 literal|0
 condition|)
-return|return;
+goto|goto
+name|bad
+goto|;
+comment|/*      * Now we can update state.      */
+if|if
+condition|(
+name|f
+operator|->
+name|state
+operator|!=
+name|OPENED
+condition|)
+operator|*
+name|go
+operator|=
+name|try
+expr_stmt|;
+return|return
+literal|1
+return|;
 name|bad
 label|:
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_WARNING,
+operator|(
+name|LOG_WARNING
+operator|,
 literal|"lcp_rejci: received bad Reject!"
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_WARNING,
-literal|"lcp_rejci: plen %d len %d off %d, exp opt %d, found %d, val %d fval %d "
-argument|, 	plen, len, p - start, myopt, p[
-literal|0
-argument|]&
-literal|0xff
-argument|, myval, xval )
+operator|(
+name|LOG_WARNING
+operator|,
+literal|"lcp_rejci: plen %d len %d off %d"
+operator|,
+name|plen
+operator|,
+name|len
+operator|,
+name|p
+operator|-
+name|start
+operator|)
 argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * lcp_reqci - Check the peer's requested CIs and send appropriate response.  *  * Returns: CONFACK, CONFNAK or CONFREJ and input packet modified  * appropriately.  */
+comment|/*  * lcp_reqci - Check the peer's requested CIs and send appropriate response.  *  * Returns: CONFACK, CONFNAK or CONFREJ and input packet modified  * appropriately.  If reject_if_disagree is non-zero, doesn't return  * CONFNAK; returns CONFREJ if it can't return CONFACK.  */
 end_comment
 
 begin_function
 specifier|static
-name|u_char
+name|int
 name|lcp_reqci
 parameter_list|(
 name|f
 parameter_list|,
 name|inp
 parameter_list|,
-name|len
+name|lenp
+parameter_list|,
+name|reject_if_disagree
 parameter_list|)
 name|fsm
 modifier|*
@@ -1925,9 +2910,12 @@ decl_stmt|;
 comment|/* Requested CIs */
 name|int
 modifier|*
-name|len
+name|lenp
 decl_stmt|;
 comment|/* Length of requested CIs */
+name|int
+name|reject_if_disagree
+decl_stmt|;
 block|{
 name|lcp_options
 modifier|*
@@ -1968,8 +2956,11 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|cip
+decl_stmt|,
+modifier|*
+name|next
 decl_stmt|;
-comment|/* Pointer to Current CI */
+comment|/* Pointer to current and next CIs */
 name|u_char
 name|cilen
 decl_stmt|,
@@ -1999,8 +2990,6 @@ comment|/* Individual option return code */
 name|u_char
 modifier|*
 name|p
-init|=
-name|inp
 decl_stmt|;
 comment|/* Pointer to next char to parse */
 name|u_char
@@ -2014,53 +3003,26 @@ name|int
 name|l
 init|=
 operator|*
-name|len
+name|lenp
 decl_stmt|;
 comment|/* Length left */
 comment|/*      * Reset all his options.      */
+name|BZERO
+argument_list|(
 name|ho
-operator|->
-name|neg_mru
-operator|=
-literal|0
-expr_stmt|;
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
 name|ho
-operator|->
-name|neg_asyncmap
-operator|=
-literal|0
-expr_stmt|;
-name|ho
-operator|->
-name|neg_chap
-operator|=
-literal|0
-expr_stmt|;
-name|ho
-operator|->
-name|neg_upap
-operator|=
-literal|0
-expr_stmt|;
-name|ho
-operator|->
-name|neg_magicnumber
-operator|=
-literal|0
-expr_stmt|;
-name|ho
-operator|->
-name|neg_pcompression
-operator|=
-literal|0
-expr_stmt|;
-name|ho
-operator|->
-name|neg_accompression
-operator|=
-literal|0
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/*      * Process all his options.      */
+name|next
+operator|=
+name|inp
+expr_stmt|;
 while|while
 condition|(
 name|l
@@ -2074,6 +3036,8 @@ comment|/* Assume success */
 name|cip
 operator|=
 name|p
+operator|=
+name|next
 expr_stmt|;
 comment|/* Remember begining of CI */
 if|if
@@ -2102,10 +3066,13 @@ block|{
 comment|/*  CI length too big? */
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_WARNING,
+operator|(
+name|LOG_WARNING
+operator|,
 literal|"lcp_reqci: bad CI length!"
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
 name|orc
 operator|=
 name|CONFREJ
@@ -2146,11 +3113,11 @@ operator|-=
 name|cilen
 expr_stmt|;
 comment|/* Adjust remaining length */
+name|next
+operator|+=
 name|cilen
-operator|-=
-literal|2
 expr_stmt|;
-comment|/* Adjust cilen to just data */
+comment|/* Step to next CI */
 switch|switch
 condition|(
 name|citype
@@ -2162,10 +3129,13 @@ name|CI_MRU
 case|:
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
+operator|(
+name|LOG_INFO
+operator|,
 literal|"lcp_reqci: rcvd MRU"
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2176,21 +3146,10 @@ operator|||
 comment|/* Allow option? */
 name|cilen
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|short
-argument_list|)
+name|CILEN_SHORT
 condition|)
 block|{
 comment|/* Check CI length */
-name|INCPTR
-argument_list|(
-name|cilen
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* Skip rest of CI */
 name|orc
 operator|=
 name|CONFREJ
@@ -2208,10 +3167,15 @@ expr_stmt|;
 comment|/* Parse MRU */
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
+operator|(
+name|LOG_INFO
+operator|,
 literal|"(%d)"
-argument|, cishort)
+operator|,
+name|cishort
+operator|)
 argument_list|)
+expr_stmt|;
 comment|/* 	     * He must be able to receive at least our minimum. 	     * No need to check a maximum.  If he sends a large number, 	     * we'll just ignore it. 	     */
 if|if
 condition|(
@@ -2225,6 +3189,12 @@ operator|=
 name|CONFNAK
 expr_stmt|;
 comment|/* Nak CI */
+if|if
+condition|(
+operator|!
+name|reject_if_disagree
+condition|)
+block|{
 name|DECPTR
 argument_list|(
 sizeof|sizeof
@@ -2244,6 +3214,7 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* Give him a hint */
+block|}
 break|break;
 block|}
 name|ho
@@ -2252,7 +3223,7 @@ name|neg_mru
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Remember he sent and MRU */
+comment|/* Remember he sent MRU */
 name|ho
 operator|->
 name|mru
@@ -2266,10 +3237,13 @@ name|CI_ASYNCMAP
 case|:
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
+operator|(
+name|LOG_INFO
+operator|,
 literal|"lcp_reqci: rcvd ASYNCMAP"
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2279,19 +3253,9 @@ name|neg_asyncmap
 operator|||
 name|cilen
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|long
-argument_list|)
+name|CILEN_LONG
 condition|)
 block|{
-name|INCPTR
-argument_list|(
-name|cilen
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 name|orc
 operator|=
 name|CONFREJ
@@ -2307,18 +3271,64 @@ argument_list|)
 expr_stmt|;
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
+operator|(
+name|LOG_INFO
+operator|,
 literal|"(%lx)"
-argument|, cilong)
+operator|,
+name|cilong
+operator|)
 argument_list|)
-comment|/* XXX Accept anything he says */
-if|#
-directive|if
+expr_stmt|;
+comment|/* 	     * Asyncmap must have set at least the bits 	     * which are set in lcp_allowoptions[unit].asyncmap. 	     */
+if|if
+condition|(
+operator|(
+name|ao
+operator|->
+name|asyncmap
+operator|&
+operator|~
+name|cilong
+operator|)
+operator|!=
 literal|0
-comment|/* 	     * Asyncmap must be OR of two maps. 	     */
-block|if ((lcp_wantoptions[f->unit].neg_asyncmap&& 		 cilong != (lcp_wantoptions[f->unit].asyncmap | cilong)) || 		(!lcp_wantoptions[f->unit].neg_asyncmap&& 		 cilong != 0xffffffff)) { 		orc = CONFNAK; 		DECPTR(sizeof (long), p); 		PUTLONG(lcp_wantoptions[f->unit].neg_asyncmap ? 			lcp_wantoptions[f->unit].asyncmap | cilong : 			0xffffffff, p); 		break; 	    }
-endif|#
-directive|endif
+condition|)
+block|{
+name|orc
+operator|=
+name|CONFNAK
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|reject_if_disagree
+condition|)
+block|{
+name|DECPTR
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|PUTLONG
+argument_list|(
+name|ao
+operator|->
+name|asyncmap
+operator||
+name|cilong
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+block|}
 name|ho
 operator|->
 name|neg_asyncmap
@@ -2335,41 +3345,33 @@ break|break;
 case|case
 name|CI_AUTHTYPE
 case|:
+name|LCPDEBUG
+argument_list|(
+operator|(
+name|LOG_INFO
+operator|,
+literal|"lcp_reqci: rcvd AUTHTYPE"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cilen
 operator|<
-sizeof|sizeof
-argument_list|(
-name|short
-argument_list|)
+name|CILEN_SHORT
 operator|||
-operator|(
 operator|!
+operator|(
 name|ao
 operator|->
 name|neg_upap
-operator|&&
-operator|!
+operator|||
 name|ao
 operator|->
 name|neg_chap
 operator|)
 condition|)
 block|{
-name|LCPDEBUG
-argument_list|(
-argument|(LOG_WARNING,
-literal|"lcp_reqci: rcvd AUTHTYPE, rejecting ...!"
-argument|)
-argument_list|)
-name|INCPTR
-argument_list|(
-name|cilen
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 name|orc
 operator|=
 name|CONFREJ
@@ -2385,11 +3387,16 @@ argument_list|)
 expr_stmt|;
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
-literal|"lcp_reqci: rcvd AUTHTYPE (%x)"
-argument|, 		      cishort)
+operator|(
+name|LOG_INFO
+operator|,
+literal|"(%x)"
+operator|,
+name|cishort
+operator|)
 argument_list|)
-comment|/* 	     * Authtype must be UPAP or CHAP. 	     */
+expr_stmt|;
+comment|/* 	     * Authtype must be UPAP or CHAP. 	     * 	     * Note: if both ao->neg_upap and ao->neg_chap are set, 	     * and the peer sends a Configure-Request with two 	     * authenticate-protocol requests, one for CHAP and one 	     * for UPAP, then we will reject the second request. 	     * Whether we end up doing CHAP or UPAP depends then on 	     * the ordering of the CIs in the peer's Configure-Request. 	     */
 if|if
 condition|(
 name|cishort
@@ -2397,33 +3404,33 @@ operator|==
 name|UPAP
 condition|)
 block|{
-name|INCPTR
-argument_list|(
-name|cilen
-operator|-
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|ao
 operator|->
 name|neg_upap
+operator|||
+comment|/* we don't want to do PAP */
+name|ho
+operator|->
+name|neg_chap
+operator|||
+comment|/* or we've already accepted CHAP */
+name|cilen
+operator|!=
+name|CILEN_SHORT
 condition|)
 block|{
-comment|/* we don't want to do PAP */
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
+operator|(
+name|LOG_WARNING
+operator|,
 literal|"lcp_reqci: rcvd AUTHTYPE PAP, rejecting..."
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
 name|orc
 operator|=
 name|CONFREJ
@@ -2438,7 +3445,6 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-elseif|else
 if|if
 condition|(
 name|cishort
@@ -2446,33 +3452,33 @@ operator|==
 name|CHAP
 condition|)
 block|{
-name|INCPTR
-argument_list|(
-name|cilen
-operator|-
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|ao
 operator|->
 name|neg_chap
+operator|||
+comment|/* we don't want to do CHAP */
+name|ho
+operator|->
+name|neg_upap
+operator|||
+comment|/* or we've already accepted UPAP */
+name|cilen
+operator|!=
+name|CILEN_CHAP
 condition|)
 block|{
-comment|/* we don't want to do CHAP */
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
+operator|(
+name|LOG_INFO
+operator|,
 literal|"lcp_reqci: rcvd AUTHTYPE CHAP, rejecting..."
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
 name|orc
 operator|=
 name|CONFREJ
@@ -2496,6 +3502,16 @@ operator|->
 name|chap_mdtype
 condition|)
 block|{
+name|orc
+operator|=
+name|CONFNAK
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|reject_if_disagree
+condition|)
+block|{
 name|DECPTR
 argument_list|(
 sizeof|sizeof
@@ -2506,10 +3522,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|orc
-operator|=
-name|CONFNAK
-expr_stmt|;
 name|PUTCHAR
 argument_list|(
 name|ao
@@ -2519,18 +3531,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|INCPTR
-argument_list|(
-name|cilen
-operator|-
-sizeof|sizeof
-argument_list|(
-name|u_char
-argument_list|)
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
+block|}
 break|break;
 block|}
 name|ho
@@ -2540,66 +3541,6 @@ operator|=
 name|cichar
 expr_stmt|;
 comment|/* save md type */
-name|GETCHAR
-argument_list|(
-name|cichar
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* get callback type*/
-if|if
-condition|(
-name|cichar
-operator|!=
-name|ao
-operator|->
-name|chap_callback
-condition|)
-block|{
-comment|/* we don't callback yet */
-name|DECPTR
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|u_char
-argument_list|)
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|orc
-operator|=
-name|CONFNAK
-expr_stmt|;
-name|PUTCHAR
-argument_list|(
-name|CHAP_NOCALLBACK
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|INCPTR
-argument_list|(
-name|cilen
-operator|-
-sizeof|sizeof
-argument_list|(
-name|u_char
-argument_list|)
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-name|ho
-operator|->
-name|chap_callback
-operator|=
-name|cichar
-expr_stmt|;
-comment|/* save callback */
 name|ho
 operator|->
 name|neg_chap
@@ -2608,114 +3549,114 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-else|else
-block|{
-name|DECPTR
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|short
-argument_list|)
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
+comment|/* 	     * We don't recognize the protocol they're asking for. 	     * Reject it. 	     */
 name|orc
 operator|=
-name|CONFNAK
-expr_stmt|;
-if|if
-condition|(
-name|ao
-operator|->
-name|neg_chap
-condition|)
-block|{
-comment|/* We prefer CHAP */
-name|PUTSHORT
-argument_list|(
-name|CHAP
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|ao
-operator|->
-name|neg_upap
-condition|)
-block|{
-name|PUTSHORT
-argument_list|(
-name|CHAP
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Coding botch in lcp_reqci authnak. This shouldn't happen."
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|INCPTR
-argument_list|(
-name|cilen
-operator|-
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-argument_list|,
-name|p
-argument_list|)
+name|CONFREJ
 expr_stmt|;
 break|break;
-block|}
 case|case
-name|CI_MAGICNUMBER
+name|CI_QUALITY
 case|:
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
-literal|"lcp_reqci: rcvd MAGICNUMBER"
-argument|)
+operator|(
+name|LOG_INFO
+operator|,
+literal|"lcp_reqci: rcvd QUALITY"
+operator|)
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|ao
 operator|->
-name|neg_magicnumber
+name|neg_lqr
 operator|||
 name|cilen
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|long
-argument_list|)
+name|CILEN_LQR
 condition|)
 block|{
-name|INCPTR
+name|orc
+operator|=
+name|CONFREJ
+expr_stmt|;
+break|break;
+block|}
+name|GETSHORT
 argument_list|(
-name|cilen
+name|cishort
 argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|GETLONG
+argument_list|(
+name|cilong
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|LCPDEBUG
+argument_list|(
+operator|(
+name|LOG_INFO
+operator|,
+literal|"(%x %lx)"
+operator|,
+name|cishort
+operator|,
+name|cilong
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cishort
+operator|!=
+name|LQR
+condition|)
+block|{
+name|orc
+operator|=
+name|CONFREJ
+expr_stmt|;
+break|break;
+block|}
+comment|/* 	     * Check the reporting period. 	     * XXX When should we Nak this, and what with? 	     */
+break|break;
+case|case
+name|CI_MAGICNUMBER
+case|:
+name|LCPDEBUG
+argument_list|(
+operator|(
+name|LOG_INFO
+operator|,
+literal|"lcp_reqci: rcvd MAGICNUMBER"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ao
+operator|->
+name|neg_magicnumber
+operator|||
+name|go
+operator|->
+name|neg_magicnumber
+operator|)
+operator|||
+name|cilen
+operator|!=
+name|CILEN_LONG
+condition|)
+block|{
 name|orc
 operator|=
 name|CONFREJ
@@ -2731,10 +3672,15 @@ argument_list|)
 expr_stmt|;
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
+operator|(
+name|LOG_INFO
+operator|,
 literal|"(%lx)"
-argument|, cilong)
+operator|,
+name|cilong
+operator|)
 argument_list|)
+expr_stmt|;
 comment|/* 	     * He must have a different magic number. 	     */
 if|if
 condition|(
@@ -2796,10 +3742,13 @@ name|CI_PCOMPRESSION
 case|:
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
+operator|(
+name|LOG_INFO
+operator|,
 literal|"lcp_reqci: rcvd PCOMPRESSION"
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2809,16 +3758,9 @@ name|neg_pcompression
 operator|||
 name|cilen
 operator|!=
-literal|0
+name|CILEN_VOID
 condition|)
 block|{
-name|INCPTR
-argument_list|(
-name|cilen
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 name|orc
 operator|=
 name|CONFREJ
@@ -2837,10 +3779,13 @@ name|CI_ACCOMPRESSION
 case|:
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
+operator|(
+name|LOG_INFO
+operator|,
 literal|"lcp_reqci: rcvd ACCOMPRESSION"
-argument|)
+operator|)
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2850,16 +3795,9 @@ name|neg_accompression
 operator|||
 name|cilen
 operator|!=
-literal|0
+name|CILEN_VOID
 condition|)
 block|{
-name|INCPTR
-argument_list|(
-name|cilen
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 name|orc
 operator|=
 name|CONFREJ
@@ -2876,15 +3814,13 @@ break|break;
 default|default:
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
+operator|(
+name|LOG_INFO
+operator|,
 literal|"lcp_reqci: rcvd unknown option %d"
-argument|, 		      citype)
-argument_list|)
-name|INCPTR
-argument_list|(
-name|cilen
-argument_list|,
-name|p
+operator|,
+name|citype
+operator|)
 argument_list|)
 expr_stmt|;
 name|orc
@@ -2893,25 +3829,22 @@ name|CONFREJ
 expr_stmt|;
 break|break;
 block|}
-name|cilen
-operator|+=
-literal|2
-expr_stmt|;
-comment|/* Adjust cilen whole CI */
 name|endswitch
 label|:
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
+operator|(
+name|LOG_INFO
+operator|,
 literal|" (%s)"
-argument|, 		  orc == CONFACK ?
-literal|"ACK"
-argument|: (orc == CONFNAK ?
-literal|"NAK"
-argument|:
-literal|"REJ"
-argument|))
+operator|,
+name|CODENAME
+argument_list|(
+name|orc
 argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|orc
@@ -2934,6 +3867,18 @@ name|CONFNAK
 condition|)
 block|{
 comment|/* Nak this CI? */
+if|if
+condition|(
+name|reject_if_disagree
+condition|)
+comment|/* Getting fed up with sending NAKs? */
+name|orc
+operator|=
+name|CONFREJ
+expr_stmt|;
+comment|/* Get tough if so */
+else|else
+block|{
 if|if
 condition|(
 name|rc
@@ -2961,6 +3906,7 @@ operator|=
 name|inp
 expr_stmt|;
 comment|/* Backup */
+block|}
 block|}
 block|}
 if|if
@@ -3012,9 +3958,9 @@ argument_list|)
 expr_stmt|;
 comment|/* Update output pointer */
 block|}
-comment|/*      * XXX If we wanted to send additional NAKs (for unsent CIs), the      * code would go here.  This must be done with care since it might      * require a longer packet than we received.      */
+comment|/*      * If we wanted to send additional NAKs (for unsent CIs), the      * code would go here.  This must be done with care since it might      * require a longer packet than we received.  At present there      * are no cases where we want to ask the peer to negotiate an option.      */
 operator|*
-name|len
+name|lenp
 operator|=
 name|ucp
 operator|-
@@ -3023,16 +3969,18 @@ expr_stmt|;
 comment|/* Compute output length */
 name|LCPDEBUG
 argument_list|(
-argument|(LOG_INFO,
-literal|"lcp_reqci: returning %s."
-argument|, 	      rc == CONFACK ?
-literal|"CONFACK"
-argument|: 	      rc == CONFNAK ?
-literal|"CONFNAK"
-argument|:
-literal|"CONFREJ"
-argument|)
+operator|(
+name|LOG_INFO
+operator|,
+literal|"lcp_reqci: returning CONF%s."
+operator|,
+name|CODENAME
+argument_list|(
+name|rc
 argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rc
@@ -3060,6 +4008,18 @@ decl_stmt|;
 block|{
 name|lcp_options
 modifier|*
+name|wo
+init|=
+operator|&
+name|lcp_wantoptions
+index|[
+name|f
+operator|->
+name|unit
+index|]
+decl_stmt|;
+name|lcp_options
+modifier|*
 name|ho
 init|=
 operator|&
@@ -3082,79 +4042,128 @@ operator|->
 name|unit
 index|]
 decl_stmt|;
-name|int
-name|auth
+name|lcp_options
+modifier|*
+name|ao
 init|=
-literal|0
+operator|&
+name|lcp_allowoptions
+index|[
+name|f
+operator|->
+name|unit
+index|]
 decl_stmt|;
+comment|/*      * Set our MTU to the smaller of the MTU we wanted and      * the MRU our peer wanted.  If we negotiated an MRU,      * set our MRU to the larger of value we wanted and      * the value we got in the negotiation.      */
+name|ppp_send_config
+argument_list|(
+name|f
+operator|->
+name|unit
+argument_list|,
+operator|(
+name|ho
+operator|->
+name|neg_mru
+condition|?
+name|MIN
+argument_list|(
+name|ao
+operator|->
+name|mru
+argument_list|,
+name|ho
+operator|->
+name|mru
+argument_list|)
+else|:
+name|MTU
+operator|)
+argument_list|,
+operator|(
+name|ho
+operator|->
+name|neg_asyncmap
+condition|?
+name|ho
+operator|->
+name|asyncmap
+else|:
+literal|0xffffffff
+operator|)
+argument_list|,
+name|ho
+operator|->
+name|neg_pcompression
+argument_list|,
+name|ho
+operator|->
+name|neg_accompression
+argument_list|)
+expr_stmt|;
+name|ppp_recv_config
+argument_list|(
+name|f
+operator|->
+name|unit
+argument_list|,
+operator|(
+name|go
+operator|->
+name|neg_mru
+condition|?
+name|MAX
+argument_list|(
+name|wo
+operator|->
+name|mru
+argument_list|,
+name|go
+operator|->
+name|mru
+argument_list|)
+else|:
+name|MTU
+operator|)
+argument_list|,
+operator|(
+name|go
+operator|->
+name|neg_asyncmap
+condition|?
+name|go
+operator|->
+name|asyncmap
+else|:
+literal|0xffffffff
+operator|)
+argument_list|,
+name|go
+operator|->
+name|neg_pcompression
+argument_list|,
+name|go
+operator|->
+name|neg_accompression
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ho
 operator|->
 name|neg_mru
 condition|)
-name|SIFMTU
-argument_list|(
+name|peer_mru
+index|[
 name|f
 operator|->
 name|unit
-argument_list|,
+index|]
+operator|=
 name|ho
 operator|->
 name|mru
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ho
-operator|->
-name|neg_asyncmap
-condition|)
-name|SIFASYNCMAP
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|,
-name|ho
-operator|->
-name|asyncmap
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ho
-operator|->
-name|neg_pcompression
-condition|)
-name|SIFPCOMPRESSION
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ho
-operator|->
-name|neg_accompression
-condition|)
-name|SIFACCOMPRESSION
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|SIFUP
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-comment|/* Bring the interface up (set IFF_UP) */
 name|ChapLowerUp
 argument_list|(
 name|f
@@ -3179,88 +4188,7 @@ name|unit
 argument_list|)
 expr_stmt|;
 comment|/* Enable IPCP */
-if|if
-condition|(
-name|go
-operator|->
-name|neg_chap
-condition|)
-block|{
-name|ChapAuthPeer
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|auth
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ho
-operator|->
-name|neg_chap
-condition|)
-block|{
-name|ChapAuthWithPeer
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|auth
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|go
-operator|->
-name|neg_upap
-condition|)
-block|{
-name|upap_authpeer
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|auth
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ho
-operator|->
-name|neg_upap
-condition|)
-block|{
-name|upap_authwithpeer
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|auth
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|auth
-condition|)
-name|ipcp_activeopen
+name|link_established
 argument_list|(
 name|f
 operator|->
@@ -3293,45 +4221,6 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
-name|SIFDOWN
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|SIFMTU
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|,
-name|MTU
-argument_list|)
-expr_stmt|;
-name|SIFASYNCMAP
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|,
-literal|0xffffffff
-argument_list|)
-expr_stmt|;
-name|CIFPCOMPRESSION
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|CIFACCOMPRESSION
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
 name|ChapLowerDown
 argument_list|(
 name|f
@@ -3346,17 +4235,70 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
+name|sifdown
+argument_list|(
+name|f
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+name|ppp_send_config
+argument_list|(
+name|f
+operator|->
+name|unit
+argument_list|,
+name|MTU
+argument_list|,
+literal|0xffffffff
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|ppp_recv_config
+argument_list|(
+name|f
+operator|->
+name|unit
+argument_list|,
+name|MTU
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|peer_mru
+index|[
+name|f
+operator|->
+name|unit
+index|]
+operator|=
+name|MTU
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"Connection terminated."
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * lcp_closed - LCP has CLOSED.  *  * Alert other protocols.  */
+comment|/*  * lcp_starting - LCP needs the lower layer up.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|lcp_closed
+name|lcp_starting
 parameter_list|(
 name|f
 parameter_list|)
@@ -3365,50 +4307,7 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|lcp_wantoptions
-index|[
-name|f
-operator|->
-name|unit
-index|]
-operator|.
-name|restart
-condition|)
-block|{
-if|if
-condition|(
-name|lcp_wantoptions
-index|[
-name|f
-operator|->
-name|unit
-index|]
-operator|.
-name|passive
-condition|)
-name|lcp_passiveopen
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-comment|/* Start protocol in passive mode */
-else|else
-name|lcp_activeopen
-argument_list|(
-name|f
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-comment|/* Start protocol in active mode */
-block|}
-else|else
-block|{
-name|EXIT
+name|link_required
 argument_list|(
 name|f
 operator|->
@@ -3416,6 +4315,31 @@ name|unit
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
+comment|/*  * lcp_finished - LCP has finished with the lower layer.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|lcp_finished
+parameter_list|(
+name|f
+parameter_list|)
+name|fsm
+modifier|*
+name|f
+decl_stmt|;
+block|{
+name|link_terminated
+argument_list|(
+name|f
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
