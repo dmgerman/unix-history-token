@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whatis.c	8.4 (Berkeley) %G%"
+literal|"@(#)whatis.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,6 +157,10 @@ decl_stmt|;
 name|ENTRY
 modifier|*
 name|ep
+decl_stmt|;
+name|TAG
+modifier|*
+name|tp
 decl_stmt|;
 name|int
 name|ch
@@ -383,24 +387,24 @@ argument_list|)
 expr_stmt|;
 name|ep
 operator|=
+operator|(
+name|tp
+operator|=
 name|getlist
 argument_list|(
 literal|"_whatdb"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ep
-operator|!=
+operator|)
+operator|==
 name|NULL
-condition|)
-name|ep
-operator|=
-name|ep
+condition|?
+name|NULL
+else|:
+name|tp
 operator|->
 name|list
 operator|.
-name|qe_next
+name|tqh_first
 expr_stmt|;
 for|for
 control|(
@@ -413,9 +417,9 @@ name|ep
 operator|=
 name|ep
 operator|->
-name|list
+name|q
 operator|.
-name|qe_next
+name|tqe_next
 control|)
 name|whatis
 argument_list|(
