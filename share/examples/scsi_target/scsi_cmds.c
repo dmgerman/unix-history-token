@@ -395,6 +395,7 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* XXX REPORT_LUNS should be handled here. */
 ifdef|#
 directive|ifdef
 name|READ_16
