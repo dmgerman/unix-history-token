@@ -103,7 +103,7 @@ parameter_list|(
 name|usage_msg
 parameter_list|)
 define|\
-value|{					\     char O_cont;			\     O_usage = (usage_msg);		\     O_name = argv[0];			\     while (*++argv&& **argv == '-')	\ 	{				\ 	if ((*argv)[1] == '\0')		\ 	    break;			\ 	argc--;				\ 	if ((*argv)[1] == '-'&& (*argv)[2] == '\0') \ 	    {				\ 	    argv++;			\ 	    break;			\ 	    }				\ 	O_cont = 1;			\ 	while (O_cont)			\ 	    switch (*++*argv)		\ 		{			\ 		case '-':		\ 		    usage();		\ 		case '\0':		\ 		    O_cont = 0;
+value|{					\     char O_cont;			\     O_usage = (usage_msg);		\     O_name = argv[0];			\     while (*++argv&& **argv == '-')	\ 	{				\ 	if ((*argv)[1] == '\0')		\ 	    break;			\ 	argc--;				\ 	if ((*argv)[1] == '-'&& (*argv)[2] == '\0') \ 	    {				\ 	    argv++;			\ 	    break;			\ 	    }				\ 	O_cont = 1;			\ 	while (O_cont)			\ 	    switch (*++*argv)		\ 		{			\ 		default:		\ 		case '-':		\ 		    usage();		\ 		case '\0':		\ 		    O_cont = 0;
 end_define
 
 begin_define
@@ -176,7 +176,7 @@ define|#
 directive|define
 name|ENDOPTS
 define|\
-value|break;		\ 		default:		\ 		    usage();		\ 		}			\ 	}				\     *--argv = O_name;			\     }
+value|break;		\ 		}			\ 	}				\     *--argv = O_name;			\     }
 end_define
 
 end_unit

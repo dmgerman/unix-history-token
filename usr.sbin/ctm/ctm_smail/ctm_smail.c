@@ -1091,7 +1091,7 @@ name|fprintf
 argument_list|(
 name|sfp
 argument_list|,
-literal|"From: %s-owner\n"
+literal|"From: owner-%s\n"
 argument_list|,
 name|mail_alias
 argument_list|)
