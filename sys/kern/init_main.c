@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syscallsubr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -2189,15 +2195,15 @@ block|{
 comment|/* 		 * For disk based systems, we probably cannot do this yet 		 * since the fs will be read-only.  But a NFS root 		 * might be ok.  It is worth a shot. 		 */
 name|error
 operator|=
-name|vn_mkdir
+name|kern_mkdir
 argument_list|(
-literal|"/dev"
+name|td
 argument_list|,
-literal|0700
+literal|"/dev"
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
-name|td
+literal|0700
 argument_list|)
 expr_stmt|;
 if|if
