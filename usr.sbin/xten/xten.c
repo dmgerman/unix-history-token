@@ -247,32 +247,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -400,10 +397,8 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-operator|(
 operator|&
 name|sa
-operator|)
 argument_list|,
 name|strlen
 argument_list|(
@@ -446,7 +441,7 @@ argument_list|,
 literal|"can't attach stream to socket"
 argument_list|)
 expr_stmt|;
-comment|/*    * If interactive, copy standard input to daemon and report results    * on standard output.    */
+comment|/* 	 * If interactive, copy standard input to daemon and report results 	 * on standard output. 	 */
 if|if
 condition|(
 name|interactive
@@ -526,7 +521,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * Otherwise, interpret arguments and issue commands to daemon,    * handling retries in case of errors.    */
+comment|/* 	 * Otherwise, interpret arguments and issue commands to daemon, 	 * handling retries in case of errors. 	 */
 if|if
 condition|(
 operator|(
@@ -804,7 +799,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -825,19 +822,15 @@ begin_function
 name|int
 name|find
 parameter_list|(
-name|s
-parameter_list|,
-name|tab
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|tab
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
