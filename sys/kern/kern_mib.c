@@ -254,24 +254,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|prison
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"Prison rules"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_STRING
 argument_list|(
 name|_kern
@@ -721,36 +703,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
-name|int
-name|prison_set_hostname_allowed
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern_prison
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|set_hostname_allowed
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|prison_set_hostname_allowed
-argument_list|,
-literal|0
-argument_list|,
-literal|"Processes in prison can set their hostnames"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|char
 name|hostname
 index|[
@@ -780,7 +732,11 @@ block|{
 if|if
 condition|(
 operator|!
-name|prison_set_hostname_allowed
+name|jail_set_hostname_allowed
+operator|&&
+name|req
+operator|->
+name|newptr
 condition|)
 return|return
 operator|(

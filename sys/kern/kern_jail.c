@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -83,6 +89,51 @@ argument_list|,
 literal|"prison"
 argument_list|,
 literal|"Prison structures"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(,
+name|OID_AUTO
+argument_list|,
+name|jail
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"Jail rules"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|jail_set_hostname_allowed
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_jail
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|set_hostname_allowed
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|jail_set_hostname_allowed
+argument_list|,
+literal|0
+argument_list|,
+literal|"Processes in jail can set their hostnames"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
