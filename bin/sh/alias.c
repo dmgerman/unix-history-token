@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)alias.c	8.3 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -100,6 +106,37 @@ end_decl_stmt
 
 begin_decl_stmt
 name|STATIC
+name|void
+name|setalias
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|STATIC
+name|int
+name|unalias
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|STATIC
 name|struct
 name|alias
 modifier|*
@@ -117,6 +154,7 @@ end_decl_stmt
 
 begin_function
 name|STATIC
+name|void
 name|setalias
 parameter_list|(
 name|name
@@ -260,12 +298,12 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|val
-argument_list|,
 name|ap
 operator|->
+name|val
+argument_list|,
 name|val
 argument_list|,
 name|len
@@ -573,6 +611,9 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|int
+name|check
+decl_stmt|;
 block|{
 name|struct
 name|alias
@@ -645,24 +686,22 @@ begin_comment
 comment|/*  * TODO - sort output  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|aliascmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -753,11 +792,15 @@ return|;
 block|}
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 operator|*
 operator|++
 name|argv
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -843,26 +886,24 @@ name|ret
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|unaliascmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -924,7 +965,7 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|STATIC

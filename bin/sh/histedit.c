@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)histedit.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)histedit.c	8.2 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,10 +26,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/*  * Editline and history functions (and glue).  */
 end_comment
 
 begin_include
@@ -49,6 +45,22 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_comment
+comment|/*  * Editline and history functions (and glue).  */
+end_comment
 
 begin_include
 include|#
@@ -77,8 +89,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"main.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"output.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mystring.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_HISTORY
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"myhistedit.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -89,7 +130,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"histedit.h"
+file|"eval.h"
 end_include
 
 begin_include
@@ -185,12 +226,10 @@ begin_comment
 comment|/*  * Set history and editing status.  Called whenever the status may  * have changed (figures out what to do).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|histedit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 define|#
 directive|define
@@ -445,14 +484,12 @@ name|INTON
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|sethistsize
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -512,30 +549,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  This command is provided since POSIX decided to standardize  *  the Korn shell fc command.  Oh well...  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|histcmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|char
@@ -636,6 +671,84 @@ name|FILE
 modifier|*
 name|efp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
+comment|/* Avoid longjmp clobbering */
+operator|(
+name|void
+operator|)
+operator|&
+name|editor
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|lflg
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|nflg
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|rflg
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|sflg
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|firststr
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|laststr
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|pat
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|repl
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|efp
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|argc
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|argv
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|hist
@@ -1406,8 +1519,11 @@ name|displayhist
 operator|=
 literal|0
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|STATIC
@@ -1536,22 +1652,26 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|not_fcnumber
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|*
@@ -1572,31 +1692,23 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|str_to_event
-argument_list|(
-argument|str
-argument_list|,
-argument|last
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|,
+name|last
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|last
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|const
 name|HistEvent
@@ -1616,8 +1728,6 @@ literal|0
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|he
 operator|=
@@ -1791,7 +1901,7 @@ name|num
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

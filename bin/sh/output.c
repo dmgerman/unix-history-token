@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)output.c	8.2 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,12 +35,70 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_comment
 comment|/* defines BUFSIZ */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -70,40 +128,6 @@ begin_include
 include|#
 directive|include
 file|"error.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"stdarg.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_define
@@ -377,6 +401,7 @@ name|out1str
 parameter_list|(
 name|p
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|p
@@ -398,6 +423,7 @@ name|out2str
 parameter_list|(
 name|p
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|p
@@ -422,6 +448,7 @@ parameter_list|,
 name|file
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|p
@@ -2229,7 +2256,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Version of ioctl that retries after a signal is caught.  */
+comment|/*  * Version of ioctl that retries after a signal is caught.  * XXX unused function  */
 end_comment
 
 begin_function
@@ -2242,6 +2269,17 @@ name|request
 parameter_list|,
 name|arg
 parameter_list|)
+name|int
+name|fd
+decl_stmt|;
+name|unsigned
+name|long
+name|request
+decl_stmt|;
+name|char
+modifier|*
+name|arg
+decl_stmt|;
 block|{
 name|int
 name|i

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)options.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)options.c	8.2 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,24 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -116,6 +134,23 @@ directive|include
 file|"mystring.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_HISTORY
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"myhistedit.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -183,80 +218,49 @@ begin_comment
 comment|/* argument to -c option */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_function_decl
+begin_decl_stmt
 name|STATIC
 name|void
 name|options
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|STATIC
-name|void
-name|setoption
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+begin_decl_stmt
 name|STATIC
 name|void
 name|minus_o
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|char
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|STATIC
-name|void
-name|options
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+begin_decl_stmt
 name|STATIC
 name|void
 name|setoption
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|STATIC
-name|void
-name|minus_o
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Process the shell command line arguments.  */
@@ -270,6 +274,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -463,28 +470,31 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|optschanged
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|setinteractive
 argument_list|(
 name|iflag
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_HISTORY
 name|histedit
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|setjobctl
 argument_list|(
 name|mflag
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Process shell options.  The global variable argptr contains a pointer  * to the argument list; we advance it past the options.  */
@@ -497,6 +507,9 @@ name|options
 parameter_list|(
 name|cmdline
 parameter_list|)
+name|int
+name|cmdline
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -558,6 +571,7 @@ index|]
 operator|==
 literal|'\0'
 operator|||
+operator|(
 name|p
 index|[
 literal|0
@@ -571,6 +585,7 @@ literal|1
 index|]
 operator|==
 literal|'\0'
+operator|)
 condition|)
 block|{
 if|if
@@ -1195,24 +1210,22 @@ begin_comment
 comment|/*  * The shift builtin command.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|shiftcmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|n
@@ -1330,30 +1343,28 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * The set command builtin.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|setcmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1399,30 +1410,28 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * The getopts builtin.  Shellparam.optnext points to the next argument  * to be processed.  Shellparam.optptr points to the next character to  * be processed in the current argument.  If shellparam.optnext is NULL,  * then it's the first time getopts has been called.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getoptscmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1742,7 +1751,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * XXX - should get rid of.  have all builtins use getopt(3).  the  * library getopt must have the BSD extension static variable "optreset"  * otherwise it can't be used within the shell safely.  *  * Standard option processing (a la getopt) for builtin routines.  The  * only argument that is passed to nextopt is the option string; the  * other arguments are unnecessary.  It return the character, or '\0' on  * end of input.  */

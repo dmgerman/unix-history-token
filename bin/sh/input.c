@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)input.c	8.3 (Berkeley) 6/9/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,10 +26,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/*  * This file implements the input routines used by the parser.  */
 end_comment
 
 begin_include
@@ -45,12 +41,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"shell.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -58,6 +48,40 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_comment
+comment|/*  * This file implements the input routines used by the parser.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"shell.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"redir.h"
 end_include
 
 begin_include
@@ -339,39 +363,18 @@ begin_comment
 comment|/* cookie for editline package */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_function_decl
+begin_decl_stmt
 name|STATIC
 name|void
 name|pushfile
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|STATIC
-name|void
-name|pushfile
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -449,6 +452,9 @@ parameter_list|)
 name|char
 modifier|*
 name|line
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 block|{
 specifier|register
@@ -689,8 +695,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|regular_read
-label|:
 name|i
 operator|=
 name|read
@@ -1169,12 +1173,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|popstring
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|strpush
@@ -1242,7 +1244,7 @@ expr_stmt|;
 name|INTON
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Set the input to take input from a file.  If push is set, push the  * old input onto the stack first.  */
@@ -1259,6 +1261,9 @@ parameter_list|)
 name|char
 modifier|*
 name|fname
+decl_stmt|;
+name|int
+name|push
 decl_stmt|;
 block|{
 name|int
@@ -1352,6 +1357,11 @@ name|fd
 parameter_list|,
 name|push
 parameter_list|)
+name|int
+name|fd
+decl_stmt|,
+name|push
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1435,6 +1445,9 @@ parameter_list|)
 name|char
 modifier|*
 name|string
+decl_stmt|;
+name|int
+name|push
 decl_stmt|;
 block|{
 name|INTOFF

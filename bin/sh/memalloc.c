@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)memalloc.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)memalloc.c	8.3 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,18 @@ directive|include
 file|"mystring.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * Like malloc, but returns an error when out of space.  */
 end_comment
@@ -74,15 +86,14 @@ name|ckmalloc
 parameter_list|(
 name|nbytes
 parameter_list|)
+name|int
+name|nbytes
+decl_stmt|;
 block|{
 specifier|register
 name|pointer
 name|p
 decl_stmt|;
-name|pointer
-name|malloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|(
@@ -123,11 +134,10 @@ specifier|register
 name|pointer
 name|p
 decl_stmt|;
+name|int
+name|nbytes
+decl_stmt|;
 block|{
-name|pointer
-name|realloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|(
@@ -292,6 +302,9 @@ name|stalloc
 parameter_list|(
 name|nbytes
 parameter_list|)
+name|int
+name|nbytes
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -650,11 +663,11 @@ argument_list|(
 name|newlen
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|oldspace
-argument_list|,
 name|p
+argument_list|,
+name|oldspace
 argument_list|,
 name|oldlen
 argument_list|)
@@ -666,7 +679,10 @@ expr_stmt|;
 comment|/* free the space */
 name|stacknleft
 operator|+=
+name|ALIGN
+argument_list|(
 name|newlen
+argument_list|)
 expr_stmt|;
 comment|/* we just allocated */
 block|}
@@ -679,6 +695,9 @@ name|grabstackblock
 parameter_list|(
 name|len
 parameter_list|)
+name|int
+name|len
+decl_stmt|;
 block|{
 name|len
 operator|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trap.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)trap.c	8.5 (Berkeley) 6/5/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,24 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -65,6 +83,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"show.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"options.h"
 end_include
 
@@ -72,12 +96,6 @@ begin_include
 include|#
 directive|include
 file|"syntax.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"signames.h"
 end_include
 
 begin_include
@@ -108,12 +126,6 @@ begin_include
 include|#
 directive|include
 file|"mystring.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_comment
@@ -194,7 +206,7 @@ name|char
 modifier|*
 name|trap
 index|[
-name|MAXSIG
+name|NSIG
 operator|+
 literal|1
 index|]
@@ -210,7 +222,7 @@ name|MKINIT
 name|char
 name|sigmode
 index|[
-name|MAXSIG
+name|NSIG
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -223,7 +235,7 @@ begin_decl_stmt
 name|char
 name|gotsig
 index|[
-name|MAXSIG
+name|NSIG
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -242,28 +254,42 @@ begin_comment
 comment|/* indicates some signal received */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|getsigaction
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|sig_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * The trap builtin.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|trapcmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -292,7 +318,7 @@ literal|0
 init|;
 name|signo
 operator|<=
-name|MAXSIG
+name|NSIG
 condition|;
 name|signo
 operator|++
@@ -371,7 +397,7 @@ literal|0
 operator|||
 name|signo
 operator|>
-name|MAXSIG
+name|NSIG
 condition|)
 name|error
 argument_list|(
@@ -437,7 +463,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Clear traps on a fork.  */
@@ -464,7 +490,7 @@ operator|<=
 operator|&
 name|trap
 index|[
-name|MAXSIG
+name|NSIG
 index|]
 condition|;
 name|tp
@@ -524,17 +550,22 @@ comment|/*  * Set the signal handler for the specified signal.  The routine figu
 end_comment
 
 begin_function
-name|int
+name|long
 name|setsignal
 parameter_list|(
 name|signo
 parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|int
 name|action
 decl_stmt|;
 name|sig_t
 name|sigact
+init|=
+name|SIG_DFL
 decl_stmt|;
 name|char
 modifier|*
@@ -543,11 +574,6 @@ decl_stmt|;
 specifier|extern
 name|void
 name|onsig
-parameter_list|()
-function_decl|;
-specifier|extern
-name|sig_t
-name|getsigaction
 parameter_list|()
 function_decl|;
 if|if
@@ -683,13 +709,23 @@ literal|0
 condition|)
 block|{
 comment|/*  		 * current setting unknown  		 */
-name|sigact
-operator|=
+if|if
+condition|(
+operator|!
 name|getsigaction
 argument_list|(
 name|signo
+argument_list|,
+operator|&
+name|sigact
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+comment|/* 			 * Pretend it worked; maybe we should give a warning 			 * here, but other shells don't. We don't alter 			 * sigmode, so that we retry every time. 			 */
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|sigact
@@ -792,7 +828,7 @@ name|action
 expr_stmt|;
 return|return
 operator|(
-name|int
+name|long
 operator|)
 name|signal
 argument_list|(
@@ -809,11 +845,21 @@ comment|/*  * Return the current setting for sig w/o changing it.  */
 end_comment
 
 begin_function
-name|sig_t
+specifier|static
+name|int
 name|getsigaction
 parameter_list|(
 name|signo
+parameter_list|,
+name|sigact
 parameter_list|)
+name|int
+name|signo
+decl_stmt|;
+name|sig_t
+modifier|*
+name|sigact
+decl_stmt|;
 block|{
 name|struct
 name|sigaction
@@ -839,15 +885,21 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
-argument_list|(
-literal|"Sigaction system call failed"
-argument_list|)
-expr_stmt|;
 return|return
+literal|0
+return|;
+operator|*
+name|sigact
+operator|=
+operator|(
+name|sig_t
+operator|)
 name|sa
 operator|.
 name|sa_handler
+expr_stmt|;
+return|return
+literal|1
 return|;
 block|}
 end_function
@@ -862,6 +914,9 @@ name|ignoresig
 parameter_list|(
 name|signo
 parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -912,7 +967,11 @@ end_ifdef
 
 begin_expr_stmt
 name|INCLUDE
-literal|"signames.h"
+operator|<
+name|signal
+operator|.
+name|h
+operator|>
 name|INCLUDE
 literal|"trap.h"
 name|SHELLPROC
@@ -934,7 +993,7 @@ name|sm
 operator|<
 name|sigmode
 operator|+
-name|MAXSIG
+name|NSIG
 condition|;
 name|sm
 operator|++
@@ -972,6 +1031,12 @@ argument_list|(
 argument|signo
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|signo
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1062,7 +1127,7 @@ if|if
 condition|(
 name|i
 operator|>=
-name|MAXSIG
+name|NSIG
 condition|)
 goto|goto
 name|done
@@ -1113,6 +1178,9 @@ name|setinteractive
 parameter_list|(
 name|on
 parameter_list|)
+name|int
+name|on
+decl_stmt|;
 block|{
 specifier|static
 name|int
@@ -1157,6 +1225,9 @@ name|exitshell
 parameter_list|(
 name|status
 parameter_list|)
+name|int
+name|status
+decl_stmt|;
 block|{
 name|struct
 name|jmploc

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mystring.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)mystring.c	8.2 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,12 @@ end_comment
 begin_comment
 comment|/*  * String functions.  *  *	equal(s1, s2)		Return true if strings are equal.  *	scopy(from, to)		Copy a string.  *	scopyn(from, to, n)	Like scopy, but checks for overflow.  *	number(s)		Convert a string of digits to an integer.  *	is_number(s)		Return true if s is a string of digits.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
