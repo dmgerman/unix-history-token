@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass2.c	3.5 (Berkeley) %G%"
+literal|"@(#)pass2.c	3.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -416,6 +416,12 @@ name|dp
 decl_stmt|;
 name|DIRECT
 name|proto
+decl_stmt|;
+name|char
+name|namebuf
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 comment|/*  	 * check for "." 	 */
 if|if
@@ -1373,15 +1379,56 @@ name|id_entryno
 operator|>
 literal|2
 condition|)
+block|{
+name|getpathname
+argument_list|(
+name|namebuf
+argument_list|,
+name|dirp
+operator|->
+name|d_ino
+argument_list|,
+name|dirp
+operator|->
+name|d_ino
+argument_list|)
+expr_stmt|;
 name|pwarn
 argument_list|(
-literal|"WARNING: %s IS %s\n"
+literal|"%s %s %s\n"
 argument_list|,
 name|pathname
 argument_list|,
-literal|"AN EXTRANEOUS HARD LINK TO A DIRECTORY"
+literal|"IS AN EXTRANEOUS HARD LINK TO DIRECTORY"
+argument_list|,
+name|namebuf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|preen
+condition|)
+name|printf
+argument_list|(
+literal|" (IGNORED)\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|n
+operator|=
+name|reply
+argument_list|(
+literal|"REMOVE"
+argument_list|)
+operator|)
+operator|==
+literal|1
+condition|)
+break|break;
+block|}
 comment|/* fall through */
 case|case
 name|FSTATE
