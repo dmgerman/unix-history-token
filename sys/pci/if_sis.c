@@ -3732,11 +3732,6 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-name|SIS_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pci_get_device
@@ -5290,11 +5285,6 @@ operator|->
 name|sis_stat_ch
 argument_list|)
 expr_stmt|;
-name|SIS_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5302,11 +5292,6 @@ operator|)
 return|;
 name|fail
 label|:
-name|SIS_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
