@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_descrip.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_descrip.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3947,6 +3947,8 @@ argument_list|,
 argument|mode
 argument_list|,
 argument|type
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -3964,10 +3966,18 @@ name|type
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 comment|/* 	 * XXX Kludge: set curproc->p_dupfd to contain the value of the 	 * the file descriptor being sought for duplication. The error  	 * return ensures that the vnode for this device will be released 	 * by vn_open. Open will detect this special error and take the 	 * actions in dupfdopen below. Other callers of vn_open or VOP_OPEN 	 * will simply report the error. 	 */
-name|curproc
+name|p
 operator|->
 name|p_dupfd
 operator|=
@@ -3976,7 +3986,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 name|ENODEV
