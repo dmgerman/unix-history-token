@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)vars.h 1.8 %G%"; */
+comment|/* static char sccsid[] = "@(#)vars.h 1.9 %G%"; */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/*  * px - Berkeley Pascal interpreter  *  * Version 4.0, January 1981  *  * Original version by Ken Thompson  *  * Substantial revisions by Bill Joy and Chuck Haley  * November-December 1976  *  * Rewritten for VAX 11/780 by Kirk McKusick  * Fall 1978  *  * Rewritten in ``C'' using libpc by Kirk McKusick  * Winter 1981  *  * Px is described in detail in the "PX 4.0 Implementation Notes"  * The source code for px is in several major pieces:  *  *	int.c		C main program which reads in interpreter code  *	interp.c	Driver including main interpreter loop and  *			the interpreter instructions grouped by their  *			positions in the interpreter table.  *	except.c	Handlers for interpreter specific errors not  *			included in libpc.  *	utilities.c	Interpreter exit, backtrace, and runtime statistics.  *  * In addition there are several headers defining mappings for panic  * names into codes, and a definition of the interpreter transfer  * table. These are made by the script make.ed1 in this directory and   * the routine opc.c from ${PASCALDIR}. (see the makefile for details)  */
+comment|/*  * px - Berkeley Pascal interpreter  *  * Version 4.0, January 1981  *  * Original version by Ken Thompson  *  * Substantial revisions by Bill Joy and Chuck Haley  * November-December 1976  *  * Rewritten for VAX 11/780 by Kirk McKusick  * Fall 1978  *  * Rewritten in ``C'' using libpc by Kirk McKusick  * Winter 1981  *  * Px is described in detail in the "PX 4.0 Implementation Notes"  * The source code for px is in several major pieces:  *  *	int.c		C main program which reads in interpreter code  *	interp.c	Driver including main interpreter loop and  *			the interpreter instructions grouped by their  *			positions in the interpreter table.  *	utilities.c	Interpreter exit, backtrace, and runtime statistics.  *  * In addition there are several headers defining mappings for panic  * names into codes, and a definition of the interpreter transfer  * table. These are made by the script make.ed1 in this directory and   * the routine opc.c from ${PASCALDIR}. (see the makefile for details)  */
 end_comment
 
 begin_define
@@ -292,15 +292,6 @@ end_empty_stmt
 
 begin_extern
 extern|extern memsize(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern except(
 end_extern
 
 begin_empty_stmt

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.18 %G%"
+literal|"@(#)interp.c 1.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"panics.h"
 end_include
 
 begin_include
@@ -1841,9 +1835,9 @@ literal|0
 argument_list|)
 argument_list|)
 condition|)
-name|panic
+name|ERROR
 argument_list|(
-name|PSTKNEMP
+literal|"Panic: stack not empty between statements\n"
 argument_list|)
 expr_stmt|;
 name|_lino
@@ -2034,17 +2028,13 @@ argument_list|()
 expr_stmt|;
 name|cmplong
 label|:
-name|tl2
-operator|=
+switch|switch
+condition|(
 operator|*
 name|pc
 operator|.
 name|cp
 operator|++
-expr_stmt|;
-switch|switch
-condition|(
-name|tl2
 condition|)
 block|{
 case|case
@@ -2114,9 +2104,18 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 default|default:
-name|panic
+name|ERROR
 argument_list|(
-name|PSYSTEM
+literal|"Panic: bad relation %d to REL4*\n"
+argument_list|,
+operator|*
+operator|(
+name|pc
+operator|.
+name|cp
+operator|-
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2275,9 +2274,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|panic
+name|ERROR
 argument_list|(
-name|PSYSTEM
+literal|"Panic: bad relation %d to RELG*\n"
+argument_list|,
+name|tl2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2442,9 +2443,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|panic
+name|ERROR
 argument_list|(
-name|PSYSTEM
+literal|"Panic: bad relation %d to RELT*\n"
+argument_list|,
+name|tl2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2622,9 +2625,18 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 default|default:
-name|panic
+name|ERROR
 argument_list|(
-name|PSYSTEM
+literal|"Panic: bad relation %d to REL8*\n"
+argument_list|,
+operator|*
+operator|(
+name|pc
+operator|.
+name|cp
+operator|-
+literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5946,9 +5958,32 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
-name|panic
+if|if
+condition|(
+name|_nodump
+operator|==
+name|TRUE
+condition|)
+name|psexit
 argument_list|(
-name|PHALT
+literal|0
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"\nCall to procedure halt\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|backtrace
+argument_list|(
+literal|"Halted"
+argument_list|)
+expr_stmt|;
+name|psexit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -9113,9 +9148,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 default|default:
-name|panic
+name|ERROR
 argument_list|(
-name|PBADOP
+literal|"Panic: bad op code\n"
 argument_list|)
 expr_stmt|;
 continue|continue;

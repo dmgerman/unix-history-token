@@ -9,9 +9,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c 1.4 %G%"
+literal|"@(#)utilities.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
 
 begin_include
 include|#
@@ -23,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"panics.h"
 end_include
 
 begin_include
@@ -325,13 +325,14 @@ end_escape
 begin_macro
 name|backtrace
 argument_list|(
-argument|errnum
+argument|type
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
-name|errnum
+name|char
+modifier|*
+name|type
 decl_stmt|;
 end_decl_stmt
 
@@ -384,39 +385,13 @@ name|disp
 operator|=
 name|_display
 expr_stmt|;
-if|if
-condition|(
-name|errnum
-operator|==
-name|PINTR
-condition|)
-name|fputs
+name|fprintf
 argument_list|(
-literal|"\n\tInterrupted in \""
-argument_list|,
 name|stderr
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|errnum
-operator|==
-name|PHALT
-condition|)
-name|fputs
-argument_list|(
-literal|"\n\tHalted in \""
 argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-else|else
-name|fputs
-argument_list|(
-literal|"\n\tError in \""
+literal|"\n\t%s in \""
 argument_list|,
-name|stderr
+name|type
 argument_list|)
 expr_stmt|;
 name|mydp
@@ -522,11 +497,7 @@ name|_display
 operator|=
 name|disp
 expr_stmt|;
-name|psexit
-argument_list|(
-name|errnum
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 name|mydp
 operator|=
@@ -634,6 +605,121 @@ expr_stmt|;
 name|exit
 argument_list|(
 name|code
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Routines to field various types of signals  *  * catch a library error and generate a backtrace  */
+end_comment
+
+begin_macro
+name|liberr
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|backtrace
+argument_list|(
+literal|"Error"
+argument_list|)
+expr_stmt|;
+name|psexit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * catch an interrupt and generate a backtrace  */
+end_comment
+
+begin_macro
+name|intr
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|intr
+argument_list|)
+expr_stmt|;
+name|backtrace
+argument_list|(
+literal|"Interrupted"
+argument_list|)
+expr_stmt|;
+name|psexit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * catch memory faults  */
+end_comment
+
+begin_macro
+name|memsize
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|signal
+argument_list|(
+name|SIGSEGV
+argument_list|,
+name|memsize
+argument_list|)
+expr_stmt|;
+name|ERROR
+argument_list|(
+literal|"Run time stack overflow\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * catch random system faults  */
+end_comment
+
+begin_macro
+name|syserr
+argument_list|(
+argument|signum
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|signum
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|signal
+argument_list|(
+name|signum
+argument_list|,
+name|syserr
+argument_list|)
+expr_stmt|;
+name|ERROR
+argument_list|(
+literal|"Panic: Computational error in interpreter\n"
 argument_list|)
 expr_stmt|;
 block|}

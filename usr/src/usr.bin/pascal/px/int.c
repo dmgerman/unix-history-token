@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)int.c 1.6 %G%"
+literal|"@(#)int.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|"vars.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libpc.h"
 end_include
 
 begin_include
@@ -621,7 +627,7 @@ name|signal
 argument_list|(
 name|SIGFPE
 argument_list|,
-name|except
+name|EXCEPT
 argument_list|)
 expr_stmt|;
 name|signal
@@ -727,7 +733,6 @@ expr_stmt|;
 name|PFLUSH
 argument_list|()
 expr_stmt|;
-comment|/* pfree(objprog); */
 name|psexit
 argument_list|(
 literal|0
