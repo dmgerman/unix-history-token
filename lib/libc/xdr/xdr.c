@@ -26,7 +26,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|sccsid
+name|sccsid2
 init|=
 literal|"@(#)xdr.c 1.35 87/08/12"
 decl_stmt|;

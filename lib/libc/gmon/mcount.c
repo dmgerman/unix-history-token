@@ -9,18 +9,18 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|lint
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
 name|_KERNEL
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
 name|LIBC_SCCS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lint
 argument_list|)
 end_if
 
