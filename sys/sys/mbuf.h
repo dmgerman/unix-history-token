@@ -1343,6 +1343,241 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Some packet tags to identify different mbuf annotations.  *  * Eventually, these annotations will end up in an appropriate chain  * (struct m_tag or similar, e.g. as in NetBSD) properly managed by  * the mbuf handling routines.  *  * As a temporary and low impact solution to replace the even uglier  * approach used so far in some parts of the network stack (which relies  * on global variables), these annotations are stored in MT_CONTROL  * mbufs (or lookalikes) prepended to the actual mbuf chain.  *  *	m_type	= MT_CONTROL  *	m_flags = m_tag_id  *	m_next	= next buffer in chain.  *  * BE VERY CAREFUL not to pass these blocks to the mbuf handling routines.  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|m_tag_id
+value|m_hdr.mh_flags
+end_define
+
+begin_comment
+comment|/* Packet tag types -- first ones are from NetBSD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* Nadda */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPSEC_IN_DONE
+value|1
+end_define
+
+begin_comment
+comment|/* IPsec applied, in */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPSEC_OUT_DONE
+value|2
+end_define
+
+begin_comment
+comment|/* IPsec applied, out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPSEC_IN_CRYPTO_DONE
+value|3
+end_define
+
+begin_comment
+comment|/* NIC IPsec crypto done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPSEC_OUT_CRYPTO_NEEDED
+value|4
+end_define
+
+begin_comment
+comment|/* NIC IPsec crypto req'ed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPSEC_IN_COULD_DO_CRYPTO
+value|5
+end_define
+
+begin_comment
+comment|/* NIC notifies IPsec */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPSEC_PENDING_TDB
+value|6
+end_define
+
+begin_comment
+comment|/* Reminder to do IPsec */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_BRIDGE
+value|7
+end_define
+
+begin_comment
+comment|/* Bridge processing done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_GIF
+value|8
+end_define
+
+begin_comment
+comment|/* GIF processing done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_GRE
+value|9
+end_define
+
+begin_comment
+comment|/* GRE processing done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IN_PACKET_CHECKSUM
+value|10
+end_define
+
+begin_comment
+comment|/* NIC checksumming done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_ENCAP
+value|11
+end_define
+
+begin_comment
+comment|/* Encap.  processing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPSEC_SOCKET
+value|12
+end_define
+
+begin_comment
+comment|/* IPSEC socket ref */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPSEC_HISTORY
+value|13
+end_define
+
+begin_comment
+comment|/* IPSEC history */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPV6_INPUT
+value|14
+end_define
+
+begin_comment
+comment|/* IPV6 input processing */
+end_comment
+
+begin_comment
+comment|/* Packet tags used in the FreeBSD network stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_DUMMYNET
+value|15
+end_define
+
+begin_comment
+comment|/* dummynet info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPFW
+value|16
+end_define
+
+begin_comment
+comment|/* ipfw classification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_DIVERT
+value|17
+end_define
+
+begin_comment
+comment|/* divert info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPFORWARD
+value|18
+end_define
+
+begin_comment
+comment|/* ipforward info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_MAX
+value|19
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
