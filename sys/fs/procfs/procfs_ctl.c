@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ksiginfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/pseudofs/pseudofs.h>
 end_include
 
@@ -759,11 +753,11 @@ operator|~
 name|P_TRACED
 expr_stmt|;
 comment|/* remove pending SIGTRAP, else the process will die */
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|SIGTRAP
 argument_list|)

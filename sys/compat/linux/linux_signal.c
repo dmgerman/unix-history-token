@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ksiginfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syscallsubr.h>
 end_include
 
@@ -1980,13 +1974,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|ksiginfo_to_sigset_t
-argument_list|(
-name|p
-argument_list|,
-operator|&
 name|bset
-argument_list|)
+operator|=
+name|p
+operator|->
+name|p_siglist
 expr_stmt|;
 name|SIGSETAND
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002 New Gold Technoloy.  All rights reserved.  * Copyright (c) 2002 Juli Mallett.  All rights reserved.  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_sig.c	8.7 (Berkeley) 4/18/94  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_sig.c	8.7 (Berkeley) 4/18/94  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -181,12 +181,6 @@ begin_include
 include|#
 directive|include
 file|<sys/unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ksiginfo.h>
 end_include
 
 begin_include
@@ -501,33 +495,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|stopmask
-init|=
-name|sigmask
-argument_list|(
-name|SIGSTOP
-argument_list|)
-operator||
-name|sigmask
-argument_list|(
-name|SIGTSTP
-argument_list|)
-operator||
-name|sigmask
-argument_list|(
-name|SIGTTIN
-argument_list|)
-operator||
-name|sigmask
-argument_list|(
-name|SIGTTOU
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Signal properties and actions.  * The array below categorizes the signals and their default actions  * according to the following properties:  */
 end_comment
@@ -781,7 +748,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|signal_pending
+name|SIGPENDING
 argument_list|(
 name|p
 argument_list|)
@@ -798,7 +765,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Arrange for ast() to handle unmasked pending signals on return to user  * mode.  This must be called whenever a signal is added to p_sigq or  * unmasked in p_sigmask.  */
+comment|/*  * Arrange for ast() to handle unmasked pending signals on return to user  * mode.  This must be called whenever a signal is added to p_siglist or  * unmasked in p_sigmask.  */
 end_comment
 
 begin_function
@@ -836,7 +803,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|signal_pending
+name|SIGPENDING
 argument_list|(
 name|p
 argument_list|)
@@ -1653,11 +1620,11 @@ operator|)
 condition|)
 block|{
 comment|/* never to be seen again */
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -2463,11 +2430,11 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -3138,13 +3105,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|ksiginfo_to_sigset_t
-argument_list|(
-name|p
-argument_list|,
-operator|&
 name|siglist
-argument_list|)
+operator|=
+name|p
+operator|->
+name|p_siglist
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
@@ -3250,9 +3215,6 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-name|sigset_t
-name|siglist
-decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3264,17 +3226,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|ksiginfo_to_sigset_t
-argument_list|(
-name|p
-argument_list|,
-operator|&
-name|siglist
-argument_list|)
-expr_stmt|;
 name|SIG2OSIG
 argument_list|(
-name|siglist
+name|p
+operator|->
+name|p_siglist
 argument_list|,
 name|td
 operator|->
@@ -6313,11 +6269,11 @@ name|prop
 operator|&
 name|SA_CONT
 condition|)
-name|signal_delete_mask
+name|SIG_STOPSIGMASK
 argument_list|(
 name|p
-argument_list|,
-name|stopmask
+operator|->
+name|p_siglist
 argument_list|)
 expr_stmt|;
 if|if
@@ -6353,14 +6309,11 @@ name|SIG_DFL
 operator|)
 condition|)
 return|return;
-name|signal_delete_mask
+name|SIG_CONTSIGMASK
 argument_list|(
 name|p
-argument_list|,
-name|sigmask
-argument_list|(
-name|SIGCONT
-argument_list|)
+operator|->
+name|p_siglist
 argument_list|)
 expr_stmt|;
 name|p
@@ -6371,11 +6324,11 @@ operator|~
 name|P_CONTINUED
 expr_stmt|;
 block|}
-name|signal_add
+name|SIGADDSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -6436,7 +6389,7 @@ operator|&
 name|SA_CONT
 condition|)
 block|{
-comment|/* 			 * If SIGCONT is default (or ignored), we continue the 			 * process but don't leave the signal in p_sigq as it 			 * has no further action.  If SIGCONT is held, we 			 * continue the process and leave the signal in 			 * p_sigq.  If the process catches SIGCONT, let it 			 * handle the signal itself.  If it isn't waiting on 			 * an event, it goes back to run state. 			 * Otherwise, process goes back to sleep state. 			 */
+comment|/* 			 * If SIGCONT is default (or ignored), we continue the 			 * process but don't leave the signal in p_siglist as 			 * it has no further action.  If SIGCONT is held, we 			 * continue the process and leave the signal in 			 * p_siglist.  If the process catches SIGCONT, let it 			 * handle the signal itself.  If it isn't waiting on 			 * an event, it goes back to run state. 			 * Otherwise, process goes back to sleep state. 			 */
 name|p
 operator|->
 name|p_flag
@@ -6457,11 +6410,11 @@ operator|==
 name|SIG_DFL
 condition|)
 block|{
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -6516,11 +6469,11 @@ name|p_flag
 operator||=
 name|P_STOPPED_SIG
 expr_stmt|;
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -6609,11 +6562,11 @@ name|SA_CONT
 condition|)
 block|{
 comment|/* 			 * Already active, don't need to start again. 			 */
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -6757,11 +6710,11 @@ name|p_xstat
 operator|=
 name|sig
 expr_stmt|;
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -6830,11 +6783,11 @@ block|}
 else|else
 block|{
 comment|/* Not in "NORMAL" state. discard the signal. */
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -7042,11 +6995,11 @@ operator|==
 name|SIG_DFL
 condition|)
 block|{
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -7201,13 +7154,11 @@ operator|&
 name|S_SIG
 operator|)
 decl_stmt|;
-name|ksiginfo_to_sigset_t
-argument_list|(
-name|p
-argument_list|,
-operator|&
 name|mask
-argument_list|)
+operator|=
+name|p
+operator|->
+name|p_siglist
 expr_stmt|;
 name|SIGSETNAND
 argument_list|(
@@ -7246,10 +7197,9 @@ operator|)
 return|;
 name|sig
 operator|=
-name|signal_queued_mask
+name|sig_ffs
 argument_list|(
-name|p
-argument_list|,
+operator|&
 name|mask
 argument_list|)
 expr_stmt|;
@@ -7288,11 +7238,11 @@ literal|0
 operator|)
 condition|)
 block|{
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -7414,11 +7364,11 @@ literal|0
 condition|)
 continue|continue;
 comment|/* 			 * If parent wants us to take the signal, 			 * then it will leave it in p->p_xstat; 			 * otherwise we just look for signals again. 			 */
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -7437,10 +7387,12 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 			 * Put the new signal into p_sigq.  If the signal 			 * is being masked, look for other signals. 			 */
-name|psignal
+comment|/* 			 * Put the new signal into p_siglist.  If the 			 * signal is being masked, look for other signals. 			 */
+name|SIGADDSET
 argument_list|(
 name|p
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -7742,11 +7694,11 @@ name|sig
 operator|)
 return|;
 block|}
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)
@@ -7875,11 +7827,11 @@ name|p
 operator|->
 name|p_sigacts
 expr_stmt|;
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|sig
 argument_list|)

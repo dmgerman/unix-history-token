@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ksiginfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netipx/ipx.h>
 end_include
 
@@ -245,13 +239,11 @@ condition|)
 return|return
 literal|0
 return|;
-name|ksiginfo_to_sigset_t
-argument_list|(
-name|p
-argument_list|,
-operator|&
 name|tmpset
-argument_list|)
+operator|=
+name|p
+operator|->
+name|p_siglist
 expr_stmt|;
 name|SIGSETNAND
 argument_list|(
@@ -273,11 +265,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|signal_queued
+name|SIGNOTEMPTY
 argument_list|(
 name|p
-argument_list|,
-literal|0
+operator|->
+name|p_siglist
 argument_list|)
 operator|&&
 name|NCP_SIGMASK

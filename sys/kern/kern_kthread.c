@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ksiginfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -482,7 +476,7 @@ name|int
 name|timo
 parameter_list|)
 block|{
-comment|/* 	 * Make sure this is indeed a system process and we can safely 	 * use the signal queue. 	 */
+comment|/* 	 * Make sure this is indeed a system process and we can safely 	 * use the p_siglist field. 	 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -512,11 +506,11 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|signal_add
+name|SIGADDSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|SIGSTOP
 argument_list|)
@@ -532,7 +526,7 @@ argument_list|(
 operator|&
 name|p
 operator|->
-name|p_sigq
+name|p_siglist
 argument_list|,
 operator|&
 name|p
@@ -591,11 +585,11 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|signal_delete
+name|SIGDELSET
 argument_list|(
 name|p
-argument_list|,
-name|NULL
+operator|->
+name|p_siglist
 argument_list|,
 name|SIGSTOP
 argument_list|)
@@ -610,7 +604,7 @@ argument_list|(
 operator|&
 name|p
 operator|->
-name|p_sigq
+name|p_siglist
 argument_list|)
 expr_stmt|;
 return|return
@@ -638,9 +632,11 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|signal_queued
+name|SIGISMEMBER
 argument_list|(
 name|p
+operator|->
+name|p_siglist
 argument_list|,
 name|SIGSTOP
 argument_list|)
@@ -651,7 +647,7 @@ argument_list|(
 operator|&
 name|p
 operator|->
-name|p_sigq
+name|p_siglist
 argument_list|)
 expr_stmt|;
 name|msleep
@@ -659,7 +655,7 @@ argument_list|(
 operator|&
 name|p
 operator|->
-name|p_sigq
+name|p_siglist
 argument_list|,
 operator|&
 name|p

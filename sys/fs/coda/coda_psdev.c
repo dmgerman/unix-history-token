@@ -85,12 +85,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/ksiginfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mount.h>
 end_include
 
@@ -2056,9 +2050,6 @@ operator|->
 name|td_proc
 decl_stmt|;
 name|sigset_t
-name|pending_set
-decl_stmt|;
-name|sigset_t
 name|psig_omask
 decl_stmt|;
 name|sigset_t
@@ -2412,14 +2403,6 @@ directive|endif
 block|}
 else|else
 block|{
-name|ksiginfo_to_sigset_t
-argument_list|(
-name|p
-argument_list|,
-operator|&
-name|pending_set
-argument_list|)
-expr_stmt|;
 name|SIGEMPTYSET
 argument_list|(
 name|tempset
@@ -2436,7 +2419,9 @@ if|if
 condition|(
 name|SIGSETEQ
 argument_list|(
-name|pending_set
+name|p
+operator|->
+name|p_siglist
 argument_list|,
 name|tempset
 argument_list|)
@@ -2468,14 +2453,6 @@ directive|endif
 block|}
 else|else
 block|{
-name|ksiginfo_to_sigset_t
-argument_list|(
-name|p
-argument_list|,
-operator|&
-name|pending_set
-argument_list|)
-expr_stmt|;
 name|SIGDELSET
 argument_list|(
 name|tempset
@@ -2494,7 +2471,9 @@ if|if
 condition|(
 name|SIGSETEQ
 argument_list|(
-name|pending_set
+name|p
+operator|->
+name|p_siglist
 argument_list|,
 name|tempset
 argument_list|)
@@ -2540,7 +2519,9 @@ directive|if
 name|notyet
 name|tempset
 operator|=
-name|pending_set
+name|p
+operator|->
+name|p_siglist
 expr_stmt|;
 name|SIGSETNAND
 argument_list|(
@@ -2555,7 +2536,9 @@ name|printf
 argument_list|(
 literal|"coda_call: siglist = %p, sigmask = %p, mask %p\n"
 argument_list|,
-name|pending_set
+name|p
+operator|->
+name|p_siglist
 argument_list|,
 name|p
 operator|->
@@ -2571,12 +2554,16 @@ name|p
 operator|->
 name|p_sigmask
 argument_list|,
-name|pending_set
+name|p
+operator|->
+name|p_siglist
 argument_list|)
 expr_stmt|;
 name|tempset
 operator|=
-name|pending_set
+name|p
+operator|->
+name|p_siglist
 expr_stmt|;
 name|SIGSETNAND
 argument_list|(
@@ -2591,7 +2578,9 @@ name|printf
 argument_list|(
 literal|"coda_call: new mask, siglist = %p, sigmask = %p, mask %p\n"
 argument_list|,
-name|pending_set
+name|p
+operator|->
+name|p_siglist
 argument_list|,
 name|p
 operator|->

@@ -2528,14 +2528,6 @@ operator|->
 name|p_children
 argument_list|)
 expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|p2
-operator|->
-name|p_sigq
-argument_list|)
-expr_stmt|;
 name|callout_init
 argument_list|(
 operator|&

@@ -1573,14 +1573,6 @@ argument_list|)
 name|p_suspended
 expr_stmt|;
 comment|/* (td_runq) suspended threads */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ksiginfo
-argument_list|)
-name|p_sigq
-expr_stmt|;
-comment|/* (c) Queued signals. */
 name|struct
 name|ucred
 modifier|*
@@ -1729,6 +1721,10 @@ modifier|*
 name|p_tracep
 decl_stmt|;
 comment|/* (c + o) Trace to vnode. */
+name|sigset_t
+name|p_siglist
+decl_stmt|;
+comment|/* (c) Sigs arrived, not delivered. */
 name|struct
 name|vnode
 modifier|*

@@ -143,12 +143,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/ksiginfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1880,7 +1874,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|signal_pending
+name|SIGPENDING
 argument_list|(
 name|p
 argument_list|)
@@ -4889,15 +4883,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|ksiginfo_to_sigset_t
-argument_list|(
-name|p
-argument_list|,
-operator|&
 name|kp
 operator|->
 name|ki_siglist
-argument_list|)
+operator|=
+name|p
+operator|->
+name|p_siglist
 expr_stmt|;
 name|kp
 operator|->
