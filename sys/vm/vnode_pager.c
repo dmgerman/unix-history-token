@@ -109,6 +109,19 @@ end_include
 
 begin_decl_stmt
 specifier|static
+name|void
+name|vnode_pager_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|vm_offset_t
 name|vnode_pager_addr
 name|__P
@@ -263,7 +276,7 @@ name|pagerops
 name|vnodepagerops
 init|=
 block|{
-name|NULL
+name|vnode_pager_init
 block|,
 name|vnode_pager_alloc
 block|,
@@ -283,15 +296,26 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|vnode_pbuf_freecnt
-init|=
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* start out unlimited */
-end_comment
+begin_function
+name|void
+name|vnode_pager_init
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|vnode_pbuf_freecnt
+operator|=
+name|nswbuf
+operator|/
+literal|2
+operator|+
+literal|1
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Allocate (or lookup) pager for a vnode.  * Handle is a vnode pointer.  */
@@ -343,23 +367,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * XXX hack - This initialization should be put somewhere else. 	 */
-if|if
-condition|(
-name|vnode_pbuf_freecnt
-operator|<
-literal|0
-condition|)
-block|{
-name|vnode_pbuf_freecnt
-operator|=
-name|nswbuf
-operator|/
-literal|2
-operator|+
-literal|1
-expr_stmt|;
-block|}
 name|vp
 operator|=
 operator|(
