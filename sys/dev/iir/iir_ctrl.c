@@ -214,8 +214,9 @@ block|,
 comment|/* flags */
 literal|0
 block|,
-comment|/* kq */
-name|nokqfilter
+comment|/* bmaj */
+operator|-
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
