@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)quad.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)quad.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -22,6 +22,13 @@ include|#
 directive|include
 file|<stddef.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|BITS_PER_WORD
+value|(NBBY * sizeof(long))
+end_define
 
 begin_ifndef
 ifndef|#
