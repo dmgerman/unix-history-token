@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)mount_null.c	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)mount_null.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lofs/lofs.h>
+file|<nullfs/null.h>
 end_include
 
 begin_include
@@ -81,7 +81,7 @@ index|[]
 decl_stmt|;
 block|{
 name|struct
-name|lofs_args
+name|null_args
 name|args
 decl_stmt|;
 name|int
@@ -164,7 +164,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-name|MOUNT_LOFS
+name|MOUNT_NULL
 argument_list|,
 name|argv
 index|[
@@ -185,7 +185,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"mount_lofs: %s\n"
+literal|"mount_null: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -219,7 +219,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_lofs [ -F fsoptions ] target_fs mount_point\n"
+literal|"usage: mount_null [ -F fsoptions ] target_fs mount_point\n"
 argument_list|)
 expr_stmt|;
 name|exit
