@@ -77,13 +77,6 @@ block|{
 name|int
 name|w
 decl_stmt|;
-name|_DIAGASSERT
-argument_list|(
-name|s
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 name|w
 operator|=
 literal|0

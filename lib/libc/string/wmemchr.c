@@ -83,13 +83,6 @@ block|{
 name|size_t
 name|i
 decl_stmt|;
-name|_DIAGASSERT
-argument_list|(
-name|s
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i

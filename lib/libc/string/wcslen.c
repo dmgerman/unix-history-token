@@ -74,13 +74,6 @@ name|wchar_t
 modifier|*
 name|p
 decl_stmt|;
-name|_DIAGASSERT
-argument_list|(
-name|s
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 name|p
 operator|=
 name|s

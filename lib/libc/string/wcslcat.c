@@ -115,20 +115,6 @@ decl_stmt|;
 name|size_t
 name|dlen
 decl_stmt|;
-name|_DIAGASSERT
-argument_list|(
-name|dst
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
-name|_DIAGASSERT
-argument_list|(
-name|src
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* Find the end of dst and adjust bytes left but don't go past end */
 while|while
 condition|(

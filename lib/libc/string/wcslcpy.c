@@ -112,20 +112,6 @@ name|n
 init|=
 name|siz
 decl_stmt|;
-name|_DIAGASSERT
-argument_list|(
-name|dst
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
-name|_DIAGASSERT
-argument_list|(
-name|src
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* Copy as many bytes as will fit */
 if|if
 condition|(

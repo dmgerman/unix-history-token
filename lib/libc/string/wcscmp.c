@@ -98,20 +98,6 @@ end_function
 
 begin_block
 block|{
-name|_DIAGASSERT
-argument_list|(
-name|s1
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
-name|_DIAGASSERT
-argument_list|(
-name|s2
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|*
