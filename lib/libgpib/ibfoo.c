@@ -841,7 +841,7 @@ name|int
 name|handle
 parameter_list|,
 name|int
-name|v
+name|eot
 parameter_list|)
 block|{
 name|struct
@@ -862,9 +862,9 @@ name|handle
 expr_stmt|;
 name|io
 operator|.
-name|v
+name|eot
 operator|=
-name|v
+name|eot
 expr_stmt|;
 name|io
 operator|.
@@ -872,7 +872,7 @@ name|__field
 operator|=
 name|__F_HANDLE
 operator||
-name|__F_V
+name|__F_EOT
 expr_stmt|;
 return|return
 operator|(
