@@ -840,15 +840,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|p
-operator|!=
-name|curproc
-operator|)
-operator|&&
-ifdef|#
-directive|ifdef
-name|SMP
 name|p
 operator|->
 name|p_oncpu
@@ -856,8 +847,6 @@ operator|==
 name|NOCPU
 operator|&&
 comment|/* idle */
-endif|#
-directive|endif
 name|p
 operator|->
 name|p_stat
