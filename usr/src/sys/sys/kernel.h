@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kernel.h	6.1	83/07/29	*/
+comment|/*	kernel.h	6.2	85/06/07	*/
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ begin_decl_stmt
 name|char
 name|hostname
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
