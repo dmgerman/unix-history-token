@@ -4899,7 +4899,6 @@ block|{
 if|#
 directive|if
 literal|1
-comment|/* this could happen if we call fwohci_arcv() before fwohci_txd() */
 if|if
 condition|(
 name|xfer
@@ -4908,7 +4907,8 @@ name|state
 operator|==
 name|FWXF_START
 condition|)
-name|panic
+comment|/* 			 * This could happen if: 			 *  1. We call fwohci_arcv() before fwohci_txd(). 			 *  2. firewire_watch() is called. 			 */
+name|printf
 argument_list|(
 literal|"fw_xfer_free FWXF_START\n"
 argument_list|)
