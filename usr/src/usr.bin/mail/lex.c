@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	1.4 %G%"
+literal|"@(#)lex.c	1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,11 +342,9 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|announce
-argument_list|(
-operator|!
-name|edit
-argument_list|)
+name|shudann
+operator|=
+literal|1
 expr_stmt|;
 name|sawcom
 operator|=
@@ -476,23 +474,17 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * How's this for obscure:  after we 		 * finish sourcing for the first time, 		 * go off and print the headers! 		 */
-ifdef|#
-directive|ifdef
-name|CRAZYWOW
 if|if
 condition|(
-name|firstsw
-operator|==
-literal|0
+name|shudann
 operator|&&
 operator|!
 name|sourcing
 condition|)
 block|{
-name|firstsw
+name|shudann
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -500,12 +492,10 @@ name|rcvmode
 condition|)
 name|announce
 argument_list|(
-literal|1
+name|edit
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 		 * Print the prompt, if needed.  Clear out 		 * string space, and flush the output. 		 */
 if|if
 condition|(
@@ -1788,42 +1778,6 @@ name|message
 modifier|*
 name|mp
 decl_stmt|;
-if|if
-condition|(
-name|value
-argument_list|(
-literal|"hold"
-argument_list|)
-operator|!=
-name|NOSTR
-condition|)
-for|for
-control|(
-name|mp
-operator|=
-operator|&
-name|message
-index|[
-literal|0
-index|]
-init|;
-name|mp
-operator|<
-operator|&
-name|message
-index|[
-name|msgCount
-index|]
-condition|;
-name|mp
-operator|++
-control|)
-name|mp
-operator|->
-name|m_flag
-operator||=
-name|MPRESERVE
-expr_stmt|;
 name|vec
 index|[
 literal|0
