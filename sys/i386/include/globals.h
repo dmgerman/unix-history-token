@@ -109,18 +109,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* #if defined(SMP) || defined(KLD_MODULE) */
+end_comment
+
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
+literal|1
 end_if
 
 begin_comment
@@ -678,35 +674,12 @@ argument|witness_spin_check
 argument_list|)
 end_macro
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|GLOBALDATA
 value|GLOBAL_RVALUE(globaldata, struct globaldata *)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|GLOBALDATA
-value|(&globaldata)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -75,7 +75,7 @@ struct|struct
 name|globaldata
 block|{
 name|struct
-name|privatespace
+name|globaldata
 modifier|*
 name|gd_prvspace
 decl_stmt|;
@@ -215,14 +215,6 @@ directive|endif
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|globaldata
-name|globaldata
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|SLIST_HEAD

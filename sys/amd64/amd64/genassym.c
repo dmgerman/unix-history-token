@@ -1397,6 +1397,22 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
+name|GD_PRVSPACE
+argument_list|,
+name|offsetof
+argument_list|(
+expr|struct
+name|globaldata
+argument_list|,
+name|gd_prvspace
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
 name|GD_CURPROC
 argument_list|,
 name|offsetof
@@ -2071,12 +2087,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -2091,11 +2101,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|ASSYM

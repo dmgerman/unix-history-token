@@ -188,7 +188,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SMP
+name|LOCORE
 end_ifdef
 
 begin_define
@@ -201,19 +201,16 @@ parameter_list|)
 value|%fs:GD_ ## member
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
-name|PCPU
+name|PCPU_ADDR
 parameter_list|(
 name|member
+parameter_list|,
+name|reg
 parameter_list|)
-value|CNAME(globaldata) + GD_ ## member
+value|movl %fs:GD_PRVSPACE,reg; \ 			addl $GD_ ## member,reg
 end_define
 
 begin_endif
