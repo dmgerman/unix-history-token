@@ -545,17 +545,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|TDF_ONRUNQ
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* This KE is on a run queue */
-end_comment
-
 begin_comment
 comment|/*  * The schedulable entity that can be given a context to run.  * A process may have several of these. Probably one per processor  * but posibly a few more. In this universe they are grouped  * with a KSEG that contains the priority and niceness  * for the group.  */
 end_comment
@@ -1301,10 +1290,6 @@ begin_comment
 comment|/* These flags are kept in p_flag. */
 end_comment
 
-begin_comment
-comment|/* In a KSE world some go to a thread or a KSE (*)*/
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1566,6 +1551,21 @@ begin_comment
 comment|/* Process is being swapped. */
 end_comment
 
+begin_comment
+comment|/* flags kept in td_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_ONRUNQ
+value|0x00001
+end_define
+
+begin_comment
+comment|/* This KE is on a run queue */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1613,12 +1613,38 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_TIMOFAIL
+value|0x01000
+end_define
+
+begin_comment
+comment|/* Timeout from sleep after we were awake. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_DEADLKTREAT
 value|0x800000
 end_define
 
 begin_comment
 comment|/* Lock aquisition - deadlock treatment. */
+end_comment
+
+begin_comment
+comment|/* flags kept in ke_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_ONRUNQ
+value|0x00001
+end_define
+
+begin_comment
+comment|/* This KE is on a run queue */
 end_comment
 
 begin_define
@@ -1652,28 +1678,6 @@ end_define
 
 begin_comment
 comment|/* Process needs to yield. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDF_TIMOFAIL
-value|0x01000
-end_define
-
-begin_comment
-comment|/* Timeout from sleep after we were awake. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_ONRUNQ
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* This KE is on a run queue */
 end_comment
 
 begin_define
