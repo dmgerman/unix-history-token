@@ -139,7 +139,14 @@ begin_define
 define|#
 directive|define
 name|ZERO_ALLOWED
-value|0X02
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_DENSITY
+value|0x04
 end_define
 
 begin_endif
@@ -298,6 +305,8 @@ block|,
 name|NEED_2ARGS
 operator||
 name|ZERO_ALLOWED
+operator||
+name|IS_DENSITY
 block|}
 block|,
 block|{
@@ -406,6 +415,30 @@ parameter_list|(
 name|struct
 name|mtget
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|stringtodens
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|denstostring
+parameter_list|(
+name|int
+name|d
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -685,6 +718,91 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+if|if
+condition|(
+operator|!
+name|isdigit
+argument_list|(
+operator|*
+operator|*
+name|argv
+argument_list|)
+operator|&&
+name|comp
+operator|->
+name|c_flags
+operator|&
+name|IS_DENSITY
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|dcanon
+decl_stmt|;
+name|mt_com
+operator|.
+name|mt_count
+operator|=
+name|stringtodens
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mt_com
+operator|.
+name|mt_count
+operator|==
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|"%s: unknown density"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+name|dcanon
+operator|=
+name|denstostring
+argument_list|(
+name|mt_com
+operator|.
+name|mt_count
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|dcanon
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Using \"%s\" as an alias for %s\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|,
+name|dcanon
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+literal|""
+expr_stmt|;
+block|}
+else|else
 comment|/* allow for hex numbers; useful for density */
 name|mt_com
 operator|.
@@ -1605,97 +1723,97 @@ block|{
 block|{
 literal|0x1
 block|,
-literal|"X3.22-1983  "
+literal|"X3.22-1983"
 block|}
 block|,
 block|{
 literal|0x2
 block|,
-literal|"X3.39-1986  "
+literal|"X3.39-1986"
 block|}
 block|,
 block|{
 literal|0x3
 block|,
-literal|"X3.54-1986  "
+literal|"X3.54-1986"
 block|}
 block|,
 block|{
 literal|0x5
 block|,
-literal|"X3.136-1986 "
+literal|"X3.136-1986"
 block|}
 block|,
 block|{
 literal|0x6
 block|,
-literal|"X3.157-1987 "
+literal|"X3.157-1987"
 block|}
 block|,
 block|{
 literal|0x7
 block|,
-literal|"X3.116-1986 "
+literal|"X3.116-1986"
 block|}
 block|,
 block|{
 literal|0x8
 block|,
-literal|"X3.158-1986 "
+literal|"X3.158-1986"
 block|}
 block|,
 block|{
 literal|0x9
 block|,
-literal|"X3B5/87-099 "
+literal|"X3B5/87-099"
 block|}
 block|,
 block|{
 literal|0xA
 block|,
-literal|"X3B5/86-199 "
+literal|"X3B5/86-199"
 block|}
 block|,
 block|{
 literal|0xB
 block|,
-literal|"X3.56-1986  "
+literal|"X3.56-1986"
 block|}
 block|,
 block|{
 literal|0xC
 block|,
-literal|"HI-TC1      "
+literal|"HI-TC1"
 block|}
 block|,
 block|{
 literal|0xD
 block|,
-literal|"HI-TC2      "
+literal|"HI-TC2"
 block|}
 block|,
 block|{
 literal|0xF
 block|,
-literal|"QIC-120     "
+literal|"QIC-120"
 block|}
 block|,
 block|{
 literal|0x10
 block|,
-literal|"QIC-150     "
+literal|"QIC-150"
 block|}
 block|,
 block|{
 literal|0x11
 block|,
-literal|"QIC-320     "
+literal|"QIC-320"
 block|}
 block|,
 block|{
 literal|0x12
 block|,
-literal|"QIC-1350    "
+literal|"QIC-1350"
 block|}
 block|,
 block|{
@@ -1707,25 +1825,25 @@ block|,
 block|{
 literal|0x14
 block|,
-literal|"X3.202-1991 "
+literal|"X3.202-1991"
 block|}
 block|,
 block|{
 literal|0x15
 block|,
-literal|"ECMA TC17   "
+literal|"ECMA TC17"
 block|}
 block|,
 block|{
 literal|0x16
 block|,
-literal|"X3.193-1990 "
+literal|"X3.193-1990"
 block|}
 block|,
 block|{
 literal|0x17
 block|,
-literal|"X3B5/91-174 "
+literal|"X3B5/91-174"
 block|}
 block|,
 block|{
@@ -1741,7 +1859,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
-name|getdens
+name|denstostring
 parameter_list|(
 name|int
 name|d
@@ -1794,7 +1912,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"0x%02x        "
+literal|"0x%02x"
 argument_list|,
 name|d
 argument_list|)
@@ -1808,6 +1926,66 @@ return|return
 name|sd
 operator|->
 name|name
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|stringtodens
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|struct
+name|densities
+modifier|*
+name|sd
+decl_stmt|;
+name|size_t
+name|l
+init|=
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+decl_stmt|;
+for|for
+control|(
+name|sd
+operator|=
+name|dens
+init|;
+name|sd
+operator|->
+name|dens
+condition|;
+name|sd
+operator|++
+control|)
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|sd
+operator|->
+name|name
+argument_list|,
+name|s
+argument_list|,
+name|l
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+return|return
+name|sd
+operator|->
+name|dens
 return|;
 block|}
 end_function
@@ -1868,9 +2046,9 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"Present Mode:   Density = %s Blocksize %s\n"
+literal|"Present Mode:   Density = %-12s Blocksize %s\n"
 argument_list|,
-name|getdens
+name|denstostring
 argument_list|(
 name|bp
 operator|->
@@ -1892,9 +2070,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Mode 0:         Density = %s Blocksize %s\n"
+literal|"Mode 0:         Density = %-12s Blocksize %s\n"
 argument_list|,
-name|getdens
+name|denstostring
 argument_list|(
 name|bp
 operator|->
@@ -1911,9 +2089,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Mode 1:         Density = %s Blocksize %s\n"
+literal|"Mode 1:         Density = %-12s Blocksize %s\n"
 argument_list|,
-name|getdens
+name|denstostring
 argument_list|(
 name|bp
 operator|->
@@ -1930,9 +2108,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Mode 2:         Density = %s Blocksize %s\n"
+literal|"Mode 2:         Density = %-12s Blocksize %s\n"
 argument_list|,
-name|getdens
+name|denstostring
 argument_list|(
 name|bp
 operator|->
@@ -1949,9 +2127,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Mode 3:         Density = %s Blocksize %s\n"
+literal|"Mode 3:         Density = %-12s Blocksize %s\n"
 argument_list|,
-name|getdens
+name|denstostring
 argument_list|(
 name|bp
 operator|->
