@@ -791,22 +791,6 @@ label|:
 if|if
 condition|(
 name|td
-operator|!=
-name|curthread
-condition|)
-name|printf
-argument_list|(
-literal|"uiomove: IT CHANGED!"
-argument_list|)
-expr_stmt|;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
-comment|/* Might things have changed in copyin/copyout? */
-if|if
-condition|(
-name|td
 condition|)
 block|{
 name|mtx_lock_spin
