@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmd.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmd.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -39,24 +39,6 @@ name|c
 parameter_list|)
 value|( c< 0x20 ? 0 : 1)
 end_define
-
-begin_comment
-comment|/*  *  RFCNT register  */
-end_comment
-
-begin_struct
-struct|struct
-name|bmd_rfcnt
-block|{
-name|short
-name|rfc_hcnt
-decl_stmt|;
-name|short
-name|rfc_vcnt
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  *  Width& Hight  */
@@ -884,20 +866,6 @@ end_macro
 
 begin_block
 block|{
-specifier|volatile
-specifier|register
-name|struct
-name|bmd_rfcnt
-modifier|*
-name|bmd_rfcnt
-init|=
-operator|(
-expr|struct
-name|bmd_rfcnt
-operator|*
-operator|)
-literal|0xB1000000
-decl_stmt|;
 specifier|register
 name|struct
 name|bmd_softc
@@ -917,11 +885,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|struct
-name|bmd_rfcnt
-name|rfcnt
-decl_stmt|;
-comment|/* 	 *  adjust plane position 	 */
 name|bp
 operator|->
 name|bc_raddr
@@ -944,25 +907,14 @@ operator|)
 literal|0xB1080008
 expr_stmt|;
 comment|/* common bitmap hardware address */
-name|rfcnt
-operator|.
-name|rfc_hcnt
-operator|=
+comment|/* 	 *  adjust plane position 	 */
+name|fb_adjust
+argument_list|(
 literal|7
-expr_stmt|;
-comment|/* shift left   16 dot */
-name|rfcnt
-operator|.
-name|rfc_vcnt
-operator|=
+argument_list|,
 operator|-
 literal|27
-expr_stmt|;
-comment|/* shift down    1 dot */
-operator|*
-name|bmd_rfcnt
-operator|=
-name|rfcnt
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
@@ -1172,74 +1124,6 @@ name|bp
 operator|->
 name|bc_row
 argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|bmdadjust
-argument_list|(
-argument|hcnt
-argument_list|,
-argument|vcnt
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|short
-name|hcnt
-decl_stmt|,
-name|vcnt
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|volatile
-specifier|register
-name|struct
-name|bmd_rfcnt
-modifier|*
-name|bmd_rfcnt
-init|=
-operator|(
-expr|struct
-name|bmd_rfcnt
-operator|*
-operator|)
-literal|0xB1000000
-decl_stmt|;
-name|struct
-name|bmd_rfcnt
-name|rfcnt
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"bmdadjust: hcnt = %d, vcnt = %d\n"
-argument_list|,
-name|hcnt
-argument_list|,
-name|vcnt
-argument_list|)
-expr_stmt|;
-name|rfcnt
-operator|.
-name|rfc_hcnt
-operator|=
-name|hcnt
-expr_stmt|;
-comment|/* shift left   16 dot */
-name|rfcnt
-operator|.
-name|rfc_vcnt
-operator|=
-name|vcnt
-expr_stmt|;
-comment|/* shift down    1 dot */
-operator|*
-name|bmd_rfcnt
-operator|=
-name|rfcnt
 expr_stmt|;
 block|}
 end_block
