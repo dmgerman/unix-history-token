@@ -517,6 +517,14 @@ name|afswtch
 struct_decl|;
 end_struct_decl
 
+begin_decl_stmt
+name|int
+name|supmedia
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1987,11 +1995,11 @@ literal|"usage: ifconfig interface address_family [address [dest_address]]"
 argument_list|,
 literal|"                [parameters]"
 argument_list|,
-literal|"       ifconfig -a [-d] [-u] [address_family]"
+literal|"       ifconfig -a [-d] [-m] [-u] [address_family]"
 argument_list|,
 literal|"       ifconfig -l [-d] [-u] [address_family]"
 argument_list|,
-literal|"       ifconfig [-d] [-u]"
+literal|"       ifconfig [-d] [-m] [-u]"
 argument_list|)
 expr_stmt|;
 else|#
@@ -2006,11 +2014,11 @@ literal|"usage: ifconfig [-L] interface address_family [address [dest_address]]"
 argument_list|,
 literal|"                [parameters]"
 argument_list|,
-literal|"       ifconfig -a [-L] [-d] [-u] [address_family]"
+literal|"       ifconfig -a [-L] [-d] [-m] [-u] [address_family]"
 argument_list|,
 literal|"       ifconfig -l [-d] [-u] [address_family]"
 argument_list|,
-literal|"       ifconfig [-L] [-d] [-u]"
+literal|"       ifconfig [-L] [-d] [-m] [-u]"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2200,7 +2208,10 @@ case|case
 literal|'m'
 case|:
 comment|/* show media choices in status */
-comment|/* ignored for compatibility */
+name|supmedia
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 default|default:
 name|usage
@@ -2222,7 +2233,11 @@ if|if
 condition|(
 name|namesonly
 operator|&&
+operator|(
 name|all
+operator|||
+name|supmedia
+operator|)
 condition|)
 name|usage
 argument_list|()
