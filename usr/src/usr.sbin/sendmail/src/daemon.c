@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.40 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.41 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.40 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.41 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1166,6 +1166,14 @@ case|:
 case|case
 name|ENETUNREACH
 case|:
+ifdef|#
+directive|ifdef
+name|ENOSR
+case|case
+name|ENOSR
+case|:
+endif|#
+directive|endif
 comment|/* there are others, I'm sure..... */
 return|return
 operator|(
