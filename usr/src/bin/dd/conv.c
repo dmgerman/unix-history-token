@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conv.c	5.5 (Berkeley) %G%"
+literal|"@(#)conv.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -456,7 +456,7 @@ name|in
 operator|.
 name|dbcnt
 expr_stmt|;
-comment|/* Pad short records with "spaces". */
+comment|/* Pad short records with spaces. */
 if|if
 condition|(
 name|cnt
@@ -486,6 +486,19 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+comment|/* 			 * If the next character wouldn't have ended the 			 * block, it's a truncation. 			 */
+if|if
+condition|(
+operator|!
+name|in
+operator|.
+name|dbcnt
+operator|||
+operator|*
+name|inp
+operator|!=
+literal|'\n'
+condition|)
 operator|++
 name|st
 operator|.
