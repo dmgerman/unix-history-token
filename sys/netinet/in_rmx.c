@@ -1526,13 +1526,7 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-name|RTFREE_LOCKED
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
 block|}
-else|else
 name|RT_UNLOCK
 argument_list|(
 name|rt
