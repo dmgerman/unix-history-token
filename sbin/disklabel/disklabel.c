@@ -2465,7 +2465,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"use \"disklabel -r\" to install initial label\n"
+literal|"add \"-r\" to install initial label\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4845,6 +4845,10 @@ name|ed
 argument_list|,
 name|tmpfil
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -5072,9 +5076,6 @@ name|struct
 name|partition
 modifier|*
 name|pp
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|unsigned
 name|int
@@ -7158,10 +7159,6 @@ block|}
 block|}
 else|else
 block|{
-name|char
-modifier|*
-name|type
-decl_stmt|;
 name|off_t
 name|size
 decl_stmt|;
@@ -7398,14 +7395,6 @@ operator|==
 literal|'%'
 condition|)
 block|{
-name|unsigned
-name|long
-name|old_size
-init|=
-name|pp
-operator|->
-name|p_size
-decl_stmt|;
 comment|/* careful of overflows! and integer roundoff */
 name|pp
 operator|->
