@@ -124,13 +124,24 @@ begin_comment
 comment|/* ICANON together with IEXTEN */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VERASE2
+value|7
+end_define
+
+begin_comment
+comment|/* ICANON */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*			7	   spare 1 */
+comment|/*			7	   ex-spare 1 */
 end_comment
 
 begin_define

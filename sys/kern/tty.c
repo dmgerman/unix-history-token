@@ -2742,7 +2742,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * From here on down canonical mode character 		 * processing takes place. 		 */
-comment|/* 		 * erase (^H / ^?) 		 */
+comment|/* 		 * erase or erase2 (^H / ^?) 		 */
 if|if
 condition|(
 name|CCEQ
@@ -2750,6 +2750,16 @@ argument_list|(
 name|cc
 index|[
 name|VERASE
+index|]
+argument_list|,
+name|c
+argument_list|)
+operator|||
+name|CCEQ
+argument_list|(
+name|cc
+index|[
+name|VERASE2
 index|]
 argument_list|,
 name|c
@@ -10103,6 +10113,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|ttyecho
 argument_list|(
 name|tp
@@ -10115,6 +10126,8 @@ argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
+comment|/* 		 * This code may be executed not only when an ERASE key 		 * is pressed, but also when ^U (KILL) or ^W (WERASE) are. 		 * So, I didn't think it was worthwhile to pass the extra 		 * information (which would need an extra parameter, 		 * changing every call) needed to distinguish the ERASE2 		 * case from the ERASE. 		 */
+block|}
 operator|--
 name|tp
 operator|->
