@@ -59,5 +59,29 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* bytes for NaN */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|union
+name|__nan_un
+name|__nan
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0xc0
+block|,
+literal|0xff
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

@@ -41,6 +41,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FLT_EVAL_METHOD
+value|(-1)
+end_define
+
+begin_comment
+comment|/* i387 semantics are...interesting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECIMAL_DIG
+value|21
+end_define
+
+begin_comment
+comment|/* max precision in decimal digits */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FLT_MANT_DIG
 value|24
 end_define

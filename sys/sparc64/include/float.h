@@ -57,6 +57,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|FLT_EVAL_METHOD
+value|0
+end_define
+
+begin_comment
+comment|/* no promotion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECIMAL_DIG
+value|35
+end_define
+
+begin_comment
+comment|/* max precision in decimal digits */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FLT_MANT_DIG
 value|24
 end_define
