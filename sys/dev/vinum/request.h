@@ -1,25 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: request.h,v 1.4 1998/12/28 04:56:23 peter Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: request.h,v 1.13 1999/01/14 05:46:22 grog Exp grog $  */
 end_comment
 
 begin_comment
 comment|/* Information needed to set up a transfer */
-end_comment
-
-begin_comment
-comment|/* struct buf is surprisingly big (about 300  * bytes), and it's part of the request, so this  * value is really important.  Most requests  * don't need more than 2 subrequests per  * plex. The table is automatically extended if  * this value is too small. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RQELTS
-value|2
-end_define
-
-begin_comment
-comment|/* default of 2 requests per transfer */
 end_comment
 
 begin_enum
@@ -274,7 +259,8 @@ modifier|*
 name|bp
 decl_stmt|;
 comment|/* pointer to the high-level request */
-name|int
+name|enum
+name|xferinfo
 name|flags
 decl_stmt|;
 union|union
@@ -294,6 +280,10 @@ name|int
 name|error
 decl_stmt|;
 comment|/* current error indication */
+name|int
+name|sdno
+decl_stmt|;
+comment|/* reviving subdisk (XFR_REVIVECONFLICT) */
 name|short
 name|isplex
 decl_stmt|;
@@ -313,7 +303,7 @@ name|rqgroup
 modifier|*
 name|lrqg
 decl_stmt|;
-comment|/* and to the first group of requests */
+comment|/* and to the last group of requests */
 name|struct
 name|request
 modifier|*
@@ -482,7 +472,7 @@ begin_define
 define|#
 directive|define
 name|RQINFO_SIZE
-value|64
+value|128
 end_define
 
 begin_comment
@@ -513,6 +503,142 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Structures for the daemon */
+end_comment
+
+begin_comment
+comment|/* types of request to the daemon */
+end_comment
+
+begin_enum
+enum|enum
+name|daemonrq
+block|{
+name|daemonrq_none
+block|,
+comment|/* dummy to catch bugs */
+name|daemonrq_ioerror
+block|,
+comment|/* error occurred on I/O */
+name|daemonrq_saveconfig
+block|,
+comment|/* save configuration */
+name|daemonrq_return
+block|,
+comment|/* return to userland */
+name|daemonrq_ping
+block|,
+comment|/* show sign of life */
+name|daemonrq_init
+block|,
+comment|/* initialize a plex */
+name|daemonrq_revive
+block|,
+comment|/* revive a subdisk */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* info field for daemon requests */
+end_comment
+
+begin_union
+union|union
+name|daemoninfo
+block|{
+comment|/* and the request information */
+name|struct
+name|request
+modifier|*
+name|rq
+decl_stmt|;
+comment|/* for daemonrq_ioerror */
+name|struct
+name|sd
+modifier|*
+name|sd
+decl_stmt|;
+comment|/* for daemonrq_revive */
+name|struct
+name|plex
+modifier|*
+name|plex
+decl_stmt|;
+comment|/* for daemonrq_init */
+block|}
+union|;
+end_union
+
+begin_struct
+struct|struct
+name|daemonq
+block|{
+name|struct
+name|daemonq
+modifier|*
+name|next
+decl_stmt|;
+comment|/* pointer to next element in queue */
+name|enum
+name|daemonrq
+name|type
+decl_stmt|;
+comment|/* type of request */
+name|union
+name|daemoninfo
+name|info
+decl_stmt|;
+comment|/* and the request information */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|void
+name|queue_daemon_request
+parameter_list|(
+name|enum
+name|daemonrq
+name|type
+parameter_list|,
+name|union
+name|daemoninfo
+name|info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|daemon_options
+decl_stmt|;
+end_decl_stmt
+
+begin_enum
+enum|enum
+name|daemon_option
+block|{
+name|daemon_verbose
+init|=
+literal|1
+block|,
+comment|/* talk about what we're doing */
+name|daemon_stopped
+init|=
+literal|2
+block|,
+name|daemon_noupdate
+init|=
+literal|4
+block|,
+comment|/* don't update the disk config, for recovery */
+block|}
+enum|;
+end_enum
 
 end_unit
 
