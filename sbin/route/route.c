@@ -5306,6 +5306,8 @@ name|char
 name|mybuf
 index|[
 literal|50
+operator|+
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|,
 name|cport
@@ -5569,9 +5571,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|mybuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mybuf
+argument_list|)
 argument_list|,
 literal|"%lxH.%s%s"
 argument_list|,
