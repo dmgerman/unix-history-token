@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)signal.h	8.2 (Berkeley) 1/21/94  * $Id: signal.h,v 1.2 1994/08/02 07:53:32 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)signal.h	8.2 (Berkeley) 1/21/94  * $Id: signal.h,v 1.3 1995/01/29 01:19:25 ats Exp $  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,38 @@ define|#
 directive|define
 name|_SYS_SIGNAL_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/signal.h>
+end_include
+
+begin_comment
+comment|/* sig_atomic_t; trap codes; sigcontext */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -24,22 +56,6 @@ end_define
 
 begin_comment
 comment|/* counting 0; could be 33 (mask is 1-32) */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ANSI_SOURCE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<machine/signal.h>
-end_include
-
-begin_comment
-comment|/* sigcontext; codes for SIGILL, SIGFPE */
 end_comment
 
 begin_endif
@@ -465,75 +481,40 @@ begin_comment
 comment|/* user defined signal 2 */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
-
 begin_comment
-comment|/*  * Language spec sez we must list exactly one parameter, even though we  * actually supply three.  Ugh!  */
+comment|/*-  * Type of a signal handling function.  *  * Language spec sez signal handlers take exactly one arg, even though we  * actually supply three.  Ugh!  *  * We don't try to hide the difference by leaving out the args because  * that would cause warnings about conformant programs.  Nonconformant  * programs can avoid the warnings by casting to (__sighandler_t *) or  * sig_t before calling signal() or assigning to sa_handler or sv_handler.  *  * The kernel should reverse the cast before calling the function.  It  * has no way to do this, but on most machines 1-arg and 3-arg functions  * have the same calling protocol so there is no problem in practice.  * A bit in sa_flags could be used to specify the number of args.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|void
+name|__sighandler_t
+name|__P
+typedef|((
+name|int
+typedef|));
+end_typedef
+
 begin_define
 define|#
 directive|define
 name|SIG_DFL
-value|(void (*)(int))0
+value|((__sighandler_t *)0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIG_IGN
-value|(void (*)(int))1
+value|((__sighandler_t *)1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIG_ERR
-value|(void (*)(int))-1
+value|((__sighandler_t *)-1)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SIG_DFL
-value|(void (*)())0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIG_IGN
-value|(void (*)())1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIG_ERR
-value|(void (*)())-1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -557,13 +538,10 @@ begin_struct
 struct|struct
 name|sigaction
 block|{
-name|void
-function_decl|(
+name|__sighandler_t
 modifier|*
 name|sa_handler
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 comment|/* signal handler */
 name|sigset_t
 name|sa_mask
@@ -602,7 +580,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* restart system on signal return */
+comment|/* restart system call on signal return */
 end_comment
 
 begin_define
@@ -697,40 +675,16 @@ directive|ifndef
 name|_POSIX_SOURCE
 end_ifndef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERNEL
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
-name|void
-argument_list|(
-argument|*sig_t
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-expr_stmt|;
+name|__sighandler_t
+modifier|*
+name|sig_t
+typedef|;
 end_typedef
 
 begin_comment
-comment|/* type of signal function */
+comment|/* type of pointer to a signal function */
 end_comment
 
 begin_comment
@@ -788,13 +742,10 @@ begin_struct
 struct|struct
 name|sigvec
 block|{
-name|void
-function_decl|(
+name|__sighandler_t
 modifier|*
 name|sv_handler
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 comment|/* signal handler */
 name|int
 name|sv_mask
@@ -903,32 +854,16 @@ end_comment
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-name|void
-argument_list|(
-operator|*
+name|__sighandler_t
+modifier|*
 name|signal
 name|__P
 argument_list|(
 operator|(
 name|int
 operator|,
-name|void
-argument_list|(
-argument|*
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-operator|)
-argument_list|)
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|int
+name|__sighandler_t
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
