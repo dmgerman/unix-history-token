@@ -353,6 +353,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|pcic_do_stat_delta
+parameter_list|(
+name|struct
+name|pcic_slot
+modifier|*
+name|sp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|pcic_get_memory_offset
 parameter_list|(

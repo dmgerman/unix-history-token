@@ -346,6 +346,8 @@ block|{
 name|card_removed
 block|,
 name|card_inserted
+block|,
+name|card_deactivated
 block|}
 enum|;
 end_enum
