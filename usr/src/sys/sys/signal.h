@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,16 @@ directive|define
 name|NSIG
 value|32
 end_define
+
+begin_comment
+comment|/* could be 33, as masks hold 1-32 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_ifdef
 ifdef|#
@@ -51,6 +61,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
 
 begin_define
 define|#
@@ -96,6 +115,12 @@ begin_comment
 comment|/* illegal instruction (not reset when caught) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -107,22 +132,33 @@ begin_comment
 comment|/* trace trap (not reset when caught) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIGIOT
-value|6
-end_define
-
-begin_comment
-comment|/* IOT instruction */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
 name|SIGABRT
-value|SIGIOT
+value|6
+end_define
+
+begin_comment
+comment|/* abort() */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SIGIOT
+value|SIGABRT
 end_define
 
 begin_comment
@@ -139,6 +175,11 @@ end_define
 begin_comment
 comment|/* EMT instruction */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -162,6 +203,12 @@ begin_comment
 comment|/* kill (cannot be caught or ignored) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -172,6 +219,11 @@ end_define
 begin_comment
 comment|/* bus error */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -184,6 +236,12 @@ begin_comment
 comment|/* segmentation violation */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -194,6 +252,11 @@ end_define
 begin_comment
 comment|/* bad argument to system call */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -228,6 +291,12 @@ begin_comment
 comment|/* software termination signal from kill */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -238,6 +307,11 @@ end_define
 begin_comment
 comment|/* urgent condition on IO channel */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -286,17 +360,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIGCLD
-value|SIGCHLD
-end_define
-
-begin_comment
-comment|/* compatibility */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SIGTTIN
 value|21
 end_define
@@ -315,6 +378,12 @@ end_define
 begin_comment
 comment|/* like TTIN for output if (tp->t_local&LTOSTOP) */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -385,6 +454,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIGINFO
+value|29
+end_define
+
+begin_comment
+comment|/* information request */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|SIGUSR1
 value|30
 end_define
@@ -407,11 +492,37 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|sig_t
+function_decl|)
+parameter_list|()
+function_decl|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|KERNEL
 end_ifndef
 
 begin_expr_stmt
-name|int
+name|void
 argument_list|(
 operator|*
 name|signal
@@ -427,14 +538,200 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Signal vector "template" used in sigvec call.  */
+comment|/* KERNEL */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|sigset_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|sigemptyset
+parameter_list|(
+name|set
+parameter_list|)
+value|{ *(set) = 0; }
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigfillset
+parameter_list|(
+name|set
+parameter_list|)
+value|{ *(set) = 0xffff; }
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigaddset
+parameter_list|(
+name|set
+parameter_list|,
+name|signo
+parameter_list|)
+value|( *(set) |= 1<< ((signo) - 1), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigdelset
+parameter_list|(
+name|set
+parameter_list|,
+name|signo
+parameter_list|)
+value|( *(set)&= ~(1<< ((signo) - 1)), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigismember
+parameter_list|(
+name|set
+parameter_list|,
+name|signo
+parameter_list|)
+value|( (*(set)& (1<< ((signo) - 1))) != 0)
+end_define
+
+begin_comment
+comment|/*  * Signal vector "template" used in sigaction call.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sigaction
+block|{
+name|void
+function_decl|(
+modifier|*
+name|sa_handler
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* signal handler */
+name|sigset_t
+name|sa_mask
+decl_stmt|;
+comment|/* signal mask to apply */
+name|int
+name|sa_flags
+decl_stmt|;
+comment|/* see signal options below */
+block|}
+struct|;
+end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SA_ONSTACK
+value|0x0001
+end_define
+
+begin_comment
+comment|/* take signal on signal stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SA_RESTART
+value|0x0002
+end_define
+
+begin_comment
+comment|/* do not restart system on signal return */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SA_NOCLDSTOP
+value|0x0004
+end_define
+
+begin_comment
+comment|/* do not generate SIGCHLD on child stop */
+end_comment
+
+begin_comment
+comment|/*  * Flags for sigprocmask:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_BLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* block specified signal set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_UNBLOCK
+value|2
+end_define
+
+begin_comment
+comment|/* unblock specified signal set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_SETMASK
+value|3
+end_define
+
+begin_comment
+comment|/* set specified signal set */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_comment
+comment|/*  * 4.3 compatibility:  * Signal vector "template" used in sigvec call.  */
 end_comment
 
 begin_struct
 struct|struct
 name|sigvec
 block|{
-name|int
+name|void
 function_decl|(
 modifier|*
 name|sv_handler
@@ -458,22 +755,18 @@ begin_define
 define|#
 directive|define
 name|SV_ONSTACK
-value|0x0001
+value|SA_ONSTACK
 end_define
-
-begin_comment
-comment|/* take signal on signal stack */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|SV_INTERRUPT
-value|0x0002
+value|SA_RESTART
 end_define
 
 begin_comment
-comment|/* do not restart system on signal return */
+comment|/* same bit, opposite sense */
 end_comment
 
 begin_define
@@ -509,7 +802,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Information pushed on stack when a signal is delivered.  * This is used by the kernel to restore state following  * execution of the signal handler.  It is also made available  * to the handler to allow it to properly restore state if  * a non-standard exit is performed.  */
+comment|/*  * Information pushed on stack when a signal is delivered.  * This is used by the kernel to restore state following  * execution of the signal handler.  It is also made available  * to the handler to allow it to restore state properly if  * a non-standard exit is performed.  */
 end_comment
 
 begin_struct
@@ -548,57 +841,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|BADSIG
-value|(int (*)())-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIG_DFL
-value|(int (*)())0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIG_IGN
-value|(int (*)())1
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SIG_CATCH
-value|(int (*)())2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIG_HOLD
-value|(int (*)())3
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Macro for converting signal number to a mask suitable for  * sigblock().  */
 end_comment
@@ -612,6 +854,66 @@ name|m
 parameter_list|)
 value|(1<< ((m)-1))
 end_define
+
+begin_define
+define|#
+directive|define
+name|BADSIG
+value|(void (*)())-1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _POSIX_SOURCE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIG_DFL
+value|(void (*)())0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_IGN
+value|(void (*)())1
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SIG_CATCH
+value|(void (*)())2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIG_HOLD
+value|(void (*)())3
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
