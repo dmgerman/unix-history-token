@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/bootp.h,v 1.10 2000/12/03 23:42:23 fenner Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/bootp.h,v 1.11 2001/01/09 07:39:13 fenner Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -719,6 +719,24 @@ define|#
 directive|define
 name|TAG_NDS_CONTEXT
 value|((u_int8_t)  87)
+end_define
+
+begin_comment
+comment|/* RFC 2242 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TAG_NDS_IPDOMAIN
+value|((u_int8_t)  62)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_NDS_IPINFO
+value|((u_int8_t)  63)
 end_define
 
 begin_comment
