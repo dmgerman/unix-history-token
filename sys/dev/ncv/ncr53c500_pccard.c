@@ -253,35 +253,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"apm.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NAPM
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/apm_bios.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NAPM> 0 */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"card.h"
 end_include
 
