@@ -959,7 +959,7 @@ operator|<=
 name|MHLEN
 argument_list|,
 operator|(
-literal|"not enough room, need %u got %u\n"
+literal|"not enough room, need %u got %zu\n"
 operator|,
 name|needed_space
 operator|,
@@ -3123,7 +3123,7 @@ name|ieee80211_ie_wpa
 argument_list|)
 argument_list|,
 operator|(
-literal|"WPA IE too big, %u> %u"
+literal|"WPA IE too big, %u> %zu"
 operator|,
 name|ie
 index|[
@@ -3546,7 +3546,7 @@ name|ieee80211_ie_wpa
 argument_list|)
 argument_list|,
 operator|(
-literal|"RSN IE too big, %u> %u"
+literal|"RSN IE too big, %u> %zu"
 operator|,
 name|ie
 index|[

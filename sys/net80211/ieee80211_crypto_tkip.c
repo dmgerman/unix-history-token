@@ -3988,7 +3988,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"out of buffers with data_len %u\n"
+literal|"out of buffers with data_len %zu\n"
 operator|,
 name|data_len
 operator|)
@@ -4398,7 +4398,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"out of buffers with data_len %u\n"
+literal|"out of buffers with data_len %zu\n"
 operator|,
 name|data_len
 operator|)
@@ -5239,7 +5239,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|(
-literal|"out of data, data_len %u\n"
+literal|"out of data, data_len %zu\n"
 operator|,
 name|data_len
 operator|)
@@ -5286,7 +5286,7 @@ name|space
 argument_list|,
 operator|(
 literal|"not enough data in following buffer, "
-literal|"m_len %u need %u\n"
+literal|"m_len %u need %zu\n"
 operator|,
 name|m
 operator|->

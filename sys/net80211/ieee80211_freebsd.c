@@ -1210,7 +1210,7 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] %s replay detected<rsc %llu, csc %llu>\n"
+literal|"[%s] %s replay detected<rsc %ju, csc %ju>\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -1225,8 +1225,14 @@ name|wk_cipher
 operator|->
 name|ic_name
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|rsc
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|k
 operator|->
 name|wk_keyrsc

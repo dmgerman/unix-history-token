@@ -1849,7 +1849,7 @@ name|wc_ic
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] out of data for WEP (data_len %u)\n"
+literal|"[%s] out of data for WEP (data_len %zu)\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -2417,7 +2417,7 @@ name|wc_ic
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] out of data for WEP (data_len %u)\n"
+literal|"[%s] out of data for WEP (data_len %zu)\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
