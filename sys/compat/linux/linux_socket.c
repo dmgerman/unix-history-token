@@ -96,17 +96,45 @@ directive|include
 file|<machine/../linux/linux.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux_proto.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<machine/../linux/linux_proto.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<compat/linux/linux_util.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
 
 begin_function
 specifier|static
@@ -3758,6 +3786,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
 
 end_unit
 

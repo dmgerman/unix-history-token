@@ -45,11 +45,33 @@ directive|include
 file|<machine/../linux/linux.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux_proto.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<machine/../linux/linux_proto.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -661,7 +683,7 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_ipc_args
+name|linux_semop_args
 modifier|*
 name|args
 parameter_list|)
@@ -722,7 +744,7 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_ipc_args
+name|linux_semget_args
 modifier|*
 name|args
 parameter_list|)
@@ -778,7 +800,7 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_ipc_args
+name|linux_semctl_args
 modifier|*
 name|args
 parameter_list|)
@@ -1263,7 +1285,7 @@ literal|"LINUX: 'ipc' typ=%d not implemented\n"
 argument_list|,
 name|args
 operator|->
-name|what
+name|arg3
 argument_list|)
 expr_stmt|;
 return|return
@@ -1292,7 +1314,7 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_ipc_args
+name|linux_msgsnd_args
 modifier|*
 name|args
 parameter_list|)
@@ -1356,7 +1378,7 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_ipc_args
+name|linux_msgrcv_args
 modifier|*
 name|args
 parameter_list|)
@@ -1426,7 +1448,7 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_ipc_args
+name|linux_msgget_args
 modifier|*
 name|args
 parameter_list|)
@@ -1474,7 +1496,7 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_ipc_args
+name|linux_msgctl_args
 modifier|*
 name|args
 parameter_list|)
@@ -1558,7 +1580,7 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_ipc_args
+name|linux_shmat_args
 modifier|*
 name|args
 parameter_list|)
@@ -1612,6 +1634,9 @@ condition|)
 return|return
 name|error
 return|;
+ifdef|#
+directive|ifdef
+name|__i386__
 if|if
 condition|(
 operator|(
@@ -1649,6 +1674,8 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -1665,7 +1692,7 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_ipc_args
+name|linux_shmdt_args
 modifier|*
 name|args
 parameter_list|)
@@ -1705,7 +1732,7 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_ipc_args
+name|linux_shmget_args
 modifier|*
 name|args
 parameter_list|)
@@ -1761,7 +1788,7 @@ modifier|*
 name|p
 parameter_list|,
 name|struct
-name|linux_ipc_args
+name|linux_shmctl_args
 modifier|*
 name|args
 parameter_list|)
@@ -2176,7 +2203,7 @@ literal|"LINUX: 'ipc' typ=%d not implemented\n"
 argument_list|,
 name|args
 operator|->
-name|what
+name|arg2
 argument_list|)
 expr_stmt|;
 return|return

@@ -171,11 +171,22 @@ directive|include
 file|<machine/sysarch.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<machine/segments.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -189,11 +200,33 @@ directive|include
 file|<machine/../linux/linux.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux_proto.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<machine/../linux/linux_proto.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -207,6 +240,27 @@ directive|include
 file|<compat/linux/linux_util.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BSD_TO_LINUX_SIGNAL
+parameter_list|(
+name|sig
+parameter_list|)
+value|(sig)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -217,6 +271,11 @@ parameter_list|)
 define|\
 value|(((sig)<= LINUX_SIGTBLSZ) ? bsd_to_linux_signal[_SIG_IDX(sig)] : sig)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -233,6 +292,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -267,6 +332,21 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
 
 begin_function
 name|int
@@ -526,6 +606,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
+
 begin_function
 name|int
 name|linux_brk
@@ -656,7 +745,7 @@ literal|0
 index|]
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|new
 expr_stmt|;
@@ -669,7 +758,7 @@ literal|0
 index|]
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|old
 expr_stmt|;
@@ -1481,13 +1570,13 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"mem=%08x = %08x %08x\n"
+literal|"mem=%08lx = %08lx %08lx\n"
 argument_list|,
 name|vmaddr
 argument_list|,
 operator|(
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 name|vmaddr
@@ -1498,7 +1587,7 @@ index|]
 argument_list|,
 operator|(
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 name|vmaddr
@@ -2235,7 +2324,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"Linux-emul(%ld): mremap(%p, %08x, %08x, %08x)\n"
+literal|"Linux-emul(%ld): mremap(%p, %08lx, %08lx, %08lx)\n"
 argument_list|,
 operator|(
 name|long
@@ -2252,14 +2341,26 @@ name|args
 operator|->
 name|addr
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|args
 operator|->
 name|old_len
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|args
 operator|->
 name|new_len
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|args
 operator|->
 name|flags
@@ -2371,7 +2472,7 @@ condition|?
 literal|0
 else|:
 operator|(
-name|int
+name|u_long
 operator|)
 name|args
 operator|->
@@ -2436,6 +2537,12 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
 
 begin_function
 name|int
@@ -2533,6 +2640,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
 
 begin_struct
 struct|struct
@@ -3177,6 +3293,12 @@ name|__WCLONE
 value|0x80000000
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
+
 begin_function
 name|int
 name|linux_waitpid
@@ -3418,6 +3540,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
 
 begin_function
 name|int
@@ -3866,6 +3997,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|__alpha__
 if|if
 condition|(
 name|args
@@ -3877,6 +4011,8 @@ condition|)
 return|return
 name|EINVAL
 return|;
+endif|#
+directive|endif
 comment|/* Yes Jim, it's still a Linux... */
 name|p
 operator|->
@@ -4141,6 +4277,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
+
 begin_function
 name|int
 name|linux_nice
@@ -4192,6 +4334,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
 
 begin_function
 name|int
@@ -4573,6 +4724,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
 
 begin_function
 name|int
@@ -4973,6 +5130,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*!__alpha__*/
+end_comment
 
 begin_function
 name|int
