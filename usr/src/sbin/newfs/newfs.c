@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.31 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1711,6 +1711,53 @@ name|mp
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|mfs
+operator|&&
+name|disktype
+operator|!=
+name|NULL
+condition|)
+block|{
+name|lp
+operator|=
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+name|getdiskbyname
+argument_list|(
+name|disktype
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: unknown disk type"
+argument_list|,
+name|disktype
+argument_list|)
+expr_stmt|;
+name|pp
+operator|=
+operator|&
+name|lp
+operator|->
+name|d_partitions
+index|[
+literal|1
+index|]
+expr_stmt|;
+block|}
+else|else
+block|{
 name|fsi
 operator|=
 name|open
@@ -1918,6 +1965,7 @@ operator|*
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|fssize
