@@ -2089,17 +2089,6 @@ block|{
 case|case
 name|VBLK
 case|:
-name|sb
-operator|->
-name|st_blksize
-operator|=
-name|vp
-operator|->
-name|v_rdev
-operator|->
-name|si_bsize_best
-expr_stmt|;
-break|break;
 case|case
 name|VCHR
 case|:

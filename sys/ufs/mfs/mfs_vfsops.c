@@ -1132,12 +1132,6 @@ name|DEV_BSIZE
 expr_stmt|;
 name|dev
 operator|->
-name|si_bsize_best
-operator|=
-name|BLKDEV_IOSIZE
-expr_stmt|;
-name|dev
-operator|->
 name|si_bsize_max
 operator|=
 name|MAXBSIZE
@@ -1724,12 +1718,6 @@ operator|->
 name|si_bsize_phys
 operator|=
 name|DEV_BSIZE
-expr_stmt|;
-name|rootdev
-operator|->
-name|si_bsize_best
-operator|=
-name|BLKDEV_IOSIZE
 expr_stmt|;
 name|rootdev
 operator|->

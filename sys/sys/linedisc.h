@@ -133,10 +133,6 @@ name|__sid_bsize_phys
 decl_stmt|;
 comment|/* min physical block size */
 name|int
-name|__sid_bsize_best
-decl_stmt|;
-comment|/* optimal block size */
-name|int
 name|__sid_bsize_max
 decl_stmt|;
 comment|/* maximum block size */
@@ -176,13 +172,6 @@ define|#
 directive|define
 name|si_bsize_phys
 value|__si_u.__si_disk.__sid_bsize_phys
-end_define
-
-begin_define
-define|#
-directive|define
-name|si_bsize_best
-value|__si_u.__si_disk.__sid_bsize_best
 end_define
 
 begin_define
