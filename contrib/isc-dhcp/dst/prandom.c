@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /rc0/proj/cvs/isc/DHCP/dst/prandom.c,v 1.1 2001/02/22 07:22:09 mellon Exp $"
+literal|"$Header: /proj/cvs/prod/DHCP/dst/prandom.c,v 1.1 2001/02/22 07:22:09 mellon Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -900,7 +900,7 @@ operator|->
 name|D
 expr_stmt|;
 comment|/* Round 0 */
-name|R0
+name|LOCL_R0
 argument_list|(
 name|A
 argument_list|,
@@ -920,7 +920,7 @@ argument_list|,
 literal|0xd76aa478L
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|D
 argument_list|,
@@ -940,7 +940,7 @@ argument_list|,
 literal|0xe8c7b756L
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|C
 argument_list|,
@@ -960,7 +960,7 @@ argument_list|,
 literal|0x242070dbL
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|B
 argument_list|,
@@ -980,7 +980,7 @@ argument_list|,
 literal|0xc1bdceeeL
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|A
 argument_list|,
@@ -1000,7 +1000,7 @@ argument_list|,
 literal|0xf57c0fafL
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|D
 argument_list|,
@@ -1020,7 +1020,7 @@ argument_list|,
 literal|0x4787c62aL
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|C
 argument_list|,
@@ -1040,7 +1040,7 @@ argument_list|,
 literal|0xa8304613L
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|B
 argument_list|,
@@ -1060,7 +1060,7 @@ argument_list|,
 literal|0xfd469501L
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|A
 argument_list|,
@@ -1080,7 +1080,7 @@ argument_list|,
 literal|0x698098d8L
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|D
 argument_list|,
@@ -1100,7 +1100,7 @@ argument_list|,
 literal|0x8b44f7afL
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|C
 argument_list|,
@@ -1120,7 +1120,7 @@ argument_list|,
 literal|0xffff5bb1L
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|B
 argument_list|,
@@ -1140,7 +1140,7 @@ argument_list|,
 literal|0x895cd7beL
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|A
 argument_list|,
@@ -1160,7 +1160,7 @@ argument_list|,
 literal|0x6b901122L
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|D
 argument_list|,
@@ -1180,7 +1180,7 @@ argument_list|,
 literal|0xfd987193L
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|C
 argument_list|,
@@ -1200,7 +1200,7 @@ argument_list|,
 literal|0xa679438eL
 argument_list|)
 expr_stmt|;
-name|R0
+name|LOCL_R0
 argument_list|(
 name|B
 argument_list|,
@@ -1221,7 +1221,7 @@ literal|0x49b40821L
 argument_list|)
 expr_stmt|;
 comment|/* Round 1 */
-name|R1
+name|LOCL_R1
 argument_list|(
 name|A
 argument_list|,
@@ -1241,7 +1241,7 @@ argument_list|,
 literal|0xf61e2562L
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|D
 argument_list|,
@@ -1261,7 +1261,7 @@ argument_list|,
 literal|0xc040b340L
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|C
 argument_list|,
@@ -1281,7 +1281,7 @@ argument_list|,
 literal|0x265e5a51L
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|B
 argument_list|,
@@ -1301,7 +1301,7 @@ argument_list|,
 literal|0xe9b6c7aaL
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|A
 argument_list|,
@@ -1321,7 +1321,7 @@ argument_list|,
 literal|0xd62f105dL
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|D
 argument_list|,
@@ -1341,7 +1341,7 @@ argument_list|,
 literal|0x02441453L
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|C
 argument_list|,
@@ -1361,7 +1361,7 @@ argument_list|,
 literal|0xd8a1e681L
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|B
 argument_list|,
@@ -1381,7 +1381,7 @@ argument_list|,
 literal|0xe7d3fbc8L
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|A
 argument_list|,
@@ -1401,7 +1401,7 @@ argument_list|,
 literal|0x21e1cde6L
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|D
 argument_list|,
@@ -1421,7 +1421,7 @@ argument_list|,
 literal|0xc33707d6L
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|C
 argument_list|,
@@ -1441,7 +1441,7 @@ argument_list|,
 literal|0xf4d50d87L
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|B
 argument_list|,
@@ -1461,7 +1461,7 @@ argument_list|,
 literal|0x455a14edL
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|A
 argument_list|,
@@ -1481,7 +1481,7 @@ argument_list|,
 literal|0xa9e3e905L
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|D
 argument_list|,
@@ -1501,7 +1501,7 @@ argument_list|,
 literal|0xfcefa3f8L
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|C
 argument_list|,
@@ -1521,7 +1521,7 @@ argument_list|,
 literal|0x676f02d9L
 argument_list|)
 expr_stmt|;
-name|R1
+name|LOCL_R1
 argument_list|(
 name|B
 argument_list|,
@@ -1542,7 +1542,7 @@ literal|0x8d2a4c8aL
 argument_list|)
 expr_stmt|;
 comment|/* Round 2 */
-name|R2
+name|LOCL_R2
 argument_list|(
 name|A
 argument_list|,
@@ -1562,7 +1562,7 @@ argument_list|,
 literal|0xfffa3942L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|D
 argument_list|,
@@ -1582,7 +1582,7 @@ argument_list|,
 literal|0x8771f681L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|C
 argument_list|,
@@ -1602,7 +1602,7 @@ argument_list|,
 literal|0x6d9d6122L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|B
 argument_list|,
@@ -1622,7 +1622,7 @@ argument_list|,
 literal|0xfde5380cL
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|A
 argument_list|,
@@ -1642,7 +1642,7 @@ argument_list|,
 literal|0xa4beea44L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|D
 argument_list|,
@@ -1662,7 +1662,7 @@ argument_list|,
 literal|0x4bdecfa9L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|C
 argument_list|,
@@ -1682,7 +1682,7 @@ argument_list|,
 literal|0xf6bb4b60L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|B
 argument_list|,
@@ -1702,7 +1702,7 @@ argument_list|,
 literal|0xbebfbc70L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|A
 argument_list|,
@@ -1722,7 +1722,7 @@ argument_list|,
 literal|0x289b7ec6L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|D
 argument_list|,
@@ -1742,7 +1742,7 @@ argument_list|,
 literal|0xeaa127faL
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|C
 argument_list|,
@@ -1762,7 +1762,7 @@ argument_list|,
 literal|0xd4ef3085L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|B
 argument_list|,
@@ -1782,7 +1782,7 @@ argument_list|,
 literal|0x04881d05L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|A
 argument_list|,
@@ -1802,7 +1802,7 @@ argument_list|,
 literal|0xd9d4d039L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|D
 argument_list|,
@@ -1822,7 +1822,7 @@ argument_list|,
 literal|0xe6db99e5L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|C
 argument_list|,
@@ -1842,7 +1842,7 @@ argument_list|,
 literal|0x1fa27cf8L
 argument_list|)
 expr_stmt|;
-name|R2
+name|LOCL_R2
 argument_list|(
 name|B
 argument_list|,
@@ -1863,7 +1863,7 @@ literal|0xc4ac5665L
 argument_list|)
 expr_stmt|;
 comment|/* Round 3 */
-name|R3
+name|LOCL_R3
 argument_list|(
 name|A
 argument_list|,
@@ -1883,7 +1883,7 @@ argument_list|,
 literal|0xf4292244L
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|D
 argument_list|,
@@ -1903,7 +1903,7 @@ argument_list|,
 literal|0x432aff97L
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|C
 argument_list|,
@@ -1923,7 +1923,7 @@ argument_list|,
 literal|0xab9423a7L
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|B
 argument_list|,
@@ -1943,7 +1943,7 @@ argument_list|,
 literal|0xfc93a039L
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|A
 argument_list|,
@@ -1963,7 +1963,7 @@ argument_list|,
 literal|0x655b59c3L
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|D
 argument_list|,
@@ -1983,7 +1983,7 @@ argument_list|,
 literal|0x8f0ccc92L
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|C
 argument_list|,
@@ -2003,7 +2003,7 @@ argument_list|,
 literal|0xffeff47dL
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|B
 argument_list|,
@@ -2023,7 +2023,7 @@ argument_list|,
 literal|0x85845dd1L
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|A
 argument_list|,
@@ -2043,7 +2043,7 @@ argument_list|,
 literal|0x6fa87e4fL
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|D
 argument_list|,
@@ -2063,7 +2063,7 @@ argument_list|,
 literal|0xfe2ce6e0L
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|C
 argument_list|,
@@ -2083,7 +2083,7 @@ argument_list|,
 literal|0xa3014314L
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|B
 argument_list|,
@@ -2103,7 +2103,7 @@ argument_list|,
 literal|0x4e0811a1L
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|A
 argument_list|,
@@ -2123,7 +2123,7 @@ argument_list|,
 literal|0xf7537e82L
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|D
 argument_list|,
@@ -2143,7 +2143,7 @@ argument_list|,
 literal|0xbd3af235L
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|C
 argument_list|,
@@ -2163,7 +2163,7 @@ argument_list|,
 literal|0x2ad7d2bbL
 argument_list|)
 expr_stmt|;
-name|R3
+name|LOCL_R3
 argument_list|(
 name|B
 argument_list|,
