@@ -2562,6 +2562,14 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|curproc
@@ -2569,9 +2577,9 @@ operator|&&
 operator|(
 name|curproc
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_INMEM
+name|PS_INMEM
 operator|)
 operator|&&
 name|curproc
@@ -2607,6 +2615,14 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Unlock everything, and return 	 */
 name|vm_page_wakeup
 argument_list|(
