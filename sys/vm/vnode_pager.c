@@ -898,13 +898,7 @@ name|vp
 argument_list|,
 name|reqblock
 argument_list|,
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|bn
@@ -1337,11 +1331,6 @@ decl_stmt|;
 name|daddr_t
 name|block
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|rtvp
-decl_stmt|;
 name|int
 name|err
 decl_stmt|;
@@ -1408,8 +1397,7 @@ name|vp
 argument_list|,
 name|vblock
 argument_list|,
-operator|&
-name|rtvp
+name|NULL
 argument_list|,
 operator|&
 name|block
