@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	3.11	(Berkeley)	83/04/19"
+literal|"@(#)utilities.c	3.12	(Berkeley)	83/05/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -1701,6 +1701,11 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"[yn] "
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 name|c
