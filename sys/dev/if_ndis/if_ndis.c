@@ -7446,7 +7446,7 @@ endif|#
 directive|endif
 name|arg
 operator|=
-name|NDIS_80211_AUTHMODE_SHARED
+name|NDIS_80211_AUTHMODE_AUTO
 expr_stmt|;
 block|}
 else|else
@@ -7502,6 +7502,9 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 name|rval
@@ -7517,6 +7520,8 @@ argument_list|,
 name|rval
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Set SSID. */
 name|len
 operator|=
