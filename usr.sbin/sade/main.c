@@ -221,36 +221,6 @@ name|i
 decl_stmt|,
 name|start_arg
 decl_stmt|;
-comment|/* Try to set ourselves up as a CDROM if we can do that first */
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|mediaSetCDROM
-argument_list|(
-name|NULL
-argument_list|)
-argument_list|)
-operator|==
-name|DITEM_SUCCESS
-condition|)
-block|{
-comment|/* If we can't initialize it, it's probably not a FreeBSD CDROM so punt on it */
-if|if
-condition|(
-operator|!
-name|mediaDevice
-operator|->
-name|init
-argument_list|(
-name|mediaDevice
-argument_list|)
-condition|)
-name|mediaDevice
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
