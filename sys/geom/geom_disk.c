@@ -1024,6 +1024,37 @@ name|softc
 expr_stmt|;
 if|if
 condition|(
+name|indent
+operator|==
+name|NULL
+condition|)
+block|{
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|" hd %u"
+argument_list|,
+name|dp
+operator|->
+name|d_fwheads
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|" sc %u"
+argument_list|,
+name|dp
+operator|->
+name|d_fwsectors
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|pp
 operator|!=
 name|NULL
