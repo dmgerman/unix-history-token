@@ -147,11 +147,26 @@ name|MID_MACHINE
 value|MID_POWERPC
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LOCORE
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * OBJFORMAT_NAMES is a comma-separated list of the object formats  * that are supported on the architecture.  */
@@ -529,7 +544,7 @@ name|trunc_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& ~PAGE_MASK)
+value|((unsigned long)(x)& ~(PAGE_MASK))
 end_define
 
 begin_define
@@ -569,7 +584,7 @@ name|atop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)>> PAGE_SHIFT)
+value|((unsigned long)(x)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -579,7 +594,7 @@ name|ptoa
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)<< PAGE_SHIFT)
+value|((unsigned long)(x)<< PAGE_SHIFT)
 end_define
 
 begin_define
@@ -610,6 +625,121 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x) * (PAGE_SIZE / 1024))
+end_define
+
+begin_comment
+comment|/* XXX: NetBSD defines that we're using for the moment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_SR
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNEL_SR
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|KERNEL_SEGMENT
+value|(0xfffff0 + KERNEL_SR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMPTY_SEGMENT
+value|0xfffff0
+end_define
+
+begin_define
+define|#
+directive|define
+name|USER_ADDR
+value|((void *)(USER_SR<< ADDR_SR_SHFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEGMENT_LENGTH
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEGMENT_MASK
+value|0xf0000000
+end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NPMAPS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NPMAPS
+value|32768
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(NPMAPS) */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|MSGBUFSIZE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MSGBUFSIZE
+value|PAGE_SIZE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(MSGBUFSIZE) */
+end_comment
+
+begin_comment
+comment|/*  * XXX: Stop NetBSD msgbuf_paddr code from happening.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSGBUFADDR
 end_define
 
 begin_endif

@@ -157,6 +157,13 @@ name|intrmask_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|register_t
+name|critical_t
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif

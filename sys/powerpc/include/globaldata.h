@@ -36,11 +36,6 @@ struct|struct
 name|globaldata
 block|{
 name|struct
-name|alpha_pcb
-name|gd_idlepcb
-decl_stmt|;
-comment|/* pcb for idling */
-name|struct
 name|proc
 modifier|*
 name|gd_curproc
@@ -79,14 +74,9 @@ name|u_int
 name|gd_other_cpus
 decl_stmt|;
 comment|/* all other cpus */
-name|u_int64_t
-name|gd_idlepcbphys
+name|int
+name|gd_inside_intr
 decl_stmt|;
-comment|/* pa of gd_idlepcb */
-name|u_int64_t
-name|gd_pending_ipis
-decl_stmt|;
-comment|/* pending IPI events */
 name|u_int32_t
 name|gd_next_asn
 decl_stmt|;
@@ -95,6 +85,13 @@ name|u_int32_t
 name|gd_current_asngen
 decl_stmt|;
 comment|/* ASN rollover check */
+name|u_int32_t
+name|gd_intr_nesting_level
+decl_stmt|;
+comment|/* interrupt recursion */
+name|u_int
+name|gd_astpending
+decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
 argument|globaldata
@@ -109,6 +106,9 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KTR_PERCPU
+ifdef|#
+directive|ifdef
+name|KTR
 specifier|volatile
 name|int
 name|gd_ktr_idx
@@ -121,9 +121,11 @@ decl_stmt|;
 name|char
 name|gd_ktr_buf_data
 index|[
-literal|0
+name|KTR_SIZE
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}

@@ -27,18 +27,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_comment
-comment|/* Global locks */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|clock_lock
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -46,7 +34,21 @@ name|mtx_intr_enable
 parameter_list|(
 name|mutex
 parameter_list|)
-value|do (mutex)->mtx_savecrit = ALPHA_PSL_IPL_0; while (0)
+value|do (mutex)->mtx_savecrit |= PSL_EE; while (0)
+end_define
+
+begin_comment
+comment|/*  * Assembly macros (for internal use only)  *--------------------------------------------------------------------------  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_V
+parameter_list|(
+name|x
+parameter_list|)
+value|__STRING(x)
 end_define
 
 begin_endif
@@ -68,7 +70,7 @@ comment|/* !LOCORE */
 end_comment
 
 begin_comment
-comment|/*  * Simple assembly macros to get and release non-recursive spin locks  *  * XXX: These are presently unused and cannot be used right now. Need to be  *	re-written (they are wrong). If you plan to use this and still see  *	this message, know not to unless you fix them first! :-)  */
+comment|/*  * Simple assembly macros to get and release non-recursive spin locks  */
 end_comment
 
 begin_define
@@ -79,10 +81,130 @@ parameter_list|(
 name|lck
 parameter_list|)
 define|\
-value|ldiq	a0, ALPHA_PSL_IPL_HIGH;		\ 	call_pal PAL_OSF1_swpipl;		\ 1:	ldq_l	a0, lck+MTX_LOCK;		\ 	cmpeq	a0, MTX_UNOWNED, a1;		\ 	beq	a1, 1b;				\ 	ldq	a0, PC_CURPROC(globalp);	\ 	stq_c	a0, lck+MTX_LOCK;		\ 	beq	a0, 1b;				\ 	mb;					\ 	stl	v0, lck+MTX_SAVEINTR
+value|mfmsr	r10;				\
 end_define
 
-begin_define
+begin_comment
+comment|/* disable interrupts */
+end_comment
+
+begin_decl_stmt
+name|rlwinm
+name|r0
+decl_stmt|,
+name|r10
+decl_stmt|, 0, 17, 15;
+end_decl_stmt
+
+begin_decl_stmt
+unit|\
+name|mtmsr
+name|r0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+unit|\
+literal|1
+operator|:
+name|li
+name|r11
+operator|,
+name|MTX_LOCK
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* MTX_LOCK offset */
+name|lwarx
+name|r0
+operator|,
+name|r11
+operator|,
+name|lck
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* load current lock value */
+name|cmplwi
+name|r0
+operator|,
+name|r1
+operator|,
+name|MTX_UNOWNED
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* compare with unowned */
+name|beq
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* if owned, loop */
+name|lwz
+name|r0
+operator|,
+name|PC_CURPROC
+argument_list|(
+name|globalp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* load curproc */
+name|stwcx
+operator|.
+name|r0
+operator|,
+name|r11
+operator|,
+name|lck
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* attempt to store */
+name|beq
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* loop if failed */
+name|sync
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* sync */
+name|eieio
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* sync */
+name|stw
+name|r10
+operator|,
+name|MTX_SAVEINTR
+argument_list|(
+argument|lck
+argument_list|)
+comment|/* save flags */
 define|#
 directive|define
 name|MTX_EXIT
@@ -90,8 +212,58 @@ parameter_list|(
 name|lck
 parameter_list|)
 define|\
-value|mb;					\ 	ldiq	a0, MTX_UNOWNED;		\ 	stq	a0, lck+MTX_LOCK;		\ 	ldl	a0, lck+MTX_SAVEINTR;		\ 	call_pal PAL_OSF1_swpipl
-end_define
+value|sync;					\
+comment|/* sync */
+name|eieio
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* sync */
+name|li
+name|r0
+operator|,
+name|MTX_UNOWNED
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* load in unowned */
+name|stw
+name|r0
+operator|,
+name|MTX_LOCK
+argument_list|(
+name|lck
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* store to lock */
+name|lwz
+name|r0
+operator|,
+name|MTX_SAVEINTR
+argument_list|(
+name|lck
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|\
+comment|/* load saved flags */
+name|mtmsr
+name|r0
+end_expr_stmt
+
+begin_comment
+comment|/* enable interrupts */
+end_comment
 
 begin_endif
 endif|#

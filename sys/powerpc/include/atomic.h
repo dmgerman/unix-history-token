@@ -551,7 +551,12 @@ begin_define
 define|#
 directive|define
 name|atomic_add_long
-value|atomic_add_32
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+value|atomic_add_32((u_int32_t *)p, (u_int32_t)v)
 end_define
 
 begin_define
@@ -825,32 +830,30 @@ block|{
 name|u_int32_t
 name|ret
 block|;
+name|ret
+operator|=
+literal|0
+block|;
 asm|__asm __volatile (
-literal|"1:\tlwarx %0, 0, %4\n\t"
+literal|"1:\tlwarx %0, 0, %3\n\t"
 comment|/* load old value */
-literal|"cmplw 0, %2, %0\n\t"
+literal|"cmplw 0, %1, %0\n\t"
 comment|/* compare */
-literal|"bne 2\n\t"
+literal|"bne 2f\n\t"
 comment|/* exit if not equal */
-literal|"mr %0, %3\n\t"
+literal|"mr %0, %2\n\t"
 comment|/* value to store */
-literal|"stwcx. %0, 0, %1\n\t"
+literal|"stwcx. %0, 0, %3\n\t"
 comment|/* attempt to store */
-literal|"bne- 1\n\t"
+literal|"bne- 1b\n\t"
 comment|/* spin if failed */
 literal|"eieio\n"
 comment|/* memory barrier */
 literal|"2:\t\n"
 operator|:
-literal|"=&r"
-operator|(
-name|ret
-operator|)
-block|,
 literal|"=r"
 operator|(
-operator|*
-name|p
+name|ret
 operator|)
 operator|:
 literal|"r"
@@ -865,7 +868,6 @@ operator|)
 block|,
 literal|"r"
 operator|(
-operator|*
 name|p
 operator|)
 operator|:
@@ -1112,7 +1114,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|atomic_cmpset_acq_long
+name|atomic_cmpset_acq_32
 argument_list|(
 operator|(
 specifier|volatile
@@ -1158,7 +1160,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|atomic_cmpset_rel_long
+name|atomic_cmpset_rel_32
 argument_list|(
 operator|(
 specifier|volatile
@@ -1200,7 +1202,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|atomic_load_acq_long
+name|atomic_load_acq_32
 argument_list|(
 operator|(
 specifier|volatile
@@ -1229,7 +1231,7 @@ modifier|*
 name|v
 parameter_list|)
 block|{
-name|atomic_store_rel_long
+name|atomic_store_rel_32
 argument_list|(
 operator|(
 specifier|volatile
@@ -1255,7 +1257,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|static __inline void						\ atomic_##NAME##_ptr(volatile void *p, uintptr_t v)		\ {								\ 	atomic_##NAME##_long((volatile u_int32_t *)p, v);	\ }								\ 								\ static __inline void						\ atomic_##NAME##_acq_ptr(volatile void *p, uintptr_t v)		\ {								\ 	atomic_##NAME##_acq_long((volatile u_int32_t *)p, v);	\ }								\ 								\ static __inline void						\ atomic_##NAME##_rel_ptr(volatile void *p, uintptr_t v)		\ {								\ 	atomic_##NAME##_rel_long((volatile u_int32_t *)p, v);	\ }
+value|static __inline void						\ atomic_##NAME##_ptr(volatile void *p, uintptr_t v)		\ {								\ 	atomic_##NAME##_32((volatile u_int32_t *)p, v);	\ }								\ 								\ static __inline void						\ atomic_##NAME##_acq_ptr(volatile void *p, uintptr_t v)		\ {								\ 	atomic_##NAME##_acq_32((volatile u_int32_t *)p, v);	\ }								\ 								\ static __inline void						\ atomic_##NAME##_rel_ptr(volatile void *p, uintptr_t v)		\ {								\ 	atomic_##NAME##_rel_32((volatile u_int32_t *)p, v);	\ }
 end_define
 
 begin_macro
