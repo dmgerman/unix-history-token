@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	8.3 (Berkeley) %G%"
+literal|"@(#)dbtest.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1258,15 +1258,11 @@ name|recno
 decl_stmt|;
 name|recno
 operator|=
-name|strtol
+name|atoi
 argument_list|(
 name|p
 operator|+
 literal|1
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|key
