@@ -649,7 +649,9 @@ begin_decl_stmt
 specifier|extern
 name|char
 name|buf
-index|[]
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 end_decl_stmt
 
