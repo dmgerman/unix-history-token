@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)string.c	3.1 83/11/22"
+literal|"@(#)string.c	3.2 83/11/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,14 @@ begin_function_decl
 name|char
 modifier|*
 name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|sprintf
 parameter_list|()
 function_decl|;
 end_function_decl
