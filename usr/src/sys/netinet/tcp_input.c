@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.51	82/01/25	*/
+comment|/*	tcp_input.c	1.52	82/02/03	*/
 end_comment
 
 begin_include
@@ -1306,6 +1306,15 @@ operator|>
 literal|0
 condition|)
 block|{
+name|m_adj
+argument_list|(
+name|m
+argument_list|,
+name|ti
+operator|->
+name|ti_len
+argument_list|)
+expr_stmt|;
 name|ti
 operator|->
 name|ti_len
@@ -1328,20 +1337,6 @@ block|}
 else|else
 block|{
 comment|/* 		 * If segment begins before rcv_nxt, drop leading 		 * data (and SYN); if nothing left, just ack. 		 */
-if|if
-condition|(
-name|SEQ_GT
-argument_list|(
-name|tp
-operator|->
-name|rcv_nxt
-argument_list|,
-name|ti
-operator|->
-name|ti_seq
-argument_list|)
-condition|)
-block|{
 name|todrop
 operator|=
 name|tp
@@ -1354,12 +1349,26 @@ name|ti_seq
 expr_stmt|;
 if|if
 condition|(
+name|todrop
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|tiflags
 operator|&
 name|TH_SYN
 condition|)
 block|{
 name|tiflags
+operator|&=
+operator|~
+name|TH_SYN
+expr_stmt|;
+name|ti
+operator|->
+name|ti_flags
 operator|&=
 operator|~
 name|TH_SYN
@@ -1443,37 +1452,25 @@ operator|&=
 operator|~
 name|TH_URG
 expr_stmt|;
-comment|/* ti->ti_flags&= ~TH_URG; */
-comment|/* ti->ti_urp = 0; */
+name|ti
+operator|->
+name|ti_flags
+operator|&=
+operator|~
+name|TH_URG
+expr_stmt|;
+name|ti
+operator|->
+name|ti_urp
+operator|=
+literal|0
+expr_stmt|;
 block|}
-comment|/* tiflags&= ~TH_SYN; */
-comment|/* ti->ti_flags&= ~TH_SYN; */
 block|}
 comment|/* 		 * If segment ends after window, drop trailing data 		 * (and PUSH and FIN); if nothing left, just ACK. 		 */
-if|if
-condition|(
-name|SEQ_GT
-argument_list|(
-name|ti
-operator|->
-name|ti_seq
-operator|+
-name|ti
-operator|->
-name|ti_len
-argument_list|,
-name|tp
-operator|->
-name|rcv_nxt
-operator|+
-name|tp
-operator|->
-name|rcv_wnd
-argument_list|)
-condition|)
-block|{
 name|todrop
 operator|=
+operator|(
 name|ti
 operator|->
 name|ti_seq
@@ -1481,6 +1478,7 @@ operator|+
 name|ti
 operator|->
 name|ti_len
+operator|)
 operator|-
 operator|(
 name|tp
@@ -1492,6 +1490,13 @@ operator|->
 name|rcv_wnd
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|todrop
+operator|>
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|todrop
@@ -3534,11 +3539,9 @@ expr|struct
 name|tcpiphdr
 operator|*
 operator|)
-operator|(
 name|q
 operator|->
 name|ti_prev
-operator|)
 expr_stmt|;
 comment|/* conversion to int (in i) handles seq wraparound */
 name|i
@@ -3621,21 +3624,6 @@ name|tcpiphdr
 operator|*
 operator|)
 name|tp
-operator|&&
-name|SEQ_GT
-argument_list|(
-name|ti
-operator|->
-name|ti_seq
-operator|+
-name|ti
-operator|->
-name|ti_len
-argument_list|,
-name|q
-operator|->
-name|ti_seq
-argument_list|)
 condition|)
 block|{
 specifier|register
@@ -3659,12 +3647,25 @@ decl_stmt|;
 if|if
 condition|(
 name|i
+operator|<=
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|i
 operator|<
 name|q
 operator|->
 name|ti_len
 condition|)
 block|{
+name|q
+operator|->
+name|ti_seq
+operator|+=
+name|i
+expr_stmt|;
 name|q
 operator|->
 name|ti_len

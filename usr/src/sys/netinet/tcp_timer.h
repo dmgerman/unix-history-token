@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.h	4.6	82/01/17	*/
+comment|/*	tcp_timer.h	4.7	82/02/03	*/
 end_comment
 
 begin_comment
@@ -185,6 +185,17 @@ end_define
 
 begin_comment
 comment|/* linger at most 2 minutes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_MAXRXTSHIFT
+value|10
+end_define
+
+begin_comment
+comment|/* maximum retransmits */
 end_comment
 
 begin_ifdef

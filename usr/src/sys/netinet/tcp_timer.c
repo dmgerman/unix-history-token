@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.13 82/01/19 */
+comment|/* tcp_timer.c 4.14 82/02/03 */
 end_comment
 
 begin_include
@@ -159,13 +159,18 @@ argument_list|(
 name|TCP_FASTTIMO
 argument_list|)
 expr_stmt|;
-for|for
-control|(
 name|inp
 operator|=
 name|tcb
 operator|.
 name|inp_next
+expr_stmt|;
+if|if
+condition|(
+name|inp
+condition|)
+for|for
+control|(
 init|;
 name|inp
 operator|!=
@@ -523,6 +528,24 @@ operator|->
 name|t_rxtshift
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_rxtshift
+operator|>
+name|TCP_MAXRXTSHIFT
+condition|)
+block|{
+name|tcp_drop
+argument_list|(
+name|tp
+argument_list|,
+name|ETIMEDOUT
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|TCPT_RANGESET
 argument_list|(
 name|tp
@@ -575,29 +598,6 @@ argument_list|,
 name|TCPTV_MAX
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_timer
-index|[
-name|TCPT_REXMT
-index|]
-operator|>
-name|TCPTV_MAXIDLE
-operator|/
-literal|2
-condition|)
-block|{
-name|tcp_drop
-argument_list|(
-name|tp
-argument_list|,
-name|ETIMEDOUT
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* printf("rexmt set to %d\n", tp->t_timer[TCPT_REXMT]); */
 name|tp
 operator|->
