@@ -682,7 +682,7 @@ name|shar_printf
 argument_list|(
 name|a
 argument_list|,
-literal|"# This is a shar archive\n"
+literal|"# This is a shell archive\n"
 argument_list|)
 expr_stmt|;
 name|shar
