@@ -1010,7 +1010,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * DIVA USB Mp3 Player. 		 * Doesn't work correctly with 6 byte reads/writes. 		 */
+comment|/* 		 * DIVA USB Mp3 Player. 		 * PR: kern/33638 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -1043,6 +1043,46 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
+comment|/* 		 * Apacer HandyDrive 		 * PR: kern/43627 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Apacer"
+block|,
+literal|"HandyDrive"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * Daisy Technology PhotoClip on Zoran chip 		 * PR: kern/43580 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"ZORAN"
+block|,
+literal|"COACH DSC"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
 block|}
 block|}
 decl_stmt|;
