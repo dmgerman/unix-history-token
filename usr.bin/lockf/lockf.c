@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997 John D. Polstra.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JOHN D. POLSTRA AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JOHN D. POLSTRA OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: lockf.c,v 1.1.1.1.2.3 1997/08/29 05:29:30 imp Exp $  */
+comment|/*  * Copyright (C) 1997 John D. Polstra.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JOHN D. POLSTRA AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JOHN D. POLSTRA OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: lockf.c,v 1.7 1998/07/08 05:29:05 jdp Exp $  */
 end_comment
 
 begin_include
@@ -142,6 +142,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|lockfd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|keep
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|timed_out
@@ -169,9 +183,6 @@ name|int
 name|ch
 decl_stmt|;
 name|int
-name|lockfd
-decl_stmt|;
-name|int
 name|silent
 decl_stmt|;
 name|int
@@ -184,6 +195,10 @@ name|pid_t
 name|child
 decl_stmt|;
 name|silent
+operator|=
+literal|0
+expr_stmt|;
+name|keep
 operator|=
 literal|0
 expr_stmt|;
@@ -204,7 +219,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"st:"
+literal|"skt:"
 argument_list|)
 operator|)
 operator|!=
@@ -217,6 +232,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'k'
+case|:
+name|keep
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'s'
 case|:
@@ -647,6 +670,18 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|keep
+condition|)
+name|flock
+argument_list|(
+name|lockfd
+argument_list|,
+name|LOCK_UN
+argument_list|)
+expr_stmt|;
+else|else
 name|unlink
 argument_list|(
 name|lockname
@@ -733,7 +768,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lockf [-s] [-t seconds] file command [arguments]\n"
+literal|"usage: lockf [-ks] [-t seconds] file command [arguments]\n"
 argument_list|)
 expr_stmt|;
 name|exit
