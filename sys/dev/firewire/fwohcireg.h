@@ -250,7 +250,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|uint32_t
 name|fwohcireg_t
 typedef|;
 end_typedef
@@ -377,22 +377,22 @@ union|union
 block|{
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|cmd
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|addr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|depend
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|res
 decl_stmt|;
 block|}
 name|desc
 struct|;
-name|u_int32_t
+name|uint32_t
 name|immed
 index|[
 literal|4
@@ -1271,7 +1271,7 @@ name|fwohci_txpkthdr
 block|{
 union|union
 block|{
-name|u_int32_t
+name|uint32_t
 name|ld
 index|[
 literal|4
@@ -1284,7 +1284,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int32_t
+name|uint32_t
 name|spd
 range|:
 literal|16
@@ -1302,7 +1302,7 @@ literal|4
 decl_stmt|;
 else|#
 directive|else
-name|u_int32_t
+name|uint32_t
 label|:
 literal|4
 operator|,
@@ -1330,7 +1330,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int32_t
+name|uint32_t
 label|:
 literal|8
 operator|,
@@ -1358,7 +1358,7 @@ literal|4
 expr_stmt|;
 else|#
 directive|else
-name|u_int32_t
+name|uint32_t
 label|:
 literal|4
 operator|,
@@ -1401,7 +1401,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int32_t
+name|uint32_t
 label|:
 literal|13
 operator|,
@@ -1423,7 +1423,7 @@ literal|4
 expr_stmt|;
 else|#
 directive|else
-name|u_int32_t
+name|uint32_t
 name|sy
 range|:
 literal|4
@@ -1464,7 +1464,7 @@ begin_struct
 struct|struct
 name|fwohci_trailer
 block|{
-name|u_int32_t
+name|uint32_t
 name|time
 range|:
 literal|16

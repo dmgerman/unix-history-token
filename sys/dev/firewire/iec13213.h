@@ -653,7 +653,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int32_t
+name|uint32_t
 name|key
 range|:
 literal|8
@@ -664,7 +664,7 @@ literal|24
 decl_stmt|;
 else|#
 directive|else
-name|u_int32_t
+name|uint32_t
 name|val
 range|:
 literal|24
@@ -688,7 +688,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int32_t
+name|uint32_t
 name|info_len
 range|:
 literal|8
@@ -703,7 +703,7 @@ literal|16
 decl_stmt|;
 else|#
 directive|else
-name|u_int32_t
+name|uint32_t
 name|crc
 range|:
 literal|16
@@ -760,7 +760,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int32_t
+name|uint32_t
 name|spec_type
 range|:
 literal|8
@@ -771,7 +771,7 @@ literal|24
 decl_stmt|;
 else|#
 directive|else
-name|u_int32_t
+name|uint32_t
 name|spec_id
 range|:
 literal|24
@@ -782,10 +782,10 @@ literal|8
 decl_stmt|;
 endif|#
 directive|endif
-name|u_int32_t
+name|uint32_t
 name|lang_id
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|text
 index|[
 literal|0
@@ -803,7 +803,7 @@ define|#
 directive|define
 name|CSR_BUS_NAME_IEEE1394
 value|0x31333934
-name|u_int32_t
+name|uint32_t
 name|bus_name
 decl_stmt|;
 if|#
@@ -811,7 +811,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int32_t
+name|uint32_t
 name|irmc
 range|:
 literal|1
@@ -870,7 +870,7 @@ literal|3
 decl_stmt|;
 else|#
 directive|else
-name|u_int32_t
+name|uint32_t
 name|link_spd
 range|:
 literal|3
@@ -1011,7 +1011,7 @@ name|struct
 name|crom_context
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1058,10 +1058,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int16_t
+name|uint16_t
 name|crom_crc
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|r
 parameter_list|,
@@ -1080,7 +1080,7 @@ name|struct
 name|crom_context
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1089,12 +1089,12 @@ begin_function_decl
 name|int
 name|crom_has_specver
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1205,7 +1205,7 @@ argument_list|,
 name|crc
 argument_list|)
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|buf
 index|[
 name|CROM_MAX_CHUNK_LEN
@@ -1227,7 +1227,7 @@ name|struct
 name|crom_chunk
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1304,7 +1304,7 @@ name|struct
 name|crom_src
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|,
 name|int

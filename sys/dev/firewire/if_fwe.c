@@ -2856,7 +2856,7 @@ name|hdr
 expr_stmt|;
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&

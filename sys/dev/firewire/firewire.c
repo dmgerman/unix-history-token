@@ -538,15 +538,15 @@ name|struct
 name|firewire_comm
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|void
 function_decl|(
@@ -3536,7 +3536,7 @@ argument_list|(
 name|src
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|newrom
@@ -3591,7 +3591,7 @@ argument_list|(
 name|src
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|newrom
@@ -4367,10 +4367,10 @@ name|firewire_comm
 modifier|*
 name|fc
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 name|dest_hi
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|dest_lo
 parameter_list|)
 block|{
@@ -5773,7 +5773,7 @@ comment|/*  * Dump self ID.   */
 end_comment
 
 begin_endif
-unit|static void fw_print_sid(u_int32_t sid) { 	union fw_self_id *s; 	s = (union fw_self_id *)&sid; 	printf("node:%d link:%d gap:%d spd:%d del:%d con:%d pwr:%d" 		" p0:%d p1:%d p2:%d i:%d m:%d\n", 		s->p0.phy_id, s->p0.link_active, s->p0.gap_count, 		s->p0.phy_speed, s->p0.phy_delay, s->p0.contender, 		s->p0.power_class, s->p0.port0, s->p0.port1, 		s->p0.port2, s->p0.initiated_reset, s->p0.more_packets); }
+unit|static void fw_print_sid(uint32_t sid) { 	union fw_self_id *s; 	s = (union fw_self_id *)&sid; 	printf("node:%d link:%d gap:%d spd:%d del:%d con:%d pwr:%d" 		" p0:%d p1:%d p2:%d i:%d m:%d\n", 		s->p0.phy_id, s->p0.link_active, s->p0.gap_count, 		s->p0.phy_speed, s->p0.phy_delay, s->p0.contender, 		s->p0.power_class, s->p0.port0, s->p0.port1, 		s->p0.port2, s->p0.initiated_reset, s->p0.more_packets); }
 endif|#
 directive|endif
 end_endif
@@ -5791,7 +5791,7 @@ name|firewire_comm
 modifier|*
 name|fc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|sid
 parameter_list|,
@@ -5799,7 +5799,7 @@ name|u_int
 name|len
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 decl_stmt|;
@@ -5832,7 +5832,7 @@ operator|/
 operator|(
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|*
 literal|2
@@ -5863,7 +5863,7 @@ argument_list|)
 operator|=
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|fc
 operator|->
@@ -6291,7 +6291,7 @@ operator|=
 name|fw_crc16
 argument_list|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -6319,7 +6319,7 @@ operator|=
 name|fw_crc16
 argument_list|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -6342,7 +6342,7 @@ comment|/* byteswap and copy to CSR */
 name|p
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|fc
@@ -6387,7 +6387,7 @@ expr_stmt|;
 name|p
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|fc
@@ -6424,7 +6424,7 @@ name|p
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* don't byte-swap u_int8_t array */
+comment|/* don't byte-swap uint8_t array */
 name|bcopy
 argument_list|(
 name|p
@@ -6889,7 +6889,7 @@ decl_stmt|,
 modifier|*
 name|tfwdev
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|addr
 decl_stmt|;
 name|struct
@@ -7625,19 +7625,19 @@ name|firewire_comm
 modifier|*
 name|fc
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|spd
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|tl
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|rt
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|addr_hi
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|addr_lo
 parameter_list|,
 name|void
@@ -7895,7 +7895,7 @@ name|csrreg
 modifier|*
 name|csrreg
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|offset
 decl_stmt|;
 if|if
@@ -8012,7 +8012,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|{ 		u_int32_t *qld; 		int i; 		qld = (u_int32_t *)xfer->recv.buf; 		printf("len:%d\n", xfer->recv.len); 		for( i = 0 ; i<= xfer->recv.len&& i< 32; i+= 4){ 			printf("0x%08x ", rfp->mode.ld[i/4]); 			if((i % 16) == 15) printf("\n"); 		} 		if((i % 16) != 15) printf("\n"); 	}
+block|{ 		uint32_t *qld; 		int i; 		qld = (uint32_t *)xfer->recv.buf; 		printf("len:%d\n", xfer->recv.len); 		for( i = 0 ; i<= xfer->recv.len&& i< 32; i+= 4){ 			printf("0x%08x ", rfp->mode.ld[i/4]); 			if((i % 16) == 15) printf("\n"); 		} 		if((i % 16) != 15) printf("\n"); 	}
 endif|#
 directive|endif
 if|if
@@ -9259,7 +9259,7 @@ name|int
 name|s
 decl_stmt|;
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|label
 init|=
 literal|0
@@ -9648,13 +9648,13 @@ name|res
 operator|>=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 condition|)
 block|{
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|p
@@ -9677,7 +9677,7 @@ name|pay_len
 operator|=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9860,7 +9860,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|{ 		u_int32_t *qld; 		int i; 		qld = (u_int32_t *)buf; 		printf("spd %d len:%d\n", spd, len); 		for( i = 0 ; i<= len&& i< 32; i+= 4){ 			printf("0x%08x ", ntohl(qld[i/4])); 			if((i % 16) == 15) printf("\n"); 		} 		if((i % 16) != 15) printf("\n"); 	}
+block|{ 		uint32_t *qld; 		int i; 		qld = (uint32_t *)buf; 		printf("spd %d len:%d\n", spd, len); 		for( i = 0 ; i<= len&& i< 32; i+= 4){ 			printf("0x%08x ", ntohl(qld[i/4])); 			if((i % 16) == 15) printf("\n"); 		} 		if((i % 16) != 15) printf("\n"); 	}
 endif|#
 directive|endif
 name|fp
@@ -11289,12 +11289,12 @@ name|sfp
 init|=
 name|NULL
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|ld
 init|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|xfer
@@ -11581,7 +11581,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -11700,7 +11700,7 @@ operator|.
 name|payload
 argument_list|,
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|ntohs
 argument_list|(
@@ -11810,7 +11810,7 @@ name|data
 operator|=
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -11953,18 +11953,18 @@ comment|/*  * CRC16 check-sum for IEEE1394 register blocks.  */
 end_comment
 
 begin_function
-name|u_int16_t
+name|uint16_t
 name|fw_crc16
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|ptr
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|len
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|i
 decl_stmt|,
 name|sum
@@ -12071,7 +12071,7 @@ block|}
 return|return
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|crc
 operator|)
@@ -12102,7 +12102,7 @@ decl_stmt|;
 name|int
 name|cmstr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|quad
 decl_stmt|;
 comment|/* Check to see if the current root node is cycle master capable */

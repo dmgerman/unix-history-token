@@ -188,7 +188,7 @@ struct|;
 name|u_int
 name|maxrec
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|sid_buf
 decl_stmt|;
@@ -204,7 +204,7 @@ name|struct
 name|fwdma_alloc
 name|dummy_dma
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|intmask
 decl_stmt|,
 name|irstat
@@ -214,7 +214,7 @@ decl_stmt|;
 if|#
 directive|if
 name|FWOHCI_TASKQUEUE
-name|u_int32_t
+name|uint32_t
 name|intstat
 decl_stmt|;
 name|struct

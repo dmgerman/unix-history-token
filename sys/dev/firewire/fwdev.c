@@ -511,7 +511,7 @@ name|psize
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -525,7 +525,7 @@ name|fc
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 argument_list|,
 name|b
@@ -1767,7 +1767,7 @@ name|len
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 argument_list|,
 name|uio
@@ -4010,7 +4010,7 @@ operator|++
 control|)
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|ptr

@@ -167,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|MAX_ROM
-value|(1024 - sizeof(u_int32_t) * 5)
+value|(1024 - sizeof(uint32_t) * 5)
 end_define
 
 begin_define
@@ -189,7 +189,7 @@ name|crom_context
 modifier|*
 name|cc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|)
@@ -559,7 +559,7 @@ name|crom_context
 modifier|*
 name|cc
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 name|key
 parameter_list|)
 block|{
@@ -611,14 +611,14 @@ begin_function
 name|int
 name|crom_has_specver
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|spec
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|ver
 parameter_list|)
 block|{
@@ -762,7 +762,7 @@ name|csrtext
 modifier|*
 name|textleaf
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|bp
 decl_stmt|;
@@ -877,7 +877,7 @@ comment|/* XXX should check spec and type */
 name|bp
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -967,10 +967,10 @@ block|}
 end_function
 
 begin_function
-name|u_int16_t
+name|uint16_t
 name|crom_crc
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|ptr
 parameter_list|,
@@ -983,7 +983,7 @@ name|i
 decl_stmt|,
 name|shift
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|data
 decl_stmt|,
 name|sum
@@ -1077,7 +1077,7 @@ block|}
 return|return
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|crc
 operator|)
@@ -1096,10 +1096,10 @@ specifier|static
 name|void
 name|crom_desc_specver
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|spec
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|ver
 parameter_list|,
 name|char
@@ -1308,7 +1308,7 @@ name|desc
 decl_stmt|,
 name|st
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|crc
 decl_stmt|;
 name|reg
@@ -1401,7 +1401,7 @@ operator|=
 name|crom_crc
 argument_list|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -1666,7 +1666,7 @@ name|crom_chunk
 modifier|*
 name|chunk
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|entry
 parameter_list|)
 block|{
@@ -1751,7 +1751,7 @@ name|csrreg
 modifier|*
 name|reg
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|i
 decl_stmt|;
 name|reg
@@ -1783,7 +1783,7 @@ argument_list|(
 name|chunk
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|i
 argument_list|)
@@ -1936,7 +1936,7 @@ name|csrtext
 modifier|*
 name|tl
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|p
 decl_stmt|;
@@ -2030,7 +2030,7 @@ name|len
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2066,7 +2066,7 @@ name|len
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 argument_list|)
 argument_list|)
@@ -2087,7 +2087,7 @@ expr_stmt|;
 name|p
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -2110,7 +2110,7 @@ name|len
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 argument_list|)
 condition|;
@@ -2153,11 +2153,11 @@ specifier|static
 name|int
 name|crom_copy
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|src
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|dst
 parameter_list|,
@@ -2213,7 +2213,7 @@ name|len
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2239,7 +2239,7 @@ name|crom_src
 modifier|*
 name|src
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|buf
 parameter_list|,
@@ -2263,7 +2263,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|ptr
 decl_stmt|;
@@ -2388,7 +2388,7 @@ condition|(
 name|crom_copy
 argument_list|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -2463,7 +2463,7 @@ condition|(
 name|crom_copy
 argument_list|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&
@@ -2615,7 +2615,7 @@ name|text6
 decl_stmt|,
 name|text7
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|buf
 index|[
 literal|256

@@ -824,7 +824,7 @@ decl_stmt|;
 name|bus_addr_t
 name|bus_addr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|orb
 index|[
 literal|8
@@ -833,7 +833,7 @@ decl_stmt|;
 define|#
 directive|define
 name|IND_PTR_OFFSET
-value|(8*sizeof(u_int32_t))
+value|(8*sizeof(uint32_t))
 name|struct
 name|ind_ptr
 name|ind_ptr
@@ -932,7 +932,7 @@ directive|define
 name|SBP_DEV_RETRY
 value|7
 comment|/* unavailable unit */
-name|u_int8_t
+name|uint8_t
 name|status
 range|:
 literal|4
@@ -941,13 +941,13 @@ name|timeout
 range|:
 literal|4
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|type
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|lun_id
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|freeze
 decl_stmt|;
 define|#
@@ -978,7 +978,7 @@ define|#
 directive|define
 name|ORB_SHORTAGE
 value|(1<< 6)
-name|u_int16_t
+name|uint16_t
 name|flags
 decl_stmt|;
 name|struct
@@ -1076,7 +1076,7 @@ name|fw_device
 modifier|*
 name|fwdev
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|mgm_hi
 decl_stmt|,
 name|mgm_lo
@@ -2794,7 +2794,7 @@ argument_list|,
 comment|/* alignment */
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 argument_list|,
 name|SBP_DMA_SIZE
@@ -6152,7 +6152,7 @@ argument_list|,
 name|__func__
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|ocb
 operator|->
@@ -6298,7 +6298,7 @@ operator|=
 name|htonl
 argument_list|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|ocb
 operator|->
@@ -7560,7 +7560,7 @@ argument_list|(
 literal|"mgm orb: %08x\n"
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|ocb
 operator|->
@@ -8105,7 +8105,7 @@ name|CAM_SCSI_STATUS_ERROR
 operator||
 name|CAM_AUTOSNS_VALID
 expr_stmt|;
-comment|/* { 		u_int8_t j, *tmp; 		tmp = sense; 		for( j = 0 ; j< 32 ; j+=8){ 			printf("sense %02x%02x %02x%02x %02x%02x %02x%02x\n",  				tmp[j], tmp[j+1], tmp[j+2], tmp[j+3], 				tmp[j+4], tmp[j+5], tmp[j+6], tmp[j+7]); 		}  } */
+comment|/* { 		uint8_t j, *tmp; 		tmp = sense; 		for( j = 0 ; j< 32 ; j+=8){ 			printf("sense %02x%02x %02x%02x %02x%02x %02x%02x\n",  				tmp[j], tmp[j+1], tmp[j+2], tmp[j+3], 				tmp[j+4], tmp[j+5], tmp[j+6], tmp[j+7]); 		}  } */
 break|break;
 default|default:
 name|sbp_show_sdev_info
@@ -8404,10 +8404,10 @@ name|reset_agent
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|addr
 decl_stmt|;
-comment|/* 	u_int32_t *ld; 	ld = xfer->recv.buf; printf("sbp %x %d %d %08x %08x %08x %08x\n", 			xfer->resp, xfer->recv.len, xfer->recv.off, ntohl(ld[0]), ntohl(ld[1]), ntohl(ld[2]), ntohl(ld[3])); printf("sbp %08x %08x %08x %08x\n", ntohl(ld[4]), ntohl(ld[5]), ntohl(ld[6]), ntohl(ld[7])); printf("sbp %08x %08x %08x %08x\n", ntohl(ld[8]), ntohl(ld[9]), ntohl(ld[10]), ntohl(ld[11])); */
+comment|/* 	uint32_t *ld; 	ld = xfer->recv.buf; printf("sbp %x %d %d %08x %08x %08x %08x\n", 			xfer->resp, xfer->recv.len, xfer->recv.off, ntohl(ld[0]), ntohl(ld[1]), ntohl(ld[2]), ntohl(ld[3])); printf("sbp %08x %08x %08x %08x\n", ntohl(ld[4]), ntohl(ld[5]), ntohl(ld[6]), ntohl(ld[7])); printf("sbp %08x %08x %08x %08x\n", ntohl(ld[8]), ntohl(ld[9]), ntohl(ld[10]), ntohl(ld[11])); */
 name|sbp
 operator|=
 operator|(
@@ -8858,7 +8858,7 @@ literal|"unknown function %d\n"
 argument|, orb_fun); 				break; 			} 			sbp_mgm_orb(sdev, ORB_FUN_RUNQUEUE, NULL); 			break; 		case OCB_ACT_CMD: 			sdev->timeout =
 literal|0
 argument|; 			if(ocb->ccb != NULL){ 				union ccb *ccb;
-comment|/* 				u_int32_t *ld; 				ld = ocb->ccb->csio.data_ptr; 				if(ld != NULL&& ocb->ccb->csio.dxfer_len != 0) 					printf("ptr %08x %08x %08x %08x\n", ld[0], ld[1], ld[2], ld[3]); 				else 					printf("ptr NULL\n"); printf("len %d\n", sbp_status->len); */
+comment|/* 				uint32_t *ld; 				ld = ocb->ccb->csio.data_ptr; 				if(ld != NULL&& ocb->ccb->csio.dxfer_len != 0) 					printf("ptr %08x %08x %08x %08x\n", ld[0], ld[1], ld[2], ld[3]); 				else 					printf("ptr NULL\n"); printf("len %d\n", sbp_status->len); */
 argument|ccb = ocb->ccb; 				if(sbp_status->len>
 literal|1
 argument|){ 					sbp_scsi_status(sbp_status, ocb); 				}else{ 					if(sbp_status->resp != ORB_RES_CMPL){ 						ccb->ccb_h.status = CAM_REQ_CMP_ERR; 					}else{ 						ccb->ccb_h.status = CAM_REQ_CMP; 					} 				}
@@ -9067,7 +9067,7 @@ argument|); 		sbp_reset_start(sdev); 		break; 	} 			 }  static void sbp_mgm_time
 literal|2
 argument|); 	printf(
 literal|"request timeout(mgm orb:0x%08x) ... "
-argument|, 	    (u_int32_t)ocb->bus_addr); 	target->mgm_ocb_cur = NULL; 	sbp_free_ocb(sdev, ocb);
+argument|, 	    (uint32_t)ocb->bus_addr); 	target->mgm_ocb_cur = NULL; 	sbp_free_ocb(sdev, ocb);
 if|#
 directive|if
 literal|0
@@ -9087,7 +9087,7 @@ argument|}  static void sbp_timeout(void *arg) { 	struct sbp_ocb *ocb = (struct 
 literal|2
 argument|); 	printf(
 literal|"request timeout(cmd orb:0x%08x) ... "
-argument|, 	    (u_int32_t)ocb->bus_addr);  	sdev->timeout ++; 	switch(sdev->timeout) { 	case
+argument|, 	    (uint32_t)ocb->bus_addr);  	sdev->timeout ++; 	switch(sdev->timeout) { 	case
 literal|1
 argument|: 		printf(
 literal|"agent reset\n"
@@ -9225,7 +9225,7 @@ operator|||
 name|__FreeBSD_version
 operator|<
 literal|501100
-argument|u_int32_t size_mb; 		u_int32_t secs_per_cylinder; 		int extended =
+argument|uint32_t size_mb; 		uint32_t secs_per_cylinder; 		int extended =
 literal|1
 argument|;
 endif|#

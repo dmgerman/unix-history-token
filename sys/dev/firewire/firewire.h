@@ -80,12 +80,10 @@ begin_struct
 struct|struct
 name|fw_addr
 block|{
-name|unsigned
-name|long
+name|uint32_t
 name|hi
 decl_stmt|;
-name|unsigned
-name|long
+name|uint32_t
 name|lo
 decl_stmt|;
 block|}
@@ -112,12 +110,10 @@ begin_struct
 struct|struct
 name|fw_reg_req_t
 block|{
-name|unsigned
-name|long
+name|uint32_t
 name|addr
 decl_stmt|;
-name|unsigned
-name|long
+name|uint32_t
 name|data
 decl_stmt|;
 block|}
@@ -338,7 +334,7 @@ begin_struct
 struct|struct
 name|fw_isohdr
 block|{
-name|u_int32_t
+name|uint32_t
 name|hdr
 index|[
 literal|1
@@ -352,7 +348,7 @@ begin_struct
 struct|struct
 name|fw_asyhdr
 block|{
-name|u_int32_t
+name|uint32_t
 name|hdr
 index|[
 literal|4
@@ -379,7 +375,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|u_int8_t  x:4, y:4
+value|uint8_t  x:4, y:4
 end_define
 
 begin_define
@@ -391,7 +387,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|u_int32_t x:16, y:16
+value|uint32_t x:16, y:16
 end_define
 
 begin_else
@@ -408,7 +404,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|u_int8_t  y:4, x:4
+value|uint8_t  y:4, x:4
 end_define
 
 begin_define
@@ -420,7 +416,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|u_int32_t y:16, x:16
+value|uint32_t y:16, x:16
 end_define
 
 begin_endif
@@ -449,7 +445,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|u_int32_t a:16,b:8,c:4,d:4
+value|uint32_t a:16,b:8,c:4,d:4
 end_define
 
 begin_define
@@ -465,7 +461,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|u_int32_t a:16,b:4,c:4,d:8
+value|uint32_t a:16,b:4,c:4,d:8
 end_define
 
 begin_else
@@ -486,7 +482,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|u_int32_t d:4,c:4,b:8,a:16
+value|uint32_t d:4,c:4,b:8,a:16
 end_define
 
 begin_define
@@ -502,7 +498,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|u_int32_t d:8,c:4,b:4,a:16
+value|uint32_t d:8,c:4,b:4,a:16
 end_define
 
 begin_endif
@@ -516,7 +512,7 @@ name|fw_pkt
 block|{
 union|union
 block|{
-name|u_int32_t
+name|uint32_t
 name|ld
 index|[
 literal|0
@@ -545,7 +541,7 @@ argument_list|,
 name|sy
 argument_list|)
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|payload
 index|[
 literal|0
@@ -595,7 +591,7 @@ argument_list|,
 name|dest_hi
 argument_list|)
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dest_lo
 decl_stmt|;
 block|}
@@ -621,7 +617,7 @@ argument_list|,
 name|rtcode
 argument_list|, , )
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 label|:
 literal|32
 expr_stmt|;
@@ -648,7 +644,7 @@ argument_list|,
 name|dest_hi
 argument_list|)
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dest_lo
 decl_stmt|;
 name|BIT16x2
@@ -681,10 +677,10 @@ argument_list|,
 name|dest_hi
 argument_list|)
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dest_lo
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|data
 decl_stmt|;
 block|}
@@ -710,10 +706,10 @@ argument_list|,
 name|dest_hi
 argument_list|)
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dest_lo
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|data
 decl_stmt|;
 block|}
@@ -739,11 +735,11 @@ argument_list|,
 name|rtcode
 argument_list|, , )
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 label|:
 literal|32
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|data
 decl_stmt|;
 block|}
@@ -769,7 +765,7 @@ argument_list|,
 name|dest_hi
 argument_list|)
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dest_lo
 decl_stmt|;
 name|BIT16x2
@@ -779,7 +775,7 @@ argument_list|,
 name|extcode
 argument_list|)
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|payload
 index|[
 literal|0
@@ -808,7 +804,7 @@ argument_list|,
 name|dest_hi
 argument_list|)
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|dest_lo
 decl_stmt|;
 name|BIT16x2
@@ -818,7 +814,7 @@ argument_list|,
 name|extcode
 argument_list|)
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|payload
 index|[
 literal|0
@@ -847,7 +843,7 @@ argument_list|,
 name|rtcode
 argument_list|, , )
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 label|:
 literal|32
 expr_stmt|;
@@ -858,7 +854,7 @@ argument_list|,
 name|extcode
 argument_list|)
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|payload
 index|[
 literal|0
@@ -887,7 +883,7 @@ argument_list|,
 name|rtcode
 argument_list|, , )
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 label|:
 literal|32
 expr_stmt|;
@@ -898,7 +894,7 @@ argument_list|,
 name|extcode
 argument_list|)
 expr_stmt|;
-name|u_int32_t
+name|uint32_t
 name|payload
 index|[
 literal|0
@@ -1023,7 +1019,7 @@ begin_struct
 struct|struct
 name|fw_eui64
 block|{
-name|u_int32_t
+name|uint32_t
 name|hi
 decl_stmt|,
 name|lo
@@ -1109,7 +1105,7 @@ name|struct
 name|fw_pkt
 name|pkt
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|data
 index|[
 literal|512
@@ -1127,10 +1123,10 @@ name|struct
 name|fw_eui64
 name|eui
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|dst
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|;
 block|}
@@ -1148,10 +1144,10 @@ begin_struct
 struct|struct
 name|fw_devlstreq
 block|{
-name|u_int16_t
+name|uint16_t
 name|n
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|info_len
 decl_stmt|;
 name|struct
@@ -1207,7 +1203,7 @@ name|fw_self_id
 block|{
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|id
 range|:
 literal|2
@@ -1269,7 +1265,7 @@ name|p0
 struct|;
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|id
 range|:
 literal|2
@@ -1346,7 +1342,7 @@ name|fw_self_id
 block|{
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|more_packets
 range|:
 literal|1
@@ -1408,7 +1404,7 @@ name|p0
 struct|;
 struct|struct
 block|{
-name|u_int32_t
+name|uint32_t
 name|more_packets
 range|:
 literal|1
@@ -1485,7 +1481,7 @@ begin_struct
 struct|struct
 name|fw_topology_map
 block|{
-name|u_int32_t
+name|uint32_t
 name|crc
 range|:
 literal|16
@@ -1494,10 +1490,10 @@ name|crc_len
 range|:
 literal|16
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|generation
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|self_id_count
 range|:
 literal|16
@@ -1523,7 +1519,7 @@ begin_struct
 struct|struct
 name|fw_speed_map
 block|{
-name|u_int32_t
+name|uint32_t
 name|crc
 range|:
 literal|16
@@ -1532,10 +1528,10 @@ name|crc_len
 range|:
 literal|16
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|generation
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|speed
 index|[
 literal|64
@@ -1708,7 +1704,7 @@ begin_define
 define|#
 directive|define
 name|DUMPDMA
-value|_IOWR('S', 82, u_int32_t)
+value|_IOWR('S', 82, uint32_t)
 end_define
 
 begin_ifdef

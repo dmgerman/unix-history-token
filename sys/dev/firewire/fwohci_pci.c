@@ -296,7 +296,7 @@ block|{
 if|#
 directive|if
 literal|1
-name|u_int32_t
+name|uint32_t
 name|id
 decl_stmt|;
 name|id
@@ -900,7 +900,7 @@ name|ocache_line
 decl_stmt|,
 name|cache_line
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|cmd
 decl_stmt|;
 name|cmd

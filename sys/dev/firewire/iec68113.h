@@ -47,7 +47,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int8_t
+name|uint8_t
 name|eoh0
 range|:
 literal|1
@@ -64,7 +64,7 @@ literal|6
 decl_stmt|;
 else|#
 directive|else
-name|u_int8_t
+name|uint8_t
 name|src
 range|:
 literal|6
@@ -81,7 +81,7 @@ decl_stmt|;
 comment|/* 0 */
 endif|#
 directive|endif
-name|u_int8_t
+name|uint8_t
 name|len
 decl_stmt|;
 if|#
@@ -89,7 +89,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int8_t
+name|uint8_t
 name|fn
 range|:
 literal|2
@@ -107,7 +107,7 @@ literal|2
 decl_stmt|;
 else|#
 directive|else
-name|u_int8_t
+name|uint8_t
 label|:
 literal|2
 operator|,
@@ -125,7 +125,7 @@ literal|2
 expr_stmt|;
 endif|#
 directive|endif
-name|u_int8_t
+name|uint8_t
 name|dbc
 decl_stmt|;
 if|#
@@ -133,7 +133,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int8_t
+name|uint8_t
 name|eoh1
 range|:
 literal|1
@@ -150,7 +150,7 @@ literal|6
 decl_stmt|;
 else|#
 directive|else
-name|u_int8_t
+name|uint8_t
 name|fmt
 range|:
 literal|6
@@ -184,7 +184,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int8_t
+name|uint8_t
 name|fs
 range|:
 literal|1
@@ -199,7 +199,7 @@ literal|2
 decl_stmt|;
 else|#
 directive|else
-name|u_int8_t
+name|uint8_t
 label|:
 literal|2
 operator|,
@@ -226,7 +226,7 @@ define|#
 directive|define
 name|CIP_STYPE_HD
 value|2
-name|u_int16_t
+name|uint16_t
 name|cyc
 range|:
 literal|16
@@ -241,7 +241,7 @@ operator|)
 argument_list|)
 name|dv
 struct|;
-name|u_int8_t
+name|uint8_t
 name|bytes
 index|[
 literal|3
@@ -263,7 +263,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int8_t
+name|uint8_t
 name|sct
 range|:
 literal|3
@@ -280,7 +280,7 @@ decl_stmt|;
 comment|/* Arbitrary bit */
 else|#
 directive|else
-name|u_int8_t
+name|uint8_t
 name|arb
 range|:
 literal|4
@@ -322,7 +322,7 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|u_int8_t
+name|uint8_t
 name|dseq
 range|:
 literal|4
@@ -338,7 +338,7 @@ literal|3
 decl_stmt|;
 else|#
 directive|else
-name|u_int8_t
+name|uint8_t
 label|:
 literal|3
 operator|,
@@ -354,11 +354,11 @@ expr_stmt|;
 comment|/* DIF sequence number */
 endif|#
 directive|endif
-name|u_int8_t
+name|uint8_t
 name|dbn
 decl_stmt|;
 comment|/* DIF block number */
-name|u_int8_t
+name|uint8_t
 name|payload
 index|[
 literal|77

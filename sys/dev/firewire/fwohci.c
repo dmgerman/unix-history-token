@@ -407,7 +407,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32_t
+name|uint32_t
 name|tagbit
 index|[
 literal|4
@@ -733,30 +733,30 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fwphy_wrdata
 parameter_list|(
 name|struct
 name|fwohci_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fwphy_rddata
 parameter_list|(
 name|struct
 name|fwohci_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -838,7 +838,7 @@ name|struct
 name|firewire_comm
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -951,7 +951,7 @@ name|struct
 name|fwohci_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -969,9 +969,9 @@ name|struct
 name|fwohcidb
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -985,14 +985,14 @@ name|struct
 name|fwohci_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fwohci_cyctimer
 parameter_list|(
 name|struct
@@ -1651,7 +1651,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fwphy_wrdata
 parameter_list|(
 name|struct
@@ -1659,14 +1659,14 @@ name|fwohci_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|addr
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|data
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|fun
 decl_stmt|;
 name|addr
@@ -1724,7 +1724,7 @@ end_function
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fwohci_set_bus_manager
 parameter_list|(
 name|struct
@@ -1751,7 +1751,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|bm
 decl_stmt|;
 define|#
@@ -1887,7 +1887,7 @@ end_function
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fwphy_rddata
 parameter_list|(
 name|struct
@@ -1899,7 +1899,7 @@ name|u_int
 name|addr
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|fun
 decl_stmt|,
 name|stat
@@ -2205,12 +2205,12 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|dmach
 init|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|data
@@ -2481,7 +2481,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|reg
 decl_stmt|,
 name|reg2
@@ -2871,7 +2871,7 @@ name|max_rec
 decl_stmt|,
 name|speed
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|reg
 decl_stmt|,
 name|reg2
@@ -3563,10 +3563,10 @@ name|i
 decl_stmt|,
 name|mver
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|reg
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ui
 index|[
 literal|8
@@ -4301,12 +4301,12 @@ name|fc
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 argument_list|,
 operator|&
@@ -4737,7 +4737,7 @@ block|}
 end_function
 
 begin_function
-name|u_int32_t
+name|uint32_t
 name|fwohci_cyctimer
 parameter_list|(
 name|struct
@@ -5150,7 +5150,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|off
 decl_stmt|;
 name|struct
@@ -5178,7 +5178,7 @@ name|fwohcidb
 modifier|*
 name|db
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|ld
 decl_stmt|;
@@ -6398,7 +6398,7 @@ name|fw_xfer
 modifier|*
 name|xfer
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|off
 decl_stmt|;
 name|u_int
@@ -7981,7 +7981,7 @@ name|firewire_comm
 modifier|*
 name|fc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|qld
 parameter_list|)
@@ -8042,7 +8042,7 @@ literal|0
 decl_stmt|,
 name|ldesc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|off
 init|=
 literal|0
@@ -8451,7 +8451,7 @@ literal|0
 decl_stmt|,
 name|ldesc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|off
 init|=
 literal|0
@@ -9117,7 +9117,7 @@ name|s
 decl_stmt|,
 name|ldesc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|stat
 decl_stmt|;
 name|struct
@@ -9831,7 +9831,7 @@ name|tag
 decl_stmt|,
 name|ich
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|stat
 decl_stmt|;
 name|struct
@@ -10842,14 +10842,14 @@ name|fwohci_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|stat
 parameter_list|,
 name|int
 name|count
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|irstat
 decl_stmt|,
 name|itstat
@@ -11563,7 +11563,7 @@ operator|&
 name|OHCI_INT_PHY_SID
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|buf
 decl_stmt|,
@@ -11827,7 +11827,7 @@ comment|/* chop control info */
 name|buf
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|malloc
@@ -12174,7 +12174,7 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|stat
 decl_stmt|;
 name|again
@@ -12218,7 +12218,7 @@ end_endif
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|fwochi_check_stat
 parameter_list|(
 name|struct
@@ -12227,7 +12227,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|stat
 decl_stmt|,
 name|irstat
@@ -12386,14 +12386,14 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|stat
 decl_stmt|;
 if|#
 directive|if
 operator|!
 name|FWOHCI_TASKQUEUE
-name|u_int32_t
+name|uint32_t
 name|bus_reset
 init|=
 literal|0
@@ -12527,7 +12527,7 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|stat
 decl_stmt|;
 name|struct
@@ -12739,7 +12739,7 @@ name|fw_xferq
 modifier|*
 name|it
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|stat
 decl_stmt|,
 name|count
@@ -13022,7 +13022,7 @@ name|fw_xferq
 modifier|*
 name|ir
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|stat
 decl_stmt|;
 name|int
@@ -13330,11 +13330,11 @@ name|fwohci_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|ch
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|off
 decl_stmt|,
 name|cntl
@@ -13588,7 +13588,7 @@ name|fwohci_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|ch
 parameter_list|)
 block|{
@@ -13632,7 +13632,7 @@ name|idb
 decl_stmt|,
 name|jdb
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|cmd
 decl_stmt|,
 name|off
@@ -14030,10 +14030,10 @@ name|fwohcidb
 modifier|*
 name|db
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|ch
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|max
 parameter_list|)
 block|{
@@ -14045,7 +14045,7 @@ name|i
 decl_stmt|,
 name|key
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|cmd
 decl_stmt|,
 name|res
@@ -14240,7 +14240,7 @@ argument|]), 				FWOHCI_DMA_READ(db[i+
 literal|1
 argument|].db.immed[
 literal|3
-argument|])); 		} 		if(key == OHCI_KEY_DEVICE){ 			return; 		} 		if((cmd& OHCI_BRANCH_MASK)  				== OHCI_BRANCH_ALWAYS){ 			return; 		} 		if((cmd& OHCI_CMD_MASK)  				== OHCI_OUTPUT_LAST){ 			return; 		} 		if((cmd& OHCI_CMD_MASK)  				== OHCI_INPUT_LAST){ 			return; 		} 		if(key == OHCI_KEY_ST2 ){ 			i++; 		} 	} 	return; }  void fwohci_ibr(struct firewire_comm *fc) { 	struct fwohci_softc *sc; 	u_int32_t fun;  	device_printf(fc->dev,
+argument|])); 		} 		if(key == OHCI_KEY_DEVICE){ 			return; 		} 		if((cmd& OHCI_BRANCH_MASK)  				== OHCI_BRANCH_ALWAYS){ 			return; 		} 		if((cmd& OHCI_CMD_MASK)  				== OHCI_OUTPUT_LAST){ 			return; 		} 		if((cmd& OHCI_CMD_MASK)  				== OHCI_INPUT_LAST){ 			return; 		} 		if(key == OHCI_KEY_ST2 ){ 			i++; 		} 	} 	return; }  void fwohci_ibr(struct firewire_comm *fc) { 	struct fwohci_softc *sc; 	uint32_t fun;  	device_printf(fc->dev,
 literal|"Initiate bus reset\n"
 argument|); 	sc = (struct fwohci_softc *)fc;
 comment|/* 	 * Set root hold-off bit so that non cyclemaster capable node 	 * shouldn't became the root node. 	 */
@@ -14363,7 +14363,7 @@ argument|], sizeof(db[
 literal|1
 argument|].db.immed)); 	FWOHCI_DMA_WRITE(db[
 literal|2
-argument|].db.desc.addr, 	fwdma_bus_addr(it->buf, poffset) + sizeof(u_int32_t));  	FWOHCI_DMA_WRITE(db[
+argument|].db.desc.addr, 	fwdma_bus_addr(it->buf, poffset) + sizeof(uint32_t));  	FWOHCI_DMA_WRITE(db[
 literal|2
 argument|].db.desc.cmd, 		OHCI_OUTPUT_LAST | OHCI_UPDATE | OHCI_BRANCH_ALWAYS);
 if|#
@@ -14398,13 +14398,13 @@ argument|; 		dsiz[
 literal|0
 argument|] = ir->psize; 		bus_dmamap_sync(dbch->dmat, db_tr->dma_map, 			BUS_DMASYNC_PREREAD); 	} else { 		db_tr->dbcnt =
 literal|0
-argument|; 		if (dummy_dma != NULL) { 			dsiz[db_tr->dbcnt] = sizeof(u_int32_t); 			dbuf[db_tr->dbcnt++] = dummy_dma->bus_addr; 		} 		dsiz[db_tr->dbcnt] = ir->psize; 		if (ir->buf != NULL) { 			db_tr->buf = fwdma_v_addr(ir->buf, poffset); 			dbuf[db_tr->dbcnt] = fwdma_bus_addr( ir->buf, poffset); 		} 		db_tr->dbcnt++; 	} 	for(i =
+argument|; 		if (dummy_dma != NULL) { 			dsiz[db_tr->dbcnt] = sizeof(uint32_t); 			dbuf[db_tr->dbcnt++] = dummy_dma->bus_addr; 		} 		dsiz[db_tr->dbcnt] = ir->psize; 		if (ir->buf != NULL) { 			db_tr->buf = fwdma_v_addr(ir->buf, poffset); 			dbuf[db_tr->dbcnt] = fwdma_bus_addr( ir->buf, poffset); 		} 		db_tr->dbcnt++; 	} 	for(i =
 literal|0
 argument|; i< db_tr->dbcnt ; i++){ 		FWOHCI_DMA_WRITE(db[i].db.desc.addr, dbuf[i]); 		FWOHCI_DMA_WRITE(db[i].db.desc.cmd, OHCI_INPUT_MORE | dsiz[i]); 		if (ir->flag& FWXFERQ_STREAM) { 			FWOHCI_DMA_SET(db[i].db.desc.cmd, OHCI_UPDATE); 		} 		FWOHCI_DMA_WRITE(db[i].db.desc.res, dsiz[i]); 	} 	ldesc = db_tr->dbcnt -
 literal|1
 argument|; 	if (ir->flag& FWXFERQ_STREAM) { 		FWOHCI_DMA_SET(db[ldesc].db.desc.cmd, OHCI_INPUT_LAST); 	} 	FWOHCI_DMA_SET(db[ldesc].db.desc.cmd, OHCI_BRANCH_ALWAYS); 	return
 literal|0
-argument|; }   static int fwohci_arcv_swap(struct fw_pkt *fp, int len) { 	struct fw_pkt *fp0; 	u_int32_t ld0; 	int slen
+argument|; }   static int fwohci_arcv_swap(struct fw_pkt *fp, int len) { 	struct fw_pkt *fp0; 	uint32_t ld0; 	int slen
 argument_list|,
 argument|hlen;
 if|#
@@ -14449,9 +14449,9 @@ literal|4
 argument|; i ++) 		fp->mode.ld[i] = FWOHCI_DMA_READ(fp->mode.ld[i]);
 endif|#
 directive|endif
-argument|return(hlen); }  static int fwohci_get_plen(struct fwohci_softc *sc, struct fwohci_dbch *dbch, struct fw_pkt *fp) { 	struct tcode_info *info; 	int r;  	info =&tinfo[fp->mode.common.tcode]; 	r = info->hdr_len + sizeof(u_int32_t); 	if ((info->flag& FWTI_BLOCK_ASY) !=
+argument|return(hlen); }  static int fwohci_get_plen(struct fwohci_softc *sc, struct fwohci_dbch *dbch, struct fw_pkt *fp) { 	struct tcode_info *info; 	int r;  	info =&tinfo[fp->mode.common.tcode]; 	r = info->hdr_len + sizeof(uint32_t); 	if ((info->flag& FWTI_BLOCK_ASY) !=
 literal|0
-argument|) 		r += roundup2(fp->mode.wreqb.len, sizeof(u_int32_t));  	if (r == sizeof(u_int32_t))
+argument|) 		r += roundup2(fp->mode.wreqb.len, sizeof(uint32_t));  	if (r == sizeof(uint32_t))
 comment|/* XXX */
 argument|device_printf(sc->fc.dev,
 literal|"Unknown tcode %d\n"
@@ -14469,7 +14469,7 @@ argument|].db.desc.depend,
 literal|1
 argument|); 	fwdma_sync_multiseg_all(dbch->am, BUS_DMASYNC_PREWRITE); 	dbch->bottom = db_tr; }  static void fwohci_arcv(struct fwohci_softc *sc, struct fwohci_dbch *dbch, int count) { 	struct fwohcidb_tr *db_tr; 	struct iovec vec[
 literal|2
-argument|]; 	struct fw_pkt pktbuf; 	int nvec; 	struct fw_pkt *fp; 	u_int8_t *ld; 	u_int32_t stat
+argument|]; 	struct fw_pkt pktbuf; 	int nvec; 	struct fw_pkt *fp; 	uint8_t *ld; 	uint32_t stat
 argument_list|,
 argument|off
 argument_list|,
@@ -14496,7 +14496,7 @@ literal|0
 argument|printf("status 0x%04x, resCount 0x%04x\n", status, resCount);
 endif|#
 directive|endif
-argument|while (status& OHCI_CNTL_DMA_ACTIVE) { 		len = dbch->xferq.psize - resCount; 		ld = (u_int8_t *)db_tr->buf; 		if (dbch->pdb_tr == NULL) { 			len -= dbch->buf_offset; 			ld += dbch->buf_offset; 		} 		if (len>
+argument|while (status& OHCI_CNTL_DMA_ACTIVE) { 		len = dbch->xferq.psize - resCount; 		ld = (uint8_t *)db_tr->buf; 		if (dbch->pdb_tr == NULL) { 			len -= dbch->buf_offset; 			ld += dbch->buf_offset; 		} 		if (len>
 literal|0
 argument|) 			bus_dmamap_sync(dbch->dmat, db_tr->dma_map, 					BUS_DMASYNC_POSTREAD); 		while (len>
 literal|0
@@ -14580,7 +14580,7 @@ argument|)  						printf(
 literal|"resCount = %d !?\n"
 argument|, 						    resCount);
 comment|/* XXX clear pdb_tr */
-argument|goto out; 				} 				vec[nvec].iov_base = ld; 				vec[nvec].iov_len = plen; 				nvec ++; 				ld += plen; 			} 			dbch->buf_offset = ld - (u_int8_t *)db_tr->buf; 			if (nvec ==
+argument|goto out; 				} 				vec[nvec].iov_base = ld; 				vec[nvec].iov_len = plen; 				nvec ++; 				ld += plen; 			} 			dbch->buf_offset = ld - (uint8_t *)db_tr->buf; 			if (nvec ==
 literal|0
 argument|) 				printf(
 literal|"nvec == 0\n"
