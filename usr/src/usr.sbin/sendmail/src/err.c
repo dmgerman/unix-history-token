@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	1.4	%G%"
+literal|"@(#)err.c	1.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,7 +200,7 @@ expr_stmt|;
 else|else
 name|ExitStat
 operator|=
-name|EX_UNAVAIL
+name|EX_OSERR
 expr_stmt|;
 block|}
 ifdef|#

@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	1.7	%G%"
+literal|"@(#)deliver.c	1.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -774,7 +774,7 @@ comment|/* syserr fails because log is closed */
 comment|/* syserr("Cannot exec %s", m->m_mailer); */
 name|exit
 argument_list|(
-name|EX_UNAVAIL
+name|EX_UNAVAILABLE
 argument_list|)
 expr_stmt|;
 block|}
@@ -909,7 +909,7 @@ argument_list|)
 expr_stmt|;
 name|ExitStat
 operator|=
-name|EX_UNAVAIL
+name|EX_UNAVAILABLE
 expr_stmt|;
 return|return
 operator|(

@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	1.9	%G%"
+literal|"@(#)conf.c	1.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -559,7 +559,7 @@ name|M_HDR
 operator||
 name|M_NOHOST
 block|,
-name|EX_UNAVAIL
+name|EX_UNAVAILABLE
 block|,
 name|NULL
 block|,
@@ -584,7 +584,7 @@ name|M_HDR
 operator||
 name|M_STRIPQ
 block|,
-name|EX_UNAVAIL
+name|EX_UNAVAILABLE
 block|,
 name|BerkLocal
 block|,

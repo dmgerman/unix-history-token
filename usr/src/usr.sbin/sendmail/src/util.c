@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	1.3	%G%"
+literal|"@(#)util.c	1.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,7 +150,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_UNAVAIL
+name|EX_UNAVAILABLE
 argument_list|)
 expr_stmt|;
 block|}
