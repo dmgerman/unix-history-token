@@ -4064,11 +4064,15 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"Zone %s was not empty.  Lost %d pages of memory.\n"
+literal|"Zone %s was not empty (%d items).  Lost %d pages of memory.\n"
 argument_list|,
 name|zone
 operator|->
 name|uz_name
+argument_list|,
+name|zone
+operator|->
+name|uz_free
 argument_list|,
 name|zone
 operator|->
