@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md.h,v 1.3 1993/10/24 00:52:40 pk Exp $		- I386 dependent definitions  */
+comment|/*  * $Id: md.h,v 1.2 1993/11/09 04:19:17 paul Exp $		- I386 dependent definitions  */
 end_comment
 
 begin_if
@@ -240,12 +240,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRAP
+name|BPT
 value|0xcc
 end_define
 
 begin_comment
-comment|/* INT 3 */
+comment|/* breakpoint: INT 3 */
 end_comment
 
 begin_comment
