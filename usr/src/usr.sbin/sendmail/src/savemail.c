@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.37 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3563,10 +3563,16 @@ if|if
 condition|(
 operator|!
 name|SendBody
+operator|&&
+name|e
+operator|->
+name|e_msgboundary
+operator|!=
+name|NULL
 condition|)
 name|pflags
 operator||=
-name|PF_NOBODYPART
+name|PF_DELETEMIMEHDRS
 expr_stmt|;
 name|putline
 argument_list|(

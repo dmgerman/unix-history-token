@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.42 (Berkeley) %G%"
+literal|"@(#)headers.c	8.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4002,7 +4002,7 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-name|PF_NOBODYPART
+name|PF_DELETEMIMEHDRS
 argument_list|,
 name|flags
 argument_list|)
@@ -4057,7 +4057,7 @@ argument_list|)
 operator|||
 name|bitset
 argument_list|(
-name|PF_NOBODYPART
+name|PF_DELETEMIMEHDRS
 argument_list|,
 name|flags
 argument_list|)
