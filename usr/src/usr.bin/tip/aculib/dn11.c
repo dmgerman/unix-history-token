@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn11.c	4.3	81/06/16	*/
+comment|/*	dn11.c	4.4	81/06/16	*/
 end_comment
 
 begin_if
@@ -108,6 +108,21 @@ name|timelim
 decl_stmt|;
 if|if
 condition|(
+name|boolean
+argument_list|(
+name|value
+argument_list|(
+name|VERBOSE
+argument_list|)
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\nstarting call..."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|dn
 operator|=
@@ -130,13 +145,13 @@ name|ENXIO
 condition|)
 name|printf
 argument_list|(
-literal|"line busy\n"
+literal|"line busy..."
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"acu open error\n"
+literal|"acu open error..."
 argument_list|)
 expr_stmt|;
 return|return
@@ -153,11 +168,6 @@ name|jmpbuf
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"dn11 write error..."
-argument_list|)
-expr_stmt|;
 name|kill
 argument_list|(
 name|child
@@ -215,9 +225,24 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * ignore this stuff for aborts 		 */
 name|signal
 argument_list|(
 name|SIGALRM
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
 argument_list|,
 name|SIG_IGN
 argument_list|)
@@ -267,7 +292,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  open line - will return on carrier */
+comment|/* 	 * open line - will return on carrier 	 */
 name|FD
 operator|=
 name|open
@@ -448,6 +473,11 @@ end_macro
 
 begin_block
 block|{
+name|sleep
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VMUNIX
@@ -483,6 +513,11 @@ end_macro
 
 begin_block
 block|{
+name|sleep
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VMUNIX
