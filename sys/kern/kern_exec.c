@@ -2773,9 +2773,6 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|MAC
 return|return
 operator|(
 name|kern_execve
@@ -2798,15 +2795,6 @@ name|NULL
 argument_list|)
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-name|ENOSYS
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2872,6 +2860,9 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|MAC
 return|return
 operator|(
 name|kern_execve
@@ -2896,6 +2887,15 @@ name|mac_p
 argument_list|)
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
