@@ -986,7 +986,13 @@ name|defined
 argument_list|(
 name|__STDC__
 argument_list|)
+operator|&&
+name|__STDC__
 end_if
+
+begin_comment
+comment|/* NextStep 2.0 cc is really gcc 1.93 but it defines __GNUC__ = 2 and    does not implement __extension__.  But that compiler doesn't define    __GNUC_MINOR__.  */
+end_comment
 
 begin_if
 if|#
@@ -994,6 +1000,13 @@ directive|if
 name|__GNUC__
 operator|<
 literal|2
+operator|||
+operator|(
+name|__NeXT__
+operator|&&
+operator|!
+name|__GNUC_MINOR__
+operator|)
 end_if
 
 begin_define

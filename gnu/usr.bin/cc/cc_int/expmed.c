@@ -11648,6 +11648,27 @@ block|{
 if|if
 condition|(
 name|unsignedp
+operator|||
+operator|(
+name|INTVAL
+argument_list|(
+name|op1
+argument_list|)
+operator|==
+operator|(
+name|HOST_WIDE_INT
+operator|)
+literal|1
+operator|<<
+operator|(
+name|GET_MODE_BITSIZE
+argument_list|(
+name|compute_mode
+argument_list|)
+operator|-
+literal|1
+operator|)
+operator|)
 condition|)
 block|{
 name|unsigned
@@ -12468,6 +12489,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* We have computed OP0 / abs(OP1).  If OP1 is negative, negate 		       the quotient.  */
 if|if
 condition|(
 name|d

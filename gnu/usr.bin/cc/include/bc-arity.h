@@ -80,6 +80,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -98,6 +101,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -116,6 +122,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|QIcode
 block|, }
 block|}
@@ -134,6 +143,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|HIcode
 block|, }
 block|}
@@ -152,6 +164,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -170,6 +185,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|DIcode
 block|, }
 block|}
@@ -188,6 +206,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SFcode
 block|, }
 block|}
@@ -206,6 +227,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|DFcode
 block|, }
 block|}
@@ -224,6 +248,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|XFcode
 block|, }
 block|}
@@ -242,6 +269,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|Pcode
 block|, }
 block|}
@@ -584,6 +614,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -620,6 +653,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -638,6 +674,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -3968,6 +4007,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -3986,6 +4028,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -4004,6 +4049,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -4040,10 +4088,19 @@ operator|,
 literal|3
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|,
+operator|(
+name|char
+operator|)
 name|SIcode
 block|,
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -4062,10 +4119,19 @@ operator|,
 literal|3
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|,
+operator|(
+name|char
+operator|)
 name|SIcode
 block|,
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -4084,10 +4150,19 @@ operator|,
 literal|3
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|,
+operator|(
+name|char
+operator|)
 name|SIcode
 block|,
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -4106,10 +4181,19 @@ operator|,
 literal|3
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|,
+operator|(
+name|char
+operator|)
 name|SIcode
 block|,
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}
@@ -4182,6 +4266,9 @@ operator|,
 literal|1
 operator|,
 block|{
+operator|(
+name|char
+operator|)
 name|SIcode
 block|, }
 block|}

@@ -5279,6 +5279,10 @@ decl_stmt|;
 comment|/* First compute the "basic needs", which counts a 		     need only in the smallest class in which it 		     is required.  */
 name|bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|insn_needs
 operator|.
 name|other
@@ -5288,6 +5292,10 @@ index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|basic_needs
 argument_list|,
 sizeof|sizeof
@@ -5296,12 +5304,20 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|insn_needs
 operator|.
 name|other
 operator|.
 name|groups
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|basic_groups
 argument_list|,
 sizeof|sizeof

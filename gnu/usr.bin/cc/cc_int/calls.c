@@ -11771,7 +11771,12 @@ comment|/* ANSI doesn't require a sequence point here,      but PCC has one, so 
 name|emit_queue
 argument_list|()
 expr_stmt|;
-comment|/* Free any temporary slots made in processing this argument.  */
+comment|/* Free any temporary slots made in processing this argument.  Show      that we might have taken the address of something and pushed that      as an operand.  */
+name|preserve_temp_slots
+argument_list|(
+name|NULL_RTX
+argument_list|)
+expr_stmt|;
 name|free_temp_slots
 argument_list|()
 expr_stmt|;

@@ -239,7 +239,7 @@ parameter_list|(
 name|INSN
 parameter_list|)
 define|\
-value|(((INSN_UID (INSN)> max_uid)	\     ? (int *)(abort() , 0)		\     : block_number)[INSN_UID (INSN)])
+value|((INSN_UID (INSN)> max_uid)	\    ? (abort() , -1) : block_number[INSN_UID (INSN)])
 end_define
 
 begin_decl_stmt
@@ -853,6 +853,10 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|block_stack_in
 argument_list|,
 name|blocks
@@ -866,6 +870,10 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|block_out_reg_set
 argument_list|,
 name|blocks
@@ -2678,6 +2686,10 @@ block|}
 comment|/* Enforce rule #4: Output operands must specifically indicate which      reg an output appears in after an asm.  "=f" is not allowed: the      operand constraints must select a class with a single reg.       Also enforce rule #5: Output operands must start at the top of      the reg-stack: output operands may not "skip" a reg. */
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|reg_used_as_output
 argument_list|,
 sizeof|sizeof
@@ -2823,6 +2835,10 @@ block|}
 comment|/* Enforce rule #2: All implicitly popped input regs must be closer      to the top of the reg-stack than any input that is not implicitly      popped. */
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|implicitly_dies
 argument_list|,
 sizeof|sizeof
@@ -4487,10 +4503,13 @@ name|label_value_list
 argument_list|)
 expr_stmt|;
 block|}
-name|BLOCK_NUM
+name|block_number
+index|[
+name|INSN_UID
 argument_list|(
 name|insn
 argument_list|)
+index|]
 operator|=
 name|block
 expr_stmt|;
@@ -9534,8 +9553,16 @@ block|}
 block|}
 name|bcopy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|regstack
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|temp_stack
 argument_list|,

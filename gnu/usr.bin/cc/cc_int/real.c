@@ -505,7 +505,7 @@ name|r
 parameter_list|,
 name|e
 parameter_list|)
-value|bcopy (r, e, 2*NE)
+value|bcopy ((char *) r, (char *) e, 2*NE)
 define|#
 directive|define
 name|PUT_REAL
@@ -514,7 +514,7 @@ name|e
 parameter_list|,
 name|r
 parameter_list|)
-value|bcopy (e, r, 2*NE)
+value|bcopy ((char *) e, (char *) r, 2*NE)
 else|#
 directive|else
 comment|/* no XFmode */
@@ -543,7 +543,7 @@ name|r
 parameter_list|,
 name|e
 parameter_list|)
-value|bcopy (r, e, 2*NE)
+value|bcopy ((char *) r, (char *) e, 2*NE)
 define|#
 directive|define
 name|PUT_REAL
@@ -552,7 +552,7 @@ name|e
 parameter_list|,
 name|r
 parameter_list|)
-value|bcopy (e, r, 2*NE)
+value|bcopy ((char *) e, (char *) r, 2*NE)
 else|#
 directive|else
 define|#

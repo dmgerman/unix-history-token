@@ -7757,6 +7757,7 @@ operator|)
 operator|>=
 literal|0
 condition|)
+block|{
 name|SUBST
 argument_list|(
 operator|*
@@ -7783,6 +7784,16 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Update split_code because we may not have a multiply 		 anymore.  */
+name|split_code
+operator|=
+name|GET_CODE
+argument_list|(
+operator|*
+name|split
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|INSN_SCHEDULING

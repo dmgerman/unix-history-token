@@ -6190,9 +6190,10 @@ name|newdecl
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Keep source location of definition rather than declaration.  */
+comment|/* Keep source location of definition rather than declaration. 	 Likewise, keep decl at outer scope.  */
 if|if
 condition|(
+operator|(
 name|DECL_INITIAL
 argument_list|(
 name|newdecl
@@ -6206,6 +6207,23 @@ name|olddecl
 argument_list|)
 operator|!=
 literal|0
+operator|)
+operator|||
+operator|(
+name|DECL_CONTEXT
+argument_list|(
+name|newdecl
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|DECL_CONTEXT
+argument_list|(
+name|olddecl
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|DECL_SOURCE_LINE
@@ -6227,6 +6245,22 @@ name|DECL_SOURCE_FILE
 argument_list|(
 name|olddecl
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DECL_CONTEXT
+argument_list|(
+name|olddecl
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|DECL_CONTEXT
+argument_list|(
+name|newdecl
+argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 block|}
 comment|/* Merge the unused-warning information.  */

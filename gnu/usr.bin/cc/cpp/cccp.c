@@ -2704,7 +2704,7 @@ name|TOOL_INCLUDE_DIR
 block|,
 literal|0
 block|,
-literal|1
+literal|0
 block|}
 block|,
 else|#
@@ -2725,7 +2725,7 @@ name|TOOL_INCLUDE_DIR
 block|,
 literal|0
 block|,
-literal|1
+literal|0
 block|}
 block|,
 comment|/* This is the dir for fixincludes.  Put it just before        the files that we fix.  */
@@ -13960,7 +13960,7 @@ comment|/* Exit the for loop.  */
 break|break;
 block|}
 block|}
-comment|/* This is now known to be a macro call. 		 Discard the macro name from the output, 		 along with any following whitespace just copied, 		 but preserve newlines at the top level since this 		 is more likely to do the right thing with line numbers.  */
+comment|/* This is now known to be a macro call. 		 Discard the macro name from the output, 		 along with any following whitespace just copied, 		 but preserve newlines if not outputting marks since this 		 is more likely to do the right thing with line numbers.  */
 name|obp
 operator|=
 name|op
@@ -13971,11 +13971,7 @@ name|obufp_before_macroname
 expr_stmt|;
 if|if
 condition|(
-name|ip
-operator|->
-name|macro
-operator|!=
-literal|0
+name|output_marks
 condition|)
 name|op
 operator|->
@@ -39644,6 +39640,18 @@ argument_list|,
 name|of
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+name|ap
+operator|->
+name|nchars
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|traditional
+condition|)
+block|{
 if|if
 condition|(
 name|ap
@@ -39655,12 +39663,6 @@ condition|)
 name|concat
 operator|=
 literal|0
-expr_stmt|;
-name|offset
-operator|+=
-name|ap
-operator|->
-name|nchars
 expr_stmt|;
 if|if
 condition|(
@@ -39695,6 +39697,7 @@ name|concat
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|dump_arg_n
 argument_list|(
 name|defn
@@ -39708,6 +39711,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|traditional
+operator|&&
 name|ap
 operator|->
 name|raw_after
@@ -39824,7 +39830,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output to OF a substring of a macro definition.    BASE is the beginning of the definition.    Output characters START thru LENGTH.    Discard newlines outside of strings, thus    converting funny-space markers to ordinary spaces.  */
+comment|/* Output to OF a substring of a macro definition.    BASE is the beginning of the definition.    Output characters START thru LENGTH.    Unless traditional, discard newlines outside of strings, thus    converting funny-space markers to ordinary spaces.  */
 end_comment
 
 begin_function
@@ -39873,6 +39879,27 @@ name|start
 operator|+
 name|length
 decl_stmt|;
+if|if
+condition|(
+name|traditional
+condition|)
+name|fwrite
+argument_list|(
+name|p
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|p
+argument_list|)
+argument_list|,
+name|length
+argument_list|,
+name|of
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 while|while
 condition|(
 name|p
@@ -39916,11 +39943,15 @@ name|fwrite
 argument_list|(
 name|p
 argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|p
+argument_list|)
+argument_list|,
 name|p1
 operator|-
 name|p
-argument_list|,
-literal|1
 argument_list|,
 name|of
 argument_list|)
@@ -39950,6 +39981,7 @@ expr_stmt|;
 name|p
 operator|++
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}

@@ -10040,6 +10040,9 @@ expr_stmt|;
 if|if
 condition|(
 name|temp
+operator|&&
+operator|!
+name|cross_compile
 condition|)
 block|{
 name|char
@@ -10219,6 +10222,9 @@ expr_stmt|;
 if|if
 condition|(
 name|temp
+operator|&&
+operator|!
+name|cross_compile
 condition|)
 block|{
 name|char

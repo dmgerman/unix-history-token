@@ -3558,6 +3558,9 @@ literal|1
 decl_stmt|;
 name|byte
 operator|=
+operator|(
+name|char
+operator|)
 name|bytecode
 expr_stmt|;
 ifdef|#
