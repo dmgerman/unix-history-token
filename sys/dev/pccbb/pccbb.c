@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -721,6 +727,76 @@ block|}
 block|, }
 struct|;
 end_struct
+
+begin_comment
+comment|/* sysctl vars */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pccbb
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"PCCBB parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* There's no way to say TUNEABLE_LONG to get the right types */
+end_comment
+
+begin_decl_stmt
+name|u_long
+name|pccbb_start_mem
+init|=
+name|PCCBB_START_MEM
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pccbb.start_memory"
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+operator|&
+name|pccbb_start_mem
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_hw_pccbb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|start_mem
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|pccbb_start_mem
+argument_list|,
+name|PCCBB_START_MEM
+argument_list|,
+literal|"Starting address for memory allocations"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -2589,7 +2665,7 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|PCCBB_START_MEM
+name|pccbb_start_mem
 argument_list|,
 operator|~
 literal|0
@@ -7195,11 +7271,11 @@ if|if
 condition|(
 name|start
 operator|<=
-name|PCCBB_START_MEM
+name|pccbb_start_mem
 condition|)
 name|start
 operator|=
-name|PCCBB_START_MEM
+name|pccbb_start_mem
 expr_stmt|;
 if|if
 condition|(
@@ -10226,11 +10302,11 @@ if|if
 condition|(
 name|start
 operator|<
-name|PCCBB_START_MEM
+name|pccbb_start_mem
 condition|)
 name|start
 operator|=
-name|PCCBB_START_MEM
+name|pccbb_start_mem
 expr_stmt|;
 if|if
 condition|(
