@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rarpd.c,v 1.15 1997/02/22 16:12:44 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -895,7 +895,8 @@ literal|"afsv"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

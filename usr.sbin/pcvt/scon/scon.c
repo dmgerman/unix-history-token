@@ -1165,7 +1165,8 @@ literal|"ac:d:f:HVlms:t:vp:18"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

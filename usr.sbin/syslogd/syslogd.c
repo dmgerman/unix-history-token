@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.20 1997/02/22 16:14:00 peter Exp $"
+literal|"$Id: syslogd.c,v 1.21 1997/03/14 01:27:02 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1303,7 +1303,8 @@ literal|"dsf:Im:p:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

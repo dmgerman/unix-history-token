@@ -56,7 +56,7 @@ name|unused
 operator|)
 argument_list|)
 init|=
-literal|"$Id$"
+literal|"$Id: inetd.c,v 1.21 1997/02/22 16:05:52 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1365,7 +1365,8 @@ literal|"dlR:a:p:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

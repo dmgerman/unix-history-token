@@ -53,7 +53,7 @@ specifier|const
 name|freebsdid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: arp.c,v 1.9 1997/02/22 16:04:19 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,7 +413,8 @@ literal|"andfsS"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

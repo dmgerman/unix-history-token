@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996 Joerg Wunsch  *  * All rights reserved.  
 end_comment
 
 begin_comment
-comment|/*  * Create an MS-DOS (FAT) file system.  *  * $Id$  */
+comment|/*  * Create an MS-DOS (FAT) file system.  *  * $Id: mkdosfs.c,v 1.4 1997/02/22 16:06:38 peter Exp $  */
 end_comment
 
 begin_include
@@ -991,7 +991,8 @@ literal|"f:L:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
