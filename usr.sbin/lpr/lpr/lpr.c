@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpr.c,v 1.27 1999/01/06 08:33:38 imp Exp $"
+literal|"$Id: lpr.c,v 1.28 1999/02/01 19:53:08 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1008,7 +1008,7 @@ comment|/* user name */
 name|hdr
 operator|++
 expr_stmt|;
-name|uflag
+name|Uflag
 operator|=
 name|optarg
 expr_stmt|;
