@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dead_vnops.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dead_vnops.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -899,16 +899,20 @@ argument_list|(
 literal|"dead_read: lock"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Return EOF for character devices, EIO for others 	 */
+comment|/* 	 * Return EOF for tty devices, EIO for others 	 */
 if|if
 condition|(
+operator|(
 name|ap
 operator|->
 name|a_vp
 operator|->
-name|v_type
-operator|!=
-name|VCHR
+name|v_flag
+operator|&
+name|VISTTY
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
