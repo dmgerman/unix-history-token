@@ -1209,7 +1209,7 @@ decl_stmt|;
 name|gzFile
 name|in
 decl_stmt|;
-name|int
+name|size_t
 name|len
 init|=
 name|strlen
