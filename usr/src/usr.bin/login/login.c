@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.14 (Berkeley) %G%"
+literal|"@(#)login.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,8 +149,8 @@ end_include
 begin_define
 define|#
 directive|define
-name|WRITENAME
-value|"write"
+name|TTYGRPNAME
+value|"tty"
 end_define
 
 begin_comment
@@ -160,11 +160,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WRITEGID
+name|TTYGID
 parameter_list|(
 name|gid
 parameter_list|)
-value|write_gid(gid)
+value|tty_gid(gid)
 end_define
 
 begin_comment
@@ -1935,7 +1935,7 @@ name|pwd
 operator|->
 name|pw_uid
 argument_list|,
-name|WRITEGID
+name|TTYGID
 argument_list|(
 name|pwd
 operator|->
@@ -3403,7 +3403,7 @@ block|}
 end_block
 
 begin_macro
-name|write_gid
+name|tty_gid
 argument_list|(
 argument|default_gid
 argument_list|)
@@ -3435,7 +3435,7 @@ name|gr
 operator|=
 name|getgrnam
 argument_list|(
-name|WRITENAME
+name|TTYGRPNAME
 argument_list|)
 expr_stmt|;
 if|if
