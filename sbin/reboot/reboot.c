@@ -453,7 +453,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-literal|"/boot/nextkernel"
+literal|"/boot/nextboot.conf"
 argument_list|,
 name|O_WRONLY
 operator||
