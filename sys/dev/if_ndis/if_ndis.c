@@ -2260,7 +2260,7 @@ name|pdrv
 operator|=
 name|windrv_lookup
 argument_list|(
-name|NULL
+literal|0
 argument_list|,
 literal|"PCI Bus"
 argument_list|)
@@ -2278,7 +2278,7 @@ name|pdrv
 operator|=
 name|windrv_lookup
 argument_list|(
-name|NULL
+literal|0
 argument_list|,
 literal|"PCCARD Bus"
 argument_list|)
@@ -2288,7 +2288,7 @@ name|pdrv
 operator|=
 name|windrv_lookup
 argument_list|(
-name|NULL
+literal|0
 argument_list|,
 literal|"USB Bus"
 argument_list|)
@@ -4184,7 +4184,7 @@ name|drv
 operator|=
 name|windrv_lookup
 argument_list|(
-name|NULL
+literal|0
 argument_list|,
 literal|"PCI Bus"
 argument_list|)
@@ -4202,7 +4202,7 @@ name|drv
 operator|=
 name|windrv_lookup
 argument_list|(
-name|NULL
+literal|0
 argument_list|,
 literal|"PCCARD Bus"
 argument_list|)
@@ -4212,7 +4212,7 @@ name|drv
 operator|=
 name|windrv_lookup
 argument_list|(
-name|NULL
+literal|0
 argument_list|,
 literal|"USB Bus"
 argument_list|)

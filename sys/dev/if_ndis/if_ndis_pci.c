@@ -594,7 +594,7 @@ name|drv
 operator|=
 name|windrv_lookup
 argument_list|(
-name|NULL
+literal|0
 argument_list|,
 literal|"PCI Bus"
 argument_list|)
