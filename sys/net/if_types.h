@@ -2145,6 +2145,17 @@ name|IFT_PFSYNC
 value|0xf7
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFT_CARP
+value|0xf8
+end_define
+
+begin_comment
+comment|/* Common Address Redundancy Protocol */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

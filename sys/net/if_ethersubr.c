@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_carp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -236,6 +242,23 @@ begin_include
 include|#
 directive|include
 file|<netinet6/nd6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_CARP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_carp.h>
 end_include
 
 begin_endif
@@ -1677,6 +1700,35 @@ return|;
 comment|/* XXX */
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|DEV_CARP
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_carp
+operator|&&
+operator|(
+name|error
+operator|=
+name|carp_output
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|,
+name|dst
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+condition|)
+goto|goto
+name|bad
+goto|;
+endif|#
+directive|endif
 comment|/* Handle ng_ether(4) processing, if any */
 if|if
 condition|(
@@ -2884,6 +2936,32 @@ literal|0
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_CARP
+comment|/* 		 * XXX: Okay, we need to call carp_forus() and - if it is for us 		 * jump over code that does the normal check 		 * "ac_enaddr == ether_dhost". The check sequence is a bit 		 * different from OpenBSD, so we jump over as few code as possible, 		 * to catch _all_ sanity checks. This needs evaluation, to see if 		 * the carp ether_dhost values break any of these checks! 		 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_carp
+operator|&&
+name|carp_forus
+argument_list|(
+name|ifp
+operator|->
+name|if_carp
+argument_list|,
+name|eh
+operator|->
+name|ether_dhost
+argument_list|)
+condition|)
+goto|goto
+name|pre_stats
+goto|;
+endif|#
+directive|endif
 comment|/* 		 * Discard packet if upper layers shouldn't see it because it 		 * was unicast to a different Ethernet address. If the driver 		 * is working properly, then this situation can only happen 		 * when the interface is in promiscuous mode. 		 * 		 * If VLANs are active, and this packet has a VLAN tag, do 		 * not drop it here but pass it on to the VLAN layer, to 		 * give them a chance to consider it as well (e. g. in case 		 * bridging is only active on a VLAN).  They will drop it if 		 * it's undesired. 		 */
 if|if
 condition|(
@@ -2942,6 +3020,13 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|DEV_CARP
+name|pre_stats
+label|:
+endif|#
+directive|endif
 comment|/* Discard packet if interface is not up */
 if|if
 condition|(

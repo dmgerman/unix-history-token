@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_carp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -200,6 +206,23 @@ include|#
 directive|include
 file|<machine/in_cksum.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_CARP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_carp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2282,7 +2305,7 @@ condition|)
 goto|goto
 name|ours
 goto|;
-comment|/* 	 * Enable a consistency check between the destination address 	 * and the arrival interface for a unicast packet (the RFC 1122 	 * strong ES model) if IP forwarding is disabled and the packet 	 * is not locally generated and the packet is not subject to 	 * 'ipfw fwd'. 	 * 	 * XXX - Checking also should be disabled if the destination 	 * address is ipnat'ed to a different interface. 	 * 	 * XXX - Checking is incompatible with IP aliases added 	 * to the loopback interface instead of the interface where 	 * the packets are received. 	 */
+comment|/* 	 * Enable a consistency check between the destination address 	 * and the arrival interface for a unicast packet (the RFC 1122 	 * strong ES model) if IP forwarding is disabled and the packet 	 * is not locally generated and the packet is not subject to 	 * 'ipfw fwd'. 	 * 	 * XXX - Checking also should be disabled if the destination 	 * address is ipnat'ed to a different interface. 	 * 	 * XXX - Checking is incompatible with IP aliases added 	 * to the loopback interface instead of the interface where 	 * the packets are received. 	 * 	 * XXX - This is the case for carp vhost IPs as well so we 	 * insert a workaround. If the packet got here, we already 	 * checked with carp_iamatch() and carp_forus(). 	 */
 name|checkif
 operator|=
 name|ip_checkinterface
@@ -2317,6 +2340,20 @@ operator|==
 literal|0
 operator|)
 operator|&&
+ifdef|#
+directive|ifdef
+name|DEV_CARP
+operator|!
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|->
+name|if_carp
+operator|&&
+endif|#
+directive|endif
 operator|(
 name|dchg
 operator|==
