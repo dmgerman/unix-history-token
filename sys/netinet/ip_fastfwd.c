@@ -1661,7 +1661,6 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
-comment|//bcopy((fwd_tag+1), dst, sizeof(struct sockaddr_in));
 name|m_tag_delete
 argument_list|(
 name|m
