@@ -26,14 +26,14 @@ begin_define
 define|#
 directive|define
 name|NGM_NETFLOW_COOKIE
-value|1095355665
+value|1101814790
 end_define
 
 begin_define
 define|#
 directive|define
 name|NG_NETFLOW_MAXIFACES
-value|64
+value|512
 end_define
 
 begin_comment
