@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)param.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)param.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -64,12 +64,6 @@ begin_include
 include|#
 directive|include
 file|"../sys/vnode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ufs/inode.h"
 end_include
 
 begin_include
@@ -213,46 +207,15 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|NINODE
+name|NVNODE
 value|((NPROC + 16 + MAXUSERS) + 32)
 end_define
 
 begin_decl_stmt
 name|int
-name|ninode
+name|nvnode
 init|=
-name|NINODE
-decl_stmt|;
-end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NFS
-end_ifndef
-
-begin_decl_stmt
-name|int
-name|nchsize
-init|=
-name|NINODE
-operator|*
-literal|11
-operator|/
-literal|10
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|nnfsnode
-init|=
-name|NINODE
+name|NVNODE
 decl_stmt|;
 end_decl_stmt
 
@@ -260,26 +223,13 @@ begin_decl_stmt
 name|int
 name|nchsize
 init|=
-operator|(
-literal|2
-operator|*
-name|NINODE
-operator|)
+name|NVNODE
 operator|*
 literal|11
 operator|/
 literal|10
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NFS */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -357,7 +307,7 @@ begin_decl_stmt
 name|int
 name|ndquot
 init|=
-name|NINODE
+name|NVNODE
 operator|+
 operator|(
 name|MAXUSERS
@@ -426,12 +376,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|inode
+name|vnode
 modifier|*
-name|inode
+name|vnode
 decl_stmt|,
 modifier|*
-name|inodeNINODE
+name|vnodeNVNODE
 decl_stmt|;
 end_decl_stmt
 
