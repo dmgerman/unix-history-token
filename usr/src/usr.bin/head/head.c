@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)head.c	5.6 (Berkeley) %G%"
+literal|"@(#)head.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +116,9 @@ name|head
 name|__P
 argument_list|(
 operator|(
+name|FILE
+operator|*
+operator|,
 name|int
 operator|)
 argument_list|)
@@ -174,6 +177,10 @@ block|{
 specifier|register
 name|int
 name|ch
+decl_stmt|;
+name|FILE
+modifier|*
+name|fp
 decl_stmt|;
 name|int
 name|first
@@ -285,16 +292,19 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
-name|freopen
+operator|(
+name|fp
+operator|=
+name|fopen
 argument_list|(
 operator|*
 name|argv
 argument_list|,
 literal|"r"
-argument_list|,
-name|stdin
 argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|err
@@ -345,13 +355,25 @@ expr_stmt|;
 block|}
 name|head
 argument_list|(
+name|fp
+argument_list|,
 name|linecnt
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|head
 argument_list|(
+name|stdin
+argument_list|,
 name|linecnt
 argument_list|)
 expr_stmt|;
@@ -367,8 +389,14 @@ begin_function
 name|void
 name|head
 parameter_list|(
+name|fp
+parameter_list|,
 name|cnt
 parameter_list|)
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 specifier|register
 name|int
 name|cnt
@@ -388,8 +416,10 @@ condition|(
 operator|(
 name|ch
 operator|=
-name|getchar
-argument_list|()
+name|getc
+argument_list|(
+name|fp
+argument_list|)
 operator|)
 operator|!=
 name|EOF
