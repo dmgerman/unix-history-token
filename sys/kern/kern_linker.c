@@ -5566,15 +5566,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|error
 condition|)
-block|{
+break|break;
 name|lf
 operator|=
 name|NULL
 expr_stmt|;
-break|break;
-block|}
 block|}
 if|if
 condition|(
