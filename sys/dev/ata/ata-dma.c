@@ -417,7 +417,7 @@ name|ATA_DMA_ENTRIES
 argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-literal|0
+name|BUS_DMA_ALLOCNOW
 argument_list|,
 name|NULL
 argument_list|,
@@ -444,7 +444,7 @@ name|dma
 operator|->
 name|dmatag
 argument_list|,
-literal|1
+name|PAGE_SIZE
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
@@ -495,7 +495,9 @@ name|dma
 operator|->
 name|alignment
 argument_list|,
-literal|0
+literal|64
+operator|*
+literal|1024
 argument_list|,
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
