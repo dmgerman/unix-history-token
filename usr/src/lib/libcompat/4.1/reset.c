@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	reset.c	4.1	83/06/30	*/
+comment|/*	reset.c	4.2	90/06/23	*/
+end_comment
+
+begin_comment
+comment|/*  * This can't be written in C.  You have to longjmp from a context  * below (stackwise) the call to setjmp:  *  *	/* test reset/setexit *(/  *	main()  *	{  *		int i = setexit();  *		printf("i=%d\n", i);  *		if (i == 0)  *			reset(1);  *	}  *  * The above prints `longjmp botch' and dumps core.  */
 end_comment
 
 begin_comment
