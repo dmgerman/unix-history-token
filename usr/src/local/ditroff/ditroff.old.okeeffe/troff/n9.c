@@ -1356,20 +1356,6 @@ operator|==
 name|delim
 condition|)
 break|break;
-comment|/* ought to pick up optional drawing character */
-if|if
-condition|(
-name|cbits
-argument_list|(
-name|c
-argument_list|)
-operator|!=
-literal|' '
-condition|)
-name|ch
-operator|=
-name|c
-expr_stmt|;
 name|vflag
 operator|=
 literal|0
@@ -1542,18 +1528,6 @@ name|chbits
 operator||
 name|ZBIT
 expr_stmt|;
-name|cbuf
-index|[
-literal|2
-index|]
-operator|=
-literal|'.'
-operator||
-name|chbits
-operator||
-name|ZBIT
-expr_stmt|;
-comment|/* indicates to use default drawing character */
 for|for
 control|(
 name|k
@@ -1562,7 +1536,7 @@ literal|0
 operator|,
 name|j
 operator|=
-literal|3
+literal|2
 init|;
 name|k
 operator|<
@@ -1652,12 +1626,12 @@ condition|)
 block|{
 name|cbuf
 index|[
-literal|5
+literal|4
 index|]
 operator|=
 name|cbuf
 index|[
-literal|4
+literal|3
 index|]
 operator||
 name|NMOT
@@ -1665,7 +1639,7 @@ expr_stmt|;
 comment|/* so net vertical is zero */
 name|j
 operator|=
-literal|6
+literal|5
 expr_stmt|;
 block|}
 elseif|else
@@ -1682,12 +1656,12 @@ condition|)
 block|{
 name|cbuf
 index|[
-literal|4
+literal|3
 index|]
 operator|=
 name|cbuf
 index|[
-literal|3
+literal|2
 index|]
 operator||
 name|NMOT
