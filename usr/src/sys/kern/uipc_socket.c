@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_socket.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_socket.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2611,13 +2611,13 @@ name|so_rcv
 operator|.
 name|sb_mb
 expr_stmt|;
+comment|/* 	 * If we have less data than requested, block awaiting more 	 * (subject to any timeout) if: 	 *   1. the current count is less than the low water mark, or 	 *   2. MSG_WAITALL is set, and it is possible to do the entire 	 *	receive operation at once if we block (resid<= hiwat). 	 * If MSG_WAITALL is set but resid is larger than the receive buffer, 	 * we have to do the receive in sections, and thus risk returning 	 * a short count if a timeout or signal occurs after we start. 	 */
 if|if
 condition|(
 name|m
 operator|==
 literal|0
 operator|||
-operator|(
 name|so
 operator|->
 name|so_rcv
@@ -2628,6 +2628,7 @@ name|uio
 operator|->
 name|uio_resid
 operator|&&
+operator|(
 name|so
 operator|->
 name|so_rcv
@@ -2639,7 +2640,6 @@ operator|->
 name|so_rcv
 operator|.
 name|sb_lowat
-operator|)
 operator|||
 operator|(
 operator|(
@@ -2648,31 +2648,16 @@ operator|&
 name|MSG_WAITALL
 operator|)
 operator|&&
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_cc
-operator|<
 name|uio
 operator|->
 name|uio_resid
-operator|&&
+operator|<=
 name|so
 operator|->
 name|so_rcv
 operator|.
 name|sb_hiwat
-operator|>=
-name|uio
-operator|->
-name|uio_resid
-operator|&&
-operator|!
-name|sosendallatonce
-argument_list|(
-name|so
-argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
@@ -2838,24 +2823,6 @@ operator|.
 name|ru_msgrcv
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|m
-operator|->
-name|m_type
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"receive 3a"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|nextrecord
 operator|=
 name|m
@@ -3164,6 +3131,16 @@ condition|(
 name|m
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|MSG_PEEK
+operator|)
+operator|==
+literal|0
+condition|)
 name|m
 operator|->
 name|m_nextpkt
