@@ -3559,7 +3559,7 @@ comment|/*  * Delete a function if it exists.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|unsetfunc
 parameter_list|(
 name|name
@@ -3608,7 +3608,17 @@ expr_stmt|;
 name|delete_cmd_entry
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
