@@ -806,6 +806,7 @@ name|ip
 operator|->
 name|i_size
 condition|)
+block|{
 comment|/* 			 * Don't do readahead if this is the end of the file. 			 */
 name|error
 operator|=
@@ -823,6 +824,7 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -838,6 +840,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 comment|/*  			 * Otherwise if we are allowed to cluster, 			 * grab as much as we can. 			 * 			 * XXX  This may not be a win if we are not 			 * doing sequential access. 			 */
 name|error
 operator|=
@@ -865,6 +868,7 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -912,6 +916,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 comment|/* 			 * Failing all of the above, just read what the  			 * user asked for. Interestingly, the same as 			 * the first option above. 			 */
 name|error
 operator|=
@@ -929,6 +934,7 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
