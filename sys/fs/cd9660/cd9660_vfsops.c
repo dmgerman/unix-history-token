@@ -752,17 +752,11 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_ROOTFS
-operator|)
-operator|!=
-literal|0
+name|path
+operator|==
+name|NULL
 condition|)
-block|{
+comment|/* We are doing the initial root mount */
 return|return
 operator|(
 name|iso_mountroot
@@ -773,7 +767,6 @@ name|td
 argument_list|)
 operator|)
 return|;
-block|}
 if|if
 condition|(
 operator|(
