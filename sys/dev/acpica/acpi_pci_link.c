@@ -2494,7 +2494,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acpi link: can't set invalid IRQ %d on %s\n"
+literal|"acpi link set: invalid IRQ %d on %s\n"
 argument_list|,
 name|irq
 argument_list|,
@@ -2524,7 +2524,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"link %s already routed to %d\n"
+literal|"acpi link set: %s already routed to %d\n"
 argument_list|,
 name|acpi_name
 argument_list|(
@@ -2686,26 +2686,22 @@ name|irq
 expr_stmt|;
 break|break;
 default|default:
-name|ACPI_DEBUG_PRINT
+name|printf
 argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Resource is not an IRQ entry %s - %d\n"
-operator|,
+literal|"acpi link set: %s resource is not an IRQ (%d)\n"
+argument_list|,
 name|acpi_name
 argument_list|(
 name|link
 operator|->
 name|handle
 argument_list|)
-operator|,
+argument_list|,
 name|link
 operator|->
 name|possible_resources
 operator|.
 name|Id
-operator|)
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -2733,20 +2729,16 @@ name|error
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|printf
 argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"couldn't setup buffer by acpi_AppendBufferResource - %s\n"
-operator|,
+literal|"acpi link set: AppendBuffer failed for %s\n"
+argument_list|,
 name|acpi_name
 argument_list|(
 name|link
 operator|->
 name|handle
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -2764,20 +2756,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|printf
 argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"appended buffer for %s is corrupted\n"
-operator|,
+literal|"acpi link set: AppendBuffer returned empty for %s\n"
+argument_list|,
 name|acpi_name
 argument_list|(
 name|link
 operator|->
 name|handle
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -2807,25 +2795,21 @@ name|error
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|printf
 argument_list|(
-operator|(
-name|ACPI_DB_WARN
-operator|,
-literal|"couldn't set link device _SRS %s - %s\n"
-operator|,
+literal|"acpi link set: _SRS failed for link %s - %s\n"
+argument_list|,
 name|acpi_name
 argument_list|(
 name|link
 operator|->
 name|handle
 argument_list|)
-operator|,
+argument_list|,
 name|AcpiFormatException
 argument_list|(
 name|error
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2865,25 +2849,21 @@ name|error
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|printf
 argument_list|(
-operator|(
-name|ACPI_DB_WARN
-operator|,
-literal|"couldn't get current IRQ from interrupt link %s - %s\n"
-operator|,
+literal|"acpi link set: _CRS failed for link %s - %s\n"
+argument_list|,
 name|acpi_name
 argument_list|(
 name|link
 operator|->
 name|handle
 argument_list|)
-operator|,
+argument_list|,
 name|AcpiFormatException
 argument_list|(
 name|error
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
