@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.77 1995/12/08 23:22:25 phk Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.78 1995/12/09 20:42:35 phk Exp $  */
 end_comment
 
 begin_define
@@ -166,6 +166,20 @@ comment|/* for aborting dump */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|SCSI_DEVICE_ENTRIES
+name|__P
+argument_list|(
+operator|(
+name|int
+name|sd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|u_int32
 name|sdstrats
@@ -247,6 +261,40 @@ begin_decl_stmt
 specifier|static
 name|errval
 name|sd_get_parms
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|,
+name|int
+name|flags
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|errval
+name|sd_reassign_blocks
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|,
+name|int
+name|block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int32
+name|sd_size
 name|__P
 argument_list|(
 operator|(
@@ -952,6 +1000,7 @@ comment|/*  * The routine called by the low level scsi routine when it discovers
 end_comment
 
 begin_function
+specifier|static
 name|errval
 name|sdattach
 parameter_list|(
@@ -969,6 +1018,17 @@ name|disk_parms
 modifier|*
 name|dp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|scsi_data
 modifier|*
