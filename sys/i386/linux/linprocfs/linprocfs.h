@@ -47,6 +47,8 @@ comment|/* system uptime */
 name|Pversion
 block|,
 comment|/* system version */
+name|Ploadavg
+comment|/* system load average */
 block|}
 name|pfstype
 typedef|;
@@ -537,6 +539,34 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|linprocfs_doprocstatus
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|pfsnode
+operator|*
+name|pfsp
+operator|,
+expr|struct
+name|uio
+operator|*
+name|uio
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|linprocfs_doloadavg
 name|__P
 argument_list|(
 operator|(
