@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c 1.12 %G%"
+literal|"@(#)pccaseop.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1781,7 +1781,7 @@ argument_list|)
 expr_stmt|;
 name|putprintf
 argument_list|(
-literal|"	jeq	L%d"
+literal|"	jeq	%s%d"
 argument_list|,
 literal|0
 argument_list|,
