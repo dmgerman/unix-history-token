@@ -3,6 +3,10 @@ begin_comment
 comment|/* Shared between kernel& process */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -300,6 +304,20 @@ define|#
 directive|define
 name|WORMIOCFIRSTWRITABLEADDR
 value|_IOWR('W', 33, struct wormio_first_writable_addr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDRIOCBLANK
+value|_IO('c', 100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDRIOCNEXTWRITEABLEADDR
+value|_IOR('c', 101, int)
 end_define
 
 begin_comment
