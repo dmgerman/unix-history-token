@@ -1583,6 +1583,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|intptr_t
+name|casuptr
+parameter_list|(
+name|intptr_t
+modifier|*
+name|p
+parameter_list|,
+name|intptr_t
+name|old
+parameter_list|,
+name|intptr_t
+name|new
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|realitexpire
 parameter_list|(

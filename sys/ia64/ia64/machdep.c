@@ -6785,5 +6785,29 @@ return|;
 block|}
 end_function
 
+begin_function
+name|intptr_t
+name|casuptr
+parameter_list|(
+name|intptr_t
+modifier|*
+name|p
+parameter_list|,
+name|intptr_t
+name|old
+parameter_list|,
+name|intptr_t
+name|new
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
