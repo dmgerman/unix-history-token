@@ -109,6 +109,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ucontext.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread_np.h>
 end_include
 
