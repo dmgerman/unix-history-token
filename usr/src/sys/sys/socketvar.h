@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socketvar.h	6.1	83/07/29	*/
+comment|/*	socketvar.h	6.2	84/01/11	*/
 end_comment
 
 begin_comment
@@ -407,7 +407,7 @@ name|sorwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|sbwakeup(&(so)->so_rcv)
+value|sowakeup((so),&(so)->so_rcv)
 end_define
 
 begin_define
@@ -417,7 +417,7 @@ name|sowwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|sbwakeup(&(so)->so_snd)
+value|sowakeup((so),&(so)->so_snd)
 end_define
 
 begin_ifdef
