@@ -8735,6 +8735,48 @@ literal|"keymap=danish.iso"
 block|}
 block|,
 block|{
+literal|"Estonian ISO"
+block|,
+literal|"Estonian ISO keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=estonian.iso"
+block|}
+block|,
+block|{
+literal|"Estonian ISO 15"
+block|,
+literal|"Estonian ISO 8859-15 keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=estonian.iso15"
+block|}
+block|,
+block|{
+literal|"Estonian CP850"
+block|,
+literal|"Estonian Code Page 850 keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=estonian.cp850"
+block|}
+block|,
+block|{
 literal|"Finnish CP850"
 block|,
 literal|"Finnish Code Page 850 keymap"
@@ -9071,7 +9113,21 @@ literal|"keymap=swedish.iso"
 block|}
 block|,
 block|{
-literal|"Swiss French"
+literal|"Swiss French ISO (accent)"
+block|,
+literal|"Swiss French ISO keymap (accent keys)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=swissfrench.iso.acc"
+block|}
+block|,
+block|{
+literal|"Swiss French ISO"
 block|,
 literal|"Swiss French ISO keymap"
 block|,
@@ -9085,7 +9141,35 @@ literal|"keymap=swissfrench.iso"
 block|}
 block|,
 block|{
-literal|"Swiss German"
+literal|"Swiss French CP850"
+block|,
+literal|"Swiss French Code Page 850 keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=swissfrench.cp850"
+block|}
+block|,
+block|{
+literal|"Swiss German ISO (accent)"
+block|,
+literal|"Swiss German ISO keymap (accent keys)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=swissgerman.iso.acc"
+block|}
+block|,
+block|{
+literal|"Swiss German ISO"
 block|,
 literal|"Swiss German ISO keymap"
 block|,
@@ -9096,6 +9180,20 @@ block|,
 name|NULL
 block|,
 literal|"keymap=swissgerman.iso"
+block|}
+block|,
+block|{
+literal|"Swiss German CP850"
+block|,
+literal|"Swiss German Code Page 850 keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=swissgerman.cp850"
 block|}
 block|,
 block|{
