@@ -92,7 +92,8 @@ name|char
 name|atiocope
 index|[]
 init|=
-literal|"ATIO returned for lun %d because it was in the middle of Bus Device Reset"
+literal|"ATIO returned for lun %d because it was in the middle of Bus Device Reset "
+literal|"on bus %d"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,7 +104,8 @@ name|char
 name|atior
 index|[]
 init|=
-literal|"ATIO returned for lun %d from initiator %d because a Bus Reset occurred"
+literal|"ATIO returned on for lun %d on from IID %d because a Bus Reset occurred "
+literal|"on bus %d"
 decl_stmt|;
 end_decl_stmt
 
@@ -490,22 +492,21 @@ condition|)
 block|{
 name|bus
 operator|=
-operator|(
+name|GET_BUS_VAL
+argument_list|(
 name|inotp
 operator|->
 name|in_iid
-operator|&
-literal|0x80
-operator|)
-operator|>>
-literal|7
+argument_list|)
 expr_stmt|;
+name|SET_BUS_VAL
+argument_list|(
 name|inotp
 operator|->
 name|in_iid
-operator|&=
-operator|~
-literal|0x80
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -513,13 +514,31 @@ name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
-name|ISP_LOGTDEBUG1
+name|ISP_LOGTDEBUG0
 argument_list|,
-literal|"Immediate Notify, status=0x%x seqid=0x%x"
+literal|"Immediate Notify On Bus %d, status=0x%x seqid=0x%x"
+argument_list|,
+name|bus
 argument_list|,
 name|status
 argument_list|,
 name|seqid
+argument_list|)
+expr_stmt|;
+comment|/* 		 * ACK it right away. 		 */
+name|isp_notify_ack
+argument_list|(
+name|isp
+argument_list|,
+operator|(
+name|status
+operator|==
+name|IN_RESET
+operator|)
+condition|?
+name|NULL
+else|:
+name|vptr
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -603,13 +622,26 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"Abort Task for Initiator %d RX_ID 0x%x"
+literal|"Abort Task from IID %d RX_ID 0x%x"
 argument_list|,
 name|inot_fcp
 operator|->
 name|in_iid
 argument_list|,
 name|seqid
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|isp_async
+argument_list|(
+name|isp
+argument_list|,
+name|ISPASYNC_TARGET_ACTION
+argument_list|,
+operator|&
+name|bus
 argument_list|)
 expr_stmt|;
 break|break;
@@ -678,13 +710,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|isp_notify_ack
-argument_list|(
-name|isp
-argument_list|,
-name|vptr
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|RQSTYPE_NOTIFY_ACK
@@ -1033,11 +1058,18 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|FCPARAM
+argument_list|(
 name|isp
+argument_list|)
 operator|->
-name|isp_maxluns
-operator|<=
-literal|16
+name|isp_fwattr
+operator|&
+name|ISP_FW_ATTR_SCCLUN
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|el
@@ -1647,11 +1679,18 @@ name|at_iid
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|FCPARAM
+argument_list|(
 name|isp
+argument_list|)
 operator|->
-name|isp_maxluns
-operator|<=
-literal|16
+name|isp_fwattr
+operator|&
+name|ISP_FW_ATTR_SCCLUN
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|cto
@@ -2036,6 +2075,9 @@ condition|)
 block|{
 comment|/* 	 * These three we handle here to propagate an effective bus reset 	 * upstream, but these do not require any immediate notify actions 	 * so we return when done. 	 */
 case|case
+name|ASYNC_LIP_F8
+case|:
+case|case
 name|ASYNC_LIP_OCCURRED
 case|:
 case|case
@@ -2044,35 +2086,14 @@ case|:
 case|case
 name|ASYNC_LOOP_DOWN
 case|:
-name|evt
-operator|.
-name|ev_bus
-operator|=
-name|bus
-expr_stmt|;
-name|evt
-operator|.
-name|ev_event
-operator|=
-name|event
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|isp_async
-argument_list|(
-name|isp
-argument_list|,
-name|ISPASYNC_TARGET_EVENT
-argument_list|,
-operator|&
-name|evt
-argument_list|)
-expr_stmt|;
-return|return;
 case|case
 name|ASYNC_LOOP_RESET
 case|:
+case|case
+name|ASYNC_PTPMODE
+case|:
+comment|/* 		 * These don't require any immediate notify actions. We used 		 * treat them like SCSI Bus Resets, but that was just plain 		 * wrong. Let the normal CTIO completion report what occurred. 		 */
+return|return;
 case|case
 name|ASYNC_BUS_RESET
 case|:
@@ -3246,6 +3267,13 @@ argument_list|,
 name|atiocope
 argument_list|,
 name|lun
+argument_list|,
+name|GET_BUS_VAL
+argument_list|(
+name|aep
+operator|->
+name|at_iid
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3285,9 +3313,19 @@ name|atior
 argument_list|,
 name|lun
 argument_list|,
+name|GET_IID_VAL
+argument_list|(
 name|aep
 operator|->
 name|at_iid
+argument_list|)
+argument_list|,
+name|GET_BUS_VAL
+argument_list|(
+name|aep
+operator|->
+name|at_iid
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3428,6 +3466,8 @@ argument_list|,
 name|atiocope
 argument_list|,
 name|lun
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3466,6 +3506,8 @@ argument_list|,
 name|aep
 operator|->
 name|at_iid
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3661,7 +3703,7 @@ name|NULL
 condition|)
 name|fmsg
 operator|=
-literal|"ABORT TASK sent by Initiator"
+literal|"ABORT TAG message sent by Initiator"
 expr_stmt|;
 name|isp_prt
 argument_list|(
