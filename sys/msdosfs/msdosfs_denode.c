@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.31 1998/02/09 06:09:51 eivind Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.32 1998/02/18 09:28:33 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -1786,29 +1786,6 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
-comment|/* 			 * 1024 byte/sector support 			 */
-if|if
-condition|(
-name|pmp
-operator|->
-name|pm_BytesPerSec
-operator|==
-literal|1024
-condition|)
-name|DETOV
-argument_list|(
-name|dep
-argument_list|)
-operator|->
-name|v_flag
-operator||=
-literal|0x10000
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|bread
