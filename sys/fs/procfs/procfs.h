@@ -172,13 +172,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|KMEM_GROUP
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|PROCFS_FILENO
 parameter_list|(
 name|pid

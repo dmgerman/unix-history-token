@@ -750,27 +750,24 @@ name|ap
 operator|->
 name|a_p
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|p_candebug
 argument_list|(
 name|p1
 argument_list|,
 name|p2
 argument_list|)
-operator|&&
-operator|!
-name|procfs_kmemaccess
-argument_list|(
-name|p1
-argument_list|)
-condition|)
-block|{
-name|error
-operator|=
-name|EPERM
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|ap
@@ -1894,7 +1891,6 @@ break|break;
 case|case
 name|Pmem
 case|:
-comment|/* Retain group kmem readablity. */
 name|PROC_LOCK
 argument_list|(
 name|procp
@@ -2162,7 +2158,7 @@ block|}
 case|case
 name|Pmem
 case|:
-comment|/* 		 * If we denied owner access earlier, then we have to 		 * change the owner to root - otherwise 'ps' and friends 		 * will break even though they are setgid kmem. *SIGH* 		 */
+comment|/* 		 * If we denied owner access earlier, then we have to 		 * change the owner to root - otherwise 'ps' and friends 		 * will break even though they are setgid kmem. *SIGH* 		 * XXX: ps and friends are no longer setgid kmem, why 		 * is this needed? 		 */
 name|PROC_LOCK
 argument_list|(
 name|procp
@@ -2197,12 +2193,6 @@ name|PROC_UNLOCK
 argument_list|(
 name|procp
 argument_list|)
-expr_stmt|;
-name|vap
-operator|->
-name|va_gid
-operator|=
-name|KMEM_GROUP
 expr_stmt|;
 break|break;
 case|case
