@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chmod.c	8.1 (Berkeley) %G%"
+literal|"@(#)chmod.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,14 +397,6 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|oct
-condition|)
-name|fts_options
-operator||=
-name|FTS_NOSTAT
-expr_stmt|;
-if|if
-condition|(
 operator|(
 name|ftsp
 operator|=
@@ -461,6 +453,12 @@ argument_list|,
 name|FTS_SKIP
 argument_list|)
 expr_stmt|;
+case|case
+name|FTS_SL
+case|:
+case|case
+name|FTS_SLNONE
+case|:
 break|break;
 case|case
 name|FTS_DNR
