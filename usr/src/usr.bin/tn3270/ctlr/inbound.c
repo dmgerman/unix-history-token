@@ -3566,7 +3566,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* defined(FCN_ESCAPE)  #if	defined(FCN_DISC) 	    case FCN_DISC: 		StopScreen(1); 		suspend(); 		ConnectScreen(); 		break; #endif	/* defined(FCN_DISC) */
+comment|/* defined(FCN_ESCAPE)  #if	defined(FCN_DISC) 	    case FCN_DISC: 		StopScreen(1); 		suspend(); 		setconnmode(); 		ConnectScreen(); 		break; #endif	/* defined(FCN_DISC) */
 if|#
 directive|if
 name|defined
