@@ -487,9 +487,6 @@ argument|nfs4_fstate
 argument_list|)
 name|next
 expr_stmt|;
-name|pid_t
-name|pid
-decl_stmt|;
 name|uint32_t
 name|refcnt
 decl_stmt|;

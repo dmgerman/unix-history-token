@@ -1904,6 +1904,13 @@ block|{
 name|int
 name|error
 decl_stmt|;
+specifier|static
+name|char
+name|zero_stateid
+index|[
+name|NFSX_V4STATEID
+index|]
+decl_stmt|;
 name|nfsm_buildf_xx
 argument_list|(
 name|mb
@@ -1917,8 +1924,12 @@ argument_list|,
 name|NFSX_V4STATEID
 argument_list|,
 name|fcp
+condition|?
+name|fcp
 operator|->
 name|stateid
+else|:
+name|zero_stateid
 argument_list|)
 expr_stmt|;
 name|error
