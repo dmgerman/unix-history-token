@@ -242,6 +242,15 @@ begin_comment
 comment|/* buffer header pool */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|proc
+modifier|*
+name|bufdaemonproc
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -3684,7 +3693,21 @@ return|;
 block|}
 else|else
 block|{
-comment|/* 		 * don't allow the async write to saturate the I/O 		 * system.  We will not deadlock here because 		 * we are blocking waiting for I/O that is already in-progress 		 * to complete. 		 */
+comment|/* 		 * don't allow the async write to saturate the I/O 		 * system.  We will not deadlock here because 		 * we are blocking waiting for I/O that is already in-progress 		 * to complete. We do not block here if it is the update 		 * or syncer daemon trying to clean up as that can lead 		 * to deadlock. 		 */
+if|if
+condition|(
+name|curthread
+operator|->
+name|td_proc
+operator|!=
+name|bufdaemonproc
+operator|&&
+name|curthread
+operator|->
+name|td_proc
+operator|!=
+name|updateproc
+condition|)
 name|waitrunningbufspace
 argument_list|()
 expr_stmt|;
@@ -7736,15 +7759,6 @@ end_function
 begin_comment
 comment|/*  *	buf_daemon:  *  *	buffer flushing daemon.  Buffers are normally flushed by the  *	update daemon but if it cannot keep up this process starts to  *	take the load in an attempt to prevent getnewbuf() from blocking.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|proc
-modifier|*
-name|bufdaemonproc
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
