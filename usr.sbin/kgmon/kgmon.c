@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)kgmon.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)kgmon.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +100,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -99,6 +125,18 @@ begin_include
 include|#
 directive|include
 file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -122,19 +160,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -160,7 +186,9 @@ block|{
 literal|"_profhz"
 block|}
 block|,
-literal|0
+block|{
+name|NULL
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -202,6 +230,66 @@ name|int
 name|debug
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|getprof
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|kvmvars
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|getprofhz
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|kvmvars
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|kern_readonly
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|openfiles
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+expr|struct
+name|kvmvars
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -253,6 +341,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -266,15 +367,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -397,20 +489,8 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: kgmon [-Bbhrp] [-M core] [-N system]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -608,44 +688,54 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: kgmon [-Bbhrp] [-M core] [-N system]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Check that profiling is enabled and open any ncessary files.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|openfiles
-argument_list|(
-argument|system
-argument_list|,
-argument|kmemf
-argument_list|,
-argument|kvp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|system
+parameter_list|,
+name|kmemf
+parameter_list|,
+name|kvp
+parameter_list|)
 name|char
 modifier|*
 name|system
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|kmemf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|kvmvars
 modifier|*
 name|kvp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|mib
@@ -718,23 +808,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: profiling not defined in kernel.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|20
+argument_list|,
+literal|"profiling not defined in kernel"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -901,25 +981,15 @@ name|kd
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"kgmon: kvm_openfiles: %s\n"
+literal|"kvm_openfiles: %s"
 argument_list|,
 name|errbuf
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 name|kern_readonly
 argument_list|(
 name|GMON_PROF_ON
@@ -939,25 +1009,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|3
 argument_list|,
-literal|"kgmon: %s: no namelist\n"
+literal|"%s: no namelist"
 argument_list|,
 name|system
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|3
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -968,49 +1028,34 @@ index|]
 operator|.
 name|n_value
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: profiling not defined in kernel.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|20
+argument_list|,
+literal|"profiling not defined in kernel"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|openmode
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Suppress options that require a writable kernel.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|kern_readonly
-argument_list|(
-argument|mode
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mode
+parameter_list|)
 name|int
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|(
 name|void
@@ -1113,28 +1158,23 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Get the state of kernel profiling.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getprof
-argument_list|(
-argument|kvp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|kvp
+parameter_list|)
 name|struct
 name|kvmvars
 modifier|*
 name|kvp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|mib
@@ -1243,15 +1283,11 @@ name|kvp
 operator|->
 name|gpm
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|4
 argument_list|,
-literal|"kgmon: cannot get gmonparam: %s\n"
+literal|"cannot get gmonparam: %s"
 argument_list|,
 name|kflag
 condition|?
@@ -1268,12 +1304,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|4
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|kvp
@@ -1284,7 +1314,7 @@ name|state
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Enable or disable kernel profiling according to the state variable.  */
@@ -1481,14 +1511,9 @@ condition|)
 return|return;
 name|bad
 label|:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: warning: cannot turn profiling %s\n"
+literal|"warning: cannot turn profiling %s"
 argument_list|,
 name|state
 operator|==
@@ -1534,8 +1559,6 @@ name|tos
 decl_stmt|;
 name|u_long
 name|frompc
-decl_stmt|,
-name|addr
 decl_stmt|;
 name|u_short
 modifier|*
@@ -1586,7 +1609,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"gmon.out"
 argument_list|)
@@ -1729,20 +1752,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: cannot allocate kcount space\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|5
+argument_list|,
+literal|"cannot allocate kcount space"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|kflag
@@ -1831,15 +1847,11 @@ name|gpm
 operator|.
 name|kcountsize
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|6
 argument_list|,
-literal|"kgmon: read ticks: read %u, got %d: %s"
+literal|"read ticks: read %u, got %d: %s"
 argument_list|,
 name|kvp
 operator|->
@@ -1864,12 +1876,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|6
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -1891,18 +1897,13 @@ operator|)
 operator|!=
 literal|1
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"kgmon: writing tocks to gmon.out"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|7
+argument_list|,
+literal|"writing tocks to gmon.out"
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|tickbuf
@@ -1930,20 +1931,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: cannot allocate froms space\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|8
+argument_list|,
+literal|"cannot allocate froms space"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|kflag
@@ -2032,15 +2026,11 @@ name|gpm
 operator|.
 name|fromssize
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|9
 argument_list|,
-literal|"kgmon: read froms: read %u, got %d: %s"
+literal|"read froms: read %u, got %d: %s"
 argument_list|,
 name|kvp
 operator|->
@@ -2065,12 +2055,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|9
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2093,20 +2077,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: cannot allocate tos space\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|10
+argument_list|,
+literal|"cannot allocate tos space"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|kflag
@@ -2195,15 +2172,11 @@ name|gpm
 operator|.
 name|tossize
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|11
 argument_list|,
-literal|"kgmon: read tos: read %u, got %d: %s"
+literal|"read tos: read %u, got %d: %s"
 argument_list|,
 name|kvp
 operator|->
@@ -2228,24 +2201,13 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|11
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|debug
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: lowpc 0x%x, textsize 0x%x\n"
+literal|"lowpc 0x%x, textsize 0x%x"
 argument_list|,
 name|kvp
 operator|->
@@ -2352,16 +2314,9 @@ if|if
 condition|(
 name|debug
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: [mcleanup] frompc 0x%x selfpc 0x%x count %d\n"
-argument_list|,
-literal|"kgmon"
+literal|"[mcleanup] frompc 0x%x selfpc 0x%x count %d"
 argument_list|,
 name|frompc
 argument_list|,
@@ -2504,14 +2459,9 @@ operator|!=
 sizeof|sizeof
 name|profrate
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: get clockrate: %s\n"
+literal|"get clockrate: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -2573,19 +2523,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: get clockrate: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"get clockrate"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2695,20 +2635,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: cannot allocate zbuf space\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|12
+argument_list|,
+literal|"cannot allocate zbuf space"
 argument_list|)
 expr_stmt|;
-block|}
 name|bzero
 argument_list|(
 name|zbuf
@@ -2753,15 +2686,11 @@ name|gpm
 operator|.
 name|kcountsize
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|13
 argument_list|,
-literal|"kgmon: tickbuf zero: %s\n"
+literal|"tickbuf zero: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -2771,12 +2700,6 @@ name|kd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|13
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|kvm_write
@@ -2809,15 +2732,11 @@ name|gpm
 operator|.
 name|fromssize
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|14
 argument_list|,
-literal|"kgmon: froms zero: %s\n"
+literal|"froms zero: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -2827,12 +2746,6 @@ name|kd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|14
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|kvm_write
@@ -2865,15 +2778,11 @@ name|gpm
 operator|.
 name|tossize
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|15
 argument_list|,
-literal|"kgmon: tos zero: %s\n"
+literal|"tos zero: %s"
 argument_list|,
 name|kvm_geterr
 argument_list|(
@@ -2883,12 +2792,6 @@ name|kd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|15
-argument_list|)
-expr_stmt|;
-block|}
 return|return;
 block|}
 operator|(
@@ -2943,28 +2846,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: tickbuf zero: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|13
+argument_list|,
+literal|"tickbuf zero"
 argument_list|)
 expr_stmt|;
-block|}
 name|mib
 index|[
 literal|2
@@ -2995,28 +2883,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: froms zero: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|14
+argument_list|,
+literal|"froms zero"
 argument_list|)
 expr_stmt|;
-block|}
 name|mib
 index|[
 literal|2
@@ -3047,28 +2920,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kgmon: tos zero: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|15
+argument_list|,
+literal|"tos zero"
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
