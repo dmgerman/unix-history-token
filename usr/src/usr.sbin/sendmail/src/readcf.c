@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|4.4.1.1
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -2408,6 +2408,28 @@ name|newstr
 argument_list|(
 name|val
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'B'
+case|:
+comment|/* substitution for blank character */
+name|SpaceSub
+operator|=
+name|val
+index|[
+literal|0
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|SpaceSub
+operator|==
+literal|'\0'
+condition|)
+name|SpaceSub
+operator|=
+literal|' '
 expr_stmt|;
 break|break;
 case|case
