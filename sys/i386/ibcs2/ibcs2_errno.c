@@ -6,12 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_errno.h>
+file|<i386/ibcs2/ibcs2_errno.h>
 end_include
 
 begin_decl_stmt
 name|int
-name|bsd2ibcs_errno
+name|bsd_to_ibcs2_errno
 index|[]
 init|=
 block|{

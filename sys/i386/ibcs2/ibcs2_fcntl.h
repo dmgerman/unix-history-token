@@ -23,7 +23,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_types.h>
+file|<i386/ibcs2/ibcs2_types.h>
 end_include
 
 begin_define
@@ -101,6 +101,13 @@ define|#
 directive|define
 name|IBCS2_O_NOCTTY
 value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|IBCS2_O_PRIV
+value|0x1000
 end_define
 
 begin_define

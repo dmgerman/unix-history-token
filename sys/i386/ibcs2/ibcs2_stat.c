@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Scott Bartram  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1995 Scott Bartram  * Copyright (c) 1995 Steven Wallace  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -78,7 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/syscallargs.h>
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysproto.h>
 end_include
 
 begin_include
@@ -90,56 +96,94 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_types.h>
+file|<i386/ibcs2/ibcs2_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_fcntl.h>
+file|<i386/ibcs2/ibcs2_fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_signal.h>
+file|<i386/ibcs2/ibcs2_signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_stat.h>
+file|<i386/ibcs2/ibcs2_stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_statfs.h>
+file|<i386/ibcs2/ibcs2_statfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_syscallargs.h>
+file|<i386/ibcs2/ibcs2_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_ustat.h>
+file|<i386/ibcs2/ibcs2_ustat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_util.h>
+file|<i386/ibcs2/ibcs2_util.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_utsname.h>
+file|<i386/ibcs2/ibcs2_utsname.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|bsd_stat2ibcs_stat
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|stat
+operator|*
+operator|,
+expr|struct
+name|ibcs2_stat
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cvt_statfs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|statfs
+operator|*
+operator|,
+name|caddr_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -151,7 +195,7 @@ parameter_list|,
 name|st4
 parameter_list|)
 name|struct
-name|ostat
+name|stat
 modifier|*
 name|st
 decl_stmt|;
@@ -249,6 +293,19 @@ name|st
 operator|->
 name|st_rdev
 expr_stmt|;
+if|if
+condition|(
+name|st
+operator|->
+name|st_size
+operator|<
+operator|(
+name|quad_t
+operator|)
+literal|1
+operator|<<
+literal|32
+condition|)
 name|st4
 operator|->
 name|st_size
@@ -259,6 +316,14 @@ operator|)
 name|st
 operator|->
 name|st_size
+expr_stmt|;
+else|else
+name|st4
+operator|->
+name|st_size
+operator|=
+operator|-
+literal|2
 expr_stmt|;
 name|st4
 operator|->
@@ -768,7 +833,7 @@ name|retval
 decl_stmt|;
 block|{
 name|struct
-name|ostat
+name|stat
 name|st
 decl_stmt|;
 name|struct
@@ -776,7 +841,7 @@ name|ibcs2_stat
 name|ibcs2_st
 decl_stmt|;
 name|struct
-name|compat_43_stat_args
+name|stat_args
 name|cup
 decl_stmt|;
 name|int
@@ -841,7 +906,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|compat_43_stat
+name|stat
 argument_list|(
 name|p
 argument_list|,
@@ -940,7 +1005,7 @@ name|retval
 decl_stmt|;
 block|{
 name|struct
-name|ostat
+name|stat
 name|st
 decl_stmt|;
 name|struct
@@ -948,7 +1013,7 @@ name|ibcs2_stat
 name|ibcs2_st
 decl_stmt|;
 name|struct
-name|compat_43_lstat_args
+name|lstat_args
 name|cup
 decl_stmt|;
 name|int
@@ -1013,7 +1078,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|compat_43_lstat
+name|lstat
 argument_list|(
 name|p
 argument_list|,
@@ -1112,7 +1177,7 @@ name|retval
 decl_stmt|;
 block|{
 name|struct
-name|ostat
+name|stat
 name|st
 decl_stmt|;
 name|struct
@@ -1120,7 +1185,7 @@ name|ibcs2_stat
 name|ibcs2_st
 decl_stmt|;
 name|struct
-name|compat_43_fstat_args
+name|fstat_args
 name|cup
 decl_stmt|;
 name|int
@@ -1170,7 +1235,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|compat_43_fstat
+name|fstat
 argument_list|(
 name|p
 argument_list|,
@@ -1286,17 +1351,6 @@ block|{
 name|struct
 name|ibcs2_utsname
 name|sut
-decl_stmt|;
-specifier|extern
-name|char
-name|ostype
-index|[]
-decl_stmt|,
-name|machine
-index|[]
-decl_stmt|,
-name|osrelease
-index|[]
 decl_stmt|;
 name|bzero
 argument_list|(

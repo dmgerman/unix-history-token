@@ -23,7 +23,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_types.h>
+file|<i386/ibcs2/ibcs2_types.h>
 end_include
 
 begin_define

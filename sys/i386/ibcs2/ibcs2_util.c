@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<compat/ibcs2/ibcs2_util.h>
+file|<i386/ibcs2/ibcs2_util.h>
 end_include
 
 begin_decl_stmt
