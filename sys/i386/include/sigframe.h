@@ -36,7 +36,6 @@ name|register_t
 name|sf_scp
 decl_stmt|;
 name|register_t
-modifier|*
 name|sf_addr
 decl_stmt|;
 comment|/* 	 * The following arguments are not constrained by the 	 * function call protocol. 	 * Applications are not supposed to access these members, 	 * except using the pointers we provide in the first three 	 * arguments. 	 */
@@ -78,7 +77,6 @@ name|sf_ucontext
 decl_stmt|;
 comment|/* points to sf_uc */
 name|register_t
-modifier|*
 name|sf_addr
 decl_stmt|;
 comment|/* undocumented 4th arg */

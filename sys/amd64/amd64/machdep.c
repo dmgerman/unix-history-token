@@ -2537,10 +2537,6 @@ name|sf
 operator|.
 name|sf_addr
 operator|=
-operator|(
-name|register_t
-operator|*
-operator|)
 name|regs
 operator|->
 name|tf_err
@@ -3523,10 +3519,6 @@ name|sf
 operator|.
 name|sf_addr
 operator|=
-operator|(
-name|register_t
-operator|*
-operator|)
 name|regs
 operator|->
 name|tf_err
