@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	4.1 %G%"
+literal|"@(#)newfs.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1237,9 +1237,6 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|status
@@ -1254,8 +1251,6 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|*
@@ -1565,14 +1560,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 name|fd
 operator|=
 name|open
 argument_list|(
-name|special
+name|dev
 argument_list|,
 literal|1
 argument_list|)
@@ -1593,7 +1585,7 @@ argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-name|special
+name|dev
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1625,7 +1617,7 @@ argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-name|special
+name|dev
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1639,8 +1631,6 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
