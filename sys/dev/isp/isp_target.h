@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Qlogic Target Mode Structure and Flag Definitions  *  * Copyright (c) 1997, 1998  * Patrick Stirling  * pms@psconsult.com  * All rights reserved.  *  * Additional Copyright (c) 1999< 2000  * Matthew Jacob  * mjacob@feral.com  * All rights reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Qlogic Target Mode Structure and Flag Definitions  *  * Copyright (c) 1997, 1998  * Patrick Stirling  * pms@psconsult.com  * All rights reserved.  *  * Additional Copyright (c) 1999, 2000, 2001  * Matthew Jacob  * mjacob@feral.com  * All rights reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -840,8 +840,11 @@ block|{
 name|isphdr_t
 name|at_header
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|at_reserved
+decl_stmt|;
+name|u_int16_t
+name|at_handle
 decl_stmt|;
 name|u_int8_t
 name|at_lun
@@ -1062,15 +1065,12 @@ decl_stmt|;
 comment|/* SCC Lun or reserved */
 name|u_int16_t
 name|at_reserved2
+index|[
+literal|10
+index|]
 decl_stmt|;
 name|u_int16_t
-name|at_scsi_status
-decl_stmt|;
-name|u_int8_t
-name|at_sense
-index|[
-name|QLTM_SENSELEN
-index|]
+name|at_oxid
 decl_stmt|;
 block|}
 name|at2_entry_t
@@ -1144,9 +1144,18 @@ block|{
 name|isphdr_t
 name|ct_header
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|ct_reserved
 decl_stmt|;
+define|#
+directive|define
+name|ct_syshandle
+value|ct_reserved
+comment|/* we use this */
+name|u_int16_t
+name|ct_fwhandle
+decl_stmt|;
+comment|/* required by f/w */
 name|u_int8_t
 name|ct_lun
 decl_stmt|;
@@ -1632,9 +1641,13 @@ block|{
 name|isphdr_t
 name|ct_header
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|ct_reserved
 decl_stmt|;
+name|u_int16_t
+name|ct_fwhandle
+decl_stmt|;
+comment|/* just to match CTIO */
 name|u_int8_t
 name|ct_lun
 decl_stmt|;
@@ -1978,7 +1991,7 @@ parameter_list|,
 name|vsrc
 parameter_list|)
 define|\
-value|{									\ 	at_entry_t *source = (at_entry_t *) vsrc;			\ 	at_entry_t local, *vdst;					\ 	if ((void *)dest == (void *)vsrc) {				\ 		MEMCPY(vsrc,&local, sizeof (at_entry_t));		\ 		vdst =&local;						\ 	} else {							\ 		vdst = dest;						\ 	}								\ 	vdst->at_header = source->at_header;				\ 	vdst->at_reserved2 = source->at_reserved2;			\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, at_lun, at_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, at_cdblen, at_tgt);		\ 	vdst->at_flags = source->at_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, at_status, at_scsi_status);	\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, at_tag_val, at_tag_type);	\ 	MEMCPY(vdst->at_cdb, source->at_cdb, ATIO_CDBLEN);		\ 	MEMCPY(vdst->at_sense, source->at_sense, QLTM_SENSELEN);	\ }
+value|{									\ 	at_entry_t *source = (at_entry_t *) vsrc;			\ 	at_entry_t local, *vdst;					\ 	if ((void *)dest == (void *)vsrc) {				\ 		MEMCPY(vsrc,&local, sizeof (at_entry_t));		\ 		vdst =&local;						\ 	} else {							\ 		vdst = dest;						\ 	}								\ 	vdst->at_header = source->at_header;				\ 	vdst->at_reserved = source->at_reserved;			\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, at_lun, at_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, at_cdblen, at_tgt);		\ 	vdst->at_flags = source->at_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, at_status, at_scsi_status);	\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, at_tag_val, at_tag_type);	\ 	MEMCPY(vdst->at_cdb, source->at_cdb, ATIO_CDBLEN);		\ 	MEMCPY(vdst->at_sense, source->at_sense, QLTM_SENSELEN);	\ }
 end_define
 
 begin_define
@@ -1993,7 +2006,7 @@ parameter_list|,
 name|vsrc
 parameter_list|)
 define|\
-value|{									\ 	ct_entry_t *source = (ct_entry_t *) vsrc;			\ 	ct_entry_t *local, *vdst;					\ 	if ((void *)dest == (void *)vsrc) {				\ 		MEMCPY(vsrc,&local, sizeof (ct_entry_t));		\ 		vdst =&local;						\ 	} else {							\ 		vdst = dest;						\ 	}								\ 	vdst->ct_header = source->ct_header;				\ 	vdst->ct_reserved = source->ct_reserved;			\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_lun, ct_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_rsvd, ct_tgt);		\ 	vdst->ct_flags = source->ct_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_status, ct_scsi_status);	\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_tag_val, ct_tag_type);	\ 	vdst->ct_xfrlen = source->ct_xfrlen;				\ 	vdst->ct_resid = source->ct_resid;				\ 	vdst->ct_timeout = source->ct_timeout;				\ 	vdst->ct_seg_count = source->ct_seg_count;			\ 	MEMCPY(vdst->ct_cdb, source->ct_cdb, ATIO_CDBLEN);		\ 	MEMCPY(vdst->ct_sense, source->ct_sense, QLTM_SENSELEN);	\ 	vdst->ct_dataseg = source->ct_dataseg;				\ }
+value|{									\ 	ct_entry_t *source = (ct_entry_t *) vsrc;			\ 	ct_entry_t *local, *vdst;					\ 	if ((void *)dest == (void *)vsrc) {				\ 		MEMCPY(vsrc,&local, sizeof (ct_entry_t));		\ 		vdst =&local;						\ 	} else {							\ 		vdst = dest;						\ 	}								\ 	vdst->ct_header = source->ct_header;				\ 	vdst->ct_reserved = source->ct_reserved;			\ 	vdst->ct_fwhandle = source->ct_fwhandle;			\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_lun, ct_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_rsvd, ct_tgt);		\ 	vdst->ct_flags = source->ct_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_status, ct_scsi_status);	\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_tag_val, ct_tag_type);	\ 	vdst->ct_xfrlen = source->ct_xfrlen;				\ 	vdst->ct_resid = source->ct_resid;				\ 	vdst->ct_timeout = source->ct_timeout;				\ 	vdst->ct_seg_count = source->ct_seg_count;			\ 	MEMCPY(vdst->ct_cdb, source->ct_cdb, ATIO_CDBLEN);		\ 	MEMCPY(vdst->ct_sense, source->ct_sense, QLTM_SENSELEN);	\ 	vdst->ct_dataseg = source->ct_dataseg;				\ }
 end_define
 
 begin_define
@@ -2367,7 +2380,7 @@ operator|*
 operator|,
 name|u_int32_t
 operator|,
-name|u_int32_t
+name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|;
