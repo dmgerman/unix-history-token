@@ -1821,6 +1821,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|devclass_find_free_unit
+parameter_list|(
+name|devclass_t
+name|dc
+parameter_list|,
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Access functions for device resources.  */
 end_comment
