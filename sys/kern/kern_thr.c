@@ -752,20 +752,6 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This unlocks proc and doesn't return unless this is the last 	 * thread. 	 */
-while|while
-condition|(
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|thr_exit1
 argument_list|()
 expr_stmt|;
