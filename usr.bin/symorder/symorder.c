@@ -2003,7 +2003,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: symorder [-m] [-t] [-x excludelist] symlist file\n"
+literal|"usage: symorder [-c] [-m] [-t] [-x excludelist] symlist file\n"
 argument_list|)
 expr_stmt|;
 name|exit
