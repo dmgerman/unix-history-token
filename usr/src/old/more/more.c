@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)more.c	4.7 (Berkeley) 82/12/14"
+literal|"@(#)more.c	4.8 (Berkeley) 83/02/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -6147,6 +6147,10 @@ decl_stmt|;
 name|int
 name|ldisc
 decl_stmt|;
+name|char
+modifier|*
+name|term
+decl_stmt|;
 name|setbuf
 argument_list|(
 name|stdout
@@ -6172,14 +6176,20 @@ condition|)
 block|{
 if|if
 condition|(
-name|tgetent
-argument_list|(
-name|buf
-argument_list|,
+operator|(
+name|term
+operator|=
 name|getenv
 argument_list|(
 literal|"TERM"
 argument_list|)
+operator|)
+operator|||
+name|tgetent
+argument_list|(
+name|buf
+argument_list|,
+name|term
 argument_list|)
 operator|<=
 literal|0
@@ -6469,6 +6479,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Home
+operator|==
+literal|0
+operator|||
 operator|*
 name|Home
 operator|==
