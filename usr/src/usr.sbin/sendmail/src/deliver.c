@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.38 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,11 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* determine actual delivery mode */
+name|CurrentLA
+operator|=
+name|getla
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|mode
