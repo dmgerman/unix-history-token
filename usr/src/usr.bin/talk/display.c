@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)display.c	5.4 (Berkeley) %G%"
+literal|"@(#)display.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -436,6 +436,9 @@ name|win
 operator|->
 name|x_col
 argument_list|)
+expr_stmt|;
+name|text
+operator|++
 expr_stmt|;
 continue|continue;
 block|}
