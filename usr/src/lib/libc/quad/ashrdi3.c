@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ashrdi3.c	5.5 (Berkeley) %G%"
+literal|"@(#)ashrdi3.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ parameter_list|(
 name|quad
 name|a
 parameter_list|,
-name|u_quad
+name|qshift_t
 name|shift
 parameter_list|)
 block|{
