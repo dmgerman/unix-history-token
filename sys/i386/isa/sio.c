@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.147.2.6 1997/01/29 21:41:02 bde Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.147.2.7 1997/02/01 16:19:05 bde Exp $  */
 end_comment
 
 begin_include
@@ -483,6 +483,17 @@ begin_comment
 comment|/* use RTS input flow control */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CSE_BUSYCHECK
+value|1
+end_define
+
+begin_comment
+comment|/* siobusycheck() scheduled */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -620,6 +631,10 @@ decl_stmt|;
 comment|/* is this unit a hayes esp board? */
 endif|#
 directive|endif
+name|u_char
+name|extra_state
+decl_stmt|;
+comment|/* more flag bits, separate for order trick */
 name|u_char
 name|fifo_image
 decl_stmt|;
@@ -5267,6 +5282,15 @@ operator|->
 name|dtr_wait
 operator|!=
 literal|0
+operator|&&
+operator|!
+operator|(
+name|com
+operator|->
+name|state
+operator|&
+name|CS_DTR_OFF
+operator|)
 condition|)
 block|{
 name|timeout
@@ -5596,7 +5620,7 @@ operator|*
 operator|)
 name|chan
 expr_stmt|;
-comment|/* 	 * Clear TS_BUSY if low-level output is complete. 	 * spl locking is sufficient because siointr1() does not set CS_BUSY. 	 * If siointr() clears CS_BUSY after we look at it, then we'll get 	 * called again.  Reading the line status port outside of siointr1() 	 * is safe because CS_BUSY is clear so there are no output interrupts 	 * to lose. 	 */
+comment|/* 	 * Clear TS_BUSY if low-level output is complete. 	 * spl locking is sufficient because siointr1() does not set CS_BUSY. 	 * If siointr1() clears CS_BUSY after we look at it, then we'll get 	 * called again.  Reading the line status port outside of siointr1() 	 * is safe because CS_BUSY is clear so there are no output interrupts 	 * to lose. 	 */
 name|s
 operator|=
 name|spltty
@@ -5610,7 +5634,13 @@ name|state
 operator|&
 name|CS_BUSY
 condition|)
-empty_stmt|;
+name|com
+operator|->
+name|extra_state
+operator|&=
+operator|~
+name|CSE_BUSYCHECK
+expr_stmt|;
 comment|/* False alarm. */
 elseif|else
 if|if
@@ -5652,6 +5682,13 @@ name|com
 operator|->
 name|tp
 argument_list|)
+expr_stmt|;
+name|com
+operator|->
+name|extra_state
+operator|&=
+operator|~
+name|CSE_BUSYCHECK
 expr_stmt|;
 block|}
 else|else
@@ -8062,7 +8099,17 @@ name|state
 operator|&
 name|CS_BUSY
 operator|)
+operator|&&
+operator|!
+operator|(
+name|com
+operator|->
+name|extra_state
+operator|&
+name|CSE_BUSYCHECK
+operator|)
 condition|)
+block|{
 name|timeout
 argument_list|(
 name|siobusycheck
@@ -8074,6 +8121,13 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
+name|com
+operator|->
+name|extra_state
+operator||=
+name|CSE_BUSYCHECK
+expr_stmt|;
+block|}
 operator|(
 operator|*
 name|linesw
