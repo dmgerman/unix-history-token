@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.21 (Berkeley) %G%"
+literal|"@(#)err.c	6.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -757,38 +757,45 @@ name|OutChannel
 argument_list|)
 condition|)
 block|{
-name|int
-name|saveerrno
-init|=
-name|errno
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|freopen
-argument_list|(
-literal|"/dev/null"
-argument_list|,
-literal|"w"
-argument_list|,
-name|OutChannel
-argument_list|)
-expr_stmt|;
+comment|/* can't call syserr, 'cause we are using MsgBuf */
 name|HoldErrs
 operator|=
 name|TRUE
 expr_stmt|;
-name|errno
-operator|=
-name|saveerrno
-expr_stmt|;
-name|syserr
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|0
+condition|)
+name|syslog
 argument_list|(
-literal|"putmsg: error on output channel sending \"%s\""
+name|LOG_CRIT
+argument_list|,
+literal|"%s: SYSERR: putmsg (%s): error on output channel sending \"%s\""
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NOQUEUE"
+else|:
+name|CurEnv
+operator|->
+name|e_id
+argument_list|,
+name|CurHostName
 argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 block|}
