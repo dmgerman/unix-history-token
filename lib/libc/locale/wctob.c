@@ -35,6 +35,12 @@ directive|include
 file|<wchar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mblocal.h"
+end_include
+
 begin_function
 name|int
 name|wctob
@@ -65,7 +71,7 @@ name|c
 operator|==
 name|WEOF
 operator|||
-name|wcrtomb
+name|__wcrtomb
 argument_list|(
 name|buf
 argument_list|,

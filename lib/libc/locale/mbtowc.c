@@ -47,6 +47,12 @@ directive|include
 file|<wchar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mblocal.h"
+end_include
+
 begin_function
 name|int
 name|mbtowc
@@ -98,7 +104,7 @@ return|;
 block|}
 name|rval
 operator|=
-name|mbrtowc
+name|__mbrtowc
 argument_list|(
 name|pwc
 argument_list|,

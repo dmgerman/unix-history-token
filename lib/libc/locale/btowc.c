@@ -29,6 +29,12 @@ directive|include
 file|<wchar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mblocal.h"
+end_include
+
 begin_function
 name|wint_t
 name|btowc
@@ -74,7 +80,7 @@ name|c
 expr_stmt|;
 if|if
 condition|(
-name|mbrtowc
+name|__mbrtowc
 argument_list|(
 operator|&
 name|wc

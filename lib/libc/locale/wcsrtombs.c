@@ -41,6 +41,12 @@ directive|include
 file|<wchar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mblocal.h"
+end_include
+
 begin_function
 name|size_t
 name|wcsrtombs
@@ -131,7 +137,7 @@ operator|=
 operator|(
 name|int
 operator|)
-name|wcrtomb
+name|__wcrtomb
 argument_list|(
 name|buf
 argument_list|,
@@ -208,7 +214,7 @@ operator|=
 operator|(
 name|int
 operator|)
-name|wcrtomb
+name|__wcrtomb
 argument_list|(
 name|dst
 argument_list|,
@@ -254,7 +260,7 @@ operator|=
 operator|(
 name|int
 operator|)
-name|wcrtomb
+name|__wcrtomb
 argument_list|(
 name|buf
 argument_list|,

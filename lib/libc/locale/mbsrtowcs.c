@@ -41,6 +41,12 @@ directive|include
 file|<wchar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mblocal.h"
+end_include
+
 begin_function
 name|size_t
 name|mbsrtowcs
@@ -125,7 +131,7 @@ operator|=
 operator|(
 name|int
 operator|)
-name|mbrtowc
+name|__mbrtowc
 argument_list|(
 operator|&
 name|wc
@@ -188,7 +194,7 @@ operator|=
 operator|(
 name|int
 operator|)
-name|mbrtowc
+name|__mbrtowc
 argument_list|(
 name|dst
 argument_list|,
