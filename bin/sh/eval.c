@@ -2182,9 +2182,8 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|prevfd
-operator|>
+operator|<
 literal|0
 condition|)
 name|close
