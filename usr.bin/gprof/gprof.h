@@ -255,6 +255,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|UNITS_TO_CODE
+value|(OFFSET_OF_CODE / sizeof(UNIT))
+end_define
+
 begin_decl_stmt
 name|char
 modifier|*

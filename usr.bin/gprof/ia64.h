@@ -14,13 +14,6 @@ name|OFFSET_OF_CODE
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|UNITS_TO_CODE
-value|(OFFSET_OF_CODE / sizeof(UNIT))
-end_define
-
 begin_enum
 enum|enum
 name|opermodes

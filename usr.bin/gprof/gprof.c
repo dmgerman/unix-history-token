@@ -79,6 +79,13 @@ directive|include
 file|"gprof.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|UNITS_TO_CODE
+value|(OFFSET_OF_CODE / sizeof(UNIT))
+end_define
+
 begin_function_decl
 specifier|static
 name|int
