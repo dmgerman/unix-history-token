@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.67 1996/10/04 13:33:41 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.68 1996/10/04 14:53:48 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -159,8 +159,27 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|current_chunk
+operator|>=
+name|i
+condition|)
+name|current_chunk
+operator|=
+name|i
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+name|int
+name|Total
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -177,14 +196,12 @@ name|row
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|sz
 decl_stmt|;
 for|for
 control|(
 name|i
 operator|=
-name|sz
+name|Total
 operator|=
 literal|0
 init|;
@@ -196,7 +213,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|sz
+name|Total
 operator|+=
 name|chunk_info
 index|[
@@ -308,7 +325,7 @@ name|d
 operator|->
 name|bios_cyl
 operator|=
-name|sz
+name|Total
 operator|/
 name|ONE_MEG
 expr_stmt|;
@@ -769,6 +786,9 @@ parameter_list|)
 block|{
 name|char
 modifier|*
+name|cp
+decl_stmt|,
+modifier|*
 name|p
 decl_stmt|;
 name|int
@@ -827,6 +847,15 @@ condition|(
 name|chunking
 condition|)
 block|{
+name|char
+modifier|*
+name|val
+decl_stmt|,
+name|geometry
+index|[
+literal|80
+index|]
+decl_stmt|;
 comment|/* Now print our overall state */
 name|print_chunks
 argument_list|(
@@ -895,11 +924,10 @@ name|key
 argument_list|)
 condition|)
 block|{
-comment|/* redraw */
 case|case
 literal|'\014'
 case|:
-comment|/* ^L */
+comment|/* ^L (redraw) */
 name|clear
 argument_list|()
 expr_stmt|;
@@ -1053,6 +1081,29 @@ name|bios_cyl
 operator|=
 literal|1
 expr_stmt|;
+else|else
+block|{
+name|d
+operator|->
+name|bios_hd
+operator|=
+literal|64
+expr_stmt|;
+name|d
+operator|->
+name|bios_sect
+operator|=
+literal|32
+expr_stmt|;
+name|d
+operator|->
+name|bios_cyl
+operator|=
+name|Total
+operator|/
+name|ONE_MEG
+expr_stmt|;
+block|}
 name|variable_set2
 argument_list|(
 name|DISK_PARTITIONED
@@ -1416,16 +1467,6 @@ break|break;
 case|case
 literal|'G'
 case|:
-block|{
-name|char
-modifier|*
-name|val
-decl_stmt|,
-name|geometry
-index|[
-literal|80
-index|]
-decl_stmt|;
 name|snprintf
 argument_list|(
 name|geometry
@@ -1512,7 +1553,6 @@ block|}
 name|clear
 argument_list|()
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'S'
@@ -1533,17 +1573,41 @@ literal|'U'
 case|:
 if|if
 condition|(
+operator|(
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|DISK_LABELLED
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"written"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"You've already written this information out - you\n"
+literal|"can't undo it."
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
 name|msgYesNo
 argument_list|(
 literal|"Are you SURE you want to Undo everything?"
 argument_list|)
 condition|)
 block|{
-name|clear
-argument_list|()
-expr_stmt|;
-break|break;
-block|}
 name|d
 operator|=
 name|Open_Disk
@@ -1601,6 +1665,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+block|}
 name|clear
 argument_list|()
 expr_stmt|;
@@ -1608,6 +1673,34 @@ break|break;
 case|case
 literal|'W'
 case|:
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|DISK_LABELLED
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"written"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"You've already written this information out - if\n"
+literal|"you wish to overwrite it, you'll have to restart."
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|!
