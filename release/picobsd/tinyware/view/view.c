@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Andrzej Bialecki  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: view.c,v 1.1 1998/08/19 06:13:35 abial Exp $  */
+comment|/*-  * Copyright (c) 1998 Andrzej Bialecki  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: view.c,v 1.1.1.1 1998/08/27 17:38:45 abial Exp $  */
 end_comment
 
 begin_comment
@@ -3125,6 +3125,9 @@ name|screen_gamma
 operator|=
 literal|1.5
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|log
 operator|=
 name|fopen
@@ -3134,6 +3137,8 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(
@@ -3254,6 +3259,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|log
@@ -3261,6 +3269,8 @@ argument_list|,
 literal|"VGL initialised\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|VGLSavePalette
 argument_list|()
 expr_stmt|;
@@ -3319,6 +3329,9 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|log
@@ -3331,6 +3344,8 @@ name|optind
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fgets
 argument_list|(
 name|buf
@@ -3474,6 +3489,9 @@ name|cur_img
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|log
@@ -3483,6 +3501,8 @@ argument_list|,
 name|nimg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|png_load
 argument_list|(
 name|pres
@@ -3672,6 +3692,9 @@ condition|(
 name|act
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|log
@@ -3681,6 +3704,8 @@ argument_list|,
 name|act
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|kbd_action
 argument_list|(
 name|x
@@ -3701,6 +3726,9 @@ condition|(
 name|changed
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|log
@@ -3708,6 +3736,8 @@ argument_list|,
 literal|"changed, redisplaying\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|display
 argument_list|(
 operator|&
@@ -3750,6 +3780,9 @@ operator|&
 name|MOUSE_BUTTON3DOWN
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fprintf
 argument_list|(
 name|log
@@ -3757,6 +3790,8 @@ argument_list|,
 literal|"pop_up called\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pop_up
 argument_list|(
 literal|"View"
@@ -3771,11 +3806,16 @@ block|}
 name|VGLEnd
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|fclose
 argument_list|(
 name|log
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|0
