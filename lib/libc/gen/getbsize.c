@@ -84,7 +84,7 @@ name|headerlenp
 parameter_list|,
 name|blocksizep
 parameter_list|)
-name|int
+name|size_t
 modifier|*
 name|headerlenp
 decl_stmt|;
@@ -115,7 +115,9 @@ name|ep
 decl_stmt|,
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|form
 decl_stmt|;
