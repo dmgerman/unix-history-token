@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)update.c	4.8 (Berkeley) %G%"
+literal|"@(#)update.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,26 +164,22 @@ control|(
 init|;
 condition|;
 control|)
-name|pause
-argument_list|()
+name|sigpause
+argument_list|(
+name|sigblock
+argument_list|(
+literal|0L
+argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 block|}
 end_function
-
-begin_comment
-comment|/* VARARGS */
-end_comment
 
 begin_function
 name|void
 name|mysync
-parameter_list|(
-name|i
-parameter_list|)
-name|int
-name|i
-decl_stmt|;
+parameter_list|()
 block|{
 operator|(
 name|void
