@@ -10401,8 +10401,10 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 comment|/* port not numeric */
 block|}
@@ -10495,8 +10497,10 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 ifdef|#
@@ -10821,8 +10825,10 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* Lose any host bits in the network number. */
@@ -11013,8 +11019,10 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|freeaddrinfo
@@ -11261,7 +11269,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -11370,7 +11380,9 @@ literal|0
 condition|)
 comment|/* traditional behaviour, allow everything */
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 operator|(
 name|void
@@ -11506,7 +11518,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* for safety, should not occur */
 name|dprintf
@@ -11968,12 +11982,16 @@ name|i
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* hooray! */
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -12037,8 +12055,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -12058,8 +12078,10 @@ literal|1
 condition|)
 comment|/* we are royally screwed anyway */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|sigemptyset
 argument_list|(
@@ -12125,8 +12147,10 @@ name|nulldesc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 case|case
 literal|0
@@ -12401,10 +12425,12 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|pfd
 index|[
 literal|1
 index|]
+operator|)
 return|;
 block|}
 end_function
@@ -12581,11 +12607,15 @@ name|q
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
