@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	4.3 82/10/07"
+literal|"@(#)if.c	4.4 82/11/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,13 +35,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/in.h>
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|<netinet/in.h>
 end_include
 
 begin_include

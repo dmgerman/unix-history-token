@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	4.4 82/10/07"
+literal|"@(#)route.c	4.5 82/11/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,12 +44,6 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/in.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -64,6 +58,12 @@ begin_include
 include|#
 directive|include
 file|<net/route.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include
