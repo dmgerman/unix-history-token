@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lsearch.c	5.3 (Berkeley) %G%"
+literal|"@(#)lsearch.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|linear_base
