@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -191,12 +191,9 @@ argument_list|(
 literal|"server \"smtp\" unknown"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+goto|goto
+name|severe
+goto|;
 block|}
 name|SendmailAddress
 operator|.
