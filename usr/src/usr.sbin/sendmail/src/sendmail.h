@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	4.8		%G%"
+literal|"@(#)sendmail.h	4.9		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2145,23 +2145,23 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|SafeAlias
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* alias file must have "@:@" to be complete */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|AutoRebuild
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* auto-rebuild the alias database as needed */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|SafeAlias
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* minutes to wait until @:@ in alias file */
 end_comment
 
 begin_decl_stmt
