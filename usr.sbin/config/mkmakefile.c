@@ -99,6 +99,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|old_config_present
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Lookup a file, by name.  */
 end_comment
@@ -444,6 +451,11 @@ name|users
 modifier|*
 name|up
 decl_stmt|;
+name|int
+name|warn_make_clean
+init|=
+literal|0
+decl_stmt|;
 name|read_files
 argument_list|()
 expr_stmt|;
@@ -572,38 +584,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-block|{
-name|struct
-name|cputype
-modifier|*
-name|cp
-decl_stmt|;
-for|for
-control|(
-name|cp
-operator|=
-name|cputype
-init|;
-name|cp
-condition|;
-name|cp
-operator|=
-name|cp
-operator|->
-name|cpu_next
-control|)
-name|fprintf
-argument_list|(
-name|ofp
-argument_list|,
-literal|" -D%s"
-argument_list|,
-name|cp
-operator|->
-name|cpu_name
-argument_list|)
-expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* XXX: moved to cputype.h */
+block|{ struct cputype *cp; 	  for (cp = cputype; cp; cp = cp->cpu_next) 		fprintf(ofp, " -D%s", cp->cpu_name); 	}
+endif|#
+directive|endif
 for|for
 control|(
 name|op
@@ -618,6 +605,18 @@ name|op
 operator|->
 name|op_next
 control|)
+block|{
+if|if
+condition|(
+operator|!
+name|op
+operator|->
+name|op_ownfile
+condition|)
+block|{
+name|warn_make_clean
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|op
@@ -628,7 +627,7 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|" -D%s=\"%s\""
+literal|" -D%s=%s"
 argument_list|,
 name|op
 operator|->
@@ -651,6 +650,8 @@ operator|->
 name|op_name
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 name|fprintf
 argument_list|(
 name|ofp
@@ -1006,6 +1007,40 @@ argument_list|(
 name|ofp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
+if|if
+condition|(
+name|warn_make_clean
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: Unknown options used (not in ../../conf/options or ./options.%s).\n"
+argument_list|,
+name|machinename
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|old_config_present
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"It is VERY important that you do a ``make clean'' before recompiling!\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|printf
+argument_list|(
+literal|"Don't forget to do a ``make depend''\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1877,6 +1912,15 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+sizeof|sizeof
+expr|*
+name|dp
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|dp
+argument_list|,
 sizeof|sizeof
 expr|*
 name|dp

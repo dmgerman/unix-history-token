@@ -148,6 +148,12 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|old_config_present
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Config builds a set of files for building a UNIX  * system given a description of the desired system.  */
 end_comment
@@ -483,6 +489,10 @@ block|}
 block|}
 endif|#
 directive|endif
+else|else
+name|old_config_present
+operator|++
+expr_stmt|;
 name|loadaddress
 operator|=
 operator|-
@@ -627,6 +637,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|options
+argument_list|()
+expr_stmt|;
+comment|/* make options .h files */
 name|makefile
 argument_list|()
 expr_stmt|;

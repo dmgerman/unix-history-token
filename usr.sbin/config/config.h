@@ -516,6 +516,10 @@ name|char
 modifier|*
 name|op_value
 decl_stmt|;
+name|int
+name|op_ownfile
+decl_stmt|;
+comment|/* true = own file, false = makefile */
 name|struct
 name|opt
 modifier|*
@@ -527,6 +531,29 @@ name|opt
 struct|,
 modifier|*
 name|mkopt
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|opt_list
+block|{
+name|char
+modifier|*
+name|o_name
+decl_stmt|;
+name|char
+modifier|*
+name|o_file
+decl_stmt|;
+name|struct
+name|opt_list
+modifier|*
+name|o_next
+decl_stmt|;
+block|}
+modifier|*
+name|otab
 struct|;
 end_struct
 
@@ -756,6 +783,17 @@ name|u_int
 name|loadaddress
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|old_config_present
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Old config/build directory still there */
+end_comment
 
 begin_define
 define|#

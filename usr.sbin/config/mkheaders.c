@@ -629,6 +629,7 @@ name|f_fn
 operator|=
 name|inw
 expr_stmt|;
+comment|/* malloced */
 name|fl
 operator|->
 name|f_type
@@ -685,6 +686,13 @@ expr_stmt|;
 name|free
 argument_list|(
 name|fl
+operator|->
+name|f_fn
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fl
 argument_list|)
 expr_stmt|;
 block|}
@@ -727,8 +735,12 @@ name|fl
 operator|->
 name|f_fn
 operator|=
+name|ns
+argument_list|(
 name|name
+argument_list|)
 expr_stmt|;
+comment|/* malloced */
 name|fl
 operator|->
 name|f_type
@@ -812,6 +824,13 @@ operator|=
 name|fl
 operator|->
 name|f_next
+expr_stmt|;
+name|free
+argument_list|(
+name|fl
+operator|->
+name|f_fn
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
