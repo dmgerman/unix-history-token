@@ -267,6 +267,12 @@ name|register_t
 operator|)
 name|i386_unpend
 expr_stmt|;
+name|frame
+operator|.
+name|cf_eflags
+operator|=
+name|PSL_KERNEL
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|curthread
