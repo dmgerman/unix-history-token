@@ -244,9 +244,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|uid_t
-name|saved_uid
-decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -595,24 +592,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX Hack to temporarily allow this process (regardless of it's creds) 	 * to open the fifo we need to write to. vn_open() really should 	 * take a ucred (and once it does, this code should be fixed to use 	 * proc0's ucred. 	 * 	 * XXX: This introduces an exploitable race condition allowing 	 * a local attacker to gain root privilege. 	 */
-name|saved_uid
-operator|=
-name|p
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
-expr_stmt|;
-name|p
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* temporarly run the vn_open as root */
 name|fmode
 operator|=
 name|FFLAGS
@@ -622,7 +601,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|vn_open
+name|vn_open_cred
 argument_list|(
 operator|&
 name|nd
@@ -631,15 +610,11 @@ operator|&
 name|fmode
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|p
-operator|->
+argument_list|,
+name|proc0
+operator|.
 name|p_ucred
-operator|->
-name|cr_uid
-operator|=
-name|saved_uid
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
