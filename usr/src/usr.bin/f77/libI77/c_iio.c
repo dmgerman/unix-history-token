@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_c_iio[] = "@(#)c_iio.c	1.1";  *  * internal (character array) i/o: common portions  */
+comment|/* char id_c_iio[] = "@(#)c_iio.c	1.2";  *  * internal (character array) i/o: common portions  */
 end_comment
 
 begin_include
@@ -27,6 +27,12 @@ begin_comment
 comment|/* active internal io list */
 end_comment
 
+begin_decl_stmt
+name|LOCAL
+name|lio_nl
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|z_wnew
@@ -41,6 +47,53 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|formatted
+operator|==
+name|LISTDIRECTED
+condition|)
+block|{
+if|if
+condition|(
+name|lio_nl
+operator|==
+name|YES
+condition|)
+block|{
+name|recnum
+operator|++
+expr_stmt|;
+name|recpos
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|recpos
+operator|==
+name|svic
+operator|->
+name|icirlen
+condition|)
+block|{
+name|lio_nl
+operator|=
+name|YES
+expr_stmt|;
+return|return
+operator|(
+literal|'\n'
+operator|)
+return|;
+block|}
+name|lio_nl
+operator|=
+name|NO
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|icptr
@@ -76,17 +129,6 @@ operator|(
 operator|*
 name|icptr
 operator|++
-operator|)
-return|;
-if|if
-condition|(
-name|formatted
-operator|==
-name|LISTDIRECTED
-condition|)
-return|return
-operator|(
-name|EOF
 operator|)
 return|;
 return|return
@@ -214,6 +256,23 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|lio_nl
+operator|==
+name|YES
+condition|)
+block|{
+name|lio_nl
+operator|=
+name|NO
+expr_stmt|;
+return|return
+operator|(
+name|OK
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|ch
@@ -710,6 +769,10 @@ expr_stmt|;
 name|cplus
 operator|=
 name|cblank
+operator|=
+name|NO
+expr_stmt|;
+name|lio_nl
 operator|=
 name|NO
 expr_stmt|;
