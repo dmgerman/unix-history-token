@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rsa.c,v 1.29 2000/09/07 21:13:36 markus Exp $"
+literal|"$OpenBSD: auth-rsa.c,v 1.32 2000/10/14 12:19:45 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -90,6 +90,17 @@ include|#
 directive|include
 file|<openssl/md5.h>
 end_include
+
+begin_comment
+comment|/* import */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|ServerOptions
+name|options
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Session identifier that is used to bind key exchange and authentication  * responses to a particular session.  */
@@ -408,10 +419,6 @@ modifier|*
 name|client_n
 parameter_list|)
 block|{
-specifier|extern
-name|ServerOptions
-name|options
-decl_stmt|;
 name|char
 name|line
 index|[
@@ -448,6 +455,16 @@ name|RSA
 modifier|*
 name|pk
 decl_stmt|;
+comment|/* no user given */
+if|if
+condition|(
+name|pw
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* Temporarily use the user's uid. */
 name|temporarily_use_uid
 argument_list|(
@@ -941,6 +958,20 @@ name|options
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 		 * If our options do not allow this key to be used, 		 * do not send challenge. 		 */
+if|if
+condition|(
+operator|!
+name|auth_parse_options
+argument_list|(
+name|pw
+argument_list|,
+name|options
+argument_list|,
+name|linenum
+argument_list|)
+condition|)
+continue|continue;
 comment|/* Parse the key from the line. */
 if|if
 condition|(
@@ -1057,19 +1088,8 @@ block|}
 comment|/* 		 * Correct response.  The client has been successfully 		 * authenticated. Note that we have not yet processed the 		 * options; this will be reset if the options cause the 		 * authentication to be rejected. 		 * Break out of the loop if authentication was successful; 		 * otherwise continue searching. 		 */
 name|authenticated
 operator|=
-name|auth_parse_options
-argument_list|(
-name|pw
-argument_list|,
-name|options
-argument_list|,
-name|linenum
-argument_list|)
+literal|1
 expr_stmt|;
-if|if
-condition|(
-name|authenticated
-condition|)
 break|break;
 block|}
 comment|/* Restore the privileged uid. */
@@ -1095,6 +1115,10 @@ name|packet_send_debug
 argument_list|(
 literal|"RSA authentication accepted."
 argument_list|)
+expr_stmt|;
+else|else
+name|auth_clear_options
+argument_list|()
 expr_stmt|;
 comment|/* Return authentication result. */
 return|return

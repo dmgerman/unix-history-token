@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect1.c,v 1.6 2000/09/07 20:27:54 deraadt Exp $"
+literal|"$OpenBSD: sshconnect1.c,v 1.8 2000/10/12 09:59:19 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -77,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"packet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cipher.h"
 end_include
 
 begin_include
@@ -3763,7 +3757,7 @@ literal|"No valid SSH1 cipher, using %.100s instead."
 argument_list|,
 name|cipher_name
 argument_list|(
-name|SSH_FALLBACK_CIPHER
+name|ssh_cipher_default
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3771,7 +3765,7 @@ name|options
 operator|.
 name|cipher
 operator|=
-name|SSH_FALLBACK_CIPHER
+name|ssh_cipher_default
 expr_stmt|;
 block|}
 elseif|else
@@ -3786,8 +3780,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|cipher_mask1
-argument_list|()
+name|cipher_mask_ssh1
+argument_list|(
+literal|1
+argument_list|)
 operator|&
 name|supported_ciphers
 operator|&
@@ -3803,30 +3799,6 @@ name|cipher
 operator|=
 name|ssh_cipher_default
 expr_stmt|;
-else|else
-block|{
-name|debug
-argument_list|(
-literal|"Cipher %s not supported, using %.100s instead."
-argument_list|,
-name|cipher_name
-argument_list|(
-name|ssh_cipher_default
-argument_list|)
-argument_list|,
-name|cipher_name
-argument_list|(
-name|SSH_FALLBACK_CIPHER
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|options
-operator|.
-name|cipher
-operator|=
-name|SSH_FALLBACK_CIPHER
-expr_stmt|;
-block|}
 block|}
 comment|/* Check that the selected cipher is supported. */
 if|if

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: canohost.c,v 1.15 2000/09/07 21:13:37 markus Exp $"
+literal|"$OpenBSD: canohost.c,v 1.16 2000/10/21 17:04:22 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -528,7 +528,7 @@ if|if
 condition|(
 name|getsockopt
 argument_list|(
-literal|0
+name|socket
 argument_list|,
 name|ipproto
 argument_list|,

@@ -36,7 +36,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-krb4.c,v 1.18 2000/09/07 20:27:49 deraadt Exp $"
+literal|"$OpenBSD: auth-krb4.c,v 1.19 2000/10/03 18:03:02 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1247,6 +1247,15 @@ name|creds
 decl_stmt|;
 if|if
 condition|(
+name|pw
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|auth_kerberos_tgt_failure
+goto|;
+if|if
+condition|(
 operator|!
 name|radix_to_creds
 argument_list|(
@@ -1601,11 +1610,35 @@ name|creds
 decl_stmt|;
 name|uid_t
 name|uid
-init|=
-name|pw
-operator|->
-name|pw_uid
 decl_stmt|;
+if|if
+condition|(
+name|pw
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* XXX fake protocol error */
+name|packet_send_debug
+argument_list|(
+literal|"Protocol error decoding AFS token"
+argument_list|)
+expr_stmt|;
+name|packet_start
+argument_list|(
+name|SSH_SMSG_FAILURE
+argument_list|)
+expr_stmt|;
+name|packet_send
+argument_list|()
+expr_stmt|;
+name|packet_write_wait
+argument_list|()
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1698,6 +1731,13 @@ name|pname
 operator|+
 literal|7
 argument_list|)
+expr_stmt|;
+else|else
+name|uid
+operator|=
+name|pw
+operator|->
+name|pw_uid
 expr_stmt|;
 if|if
 condition|(

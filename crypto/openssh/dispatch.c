@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: dispatch.c,v 1.4 2000/09/07 20:27:51 deraadt Exp $"
+literal|"$OpenBSD: dispatch.c,v 1.5 2000/09/21 11:25:34 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -68,6 +68,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|error
@@ -149,6 +153,10 @@ parameter_list|,
 name|int
 modifier|*
 name|done
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 for|for
@@ -225,6 +233,8 @@ argument_list|(
 name|type
 argument_list|,
 name|plen
+argument_list|,
+name|ctxt
 argument_list|)
 expr_stmt|;
 else|else

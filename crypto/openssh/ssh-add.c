@@ -12,6 +12,14 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
 literal|"$OpenBSD: ssh-add.c,v 1.22 2000/09/07 20:27:54 deraadt Exp $"
 argument_list|)
 expr_stmt|;
@@ -324,6 +332,16 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
 argument_list|)
 expr_stmt|;
 if|if

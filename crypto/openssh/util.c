@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: util.c,v 1.5 2000/09/07 20:27:55 deraadt Exp $	*/
+comment|/*	$OpenBSD: util.c,v 1.6 2000/10/27 07:32:19 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: util.c,v 1.5 2000/09/07 20:27:55 deraadt Exp $"
+literal|"$OpenBSD: util.c,v 1.6 2000/10/27 07:32:19 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -92,24 +92,6 @@ block|{
 name|int
 name|val
 decl_stmt|;
-if|if
-condition|(
-name|isatty
-argument_list|(
-name|fd
-argument_list|)
-condition|)
-block|{
-comment|/* do not mess with tty's */
-name|debug
-argument_list|(
-literal|"no set_nonblock for tty fd %d"
-argument_list|,
-name|fd
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|val
 operator|=
 name|fcntl
@@ -148,7 +130,16 @@ name|val
 operator|&
 name|O_NONBLOCK
 condition|)
+block|{
+name|debug
+argument_list|(
+literal|"fd %d IS O_NONBLOCK"
+argument_list|,
+name|fd
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|debug
 argument_list|(
 literal|"fd %d setting O_NONBLOCK"

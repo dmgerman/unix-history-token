@@ -23,6 +23,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 function_decl|;
 end_typedef
@@ -62,6 +66,10 @@ parameter_list|,
 name|int
 modifier|*
 name|done
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -75,6 +83,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 function_decl|;
 end_function_decl

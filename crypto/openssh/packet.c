@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: packet.c,v 1.35 2000/09/07 20:27:52 deraadt Exp $"
+literal|"$OpenBSD: packet.c,v 1.38 2000/10/12 14:21:12 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -51,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|"crc32.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cipher.h"
 end_include
 
 begin_include
@@ -117,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cipher.h"
 end_include
 
 begin_include
@@ -559,6 +559,26 @@ name|int
 name|fd_out
 parameter_list|)
 block|{
+name|Cipher
+modifier|*
+name|none
+init|=
+name|cipher_by_name
+argument_list|(
+literal|"none"
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|none
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"packet_set_connection: cannot load cipher 'none'"
+argument_list|)
+expr_stmt|;
 name|connection_in
 operator|=
 name|fd_in
@@ -571,12 +591,12 @@ name|cipher_type
 operator|=
 name|SSH_CIPHER_NONE
 expr_stmt|;
-name|cipher_set_key
+name|cipher_init
 argument_list|(
 operator|&
 name|send_context
 argument_list|,
-name|SSH_CIPHER_NONE
+name|none
 argument_list|,
 operator|(
 name|unsigned
@@ -586,14 +606,18 @@ operator|)
 literal|""
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|cipher_set_key
+name|cipher_init
 argument_list|(
 operator|&
 name|receive_context
 argument_list|,
-name|SSH_CIPHER_NONE
+name|none
 argument_list|,
 operator|(
 name|unsigned
@@ -601,6 +625,10 @@ name|char
 operator|*
 operator|)
 literal|""
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -1226,7 +1254,7 @@ name|packet_decrypt
 parameter_list|(
 name|CipherContext
 modifier|*
-name|cc
+name|context
 parameter_list|,
 name|void
 modifier|*
@@ -1241,47 +1269,20 @@ name|int
 name|bytes
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|bytes
-operator|%
-literal|8
-operator|)
-operator|!=
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"packet_decrypt: bad ciphertext length %d"
-argument_list|,
-name|bytes
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Cryptographic attack detector for ssh - Modifications for packet.c 	 * (C)1998 CORE-SDI, Buenos Aires Argentina Ariel Futoransky(futo@core-sdi.com) 	 */
 if|if
 condition|(
-name|cc
-operator|->
-name|type
-operator|==
-name|SSH_CIPHER_NONE
-operator|||
+operator|!
 name|compat20
-condition|)
-block|{
-name|i
-operator|=
-name|DEATTACK_OK
-expr_stmt|;
-block|}
-else|else
-block|{
-name|i
-operator|=
+operator|&&
+name|context
+operator|->
+name|cipher
+operator|->
+name|number
+operator|!=
+name|SSH_CIPHER_NONE
+operator|&&
 name|detect_attack
 argument_list|(
 name|src
@@ -1290,11 +1291,6 @@ name|bytes
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|i
 operator|==
 name|DEATTACK_DETECTED
 condition|)
@@ -1305,7 +1301,7 @@ argument_list|)
 expr_stmt|;
 name|cipher_decrypt
 argument_list|(
-name|cc
+name|context
 argument_list|,
 name|dest
 argument_list|,
@@ -1336,9 +1332,31 @@ name|int
 name|keylen
 parameter_list|,
 name|int
-name|cipher
+name|number
 parameter_list|)
 block|{
+name|Cipher
+modifier|*
+name|cipher
+init|=
+name|cipher_by_number
+argument_list|(
+name|number
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|cipher
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"packet_set_encryption_key: unknown cipher number %d"
+argument_list|,
+name|number
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|keylen
@@ -1347,13 +1365,12 @@ literal|20
 condition|)
 name|fatal
 argument_list|(
-literal|"keylen too small: %d"
+literal|"packet_set_encryption_key: keylen too small: %d"
 argument_list|,
 name|keylen
 argument_list|)
 expr_stmt|;
-comment|/* All other ciphers use the same key in both directions for now. */
-name|cipher_set_key
+name|cipher_init
 argument_list|(
 operator|&
 name|receive_context
@@ -1363,9 +1380,13 @@ argument_list|,
 name|key
 argument_list|,
 name|keylen
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|cipher_set_key
+name|cipher_init
 argument_list|(
 operator|&
 name|send_context
@@ -1375,6 +1396,10 @@ argument_list|,
 name|key
 argument_list|,
 name|keylen
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2155,6 +2180,8 @@ name|enc
 condition|?
 name|enc
 operator|->
+name|cipher
+operator|->
 name|block_size
 else|:
 literal|8
@@ -2333,7 +2360,9 @@ name|enc
 operator|&&
 name|enc
 operator|->
-name|type
+name|cipher
+operator|->
+name|number
 operator|!=
 name|SSH_CIPHER_NONE
 condition|)
@@ -2493,7 +2522,7 @@ name|DBG
 argument_list|(
 name|debug
 argument_list|(
-literal|"done calc HMAC out #%d"
+literal|"done calc MAC out #%d"
 argument_list|,
 name|seqnr
 argument_list|)
@@ -2646,24 +2675,26 @@ name|DBG
 argument_list|(
 name|debug
 argument_list|(
-literal|"cipher_set_key_iv send_context"
+literal|"cipher_init send_context"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cipher_set_key_iv
+name|cipher_init
 argument_list|(
 operator|&
 name|send_context
 argument_list|,
 name|enc
 operator|->
-name|type
+name|cipher
 argument_list|,
 name|enc
 operator|->
 name|key
 argument_list|,
 name|enc
+operator|->
+name|cipher
 operator|->
 name|key_len
 argument_list|,
@@ -2673,7 +2704,9 @@ name|iv
 argument_list|,
 name|enc
 operator|->
-name|iv_len
+name|cipher
+operator|->
+name|block_size
 argument_list|)
 expr_stmt|;
 name|clear_enc_keys
@@ -3502,6 +3535,8 @@ name|enc
 condition|?
 name|enc
 operator|->
+name|cipher
+operator|->
 name|block_size
 else|:
 literal|8
@@ -3810,14 +3845,14 @@ literal|0
 condition|)
 name|packet_disconnect
 argument_list|(
-literal|"Corrupted HMAC on input."
+literal|"Corrupted MAC on input."
 argument_list|)
 expr_stmt|;
 name|DBG
 argument_list|(
 name|debug
 argument_list|(
-literal|"HMAC #%d ok"
+literal|"MAC #%d ok"
 argument_list|,
 name|seqnr
 argument_list|)
@@ -4076,24 +4111,26 @@ name|DBG
 argument_list|(
 name|debug
 argument_list|(
-literal|"cipher_set_key_iv receive_context"
+literal|"cipher_init receive_context"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cipher_set_key_iv
+name|cipher_init
 argument_list|(
 operator|&
 name|receive_context
 argument_list|,
 name|enc
 operator|->
-name|type
+name|cipher
 argument_list|,
 name|enc
 operator|->
 name|key
 argument_list|,
 name|enc
+operator|->
+name|cipher
 operator|->
 name|key_len
 argument_list|,
@@ -4103,7 +4140,9 @@ name|iv
 argument_list|,
 name|enc
 operator|->
-name|iv_len
+name|cipher
+operator|->
+name|block_size
 argument_list|)
 expr_stmt|;
 name|clear_enc_keys

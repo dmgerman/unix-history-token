@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999 Markus Friedl.  All rights reserved.  *  * Redi
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: compat.h,v 1.10 2000/09/07 20:27:50 deraadt Exp $"); */
+comment|/* RCSID("$OpenBSD: compat.h,v 1.11 2000/10/14 12:16:56 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -78,7 +78,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SSH_COMPAT_SESSIONID_ENCODING
+name|SSH_OLD_SESSIONID
 value|0x10
 end_define
 

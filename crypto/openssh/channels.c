@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: channels.c,v 1.68 2000/09/07 20:40:29 markus Exp $"
+literal|"$OpenBSD: channels.c,v 1.72 2000/10/27 07:48:22 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -458,6 +458,9 @@ name|efd
 parameter_list|,
 name|int
 name|extusage
+parameter_list|,
+name|int
+name|nonblock
 parameter_list|)
 block|{
 comment|/* Update the maximum file descriptor value. */
@@ -531,6 +534,12 @@ name|extended_usage
 operator|=
 name|extusage
 expr_stmt|;
+comment|/* enable nonblocking mode */
+if|if
+condition|(
+name|nonblock
+condition|)
+block|{
 if|if
 condition|(
 name|rfd
@@ -567,6 +576,7 @@ argument_list|(
 name|efd
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -606,6 +616,9 @@ parameter_list|,
 name|char
 modifier|*
 name|remote_name
+parameter_list|,
+name|int
+name|nonblock
 parameter_list|)
 block|{
 name|int
@@ -740,7 +753,7 @@ name|channels_alloc
 operator|+=
 literal|10
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel: expanding %d"
 argument_list|,
@@ -833,6 +846,8 @@ argument_list|,
 name|efd
 argument_list|,
 name|extusage
+argument_list|,
+name|nonblock
 argument_list|)
 expr_stmt|;
 name|c
@@ -987,6 +1002,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|remote_name
+argument_list|,
+literal|1
 argument_list|)
 return|;
 block|}
@@ -2513,6 +2530,8 @@ name|xstrdup
 argument_list|(
 name|buf
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2805,6 +2824,8 @@ name|xstrdup
 argument_list|(
 name|buf
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3551,7 +3572,7 @@ name|extended
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: written %d to efd %d"
 argument_list|,
@@ -3626,7 +3647,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: read %d from efd %d"
 argument_list|,
@@ -3774,7 +3795,7 @@ expr_stmt|;
 name|packet_send
 argument_list|()
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: window %d sent adjust %d"
 argument_list|,
@@ -4910,6 +4931,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|int
@@ -5107,6 +5132,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|int
@@ -5249,7 +5278,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: rcvd ext data %d"
 argument_list|,
@@ -5424,6 +5453,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|int
@@ -5484,6 +5517,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|int
@@ -5593,6 +5630,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|int
@@ -5649,6 +5690,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|int
@@ -5722,6 +5767,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|int
@@ -5836,7 +5885,7 @@ operator|==
 name|type
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"callback start"
 argument_list|)
@@ -5854,7 +5903,7 @@ operator|->
 name|cb_arg
 argument_list|)
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"callback done"
 argument_list|)
@@ -5890,6 +5939,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|int
@@ -6017,6 +6070,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|int
@@ -6081,7 +6138,7 @@ operator|==
 name|type
 condition|)
 block|{
-name|debug
+name|debug2
 argument_list|(
 literal|"callback start"
 argument_list|)
@@ -6099,7 +6156,7 @@ operator|->
 name|cb_arg
 argument_list|)
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"callback done"
 argument_list|)
@@ -6158,6 +6215,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|Channel
@@ -6219,7 +6280,7 @@ expr_stmt|;
 name|packet_done
 argument_list|()
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"channel %d: rcvd adjust %d"
 argument_list|,
@@ -7168,6 +7229,8 @@ name|xstrdup
 argument_list|(
 literal|"port listener"
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|strlcpy
@@ -7781,6 +7844,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|u_short
@@ -8554,6 +8621,8 @@ name|xstrdup
 argument_list|(
 literal|"X11 inet listener"
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -9220,6 +9289,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|int
@@ -9374,6 +9447,87 @@ name|packet_send
 argument_list|()
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* dummy protocol handler that denies SSH-1 requests (agent/x11) */
+end_comment
+
+begin_function
+name|void
+name|deny_input_open
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|int
+name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
+parameter_list|)
+block|{
+name|int
+name|rchan
+init|=
+name|packet_get_int
+argument_list|()
+decl_stmt|;
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|SSH_SMSG_AGENT_OPEN
+case|:
+name|error
+argument_list|(
+literal|"Warning: ssh server tried agent forwarding."
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SSH_SMSG_X11_OPEN
+case|:
+name|error
+argument_list|(
+literal|"Warning: ssh server tried X11 forwarding."
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|error
+argument_list|(
+literal|"deny_input_open: type %d plen %d"
+argument_list|,
+name|type
+argument_list|,
+name|plen
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|error
+argument_list|(
+literal|"Warning: this is probably a break in attempt by a malicious server."
+argument_list|)
+expr_stmt|;
+name|packet_start
+argument_list|(
+name|SSH_MSG_CHANNEL_OPEN_FAILURE
+argument_list|)
+expr_stmt|;
+name|packet_put_int
+argument_list|(
+name|rchan
+argument_list|)
+expr_stmt|;
+name|packet_send
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -10096,6 +10250,10 @@ name|type
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|void
+modifier|*
+name|ctxt
 parameter_list|)
 block|{
 name|int
@@ -10625,6 +10783,9 @@ name|efd
 parameter_list|,
 name|int
 name|extusage
+parameter_list|,
+name|int
+name|nonblock
 parameter_list|)
 block|{
 name|Channel
@@ -10666,6 +10827,8 @@ argument_list|,
 name|efd
 argument_list|,
 name|extusage
+argument_list|,
+name|nonblock
 argument_list|)
 expr_stmt|;
 name|c

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth.c,v 1.10 2000/09/07 21:13:36 markus Exp $"
+literal|"$OpenBSD: auth.c,v 1.11 2000/10/11 20:27:23 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -59,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cipher.h"
 end_include
 
 begin_include

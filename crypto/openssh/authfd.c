@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfd.c,v 1.27 2000/09/07 20:27:49 deraadt Exp $"
+literal|"$OpenBSD: authfd.c,v 1.29 2000/10/09 21:51:00 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -103,6 +103,12 @@ directive|include
 file|"dsa.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"compat.h"
+end_include
+
 begin_comment
 comment|/* helper */
 end_comment
@@ -116,6 +122,21 @@ name|type
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* macro to check for "agent failure" message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|agent_failed
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((x == SSH_AGENT_FAILURE) || (x == SSH_COM_AGENT2_FAILURE))
+end_define
 
 begin_comment
 comment|/* Returns the number of the authentication fd, or -1 if there is none. */
@@ -801,9 +822,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|agent_failed
+argument_list|(
 name|type
-operator|==
-name|SSH_AGENT_FAILURE
+argument_list|)
 condition|)
 block|{
 return|return
@@ -1277,9 +1299,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|agent_failed
+argument_list|(
 name|type
-operator|==
-name|SSH_AGENT_FAILURE
+argument_list|)
 condition|)
 block|{
 name|log
@@ -1383,6 +1406,10 @@ name|int
 name|datalen
 parameter_list|)
 block|{
+specifier|extern
+name|int
+name|datafellows
+decl_stmt|;
 name|Buffer
 name|msg
 decl_stmt|;
@@ -1397,6 +1424,10 @@ name|blen
 decl_stmt|;
 name|int
 name|type
+decl_stmt|,
+name|flags
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|ret
@@ -1423,6 +1454,16 @@ return|return
 operator|-
 literal|1
 return|;
+if|if
+condition|(
+name|datafellows
+operator|&
+name|SSH_BUG_SIGBLOB
+condition|)
+name|flags
+operator|=
+name|SSH_AGENT_OLD_SIGNATURE
+expr_stmt|;
 name|buffer_init
 argument_list|(
 operator|&
@@ -1462,10 +1503,9 @@ argument_list|(
 operator|&
 name|msg
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
-comment|/* flags, unused */
 name|xfree
 argument_list|(
 name|blob
@@ -1508,9 +1548,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|agent_failed
+argument_list|(
 name|type
-operator|==
-name|SSH_AGENT_FAILURE
+argument_list|)
 condition|)
 block|{
 name|log
@@ -2229,6 +2270,9 @@ condition|)
 block|{
 case|case
 name|SSH_AGENT_FAILURE
+case|:
+case|case
+name|SSH_COM_AGENT2_FAILURE
 case|:
 name|log
 argument_list|(

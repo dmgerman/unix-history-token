@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-skey.c,v 1.8 2000/09/07 20:27:49 deraadt Exp $"
+literal|"$OpenBSD: auth-skey.c,v 1.9 2000/10/19 16:41:13 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -127,6 +127,8 @@ name|NULL
 condition|)
 name|packet_send_debug
 argument_list|(
+literal|"%s"
+argument_list|,
 name|skeyinfo
 argument_list|)
 expr_stmt|;

@@ -477,7 +477,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"rsa_private_encrypt() failed."
+literal|"rsa_public_encrypt() failed."
 argument_list|)
 expr_stmt|;
 name|BN_bin2bn
