@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.43.2.10 1995/06/05 18:53:54 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.43.2.11 1995/06/06 09:27:10 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -180,7 +180,7 @@ name|setenv
 argument_list|(
 literal|"PATH"
 argument_list|,
-literal|"/stand:/bin:/sbin:/usr/sbin:/usr/bin:/mnt/bin:/mnt/sbin:/mnt/usr/sbin:/mnt/usr/bin"
+literal|"/stand:/bin:/sbin:/usr/sbin:/usr/bin:/mnt/bin:/mnt/sbin:/mnt/usr/sbin:/mnt/usr/bin:/usr/X11R6/bin"
 argument_list|,
 literal|1
 argument_list|)
