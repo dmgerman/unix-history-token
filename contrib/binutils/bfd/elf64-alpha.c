@@ -6600,12 +6600,23 @@ name|MAX_GOT_ENTRIES
 value|(64*1024 / 8)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ELF_DYNAMIC_INTERPRETER
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|ELF_DYNAMIC_INTERPRETER
-value|"/usr/libexec/ld-elf.so.1"
+value|"/usr/lib/ld.so"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape
@@ -14626,6 +14637,17 @@ operator|!
 name|info
 operator|->
 name|no_undefined
+operator|&&
+name|ELF_ST_VISIBILITY
+argument_list|(
+name|h
+operator|->
+name|root
+operator|.
+name|other
+argument_list|)
+operator|==
+name|STV_DEFAULT
 condition|)
 name|relocation
 operator|=
@@ -14675,6 +14697,15 @@ operator|||
 name|info
 operator|->
 name|no_undefined
+operator|||
+name|ELF_ST_VISIBILITY
+argument_list|(
+name|h
+operator|->
+name|root
+operator|.
+name|other
+argument_list|)
 operator|)
 argument_list|)
 operator|)
