@@ -1682,17 +1682,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-name|phy
-operator|>
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|sc
 operator|=
 name|device_get_softc
