@@ -12,6 +12,10 @@ name|TZFILE_H
 end_define
 
 begin_comment
+comment|/* ** This file is in the public domain, so clarified as of ** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov). */
+end_comment
+
+begin_comment
 comment|/* ** This header is for use ONLY with the time conversion code. ** There is no guarantee that it will remain unchanged, ** or that it will remain at all. ** Do NOT copy it to any system include directory. ** Thank you! */
 end_comment
 
@@ -32,7 +36,7 @@ name|NOID
 end_ifndef
 
 begin_comment
-comment|/*static char	tzfilehid[] = "@(#)tzfile.h	7.6";*/
+comment|/* static char	tzfilehid[] = "@(#)tzfile.h	7.8"; */
 end_comment
 
 begin_endif
@@ -577,7 +581,7 @@ name|isleap
 parameter_list|(
 name|y
 parameter_list|)
-value|((((y) % 4) == 0&& ((y) % 100) != 0) || ((y) % 400) == 0)
+value|(((y) % 4) == 0&& (((y) % 100) != 0 || ((y) % 400) == 0))
 end_define
 
 begin_ifndef

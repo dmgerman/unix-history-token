@@ -12,6 +12,10 @@ name|PRIVATE_H
 end_define
 
 begin_comment
+comment|/* ** This file is in the public domain, so clarified as of ** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov). */
+end_comment
+
+begin_comment
 comment|/* Stuff moved from Makefile.inc to reduce clutter */
 end_comment
 
@@ -59,6 +63,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_STRERROR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_UNISTD_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCALE_HOME
+value|_PATH_LOCALE
+end_define
+
+begin_define
+define|#
+directive|define
 name|TZDIR
 value|"/usr/share/zoneinfo"
 end_define
@@ -93,7 +118,7 @@ name|NOID
 end_ifndef
 
 begin_comment
-comment|/*static char	privatehid[] = "@(#)private.h	7.33";*/
+comment|/* static char	privatehid[] = "@(#)private.h	7.43"; */
 end_comment
 
 begin_endif
@@ -143,6 +168,28 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HAVE_GETTEXT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETTEXT
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined HAVE_GETTEXT */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_SETTIMEOFDAY
 end_ifndef
 
@@ -160,6 +207,28 @@ end_endif
 
 begin_comment
 comment|/* !defined HAVE_SETTIMEOFDAY */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRERROR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRERROR
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined HAVE_STRERROR */
 end_comment
 
 begin_ifndef
@@ -184,6 +253,50 @@ begin_comment
 comment|/* !defined HAVE_UNISTD_H */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_UTMPX_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_UTMPX_H
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined HAVE_UTMPX_H */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCALE_HOME
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LOCALE_HOME
+value|"/usr/lib/locale"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined LOCALE_HOME */
+end_comment
+
 begin_comment
 comment|/* ** Nested includes */
 end_comment
@@ -202,12 +315,6 @@ begin_include
 include|#
 directive|include
 file|"stdio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ctype.h"
 end_include
 
 begin_include
@@ -243,6 +350,29 @@ include|#
 directive|include
 file|"stdlib.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|HAVE_GETTEXT
+operator|-
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|"libintl.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_GETTEXT - 0 */
+end_comment
 
 begin_if
 if|#
@@ -336,51 +466,21 @@ comment|/* !(HAVE_UNISTD_H - 0) */
 end_comment
 
 begin_comment
-comment|/* ** Workarounds for compilers/systems. */
+comment|/* Unlike<ctype.h>'s isdigit, this also works if c< 0 | c> UCHAR_MAX.  */
 end_comment
-
-begin_comment
-comment|/* ** SunOS 4.1.1 cc lacks const. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|const
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
 
 begin_define
 define|#
 directive|define
-name|const
+name|is_digit
+parameter_list|(
+name|c
+parameter_list|)
+value|((unsigned)(c) - '0'<= 9)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* !defined __STDC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined const */
-end_comment
-
-begin_comment
-comment|/* ** SunOS 4.1.1 cc lacks prototypes. */
+comment|/* ** Workarounds for compilers/systems. */
 end_comment
 
 begin_ifndef
@@ -446,58 +546,6 @@ end_endif
 
 begin_comment
 comment|/* !defined P */
-end_comment
-
-begin_comment
-comment|/* ** SunOS 4.1.1 headers lack EXIT_SUCCESS. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXIT_SUCCESS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|EXIT_SUCCESS
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined EXIT_SUCCESS */
-end_comment
-
-begin_comment
-comment|/* ** SunOS 4.1.1 headers lack EXIT_FAILURE. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXIT_FAILURE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|EXIT_FAILURE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined EXIT_FAILURE */
 end_comment
 
 begin_comment
@@ -604,48 +652,6 @@ comment|/* !defined FILENAME_MAX */
 end_comment
 
 begin_comment
-comment|/* ** SunOS 4.1.1 libraries lack remove. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|remove
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|unlink
-name|P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|filename
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|remove
-value|unlink
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined remove */
-end_comment
-
-begin_comment
 comment|/* ** Finally, some convenience items. */
 end_comment
 
@@ -696,11 +702,61 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|TYPE_BIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_BIT
+parameter_list|(
+name|type
+parameter_list|)
+value|(sizeof (type) * CHAR_BIT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined TYPE_BIT */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TYPE_SIGNED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TYPE_SIGNED
+parameter_list|(
+name|type
+parameter_list|)
+value|(((type) -1)< 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined TYPE_SIGNED */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|INT_STRLEN_MAXIMUM
 end_ifndef
 
 begin_comment
-comment|/* ** 302 / 1000 is log10(2.0) rounded up. ** Subtract one for the sign bit; ** add one for integer division truncation; ** add one more for a minus sign. */
+comment|/* ** 302 / 1000 is log10(2.0) rounded up. ** Subtract one for the sign bit if the type is signed; ** add one for integer division truncation; ** add one more for a minus sign if the type is signed. */
 end_comment
 
 begin_define
@@ -711,7 +767,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|((sizeof(type) * CHAR_BIT - 1) * 302 / 1000 + 2)
+value|((TYPE_BIT(type) - TYPE_SIGNED(type)) * 302 / 100 + 1 + TYPE_SIGNED(type))
 end_define
 
 begin_endif
@@ -861,6 +917,93 @@ end_endif
 
 begin_comment
 comment|/* !defined INITIALIZE */
+end_comment
+
+begin_comment
+comment|/* ** For the benefit of GNU folk... ** `_(MSGID)' uses the current locale's message library string for MSGID. ** The default is to use gettext if available, and use MSGID otherwise. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|HAVE_GETTEXT
+operator|-
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|_
+parameter_list|(
+name|msgid
+parameter_list|)
+value|gettext(msgid)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !(HAVE_GETTEXT - 0) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_
+parameter_list|(
+name|msgid
+parameter_list|)
+value|msgid
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !(HAVE_GETTEXT - 0) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined _ */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TZ_DOMAIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TZ_DOMAIN
+value|"tz"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined TZ_DOMAIN */
 end_comment
 
 begin_comment

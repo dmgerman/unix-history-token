@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* ** This file is in the public domain, so clarified as of ** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov). */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -17,7 +21,7 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)difftime.c	7.4"
+literal|"@(#)difftime.c	7.7"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,20 +204,24 @@ return|;
 comment|/* 	** Repair delta overflow. 	*/
 name|hibit
 operator|=
-literal|1
-expr_stmt|;
-while|while
-condition|(
 operator|(
-name|hibit
-operator|<<=
+operator|~
+operator|(
+name|time_t
+operator|)
+literal|0
+operator|)
+operator|<<
+operator|(
+name|TYPE_BIT
+argument_list|(
+name|time_t
+argument_list|)
+operator|-
 literal|1
 operator|)
-operator|>
-literal|0
-condition|)
-continue|continue;
-comment|/* 	** The following expression rounds twice, which means 	** the result may not be the closest to the true answer. 	** For example, suppose time_t is 64-bit signed int, 	** long_double is IEEE 754 double with default rounding, 	** time1 = 9223372036854775807 and time0 = -1536. 	** Then the true difference is 9223372036854777343, 	** which rounds to 9223372036854777856 	** with a total error of 513. 	** But delta overflows to -9223372036854774273, 	** which rounds to -9223372036854774784, and correcting 	** this by subtracting 2 * (long_double) hibit 	** (i.e. by adding 2**64 = 18446744073709551616) 	** yields 9223372036854776832, which 	** rounds to 9223372036854775808 	** with a total error of 1535 instead. 	** This problem occurs only with very large differences. 	** It's too painful to fix this portably. 	** We are not alone in this problem; 	** many C compilers round twice when converting 	** large unsigned types to small floating types, 	** so if time_t is unsigned the "return delta" above 	** has the same double-rounding problem. 	*/
+expr_stmt|;
+comment|/* 	** The following expression rounds twice, which means 	** the result may not be the closest to the true answer. 	** For example, suppose time_t is 64-bit signed int, 	** long_double is IEEE 754 double with default rounding, 	** time1 = 9223372036854775807 and time0 = -1536. 	** Then the true difference is 9223372036854777343, 	** which rounds to 9223372036854777856 	** with a total error of 513. 	** But delta overflows to -9223372036854774273, 	** which rounds to -9223372036854774784, and correcting 	** this by subtracting 2 * (long_double) hibit 	** (i.e. by adding 2**64 = 18446744073709551616) 	** yields 9223372036854776832, which 	** rounds to 9223372036854775808 	** with a total error of 1535 instead. 	** This problem occurs only with very large differences. 	** It's too painful to fix this portably. 	** We are not alone in this problem; 	** some C compilers round twice when converting 	** large unsigned types to small floating types, 	** so if time_t is unsigned the "return delta" above 	** has the same double-rounding problem with those compilers. 	*/
 return|return
 name|delta
 operator|-
