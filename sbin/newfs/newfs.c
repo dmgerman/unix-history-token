@@ -1417,7 +1417,7 @@ argument_list|,
 name|special
 argument_list|,
 call|(
-name|off_t
+name|intmax_t
 call|)
 argument_list|(
 name|mediasize
