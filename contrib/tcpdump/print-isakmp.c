@@ -1883,6 +1883,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|TCHECK2
+argument_list|(
+operator|*
+name|loc
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 operator|(
@@ -1916,6 +1924,8 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
+name|trunc
+label|:
 block|}
 end_function
 
@@ -6455,6 +6465,17 @@ condition|(
 name|np
 condition|)
 block|{
+name|TCHECK2
+argument_list|(
+operator|*
+name|ext
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|safememcpy
 argument_list|(
 operator|&
@@ -6590,6 +6611,11 @@ expr_stmt|;
 block|}
 return|return
 name|cp
+return|;
+name|trunc
+label|:
+return|return
+name|NULL
 return|;
 block|}
 end_function
