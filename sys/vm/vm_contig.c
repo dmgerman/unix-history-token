@@ -979,7 +979,7 @@ name|tmp_addr
 operator|=
 name|addr
 expr_stmt|;
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|kernel_object
 argument_list|)
@@ -1032,7 +1032,7 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|kernel_object
 argument_list|)

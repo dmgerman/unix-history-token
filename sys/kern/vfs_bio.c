@@ -2390,7 +2390,7 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|kernel_object
 argument_list|)
@@ -2416,7 +2416,7 @@ operator||
 name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|kernel_object
 argument_list|)
@@ -13339,7 +13339,7 @@ block|{
 name|tryagain
 label|:
 comment|/* 		 * note: must allocate system pages since blocking here 		 * could intefere with paging I/O, no matter which 		 * process we are. 		 */
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|kernel_object
 argument_list|)
@@ -13365,7 +13365,7 @@ operator||
 name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|kernel_object
 argument_list|)
