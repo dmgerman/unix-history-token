@@ -931,6 +931,14 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'x'
+case|:
+name|probeonly
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'z'
 case|:
 name|delay
