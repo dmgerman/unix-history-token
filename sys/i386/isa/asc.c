@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.29 1998/03/28 10:32:59 bde Exp $  */
+comment|/*  * $Id: asc.c,v 1.30 1998/06/07 17:10:13 dfr Exp $  */
 end_comment
 
 begin_include
@@ -20,77 +20,6 @@ name|NASC
 operator|>
 literal|0
 end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FREEBSD_1_X
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"malloc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"kernel.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i386/isa/isa_device.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i386/isa/ascreg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/asc_ioctl.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -196,15 +125,6 @@ include|#
 directive|include
 file|<i386/isa/ascreg.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FREEBSD_1_X */
-end_comment
 
 begin_comment
 comment|/***  *** CONSTANTS& DEFINES  ***  ***/
@@ -692,21 +612,10 @@ name|long
 name|icnt
 decl_stmt|;
 comment|/* interrupt count XXX for debugging */
-ifdef|#
-directive|ifdef
-name|FREEBSD_1_X
-name|pid_t
-name|selp
-decl_stmt|;
-comment|/* select pointer... */
-else|#
-directive|else
 name|struct
 name|selinfo
 name|selp
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|height
 decl_stmt|;
@@ -819,12 +728,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FREEBSD_1_X
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -914,26 +817,6 @@ directive|define
 name|STATIC
 value|static
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|STATIC
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! FREEBSD_1_X */
-end_comment
 
 begin_comment
 comment|/***  *** LOCALLY USED SUBROUTINES  ***  ***/
@@ -1923,37 +1806,6 @@ name|unit
 argument_list|)
 expr_stmt|;
 comment|/*    * Initialize buffer structure.    * XXX this must be done early to give a good chance of getting a    * contiguous buffer.  This wastes memory.    */
-ifdef|#
-directive|ifdef
-name|FREEBSD_1_X
-comment|/*    * The old contigmalloc() didn't have a `low/minpa' arg, and took masks    * instead of multipliers for the alignments.    */
-name|scu
-operator|->
-name|sbuf
-operator|.
-name|base
-operator|=
-name|contigmalloc
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|MAX_BUFSIZE
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|,
-literal|0xfffffful
-argument_list|,
-literal|0ul
-argument_list|,
-literal|0xfffful
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|scu
 operator|->
 name|sbuf
@@ -1981,8 +1833,6 @@ argument_list|,
 literal|0x10000ul
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|scu
@@ -2036,20 +1886,6 @@ operator|&=
 operator|~
 name|FLAG_DEBUG
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FREEBSD_1_X
-name|scu
-operator|->
-name|selp
-operator|=
-operator|(
-name|pid_t
-operator|)
-literal|0
-expr_stmt|;
-else|#
-directive|else
 name|scu
 operator|->
 name|selp
@@ -2069,8 +1905,6 @@ name|pid_t
 operator|)
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DEVFS
@@ -2444,49 +2278,6 @@ name|scu
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|FREEBSD_1_X
-if|if
-condition|(
-name|scu
-operator|->
-name|selp
-condition|)
-block|{
-name|selwakeup
-argument_list|(
-operator|&
-name|scu
-operator|->
-name|selp
-argument_list|,
-name|scu
-operator|->
-name|flags
-operator|&
-name|SEL_COLL
-argument_list|)
-expr_stmt|;
-name|scu
-operator|->
-name|selp
-operator|=
-operator|(
-name|pid_t
-operator|)
-literal|0
-expr_stmt|;
-name|scu
-operator|->
-name|flags
-operator|&=
-operator|~
-name|SEL_COLL
-expr_stmt|;
-block|}
-else|#
-directive|else
 if|if
 condition|(
 name|scu
@@ -2524,8 +2315,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -3394,7 +3183,7 @@ name|p
 decl_stmt|;
 name|lprintf
 argument_list|(
-literal|"asc%d.read: minor %d icnt %d\n"
+literal|"asc%d.read: minor %d icnt %ld\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3501,7 +3290,7 @@ block|}
 name|lprintf
 argument_list|(
 literal|"asc%d.read(before): "
-literal|"sz 0x%x, rptr 0x%x, wptr 0x%x, cnt 0x%x bcnt 0x%x flags 0x%x icnt %d\n"
+literal|"sz 0x%x, rptr 0x%x, wptr 0x%x, cnt 0x%x bcnt 0x%x flags 0x%x icnt %ld\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3650,7 +3439,7 @@ expr_stmt|;
 name|lprintf
 argument_list|(
 literal|"asc%d.read(after): "
-literal|"sz 0x%x, rptr 0x%x, wptr 0x%x, cnt 0x%x bcnt 0x%x flags 0x%x icnt %d\n"
+literal|"sz 0x%x, rptr 0x%x, wptr 0x%x, cnt 0x%x bcnt 0x%x flags 0x%x icnt %ld\n"
 argument_list|,
 name|unit
 argument_list|,
