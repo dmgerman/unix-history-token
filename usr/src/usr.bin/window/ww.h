@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.6 83/08/17	  */
+comment|/*  *	@(#)ww.h	3.7 83/08/18	  */
 end_comment
 
 begin_include
@@ -835,7 +835,7 @@ begin_define
 define|#
 directive|define
 name|WWT_TERMCAP
-value|"TERMCAP=WW|window|window package:\ 	:cr=^M:nl=^J:bl=^G:\ 	:al=\\EL:am:le=^H:bs:cd=\\EJ:ce=\\EK:cl=\\EE:cm=\\EY%%+ %%+ :\ 	:co#%d:dc=\\EN:dl=\\EM:do=\\EB:ei=\\EO:ho=\\EH:li#%d:im=\\E@:mi:\ 	:nd=\\EC:ta=^I:pt:up=\\EA:"
+value|"WW|window|window package:\ 	:cr=^M:nl=^J:bl=^G:\ 	:al=\\EL:am:le=^H:bs:cd=\\EJ:ce=\\EK:cl=\\EE:cm=\\EY%+ %+ :\ 	:da:db:dc=\\EN:dl=\\EM:do=\\EB:ei=\\EO:ho=\\EH:im=\\E@:mi:\ 	:nd=\\EC:ta=^I:pt:up=\\EA:"
 end_define
 
 begin_define

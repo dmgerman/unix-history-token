@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwenviron.c	3.1 83/08/17"
+literal|"@(#)wwenviron.c	3.2 83/08/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -343,6 +343,8 @@ operator|=
 name|sprintf
 argument_list|(
 name|tbuf
+argument_list|,
+literal|"TERMCAP=%sco#%d:li#%d:"
 argument_list|,
 name|WWT_TERMCAP
 argument_list|,
