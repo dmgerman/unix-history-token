@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)state.c	8.3 (Berkeley) %G%"
+literal|"@(#)state.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2156,10 +2156,6 @@ operator|!=
 name|REAL_LINEMODE
 condition|)
 break|break;
-name|lmodetype
-operator|=
-name|KLUDGE_LINEMODE
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* KLUDGELINEMODE */
