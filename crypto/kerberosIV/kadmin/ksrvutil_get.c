@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997, 1998 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the Kungliga Tekniska  *      Högskolan and its contributors.  *   * 4. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1995, 1996, 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ksrvutil_get.c,v 1.38 1999/06/29 21:19:37 bg Exp $"
+literal|"$Id: ksrvutil_get.c,v 1.43 1999/12/02 16:58:36 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -879,7 +879,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|chname
 argument_list|,
@@ -927,7 +927,7 @@ name|values
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|values
 operator|.
@@ -943,7 +943,7 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|values
 operator|.
@@ -1140,7 +1140,7 @@ argument_list|(
 literal|1
 argument_list|)
 decl_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|old_tktfile
 argument_list|,
@@ -1162,8 +1162,9 @@ argument_list|(
 name|new_tktfile
 argument_list|)
 argument_list|,
+literal|"%s_ksrvutil-get.%u"
+argument_list|,
 name|TKT_ROOT
-literal|"_ksrvutil-get.%u"
 argument_list|,
 operator|(
 name|unsigned
@@ -1206,6 +1207,32 @@ argument_list|(
 name|old
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"getting tickets for %s: %s"
+argument_list|,
+name|krb_unparse_name_long
+argument_list|(
+name|name
+argument_list|,
+name|inst
+argument_list|,
+name|realm
+argument_list|)
+argument_list|,
+name|krb_get_err_text
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 block|}
 if|if
 condition|(
@@ -1271,7 +1298,12 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"Could not find the cred in the ticket file"
+literal|"Could not find the cred in the ticket file: %s"
+argument_list|,
+name|krb_get_err_text
+argument_list|(
+name|ret
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1614,8 +1646,9 @@ argument_list|(
 name|tktstring
 argument_list|)
 argument_list|,
+literal|"%s_ksrvutil_%d"
+argument_list|,
 name|TKT_ROOT
-literal|"_ksrvutil_%d"
 argument_list|,
 operator|(
 name|int
@@ -1744,7 +1777,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|result
 argument_list|,
@@ -1908,7 +1941,7 @@ name|local_hostname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|local_hostname
 argument_list|,
@@ -1981,7 +2014,7 @@ name|next
 operator|=
 name|head
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|p
 operator|->
@@ -2050,7 +2083,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|p
 operator|->
@@ -2077,7 +2110,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|p
 operator|->
@@ -2104,7 +2137,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|p
 operator|->
@@ -2291,7 +2324,7 @@ name|head
 operator|=
 name|p
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|p
 operator|->
@@ -2307,7 +2340,7 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|p
 operator|->
@@ -2323,7 +2356,7 @@ name|inst
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|p
 operator|->

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: tkt_string.c,v 1.14 1998/06/09 19:25:28 joda Exp $"
+literal|"$Id: tkt_string.c,v 1.15 1999/09/16 20:41:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -64,7 +64,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|krb_ticket_string
 argument_list|,
@@ -121,7 +121,7 @@ modifier|*
 name|val
 parameter_list|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|krb_ticket_string
 argument_list|,

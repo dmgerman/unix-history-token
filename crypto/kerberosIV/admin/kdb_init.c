@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kdb_init.c,v 1.24 1998/06/09 19:24:13 joda Exp $"
+literal|"$Id: kdb_init.c,v 1.25 1999/09/16 20:37:21 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -95,7 +95,7 @@ name|principal
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -106,7 +106,7 @@ argument_list|,
 name|ANAME_SZ
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -330,7 +330,7 @@ name|key_version
 operator|=
 literal|1
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -341,7 +341,7 @@ argument_list|,
 name|ANAME_SZ
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -536,7 +536,7 @@ name|argc
 operator|==
 literal|2
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|realm
 argument_list|,
@@ -561,7 +561,7 @@ argument_list|)
 operator|!=
 name|KSUCCESS
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|realm
 argument_list|,
@@ -638,7 +638,7 @@ argument_list|)
 operator|!=
 name|KSUCCESS
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|realm
 argument_list|,

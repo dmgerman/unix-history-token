@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: popen.c,v 1.18 1998/06/09 19:24:24 joda Exp $"
+literal|"$Id: popen.c,v 1.19 1999/09/16 20:38:45 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -242,7 +242,7 @@ literal|"ftp"
 argument_list|)
 operator|)
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|home
 argument_list|,
@@ -281,7 +281,7 @@ argument_list|,
 name|X_OK
 argument_list|)
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|newpath
 argument_list|,

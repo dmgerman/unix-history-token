@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadm_cli_wrap.c,v 1.26 1999/07/05 13:28:58 bg Exp $"
+literal|"$Id: kadm_cli_wrap.c,v 1.27 1999/09/16 20:41:46 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -178,7 +178,7 @@ expr_stmt|;
 name|init_krb_err_tbl
 argument_list|()
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|client_parm
 operator|.
@@ -189,7 +189,7 @@ argument_list|,
 name|ANAME_SZ
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|client_parm
 operator|.
@@ -200,7 +200,7 @@ argument_list|,
 name|INST_SZ
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|client_parm
 operator|.

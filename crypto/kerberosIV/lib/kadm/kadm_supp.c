@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadm_supp.c,v 1.13 1999/03/16 09:41:20 assar Exp $"
+literal|"$Id: kadm_supp.c,v 1.14 1999/09/16 20:41:46 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -447,7 +447,7 @@ name|fields
 argument_list|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|new
 operator|->
@@ -480,7 +480,7 @@ name|fields
 argument_list|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|new
 operator|->
@@ -664,7 +664,7 @@ name|fields
 argument_list|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|new
 operator|->
@@ -697,7 +697,7 @@ name|fields
 argument_list|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|new
 operator|->
@@ -792,7 +792,7 @@ argument_list|,
 name|fields
 argument_list|)
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|new
 operator|->
@@ -814,7 +814,7 @@ argument_list|,
 name|fields
 argument_list|)
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|new
 operator|->
@@ -934,7 +934,7 @@ argument_list|,
 name|fields
 argument_list|)
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|new
 operator|->
@@ -956,7 +956,7 @@ argument_list|,
 name|fields
 argument_list|)
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|new
 operator|->

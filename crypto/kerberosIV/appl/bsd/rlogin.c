@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rlogin.c,v 1.65 1999/03/13 21:13:54 assar Exp $"
+literal|"$Id: rlogin.c,v 1.67 1999/11/13 06:13:02 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2365,7 +2365,8 @@ name|OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -2434,7 +2435,7 @@ name|dest_realm
 operator|=
 name|dst_realm_buf
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|dest_realm
 argument_list|,

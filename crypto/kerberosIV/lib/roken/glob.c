@@ -3480,7 +3480,7 @@ operator|!
 operator|*
 name|str
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,

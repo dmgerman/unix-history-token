@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getrealm.c,v 1.35 1998/08/31 10:40:06 assar Exp $"
+literal|"$Id: getrealm.c,v 1.36 1999/09/16 20:41:51 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -161,7 +161,7 @@ operator|==
 name|T_TXT
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|realm
 argument_list|,
@@ -424,7 +424,7 @@ literal|0
 condition|)
 block|{
 comment|/* exact match of hostname, so return the realm */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|ret_realm
 argument_list|,
@@ -475,7 +475,7 @@ literal|0
 condition|)
 block|{
 comment|/* domain match, save for later */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|ret_realm
 argument_list|,
@@ -620,7 +620,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|ret_realm
 argument_list|,

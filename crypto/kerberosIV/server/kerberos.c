@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos.c,v 1.84.2.1 1999/07/22 03:18:03 assar Exp $"
+literal|"$Id: kerberos.c,v 1.87 1999/11/13 06:35:39 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1153,7 +1153,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|lastrealm
 argument_list|,
@@ -1306,7 +1306,7 @@ operator|<
 literal|2
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -1362,7 +1362,7 @@ argument_list|,
 name|pvno
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -1510,7 +1510,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -1562,7 +1562,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -1808,7 +1808,7 @@ return|;
 case|case
 name|AUTH_MSG_APPL_REQUEST
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|realm
 argument_list|,
@@ -1862,7 +1862,7 @@ name|sin_port
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -1991,7 +1991,7 @@ name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2114,7 +2114,7 @@ operator|.
 name|prealm
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2149,7 +2149,7 @@ literal|"changepw"
 argument_list|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2192,7 +2192,7 @@ condition|(
 name|err
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -2495,7 +2495,7 @@ name|sin_port
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 operator|(
 name|char
@@ -3982,7 +3982,8 @@ literal|"snmp:P:a:l:r:i:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -4214,7 +4215,7 @@ comment|/* Set realm name */
 name|rflag
 operator|++
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|local_realm
 argument_list|,

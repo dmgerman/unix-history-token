@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: cmds.c,v 1.34.2.1 1999/08/18 18:19:44 assar Exp $"
+literal|"$Id: cmds.c,v 1.36 1999/09/16 20:37:28 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -427,7 +427,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 		 * Set up defaults for FTP. 		 */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|typename
 argument_list|,
@@ -447,7 +447,7 @@ name|curtype
 operator|=
 name|TYPE_A
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|formname
 argument_list|,
@@ -463,7 +463,7 @@ name|form
 operator|=
 name|FORM_N
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|modename
 argument_list|,
@@ -479,7 +479,7 @@ name|mode
 operator|=
 name|MODE_S
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|structname
 argument_list|,
@@ -495,7 +495,7 @@ name|stru
 operator|=
 name|STRU_F
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|bytename
 argument_list|,
@@ -696,7 +696,7 @@ name|type
 operator|=
 literal|0
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|typename
 argument_list|,
@@ -1070,7 +1070,7 @@ operator|==
 name|COMPLETE
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|typename
 argument_list|,
@@ -3815,7 +3815,7 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|temp
 argument_list|,
@@ -6854,7 +6854,7 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 comment|/* must be>= sizeof(line) */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -6886,7 +6886,7 @@ name|i
 operator|>
 literal|1
 condition|)
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|buf
 argument_list|,
@@ -6898,7 +6898,7 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|buf
 argument_list|,
@@ -7550,7 +7550,7 @@ expr_stmt|;
 operator|--
 name|argc
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|acct
 argument_list|,
@@ -7576,7 +7576,7 @@ expr_stmt|;
 operator|++
 name|argv
 expr_stmt|;
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|acct
 argument_list|,
@@ -8055,7 +8055,7 @@ name|code
 operator|=
 name|ntflag
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|ntin
 argument_list|,
@@ -8083,7 +8083,7 @@ literal|'\0'
 expr_stmt|;
 return|return;
 block|}
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|ntout
 argument_list|,
@@ -8381,7 +8381,7 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|mapin
 argument_list|,
@@ -8399,7 +8399,7 @@ operator|==
 literal|' '
 condition|)
 continue|continue;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|mapout
 argument_list|,
@@ -9536,7 +9536,7 @@ literal|"Enter macro line by line, terminating it with a null line\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|macros
 index|[

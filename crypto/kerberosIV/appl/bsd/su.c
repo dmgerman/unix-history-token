@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: su.c,v 1.66 1999/03/11 13:57:58 joda Exp $"
+literal|"$Id: su.c,v 1.70 1999/11/13 06:14:11 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -116,8 +116,16 @@ begin_define
 define|#
 directive|define
 name|ARGSTR
-value|"Kflmi:"
+value|"Kflmti:"
 end_define
+
+begin_decl_stmt
+name|int
+name|destroy_tickets
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -254,7 +262,8 @@ name|ARGSTR
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -305,6 +314,14 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+literal|'t'
+case|:
+name|destroy_tickets
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'i'
 case|:
 name|root_inst
@@ -320,7 +337,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: su [-Kflm] [-i root-instance] [-] [login]\n"
+literal|"usage: su [-Kflmt] [-i root-instance] [-] [login]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -530,7 +547,7 @@ operator|->
 name|pw_shell
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|shellbuf
 argument_list|,
@@ -1436,6 +1453,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|destroy_tickets
+condition|)
+name|dest_tkt
+argument_list|()
+expr_stmt|;
 name|execv
 argument_list|(
 name|shell
@@ -2065,7 +2089,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|savehost
 argument_list|,
@@ -2312,6 +2336,11 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|destroy_tickets
+condition|)
 name|fprintf
 argument_list|(
 name|stderr

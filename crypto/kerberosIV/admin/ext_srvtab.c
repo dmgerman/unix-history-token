@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ext_srvtab.c,v 1.17 1998/06/09 19:24:13 joda Exp $"
+literal|"$Id: ext_srvtab.c,v 1.18 1999/09/16 20:37:20 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -319,7 +319,7 @@ argument_list|()
 expr_stmt|;
 else|else
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|realm
 argument_list|,

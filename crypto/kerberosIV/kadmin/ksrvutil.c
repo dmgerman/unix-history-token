@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ksrvutil.c,v 1.47 1999/06/29 18:53:58 bg Exp $"
+literal|"$Id: ksrvutil.c,v 1.50 1999/11/13 06:33:59 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1731,7 +1731,7 @@ argument_list|)
 operator|!=
 name|KSUCCESS
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|local_realm
 argument_list|,
@@ -1758,7 +1758,8 @@ literal|"ikc:f:p:r:u"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -1783,7 +1784,7 @@ break|break;
 case|case
 literal|'c'
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|cellname
 argument_list|,
@@ -1799,7 +1800,7 @@ break|break;
 case|case
 literal|'f'
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|keyfile
 argument_list|,
@@ -1852,7 +1853,7 @@ break|break;
 case|case
 literal|'r'
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|u_realm
 argument_list|,
@@ -1897,7 +1898,7 @@ name|u_realm
 operator|==
 literal|'\0'
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|u_realm
 argument_list|,
@@ -2108,7 +2109,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|keyfile
 argument_list|,
@@ -2120,7 +2121,7 @@ name|keyfile
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|work_keyfile
 argument_list|,
@@ -2132,7 +2133,7 @@ name|work_keyfile
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|backup_keyfile
 argument_list|,
@@ -2552,8 +2553,9 @@ argument_list|(
 name|change_tkt
 argument_list|)
 argument_list|,
+literal|"%s_ksrvutil.%u"
+argument_list|,
 name|TKT_ROOT
-literal|"_ksrvutil.%u"
 argument_list|,
 operator|(
 name|unsigned
@@ -3047,7 +3049,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|sname
 argument_list|,
@@ -3059,7 +3061,7 @@ name|sname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|sinst
 argument_list|,
@@ -3074,7 +3076,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|sname
 argument_list|,
@@ -3098,7 +3100,7 @@ name|databuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|sinst
 argument_list|,
@@ -3132,7 +3134,7 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|srealm
 argument_list|,
@@ -3145,7 +3147,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|srealm
 argument_list|,
@@ -3184,7 +3186,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|srealm
 argument_list|,

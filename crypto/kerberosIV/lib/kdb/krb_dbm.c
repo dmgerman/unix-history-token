@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krb_dbm.c,v 1.36 1998/11/07 14:25:55 assar Exp $"
+literal|"$Id: krb_dbm.c,v 1.37 1999/09/16 20:41:49 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -210,7 +210,7 @@ modifier|*
 name|instance
 parameter_list|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|name
 argument_list|,
@@ -221,7 +221,7 @@ argument_list|,
 name|ANAME_SZ
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|instance
 argument_list|,

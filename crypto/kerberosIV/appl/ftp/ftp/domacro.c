@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: domacro.c,v 1.6 1998/06/09 19:24:21 joda Exp $"
+literal|"$Id: domacro.c,v 1.7 1999/09/16 20:37:29 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -158,7 +158,7 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|line2
 argument_list|,

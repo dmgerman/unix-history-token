@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kpasswd.c,v 1.26 1998/06/09 19:24:54 joda Exp $"
+literal|"$Id: kpasswd.c,v 1.29 1999/11/13 06:33:20 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -173,7 +173,8 @@ literal|"u:n:i:r:h"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -256,7 +257,7 @@ argument_list|(
 name|optarg
 argument_list|)
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -298,7 +299,7 @@ argument_list|(
 name|optarg
 argument_list|)
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -341,7 +342,7 @@ name|optarg
 argument_list|)
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -447,7 +448,7 @@ condition|(
 name|use_default
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -465,7 +466,7 @@ name|name
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -483,7 +484,7 @@ name|instance
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -514,7 +515,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -542,7 +543,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -570,8 +571,9 @@ argument_list|(
 name|tktstring
 argument_list|)
 argument_list|,
+literal|"%s_cpw_%u"
+argument_list|,
 name|TKT_ROOT
-literal|"_cpw_%u"
 argument_list|,
 operator|(
 name|unsigned

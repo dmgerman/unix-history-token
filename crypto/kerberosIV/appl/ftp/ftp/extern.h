@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1994 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* $Id: extern.h,v 1.16 1999/05/21 09:21:51 assar Exp $ */
+comment|/* $Id: extern.h,v 1.18 1999/10/28 20:49:10 assar Exp $ */
 end_comment
 
 begin_include
@@ -241,6 +241,7 @@ name|FILE
 modifier|*
 name|dataconn
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -461,6 +462,7 @@ name|char
 modifier|*
 name|hookup
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

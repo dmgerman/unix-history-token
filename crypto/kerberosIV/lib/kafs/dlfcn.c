@@ -586,7 +586,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|errbuf
 argument_list|,
@@ -629,7 +629,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1019,7 +1019,7 @@ block|{
 case|case
 name|L_ERROR_TOOMANY
 case|:
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1035,7 +1035,7 @@ break|break;
 case|case
 name|L_ERROR_NOLIB
 case|:
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1047,7 +1047,7 @@ name|errbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1063,7 +1063,7 @@ break|break;
 case|case
 name|L_ERROR_UNDEF
 case|:
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1075,7 +1075,7 @@ name|errbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1091,7 +1091,7 @@ break|break;
 case|case
 name|L_ERROR_RLDBAD
 case|:
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1103,7 +1103,7 @@ name|errbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1119,7 +1119,7 @@ break|break;
 case|case
 name|L_ERROR_FORMAT
 case|:
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1131,7 +1131,7 @@ name|errbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1147,7 +1147,7 @@ break|break;
 case|case
 name|L_ERROR_ERRNO
 case|:
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -1168,7 +1168,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -2483,7 +2483,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* 			 * The l_name member is not zero terminated, we 			 * must copy the first SYMNMLEN chars and make 			 * sure we have a zero byte at the end. 			 */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|tmpsym
 argument_list|,

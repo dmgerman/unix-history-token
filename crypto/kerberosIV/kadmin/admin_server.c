@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: admin_server.c,v 1.47 1999/07/07 12:41:07 assar Exp $"
+literal|"$Id: admin_server.c,v 1.49 1999/11/13 06:32:19 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1728,7 +1728,8 @@ literal|"f:hmnd:a:r:i:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -1808,7 +1809,7 @@ break|break;
 case|case
 literal|'r'
 case|:
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|krbrlm
 argument_list|,

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ruserpass.c,v 1.15 1999/03/11 13:54:58 joda Exp $"
+literal|"$Id: ruserpass.c,v 1.16 1999/09/16 20:37:31 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -223,7 +223,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|hostname
 argument_list|,
@@ -290,7 +290,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|hostname
 argument_list|,
@@ -344,7 +344,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|hostname
 argument_list|,

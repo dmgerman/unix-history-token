@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rcp.c,v 1.49 1999/07/06 03:17:58 assar Exp $"
+literal|"$Id: rcp.c,v 1.52 1999/11/16 16:54:16 bg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -63,8 +63,22 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"dfKk:prtx"
+value|"dfKk:prtxl:"
 end_define
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|user_name
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Given as -l option. */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -759,7 +773,7 @@ define|#
 directive|define
 name|RCPERR
 value|"\001rcp: "
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|errbuf
 argument_list|,
@@ -795,7 +809,7 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-name|strcat_truncate
+name|strlcat
 argument_list|(
 name|errbuf
 argument_list|,
@@ -2668,7 +2682,7 @@ index|]
 expr_stmt|;
 name|tuser
 operator|=
-name|NULL
+name|user_name
 expr_stmt|;
 block|}
 for|for
@@ -4811,6 +4825,14 @@ name|pwd
 operator|->
 name|pw_name
 expr_stmt|;
+if|if
+condition|(
+name|user_name
+condition|)
+name|suser
+operator|=
+name|user_name
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -5243,7 +5265,8 @@ name|OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -5266,7 +5289,7 @@ name|dest_realm
 operator|=
 name|dst_realm_buf
 expr_stmt|;
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|dst_realm_buf
 argument_list|,
@@ -5337,6 +5360,14 @@ expr_stmt|;
 name|tflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|user_name
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kprop.c,v 1.36 1999/03/11 20:57:07 bg Exp $"
+literal|"$Id: kprop.c,v 1.37 1999/09/16 20:41:59 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1097,7 +1097,7 @@ name|my_host_name
 argument_list|)
 expr_stmt|;
 comment|/* copy it to make sure gethostbyname static doesn't 		     * screw us. */
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|kprop_service_instance
 argument_list|,
@@ -2155,7 +2155,7 @@ name|i
 operator|<
 name|argc
 condition|)
-name|strcpy_truncate
+name|strlcpy
 argument_list|(
 name|my_realm
 argument_list|,

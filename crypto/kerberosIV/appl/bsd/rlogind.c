@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rlogind.c,v 1.107.2.1 1999/07/22 03:14:39 assar Exp $"
+literal|"$Id: rlogind.c,v 1.109 1999/11/25 05:27:38 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1616,7 +1616,8 @@ name|ARGSTR
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
