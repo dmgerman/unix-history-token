@@ -5034,12 +5034,6 @@ block|{
 comment|/* check for usability */
 if|if
 condition|(
-operator|(
-name|cpu
-operator|>=
-name|NCPU
-operator|)
-operator|||
 operator|!
 operator|(
 name|entry
@@ -5092,7 +5086,13 @@ return|;
 comment|/* its already been counted */
 block|}
 comment|/* add another AP to list, if less than max number of CPUs */
-else|else
+elseif|else
+if|if
+condition|(
+name|cpu
+operator|<
+name|NCPU
+condition|)
 block|{
 name|CPU_TO_ID
 argument_list|(
@@ -5116,6 +5116,9 @@ return|return
 literal|1
 return|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 

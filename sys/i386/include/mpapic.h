@@ -256,6 +256,15 @@ name|int
 name|vector
 parameter_list|)
 block|{
+if|if
+condition|(
+name|mp_ncpus
+operator|<=
+literal|1
+condition|)
+return|return
+literal|0
+return|;
 return|return
 name|apic_ipi
 argument_list|(
