@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.18.2.2 1999/02/25 17:49:24 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.18.2.3 1999/04/20 12:02:00 joerg Exp $  */
 end_comment
 
 begin_include
@@ -1550,7 +1550,7 @@ name|hdr
 operator|.
 name|eh
 operator|.
-name|e_phoff
+name|e_phnum
 operator|&&
 name|j
 operator|<
