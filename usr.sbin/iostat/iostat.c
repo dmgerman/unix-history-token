@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/errno.h>
 end_include
 
@@ -374,10 +368,6 @@ name|errbuf
 index|[
 name|_POSIX2_LINE_MAX
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|err_str
 decl_stmt|;
 name|kvm_t
 modifier|*
