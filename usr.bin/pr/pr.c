@@ -132,7 +132,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * pr:	a printing and pagination filter. If multiple input files  *	are specified, each is read, formatted, and written to standard  *	output. By default, input is seperated into 66-line pages, each  *	with a header that includes the page number, date, time and the  *	files pathname.  *  *	Complies with posix P1003.2/D11  */
+comment|/*  * pr:	a printing and pagination filter. If multiple input files  *	are specified, each is read, formatted, and written to standard  *	output. By default, input is separated into 66-line pages, each  *	with a header that includes the page number, date, time and the  *	files pathname.  *  *	Complies with posix P1003.2/D11  */
 end_comment
 
 begin_comment
