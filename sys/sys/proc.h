@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)proc.h	8.8 (Berkeley) 1/21/94  * $Id: proc.h,v 1.21 1996/02/25 09:28:06 hsu Exp $  */
+comment|/*-  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)proc.h	8.15 (Berkeley) 5/19/95  * $Id: proc.h,v 1.23 1996/03/10 23:48:35 hsu Exp $  */
 end_comment
 
 begin_ifndef
@@ -55,6 +55,12 @@ begin_comment
 comment|/* For structs itimerval, timeval. */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_comment
 comment|/*  * One structure allocated per session.  */
 end_comment
@@ -104,17 +110,20 @@ begin_struct
 struct|struct
 name|pgrp
 block|{
-name|struct
-name|pgrp
-modifier|*
-name|pg_hforw
-decl_stmt|;
-comment|/* Forward link in hash bucket. */
-name|struct
-name|proc
-modifier|*
-name|pg_mem
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|pgrp
+argument_list|)
+name|pg_hash
+expr_stmt|;
+comment|/* Hash chain. */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|proc
+argument_list|)
+name|pg_members
+expr_stmt|;
 comment|/* Pointer to pgrp members. */
 name|struct
 name|session
@@ -153,19 +162,13 @@ name|proc
 modifier|*
 name|p_back
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p_next
-decl_stmt|;
-comment|/* Linked list of active procs */
-name|struct
-name|proc
-modifier|*
-modifier|*
-name|p_prev
-decl_stmt|;
-comment|/*    and zombies. */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_list
+expr_stmt|;
+comment|/* List of all processes. */
 comment|/* substructures: */
 name|struct
 name|pcred
@@ -229,47 +232,39 @@ name|pid_t
 name|p_pid
 decl_stmt|;
 comment|/* Process identifier. */
-name|struct
-name|proc
-modifier|*
-name|p_hash
-decl_stmt|;
-comment|/* Hashed based on p_pid for kill+exit+... */
-name|struct
-name|proc
-modifier|*
-name|p_pgrpnxt
-decl_stmt|;
-comment|/* Pointer to next process in process group. */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_pglist
+expr_stmt|;
+comment|/* List of processes in pgrp. */
 name|struct
 name|proc
 modifier|*
 name|p_pptr
 decl_stmt|;
-comment|/* Pointer to process structure of parent. */
-name|struct
-name|proc
-modifier|*
-name|p_osptr
-decl_stmt|;
-comment|/* Pointer to older sibling processes. */
+comment|/* Pointer to parent process. */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_sibling
+expr_stmt|;
+comment|/* List of sibling processes. */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|proc
+argument_list|)
+name|p_children
+expr_stmt|;
+comment|/* Pointer to list of children. */
 comment|/* The following fields are all zeroed upon creation in fork. */
 define|#
 directive|define
 name|p_startzero
-value|p_ysptr
-name|struct
-name|proc
-modifier|*
-name|p_ysptr
-decl_stmt|;
-comment|/* Pointer to younger siblings. */
-name|struct
-name|proc
-modifier|*
-name|p_cptr
-decl_stmt|;
-comment|/* Pointer to youngest living child. */
+value|p_oppid
 name|pid_t
 name|p_oppid
 decl_stmt|;
@@ -362,11 +357,27 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* alignment */
+name|short
+name|p_locks
+decl_stmt|;
+comment|/* DEBUG: lockmgr count of held locks */
+name|short
+name|p_simple_locks
+decl_stmt|;
+comment|/* DEBUG: count of held simple locks */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
 name|p_endzero
-value|p_startcopy
+value|p_hash.le_next
+comment|/* 	 * Not copied, not zero'ed. 	 * Belongs after p_pid, but here to avoid shifting proc elements. 	 */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_hash
+expr_stmt|;
+comment|/* Hash chain. */
 comment|/* The following fields are all copied upon creation in fork. */
 define|#
 directive|define
@@ -697,15 +708,8 @@ begin_comment
 comment|/* Process called exec. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|P_SWAPPING
-value|0x40000
-end_define
-
 begin_comment
-comment|/* Process is being swapped. */
+comment|/* Should probably be changed into a hold count. */
 end_comment
 
 begin_define
@@ -716,7 +720,7 @@ value|0x08000
 end_define
 
 begin_comment
-comment|/* Flag to prevent swap out. */
+comment|/* Another flag to prevent swap out. */
 end_comment
 
 begin_define
@@ -743,6 +747,17 @@ end_define
 
 begin_comment
 comment|/* Owe process an addupc() call at next ast. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_SWAPPING
+value|0x40000
+end_define
+
+begin_comment
+comment|/* Process is being swapped. */
 end_comment
 
 begin_comment
@@ -810,16 +825,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PIDHASH
-parameter_list|(
-name|pid
-parameter_list|)
-value|((pid)& pidhashmask)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SESS_LEADER
 parameter_list|(
 name|p
@@ -871,33 +876,65 @@ parameter_list|)
 value|(--(p)->p_lock)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PIDHASH
+parameter_list|(
+name|pid
+parameter_list|)
+value|(&pidhashtbl[(pid)& pidhash])
+end_define
+
+begin_extern
+extern|extern LIST_HEAD(pidhashhead
+operator|,
+extern|proc
+end_extern
+
+begin_expr_stmt
+unit|)
+operator|*
+name|pidhashtbl
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
-name|struct
-name|proc
-modifier|*
+name|u_long
 name|pidhash
-index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* In param.c. */
-end_comment
+begin_define
+define|#
+directive|define
+name|PGRPHASH
+parameter_list|(
+name|pgid
+parameter_list|)
+value|(&pgrphashtbl[(pgid)& pgrphash])
+end_define
+
+begin_extern
+extern|extern LIST_HEAD(pgrphashhead
+operator|,
+extern|pgrp
+end_extern
+
+begin_expr_stmt
+unit|)
+operator|*
+name|pgrphashtbl
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|pgrp
-modifier|*
+name|u_long
 name|pgrphash
-index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* In param.c. */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -948,42 +985,38 @@ begin_comment
 comment|/* Max procs per uid. */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|pidhashmask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* In param.c. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|struct
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|proclist
+argument_list|,
 name|proc
-modifier|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proclist
 name|allproc
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* List of active procs. */
+comment|/* List of all processes. */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|proc
-modifier|*
+name|proclist
 name|zombproc
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* List of zombie procs. */
+comment|/* List of zombie processes. */
 end_comment
 
 begin_decl_stmt
@@ -1071,20 +1104,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|int
-name|chgproccnt
-name|__P
-argument_list|(
-operator|(
-name|uid_t
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
@@ -1121,8 +1140,110 @@ comment|/* Find process group by id. */
 end_comment
 
 begin_decl_stmt
+name|int
+name|chgproccnt
+name|__P
+argument_list|(
+operator|(
+name|uid_t
+name|uid
+operator|,
+name|int
+name|diff
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|enterpgrp
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+name|pid_t
+name|pgid
+operator|,
+name|int
+name|mksess
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|fixjobc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+expr|struct
+name|pgrp
+operator|*
+name|pgrp
+operator|,
+name|int
+name|entering
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|inferior
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|leavepgrp
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|mi_switch
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|procinit
 name|__P
 argument_list|(
 operator|(
@@ -1332,58 +1453,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|fixjobc
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|,
-expr|struct
-name|pgrp
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|leavepgrp
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|enterpgrp
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|,
-name|pid_t
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|trace_req
 name|__P
@@ -1427,20 +1496,6 @@ operator|*
 operator|,
 expr|struct
 name|ucred
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|inferior
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
 operator|*
 operator|)
 argument_list|)
