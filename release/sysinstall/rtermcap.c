@@ -33,6 +33,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+return|return
+literal|1
+return|;
 name|i
 operator|=
 name|tgetent
