@@ -1004,7 +1004,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * One deep route cache for ip forwarding.  */
+comment|/*  * One deep route cache for ip forwarding.  This is done  * very inefficiently.  We don't care as it's about to be  * replaced by something better.  */
 end_comment
 
 begin_struct
@@ -1049,7 +1049,7 @@ directive|define
 name|RTCACHE_LOCK_INIT
 parameter_list|()
 define|\
-value|mtx_init(&ip_fwdcache.rc_mtx, "route cache", NULL, MTX_DEF);
+value|mtx_init(&ip_fwdcache.rc_mtx, "route cache", NULL, MTX_DEF)
 end_define
 
 begin_define
@@ -1061,7 +1061,7 @@ value|mtx_assert(&ip_fwdcache.rc_mtx, MA_OWNED)
 end_define
 
 begin_comment
-comment|/*  * Get the current route cache contents.  */
+comment|/*  * Get a copy of the current route cache contents.  */
 end_comment
 
 begin_define
@@ -1071,11 +1071,11 @@ name|RTCACHE_GET
 parameter_list|(
 name|_ro
 parameter_list|)
-value|do {					\ 	RTCACHE_LOCK();						\ 	*(_ro) = ip_fwdcache.rc_ro;				\ 	RTCACHE_UNLOCK();					\ } while (0)
+value|do {					\ 	struct rtentry *rt;					\ 	RTCACHE_LOCK();						\ 	*(_ro) = ip_fwdcache.rc_ro;				\ 	if ((rt = (_ro)->ro_rt) != NULL) {			\ 		RT_LOCK(rt);					\ 		rt->rt_refcnt++;				\ 		RT_UNLOCK(rt);					\ 	}							\ 	RTCACHE_UNLOCK();					\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * Update the cache contents.  We optimize this using  * the routing table reference. XXX is this safe?  */
+comment|/*  * Update the cache contents.  */
 end_comment
 
 begin_define
@@ -1085,7 +1085,7 @@ name|RTCACHE_UPDATE
 parameter_list|(
 name|_ro
 parameter_list|)
-value|do {				\ 	if ((_ro)->ro_rt != ip_fwdcache.rc_ro.ro_rt) {		\ 		RTCACHE_LOCK();					\ 		ip_fwdcache.rc_ro = *(_ro);			\ 		RTCACHE_UNLOCK();				\ 	}							\ } while (0)
+value|do {				\ 	struct rtentry *rt;					\ 	RTCACHE_LOCK();						\ 	rt = ip_fwdcache.rc_ro.ro_rt;				\ 	if ((_ro)->ro_rt != rt) {				\ 		ip_fwdcache.rc_ro = *(_ro);			\ 		if (rt)						\ 			RTFREE(rt);				\ 	}							\ 	RTCACHE_UNLOCK();					\ } while (0)
 end_define
 
 begin_comment
@@ -1524,8 +1524,6 @@ name|struct
 name|rtentry
 modifier|*
 name|rt
-init|=
-name|NULL
 decl_stmt|;
 name|RTCACHE_LOCK
 argument_list|()
@@ -1546,9 +1544,6 @@ name|ro_rt
 operator|=
 literal|0
 expr_stmt|;
-name|RTCACHE_UNLOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|rt
@@ -1559,6 +1554,9 @@ name|RTFREE
 argument_list|(
 name|rt
 argument_list|)
+expr_stmt|;
+name|RTCACHE_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
