@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   Copyright (c) 1998 Eivind Eklund. All rights reserved.  *  *   Copyright (c) 1998, 1999 German Tischler. All rights reserved.  *  *   Copyright (c) 1998, 2001 Hellmuth Michaelis. All rights reserved.   *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_isic_pnp.c - i4b pnp support  *	--------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Wed Jan 24 09:31:38 2001]  *  *---------------------------------------------------------------------------*/
+comment|/*  *   Copyright (c) 1998 Eivind Eklund. All rights reserved.  *  *   Copyright (c) 1998, 1999 German Tischler. All rights reserved.  *  *   Copyright (c) 1998, 2001 Hellmuth Michaelis. All rights reserved.   *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_isic_pnp.c - i4b pnp support  *	--------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Fri Jan 26 14:01:04 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -183,6 +183,28 @@ begin_comment
 comment|/* Asuscom (with IPAC)	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VID_EICON_DIVA_20
+value|0x7100891c
+end_define
+
+begin_comment
+comment|/* Eicon DIVA 2.0 ISAC/HSCX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VID_EICON_DIVA_202
+value|0xa100891c
+end_define
+
+begin_comment
+comment|/* Eicon DIVA 2.02 IPAC	*/
+end_comment
+
 begin_struct
 specifier|static
 struct|struct
@@ -309,6 +331,23 @@ block|{
 name|VID_ASUSCOM_IPAC
 block|,
 literal|"Asuscom ISDNLink 128 PnP"
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EICON_DIVA
+block|{
+name|VID_EICON_DIVA_20
+block|,
+literal|"Eicon.Diehl DIVA 2.0 ISA PnP"
+block|}
+block|,
+block|{
+name|VID_EICON_DIVA_202
+block|,
+literal|"Eicon.Diehl DIVA 2.02 ISA PnP"
 block|}
 block|,
 endif|#
@@ -940,6 +979,45 @@ expr_stmt|;
 name|ret
 operator|=
 name|isic_attach_asi
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EICON_DIVA
+case|case
+name|VID_EICON_DIVA_20
+case|:
+name|sc
+operator|->
+name|sc_cardtyp
+operator|=
+name|CARD_TYPEP_DIVA_ISA
+expr_stmt|;
+name|ret
+operator|=
+name|isic_attach_diva
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|VID_EICON_DIVA_202
+case|:
+name|sc
+operator|->
+name|sc_cardtyp
+operator|=
+name|CARD_TYPEP_DIVA_ISA
+expr_stmt|;
+name|ret
+operator|=
+name|isic_attach_diva_ipac
 argument_list|(
 name|dev
 argument_list|)
