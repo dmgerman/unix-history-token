@@ -4586,6 +4586,26 @@ name|diff
 decl_stmt|,
 name|inserted
 decl_stmt|;
+comment|/* Stats */
+name|priv
+operator|->
+name|bundleStats
+operator|.
+name|recvFrames
+operator|++
+expr_stmt|;
+name|priv
+operator|->
+name|bundleStats
+operator|.
+name|recvOctets
+operator|+=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
 comment|/* Extract fragment information from MP header */
 if|if
 condition|(
