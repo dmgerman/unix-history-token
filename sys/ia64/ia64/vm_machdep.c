@@ -1313,23 +1313,6 @@ block|{ }
 end_function
 
 begin_comment
-comment|/*  * Force reset the processor by invalidating the entire address space!  */
-end_comment
-
-begin_function
-name|void
-name|cpu_reset
-parameter_list|()
-block|{
-name|cpu_boot
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Software interrupt handler for queued VM system processing.  */
 end_comment
 
