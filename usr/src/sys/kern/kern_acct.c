@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_acct.c	7.23 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_acct.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -116,20 +116,15 @@ comment|/* resume when free space risen to> 4% */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|timeval
+name|int
 name|chk
 init|=
-block|{
 literal|15
-block|,
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* frequency to check space for accounting */
+comment|/* frequency (in seconds) to check space */
 end_comment
 
 begin_comment
@@ -209,10 +204,16 @@ modifier|*
 name|vp
 decl_stmt|;
 specifier|extern
-name|int
+name|void
 name|acctwatch
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -299,11 +300,7 @@ name|untimeout
 argument_list|(
 name|acctwatch
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|chk
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -421,8 +418,7 @@ argument_list|)
 expr_stmt|;
 name|acctwatch
 argument_list|(
-operator|&
-name|chk
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -437,22 +433,20 @@ begin_comment
 comment|/*  * Periodically check the file system to see if accounting  * should be turned on or off.  */
 end_comment
 
-begin_macro
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|void
 name|acctwatch
-argument_list|(
-argument|resettime
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|timeval
+parameter_list|(
+name|a
+parameter_list|)
+name|void
 modifier|*
-name|resettime
+name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|statfs
@@ -578,19 +572,15 @@ name|timeout
 argument_list|(
 name|acctwatch
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|resettime
+name|NULL
 argument_list|,
-name|hzto
-argument_list|(
-name|resettime
-argument_list|)
+name|chk
+operator|*
+name|hz
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This routine calculates an accounting record for a process and,  * if accounting is enabled, writes it to the accounting file.  */
@@ -690,22 +680,23 @@ name|p_stats
 operator|->
 name|p_ru
 expr_stmt|;
+name|calcru
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|ut
+argument_list|,
+operator|&
+name|st
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splclock
 argument_list|()
-expr_stmt|;
-name|ut
-operator|=
-name|p
-operator|->
-name|p_utime
-expr_stmt|;
-name|st
-operator|=
-name|p
-operator|->
-name|p_stime
 expr_stmt|;
 name|t
 operator|=
