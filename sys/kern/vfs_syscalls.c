@@ -16803,7 +16803,7 @@ operator|=
 name|NDHASGIANT
 argument_list|(
 operator|&
-name|fromnd
+name|tond
 argument_list|)
 expr_stmt|;
 name|tdvp
