@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.79 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.80 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -6413,14 +6413,6 @@ begin_comment
 comment|/*  * Calculate the logical to physical mapping if not done already,  * then call the device strategy routine.  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|checkoverlap
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|ufs_strategy
@@ -6513,11 +6505,30 @@ operator|->
 name|b_blkno
 argument_list|)
 condition|)
+block|{
+name|bp
+operator|->
+name|b_error
+operator|=
+name|error
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|biodone
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -6560,34 +6571,6 @@ literal|0
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|checkoverlap
-operator|&&
-name|bp
-operator|->
-name|b_vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_stat
-operator|.
-name|f_type
-operator|==
-name|MOUNT_UFS
-condition|)
-name|ffs_checkoverlap
-argument_list|(
-name|bp
-argument_list|,
-name|ip
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vp
 operator|=
 name|ip
