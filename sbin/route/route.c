@@ -43,7 +43,7 @@ name|char
 name|main_c_rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: route.c,v 1.3 1993/11/17 21:27:20 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -721,7 +721,13 @@ literal|'?'
 case|:
 default|default:
 name|usage
-argument_list|()
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 name|argc
