@@ -174,7 +174,43 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(CRAY2)&& defined(UNICOS5) */
-comment|/* 	 * Check for state of BINARY options. 	 */
+comment|/* 	 * Check for changes to flow control if client supports it. 	 */
+name|flowstat
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Check linemode on/off state 	 */
+name|uselinemode
+operator|=
+name|tty_linemode
+argument_list|()
+expr_stmt|;
+comment|/* 	 * If alwayslinemode is on, and pty is changing to turn it off, then 	 * force linemode back on. 	 */
+if|if
+condition|(
+name|alwayslinemode
+operator|&&
+name|linemode
+operator|&&
+operator|!
+name|uselinemode
+condition|)
+block|{
+name|uselinemode
+operator|=
+literal|1
+expr_stmt|;
+name|tty_setlinemode
+argument_list|(
+name|uselinemode
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|uselinemode
+condition|)
+block|{
+comment|/* 		 * Check for state of BINARY options. 		 * 		 * We only need to do the binary dance if we are actually going 		 * to use linemode.  As this confuses some telnet clients 		 * that don't support linemode, and doesn't gain us 		 * anything, we don't do it unless we're doing linemode. 		 * -Crh (henrich@msu.edu) 		 */
 if|if
 condition|(
 name|tty_isbinaryin
@@ -251,36 +287,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Check for changes to flow control if client supports it. 	 */
-name|flowstat
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Check linemode on/off state 	 */
-name|uselinemode
-operator|=
-name|tty_linemode
-argument_list|()
-expr_stmt|;
-comment|/* 	 * If alwayslinemode is on, and pty is changing to turn it off, then 	 * force linemode back on. 	 */
-if|if
-condition|(
-name|alwayslinemode
-operator|&&
-name|linemode
-operator|&&
-operator|!
-name|uselinemode
-condition|)
-block|{
-name|uselinemode
-operator|=
-literal|1
-expr_stmt|;
-name|tty_setlinemode
-argument_list|(
-name|uselinemode
-argument_list|)
-expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
