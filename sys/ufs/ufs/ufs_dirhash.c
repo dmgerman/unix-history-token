@@ -273,7 +273,7 @@ specifier|static
 name|int
 name|ufs_dirhashcheck
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
