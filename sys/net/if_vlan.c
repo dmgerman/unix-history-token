@@ -1931,6 +1931,9 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|int
+name|unit
+decl_stmt|;
 name|struct
 name|ifvlan
 modifier|*
@@ -1940,6 +1943,12 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|unit
+operator|=
+name|ifp
+operator|->
+name|if_dunit
+expr_stmt|;
 name|VLAN_LOCK
 argument_list|()
 expr_stmt|;
@@ -1968,6 +1977,13 @@ argument_list|(
 name|ifv
 argument_list|,
 name|M_VLAN
+argument_list|)
+expr_stmt|;
+name|ifc_free_unit
+argument_list|(
+name|ifc
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
