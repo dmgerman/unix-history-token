@@ -214,7 +214,11 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Pass 1 of 2 detection "
-literal|"failed (nonfatal)\n"
+literal|"failed (nonfatal) id 0x%x\n"
+argument_list|,
+name|epb
+operator|->
+name|prod_id
 argument_list|)
 expr_stmt|;
 name|epb
@@ -383,6 +387,15 @@ operator|(
 literal|"3Com 3C562D/3C563D"
 operator|)
 return|;
+case|case
+literal|0x0010
+case|:
+comment|/* 3C1 */
+return|return
+operator|(
+literal|"3Com Megahertz C1"
+operator|)
+return|;
 block|}
 return|return
 operator|(
@@ -427,6 +440,10 @@ case|case
 literal|0x4b57
 case|:
 comment|/* 3C574B */
+case|case
+literal|0x0010
+case|:
+comment|/* 3C1 */
 name|epb
 operator|->
 name|mii_trans
