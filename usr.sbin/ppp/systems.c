@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.5 1995/05/30 03:50:58 rgrimes Exp $  *  *  TODO:  */
+comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.6 1996/03/08 09:03:09 ache Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -210,8 +210,11 @@ block|{
 name|SetUserId
 argument_list|()
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
 name|line
 argument_list|,
 literal|"%s/.%s"
@@ -241,8 +244,11 @@ block|{
 name|SetPppId
 argument_list|()
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
 name|line
 argument_list|,
 literal|"%s/%s"
@@ -382,8 +388,11 @@ block|{
 name|SetUserId
 argument_list|()
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
 name|line
 argument_list|,
 literal|"%s/.%s"
@@ -414,8 +423,11 @@ name|SetPppId
 argument_list|()
 expr_stmt|;
 comment|/* fix from pdp@ark.jr3uom.iijnet.or.jp */
-name|sprintf
+name|snprintf
 argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
 name|line
 argument_list|,
 literal|"%s/%s"
