@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmail.c	4.11 (Berkeley) %G%"
+literal|"@(#)rmail.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -708,8 +708,27 @@ name|i
 operator|++
 index|]
 operator|=
-literal|"-ee"
+literal|"-oee"
 expr_stmt|;
+comment|/* no errors, just status */
+name|args
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|"-odq"
+expr_stmt|;
+comment|/* queue it, don't try to deliver */
+name|args
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|"-oi"
+expr_stmt|;
+comment|/* ignore '.' on a line by itself */
 if|if
 condition|(
 name|fsys
@@ -720,6 +739,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+comment|/* set sender's host name */
 specifier|static
 name|char
 name|junk2
@@ -781,6 +801,7 @@ operator|=
 name|junk2
 expr_stmt|;
 block|}
+comment|/* set protocol used */
 operator|(
 name|void
 operator|)
@@ -811,6 +832,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+comment|/* set name of ``from'' person */
 specifier|static
 name|char
 name|junk2
@@ -852,7 +874,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * don't copy arguments beginning with - as they will 		 * be passed to sendmail and could be interpreted as flags 		 */
+comment|/* 		 * don't copy arguments beginning with - as they will 		 * be passed to sendmail and could be interpreted as flags 		 * should be fixed in sendmail by using getopt(3), and 		 * just passing "--" before regular args. 		 */
 if|if
 condition|(
 operator|*
@@ -956,7 +978,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 if|if
 condition|(
 name|pipe
