@@ -966,14 +966,6 @@ name|st_dev
 operator|||
 name|sb2
 operator|.
-name|st_rdev
-operator|!=
-name|sbp
-operator|->
-name|st_rdev
-operator|||
-name|sb2
-operator|.
 name|st_nlink
 operator|==
 literal|0
