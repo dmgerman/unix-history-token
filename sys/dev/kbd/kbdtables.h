@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: kbdtables.h,v 1.17 1994/11/19 22:58:56 ache Exp $  */
+comment|/*-  * Copyright (c) 1992-1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: kbdtables.h,v 1.18 1994/11/19 23:17:46 ache Exp $  */
 end_comment
 
 begin_define
@@ -1881,7 +1881,10 @@ block|,
 literal|0x02
 block|,
 comment|/* sc=4c */
-name|NOP
+name|F
+argument_list|(
+literal|48
+argument_list|)
 block|,
 literal|'5'
 block|,
@@ -2046,7 +2049,10 @@ block|,
 literal|0x02
 block|,
 comment|/* sc=53 */
-literal|0x7F
+name|F
+argument_list|(
+literal|54
+argument_list|)
 block|,
 literal|'.'
 block|,
@@ -4804,7 +4810,7 @@ block|,
 comment|/* sc=4c */
 name|F
 argument_list|(
-literal|54
+literal|48
 argument_list|)
 block|,
 literal|'5'
@@ -4970,7 +4976,10 @@ block|,
 literal|0x02
 block|,
 comment|/* sc=53 */
-literal|0x7F
+name|F
+argument_list|(
+literal|54
+argument_list|)
 block|,
 literal|'.'
 block|,
@@ -7728,7 +7737,7 @@ block|,
 comment|/* sc=4c */
 name|F
 argument_list|(
-literal|54
+literal|48
 argument_list|)
 block|,
 literal|'5'
@@ -7894,7 +7903,10 @@ block|,
 literal|0x02
 block|,
 comment|/* sc=53 */
-literal|0x7F
+name|F
+argument_list|(
+literal|54
+argument_list|)
 block|,
 literal|'.'
 block|,
@@ -10652,7 +10664,7 @@ block|,
 comment|/* sc=4c */
 name|F
 argument_list|(
-literal|54
+literal|48
 argument_list|)
 block|,
 literal|'5'
@@ -10818,7 +10830,10 @@ block|,
 literal|0x02
 block|,
 comment|/* sc=53 */
-literal|0x7F
+name|F
+argument_list|(
+literal|54
+argument_list|)
 block|,
 literal|'.'
 block|,
@@ -20768,7 +20783,10 @@ block|,
 literal|0x02
 block|,
 comment|/* sc=4c */
-name|NOP
+name|F
+argument_list|(
+literal|48
+argument_list|)
 block|,
 literal|'5'
 block|,
@@ -20933,7 +20951,10 @@ block|,
 literal|0x02
 block|,
 comment|/* sc=53 */
-literal|0x7F
+name|F
+argument_list|(
+literal|54
+argument_list|)
 block|,
 literal|'.'
 block|,
@@ -22125,7 +22146,7 @@ literal|3
 block|}
 block|,
 block|{
-literal|"\033[r"
+literal|"\033[E"
 block|,
 literal|3
 block|}
