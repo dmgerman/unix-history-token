@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pcb.h 1.13 89/04/23$  *  *	@(#)pcb.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pcb.h 1.13 89/04/23$  *  *	@(#)pcb.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -62,30 +62,12 @@ literal|12
 index|]
 decl_stmt|;
 comment|/* D0-D7, A0-A7 (+C) */
-name|struct
-name|pte
-modifier|*
-name|pcb_p0br
-decl_stmt|;
-comment|/* P0 base register (+3C) */
 name|int
-name|pcb_p0lr
+name|pcb_pad
+index|[
+literal|5
+index|]
 decl_stmt|;
-comment|/* P0 length register (+40) */
-name|struct
-name|pte
-modifier|*
-name|pcb_p1br
-decl_stmt|;
-comment|/* P1 base register (+44) */
-name|int
-name|pcb_p1lr
-decl_stmt|;
-comment|/* P1 length register (+48) */
-name|int
-name|pcb_szpt
-decl_stmt|;
-comment|/* number of pages of user page table (+4C) */
 name|int
 name|pcb_cmap2
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.13 89/06/23$  *  *	@(#)cpu.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.13 89/06/23$  *  *	@(#)cpu.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -216,8 +216,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|IObase
+name|unsigned
+name|long
+name|DIObase
 decl_stmt|;
 end_decl_stmt
 
@@ -270,8 +271,15 @@ value|(0xFFFFF000)
 end_define
 
 begin_comment
-comment|/* IO space stuff */
+comment|/* DIO space stuff */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|INTERNALHPIB
+value|(0x00478000)
+end_define
 
 begin_define
 define|#
@@ -311,7 +319,7 @@ name|IOV
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) - IOBASE) + (int)&IObase)
+value|(((x) - IOBASE) + DIObase)
 end_define
 
 begin_define
@@ -321,7 +329,7 @@ name|UNIOV
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) - (int)&IObase + IOBASE)
+value|((x) - DIObase + IOBASE)
 end_define
 
 begin_comment
@@ -350,35 +358,42 @@ value|(0x00400000)
 end_define
 
 begin_comment
-comment|/* offsets for longword read/write */
+comment|/* base/offsets for longword read/write (for locore.s) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MMUSSTP
+name|MMUBASE
 value|IOP(0x5F4000)
 end_define
 
 begin_define
 define|#
 directive|define
+name|MMUSSTP
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
 name|MMUUSTP
-value|IOP(0x5F4004)
+value|0x4
 end_define
 
 begin_define
 define|#
 directive|define
 name|MMUTBINVAL
-value|IOP(0x5F4008)
+value|0x8
 end_define
 
 begin_define
 define|#
 directive|define
 name|MMUSTAT
-value|IOP(0x5F400C)
+value|0xC
 end_define
 
 begin_define
@@ -558,7 +573,7 @@ value|(PMMU_WP|PMMU_INV)
 end_define
 
 begin_comment
-comment|/* function code for user data space */
+comment|/* 680X0 function codes */
 end_comment
 
 begin_define
@@ -569,7 +584,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* methinks the following is used to selectively clear TLB entries */
+comment|/* user data space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_USERP
+value|2
+end_define
+
+begin_comment
+comment|/* user program space */
 end_comment
 
 begin_define
@@ -578,6 +604,43 @@ directive|define
 name|FC_PURGE
 value|3
 end_define
+
+begin_comment
+comment|/* HPMMU: clear TLB entries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_SUPERD
+value|5
+end_define
+
+begin_comment
+comment|/* supervisor data space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_SUPERP
+value|6
+end_define
+
+begin_comment
+comment|/* supervisor program space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_CPU
+value|7
+end_define
+
+begin_comment
+comment|/* CPU space */
+end_comment
 
 begin_comment
 comment|/* fields in the 68020 cache control register */

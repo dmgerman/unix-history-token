@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vmparam.h 1.14 89/08/14$  *  *	@(#)vmparam.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vmparam.h 1.14 89/08/14$  *  *	@(#)vmparam.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -475,6 +475,96 @@ name|prot
 parameter_list|)
 define|\
 value|(*(u_int *)(pte) = ((pfnum)<< PGSHIFT) | (prot), TBIS((caddr_t)(v)))
+end_define
+
+begin_comment
+comment|/*  * Mach derived constants  */
+end_comment
+
+begin_comment
+comment|/* user/kernel map constants */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_MIN_ADDRESS
+value|((vm_offset_t)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_ADDRESS
+value|((vm_offset_t)0xFFF00000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MIN_KERNEL_ADDRESS
+value|((vm_offset_t)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_KERNEL_ADDRESS
+value|((vm_offset_t)0xFFFFF000)
+end_define
+
+begin_comment
+comment|/* virtual sizes (bytes) for various kernel submaps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_MBUF_SIZE
+value|(NMBCLUSTERS*MCLBYTES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE
+value|(NKMEMCLUSTERS*CLBYTES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_PHYS_SIZE
+value|(USRIOSIZE*CLBYTES)
+end_define
+
+begin_comment
+comment|/* # of kernel PT pages (initial only, can grow dynamically) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_KERNEL_PT_PAGES
+value|((vm_size_t)2)
+end_define
+
+begin_comment
+comment|/* XXX: SYSPTSIZE */
+end_comment
+
+begin_comment
+comment|/* pcb base */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|pcbb
+parameter_list|(
+name|p
+parameter_list|)
+value|((u_int)(p)->p_addr)
 end_define
 
 end_unit
