@@ -3353,12 +3353,6 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3367,12 +3361,6 @@ argument_list|(
 name|delfp
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -4388,12 +4376,6 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|FILEDESC_LOCK
 argument_list|(
 name|fdp
@@ -4427,12 +4409,6 @@ block|{
 name|FILEDESC_UNLOCK
 argument_list|(
 name|fdp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -4508,12 +4484,6 @@ argument_list|(
 name|fp
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -8524,7 +8494,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal form of close.  * Decrement reference count on file structure.  * Note: td may be NULL when closing a file  * that was being passed in a message.  */
+comment|/*  * Internal form of close.  * Decrement reference count on file structure.  * Note: td may be NULL when closing a file that was being passed in a  * message.  *  * XXXRW: Giant is not required for the caller, but often will be held; this  * makes it moderately likely the Giant will be recursed in the VFS case.  */
 end_comment
 
 begin_function
@@ -8575,6 +8545,12 @@ operator|==
 name|DTYPE_VNODE
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8820,6 +8796,12 @@ name|fdp
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
