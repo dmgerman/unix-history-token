@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.31
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.31
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -873,7 +873,7 @@ operator|!=
 literal|0
 condition|)
 break|break;
-comment|/* if sending to multiple people, mail back errors */
+comment|/* 			**  Arrange to send to everyone. 			**	If sending to multiple people, mail back 			**		errors rather than reporting directly. 			**	In any case, don't mail back errors for 			**		anything that has happened up to 			**		now (the other end will do this). 			**	Then send to everyone. 			**	Finally give a reply code.  If an error has 			**		already been given, don't mail a 			**		message back. 			**	We goose error returns by clearing FatalErrors. 			*/
 if|if
 condition|(
 name|rcps
@@ -886,6 +886,10 @@ name|MailBack
 operator|=
 name|TRUE
 expr_stmt|;
+name|FatalErrors
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* send to all recipients */
 name|sendall
 argument_list|(
@@ -894,34 +898,38 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* reset strange modes */
-name|HoldErrs
-operator|=
-name|FALSE
-expr_stmt|;
 name|CurEnv
 operator|->
 name|e_to
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* issue success if appropriate */
+comment|/* issue success if appropriate and reset */
 if|if
 condition|(
 name|Errors
 operator|==
 literal|0
 operator|||
-name|rcps
-operator|!=
-literal|1
+name|HoldErrs
 condition|)
+block|{
+name|HoldErrs
+operator|=
+name|FALSE
+expr_stmt|;
 name|message
 argument_list|(
 literal|"250"
 argument_list|,
 literal|"Sent"
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|FatalErrors
+operator|=
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
