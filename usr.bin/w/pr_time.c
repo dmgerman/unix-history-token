@@ -219,7 +219,7 @@ name|use_ampm
 condition|?
 literal|"%l:%M%p"
 else|:
-literal|"%k:%M	 "
+literal|"%k:%M "
 argument_list|)
 expr_stmt|;
 block|}
