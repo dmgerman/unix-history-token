@@ -354,15 +354,6 @@ decl_stmt|;
 name|int
 name|attached
 decl_stmt|;
-name|DEVPRINTF
-argument_list|(
-operator|(
-name|dev
-operator|,
-literal|"pccard_card_attach\n"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * this is here so that when socket_enable calls gettype, trt happens 	 */
 name|STAILQ_INIT
 argument_list|(
@@ -540,13 +531,6 @@ argument_list|)
 condition|)
 continue|continue;
 comment|/* 		 * In NetBSD, the drivers are responsible for activating 		 * each function of a card.  I think that in FreeBSD we 		 * want to activate them enough for the usual bus_*_resource 		 * routines will do the right thing.  This many mean a 		 * departure from the current NetBSD model. 		 * 		 * This could get really ugly for multifunction cards.  But 		 * it might also just fall out of the FreeBSD resource model. 		 * 		 */
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Starting to attach....\n"
-argument_list|)
-expr_stmt|;
 name|ivar
 operator|=
 name|malloc
@@ -611,19 +595,6 @@ expr_stmt|;
 name|pccard_function_enable
 argument_list|(
 name|pf
-argument_list|)
-expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"pf %p pf->sc %p\n"
-argument_list|,
-name|pf
-argument_list|,
-name|pf
-operator|->
-name|sc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2083,12 +2054,10 @@ name|PCCARD_CCR_OPTION_ADDR_DECODE
 operator|)
 expr_stmt|;
 comment|/*  		 * XXX Need to enable PCCARD_CCR_OPTION_IRQ_ENABLE if 		 * XXX we have an interrupt handler, but we don't know that 		 * XXX at this point. 		 */
-if|#
-directive|if
-literal|0
-block|if (pf->ih_fct) 			reg |= PCCARD_CCR_OPTION_IREQ_ENABLE;
-endif|#
-directive|endif
+name|reg
+operator||=
+name|PCCARD_CCR_OPTION_IREQ_ENABLE
+expr_stmt|;
 block|}
 name|pccard_ccr_write
 argument_list|(
@@ -2823,17 +2792,6 @@ name|sc_enabled_count
 operator|=
 literal|0
 expr_stmt|;
-name|DEVPRINTF
-argument_list|(
-operator|(
-name|dev
-operator|,
-literal|"pccard_attach %p\n"
-operator|,
-name|dev
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 name|bus_generic_attach
 argument_list|(
@@ -3106,6 +3064,27 @@ argument_list|,
 name|PCCARD_NDRQ
 argument_list|,
 literal|"%ld"
+argument_list|)
+expr_stmt|;
+name|retval
+operator|+=
+name|printf
+argument_list|(
+literal|" function %d config %d"
+argument_list|,
+name|devi
+operator|->
+name|fcn
+operator|->
+name|number
+argument_list|,
+name|devi
+operator|->
+name|fcn
+operator|->
+name|cfe
+operator|->
+name|number
 argument_list|)
 expr_stmt|;
 block|}
@@ -3787,6 +3766,13 @@ name|pccard_function
 modifier|*
 name|pf
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|r
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|device_get_parent
@@ -3828,15 +3814,15 @@ condition|)
 return|return
 name|NULL
 return|;
-return|return
-operator|(
+name|r
+operator|=
 name|pf
 operator|->
 name|cfe
 operator|->
 name|irqres
-operator|)
-return|;
+expr_stmt|;
+break|break;
 case|case
 name|SYS_RES_IOPORT
 case|:
@@ -3851,8 +3837,8 @@ comment|/* XXX */
 return|return
 name|NULL
 return|;
-return|return
-operator|(
+name|r
+operator|=
 name|pf
 operator|->
 name|cfe
@@ -3862,9 +3848,44 @@ index|[
 operator|*
 name|rid
 index|]
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|r
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|RF_ACTIVE
+condition|)
+name|bus_generic_activate_resource
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|,
+name|type
+argument_list|,
+operator|*
+name|rid
+argument_list|,
+name|r
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|r
 operator|)
 return|;
-block|}
 block|}
 return|return
 operator|(
@@ -3954,7 +3975,7 @@ modifier|*
 name|r
 parameter_list|)
 block|{
-comment|/* XXX need to write to the COR to activate this */
+comment|/* XXX need to write to the COR to activate this for mf cards */
 return|return
 operator|(
 name|bus_generic_activate_resource
@@ -3997,7 +4018,7 @@ modifier|*
 name|r
 parameter_list|)
 block|{
-comment|/* XXX need to write to the COR to deactivate this */
+comment|/* XXX need to write to the COR to deactivate this for mf cards */
 return|return
 operator|(
 name|bus_generic_deactivate_resource
