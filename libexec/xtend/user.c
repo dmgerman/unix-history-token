@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: user.c,v 1.3.2.1 1997/12/18 07:37:46 charnier Exp $"
+literal|"$Id: user.c,v 1.3.2.2 1998/03/06 01:49:59 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -414,6 +414,13 @@ argument_list|(
 name|dumppath
 argument_list|,
 name|X10DIR
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|dumppath
+argument_list|,
+literal|"/"
 argument_list|)
 expr_stmt|;
 name|strcat
