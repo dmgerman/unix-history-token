@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_carp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -3569,6 +3575,25 @@ operator|->
 name|ia_sockmask
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_CARP
+comment|/* 	 * XXX: carp(4) does not have interface route 	 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_type
+operator|==
+name|IFT_CARP
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* 	 * Add route for the network. 	 */
 name|ia
 operator|->
@@ -4089,7 +4114,7 @@ operator|.
 name|s_addr
 condition|)
 continue|continue;
-comment|/* 		 * If we got a matching prefix address, move IFA_ROUTE and 		 * the route itself to it.  Make sure that routing daemons 		 * get a heads-up. 		 */
+comment|/* 		 * If we got a matching prefix address, move IFA_ROUTE and 		 * the route itself to it.  Make sure that routing daemons 		 * get a heads-up. 		 * 		 * XXX: a special case for carp(4) interface 		 */
 if|if
 condition|(
 operator|(
@@ -4101,6 +4126,21 @@ name|IFA_ROUTE
 operator|)
 operator|==
 literal|0
+ifdef|#
+directive|ifdef
+name|DEV_CARP
+operator|&&
+operator|(
+name|ia
+operator|->
+name|ia_ifp
+operator|->
+name|if_type
+operator|!=
+name|IFT_CARP
+operator|)
+endif|#
+directive|endif
 condition|)
 block|{
 name|rtinit

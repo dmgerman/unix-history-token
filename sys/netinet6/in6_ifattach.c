@@ -2906,6 +2906,9 @@ case|:
 case|case
 name|IFT_PFSYNC
 case|:
+case|case
+name|IFT_CARP
+case|:
 return|return;
 block|}
 comment|/* 	 * quirks based on interface type 	 */

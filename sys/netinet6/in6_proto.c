@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_carp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -336,6 +342,23 @@ end_endif
 begin_comment
 comment|/* IPSEC */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_CARP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_carp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -961,6 +984,46 @@ operator|&
 name|rip6_usrreqs
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|DEV_CARP
+block|{
+name|SOCK_RAW
+block|,
+operator|&
+name|inet6domain
+block|,
+name|IPPROTO_CARP
+block|,
+name|PR_ATOMIC
+operator||
+name|PR_ADDR
+block|,
+name|carp6_input
+block|,
+name|rip6_output
+block|,
+literal|0
+block|,
+name|rip6_ctloutput
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+operator|&
+name|rip6_usrreqs
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* DEV_CARP */
 comment|/* raw wildcard */
 block|{
 name|SOCK_RAW

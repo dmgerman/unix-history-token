@@ -7658,6 +7658,14 @@ name|IFT_IEEE80211
 case|:
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|IFT_CARP
+case|case
+name|IFT_CARP
+case|:
+endif|#
+directive|endif
 case|case
 name|IFT_GIF
 case|:

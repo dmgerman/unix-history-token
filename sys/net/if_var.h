@@ -65,6 +65,12 @@ name|ether_header
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|carp_if
+struct_decl|;
+end_struct_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -310,11 +316,12 @@ name|int
 name|if_pcount
 decl_stmt|;
 comment|/* number of promiscuous listeners */
-name|void
+name|struct
+name|carp_if
 modifier|*
 name|if_carp
 decl_stmt|;
-comment|/* carp (tbd) interface pointer */
+comment|/* carp interface structure */
 name|struct
 name|bpf_if
 modifier|*

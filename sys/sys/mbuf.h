@@ -2844,6 +2844,17 @@ begin_comment
 comment|/* Saved IP options */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_CARP
+value|28
+end_define
+
+begin_comment
+comment|/* CARP info */
+end_comment
+
 begin_comment
 comment|/* Packet tag routines. */
 end_comment

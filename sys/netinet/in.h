@@ -1588,6 +1588,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPPROTO_CARP
+value|112
+end_define
+
+begin_comment
+comment|/* CARP */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_PGM
 value|113
 end_define
@@ -1954,6 +1965,17 @@ end_define
 
 begin_comment
 comment|/* 224.0.0.2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INADDR_CARP_GROUP
+value|(u_int32_t)0xe0000012
+end_define
+
+begin_comment
+comment|/* 224.0.0.18 */
 end_comment
 
 begin_define
