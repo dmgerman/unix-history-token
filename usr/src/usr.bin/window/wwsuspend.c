@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwsuspend.c	3.10 (Berkeley) %G%"
+literal|"@(#)wwsuspend.c	3.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
