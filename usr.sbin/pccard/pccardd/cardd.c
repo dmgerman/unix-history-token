@@ -4981,9 +4981,6 @@ name|iobase
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEV_DESC_HAS_SIZE
 name|drv
 operator|.
 name|iosize
@@ -4994,8 +4991,6 @@ name|io
 operator|.
 name|size
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|debug_level
