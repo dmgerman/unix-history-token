@@ -392,6 +392,32 @@ name|ohci_softc_t
 typedef|;
 end_typedef
 
+begin_struct
+struct|struct
+name|ohci_xfer
+block|{
+name|struct
+name|usbd_xfer
+name|xfer
+decl_stmt|;
+name|struct
+name|usb_task
+name|abort_task
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|OXFER
+parameter_list|(
+name|xfer
+parameter_list|)
+value|((struct ehci_xfer *)(xfer))
+end_define
+
 begin_function_decl
 name|usbd_status
 name|ohci_init
