@@ -9473,13 +9473,6 @@ name|idlethread
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|spinlocks
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* lock against other AP's that are waking up */
 name|mtx_lock_spin
 argument_list|(
