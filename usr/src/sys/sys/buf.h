@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.18 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_BUF_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_BUF_H_
+end_define
 
 begin_comment
 comment|/*  * The header for buffers in the buffer pool and otherwise used  * to describe a block i/o request is given here.  *  * Each buffer in the pool is usually doubly linked into 2 lists:  * hashed into a chain by<dev,blkno> so it can be located in the cache,  * and (usually) on (one of several) queues.  These lists are circular and  * doubly linked for easy removal.  *  * There are currently three queues for buffers:  *	one for buffers which must be kept permanently (super blocks)  * 	one for buffers containing ``useful'' information (the cache)  *	one for buffers containing ``non-useful'' information  *		(and empty buffers, pushed onto the front)  * The latter two queues contain the buffers which are available for  * reallocation, are kept in lru order.  When not on one of these queues,  * the buffers are ``checked out'' to drivers which use the available list  * pointers to keep track of them in their i/o active queues.  */
@@ -1167,6 +1179,15 @@ end_define
 
 begin_comment
 comment|/* do all allocations synchronously */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_BUF_H_ */
 end_comment
 
 end_unit
