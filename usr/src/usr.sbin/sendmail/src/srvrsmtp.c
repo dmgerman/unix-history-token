@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.32 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.33 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.32 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.33 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -585,6 +585,27 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|inp
+argument_list|,
+literal|'\n'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|BrokenSmtpPeers
@@ -600,13 +621,52 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|char
+modifier|*
+name|q
+init|=
+name|inp
+decl_stmt|;
+while|while
+condition|(
+name|q
+operator|!=
+name|NULL
+condition|)
+block|{
 name|message
 argument_list|(
 literal|"220-%s"
 argument_list|,
-name|inp
+name|q
 argument_list|)
 expr_stmt|;
+name|q
+operator|=
+name|p
+expr_stmt|;
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|'\n'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 name|message
 argument_list|(
 literal|"220 ESMTP spoken here"
