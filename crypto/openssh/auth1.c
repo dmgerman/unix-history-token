@@ -1733,6 +1733,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 ifdef|#
 directive|ifdef
 name|LOGIN_CAP
@@ -1887,7 +1888,6 @@ name|get_canonical_hostname
 argument_list|()
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Raise logging level */
 if|if
 condition|(
