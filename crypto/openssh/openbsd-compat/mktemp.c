@@ -17,11 +17,20 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|HAVE_MKDTEMP
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_STRICT_MKSTEMP
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -734,7 +743,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !HAVE_MKDTEMP */
+comment|/* !defined(HAVE_MKDTEMP) || defined(HAVE_STRICT_MKSTEMP) */
 end_comment
 
 end_unit

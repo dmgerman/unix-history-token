@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: misc.c,v 1.19 2002/03/04 17:27:39 stevesk Exp $"
+literal|"$OpenBSD: misc.c,v 1.20 2002/12/13 10:03:15 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -375,7 +375,7 @@ name|opt
 operator|=
 literal|1
 expr_stmt|;
-name|debug
+name|debug2
 argument_list|(
 literal|"fd %d setting TCP_NODELAY"
 argument_list|,

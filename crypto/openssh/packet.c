@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: packet.c,v 1.97 2002/07/04 08:12:15 deraadt Exp $"
+literal|"$OpenBSD: packet.c,v 1.104 2003/04/01 10:22:21 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2198,9 +2198,9 @@ decl_stmt|;
 name|int
 name|encrypt
 decl_stmt|;
-name|debug
+name|debug2
 argument_list|(
-literal|"newkeys: mode %d"
+literal|"set_newkeys: mode %d"
 argument_list|,
 name|mode
 argument_list|)
@@ -2246,7 +2246,7 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|"newkeys: rekeying"
+literal|"set_newkeys: rekeying"
 argument_list|)
 expr_stmt|;
 name|cipher_cleanup
@@ -3503,7 +3503,7 @@ literal|1024
 condition|)
 name|packet_disconnect
 argument_list|(
-literal|"Bad packet length %d."
+literal|"Bad packet length %u."
 argument_list|,
 name|len
 argument_list|)
@@ -3999,7 +3999,7 @@ argument_list|)
 expr_stmt|;
 name|packet_disconnect
 argument_list|(
-literal|"Bad packet length %d."
+literal|"Bad packet length %u."
 argument_list|,
 name|packet_length
 argument_list|)
@@ -4009,7 +4009,7 @@ name|DBG
 argument_list|(
 name|debug
 argument_list|(
-literal|"input: packet len %d"
+literal|"input: packet len %u"
 argument_list|,
 name|packet_length
 operator|+
@@ -5086,6 +5086,14 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
+comment|/* Display the error locally */
+name|log
+argument_list|(
+literal|"Disconnecting: %.100s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 comment|/* Send the disconnect message to the other side, and wait for it to get sent. */
 if|if
 condition|(
@@ -5139,14 +5147,6 @@ expr_stmt|;
 comment|/* Close the connection. */
 name|packet_close
 argument_list|()
-expr_stmt|;
-comment|/* Display the error locally and exit. */
-name|log
-argument_list|(
-literal|"Disconnecting: %.100s"
-argument_list|,
-name|buf
-argument_list|)
 expr_stmt|;
 name|fatal_cleanup
 argument_list|()
@@ -5414,6 +5414,71 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|packet_set_tos
+parameter_list|(
+name|int
+name|interactive
+parameter_list|)
+block|{
+name|int
+name|tos
+init|=
+name|interactive
+condition|?
+name|IPTOS_LOWDELAY
+else|:
+name|IPTOS_THROUGHPUT
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|packet_connection_is_on_socket
+argument_list|()
+operator|||
+operator|!
+name|packet_connection_is_ipv4
+argument_list|()
+condition|)
+return|return;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|connection_in
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_TOS
+argument_list|,
+operator|&
+name|tos
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tos
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"setsockopt IP_TOS %d: %.100s:"
+argument_list|,
+name|tos
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* Informs that the current session is interactive.  Sets IP flags for that. */
 end_comment
@@ -5432,30 +5497,6 @@ name|called
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IP_TOS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|IP_TOS_IS_BROKEN
-argument_list|)
-name|int
-name|lowdelay
-init|=
-name|IPTOS_LOWDELAY
-decl_stmt|;
-name|int
-name|throughput
-init|=
-name|IPTOS_THROUGHPUT
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|called
@@ -5477,80 +5518,15 @@ operator|!
 name|packet_connection_is_on_socket
 argument_list|()
 condition|)
-return|return;
-comment|/* 	 * IPTOS_LOWDELAY and IPTOS_THROUGHPUT are IPv4 only 	 */
 if|if
 condition|(
 name|interactive
 condition|)
-block|{
-comment|/* 		 * Set IP options for an interactive connection.  Use 		 * IPTOS_LOWDELAY and TCP_NODELAY. 		 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IP_TOS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|IP_TOS_IS_BROKEN
-argument_list|)
-if|if
-condition|(
-name|packet_connection_is_ipv4
-argument_list|()
-condition|)
-block|{
-if|if
-condition|(
-name|setsockopt
-argument_list|(
-name|connection_in
-argument_list|,
-name|IPPROTO_IP
-argument_list|,
-name|IP_TOS
-argument_list|,
-operator|&
-name|lowdelay
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|lowdelay
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"setsockopt IPTOS_LOWDELAY: %.100s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|set_nodelay
 argument_list|(
 name|connection_in
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|packet_connection_is_ipv4
-argument_list|()
-condition|)
-block|{
-comment|/* 		 * Set IP options for a non-interactive connection.  Use 		 * IPTOS_THROUGHPUT. 		 */
 if|#
 directive|if
 name|defined
@@ -5563,40 +5539,13 @@ name|defined
 argument_list|(
 name|IP_TOS_IS_BROKEN
 argument_list|)
-if|if
-condition|(
-name|setsockopt
+name|packet_set_tos
 argument_list|(
-name|connection_in
-argument_list|,
-name|IPPROTO_IP
-argument_list|,
-name|IP_TOS
-argument_list|,
-operator|&
-name|throughput
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|throughput
-argument_list|)
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"setsockopt IPTOS_THROUGHPUT: %.100s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|interactive
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 block|}
 end_function
 

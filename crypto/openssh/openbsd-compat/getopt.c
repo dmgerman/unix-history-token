@@ -46,7 +46,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$OpenBSD: getopt.c,v 1.2 1996/08/19 08:33:32 tholo Exp $"
+literal|"$OpenBSD: getopt.c,v 1.4 2002/12/08 22:57:14 millert Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,6 +179,18 @@ modifier|*
 name|oli
 decl_stmt|;
 comment|/* option letter list index */
+if|if
+condition|(
+name|ostr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|BSDoptreset

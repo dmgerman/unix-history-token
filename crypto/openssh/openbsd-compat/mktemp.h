@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: mktemp.h,v 1.2 2001/02/09 01:55:36 djm Exp $ */
+comment|/* $Id: mktemp.h,v 1.3 2003/01/07 04:18:33 djm Exp $ */
 end_comment
 
 begin_ifndef
@@ -21,11 +21,20 @@ directive|include
 file|"config.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|HAVE_MKDTEMP
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_STRICT_MKSTEMP
+argument_list|)
+end_if
 
 begin_function_decl
 name|int
@@ -70,7 +79,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !HAVE_MKDTEMP */
+comment|/* !defined(HAVE_MKDTEMP) || defined(HAVE_STRICT_MKSTEMP) */
 end_comment
 
 begin_endif

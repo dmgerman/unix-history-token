@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-getpeereid.c,v 1.1 2002/09/12 00:33:02 djm Exp $"
+literal|"$Id: bsd-getpeereid.c,v 1.2 2003/03/24 22:07:52 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -56,7 +56,7 @@ name|struct
 name|ucred
 name|cred
 decl_stmt|;
-name|size_t
+name|socklen_t
 name|len
 init|=
 sizeof|sizeof

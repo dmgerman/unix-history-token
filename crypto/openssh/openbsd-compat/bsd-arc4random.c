@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-arc4random.c,v 1.5 2002/05/08 22:57:18 tim Exp $"
+literal|"$Id: bsd-arc4random.c,v 1.6 2003/03/17 05:13:53 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -198,7 +198,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|RAND_bytes
 argument_list|(
 name|rand_buf
@@ -208,6 +207,8 @@ argument_list|(
 name|rand_buf
 argument_list|)
 argument_list|)
+operator|<=
+literal|0
 condition|)
 name|fatal
 argument_list|(

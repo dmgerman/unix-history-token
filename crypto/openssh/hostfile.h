@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: hostfile.h,v 1.12 2002/09/08 20:24:08 markus Exp $	*/
+comment|/*	$OpenBSD: hostfile.h,v 1.13 2002/11/21 23:03:51 deraadt Exp $	*/
 end_comment
 
 begin_comment

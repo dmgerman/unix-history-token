@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: log.c,v 1.24 2002/07/19 15:43:33 markus Exp $"
+literal|"$OpenBSD: log.c,v 1.25 2003/01/11 18:29:43 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -901,6 +901,10 @@ name|cu
 argument_list|)
 expr_stmt|;
 block|}
+name|fatal_cleanups
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -1428,6 +1432,21 @@ name|args
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Escape magic chars in output. */
+name|strnvis
+argument_list|(
+name|fmtbuf
+argument_list|,
+name|msgbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fmtbuf
+argument_list|)
+argument_list|,
+name|VIS_OCTAL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|log_on_stderr
@@ -1439,7 +1458,7 @@ name|stderr
 argument_list|,
 literal|"%s\r\n"
 argument_list|,
-name|msgbuf
+name|fmtbuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -1464,7 +1483,7 @@ name|pri
 argument_list|,
 literal|"%.500s"
 argument_list|,
-name|msgbuf
+name|fmtbuf
 argument_list|)
 expr_stmt|;
 name|closelog

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp.c,v 1.31 2002/07/25 01:16:59 mouring Exp $"
+literal|"$OpenBSD: sftp.c,v 1.34 2003/01/10 08:19:07 fgsch Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -126,6 +126,13 @@ name|size_t
 name|num_requests
 init|=
 literal|16
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|showprogress
 decl_stmt|;
 end_decl_stmt
 
@@ -485,6 +492,8 @@ decl_stmt|,
 name|out
 decl_stmt|,
 name|ch
+decl_stmt|,
+name|err
 decl_stmt|;
 name|pid_t
 name|sshpid
@@ -770,6 +779,10 @@ argument_list|(
 literal|"Filename already specified."
 argument_list|)
 expr_stmt|;
+name|showprogress
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'P'
@@ -943,7 +956,7 @@ condition|(
 operator|(
 name|host
 operator|=
-name|strchr
+name|strrchr
 argument_list|(
 name|userhost
 argument_list|,
@@ -1164,6 +1177,8 @@ name|sshpid
 argument_list|)
 expr_stmt|;
 block|}
+name|err
+operator|=
 name|interactive_loop
 argument_list|(
 name|in
@@ -1251,7 +1266,13 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
+name|err
+operator|==
 literal|0
+condition|?
+literal|0
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

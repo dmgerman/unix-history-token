@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openbsd-compat.h,v 1.17 2002/09/12 00:33:02 djm Exp $ */
+comment|/* $Id: openbsd-compat.h,v 1.19 2003/02/24 01:55:56 djm Exp $ */
 end_comment
 
 begin_ifndef
@@ -24,6 +24,12 @@ end_include
 begin_comment
 comment|/* OpenBSD function replacements */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"basename.h"
+end_include
 
 begin_include
 include|#
@@ -143,6 +149,12 @@ begin_include
 include|#
 directive|include
 file|"getopt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vis.h"
 end_include
 
 begin_comment

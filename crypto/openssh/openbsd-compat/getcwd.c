@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$OpenBSD: getcwd.c,v 1.6 2000/07/19 15:25:13 deraadt Exp $"
+literal|"$OpenBSD: getcwd.c,v 1.7 2002/11/24 01:52:27 cloder Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,7 +423,7 @@ name|pt
 operator|)
 return|;
 block|}
-comment|/* 		 * Build pointer to the parent directory, allocating memory 		 * as necessary.  Max length is 3 for "../", the largest 		 * possible component name, plus a trailing NULL. 		 */
+comment|/* 		 * Build pointer to the parent directory, allocating memory 		 * as necessary.  Max length is 3 for "../", the largest 		 * possible component name, plus a trailing NUL. 		 */
 if|if
 condition|(
 name|bup

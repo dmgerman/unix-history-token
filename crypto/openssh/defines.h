@@ -12,7 +12,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.96 2002/09/26 00:38:48 tim Exp $ */
+comment|/* $Id: defines.h,v 1.97 2003/01/24 00:50:32 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2084,6 +2084,52 @@ name|result
 parameter_list|)
 define|\
 value|do {								\       (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;		\       (result)->tv_usec = (a)->tv_usec - (b)->tv_usec;		\       if ((result)->tv_usec< 0) {				\ 	 --(result)->tv_sec;					\ 	 (result)->tv_usec += 1000000;				\       }								\    } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TIMEVAL_TO_TIMESPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TIMEVAL_TO_TIMESPEC
+parameter_list|(
+name|tv
+parameter_list|,
+name|ts
+parameter_list|)
+value|{					\ 	(ts)->tv_sec = (tv)->tv_sec;					\ 	(ts)->tv_nsec = (tv)->tv_usec * 1000;				\ }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TIMESPEC_TO_TIMEVAL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TIMESPEC_TO_TIMEVAL
+parameter_list|(
+name|tv
+parameter_list|,
+name|ts
+parameter_list|)
+value|{					\ 	(tv)->tv_sec = (ts)->tv_sec;					\ 	(tv)->tv_usec = (ts)->tv_nsec / 1000;				\ }
 end_define
 
 begin_endif

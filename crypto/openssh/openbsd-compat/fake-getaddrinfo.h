@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: fake-getaddrinfo.h,v 1.2 2001/02/09 01:55:36 djm Exp $ */
+comment|/* $Id: fake-getaddrinfo.h,v 1.4 2003/02/24 01:35:09 djm Exp $ */
 end_comment
 
 begin_ifndef

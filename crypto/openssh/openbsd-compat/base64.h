@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: base64.h,v 1.3 2002/02/26 16:59:59 stevesk Exp $ */
+comment|/* $Id: base64.h,v 1.4 2003/02/24 04:45:43 djm Exp $ */
 end_comment
 
 begin_ifndef
@@ -55,6 +55,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !HAVE_B64_NTOP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__b64_ntop
+value|b64_ntop
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE___B64_NTOP */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE___B64_PTON
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_B64_PTON
+end_ifndef
+
 begin_function_decl
 name|int
 name|b64_pton
@@ -80,15 +117,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !HAVE_B64_NTOP */
+comment|/* !HAVE_B64_PTON */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|__b64_ntop
-value|b64_ntop
-end_define
 
 begin_define
 define|#
@@ -103,7 +133,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE___B64_NTOP */
+comment|/* HAVE___B64_PTON */
 end_comment
 
 begin_endif
