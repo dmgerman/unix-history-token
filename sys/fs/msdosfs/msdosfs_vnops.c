@@ -8163,9 +8163,11 @@ expr_stmt|;
 name|lockmgr_printinfo
 argument_list|(
 operator|&
-name|dep
+name|ap
 operator|->
-name|de_lock
+name|a_vp
+operator|->
+name|v_lock
 argument_list|)
 expr_stmt|;
 name|printf

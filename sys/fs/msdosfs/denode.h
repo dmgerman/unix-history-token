@@ -128,11 +128,6 @@ struct|struct
 name|denode
 block|{
 name|struct
-name|lock
-name|de_lock
-decl_stmt|;
-comment|/* denode lock>Keep this first< */
-name|struct
 name|denode
 modifier|*
 name|de_next
