@@ -1270,6 +1270,7 @@ value|5000000
 end_define
 
 begin_function
+specifier|static
 name|int
 name|mcd_attach
 parameter_list|(
@@ -1397,6 +1398,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mcdopen
 parameter_list|(
@@ -1921,6 +1923,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mcdclose
 parameter_list|(
@@ -2050,6 +2053,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mcdstrategy
 parameter_list|(
@@ -2551,6 +2555,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mcdioctl
 parameter_list|(
@@ -3470,6 +3475,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mcdsize
 parameter_list|(
@@ -3752,6 +3758,7 @@ comment|/* check to see if a Mitsumi CD-ROM is attached to the ISA bus */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mcd_probe
 parameter_list|(
