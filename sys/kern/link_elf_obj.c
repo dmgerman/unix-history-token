@@ -3148,13 +3148,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
-argument_list|(
-name|ef
-argument_list|,
-name|M_LINKER
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ENOMEM
