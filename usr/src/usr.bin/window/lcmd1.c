@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd1.c	3.24 %G%"
+literal|"@(#)lcmd1.c	3.25 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,6 +129,14 @@ block|,
 name|ARG_ANY
 block|}
 block|,
+block|{
+literal|"mapnl"
+block|,
+literal|1
+block|,
+name|ARG_ANY
+block|}
+block|,
 literal|0
 block|}
 decl_stmt|;
@@ -154,6 +162,12 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|ww
+modifier|*
+name|w
+decl_stmt|;
 name|int
 name|col
 decl_stmt|,
@@ -175,6 +189,8 @@ name|char
 name|haspty
 decl_stmt|,
 name|hasframe
+decl_stmt|,
+name|mapnl
 decl_stmt|;
 name|char
 modifier|*
@@ -433,6 +449,31 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|(
+name|mapnl
+operator|=
+name|vtobool
+argument_list|(
+name|a
+operator|+
+literal|9
+argument_list|,
+operator|!
+name|haspty
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+operator|(
+name|w
+operator|=
 name|openwin
 argument_list|(
 name|id
@@ -457,10 +498,17 @@ name|shf
 argument_list|,
 name|sh
 argument_list|)
+operator|)
 operator|==
 literal|0
 condition|)
 return|return;
+name|w
+operator|->
+name|ww_mapnl
+operator|=
+name|mapnl
+expr_stmt|;
 name|v
 operator|->
 name|v_type

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)win.c	3.9 %G%"
+literal|"@(#)win.c	3.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,17 +223,6 @@ operator|.
 name|c
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|haspty
-condition|)
-name|w
-operator|->
-name|ww_mapnl
-operator|=
-literal|1
 expr_stmt|;
 if|if
 condition|(
