@@ -4266,7 +4266,7 @@ argument|) { 						perror (
 literal|"select"
 argument|); 						finish( -
 literal|1
-argument|); 				}  				if ( ns ) { 					int c1; 					int	nr;  					nr = read ( fileno(stdin),&c1,
+argument|); 				}  				if ( ns ) { 					char c1; 					int nr;  					nr = read ( fileno(stdin),&c1,
 literal|1
 argument|); 					c1&=
 literal|0xff
