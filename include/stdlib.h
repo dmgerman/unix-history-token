@@ -930,9 +930,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* int	 grantpt(int); */
-end_comment
+begin_function_decl
+name|int
+name|grantpt
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|char
@@ -1067,13 +1072,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* int	 posix_openpt(int); */
-end_comment
+begin_function_decl
+name|int
+name|posix_openpt
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_comment
-comment|/* char	*ptsname(int); */
-end_comment
+begin_function_decl
+name|char
+modifier|*
+name|ptsname
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -1185,9 +1201,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* int	 unlockpt(int); */
-end_comment
+begin_function_decl
+name|int
+name|unlockpt
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
