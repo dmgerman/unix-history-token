@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumplfs.c	5.9 (Berkeley) %G%"
+literal|"@(#)dumplfs.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2972,7 +2972,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s%X\n"
+literal|"%s%d\t%s%X\t%qd\n"
 argument_list|,
 literal|"fsbtodb  "
 argument_list|,
@@ -2985,6 +2985,12 @@ argument_list|,
 name|lfsp
 operator|->
 name|lfs_cksum
+argument_list|,
+literal|"maxfilesize  "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_maxfilesize
 argument_list|)
 expr_stmt|;
 operator|(
