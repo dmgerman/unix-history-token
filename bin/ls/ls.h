@@ -57,12 +57,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|f_lomac
+name|f_label
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* show LOMAC attributes */
+comment|/* show MAC label */
 end_comment
 
 begin_decl_stmt
@@ -246,7 +246,7 @@ name|u_int
 name|s_flags
 decl_stmt|;
 name|u_int
-name|s_lattr
+name|s_label
 decl_stmt|;
 name|u_int
 name|s_group
@@ -286,7 +286,7 @@ name|flags
 decl_stmt|;
 name|char
 modifier|*
-name|lattr
+name|label
 decl_stmt|;
 name|char
 name|data

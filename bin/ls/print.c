@@ -853,7 +853,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|f_lomac
+name|f_label
 condition|)
 operator|(
 name|void
@@ -864,11 +864,11 @@ literal|"%-*s "
 argument_list|,
 name|dp
 operator|->
-name|s_lattr
+name|s_label
 argument_list|,
 name|np
 operator|->
-name|lattr
+name|label
 argument_list|)
 expr_stmt|;
 if|if
