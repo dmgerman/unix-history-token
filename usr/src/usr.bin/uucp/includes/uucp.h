@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uucp.h	5.8	85/06/24	*/
+comment|/*	uucp.h	5.9	85/10/24	*/
 end_comment
 
 begin_include
@@ -83,19 +83,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DN11
+name|BSDTCP
 end_define
 
 begin_comment
-comment|/* standard dialer */
+comment|/* 4.2bsd or 2.9bsd TCP/IP */
 end_comment
 
 begin_comment
-comment|/*#define DATAKIT	/* ATT's datakit */
-end_comment
-
-begin_comment
-comment|/*#define PNET		/* Purdue network */
+comment|/* #define DATAKIT	/* ATT's datakit */
 end_comment
 
 begin_define
@@ -121,6 +117,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DN11
+end_define
+
+begin_comment
+comment|/* "standard" DEC dialer */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HAYES
 end_define
 
@@ -128,14 +134,28 @@ begin_comment
 comment|/* Hayes' Smartmodem */
 end_comment
 
+begin_comment
+comment|/* #define MICOM	/* Micom Mux port */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|VENTEL
+name|NOVATION
 end_define
 
 begin_comment
-comment|/* Ventel Dialer */
+comment|/* Novation modem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAD
+end_define
+
+begin_comment
+comment|/* X.25 PAD */
 end_comment
 
 begin_define
@@ -148,14 +168,26 @@ begin_comment
 comment|/* PENRIL Dialer */
 end_comment
 
+begin_comment
+comment|/* #define PNET		/* Purdue network */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|VADIC
+name|RVMACS
 end_define
 
 begin_comment
-comment|/* Racal-Vadic 345x */
+comment|/* Racal-Vadic MACS  820 dialer, 831 adaptor */
+end_comment
+
+begin_comment
+comment|/* #define SYTEK	/* Sytek Local Area Net */
+end_comment
+
+begin_comment
+comment|/* #define UNETTCP	/* 3Com's UNET */
 end_comment
 
 begin_define
@@ -191,11 +223,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RVMACS
+name|VADIC
 end_define
 
 begin_comment
-comment|/* Racal-Vadic MACS  820 dialer, 831 adaptor */
+comment|/* Racal-Vadic 345x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VENTEL
+end_define
+
+begin_comment
+comment|/* Ventel Dialer */
 end_comment
 
 begin_define
@@ -206,44 +248,6 @@ end_define
 
 begin_comment
 comment|/* Racal-Vadic MACS  811 dialer, 831 adaptor */
-end_comment
-
-begin_comment
-comment|/*#define UNETTCP	/* 3Com's UNET */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BSDTCP
-end_define
-
-begin_comment
-comment|/* 4.2bsd or 2.9bsd TCP/IP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PAD
-end_define
-
-begin_comment
-comment|/* X.25 PAD */
-end_comment
-
-begin_comment
-comment|/*#define MICOM		/* micom mux port */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOVATION
-end_define
-
-begin_comment
-comment|/* Novation modem */
 end_comment
 
 begin_if
@@ -304,6 +308,18 @@ define|#
 directive|define
 name|INTERVALTIMER
 end_define
+
+begin_comment
+comment|/*#define FASTTIMER /**/
+end_comment
+
+begin_comment
+comment|/*#define FTIME /**/
+end_comment
+
+begin_comment
+comment|/*#define BUSYLOOP /**/
+end_comment
 
 begin_endif
 endif|#
@@ -496,11 +512,11 @@ comment|/**/
 end_comment
 
 begin_comment
-comment|/*  * Traditionally LCK (lock) files have been kept in /usr/spool/uucp.  * If you want that define LOCKDIR to be ".".  * If you want the locks kept in a subdirectory, define LOCKDIR as "LCK.".  * Good news about LCK. subdirectory: the directory can be mode 777 so  * unprivileged programs can share the uucp locking system,  * and the subdirectory keeps down clutter in the main directory.  * The BAD news: you have to change 'tip' and another programs that  * know where the LCK files are kept, and you have to change your /etc/rc  * if your rc cleans out the lock files (as it should).  */
+comment|/*  * Traditionally LCK (lock) files have been kept in /usr/spool/uucp.  * If you want that define LOCKDIR to be ".".  * If you want the locks kept in a subdirectory, define LOCKDIR as "LCK".  * Good news about LCK. subdirectory: the directory can be mode 777 so  * unprivileged programs can share the uucp locking system,  * and the subdirectory keeps down clutter in the main directory.  * The BAD news: you have to change 'tip' and another programs that  * know where the LCK files are kept, and you have to change your /etc/rc  * if your rc cleans out the lock files (as it should).  */
 end_comment
 
 begin_comment
-comment|/*#define	LOCKDIR	"LCK."	/**/
+comment|/*#define	LOCKDIR	"LCK"	/**/
 end_comment
 
 begin_define
@@ -515,7 +531,7 @@ comment|/**/
 end_comment
 
 begin_comment
-comment|/*   * If you want uucp and uux to copy the data files by default,  * don't define DONTCOPY (This is the way older 4bsd uucps worked)  * If you want uucp and uux to use the original files instead of  * copies, define DONTCOPY (This is the way System III and V work)  */
+comment|/*  * If you want uucp and uux to copy the data files by default,  * don't define DONTCOPY (This is the way older 4bsd uucps worked)  * If you want uucp and uux to use the original files instead of  * copies, define DONTCOPY (This is the way System III and V work)  */
 end_comment
 
 begin_define
@@ -636,7 +652,7 @@ begin_define
 define|#
 directive|define
 name|SQLOCK
-value|"LCK.SQ"
+value|"SQ"
 end_define
 
 begin_define
@@ -657,7 +673,7 @@ begin_define
 define|#
 directive|define
 name|SEQLOCK
-value|"LCK.SEQL"
+value|"SEQL"
 end_define
 
 begin_define
@@ -790,6 +806,26 @@ parameter_list|,
 name|i1
 parameter_list|)
 value|if (!(e)) {assert(s1, s2, i1);cleanup(FAIL);}else
+end_define
+
+begin_define
+define|#
+directive|define
+name|delock
+parameter_list|(
+name|dev
+parameter_list|)
+value|rmlock(dev)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mlock
+parameter_list|(
+name|dev
+parameter_list|)
+value|ulockf(dev, SLCKTIME)
 end_define
 
 begin_define
@@ -1296,7 +1332,7 @@ begin_define
 define|#
 directive|define
 name|X_LOCK
-value|"LCK.XQT"
+value|"XQT"
 end_define
 
 begin_define
@@ -1515,13 +1551,6 @@ name|struct
 name|condev
 name|condevs
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nologinflag
 decl_stmt|;
 end_decl_stmt
 
