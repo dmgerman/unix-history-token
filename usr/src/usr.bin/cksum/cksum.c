@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * James W. Williams of the University of Maryland.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * James W. Williams of NASA Goddard Space Flight Center.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cksum.c	5.3 (Berkeley) %G%"
+literal|"@(#)cksum.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
