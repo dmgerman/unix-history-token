@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_lockf.c	8.3 (Berkeley) 1/6/94  * $Id: kern_lockf.c,v 1.17 1997/12/05 19:55:38 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_lockf.c	8.3 (Berkeley) 1/6/94  * $Id: kern_lockf.c,v 1.18 1998/01/31 07:23:11 eivind Exp $  */
 end_comment
 
 begin_include
@@ -2961,10 +2961,14 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"%s: lock 0x%lx for "
+literal|"%s: lock %p for "
 argument_list|,
 name|tag
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lock
 argument_list|)
 expr_stmt|;
@@ -2978,20 +2982,21 @@ name|F_POSIX
 condition|)
 name|printf
 argument_list|(
-literal|"proc %d"
+literal|"proc %ld"
 argument_list|,
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 operator|(
 expr|struct
 name|proc
 operator|*
 operator|)
-operator|(
 name|lock
 operator|->
 name|lf_id
-operator|)
-operator|)
+argument_list|)
 operator|->
 name|p_pid
 argument_list|)
@@ -2999,17 +3004,25 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"id 0x%x"
+literal|"id %p"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lock
 operator|->
 name|lf_id
 argument_list|)
 expr_stmt|;
+comment|/* XXX no %qd in kernel.  Truncate. */
 name|printf
 argument_list|(
-literal|" in ino %d on dev<%d, %d>, %s, start %d, end %d"
+literal|" in ino %lu on dev<%d, %d>, %s, start %ld, end %ld"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lock
 operator|->
 name|lf_inode
@@ -3060,10 +3073,16 @@ literal|"unlock"
 else|:
 literal|"unknown"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|lock
 operator|->
 name|lf_start
 argument_list|,
+operator|(
+name|long
+operator|)
 name|lock
 operator|->
 name|lf_end
@@ -3079,8 +3098,12 @@ name|tqh_first
 condition|)
 name|printf
 argument_list|(
-literal|" block 0x%x\n"
+literal|" block %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lock
 operator|->
 name|lf_blkhd
@@ -3126,10 +3149,13 @@ name|blk
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%s: Lock list for ino %d on dev<%d, %d>:\n"
+literal|"%s: Lock list for ino %lu on dev<%d, %d>:\n"
 argument_list|,
 name|tag
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lock
 operator|->
 name|lf_inode
@@ -3176,8 +3202,12 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"\tlock 0x%lx for "
+literal|"\tlock %p for "
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lf
 argument_list|)
 expr_stmt|;
@@ -3191,20 +3221,21 @@ name|F_POSIX
 condition|)
 name|printf
 argument_list|(
-literal|"proc %d"
+literal|"proc %ld"
 argument_list|,
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 operator|(
 expr|struct
 name|proc
 operator|*
 operator|)
-operator|(
 name|lf
 operator|->
 name|lf_id
-operator|)
-operator|)
+argument_list|)
 operator|->
 name|p_pid
 argument_list|)
@@ -3212,16 +3243,21 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"id 0x%x"
+literal|"id %p"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lf
 operator|->
 name|lf_id
 argument_list|)
 expr_stmt|;
+comment|/* XXX no %qd in kernel.  Truncate. */
 name|printf
 argument_list|(
-literal|", %s, start %d, end %d"
+literal|", %s, start %ld, end %ld"
 argument_list|,
 name|lf
 operator|->
@@ -3249,10 +3285,16 @@ literal|"unlock"
 else|:
 literal|"unknown"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|lf
 operator|->
 name|lf_start
 argument_list|,
+operator|(
+name|long
+operator|)
 name|lf
 operator|->
 name|lf_end
@@ -3281,8 +3323,12 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\t\tlock request 0x%lx for "
+literal|"\n\t\tlock request %p for "
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|blk
 argument_list|)
 expr_stmt|;
@@ -3296,20 +3342,21 @@ name|F_POSIX
 condition|)
 name|printf
 argument_list|(
-literal|"proc %d"
+literal|"proc %ld"
 argument_list|,
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 operator|(
 expr|struct
 name|proc
 operator|*
 operator|)
-operator|(
 name|blk
 operator|->
 name|lf_id
-operator|)
-operator|)
+argument_list|)
 operator|->
 name|p_pid
 argument_list|)
@@ -3317,16 +3364,21 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"id 0x%x"
+literal|"id %p"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|blk
 operator|->
 name|lf_id
 argument_list|)
 expr_stmt|;
+comment|/* XXX no %qd in kernel.  Truncate. */
 name|printf
 argument_list|(
-literal|", %s, start %d, end %d"
+literal|", %s, start %ld, end %ld"
 argument_list|,
 name|blk
 operator|->
@@ -3354,10 +3406,16 @@ literal|"unlock"
 else|:
 literal|"unknown"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blk
 operator|->
 name|lf_start
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blk
 operator|->
 name|lf_end
