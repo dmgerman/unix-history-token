@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.29 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -256,6 +256,8 @@ operator|=
 name|m_pullup
 argument_list|(
 name|m
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|==
@@ -1351,7 +1353,7 @@ name|error
 operator|=
 name|errlen
 operator|=
-name|tpdulen
+name|tpdu_len
 operator|=
 literal|0
 expr_stmt|;
@@ -1373,7 +1375,7 @@ literal|0
 expr_stmt|;
 name|fsufxloc
 operator|=
-name|lsusfloc
+name|lsufxloc
 operator|=
 name|NULL
 expr_stmt|;
