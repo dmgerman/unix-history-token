@@ -1442,7 +1442,13 @@ block|}
 ifdef|#
 directive|ifdef
 name|PFIL_HOOKS
-comment|/* 	 * Run through list of hooks for input packets. 	 */
+comment|/* 	 * Run through list of hooks for input packets. 	 * 	 * NB: Beware of the destination address changing 	 *     (e.g. by NAT rewriting).  When this happens, 	 *     tell ip6_forward to do the right thing. 	 */
+name|odst
+operator|=
+name|ip6
+operator|->
+name|ip6_dst
+expr_stmt|;
 if|if
 condition|(
 name|pfil_run_hooks
@@ -1471,42 +1477,8 @@ name|NULL
 condition|)
 comment|/* consumed by filter */
 return|return;
-operator|*
-operator|*
-name|NB
-operator|:
-name|Beware
-name|of
-name|the
-name|destination
-name|address
-name|changing
-operator|*
-operator|(
-name|e
-operator|.
-name|g
-operator|.
-name|by
-name|NAT
-name|rewriting
-operator|)
-operator|.
-name|When
-name|this
-name|happens
-operator|,
-operator|*
-name|tell
-name|ip6_forward
-name|to
-do|do
-name|the
-name|right
-name|thing
-operator|.
 name|ip6
-init|=
+operator|=
 name|mtod
 argument_list|(
 name|m
@@ -1515,21 +1487,7 @@ expr|struct
 name|ip6_hdr
 operator|*
 argument_list|)
-decl_stmt|;
-do|odst = ip6->ip6_dst;
-endif|#
-directive|endif
-comment|/* PFIL_HOOKS */
-do|ip6stat.ip6s_nxthist[ip6->ip6_nxt]++;
-comment|/* 	 * Check with the firewall... 	 */
-do|if (ip6_fw_enable&& ip6_fw_chk_ptr
-block|)
-block|{
-name|u_short
-name|port
-init|=
-literal|0
-decl_stmt|;
+expr_stmt|;
 name|srcrt
 operator|=
 operator|!
@@ -1544,6 +1502,32 @@ operator|->
 name|ip6_dst
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* PFIL_HOOKS */
+name|ip6stat
+operator|.
+name|ip6s_nxthist
+index|[
+name|ip6
+operator|->
+name|ip6_nxt
+index|]
+operator|++
+expr_stmt|;
+comment|/* 	 * Check with the firewall... 	 */
+if|if
+condition|(
+name|ip6_fw_enable
+operator|&&
+name|ip6_fw_chk_ptr
+condition|)
+block|{
+name|u_short
+name|port
+init|=
+literal|0
+decl_stmt|;
 comment|/* If ipfw says divert, we have to just drop packet */
 comment|/* use port as a dummy argument */
 if|if
@@ -1583,13 +1567,7 @@ name|m
 condition|)
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/* 	 * Check against address spoofing/corruption. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|IN6_IS_ADDR_MULTICAST
@@ -1630,9 +1608,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1688,13 +1663,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	 * The following check is not documented in specs.  A malicious 	 * party may be able to use IPv4 mapped addr to confuse tcp/udp stack 	 * and bypass security checks (act as if it was from 127.0.0.1 by using 	 * IPv6 src ::ffff:127.0.0.1).  Be cautious. 	 * 	 * This check chokes if we are in an SIIT cloud.  As none of BSDs 	 * support IPv4-less kernel compilation, we cannot support SIIT 	 * environment at all.  So, it makes more sense for us to reject any 	 * malicious packets for non-SIIT environment, than try to do a 	 * partial support for SIIT environment. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|IN6_IS_ADDR_V4MAPPED
@@ -1734,29 +1703,14 @@ goto|goto
 name|bad
 goto|;
 block|}
-end_if
-
-begin_if
 if|#
 directive|if
 literal|0
-end_if
-
-begin_comment
 comment|/* 	 * Reject packets with IPv4 compatible addresses (auto tunnel). 	 * 	 * The code forbids auto tunnel relay case in RFC1933 (the check is 	 * stronger than RFC1933).  We may want to re-enable it if mech-xx 	 * is revised to forbid relaying case. 	 */
-end_comment
-
-begin_endif
-unit|if (IN6_IS_ADDR_V4COMPAT(&ip6->ip6_src) || 	    IN6_IS_ADDR_V4COMPAT(&ip6->ip6_dst)) { 		ip6stat.ip6s_badscope++; 		in6_ifstat_inc(m->m_pkthdr.rcvif, ifs6_in_addrerr); 		goto bad; 	}
+block|if (IN6_IS_ADDR_V4COMPAT(&ip6->ip6_src) || 	    IN6_IS_ADDR_V4COMPAT(&ip6->ip6_dst)) { 		ip6stat.ip6s_badscope++; 		in6_ifstat_inc(m->m_pkthdr.rcvif, ifs6_in_addrerr); 		goto bad; 	}
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* drop packets if interface ID portion is already filled */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1833,9 +1787,6 @@ name|bad
 goto|;
 block|}
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|IN6_IS_SCOPE_LINKLOCAL
@@ -1866,9 +1817,6 @@ operator|->
 name|if_index
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|IN6_IS_SCOPE_LINKLOCAL
@@ -1899,13 +1847,7 @@ operator|->
 name|if_index
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* 	 * Multicast check 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|IN6_IS_ADDR_MULTICAST
@@ -2003,13 +1945,7 @@ goto|goto
 name|hbhcheck
 goto|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	 *  Unicast check 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|ip6_forward_rt
@@ -2158,9 +2094,6 @@ name|RTF_PRCLONING
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_define
 define|#
 directive|define
 name|rt6_key
@@ -2168,13 +2101,7 @@ parameter_list|(
 name|r
 parameter_list|)
 value|((struct sockaddr_in6 *)((r)->rt_nodes->rn_key))
-end_define
-
-begin_comment
 comment|/* 	 * Accept the packet if the forwarding interface to the destination 	 * according to the routing table is the loopback interface, 	 * unless the associated route has a gateway. 	 * Note that this approach causes to accept a packet if there is a 	 * route to the loopback interface for the destination of the packet. 	 * But we think it's even useful in some situations, e.g. when using 	 * a special daemon which wants to intercept the packet. 	 * 	 * XXX: some OSes automatically make a cloned route for the destination 	 * of an outgoing packet.  If the outgoing interface of the packet 	 * is a loopback one, the kernel would consider the packet to be 	 * accepted, even if we have no such address assinged on the interface. 	 * We check the cloned flag of the route entry to reject such cases, 	 * assuming that route entries for our own addresses are not made by 	 * cloning (it should be true because in6_addloop explicitly installs 	 * the host route).  However, we might have to do an explicit check 	 * while it would be less efficient.  Or, should we rather install a 	 * reject route for such a case? 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|ip6_forward_rt
@@ -2356,13 +2283,7 @@ name|bad
 goto|;
 block|}
 block|}
-end_if
-
-begin_comment
 comment|/* 	 * FAITH (Firewall Aided Internet Translator) 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|ip6_keepfaith
@@ -2410,13 +2331,7 @@ name|hbhcheck
 goto|;
 block|}
 block|}
-end_if
-
-begin_comment
 comment|/* 	 * Now there is no reason to process the packet if it's not our own 	 * and we're not a router. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -2443,18 +2358,9 @@ goto|goto
 name|bad
 goto|;
 block|}
-end_if
-
-begin_label
 name|hbhcheck
 label|:
-end_label
-
-begin_comment
 comment|/* 	 * record address information into m_aux, if we don't have one yet. 	 * note that we are unable to record it, if the address is not listed 	 * as our interface address (e.g. multicast addresses, addresses 	 * within FAITH prefixes and such). 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|deliverifp
@@ -2503,13 +2409,7 @@ comment|/* 				 * XXX maybe we should drop the packet here, 				 * as we could n
 block|}
 block|}
 block|}
-end_if
-
-begin_comment
 comment|/* 	 * Process Hop-by-Hop options header if it's contained. 	 * m may be modified in ip6_hopopts_input(). 	 * If a JumboPayload option is included, plen will also be modified. 	 */
-end_comment
-
-begin_expr_stmt
 name|plen
 operator|=
 operator|(
@@ -2522,9 +2422,6 @@ operator|->
 name|ip6_plen
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|ip6
@@ -2731,13 +2628,7 @@ name|ip6
 operator|->
 name|ip6_nxt
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* 	 * Check that the amount of data in the buffers 	 * is as at least much as the IPv6 header would have us expect. 	 * Trim mbufs if longer than we expect. 	 * Drop packet if shorter than we expect. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|m
@@ -2775,9 +2666,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|m
@@ -2856,13 +2744,7 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	 * Forward if desirable. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|IN6_IS_ADDR_MULTICAST
@@ -2935,9 +2817,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_if
-
-begin_expr_stmt
 name|ip6
 operator|=
 name|mtod
@@ -2949,13 +2828,7 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Malicious party may be able to use IPv4 mapped addr to confuse 	 * tcp/udp stack and bypass security checks (act as if it was from 	 * 127.0.0.1 by using IPv6 src ::ffff:127.0.0.1).  Be cautious. 	 * 	 * For SIIT end node behavior, you may want to disable the check. 	 * However, you will  become vulnerable to attacks using IPv4 mapped 	 * source. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|IN6_IS_ADDR_V4MAPPED
@@ -2995,21 +2868,12 @@ goto|goto
 name|bad
 goto|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	 * Tell launch routine the next header 	 */
-end_comment
-
-begin_expr_stmt
 name|ip6stat
 operator|.
 name|ip6s_delivered
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|in6_ifstat_inc
 argument_list|(
 name|deliverifp
@@ -3017,16 +2881,10 @@ argument_list|,
 name|ifs6_in_deliver
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|nest
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 name|nxt
@@ -3160,32 +3018,23 @@ name|nxt
 operator|)
 expr_stmt|;
 block|}
-end_while
-
-begin_return
 return|return;
-end_return
-
-begin_label
 name|bad
 label|:
-end_label
-
-begin_expr_stmt
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * set/grab in6_ifaddr correspond to IPv6 destination address.  * XXX backward compatibility wrapper  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|struct
 name|ip6aux
 modifier|*
