@@ -85,7 +85,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$FreeBSD$"
+literal|"@(#)$Id$"
 decl_stmt|;
 end_decl_stmt
 

@@ -131,7 +131,7 @@ name|char
 operator|*
 name|moduleid
 operator|=
-literal|"@(#)$FreeBSD$"
+literal|"@(#)$Id$"
 expr_stmt|;
 end_expr_stmt
 
