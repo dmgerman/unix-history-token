@@ -1518,9 +1518,9 @@ literal|"#7"
 block|,
 literal|"echo"
 block|,
-literal|"#9"
+literal|"router advertisement"
 block|,
-literal|"#10"
+literal|"router solicitation"
 block|,
 literal|"time exceeded"
 block|,
