@@ -1432,6 +1432,26 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Wait for controller not busy. */
+ifdef|#
+directive|ifdef
+name|PC98
+name|outb
+argument_list|(
+name|port
+operator|+
+name|AR_DRIVE
+argument_list|,
+name|unit
+operator|/
+literal|2
+condition|?
+name|ARD_DRIVE1
+else|:
+name|ARD_DRIVE0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|outb
 argument_list|(
 name|port
@@ -1445,6 +1465,8 @@ else|:
 name|ARD_DRIVE0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|atapi_wait
