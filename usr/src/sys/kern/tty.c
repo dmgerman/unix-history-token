@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	6.5	83/09/25	*/
+comment|/*	tty.c	6.6	83/09/28	*/
 end_comment
 
 begin_include
@@ -1397,6 +1397,7 @@ operator|~
 name|TS_TBLOCK
 expr_stmt|;
 block|}
+comment|/* 	 * Block further input iff: 	 * Current input> threshold AND input is available to user program 	 */
 if|if
 condition|(
 name|x
@@ -1405,6 +1406,29 @@ name|TTYHOG
 operator|/
 literal|2
 operator|&&
+operator|(
+name|tp
+operator|->
+name|t_delct
+operator|>
+literal|0
+operator|||
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+operator|(
+name|RAW
+operator||
+name|CBREAK
+operator|)
+operator|)
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|putc
 argument_list|(
 name|tp
@@ -1431,6 +1455,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block
