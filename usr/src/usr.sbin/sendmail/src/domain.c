@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.7 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.8 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.7 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.8 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1223,6 +1223,9 @@ decl_stmt|;
 name|bool
 name|amatch
 decl_stmt|;
+name|int
+name|qtype
+decl_stmt|;
 name|char
 name|nbuf
 index|[
@@ -1383,6 +1386,10 @@ name|mxmatch
 operator|=
 name|NULL
 expr_stmt|;
+name|qtype
+operator|=
+name|T_ANY
+expr_stmt|;
 for|for
 control|(
 name|dp
@@ -1394,8 +1401,6 @@ name|dp
 operator|!=
 name|NULL
 condition|;
-name|dp
-operator|++
 control|)
 block|{
 if|if
@@ -1428,7 +1433,7 @@ name|dp
 argument_list|,
 name|C_IN
 argument_list|,
-name|T_ANY
+name|qtype
 argument_list|,
 operator|&
 name|answer
@@ -1486,6 +1491,24 @@ return|;
 block|}
 if|if
 condition|(
+name|h_errno
+operator|==
+name|HOST_NOT_FOUND
+condition|)
+block|{
+comment|/* definitely no data for this address */
+name|dp
+operator|++
+expr_stmt|;
+name|qtype
+operator|=
+name|T_ANY
+expr_stmt|;
+comment|/* just in case */
+continue|continue;
+block|}
+if|if
+condition|(
 name|mxmatch
 operator|!=
 name|NULL
@@ -1496,6 +1519,7 @@ break|break;
 block|}
 continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 name|tTd
@@ -1818,6 +1842,39 @@ operator|*
 name|dp
 expr_stmt|;
 break|break;
+block|}
+comment|/* 		**  If this was a T_ANY query, we may have the info but 		**  need an explicit query.  Try T_A, then T_MX. 		*/
+if|if
+condition|(
+name|qtype
+operator|==
+name|T_ANY
+condition|)
+name|qtype
+operator|=
+name|T_A
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|qtype
+operator|=
+name|T_A
+condition|)
+name|qtype
+operator|=
+name|T_MX
+expr_stmt|;
+else|else
+block|{
+comment|/* really nothing in this domain; try the next */
+name|qtype
+operator|=
+name|T_ANY
+expr_stmt|;
+name|dp
+operator|++
+expr_stmt|;
 block|}
 block|}
 if|if
