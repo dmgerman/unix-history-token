@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media_strategy.c,v 1.16 1995/05/24 11:19:11 gpalmer Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media_strategy.c,v 1.17 1995/05/24 17:49:18 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -771,6 +771,15 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|pid_t
+name|getDistpid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -804,8 +813,6 @@ name|pfd
 index|[
 literal|2
 index|]
-decl_stmt|,
-name|pid
 decl_stmt|,
 name|numchunks
 decl_stmt|;
@@ -907,6 +914,65 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+comment|/* reap the previous child corpse - yuck! */
+if|if
+condition|(
+name|getDistpid
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|i
+operator|=
+name|waitpid
+argument_list|(
+name|getDistpid
+argument_list|,
+operator|&
+name|j
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+operator|||
+name|WEXITSTATUS
+argument_list|(
+name|j
+argument_list|)
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Warning: Previous extraction returned status code %d."
+argument_list|,
+name|WEXITSTATUS
+argument_list|(
+name|j
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|getDistpid
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|getDistpid
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|msgDebug
 argument_list|(
 literal|"Attempting to extract distribution from %u files\n"
@@ -919,7 +985,7 @@ argument_list|(
 name|pfd
 argument_list|)
 expr_stmt|;
-name|pid
+name|getDistpid
 operator|=
 name|fork
 argument_list|()
@@ -927,7 +993,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|pid
+name|getDistpid
 condition|)
 block|{
 name|caddr_t
@@ -935,8 +1001,6 @@ name|memory
 decl_stmt|;
 name|int
 name|chunk
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|retval
@@ -967,12 +1031,19 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|chunk
+operator|=
+literal|0
+init|;
 name|chunk
 operator|<
 name|numchunks
-condition|)
+condition|;
+name|chunk
+operator|++
+control|)
 block|{
 name|int
 name|fd
@@ -1022,7 +1093,7 @@ literal|1
 condition|)
 name|msgFatal
 argument_list|(
-literal|"Cannot find file `%s'!\n"
+literal|"Cannot find file `%s'!"
 argument_list|,
 name|buf
 argument_list|)
@@ -1110,7 +1181,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"write didn't write out the complete file!\n (wrote %d bytes of %d bytes)\n"
+literal|"write didn't write out the complete file!\n(wrote %d bytes of %d bytes)"
 argument_list|,
 name|retval
 argument_list|,
@@ -1145,7 +1216,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"munmap() returned %d\n"
+literal|"munmap() returned %d"
 argument_list|,
 name|retval
 argument_list|)
@@ -1160,9 +1231,6 @@ name|close
 argument_list|(
 name|fd
 argument_list|)
-expr_stmt|;
-operator|++
-name|chunk
 expr_stmt|;
 block|}
 name|close
@@ -1475,6 +1543,60 @@ argument_list|(
 literal|"In mediaShutdownCDROM\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|getDistpid
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|i
+operator|=
+name|waitpid
+argument_list|(
+name|getDistpid
+argument_list|,
+operator|&
+name|j
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+operator|||
+name|WEXITSTATUS
+argument_list|(
+name|j
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Warning: Last extraction returned status code %d."
+argument_list|,
+name|WEXITSTATUS
+argument_list|(
+name|j
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|getDistpid
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|getDistpid
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|unmount
@@ -2372,6 +2494,15 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|pid_t
+name|ftppid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|mediaGetFTP
@@ -2407,12 +2538,6 @@ name|struct
 name|attribs
 modifier|*
 name|dist_attr
-decl_stmt|;
-specifier|static
-name|pid_t
-name|pid
-init|=
-literal|0
 decl_stmt|;
 name|msgNotify
 argument_list|(
@@ -2537,7 +2662,7 @@ block|}
 comment|/* reap the previous child corpse - yuck! */
 if|if
 condition|(
-name|pid
+name|ftppid
 condition|)
 block|{
 name|int
@@ -2549,7 +2674,7 @@ name|i
 operator|=
 name|waitpid
 argument_list|(
-name|pid
+name|ftppid
 argument_list|,
 operator|&
 name|j
@@ -2579,7 +2704,7 @@ name|j
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|pid
+name|ftppid
 operator|=
 literal|0
 expr_stmt|;
@@ -2588,7 +2713,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|pid
+name|ftppid
 operator|=
 literal|0
 expr_stmt|;
@@ -2598,7 +2723,7 @@ argument_list|(
 name|pfd
 argument_list|)
 expr_stmt|;
-name|pid
+name|ftppid
 operator|=
 name|fork
 argument_list|()
@@ -2606,7 +2731,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|pid
+name|ftppid
 condition|)
 block|{
 name|int
@@ -2858,6 +2983,54 @@ expr_stmt|;
 name|ftp
 operator|=
 name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ftppid
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|i
+operator|=
+name|waitpid
+argument_list|(
+name|ftppid
+argument_list|,
+operator|&
+name|j
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+operator|||
+name|WEXITSTATUS
+argument_list|(
+name|j
+argument_list|)
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Warning: Last FTP transaction returned status code %d."
+argument_list|,
+name|WEXITSTATUS
+argument_list|(
+name|j
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ftppid
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
