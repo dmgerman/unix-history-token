@@ -94,6 +94,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|PTRIN
+parameter_list|(
+name|v
+parameter_list|)
+value|(void *)(v)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTROUT
+parameter_list|(
+name|v
+parameter_list|)
+value|(l_uintptr_t)(v)
+end_define
+
 begin_comment
 comment|/*  * Provide a separate set of types for the Linux types.  */
 end_comment
@@ -161,6 +181,13 @@ typedef|typedef
 name|char
 modifier|*
 name|l_caddr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|l_ulong
+name|l_uintptr_t
 typedef|;
 end_typedef
 
