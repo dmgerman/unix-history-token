@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	8.2 (Berkeley) %G%"
+literal|"@(#)cp.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Cp copies source files to target files.  *   * The global PATH_T structure "to" always contains the path to the  * current target file.  Since fts(3) does not change directories,  * this path can be either absolute or dot-realative.  *   * The basic algorithm is to initialize "to" and use fts(3) to traverse  * the file hierarchy rooted in the argument list.  A trivial case is the  * case of 'cp file1 file2'.  The more interesting case is the case of  * 'cp file1 file2 ... fileN dir' where the hierarchy is traversed and the  * path (relative to the root of the traversal) is appended to dir (stored  * in "to") to form the final target path.  */
+comment|/*  * Cp copies source files to target files.  *   * The global PATH_T structure "to" always contains the path to the  * current target file.  Since fts(3) does not change directories,  * this path can be either absolute or dot-relative.  *   * The basic algorithm is to initialize "to" and use fts(3) to traverse  * the file hierarchy rooted in the argument list.  A trivial case is the  * case of 'cp file1 file2'.  The more interesting case is the case of  * 'cp file1 file2 ... fileN dir' where the hierarchy is traversed and the  * path (relative to the root of the traversal) is appended to dir (stored  * in "to") to form the final target path.  */
 end_comment
 
 begin_include
@@ -1254,6 +1254,45 @@ name|curr
 argument_list|,
 name|FTS_SKIP
 argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|S_ISDIR
+argument_list|(
+name|curr
+operator|->
+name|fts_statp
+operator|->
+name|st_mode
+argument_list|)
+operator|&&
+name|S_ISDIR
+argument_list|(
+name|to_stat
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"cannot overwrite directory %s with non-directory %s"
+argument_list|,
+name|to
+operator|.
+name|p_path
+argument_list|,
+name|curr
+operator|->
+name|fts_path
+argument_list|)
+expr_stmt|;
+name|rval
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
