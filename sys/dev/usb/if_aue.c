@@ -492,6 +492,14 @@ literal|0
 block|}
 block|,
 block|{
+name|USB_VENDOR_HP
+block|,
+name|USB_PRODUCT_HP_HN210E
+block|,
+name|PII
+block|}
+block|,
+block|{
 name|USB_VENDOR_IODATA
 block|,
 name|USB_PRODUCT_IODATA_USBETTX
