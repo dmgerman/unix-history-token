@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*                    * Copyright (c) 1999, Traakan Software  * All rights reserved.  *                * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:               * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.    * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*                    * Principal Author: Matthew Jacob  * Copyright (c) 1999, 2001 by Traakan Software  * All rights reserved.  *                * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:               * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.    * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Additional Copyright (c) 2001 by Parag Patel  * under same licence for MII PHY code.  */
 end_comment
 
 begin_comment
@@ -309,6 +309,18 @@ directive|include
 file|<dev/pci/if_wxreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/mii/mii.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mii/miivar.h>
+end_include
+
 begin_struct
 struct|struct
 name|wxmdvar
@@ -558,6 +570,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|WX_SOFTC_FROM_MII_ARG
+parameter_list|(
+name|x
+parameter_list|)
+value|(wx_softc_t *) x
+end_define
+
+begin_define
+define|#
+directive|define
 name|vm_offset_t
 value|vaddr_t
 end_define
@@ -781,6 +803,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/mii/mii.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mii/miivar.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|NBPFILTER
+value|1
+end_define
+
+begin_include
+include|#
+directive|include
+file|"miibus_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_bdg.h"
 end_include
 
@@ -864,6 +911,9 @@ comment|/* bus space handle */
 name|struct
 name|ifmedia
 name|ifm
+decl_stmt|;
+name|device_t
+name|miibus
 decl_stmt|;
 name|struct
 name|wx_softc
@@ -1141,6 +1191,16 @@ end_endif
 begin_define
 define|#
 directive|define
+name|WX_SOFTC_FROM_MII_ARG
+parameter_list|(
+name|x
+parameter_list|)
+value|device_get_softc(x)
+end_define
+
+begin_define
+define|#
+directive|define
 name|READ_CSR
 parameter_list|(
 name|sc
@@ -1414,6 +1474,18 @@ directive|include
 file|<dev/pci/if_wxreg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/mii/mii.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mii/miivar.h>
+end_include
+
 begin_struct
 struct|struct
 name|wxmdvar
@@ -1458,6 +1530,9 @@ name|struct
 name|wx_softc
 modifier|*
 name|next
+decl_stmt|;
+name|int
+name|locked
 decl_stmt|;
 name|int
 name|spl
@@ -1620,9 +1695,9 @@ define|#
 directive|define
 name|WX_LOCK
 parameter_list|(
-name|_sc
+name|wx
 parameter_list|)
-value|_sc->w.spl = splimp()
+value|if (wx->w.locked++ == 0) wx->w.spl = splimp()
 end_define
 
 begin_define
@@ -1630,9 +1705,9 @@ define|#
 directive|define
 name|WX_UNLOCK
 parameter_list|(
-name|_sc
+name|wx
 parameter_list|)
-value|splx(_sc->w.spl)
+value|if (wx->w.locked) {				\ 				if (--wx->w.locked == 0)		\ 					splx(wx->w.spl);		\ 			}
 end_define
 
 begin_define
@@ -1651,6 +1726,16 @@ name|WX_IUNLK
 parameter_list|(
 name|_sc
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WX_SOFTC_FROM_MII_ARG
+parameter_list|(
+name|x
+parameter_list|)
+value|(wx_softc_t *) x
 end_define
 
 begin_define
@@ -1750,7 +1835,7 @@ decl_stmt|;
 comment|/* 	 * misc goodies 	 */
 name|u_int32_t
 label|:
-literal|25
+literal|24
 operator|,
 name|wx_no_flow
 operator|:
@@ -1761,6 +1846,10 @@ operator|:
 literal|1
 operator|,
 name|wx_no_ilos
+operator|:
+literal|1
+operator|,
+name|wx_verbose
 operator|:
 literal|1
 operator|,
@@ -1802,6 +1891,11 @@ name|u_int32_t
 name|wx_icr
 decl_stmt|;
 comment|/* last icr */
+name|mii_data_t
+modifier|*
+name|wx_mii
+decl_stmt|;
+comment|/* non-NULL if we have a PHY */
 comment|/* 	 * Statistics, soft&& hard 	 */
 name|u_int32_t
 name|wx_intr
