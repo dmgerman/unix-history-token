@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hertz.c	1.2 (Berkeley) %G%"
+literal|"@(#)hertz.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/*      *	discover the tick frequency of the machine      *	if something goes wrong, we return HZ_DEFAULT.      */
+comment|/*      *	discover the tick frequency of the machine      *	if something goes wrong, we return 0, an impossible hertz.      */
 end_comment
 
 begin_include
@@ -47,8 +47,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|HZ_DEFAULT
-value|1
+name|HZ_WRONG
+value|0
 end_define
 
 begin_decl_stmt
@@ -136,27 +136,8 @@ argument_list|,
 name|HZ_SYMBOL
 argument_list|)
 expr_stmt|;
-name|wrong
-label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"times are in units of %d tick%s, not seconds\n"
-argument_list|,
-name|HZ_DEFAULT
-argument_list|,
-name|HZ_DEFAULT
-operator|==
-literal|1
-condition|?
-literal|""
-else|:
-literal|"s"
-argument_list|)
-expr_stmt|;
 return|return
-name|HZ_DEFAULT
+name|HZ_WRONG
 return|;
 block|}
 define|#
@@ -195,9 +176,9 @@ argument_list|,
 name|KMEM
 argument_list|)
 expr_stmt|;
-goto|goto
-name|wrong
-goto|;
+return|return
+name|HZ_WRONG
+return|;
 block|}
 name|seeked
 operator|=
@@ -237,9 +218,9 @@ operator|.
 name|n_value
 argument_list|)
 expr_stmt|;
-goto|goto
-name|wrong
-goto|;
+return|return
+name|HZ_WRONG
+return|;
 block|}
 name|red
 operator|=
@@ -277,9 +258,9 @@ argument_list|,
 name|red
 argument_list|)
 expr_stmt|;
-goto|goto
-name|wrong
-goto|;
+return|return
+name|HZ_WRONG
+return|;
 block|}
 name|closed
 operator|=
@@ -309,9 +290,9 @@ argument_list|,
 name|KMEM
 argument_list|)
 expr_stmt|;
-goto|goto
-name|wrong
-goto|;
+return|return
+name|HZ_WRONG
+return|;
 block|}
 return|return
 name|hz
