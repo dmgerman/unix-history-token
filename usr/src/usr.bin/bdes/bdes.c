@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bdes.c	5.4 (Berkeley) %G%"
+literal|"@(#)bdes.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,7 +145,8 @@ name|DES_KEY
 parameter_list|(
 name|buf
 parameter_list|)
-value|des_setkey(buf)
+define|\
+value|if (des_setkey(buf)) \ 		err("des_setkey", 0);
 end_define
 
 begin_define
@@ -155,7 +156,8 @@ name|DES_XFORM
 parameter_list|(
 name|buf
 parameter_list|)
-value|des_cipher(buf, buf, 0L, (inverse ? -1 : 1))
+define|\
+value|if (des_cipher(buf, buf, 0L, (inverse ? -1 : 1))) \ 		err("des_cipher", 0);
 end_define
 
 begin_else
@@ -172,7 +174,7 @@ name|buf
 parameter_list|)
 value|{						\ 				char bits1[64];
 comment|/* bits of key */
-value|\ 				expand(buf, bits1);			\ 				setkey(bits1);				\ 			}
+value|\ 				expand(buf, bits1);			\ 				if (setkey(bits1))			\ 					err("setkey", 0);		\ 			}
 end_define
 
 begin_define
@@ -184,7 +186,7 @@ name|buf
 parameter_list|)
 value|{						\ 				char bits1[64];
 comment|/* bits of message */
-value|\ 				expand(buf, bits1);			\ 				encrypt(bits1, inverse);		\ 				compress(bits1, buf);			\ 			}
+value|\ 				expand(buf, bits1);			\ 				if (encrypt(bits1, inverse))		\ 					err("encrypt", 0);		\ 				compress(bits1, buf);			\ 			}
 end_define
 
 begin_endif
@@ -2180,28 +2182,12 @@ literal|0200
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Make the key schedule.  If an error, the system probably does 	 * not have the encryption routines available. 	 */
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|DES_KEY
 argument_list|(
 name|UBUFFER
 argument_list|(
 name|buf
 argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-condition|)
-name|err
-argument_list|(
-literal|0
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
