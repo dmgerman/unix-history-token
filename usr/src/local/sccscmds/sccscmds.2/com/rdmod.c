@@ -23,7 +23,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)rdmod.c	1.2	%G%"
+literal|"@(#)rdmod.c	1.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,6 +391,7 @@ modifier|*
 name|cur
 decl_stmt|,
 modifier|*
+modifier|*
 name|prev
 decl_stmt|,
 modifier|*
@@ -398,7 +399,7 @@ name|q
 decl_stmt|;
 for|for
 control|(
-name|cur
+name|prev
 operator|=
 operator|&
 name|pkt
@@ -407,14 +408,15 @@ name|p_q
 init|;
 name|cur
 operator|=
-operator|(
+operator|*
+name|prev
+condition|;
 name|prev
 operator|=
+operator|&
 name|cur
-operator|)
 operator|->
 name|q_next
-condition|;
 control|)
 if|if
 condition|(
@@ -428,6 +430,8 @@ break|break;
 if|if
 condition|(
 name|cur
+operator|&&
+name|cur
 operator|->
 name|q_sernum
 operator|==
@@ -438,9 +442,8 @@ argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
+operator|*
 name|prev
-operator|->
-name|q_next
 operator|=
 name|q
 operator|=
@@ -557,11 +560,12 @@ modifier|*
 name|cur
 decl_stmt|,
 modifier|*
+modifier|*
 name|prev
 decl_stmt|;
 for|for
 control|(
-name|cur
+name|prev
 operator|=
 operator|&
 name|pkt
@@ -570,14 +574,15 @@ name|p_q
 init|;
 name|cur
 operator|=
-operator|(
+operator|*
+name|prev
+condition|;
 name|prev
 operator|=
+operator|&
 name|cur
-operator|)
 operator|->
 name|q_next
-condition|;
 control|)
 if|if
 condition|(
@@ -606,9 +611,8 @@ operator|->
 name|p_ixmsg
 operator|)
 expr_stmt|;
+operator|*
 name|prev
-operator|->
-name|q_next
 operator|=
 name|cur
 operator|->
@@ -837,10 +841,14 @@ operator|=
 name|head
 init|;
 name|cur
+operator|&&
+operator|(
+name|cur
 operator|=
 name|cur
 operator|->
 name|q_next
+operator|)
 condition|;
 control|)
 if|if
@@ -879,10 +887,14 @@ operator|=
 name|head
 init|;
 name|cur
+operator|&&
+operator|(
+name|cur
 operator|=
 name|cur
 operator|->
 name|q_next
+operator|)
 condition|;
 control|)
 block|{
