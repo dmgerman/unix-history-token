@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 William Jolitz. All rights reserved.  * Written by William Jolitz 1/92  *  * Redistribution and use in source and binary forms are freely permitted  * provided that the above copyright notice and attribution and date of work  * and this paragraph are duplicated in all such forms.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Resource lists.  *  *	Usage:  *		rlist_free(&swapmap, 100, 200);	add space to swapmap  *		rlist_alloc(&swapmap, 100,&loc); obtain 100 sectors from swap  * $Header: /a/cvs/386BSD/src/sys.386bsd/sys/rlist.h,v 1.1.1.1 1993/06/12 14:58:17 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1992 William Jolitz. All rights reserved.  * Written by William Jolitz 1/92  *  * Redistribution and use in source and binary forms are freely permitted  * provided that the above copyright notice and attribution and date of work  * and this paragraph are duplicated in all such forms.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Resource lists.  *  *	Usage:  *		rlist_free(&swapmap, 100, 200);	add space to swapmap  *		rlist_alloc(&swapmap, 100,&loc); obtain 100 sectors from swap  * $Header: /a/cvs/386BSD/src/sys/sys/rlist.h,v 1.2 1993/07/30 10:51:58 jkh Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_RLIST_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SYS_RLIST_H_
+end_define
 
 begin_comment
 comment|/* A resource list element. */
@@ -98,6 +110,15 @@ modifier|*
 name|swapmap
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_RLIST_H_ */
+end_comment
 
 end_unit
 
