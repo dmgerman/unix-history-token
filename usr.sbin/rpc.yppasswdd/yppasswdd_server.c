@@ -3277,22 +3277,6 @@ return|;
 block|}
 end_function
 
-begin_struct
-struct|struct
-name|cmessage
-block|{
-name|struct
-name|cmsghdr
-name|cmsg
-decl_stmt|;
-name|struct
-name|cmsgcred
-name|cmcred
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * Note that this function performs a little less sanity checking  * than the last one. Since only the superuser is allowed to use it,  * it is assumed that the caller knows what he's doing.  */
 end_comment
