@@ -64,6 +64,8 @@ decl_stmt|;
 name|int
 name|SamplePeriod
 decl_stmt|;
+struct|struct
+block|{
 name|unsigned
 name|long
 name|long
@@ -75,6 +77,11 @@ name|long
 name|long
 name|OctetsPerSecond
 decl_stmt|;
+block|}
+name|in
+struct|,
+name|out
+struct|;
 name|unsigned
 name|long
 name|long
