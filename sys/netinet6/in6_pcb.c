@@ -292,12 +292,6 @@ directive|include
 file|<netipsec/key.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|IPSEC
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -1896,9 +1890,17 @@ name|inp
 operator|->
 name|inp_pcbinfo
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FAST_IPSEC
+argument_list|)
 if|if
 condition|(
 name|inp
