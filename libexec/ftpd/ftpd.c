@@ -685,6 +685,18 @@ comment|/* RETR command is disabled.	*/
 end_comment
 
 begin_decl_stmt
+name|int
+name|noguestretr
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* RETR command is disabled for anon users. */
+end_comment
+
+begin_decl_stmt
 name|sig_atomic_t
 name|transflag
 decl_stmt|;
@@ -1598,7 +1610,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AdlDESURrt:T:u:voa:p:46"
+literal|"AdlDESURrt:T:u:vOoa:p:46"
 argument_list|)
 operator|)
 operator|!=
@@ -1814,6 +1826,14 @@ case|:
 name|family
 operator|=
 name|AF_INET6
+expr_stmt|;
+break|break;
+case|case
+literal|'O'
+case|:
+name|noguestretr
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
