@@ -122,11 +122,9 @@ directive|include
 file|<machine/bus_memio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/lockmgr.h>
-end_include
+begin_comment
+comment|/* #include<sys/lockmgr.h> */
+end_comment
 
 begin_if
 if|#
@@ -2295,22 +2293,12 @@ operator|->
 name|sc_tmo_pcd
 argument_list|)
 expr_stmt|;
-name|lockinit
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_doorbell_lock
-argument_list|,
-name|PZERO
-argument_list|,
-literal|"ehcidb"
-argument_list|,
+if|#
+directive|if
 literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+block|lockinit(&sc->sc_doorbell_lock, PZERO, "ehcidb", 0, 0);
+endif|#
+directive|endif
 comment|/* Enable interrupts */
 name|EOWRITE4
 argument_list|(
@@ -6559,20 +6547,12 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* get doorbell */
-name|lockmgr
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_doorbell_lock
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|lockmgr(&sc->sc_doorbell_lock, LK_EXCLUSIVE, NULL, NULL);
+endif|#
+directive|endif
 name|s
 operator|=
 name|splhardusb
@@ -6664,20 +6644,12 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* release doorbell */
-name|lockmgr
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_doorbell_lock
-argument_list|,
-name|LK_RELEASE
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|lockmgr(&sc->sc_doorbell_lock, LK_RELEASE, NULL, NULL);
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC

@@ -317,10 +317,12 @@ argument_list|)
 name|sc_free_xfers
 expr_stmt|;
 comment|/* free xfers */
-name|struct
-name|lock
-name|sc_doorbell_lock
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct lock sc_doorbell_lock;
+endif|#
+directive|endif
 name|usb_callout_t
 name|sc_tmo_pcd
 decl_stmt|;

@@ -67,11 +67,9 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/lockmgr.h>
-end_include
+begin_comment
+comment|/* #include<sys/lockmgr.h>*/
+end_comment
 
 begin_include
 include|#
@@ -94,13 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcivar.h>
+file|<pci/pcivar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcireg.h>
+file|<pci/pcireg.h>
 end_include
 
 begin_include
