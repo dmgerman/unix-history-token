@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)termios.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)termios.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -439,17 +439,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEXTEN
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* enable FLUSHO and LNEXT */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IMAXBEL
 value|0x00002000
 end_define
@@ -536,7 +525,7 @@ value|0x00000000
 end_define
 
 begin_comment
-comment|/* 5 bits - pseudo */
+comment|/* 5 bits (pseudo) */
 end_comment
 
 begin_define
@@ -650,7 +639,7 @@ comment|/* RTS/CTS flow control */
 end_comment
 
 begin_comment
-comment|/*   * "Local" flags - dumping ground for other state  *  * Warning: some flags in this structure begin with  * the letter "I" and look like they belong in the  * input flag.  Isn't history fun.  */
+comment|/*   * "Local" flags - dumping ground for other state  *  * Warning: some flags in this structure begin with  * the letter "I" and look like they belong in the  * input flag.  */
 end_comment
 
 begin_define
@@ -750,6 +739,17 @@ end_define
 
 begin_comment
 comment|/* use alternate WERASE algorithm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEXTEN
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* enable FLUSHO and LNEXT */
 end_comment
 
 begin_ifdef
@@ -957,7 +957,7 @@ name|val
 parameter_list|,
 name|c
 parameter_list|)
-value|(c == val ? val != _POSIX_VDISABLE : 0)
+value|((c) == (val) ? (val) != _POSIX_VDISABLE : 0)
 end_define
 
 begin_endif
