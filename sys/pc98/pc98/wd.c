@@ -3788,7 +3788,7 @@ argument|wdustart(du);
 comment|/* anything more for controller to do? */
 argument|wdstart(unit); }
 comment|/*  * Initialize a drive.  */
-argument|int wdopen(dev_t dev, int flags, int fmt, struct thread *td) { 	register unsigned int lunit; 	register struct softc *du; 	struct disklabel *dl;  	lunit = dkunit(dev); 	if (lunit>= NWD || dktype(dev) !=
+argument|int wdopen(dev_t dev, int flags, int fmt, struct thread *td) { 	register unsigned int lunit; 	register struct softc *du; 	struct disklabel *dl;  	lunit = dkunit(dev); 	if (lunit>= NWD || dksparebits(dev) !=
 literal|0
 argument|) 		return (ENXIO); 	du = wddrives[lunit]; 	if (du == NULL) 		return (ENXIO);  	dev->si_iosize_max =
 literal|248

@@ -169,7 +169,7 @@ name|pdev
 decl_stmt|;
 if|if
 condition|(
-name|dktype
+name|dksparebits
 argument_list|(
 name|dev
 argument_list|)
