@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mri.c -- handle MRI style linker scripts    Copyright 1991, 1992, 1993, 1994, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     This bit does the tree decoration when MRI style link scripts    are parsed.     Contributed by Steve Chamberlain<sac@cygnus.com>.  */
+comment|/* mri.c -- handle MRI style linker scripts    Copyright 1991, 1992, 1993, 1994, 1996, 1997, 1998, 1999, 2000, 2002    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     This bit does the tree decoration when MRI style link scripts    are parsed.     Contributed by Steve Chamberlain<sac@cygnus.com>.  */
 end_comment
 
 begin_include
@@ -66,12 +66,12 @@ name|section_name_struct
 modifier|*
 name|next
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|alias
@@ -228,7 +228,7 @@ name|name
 parameter_list|,
 name|list
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -341,7 +341,7 @@ modifier|*
 modifier|*
 name|list
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -350,7 +350,7 @@ name|etree_type
 modifier|*
 name|vma
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|zalias
@@ -456,7 +456,7 @@ name|name
 parameter_list|,
 name|vma
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -495,7 +495,7 @@ name|mri_only_load
 parameter_list|(
 name|name
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1165,7 +1165,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|"*default*"
+name|NULL
 argument_list|)
 expr_stmt|;
 name|p
@@ -1189,7 +1189,7 @@ name|mri_load
 parameter_list|(
 name|name
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1227,7 +1227,7 @@ name|mri_order
 parameter_list|(
 name|name
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1262,12 +1262,12 @@ name|is
 parameter_list|,
 name|isn
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|want
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|is
@@ -1340,7 +1340,7 @@ name|mri_name
 parameter_list|(
 name|name
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1362,7 +1362,7 @@ name|mri_format
 parameter_list|(
 name|name
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1482,7 +1482,7 @@ name|name
 parameter_list|,
 name|exp
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1515,7 +1515,7 @@ name|name
 parameter_list|,
 name|exp
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1552,7 +1552,7 @@ name|name
 parameter_list|,
 name|exp
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name

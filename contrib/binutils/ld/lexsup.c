@@ -729,8 +729,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPTION_DISCARD_NONE
+name|OPTION_ALLOW_MULTIPLE_DEFINITION
 value|(OPTION_ALLOW_SHLIB_UNDEFINED + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_NO_UNDEFINED_VERSION
+value|(OPTION_ALLOW_MULTIPLE_DEFINITION + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_DISCARD_NONE
+value|(OPTION_NO_UNDEFINED_VERSION + 1)
 end_define
 
 begin_define
@@ -2517,6 +2531,52 @@ block|,
 name|N_
 argument_list|(
 literal|"Allow undefined symbols in shared objects"
+argument_list|)
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"allow-multiple-definition"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_ALLOW_MULTIPLE_DEFINITION
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Allow multiple definitions"
+argument_list|)
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
+literal|"no-undefined-version"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NO_UNDEFINED_VERSION
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+name|N_
+argument_list|(
+literal|"Disallow undefined version"
 argument_list|)
 block|,
 name|TWO_DASHES
@@ -4865,6 +4925,26 @@ operator|.
 name|allow_shlib_undefined
 operator|=
 name|true
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_ALLOW_MULTIPLE_DEFINITION
+case|:
+name|link_info
+operator|.
+name|allow_multiple_definition
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_NO_UNDEFINED_VERSION
+case|:
+name|link_info
+operator|.
+name|allow_undefined_version
+operator|=
+name|false
 expr_stmt|;
 break|break;
 case|case

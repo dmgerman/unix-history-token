@@ -73,7 +73,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|char
+modifier|*
 name|dwarf2_directive_file
 name|PARAMS
 argument_list|(

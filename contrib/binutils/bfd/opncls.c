@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opncls.c -- open and close a BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000,    2001, 2002    Free Software Foundation, Inc.     Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* opncls.c -- open and close a BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000,    2001, 2002    Free Software Foundation, Inc.     Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -96,19 +96,6 @@ end_endif
 begin_comment
 comment|/* fdopen is a loser -- we should use stdio exclusively.  Unfortunately    if we do that we can't use fcntl.  */
 end_comment
-
-begin_comment
-comment|/* FIXME: This is no longer used.  */
-end_comment
-
-begin_decl_stmt
-name|long
-name|_bfd_chunksize
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Return a new BFD.  All BFD's are allocated through this routine.  */
@@ -501,11 +488,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_set_error
-argument_list|(
-name|bfd_error_invalid_target
-argument_list|)
-expr_stmt|;
 name|_bfd_delete_bfd
 argument_list|(
 name|nbfd
@@ -537,7 +519,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* File didn't exist, or some such */
+comment|/* File didn't exist, or some such.  */
 name|bfd_set_error
 argument_list|(
 name|bfd_error_system_call
@@ -625,7 +607,7 @@ name|fdflags
 operator|=
 name|O_RDWR
 expr_stmt|;
-comment|/* Assume full access */
+comment|/* Assume full access.  */
 else|#
 directive|else
 name|fdflags
@@ -681,11 +663,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_set_error
-argument_list|(
-name|bfd_error_invalid_target
-argument_list|)
-expr_stmt|;
 name|_bfd_delete_bfd
 argument_list|(
 name|nbfd
@@ -714,7 +691,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* (O_ACCMODE) parens are to avoid Ultrix header file bug */
+comment|/* (O_ACCMODE) parens are to avoid Ultrix header file bug.  */
 switch|switch
 condition|(
 name|fdflags
@@ -803,7 +780,7 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/* OK, put everything where it belongs */
+comment|/* OK, put everything where it belongs.  */
 name|nbfd
 operator|->
 name|filename
@@ -811,7 +788,7 @@ operator|=
 name|filename
 expr_stmt|;
 comment|/* As a special case we allow a FD open for read/write to      be written through, although doing so requires that we end      the previous clause with a preposition.  */
-comment|/* (O_ACCMODE) parens are to avoid Ultrix header file bug */
+comment|/* (O_ACCMODE) parens are to avoid Ultrix header file bug.  */
 switch|switch
 condition|(
 name|fdflags
@@ -964,11 +941,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_set_error
-argument_list|(
-name|bfd_error_invalid_target
-argument_list|)
-expr_stmt|;
 name|_bfd_delete_bfd
 argument_list|(
 name|nbfd
@@ -1027,7 +999,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/** bfd_openw -- open for writing.   Returns a pointer to a freshly-allocated BFD on success, or NULL.    See comment by bfd_fdopenr before you try to modify this function. */
+comment|/* bfd_openw -- open for writing.    Returns a pointer to a freshly-allocated BFD on success, or NULL.     See comment by bfd_fdopenr before you try to modify this function.  */
 end_comment
 
 begin_comment
@@ -1063,12 +1035,7 @@ name|bfd_target
 modifier|*
 name|target_vec
 decl_stmt|;
-name|bfd_set_error
-argument_list|(
-name|bfd_error_system_call
-argument_list|)
-expr_stmt|;
-comment|/* nbfd has to point to head of malloc'ed block so that bfd_close may      reclaim it correctly. */
+comment|/* nbfd has to point to head of malloc'ed block so that bfd_close may      reclaim it correctly.  */
 name|nbfd
 operator|=
 name|_bfd_new_bfd
@@ -1130,12 +1097,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* File not writeable, etc.  */
 name|bfd_set_error
 argument_list|(
 name|bfd_error_system_call
 argument_list|)
 expr_stmt|;
-comment|/* File not writeable, etc */
 name|_bfd_delete_bfd
 argument_list|(
 name|nbfd
@@ -1171,8 +1138,7 @@ name|ret
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|bfd_read_p
+name|bfd_write_p
 argument_list|(
 name|abfd
 argument_list|)
@@ -1220,7 +1186,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* If the file was open for writing and is now executable,      make it so */
+comment|/* If the file was open for writing and is now executable,      make it so.  */
 if|if
 condition|(
 name|ret
@@ -1315,7 +1281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_close_all_done  SYNOPSIS 	boolean bfd_close_all_done(bfd *);  DESCRIPTION 	Close a BFD.  Differs from<<bfd_close>> 	since it does not complete any pending operations.  This 	routine would be used if the application had just used BFD for 	swapping and didn't want to use any of the writing code.  	If the created file is executable, then<<chmod>> is called 	to mark it as such.  	All memory attached to the BFD is released.  RETURNS<<true>> is returned if all is ok, otherwise<<false>>.  */
+comment|/* FUNCTION 	bfd_close_all_done  SYNOPSIS 	boolean bfd_close_all_done(bfd *);  DESCRIPTION 	Close a BFD.  Differs from<<bfd_close>> 	since it does not complete any pending operations.  This 	routine would be used if the application had just used BFD for 	swapping and didn't want to use any of the writing code.  	If the created file is executable, then<<chmod>> is called 	to mark it as such.  	All memory attached to the BFD is released.  RETURNS<<true>> is returned if all is ok, otherwise<<false>>. */
 end_comment
 
 begin_function
@@ -1339,7 +1305,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* If the file was open for writing and is now executable,      make it so */
+comment|/* If the file was open for writing and is now executable,      make it so.  */
 if|if
 condition|(
 name|ret
@@ -1434,7 +1400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_create  SYNOPSIS 	bfd *bfd_create(const char *filename, bfd *templ);  DESCRIPTION 	Create a new BFD in the manner of<<bfd_openw>>, but without opening a file. The new BFD 	takes the target from the target used by @var{template}. The 	format is always set to<<bfd_object>>.  */
+comment|/* FUNCTION 	bfd_create  SYNOPSIS 	bfd *bfd_create(const char *filename, bfd *templ);  DESCRIPTION 	Create a new BFD in the manner of<<bfd_openw>>, but without opening a file. The new BFD 	takes the target from the target used by @var{template}. The 	format is always set to<<bfd_object>>. */
 end_comment
 
 begin_function
@@ -1579,7 +1545,7 @@ name|PTR
 operator|)
 name|bim
 expr_stmt|;
-comment|/* bfd_bwrite will grow these as needed */
+comment|/* bfd_bwrite will grow these as needed.  */
 name|bim
 operator|->
 name|size

@@ -50,7 +50,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* filemodestring - fill in string STR with an ls-style ASCII    representation of the st_mode field of file stats block STATP.    10 characters are stored in STR; no terminating null is added.    The characters stored in STR are:     0	File type.  'd' for directory, 'c' for character 	special, 'b' for block special, 'm' for multiplex, 	'l' for symbolic link, 's' for socket, 'p' for fifo, 	'-' for any other file type     1	'r' if the owner may read, '-' otherwise.     2	'w' if the owner may write, '-' otherwise.     3	'x' if the owner may execute, 's' if the file is 	set-user-id, '-' otherwise. 	'S' if the file is set-user-id, but the execute 	bit isn't set.     4	'r' if group members may read, '-' otherwise.     5	'w' if group members may write, '-' otherwise.     6	'x' if group members may execute, 's' if the file is 	set-group-id, '-' otherwise. 	'S' if it is set-group-id but not executable.     7	'r' if any user may read, '-' otherwise.     8	'w' if any user may write, '-' otherwise.     9	'x' if any user may execute, 't' if the file is "sticky" 	(will be retained in swap space after execution), '-' 	otherwise. 	'T' if the file is sticky but not executable. */
+comment|/* filemodestring - fill in string STR with an ls-style ASCII    representation of the st_mode field of file stats block STATP.    10 characters are stored in STR; no terminating null is added.    The characters stored in STR are:     0	File type.  'd' for directory, 'c' for character 	special, 'b' for block special, 'm' for multiplex, 	'l' for symbolic link, 's' for socket, 'p' for fifo, 	'-' for any other file type     1	'r' if the owner may read, '-' otherwise.     2	'w' if the owner may write, '-' otherwise.     3	'x' if the owner may execute, 's' if the file is 	set-user-id, '-' otherwise. 	'S' if the file is set-user-id, but the execute 	bit isn't set.     4	'r' if group members may read, '-' otherwise.     5	'w' if group members may write, '-' otherwise.     6	'x' if group members may execute, 's' if the file is 	set-group-id, '-' otherwise. 	'S' if it is set-group-id but not executable.     7	'r' if any user may read, '-' otherwise.     8	'w' if any user may write, '-' otherwise.     9	'x' if any user may execute, 't' if the file is "sticky" 	(will be retained in swap space after execution), '-' 	otherwise. 	'T' if the file is sticky but not executable.  */
 end_comment
 
 begin_if
@@ -290,7 +290,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Like filemodestring, but only the relevant part of the `struct stat'    is given as an argument. */
+comment|/* Like filemodestring, but only the relevant part of the `struct stat'    is given as an argument.  */
 end_comment
 
 begin_function
@@ -492,7 +492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return a character indicating the type of file described by    file mode BITS:    'd' for directories    'b' for block special files    'c' for character special files    'm' for multiplexor files    'l' for symbolic links    's' for sockets    'p' for fifos    '-' for any other file type. */
+comment|/* Return a character indicating the type of file described by    file mode BITS:    'd' for directories    'b' for block special files    'c' for character special files    'm' for multiplexor files    'l' for symbolic links    's' for sockets    'p' for fifos    '-' for any other file type.  */
 end_comment
 
 begin_ifndef
@@ -977,7 +977,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set the 's' and 't' flags in file attributes string CHARS,    according to the file mode BITS. */
+comment|/* Set the 's' and 't' flags in file attributes string CHARS,    according to the file mode BITS.  */
 end_comment
 
 begin_function
@@ -1019,7 +1019,7 @@ index|]
 operator|!=
 literal|'x'
 condition|)
-comment|/* Set-uid, but not executable by owner. */
+comment|/* Set-uid, but not executable by owner.  */
 name|chars
 index|[
 literal|3
@@ -1057,7 +1057,7 @@ index|]
 operator|!=
 literal|'x'
 condition|)
-comment|/* Set-gid, but not executable by group. */
+comment|/* Set-gid, but not executable by group.  */
 name|chars
 index|[
 literal|6
@@ -1095,7 +1095,7 @@ index|]
 operator|!=
 literal|'x'
 condition|)
-comment|/* Sticky, but not executable by others. */
+comment|/* Sticky, but not executable by others.  */
 name|chars
 index|[
 literal|9

@@ -18648,12 +18648,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OBJ_ELF
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -18666,6 +18660,12 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -18824,9 +18824,6 @@ block|,
 literal|0
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|OBJ_ELF
 block|{
 literal|"section"
 block|,
@@ -18859,6 +18856,9 @@ block|,
 literal|0
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
 block|{
 literal|"word"
 block|,
@@ -20762,12 +20762,6 @@ directive|endif
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OBJ_ELF
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -20784,18 +20778,28 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
 name|obj_elf_section
 argument_list|(
 name|ignore
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+ifdef|#
+directive|ifdef
+name|OBJ_COFF
+name|obj_coff_section
+argument_list|(
+name|ignore
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -26132,7 +26136,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ARM V5 breakpoint instruction (argument parse)      BKPT<16 bit unsigned immediate>      Instruction is not conditional. 	The bit pattern given in insns[] has the COND_ALWAYS condition, 	and it is an error if the caller tried to override that. */
+comment|/* ARM V5 breakpoint instruction (argument parse)      BKPT<16 bit unsigned immediate>      Instruction is not conditional. 	The bit pattern given in insns[] has the COND_ALWAYS condition, 	and it is an error if the caller tried to override that.  */
 end_comment
 
 begin_function
@@ -27732,7 +27736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* We handle all bad expressions here, so that we can report the faulty     instruction in the error message.  */
+comment|/* We handle all bad expressions here, so that we can report the faulty    instruction in the error message.  */
 end_comment
 
 begin_function
@@ -41371,7 +41375,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* cfmvsc32<cond> DSPSC,MVFX[15:0]. */
+comment|/* cfmvsc32<cond> DSPSC,MVFX[15:0].  */
 end_comment
 
 begin_function
@@ -48797,9 +48801,15 @@ name|fx_r_type
 operator|==
 name|BFD_RELOC_THUMB_PCREL_BLX
 condition|)
-comment|/* Remove bit zero of the adjusted offset.  Bit zero can only be 	     set if the upper insn is at a half-word boundary, since the 	     destination address, an ARM instruction, must always be on a 	     word boundary.  The semantics of the BLX (1) instruction, however, 	     are that bit zero in the offset must always be zero, and the 	     corresponding bit one in the target address will be set from bit 	     one of the source address.  */
+comment|/* For a BLX instruction, make sure that the relocation is rounded up 	     to a word boundary.  This follows the semantics of the instruction 	     which specifies that bit 1 of the target address will come from bit 	     1 of the base address.  */
 name|newval2
-operator|&=
+operator|=
+operator|(
+name|newval2
+operator|+
+literal|1
+operator|)
+operator|&
 operator|~
 literal|1
 expr_stmt|;
@@ -50721,10 +50731,6 @@ literal|0
 block|arm_align (2, 0);
 endif|#
 directive|endif
-name|listing_prev_line
-argument_list|()
-expr_stmt|;
-comment|/* Defined in listing.h.  */
 comment|/* Align the previous label if needed.  */
 if|if
 condition|(
@@ -51065,11 +51071,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* md_parse_option       Invocation line includes a switch not recognized by the base assembler.       See if it's a processor-specific option.          This routine is somewhat complicated by the need for backwards       compatibility (since older releases of gcc can't be changed).       The new options try to make the interface as compatible as       possible with GCC.        New options (supported) are:  	      -mcpu=<cpu name>		 Assemble for selected processor 	      -march=<architecture name> Assemble for selected architecture 	      -mfpu=<fpu architecture>	 Assemble for selected FPU. 	      -EB/-mbig-endian		 Big-endian 	      -EL/-mlittle-endian	 Little-endian 	      -k			 Generate PIC code 	      -mthumb			 Start in Thumb mode 	      -mthumb-interwork		 Code supports ARM/Thumb interworking        For now we will also provide support for   	      -mapcs-32			 32-bit Program counter 	      -mapcs-26			 26-bit Program counter 	      -macps-float		 Floats passed in FP registers 	      -mapcs-reentrant		 Reentrant code 	      -matpcs       (sometime these will probably be replaced with -mapcs=<list of options>       and -matpcs=<list of options>)        The remaining options are only supported for back-wards compatibility.       Cpu variants, the arm part is optional:               -m[arm]1                Currently not supported.               -m[arm]2, -m[arm]250    Arm 2 and Arm 250 processor               -m[arm]3                Arm 3 processor               -m[arm]6[xx],           Arm 6 processors               -m[arm]7[xx][t][[d]m]   Arm 7 processors               -m[arm]8[10]            Arm 8 processors               -m[arm]9[20][tdmi]      Arm 9 processors               -mstrongarm[110[0]]     StrongARM processors               -mxscale                XScale processors               -m[arm]v[2345[t[e]]]    Arm architectures               -mall                   All (except the ARM1)       FP variants:               -mfpa10, -mfpa11        FPA10 and 11 co-processor instructions               -mfpe-old               (No float load/store multiples) 	      -mvfpxd		      VFP Single precision 	      -mvfp		      All VFP               -mno-fpu                Disable all floating point instructions        The following CPU names are recognized: 	      arm1, arm2, arm250, arm3, arm6, arm600, arm610, arm620, 	      arm7, arm7m, arm7d, arm7dm, arm7di, arm7dmi, arm70, arm700, 	      arm700i, arm710 arm710t, arm720, arm720t, arm740t, arm710c, 	      arm7100, arm7500, arm7500fe, arm7tdmi, arm8, arm810, arm9, 	      arm920, arm920t, arm940t, arm946, arm966, arm9tdmi, arm9e, 	      arm10t arm10e, arm1020t, arm1020e, arm10200e, 	      strongarm, strongarm110, strongarm1100, strongarm1110, xscale.        */
+comment|/* md_parse_option       Invocation line includes a switch not recognized by the base assembler.       See if it's a processor-specific option.        This routine is somewhat complicated by the need for backwards       compatibility (since older releases of gcc can't be changed).       The new options try to make the interface as compatible as       possible with GCC.        New options (supported) are:  	      -mcpu=<cpu name>		 Assemble for selected processor 	      -march=<architecture name> Assemble for selected architecture 	      -mfpu=<fpu architecture>	 Assemble for selected FPU. 	      -EB/-mbig-endian		 Big-endian 	      -EL/-mlittle-endian	 Little-endian 	      -k			 Generate PIC code 	      -mthumb			 Start in Thumb mode 	      -mthumb-interwork		 Code supports ARM/Thumb interworking        For now we will also provide support for  	      -mapcs-32			 32-bit Program counter 	      -mapcs-26			 26-bit Program counter 	      -macps-float		 Floats passed in FP registers 	      -mapcs-reentrant		 Reentrant code 	      -matpcs       (sometime these will probably be replaced with -mapcs=<list of options>       and -matpcs=<list of options>)        The remaining options are only supported for back-wards compatibility.       Cpu variants, the arm part is optional:               -m[arm]1                Currently not supported.               -m[arm]2, -m[arm]250    Arm 2 and Arm 250 processor               -m[arm]3                Arm 3 processor               -m[arm]6[xx],           Arm 6 processors               -m[arm]7[xx][t][[d]m]   Arm 7 processors               -m[arm]8[10]            Arm 8 processors               -m[arm]9[20][tdmi]      Arm 9 processors               -mstrongarm[110[0]]     StrongARM processors               -mxscale                XScale processors               -m[arm]v[2345[t[e]]]    Arm architectures               -mall                   All (except the ARM1)       FP variants:               -mfpa10, -mfpa11        FPA10 and 11 co-processor instructions               -mfpe-old               (No float load/store multiples) 	      -mvfpxd		      VFP Single precision 	      -mvfp		      All VFP               -mno-fpu                Disable all floating point instructions        The following CPU names are recognized: 	      arm1, arm2, arm250, arm3, arm6, arm600, arm610, arm620, 	      arm7, arm7m, arm7d, arm7dm, arm7di, arm7dmi, arm70, arm700, 	      arm700i, arm710 arm710t, arm720, arm720t, arm740t, arm710c, 	      arm7100, arm7500, arm7500fe, arm7tdmi, arm8, arm810, arm9, 	      arm920, arm920t, arm940t, arm946, arm966, arm9tdmi, arm9e, 	      arm10t arm10e, arm1020t, arm1020e, arm10200e, 	      strongarm, strongarm110, strongarm1100, strongarm1110, xscale.        */
 end_comment
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|md_shortopts
@@ -54596,7 +54602,7 @@ directive|endif
 case|case
 literal|'a'
 case|:
-comment|/* Listing option.  Just ignore these, we don't support additional  	 ones.  */
+comment|/* Listing option.  Just ignore these, we don't support additional 	 ones.  */
 return|return
 literal|0
 return|;
@@ -55280,9 +55286,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|listing_prev_line
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -55336,7 +55339,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Note - do not allow local symbols (.Lxxx) to be labeled      as Thumb functions.  This is because these labels, whilst      they exist inside Thumb code, are not the entry points for      possible ARM->Thumb calls.  Also, these labels can be used      as part of a computed goto or switch statement.  eg gcc      can generate code that looks like this:                  ldr  r2, [pc, .Laaa]                 lsl  r3, r3, #2                 ldr  r2, [r3, r2]                 mov  pc, r2 		        .Lbbb:  .word .Lxxx        .Lccc:  .word .Lyyy        ..etc...        .Laaa:   .word Lbbb       The first instruction loads the address of the jump table.      The second instruction converts a table index into a byte offset.      The third instruction gets the jump address out of the table.      The fourth instruction performs the jump.            If the address stored at .Laaa is that of a symbol which has the      Thumb_Func bit set, then the linker will arrange for this address      to have the bottom bit set, which in turn would mean that the      address computation performed by the third instruction would end      up with the bottom bit set.  Since the ARM is capable of unaligned      word loads, the instruction would then load the incorrect address      out of the jump table, and chaos would ensue.  */
+comment|/* Note - do not allow local symbols (.Lxxx) to be labeled      as Thumb functions.  This is because these labels, whilst      they exist inside Thumb code, are not the entry points for      possible ARM->Thumb calls.  Also, these labels can be used      as part of a computed goto or switch statement.  eg gcc      can generate code that looks like this:                  ldr  r2, [pc, .Laaa]                 lsl  r3, r3, #2                 ldr  r2, [r3, r2]                 mov  pc, r2         .Lbbb:  .word .Lxxx        .Lccc:  .word .Lyyy        ..etc...        .Laaa:   .word Lbbb       The first instruction loads the address of the jump table.      The second instruction converts a table index into a byte offset.      The third instruction gets the jump address out of the table.      The fourth instruction performs the jump.       If the address stored at .Laaa is that of a symbol which has the      Thumb_Func bit set, then the linker will arrange for this address      to have the bottom bit set, which in turn would mean that the      address computation performed by the third instruction would end      up with the bottom bit set.  Since the ARM is capable of unaligned      word loads, the instruction would then load the incorrect address      out of the jump table, and chaos would ensue.  */
 if|if
 condition|(
 name|label_is_thumb_function_name

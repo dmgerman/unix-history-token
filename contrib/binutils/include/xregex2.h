@@ -873,10 +873,46 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* For now unconditionally define __restrict_arr to expand to nothing.    Ideally we would have a test for the compiler which allows defining    it to restrict.  */
+comment|/* GCC 3.1 and later support declaring arrays as non-overlapping    using the syntax array_name[restrict]  */
+ifndef|#
+directive|ifndef
+name|__restrict_arr
+if|#
+directive|if
+operator|!
+operator|(
+literal|3
+operator|<
+name|__GNUC__
+operator|||
+operator|(
+literal|3
+operator|==
+name|__GNUC__
+operator|&&
+literal|1
+operator|<=
+name|__GNUC_MINOR__
+operator|)
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|__GNUG__
+argument_list|)
 define|#
 directive|define
 name|__restrict_arr
+else|#
+directive|else
+define|#
+directive|define
+name|__restrict_arr
+value|__restrict
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/* POSIX compatibility.  */
 specifier|extern
 name|int

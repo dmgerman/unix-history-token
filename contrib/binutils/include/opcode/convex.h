@@ -1,27 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Information for instruction disassembly on the Convex.    Copyright 1989, 1993 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CONST
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CONST
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONST */
+comment|/* Information for instruction disassembly on the Convex.    Copyright 1989, 1993, 2002 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -338,7 +317,7 @@ value|21
 end_define
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|op
@@ -393,7 +372,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|format0
@@ -1365,7 +1344,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|format1
@@ -2321,7 +2300,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|format2
@@ -4253,7 +4232,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|format3
@@ -5223,7 +5202,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|format4
@@ -5355,7 +5334,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|format5
@@ -5607,7 +5586,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|format6
@@ -6571,7 +6550,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|format7
@@ -7059,7 +7038,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|formatx
@@ -7084,7 +7063,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|format1a
@@ -7574,7 +7553,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|format1b
@@ -8066,7 +8045,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e0_format0
@@ -9038,7 +9017,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e0_format1
@@ -9991,7 +9970,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e0_format2
@@ -11825,7 +11804,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e0_format3
@@ -12784,7 +12763,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e0_format4
@@ -12907,7 +12886,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e0_format5
@@ -13159,7 +13138,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e0_format6
@@ -14085,7 +14064,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e0_format7
@@ -14571,7 +14550,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e1_format0
@@ -15539,7 +15518,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e1_format1
@@ -16459,7 +16438,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e1_format2
@@ -18274,7 +18253,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e1_format3
@@ -19233,7 +19212,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e1_format4
@@ -19356,7 +19335,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e1_format5
@@ -19608,7 +19587,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e1_format6
@@ -20515,7 +20494,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|struct
 name|formstr
 name|e1_format7

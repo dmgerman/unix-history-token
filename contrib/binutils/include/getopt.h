@@ -111,20 +111,19 @@ name|__STDC__
 comment|/* HAVE_DECL_* is a three-state macro: undefined, 0 or 1.  If it is    undefined, we haven't run the autoconf check so provide the    declaration without arguments.  If it is 0, we checked and failed    to find the declaration so provide a fully prototyped one.  If it    is 1, we found it so don't provide any declaration at all.  */
 if|#
 directive|if
+operator|!
+name|HAVE_DECL_GETOPT
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__GNU_LIBRARY__
 argument_list|)
 operator|||
-operator|(
 name|defined
 argument_list|(
 name|HAVE_DECL_GETOPT
 argument_list|)
-operator|&&
-operator|!
-name|HAVE_DECL_GETOPT
-operator|)
 comment|/* Many other libraries have conflicting prototypes for getopt, with    differences in the consts, in stdlib.h.  To avoid compilation    errors, only prototype getopt for the GNU C library.  */
 specifier|extern
 name|int
@@ -147,14 +146,6 @@ parameter_list|)
 function_decl|;
 else|#
 directive|else
-comment|/* not __GNU_LIBRARY__ */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_DECL_GETOPT
-argument_list|)
 specifier|extern
 name|int
 name|getopt
@@ -164,7 +155,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* __GNU_LIBRARY__ */
+comment|/* !HAVE_DECL_GETOPT */
 specifier|extern
 name|int
 name|getopt_long

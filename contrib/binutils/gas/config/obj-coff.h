@@ -1223,7 +1223,7 @@ value|(SYM_AUXENT (s)->x_scn.x_nlinno=(v))
 end_define
 
 begin_comment
-comment|/* Internal use only definitions. SF_ stands for symbol flags.       These values can be assigned to sy_symbol.ost_flags field of a symbolS.       You'll break i960 if you shift the SYSPROC bits anywhere else.  for    more on the balname/callname hack, see tc-i960.h.  b.out is done    differently.  */
+comment|/* Internal use only definitions. SF_ stands for symbol flags.     These values can be assigned to sy_symbol.ost_flags field of a symbolS.     You'll break i960 if you shift the SYSPROC bits anywhere else.  for    more on the balname/callname hack, see tc-i960.h.  b.out is done    differently.  */
 end_comment
 
 begin_define
@@ -3029,7 +3029,7 @@ value|(SYM_AUXENT (s)->x_scn.x_nlinno=(v))
 end_define
 
 begin_comment
-comment|/* Internal use only definitions. SF_ stands for symbol flags.       These values can be assigned to sy_symbol.ost_flags field of a symbolS.       You'll break i960 if you shift the SYSPROC bits anywhere else.  for    more on the balname/callname hack, see tc-i960.h.  b.out is done    differently.  */
+comment|/* Internal use only definitions. SF_ stands for symbol flags.     These values can be assigned to sy_symbol.ost_flags field of a symbolS.     You'll break i960 if you shift the SYSPROC bits anywhere else.  for    more on the balname/callname hack, see tc-i960.h.  b.out is done    differently.  */
 end_comment
 
 begin_define

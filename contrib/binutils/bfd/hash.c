@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* hash.c -- hash table routines for BFD    Copyright 1993, 1994, 1995, 1997, 1999, 2001    Free Software Foundation, Inc.    Written by Steve Chamberlain<sac@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* hash.c -- hash table routines for BFD    Copyright 1993, 1994, 1995, 1997, 1999, 2001, 2002    Free Software Foundation, Inc.    Written by Steve Chamberlain<sac@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -428,10 +428,23 @@ name|hash
 operator|>>
 literal|2
 expr_stmt|;
-operator|++
-name|len
-expr_stmt|;
 block|}
+name|len
+operator|=
+operator|(
+name|s
+operator|-
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
+name|string
+operator|)
+operator|-
+literal|1
+expr_stmt|;
 name|hash
 operator|+=
 name|len
@@ -610,11 +623,15 @@ operator|)
 name|NULL
 return|;
 block|}
-name|strcpy
+name|memcpy
 argument_list|(
 name|new
 argument_list|,
 name|string
+argument_list|,
+name|len
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|string

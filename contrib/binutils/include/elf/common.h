@@ -501,7 +501,7 @@ comment|/* Processor-specific */
 end_comment
 
 begin_comment
-comment|/* Values for e_machine, which identifies the architecture.  These numbers    are officially assigned by registry@sco.com.  See below for a list of    ad-hoc numbers used during initial development.  */
+comment|/* Values for e_machine, which identifies the architecture.  These numbers    are officially assigned by registry@caldera.com.  See below for a list of    ad-hoc numbers used during initial development.  */
 end_comment
 
 begin_define
@@ -1025,6 +1025,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EM_PDP10
+value|64
+end_define
+
+begin_comment
+comment|/* Digital Equipment Corp. PDP-10 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_PDP11
+value|65
+end_define
+
+begin_comment
+comment|/* Digital Equipment Corp. PDP-11 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EM_FX66
 value|66
 end_define
@@ -1342,7 +1364,7 @@ comment|/* Tensilica Xtensa Architecture */
 end_comment
 
 begin_comment
-comment|/* If it is necessary to assign new unofficial EM_* values, please pick large    random numbers (0x8523, 0xa7f2, etc.) to minimize the chances of collision    with official or non-GNU unofficial values.     NOTE: Do not just increment the most recent number by one.    Somebody else somewhere will do exactly the same thing, and you    will have a collision.  Instead, pick a random number.     Normally, each entity or maintainer responsible for a machine with an    unofficial e_machine number should eventually ask registry@sco.com for    an officially blessed number to be added to the list above.  */
+comment|/* If it is necessary to assign new unofficial EM_* values, please pick large    random numbers (0x8523, 0xa7f2, etc.) to minimize the chances of collision    with official or non-GNU unofficial values.     NOTE: Do not just increment the most recent number by one.    Somebody else somewhere will do exactly the same thing, and you    will have a collision.  Instead, pick a random number.     Normally, each entity or maintainer responsible for a machine with an    unofficial e_machine number should eventually ask registry@caldera.com for    an officially blessed number to be added to the list above.  */
 end_comment
 
 begin_define
@@ -1517,11 +1539,33 @@ name|EM_OPENRISC_OLD
 value|0x3426
 end_define
 
+begin_comment
+comment|/* DLX magic number    Written in the absense of an ABI.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_DLX
+value|0x5aa5
+end_define
+
 begin_define
 define|#
 directive|define
 name|EM_XSTORMY16
 value|0xad45
+end_define
+
+begin_comment
+comment|/* FRV magic number - no EABI available??.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_CYGNUS_FRV
+value|0x5441
 end_define
 
 begin_comment
@@ -1633,6 +1677,17 @@ end_define
 
 begin_comment
 comment|/* Entry for header table itself */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_TLS
+value|7
+end_define
+
+begin_comment
+comment|/* Thread local storage segment */
 end_comment
 
 begin_define
@@ -1966,6 +2021,17 @@ begin_comment
 comment|/* Last of OS specific semantics */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SHT_GNU_LIBLIST
+value|0x6ffffff7
+end_define
+
+begin_comment
+comment|/* List of prelink dependencies */
+end_comment
+
 begin_comment
 comment|/* The next three section types are defined by Solaris, and are named    SHT_SUNW*.  We use them in GNU code, so we also define SHT_GNU*    versions.  */
 end_comment
@@ -2177,6 +2243,17 @@ end_define
 
 begin_comment
 comment|/* Member of a section group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_TLS
+value|(1<< 10)
+end_define
+
+begin_comment
+comment|/* Thread local storage section */
 end_comment
 
 begin_comment
@@ -2393,6 +2470,60 @@ end_define
 begin_comment
 comment|/* Contains an architecture string.  */
 end_comment
+
+begin_comment
+comment|/* Values for GNU .note.ABI-tag notes.  Note name is "GNU".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_GNU_ABI_TAG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|GNU_ABI_TAG_LINUX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GNU_ABI_TAG_HURD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|GNU_ABI_TAG_SOLARIS
+value|2
+end_define
+
+begin_comment
+comment|/* Values for NetBSD .note.netbsd.ident notes.  Note name is "NetBSD".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_NETBSD_IDENT
+value|1
+end_define
+
+begin_comment
+comment|/* Values for FreeBSD .note.ABI-tag notes.  Note name is "FreeBSD".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NT_FREEBSD_ABI_TAG
+value|1
+end_define
 
 begin_comment
 comment|/* These three macros disassemble and assemble a symbol table st_info field,    which contains the symbol binding and symbol type.  The STB_ and STT_    defines identify the binding and type.  */
@@ -2660,6 +2791,17 @@ end_define
 
 begin_comment
 comment|/* An uninitialised common block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STT_TLS
+value|6
+end_define
+
+begin_comment
+comment|/* Thread local data object */
 end_comment
 
 begin_define
@@ -3249,6 +3391,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_GNU_PRELINKED
+value|0x6ffffdf5
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_GNU_CONFLICTSZ
+value|0x6ffffdf6
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_GNU_LIBLISTSZ
+value|0x6ffffdf7
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_CHECKSUM
 value|0x6ffffdf8
 end_define
@@ -3314,6 +3477,20 @@ define|#
 directive|define
 name|DT_ADDRRNGLO
 value|0x6ffffe00
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_GNU_CONFLICT
+value|0x6ffffef8
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_GNU_LIBLIST
+value|0x6ffffef9
 end_define
 
 begin_define
@@ -3636,6 +3813,13 @@ define|#
 directive|define
 name|DF_BIND_NOW
 value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DF_STATIC_TLS
+value|(1<< 4)
 end_define
 
 begin_comment

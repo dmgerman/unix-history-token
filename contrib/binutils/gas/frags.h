@@ -33,7 +33,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* A code fragment (frag) is some known number of chars, followed by some    unknown number of chars. Typically the unknown number of chars is an    instruction address whose size is yet unknown. We always know the greatest    possible size the unknown number of chars may become, and reserve that    much room at the end of the frag.    Once created, frags do not change address during assembly.    We chain the frags in (a) forward-linked list(s). The object-file address    of the 1st char of a frag is generally not known until after relax().    Many things at assembly time describe an address by {object-file-address    of a particular frag}+offset.     BUG: it may be smarter to have a single pointer off to various different    notes for different frag kinds.  See how code pans.   */
+comment|/* A code fragment (frag) is some known number of chars, followed by some    unknown number of chars. Typically the unknown number of chars is an    instruction address whose size is yet unknown. We always know the greatest    possible size the unknown number of chars may become, and reserve that    much room at the end of the frag.    Once created, frags do not change address during assembly.    We chain the frags in (a) forward-linked list(s). The object-file address    of the 1st char of a frag is generally not known until after relax().    Many things at assembly time describe an address by {object-file-address    of a particular frag}+offset.     BUG: it may be smarter to have a single pointer off to various different    notes for different frag kinds.  See how code pans.  */
 end_comment
 
 begin_struct

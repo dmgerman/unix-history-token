@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Routines to help build PEI-format DLLs (Win32 etc)    Copyright 1998, 1999, 2000, 2001 Free Software Foundation, Inc.    Written by DJ Delorie<dj@cygnus.com>     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Routines to help build PEI-format DLLs (Win32 etc)    Copyright 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Written by DJ Delorie<dj@cygnus.com>     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -118,7 +118,7 @@ file|"pe-dll.h"
 end_include
 
 begin_comment
-comment|/*  This file turns a regular Windows PE image into a DLL.  Because of     the complexity of this operation, it has been broken down into a     number of separate modules which are all called by the main function     at the end of this file.  This function is not re-entrant and is     normally only called once, so static variables are used to reduce     the number of parameters and return values required.          See also: ld/emultempl/pe.em.  */
+comment|/*  This file turns a regular Windows PE image into a DLL.  Because of     the complexity of this operation, it has been broken down into a     number of separate modules which are all called by the main function     at the end of this file.  This function is not re-entrant and is     normally only called once, so static variables are used to reduce     the number of parameters and return values required.      See also: ld/emultempl/pe.em.  */
 end_comment
 
 begin_comment
@@ -544,6 +544,24 @@ literal|11
 block|}
 block|,
 block|{
+literal|"libg2c."
+block|,
+literal|7
+block|}
+block|,
+block|{
+literal|"libsupc++."
+block|,
+literal|10
+block|}
+block|,
+block|{
+literal|"libobjc."
+block|,
+literal|8
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
@@ -605,6 +623,18 @@ block|{
 literal|"gcrt2.o"
 block|,
 literal|7
+block|}
+block|,
+block|{
+literal|"crtbegin.o"
+block|,
+literal|10
+block|}
+block|,
+block|{
+literal|"crtend.o"
+block|,
+literal|8
 block|}
 block|,
 block|{
@@ -1237,7 +1267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Helper functions for qsort.  Relocs must be sorted so that we can write     them out by pages.  */
+comment|/* Helper functions for qsort.  Relocs must be sorted so that we can write    them out by pages.  */
 end_comment
 
 begin_typedef
@@ -1480,6 +1510,9 @@ name|exclude_list_struct
 modifier|*
 name|next
 decl_stmt|;
+name|int
+name|type
+decl_stmt|;
 block|}
 name|exclude_list_struct
 typedef|;
@@ -1501,11 +1534,17 @@ name|void
 name|pe_dll_add_excludes
 parameter_list|(
 name|new_excludes
+parameter_list|,
+name|type
 parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|new_excludes
+decl_stmt|;
+specifier|const
+name|int
+name|type
 decl_stmt|;
 block|{
 name|char
@@ -1599,6 +1638,12 @@ argument_list|)
 expr_stmt|;
 name|new_exclude
 operator|->
+name|type
+operator|=
+name|type
+expr_stmt|;
+name|new_exclude
+operator|->
 name|next
 operator|=
 name|excludes
@@ -1657,6 +1702,32 @@ name|autofilter_entry_type
 modifier|*
 name|afptr
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|libname
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|abfd
+operator|&&
+name|abfd
+operator|->
+name|my_archive
+condition|)
+name|libname
+operator|=
+name|lbasename
+argument_list|(
+name|abfd
+operator|->
+name|my_archive
+operator|->
+name|filename
+argument_list|)
+expr_stmt|;
 comment|/* We should not re-export imported stuff.  */
 if|if
 condition|(
@@ -1740,14 +1811,10 @@ operator|->
 name|my_archive
 argument_list|)
 expr_stmt|;
-comment|/* First of all, make context checks:          Don't export anything from libgcc.  */
+comment|/* First of all, make context checks:          Don't export anything from standard libs.  */
 if|if
 condition|(
-name|abfd
-operator|&&
-name|abfd
-operator|->
-name|my_archive
+name|libname
 condition|)
 block|{
 name|afptr
@@ -1763,18 +1830,20 @@ condition|)
 block|{
 if|if
 condition|(
-name|strstr
+name|strncmp
 argument_list|(
-name|abfd
-operator|->
-name|my_archive
-operator|->
-name|filename
+name|libname
 argument_list|,
 name|afptr
 operator|->
 name|name
+argument_list|,
+name|afptr
+operator|->
+name|len
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 literal|0
@@ -1930,8 +1999,8 @@ name|afptr
 operator|->
 name|len
 operator|)
-operator|&&
 comment|/* Add 1 to insure match with trailing '\0'.  */
+operator|&&
 name|strncmp
 argument_list|(
 name|n
@@ -1977,6 +2046,54 @@ name|ex
 operator|->
 name|next
 control|)
+block|{
+if|if
+condition|(
+name|ex
+operator|->
+name|type
+operator|==
+literal|1
+condition|)
+comment|/* exclude-libs */
+block|{
+if|if
+condition|(
+name|libname
+operator|&&
+operator|(
+operator|(
+name|strcmp
+argument_list|(
+name|libname
+argument_list|,
+name|ex
+operator|->
+name|string
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|strcasecmp
+argument_list|(
+literal|"ALL"
+argument_list|,
+name|ex
+operator|->
+name|string
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|)
+condition|)
+return|return
+literal|0
+return|;
+block|}
+elseif|else
 if|if
 condition|(
 name|strcmp
@@ -1993,6 +2110,7 @@ condition|)
 return|return
 literal|0
 return|;
+block|}
 return|return
 literal|1
 return|;
@@ -7445,7 +7563,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	.section	.idata$2  	.global		__head_my_dll    __head_my_dll:  	.rva		hname  	.long		0  	.long		0  	.rva		__my_dll_iname  	.rva		fthunk    	.section	.idata$5  	.long		0    fthunk:    	.section	.idata$4  	.long		0    hname:                              */
+comment|/*	.section	.idata$2  	.global		__head_my_dll    __head_my_dll:  	.rva		hname  	.long		0  	.long		0  	.rva		__my_dll_iname  	.rva		fthunk   	.section	.idata$5  	.long		0    fthunk:   	.section	.idata$4  	.long		0    hname:                              */
 end_comment
 
 begin_function
@@ -8252,7 +8370,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	.text  	.global		_function  	.global		___imp_function  	.global		__imp__function   _function:  	jmp		*__imp__function:    	.section	idata$7  	.long		__head_my_dll    	.section	.idata$5   ___imp_function:   __imp__function:   iat?   	.section	.idata$4   iat?  	.section	.idata$6   ID<ordinal>:  	.short<hint>  	.asciz		"function" xlate? (add underscore, kill at)  */
+comment|/*	.text  	.global		_function  	.global		___imp_function  	.global		__imp__function   _function:  	jmp		*__imp__function:   	.section	idata$7  	.long		__head_my_dll   	.section	.idata$5   ___imp_function:   __imp__function:   iat?   	.section	.idata$4   iat?  	.section	.idata$6   ID<ordinal>:  	.short<hint>  	.asciz		"function" xlate? (add underscore, kill at)  */
 end_comment
 
 begin_decl_stmt
@@ -9698,7 +9816,7 @@ literal|25
 operator|>
 name|buffer_len
 condition|)
-comment|/* Assume 25 chars for "__fu" + counter + "_".  If counter is       bigger than 20 digits long, we've got worse problems than      overflowing this buffer...  */
+comment|/* Assume 25 chars for "__fu" + counter + "_".  If counter is      bigger than 20 digits long, we've got worse problems than      overflowing this buffer...  */
 block|{
 name|free
 argument_list|(
@@ -9789,7 +9907,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf ("type:%d\n", myh->type);     printf ("%s\n", myh->root.u.def.section->name);
+block|printf ("type:%d\n", myh->type);   printf ("%s\n", myh->root.u.def.section->name);
 endif|#
 directive|endif
 return|return
@@ -12145,6 +12263,7 @@ name|abs_output_section
 argument_list|,
 operator|(
 name|fill_type
+operator|*
 operator|)
 literal|0
 argument_list|,
@@ -12285,6 +12404,7 @@ name|abs_output_section
 argument_list|,
 operator|(
 name|fill_type
+operator|*
 operator|)
 literal|0
 argument_list|,

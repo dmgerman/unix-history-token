@@ -1266,5 +1266,52 @@ return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|print_ppc_disassembler_options
+parameter_list|(
+name|FILE
+modifier|*
+name|stream
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"\n\ The following PPC specific disassembler options are supported for use with\n\ the -M switch:\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"  booke|booke32|booke64    Disassemble the BookE instructions\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"  power4                   Disassemble the Power4 instructions\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"  32                       Do not disassemble 64-bit instructions\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"  64                       Allow disassembly of 64-bit instructions\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

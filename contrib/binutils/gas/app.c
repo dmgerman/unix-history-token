@@ -80,6 +80,21 @@ name|scrub_m68k_mri
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* The pseudo-op which switches in and out of MRI mode.  See the    comment in do_scrub_chars.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|mri_pseudo
+index|[]
+init|=
+literal|".mri 0"
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -96,21 +111,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* The pseudo-op which switches in and out of MRI mode.  See the    comment in do_scrub_chars.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|mri_pseudo
-index|[]
-init|=
-literal|".mri 0"
-decl_stmt|;
-end_decl_stmt
 
 begin_if
 if|#
@@ -1477,7 +1477,7 @@ parameter_list|(
 name|pch
 parameter_list|)
 define|\
-value|do					\     {					\       *to++ = (pch);			\       if (to>= toend)			\         goto tofull;			\     }					\   while (0)
+value|do						\     {						\       *to++ = (pch);				\       if (to>= toend)				\ 	goto tofull;				\     }						\   while (0)
 if|if
 condition|(
 name|saved_input

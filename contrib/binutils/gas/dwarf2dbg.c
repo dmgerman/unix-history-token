@@ -1120,9 +1120,13 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* Don't emit sequences of line symbols for the same line. */
+comment|/* Don't emit sequences of line symbols for the same line when the      symbols apply to assembler code.  It is necessary to emit      duplicate line symbols when a compiler asks for them, because GDB      uses them to determine the end of the prologue.  */
 if|if
 condition|(
+name|debug_type
+operator|==
+name|DEBUG_DWARF2
+operator|&&
 name|line
 operator|==
 name|loc
@@ -1302,18 +1306,35 @@ name|loc
 decl_stmt|;
 if|if
 condition|(
+name|loc_directive_seen
+condition|)
+block|{
+comment|/* Use the last location established by a .loc directive, not 	 the value returned by dwarf2_where().  That calls as_where() 	 which will return either the logical input file name (foo.c) 	or the physical input file name (foo.s) and not the file name 	specified in the most recent .loc directive (eg foo.h).  */
+name|loc
+operator|=
+name|current
+expr_stmt|;
+comment|/* Unless we generate DWARF2 debugging information for each 	 assembler line, we only emit one line symbol for one LOC.  */
+if|if
+condition|(
 name|debug_type
 operator|!=
 name|DEBUG_DWARF2
-operator|&&
-operator|!
-name|loc_directive_seen
 condition|)
-return|return;
 name|loc_directive_seen
 operator|=
 name|false
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|debug_type
+operator|!=
+name|DEBUG_DWARF2
+condition|)
+return|return;
+else|else
 name|dwarf2_where
 argument_list|(
 operator|&
@@ -1521,11 +1542,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle the .file directive.  */
+comment|/* Handle two forms of .file directive:    - Pass .file "source.c" to s_app_file    - Handle .file 1 "source.c" by adding an entry to the DWARF-2 file table     If an entry is added to the file table, return a pointer to the filename. */
 end_comment
 
 begin_function
-name|void
+name|char
+modifier|*
 name|dwarf2_directive_file
 parameter_list|(
 name|dummy
@@ -1562,7 +1584,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 name|num
 operator|=
@@ -1595,7 +1619,9 @@ literal|"file number less than one"
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 if|if
 condition|(
@@ -1629,7 +1655,9 @@ operator|)
 name|num
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|NULL
+return|;
 block|}
 if|if
 condition|(
@@ -1726,6 +1754,9 @@ name|num
 operator|+
 literal|1
 expr_stmt|;
+return|return
+name|filename
+return|;
 block|}
 end_function
 
@@ -1857,11 +1888,23 @@ if|if
 condition|(
 name|listing
 condition|)
+block|{
+name|listing_source_file
+argument_list|(
+name|files
+index|[
+name|filenum
+index|]
+operator|.
+name|filename
+argument_list|)
+expr_stmt|;
 name|listing_source_line
 argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -4620,6 +4663,13 @@ expr_stmt|;
 block|}
 name|out_abbrev
 argument_list|(
+name|DW_AT_name
+argument_list|,
+name|DW_FORM_string
+argument_list|)
+expr_stmt|;
+name|out_abbrev
+argument_list|(
 name|DW_AT_comp_dir
 argument_list|,
 name|DW_FORM_string
@@ -4908,6 +4958,54 @@ name|sizeof_address
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* DW_AT_name.  We don't have the actual file name that was present      on the command line, so assume files[1] is the main input file.      We're not supposed to get called unless at least one line number      entry was emitted, so this should always be defined.  */
+if|if
+condition|(
+operator|!
+name|files
+operator|||
+name|files_in_use
+operator|<
+literal|1
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|files
+index|[
+literal|1
+index|]
+operator|.
+name|filename
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+name|p
+operator|=
+name|frag_more
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|p
+argument_list|,
+name|files
+index|[
+literal|1
+index|]
+operator|.
+name|filename
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 comment|/* DW_AT_comp_dir */
 name|comp_dir
 operator|=
@@ -5001,16 +5099,25 @@ name|line_seg
 modifier|*
 name|s
 decl_stmt|;
-comment|/* If no debug information was recorded, nothing to do.  */
+comment|/* We don't need to do anything unless:      - Some debug information was recorded via .file/.loc      - or, we are generating DWARF2 information ourself (--gdwarf2)      - or, there is a user-provided .debug_info section which could        reference the file table in the .debug_line section we generate        below.  */
 if|if
 condition|(
 name|all_segs
 operator|==
 name|NULL
 operator|&&
-name|files_in_use
-operator|<=
-literal|1
+name|debug_type
+operator|!=
+name|DEBUG_DWARF2
+operator|&&
+name|bfd_get_section_by_name
+argument_list|(
+name|stdoutput
+argument_list|,
+literal|".debug_info"
+argument_list|)
+operator|==
+name|NULL
 condition|)
 return|return;
 comment|/* Calculate the size of an address for the target machine.  */

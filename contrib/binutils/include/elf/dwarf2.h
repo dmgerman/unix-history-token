@@ -2265,14 +2265,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|DW_CFA_low_user
+name|DW_CFA_lo_user
 value|0x1c
 end_define
 
 begin_define
 define|#
 directive|define
-name|DW_CFA_high_user
+name|DW_CFA_hi_user
 value|0x3f
 end_define
 

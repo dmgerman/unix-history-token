@@ -1062,6 +1062,11 @@ init|=
 literal|147
 block|,
 comment|/* 0x93, reserved */
+name|M_VAX4K_NETBSD
+init|=
+literal|150
+block|,
+comment|/* NetBSD/vax 4K pages binary */
 name|M_MIPS1
 init|=
 literal|151

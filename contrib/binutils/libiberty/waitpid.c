@@ -20,6 +20,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* On some systems (such as WindISS), you must include<sys/types.h>    to get the definition of "pid_t" before you include<sys/wait.h>.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -38,7 +48,7 @@ directive|endif
 end_endif
 
 begin_function
-name|int
+name|pid_t
 name|waitpid
 parameter_list|(
 name|pid
@@ -47,17 +57,15 @@ name|stat_loc
 parameter_list|,
 name|options
 parameter_list|)
-name|int
+name|pid_t
 name|pid
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|int
+modifier|*
 name|stat_loc
 decl_stmt|,
 name|options
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 for|for
 control|(
@@ -89,7 +97,7 @@ name|wpid
 return|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

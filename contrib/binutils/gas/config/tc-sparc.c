@@ -1613,7 +1613,7 @@ name|OBJ_ELF
 end_ifdef
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|md_shortopts
@@ -1634,7 +1634,7 @@ name|OBJ_AOUT
 end_ifdef
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|md_shortopts
@@ -1649,7 +1649,7 @@ directive|else
 end_else
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|md_shortopts
@@ -11509,6 +11509,14 @@ operator|->
 name|flags
 operator|&
 name|SEC_MERGE
+operator|)
+operator|||
+operator|(
+name|seg
+operator|->
+name|flags
+operator|&
+name|SEC_THREAD_LOCAL
 operator|)
 operator|||
 operator|(

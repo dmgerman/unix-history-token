@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ieee.c -- Read and write IEEE-695 debugging information.    Copyright 1996, 1998, 2000, 2001 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ieee.c -- Read and write IEEE-695 debugging information.    Copyright 1996, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1450,7 +1450,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read a number in an IEEE file.  If ppresent is not NULL, the number    need not be there. */
+comment|/* Read a number in an IEEE file.  If ppresent is not NULL, the number    need not be there.  */
 end_comment
 
 begin_function
@@ -4296,7 +4296,7 @@ break|break;
 case|case
 literal|2
 case|:
-comment|/* BB2: Global type definitions.  The name is supposed to be 	 empty, but we don't check. */
+comment|/* BB2: Global type definitions.  The name is supposed to be 	 empty, but we don't check.  */
 if|if
 condition|(
 operator|!
@@ -8158,7 +8158,7 @@ name|ty_start
 argument_list|,
 name|_
 argument_list|(
-literal|"unsupported qualifer"
+literal|"unsupported qualifier"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -17510,10 +17510,6 @@ begin_comment
 comment|/* Initialize a buffer to be empty.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -17666,10 +17662,6 @@ end_function
 
 begin_comment
 comment|/* Append a buffer chain.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -23171,10 +23163,6 @@ begin_comment
 comment|/* Start recording information from a particular source file.  This is    used to record which file defined which types, variables, etc.  It    is not used for line numbers, since the lineno entry point passes    down the file name anyhow.  IEEE debugging information doesn't seem    to store this information anywhere.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -25222,10 +25210,6 @@ end_function
 
 begin_comment
 comment|/* Make an array type.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -27354,7 +27338,7 @@ name|strdef
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* If we were ignoring this struct definition because it was a      duplicate defintion, just through away whatever bytes we have      accumulated.  Leave the type on the stack. */
+comment|/* If we were ignoring this struct definition because it was a      duplicate defintion, just through away whatever bytes we have      accumulated.  Leave the type on the stack.  */
 if|if
 condition|(
 name|info
@@ -30039,7 +30023,7 @@ operator|.
 name|localp
 condition|)
 block|{
-comment|/* This is a duplicate of a global type, so it must be              local. */
+comment|/* This is a duplicate of a global type, so it must be              local.  */
 name|localp
 operator|=
 name|true

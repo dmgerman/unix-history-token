@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* listing.c - mainting assembly listings    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* listing.c - mainting assembly listings    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<obstack.h>
+file|"obstack.h"
 end_include
 
 begin_include
@@ -825,26 +825,8 @@ name|p
 operator|->
 name|filename
 operator|=
-name|xmalloc
+name|xstrdup
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|strlen
-argument_list|(
-name|file_name
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|p
-operator|->
-name|filename
-argument_list|,
 name|file_name
 argument_list|)
 expr_stmt|;
@@ -2286,7 +2268,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|data_buffer[data_buffer_size++] = '*'; 	    data_buffer[data_buffer_size++] = '*';
+block|data_buffer[data_buffer_size++] = '*'; 	      data_buffer[data_buffer_size++] = '*';
 endif|#
 directive|endif
 name|data_buffer_size

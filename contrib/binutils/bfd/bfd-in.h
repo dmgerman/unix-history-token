@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -750,7 +750,7 @@ parameter_list|,
 name|align
 parameter_list|)
 define|\
-value|( ((addr) + ((1<<(align))-1))& (-1<< (align)))
+value|(((addr) + ((bfd_vma) 1<< (align)) - 1)& ((bfd_vma) -1<< (align)))
 typedef|typedef
 name|struct
 name|sec
@@ -775,6 +775,15 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|((ptr)->vma + 0)
+define|#
+directive|define
+name|bfd_get_section_lma
+parameter_list|(
+name|bfd
+parameter_list|,
+name|ptr
+parameter_list|)
+value|((ptr)->lma + 0)
 define|#
 directive|define
 name|bfd_get_section_alignment
@@ -864,7 +873,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|(((ptr)->vma = (ptr)->lma= (val)), ((ptr)->user_set_vma = (boolean)true), true)
+value|(((ptr)->vma = (ptr)->lma = (val)), ((ptr)->user_set_vma = (boolean)true), true)
 define|#
 directive|define
 name|bfd_set_section_alignment
@@ -1551,6 +1560,13 @@ parameter_list|(
 name|abfd
 parameter_list|)
 value|((abfd)->section_count)
+define|#
+directive|define
+name|bfd_get_dynamic_symcount
+parameter_list|(
+name|abfd
+parameter_list|)
+value|((abfd)->dynsymcount)
 define|#
 directive|define
 name|bfd_get_symbol_leading_char
@@ -3006,6 +3022,8 @@ expr|struct
 name|sec
 operator|*
 operator|*
+operator|,
+name|boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3023,6 +3041,23 @@ name|char
 operator|*
 operator|,
 specifier|const
+name|char
+operator|*
+operator|,
+name|boolean
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* XCOFF support routines for ar.  */
+specifier|extern
+name|boolean
+name|bfd_xcoff_ar_archive_set_magic
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
 name|char
 operator|*
 operator|)
@@ -3268,6 +3303,21 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_elf32_arm_add_glue_sections_to_bfd
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* TI COFF load page support.  */
 specifier|extern
 name|void
@@ -3296,10 +3346,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_extern
-
-begin_comment
-comment|/* And more from the source.  */
-end_comment
 
 end_unit
 

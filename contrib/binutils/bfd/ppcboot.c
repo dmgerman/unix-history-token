@@ -2377,6 +2377,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ppcboot_bfd_discard_group
+value|bfd_generic_discard_group
+end_define
+
+begin_define
+define|#
+directive|define
 name|ppcboot_bfd_link_hash_table_create
 value|_bfd_generic_link_hash_table_create
 end_define
@@ -2384,8 +2391,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ppcboot_bfd_link_hash_table_free
+value|_bfd_generic_link_hash_table_free
+end_define
+
+begin_define
+define|#
+directive|define
 name|ppcboot_bfd_link_add_symbols
 value|_bfd_generic_link_add_symbols
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppcboot_bfd_link_just_syms
+value|_bfd_generic_link_just_syms
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* debug.c -- Handle generic debugging information.    Copyright 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* debug.c -- Handle generic debugging information.    Copyright 1995, 1996, 1997, 1998, 2000, 2002 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -3825,7 +3825,7 @@ name|debug_error
 argument_list|(
 name|_
 argument_list|(
-literal|"debug_record_label not implemented"
+literal|"debug_record_label: not implemented"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4100,10 +4100,6 @@ end_function
 
 begin_comment
 comment|/* Make a type with a given kind and size.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -6268,10 +6264,6 @@ begin_comment
 comment|/* Make a base class for an object.  The second argument is the base    class type.  The third argument is the bit position of this base    class in the object (always 0 unless doing multiple inheritance).    The fourth argument is whether this is a virtual class.  The fifth    argument is the visibility of the base class.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|debug_baseclass
 name|debug_make_baseclass
@@ -6366,10 +6358,6 @@ end_function
 
 begin_comment
 comment|/* Make a field for a struct.  The second argument is the name.  The    third argument is the type of the field.  The fourth argument is    the bit position of the field.  The fifth argument is the size of    the field (it may be zero).  The sixth argument is the visibility    of the field.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -6495,10 +6483,6 @@ begin_comment
 comment|/* Make a static member of an object.  The second argument is the    name.  The third argument is the type of the member.  The fourth    argument is the physical name of the member (i.e., the name as a    global variable).  The fifth argument is the visibility of the    member.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|debug_field
 name|debug_make_static_member
@@ -6609,10 +6593,6 @@ begin_comment
 comment|/* Make a method.  The second argument is the name, and the third    argument is a NULL terminated array of method variants.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|debug_method
 name|debug_make_method
@@ -6687,10 +6667,6 @@ end_function
 
 begin_comment
 comment|/* Make a method argument.  The second argument is the real name of    the function.  The third argument is the type of the function.  The    fourth argument is the visibility.  The fifth argument is whether    this is a const function.  The sixth argument is whether this is a    volatile function.  The seventh argument is the offset in the    virtual function table, if any.  The eighth argument is the virtual    function context.  FIXME: Are the const and volatile arguments    necessary?  Could we just use debug_make_const_type?  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -7378,10 +7354,6 @@ end_function
 
 begin_comment
 comment|/* Record the size of a given type.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -8761,10 +8733,6 @@ begin_comment
 comment|/* Get the type of a field.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|debug_type
 name|debug_get_field_type
@@ -8800,10 +8768,6 @@ end_function
 
 begin_comment
 comment|/* Get the name of a field.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -8843,10 +8807,6 @@ end_function
 
 begin_comment
 comment|/* Get the bit position of a field.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -8898,10 +8858,6 @@ begin_comment
 comment|/* Get the bit size of a field.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|bfd_vma
 name|debug_get_field_bitsize
@@ -8949,10 +8905,6 @@ end_function
 
 begin_comment
 comment|/* Get the visibility of a field.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function

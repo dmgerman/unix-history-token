@@ -3238,10 +3238,6 @@ argument_list|)
 operator|==
 literal|0
 operator|)
-condition|?
-name|true
-else|:
-name|false
 return|;
 block|}
 end_function

@@ -4,7 +4,7 @@ comment|/* DO NOT EDIT!  -*- buffer-read-only: t -*-  This file is automatically
 end_comment
 
 begin_comment
-comment|/* libbfd.h -- Declarations used by bfd library *implementation*.    (This include file is not for users of the library.)    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* libbfd.h -- Declarations used by bfd library *implementation*.    (This include file is not for users of the library.)    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1547,6 +1547,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|_bfd_nolink_bfd_discard_group
+define|\
+value|((boolean (*) \     PARAMS ((bfd *, struct sec *))) \    bfd_false)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_bfd_nolink_bfd_link_hash_table_create
 define|\
 value|((struct bfd_link_hash_table *(*) PARAMS ((bfd *))) bfd_nullvoidptr)
@@ -1555,9 +1563,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|_bfd_nolink_bfd_link_hash_table_free
+define|\
+value|((void (*) PARAMS ((struct bfd_link_hash_table *))) bfd_void)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_bfd_nolink_bfd_link_add_symbols
 define|\
 value|((boolean (*) PARAMS ((bfd *, struct bfd_link_info *))) bfd_false)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_bfd_nolink_bfd_link_just_syms
+define|\
+value|((void (*) PARAMS ((asection *, struct bfd_link_info *))) bfd_void)
 end_define
 
 begin_define
@@ -1944,6 +1968,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Generic link hash table destruction routine.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_bfd_generic_link_hash_table_free
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_link_hash_table
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Generic add symbol routine.  */
 end_comment
 
@@ -2081,6 +2124,28 @@ operator|,
 expr|struct
 name|bfd_link_hash_entry
 operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generic routine to mark section as supplying symbols only.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_bfd_generic_link_just_syms
+name|PARAMS
+argument_list|(
+operator|(
+name|asection
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
 operator|*
 operator|)
 argument_list|)
@@ -3062,7 +3127,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* And more follows */
+comment|/* Extracted from init.c.  */
+end_comment
+
+begin_comment
+comment|/* Extracted from libbfd.c.  */
 end_comment
 
 begin_decl_stmt
@@ -3094,6 +3163,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Extracted from cache.c.  */
+end_comment
 
 begin_define
 define|#
@@ -3178,6 +3251,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Extracted from reloc.c.  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -3411,6 +3488,32 @@ literal|"BFD_RELOC_ALPHA_GPREL_LO16"
 block|,
 literal|"BFD_RELOC_ALPHA_BRSGP"
 block|,
+literal|"BFD_RELOC_ALPHA_TLSGD"
+block|,
+literal|"BFD_RELOC_ALPHA_TLSLDM"
+block|,
+literal|"BFD_RELOC_ALPHA_DTPMOD64"
+block|,
+literal|"BFD_RELOC_ALPHA_GOTDTPREL16"
+block|,
+literal|"BFD_RELOC_ALPHA_DTPREL64"
+block|,
+literal|"BFD_RELOC_ALPHA_DTPREL_HI16"
+block|,
+literal|"BFD_RELOC_ALPHA_DTPREL_LO16"
+block|,
+literal|"BFD_RELOC_ALPHA_DTPREL16"
+block|,
+literal|"BFD_RELOC_ALPHA_GOTTPREL16"
+block|,
+literal|"BFD_RELOC_ALPHA_TPREL64"
+block|,
+literal|"BFD_RELOC_ALPHA_TPREL_HI16"
+block|,
+literal|"BFD_RELOC_ALPHA_TPREL_LO16"
+block|,
+literal|"BFD_RELOC_ALPHA_TPREL16"
+block|,
 literal|"BFD_RELOC_MIPS_JMP"
 block|,
 literal|"BFD_RELOC_MIPS16_JMP"
@@ -3471,6 +3574,24 @@ literal|"BFD_RELOC_MIPS_RELGOT"
 block|,
 literal|"BFD_RELOC_MIPS_JALR"
 block|,
+literal|"BFD_RELOC_FRV_LABEL16"
+block|,
+literal|"BFD_RELOC_FRV_LABEL24"
+block|,
+literal|"BFD_RELOC_FRV_LO16"
+block|,
+literal|"BFD_RELOC_FRV_HI16"
+block|,
+literal|"BFD_RELOC_FRV_GPREL12"
+block|,
+literal|"BFD_RELOC_FRV_GPRELU12"
+block|,
+literal|"BFD_RELOC_FRV_GPREL32"
+block|,
+literal|"BFD_RELOC_FRV_GPRELHI"
+block|,
+literal|"BFD_RELOC_FRV_GPRELLO"
+block|,
 literal|"BFD_RELOC_386_GOT32"
 block|,
 literal|"BFD_RELOC_386_PLT32"
@@ -3486,6 +3607,30 @@ block|,
 literal|"BFD_RELOC_386_GOTOFF"
 block|,
 literal|"BFD_RELOC_386_GOTPC"
+block|,
+literal|"BFD_RELOC_386_TLS_TPOFF"
+block|,
+literal|"BFD_RELOC_386_TLS_IE"
+block|,
+literal|"BFD_RELOC_386_TLS_GOTIE"
+block|,
+literal|"BFD_RELOC_386_TLS_LE"
+block|,
+literal|"BFD_RELOC_386_TLS_GD"
+block|,
+literal|"BFD_RELOC_386_TLS_LDM"
+block|,
+literal|"BFD_RELOC_386_TLS_LDO_32"
+block|,
+literal|"BFD_RELOC_386_TLS_IE_32"
+block|,
+literal|"BFD_RELOC_386_TLS_LE_32"
+block|,
+literal|"BFD_RELOC_386_TLS_DTPMOD32"
+block|,
+literal|"BFD_RELOC_386_TLS_DTPOFF32"
+block|,
+literal|"BFD_RELOC_386_TLS_TPOFF32"
 block|,
 literal|"BFD_RELOC_X86_64_GOT32"
 block|,
@@ -3899,6 +4044,12 @@ literal|"BFD_RELOC_D30V_32"
 block|,
 literal|"BFD_RELOC_D30V_32_PCREL"
 block|,
+literal|"BFD_RELOC_DLX_HI16_S"
+block|,
+literal|"BFD_RELOC_DLX_LO16"
+block|,
+literal|"BFD_RELOC_DLX_JMP26"
+block|,
 literal|"BFD_RELOC_M32R_24"
 block|,
 literal|"BFD_RELOC_M32R_10_PCREL"
@@ -4227,17 +4378,43 @@ literal|"BFD_RELOC_IA64_IPLTLSB"
 block|,
 literal|"BFD_RELOC_IA64_COPY"
 block|,
+literal|"BFD_RELOC_IA64_LTOFF22X"
+block|,
+literal|"BFD_RELOC_IA64_LDXMOV"
+block|,
+literal|"BFD_RELOC_IA64_TPREL14"
+block|,
 literal|"BFD_RELOC_IA64_TPREL22"
+block|,
+literal|"BFD_RELOC_IA64_TPREL64I"
 block|,
 literal|"BFD_RELOC_IA64_TPREL64MSB"
 block|,
 literal|"BFD_RELOC_IA64_TPREL64LSB"
 block|,
-literal|"BFD_RELOC_IA64_LTOFF_TP22"
+literal|"BFD_RELOC_IA64_LTOFF_TPREL22"
 block|,
-literal|"BFD_RELOC_IA64_LTOFF22X"
+literal|"BFD_RELOC_IA64_DTPMOD64MSB"
 block|,
-literal|"BFD_RELOC_IA64_LDXMOV"
+literal|"BFD_RELOC_IA64_DTPMOD64LSB"
+block|,
+literal|"BFD_RELOC_IA64_LTOFF_DTPMOD22"
+block|,
+literal|"BFD_RELOC_IA64_DTPREL14"
+block|,
+literal|"BFD_RELOC_IA64_DTPREL22"
+block|,
+literal|"BFD_RELOC_IA64_DTPREL64I"
+block|,
+literal|"BFD_RELOC_IA64_DTPREL32MSB"
+block|,
+literal|"BFD_RELOC_IA64_DTPREL32LSB"
+block|,
+literal|"BFD_RELOC_IA64_DTPREL64MSB"
+block|,
+literal|"BFD_RELOC_IA64_DTPREL64LSB"
+block|,
+literal|"BFD_RELOC_IA64_LTOFF_DTPREL22"
 block|,
 literal|"BFD_RELOC_M68HC11_HI8"
 block|,
@@ -4360,6 +4537,12 @@ block|,
 literal|"BFD_RELOC_XSTORMY16_24"
 block|,
 literal|"BFD_RELOC_XSTORMY16_FPTR16"
+block|,
+literal|"BFD_RELOC_VAX_GLOB_DAT"
+block|,
+literal|"BFD_RELOC_VAX_JMP_SLOT"
+block|,
+literal|"BFD_RELOC_VAX_RELATIVE"
 block|,
 literal|"@@overflow: BFD_RELOC_UNUSED@@"
 block|, }
@@ -4485,6 +4668,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Extracted from archures.c.  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -4557,6 +4744,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Extracted from elf.c.  */
+end_comment
 
 begin_decl_stmt
 name|struct

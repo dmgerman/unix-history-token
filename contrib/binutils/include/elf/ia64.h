@@ -1260,7 +1260,7 @@ end_comment
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
-argument|R_IA64_LTOFF_TP22
+argument|R_IA64_LTOFF_TPREL22
 argument_list|,
 literal|0x9a
 argument_list|)

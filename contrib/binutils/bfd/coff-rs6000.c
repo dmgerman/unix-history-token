@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for IBM RS/6000 "XCOFF" files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    FIXME: Can someone provide a transliteration of this name into ASCII?    Using the following chars caused a compiler warning on HIUX (so I replaced    them with octal escapes), and isn't useful without an understanding of what    character set it is.    Written by Metin G. Ozisik, Mimi Ph\373\364ng-Th\345o V\365,      and John Gilmore.    Archive support from Damon A. Permezel.    Contributed by IBM Corporation and Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for IBM RS/6000 "XCOFF" files.    Copyright 1990-1999, 2000, 2001, 2002    Free Software Foundation, Inc.    FIXME: Can someone provide a transliteration of this name into ASCII?    Using the following chars caused a compiler warning on HIUX (so I replaced    them with octal escapes), and isn't useful without an understanding of what    character set it is.    Written by Metin G. Ozisik, Mimi Ph\373\364ng-Th\345o V\365,      and John Gilmore.    Archive support from Damon A. Permezel.    Contributed by IBM Corporation and Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -349,13 +349,50 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|xcoff_swap_reloc_in
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|xcoff_swap_reloc_out
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* Forward declare _bfd_xcoff_rtype2howto for coffcode.h macro.  */
+comment|/* Forward declare xcoff_rtype2howto for coffcode.h macro.  */
 end_comment
 
 begin_decl_stmt
 name|void
-name|_bfd_xcoff_rtype2howto
+name|xcoff_rtype2howto
 name|PARAMS
 argument_list|(
 operator|(
@@ -422,7 +459,7 @@ name|cache_ptr
 parameter_list|,
 name|dst
 parameter_list|)
-value|_bfd_xcoff_rtype2howto (cache_ptr, dst)
+value|xcoff_rtype2howto (cache_ptr, dst)
 end_define
 
 begin_define
@@ -459,23 +496,41 @@ directive|ifdef
 name|AIX_CORE
 end_ifdef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
 modifier|*
 name|rs6000coff_core_p
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|boolean
 name|rs6000coff_core_file_matches_executable_p
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|cbfd
+operator|,
+name|bfd
+operator|*
+name|ebfd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -606,6 +661,26 @@ define|#
 directive|define
 name|coff_SWAP_aux_out
 value|_bfd_xcoff_swap_aux_out
+end_define
+
+begin_define
+define|#
+directive|define
+name|coff_swap_reloc_in
+value|xcoff_swap_reloc_in
+end_define
+
+begin_define
+define|#
+directive|define
+name|coff_swap_reloc_out
+value|xcoff_swap_reloc_out
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_COFF_RELOCS
 end_define
 
 begin_include
@@ -1013,10 +1088,268 @@ operator|,
 specifier|const
 name|char
 operator|*
+operator|,
+name|boolean
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|do_pad
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|do_copy
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|bfd
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|do_shared_object_padding
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|bfd
+operator|*
+operator|,
+name|ufile_ptr
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Relocation functions */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|xcoff_reloc_type_br
+name|PARAMS
+argument_list|(
+operator|(
+name|XCOFF_RELOC_FUNCTION_ARGS
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|xcoff_complain_overflow_dont_func
+name|PARAMS
+argument_list|(
+operator|(
+name|XCOFF_COMPLAIN_FUNCTION_ARGS
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|xcoff_complain_overflow_bitfield_func
+name|PARAMS
+argument_list|(
+operator|(
+name|XCOFF_COMPLAIN_FUNCTION_ARGS
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|xcoff_complain_overflow_signed_func
+name|PARAMS
+argument_list|(
+operator|(
+name|XCOFF_COMPLAIN_FUNCTION_ARGS
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|xcoff_complain_overflow_unsigned_func
+name|PARAMS
+argument_list|(
+operator|(
+name|XCOFF_COMPLAIN_FUNCTION_ARGS
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|boolean
+argument_list|(
+argument|*xcoff_calculate_relocation[XCOFF_MAX_CALCULATE_RELOCATION]
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|PARAMS
+argument_list|(
+operator|(
+name|XCOFF_RELOC_FUNCTION_ARGS
+operator|)
+argument_list|)
+operator|=
+block|{
+name|xcoff_reloc_type_pos
+block|,
+comment|/* R_POS   (0x00) */
+name|xcoff_reloc_type_neg
+block|,
+comment|/* R_NEG   (0x01) */
+name|xcoff_reloc_type_rel
+block|,
+comment|/* R_REL   (0x02) */
+name|xcoff_reloc_type_toc
+block|,
+comment|/* R_TOC   (0x03) */
+name|xcoff_reloc_type_fail
+block|,
+comment|/* R_RTB   (0x04) */
+name|xcoff_reloc_type_toc
+block|,
+comment|/* R_GL    (0x05) */
+name|xcoff_reloc_type_toc
+block|,
+comment|/* R_TCL   (0x06) */
+name|xcoff_reloc_type_fail
+block|,
+comment|/*         (0x07) */
+name|xcoff_reloc_type_ba
+block|,
+comment|/* R_BA    (0x08) */
+name|xcoff_reloc_type_fail
+block|,
+comment|/*         (0x09) */
+name|xcoff_reloc_type_br
+block|,
+comment|/* R_BR    (0x0a) */
+name|xcoff_reloc_type_fail
+block|,
+comment|/*         (0x0b) */
+name|xcoff_reloc_type_pos
+block|,
+comment|/* R_RL    (0x0c) */
+name|xcoff_reloc_type_pos
+block|,
+comment|/* R_RLA   (0x0d) */
+name|xcoff_reloc_type_fail
+block|,
+comment|/*         (0x0e) */
+name|xcoff_reloc_type_noop
+block|,
+comment|/* R_REF   (0x0f) */
+name|xcoff_reloc_type_fail
+block|,
+comment|/*         (0x10) */
+name|xcoff_reloc_type_fail
+block|,
+comment|/*         (0x11) */
+name|xcoff_reloc_type_toc
+block|,
+comment|/* R_TRL   (0x12) */
+name|xcoff_reloc_type_toc
+block|,
+comment|/* R_TRLA  (0x13) */
+name|xcoff_reloc_type_fail
+block|,
+comment|/* R_RRTBI (0x14) */
+name|xcoff_reloc_type_fail
+block|,
+comment|/* R_RRTBA (0x15) */
+name|xcoff_reloc_type_ba
+block|,
+comment|/* R_CAI   (0x16) */
+name|xcoff_reloc_type_crel
+block|,
+comment|/* R_CREL  (0x17) */
+name|xcoff_reloc_type_ba
+block|,
+comment|/* R_RBA   (0x18) */
+name|xcoff_reloc_type_ba
+block|,
+comment|/* R_RBAC  (0x19) */
+name|xcoff_reloc_type_br
+block|,
+comment|/* R_RBR   (0x1a) */
+name|xcoff_reloc_type_ba
+block|,
+comment|/* R_RBRC  (0x1b) */
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|boolean
+argument_list|(
+argument|*xcoff_complain_overflow[XCOFF_MAX_COMPLAIN_OVERFLOW]
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|PARAMS
+argument_list|(
+operator|(
+name|XCOFF_COMPLAIN_FUNCTION_ARGS
+operator|)
+argument_list|)
+operator|=
+block|{
+name|xcoff_complain_overflow_dont_func
+block|,
+name|xcoff_complain_overflow_bitfield_func
+block|,
+name|xcoff_complain_overflow_signed_func
+block|,
+name|xcoff_complain_overflow_unsigned_func
+block|, }
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* We use our own tdata type.  Its first field is the COFF tdata type,    so the COFF routines are compatible.  */
@@ -1167,7 +1500,13 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* text section alignment is different than the default */
-comment|/* xcoff_data (abfd)->text_align_power = 5; */
+name|bfd_xcoff_text_align_power
+argument_list|(
+name|abfd
+argument_list|)
+operator|=
+literal|2
+expr_stmt|;
 return|return
 name|true
 return|;
@@ -1352,21 +1691,25 @@ operator|->
 name|target_index
 expr_stmt|;
 block|}
-name|ox
-operator|->
-name|text_align_power
+name|bfd_xcoff_text_align_power
+argument_list|(
+name|obfd
+argument_list|)
 operator|=
-name|ix
-operator|->
-name|text_align_power
+name|bfd_xcoff_text_align_power
+argument_list|(
+name|ibfd
+argument_list|)
 expr_stmt|;
-name|ox
-operator|->
-name|data_align_power
+name|bfd_xcoff_data_align_power
+argument_list|(
+name|obfd
+argument_list|)
 operator|=
-name|ix
-operator|->
-name|data_align_power
+name|bfd_xcoff_data_align_power
+argument_list|(
+name|ibfd
+argument_list|)
 expr_stmt|;
 name|ox
 operator|->
@@ -3302,7 +3645,7 @@ block|{
 comment|/* Standard 32 bit relocation.  */
 name|HOWTO
 argument_list|(
-literal|0
+name|R_POS
 argument_list|,
 comment|/* type */
 literal|0
@@ -3345,7 +3688,7 @@ comment|/* pcrel_offset */
 comment|/* 32 bit relocation, but store negative value.  */
 name|HOWTO
 argument_list|(
-literal|1
+name|R_NEG
 argument_list|,
 comment|/* type */
 literal|0
@@ -3389,7 +3732,7 @@ comment|/* pcrel_offset */
 comment|/* 32 bit PC relative relocation.  */
 name|HOWTO
 argument_list|(
-literal|2
+name|R_REL
 argument_list|,
 comment|/* type */
 literal|0
@@ -3432,7 +3775,7 @@ comment|/* pcrel_offset */
 comment|/* 16 bit TOC relative relocation.  */
 name|HOWTO
 argument_list|(
-literal|3
+name|R_TOC
 argument_list|,
 comment|/* type */
 literal|0
@@ -3475,7 +3818,7 @@ comment|/* pcrel_offset */
 comment|/* I don't really know what this is.  */
 name|HOWTO
 argument_list|(
-literal|4
+name|R_RTB
 argument_list|,
 comment|/* type */
 literal|1
@@ -3518,13 +3861,13 @@ comment|/* pcrel_offset */
 comment|/* External TOC relative symbol.  */
 name|HOWTO
 argument_list|(
-literal|5
+name|R_GL
 argument_list|,
 comment|/* type */
 literal|0
 argument_list|,
 comment|/* rightshift */
-literal|2
+literal|1
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
@@ -3561,13 +3904,13 @@ comment|/* pcrel_offset */
 comment|/* Local TOC relative symbol.  */
 name|HOWTO
 argument_list|(
-literal|6
+name|R_TCL
 argument_list|,
 comment|/* type */
 literal|0
 argument_list|,
 comment|/* rightshift */
-literal|2
+literal|1
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
@@ -3609,7 +3952,7 @@ block|,
 comment|/* Non modifiable absolute branch.  */
 name|HOWTO
 argument_list|(
-literal|8
+name|R_BA
 argument_list|,
 comment|/* type */
 literal|0
@@ -3633,16 +3976,16 @@ comment|/* complain_on_overflow */
 literal|0
 argument_list|,
 comment|/* special_function */
-literal|"R_BA"
+literal|"R_BA_26"
 argument_list|,
 comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0x3fffffc
+literal|0x03fffffc
 argument_list|,
 comment|/* src_mask */
-literal|0x3fffffc
+literal|0x03fffffc
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -3657,7 +4000,7 @@ block|,
 comment|/* Non modifiable relative branch.  */
 name|HOWTO
 argument_list|(
-literal|0xa
+name|R_BR
 argument_list|,
 comment|/* type */
 literal|0
@@ -3705,13 +4048,13 @@ block|,
 comment|/* Indirect load.  */
 name|HOWTO
 argument_list|(
-literal|0xc
+name|R_RL
 argument_list|,
 comment|/* type */
 literal|0
 argument_list|,
 comment|/* rightshift */
-literal|2
+literal|1
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
@@ -3748,13 +4091,13 @@ comment|/* pcrel_offset */
 comment|/* Load address.  */
 name|HOWTO
 argument_list|(
-literal|0xd
+name|R_RLA
 argument_list|,
 comment|/* type */
 literal|0
 argument_list|,
 comment|/* rightshift */
-literal|2
+literal|1
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
@@ -3796,7 +4139,7 @@ block|,
 comment|/* Non-relocating reference.  */
 name|HOWTO
 argument_list|(
-literal|0xf
+name|R_REF
 argument_list|,
 comment|/* type */
 literal|0
@@ -3814,7 +4157,7 @@ comment|/* pc_relative */
 literal|0
 argument_list|,
 comment|/* bitpos */
-name|complain_overflow_bitfield
+name|complain_overflow_dont
 argument_list|,
 comment|/* complain_on_overflow */
 literal|0
@@ -3849,13 +4192,13 @@ block|,
 comment|/* TOC relative indirect load.  */
 name|HOWTO
 argument_list|(
-literal|0x12
+name|R_TRL
 argument_list|,
 comment|/* type */
 literal|0
 argument_list|,
 comment|/* rightshift */
-literal|2
+literal|1
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
@@ -3892,13 +4235,13 @@ comment|/* pcrel_offset */
 comment|/* TOC relative load address.  */
 name|HOWTO
 argument_list|(
-literal|0x13
+name|R_TRLA
 argument_list|,
 comment|/* type */
 literal|0
 argument_list|,
 comment|/* rightshift */
-literal|2
+literal|1
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
@@ -3935,7 +4278,7 @@ comment|/* pcrel_offset */
 comment|/* Modifiable relative branch.  */
 name|HOWTO
 argument_list|(
-literal|0x14
+name|R_RRTBI
 argument_list|,
 comment|/* type */
 literal|1
@@ -3978,7 +4321,7 @@ comment|/* pcrel_offset */
 comment|/* Modifiable absolute branch.  */
 name|HOWTO
 argument_list|(
-literal|0x15
+name|R_RRTBA
 argument_list|,
 comment|/* type */
 literal|1
@@ -4021,13 +4364,13 @@ comment|/* pcrel_offset */
 comment|/* Modifiable call absolute indirect.  */
 name|HOWTO
 argument_list|(
-literal|0x16
+name|R_CAI
 argument_list|,
 comment|/* type */
 literal|0
 argument_list|,
 comment|/* rightshift */
-literal|2
+literal|1
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
@@ -4064,13 +4407,13 @@ comment|/* pcrel_offset */
 comment|/* Modifiable call relative.  */
 name|HOWTO
 argument_list|(
-literal|0x17
+name|R_CREL
 argument_list|,
 comment|/* type */
 literal|0
 argument_list|,
 comment|/* rightshift */
-literal|2
+literal|1
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
@@ -4107,7 +4450,7 @@ comment|/* pcrel_offset */
 comment|/* Modifiable branch absolute.  */
 name|HOWTO
 argument_list|(
-literal|0x18
+name|R_RBA
 argument_list|,
 comment|/* type */
 literal|0
@@ -4137,10 +4480,10 @@ comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0xffff
+literal|0x03fffffc
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0x03fffffc
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -4150,7 +4493,7 @@ comment|/* pcrel_offset */
 comment|/* Modifiable branch absolute.  */
 name|HOWTO
 argument_list|(
-literal|0x19
+name|R_RBAC
 argument_list|,
 comment|/* type */
 literal|0
@@ -4180,10 +4523,10 @@ comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0xffff
+literal|0xffffffff
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -4193,7 +4536,7 @@ comment|/* pcrel_offset */
 comment|/* Modifiable branch relative.  */
 name|HOWTO
 argument_list|(
-literal|0x1a
+name|R_RBR
 argument_list|,
 comment|/* type */
 literal|0
@@ -4217,16 +4560,16 @@ comment|/* complain_on_overflow */
 literal|0
 argument_list|,
 comment|/* special_function */
-literal|"R_RBR"
+literal|"R_RBR_26"
 argument_list|,
 comment|/* name */
 name|true
 argument_list|,
 comment|/* partial_inplace */
-literal|0xffff
+literal|0x03fffffc
 argument_list|,
 comment|/* src_mask */
-literal|0xffff
+literal|0x03fffffc
 argument_list|,
 comment|/* dst_mask */
 name|false
@@ -4236,13 +4579,13 @@ comment|/* pcrel_offset */
 comment|/* Modifiable branch absolute.  */
 name|HOWTO
 argument_list|(
-literal|0x1b
+name|R_RBRC
 argument_list|,
 comment|/* type */
 literal|0
 argument_list|,
 comment|/* rightshift */
-literal|2
+literal|1
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
@@ -4276,46 +4619,134 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
+comment|/* 16 bit Non modifiable absolute branch.  */
 name|HOWTO
 argument_list|(
-literal|0
+name|R_BA
 argument_list|,
 comment|/* type */
 literal|0
 argument_list|,
 comment|/* rightshift */
-literal|4
+literal|1
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
+literal|16
 argument_list|,
 comment|/* bitsize */
-argument|false
+name|false
 argument_list|,
 comment|/* pc_relative */
 literal|0
 argument_list|,
 comment|/* bitpos */
-argument|complain_overflow_bitfield
+name|complain_overflow_bitfield
 argument_list|,
 comment|/* complain_on_overflow */
 literal|0
 argument_list|,
 comment|/* special_function */
-literal|"R_POS"
+literal|"R_BA_16"
 argument_list|,
 comment|/* name */
-argument|true
+name|true
 argument_list|,
 comment|/* partial_inplace */
-argument|MINUS_ONE
+literal|0xfffc
 argument_list|,
 comment|/* src_mask */
-argument|MINUS_ONE
+literal|0xfffc
 argument_list|,
 comment|/* dst_mask */
-argument|false
+name|false
 argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Modifiable branch relative.  */
+name|HOWTO
+argument_list|(
+name|R_RBR
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|1
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+literal|0
+argument_list|,
+comment|/* special_function */
+literal|"R_RBR_16"
+argument_list|,
+comment|/* name */
+name|true
+argument_list|,
+comment|/* partial_inplace */
+literal|0xffff
+argument_list|,
+comment|/* src_mask */
+literal|0xffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
+comment|/* pcrel_offset */
+comment|/* Modifiable branch relative.  */
+name|HOWTO
+argument_list|(
+name|R_RBA
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|1
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|16
+argument_list|,
+comment|/* bitsize */
+name|false
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_signed
+argument_list|,
+comment|/* complain_on_overflow */
+literal|0
+argument_list|,
+comment|/* special_function */
+literal|"R_RBA_16"
+argument_list|,
+comment|/* name */
+name|true
+argument_list|,
+comment|/* partial_inplace */
+literal|0xffff
+argument_list|,
+comment|/* src_mask */
+literal|0xffff
+argument_list|,
+comment|/* dst_mask */
+name|false
+argument_list|)
+block|,
 comment|/* pcrel_offset */
 block|}
 decl_stmt|;
@@ -4323,7 +4754,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|_bfd_xcoff_rtype2howto
+name|xcoff_rtype2howto
 parameter_list|(
 name|relent
 parameter_list|,
@@ -4339,54 +4770,101 @@ modifier|*
 name|internal
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|internal
+operator|->
+name|r_type
+operator|>
+name|R_RBRC
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* Default howto layout works most of the time */
 name|relent
 operator|->
 name|howto
 operator|=
-name|xcoff_howto_table
-operator|+
-name|internal
-operator|->
-name|r_type
-expr_stmt|;
-comment|/* Check for relocs we don't know of.  */
-if|if
-condition|(
-name|internal
-operator|->
-name|r_type
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|xcoff_howto_table
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
+operator|&
 name|xcoff_howto_table
 index|[
-literal|0
-index|]
-argument_list|)
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|internal
 operator|->
 name|r_type
-operator|!=
+index|]
+expr_stmt|;
+comment|/* Special case some 16 bit reoloc */
+if|if
+condition|(
+literal|15
+operator|==
+operator|(
+name|internal
+operator|->
+name|r_size
+operator|&
+literal|0x1f
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|R_BA
+operator|==
+name|internal
+operator|->
+name|r_type
+condition|)
 name|relent
 operator|->
 name|howto
-operator|->
-name|type
-condition|)
-name|abort
-argument_list|()
+operator|=
+operator|&
+name|xcoff_howto_table
+index|[
+literal|0x1c
+index|]
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|R_RBR
+operator|==
+name|internal
+operator|->
+name|r_type
+condition|)
+name|relent
+operator|->
+name|howto
+operator|=
+operator|&
+name|xcoff_howto_table
+index|[
+literal|0x1d
+index|]
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|R_RBA
+operator|==
+name|internal
+operator|->
+name|r_type
+condition|)
+name|relent
+operator|->
+name|howto
+operator|=
+operator|&
+name|xcoff_howto_table
+index|[
+literal|0x1e
+index|]
+expr_stmt|;
+block|}
 comment|/* The r_size field of an XCOFF reloc encodes the bitsize of the      relocation, as well as indicating whether it is signed or not.      Doublecheck that the relocation information gathered from the      type matches this information.  The bitsize is not significant      for R_REF relocs.  */
 if|if
 condition|(
@@ -4414,7 +4892,7 @@ name|internal
 operator|->
 name|r_size
 operator|&
-literal|0x3f
+literal|0x1f
 operator|)
 operator|+
 literal|1
@@ -4423,12 +4901,6 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if ((internal->r_size& 0x80) != 0       ? (relent->howto->complain_on_overflow != complain_overflow_signed)       : (relent->howto->complain_on_overflow != complain_overflow_bitfield))     abort ();
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -4466,6 +4938,16 @@ literal|0xa
 index|]
 return|;
 case|case
+name|BFD_RELOC_PPC_BA16
+case|:
+return|return
+operator|&
+name|xcoff_howto_table
+index|[
+literal|0x1c
+index|]
+return|;
+case|case
 name|BFD_RELOC_PPC_BA26
 case|:
 return|return
@@ -4498,16 +4980,6 @@ index|[
 literal|0
 index|]
 return|;
-case|case
-name|BFD_RELOC_64
-case|:
-return|return
-operator|&
-name|xcoff_howto_table
-index|[
-literal|0x1c
-index|]
-return|;
 default|default:
 return|return
 name|NULL
@@ -4526,6 +4998,37 @@ end_comment
 begin_comment
 comment|/* XCOFF archives use this as a magic string.  Note that both strings    have the same length.  */
 end_comment
+
+begin_comment
+comment|/* Set the magic for archive.  */
+end_comment
+
+begin_function
+name|boolean
+name|bfd_xcoff_ar_archive_set_magic
+parameter_list|(
+name|abfd
+parameter_list|,
+name|magic
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|char
+modifier|*
+name|magic
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+comment|/* Not supported yet.  */
+return|return
+name|false
+return|;
+comment|/* bfd_xcoff_archive_set_magic (abfd, magic); */
+block|}
+end_function
 
 begin_comment
 comment|/* Read in the armap of an XCOFF archive.  */
@@ -5340,6 +5843,11 @@ modifier|*
 name|abfd
 decl_stmt|;
 block|{
+name|struct
+name|artdata
+modifier|*
+name|tdata_hold
+decl_stmt|;
 name|char
 name|magic
 index|[
@@ -5348,6 +5856,8 @@ index|]
 decl_stmt|;
 name|bfd_size_type
 name|amt
+init|=
+name|SXCOFFARMAG
 decl_stmt|;
 if|if
 condition|(
@@ -5358,15 +5868,12 @@ name|PTR
 operator|)
 name|magic
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-name|SXCOFFARMAG
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-name|SXCOFFARMAG
+name|amt
 condition|)
 block|{
 if|if
@@ -5419,7 +5926,13 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/* We are setting bfd_ardata(abfd) here, but since bfd_ardata      involves a cast, we can't do it as the left operand of      assignment.  */
+name|tdata_hold
+operator|=
+name|bfd_ardata
+argument_list|(
+name|abfd
+argument_list|)
+expr_stmt|;
 name|amt
 operator|=
 sizeof|sizeof
@@ -5428,11 +5941,10 @@ expr|struct
 name|artdata
 argument_list|)
 expr_stmt|;
+name|bfd_ardata
+argument_list|(
 name|abfd
-operator|->
-name|tdata
-operator|.
-name|aout_ar_data
+argument_list|)
 operator|=
 operator|(
 expr|struct
@@ -5460,9 +5972,9 @@ operator|*
 operator|)
 name|NULL
 condition|)
-return|return
-name|NULL
-return|;
+goto|goto
+name|error_ret_restore
+goto|;
 name|bfd_ardata
 argument_list|(
 name|abfd
@@ -5528,6 +6040,12 @@ name|SXCOFFARMAG
 argument_list|)
 expr_stmt|;
 comment|/* Now read the rest of the file header.  */
+name|amt
+operator|=
+name|SIZEOF_AR_FILE_HDR
+operator|-
+name|SXCOFFARMAG
+expr_stmt|;
 if|if
 condition|(
 name|bfd_bread
@@ -5540,19 +6058,12 @@ name|hdr
 operator|.
 name|memoff
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-name|SIZEOF_AR_FILE_HDR
-operator|-
-name|SXCOFFARMAG
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-name|SIZEOF_AR_FILE_HDR
-operator|-
-name|SXCOFFARMAG
+name|amt
 condition|)
 block|{
 if|if
@@ -5567,9 +6078,9 @@ argument_list|(
 name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
+goto|goto
+name|error_ret
+goto|;
 block|}
 name|bfd_ardata
 argument_list|(
@@ -5623,9 +6134,9 @@ name|tdata
 operator|==
 name|NULL
 condition|)
-return|return
-name|NULL
-return|;
+goto|goto
+name|error_ret
+goto|;
 name|memcpy
 argument_list|(
 name|bfd_ardata
@@ -5662,6 +6173,12 @@ name|SXCOFFARMAG
 argument_list|)
 expr_stmt|;
 comment|/* Now read the rest of the file header.  */
+name|amt
+operator|=
+name|SIZEOF_AR_FILE_HDR_BIG
+operator|-
+name|SXCOFFARMAG
+expr_stmt|;
 if|if
 condition|(
 name|bfd_bread
@@ -5674,19 +6191,12 @@ name|hdr
 operator|.
 name|memoff
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-name|SIZEOF_AR_FILE_HDR_BIG
-operator|-
-name|SXCOFFARMAG
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-name|SIZEOF_AR_FILE_HDR_BIG
-operator|-
-name|SXCOFFARMAG
+name|amt
 condition|)
 block|{
 if|if
@@ -5701,11 +6211,10 @@ argument_list|(
 name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
+goto|goto
+name|error_ret
+goto|;
 block|}
-comment|/* XXX This actually has to be a call to strtoll (at least on 32-bit 	 machines) since the field width is 20 and there numbers with more 	 than 32 bits can be represented.  */
 name|bfd_ardata
 argument_list|(
 name|abfd
@@ -5713,18 +6222,19 @@ argument_list|)
 operator|->
 name|first_file_filepos
 operator|=
-name|strtol
+name|bfd_scan_vma
 argument_list|(
 name|hdr
 operator|.
 name|firstmemoff
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
 operator|)
-name|NULL
+literal|0
 argument_list|,
 literal|10
 argument_list|)
@@ -5758,9 +6268,9 @@ name|tdata
 operator|==
 name|NULL
 condition|)
-return|return
-name|NULL
-return|;
+goto|goto
+name|error_ret
+goto|;
 name|memcpy
 argument_list|(
 name|bfd_ardata
@@ -5786,6 +6296,8 @@ name|abfd
 argument_list|)
 condition|)
 block|{
+name|error_ret
+label|:
 name|bfd_release
 argument_list|(
 name|abfd
@@ -5796,18 +6308,14 @@ name|abfd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|error_ret_restore
+label|:
+name|bfd_ardata
+argument_list|(
 name|abfd
-operator|->
-name|tdata
-operator|.
-name|aout_ar_data
+argument_list|)
 operator|=
-operator|(
-expr|struct
-name|artdata
-operator|*
-operator|)
-name|NULL
+name|tdata_hold
 expr_stmt|;
 return|return
 name|NULL
@@ -7537,6 +8045,318 @@ end_define
 begin_function
 specifier|static
 name|boolean
+name|do_pad
+parameter_list|(
+name|abfd
+parameter_list|,
+name|number
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|unsigned
+name|int
+name|number
+decl_stmt|;
+block|{
+name|bfd_byte
+name|b
+init|=
+literal|0
+decl_stmt|;
+comment|/* Limit pad to<= 4096.  */
+if|if
+condition|(
+name|number
+operator|>
+literal|4096
+condition|)
+return|return
+name|false
+return|;
+while|while
+condition|(
+name|number
+operator|--
+condition|)
+if|if
+condition|(
+name|bfd_bwrite
+argument_list|(
+operator|&
+name|b
+argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
+literal|1
+argument_list|,
+name|abfd
+argument_list|)
+operator|!=
+literal|1
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|boolean
+name|do_copy
+parameter_list|(
+name|out_bfd
+parameter_list|,
+name|in_bfd
+parameter_list|)
+name|bfd
+modifier|*
+name|out_bfd
+decl_stmt|;
+name|bfd
+modifier|*
+name|in_bfd
+decl_stmt|;
+block|{
+name|bfd_size_type
+name|remaining
+decl_stmt|;
+name|bfd_byte
+name|buffer
+index|[
+name|DEFAULT_BUFFERSIZE
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|bfd_seek
+argument_list|(
+name|in_bfd
+argument_list|,
+operator|(
+name|file_ptr
+operator|)
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|false
+return|;
+name|remaining
+operator|=
+name|arelt_size
+argument_list|(
+name|in_bfd
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|remaining
+operator|>=
+name|DEFAULT_BUFFERSIZE
+condition|)
+block|{
+if|if
+condition|(
+name|bfd_bread
+argument_list|(
+name|buffer
+argument_list|,
+name|DEFAULT_BUFFERSIZE
+argument_list|,
+name|in_bfd
+argument_list|)
+operator|!=
+name|DEFAULT_BUFFERSIZE
+operator|||
+name|bfd_bwrite
+argument_list|(
+name|buffer
+argument_list|,
+name|DEFAULT_BUFFERSIZE
+argument_list|,
+name|out_bfd
+argument_list|)
+operator|!=
+name|DEFAULT_BUFFERSIZE
+condition|)
+return|return
+name|false
+return|;
+name|remaining
+operator|-=
+name|DEFAULT_BUFFERSIZE
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|remaining
+condition|)
+block|{
+if|if
+condition|(
+name|bfd_bread
+argument_list|(
+name|buffer
+argument_list|,
+name|remaining
+argument_list|,
+name|in_bfd
+argument_list|)
+operator|!=
+name|remaining
+operator|||
+name|bfd_bwrite
+argument_list|(
+name|buffer
+argument_list|,
+name|remaining
+argument_list|,
+name|out_bfd
+argument_list|)
+operator|!=
+name|remaining
+condition|)
+return|return
+name|false
+return|;
+block|}
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|boolean
+name|do_shared_object_padding
+parameter_list|(
+name|out_bfd
+parameter_list|,
+name|in_bfd
+parameter_list|,
+name|offset
+parameter_list|,
+name|ar_header_size
+parameter_list|)
+name|bfd
+modifier|*
+name|out_bfd
+decl_stmt|;
+name|bfd
+modifier|*
+name|in_bfd
+decl_stmt|;
+name|ufile_ptr
+modifier|*
+name|offset
+decl_stmt|;
+name|int
+name|ar_header_size
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|bfd_check_format
+argument_list|(
+name|in_bfd
+argument_list|,
+name|bfd_object
+argument_list|)
+operator|&&
+name|bfd_get_flavour
+argument_list|(
+name|in_bfd
+argument_list|)
+operator|==
+name|bfd_target_xcoff_flavour
+operator|&&
+operator|(
+name|in_bfd
+operator|->
+name|flags
+operator|&
+name|DYNAMIC
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|bfd_size_type
+name|pad
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|text_align_power
+decl_stmt|;
+name|text_align_power
+operator|=
+name|bfd_xcoff_text_align_power
+argument_list|(
+name|in_bfd
+argument_list|)
+expr_stmt|;
+name|pad
+operator|=
+literal|1
+operator|<<
+name|text_align_power
+expr_stmt|;
+name|pad
+operator|-=
+operator|(
+operator|*
+name|offset
+operator|+
+name|ar_header_size
+operator|)
+operator|&
+operator|(
+name|pad
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|do_pad
+argument_list|(
+name|out_bfd
+argument_list|,
+name|pad
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+operator|*
+name|offset
+operator|+=
+name|pad
+expr_stmt|;
+block|}
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|boolean
 name|xcoff_write_armap_big
 parameter_list|(
 name|abfd
@@ -7845,7 +8665,7 @@ operator|(
 name|bfd_byte
 operator|*
 operator|)
-name|bfd_malloc
+name|bfd_zmalloc
 argument_list|(
 name|symbol_table_size
 argument_list|)
@@ -7859,15 +8679,6 @@ condition|)
 return|return
 name|false
 return|;
-name|memset
-argument_list|(
-name|symbol_table
-argument_list|,
-literal|0
-argument_list|,
-name|symbol_table_size
-argument_list|)
-expr_stmt|;
 name|hdr
 operator|=
 operator|(
@@ -8343,7 +9154,7 @@ operator|(
 name|bfd_byte
 operator|*
 operator|)
-name|bfd_malloc
+name|bfd_zmalloc
 argument_list|(
 name|symbol_table_size
 argument_list|)
@@ -8357,15 +9168,6 @@ condition|)
 return|return
 name|false
 return|;
-name|memset
-argument_list|(
-name|symbol_table
-argument_list|,
-literal|0
-argument_list|,
-name|symbol_table_size
-argument_list|)
-expr_stmt|;
 name|hdr
 operator|=
 operator|(
@@ -9577,108 +10379,34 @@ condition|)
 return|return
 name|false
 return|;
-while|while
-condition|(
-name|remaining
-operator|!=
-literal|0
-condition|)
-block|{
-name|bfd_size_type
-name|amt
-decl_stmt|;
-name|bfd_byte
-name|buffer
-index|[
-name|DEFAULT_BUFFERSIZE
-index|]
-decl_stmt|;
-name|amt
-operator|=
-sizeof|sizeof
-name|buffer
-expr_stmt|;
 if|if
 condition|(
-name|amt
-operator|>
-name|remaining
-condition|)
-name|amt
-operator|=
-name|remaining
-expr_stmt|;
-if|if
-condition|(
-name|bfd_bread
+operator|!
+name|do_copy
 argument_list|(
-name|buffer
-argument_list|,
-name|amt
+name|abfd
 argument_list|,
 name|sub
 argument_list|)
-operator|!=
-name|amt
-operator|||
-name|bfd_bwrite
-argument_list|(
-name|buffer
-argument_list|,
-name|amt
-argument_list|,
-name|abfd
-argument_list|)
-operator|!=
-name|amt
 condition|)
 return|return
 name|false
 return|;
-name|remaining
-operator|-=
-name|amt
-expr_stmt|;
-block|}
 if|if
 condition|(
-operator|(
+operator|!
+name|do_pad
+argument_list|(
+name|abfd
+argument_list|,
 name|size
 operator|&
 literal|1
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|bfd_byte
-name|b
-decl_stmt|;
-name|b
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-name|bfd_bwrite
-argument_list|(
-operator|&
-name|b
-argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-literal|1
-argument_list|,
-name|abfd
 argument_list|)
-operator|!=
-literal|1
 condition|)
 return|return
 name|false
 return|;
-block|}
 block|}
 name|sprintf
 argument_list|(
@@ -10121,46 +10849,19 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
+operator|!
+name|do_pad
+argument_list|(
+name|abfd
+argument_list|,
 name|size
 operator|&
 literal|1
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|bfd_byte
-name|b
-decl_stmt|;
-name|b
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-name|bfd_bwrite
-argument_list|(
-operator|(
-name|PTR
-operator|)
-operator|&
-name|b
-argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-literal|1
-argument_list|,
-name|abfd
 argument_list|)
-operator|!=
-literal|1
 condition|)
 return|return
 name|false
 return|;
-block|}
 comment|/* Write out the armap, if appropriate.  */
 if|if
 condition|(
@@ -10382,6 +11083,16 @@ decl_stmt|;
 name|bfd_vma
 name|member_table_size
 decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|fhdr
+argument_list|,
+literal|0
+argument_list|,
+name|SIZEOF_AR_FILE_HDR_BIG
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|fhdr
@@ -10393,25 +11104,37 @@ argument_list|,
 name|SXCOFFARMAG
 argument_list|)
 expr_stmt|;
-name|PRINT20
+if|if
+condition|(
+name|bfd_seek
 argument_list|(
-name|fhdr
-operator|.
-name|firstmemoff
+name|abfd
 argument_list|,
+operator|(
+name|file_ptr
+operator|)
 name|SIZEOF_AR_FILE_HDR_BIG
-argument_list|)
-expr_stmt|;
-name|PRINT20
-argument_list|(
-name|fhdr
-operator|.
-name|freeoff
 argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
 literal|0
+condition|)
+return|return
+name|false
+return|;
+comment|/* Calculate count and total_namlen.  */
+name|makemap
+operator|=
+name|bfd_has_map
+argument_list|(
+name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* Calculate count and total_namlen */
+name|hasobjects
+operator|=
+name|false
+expr_stmt|;
 for|for
 control|(
 name|current_bfd
@@ -10441,6 +11164,7 @@ operator|,
 name|count
 operator|++
 control|)
+block|{
 name|total_namlen
 operator|+=
 name|strlen
@@ -10453,6 +11177,25 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|makemap
+operator|&&
+operator|!
+name|hasobjects
+operator|&&
+name|bfd_check_format
+argument_list|(
+name|current_bfd
+argument_list|,
+name|bfd_object
+argument_list|)
+condition|)
+name|hasobjects
+operator|=
+name|true
+expr_stmt|;
+block|}
 name|offsets
 operator|=
 name|NULL
@@ -10488,36 +11231,6 @@ return|return
 name|false
 return|;
 block|}
-if|if
-condition|(
-name|bfd_seek
-argument_list|(
-name|abfd
-argument_list|,
-operator|(
-name|file_ptr
-operator|)
-name|SIZEOF_AR_FILE_HDR_BIG
-argument_list|,
-name|SEEK_SET
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-name|false
-return|;
-name|makemap
-operator|=
-name|bfd_has_map
-argument_list|(
-name|abfd
-argument_list|)
-expr_stmt|;
-name|hasobjects
-operator|=
-name|false
-expr_stmt|;
 name|prevoff
 operator|=
 literal|0
@@ -10568,28 +11281,6 @@ decl_stmt|;
 name|bfd_size_type
 name|remaining
 decl_stmt|;
-if|if
-condition|(
-name|makemap
-operator|&&
-operator|!
-name|hasobjects
-condition|)
-block|{
-if|if
-condition|(
-name|bfd_check_format
-argument_list|(
-name|current_bfd
-argument_list|,
-name|bfd_object
-argument_list|)
-condition|)
-name|hasobjects
-operator|=
-name|true
-expr_stmt|;
-block|}
 name|name
 operator|=
 name|normalize_filename
@@ -10835,6 +11526,29 @@ name|abfd
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Check for xcoff shared objects. 	 Their text section needs to be aligned wrt the archive file position. 	 This requires extra padding before the archive header.  */
+if|if
+condition|(
+operator|!
+name|do_shared_object_padding
+argument_list|(
+name|abfd
+argument_list|,
+name|current_bfd
+argument_list|,
+operator|&
+name|nextoff
+argument_list|,
+name|SIZEOF_AR_HDR_BIG
+operator|+
+name|namlen
+operator|+
+name|SXCOFFARFMAG
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
 name|offsets
 index|[
 name|i
@@ -10944,109 +11658,52 @@ condition|)
 return|return
 name|false
 return|;
-while|while
-condition|(
-name|remaining
-operator|!=
-literal|0
-condition|)
-block|{
-name|bfd_size_type
-name|amt
-decl_stmt|;
-name|bfd_byte
-name|buffer
-index|[
-name|DEFAULT_BUFFERSIZE
-index|]
-decl_stmt|;
-name|amt
-operator|=
-sizeof|sizeof
-name|buffer
-expr_stmt|;
 if|if
 condition|(
-name|amt
-operator|>
-name|remaining
-condition|)
-name|amt
-operator|=
-name|remaining
-expr_stmt|;
-if|if
-condition|(
-name|bfd_bread
+operator|!
+name|do_copy
 argument_list|(
-name|buffer
-argument_list|,
-name|amt
+name|abfd
 argument_list|,
 name|current_bfd
 argument_list|)
-operator|!=
-name|amt
-operator|||
-name|bfd_bwrite
-argument_list|(
-name|buffer
-argument_list|,
-name|amt
-argument_list|,
-name|abfd
-argument_list|)
-operator|!=
-name|amt
 condition|)
 return|return
 name|false
 return|;
-name|remaining
-operator|-=
-name|amt
-expr_stmt|;
-block|}
 if|if
 condition|(
-operator|(
+operator|!
+name|do_pad
+argument_list|(
+name|abfd
+argument_list|,
 name|size
 operator|&
 literal|1
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|bfd_byte
-name|b
-decl_stmt|;
-name|b
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-name|bfd_bwrite
-argument_list|(
-operator|&
-name|b
-argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-literal|1
-argument_list|,
-name|abfd
 argument_list|)
-operator|!=
-literal|1
 condition|)
 return|return
 name|false
 return|;
 block|}
-block|}
+if|if
+condition|(
+name|count
+condition|)
+block|{
+name|PRINT20
+argument_list|(
+name|fhdr
+operator|.
+name|firstmemoff
+argument_list|,
+name|offsets
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 name|PRINT20
 argument_list|(
 name|fhdr
@@ -11056,6 +11713,7 @@ argument_list|,
 name|prevoff
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Write out the member table.        Layout :        standard big archive header      0x0000                   ar_size   [0x14]      0x0014                   ar_nxtmem [0x14]      0x0028                   ar_prvmem [0x14]      0x003C                   ar_date   [0x0C]      0x0048                   ar_uid    [0x0C]      0x0054                   ar_gid    [0x0C]      0x0060                   ar_mod    [0x0C]      0x006C                   ar_namelen[0x04]      0x0070                   ar_fmag   [0x02]       Member table       0x0072                   count     [0x14]      0x0086                   offsets   [0x14 * counts]      0x0086 + 0x14 * counts   names     [??]      ??                       pad to even bytes.    */
 name|BFD_ASSERT
 argument_list|(
@@ -11099,7 +11757,7 @@ operator|(
 name|bfd_byte
 operator|*
 operator|)
-name|bfd_malloc
+name|bfd_zmalloc
 argument_list|(
 name|member_table_size
 argument_list|)
@@ -11113,15 +11771,6 @@ condition|)
 return|return
 name|false
 return|;
-name|memset
-argument_list|(
-name|member_table
-argument_list|,
-literal|0
-argument_list|,
-name|member_table_size
-argument_list|)
-expr_stmt|;
 name|hdr
 operator|=
 operator|(
@@ -12318,6 +12967,228 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|xcoff_swap_reloc_in
+parameter_list|(
+name|abfd
+parameter_list|,
+name|s
+parameter_list|,
+name|d
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|PTR
+name|s
+decl_stmt|;
+name|PTR
+name|d
+decl_stmt|;
+block|{
+name|struct
+name|external_reloc
+modifier|*
+name|src
+init|=
+operator|(
+expr|struct
+name|external_reloc
+operator|*
+operator|)
+name|s
+decl_stmt|;
+name|struct
+name|internal_reloc
+modifier|*
+name|dst
+init|=
+operator|(
+expr|struct
+name|internal_reloc
+operator|*
+operator|)
+name|d
+decl_stmt|;
+name|memset
+argument_list|(
+name|dst
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|internal_reloc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dst
+operator|->
+name|r_vaddr
+operator|=
+name|bfd_get_32
+argument_list|(
+name|abfd
+argument_list|,
+name|src
+operator|->
+name|r_vaddr
+argument_list|)
+expr_stmt|;
+name|dst
+operator|->
+name|r_symndx
+operator|=
+name|bfd_get_32
+argument_list|(
+name|abfd
+argument_list|,
+name|src
+operator|->
+name|r_symndx
+argument_list|)
+expr_stmt|;
+name|dst
+operator|->
+name|r_size
+operator|=
+name|bfd_get_8
+argument_list|(
+name|abfd
+argument_list|,
+name|src
+operator|->
+name|r_size
+argument_list|)
+expr_stmt|;
+name|dst
+operator|->
+name|r_type
+operator|=
+name|bfd_get_8
+argument_list|(
+name|abfd
+argument_list|,
+name|src
+operator|->
+name|r_type
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|unsigned
+name|int
+name|xcoff_swap_reloc_out
+parameter_list|(
+name|abfd
+parameter_list|,
+name|s
+parameter_list|,
+name|d
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|PTR
+name|s
+decl_stmt|;
+name|PTR
+name|d
+decl_stmt|;
+block|{
+name|struct
+name|internal_reloc
+modifier|*
+name|src
+init|=
+operator|(
+expr|struct
+name|internal_reloc
+operator|*
+operator|)
+name|s
+decl_stmt|;
+name|struct
+name|external_reloc
+modifier|*
+name|dst
+init|=
+operator|(
+expr|struct
+name|external_reloc
+operator|*
+operator|)
+name|d
+decl_stmt|;
+name|bfd_put_32
+argument_list|(
+name|abfd
+argument_list|,
+name|src
+operator|->
+name|r_vaddr
+argument_list|,
+name|dst
+operator|->
+name|r_vaddr
+argument_list|)
+expr_stmt|;
+name|bfd_put_32
+argument_list|(
+name|abfd
+argument_list|,
+name|src
+operator|->
+name|r_symndx
+argument_list|,
+name|dst
+operator|->
+name|r_symndx
+argument_list|)
+expr_stmt|;
+name|bfd_put_8
+argument_list|(
+name|abfd
+argument_list|,
+name|src
+operator|->
+name|r_type
+argument_list|,
+name|dst
+operator|->
+name|r_type
+argument_list|)
+expr_stmt|;
+name|bfd_put_8
+argument_list|(
+name|abfd
+argument_list|,
+name|src
+operator|->
+name|r_size
+argument_list|,
+name|dst
+operator|->
+name|r_size
+argument_list|)
+expr_stmt|;
+return|return
+name|bfd_coff_relsz
+argument_list|(
+name|abfd
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Swap in the ldrel structure.  */
 end_comment
@@ -12521,12 +13392,1876 @@ end_function
 begin_escape
 end_escape
 
-begin_comment
-comment|/* This is the relocation function for the RS/6000/POWER/PowerPC.    This is currently the only processor which uses XCOFF; I hope that    will never change.  */
-end_comment
+begin_function
+name|boolean
+name|xcoff_reloc_type_noop
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|input_section
+parameter_list|,
+name|output_bfd
+parameter_list|,
+name|rel
+parameter_list|,
+name|sym
+parameter_list|,
+name|howto
+parameter_list|,
+name|val
+parameter_list|,
+name|addend
+parameter_list|,
+name|relocation
+parameter_list|,
+name|contents
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|asection
+modifier|*
+name|input_section
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd
+modifier|*
+name|output_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_reloc
+modifier|*
+name|rel
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_syment
+modifier|*
+name|sym
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+name|val
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+name|addend
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+modifier|*
+name|relocation
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|contents
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_function
+name|boolean
+name|xcoff_reloc_type_fail
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|input_section
+parameter_list|,
+name|output_bfd
+parameter_list|,
+name|rel
+parameter_list|,
+name|sym
+parameter_list|,
+name|howto
+parameter_list|,
+name|val
+parameter_list|,
+name|addend
+parameter_list|,
+name|relocation
+parameter_list|,
+name|contents
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+decl_stmt|;
+name|asection
+modifier|*
+name|input_section
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd
+modifier|*
+name|output_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_reloc
+modifier|*
+name|rel
+decl_stmt|;
+name|struct
+name|internal_syment
+modifier|*
+name|sym
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+name|val
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+name|addend
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+modifier|*
+name|relocation
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|contents
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
+argument_list|(
+name|_
+argument_list|(
+literal|"%s: unsupported relocation type 0x%02x"
+argument_list|)
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|input_bfd
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|rel
+operator|->
+name|r_type
+argument_list|)
+expr_stmt|;
+name|bfd_set_error
+argument_list|(
+name|bfd_error_bad_value
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_function
+name|boolean
+name|xcoff_reloc_type_pos
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|input_section
+parameter_list|,
+name|output_bfd
+parameter_list|,
+name|rel
+parameter_list|,
+name|sym
+parameter_list|,
+name|howto
+parameter_list|,
+name|val
+parameter_list|,
+name|addend
+parameter_list|,
+name|relocation
+parameter_list|,
+name|contents
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|asection
+modifier|*
+name|input_section
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd
+modifier|*
+name|output_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_reloc
+modifier|*
+name|rel
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_syment
+modifier|*
+name|sym
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
+name|bfd_vma
+name|addend
+decl_stmt|;
+name|bfd_vma
+modifier|*
+name|relocation
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|contents
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+operator|*
+name|relocation
+operator|=
+name|val
+operator|+
+name|addend
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_function
+name|boolean
+name|xcoff_reloc_type_neg
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|input_section
+parameter_list|,
+name|output_bfd
+parameter_list|,
+name|rel
+parameter_list|,
+name|sym
+parameter_list|,
+name|howto
+parameter_list|,
+name|val
+parameter_list|,
+name|addend
+parameter_list|,
+name|relocation
+parameter_list|,
+name|contents
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|asection
+modifier|*
+name|input_section
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd
+modifier|*
+name|output_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_reloc
+modifier|*
+name|rel
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_syment
+modifier|*
+name|sym
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
+name|bfd_vma
+name|addend
+decl_stmt|;
+name|bfd_vma
+modifier|*
+name|relocation
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|contents
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+operator|*
+name|relocation
+operator|=
+name|addend
+operator|-
+name|val
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_function
+name|boolean
+name|xcoff_reloc_type_rel
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|input_section
+parameter_list|,
+name|output_bfd
+parameter_list|,
+name|rel
+parameter_list|,
+name|sym
+parameter_list|,
+name|howto
+parameter_list|,
+name|val
+parameter_list|,
+name|addend
+parameter_list|,
+name|relocation
+parameter_list|,
+name|contents
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|asection
+modifier|*
+name|input_section
+decl_stmt|;
+name|bfd
+modifier|*
+name|output_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_reloc
+modifier|*
+name|rel
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_syment
+modifier|*
+name|sym
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
+name|bfd_vma
+name|addend
+decl_stmt|;
+name|bfd_vma
+modifier|*
+name|relocation
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|contents
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|howto
+operator|->
+name|pc_relative
+operator|=
+name|true
+expr_stmt|;
+comment|/* A PC relative reloc includes the section address.  */
+name|addend
+operator|+=
+name|input_section
+operator|->
+name|vma
+expr_stmt|;
+operator|*
+name|relocation
+operator|=
+name|val
+operator|+
+name|addend
+expr_stmt|;
+operator|*
+name|relocation
+operator|-=
+operator|(
+name|input_section
+operator|->
+name|output_section
+operator|->
+name|vma
+operator|+
+name|input_section
+operator|->
+name|output_offset
+operator|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_function
+name|boolean
+name|xcoff_reloc_type_toc
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|input_section
+parameter_list|,
+name|output_bfd
+parameter_list|,
+name|rel
+parameter_list|,
+name|sym
+parameter_list|,
+name|howto
+parameter_list|,
+name|val
+parameter_list|,
+name|addend
+parameter_list|,
+name|relocation
+parameter_list|,
+name|contents
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+decl_stmt|;
+name|asection
+modifier|*
+name|input_section
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd
+modifier|*
+name|output_bfd
+decl_stmt|;
+name|struct
+name|internal_reloc
+modifier|*
+name|rel
+decl_stmt|;
+name|struct
+name|internal_syment
+modifier|*
+name|sym
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
+name|bfd_vma
+name|addend
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+modifier|*
+name|relocation
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|contents
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|struct
+name|xcoff_link_hash_entry
+modifier|*
+name|h
+decl_stmt|;
+if|if
+condition|(
+literal|0
+operator|>
+name|rel
+operator|->
+name|r_symndx
+condition|)
+return|return
+name|false
+return|;
+name|h
+operator|=
+name|obj_xcoff_sym_hashes
+argument_list|(
+name|input_bfd
+argument_list|)
+index|[
+name|rel
+operator|->
+name|r_symndx
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|!=
+name|NULL
+operator|&&
+name|h
+operator|->
+name|smclas
+operator|!=
+name|XMC_TD
+condition|)
+block|{
+if|if
+condition|(
+name|h
+operator|->
+name|toc_section
+operator|==
+name|NULL
+condition|)
+block|{
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
+argument_list|(
+name|_
+argument_list|(
+literal|"%s: TOC reloc at 0x%x to symbol `%s' with no TOC entry"
+argument_list|)
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|input_bfd
+argument_list|)
+argument_list|,
+name|rel
+operator|->
+name|r_vaddr
+argument_list|,
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|string
+argument_list|)
+expr_stmt|;
+name|bfd_set_error
+argument_list|(
+name|bfd_error_bad_value
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+name|BFD_ASSERT
+argument_list|(
+operator|(
+name|h
+operator|->
+name|flags
+operator|&
+name|XCOFF_SET_TOC
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+operator|(
+name|h
+operator|->
+name|toc_section
+operator|->
+name|output_section
+operator|->
+name|vma
+operator|+
+name|h
+operator|->
+name|toc_section
+operator|->
+name|output_offset
+operator|)
+expr_stmt|;
+block|}
+operator|*
+name|relocation
+operator|=
+operator|(
+operator|(
+name|val
+operator|-
+name|xcoff_data
+argument_list|(
+name|output_bfd
+argument_list|)
+operator|->
+name|toc
+operator|)
+operator|-
+operator|(
+name|sym
+operator|->
+name|n_value
+operator|-
+name|xcoff_data
+argument_list|(
+name|input_bfd
+argument_list|)
+operator|->
+name|toc
+operator|)
+operator|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_function
+name|boolean
+name|xcoff_reloc_type_ba
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|input_section
+parameter_list|,
+name|output_bfd
+parameter_list|,
+name|rel
+parameter_list|,
+name|sym
+parameter_list|,
+name|howto
+parameter_list|,
+name|val
+parameter_list|,
+name|addend
+parameter_list|,
+name|relocation
+parameter_list|,
+name|contents
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|asection
+modifier|*
+name|input_section
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd
+modifier|*
+name|output_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_reloc
+modifier|*
+name|rel
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_syment
+modifier|*
+name|sym
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
+name|bfd_vma
+name|addend
+decl_stmt|;
+name|bfd_vma
+modifier|*
+name|relocation
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|contents
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|howto
+operator|->
+name|src_mask
+operator|&=
+operator|~
+literal|3
+expr_stmt|;
+name|howto
+operator|->
+name|dst_mask
+operator|=
+name|howto
+operator|->
+name|src_mask
+expr_stmt|;
+operator|*
+name|relocation
+operator|=
+name|val
+operator|+
+name|addend
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
+name|boolean
+name|xcoff_reloc_type_br
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|input_section
+parameter_list|,
+name|output_bfd
+parameter_list|,
+name|rel
+parameter_list|,
+name|sym
+parameter_list|,
+name|howto
+parameter_list|,
+name|val
+parameter_list|,
+name|addend
+parameter_list|,
+name|relocation
+parameter_list|,
+name|contents
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+decl_stmt|;
+name|asection
+modifier|*
+name|input_section
+decl_stmt|;
+name|bfd
+modifier|*
+name|output_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_reloc
+modifier|*
+name|rel
+decl_stmt|;
+name|struct
+name|internal_syment
+modifier|*
+name|sym
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
+name|bfd_vma
+name|addend
+decl_stmt|;
+name|bfd_vma
+modifier|*
+name|relocation
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|contents
+decl_stmt|;
+block|{
+name|struct
+name|xcoff_link_hash_entry
+modifier|*
+name|h
+decl_stmt|;
+if|if
+condition|(
+literal|0
+operator|>
+name|rel
+operator|->
+name|r_symndx
+condition|)
+return|return
+name|false
+return|;
+name|h
+operator|=
+name|obj_xcoff_sym_hashes
+argument_list|(
+name|input_bfd
+argument_list|)
+index|[
+name|rel
+operator|->
+name|r_symndx
+index|]
+expr_stmt|;
+comment|/* If we see an R_BR or R_RBR reloc which is jumping to global      linkage code, and it is followed by an appropriate cror nop      instruction, we replace the cror with lwz r2,20(r1).  This      restores the TOC after the glink code.  Contrariwise, if the      call is followed by a lwz r2,20(r1), but the call is not      going to global linkage code, we can replace the load with a      cror.  */
+if|if
+condition|(
+name|NULL
+operator|!=
+name|h
+operator|&&
+name|bfd_link_hash_defined
+operator|==
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|&&
+operator|(
+name|rel
+operator|->
+name|r_vaddr
+operator|-
+name|input_section
+operator|->
+name|vma
+operator|+
+literal|8
+operator|<=
+name|input_section
+operator|->
+name|_cooked_size
+operator|)
+condition|)
+block|{
+name|bfd_byte
+modifier|*
+name|pnext
+decl_stmt|;
+name|unsigned
+name|long
+name|next
+decl_stmt|;
+name|pnext
+operator|=
+name|contents
+operator|+
+operator|(
+name|rel
+operator|->
+name|r_vaddr
+operator|-
+name|input_section
+operator|->
+name|vma
+operator|)
+operator|+
+literal|4
+expr_stmt|;
+name|next
+operator|=
+name|bfd_get_32
+argument_list|(
+name|input_bfd
+argument_list|,
+name|pnext
+argument_list|)
+expr_stmt|;
+comment|/* The _ptrgl function is magic.  It is used by the AIX 	 compiler to call a function through a pointer.  */
+if|if
+condition|(
+name|h
+operator|->
+name|smclas
+operator|==
+name|XMC_GL
+operator|||
+name|strcmp
+argument_list|(
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|string
+argument_list|,
+literal|"._ptrgl"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|next
+operator|==
+literal|0x4def7b82
+comment|/* cror 15,15,15 */
+operator|||
+name|next
+operator|==
+literal|0x4ffffb82
+comment|/* cror 31,31,31 */
+operator|||
+name|next
+operator|==
+literal|0x60000000
+condition|)
+comment|/* ori r0,r0,0 */
+name|bfd_put_32
+argument_list|(
+name|input_bfd
+argument_list|,
+literal|0x80410014
+argument_list|,
+name|pnext
+argument_list|)
+expr_stmt|;
+comment|/* lwz r1,20(r1) */
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|next
+operator|==
+literal|0x80410014
+condition|)
+comment|/* lwz r1,20(r1) */
+name|bfd_put_32
+argument_list|(
+name|input_bfd
+argument_list|,
+literal|0x60000000
+argument_list|,
+name|pnext
+argument_list|)
+expr_stmt|;
+comment|/* ori r0,r0,0 */
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|NULL
+operator|!=
+name|h
+operator|&&
+name|bfd_link_hash_undefined
+operator|==
+name|h
+operator|->
+name|root
+operator|.
+name|type
+condition|)
+block|{
+comment|/* Normally, this relocation is against a defined symbol.  In the 	 case where this is a partial link and the output section offset 	 is greater than 2^25, the linker will return an invalid error  	 message that the relocation has been truncated.  Yes it has been 	 truncated but no it not important.  For this case, disable the  	 overflow checking. */
+name|howto
+operator|->
+name|complain_on_overflow
+operator|=
+name|complain_overflow_dont
+expr_stmt|;
+block|}
+name|howto
+operator|->
+name|pc_relative
+operator|=
+name|true
+expr_stmt|;
+name|howto
+operator|->
+name|src_mask
+operator|&=
+operator|~
+literal|3
+expr_stmt|;
+name|howto
+operator|->
+name|dst_mask
+operator|=
+name|howto
+operator|->
+name|src_mask
+expr_stmt|;
+comment|/* A PC relative reloc includes the section address.  */
+name|addend
+operator|+=
+name|input_section
+operator|->
+name|vma
+expr_stmt|;
+operator|*
+name|relocation
+operator|=
+name|val
+operator|+
+name|addend
+expr_stmt|;
+operator|*
+name|relocation
+operator|-=
+operator|(
+name|input_section
+operator|->
+name|output_section
+operator|->
+name|vma
+operator|+
+name|input_section
+operator|->
+name|output_offset
+operator|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_function
+name|boolean
+name|xcoff_reloc_type_crel
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|input_section
+parameter_list|,
+name|output_bfd
+parameter_list|,
+name|rel
+parameter_list|,
+name|sym
+parameter_list|,
+name|howto
+parameter_list|,
+name|val
+parameter_list|,
+name|addend
+parameter_list|,
+name|relocation
+parameter_list|,
+name|contents
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|asection
+modifier|*
+name|input_section
+decl_stmt|;
+name|bfd
+modifier|*
+name|output_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_reloc
+modifier|*
+name|rel
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|internal_syment
+modifier|*
+name|sym
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+decl_stmt|;
+name|bfd_vma
+name|val
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+name|addend
+decl_stmt|;
+name|bfd_vma
+modifier|*
+name|relocation
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|contents
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|howto
+operator|->
+name|pc_relative
+operator|=
+name|true
+expr_stmt|;
+name|howto
+operator|->
+name|src_mask
+operator|&=
+operator|~
+literal|3
+expr_stmt|;
+name|howto
+operator|->
+name|dst_mask
+operator|=
+name|howto
+operator|->
+name|src_mask
+expr_stmt|;
+comment|/* A PC relative reloc includes the section address.  */
+name|addend
+operator|+=
+name|input_section
+operator|->
+name|vma
+expr_stmt|;
+operator|*
+name|relocation
+operator|=
+name|val
+operator|+
+name|addend
+expr_stmt|;
+operator|*
+name|relocation
+operator|-=
+operator|(
+name|input_section
+operator|->
+name|output_section
+operator|->
+name|vma
+operator|+
+name|input_section
+operator|->
+name|output_offset
+operator|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|boolean
+name|xcoff_complain_overflow_dont_func
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|val
+parameter_list|,
+name|relocation
+parameter_list|,
+name|howto
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+name|val
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|bfd_vma
+name|relocation
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|boolean
+name|xcoff_complain_overflow_bitfield_func
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|val
+parameter_list|,
+name|relocation
+parameter_list|,
+name|howto
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
+name|bfd_vma
+name|relocation
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+decl_stmt|;
+block|{
+name|bfd_vma
+name|addrmask
+decl_stmt|,
+name|fieldmask
+decl_stmt|,
+name|signmask
+decl_stmt|,
+name|ss
+decl_stmt|;
+name|bfd_vma
+name|a
+decl_stmt|,
+name|b
+decl_stmt|,
+name|sum
+decl_stmt|;
+comment|/* Get the values to be added together.  For signed and unsigned      relocations, we assume that all values should be truncated to      the size of an address.  For bitfields, all the bits matter.      See also bfd_check_overflow.  */
+name|fieldmask
+operator|=
+name|N_ONES
+argument_list|(
+name|howto
+operator|->
+name|bitsize
+argument_list|)
+expr_stmt|;
+name|addrmask
+operator|=
+name|N_ONES
+argument_list|(
+name|bfd_arch_bits_per_address
+argument_list|(
+name|input_bfd
+argument_list|)
+argument_list|)
+operator||
+name|fieldmask
+expr_stmt|;
+name|a
+operator|=
+name|relocation
+expr_stmt|;
+name|b
+operator|=
+name|val
+operator|&
+name|howto
+operator|->
+name|src_mask
+expr_stmt|;
+comment|/* Much like unsigned, except no trimming with addrmask.  In      addition, the sum overflows if there is a carry out of      the bfd_vma, i.e., the sum is less than either input      operand.  */
+name|a
+operator|>>=
+name|howto
+operator|->
+name|rightshift
+expr_stmt|;
+name|b
+operator|>>=
+name|howto
+operator|->
+name|bitpos
+expr_stmt|;
+comment|/* Bitfields are sometimes used for signed numbers; for      example, a 13-bit field sometimes represents values in      0..8191 and sometimes represents values in -4096..4095.      If the field is signed and a is -4095 (0x1001) and b is      -1 (0x1fff), the sum is -4096 (0x1000), but (0x1001 +      0x1fff is 0x3000).  It's not clear how to handle this      everywhere, since there is not way to know how many bits      are significant in the relocation, but the original code      assumed that it was fully sign extended, and we will keep      that assumption.  */
+name|signmask
+operator|=
+operator|(
+name|fieldmask
+operator|>>
+literal|1
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|a
+operator|&
+operator|~
+name|fieldmask
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Some bits out of the field are set.  This might not 	 be a problem: if this is a signed bitfield, it is OK 	 iff all the high bits are set, including the sign 	 bit.  We'll try setting all but the most significant 	 bit in the original relocation value: if this is all 	 ones, we are OK, assuming a signed bitfield.  */
+name|ss
+operator|=
+operator|(
+name|signmask
+operator|<<
+name|howto
+operator|->
+name|rightshift
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ss
+operator||
+name|relocation
+operator|)
+operator|!=
+operator|~
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+condition|)
+return|return
+name|true
+return|;
+name|a
+operator|&=
+name|fieldmask
+expr_stmt|;
+block|}
+comment|/* We just assume (b& ~ fieldmask) == 0.  */
+comment|/* We explicitly permit wrap around if this relocation      covers the high bit of an address.  The Linux kernel      relies on it, and it is the only way to write assembler      code which can run when loaded at a location 0x80000000      away from the location at which it is linked.  */
+if|if
+condition|(
+name|howto
+operator|->
+name|bitsize
+operator|+
+name|howto
+operator|->
+name|rightshift
+operator|==
+name|bfd_arch_bits_per_address
+argument_list|(
+name|input_bfd
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+name|sum
+operator|=
+name|a
+operator|+
+name|b
+expr_stmt|;
+if|if
+condition|(
+name|sum
+operator|<
+name|a
+operator|||
+operator|(
+name|sum
+operator|&
+operator|~
+name|fieldmask
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* There was a carry out, or the field overflow.  Test 	 for signed operands again.  Here is the overflow test 	 is as for complain_overflow_signed.  */
+if|if
+condition|(
+operator|(
+operator|(
+operator|~
+operator|(
+name|a
+operator|^
+name|b
+operator|)
+operator|)
+operator|&
+operator|(
+name|a
+operator|^
+name|sum
+operator|)
+operator|)
+operator|&
+name|signmask
+condition|)
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|boolean
+name|xcoff_complain_overflow_signed_func
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|val
+parameter_list|,
+name|relocation
+parameter_list|,
+name|howto
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
+name|bfd_vma
+name|relocation
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+decl_stmt|;
+block|{
+name|bfd_vma
+name|addrmask
+decl_stmt|,
+name|fieldmask
+decl_stmt|,
+name|signmask
+decl_stmt|,
+name|ss
+decl_stmt|;
+name|bfd_vma
+name|a
+decl_stmt|,
+name|b
+decl_stmt|,
+name|sum
+decl_stmt|;
+comment|/* Get the values to be added together.  For signed and unsigned      relocations, we assume that all values should be truncated to      the size of an address.  For bitfields, all the bits matter.      See also bfd_check_overflow.  */
+name|fieldmask
+operator|=
+name|N_ONES
+argument_list|(
+name|howto
+operator|->
+name|bitsize
+argument_list|)
+expr_stmt|;
+name|addrmask
+operator|=
+name|N_ONES
+argument_list|(
+name|bfd_arch_bits_per_address
+argument_list|(
+name|input_bfd
+argument_list|)
+argument_list|)
+operator||
+name|fieldmask
+expr_stmt|;
+name|a
+operator|=
+name|relocation
+expr_stmt|;
+name|b
+operator|=
+name|val
+operator|&
+name|howto
+operator|->
+name|src_mask
+expr_stmt|;
+name|a
+operator|=
+operator|(
+name|a
+operator|&
+name|addrmask
+operator|)
+operator|>>
+name|howto
+operator|->
+name|rightshift
+expr_stmt|;
+comment|/* If any sign bits are set, all sign bits must be set.      That is, A must be a valid negative address after      shifting.  */
+name|signmask
+operator|=
+operator|~
+operator|(
+name|fieldmask
+operator|>>
+literal|1
+operator|)
+expr_stmt|;
+name|ss
+operator|=
+name|a
+operator|&
+name|signmask
+expr_stmt|;
+if|if
+condition|(
+name|ss
+operator|!=
+literal|0
+operator|&&
+name|ss
+operator|!=
+operator|(
+operator|(
+name|addrmask
+operator|>>
+name|howto
+operator|->
+name|rightshift
+operator|)
+operator|&
+name|signmask
+operator|)
+condition|)
+return|return
+name|true
+return|;
+comment|/* We only need this next bit of code if the sign bit of B      is below the sign bit of A.  This would only happen if      SRC_MASK had fewer bits than BITSIZE.  Note that if      SRC_MASK has more bits than BITSIZE, we can get into      trouble; we would need to verify that B is in range, as      we do for A above.  */
+name|signmask
+operator|=
+operator|(
+operator|(
+operator|~
+name|howto
+operator|->
+name|src_mask
+operator|)
+operator|>>
+literal|1
+operator|)
+operator|&
+name|howto
+operator|->
+name|src_mask
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|b
+operator|&
+name|signmask
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Set all the bits above the sign bit.  */
+name|b
+operator|-=
+name|signmask
+operator|<<=
+literal|1
+expr_stmt|;
+block|}
+name|b
+operator|=
+operator|(
+name|b
+operator|&
+name|addrmask
+operator|)
+operator|>>
+name|howto
+operator|->
+name|bitpos
+expr_stmt|;
+comment|/* Now we can do the addition.  */
+name|sum
+operator|=
+name|a
+operator|+
+name|b
+expr_stmt|;
+comment|/* See if the result has the correct sign.  Bits above the      sign bit are junk now; ignore them.  If the sum is      positive, make sure we did not have all negative inputs;      if the sum is negative, make sure we did not have all      positive inputs.  The test below looks only at the sign      bits, and it really just      SIGN (A) == SIGN (B)&& SIGN (A) != SIGN (SUM)   */
+name|signmask
+operator|=
+operator|(
+name|fieldmask
+operator|>>
+literal|1
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+operator|~
+operator|(
+name|a
+operator|^
+name|b
+operator|)
+operator|)
+operator|&
+operator|(
+name|a
+operator|^
+name|sum
+operator|)
+operator|)
+operator|&
+name|signmask
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|boolean
+name|xcoff_complain_overflow_unsigned_func
+parameter_list|(
+name|input_bfd
+parameter_list|,
+name|val
+parameter_list|,
+name|relocation
+parameter_list|,
+name|howto
+parameter_list|)
+name|bfd
+modifier|*
+name|input_bfd
+decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
+name|bfd_vma
+name|relocation
+decl_stmt|;
+name|struct
+name|reloc_howto_struct
+modifier|*
+name|howto
+decl_stmt|;
+block|{
+name|bfd_vma
+name|addrmask
+decl_stmt|,
+name|fieldmask
+decl_stmt|;
+name|bfd_vma
+name|a
+decl_stmt|,
+name|b
+decl_stmt|,
+name|sum
+decl_stmt|;
+comment|/* Get the values to be added together.  For signed and unsigned      relocations, we assume that all values should be truncated to      the size of an address.  For bitfields, all the bits matter.      See also bfd_check_overflow.  */
+name|fieldmask
+operator|=
+name|N_ONES
+argument_list|(
+name|howto
+operator|->
+name|bitsize
+argument_list|)
+expr_stmt|;
+name|addrmask
+operator|=
+name|N_ONES
+argument_list|(
+name|bfd_arch_bits_per_address
+argument_list|(
+name|input_bfd
+argument_list|)
+argument_list|)
+operator||
+name|fieldmask
+expr_stmt|;
+name|a
+operator|=
+name|relocation
+expr_stmt|;
+name|b
+operator|=
+name|val
+operator|&
+name|howto
+operator|->
+name|src_mask
+expr_stmt|;
+comment|/* Checking for an unsigned overflow is relatively easy:      trim the addresses and add, and trim the result as well.      Overflow is normally indicated when the result does not      fit in the field.  However, we also need to consider the      case when, e.g., fieldmask is 0x7fffffff or smaller, an      input is 0x80000000, and bfd_vma is only 32 bits; then we      will get sum == 0, but there is an overflow, since the      inputs did not fit in the field.  Instead of doing a      separate test, we can check for this by or-ing in the      operands when testing for the sum overflowing its final      field.  */
+name|a
+operator|=
+operator|(
+name|a
+operator|&
+name|addrmask
+operator|)
+operator|>>
+name|howto
+operator|->
+name|rightshift
+expr_stmt|;
+name|b
+operator|=
+operator|(
+name|b
+operator|&
+name|addrmask
+operator|)
+operator|>>
+name|howto
+operator|->
+name|bitpos
+expr_stmt|;
+name|sum
+operator|=
+operator|(
+name|a
+operator|+
+name|b
+operator|)
+operator|&
+name|addrmask
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|a
+operator||
+name|b
+operator||
+name|sum
+operator|)
+operator|&
+operator|~
+name|fieldmask
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* This is the relocation function for the RS/6000/POWER/PowerPC.    This is currently the only processor which uses XCOFF; I hope that    will never change.       I took the relocation type definitions from two documents:    the PowerPC AIX Version 4 Application Binary Interface, First    Edition (April 1992), and the PowerOpen ABI, Big-Endian    32-Bit Hardware Implementation (June 30, 1994).  Differences    between the documents are noted below.      Unsupported r_type's      R_RTB:    R_RRTBI:    R_RRTBA: 	    These relocs are defined by the PowerPC ABI to be    relative branches which use half of the difference    between the symbol and the program counter.  I can't    quite figure out when this is useful.  These relocs are    not defined by the PowerOpen ABI.      Supported r_type's     R_POS:    Simple positive relocation.     R_NEG:    Simple negative relocation.      R_REL:    Simple PC relative relocation.     R_TOC:    TOC relative relocation.  The value in the instruction in    the input file is the offset from the input file TOC to    the desired location.  We want the offset from the final    TOC to the desired location.  We have:    isym = iTOC + in    iinsn = in + o    osym = oTOC + on    oinsn = on + o    so we must change insn by on - in.     R_GL:    GL linkage relocation.  The value of this relocation    is the address of the entry in the TOC section.      R_TCL:    Local object TOC address.  I can't figure out the    difference between this and case R_GL.      R_TRL:    TOC relative relocation.  A TOC relative load instruction    which may be changed to a load address instruction.    FIXME: We don't currently implement this optimization.      R_TRLA:    TOC relative relocation.  This is a TOC relative load    address instruction which may be changed to a load    instruction.  FIXME: I don't know if this is the correct    implementation.     R_BA:    Absolute branch.  We don't want to mess with the lower    two bits of the instruction.      R_CAI:    The PowerPC ABI defines this as an absolute call which    may be modified to become a relative call.  The PowerOpen    ABI does not define this relocation type.         R_RBA:    Absolute branch which may be modified to become a    relative branch.      R_RBAC:    The PowerPC ABI defines this as an absolute branch to a    fixed address which may be modified to an absolute branch    to a symbol.  The PowerOpen ABI does not define this    relocation type.      R_RBRC:    The PowerPC ABI defines this as an absolute branch to a    fixed address which may be modified to a relative branch.    The PowerOpen ABI does not define this relocation type.      R_BR:    Relative branch.  We don't want to mess with the lower    two bits of the instruction.      R_CREL:    The PowerPC ABI defines this as a relative call which may    be modified to become an absolute call.  The PowerOpen    ABI does not define this relocation type.      R_RBR:    A relative branch which may be modified to become an    absolute branch.  FIXME: We don't implement this,    although we should for symbols of storage mapping class    XMC_XO.      R_RL:    The PowerPC AIX ABI describes this as a load which may be    changed to a load address.  The PowerOpen ABI says this    is the same as case R_POS.      R_RLA:    The PowerPC AIX ABI describes this as a load address    which may be changed to a load.  The PowerOpen ABI says    this is the same as R_POS.  */
+end_comment
+
+begin_function
 name|boolean
 name|xcoff_ppc_relocate_section
 parameter_list|(
@@ -12639,8 +15374,18 @@ name|struct
 name|reloc_howto_struct
 name|howto
 decl_stmt|;
-name|bfd_reloc_status_type
-name|rstat
+name|bfd_vma
+name|relocation
+decl_stmt|;
+name|bfd_vma
+name|value_to_relocate
+decl_stmt|;
+name|bfd_vma
+name|address
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|location
 decl_stmt|;
 comment|/* Relocation type R_REF is a special relocation type which is          merely used to prevent garbage collection from occurring for          the csect including the symbol which it references.  */
 if|if
@@ -12652,20 +15397,125 @@ operator|==
 name|R_REF
 condition|)
 continue|continue;
-name|symndx
+comment|/* howto */
+name|howto
+operator|.
+name|type
 operator|=
 name|rel
 operator|->
-name|r_symndx
+name|r_type
 expr_stmt|;
-if|if
-condition|(
-name|symndx
-operator|==
-operator|-
+name|howto
+operator|.
+name|rightshift
+operator|=
+literal|0
+expr_stmt|;
+name|howto
+operator|.
+name|bitsize
+operator|=
+operator|(
+name|rel
+operator|->
+name|r_size
+operator|&
+literal|0x1f
+operator|)
+operator|+
 literal|1
-condition|)
-block|{
+expr_stmt|;
+name|howto
+operator|.
+name|size
+operator|=
+name|howto
+operator|.
+name|bitsize
+operator|>
+literal|16
+condition|?
+literal|2
+else|:
+literal|1
+expr_stmt|;
+name|howto
+operator|.
+name|pc_relative
+operator|=
+name|false
+expr_stmt|;
+name|howto
+operator|.
+name|bitpos
+operator|=
+literal|0
+expr_stmt|;
+name|howto
+operator|.
+name|complain_on_overflow
+operator|=
+operator|(
+name|rel
+operator|->
+name|r_size
+operator|&
+literal|0x80
+condition|?
+name|complain_overflow_signed
+else|:
+name|complain_overflow_bitfield
+operator|)
+expr_stmt|;
+name|howto
+operator|.
+name|special_function
+operator|=
+name|NULL
+expr_stmt|;
+name|howto
+operator|.
+name|name
+operator|=
+literal|"internal"
+expr_stmt|;
+name|howto
+operator|.
+name|partial_inplace
+operator|=
+name|true
+expr_stmt|;
+name|howto
+operator|.
+name|src_mask
+operator|=
+name|howto
+operator|.
+name|dst_mask
+operator|=
+name|N_ONES
+argument_list|(
+name|howto
+operator|.
+name|bitsize
+argument_list|)
+expr_stmt|;
+name|howto
+operator|.
+name|pcrel_offset
+operator|=
+name|false
+expr_stmt|;
+comment|/* symbol */
+name|val
+operator|=
+literal|0
+expr_stmt|;
+name|addend
+operator|=
+literal|0
+expr_stmt|;
 name|h
 operator|=
 name|NULL
@@ -12674,13 +15524,24 @@ name|sym
 operator|=
 name|NULL
 expr_stmt|;
-name|addend
+name|symndx
 operator|=
-literal|0
+name|rel
+operator|->
+name|r_symndx
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+operator|-
+literal|1
+operator|!=
+name|symndx
+condition|)
 block|{
+name|asection
+modifier|*
+name|sec
+decl_stmt|;
 name|h
 operator|=
 name|obj_xcoff_sym_hashes
@@ -12704,189 +15565,12 @@ name|sym
 operator|->
 name|n_value
 expr_stmt|;
-block|}
-comment|/* We build the howto information on the fly.  */
-name|howto
-operator|.
-name|type
-operator|=
-name|rel
-operator|->
-name|r_type
-expr_stmt|;
-name|howto
-operator|.
-name|rightshift
-operator|=
-literal|0
-expr_stmt|;
-name|howto
-operator|.
-name|size
-operator|=
-literal|2
-expr_stmt|;
-name|howto
-operator|.
-name|bitsize
-operator|=
-operator|(
-name|rel
-operator|->
-name|r_size
-operator|&
-literal|0x1f
-operator|)
-operator|+
-literal|1
-expr_stmt|;
-name|howto
-operator|.
-name|pc_relative
-operator|=
-name|false
-expr_stmt|;
-name|howto
-operator|.
-name|bitpos
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
-operator|(
-name|rel
-operator|->
-name|r_size
-operator|&
-literal|0x80
-operator|)
-operator|!=
-literal|0
-condition|)
-name|howto
-operator|.
-name|complain_on_overflow
-operator|=
-name|complain_overflow_signed
-expr_stmt|;
-else|else
-name|howto
-operator|.
-name|complain_on_overflow
-operator|=
-name|complain_overflow_bitfield
-expr_stmt|;
-name|howto
-operator|.
-name|special_function
-operator|=
 name|NULL
-expr_stmt|;
-name|howto
-operator|.
-name|name
-operator|=
-literal|"internal"
-expr_stmt|;
-name|howto
-operator|.
-name|partial_inplace
-operator|=
-name|true
-expr_stmt|;
-if|if
-condition|(
-name|howto
-operator|.
-name|bitsize
 operator|==
-literal|32
-condition|)
-name|howto
-operator|.
-name|src_mask
-operator|=
-name|howto
-operator|.
-name|dst_mask
-operator|=
-literal|0xffffffff
-expr_stmt|;
-else|else
-block|{
-name|howto
-operator|.
-name|src_mask
-operator|=
-name|howto
-operator|.
-name|dst_mask
-operator|=
-operator|(
-literal|1
-operator|<<
-name|howto
-operator|.
-name|bitsize
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|howto
-operator|.
-name|bitsize
-operator|==
-literal|16
-condition|)
-name|howto
-operator|.
-name|size
-operator|=
-literal|1
-expr_stmt|;
-block|}
-name|howto
-operator|.
-name|pcrel_offset
-operator|=
-name|false
-expr_stmt|;
-name|val
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
 name|h
-operator|==
-name|NULL
 condition|)
-block|{
-name|asection
-modifier|*
-name|sec
-decl_stmt|;
-if|if
-condition|(
-name|symndx
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|sec
-operator|=
-name|bfd_abs_section_ptr
-expr_stmt|;
-name|val
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
 block|{
 name|sec
 operator|=
@@ -12895,7 +15579,7 @@ index|[
 name|symndx
 index|]
 expr_stmt|;
-comment|/* Hack to make sure we use the right TOC anchor value                  if this reloc is against the TOC anchor.  */
+comment|/* Hack to make sure we use the right TOC anchor value 		 if this reloc is against the TOC anchor.  */
 if|if
 condition|(
 name|sec
@@ -12918,7 +15602,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|val
 operator|=
 name|xcoff_data
@@ -12928,9 +15611,7 @@ argument_list|)
 operator|->
 name|toc
 expr_stmt|;
-block|}
 else|else
-block|{
 name|val
 operator|=
 operator|(
@@ -12954,8 +15635,6 @@ name|vma
 operator|)
 expr_stmt|;
 block|}
-block|}
-block|}
 else|else
 block|{
 if|if
@@ -12977,10 +15656,6 @@ operator|==
 name|bfd_link_hash_defweak
 condition|)
 block|{
-name|asection
-modifier|*
-name|sec
-decl_stmt|;
 name|sec
 operator|=
 name|h
@@ -13030,10 +15705,6 @@ operator|==
 name|bfd_link_hash_common
 condition|)
 block|{
-name|asection
-modifier|*
-name|sec
-decl_stmt|;
 name|sec
 operator|=
 name|h
@@ -13067,35 +15738,21 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|h
-operator|->
-name|flags
-operator|&
-name|XCOFF_DEF_DYNAMIC
-operator|)
-operator|!=
 literal|0
-operator|||
+operator|==
 operator|(
 name|h
 operator|->
 name|flags
 operator|&
+operator|(
+name|XCOFF_DEF_DYNAMIC
+operator||
 name|XCOFF_IMPORT
 operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* Every symbol in a shared object is defined somewhere.  */
-name|val
-operator|=
-literal|0
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
+operator|)
+operator|)
+operator|&&
 operator|!
 name|info
 operator|->
@@ -13144,342 +15801,61 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* Don't try to process the reloc.  It can't help, and                  it may generate another error.  */
+comment|/* Don't try to process the reloc.  It can't help, and 		     it may generate another error.  */
 continue|continue;
 block|}
 block|}
-comment|/* I took the relocation type definitions from two documents: 	 the PowerPC AIX Version 4 Application Binary Interface, First 	 Edition (April 1992), and the PowerOpen ABI, Big-Endian 	 32-Bit Hardware Implementation (June 30, 1994).  Differences 	 between the documents are noted below.  */
-switch|switch
+block|}
+if|if
 condition|(
 name|rel
 operator|->
 name|r_type
-condition|)
-block|{
-case|case
-name|R_RTB
-case|:
-case|case
-name|R_RRTBI
-case|:
-case|case
-name|R_RRTBA
-case|:
-comment|/* These relocs are defined by the PowerPC ABI to be              relative branches which use half of the difference              between the symbol and the program counter.  I can't              quite figure out when this is useful.  These relocs are              not defined by the PowerOpen ABI.  */
-default|default:
-call|(
-modifier|*
-name|_bfd_error_handler
-call|)
-argument_list|(
-name|_
-argument_list|(
-literal|"%s: unsupported relocation type 0x%02x"
-argument_list|)
-argument_list|,
-name|bfd_archive_filename
-argument_list|(
-name|input_bfd
-argument_list|)
-argument_list|,
-operator|(
-name|unsigned
-name|int
-operator|)
-name|rel
-operator|->
-name|r_type
-argument_list|)
-expr_stmt|;
-name|bfd_set_error
-argument_list|(
-name|bfd_error_bad_value
-argument_list|)
-expr_stmt|;
-return|return
-name|false
-return|;
-case|case
-name|R_POS
-case|:
-comment|/* Simple positive relocation.  */
-break|break;
-case|case
-name|R_NEG
-case|:
-comment|/* Simple negative relocation.  */
-name|val
-operator|=
-operator|-
-name|val
-expr_stmt|;
-break|break;
-case|case
-name|R_REL
-case|:
-comment|/* Simple PC relative relocation.  */
-name|howto
-operator|.
-name|pc_relative
-operator|=
-name|true
-expr_stmt|;
-break|break;
-case|case
-name|R_TOC
-case|:
-comment|/* TOC relative relocation.  The value in the instruction in              the input file is the offset from the input file TOC to              the desired location.  We want the offset from the final              TOC to the desired location.  We have: 	         isym = iTOC + in 		 iinsn = in + o 		 osym = oTOC + on 		 oinsn = on + o 	     so we must change insn by on - in. 	     */
-case|case
-name|R_GL
-case|:
-comment|/* Global linkage relocation.  The value of this relocation              is the address of the entry in the TOC section.  */
-case|case
-name|R_TCL
-case|:
-comment|/* Local object TOC address.  I can't figure out the              difference between this and case R_GL.  */
-case|case
-name|R_TRL
-case|:
-comment|/* TOC relative relocation.  A TOC relative load instruction              which may be changed to a load address instruction.              FIXME: We don't currently implement this optimization.  */
-case|case
-name|R_TRLA
-case|:
-comment|/* TOC relative relocation.  This is a TOC relative load              address instruction which may be changed to a load              instruction.  FIXME: I don't know if this is the correct              implementation.  */
-if|if
-condition|(
-name|h
-operator|!=
-name|NULL
-operator|&&
-name|h
-operator|->
-name|smclas
-operator|!=
-name|XMC_TD
-condition|)
-block|{
-if|if
-condition|(
-name|h
-operator|->
-name|toc_section
-operator|==
-name|NULL
-condition|)
-block|{
-call|(
-modifier|*
-name|_bfd_error_handler
-call|)
-argument_list|(
-name|_
-argument_list|(
-literal|"%s: TOC reloc at 0x%x to symbol `%s' with no TOC entry"
-argument_list|)
-argument_list|,
-name|bfd_archive_filename
-argument_list|(
-name|input_bfd
-argument_list|)
-argument_list|,
-name|rel
-operator|->
-name|r_vaddr
-argument_list|,
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|string
-argument_list|)
-expr_stmt|;
-name|bfd_set_error
-argument_list|(
-name|bfd_error_bad_value
-argument_list|)
-expr_stmt|;
-return|return
-name|false
-return|;
-block|}
-name|BFD_ASSERT
-argument_list|(
-operator|(
-name|h
-operator|->
-name|flags
-operator|&
-name|XCOFF_SET_TOC
-operator|)
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-name|val
-operator|=
-operator|(
-name|h
-operator|->
-name|toc_section
-operator|->
-name|output_section
-operator|->
-name|vma
-operator|+
-name|h
-operator|->
-name|toc_section
-operator|->
-name|output_offset
-operator|)
-expr_stmt|;
-block|}
-name|val
-operator|=
-operator|(
-operator|(
-name|val
-operator|-
-name|xcoff_data
-argument_list|(
-name|output_bfd
-argument_list|)
-operator|->
-name|toc
-operator|)
-operator|-
-operator|(
-name|sym
-operator|->
-name|n_value
-operator|-
-name|xcoff_data
-argument_list|(
-name|input_bfd
-argument_list|)
-operator|->
-name|toc
-operator|)
-operator|)
-expr_stmt|;
-name|addend
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
-name|R_BA
-case|:
-comment|/* Absolute branch.  We don't want to mess with the lower              two bits of the instruction.  */
-case|case
-name|R_CAI
-case|:
-comment|/* The PowerPC ABI defines this as an absolute call which              may be modified to become a relative call.  The PowerOpen              ABI does not define this relocation type.  */
-case|case
-name|R_RBA
-case|:
-comment|/* Absolute branch which may be modified to become a              relative branch.  */
-case|case
-name|R_RBAC
-case|:
-comment|/* The PowerPC ABI defines this as an absolute branch to a              fixed address which may be modified to an absolute branch              to a symbol.  The PowerOpen ABI does not define this              relocation type.  */
-case|case
-name|R_RBRC
-case|:
-comment|/* The PowerPC ABI defines this as an absolute branch to a              fixed address which may be modified to a relative branch.              The PowerOpen ABI does not define this relocation type.  */
-name|howto
-operator|.
-name|src_mask
-operator|&=
-operator|~
-literal|3
-expr_stmt|;
-name|howto
-operator|.
-name|dst_mask
-operator|=
-name|howto
-operator|.
-name|src_mask
-expr_stmt|;
-break|break;
-case|case
-name|R_BR
-case|:
-comment|/* Relative branch.  We don't want to mess with the lower              two bits of the instruction.  */
-case|case
-name|R_CREL
-case|:
-comment|/* The PowerPC ABI defines this as a relative call which may              be modified to become an absolute call.  The PowerOpen              ABI does not define this relocation type.  */
-case|case
-name|R_RBR
-case|:
-comment|/* A relative branch which may be modified to become an              absolute branch.  FIXME: We don't implement this,              although we should for symbols of storage mapping class              XMC_XO.  */
-name|howto
-operator|.
-name|pc_relative
-operator|=
-name|true
-expr_stmt|;
-name|howto
-operator|.
-name|src_mask
-operator|&=
-operator|~
-literal|3
-expr_stmt|;
-name|howto
-operator|.
-name|dst_mask
-operator|=
-name|howto
-operator|.
-name|src_mask
-expr_stmt|;
-break|break;
-case|case
-name|R_RL
-case|:
-comment|/* The PowerPC AIX ABI describes this as a load which may be              changed to a load address.  The PowerOpen ABI says this              is the same as case R_POS.  */
-break|break;
-case|case
-name|R_RLA
-case|:
-comment|/* The PowerPC AIX ABI describes this as a load address              which may be changed to a load.  The PowerOpen ABI says              this is the same as R_POS.  */
-break|break;
-block|}
-comment|/* If we see an R_BR or R_RBR reloc which is jumping to global          linkage code, and it is followed by an appropriate cror nop          instruction, we replace the cror with lwz r2,20(r1).  This          restores the TOC after the glink code.  Contrariwise, if the          call is followed by a lwz r2,20(r1), but the call is not          going to global linkage code, we can replace the load with a          cror.  */
-if|if
-condition|(
-operator|(
-name|rel
-operator|->
-name|r_type
-operator|==
-name|R_BR
+operator|>=
+name|XCOFF_MAX_CALCULATE_RELOCATION
 operator|||
+operator|!
+operator|(
+call|(
+modifier|*
+name|xcoff_calculate_relocation
+index|[
 name|rel
 operator|->
 name|r_type
-operator|==
-name|R_RBR
+index|]
+call|)
+argument_list|(
+name|input_bfd
+argument_list|,
+name|input_section
+argument_list|,
+name|output_bfd
+argument_list|,
+name|rel
+argument_list|,
+name|sym
+argument_list|,
+operator|&
+name|howto
+argument_list|,
+name|val
+argument_list|,
+name|addend
+argument_list|,
+operator|&
+name|relocation
+argument_list|,
+name|contents
+argument_list|)
 operator|)
-operator|&&
-name|h
-operator|!=
-name|NULL
-operator|&&
-name|h
-operator|->
-name|root
-operator|.
-name|type
-operator|==
-name|bfd_link_hash_defined
-operator|&&
-operator|(
+condition|)
+return|return
+name|false
+return|;
+comment|/* address */
+name|address
+operator|=
 name|rel
 operator|->
 name|r_vaddr
@@ -13487,183 +15863,92 @@ operator|-
 name|input_section
 operator|->
 name|vma
-operator|+
-literal|8
-operator|<=
-name|input_section
-operator|->
-name|_cooked_size
-operator|)
-condition|)
-block|{
-name|bfd_byte
-modifier|*
-name|pnext
-decl_stmt|;
-name|unsigned
-name|long
-name|next
-decl_stmt|;
-name|pnext
+expr_stmt|;
+name|location
 operator|=
 name|contents
 operator|+
-operator|(
-name|rel
-operator|->
-name|r_vaddr
-operator|-
+name|address
+expr_stmt|;
+if|if
+condition|(
+name|address
+operator|>
 name|input_section
 operator|->
-name|vma
-operator|)
-operator|+
-literal|4
+name|_raw_size
+condition|)
+name|abort
+argument_list|()
 expr_stmt|;
-name|next
+comment|/* Get the value we are going to relocate.  */
+if|if
+condition|(
+literal|1
+operator|==
+name|howto
+operator|.
+name|size
+condition|)
+name|value_to_relocate
+operator|=
+name|bfd_get_16
+argument_list|(
+name|input_bfd
+argument_list|,
+name|location
+argument_list|)
+expr_stmt|;
+else|else
+name|value_to_relocate
 operator|=
 name|bfd_get_32
 argument_list|(
 name|input_bfd
 argument_list|,
-name|pnext
+name|location
 argument_list|)
 expr_stmt|;
-comment|/* The _ptrgl function is magic.  It is used by the AIX              compiler to call a function through a pointer.  */
+comment|/* overflow.   	  	 FIXME: We may drop bits during the addition 	 which we don't check for.  We must either check at every single 	 operation, which would be tedious, or we must do the computations 	 in a type larger than bfd_vma, which would be inefficient.  */
 if|if
 condition|(
-name|h
-operator|->
-name|smclas
-operator|==
-name|XMC_GL
-operator|||
-name|strcmp
-argument_list|(
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|string
-argument_list|,
-literal|"._ptrgl"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|next
-operator|==
-literal|0x4def7b82
-comment|/* cror 15,15,15 */
-operator|||
-name|next
-operator|==
-literal|0x4ffffb82
-comment|/* cror 31,31,31 */
-operator|||
-name|next
-operator|==
-literal|0x60000000
-condition|)
-comment|/* ori r0,r0,0 */
-name|bfd_put_32
-argument_list|(
-name|input_bfd
-argument_list|,
 operator|(
-name|bfd_vma
+name|unsigned
+name|int
 operator|)
-literal|0x80410014
-argument_list|,
-comment|/* lwz r1,20(r1) */
-name|pnext
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|next
-operator|==
-literal|0x80410014
-condition|)
-comment|/* lwz r1,20(r1) */
-name|bfd_put_32
-argument_list|(
-name|input_bfd
-argument_list|,
-operator|(
-name|bfd_vma
-operator|)
-literal|0x60000000
-argument_list|,
-comment|/* ori r0,r0,0 */
-name|pnext
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/* A PC relative reloc includes the section address.  */
-if|if
-condition|(
 name|howto
 operator|.
-name|pc_relative
+name|complain_on_overflow
+operator|>=
+name|XCOFF_MAX_COMPLAIN_OVERFLOW
 condition|)
-name|addend
-operator|+=
-name|input_section
-operator|->
-name|vma
-expr_stmt|;
-name|rstat
-operator|=
-name|_bfd_final_link_relocate
-argument_list|(
-operator|&
-name|howto
-argument_list|,
-name|input_bfd
-argument_list|,
-name|input_section
-argument_list|,
-name|contents
-argument_list|,
-name|rel
-operator|->
-name|r_vaddr
-operator|-
-name|input_section
-operator|->
-name|vma
-argument_list|,
-name|val
-argument_list|,
-name|addend
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|rstat
-condition|)
-block|{
-default|default:
 name|abort
 argument_list|()
 expr_stmt|;
-case|case
-name|bfd_reloc_ok
-case|:
-break|break;
-case|case
-name|bfd_reloc_overflow
-case|:
+if|if
+condition|(
+operator|(
+call|(
+modifier|*
+name|xcoff_complain_overflow
+index|[
+name|howto
+operator|.
+name|complain_on_overflow
+index|]
+call|)
+argument_list|(
+name|input_bfd
+argument_list|,
+name|value_to_relocate
+argument_list|,
+name|relocation
+argument_list|,
+operator|&
+name|howto
+argument_list|)
+operator|)
+condition|)
 block|{
 specifier|const
 name|char
@@ -13679,7 +15964,7 @@ literal|1
 index|]
 decl_stmt|;
 name|char
-name|howto_name
+name|reloc_type_name
 index|[
 literal|10
 index|]
@@ -13691,10 +15976,12 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|name
 operator|=
 literal|"*ABS*"
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -13702,6 +15989,7 @@ name|h
 operator|!=
 name|NULL
 condition|)
+block|{
 name|name
 operator|=
 name|h
@@ -13712,6 +16000,7 @@ name|root
 operator|.
 name|string
 expr_stmt|;
+block|}
 else|else
 block|{
 name|name
@@ -13731,13 +16020,14 @@ name|name
 operator|==
 name|NULL
 condition|)
-return|return
-name|false
-return|;
+name|name
+operator|=
+literal|"UNKNOWN"
+expr_stmt|;
 block|}
 name|sprintf
 argument_list|(
-name|howto_name
+name|reloc_type_name
 argument_list|,
 literal|"0x%02x"
 argument_list|,
@@ -13763,7 +16053,7 @@ name|info
 argument_list|,
 name|name
 argument_list|,
-name|howto_name
+name|reloc_type_name
 argument_list|,
 operator|(
 name|bfd_vma
@@ -13788,7 +16078,66 @@ return|return
 name|false
 return|;
 block|}
-block|}
+comment|/* Add RELOCATION to the right bits of VALUE_TO_RELOCATE.  */
+name|value_to_relocate
+operator|=
+operator|(
+operator|(
+name|value_to_relocate
+operator|&
+operator|~
+name|howto
+operator|.
+name|dst_mask
+operator|)
+operator||
+operator|(
+operator|(
+operator|(
+name|value_to_relocate
+operator|&
+name|howto
+operator|.
+name|src_mask
+operator|)
+operator|+
+name|relocation
+operator|)
+operator|&
+name|howto
+operator|.
+name|dst_mask
+operator|)
+operator|)
+expr_stmt|;
+comment|/* Put the value back in the object file.  */
+if|if
+condition|(
+literal|1
+operator|==
+name|howto
+operator|.
+name|size
+condition|)
+name|bfd_put_16
+argument_list|(
+name|input_bfd
+argument_list|,
+name|value_to_relocate
+argument_list|,
+name|location
+argument_list|)
+expr_stmt|;
+else|else
+name|bfd_put_32
+argument_list|(
+name|input_bfd
+argument_list|,
+name|value_to_relocate
+argument_list|,
+name|location
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|true
@@ -14461,7 +16810,6 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|+
-operator|(
 name|ldhdr
 operator|->
 name|l_nsyms
@@ -14470,7 +16818,6 @@ name|bfd_xcoff_ldsymsz
 argument_list|(
 name|abfd
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -14485,6 +16832,8 @@ parameter_list|,
 name|init
 parameter_list|,
 name|fini
+parameter_list|,
+name|rtld
 parameter_list|)
 name|bfd
 modifier|*
@@ -14499,6 +16848,9 @@ specifier|const
 name|char
 modifier|*
 name|fini
+decl_stmt|;
+name|boolean
+name|rtld
 decl_stmt|;
 block|{
 name|bfd_byte
@@ -14518,7 +16870,7 @@ name|syment_ext
 index|[
 name|SYMESZ
 operator|*
-literal|8
+literal|10
 index|]
 decl_stmt|;
 name|bfd_byte
@@ -14526,7 +16878,7 @@ name|reloc_ext
 index|[
 name|RELSZ
 operator|*
-literal|2
+literal|3
 index|]
 decl_stmt|;
 name|bfd_byte
@@ -14590,6 +16942,12 @@ name|rtinit_name
 init|=
 literal|"__rtinit"
 decl_stmt|;
+name|char
+modifier|*
+name|rtld_name
+init|=
+literal|"__rtld"
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -14597,16 +16955,6 @@ name|bfd_xcoff_rtinit_size
 argument_list|(
 name|abfd
 argument_list|)
-operator|||
-operator|(
-name|init
-operator|==
-name|NULL
-operator|&&
-name|fini
-operator|==
-name|NULL
-operator|)
 condition|)
 return|return
 name|false
@@ -14696,7 +17044,7 @@ name|f_nsyms
 operator|=
 literal|0
 expr_stmt|;
-comment|/* at least 6, no more than 8 */
+comment|/* at least 6, no more than 10 */
 name|filehdr
 operator|.
 name|f_symptr
@@ -14850,7 +17198,7 @@ operator|(
 name|bfd_byte
 operator|*
 operator|)
-name|bfd_malloc
+name|bfd_zmalloc
 argument_list|(
 name|data_buffer_size
 argument_list|)
@@ -14864,15 +17212,6 @@ condition|)
 return|return
 name|false
 return|;
-name|memset
-argument_list|(
-name|data_buffer
-argument_list|,
-literal|0
-argument_list|,
-name|data_buffer_size
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|initsz
@@ -15044,20 +17383,20 @@ operator|(
 name|bfd_byte
 operator|*
 operator|)
-name|bfd_malloc
+name|bfd_zmalloc
 argument_list|(
 name|string_table_size
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
+if|if
+condition|(
 name|string_table
-argument_list|,
-literal|0
-argument_list|,
-name|string_table_size
-argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+return|return
+name|false
+return|;
 name|val
 operator|=
 name|string_table_size
@@ -15082,14 +17421,14 @@ operator|+
 literal|4
 expr_stmt|;
 block|}
-comment|/* symbols       0. .data csect      2. __rtinit      4. init function       6. fini function */
+comment|/* symbols       0. .data csect      2. __rtinit      4. init function       6. fini function       8. __rtld  */
 name|memset
 argument_list|(
 name|syment_ext
 argument_list|,
 literal|0
 argument_list|,
-literal|8
+literal|10
 operator|*
 name|SYMESZ
 argument_list|)
@@ -15100,7 +17439,7 @@ name|reloc_ext
 argument_list|,
 literal|0
 argument_list|,
-literal|2
+literal|3
 operator|*
 name|RELSZ
 argument_list|)
@@ -15835,6 +18174,193 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|rtld
+condition|)
+block|{
+name|memset
+argument_list|(
+operator|&
+name|syment
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|internal_syment
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|auxent
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|union
+name|internal_auxent
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|syment
+operator|.
+name|_n
+operator|.
+name|_n_name
+argument_list|,
+name|rtld_name
+argument_list|,
+name|strlen
+argument_list|(
+name|rtld_name
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|syment
+operator|.
+name|n_sclass
+operator|=
+name|C_EXT
+expr_stmt|;
+name|syment
+operator|.
+name|n_numaux
+operator|=
+literal|1
+expr_stmt|;
+name|bfd_coff_swap_sym_out
+argument_list|(
+name|abfd
+argument_list|,
+operator|&
+name|syment
+argument_list|,
+operator|&
+name|syment_ext
+index|[
+name|filehdr
+operator|.
+name|f_nsyms
+operator|*
+name|SYMESZ
+index|]
+argument_list|)
+expr_stmt|;
+name|bfd_coff_swap_aux_out
+argument_list|(
+name|abfd
+argument_list|,
+operator|&
+name|auxent
+argument_list|,
+name|syment
+operator|.
+name|n_type
+argument_list|,
+name|syment
+operator|.
+name|n_sclass
+argument_list|,
+literal|0
+argument_list|,
+name|syment
+operator|.
+name|n_numaux
+argument_list|,
+operator|&
+name|syment_ext
+index|[
+operator|(
+name|filehdr
+operator|.
+name|f_nsyms
+operator|+
+literal|1
+operator|)
+operator|*
+name|SYMESZ
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* reloc */
+name|memset
+argument_list|(
+operator|&
+name|reloc
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|internal_reloc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|reloc
+operator|.
+name|r_vaddr
+operator|=
+literal|0x0000
+expr_stmt|;
+name|reloc
+operator|.
+name|r_symndx
+operator|=
+name|filehdr
+operator|.
+name|f_nsyms
+expr_stmt|;
+name|reloc
+operator|.
+name|r_type
+operator|=
+name|R_POS
+expr_stmt|;
+name|reloc
+operator|.
+name|r_size
+operator|=
+literal|31
+expr_stmt|;
+name|bfd_coff_swap_reloc_out
+argument_list|(
+name|abfd
+argument_list|,
+operator|&
+name|reloc
+argument_list|,
+operator|&
+name|reloc_ext
+index|[
+name|scnhdr
+operator|.
+name|s_nreloc
+operator|*
+name|RELSZ
+index|]
+argument_list|)
+expr_stmt|;
+name|filehdr
+operator|.
+name|f_nsyms
+operator|+=
+literal|2
+expr_stmt|;
+name|scnhdr
+operator|.
+name|s_nreloc
+operator|+=
+literal|1
+expr_stmt|;
+block|}
 name|scnhdr
 operator|.
 name|s_relptr
@@ -16065,67 +18591,47 @@ block|{
 comment|/* COFF backend, defined in libcoff.h.  */
 name|_bfd_xcoff_swap_aux_in
 block|,
-comment|/* _bfd_coff_swap_aux_in */
 name|_bfd_xcoff_swap_sym_in
 block|,
-comment|/* _bfd_coff_swap_sym_in */
 name|coff_swap_lineno_in
 block|,
-comment|/* _bfd_coff_swap_lineno_in */
 name|_bfd_xcoff_swap_aux_out
 block|,
-comment|/* _bfd_swap_aux_out */
 name|_bfd_xcoff_swap_sym_out
 block|,
-comment|/* _bfd_swap_sym_out */
 name|coff_swap_lineno_out
 block|,
-comment|/* _bfd_swap_lineno_out */
-name|coff_swap_reloc_out
+name|xcoff_swap_reloc_out
 block|,
-comment|/* _bfd_swap_reloc_out */
 name|coff_swap_filehdr_out
 block|,
-comment|/* _bfd_swap_filehdr_out */
 name|coff_swap_aouthdr_out
 block|,
-comment|/* _bfd_swap_aouthdr_out */
 name|coff_swap_scnhdr_out
 block|,
-comment|/* _bfd_swap_scnhdr_out */
 name|FILHSZ
 block|,
-comment|/* _bfd_filhsz */
 name|AOUTSZ
 block|,
-comment|/* _bfd_aoutsz */
 name|SCNHSZ
 block|,
-comment|/* _bfd_scnhsz */
 name|SYMESZ
 block|,
-comment|/* _bfd_symesz */
 name|AUXESZ
 block|,
-comment|/* _bfd_auxesz */
 name|RELSZ
 block|,
-comment|/* _bfd_relsz */
 name|LINESZ
 block|,
-comment|/* _bfd_linesz */
 name|FILNMLEN
 block|,
-comment|/* _bfd_filnmlen */
 name|true
 block|,
 comment|/* _bfd_coff_long_filenames */
 name|false
 block|,
 comment|/* _bfd_coff_long_section_names */
-operator|(
 literal|3
-operator|)
 block|,
 comment|/* _bfd_coff_default_section_alignment_power */
 name|false
@@ -16136,75 +18642,54 @@ block|,
 comment|/* _bfd_coff_debug_string_prefix_length */
 name|coff_swap_filehdr_in
 block|,
-comment|/* _bfd_coff_swap_filehdr_in */
 name|coff_swap_aouthdr_in
 block|,
-comment|/* _bfd_swap_aouthdr_in */
 name|coff_swap_scnhdr_in
 block|,
-comment|/* _bfd_swap_scnhdr_in */
-name|coff_swap_reloc_in
+name|xcoff_swap_reloc_in
 block|,
-comment|/* _bfd_reloc_in */
 name|coff_bad_format_hook
 block|,
-comment|/* _bfd_bad_format_hook */
 name|coff_set_arch_mach_hook
 block|,
-comment|/* _bfd_set_arch_mach_hook */
 name|coff_mkobject_hook
 block|,
-comment|/* _bfd_mkobject_hook */
 name|styp_to_sec_flags
 block|,
-comment|/* _bfd_syp_to_sec_flags */
 name|coff_set_alignment_hook
 block|,
-comment|/* _bfd_set_alignment_hook */
 name|coff_slurp_symbol_table
 block|,
-comment|/* _bfd_coff_slurp_symbol_table */
 name|symname_in_debug_hook
 block|,
-comment|/* _coff_symname_in_debug_hook */
 name|coff_pointerize_aux_hook
 block|,
-comment|/* _bfd_coff_pointerize_aux_hook */
 name|coff_print_aux
 block|,
-comment|/* bfd_coff_print_aux */
 name|dummy_reloc16_extra_cases
 block|,
-comment|/* _bfd_coff_reloc16_extra_cases */
 name|dummy_reloc16_estimate
 block|,
-comment|/* _bfd_coff_reloc16_estimate */
 name|NULL
 block|,
 comment|/* bfd_coff_sym_is_global */
 name|coff_compute_section_file_positions
 block|,
-comment|/* _bfd_coff_compute_section_file_positions */
 name|NULL
 block|,
 comment|/* _bfd_coff_start_final_link */
 name|xcoff_ppc_relocate_section
 block|,
-comment|/* _bfd_coff_relocate_section */
 name|coff_rtype_to_howto
 block|,
-comment|/* _bfd_coff_rtype_to_howto */
 name|NULL
 block|,
-comment|/* _bfd_coff_addust_symndx */
+comment|/* _bfd_coff_adjust_symndx */
 name|_bfd_generic_link_add_one_symbol
 block|,
-comment|/* _bfd_coff_add_one_symbol */
 name|coff_link_output_has_begun
 block|,
-comment|/* _bfd_coff_link_output_has_begun */
 name|coff_final_link_postscript
-comment|/* _bfd_coff_final_link_postscript */
 block|}
 block|,
 literal|0x01DF
@@ -16212,63 +18697,46 @@ block|,
 comment|/* magic number */
 name|bfd_arch_rs6000
 block|,
-comment|/* architecture */
 name|bfd_mach_rs6k
 block|,
-comment|/* machine */
 comment|/* Function pointers to xcoff specific swap routines.  */
 name|xcoff_swap_ldhdr_in
 block|,
-comment|/* _xcoff_swap_ldhdr_in */
 name|xcoff_swap_ldhdr_out
 block|,
-comment|/* _xcoff_swap_ldhdr_out */
 name|xcoff_swap_ldsym_in
 block|,
-comment|/* _xcoff_swap_ldsym_in */
 name|xcoff_swap_ldsym_out
 block|,
-comment|/* _xcoff_swap_ldsym_out */
 name|xcoff_swap_ldrel_in
 block|,
-comment|/* _xcoff_swap_ldrel_in */
 name|xcoff_swap_ldrel_out
 block|,
-comment|/* _xcoff_swap_ldrel_out */
 comment|/* Sizes.  */
 name|LDHDRSZ
 block|,
-comment|/* _xcoff_ldhdrsz */
 name|LDSYMSZ
 block|,
-comment|/* _xcoff_ldsymsz */
 name|LDRELSZ
 block|,
-comment|/* _xcoff_ldrelsz */
 literal|12
 block|,
 comment|/* _xcoff_function_descriptor_size */
 name|SMALL_AOUTSZ
 block|,
-comment|/* _xcoff_small_aout_header_size */
 comment|/* Versions. */
 literal|1
 block|,
 comment|/* _xcoff_ldhdr_version */
-comment|/* Xcoff vs xcoff64 putting symbol names.  */
 name|_bfd_xcoff_put_symbol_name
 block|,
-comment|/* _xcoff_put_symbol_name */
 name|_bfd_xcoff_put_ldsymbol_name
 block|,
-comment|/* _xcoff_put_ldsymbol_name */
 operator|&
 name|xcoff_dynamic_reloc
 block|,
-comment|/* dynamic reloc howto */
 name|xcoff_create_csect_from_smclas
 block|,
-comment|/* _xcoff_create_csect_from_smclas */
 comment|/* Lineno and reloc count overflow.  */
 name|xcoff_is_lineno_count_overflow
 block|,
@@ -16285,9 +18753,7 @@ index|[
 literal|0
 index|]
 block|,
-operator|(
 literal|36
-operator|)
 block|,
 comment|/* _xcoff_glink_size */
 comment|/* rtinit */
@@ -16295,14 +18761,12 @@ literal|64
 block|,
 comment|/* _xcoff_rtinit_size */
 name|xcoff_generate_rtinit
-block|,
-comment|/* _xcoff_generate_rtinit */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The transfer vector that leads the outside world to all of the above. */
+comment|/* The transfer vector that leads the outside world to all of the above.  */
 end_comment
 
 begin_decl_stmt
@@ -16326,7 +18790,6 @@ name|HAS_RELOC
 operator||
 name|EXEC_P
 operator||
-comment|/* object flags */
 name|HAS_LINENO
 operator||
 name|HAS_DEBUG
@@ -16350,7 +18813,6 @@ operator||
 name|SEC_RELOC
 operator|)
 block|,
-comment|/* section flags */
 literal|0
 block|,
 comment|/* leading char */
@@ -16359,63 +18821,45 @@ block|,
 comment|/* ar_pad_char */
 literal|15
 block|,
-comment|/* ar_max_namelen??? FIXMEmgo */
+comment|/* ar_max_namelen */
 comment|/* data */
 name|bfd_getb64
 block|,
-comment|/* bfd_getx64 */
 name|bfd_getb_signed_64
 block|,
-comment|/* bfd_getx_signed_64 */
 name|bfd_putb64
 block|,
-comment|/* bfd_putx64 */
 name|bfd_getb32
 block|,
-comment|/* bfd_getx32 */
 name|bfd_getb_signed_32
 block|,
-comment|/* bfd_getx_signed_32 */
 name|bfd_putb32
 block|,
-comment|/* bfd_putx32 */
 name|bfd_getb16
 block|,
-comment|/* bfd_getx16 */
 name|bfd_getb_signed_16
 block|,
-comment|/* bfd_getx_signed_16 */
 name|bfd_putb16
 block|,
-comment|/* bfd_putx16 */
 comment|/* hdrs */
 name|bfd_getb64
 block|,
-comment|/* bfd_h_getx64 */
 name|bfd_getb_signed_64
 block|,
-comment|/* bfd_h_getx_signed_64 */
 name|bfd_putb64
 block|,
-comment|/* bfd_h_putx64 */
 name|bfd_getb32
 block|,
-comment|/* bfd_h_getx32 */
 name|bfd_getb_signed_32
 block|,
-comment|/* bfd_h_getx_signed_32 */
 name|bfd_putb32
 block|,
-comment|/* bfd_h_putx32 */
 name|bfd_getb16
 block|,
-comment|/* bfd_h_getx16 */
 name|bfd_getb_signed_16
 block|,
-comment|/* bfd_h_getx_signed_16 */
 name|bfd_putb16
 block|,
-comment|/* bfd_h_putx16 */
 block|{
 comment|/* bfd_check_format */
 name|_bfd_dummy_target
@@ -16452,24 +18896,17 @@ block|,
 comment|/* Generic */
 name|bfd_true
 block|,
-comment|/* _close_and_cleanup */
 name|bfd_true
 block|,
-comment|/* _bfd_free_cached_info */
 name|coff_new_section_hook
 block|,
-comment|/* _new_section_hook */
 name|_bfd_generic_get_section_contents
 block|,
-comment|/* _bfd_get_section_contents */
-comment|/* _bfd_get_section_contents_in_window */
 name|_bfd_generic_get_section_contents_in_window
 block|,
 comment|/* Copy */
 name|_bfd_xcoff_copy_private_bfd_data
 block|,
-comment|/* _bfd_copy_private_bfd */
-comment|/* _bfd_merge_private_bfd_data */
 operator|(
 operator|(
 name|boolean
@@ -16487,7 +18924,6 @@ operator|)
 name|bfd_true
 operator|)
 block|,
-comment|/* _bfd_copy_pivate_section_data */
 operator|(
 operator|(
 name|boolean
@@ -16511,7 +18947,6 @@ operator|)
 name|bfd_true
 operator|)
 block|,
-comment|/* _bfd_copy_private_symbol_data */
 operator|(
 operator|(
 name|boolean
@@ -16551,7 +18986,6 @@ operator|)
 name|bfd_true
 operator|)
 block|,
-comment|/* _bfd_set_private_flags */
 operator|(
 operator|(
 name|boolean
@@ -16569,26 +19003,18 @@ operator|)
 name|bfd_true
 operator|)
 block|,
-comment|/* _bfd_print_private_bfd_data */
 comment|/* Core */
 name|coff_core_file_failing_command
 block|,
-comment|/* _core_file_failing_command */
 name|coff_core_file_failing_signal
 block|,
-comment|/* _core_file_failing_signal */
-comment|/* _core_file_matches_executable_p */
 name|coff_core_file_matches_executable_p
 block|,
 comment|/* Archive */
 name|_bfd_xcoff_slurp_armap
 block|,
-comment|/* _slurp_armap */
-comment|/* XCOFF archives do not have 					      anything which corresponds to 					      an extended name table.  */
 name|bfd_false
 block|,
-comment|/* _slurp_extended_name_table */
-comment|/* _construct_extended_name_table */
 operator|(
 operator|(
 name|boolean
@@ -16617,122 +19043,90 @@ operator|)
 block|,
 name|bfd_dont_truncate_arname
 block|,
-comment|/* _truncate_arname */
 name|_bfd_xcoff_write_armap
 block|,
-comment|/* _write_armap */
 name|_bfd_xcoff_read_ar_hdr
 block|,
-comment|/* _read_ar_hdr */
 name|_bfd_xcoff_openr_next_archived_file
 block|,
-comment|/* _openr_next_archived_file */
 name|_bfd_generic_get_elt_at_index
 block|,
-comment|/* _get_elt_at_index */
 name|_bfd_xcoff_stat_arch_elt
 block|,
-comment|/* _generic_stat_arch_elt */
-comment|/* XCOFF archives do not have 					      a timestamp.  */
 name|bfd_true
 block|,
-comment|/* _update_armap_timestamp */
 comment|/* Symbols */
 name|coff_get_symtab_upper_bound
 block|,
-comment|/* _get_symtab_upper_bound */
 name|coff_get_symtab
 block|,
-comment|/* _get_symtab */
 name|coff_make_empty_symbol
 block|,
-comment|/* _make_empty_symbol */
 name|coff_print_symbol
 block|,
-comment|/* _print_symbol */
 name|coff_get_symbol_info
 block|,
-comment|/* _get_symbol_info */
 name|_bfd_xcoff_is_local_label_name
 block|,
-comment|/* _bfd_is_local_label_name */
 name|coff_get_lineno
 block|,
-comment|/* _get_lineno */
 name|coff_find_nearest_line
 block|,
-comment|/* _find_nearest_line */
 name|coff_bfd_make_debug_symbol
 block|,
-comment|/* _bfd_make_debug_symbol */
 name|_bfd_generic_read_minisymbols
 block|,
-comment|/* _read_minisymbols */
 name|_bfd_generic_minisymbol_to_symbol
 block|,
-comment|/* _minsymbol_to_symbol */
 comment|/* Reloc */
 name|coff_get_reloc_upper_bound
 block|,
-comment|/* _get_reloc_upper_bound */
 name|coff_canonicalize_reloc
 block|,
-comment|/* _cononicalize_reloc */
 name|_bfd_xcoff_reloc_type_lookup
 block|,
-comment|/* _bfd_reloc_type_lookup */
 comment|/* Write */
 name|coff_set_arch_mach
 block|,
-comment|/* _set_arch_mach */
 name|coff_set_section_contents
 block|,
-comment|/* _set_section_contents */
 comment|/* Link */
 name|_bfd_xcoff_sizeof_headers
 block|,
-comment|/* _sizeof_headers */
-comment|/* _bfd_get_relocated_section_contents */
 name|bfd_generic_get_relocated_section_contents
 block|,
 name|bfd_generic_relax_section
 block|,
-comment|/* _bfd_relax_section */
 name|_bfd_xcoff_bfd_link_hash_table_create
 block|,
-comment|/* _bfd_link_hash_table_create */
+name|_bfd_generic_link_hash_table_free
+block|,
 name|_bfd_xcoff_bfd_link_add_symbols
 block|,
-comment|/* _bfd_link_add_symbols */
+name|_bfd_generic_link_just_syms
+block|,
 name|_bfd_xcoff_bfd_final_link
 block|,
-comment|/* _bfd_filnal_link */
 name|_bfd_generic_link_split_section
 block|,
-comment|/* _bfd_link_split_section */
 name|bfd_generic_gc_sections
 block|,
-comment|/* _bfd_gc_sections */
 name|bfd_generic_merge_sections
 block|,
-comment|/* _bfd_merge_sections */
+name|bfd_generic_discard_group
+block|,
 comment|/* Dynamic */
-comment|/* _get_dynamic_symtab_upper_bound */
 name|_bfd_xcoff_get_dynamic_symtab_upper_bound
 block|,
 name|_bfd_xcoff_canonicalize_dynamic_symtab
 block|,
-comment|/* _cononicalize_dynamic_symtab */
 name|_bfd_xcoff_get_dynamic_reloc_upper_bound
 block|,
-comment|/* _get_dynamic_reloc_upper_bound */
 name|_bfd_xcoff_canonicalize_dynamic_reloc
 block|,
-comment|/* _cononicalize_dynamic_reloc */
 comment|/* Opposite endian version, none exists */
 name|NULL
 block|,
-comment|/* back end data */
 operator|(
 name|void
 operator|*
@@ -16744,7 +19138,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * xcoff-powermac target  * Old target.  * Only difference between this target and the rs6000 target is the  * the default architecture and machine type used in coffcode.h  *  * PowerPC Macs use the same magic numbers as RS/6000  * (because that's how they were bootstrapped originally),  * but they are always PowerPC architecture.  */
+comment|/* xcoff-powermac target    Old target.    Only difference between this target and the rs6000 target is the    the default architecture and machine type used in coffcode.h     PowerPC Macs use the same magic numbers as RS/6000    (because that's how they were bootstrapped originally),    but they are always PowerPC architecture.  */
 end_comment
 
 begin_decl_stmt
@@ -16756,70 +19150,50 @@ name|bfd_pmac_xcoff_backend_data
 init|=
 block|{
 block|{
-comment|/* COFF backend, defined in libcoff.h */
+comment|/* COFF backend, defined in libcoff.h.  */
 name|_bfd_xcoff_swap_aux_in
 block|,
-comment|/* _bfd_coff_swap_aux_in */
 name|_bfd_xcoff_swap_sym_in
 block|,
-comment|/* _bfd_coff_swap_sym_in */
 name|coff_swap_lineno_in
 block|,
-comment|/* _bfd_coff_swap_lineno_in */
 name|_bfd_xcoff_swap_aux_out
 block|,
-comment|/* _bfd_swap_aux_out */
 name|_bfd_xcoff_swap_sym_out
 block|,
-comment|/* _bfd_swap_sym_out */
 name|coff_swap_lineno_out
 block|,
-comment|/* _bfd_swap_lineno_out */
-name|coff_swap_reloc_out
+name|xcoff_swap_reloc_out
 block|,
-comment|/* _bfd_swap_reloc_out */
 name|coff_swap_filehdr_out
 block|,
-comment|/* _bfd_swap_filehdr_out */
 name|coff_swap_aouthdr_out
 block|,
-comment|/* _bfd_swap_aouthdr_out */
 name|coff_swap_scnhdr_out
 block|,
-comment|/* _bfd_swap_scnhdr_out */
 name|FILHSZ
 block|,
-comment|/* _bfd_filhsz */
 name|AOUTSZ
 block|,
-comment|/* _bfd_aoutsz */
 name|SCNHSZ
 block|,
-comment|/* _bfd_scnhsz */
 name|SYMESZ
 block|,
-comment|/* _bfd_symesz */
 name|AUXESZ
 block|,
-comment|/* _bfd_auxesz */
 name|RELSZ
 block|,
-comment|/* _bfd_relsz */
 name|LINESZ
 block|,
-comment|/* _bfd_linesz */
 name|FILNMLEN
 block|,
-comment|/* _bfd_filnmlen */
 name|true
 block|,
 comment|/* _bfd_coff_long_filenames */
 name|false
 block|,
 comment|/* _bfd_coff_long_section_names */
-operator|(
 literal|3
-operator|)
 block|,
 comment|/* _bfd_coff_default_section_alignment_power */
 name|false
@@ -16830,53 +19204,37 @@ block|,
 comment|/* _bfd_coff_debug_string_prefix_length */
 name|coff_swap_filehdr_in
 block|,
-comment|/* _bfd_coff_swap_filehdr_in */
 name|coff_swap_aouthdr_in
 block|,
-comment|/* _bfd_swap_aouthdr_in */
 name|coff_swap_scnhdr_in
 block|,
-comment|/* _bfd_swap_scnhdr_in */
-name|coff_swap_reloc_in
+name|xcoff_swap_reloc_in
 block|,
-comment|/* _bfd_reloc_in */
 name|coff_bad_format_hook
 block|,
-comment|/* _bfd_bad_format_hook */
 name|coff_set_arch_mach_hook
 block|,
-comment|/* _bfd_set_arch_mach_hook */
 name|coff_mkobject_hook
 block|,
-comment|/* _bfd_mkobject_hook */
 name|styp_to_sec_flags
 block|,
-comment|/* _bfd_syp_to_sec_flags */
 name|coff_set_alignment_hook
 block|,
-comment|/* _bfd_set_alignment_hook */
 name|coff_slurp_symbol_table
 block|,
-comment|/* _bfd_coff_slurp_symbol_table */
 name|symname_in_debug_hook
 block|,
-comment|/* _coff_symname_in_debug_hook */
 name|coff_pointerize_aux_hook
 block|,
-comment|/* _bfd_coff_pointerize_aux_hook */
 name|coff_print_aux
 block|,
-comment|/* bfd_coff_print_aux */
 name|dummy_reloc16_extra_cases
 block|,
-comment|/* _bfd_coff_reloc16_extra_cases */
 name|dummy_reloc16_estimate
 block|,
-comment|/* _bfd_coff_reloc16_estimate */
 name|NULL
 block|,
 comment|/* bfd_coff_sym_is_global */
-comment|/* _bfd_coff_compute_section_file_positions */
 name|coff_compute_section_file_positions
 block|,
 name|NULL
@@ -16884,21 +19242,16 @@ block|,
 comment|/* _bfd_coff_start_final_link */
 name|xcoff_ppc_relocate_section
 block|,
-comment|/* _bfd_coff_relocate_section */
 name|coff_rtype_to_howto
 block|,
-comment|/* _bfd_coff_rtype_to_howto */
 name|NULL
 block|,
-comment|/* _bfd_coff_addust_symndx */
+comment|/* _bfd_coff_adjust_symndx */
 name|_bfd_generic_link_add_one_symbol
 block|,
-comment|/* _bfd_coff_add_one_symbol */
 name|coff_link_output_has_begun
 block|,
-comment|/* _bfd_coff_link_output_has_begun */
 name|coff_final_link_postscript
-comment|/* _bfd_coff_final_link_postscript */
 block|}
 block|,
 literal|0x01DF
@@ -16906,64 +19259,47 @@ block|,
 comment|/* magic number */
 name|bfd_arch_powerpc
 block|,
-comment|/* architecture */
 name|bfd_mach_ppc
 block|,
-comment|/* machine */
-comment|/* function pointers to xcoff specific swap routines */
+comment|/* Function pointers to xcoff specific swap routines.  */
 name|xcoff_swap_ldhdr_in
 block|,
-comment|/* _xcoff_swap_ldhdr_in */
 name|xcoff_swap_ldhdr_out
 block|,
-comment|/* _xcoff_swap_ldhdr_out */
 name|xcoff_swap_ldsym_in
 block|,
-comment|/* _xcoff_swap_ldsym_in */
 name|xcoff_swap_ldsym_out
 block|,
-comment|/* _xcoff_swap_ldsym_out */
 name|xcoff_swap_ldrel_in
 block|,
-comment|/* _xcoff_swap_ldrel_in */
 name|xcoff_swap_ldrel_out
 block|,
-comment|/* _xcoff_swap_ldrel_out */
-comment|/* sizes */
+comment|/* Sizes.  */
 name|LDHDRSZ
 block|,
-comment|/* _xcoff_ldhdrsz */
 name|LDSYMSZ
 block|,
-comment|/* _xcoff_ldsymsz */
 name|LDRELSZ
 block|,
-comment|/* _xcoff_ldrelsz */
 literal|12
 block|,
 comment|/* _xcoff_function_descriptor_size */
 name|SMALL_AOUTSZ
 block|,
-comment|/* _xcoff_small_aout_header_size */
-comment|/* versions */
+comment|/* Versions.  */
 literal|1
 block|,
 comment|/* _xcoff_ldhdr_version */
-comment|/* xcoff vs xcoff64 putting symbol names */
 name|_bfd_xcoff_put_symbol_name
 block|,
-comment|/* _xcoff_put_symbol_name */
 name|_bfd_xcoff_put_ldsymbol_name
 block|,
-comment|/* _xcoff_put_ldsymbol_name */
 operator|&
 name|xcoff_dynamic_reloc
 block|,
-comment|/* dynamic reloc howto */
 name|xcoff_create_csect_from_smclas
 block|,
-comment|/* _xcoff_create_csect_from_smclas */
-comment|/* lineno and reloc count overflow */
+comment|/* Lineno and reloc count overflow.  */
 name|xcoff_is_lineno_count_overflow
 block|,
 name|xcoff_is_reloc_count_overflow
@@ -16972,16 +19308,14 @@ name|xcoff_loader_symbol_offset
 block|,
 name|xcoff_loader_reloc_offset
 block|,
-comment|/* glink */
+comment|/* glink.  */
 operator|&
 name|xcoff_glink_code
 index|[
 literal|0
 index|]
 block|,
-operator|(
 literal|36
-operator|)
 block|,
 comment|/* _xcoff_glink_size */
 comment|/* rtinit */
@@ -16989,9 +19323,7 @@ literal|0
 block|,
 comment|/* _xcoff_rtinit_size */
 name|xcoff_generate_rtinit
-block|,
-comment|/* _xcoff_generate_rtinit */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -17020,7 +19352,6 @@ name|HAS_RELOC
 operator||
 name|EXEC_P
 operator||
-comment|/* object flags */
 name|HAS_LINENO
 operator||
 name|HAS_DEBUG
@@ -17044,7 +19375,6 @@ operator||
 name|SEC_RELOC
 operator|)
 block|,
-comment|/* section flags */
 literal|0
 block|,
 comment|/* leading char */
@@ -17053,63 +19383,45 @@ block|,
 comment|/* ar_pad_char */
 literal|15
 block|,
-comment|/* ar_max_namelen??? FIXMEmgo */
+comment|/* ar_max_namelen */
 comment|/* data */
 name|bfd_getb64
 block|,
-comment|/* bfd_getx64 */
 name|bfd_getb_signed_64
 block|,
-comment|/* bfd_getx_signed_64 */
 name|bfd_putb64
 block|,
-comment|/* bfd_putx64 */
 name|bfd_getb32
 block|,
-comment|/* bfd_getx32 */
 name|bfd_getb_signed_32
 block|,
-comment|/* bfd_getx_signed_32 */
 name|bfd_putb32
 block|,
-comment|/* bfd_putx32 */
 name|bfd_getb16
 block|,
-comment|/* bfd_getx16 */
 name|bfd_getb_signed_16
 block|,
-comment|/* bfd_getx_signed_16 */
 name|bfd_putb16
 block|,
-comment|/* bfd_putx16 */
 comment|/* hdrs */
 name|bfd_getb64
 block|,
-comment|/* bfd_h_getx64 */
 name|bfd_getb_signed_64
 block|,
-comment|/* bfd_h_getx_signed_64 */
 name|bfd_putb64
 block|,
-comment|/* bfd_h_putx64 */
 name|bfd_getb32
 block|,
-comment|/* bfd_h_getx32 */
 name|bfd_getb_signed_32
 block|,
-comment|/* bfd_h_getx_signed_32 */
 name|bfd_putb32
 block|,
-comment|/* bfd_h_putx32 */
 name|bfd_getb16
 block|,
-comment|/* bfd_h_getx16 */
 name|bfd_getb_signed_16
 block|,
-comment|/* bfd_h_getx_signed_16 */
 name|bfd_putb16
 block|,
-comment|/* bfd_h_putx16 */
 block|{
 comment|/* bfd_check_format */
 name|_bfd_dummy_target
@@ -17146,24 +19458,17 @@ block|,
 comment|/* Generic */
 name|bfd_true
 block|,
-comment|/* _close_and_cleanup */
 name|bfd_true
 block|,
-comment|/* _bfd_free_cached_info */
 name|coff_new_section_hook
 block|,
-comment|/* _new_section_hook */
 name|_bfd_generic_get_section_contents
 block|,
-comment|/* _bfd_get_section_contents */
-comment|/* _bfd_get_section_contents_in_window */
 name|_bfd_generic_get_section_contents_in_window
 block|,
 comment|/* Copy */
 name|_bfd_xcoff_copy_private_bfd_data
 block|,
-comment|/* _bfd_copy_private_bfd */
-comment|/* _bfd_merge_private_bfd_data */
 operator|(
 operator|(
 name|boolean
@@ -17181,7 +19486,6 @@ operator|)
 name|bfd_true
 operator|)
 block|,
-comment|/* _bfd_copy_pivate_section_data */
 operator|(
 operator|(
 name|boolean
@@ -17205,7 +19509,6 @@ operator|)
 name|bfd_true
 operator|)
 block|,
-comment|/* _bfd_copy_private_symbol_data */
 operator|(
 operator|(
 name|boolean
@@ -17245,7 +19548,6 @@ operator|)
 name|bfd_true
 operator|)
 block|,
-comment|/* _bfd_set_private_flags */
 operator|(
 operator|(
 name|boolean
@@ -17263,26 +19565,18 @@ operator|)
 name|bfd_true
 operator|)
 block|,
-comment|/* _bfd_print_private_bfd_data */
 comment|/* Core */
 name|coff_core_file_failing_command
 block|,
-comment|/* _core_file_failing_command */
 name|coff_core_file_failing_signal
 block|,
-comment|/* _core_file_failing_signal */
-comment|/* _core_file_matches_executable_p */
 name|coff_core_file_matches_executable_p
 block|,
 comment|/* Archive */
 name|_bfd_xcoff_slurp_armap
 block|,
-comment|/* _slurp_armap */
-comment|/* XCOFF archives do not have 					      anything which corresponds to 					      an extended name table.  */
 name|bfd_false
 block|,
-comment|/* _slurp_extended_name_table */
-comment|/* _construct_extended_name_table */
 operator|(
 operator|(
 name|boolean
@@ -17311,122 +19605,90 @@ operator|)
 block|,
 name|bfd_dont_truncate_arname
 block|,
-comment|/* _truncate_arname */
 name|_bfd_xcoff_write_armap
 block|,
-comment|/* _write_armap */
 name|_bfd_xcoff_read_ar_hdr
 block|,
-comment|/* _read_ar_hdr */
 name|_bfd_xcoff_openr_next_archived_file
 block|,
-comment|/* _openr_next_archived_file */
 name|_bfd_generic_get_elt_at_index
 block|,
-comment|/* _get_elt_at_index */
 name|_bfd_xcoff_stat_arch_elt
 block|,
-comment|/* _generic_stat_arch_elt */
-comment|/* XCOFF archives do not have 					      a timestamp.  */
 name|bfd_true
 block|,
-comment|/* _update_armap_timestamp */
 comment|/* Symbols */
 name|coff_get_symtab_upper_bound
 block|,
-comment|/* _get_symtab_upper_bound */
 name|coff_get_symtab
 block|,
-comment|/* _get_symtab */
 name|coff_make_empty_symbol
 block|,
-comment|/* _make_empty_symbol */
 name|coff_print_symbol
 block|,
-comment|/* _print_symbol */
 name|coff_get_symbol_info
 block|,
-comment|/* _get_symbol_info */
 name|_bfd_xcoff_is_local_label_name
 block|,
-comment|/* _bfd_is_local_label_name */
 name|coff_get_lineno
 block|,
-comment|/* _get_lineno */
 name|coff_find_nearest_line
 block|,
-comment|/* _find_nearest_line */
 name|coff_bfd_make_debug_symbol
 block|,
-comment|/* _bfd_make_debug_symbol */
 name|_bfd_generic_read_minisymbols
 block|,
-comment|/* _read_minisymbols */
 name|_bfd_generic_minisymbol_to_symbol
 block|,
-comment|/* _minsymbol_to_symbol */
 comment|/* Reloc */
 name|coff_get_reloc_upper_bound
 block|,
-comment|/* _get_reloc_upper_bound */
 name|coff_canonicalize_reloc
 block|,
-comment|/* _cononicalize_reloc */
 name|_bfd_xcoff_reloc_type_lookup
 block|,
-comment|/* _bfd_reloc_type_lookup */
 comment|/* Write */
 name|coff_set_arch_mach
 block|,
-comment|/* _set_arch_mach */
 name|coff_set_section_contents
 block|,
-comment|/* _set_section_contents */
 comment|/* Link */
 name|_bfd_xcoff_sizeof_headers
 block|,
-comment|/* _sizeof_headers */
-comment|/* _bfd_get_relocated_section_contents */
 name|bfd_generic_get_relocated_section_contents
 block|,
 name|bfd_generic_relax_section
 block|,
-comment|/* _bfd_relax_section */
 name|_bfd_xcoff_bfd_link_hash_table_create
 block|,
-comment|/* _bfd_link_hash_table_create */
+name|_bfd_generic_link_hash_table_free
+block|,
 name|_bfd_xcoff_bfd_link_add_symbols
 block|,
-comment|/* _bfd_link_add_symbols */
+name|_bfd_generic_link_just_syms
+block|,
 name|_bfd_xcoff_bfd_final_link
 block|,
-comment|/* _bfd_filnal_link */
 name|_bfd_generic_link_split_section
 block|,
-comment|/* _bfd_link_split_section */
 name|bfd_generic_gc_sections
 block|,
-comment|/* _bfd_gc_sections */
 name|bfd_generic_merge_sections
 block|,
-comment|/* _bfd_merge_sections */
+name|bfd_generic_discard_group
+block|,
 comment|/* Dynamic */
-comment|/* _get_dynamic_symtab_upper_bound */
 name|_bfd_xcoff_get_dynamic_symtab_upper_bound
 block|,
 name|_bfd_xcoff_canonicalize_dynamic_symtab
 block|,
-comment|/* _cononicalize_dynamic_symtab */
 name|_bfd_xcoff_get_dynamic_reloc_upper_bound
 block|,
-comment|/* _get_dynamic_reloc_upper_bound */
 name|_bfd_xcoff_canonicalize_dynamic_reloc
 block|,
-comment|/* _cononicalize_dynamic_reloc */
 comment|/* Opposite endian version, none exists */
 name|NULL
 block|,
-comment|/* back end data */
 operator|(
 name|void
 operator|*

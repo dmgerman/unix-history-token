@@ -1034,7 +1034,7 @@ break|break;
 case|case
 literal|2
 case|:
-comment|/* If we're at level 2, the key of this resource is the name 	     we are going to use in the rc printout. */
+comment|/* If we're at level 2, the key of this resource is the name 	     we are going to use in the rc printout.  */
 name|name
 operator|=
 operator|&

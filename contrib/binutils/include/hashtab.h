@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* An expandable hash tables datatype.      Copyright (C) 1999, 2000 Free Software Foundation, Inc.    Contributed by Vladimir Makarov (vmakarov@cygnus.com).  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* An expandable hash tables datatype.      Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.    Contributed by Vladimir Makarov (vmakarov@cygnus.com).  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -34,7 +34,18 @@ directive|endif
 comment|/* __cplusplus */
 include|#
 directive|include
-file|<ansidecl.h>
+file|"ansidecl.h"
+ifndef|#
+directive|ifndef
+name|GTY
+define|#
+directive|define
+name|GTY
+parameter_list|(
+name|X
+parameter_list|)
+endif|#
+directive|endif
 comment|/* The type for a hash code.  */
 typedef|typedef
 name|unsigned
@@ -108,9 +119,42 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Memory-allocation function, with the same functionality as calloc().    Iff it returns NULL, the hash table implementation will pass an error    code back to the user, so if your code doesn't handle errors,    best if you use xcalloc instead.  */
+typedef|typedef
+name|PTR
+argument_list|(
+argument|*htab_alloc
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|size_t
+operator|,
+name|size_t
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* We also need a free() routine.  */
+typedef|typedef
+name|void
+argument_list|(
+argument|*htab_free
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|PTR
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Hash tables are of the following type.  The structure    (implementation) of this type is not needed for using the hash    tables.  All work with hash table should be executed only through    functions mentioned below. */
-struct|struct
+name|struct
 name|htab
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 comment|/* Pointer to hash function.  */
 name|htab_hash
@@ -127,6 +171,20 @@ decl_stmt|;
 comment|/* Table itself.  */
 name|PTR
 modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|use_param
+argument_list|(
+literal|""
+argument_list|)
+operator|,
+name|length
+argument_list|(
+literal|"%h.size"
+argument_list|)
+operator|)
+argument_list|)
 name|entries
 decl_stmt|;
 comment|/* Current size (in entries) of the hash table */
@@ -151,12 +209,15 @@ name|unsigned
 name|int
 name|collisions
 decl_stmt|;
-comment|/* This is non-zero if we are allowed to return NULL for function calls      that allocate memory.  */
-name|int
-name|return_allocation_failure
+comment|/* Pointers to allocate/free functions.  */
+name|htab_alloc
+name|alloc_f
+decl_stmt|;
+name|htab_free
+name|free_f
 decl_stmt|;
 block|}
-struct|;
+empty_stmt|;
 typedef|typedef
 name|struct
 name|htab
@@ -175,6 +236,27 @@ enum|;
 comment|/* The prototypes of the package functions. */
 specifier|extern
 name|htab_t
+name|htab_create_alloc
+name|PARAMS
+argument_list|(
+operator|(
+name|size_t
+operator|,
+name|htab_hash
+operator|,
+name|htab_eq
+operator|,
+name|htab_del
+operator|,
+name|htab_alloc
+operator|,
+name|htab_free
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Backward-compatibility functions.  */
+specifier|extern
+name|htab_t
 name|htab_create
 name|PARAMS
 argument_list|(
@@ -189,7 +271,6 @@ name|htab_del
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* This function is like htab_create, but may return NULL if memory    allocation fails, and also signals that htab_find_slot_with_hash and    htab_find_slot are allowed to return NULL when inserting.  */
 specifier|extern
 name|htab_t
 name|htab_try_create

@@ -3414,10 +3414,6 @@ begin_comment
 comment|/* Make an array type.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -3649,10 +3645,6 @@ end_function
 
 begin_comment
 comment|/* Make a set type.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -7221,10 +7213,6 @@ begin_comment
 comment|/* Output a tag.  The tag should already be in the string on the    stack, so all we have to do here is print it out.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -8280,10 +8268,6 @@ end_function
 
 begin_comment
 comment|/* Finish writing out a function.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function

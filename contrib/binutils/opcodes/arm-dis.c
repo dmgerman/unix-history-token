@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Instruction printing code for the ARM    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)    Modification by James G. Smith (jsmith@cygnus.co.uk)  This file is part of libopcodes.   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.   You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Instruction printing code for the ARM    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)    Modification by James G. Smith (jsmith@cygnus.co.uk)  This file is part of libopcodes.   This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.   You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -46,7 +46,7 @@ file|"opintl.h"
 end_include
 
 begin_comment
-comment|/* FIXME: This shouldn't be done here */
+comment|/* FIXME: This shouldn't be done here.  */
 end_comment
 
 begin_include
@@ -687,15 +687,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Functions. */
+comment|/* Functions.  */
 end_comment
 
 begin_function
 name|int
 name|get_arm_regname_num_options
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 return|return
 name|NUM_ARM_REGNAMES
@@ -707,9 +705,11 @@ begin_function
 name|int
 name|set_arm_regname_option
 parameter_list|(
-name|int
 name|option
 parameter_list|)
+name|int
+name|option
+decl_stmt|;
 block|{
 name|int
 name|old
@@ -730,28 +730,36 @@ begin_function
 name|int
 name|get_arm_regnames
 parameter_list|(
-name|int
 name|option
 parameter_list|,
+name|setname
+parameter_list|,
+name|setdescription
+parameter_list|,
+name|register_names
+parameter_list|)
+name|int
+name|option
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|setname
-parameter_list|,
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|setdescription
-parameter_list|,
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
 modifier|*
 modifier|*
 name|register_names
-parameter_list|)
+decl_stmt|;
 block|{
 operator|*
 name|setname
@@ -1129,7 +1137,7 @@ operator|=
 operator|-
 name|offset
 expr_stmt|;
-comment|/* pre-indexed */
+comment|/* Pre-indexed.  */
 name|func
 argument_list|(
 name|stream
@@ -1172,13 +1180,13 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
+comment|/* ie ignore the offset.  */
 name|offset
 operator|=
 name|pc
 operator|+
 literal|8
 expr_stmt|;
-comment|/* ie ignore the offset.  */
 block|}
 name|func
 argument_list|(
@@ -3471,6 +3479,16 @@ argument_list|(
 name|given
 argument_list|)
 expr_stmt|;
+name|offset
+operator|=
+name|offset
+operator|*
+literal|2
+operator|+
+name|pc
+operator|+
+literal|4
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3489,32 +3507,9 @@ argument_list|,
 literal|"blx\t"
 argument_list|)
 expr_stmt|;
-comment|/* The spec says that bit 1 of the branch's destination 		     address comes from bit 1 of the instruction's 		     address and not from the offset in the instruction.  */
-if|if
-condition|(
-name|offset
-operator|&
-literal|0x1
-condition|)
-block|{
-comment|/* func (stream, "*malformed!* "); */
 name|offset
 operator|&=
-operator|~
-literal|0x1
-expr_stmt|;
-block|}
-name|offset
-operator||=
-operator|(
-operator|(
-name|pc
-operator|&
-literal|0x2
-operator|)
-operator|>>
-literal|1
-operator|)
+literal|0xfffffffc
 expr_stmt|;
 block|}
 else|else
@@ -3530,12 +3525,6 @@ operator|->
 name|print_address_func
 argument_list|(
 name|offset
-operator|*
-literal|2
-operator|+
-name|pc
-operator|+
-literal|4
 argument_list|,
 name|info
 argument_list|)

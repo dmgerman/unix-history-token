@@ -1612,10 +1612,6 @@ begin_comment
 comment|/* Create a handle to parse stabs symbols with.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|PTR
 name|start_stab
@@ -7640,7 +7636,7 @@ operator|++
 operator|*
 name|pp
 expr_stmt|;
-comment|/* The second number is always 0, so ignore it too. */
+comment|/* The second number is always 0, so ignore it too.  */
 operator|(
 name|void
 operator|)
@@ -7677,7 +7673,7 @@ operator|++
 operator|*
 name|pp
 expr_stmt|;
-comment|/* The third number is the number of bits for this type. */
+comment|/* The third number is the number of bits for this type.  */
 name|bits
 operator|=
 name|parse_number
@@ -9036,7 +9032,7 @@ name|c
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Look for the ':' that separates the field name from the field 	 values.  Data members are delimited by a single ':', while member 	 functions are delimited by a pair of ':'s.  When we hit the member 	 functions (if any), terminate scan loop and return. */
+comment|/* Look for the ':' that separates the field name from the field 	 values.  Data members are delimited by a single ':', while member 	 functions are delimited by a pair of ':'s.  When we hit the member 	 functions (if any), terminate scan loop and return.  */
 name|p
 operator|=
 name|strchr
@@ -11780,7 +11776,7 @@ operator|=
 operator|*
 name|pp
 expr_stmt|;
-comment|/* If we are positioned at a ';', then skip it. */
+comment|/* If we are positioned at a ';', then skip it.  */
 if|if
 condition|(
 operator|*
@@ -11829,7 +11825,7 @@ operator|==
 literal|'-'
 condition|)
 block|{
-comment|/* Obsolete flags that used to indicate the presence of 	 constructors and/or destructors. */
+comment|/* Obsolete flags that used to indicate the presence of 	 constructors and/or destructors.  */
 operator|++
 operator|*
 name|pp

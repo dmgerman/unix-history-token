@@ -2688,8 +2688,6 @@ argument_list|,
 operator|&
 name|result
 argument_list|)
-operator|==
-name|true
 argument_list|)
 expr_stmt|;
 return|return
@@ -4893,6 +4891,7 @@ expr_stmt|;
 comment|/* Fetch the defautlt value if available */
 if|if
 condition|(
+operator|!
 name|parse_int
 argument_list|(
 operator|&
@@ -4905,8 +4904,6 @@ argument_list|,
 operator|&
 name|value
 argument_list|)
-operator|==
-name|false
 condition|)
 block|{
 name|value
@@ -5195,14 +5192,13 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+operator|!
 name|IEEE_DATA
 argument_list|(
 name|abfd
 argument_list|)
 operator|->
 name|read_symbols
-operator|==
-name|false
 condition|)
 block|{
 if|if
@@ -5392,11 +5388,10 @@ literal|1
 return|;
 if|if
 condition|(
+operator|!
 name|ieee
 operator|->
 name|symbol_table_full
-operator|==
-name|false
 condition|)
 block|{
 comment|/* Arrgh - there are gaps in the table, run through and fill them */
@@ -6872,7 +6867,7 @@ operator|.
 name|ieee_ar_data
 condition|)
 goto|goto
-name|error_return
+name|error_ret_restore
 goto|;
 name|ieee
 operator|=
@@ -7506,21 +7501,6 @@ name|xvec
 return|;
 name|got_wrong_format_error
 label|:
-name|bfd_release
-argument_list|(
-name|abfd
-argument_list|,
-name|ieee
-argument_list|)
-expr_stmt|;
-name|abfd
-operator|->
-name|tdata
-operator|.
-name|ieee_ar_data
-operator|=
-name|save
-expr_stmt|;
 name|bfd_set_error
 argument_list|(
 name|bfd_error_wrong_format
@@ -7538,6 +7518,23 @@ name|free
 argument_list|(
 name|elts
 argument_list|)
+expr_stmt|;
+name|bfd_release
+argument_list|(
+name|abfd
+argument_list|,
+name|ieee
+argument_list|)
+expr_stmt|;
+name|error_ret_restore
+label|:
+name|abfd
+operator|->
+name|tdata
+operator|.
+name|ieee_ar_data
+operator|=
+name|save
 expr_stmt|;
 return|return
 name|NULL
@@ -8184,6 +8181,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|parse_int
 argument_list|(
 operator|&
@@ -8200,8 +8198,6 @@ name|ad
 operator|.
 name|number_of_bits_mau
 argument_list|)
-operator|==
-name|false
 condition|)
 block|{
 goto|goto
@@ -8210,6 +8206,7 @@ goto|;
 block|}
 if|if
 condition|(
+operator|!
 name|parse_int
 argument_list|(
 operator|&
@@ -8226,8 +8223,6 @@ name|ad
 operator|.
 name|number_of_maus_in_address
 argument_list|)
-operator|==
-name|false
 condition|)
 block|{
 goto|goto
@@ -8359,9 +8354,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|ok
-operator|==
-name|false
 condition|)
 block|{
 goto|goto
@@ -8534,9 +8528,6 @@ argument_list|)
 expr_stmt|;
 name|fail
 label|:
-operator|(
-name|void
-operator|)
 name|bfd_release
 argument_list|(
 name|abfd
@@ -9280,8 +9271,6 @@ case|:
 if|if
 condition|(
 name|pcrel
-operator|==
-name|true
 condition|)
 block|{
 if|#
@@ -9405,8 +9394,6 @@ case|:
 if|if
 condition|(
 name|pcrel
-operator|==
-name|true
 condition|)
 block|{
 if|#
@@ -9533,8 +9520,6 @@ case|:
 if|if
 condition|(
 name|pcrel
-operator|==
-name|true
 condition|)
 block|{
 if|#
@@ -9680,8 +9665,6 @@ argument_list|,
 operator|&
 name|this_size
 argument_list|)
-operator|==
-name|true
 condition|)
 block|{
 name|unsigned
@@ -9820,8 +9803,6 @@ condition|(
 name|ieee
 operator|->
 name|read_data
-operator|==
-name|true
 condition|)
 return|return
 name|true
@@ -11700,8 +11681,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-operator|(
-name|bfd_alloc
+name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
@@ -11709,7 +11689,6 @@ name|s
 operator|->
 name|_raw_size
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -11719,23 +11698,6 @@ condition|)
 return|return
 name|false
 return|;
-name|memset
-argument_list|(
-operator|(
-name|PTR
-operator|)
-name|stream
-argument_list|,
-literal|0
-argument_list|,
-operator|(
-name|size_t
-operator|)
-name|s
-operator|->
-name|_raw_size
-argument_list|)
-expr_stmt|;
 block|}
 while|while
 condition|(
@@ -12685,10 +12647,8 @@ operator|->
 name|tdata
 operator|.
 name|ieee_data
-condition|?
-name|true
-else|:
-name|false
+operator|!=
+name|NULL
 return|;
 block|}
 end_function
@@ -17629,7 +17589,7 @@ comment|/* Only bother once per bfd */
 end_comment
 
 begin_comment
-unit|if (ieee->done_debug == true)     return;   ieee->done_debug = true;
+unit|if (ieee->done_debug)     return;   ieee->done_debug = true;
 comment|/* Don't bother if there is no debug info */
 end_comment
 
@@ -17810,6 +17770,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ieee_bfd_discard_group
+value|bfd_generic_discard_group
+end_define
+
+begin_define
+define|#
+directive|define
 name|ieee_bfd_link_hash_table_create
 value|_bfd_generic_link_hash_table_create
 end_define
@@ -17817,8 +17784,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ieee_bfd_link_hash_table_free
+value|_bfd_generic_link_hash_table_free
+end_define
+
+begin_define
+define|#
+directive|define
 name|ieee_bfd_link_add_symbols
 value|_bfd_generic_link_add_symbols
+end_define
+
+begin_define
+define|#
+directive|define
+name|ieee_bfd_link_just_syms
+value|_bfd_generic_link_just_syms
 end_define
 
 begin_define
@@ -18010,7 +17991,7 @@ argument_list|(
 name|ieee
 argument_list|)
 block|,
-comment|/* ieee_sizeof_headers, ieee_bfd_get_relocated_section_contents,      ieee_bfd_relax_section, ieee_bfd_link_hash_table_create,      ieee_bfd_link_add_symbols, ieee_bfd_final_link,      ieee_bfd_link_split_section, ieee_bfd_gc_sections,      ieee_bfd_merge_sections  */
+comment|/* ieee_sizeof_headers, ieee_bfd_get_relocated_section_contents,      ieee_bfd_relax_section, ieee_bfd_link_hash_table_create,      _bfd_generic_link_hash_table_free,      ieee_bfd_link_add_symbols, ieee_bfd_final_link,      ieee_bfd_link_split_section, ieee_bfd_gc_sections,      ieee_bfd_merge_sections  */
 name|BFD_JUMP_TABLE_LINK
 argument_list|(
 name|ieee

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Intel Hex objects.    Copyright 1995, 1996, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor of Cygnus Support<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Intel Hex objects.    Copyright 1995, 1996, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor of Cygnus Support<ian@cygnus.com>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -286,7 +286,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* Macros for converting between hex and binary. */
+comment|/* Macros for converting between hex and binary.  */
 end_comment
 
 begin_define
@@ -425,17 +425,6 @@ modifier|*
 name|abfd
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|abfd
-operator|->
-name|tdata
-operator|.
-name|ihex_data
-operator|==
-name|NULL
-condition|)
-block|{
 name|struct
 name|ihex_data_struct
 modifier|*
@@ -493,7 +482,6 @@ name|tail
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 return|return
 name|true
 return|;
@@ -1754,6 +1742,9 @@ modifier|*
 name|abfd
 decl_stmt|;
 block|{
+name|PTR
+name|tdata_save
+decl_stmt|;
 name|bfd_byte
 name|b
 index|[
@@ -1904,6 +1895,14 @@ name|NULL
 return|;
 block|}
 comment|/* OK, it looks like it really is an Intel Hex file.  */
+name|tdata_save
+operator|=
+name|abfd
+operator|->
+name|tdata
+operator|.
+name|any
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1918,9 +1917,48 @@ argument_list|(
 name|abfd
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|abfd
+operator|->
+name|tdata
+operator|.
+name|any
+operator|!=
+name|tdata_save
+operator|&&
+name|abfd
+operator|->
+name|tdata
+operator|.
+name|any
+operator|!=
+name|NULL
+condition|)
+name|bfd_release
+argument_list|(
+name|abfd
+argument_list|,
+name|abfd
+operator|->
+name|tdata
+operator|.
+name|any
+argument_list|)
+expr_stmt|;
+name|abfd
+operator|->
+name|tdata
+operator|.
+name|any
+operator|=
+name|tdata_save
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 return|return
 name|abfd
 operator|->
@@ -3910,6 +3948,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ihex_bfd_discard_group
+value|bfd_generic_discard_group
+end_define
+
+begin_define
+define|#
+directive|define
 name|ihex_bfd_link_hash_table_create
 value|_bfd_generic_link_hash_table_create
 end_define
@@ -3917,8 +3962,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ihex_bfd_link_hash_table_free
+value|_bfd_generic_link_hash_table_free
+end_define
+
+begin_define
+define|#
+directive|define
 name|ihex_bfd_link_add_symbols
 value|_bfd_generic_link_add_symbols
+end_define
+
+begin_define
+define|#
+directive|define
+name|ihex_bfd_link_just_syms
+value|_bfd_generic_link_just_syms
 end_define
 
 begin_define

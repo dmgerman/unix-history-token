@@ -227,19 +227,6 @@ specifier|extern
 specifier|const
 name|struct
 name|floatformat
-name|floatformat_arm_ext
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* deprecated. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|floatformat
 name|floatformat_arm_ext_big
 decl_stmt|;
 end_decl_stmt

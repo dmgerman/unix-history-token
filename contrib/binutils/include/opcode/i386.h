@@ -833,8 +833,6 @@ block|,
 name|w_Suf
 operator||
 name|Modrm
-operator||
-name|IgnoreSize
 block|,
 block|{
 name|Reg16
@@ -889,8 +887,6 @@ block|,
 name|w_Suf
 operator||
 name|Modrm
-operator||
-name|IgnoreSize
 operator||
 name|Rex64
 block|,
@@ -1084,8 +1080,6 @@ block|,
 name|w_Suf
 operator||
 name|Modrm
-operator||
-name|IgnoreSize
 block|,
 block|{
 name|Reg16
@@ -1141,8 +1135,6 @@ block|,
 name|w_Suf
 operator||
 name|Modrm
-operator||
-name|IgnoreSize
 operator||
 name|Rex64
 block|,

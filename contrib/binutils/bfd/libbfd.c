@@ -5023,7 +5023,7 @@ name|section
 operator|->
 name|_raw_size
 operator|||
-operator|(
+operator|!
 name|bfd_get_file_window
 argument_list|(
 name|abfd
@@ -5040,9 +5040,6 @@ name|w
 argument_list|,
 name|true
 argument_list|)
-operator|==
-name|false
-operator|)
 condition|)
 return|return
 name|false

@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ar.c - Archive modify and extract.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ar.c - Archive modify and extract.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/*    Bugs: should use getopt the way tar does (complete w/optional -) and    should have long options too. GNU ar used to check file against filesystem    in quick_update and replace operations (would check mtime). Doesn't warn    when name truncated. No way to specify pos_end. Error messages should be    more consistant. */
+comment|/*    Bugs: should use getopt the way tar does (complete w/optional -) and    should have long options too. GNU ar used to check file against filesystem    in quick_update and replace operations (would check mtime). Doesn't warn    when name truncated. No way to specify pos_end. Error messages should be    more consistant.  */
 end_comment
 
 begin_include
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|"filenames.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"binemul.h"
 end_include
 
 begin_include
@@ -909,7 +915,7 @@ name|s
 argument_list|,
 name|_
 argument_list|(
-literal|"Usage: %s [-X32_64] [-]{dmpqrstx}[abcfilNoPsSuvV] [member-name] [count] archive-file file...\n"
+literal|"Usage: %s [emulation options] [-]{dmpqrstx}[abcfilNoPsSuvV] [member-name] [count] archive-file file...\n"
 argument_list|)
 argument_list|,
 name|program_name
@@ -1148,14 +1154,9 @@ literal|"  [V]          - display the version number\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|ar_emul_usage
 argument_list|(
 name|s
-argument_list|,
-name|_
-argument_list|(
-literal|"  [-X32_64]    - (ignored)\n"
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1615,6 +1616,9 @@ decl_stmt|;
 name|int
 name|show_version
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -1899,33 +1903,47 @@ argument_list|(
 name|remove_output
 argument_list|)
 expr_stmt|;
-comment|/* Ignored for (partial) AIX compatibility.  On AIX,      the -X option can be used to ignore certain kinds      of object files in the archive (the 64-bit objects      or the 32-bit objects).  GNU ar always looks at all      kinds of objects in an archive.  */
-while|while
-condition|(
-name|argc
-operator|>
+for|for
+control|(
+name|i
+operator|=
 literal|1
-operator|&&
-name|strcmp
+init|;
+name|i
+operator|<
+name|argc
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|ar_emul_parse_arg
 argument_list|(
 name|argv
 index|[
-literal|1
+name|i
 index|]
-argument_list|,
-literal|"-X32_64"
 argument_list|)
-operator|==
-literal|0
 condition|)
-block|{
+break|break;
 name|argv
-operator|++
+operator|+=
+operator|(
+name|i
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 name|argc
-operator|--
+operator|-=
+operator|(
+name|i
+operator|-
+literal|1
+operator|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|is_ranlib
@@ -2626,7 +2644,7 @@ literal|0
 comment|/* We don't use do_quick_append any more.  Too many systems          expect ar to always rebuild the symbol table even when q is          used.  */
 comment|/* We can't do a quick append if we need to construct an 	 extended name table, because do_quick_append won't be able to 	 rebuild the name table.  Unfortunately, at this point we 	 don't actually know the maximum name length permitted by this 	 object file format.  So, we guess.  FIXME.  */
 block|if (operation == quick_append&& ! ar_truncate) 	{ 	  char **chk;  	  for (chk = files; chk != NULL&& *chk != '\0'; chk++) 	    { 	      if (strlen (normalize (*chk, (bfd *) NULL))> 14) 		{ 		  operation = replace; 		  break; 		} 	    } 	}        if (operation == quick_append) 	{
-comment|/* Note that quick appending to a non-existent archive creates it, 	     even if there are no files to append. */
+comment|/* Note that quick appending to a non-existent archive creates it, 	     even if there are no files to append.  */
 block|do_quick_append (inarch_filename, files); 	  xexit (0); 	}
 endif|#
 directive|endif
@@ -4604,10 +4622,6 @@ modifier|*
 modifier|*
 name|current_ptr
 decl_stmt|;
-name|bfd
-modifier|*
-name|temp
-decl_stmt|;
 while|while
 condition|(
 name|files_to_move
@@ -4768,79 +4782,35 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
-operator|*
-name|after_bfd
-expr_stmt|;
-operator|*
-name|after_bfd
-operator|=
-name|bfd_openr
+if|if
+condition|(
+name|ar_emul_replace
 argument_list|(
+name|after_bfd
+argument_list|,
 operator|*
 name|files_to_move
 argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|after_bfd
-operator|==
-operator|(
-name|bfd
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-name|bfd_fatal
-argument_list|(
-operator|*
-name|files_to_move
-argument_list|)
-expr_stmt|;
-block|}
-operator|(
-operator|*
-name|after_bfd
-operator|)
-operator|->
-name|next
-operator|=
-name|temp
-expr_stmt|;
-comment|/* snip out this entry from the chain */
-operator|*
-name|current_ptr
-operator|=
-operator|(
-operator|*
-name|current_ptr
-operator|)
-operator|->
-name|next
-expr_stmt|;
-if|if
-condition|(
 name|verbose
+argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"r - %s\n"
-argument_list|,
+comment|/* Snip out this entry from the chain.  */
 operator|*
-name|files_to_move
-argument_list|)
+name|current_ptr
+operator|=
+operator|(
+operator|*
+name|current_ptr
+operator|)
+operator|->
+name|next
 expr_stmt|;
-block|}
 name|changed
 operator|=
 name|true
 expr_stmt|;
+block|}
 goto|goto
 name|next_file
 goto|;
@@ -4871,64 +4841,18 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
-operator|*
-name|after_bfd
-expr_stmt|;
-operator|*
-name|after_bfd
-operator|=
-name|bfd_openr
+if|if
+condition|(
+name|ar_emul_append
 argument_list|(
+name|after_bfd
+argument_list|,
 operator|*
 name|files_to_move
 argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|after_bfd
-operator|==
-operator|(
-name|bfd
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-name|bfd_fatal
-argument_list|(
-operator|*
-name|files_to_move
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|verbose
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"a - %s\n"
-argument_list|,
-operator|*
-name|files_to_move
 argument_list|)
-expr_stmt|;
-block|}
-operator|(
-operator|*
-name|after_bfd
-operator|)
-operator|->
-name|next
-operator|=
-name|temp
-expr_stmt|;
+condition|)
 name|changed
 operator|=
 name|true

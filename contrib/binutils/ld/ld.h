@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ld.h -- general linker header file    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ld.h -- general linker header file    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2002    Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -353,31 +353,6 @@ name|QUAD_SIZE
 value|(8)
 end_define
 
-begin_comment
-comment|/* ALIGN macro changed to ALIGN_N to avoid	*/
-end_comment
-
-begin_comment
-comment|/* conflict in /usr/include/machine/machparam.h */
-end_comment
-
-begin_comment
-comment|/* WARNING: If THIS is a 64 bit address and BOUNDARY is a 32 bit int,    you must coerce boundary to the same type as THIS.    ??? Is there a portable way to avoid this.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ALIGN_N
-parameter_list|(
-name|this
-parameter_list|,
-name|boundary
-parameter_list|)
-define|\
-value|((( (this) + ((boundary) -1))& (~((boundary)-1))))
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -386,7 +361,7 @@ comment|/* 1 => assign space to common symbols even if `relocatable_output'.  */
 name|boolean
 name|force_common_definition
 decl_stmt|;
-comment|/* 1 => do not assign addresses to common symbols. */
+comment|/* 1 => do not assign addresses to common symbols.  */
 name|boolean
 name|inhibit_common_definition
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for the generic parts of COFF, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support for the generic parts of COFF, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -811,6 +811,9 @@ decl_stmt|;
 name|PTR
 name|tdata
 decl_stmt|;
+name|PTR
+name|tdata_save
+decl_stmt|;
 name|bfd_size_type
 name|readsize
 decl_stmt|;
@@ -959,6 +962,14 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Set up the tdata area.  ECOFF uses its own routine, and overrides      abfd->flags.  */
+name|tdata_save
+operator|=
+name|abfd
+operator|->
+name|tdata
+operator|.
+name|any
+expr_stmt|;
 name|tdata
 operator|=
 name|bfd_coff_mkobject_hook
@@ -982,9 +993,9 @@ name|tdata
 operator|==
 name|NULL
 condition|)
-return|return
-literal|0
-return|;
+goto|goto
+name|fail2
+goto|;
 name|scnhsz
 operator|=
 name|bfd_coff_scnhsz
@@ -1044,6 +1055,7 @@ goto|;
 comment|/* Set the arch/mach *before* swapping in sections; section header swapping      may depend on arch/mach info.  */
 if|if
 condition|(
+operator|!
 name|bfd_coff_set_arch_mach_hook
 argument_list|(
 name|abfd
@@ -1053,8 +1065,6 @@ name|PTR
 operator|)
 name|internal_f
 argument_list|)
-operator|==
-name|false
 condition|)
 goto|goto
 name|fail
@@ -1145,6 +1155,16 @@ name|abfd
 argument_list|,
 name|tdata
 argument_list|)
+expr_stmt|;
+name|fail2
+label|:
+name|abfd
+operator|->
+name|tdata
+operator|.
+name|any
+operator|=
+name|tdata_save
 expr_stmt|;
 name|abfd
 operator|->
@@ -1239,7 +1259,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 if|if
 condition|(
@@ -1267,8 +1287,15 @@ argument_list|(
 name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
+name|bfd_release
+argument_list|(
+name|abfd
+argument_list|,
+name|filehdr
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 name|bfd_coff_swap_filehdr_in
@@ -1291,6 +1318,7 @@ expr_stmt|;
 comment|/* The XCOFF format has two sizes for the f_opthdr.  SMALL_AOUTSZ      (less than aoutsz) used in object files and AOUTSZ (equal to      aoutsz) in executables.  The bfd_coff_swap_aouthdr_in function      expects this header to be aoutsz bytes in length, so we use that      value in the call to bfd_alloc below.  But we must be careful to      only read in f_opthdr bytes in the call to bfd_bread.  We should      also attempt to catch corrupt or non-COFF binaries with a strange      value for f_opthdr.  */
 if|if
 condition|(
+operator|!
 name|bfd_coff_bad_format_hook
 argument_list|(
 name|abfd
@@ -1298,8 +1326,6 @@ argument_list|,
 operator|&
 name|internal_f
 argument_list|)
-operator|==
-name|false
 operator|||
 name|internal_f
 operator|.
@@ -1314,7 +1340,7 @@ name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 name|nscns
@@ -1349,7 +1375,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 if|if
 condition|(
@@ -1372,8 +1398,15 @@ operator|.
 name|f_opthdr
 condition|)
 block|{
+name|bfd_release
+argument_list|(
+name|abfd
+argument_list|,
+name|opthdr
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 name|bfd_coff_swap_aouthdr_in
@@ -1387,6 +1420,13 @@ name|PTR
 operator|)
 operator|&
 name|internal_a
+argument_list|)
+expr_stmt|;
+name|bfd_release
+argument_list|(
+name|abfd
+argument_list|,
+name|opthdr
 argument_list|)
 expr_stmt|;
 block|}
@@ -6521,7 +6561,7 @@ comment|/* @@FIXME This shouldn't use a fixed size!!  */
 end_comment
 
 begin_comment
-unit|combined_entry_type e[10]; 	};       struct foo *f;       f = (struct foo *) bfd_alloc (abfd, (bfd_size_type) sizeof (*f));       if (!f) 	{ 	  bfd_set_error (bfd_error_no_error); 	  return NULL; 	}       memset ((char *) f, 0, sizeof (*f));       coff_symbol_from (abfd, sym)->native = csym = f->e;     }   csym[0].u.syment.n_sclass = C_STAT;   csym[0].u.syment.n_numaux = 1;
+unit|combined_entry_type e[10]; 	};       struct foo *f;        f = (struct foo *) bfd_zalloc (abfd, (bfd_size_type) sizeof (*f));       if (!f) 	{ 	  bfd_set_error (bfd_error_no_error); 	  return NULL; 	}       coff_symbol_from (abfd, sym)->native = csym = f->e;     }   csym[0].u.syment.n_sclass = C_STAT;   csym[0].u.syment.n_numaux = 1;
 comment|/*  SF_SET_STATICS (sym);       @@ ??? */
 end_comment
 
@@ -8150,7 +8190,7 @@ operator|=
 operator|(
 name|PTR
 operator|)
-name|bfd_alloc
+name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
@@ -8175,17 +8215,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|memset
-argument_list|(
-name|newstring
-argument_list|,
-literal|0
-argument_list|,
-name|i
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
 name|strncpy
 argument_list|(
 name|newstring
@@ -8528,7 +8557,7 @@ operator|(
 name|coff_symbol_type
 operator|*
 operator|)
-name|bfd_alloc
+name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
@@ -8546,17 +8575,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|memset
-argument_list|(
-name|new
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-expr|*
-name|new
-argument_list|)
-expr_stmt|;
 name|new
 operator|->
 name|symbol
@@ -11046,9 +11064,8 @@ name|size
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|reloc
-operator|==
-name|false
 condition|)
 block|{
 name|size
@@ -11177,7 +11194,7 @@ operator|(
 name|combined_entry_type
 operator|*
 operator|)
-name|bfd_alloc
+name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
@@ -11193,19 +11210,6 @@ condition|)
 return|return
 name|false
 return|;
-name|memset
-argument_list|(
-name|native
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|native
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|native
 operator|->
 name|u
