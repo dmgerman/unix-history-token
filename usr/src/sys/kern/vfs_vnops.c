@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -89,7 +89,7 @@ name|vn_ioctl
 block|,
 name|vn_select
 block|,
-name|vn_close
+name|vn_closefile
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -656,7 +656,94 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Vnode version of rdwri() for calls on file systems.  */
+comment|/*  * Vnode close call  */
+end_comment
+
+begin_expr_stmt
+name|vn_close
+argument_list|(
+name|vp
+argument_list|,
+name|flags
+argument_list|,
+name|cred
+argument_list|,
+name|p
+argument_list|)
+specifier|register
+expr|struct
+name|vnode
+operator|*
+name|vp
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|error
+decl_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|FWRITE
+condition|)
+name|vp
+operator|->
+name|v_writecount
+operator|--
+expr_stmt|;
+name|error
+operator|=
+name|VOP_CLOSE
+argument_list|(
+name|vp
+argument_list|,
+name|flags
+argument_list|,
+name|cred
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Package up an I/O request on a vnode into a uio and do it.  */
 end_comment
 
 begin_expr_stmt
@@ -917,6 +1004,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * File table vnode read routine.  */
+end_comment
+
 begin_macro
 name|vn_read
 argument_list|(
@@ -1038,6 +1129,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * File table vnode write routine.  */
+end_comment
 
 begin_macro
 name|vn_write
@@ -1203,7 +1298,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Get stat info for a vnode.  */
+comment|/*  * File table vnode stat routine.  */
 end_comment
 
 begin_macro
@@ -1520,7 +1615,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Vnode ioctl call  */
+comment|/*  * File table vnode ioctl routine.  */
 end_comment
 
 begin_macro
@@ -1743,7 +1838,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Vnode select call  */
+comment|/*  * File table vnode select routine.  */
 end_comment
 
 begin_macro
@@ -1802,9 +1897,9 @@ name|fp
 operator|->
 name|f_flag
 argument_list|,
-name|p
+name|fp
 operator|->
-name|p_ucred
+name|f_cred
 argument_list|,
 name|p
 argument_list|)
@@ -1814,39 +1909,23 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Vnode close call  */
+comment|/*  * File table vnode close routine.  */
 end_comment
 
-begin_expr_stmt
-name|vn_close
+begin_macro
+name|vn_closefile
 argument_list|(
-name|vp
+argument|fp
 argument_list|,
-name|flags
-argument_list|,
-name|cred
-argument_list|,
-name|p
+argument|p
 argument_list|)
-specifier|register
-expr|struct
-name|vnode
-operator|*
-name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|flags
-decl_stmt|;
-end_decl_stmt
+end_macro
 
 begin_decl_stmt
 name|struct
-name|ucred
+name|file
 modifier|*
-name|cred
+name|fp
 decl_stmt|;
 end_decl_stmt
 
@@ -1860,41 +1939,31 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|error
-decl_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|FWRITE
-condition|)
-name|vp
-operator|->
-name|v_writecount
-operator|--
-expr_stmt|;
-name|error
-operator|=
-name|VOP_CLOSE
+return|return
+operator|(
+name|vn_close
 argument_list|(
-name|vp
+operator|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+name|fp
+operator|->
+name|f_data
+operator|)
 argument_list|,
-name|flags
+name|fp
+operator|->
+name|f_flag
 argument_list|,
-name|cred
+name|fp
+operator|->
+name|f_cred
 argument_list|,
 name|p
 argument_list|)
-expr_stmt|;
-name|vrele
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
