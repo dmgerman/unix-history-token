@@ -115,6 +115,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufsmount.h>
+end_include
+
 begin_comment
 comment|/* XXX assumes MOUNT_MAXTYPE< 32 */
 end_comment
