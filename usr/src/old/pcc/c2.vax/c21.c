@@ -5,12 +5,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.1 %G%"
+literal|"@(#)c21.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* char C21[] = {"@(#)c21.c 1.82 - 81 ??/??/?? ??:??:?? JFR"}; /* sccs ident */
+comment|/* char C21[] = {"@(#)c21.c 1.83 80/10/16 21:18:22 JFR"}; /* sccs ident */
 end_comment
 
 begin_comment
@@ -5175,6 +5175,9 @@ name|op
 condition|)
 block|{
 case|case
+name|ACB
+case|:
+case|case
 name|AOBLEQ
 case|:
 case|case
@@ -5188,15 +5191,6 @@ name|SOBGEQ
 case|:
 break|break;
 default|default:
-if|if
-condition|(
-name|p
-operator|->
-name|op
-operator|==
-name|ACB
-condition|)
-break|break;
 if|if
 condition|(
 name|uses
@@ -5483,6 +5477,33 @@ name|p
 operator|->
 name|op
 operator|==
+name|ASH
+operator|&&
+name|preg
+operator|==
+operator|(
+name|regs
+operator|+
+name|RT1
+operator|+
+literal|1
+operator|)
+condition|)
+name|cp2
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+name|BYTE
+expr_stmt|;
+comment|/* stupid DEC */
+if|if
+condition|(
+name|p
+operator|->
+name|op
+operator|==
 name|MOV
 operator|||
 name|p
@@ -5598,11 +5619,16 @@ name|cp1
 operator|++
 condition|)
 empty_stmt|;
+else|else
+operator|*
+name|cp2
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 operator|*
 name|cp2
-operator|++
 operator|=
 literal|0
 expr_stmt|;
