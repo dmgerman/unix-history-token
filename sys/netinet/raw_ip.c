@@ -1959,6 +1959,14 @@ name|RIPRCVQ
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|rip_olddiverterror
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -1997,6 +2005,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Maximum incoming raw IP datagram size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_raw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|olddiverterror
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|rip_olddiverterror
+argument_list|,
+literal|0
+argument_list|,
+literal|"Return an error when creating an 'old' DIVERT socket"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2064,6 +2093,38 @@ condition|)
 return|return
 name|error
 return|;
+if|if
+condition|(
+name|proto
+operator|>=
+name|IPPROTO_MAX
+operator|||
+name|proto
+operator|<
+literal|0
+condition|)
+return|return
+name|EPROTONOSUPPORT
+return|;
+comment|/* To be removed before 5.2 */
+if|if
+condition|(
+name|rip_olddiverterror
+operator|&&
+name|proto
+operator|==
+name|IPPROTO_OLD_DIVERT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Old IPDIVERT program needs to be recompiled, or new IP proto 254 user needs sysctl net.inet.raw.olddiverterror=0\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|EPROTONOSUPPORT
+return|;
+block|}
 name|error
 operator|=
 name|soreserve

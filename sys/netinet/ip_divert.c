@@ -386,7 +386,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * IPPROTO_DIVERT is not a real IP protocol; don't allow any packets  * with that protocol number to enter the system from the outside.  */
+comment|/*  * IPPROTO_DIVERT is not in the real IP protocol number space; this  * function should never be called.  Just in case, drop any packets.  */
 end_comment
 
 begin_function
