@@ -5280,6 +5280,9 @@ name|int
 name|howto
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|status
+decl_stmt|;
 name|ACPI_ASSERTLOCK
 expr_stmt|;
 comment|/*      * If powering off, run the actual shutdown code on each processor.      * It will only perform the shutdown on the BSP.  Some chipsets do      * not power off the system correctly if called from an AP.      */
