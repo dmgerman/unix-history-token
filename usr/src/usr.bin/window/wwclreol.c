@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwclreol.c	3.13 %G%"
+literal|"@(#)wwclreol.c	3.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Copyright (c) 1983 Regents of the University of California,  * All rights reserved.  Redistribution permitted subject to  * the terms of the Berkeley Software License Agreement.  */
+end_comment
 
 begin_include
 include|#
