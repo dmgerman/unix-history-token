@@ -1379,6 +1379,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|SIOCSIFFLAGS
+case|:
+case|case
 name|SIOCADDMULTI
 case|:
 case|case
