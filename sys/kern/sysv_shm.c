@@ -3466,6 +3466,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_object_lock
+argument_list|(
+name|shm_handle
+operator|->
+name|shm_object
+argument_list|)
+expr_stmt|;
 name|vm_object_clear_flag
 argument_list|(
 name|shm_handle
@@ -3482,6 +3489,13 @@ operator|->
 name|shm_object
 argument_list|,
 name|OBJ_NOSPLIT
+argument_list|)
+expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|shm_handle
+operator|->
+name|shm_object
 argument_list|)
 expr_stmt|;
 name|shmseg
