@@ -1774,7 +1774,6 @@ if|if
 condition|(
 name|data
 condition|)
-empty_stmt|;
 name|free
 argument_list|(
 name|data
