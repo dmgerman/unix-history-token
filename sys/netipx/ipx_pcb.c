@@ -160,6 +160,11 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
+name|IPX_LOCK_INIT
+argument_list|(
+name|ipxp
+argument_list|)
+expr_stmt|;
 name|ipxp
 operator|->
 name|ipxp_socket
@@ -1258,6 +1263,11 @@ argument_list|(
 name|ipxp
 argument_list|,
 name|ipxp_list
+argument_list|)
+expr_stmt|;
+name|IPX_LOCK_DESTROY
+argument_list|(
+name|ipxp
 argument_list|)
 expr_stmt|;
 name|FREE
