@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_nfs.c,v 1.17 1997/03/11 12:31:56 peter Exp $"
+literal|"$Id: mount_nfs.c,v 1.18 1997/03/29 03:32:39 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -567,7 +567,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|NFSMNT_RESVPORT
 block|,
 name|NFS_WSIZE
 block|,
