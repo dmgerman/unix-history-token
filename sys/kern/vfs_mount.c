@@ -5287,7 +5287,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Lookup /dev -> %d\n"
+literal|"Lookup of /dev for devfs, error: %d\n"
 argument_list|,
 name|error
 argument_list|)
