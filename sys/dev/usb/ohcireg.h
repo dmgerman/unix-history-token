@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcireg.h,v 1.11 2000/01/16 10:35:24 augustss Exp $	*/
+comment|/*	$NetBSD: ohcireg.h,v 1.13 2000/01/31 20:17:26 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -582,6 +582,39 @@ end_define
 
 begin_comment
 comment|/* No Power Switching */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OHCI_DT
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Device Type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OHCI_OCPM
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Overcurrent Protection Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OHCI_NOCP
+value|0x1000
+end_define
+
+begin_comment
+comment|/* No Overcurrent Protection */
 end_comment
 
 begin_define

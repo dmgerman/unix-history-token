@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.65 2000/01/25 12:06:21 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.68 2000/01/31 20:17:25 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -3131,6 +3131,8 @@ decl_stmt|,
 name|per
 decl_stmt|,
 name|rev
+decl_stmt|,
+name|desca
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -4143,6 +4145,27 @@ argument_list|,
 name|per
 argument_list|)
 expr_stmt|;
+comment|/* Fiddle the No OverCurrent Protection bit to avoid chip bug. */
+name|desca
+operator|=
+name|OREAD4
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_RH_DESCRIPTOR_A
+argument_list|)
+expr_stmt|;
+name|OWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_RH_DESCRIPTOR_A
+argument_list|,
+name|desca
+operator||
+name|OHCI_NOCP
+argument_list|)
+expr_stmt|;
 name|OWRITE4
 argument_list|(
 name|sc
@@ -4153,6 +4176,25 @@ name|OHCI_LPSC
 argument_list|)
 expr_stmt|;
 comment|/* Enable port power */
+name|usb_delay_ms
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|,
+literal|5
+argument_list|)
+expr_stmt|;
+name|OWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|OHCI_RH_DESCRIPTOR_A
+argument_list|,
+name|desca
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_noport
