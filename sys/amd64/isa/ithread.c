@@ -1125,6 +1125,12 @@ operator|=
 name|SWAIT
 expr_stmt|;
 comment|/* we're idle */
+name|p
+operator|->
+name|p_flag
+operator||=
+name|P_NOLOAD
+expr_stmt|;
 comment|/* Put in linkages. */
 name|softintr
 operator|->

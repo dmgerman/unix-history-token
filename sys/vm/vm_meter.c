@@ -245,6 +245,20 @@ comment|/* FALLTHROUGH */
 case|case
 name|SRUN
 case|:
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_NOLOAD
+operator|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
+comment|/* FALLTHROUGH */
 case|case
 name|SIDL
 case|:

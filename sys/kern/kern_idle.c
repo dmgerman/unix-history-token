@@ -317,6 +317,14 @@ name|gd
 operator|->
 name|gd_idleproc
 operator|->
+name|p_flag
+operator||=
+name|P_NOLOAD
+expr_stmt|;
+name|gd
+operator|->
+name|gd_idleproc
+operator|->
 name|p_stat
 operator|=
 name|SRUN
