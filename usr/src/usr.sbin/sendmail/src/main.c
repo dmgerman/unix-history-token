@@ -63,7 +63,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.91
+literal|3.92
 operator|%
 name|G
 operator|%
@@ -563,6 +563,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|NoConnect
+operator|=
+name|TRUE
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|initmacros
 argument_list|()
 expr_stmt|;
@@ -1045,7 +1052,8 @@ literal|'n'
 case|:
 comment|/* don't alias */
 name|NoAlias
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 ifdef|#
@@ -1072,7 +1080,8 @@ literal|'m'
 case|:
 comment|/* send to me too */
 name|MeToo
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -1080,7 +1089,8 @@ literal|'i'
 case|:
 comment|/* don't let dot stop me */
 name|IgnrDot
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -1128,10 +1138,10 @@ name|QUEUE
 case|case
 literal|'c'
 case|:
-comment|/* don't connect to non-local mailers */
+comment|/* connect to non-local mailers */
 name|NoConnect
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 break|break;
 endif|#
@@ -1142,7 +1152,8 @@ literal|'s'
 case|:
 comment|/* save From lines in headers */
 name|SaveFrom
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -1150,7 +1161,12 @@ literal|'v'
 case|:
 comment|/* give blow-by-blow description */
 name|Verbose
-operator|++
+operator|=
+name|TRUE
+expr_stmt|;
+name|NoConnect
+operator|=
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
