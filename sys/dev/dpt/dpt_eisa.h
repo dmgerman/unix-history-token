@@ -8,25 +8,70 @@ comment|/* Credits:  Based on and part of the DPT driver for FreeBSD written and
 end_comment
 
 begin_comment
-comment|/*  * $Id: dpt_eisa.h,v 1.1 1998/03/10 21:31:06 ShimonR Exp ShimonR $  */
+comment|/*  * $Id: dpt_eisa.h,v 1.1 1998/03/11 00:30:14 julian Exp $  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DPT_EISA_SLOT_OFFSET
-value|0xc88
+value|0xc00
 end_define
-
-begin_comment
-comment|/* 8 */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|DPT_EISA_IOSIZE
-value|sizeof(eata_reg_t)
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPT_EISA_INTDEF
+value|0x90
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPT_EISA_INT_LEVEL
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPT_EISA_INT_NUM_MASK
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPT_EISA_INT_NUM_11
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPT_EISA_INT_NUM_15
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPT_EISA_INT_NUM_14
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPT_EISA_EATA_REG_OFFSET
+value|0x88
 end_define
 
 begin_define
