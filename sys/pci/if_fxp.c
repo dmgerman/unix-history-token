@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -118,12 +124,6 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_include

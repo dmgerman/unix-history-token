@@ -70,6 +70,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -107,12 +113,6 @@ begin_include
 include|#
 directive|include
 file|<sys/cons.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ipl.h>
 end_include
 
 begin_include

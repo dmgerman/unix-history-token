@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -77,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -195,19 +207,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ipl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_include

@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -125,12 +131,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bootinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ipl.h>
 end_include
 
 begin_include

@@ -36,19 +36,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ktr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/interrupt.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/ipl.h>
+file|<sys/interrupt.h>
 end_include
 
 begin_include
@@ -67,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|<machine/globals.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_include

@@ -90,6 +90,12 @@ directive|include
 file|<sys/memrange.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -215,12 +221,6 @@ begin_include
 include|#
 directive|include
 file|<machine/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mutex.h>
 end_include
 
 begin_include

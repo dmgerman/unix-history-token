@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -79,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ipl.h>
 end_include
 
 begin_include

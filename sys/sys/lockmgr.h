@@ -18,13 +18,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/lock.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/mutex.h>
+file|<machine/lock.h>
 end_include
 
 begin_comment

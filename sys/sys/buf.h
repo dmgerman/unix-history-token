@@ -851,7 +851,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/mutex.h>
+file|<sys/mutex.h>
 end_include
 
 begin_comment
