@@ -2043,6 +2043,9 @@ condition|(
 name|isipv6
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
 comment|/* IP6_EXTHDR_CHECK() is already done at tcp6_input() */
 name|ip6
 operator|=
@@ -2128,6 +2131,15 @@ goto|goto
 name|drop
 goto|;
 block|}
+else|#
+directive|else
+name|th
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* XXX: avoid compiler warning */
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -2487,6 +2499,9 @@ condition|(
 name|isipv6
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
 name|IP6_EXTHDR_CHECK
 argument_list|(
 name|m
@@ -2523,6 +2538,8 @@ operator|+
 name|off0
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -2835,6 +2852,10 @@ if|if
 condition|(
 name|isipv6
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INET6
 name|inp
 operator|=
 name|in6_pcblookup_hash
@@ -2869,6 +2890,9 @@ operator|.
 name|rcvif
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 else|else
 name|inp
 operator|=
@@ -3037,6 +3061,9 @@ condition|(
 name|isipv6
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET6
 name|strcpy
 argument_list|(
 name|dbuf
@@ -3091,6 +3118,8 @@ argument_list|,
 literal|"]"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
