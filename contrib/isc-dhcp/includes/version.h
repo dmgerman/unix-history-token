@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|DHCP_VERSION
-value|"2.0"
+value|"2.0pl1"
 end_define
 
 end_unit

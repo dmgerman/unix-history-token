@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: dispatch.c,v 1.47.2.14 1999/03/29 22:16:36 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: dispatch.c,v 1.47.2.15 1999/07/13 12:51:55 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1856,18 +1856,20 @@ argument_list|)
 expr_stmt|;
 name|warn
 argument_list|(
-literal|"Please write a subnet declaration for the %s"
+literal|"Please write a subnet declaration in your %s"
 argument_list|,
-literal|"network segment to"
+literal|"dhcpd.conf file for the"
 argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"which interface %s is attached."
+literal|"network segment to which interface %s %s"
 argument_list|,
 name|tmp
 operator|->
 name|name
+argument_list|,
+literal|"is attached."
 argument_list|)
 expr_stmt|;
 block|}
