@@ -965,7 +965,9 @@ name|uc_flags
 operator|&
 name|UCF_BUSY
 argument_list|,
+operator|(
 literal|"not busy"
+operator|)
 argument_list|)
 expr_stmt|;
 name|umtxq_chains
@@ -2855,7 +2857,10 @@ name|error
 operator|!=
 name|EWOULDBLOCK
 condition|)
-block|{
+break|break;
+block|}
+block|}
+comment|/* 	 * This lets userland back off critical region if needed. 	 */
 if|if
 condition|(
 name|error
@@ -2866,10 +2871,6 @@ name|error
 operator|=
 name|EINTR
 expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
 return|return
 operator|(
 name|error
@@ -3653,6 +3654,12 @@ operator|(
 name|ret
 operator|)
 return|;
+name|umtxq_lock
+argument_list|(
+operator|&
+name|key
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|umtxq_signal
@@ -3661,6 +3668,12 @@ operator|&
 name|key
 argument_list|,
 name|n_wake
+argument_list|)
+expr_stmt|;
+name|umtxq_unlock
+argument_list|(
+operator|&
+name|key
 argument_list|)
 expr_stmt|;
 name|umtx_key_release
