@@ -289,6 +289,11 @@ name|filename
 parameter_list|,
 name|u_int64_t
 name|start
+parameter_list|,
+name|struct
+name|bootinfo
+modifier|*
+name|bi
 parameter_list|)
 block|{
 name|printf
@@ -350,6 +355,10 @@ end_asm
 
 begin_asm
 asm|__asm __volatile("mov cr.ifs=r0;;");
+end_asm
+
+begin_asm
+asm|__asm __volatile("mov r8=%0" :: "r" (bi));
 end_asm
 
 begin_asm
@@ -611,6 +620,8 @@ argument_list|,
 name|hdr
 operator|->
 name|e_entry
+argument_list|,
+name|bi
 argument_list|)
 expr_stmt|;
 end_expr_stmt
