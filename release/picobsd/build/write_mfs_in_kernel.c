@@ -428,7 +428,7 @@ name|strcmp
 argument_list|(
 name|p
 argument_list|,
-literal|"MD Filesystem goes here"
+literal|"MFS Filesystem goes here"
 argument_list|)
 condition|)
 goto|goto
@@ -438,7 +438,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"MD filesystem signature not found in %s\n"
+literal|"MFS filesystem signature not found in %s\n"
 argument_list|,
 name|argv
 index|[
