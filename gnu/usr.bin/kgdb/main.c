@@ -1396,7 +1396,7 @@ condition|)
 block|{
 name|fputs
 argument_list|(
-literal|"\ This is GDB, the GNU debugger.  Use the command\n\     gdb [options] [executable [core-file]]\n\ to enter the debugger.\n\ \n\ Options available are:\n\   -help             Print this message.\n\   -quiet            Do not print version number on startup.\n\   -fullname         Output information used by emacs-GDB interface.\n\   -batch            Exit after processing options.\n\   -nx               Do not read .gdbinit file.\n\   -tty TTY          Use TTY for input/output by the program being debugged.\n\   -cd DIR           Change current directory to DIR.\n\   -directory DIR    Search for source files in DIR.\n\   -command FILE     Execute GDB commands from FILE.\n\   -symbols SYMFILE  Read symbols from SYMFILE.\n\   -exec EXECFILE    Use EXECFILE as the executable.\n\   -se FILE          Use FILE as symbol file and executable file.\n\   -core COREFILE    Analyze the core dump COREFILE.\n\   -k                Kernel debugging.\n\   -w                Writeable text.\n\   -v                Print GNU message and version number on startup.\n\   -nc               Don't confirm quit or run commands.\n\ \n\ For more information, type \"help\" from within GDB, or consult the\n\ GDB manual (available as on-line info or a printed manual).\n"
+literal|"\ This is GDB, the GNU debugger.  Use the command\n\     gdb [options] [executable [core-file]]\n\ to enter the debugger.\n\ \n\ Options available are:\n\   -help             Print this message.\n\   -quiet            Do not print version number on startup.\n\   -fullname         Output information used by emacs-GDB interface.\n\   -batch            Exit after processing options.\n\   -nx               Do not read .gdbinit file.\n\   -tty TTY          Use TTY for input/output by the program being debugged.\n\   -cd DIR           Change current directory to DIR.\n\   -directory DIR    Search for source files in DIR.\n\   -command FILE     Execute GDB commands from FILE.\n\   -symbols SYMFILE  Read symbols from SYMFILE.\n\   -exec EXECFILE    Use EXECFILE as the executable.\n\   -se FILE          Use FILE as symbol file and executable file.\n\   -core COREFILE    Analyze the core dump COREFILE.\n\   -w                Writeable text.\n\   -v                Print GNU message and version number on startup.\n\   -nc               Don't confirm quit or run commands.\n\ \n\ For more information, type \"help\" from within GDB, or consult the\n\ GDB manual (available as on-line info or a printed manual).\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -1408,29 +1408,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|KERNELDEBUG
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|argv
-index|[
-name|i
-index|]
-argument_list|,
-literal|"-k"
-argument_list|)
-condition|)
-name|kernel_debugging
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 elseif|else
 if|if
 condition|(
