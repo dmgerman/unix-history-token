@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.5 (Berkeley) %G%"
+literal|"@(#)tape.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1998,6 +1998,26 @@ expr_stmt|;
 return|return
 operator|(
 name|FAIL
+operator|)
+return|;
+case|case
+name|IFSOCK
+case|:
+name|vprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"skipped socket %s\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|skipfile
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|GOOD
 operator|)
 return|;
 case|case
