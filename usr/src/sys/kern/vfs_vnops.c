@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	3.3	%G%	*/
+comment|/*	vfs_vnops.c	3.4	%G%	*/
 end_comment
 
 begin_include
@@ -373,11 +373,33 @@ name|fp
 operator|->
 name|f_count
 operator|&&
+operator|(
+name|ip
+operator|=
 name|fp
 operator|->
 name|f_inode
+operator|)
+operator|->
+name|i_un
+operator|.
+name|i_rdev
 operator|==
+name|dev
+operator|&&
+operator|(
 name|ip
+operator|->
+name|i_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+operator|(
+name|mode
+operator|&
+name|IFMT
+operator|)
 condition|)
 return|return;
 name|call
