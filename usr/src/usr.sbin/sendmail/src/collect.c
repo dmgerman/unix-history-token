@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.19	%G%"
+literal|"@(#)collect.c	3.20	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,6 +165,9 @@ operator|==
 name|NULL
 condition|)
 return|return;
+ifndef|#
+directive|ifndef
+name|NOTUNIX
 if|if
 condition|(
 name|strncmp
@@ -198,6 +201,9 @@ name|stdin
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|NOTUNIX
 comment|/* 	**  Copy stdin to temp file& do message editting. 	**	To keep certain mailers from getting confused, 	**	and to keep the output clean, lines that look 	**	like UNIX "From" lines are deleted in the header, 	**	and prepended with ">" in the body. 	*/
 for|for
 control|(
@@ -445,6 +451,9 @@ literal|'\0'
 operator|)
 condition|)
 break|break;
+ifndef|#
+directive|ifndef
+name|NOTUNIX
 comment|/* Hide UNIX-like From lines */
 if|if
 condition|(
@@ -471,6 +480,9 @@ name|MsgSize
 operator|++
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|NOTUNIX
 comment|/* 		**  Figure message length, output the line to the temp 		**  file, and insert a newline if missing. 		*/
 name|i
 operator|=
@@ -961,6 +973,12 @@ begin_comment
 comment|/* **  EATFROM -- chew up a UNIX style from line and process ** **	This does indeed make some assumptions about the format **	of UNIX messages. ** **	Parameters: **		fm -- the from line. ** **	Returns: **		none. ** **	Side Effects: **		extracts what information it can from the header, **		such as the date. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOTUNIX
+end_ifndef
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -1267,6 +1285,12 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|NOTUNIX
+end_endif
 
 end_unit
 
