@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.3 (Berkeley) %G%"
+literal|"@(#)print.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,12 +27,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/pte.h>
-end_include
 
 begin_include
 include|#
@@ -67,18 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vmparam.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<math.h>
 end_include
 
@@ -105,6 +87,75 @@ include|#
 directive|include
 file|"ps.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SPPWAIT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NEWVM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEWVM
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ucred.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kinfo_proc.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/pte.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vmparam.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|printheader
@@ -440,6 +491,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|NEWVM
 operator|(
 name|void
 operator|)
@@ -458,6 +512,30 @@ operator|->
 name|p_logname
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* NEWVM */
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%-*s"
+argument_list|,
+name|v
+operator|->
+name|width
+argument_list|,
+name|k
+operator|->
+name|ki_e
+operator|->
+name|e_login
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NEWVM */
 block|}
 end_block
 
@@ -608,6 +686,9 @@ operator|&
 name|SLOAD
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|NEWVM
 if|if
 condition|(
 name|p
@@ -624,6 +705,8 @@ operator|++
 operator|=
 literal|'>'
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 operator|*
@@ -703,6 +786,12 @@ condition|(
 name|flag
 operator|&
 name|SWEXIT
+operator|&&
+name|p
+operator|->
+name|p_stat
+operator|!=
+name|SZOMB
 condition|)
 operator|*
 name|cp
@@ -710,12 +799,25 @@ operator|++
 operator|=
 literal|'E'
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEWVM
+if|if
+condition|(
+name|flag
+operator|&
+name|SPPWAIT
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|flag
 operator|&
 name|SVFORK
 condition|)
+endif|#
+directive|endif
 operator|*
 name|cp
 operator|++
@@ -881,6 +983,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|NEWVM
 operator|(
 name|void
 operator|)
@@ -904,6 +1009,37 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* NEWVM */
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%-*s"
+argument_list|,
+name|v
+operator|->
+name|width
+argument_list|,
+name|user_from_uid
+argument_list|(
+name|k
+operator|->
+name|ki_e
+operator|->
+name|e_ucred
+operator|.
+name|cr_uid
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NEWVM */
 block|}
 end_block
 
@@ -932,6 +1068,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|NEWVM
 operator|(
 name|void
 operator|)
@@ -955,6 +1094,37 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* NEWVM */
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%-*s"
+argument_list|,
+name|v
+operator|->
+name|width
+argument_list|,
+name|user_from_uid
+argument_list|(
+name|k
+operator|->
+name|ki_e
+operator|->
+name|e_pcred
+operator|.
+name|p_ruid
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NEWVM */
 block|}
 end_block
 
@@ -1662,9 +1832,7 @@ name|k
 operator|->
 name|ki_p
 operator|->
-name|p_pri
-operator|>
-name|PZERO
+name|p_wmesg
 condition|)
 operator|(
 name|void
@@ -1778,6 +1946,9 @@ name|v
 operator|->
 name|width
 argument_list|,
+ifndef|#
+directive|ifndef
+name|NEWVM
 name|pgtok
 argument_list|(
 name|k
@@ -1800,24 +1971,63 @@ name|e_xsize
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
+else|#
+directive|else
+comment|/* NEWVM */
+name|pgtok
+argument_list|(
+name|k
+operator|->
+name|ki_e
+operator|->
+name|e_vm
+operator|.
+name|vm_dsize
+operator|+
+name|k
+operator|->
+name|ki_e
+operator|->
+name|e_vm
+operator|.
+name|vm_ssize
+operator|+
+name|k
+operator|->
+name|ki_e
+operator|->
+name|e_vm
+operator|.
+name|vm_tsize
+argument_list|)
+block|)
 end_block
 
-begin_macro
-name|rssize
-argument_list|(
-argument|k
-argument_list|,
-argument|v
-argument_list|)
-end_macro
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
-begin_decl_stmt
-name|KINFO
-modifier|*
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEWVM */
+end_comment
+
+begin_expr_stmt
+unit|}  rssize
+operator|(
 name|k
-decl_stmt|;
-end_decl_stmt
+operator|,
+name|v
+operator|)
+name|KINFO
+operator|*
+name|k
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|VAR
@@ -1828,6 +2038,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|NEWVM
 operator|(
 name|void
 operator|)
@@ -1873,6 +2086,36 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* NEWVM */
+comment|/* XXX don't have info about shared */
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%*d"
+argument_list|,
+name|v
+operator|->
+name|width
+argument_list|,
+name|pgtok
+argument_list|(
+name|k
+operator|->
+name|ki_e
+operator|->
+name|e_vm
+operator|.
+name|vm_rssize
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NEWVM */
 block|}
 end_block
 
@@ -1905,6 +2148,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|NEWVM
 operator|(
 name|void
 operator|)
@@ -1926,6 +2172,35 @@ name|p_rssize
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* NEWVM */
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%*d"
+argument_list|,
+name|v
+operator|->
+name|width
+argument_list|,
+name|pgtok
+argument_list|(
+name|k
+operator|->
+name|ki_e
+operator|->
+name|e_vm
+operator|.
+name|vm_rssize
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NEWVM */
 block|}
 end_block
 
@@ -2414,6 +2689,9 @@ operator|(
 literal|0.0
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|NEWVM
 name|szptudot
 operator|=
 name|UPAGES
@@ -2482,6 +2760,37 @@ name|e_xccount
 operator|/
 name|ecmx
 expr_stmt|;
+else|#
+directive|else
+comment|/* NEWVM */
+comment|/* XXX want pmap ptpages, segtab, etc. (per architecture) */
+name|szptudot
+operator|=
+name|UPAGES
+expr_stmt|;
+comment|/* XXX don't have info about shared */
+name|fracmem
+operator|=
+operator|(
+operator|(
+name|float
+operator|)
+name|e
+operator|->
+name|e_vm
+operator|.
+name|vm_rssize
+operator|+
+name|szptudot
+operator|)
+operator|/
+name|CLSIZE
+operator|/
+name|ecmx
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NEWVM */
 return|return
 operator|(
 literal|100.0
@@ -2616,6 +2925,10 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|NEWVM
+comment|/* not yet */
 if|if
 condition|(
 name|k
@@ -2652,6 +2965,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
+comment|/* NEWVM */
 operator|(
 name|void
 operator|)
@@ -2694,6 +3010,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|NEWVM
 operator|(
 name|void
 operator|)
@@ -2715,8 +3034,43 @@ name|e_xsize
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* NEWVM */
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%*d"
+argument_list|,
+name|v
+operator|->
+name|width
+argument_list|,
+name|pgtok
+argument_list|(
+name|k
+operator|->
+name|ki_e
+operator|->
+name|e_vm
+operator|.
+name|vm_tsize
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NEWVM */
 block|}
 end_block
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEWVM
+end_ifndef
 
 begin_macro
 name|trss
@@ -2766,6 +3120,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEWVM */
+end_comment
 
 begin_comment
 comment|/*  * Generic output routines.  Print fields from various prototype  * structures.  */

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.36 (Berkeley) %G%"
+literal|"@(#)ps.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,6 +153,23 @@ include|#
 directive|include
 file|"ps.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SPPWAIT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NEWVM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|KINFO
@@ -1585,6 +1602,41 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * save important fields 		 */
+ifdef|#
+directive|ifdef
+name|NEWVM
+name|usp
+operator|->
+name|u_start
+operator|=
+name|up
+operator|->
+name|u_stats
+operator|.
+name|p_start
+expr_stmt|;
+name|usp
+operator|->
+name|u_ru
+operator|=
+name|up
+operator|->
+name|u_stats
+operator|.
+name|p_ru
+expr_stmt|;
+name|usp
+operator|->
+name|u_cru
+operator|=
+name|up
+operator|->
+name|u_stats
+operator|.
+name|p_cru
+expr_stmt|;
+else|#
+directive|else
 name|usp
 operator|->
 name|u_procp
@@ -1625,6 +1677,8 @@ name|up
 operator|->
 name|u_acflag
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 name|pscomp
@@ -1644,6 +1698,18 @@ block|{
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NEWVM
+define|#
+directive|define
+name|VSIZE
+parameter_list|(
+name|k
+parameter_list|)
+value|((k)->ki_e->e_vm.vm_dsize + (k)->ki_e->e_vm.vm_ssize + \ 		  (k)->ki_e->e_vm.vm_tsize)
+else|#
+directive|else
 define|#
 directive|define
 name|VSIZE
@@ -1651,6 +1717,8 @@ parameter_list|(
 name|k
 parameter_list|)
 value|((k)->ki_p->p_dsize + (k)->ki_p->p_ssize + (k)->ki_e->e_xsize)
+endif|#
+directive|endif
 if|if
 condition|(
 name|sortby
