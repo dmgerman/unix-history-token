@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_put.c	7.11 (Berkeley) %G%"
+literal|"@(#)ex_put.c	7.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3893,9 +3893,11 @@ directive|ifndef
 name|USG3TTY
 name|ignore
 argument_list|(
-name|gtty
+name|ioctl
 argument_list|(
 name|i
+argument_list|,
+name|TIOCGETP
 argument_list|,
 operator|&
 name|tty
