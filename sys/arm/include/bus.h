@@ -203,25 +203,6 @@ parameter_list|,
 name|bus_space_handle_t
 parameter_list|)
 function_decl|;
-comment|/* mmap bus space for user */
-name|int
-function_decl|(
-modifier|*
-name|bs_mmap
-function_decl|)
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-parameter_list|,
-name|vm_offset_t
-parameter_list|,
-name|vm_paddr_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
 comment|/* barrier */
 name|void
 function_decl|(
@@ -1161,29 +1142,6 @@ name|h
 parameter_list|)
 define|\
 value|(*(t)->bs_vaddr)((t)->bs_cookie, (h))
-end_define
-
-begin_comment
-comment|/*  * MMap bus space for a user application.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|bus_space_mmap
-parameter_list|(
-name|t
-parameter_list|,
-name|a
-parameter_list|,
-name|o
-parameter_list|,
-name|p
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|(*(t)->bs_mmap)((t)->bs_cookie, (a), (o), (p), (f))
 end_define
 
 begin_comment

@@ -144,8 +144,6 @@ comment|/* get kernel virtual address */
 literal|0
 block|,
 comment|/* there is no linear mapping */
-name|NULL
-block|,
 comment|/* barrier */
 name|nexus_bs_barrier
 block|,

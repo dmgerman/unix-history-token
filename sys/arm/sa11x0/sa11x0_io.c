@@ -137,9 +137,6 @@ block|,
 comment|/* get kernel virtual address */
 name|sa11x0_bs_vaddr
 block|,
-comment|/* mmap bus space for userland */
-name|sa11x0_bs_mmap
-block|,
 comment|/* barrier */
 name|sa11x0_bs_barrier
 block|,
@@ -543,39 +540,6 @@ name|nbshp
 operator|=
 name|bsh
 operator|+
-name|offset
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|sa11x0_bs_mmap
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|t
-parameter_list|,
-name|vm_offset_t
-name|offset
-parameter_list|,
-name|vm_paddr_t
-modifier|*
-name|paddr
-parameter_list|,
-name|int
-name|nprot
-parameter_list|)
-block|{
-operator|*
-name|paddr
-operator|=
 name|offset
 expr_stmt|;
 return|return
