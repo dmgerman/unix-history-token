@@ -264,7 +264,7 @@ condition|)
 return|return;
 name|msgDebug
 argument_list|(
-literal|"Unmounting NFS partition on %s"
+literal|"Unmounting NFS partition on %s\n"
 argument_list|,
 name|mountpoint
 argument_list|)

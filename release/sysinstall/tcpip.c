@@ -1662,7 +1662,7 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"RTSOL configured interface returns %s"
+literal|"RTSOL configured interface returns %s\n"
 argument_list|,
 name|data
 argument_list|)
