@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Adams.  Originally by RJKing WECo-MG6565 May 83.  *   * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Adams.  Originally by RJKing WECo-MG6565 May 83.  *   * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -10,11 +10,12 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
 name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1988 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uusnap.c	5.12 (Berkeley) %G%"
+literal|"@(#)uusnap.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
