@@ -1860,6 +1860,11 @@ name|printf
 argument_list|(
 literal|"%llu\r"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|dmpcnt
 argument_list|)
 expr_stmt|;
