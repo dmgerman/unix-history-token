@@ -1557,7 +1557,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<osreldate.h>
+file|<sys/param.h>
 end_include
 
 begin_define
@@ -1574,7 +1574,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<sys/osreldate.h>
+file|<sys/param.h>
 end_include
 
 begin_endif
