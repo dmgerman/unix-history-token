@@ -304,12 +304,17 @@ block|,
 name|installFixupBin
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 block|{
 literal|"installFixupXFree"
 block|,
 name|installFixupXFree
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"installFixitHoloShell"
 block|,

@@ -3075,7 +3075,13 @@ modifier|*
 name|execfile
 decl_stmt|,
 modifier|*
+name|execcmd
+decl_stmt|,
+modifier|*
 name|style
+decl_stmt|,
+modifier|*
+name|tmp
 decl_stmt|;
 name|char
 modifier|*
@@ -3213,7 +3219,8 @@ argument_list|(
 literal|"/sbin/ifconfig lo0 127.0.0.1"
 argument_list|)
 expr_stmt|;
-name|execfile
+comment|/*       * execcmd may have been passed in as a command name with      * arguments.  Therefore, before determining if it is suitable for      * execution, we must split off the filename component from the      * command line arguments.      */
+name|execcmd
 operator|=
 name|string_concat
 argument_list|(
@@ -3221,6 +3228,31 @@ literal|"/usr/X11R6/bin/"
 argument_list|,
 name|config
 argument_list|)
+expr_stmt|;
+name|execfile
+operator|=
+name|strdup
+argument_list|(
+name|execcmd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tmp
+operator|=
+name|strchr
+argument_list|(
+name|execfile
+argument_list|,
+literal|' '
+argument_list|)
+operator|)
+condition|)
+operator|*
+name|tmp
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -3230,6 +3262,11 @@ name|execfile
 argument_list|)
 condition|)
 block|{
+name|free
+argument_list|(
+name|execfile
+argument_list|)
+expr_stmt|;
 name|moused
 operator|=
 name|variable_get
@@ -3303,7 +3340,7 @@ argument_list|)
 expr_stmt|;
 name|systemExecute
 argument_list|(
-name|execfile
+name|execcmd
 argument_list|)
 expr_stmt|;
 if|if
@@ -3356,6 +3393,11 @@ return|;
 block|}
 else|else
 block|{
+name|free
+argument_list|(
+name|execfile
+argument_list|)
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"The XFree86 setup utility you chose does not appear to be installed!\n"
