@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forward.c	5.3 (Berkeley) %G%"
+literal|"@(#)forward.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -678,18 +678,19 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Last char is special, ignore whether newline or not. */
+for|for
+control|(
 name|p
 operator|+=
 name|size
 operator|-
 literal|1
-expr_stmt|;
-comment|/* Last char is special, ignore whether newline or not. */
-while|while
-condition|(
+init|;
 operator|--
 name|size
-condition|)
+condition|;
+control|)
 if|if
 condition|(
 operator|*
@@ -702,7 +703,12 @@ operator|!
 operator|--
 name|off
 condition|)
+block|{
+operator|++
+name|p
+expr_stmt|;
 break|break;
+block|}
 comment|/* Set the file pointer to reflect the length displayed. */
 name|size
 operator|=
@@ -715,8 +721,6 @@ expr_stmt|;
 name|WR
 argument_list|(
 name|p
-operator|+
-literal|1
 argument_list|,
 name|size
 argument_list|)
