@@ -11,7 +11,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"domainname.c,v 1.3 1993/09/10 01:24:46 jtc Exp"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
