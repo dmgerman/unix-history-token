@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: popen.c,v 1.5 1997/09/15 06:39:07 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_define
@@ -492,6 +498,25 @@ operator|==
 literal|'r'
 condition|)
 block|{
+comment|/* Do not share our parent's stdin */
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pdes
@@ -581,6 +606,43 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Hack: stdout gets revoked */
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
