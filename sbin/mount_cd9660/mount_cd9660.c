@@ -676,7 +676,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_cd9660 [-egrv] [-o options] [-s startsector] [-C charset ] special node\n"
+literal|"usage: mount_cd9660 [-begjrv] [-C charset] [-o options] [-s startsector]\n"
+literal|"                    special node\n"
 argument_list|)
 expr_stmt|;
 name|exit
