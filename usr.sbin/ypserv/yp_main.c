@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_main.c,v 1.17 1998/02/11 19:15:32 wpaul Exp $"
+literal|"$Id: yp_main.c,v 1.20 1999/04/29 20:23:58 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,6 +391,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+name|pid_t
+name|yp_pid
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -416,9 +422,6 @@ name|int
 name|forked
 decl_stmt|;
 name|int
-name|pid
-decl_stmt|;
-name|int
 name|fd_setsize
 init|=
 name|_rpc_dtablesize
@@ -429,7 +432,7 @@ name|timeval
 name|timeout
 decl_stmt|;
 comment|/* Establish the identity of the parent ypserv process. */
-name|pid
+name|yp_pid
 operator|=
 name|getpid
 argument_list|()
@@ -516,11 +519,26 @@ return|return;
 case|case
 literal|0
 case|:
+if|if
+condition|(
+name|getpid
+argument_list|()
+operator|==
+name|yp_pid
+condition|)
 name|yp_prune_dnsq
 argument_list|()
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|getpid
+argument_list|()
+operator|==
+name|yp_pid
+condition|)
+block|{
 if|if
 condition|(
 name|FD_ISSET
@@ -550,21 +568,20 @@ operator|&
 name|readfds
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
-name|forked
-operator|&&
-name|pid
+name|yp_pid
 operator|!=
 name|getpid
 argument_list|()
 condition|)
-name|exit
+name|_exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
