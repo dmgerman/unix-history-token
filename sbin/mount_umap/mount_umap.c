@@ -758,7 +758,7 @@ condition|(
 operator|(
 name|fscanf
 argument_list|(
-name|fp
+name|gfp
 argument_list|,
 literal|"%d\n"
 argument_list|,
@@ -821,7 +821,7 @@ condition|(
 operator|(
 name|fscanf
 argument_list|(
-name|fp
+name|gfp
 argument_list|,
 literal|"%lu %lu\n"
 argument_list|,
@@ -856,7 +856,7 @@ if|if
 condition|(
 name|ferror
 argument_list|(
-name|fp
+name|gfp
 argument_list|)
 condition|)
 name|err
@@ -874,7 +874,7 @@ if|if
 condition|(
 name|feof
 argument_list|(
-name|fp
+name|gfp
 argument_list|)
 condition|)
 name|errx
@@ -981,15 +981,25 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|vfc
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"umap filesystem not available"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|mount
 argument_list|(
 name|vfc
-condition|?
-name|vfc
 operator|->
 name|vfc_index
-else|:
-name|MOUNT_UMAP
 argument_list|,
 name|argv
 index|[
