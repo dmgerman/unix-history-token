@@ -1511,9 +1511,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-specifier|volatile
 name|u_int8_t
-modifier|*
 name|addr
 decl_stmt|;
 name|addr
@@ -1533,7 +1531,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ALART_RESPONSE: %p\n"
+literal|"ALART_RESPONSE: 0x%x\n"
 argument_list|,
 name|addr
 argument_list|)
