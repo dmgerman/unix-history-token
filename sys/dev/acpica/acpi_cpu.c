@@ -465,17 +465,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|uint8_t
-name|cpu_pstate_cnt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Register to take over throttling. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|uint8_t
 name|cpu_cst_cnt
 decl_stmt|;
 end_decl_stmt
@@ -2359,12 +2348,6 @@ name|AcpiGbl_FADT
 operator|->
 name|SmiCmd
 expr_stmt|;
-name|cpu_pstate_cnt
-operator|=
-name|AcpiGbl_FADT
-operator|->
-name|PstateCnt
-expr_stmt|;
 name|cpu_cst_cnt
 operator|=
 name|AcpiGbl_FADT
@@ -3876,34 +3859,6 @@ argument_list|,
 literal|"current CPU speed"
 argument_list|)
 expr_stmt|;
-comment|/* If ACPI 2.0+, signal platform that we are taking over throttling. */
-if|if
-condition|(
-name|cpu_pstate_cnt
-operator|!=
-literal|0
-condition|)
-block|{
-name|ACPI_LOCK
-argument_list|(
-name|acpi
-argument_list|)
-expr_stmt|;
-name|AcpiOsWritePort
-argument_list|(
-name|cpu_smi_cmd
-argument_list|,
-name|cpu_pstate_cnt
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-name|ACPI_UNLOCK
-argument_list|(
-name|acpi
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Set initial speed to maximum. */
 name|ACPI_SERIAL_BEGIN
 argument_list|(
