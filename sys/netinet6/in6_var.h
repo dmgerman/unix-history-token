@@ -170,6 +170,40 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* control structure to manage address selection policy */
+end_comment
+
+begin_struct
+struct|struct
+name|in6_addrpolicy
+block|{
+name|struct
+name|sockaddr_in6
+name|addr
+decl_stmt|;
+comment|/* prefix address */
+name|struct
+name|sockaddr_in6
+name|addrmask
+decl_stmt|;
+comment|/* prefix mask */
+name|int
+name|preced
+decl_stmt|;
+comment|/* precedence */
+name|int
+name|label
+decl_stmt|;
+comment|/* matching label */
+name|u_quad_t
+name|use
+decl_stmt|;
+comment|/* statistics */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * IPv6 interface statistics, as defined in RFC2465 Ipv6IfStatsEntry (p12).  */
 end_comment
 
@@ -1288,6 +1322,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCAADDRCTL_POLICY
+value|_IOW('u', 108, struct in6_addrpolicy)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCDADDRCTL_POLICY
+value|_IOW('u', 109, struct in6_addrpolicy)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IN6_IFF_ANYCAST
 value|0x01
 end_define
@@ -2230,6 +2278,20 @@ operator|(
 expr|struct
 name|in6_addr
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|in6_src_ioctl
+name|__P
+argument_list|(
+operator|(
+name|u_long
+operator|,
+name|caddr_t
 operator|)
 argument_list|)
 decl_stmt|;

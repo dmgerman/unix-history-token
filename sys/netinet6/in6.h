@@ -2473,6 +2473,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPV6CTL_ADDRCTLPOLICY
+value|38
+end_define
+
+begin_comment
+comment|/* get/set address selection policy */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPV6CTL_MAXFRAGS
 value|41
 end_define
@@ -2732,6 +2743,19 @@ name|sockaddr
 operator|*
 operator|*
 name|nam
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|addrsel_policy_init
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

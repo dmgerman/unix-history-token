@@ -806,6 +806,9 @@ expr_stmt|;
 name|scope6_init
 argument_list|()
 expr_stmt|;
+name|addrsel_policy_init
+argument_list|()
+expr_stmt|;
 name|nd6_init
 argument_list|()
 expr_stmt|;
