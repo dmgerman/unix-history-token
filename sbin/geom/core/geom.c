@@ -2994,7 +2994,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|show_one_provider
+name|list_one_provider
 parameter_list|(
 name|struct
 name|gprovider
@@ -3123,7 +3123,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|show_one_consumer
+name|list_one_consumer
 parameter_list|(
 name|struct
 name|gconsumer
@@ -3277,7 +3277,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|show_one_geom
+name|list_one_geom
 parameter_list|(
 name|struct
 name|ggeom
@@ -3373,7 +3373,7 @@ name|n
 operator|++
 argument_list|)
 expr_stmt|;
-name|show_one_provider
+name|list_one_provider
 argument_list|(
 name|pp
 argument_list|,
@@ -3420,7 +3420,7 @@ name|n
 operator|++
 argument_list|)
 expr_stmt|;
-name|show_one_consumer
+name|list_one_consumer
 argument_list|(
 name|cp
 argument_list|,
@@ -3770,7 +3770,7 @@ name|gp
 operator|!=
 name|NULL
 condition|)
-name|show_one_geom
+name|list_one_geom
 argument_list|(
 name|gp
 argument_list|)
@@ -3809,7 +3809,7 @@ name|lg_provider
 argument_list|)
 condition|)
 continue|continue;
-name|show_one_geom
+name|list_one_geom
 argument_list|(
 name|gp
 argument_list|)
