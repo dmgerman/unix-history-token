@@ -555,14 +555,14 @@ define|#
 directive|define
 name|DRM_OS_KRNTOUSR
 parameter_list|(
-name|arg1
+name|user
 parameter_list|,
-name|arg2
+name|kern
 parameter_list|,
-name|arg3
+name|size
 parameter_list|)
 define|\
-value|*arg1 = arg2
+value|if ( IOCPARM_LEN(cmd) != size)			\ 		return EINVAL;				\ 	*user = kern;
 end_define
 
 begin_define
@@ -570,14 +570,14 @@ define|#
 directive|define
 name|DRM_OS_KRNFROMUSR
 parameter_list|(
-name|arg1
+name|kern
 parameter_list|,
-name|arg2
+name|user
 parameter_list|,
-name|arg3
+name|size
 parameter_list|)
 define|\
-value|arg1 = *arg2
+value|if ( IOCPARM_LEN(cmd) != size)			\ 		return EINVAL;				\ 	kern = *user;
 end_define
 
 begin_define
@@ -585,14 +585,14 @@ define|#
 directive|define
 name|DRM_OS_COPYTOUSR
 parameter_list|(
-name|arg1
+name|user
 parameter_list|,
-name|arg2
+name|kern
 parameter_list|,
-name|arg3
+name|size
 parameter_list|)
 define|\
-value|copyout(arg2, arg1, arg3)
+value|copyout(kern, user, size)
 end_define
 
 begin_define
@@ -600,14 +600,14 @@ define|#
 directive|define
 name|DRM_OS_COPYFROMUSR
 parameter_list|(
-name|arg1
+name|kern
 parameter_list|,
-name|arg2
+name|user
 parameter_list|,
-name|arg3
+name|size
 parameter_list|)
 define|\
-value|copyin(arg2, arg1, arg3)
+value|copyin(user, kern, size)
 end_define
 
 begin_define
