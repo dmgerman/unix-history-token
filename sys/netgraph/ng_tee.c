@@ -1147,6 +1147,13 @@ operator|)
 return|;
 block|}
 comment|/* Copy meta info */
+if|if
+condition|(
+name|meta
+operator|!=
+name|NULL
+condition|)
+block|{
 name|MALLOC
 argument_list|(
 name|meta2
@@ -1187,14 +1194,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|meta2
-operator|->
-name|allocated_len
-operator|=
-name|meta
-operator|->
-name|used_len
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|meta
@@ -1205,6 +1204,20 @@ name|meta
 operator|->
 name|used_len
 argument_list|)
+expr_stmt|;
+name|meta2
+operator|->
+name|allocated_len
+operator|=
+name|meta
+operator|->
+name|used_len
+expr_stmt|;
+block|}
+else|else
+name|meta2
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Deliver duplicate */
 name|dup
