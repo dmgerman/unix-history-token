@@ -273,10 +273,23 @@ name|long
 name|dont_match_prob
 decl_stmt|;
 comment|/* 0x7fffffff means 1.0, always fail */
-name|u_int
+name|u_char
 name|dyn_type
 decl_stmt|;
 comment|/* type for dynamic rule */
+define|#
+directive|define
+name|DYN_KEEP_STATE
+value|0
+comment|/* type for keep-state rules */
+name|u_char
+name|_pad1
+decl_stmt|;
+comment|/* for future use */
+name|u_short
+name|_pad2
+decl_stmt|;
+comment|/* for future use */
 block|}
 struct|;
 end_struct
@@ -360,6 +373,10 @@ name|fw_fwd_ip
 value|fw_un.fu_fwd_ip
 end_define
 
+begin_comment
+comment|/**  *  *   chain_ptr -------------+  *                          V  *     [ next.le_next ]---->[ next.le_next ]---- [ next.le_next ]--->  *     [ next.le_prev ]<----[ next.le_prev ]<----[ next.le_prev ]<---  *  +--[ rule         ]  +--[ rule         ]  +--[ rule         ]  *  |                    |                    |  *  +->[<ip_fw>      ]  +->[<ip_fw>      ]  +->[<ip_fw>      ]  *  */
+end_comment
+
 begin_struct
 struct|struct
 name|ip_fw_chain
@@ -425,20 +442,13 @@ name|struct
 name|ipfw_flow_id
 name|id
 decl_stmt|;
-name|struct
-name|ipfw_flow_id
-name|mask
-decl_stmt|;
+comment|/* (masked) flow id		*/
 name|struct
 name|ip_fw_chain
 modifier|*
 name|chain
 decl_stmt|;
-comment|/* pointer to parent rule	*/
-name|u_int32_t
-name|type
-decl_stmt|;
-comment|/* rule type			*/
+comment|/* pointer to chain		*/
 name|u_int32_t
 name|expire
 decl_stmt|;
@@ -458,6 +468,14 @@ name|state
 decl_stmt|;
 comment|/* state of this rule (typ. a   */
 comment|/* combination of TCP flags)	*/
+name|u_int16_t
+name|dyn_type
+decl_stmt|;
+comment|/* rule type			*/
+name|u_int16_t
+name|count
+decl_stmt|;
+comment|/* refcount			*/
 block|}
 struct|;
 end_struct

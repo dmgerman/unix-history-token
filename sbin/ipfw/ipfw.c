@@ -1943,30 +1943,47 @@ operator|&
 name|IP_FW_F_KEEP_S
 condition|)
 block|{
-if|if
-condition|(
-name|chain
-operator|->
-name|next_rule_ptr
-condition|)
-name|printf
-argument_list|(
-literal|" keep-state %d"
-argument_list|,
+name|u_long
+name|x
+init|=
 operator|(
-name|int
+name|u_long
 operator|)
 name|chain
 operator|->
 name|next_rule_ptr
+decl_stmt|;
+name|u_char
+name|type
+init|=
+operator|(
+name|x
+operator|)
+operator|&
+literal|0xff
+decl_stmt|;
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+default|default:
+name|printf
+argument_list|(
+literal|" *** unknown type ***"
 argument_list|)
 expr_stmt|;
-else|else
+break|break ;
+case|case
+name|DYN_KEEP_STATE
+case|:
 name|printf
 argument_list|(
 literal|" keep-state"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 block|}
 comment|/* Direction */
 if|if
@@ -3067,7 +3084,7 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"%05d %qu %qu (T %d, # %d) ty %d"
+literal|"%05d %qu %qu (T %ds, slot %d)"
 argument_list|,
 call|(
 name|int
@@ -3093,12 +3110,26 @@ argument_list|,
 name|d
 operator|->
 name|bucket
-argument_list|,
-name|d
-operator|->
-name|type
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|d
+operator|->
+name|dyn_type
+condition|)
+block|{
+case|case
+name|DYN_KEEP_STATE
+case|:
+comment|/* bidir, no mask */
+name|printf
+argument_list|(
+literal|"<->"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|do_resolv
@@ -3177,7 +3208,7 @@ switch|switch
 condition|(
 name|d
 operator|->
-name|type
+name|dyn_type
 condition|)
 block|{
 default|default:
