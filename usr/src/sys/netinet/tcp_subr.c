@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_subr.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_subr.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1735,20 +1735,22 @@ begin_comment
 comment|/*  * Notify a tcp user of an asynchronous error;  * store error as soft error, but wake up user  * (for now, won't do anything until can select for soft error).  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|tcp_notify
 argument_list|(
-name|inp
+argument|inp
 argument_list|,
-name|error
+argument|error
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|inpcb
-operator|*
+modifier|*
 name|inp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1758,7 +1760,12 @@ end_decl_stmt
 
 begin_block
 block|{
-operator|(
+specifier|register
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+init|=
 operator|(
 expr|struct
 name|tcpcb
@@ -1767,7 +1774,44 @@ operator|)
 name|inp
 operator|->
 name|inp_ppcb
-operator|)
+decl_stmt|;
+specifier|register
+name|struct
+name|socket
+modifier|*
+name|so
+init|=
+name|inp
+operator|->
+name|inp_socket
+decl_stmt|;
+comment|/* 	 * If connection hasn't completed, has retransmitted several times, 	 * and receives a second error, give up now.  This is better 	 * than waiting a long time to establish a connection that 	 * can never complete. 	 */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|<
+name|TCPS_ESTABLISHED
+operator|&&
+name|tp
+operator|->
+name|t_rxtshift
+operator|>
+literal|3
+operator|&&
+name|tp
+operator|->
+name|t_softerror
+condition|)
+name|so
+operator|->
+name|so_error
+operator|=
+name|error
+expr_stmt|;
+else|else
+name|tp
 operator|->
 name|t_softerror
 operator|=
@@ -1779,25 +1823,19 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|inp
-operator|->
-name|inp_socket
+name|so
 operator|->
 name|so_timeo
 argument_list|)
 expr_stmt|;
 name|sorwakeup
 argument_list|(
-name|inp
-operator|->
-name|inp_socket
+name|so
 argument_list|)
 expr_stmt|;
 name|sowwakeup
 argument_list|(
-name|inp
-operator|->
-name|inp_socket
+name|so
 argument_list|)
 expr_stmt|;
 block|}
