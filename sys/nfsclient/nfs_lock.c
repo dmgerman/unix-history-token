@@ -764,8 +764,6 @@ name|p
 operator|->
 name|p_nlminfo
 argument_list|,
-name|PCATCH
-operator||
 name|PUSER
 argument_list|,
 literal|"lockd"
