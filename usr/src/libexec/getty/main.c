@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.16 (Berkeley) %G%"
+literal|"@(#)main.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -954,11 +954,6 @@ init|;
 condition|;
 control|)
 block|{
-name|int
-name|ldisp
-init|=
-name|OTTYDISC
-decl_stmt|;
 name|int
 name|off
 init|=
