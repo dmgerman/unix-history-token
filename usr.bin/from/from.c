@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)from.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)from.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -86,16 +106,52 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<unistd.h>
 end_include
 
+begin_decl_stmt
+name|int
+name|match
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -178,7 +234,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:s:?"
+literal|"f:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -241,17 +297,8 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: from [-f file] [-s sender] [user]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|argv
@@ -318,23 +365,13 @@ argument_list|()
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"from: no password file entry for you.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"no password file entry for you"
 argument_list|)
 expr_stmt|;
-block|}
 name|file
 operator|=
 name|pwd
@@ -389,18 +426,13 @@ name|stdin
 argument_list|)
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"from: can't read %s.\n"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't read %s"
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 block|}
@@ -486,22 +518,44 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|match
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
 argument_list|(
-name|line
+name|stderr
 argument_list|,
-name|sender
+literal|"usage: from [-f file] [-s sender] [user]\n"
 argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|match
+parameter_list|(
+name|line
+parameter_list|,
+name|sender
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|line
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|sender
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
