@@ -9954,6 +9954,10 @@ name|g
 operator|->
 name|charjump
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -10115,6 +10119,10 @@ condition|)
 return|return;
 name|pmatches
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|g
@@ -10147,6 +10155,10 @@ name|g
 operator|->
 name|matchjump
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|g
