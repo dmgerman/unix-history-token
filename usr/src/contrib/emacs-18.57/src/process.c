@@ -5370,6 +5370,32 @@ name|HAVE_SETSID
 name|setsid
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TIOCSCTTY
+comment|/* Make the pty's terminal the controlling terminal.  */
+if|if
+condition|(
+name|pty_flag
+operator|&&
+operator|(
+name|ioctl
+argument_list|(
+name|xforkin
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+operator|)
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* not HAVE_SETSID */
