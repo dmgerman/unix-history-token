@@ -3445,29 +3445,14 @@ name|m
 expr_stmt|;
 comment|/*for (;;) {*/
 comment|/* calculate length */
-for|for
-control|(
-name|m0
-operator|=
-name|m
-operator|,
 name|len
 operator|=
-literal|0
-init|;
+name|m_length
+argument_list|(
 name|m
-condition|;
-name|m
-operator|=
-name|m
-operator|->
-name|m_next
-control|)
-name|len
-operator|+=
-name|m
-operator|->
-name|m_len
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
