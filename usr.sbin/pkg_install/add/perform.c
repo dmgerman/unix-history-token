@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.37 1996/10/14 19:41:42 jkh Exp $"
+literal|"$Id: perform.c,v 1.26.2.12 1996/10/15 18:36:14 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -465,10 +465,19 @@ name|extract_contents
 expr_stmt|;
 block|}
 else|else
+block|{
 name|extract
 operator|=
 name|NULL
 expr_stmt|;
+name|sb
+operator|.
+name|st_size
+operator|=
+literal|100000
+expr_stmt|;
+comment|/* Make up a plausible average size */
+block|}
 name|Home
 operator|=
 name|make_playpen
