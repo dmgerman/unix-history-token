@@ -44,6 +44,40 @@ begin_comment
 comment|/*  * the system_info struct is filled in by a machine dependent routine.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|p_active
+end_ifdef
+
+begin_comment
+comment|/* uw7 define macro p_active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_ACTIVE
+value|p_pactive
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|P_ACTIVE
+value|p_active
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|system_info
@@ -61,7 +95,7 @@ name|int
 name|p_total
 decl_stmt|;
 name|int
-name|p_active
+name|P_ACTIVE
 decl_stmt|;
 comment|/* number of procs considered "active" */
 name|int

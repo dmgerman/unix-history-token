@@ -56,6 +56,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"top.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"boolean.h"
 end_include
 
@@ -388,7 +394,7 @@ name|errs
 comment|/* structure for a system-call error */
 block|{
 name|int
-name|errno
+name|errnum
 decl_stmt|;
 comment|/* value of errno (that is, the actual error) */
 name|char
@@ -458,7 +464,7 @@ name|p
 parameter_list|,
 name|e
 parameter_list|)
-value|if (errcnt>= ERRMAX) \ 		    { \ 			return(err_toomany); \ 		    } \ 		    else \ 		    { \ 			errs[errcnt].arg = (p); \ 			errs[errcnt++].errno = (e); \ 		    }
+value|if (errcnt>= ERRMAX) \ 		    { \ 			return(err_toomany); \ 		    } \ 		    else \ 		    { \ 			errs[errcnt].arg = (p); \ 			errs[errcnt++].errnum = (e); \ 		    }
 end_define
 
 begin_comment
@@ -592,7 +598,7 @@ if|if
 condition|(
 name|errp
 operator|->
-name|errno
+name|errnum
 operator|!=
 name|currerr
 condition|)
@@ -645,7 +651,7 @@ name|currerr
 operator|=
 name|errp
 operator|->
-name|errno
+name|errnum
 expr_stmt|;
 name|first
 operator|=
@@ -974,11 +980,11 @@ name|result
 operator|=
 name|p1
 operator|->
-name|errno
+name|errnum
 operator|-
 name|p2
 operator|->
-name|errno
+name|errnum
 operator|)
 operator|==
 literal|0
@@ -1084,7 +1090,7 @@ name|arg
 argument_list|,
 name|errp
 operator|->
-name|errno
+name|errnum
 operator|==
 literal|0
 condition|?
@@ -1094,7 +1100,7 @@ name|errmsg
 argument_list|(
 name|errp
 operator|->
-name|errno
+name|errnum
 argument_list|)
 argument_list|)
 expr_stmt|;

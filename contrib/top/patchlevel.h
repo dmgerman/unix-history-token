@@ -3,7 +3,14 @@ begin_define
 define|#
 directive|define
 name|PATCHLEVEL
-value|4
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|BETA
+value|"beta12"
 end_define
 
 end_unit
