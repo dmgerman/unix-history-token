@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)main.c	2.5 %G%"
+literal|"@(#)main.c	2.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +76,8 @@ operator|*
 name|prevint
 argument_list|)
 argument_list|()
+decl_stmt|,
+name|f
 decl_stmt|;
 name|FILE
 modifier|*
@@ -322,6 +324,38 @@ name|i
 operator|+
 literal|1
 index|]
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|f
+operator|=
+name|creat
+argument_list|(
+name|Tflag
+argument_list|,
+literal|0600
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+name|Tflag
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|close
+argument_list|(
+name|f
+argument_list|)
 expr_stmt|;
 name|i
 operator|++
