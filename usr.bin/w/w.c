@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)w.c	8.4 (Berkeley) 4/16/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)w.c	8.4 (Berkeley) 4/16/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -930,11 +944,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"calloc"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1612,11 +1626,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2567,7 +2581,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: w: [-hin] [-M core] [-N system] [user]\n"
+literal|"usage: w [-hin] [-M core] [-N system] [user]\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -2578,7 +2592,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"uptime\n"
+literal|"usage: uptime\n"
 argument_list|)
 expr_stmt|;
 name|exit
