@@ -337,7 +337,10 @@ name|base
 argument_list|,
 name|size
 argument_list|,
-literal|4
+sizeof|sizeof
+argument_list|(
+name|register_t
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -348,7 +351,8 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|0xffffffff
+operator|-
+literal|1
 condition|)
 block|{
 name|heap_size

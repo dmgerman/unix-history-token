@@ -456,10 +456,10 @@ begin_struct
 struct|struct
 name|ofw_reg
 block|{
-name|uint32_t
+name|cell_t
 name|base
 decl_stmt|;
-name|uint32_t
+name|cell_t
 name|size
 decl_stmt|;
 block|}
