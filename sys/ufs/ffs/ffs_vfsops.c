@@ -1797,6 +1797,14 @@ name|fs
 operator|->
 name|fs_contigdirs
 expr_stmt|;
+name|newfs
+operator|->
+name|fs_active
+operator|=
+name|fs
+operator|->
+name|fs_active
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|newfs
@@ -3014,12 +3022,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|fs
-operator|->
-name|fs_active
-operator|=
-literal|0
-expr_stmt|;
 comment|/* XXX updating 4.2 FFS superblocks trashes rotational layout tables */
 if|if
 condition|(
@@ -3443,6 +3445,12 @@ name|fs_contigdirs
 argument_list|,
 name|size
 argument_list|)
+expr_stmt|;
+name|fs
+operator|->
+name|fs_active
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Compatibility for old filesystems 	   XXX */
 if|if
