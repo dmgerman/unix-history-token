@@ -1412,12 +1412,9 @@ name|payload
 expr_stmt|;
 name|sport
 operator|=
-name|ntohs
-argument_list|(
 name|ih
 operator|->
 name|icmp_type
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1462,12 +1459,9 @@ name|payload
 expr_stmt|;
 name|sport
 operator|=
-name|ntohs
-argument_list|(
 name|ih6
 operator|->
 name|icmp6_type
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
