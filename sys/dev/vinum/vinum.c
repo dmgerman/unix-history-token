@@ -1241,6 +1241,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|moduledata_t
 name|vinum_mod
 init|=
