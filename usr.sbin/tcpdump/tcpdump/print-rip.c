@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-rip.c,v 1.20 94/06/14 20:18:47 leres Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/print-rip.c,v 1.4 1995/03/08 12:52:40 olah Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,14 +129,11 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|ntohs
-argument_list|(
 name|ni
 operator|->
 name|rip_dst
 operator|.
 name|sa_family
-argument_list|)
 operator|!=
 name|AF_INET
 condition|)
@@ -149,14 +146,11 @@ name|printf
 argument_list|(
 literal|" [family %d:"
 argument_list|,
-name|ntohs
-argument_list|(
 name|ni
 operator|->
 name|rip_dst
 operator|.
 name|sa_family
-argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
