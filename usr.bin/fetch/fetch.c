@@ -744,7 +744,7 @@ name|char
 modifier|*
 name|stat_bytes
 parameter_list|(
-name|size_t
+name|off_t
 name|bytes
 parameter_list|)
 block|{
@@ -791,8 +791,11 @@ argument_list|,
 sizeof|sizeof
 name|str
 argument_list|,
-literal|"%4zu %cB"
+literal|"%4jd %cB"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bytes
 argument_list|,
 operator|*
@@ -920,7 +923,7 @@ argument_list|,
 name|stat_bytes
 argument_list|(
 operator|(
-name|size_t
+name|off_t
 operator|)
 name|bps
 argument_list|)
