@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 159 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 160 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1563,6 +1563,59 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|ACPI_GET_DESCRIPTOR_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+operator|==
+name|ACPI_DESC_TYPE_NAMED
+condition|)
+block|{
+name|AcpiExDumpNode
+argument_list|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|ObjDesc
+argument_list|,
+name|Flags
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\nAttached Object (%p):\n"
+argument_list|,
+operator|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|ObjDesc
+operator|)
+operator|->
+name|Object
+argument_list|)
+expr_stmt|;
+name|AcpiExDumpObjectDescriptor
+argument_list|(
+operator|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|ObjDesc
+operator|)
+operator|->
+name|Object
+argument_list|,
+name|Flags
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(

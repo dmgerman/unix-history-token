@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 87 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 88 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -430,6 +430,9 @@ index|]
 operator|.
 name|Pointer
 argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|AcpiGbl_AcpiTables
 index|[
 name|i
@@ -1514,6 +1517,10 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%32s"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|Buffer
 operator|.
 name|Pointer
@@ -1566,13 +1573,25 @@ name|ACPI_TYPE_INTEGER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"  Value %X"
+literal|"  Value %8.8X%8.8X"
 argument_list|,
+name|ACPI_HIDWORD
+argument_list|(
 name|ObjDesc
 operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|)
+argument_list|,
+name|ACPI_LODWORD
+argument_list|(
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1596,7 +1615,7 @@ name|ACPI_TYPE_REGION
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"  SpaceId %X Address %X Length %X"
+literal|"  SpaceId %X Length %X Address %8.8X%8.8X"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1608,13 +1627,25 @@ name|ObjDesc
 operator|->
 name|Region
 operator|.
-name|Address
+name|Length
 argument_list|,
+name|ACPI_HIDWORD
+argument_list|(
 name|ObjDesc
 operator|->
 name|Region
 operator|.
-name|Length
+name|Address
+argument_list|)
+argument_list|,
+name|ACPI_LODWORD
+argument_list|(
+name|ObjDesc
+operator|->
+name|Region
+operator|.
+name|Address
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1911,6 +1942,10 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%32s (%p) - %s\n"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|Buffer
 operator|.
 name|Pointer

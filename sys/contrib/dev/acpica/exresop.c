@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 55 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 58 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
 end_include
 
 begin_define
@@ -757,6 +751,12 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Get the resolved object */
+name|ObjDesc
+operator|=
+operator|*
+name|StackPtr
+expr_stmt|;
 comment|/*          * Check the resulting object (value) type          */
 switch|switch
 condition|(
@@ -825,13 +825,12 @@ case|case
 name|ARGI_INTEGER
 case|:
 comment|/* Number */
-comment|/*              * Need an operand of type ACPI_TYPE_INTEGER,              * But we can implicitly convert from a STRING or BUFFER              */
+comment|/*              * Need an operand of type ACPI_TYPE_INTEGER,              * But we can implicitly convert from a STRING or BUFFER              * Aka - "Implicit Source Operand Conversion"              */
 name|Status
 operator|=
 name|AcpiExConvertToInteger
 argument_list|(
-operator|*
-name|StackPtr
+name|ObjDesc
 argument_list|,
 name|StackPtr
 argument_list|,
@@ -862,12 +861,10 @@ literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|*
-name|StackPtr
+name|ObjDesc
 argument_list|)
 operator|,
-operator|*
-name|StackPtr
+name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
@@ -880,6 +877,21 @@ block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ObjDesc
+operator|!=
+operator|*
+name|StackPtr
+condition|)
+block|{
+comment|/*                   * We just created a new object, remove a reference                  * on the original operand object                  */
+name|AcpiUtRemoveReference
+argument_list|(
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 block|}
@@ -889,13 +901,12 @@ goto|;
 case|case
 name|ARGI_BUFFER
 case|:
-comment|/*              * Need an operand of type ACPI_TYPE_BUFFER,              * But we can implicitly convert from a STRING or INTEGER              */
+comment|/*              * Need an operand of type ACPI_TYPE_BUFFER,              * But we can implicitly convert from a STRING or INTEGER              * Aka - "Implicit Source Operand Conversion"              */
 name|Status
 operator|=
 name|AcpiExConvertToBuffer
 argument_list|(
-operator|*
-name|StackPtr
+name|ObjDesc
 argument_list|,
 name|StackPtr
 argument_list|,
@@ -926,12 +937,10 @@ literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|*
-name|StackPtr
+name|ObjDesc
 argument_list|)
 operator|,
-operator|*
-name|StackPtr
+name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
@@ -947,19 +956,33 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ObjDesc
+operator|!=
+operator|*
+name|StackPtr
+condition|)
+block|{
+comment|/*                   * We just created a new object, remove a reference                  * on the original operand object                  */
+name|AcpiUtRemoveReference
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|NextOperand
 goto|;
 case|case
 name|ARGI_STRING
 case|:
-comment|/*              * Need an operand of type ACPI_TYPE_STRING,              * But we can implicitly convert from a BUFFER or INTEGER              */
+comment|/*              * Need an operand of type ACPI_TYPE_STRING,              * But we can implicitly convert from a BUFFER or INTEGER              * Aka - "Implicit Source Operand Conversion"              */
 name|Status
 operator|=
 name|AcpiExConvertToString
 argument_list|(
-operator|*
-name|StackPtr
+name|ObjDesc
 argument_list|,
 name|StackPtr
 argument_list|,
@@ -994,12 +1017,10 @@ literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|*
-name|StackPtr
+name|ObjDesc
 argument_list|)
 operator|,
-operator|*
-name|StackPtr
+name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1015,6 +1036,21 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ObjDesc
+operator|!=
+operator|*
+name|StackPtr
+condition|)
+block|{
+comment|/*                   * We just created a new object, remove a reference                  * on the original operand object                  */
+name|AcpiUtRemoveReference
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|NextOperand
 goto|;
@@ -1026,8 +1062,7 @@ switch|switch
 condition|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
-operator|*
-name|StackPtr
+name|ObjDesc
 argument_list|)
 condition|)
 block|{
@@ -1052,12 +1087,10 @@ literal|"Needed [Integer/String/Buffer], found [%s] %p\n"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|*
-name|StackPtr
+name|ObjDesc
 argument_list|)
 operator|,
-operator|*
-name|StackPtr
+name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1073,121 +1106,12 @@ goto|;
 case|case
 name|ARGI_DATAOBJECT
 case|:
-comment|/*              * ARGI_DATAOBJECT is only used by the SizeOf operator.              * Need a buffer, string, package, or Node reference.              *              * The only reference allowed here is a direct reference to              * a namespace node.              */
-if|if
-condition|(
-name|ACPI_GET_OBJECT_TYPE
-argument_list|(
-operator|*
-name|StackPtr
-argument_list|)
-operator|==
-name|INTERNAL_TYPE_REFERENCE
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-operator|*
-name|StackPtr
-operator|)
-operator|->
-name|Reference
-operator|.
-name|Node
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Needed [Node Reference], found [%p]\n"
-operator|,
-operator|*
-name|StackPtr
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_AML_OPERAND_TYPE
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Get the object attached to the node */
-name|TempNode
-operator|=
-name|AcpiNsGetAttachedObject
-argument_list|(
-operator|(
-operator|*
-name|StackPtr
-operator|)
-operator|->
-name|Reference
-operator|.
-name|Node
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|TempNode
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Node [%p] has no attached object\n"
-operator|,
-operator|(
-operator|*
-name|StackPtr
-operator|)
-operator|->
-name|Reference
-operator|.
-name|Node
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_AML_OPERAND_TYPE
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*                  * Swap the reference object with the node's object.  Must add                  * a reference to the node object, and remove a reference from                  * the original reference object.                  */
-name|AcpiUtAddReference
-argument_list|(
-name|TempNode
-argument_list|)
-expr_stmt|;
-name|AcpiUtRemoveReference
-argument_list|(
-operator|*
-name|StackPtr
-argument_list|)
-expr_stmt|;
-operator|(
-operator|*
-name|StackPtr
-operator|)
-operator|=
-name|TempNode
-expr_stmt|;
-block|}
-comment|/* Need a buffer, string, package */
+comment|/*              * ARGI_DATAOBJECT is only used by the SizeOf operator.              * Need a buffer, string, package, or RefOf reference.              *              * The only reference allowed here is a direct reference to              * a namespace node.              */
 switch|switch
 condition|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
-operator|*
-name|StackPtr
+name|ObjDesc
 argument_list|)
 condition|)
 block|{
@@ -1199,6 +1123,9 @@ name|ACPI_TYPE_STRING
 case|:
 case|case
 name|ACPI_TYPE_BUFFER
+case|:
+case|case
+name|INTERNAL_TYPE_REFERENCE
 case|:
 comment|/* Valid operand */
 break|break;
@@ -1212,12 +1139,10 @@ literal|"Needed [Buf/Str/Pkg], found [%s] %p\n"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|*
-name|StackPtr
+name|ObjDesc
 argument_list|)
 operator|,
-operator|*
-name|StackPtr
+name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1238,8 +1163,7 @@ switch|switch
 condition|(
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
-operator|*
-name|StackPtr
+name|ObjDesc
 argument_list|)
 condition|)
 block|{
@@ -1264,12 +1188,10 @@ literal|"Needed [Buf/Str/Pkg], found [%s] %p\n"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
-operator|*
-name|StackPtr
+name|ObjDesc
 argument_list|)
 operator|,
-operator|*
-name|StackPtr
+name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1289,7 +1211,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Internal - Unknown ARGI type %X\n"
+literal|"Internal - Unknown ARGI (required operand) type %X\n"
 operator|,
 name|ThisArgType
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 175 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 176 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1669,11 +1669,11 @@ decl_stmt|;
 name|UINT32
 name|FinalAmlOffset
 decl_stmt|;
-name|UINT16
-name|ParseOpcode
+name|UINT32
+name|CompileFlags
 decl_stmt|;
 name|UINT16
-name|CompileFlags
+name|ParseOpcode
 decl_stmt|;
 name|UINT8
 name|AmlOpcodeLength

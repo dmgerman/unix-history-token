@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 139 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 141 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -236,6 +236,10 @@ literal|"%s %s (Node %p)\n"
 argument_list|,
 name|Msg
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|Buffer
 operator|.
 name|Pointer
@@ -678,7 +682,7 @@ name|ACPI_TYPE_PROCESSOR
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" ID %hd Addr %.4X Len %.4X\n"
+literal|" ID %X Len %.4X Addr %p\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -690,13 +694,17 @@ name|ObjDesc
 operator|->
 name|Processor
 operator|.
-name|Address
+name|Length
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|ObjDesc
 operator|->
 name|Processor
 operator|.
-name|Length
+name|Address
 argument_list|)
 expr_stmt|;
 break|break;
@@ -716,8 +724,11 @@ name|ACPI_TYPE_METHOD
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" Args %hd Len %.4X Aml %p \n"
+literal|" Args %X Len %.4X Aml %p\n"
 argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|ObjDesc
 operator|->
 name|Method
@@ -1179,6 +1190,29 @@ operator|->
 name|Name
 operator|.
 name|Ascii
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|INTERNAL_TYPE_ALIAS
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|" Target %4.4s (%p)\n"
+argument_list|,
+operator|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|ObjDesc
+operator|)
+operator|->
+name|Name
+operator|.
+name|Ascii
+argument_list|,
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1840,7 +1874,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_TABLES
 operator|,
-literal|"name space not initialized!\n"
+literal|"namespace not initialized!\n"
 operator|)
 argument_list|)
 expr_stmt|;

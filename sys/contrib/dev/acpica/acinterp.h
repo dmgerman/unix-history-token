@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 138 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 139 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -482,6 +482,30 @@ parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExResolveMultiple
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|Operand
+parameter_list|,
+name|ACPI_OBJECT_TYPE
+modifier|*
+name|ReturnType
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ReturnDesc
 parameter_list|)
 function_decl|;
 end_function_decl

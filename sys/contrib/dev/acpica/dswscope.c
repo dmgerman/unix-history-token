@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswscope - Scope stack manipulation  *              $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswscope - Scope stack manipulation  *              $Revision: 53 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -106,13 +106,16 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Popped object type %X\n"
+literal|"Popped object type (%s)\n"
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|ScopeInfo
 operator|->
 name|Common
 operator|.
 name|Value
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -307,13 +310,16 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Popped object type %X\n"
+literal|"Popped object type (%s)\n"
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|ScopeInfo
 operator|->
 name|Common
 operator|.
 name|Value
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

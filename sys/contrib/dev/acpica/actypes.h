@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 238 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 239 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -4133,7 +4133,7 @@ name|ACPI_NEXT_RESOURCE
 parameter_list|(
 name|Res
 parameter_list|)
-value|(ACPI_RESOURCE *)((UINT8 *) Res + Res->length)
+value|(ACPI_RESOURCE *)((UINT8 *) Res + Res->Length)
 end_define
 
 begin_ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 64 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 65 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -543,9 +543,28 @@ name|Next
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|AcpiGbl_DbOutputToFile
+operator|)
+operator|||
+operator|(
+name|AcpiDbgLevel
+operator|&
+name|ACPI_LV_PARSE
+operator|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|AcpiDbgLevel
 operator|=
 name|OriginalDebugLevel

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 44 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 45 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -300,7 +300,7 @@ operator|.
 name|Length
 condition|)
 block|{
-comment|/* Clear old string and copy in the new one */
+comment|/*           * String will fit in existing buffer.          * Clear old string and copy in the new one           */
 name|ACPI_MEMSET
 argument_list|(
 name|TargetDesc
@@ -316,6 +316,8 @@ operator|->
 name|String
 operator|.
 name|Length
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|ACPI_MEMCPY
@@ -334,7 +336,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          * Free the current buffer, then allocate a buffer          * large enough to hold the value          */
+comment|/*          * Free the current buffer, then allocate a new buffer          * large enough to hold the value          */
 if|if
 condition|(
 name|TargetDesc
@@ -374,7 +376,7 @@ name|String
 operator|.
 name|Pointer
 operator|=
-name|ACPI_MEM_ALLOCATE
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 operator|(
 name|ACPI_SIZE
@@ -400,14 +402,6 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|TargetDesc
-operator|->
-name|String
-operator|.
-name|Length
-operator|=
-name|Length
-expr_stmt|;
 name|ACPI_MEMCPY
 argument_list|(
 name|TargetDesc
@@ -422,6 +416,15 @@ name|Length
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Set the new target length */
+name|TargetDesc
+operator|->
+name|String
+operator|.
+name|Length
+operator|=
+name|Length
+expr_stmt|;
 return|return
 operator|(
 name|AE_OK

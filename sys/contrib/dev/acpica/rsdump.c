@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 33 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 34 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1910,47 +1910,97 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"    Granularity: %16X\n"
+literal|"    Granularity: %8.8X%8.8X\n"
 argument_list|,
+name|ACPI_HIDWORD
+argument_list|(
 name|Address64Data
 operator|->
 name|Granularity
 argument_list|)
+argument_list|,
+name|ACPI_LODWORD
+argument_list|(
+name|Address64Data
+operator|->
+name|Granularity
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"    Address range min: %16X\n"
+literal|"    Address range min: %8.8X%8.8X\n"
 argument_list|,
+name|ACPI_HIDWORD
+argument_list|(
 name|Address64Data
 operator|->
 name|MinAddressRange
 argument_list|)
+argument_list|,
+name|ACPI_HIDWORD
+argument_list|(
+name|Address64Data
+operator|->
+name|MinAddressRange
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"    Address range max: %16X\n"
+literal|"    Address range max: %8.8X%8.8X\n"
 argument_list|,
+name|ACPI_HIDWORD
+argument_list|(
 name|Address64Data
 operator|->
 name|MaxAddressRange
 argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"    Address translation offset: %16X\n"
 argument_list|,
+name|ACPI_HIDWORD
+argument_list|(
 name|Address64Data
 operator|->
-name|AddressTranslationOffset
+name|MaxAddressRange
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"    Address Length: %16X\n"
+literal|"    Address translation offset: %8.8X%8.8X\n"
 argument_list|,
+name|ACPI_HIDWORD
+argument_list|(
+name|Address64Data
+operator|->
+name|AddressTranslationOffset
+argument_list|)
+argument_list|,
+name|ACPI_HIDWORD
+argument_list|(
+name|Address64Data
+operator|->
+name|AddressTranslationOffset
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"    Address Length: %8.8X%8.8X\n"
+argument_list|,
+name|ACPI_HIDWORD
+argument_list|(
 name|Address64Data
 operator|->
 name|AddressLength
+argument_list|)
+argument_list|,
+name|ACPI_HIDWORD
+argument_list|(
+name|Address64Data
+operator|->
+name|AddressLength
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

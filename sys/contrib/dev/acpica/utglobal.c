@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 168 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 171 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
 end_include
 
 begin_define
@@ -423,7 +417,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Names built-in to the interpreter  *  * Initial values are currently supported only for types String and Number.  * To avoid type punning, both are specified as strings in this table.  *  * NOTES:  * 1) _SB_ is defined to be a device to allow _SB_/_INI to be run  *    during the initialization sequence.  */
+comment|/*  * Predefined ACPI Names (Built-in to the Interpreter)  *  * Initial values are currently supported only for types String and Number.  * Both are specified as strings in this table.  *  * NOTES:  * 1) _SB_ is defined to be a device to allow _SB_/_INI to be run  *    during the initialization sequence.  */
 end_comment
 
 begin_decl_stmt
@@ -436,7 +430,7 @@ block|{
 block|{
 literal|"_GPE"
 block|,
-name|INTERNAL_TYPE_DEF_ANY
+name|INTERNAL_TYPE_SCOPE
 block|,
 name|NULL
 block|}
@@ -444,7 +438,7 @@ block|,
 block|{
 literal|"_PR_"
 block|,
-name|INTERNAL_TYPE_DEF_ANY
+name|INTERNAL_TYPE_SCOPE
 block|,
 name|NULL
 block|}
@@ -460,7 +454,7 @@ block|,
 block|{
 literal|"_SI_"
 block|,
-name|INTERNAL_TYPE_DEF_ANY
+name|INTERNAL_TYPE_SCOPE
 block|,
 name|NULL
 block|}
@@ -468,7 +462,7 @@ block|,
 block|{
 literal|"_TZ_"
 block|,
-name|INTERNAL_TYPE_DEF_ANY
+name|INTERNAL_TYPE_SCOPE
 block|,
 name|NULL
 block|}
@@ -531,7 +525,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Properties of the ACPI Object Types, both internal and external.  *  * Elements of AcpiNsProperties are bit significant  * and the table is indexed by values of ACPI_OBJECT_TYPE  */
+comment|/*  * Properties of the ACPI Object Types, both internal and external.  * The table is indexed by values of ACPI_OBJECT_TYPE  */
 end_comment
 
 begin_decl_stmt
@@ -1592,7 +1586,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Strings and procedures used for debug only  *  */
+comment|/*  * Strings and procedures used for debug only  */
 end_comment
 
 begin_comment
@@ -2407,6 +2401,10 @@ expr_stmt|;
 name|AcpiGbl_GpeNumberInfo
 operator|=
 name|NULL
+expr_stmt|;
+name|AcpiGbl_EventsInitialized
+operator|=
+name|FALSE
 expr_stmt|;
 comment|/* Namespace */
 name|AcpiGbl_RootNode

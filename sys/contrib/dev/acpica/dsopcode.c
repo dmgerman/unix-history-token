@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 81 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 82 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -212,7 +212,7 @@ name|WalkState
 operator|->
 name|ParseFlags
 operator|=
-literal|0
+name|ACPI_PARSE_DEFERRED_OP
 expr_stmt|;
 comment|/* Pass1: Parse the entire declaration */
 name|Status

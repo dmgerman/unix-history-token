@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconvrt - Object conversion routines  *              $Revision: 37 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconvrt - Object conversion routines  *              $Revision: 39 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -340,7 +340,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExConvertToBuffer  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  Must be an  *                                Integer, Buffer, or String  *              WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Convert an ACPI Object to an Buffer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExConvertToBuffer  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  Must be an  *                                Integer, Buffer, or String  *              WalkState       - Current method state  *  * RETURN:      Status  *  * DESCRIPTION: Convert an ACPI Object to a Buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -515,10 +515,120 @@ break|break;
 case|case
 name|ACPI_TYPE_STRING
 case|:
+comment|/*          * Create a new Buffer object          */
+name|RetDesc
+operator|=
+name|AcpiUtCreateInternalObject
+argument_list|(
+name|ACPI_TYPE_BUFFER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|RetDesc
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Need enough space for one integer */
+name|NewBuf
+operator|=
+name|ACPI_MEM_CALLOCATE
+argument_list|(
+name|ObjDesc
+operator|->
+name|String
+operator|.
+name|Length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|NewBuf
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"ExConvertToBuffer: Buffer allocation failure\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|AcpiUtRemoveReference
+argument_list|(
+name|RetDesc
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
+name|ACPI_STRNCPY
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NewBuf
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|ObjDesc
+operator|->
+name|String
+operator|.
+name|Pointer
+argument_list|,
+name|ObjDesc
+operator|->
+name|String
+operator|.
+name|Length
+argument_list|)
+expr_stmt|;
+name|RetDesc
+operator|->
+name|Buffer
+operator|.
+name|Flags
+operator||=
+name|AOPOBJ_DATA_VALID
+expr_stmt|;
+name|RetDesc
+operator|->
+name|Buffer
+operator|.
+name|Pointer
+operator|=
+name|NewBuf
+expr_stmt|;
+name|RetDesc
+operator|->
+name|Buffer
+operator|.
+name|Length
+operator|=
+name|ObjDesc
+operator|->
+name|String
+operator|.
+name|Length
+expr_stmt|;
+comment|/* Return the new buffer descriptor */
 operator|*
 name|ResultDesc
 operator|=
-name|ObjDesc
+name|RetDesc
 expr_stmt|;
 break|break;
 case|case
@@ -558,7 +668,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExConvertAscii  *  * PARAMETERS:  Integer  *  * RETURN:      Actual string length  *  * DESCRIPTION: Convert an ACPI Integer to a hex string  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExConvertAscii  *  * PARAMETERS:  Integer         - Value to be converted  *              Base            - 10 or 16  *              String          - Where the string is returned  *  * RETURN:      Actual string length  *  * DESCRIPTION: Convert an ACPI Integer to a hex or decimal string  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1460,9 +1570,9 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|ACPI_DB_INFO
 operator|,
-literal|"Target does not allow conversion of type %s to %s\n"
+literal|"Explicit operator, will store (%s) over existing type (%s)\n"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 59 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
 end_include
 
 begin_include
@@ -140,6 +134,47 @@ name|EntryType
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|EntryType
+operator|==
+name|INTERNAL_TYPE_ALIAS
+condition|)
+block|{
+comment|/* There is always exactly one level of indirection */
+name|Node
+operator|=
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|Node
+operator|->
+name|Object
+expr_stmt|;
+name|SourceDesc
+operator|=
+name|AcpiNsGetAttachedObject
+argument_list|(
+name|Node
+argument_list|)
+expr_stmt|;
+name|EntryType
+operator|=
+name|AcpiNsGetType
+argument_list|(
+operator|(
+name|ACPI_HANDLE
+operator|)
+name|Node
+argument_list|)
+expr_stmt|;
+operator|*
+name|ObjectPtr
+operator|=
+name|Node
+expr_stmt|;
+block|}
 comment|/*      * Several object types require no further processing:      * 1) Devices rarely have an attached object, return the Node      * 2) Method locals and arguments have a pseudo-Node      */
 if|if
 condition|(
@@ -476,7 +511,7 @@ name|ObjDesc
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* TYPE_Any is untyped, and thus there is no object associated with it */
+comment|/* TYPE_ANY is untyped, and thus there is no object associated with it */
 case|case
 name|ACPI_TYPE_ANY
 case|:

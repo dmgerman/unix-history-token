@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 63 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -643,8 +643,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_AML_CIRCULAR_REFERENCE
+value|(ACPI_STATUS) (0x0020 | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_AML_MAX
-value|0x001F
+value|0x0020
 end_define
 
 begin_comment
@@ -724,8 +731,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_CTRL_SKIP
+value|(ACPI_STATUS) (0x000B | AE_CODE_CONTROL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_CTRL_MAX
-value|0x000A
+value|0x000B
 end_define
 
 begin_ifdef
@@ -926,6 +940,8 @@ block|,
 literal|"AE_AML_NO_RESOURCE_END_TAG"
 block|,
 literal|"AE_AML_BAD_RESOURCE_VALUE"
+block|,
+literal|"AE_AML_CIRCULAR_REFERENCE"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -957,6 +973,8 @@ block|,
 literal|"AE_CTRL_BREAK"
 block|,
 literal|"AE_CTRL_CONTINUE"
+block|,
+literal|"AE_CTRL_SKIP"
 block|}
 decl_stmt|;
 end_decl_stmt

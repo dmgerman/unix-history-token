@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 143 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 146 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -319,7 +319,7 @@ name|ACPI_USE_SYSTEM_CLIBRARY
 end_ifndef
 
 begin_function_decl
-name|UINT32
+name|ACPI_SIZE
 name|AcpiUtStrlen
 parameter_list|(
 specifier|const
@@ -361,7 +361,7 @@ name|NATIVE_CHAR
 modifier|*
 name|SrcString
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_SIZE
 name|Count
 parameter_list|)
 function_decl|;
@@ -381,14 +381,14 @@ name|NATIVE_CHAR
 modifier|*
 name|String2
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_SIZE
 name|Count
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|UINT32
+name|int
 name|AcpiUtStrcmp
 parameter_list|(
 specifier|const
@@ -435,7 +435,7 @@ name|NATIVE_CHAR
 modifier|*
 name|SrcString
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_SIZE
 name|Count
 parameter_list|)
 function_decl|;
@@ -491,7 +491,7 @@ name|void
 modifier|*
 name|Src
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_SIZE
 name|Count
 parameter_list|)
 function_decl|;
@@ -509,7 +509,7 @@ parameter_list|,
 name|NATIVE_UINT
 name|Value
 parameter_list|,
-name|NATIVE_UINT
+name|ACPI_SIZE
 name|Count
 parameter_list|)
 function_decl|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 93 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 94 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -84,7 +84,11 @@ parameter_list|)
 block|{
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|SourceNode
+name|TargetNode
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|AliasNode
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -95,7 +99,20 @@ literal|"ExCreateAlias"
 argument_list|)
 expr_stmt|;
 comment|/* Get the source/alias operands (both namespace nodes) */
-name|SourceNode
+name|AliasNode
+operator|=
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|WalkState
+operator|->
+name|Operands
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|TargetNode
 operator|=
 operator|(
 name|ACPI_NAMESPACE_NODE
@@ -108,37 +125,93 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|/* Attach the original source object to the new Alias Node */
-name|Status
+if|if
+condition|(
+name|TargetNode
+operator|->
+name|Type
+operator|==
+name|INTERNAL_TYPE_ALIAS
+condition|)
+block|{
+comment|/*           * Dereference an existing alias so that we don't create a chain          * of aliases.  With this code, we guarantee that an alias is          * always exactly one level of indirection away from the           * actual aliased name.          */
+name|TargetNode
 operator|=
-name|AcpiNsAttachObject
-argument_list|(
 operator|(
 name|ACPI_NAMESPACE_NODE
 operator|*
 operator|)
-name|WalkState
+name|TargetNode
 operator|->
-name|Operands
-index|[
-literal|0
-index|]
+name|Object
+expr_stmt|;
+block|}
+comment|/*      * For objects that can never change (i.e., the NS node will      * permanently point to the same object), we can simply attach      * the object to the new NS node.  For other objects (such as      * Integers, buffers, etc.), we have to point the Alias node      * to the original Node.      */
+switch|switch
+condition|(
+name|TargetNode
+operator|->
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_INTEGER
+case|:
+case|case
+name|ACPI_TYPE_STRING
+case|:
+case|case
+name|ACPI_TYPE_BUFFER
+case|:
+case|case
+name|ACPI_TYPE_PACKAGE
+case|:
+case|case
+name|ACPI_TYPE_BUFFER_FIELD
+case|:
+comment|/*          * The new alias has the type ALIAS and points to the original          * NS node, not the object itself.  This is because for these          * types, the object can change dynamically via a Store.          */
+name|AliasNode
+operator|->
+name|Type
+operator|=
+name|INTERNAL_TYPE_ALIAS
+expr_stmt|;
+name|AliasNode
+operator|->
+name|Object
+operator|=
+operator|(
+name|ACPI_OPERAND_OBJECT
+operator|*
+operator|)
+name|TargetNode
+expr_stmt|;
+break|break;
+default|default:
+comment|/* Attach the original source object to the new Alias Node */
+comment|/*          * The new alias assumes the type of the target, and it points          * to the same object.  The reference count of the object has an          * additional reference to prevent deletion out from under either the          * target node or the alias Node          */
+name|Status
+operator|=
+name|AcpiNsAttachObject
+argument_list|(
+name|AliasNode
 argument_list|,
 name|AcpiNsGetAttachedObject
 argument_list|(
-name|SourceNode
+name|TargetNode
 argument_list|)
 argument_list|,
-name|SourceNode
+name|TargetNode
 operator|->
 name|Type
 argument_list|)
 expr_stmt|;
-comment|/*      * The new alias assumes the type of the source, but it points      * to the same object.  The reference count of the object has an      * additional reference to prevent deletion out from under either the      * source or the alias Node      */
+break|break;
+block|}
 comment|/* Since both operands are Nodes, we don't need to delete them */
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}

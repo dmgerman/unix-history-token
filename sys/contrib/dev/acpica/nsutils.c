@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 112 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 113 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -50,6 +50,107 @@ argument_list|(
 literal|"nsutils"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsReportError  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      None  *  * DESCRIPTION: Print warning message  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiNsReportError
+parameter_list|(
+name|NATIVE_CHAR
+modifier|*
+name|ModuleName
+parameter_list|,
+name|UINT32
+name|LineNumber
+parameter_list|,
+name|UINT32
+name|ComponentId
+parameter_list|,
+name|char
+modifier|*
+name|InternalName
+parameter_list|,
+name|ACPI_STATUS
+name|LookupStatus
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|char
+modifier|*
+name|Name
+decl_stmt|;
+name|Status
+operator|=
+name|AcpiNsExternalizeName
+argument_list|(
+name|ACPI_UINT32_MAX
+argument_list|,
+name|InternalName
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|Name
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"%8s-%04d: *** Error: Looking up "
+argument_list|,
+name|ModuleName
+argument_list|,
+name|LineNumber
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Name
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"[%s]"
+argument_list|,
+name|Name
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"[COULD NOT EXTERNALIZE NAME]"
+argument_list|)
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|" in namespace, %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|LookupStatus
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Name
+condition|)
+block|{
+name|ACPI_MEM_FREE
+argument_list|(
+name|Name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsValidRootPrefix  *  * PARAMETERS:  Prefix          - Character to be checked  *  * RETURN:      TRUE if a valid prefix  *  * DESCRIPTION: Check if a character is a valid ACPI Root prefix  *  ******************************************************************************/
