@@ -9573,6 +9573,53 @@ break|break;
 case|case
 literal|'0'
 case|:
+ifdef|#
+directive|ifdef
+name|HAS_SETPROCTITLE
+comment|/* The BSDs don't show the argv[] in ps(1) output, they 	 * show a string from the process struct and provide 	 * the setproctitle() routine to manipulate that. */
+block|{
+name|s
+operator|=
+name|SvPV
+argument_list|(
+name|sv
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|410001
+comment|/* The leading "-" removes the "perl: " prefix, 	     * but not the "(perl) suffix from the ps(1) 	     * output, because that's what ps(1) shows if the 	     * argv[] is modified. */
+name|setproctitle
+argument_list|(
+literal|"-%s"
+argument_list|,
+name|s
+argument_list|,
+name|len
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* old FreeBSDs, NetBSD, OpenBSD, anyBSD */
+comment|/* This doesn't really work if you assume that 	     * $0 = 'foobar'; will wipe out 'perl' from the $0 	     * because in ps(1) output the result will be like 	     * sprintf("perl: %s (perl)", s) 	     * I guess this is a security feature: 	     * one (a user process) cannot get rid of the original name. 	     * --jhi */
+name|setproctitle
+argument_list|(
+literal|"%s"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

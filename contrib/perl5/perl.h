@@ -15352,6 +15352,27 @@ begin_comment
 comment|/* IAMSUID */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|I_LIBUTIL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_comment
+comment|/* setproctitle() in some FreeBSDs */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
