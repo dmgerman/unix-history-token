@@ -16,7 +16,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)m4.c	1.3 (Berkeley) %G%"
+literal|"@(#)m4.c	1.4 (Berkeley) %G%"
 expr_stmt|;
 end_expr_stmt
 
@@ -829,8 +829,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|tempname
+index|[]
+init|=
+literal|"/tmp/m4aXXXXX"
 decl_stmt|;
 end_decl_stmt
 
@@ -1603,11 +1605,9 @@ argument_list|,
 name|catchsig
 argument_list|)
 expr_stmt|;
-name|tempname
-operator|=
 name|mktemp
 argument_list|(
-literal|"/tmp/m4aXXXXX"
+name|tempname
 argument_list|)
 expr_stmt|;
 name|close
