@@ -1132,21 +1132,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|INSIST
-argument_list|(
-name|ttp
-operator|->
-name|tv_usec
-operator|>=
-literal|0
-operator|&&
-name|ttp
-operator|->
-name|tv_usec
-operator|<
-literal|1000000
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

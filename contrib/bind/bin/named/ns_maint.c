@@ -8212,12 +8212,6 @@ name|XFER_SUCCESSIXFR
 case|:
 name|zp
 operator|->
-name|z_flags
-operator||=
-name|Z_XFER_RUNNING
-expr_stmt|;
-name|zp
-operator|->
 name|z_xferpid
 operator|=
 name|XFER_ISIXFR
