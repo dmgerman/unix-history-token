@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.33.1.1 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -680,6 +680,10 @@ break|break;
 case|case
 literal|'e'
 case|:
+name|noescape
+operator|=
+literal|0
+expr_stmt|;
 name|escapechar
 operator|=
 name|getescape
