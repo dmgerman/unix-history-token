@@ -336,10 +336,11 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": can't find enough temporary space to extract the files, please set your\n"
+literal|"%s: can't find enough temporary space to extract the files, please set your\n"
 literal|"PKG_TMPDIR environment variable to a location with at least %ld bytes\n"
 literal|"free"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 operator|(
 name|long
@@ -407,8 +408,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: stack overflow.\n"
+argument_list|,
 name|__FUNCTION__
-literal|": stack overflow.\n"
 argument_list|)
 expr_stmt|;
 name|pstack
@@ -521,8 +523,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: can't mktemp '%s'"
+argument_list|,
 name|__FUNCTION__
-literal|": can't mktemp '%s'"
 argument_list|,
 name|pen
 argument_list|)
@@ -549,8 +552,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: can't mkdir '%s'"
+argument_list|,
 name|__FUNCTION__
-literal|": can't mkdir '%s'"
 argument_list|,
 name|pen
 argument_list|)
@@ -613,10 +617,11 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-name|__FUNCTION__
-literal|": not enough free space to create '%s'.\n"
+literal|"%s: not enough free space to create '%s'.\n"
 literal|"Please set your PKG_TMPDIR environment variable to a location\n"
 literal|"with more space and\ntry the command again"
+argument_list|,
+name|__FUNCTION__
 argument_list|,
 name|pen
 argument_list|)
@@ -661,8 +666,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: can't chdir to '%s'"
+argument_list|,
 name|__FUNCTION__
-literal|": can't chdir to '%s'"
 argument_list|,
 name|pen
 argument_list|)
@@ -748,8 +754,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: can't chdir back to '%s'"
+argument_list|,
 name|__FUNCTION__
-literal|": can't chdir back to '%s'"
 argument_list|,
 name|Previous
 argument_list|)

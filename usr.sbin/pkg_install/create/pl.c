@@ -429,7 +429,7 @@ name|PUSHOUT
 parameter_list|()
 comment|/* push out string */
 define|\
-value|if (where_count> (int)sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xpf -"); \ 		    if (system(where_args)) { \ 			cleanup(0); \ 			errx(2, __FUNCTION__ ": can't invoke tar pipeline"); \ 		    } \ 		    memset(where_args, 0, maxargs); \  		    last_chdir = NULL; \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	}
+value|if (where_count> (int)sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xpf -"); \ 		    if (system(where_args)) { \ 			cleanup(0); \ 			errx(2, "%s: can't invoke tar pipeline", __FUNCTION__); \ 		    } \ 		    memset(where_args, 0, maxargs); \  		    last_chdir = NULL; \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	}
 end_define
 
 begin_comment
@@ -538,8 +538,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: can't get argument list space"
+argument_list|,
 name|__FUNCTION__
-literal|": can't get argument list space"
 argument_list|)
 expr_stmt|;
 block|}
@@ -880,8 +881,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: oops, miscounted strings!"
+argument_list|,
 name|__FUNCTION__
-literal|": oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1077,8 +1079,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: oops, miscounted strings!"
+argument_list|,
 name|__FUNCTION__
-literal|": oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
 block|}

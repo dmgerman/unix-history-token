@@ -61,7 +61,7 @@ name|todir
 parameter_list|)
 comment|/* push out string */
 define|\
-value|if (where_count> (int)sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar --unlink -xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) { \ 	                cleanup(0); \ 		        errx(2, __FUNCTION__ ": can not invoke %ld byte tar pipeline: %s", \ 			     (long)strlen(where_args), where_args); \ 		    } \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
+value|if (where_count> (int)sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar --unlink -xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) { \ 	                cleanup(0); \ 		        errx(2, \ 			    "%s: can not invoke %ld byte tar pipeline: %s", \ 			     __FUNCTION__, \ 			     (long)strlen(where_args), where_args); \ 		    } \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
 end_define
 
 begin_function
@@ -327,8 +327,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: can't get argument list space"
+argument_list|,
 name|__FUNCTION__
-literal|": can't get argument list space"
 argument_list|)
 expr_stmt|;
 block|}
@@ -354,8 +355,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: can't get argument list space"
+argument_list|,
 name|__FUNCTION__
-literal|": can't get argument list space"
 argument_list|)
 expr_stmt|;
 block|}
@@ -524,8 +526,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: Bogus filename \"%s\""
+argument_list|,
 name|__FUNCTION__
-literal|": Bogus filename \"%s\""
 argument_list|,
 name|p
 operator|->
@@ -715,8 +718,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: oops, miscounted strings!"
+argument_list|,
 name|__FUNCTION__
-literal|": oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -830,8 +834,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: oops, miscounted strings!"
+argument_list|,
 name|__FUNCTION__
-literal|": oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -882,8 +887,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: oops, miscounted strings!"
+argument_list|,
 name|__FUNCTION__
-literal|": oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -951,8 +957,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: unable to cwd to '%s'"
+argument_list|,
 name|__FUNCTION__
-literal|": unable to cwd to '%s'"
 argument_list|,
 name|p
 operator|->
@@ -1026,8 +1033,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: no last file specified for '%s' command"
+argument_list|,
 name|__FUNCTION__
-literal|": no last file specified for '%s' command"
 argument_list|,
 name|p
 operator|->
@@ -1060,8 +1068,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: no directory specified for '%s' command"
+argument_list|,
 name|__FUNCTION__
-literal|": no directory specified for '%s' command"
 argument_list|,
 name|p
 operator|->

@@ -1388,8 +1388,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: can't stat '%s'"
+argument_list|,
 name|__FUNCTION__
-literal|": can't stat '%s'"
 argument_list|,
 name|fname
 argument_list|)
@@ -1437,8 +1438,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: unable to open '%s' for reading"
+argument_list|,
 name|__FUNCTION__
-literal|": unable to open '%s' for reading"
 argument_list|,
 name|fname
 argument_list|)
@@ -1471,8 +1473,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: short read on '%s' - did not get %qd bytes"
+argument_list|,
 name|__FUNCTION__
-literal|": short read on '%s' - did not get %qd bytes"
 argument_list|,
 name|fname
 argument_list|,
@@ -1771,8 +1774,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: cannot fopen '%s' for writing"
+argument_list|,
 name|__FUNCTION__
-literal|": cannot fopen '%s' for writing"
 argument_list|,
 name|name
 argument_list|)
@@ -1810,8 +1814,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: short fwrite on '%s', tried to write %ld bytes"
+argument_list|,
 name|__FUNCTION__
-literal|": short fwrite on '%s', tried to write %ld bytes"
 argument_list|,
 name|name
 argument_list|,
@@ -1839,8 +1844,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: failure to fclose '%s'"
+argument_list|,
 name|__FUNCTION__
-literal|": failure to fclose '%s'"
 argument_list|,
 name|name
 argument_list|)
@@ -1930,8 +1936,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: could not perform '%s'"
+argument_list|,
 name|__FUNCTION__
-literal|": could not perform '%s'"
 argument_list|,
 name|cmd
 argument_list|)
@@ -2021,8 +2028,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: could not perform '%s'"
+argument_list|,
 name|__FUNCTION__
-literal|": could not perform '%s'"
 argument_list|,
 name|cmd
 argument_list|)
@@ -2140,8 +2148,9 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
+literal|"%s: could not perform '%s'"
+argument_list|,
 name|__FUNCTION__
-literal|": could not perform '%s'"
 argument_list|,
 name|cmd
 argument_list|)
