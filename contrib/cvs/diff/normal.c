@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Normal-format output routines for GNU DIFF.    Copyright (C) 1988, 1989, 1993 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Normal-format output routines for GNU DIFF.    Copyright (C) 1988, 1989, 1993, 1998 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -138,10 +138,8 @@ argument_list|,
 name|last0
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf_output
 argument_list|(
-name|outfile
-argument_list|,
 literal|"%c"
 argument_list|,
 name|change_letter
@@ -167,10 +165,8 @@ argument_list|,
 name|last1
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf_output
 argument_list|(
-name|outfile
-argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -214,10 +210,8 @@ name|inserts
 operator|&&
 name|deletes
 condition|)
-name|fprintf
+name|printf_output
 argument_list|(
-name|outfile
-argument_list|,
 literal|"---\n"
 argument_list|)
 expr_stmt|;

@@ -326,17 +326,74 @@ directive|ifdef
 name|HAVE_GSSAPI
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GSSAPI_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<gssapi.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GSSAPI_GSSAPI_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<gssapi/gssapi.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GSSAPI_GSSAPI_GENERIC_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<gssapi/gssapi_generic.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_GSS_C_NT_HOSTBASED_SERVICE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GSS_C_NT_HOSTBASED_SERVICE
+value|gss_nt_service_name
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* This is needed for GSSAPI encryption.  */
@@ -4454,12 +4511,23 @@ name|newdir
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Create the CVS directory at the top level if needed. 	   The isdir seems like an unneeded system call, but it *does* 	   need to be called both if the CVS_CHDIR below succeeds (e.g. 	   "cvs co .") or if it fails (e.g. basicb-1a in testsuite).  */
+comment|/* Create the CVS directory at the top level if needed.  The 	   isdir seems like an unneeded system call, but it *does* 	   need to be called both if the CVS_CHDIR below succeeds 	   (e.g.  "cvs co .") or if it fails (e.g. basicb-1a in 	   testsuite).  We only need to do this for the "." case, 	   since the server takes care of forcing this directory to be 	   created in all other cases.  If we don't create CVSADM 	   here, the call to Entries_Open below will fail.  FIXME: 	   perhaps this means that we should change our algorithm 	   below that calls Create_Admin instead of having this code 	   here? */
 if|if
 condition|(
 comment|/* I think the reposdirname_absolute case has to do with 	       things like "cvs update /foo/bar".  In any event, the 	       code below which tries to put toplevel_repos into 	       CVS/Repository is almost surely unsuited to 	       the reposdirname_absolute case.  */
 operator|!
 name|reposdirname_absolute
+operator|&&
+operator|(
+name|strcmp
+argument_list|(
+name|dir_name
+argument_list|,
+literal|"."
+argument_list|)
+operator|==
+literal|0
+operator|)
 operator|&&
 operator|!
 name|isdir
@@ -12016,7 +12084,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|error
+name|handle_error
 goto|;
 if|if
 condition|(
@@ -12045,7 +12113,7 @@ operator|!=
 literal|'\''
 condition|)
 goto|goto
-name|error
+name|handle_error
 goto|;
 if|if
 condition|(
@@ -12059,7 +12127,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|error
+name|handle_error
 goto|;
 comment|/* Add server-side cvswrappers line to our wrapper list. */
 name|wrap_add
@@ -12070,7 +12138,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return;
-name|error
+name|handle_error
 label|:
 name|error
 argument_list|(
@@ -15997,7 +16065,7 @@ argument_list|,
 operator|&
 name|tok_in
 argument_list|,
-name|gss_nt_service_name
+name|GSS_C_NT_HOSTBASED_SERVICE
 argument_list|,
 operator|&
 name|server_name
@@ -21894,7 +21962,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a date to the server.  This will passed a string which is the  * result of Make_Date, and looks like YY.MM.DD.HH.MM.SS, where all  * the letters are single digits.  The time will be GMT.  getdate on  * the server can't parse that, so we turn it back into something  * which it can parse.  */
+comment|/* Send a date to the server.  The input DATE is in RCS format.    The time will be GMT.     We then convert that to the format required in the protocol    (including the "-D" option) and send it.  According to    cvsclient.texi, RFC 822/1123 format is preferred, but for now we    use the format that we always have, for    conservatism/laziness/paranoia.  As far as I know all servers    support the RFC 822/1123 format, so probably there would be no    particular danger in switching.  */
 end_comment
 
 begin_function
@@ -21934,7 +22002,7 @@ name|sscanf
 argument_list|(
 name|date
 argument_list|,
-name|DATEFORM
+name|SDATEFORM
 argument_list|,
 operator|&
 name|year
@@ -21964,7 +22032,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"diff_client_senddate: sscanf failed on date"
+literal|"client_senddate: sscanf failed on date"
 argument_list|)
 expr_stmt|;
 block|}

@@ -2173,6 +2173,68 @@ name|node
 operator|->
 name|data
 expr_stmt|;
+if|if
+condition|(
+name|baserev
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* This can only happen if the CVS/Baserev file got 		   corrupted.  We suspect it might be possible if the 		   user interrupts CVS, although I haven't verified 		   that.  */
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"%s not mentioned in %s"
+argument_list|,
+name|finfo
+operator|->
+name|fullname
+argument_list|,
+name|CVSADM_BASEREV
+argument_list|)
+expr_stmt|;
+comment|/* Since we don't know what revision the file derives from, 		   keeping it around would be asking for trouble.  */
+if|if
+condition|(
+name|unlink_file
+argument_list|(
+name|finfo
+operator|->
+name|file
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot remove %s"
+argument_list|,
+name|finfo
+operator|->
+name|fullname
+argument_list|)
+expr_stmt|;
+comment|/* This is cheesy, in a sense; why shouldn't we do the 		   update for the user?  However, doing that would require 		   contacting the server, so maybe this is OK.  */
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"run update to complete the unedit"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|Register
 argument_list|(
 name|finfo
