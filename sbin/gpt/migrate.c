@@ -118,6 +118,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|keep
 decl_stmt|,

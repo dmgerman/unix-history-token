@@ -72,6 +72,7 @@ file|"gpt.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|recoverable
 decl_stmt|;
