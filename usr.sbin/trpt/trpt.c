@@ -164,12 +164,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_var.h>
 end_include
 
