@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.87 1996/03/03 01:04:28 dyson Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.88 1996/03/09 06:46:51 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -3324,9 +3324,6 @@ modifier|*
 name|bp
 decl_stmt|;
 name|int
-name|s
-decl_stmt|;
-name|int
 name|nbyteswritten
 init|=
 literal|0
@@ -3928,11 +3925,6 @@ name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|;
-name|struct
-name|bufhashhdr
-modifier|*
-name|bh
 decl_stmt|;
 name|int
 name|s
@@ -5767,11 +5759,7 @@ operator|+
 name|off
 operator|)
 operator|&
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
+name|PAGE_MASK
 argument_list|)
 argument_list|,
 name|bytesinpage
@@ -5978,11 +5966,7 @@ operator|+
 name|off
 operator|)
 operator|&
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
+name|PAGE_MASK
 argument_list|)
 argument_list|,
 name|bytesinpage
@@ -6068,11 +6052,7 @@ operator|)
 operator||=
 name|off
 operator|&
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
+name|PAGE_MASK
 expr_stmt|;
 block|}
 block|}
@@ -6683,11 +6663,7 @@ call|)
 argument_list|(
 name|foff
 operator|&
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
+name|PAGE_MASK
 argument_list|)
 argument_list|,
 name|resid
@@ -6748,7 +6724,7 @@ name|VBLK
 condition|)
 name|printf
 argument_list|(
-literal|" iosize: %d, lblkno: %d, flags: 0x%lx, npages: %d\n"
+literal|" iosize: %ld, lblkno: %d, flags: 0x%lx, npages: %d\n"
 argument_list|,
 name|bp
 operator|->
@@ -7554,11 +7530,7 @@ call|)
 argument_list|(
 name|foff
 operator|&
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
+name|PAGE_MASK
 argument_list|)
 argument_list|,
 name|resid
@@ -7778,11 +7750,7 @@ name|vm_offset_t
 operator|)
 name|foff
 operator|&
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
+name|PAGE_MASK
 operator|)
 argument_list|,
 name|resid
