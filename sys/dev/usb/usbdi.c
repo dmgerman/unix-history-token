@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.c,v 1.89 2001/12/02 23:25:25 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.92 2001/12/12 15:38:58 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1659,6 +1659,28 @@ decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|xfer
+operator|->
+name|rqflags
+operator|&
+operator|(
+name|URQ_DEV_DMABUF
+operator||
+name|URQ_AUTO_DMABUF
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"usbd_alloc_buffer: xfer already has a buffer\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|err
 operator|=
 name|bus
@@ -1683,7 +1705,7 @@ name|err
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|xfer
