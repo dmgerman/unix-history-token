@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<resolv.h>
 end_include
 
@@ -1926,7 +1932,7 @@ expr|struct
 name|in6_addr
 argument_list|)
 operator|*
-name|NBBY
+name|CHAR_BIT
 expr_stmt|;
 break|break;
 block|}
@@ -1972,7 +1978,7 @@ else|else
 block|{
 name|m
 operator|-=
-name|NBBY
+name|CHAR_BIT
 expr_stmt|;
 operator|*
 name|u

@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -1984,7 +1990,7 @@ name|sblock
 operator|.
 name|fs_ipg
 argument_list|,
-name|NBBY
+name|CHAR_BIT
 argument_list|)
 expr_stmt|;
 name|acg
@@ -2001,7 +2007,7 @@ name|sblock
 operator|.
 name|fs_fpg
 argument_list|,
-name|NBBY
+name|CHAR_BIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2079,7 +2085,7 @@ operator|.
 name|fs_fpg
 argument_list|)
 argument_list|,
-name|NBBY
+name|CHAR_BIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2685,13 +2691,13 @@ operator|(
 name|i
 operator|&
 operator|(
-name|NBBY
+name|CHAR_BIT
 operator|-
 literal|1
 operator|)
 operator|)
 operator|!=
-name|NBBY
+name|CHAR_BIT
 operator|-
 literal|1
 condition|)

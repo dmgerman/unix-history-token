@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -676,7 +682,7 @@ operator|-
 literal|1
 operator|)
 operator|%
-name|NBBY
+name|CHAR_BIT
 operator|)
 operator|==
 literal|0

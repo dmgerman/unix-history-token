@@ -570,7 +570,7 @@ parameter_list|,
 name|map
 parameter_list|)
 define|\
-value|(map[(u_int)((ino) - 1) / NBBY]&  (1<< ((u_int)((ino) - 1) % NBBY)))
+value|(map[(u_int)((ino) - 1) / CHAR_BIT]& \ 	    (1<< ((u_int)((ino) - 1) % CHAR_BIT)))
 end_define
 
 begin_define
@@ -583,7 +583,7 @@ parameter_list|,
 name|map
 parameter_list|)
 define|\
-value|map[(u_int)((ino) - 1) / NBBY] |=  1<< ((u_int)((ino) - 1) % NBBY)
+value|map[(u_int)((ino) - 1) / CHAR_BIT] |= \ 	    1<< ((u_int)((ino) - 1) % CHAR_BIT)
 end_define
 
 begin_define

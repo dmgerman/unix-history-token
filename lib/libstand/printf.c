@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -334,7 +340,7 @@ argument_list|(
 name|long
 argument_list|)
 operator|*
-name|NBBY
+name|CHAR_BIT
 operator|/
 literal|3
 operator|+

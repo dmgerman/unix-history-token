@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdint.h>
 end_include
 
@@ -447,7 +453,7 @@ operator|-
 literal|1
 operator|)
 operator|/
-name|NBBY
+name|CHAR_BIT
 index|]
 expr_stmt|;
 for|for
@@ -459,7 +465,7 @@ literal|0
 condition|;
 name|inosused
 operator|-=
-name|NBBY
+name|CHAR_BIT
 operator|,
 name|cp
 operator|--
@@ -480,7 +486,7 @@ operator|=
 literal|1
 operator|<<
 operator|(
-name|NBBY
+name|CHAR_BIT
 operator|-
 literal|1
 operator|)

@@ -218,6 +218,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -12229,7 +12235,7 @@ name|bitlen
 operator|>
 name|len
 operator|*
-name|NBBY
+name|CHAR_BIT
 condition|)
 return|return
 operator|(
@@ -12256,10 +12262,10 @@ operator|=
 operator|(
 name|bitlen
 operator|>
-name|NBBY
+name|CHAR_BIT
 operator|)
 condition|?
-name|NBBY
+name|CHAR_BIT
 else|:
 name|bitlen
 expr_stmt|;

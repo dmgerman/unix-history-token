@@ -142,6 +142,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -1807,7 +1813,7 @@ name|howmany
 argument_list|(
 name|maxino
 argument_list|,
-name|NBBY
+name|CHAR_BIT
 argument_list|)
 argument_list|,
 name|TP_BSIZE
@@ -2256,7 +2262,7 @@ operator|-
 literal|1
 operator|)
 operator|%
-name|NBBY
+name|CHAR_BIT
 operator|)
 operator|==
 literal|0
@@ -2356,7 +2362,7 @@ operator|-
 literal|1
 operator|)
 operator|%
-name|NBBY
+name|CHAR_BIT
 operator|)
 operator|==
 literal|0

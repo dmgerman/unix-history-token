@@ -10557,14 +10557,14 @@ name|TYPE_L
 condition|)
 if|#
 directive|if
-name|NBBY
+name|CHAR_BIT
 operator|==
 literal|8
 name|printf
 argument_list|(
 literal|" %d"
 argument_list|,
-name|NBBY
+name|CHAR_BIT
 argument_list|)
 expr_stmt|;
 else|#

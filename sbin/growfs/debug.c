@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -2088,7 +2094,7 @@ name|sb
 argument_list|)
 operator|)
 argument_list|,
-name|NBBY
+name|CHAR_BIT
 argument_list|)
 expr_stmt|;
 for|for
@@ -2364,7 +2370,7 @@ argument_list|(
 name|sb
 argument_list|)
 argument_list|,
-name|NBBY
+name|CHAR_BIT
 argument_list|)
 expr_stmt|;
 for|for

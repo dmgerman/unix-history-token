@@ -77,6 +77,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -558,7 +564,7 @@ name|fs
 operator|->
 name|fs_ipg
 argument_list|,
-name|NBBY
+name|CHAR_BIT
 argument_list|)
 expr_stmt|;
 name|newcg
@@ -579,7 +585,7 @@ name|fs
 operator|->
 name|fs_fpg
 argument_list|,
-name|NBBY
+name|CHAR_BIT
 argument_list|)
 expr_stmt|;
 name|newcg
@@ -670,7 +676,7 @@ operator|->
 name|fs_fpg
 argument_list|)
 argument_list|,
-name|NBBY
+name|CHAR_BIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -1618,14 +1624,14 @@ operator|(
 name|i
 operator|&
 operator|(
-name|NBBY
+name|CHAR_BIT
 operator|-
 literal|1
 operator|)
 operator|)
 operator|!=
 operator|(
-name|NBBY
+name|CHAR_BIT
 operator|-
 literal|1
 operator|)
@@ -2286,7 +2292,7 @@ literal|1
 init|;
 name|m
 operator|<
-name|NBBY
+name|CHAR_BIT
 condition|;
 name|m
 operator|++
@@ -2317,7 +2323,7 @@ name|startvalue
 operator|+
 name|i
 operator|*
-name|NBBY
+name|CHAR_BIT
 operator|+
 name|m
 expr_stmt|;
