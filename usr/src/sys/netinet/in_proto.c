@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_proto.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_proto.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -114,12 +114,15 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|udp_usrreq
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|udp_sysctl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -380,7 +383,9 @@ block|,
 literal|0
 block|,
 literal|0
-block|, }
+block|,
+name|udp_sysctl
+block|}
 block|,
 block|{
 name|SOCK_STREAM

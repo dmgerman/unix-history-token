@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysctl.c	5.6 (Berkeley) %G%"
+literal|"@(#)sysctl.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,6 +110,24 @@ begin_include
 include|#
 directive|include
 file|<netinet/icmp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/udp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/udp_var.h>
 end_include
 
 begin_include
@@ -1836,6 +1854,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
+name|ctlname
+name|udpname
+index|[]
+init|=
+name|UDPCTL_NAMES
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
 name|list
 name|inetlist
 init|=
@@ -1860,12 +1888,117 @@ block|,
 name|IPCTL_MAXID
 block|}
 block|,
+comment|/* ip */
 block|{
 name|icmpname
 block|,
 name|ICMPCTL_MAXID
 block|}
-block|, }
+block|,
+comment|/* icmp */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* igmp */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* ggmp */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* tcp */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* egp */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* pup */
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|udpname
+block|,
+name|UDPCTL_MAXID
+block|}
+block|,
+comment|/* udp */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1993,8 +2126,17 @@ expr_stmt|;
 if|if
 condition|(
 name|indx
-operator|<
-literal|2
+operator|<=
+name|IPPROTO_UDP
+operator|&&
+name|inetvars
+index|[
+name|indx
+index|]
+operator|.
+name|list
+operator|!=
+name|NULL
 condition|)
 name|lp
 operator|=

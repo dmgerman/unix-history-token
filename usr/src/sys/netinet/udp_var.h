@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_var.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)udp_var.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -147,6 +147,35 @@ comment|/* total output packets */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Names for UDP sysctl objects  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDPCTL_CHECKSUM
+value|1
+end_define
+
+begin_comment
+comment|/* allow replies to netmask requests */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDPCTL_MAXID
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDPCTL_NAMES
+value|{ \ 	{ 0, 0 }, \ 	{ "checksum", CTLTYPE_INT }, \ }
+end_define
 
 begin_ifdef
 ifdef|#
