@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.73 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.74 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -285,6 +285,16 @@ block|{
 name|errno
 operator|=
 literal|0
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_FATALERRS
+operator||
+name|EF_PM_NOTIFY
+operator||
+name|EF_CLRQUEUE
 expr_stmt|;
 name|syserr
 argument_list|(
@@ -7483,7 +7493,7 @@ name|l
 operator|=
 name|SYSLOG_BUFSIZE
 operator|-
-literal|80
+literal|85
 expr_stmt|;
 name|p
 operator|=
