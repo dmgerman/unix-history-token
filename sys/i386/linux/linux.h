@@ -28,7 +28,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<i386/linux/linux_syscall.h>
+file|<linux_syscall.h>
 end_include
 
 begin_ifdef

@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/linux/linux_proto.h>
+file|<linux_proto.h>
 end_include
 
 begin_define
