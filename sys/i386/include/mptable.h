@@ -10557,6 +10557,9 @@ operator|&
 name|ap_boot_mtx
 argument_list|)
 expr_stmt|;
+name|smp_cpus
+operator|++
+expr_stmt|;
 name|CTR1
 argument_list|(
 name|KTR_SMP
@@ -10569,8 +10572,19 @@ name|cpuid
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|smp_cpus
-operator|++
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"SMP: AP CPU #%d Launched!\n"
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* Build our map of 'other' CPUs. */
 name|PCPU_SET
@@ -10593,16 +10607,6 @@ condition|)
 name|apic_dump
 argument_list|(
 literal|"ap_init()"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"SMP: AP CPU #%d Launched!\n"
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
