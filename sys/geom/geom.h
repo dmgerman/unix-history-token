@@ -51,6 +51,12 @@ directive|include
 file|<sys/sbuf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|g_class
@@ -186,6 +192,32 @@ specifier|const
 name|char
 modifier|*
 name|verb
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|g_init_t
+parameter_list|(
+name|struct
+name|g_class
+modifier|*
+name|mp
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|g_fini_t
+parameter_list|(
+name|struct
+name|g_class
+modifier|*
+name|mp
 parameter_list|)
 function_decl|;
 end_typedef
@@ -339,6 +371,14 @@ decl_stmt|;
 name|g_config_t
 modifier|*
 name|config
+decl_stmt|;
+name|g_init_t
+modifier|*
+name|init
+decl_stmt|;
+name|g_fini_t
+modifier|*
+name|fini
 decl_stmt|;
 name|g_ctl_create_geom_t
 modifier|*
@@ -842,18 +882,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|g_add_class
-parameter_list|(
-name|struct
-name|g_class
-modifier|*
-name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|g_attach
 parameter_list|(
@@ -1175,6 +1203,20 @@ name|gp
 parameter_list|,
 name|int
 name|error
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|g_modevent
+parameter_list|(
+name|module_t
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1527,21 +1569,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DECLARE_GEOM_CLASS_INIT
-parameter_list|(
-name|class
-parameter_list|,
-name|name
-parameter_list|,
-name|init
-parameter_list|)
-define|\
-value|SYSINIT(name, SI_SUB_DRIVERS, SI_ORDER_FIRST, init, NULL);
-end_define
-
-begin_define
-define|#
-directive|define
 name|DECLARE_GEOM_CLASS
 parameter_list|(
 name|class
@@ -1549,7 +1576,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|static void				\ 	name##init(void)			\ 	{					\ 		mtx_unlock(&Giant);		\ 		g_add_class(&class);		\ 		mtx_lock(&Giant);		\ 	}					\ 	DECLARE_GEOM_CLASS_INIT(class, name, name##init);
+value|static moduledata_t name##_mod = {			\ 		#name, g_modevent,&class			\ 	};							\ 	DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_FIRST);
 end_define
 
 begin_endif
