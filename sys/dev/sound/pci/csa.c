@@ -1932,16 +1932,13 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|csa_detach
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|csa_attach
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * XXX: this cannot possibly work 	 * needs to be properly implemented 	 */
+block|csa_detach(dev); 	csa_attach(dev);
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
