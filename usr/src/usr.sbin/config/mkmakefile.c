@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.2 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1447,6 +1447,12 @@ operator|!=
 literal|0
 condition|)
 empty_stmt|;
+if|if
+condition|(
+name|tp
+operator|==
+literal|0
+condition|)
 name|tp
 operator|=
 name|new_fent
@@ -1590,6 +1596,12 @@ condition|)
 goto|goto
 name|next
 goto|;
+if|if
+condition|(
+name|tp
+operator|==
+literal|0
+condition|)
 name|tp
 operator|=
 name|new_fent
