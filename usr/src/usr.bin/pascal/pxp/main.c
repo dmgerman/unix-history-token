@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	2.1 (Berkeley) %G%"
+literal|"@(#)main.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -791,7 +791,9 @@ name|int
 name|outcol
 decl_stmt|;
 name|gettime
-argument_list|()
+argument_list|(
+name|filename
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
