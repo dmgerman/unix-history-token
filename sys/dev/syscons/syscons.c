@@ -4948,11 +4948,14 @@ name|u_int16_t
 argument_list|)
 expr_stmt|;
 comment|/* Pointer to the last line of target buffer */
+name|outp
+operator|=
 operator|(
-name|vm_offset_t
+name|char
+operator|*
 operator|)
 name|outp
-operator|+=
+operator|+
 name|ptr
 operator|->
 name|ysize
@@ -5082,11 +5085,14 @@ operator|->
 name|y
 condition|)
 continue|continue;
+name|outp
+operator|=
 operator|(
-name|vm_offset_t
+name|char
+operator|*
 operator|)
 name|outp
-operator|-=
+operator|-
 name|csize
 expr_stmt|;
 name|retval

@@ -310,7 +310,7 @@ name|SC_STAT
 parameter_list|(
 name|dev
 parameter_list|)
-value|((scr_stat *)(dev)->si_drv1)
+value|(*((scr_stat **)&(dev)->si_drv1))
 end_define
 
 begin_comment
