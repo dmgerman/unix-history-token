@@ -1076,7 +1076,7 @@ name|opstring
 operator|=
 name|mfs
 condition|?
-literal|"NF:T:Ua:b:c:d:e:f:g:h:i:m:o:s:"
+literal|"NF:T:Ua:b:c:d:e:f:g:h:i:m:o:s:v"
 else|:
 literal|"NOS:T:Ua:b:c:d:e:f:g:h:i:k:l:m:n:o:p:r:s:t:u:vx:"
 expr_stmt|;
