@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1818,7 +1818,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Step through the translation in the name.  We do not `vput' the 	 * directory because we may need it again if a symbolic link 	 * is relative to the current directory.  Instead we save it 	 * unlocked as "pdp".  We must get the target inode before unlocking 	 * the directory to insure that the inode will not be removed 	 * before we get it.  We prevent deadlock by always fetching 	 * inodes from the root, moving down the directory tree. Thus 	 * when following backward pointers ".." we must unlock the 	 * parent directory before getting the requested directory. 	 * There is a potential race condition here if both the current 	 * and parent directories are removed before the `iget' for the 	 * inode associated with ".." returns.  We hope that this occurs 	 * infrequently since we cannot avoid this race condition without 	 * implementing a sophisticated deadlock detection algorithm. 	 * Note also that this simple deadlock detection scheme will not 	 * work if the file system has any hard links other than ".." 	 * that point backwards in the directory structure. 	 */
+comment|/* 	 * Step through the translation in the name.  We do not `vput' the 	 * directory because we may need it again if a symbolic link 	 * is relative to the current directory.  Instead we save it 	 * unlocked as "pdp".  We must get the target inode before unlocking 	 * the directory to insure that the inode will not be removed 	 * before we get it.  We prevent deadlock by always fetching 	 * inodes from the root, moving down the directory tree. Thus 	 * when following backward pointers ".." we must unlock the 	 * parent directory before getting the requested directory. 	 * There is a potential race condition here if both the current 	 * and parent directories are removed before the VFS_VGET for the 	 * inode associated with ".." returns.  We hope that this occurs 	 * infrequently since we cannot avoid this race condition without 	 * implementing a sophisticated deadlock detection algorithm. 	 * Note also that this simple deadlock detection scheme will not 	 * work if the file system has any hard links other than ".." 	 * that point backwards in the directory structure. 	 */
 name|pdp
 operator|=
 name|vdp
