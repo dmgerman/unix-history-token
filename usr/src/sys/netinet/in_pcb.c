@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	6.4	84/11/14	*/
+comment|/*	in_pcb.c	6.5	84/11/27	*/
 end_comment
 
 begin_include
@@ -381,7 +381,7 @@ block|{
 name|u_short
 name|aport
 init|=
-name|htons
+name|ntohs
 argument_list|(
 name|lport
 argument_list|)
