@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.11.2.3 1997/01/12 21:52:44 joerg Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.11.2.4 1997/02/22 17:59:06 joerg Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -63,7 +63,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sig.h"
+file|<signal.h>
 end_include
 
 begin_include
@@ -82,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|"vars.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sig.h"
 end_include
 
 begin_define
@@ -1824,30 +1830,40 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pending_signal
+name|TermTimerService
+argument_list|()
+expr_stmt|;
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-name|pending_signal
+name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-name|pending_signal
+name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-name|pending_signal
+name|signal
 argument_list|(
 name|SIGHUP
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGALRM
 argument_list|,
 name|SIG_DFL
 argument_list|)

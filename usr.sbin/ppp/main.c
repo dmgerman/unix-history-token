@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.5 1997/02/02 19:06:18 joerg Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.6 1997/02/22 17:59:08 joerg Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sig.h"
+file|<signal.h>
 end_include
 
 begin_include
@@ -157,6 +157,12 @@ begin_include
 include|#
 directive|include
 file|"alias.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sig.h"
 end_include
 
 begin_define
@@ -714,19 +720,6 @@ if|if
 condition|(
 name|mode
 operator|&
-name|MODE_AUTO
-condition|)
-block|{
-name|DeleteIfRoutes
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|mode
-operator|&
 operator|(
 name|MODE_AUTO
 operator||
@@ -734,6 +727,11 @@ name|MODE_BACKGROUND
 operator|)
 condition|)
 block|{
+name|DeleteIfRoutes
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|unlink
 argument_list|(
 name|pid_filename
@@ -745,6 +743,67 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_BACKGROUND
+operator|&&
+name|BGFiledes
+index|[
+literal|1
+index|]
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|char
+name|c
+init|=
+name|EX_ERRDEAD
+decl_stmt|;
+if|if
+condition|(
+name|write
+argument_list|(
+name|BGFiledes
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|1
+condition|)
+name|LogPrintf
+argument_list|(
+name|LOG_PHASE_BIT
+argument_list|,
+literal|"Parent notified of failure.\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|LogPrintf
+argument_list|(
+name|LOG_PHASE_BIT
+argument_list|,
+literal|"Failed to notify parent of failure.\n"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|BGFiledes
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 name|LogPrintf
 argument_list|(
 name|LOG_PHASE_BIT
@@ -820,7 +879,7 @@ name|kill
 argument_list|(
 name|BGPid
 argument_list|,
-name|SIGHUP
+name|SIGTERM
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1492,7 +1551,7 @@ name|pending_signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|Hangup
+name|LogReOpen
 argument_list|)
 expr_stmt|;
 name|pending_signal
@@ -1519,7 +1578,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SIGSEGV
-name|pending_signal
+name|signal
 argument_list|(
 name|SIGSEGV
 argument_list|,
@@ -1531,7 +1590,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|SIGPIPE
-name|pending_signal
+name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
@@ -1924,6 +1983,16 @@ name|BGPid
 operator|=
 name|bgpid
 expr_stmt|;
+name|close
+argument_list|(
+name|BGFiledes
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|read
 argument_list|(
 name|BGFiledes
@@ -1936,7 +2005,17 @@ name|c
 argument_list|,
 literal|1
 argument_list|)
+operator|!=
+literal|1
+condition|)
+name|LogPrintf
+argument_list|(
+name|LOG_PHASE_BIT
+argument_list|,
+literal|"Parent: Child exit, no status.\n"
+argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|c
@@ -1945,9 +2024,30 @@ name|EX_NORMAL
 condition|)
 name|LogPrintf
 argument_list|(
-name|LOG_CHAT
+name|LOG_PHASE_BIT
 argument_list|,
-literal|"PPP enabled.\n"
+literal|"Parent: PPP enabled.\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|LogPrintf
+argument_list|(
+name|LOG_PHASE_BIT
+argument_list|,
+literal|"Parent: Child failed %d.\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|c
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|BGFiledes
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -1957,6 +2057,21 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_BACKGROUND
+condition|)
+name|close
+argument_list|(
+name|BGFiledes
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|pid_filename
@@ -2941,7 +3056,11 @@ if|if
 condition|(
 name|mode
 operator|&
+operator|(
 name|MODE_DIRECT
+operator||
+name|MODE_BACKGROUND
+operator|)
 condition|)
 block|{
 name|modem
@@ -3005,6 +3124,18 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_BACKGROUND
+condition|)
+name|dial_up
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* Bring the line up */
+else|else
 name|dial_up
 operator|=
 name|FALSE

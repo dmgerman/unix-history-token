@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997  *	Brian Somers<brian@awfulhak.demon.co.uk>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  *  *  TODO:  *  */
+comment|/*-  * Copyright (c) 1997  *	Brian Somers<brian@awfulhak.demon.co.uk>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: sig.c,v 1.2 1997/02/22 16:10:51 peter Exp $  *  *  TODO:  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_include
 include|#
@@ -18,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbuf.h"
 end_include
 
@@ -27,35 +39,25 @@ directive|include
 file|"log.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|__MAXSIG
-value|(32)
-end_define
-
-begin_comment
-comment|/* Sizeof u_long: Make life convenient.... */
-end_comment
-
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|u_long
 name|caused
-decl_stmt|;
-end_decl_stmt
+index|[
+name|NSIG
+index|]
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* A mask of pending signals */
+comment|/* An array of pending signals */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|__sighandler_t
-modifier|*
+name|sig_type
 name|handler
 index|[
-name|__MAXSIG
+name|NSIG
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -65,7 +67,7 @@ comment|/* all start at SIG_DFL */
 end_comment
 
 begin_comment
-comment|/* Record a signal in the "caused" mask */
+comment|/* Record a signal in the "caused" array */
 end_comment
 
 begin_function
@@ -77,27 +79,13 @@ name|int
 name|sig
 parameter_list|)
 block|{
-if|if
-condition|(
-name|sig
-operator|>
-literal|0
-operator|&&
-name|sig
-operator|<=
-name|__MAXSIG
-condition|)
 name|caused
-operator||=
-operator|(
-literal|1
-operator|<<
-operator|(
+index|[
 name|sig
 operator|-
 literal|1
-operator|)
-operator|)
+index|]
+operator|++
 expr_stmt|;
 block|}
 end_function
@@ -107,20 +95,17 @@ comment|/*     set up signal_recorder, and record handler as the function to ult
 end_comment
 
 begin_function
-name|__sighandler_t
-modifier|*
+name|sig_type
 name|pending_signal
 parameter_list|(
 name|int
 name|sig
 parameter_list|,
-name|__sighandler_t
-modifier|*
+name|sig_type
 name|fn
 parameter_list|)
 block|{
-name|__sighandler_t
-modifier|*
+name|sig_type
 name|Result
 decl_stmt|;
 if|if
@@ -131,7 +116,7 @@ literal|0
 operator|||
 name|sig
 operator|>
-name|__MAXSIG
+name|NSIG
 condition|)
 block|{
 comment|/* Oops - we must be a bit out of date (too many sigs ?) */
@@ -173,6 +158,13 @@ operator|==
 name|SIG_IGN
 condition|)
 block|{
+name|signal
+argument_list|(
+name|sig
+argument_list|,
+name|fn
+argument_list|)
+expr_stmt|;
 name|handler
 index|[
 name|sig
@@ -181,17 +173,9 @@ literal|1
 index|]
 operator|=
 operator|(
-name|__sighandler_t
-operator|*
+name|sig_type
 operator|)
 literal|0
-expr_stmt|;
-name|signal
-argument_list|(
-name|sig
-argument_list|,
-name|fn
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -214,17 +198,13 @@ argument_list|)
 expr_stmt|;
 block|}
 name|caused
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
-operator|(
+index|[
 name|sig
 operator|-
 literal|1
-operator|)
-operator|)
+index|]
+operator|=
+literal|0
 expr_stmt|;
 return|return
 name|Result
@@ -244,10 +224,15 @@ block|{
 name|int
 name|sig
 decl_stmt|;
-if|if
-condition|(
-name|caused
-condition|)
+name|int
+name|got
+decl_stmt|;
+do|do
+block|{
+name|got
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|sig
@@ -256,21 +241,28 @@ literal|0
 init|;
 name|sig
 operator|<
-name|__MAXSIG
+name|NSIG
 condition|;
 name|sig
 operator|++
-operator|,
-name|caused
-operator|>>=
-literal|1
 control|)
 if|if
 condition|(
 name|caused
-operator|&
-literal|1
+index|[
+name|sig
+index|]
 condition|)
+block|{
+name|caused
+index|[
+name|sig
+index|]
+operator|--
+expr_stmt|;
+name|got
+operator|++
+expr_stmt|;
 call|(
 modifier|*
 name|handler
@@ -284,6 +276,13 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+do|while
+condition|(
+name|got
+condition|)
+do|;
 block|}
 end_function
 
