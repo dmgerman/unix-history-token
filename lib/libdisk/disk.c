@@ -1738,33 +1738,6 @@ index|]
 operator|=
 name|off
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s [%s] %jd %jd\n"
-argument_list|,
-name|t
-argument_list|,
-name|n
-argument_list|,
-call|(
-name|intmax_t
-call|)
-argument_list|(
-name|off
-operator|/
-name|s
-argument_list|)
-argument_list|,
-call|(
-name|intmax_t
-call|)
-argument_list|(
-name|len
-operator|/
-name|s
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2090,49 +2063,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"error = %d\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* PLATFORM POLICY BEGIN ------------------------------------- */
 comment|/* We have a chance to do things on a blank disk here */
-name|printf
-argument_list|(
-literal|"c %p\n"
-argument_list|,
-name|d
-operator|->
-name|chunks
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"c->p %p\n"
-argument_list|,
-name|d
-operator|->
-name|chunks
-operator|->
-name|part
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"c->p->p %p\n"
-argument_list|,
-name|d
-operator|->
-name|chunks
-operator|->
-name|part
-operator|->
-name|part
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|platform
@@ -2150,13 +2083,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"HERE %d\n"
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
 name|hd
 operator|=
 name|d
@@ -2198,13 +2124,6 @@ operator|*
 name|hd
 operator|*
 name|sc
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"HERE %d\n"
-argument_list|,
-name|__LINE__
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
