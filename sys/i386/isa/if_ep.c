@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  March 28 1995  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.13 1995/04/10 07:54:34 root Exp root $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -2833,6 +2833,18 @@ operator|->
 name|rx_early_thresh
 argument_list|)
 expr_stmt|;
+comment|/*      * These clever computations look very interesting      * but the fixed threshold gives near no output errors      * and if it as low as 16 bytes it gives the max. throughput.      * We think that processor is anyway quicker than Ethernet 	 * (and this should be true for any 386 and higher)      */
+name|outw
+argument_list|(
+name|BASE
+operator|+
+name|EP_COMMAND
+argument_list|,
+name|SET_TX_START_THRESH
+operator||
+literal|16
+argument_list|)
+expr_stmt|;
 comment|/*      * Store up a bunch of mbuf's for use later. (MAX_MBS). First we free up      * any that we had in case we're being called from intr or somewhere      * else.      */
 name|sc
 operator|->
@@ -3186,17 +3198,13 @@ operator|)
 operator|+
 literal|16
 expr_stmt|;
-name|outw
-argument_list|(
-name|BASE
-operator|+
-name|EP_COMMAND
-argument_list|,
-name|SET_TX_START_THRESH
-operator||
-name|len
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/*      * The following string does something strange with the card and      * we get a lot of output errors due to it so it's commented out      * and we use fixed threshold (see above)      */
+block|outw(BASE + EP_COMMAND, SET_TX_START_THRESH | len);
+endif|#
+directive|endif
 for|for
 control|(
 name|top
@@ -3515,6 +3523,14 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|int
+name|x
+decl_stmt|;
+name|x
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 name|outw
 argument_list|(
 name|BASE
@@ -3730,6 +3746,11 @@ directive|endif
 name|epinit
 argument_list|(
 name|unit
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|x
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3982,6 +4003,11 @@ argument_list|,
 name|SET_INTR_MASK
 operator||
 name|S_5_INTS
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|x
 argument_list|)
 expr_stmt|;
 block|}
