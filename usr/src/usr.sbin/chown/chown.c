@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chown.c	5.12 (Berkeley) %G%"
+literal|"@(#)chown.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
 end_include
 
 begin_include
@@ -491,6 +497,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -618,6 +627,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -665,7 +677,7 @@ name|dirp
 decl_stmt|;
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;
@@ -869,6 +881,10 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 specifier|static
 name|int
 name|euid
@@ -884,6 +900,10 @@ decl_stmt|;
 comment|/* check for chown without being root */
 if|if
 condition|(
+name|errno
+operator|!=
+name|EPERM
+operator|||
 name|uid
 operator|!=
 operator|-
@@ -983,6 +1003,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1038,11 +1061,14 @@ condition|(
 name|fflag
 condition|)
 return|return;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: %s: %s"
+literal|"%s: %s: %s\n"
 argument_list|,
 name|myname
 argument_list|,
@@ -1067,6 +1093,9 @@ specifier|static
 name|usage
 argument_list|()
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
