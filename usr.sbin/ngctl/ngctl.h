@@ -342,5 +342,35 @@ name|dsock
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Misc functions */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|MsgRead
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|DumpAscii
+parameter_list|(
+specifier|const
+name|u_char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
