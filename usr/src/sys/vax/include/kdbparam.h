@@ -75,7 +75,7 @@ name|ishiddenreg
 parameter_list|(
 name|p
 parameter_list|)
-value|((p)<=&reglist[8])
+value|((p)<=&kdbreglist[8])
 end_define
 
 begin_define
@@ -97,7 +97,7 @@ define|#
 directive|define
 name|clrsstep
 parameter_list|()
-value|(pcb.pcb_psl&= ~TBIT)
+value|(kdbpcb.pcb_psl&= ~TBIT)
 end_define
 
 begin_define
@@ -105,7 +105,7 @@ define|#
 directive|define
 name|setsstep
 parameter_list|()
-value|(pcb.pcb_psl |= TBIT)
+value|(kdbpcb.pcb_psl |= TBIT)
 end_define
 
 begin_define
@@ -125,7 +125,7 @@ name|getprevpc
 parameter_list|(
 name|fp
 parameter_list|)
-value|get((fp)+16, DSP)
+value|kdbget((fp)+16, DSP)
 end_define
 
 begin_comment
@@ -139,35 +139,11 @@ name|getprevframe
 parameter_list|(
 name|fp
 parameter_list|)
-value|(get((fp)+12, DSP)&~2)
+value|(kdbget((fp)+12, DSP)&~2)
 end_define
 
 begin_comment
 comment|/* fp of caller */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|getnargs
-parameter_list|(
-name|fp
-parameter_list|)
-value|(get((fp)+6, DSP)&0xffff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|nextarg
-parameter_list|(
-name|ap
-parameter_list|)
-value|((ap) + 4)
-end_define
-
-begin_comment
-comment|/* next argument in list */
 end_comment
 
 begin_define
@@ -198,7 +174,7 @@ name|getsignalpc
 parameter_list|(
 name|fp
 parameter_list|)
-value|get((fp)+92, DSP)
+value|kdbget((fp)+92, DSP)
 end_define
 
 begin_comment
