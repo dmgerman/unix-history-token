@@ -1329,12 +1329,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|td
 operator|->
 name|td_retval
@@ -1346,7 +1343,7 @@ name|ngrp
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -4785,15 +4782,6 @@ name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
 name|int
 name|error1
 init|=
@@ -4807,17 +4795,11 @@ name|error3
 init|=
 literal|0
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|cred
 operator|=
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
 if|if
 condition|(
@@ -4916,12 +4898,6 @@ name|cred
 operator|->
 name|cr_svuid
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -5004,15 +4980,6 @@ name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
 name|int
 name|error1
 init|=
@@ -5026,17 +4993,11 @@ name|error3
 init|=
 literal|0
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|cred
 operator|=
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 expr_stmt|;
 if|if
 condition|(
@@ -5141,12 +5102,6 @@ name|cred
 operator|->
 name|cr_svgid
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -5394,7 +5349,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if gid is a member of the group set.  */
+comment|/*  * Check if gid is a member of the group set.  *  * MPSAFE (cred must be held)  */
 end_comment
 
 begin_function
@@ -5581,7 +5536,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wrapper to use if you have the thread on hand but not the proc.  */
+comment|/*  * wrapper to use if you have the thread on hand but not the proc.  *  * MPSAFE (cred must be held)  */
 end_comment
 
 begin_function
@@ -5732,7 +5687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test the active securelevel against a given level.  securelevel_gt()  * implements (securelevel> level).  securelevel_ge() implements  * (securelevel>= level).  Note that the logic is inverted -- these  * functions return EPERM on "success" and 0 on "failure".  *  * cr is permitted to be NULL for the time being, as there were some  * existing securelevel checks that occurred without a process/credential  * context.  In the future this will be disallowed, so a kernel message  * is displayed.  */
+comment|/*  * Test the active securelevel against a given level.  securelevel_gt()  * implements (securelevel> level).  securelevel_ge() implements  * (securelevel>= level).  Note that the logic is inverted -- these  * functions return EPERM on "success" and 0 on "failure".  *  * cr is permitted to be NULL for the time being, as there were some  * existing securelevel checks that occurred without a process/credential  * context.  In the future this will be disallowed, so a kernel message  * is displayed.  *  * MPSAFE  */
 end_comment
 
 begin_function

@@ -196,10 +196,6 @@ name|td_critnest
 operator|==
 literal|0
 condition|)
-name|td
-operator|->
-name|td_savecrit
-operator|=
 name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
@@ -243,19 +239,17 @@ operator|=
 literal|0
 expr_stmt|;
 name|cpu_critical_exit
-argument_list|(
-name|td
-operator|->
-name|td_savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 else|else
+block|{
 name|td
 operator|->
 name|td_critnest
 operator|--
 expr_stmt|;
+block|}
 block|}
 end_function
 

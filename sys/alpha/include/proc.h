@@ -75,6 +75,10 @@ name|u_int
 name|md_kernnest
 decl_stmt|;
 comment|/* nesting level in the kernel */
+name|register_t
+name|md_savecrit
+decl_stmt|;
+comment|/* save PSL for critical section */
 block|}
 struct|;
 end_struct

@@ -61,8 +61,18 @@ name|PCPU_MD_FIELDS
 define|\
 value|struct	pcpu *pc_prvspace;
 comment|/* Self-reference */
-value|\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	int	pc_currentldt
+value|\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	int	pc_currentldt;						\ 	u_int32_t pc_int_pending;
+comment|/* master int pending flag */
+value|\ 	u_int32_t pc_ipending;
+comment|/* pending slow interrupts */
+value|\ 	u_int32_t pc_fpending;
+comment|/* pending fast interrupts */
+value|\ 	u_int32_t pc_spending
 end_define
+
+begin_comment
+comment|/* pending soft interrupts */
+end_comment
 
 begin_comment
 comment|/*  * Evaluates to the byte offset of the per-cpu variable name.  */

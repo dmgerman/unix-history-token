@@ -43,6 +43,9 @@ name|vm_offset_t
 name|md_bspstore
 decl_stmt|;
 comment|/* initial ar.bspstore */
+name|register_t
+name|md_savecrit
+decl_stmt|;
 block|}
 struct|;
 end_struct

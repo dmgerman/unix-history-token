@@ -22,7 +22,11 @@ end_comment
 begin_struct
 struct|struct
 name|mdthread
-block|{ }
+block|{
+name|register_t
+name|md_savecrit
+decl_stmt|;
+block|}
 struct|;
 end_struct
 

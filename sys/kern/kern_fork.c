@@ -3146,7 +3146,7 @@ argument_list|(
 name|cpuid
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Setup the sched_lock state so that we can release it. 	 */
+comment|/* 	 * Finish setting up thread glue.  We need to initialize 	 * the thread into a td_critnest=1 state.  Some platforms 	 * may have already partially or fully initialized td_critnest 	 * and/or td_md.md_savecrit (when applciable). 	 * 	 * see<arch>/<arch>/critical.c 	 */
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -3162,17 +3162,8 @@ name|mtx_recurse
 operator|=
 literal|0
 expr_stmt|;
-name|td
-operator|->
-name|td_critnest
-operator|=
-literal|1
-expr_stmt|;
-name|td
-operator|->
-name|td_savecrit
-operator|=
-name|CRITICAL_FORK
+name|cpu_critical_fork_exit
+argument_list|()
 expr_stmt|;
 name|CTR3
 argument_list|(

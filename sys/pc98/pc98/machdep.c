@@ -4093,15 +4093,14 @@ condition|(
 name|procrunnable
 argument_list|()
 condition|)
-name|enable_intr
-argument_list|()
-expr_stmt|;
-else|else
 block|{
 name|enable_intr
 argument_list|()
 expr_stmt|;
-asm|__asm __volatile("hlt");
+block|}
+else|else
+block|{
+asm|__asm __volatile("sti; hlt");
 block|}
 block|}
 endif|#
@@ -7774,7 +7773,7 @@ operator|.
 name|td_contested
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize mutexes. 	 */
+comment|/* 	 * Initialize mutexes. 	 * 	 * icu_lock: in order to allow an interrupt to occur in a critical 	 *	     section, to set pcpu->ipending (etc...) properly, we 	 *	     must be able to get the icu lock, so it can't be under 	 *	     witness. 	 */
 name|mtx_init
 argument_list|(
 operator|&
@@ -7831,6 +7830,8 @@ argument_list|,
 literal|"icu"
 argument_list|,
 name|MTX_SPIN
+operator||
+name|MTX_NOWITNESS
 argument_list|)
 expr_stmt|;
 name|mtx_lock

@@ -5275,6 +5275,9 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* APIC_IO */
+name|register_t
+name|crit
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|PC98
@@ -5398,6 +5401,11 @@ operator|&
 name|clkdesc
 argument_list|)
 expr_stmt|;
+name|crit
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -5415,6 +5423,11 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
+argument_list|)
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|crit
 argument_list|)
 expr_stmt|;
 else|#
@@ -5442,6 +5455,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|crit
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -5457,6 +5475,11 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
+argument_list|)
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|crit
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5555,6 +5578,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|crit
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -5583,6 +5611,11 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
+argument_list|)
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|crit
 argument_list|)
 expr_stmt|;
 name|writertc
@@ -5630,6 +5663,11 @@ literal|3
 condition|)
 block|{
 comment|/*  			 * The MP table is broken. 			 * The 8254 was not connected to the specified pin 			 * on the IO APIC. 			 * Workaround: Limited variant of mixed mode. 			 */
+name|crit
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -5647,6 +5685,11 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
+argument_list|)
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|crit
 argument_list|)
 expr_stmt|;
 name|inthand_remove
@@ -5736,6 +5779,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|crit
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -5753,6 +5801,11 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|icu_lock
+argument_list|)
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|crit
 argument_list|)
 expr_stmt|;
 block|}

@@ -1577,6 +1577,15 @@ name|irq_cookie
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX hack around brokenness of bus_teardown_intr().  If we left the 	 * irq active then we would get it instead of exception 16. 	 */
+block|{
+name|register_t
+name|crit
+decl_stmt|;
+name|crit
+operator|=
+name|intr_disable
+argument_list|()
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1596,6 +1605,12 @@ operator|&
 name|icu_lock
 argument_list|)
 expr_stmt|;
+name|intr_restore
+argument_list|(
+name|crit
+argument_list|)
+expr_stmt|;
+block|}
 name|bus_release_resource
 argument_list|(
 name|dev
