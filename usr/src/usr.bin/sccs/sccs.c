@@ -36,7 +36,7 @@ file|<whoami.h>
 end_include
 
 begin_comment
-comment|/* **  SCCS.C -- human-oriented front end to the SCCS system. ** **	Without trying to add any functionality to speak of, this **	program tries to make SCCS a little more accessible to human **	types.  The main thing it does is automatically put the **	string "SCCS/s." on the front of names.  Also, it has a **	couple of things that are designed to shorten frequent **	combinations, e.g., "delget" which expands to a "delta" **	and a "get". ** **	This program can also function as a setuid front end. **	To do this, you should copy the source, renaming it to **	whatever you want, e.g., "syssccs".  Change any defaults **	in the program (e.g., syssccs might default -d to **	"/usr/src/sys").  Then recompile and put the result **	as setuid to whomever you want.  In this mode, sccs **	knows to not run setuid for certain programs in order **	to preserve security, and so forth. ** **	Usage: **		sccs [flags] command [args] ** **	Flags: **		-d<dir><dir> represents a directory to search **				out of.  It should be a full pathname **				for general usage.  E.g., if<dir> is **				"/usr/src/sys", then a reference to the **				file "dev/bio.c" becomes a reference to **				"/usr/src/sys/dev/bio.c". **		-p<path>	prepends<path> to the final component **				of the pathname.  By default, this is **				"SCCS".  For example, in the -d example **				above, the path then gets modified to **				"/usr/src/sys/dev/SCCS/s.bio.c".  In **				more common usage (without the -d flag), **				"prog.c" would get modified to **				"SCCS/s.prog.c".  In both cases, the **				"s." gets automatically prepended. **		-r		run as the real user. ** **	Commands: **		admin, **		get, **		delta, **		rmdel, **		chghist, **		etc.		Straight out of SCCS; only difference **				is that pathnames get modified as **				described above. **		edit		Macro for "get -e". **		unedit		Removes a file being edited, knowing **				about p-files, etc. **		delget		Macro for "delta" followed by "get". **		deledit		Macro for "delta" followed by "get -e". **		info		Tell what files being edited. **		clean		Remove all files that can be **				regenerated from SCCS files. **		status		Like info, but return exit status, for **				use in makefiles. **		fix		Remove a top delta& reedit, but save **				the previous changes in that delta. ** **	Compilation Flags: **		UIDUSER -- determine who the user is by looking at the **			uid rather than the login name -- for machines **			where SCCS gets the user in this way. ** **	Compilation Instructions: **		cc -O -n -s sccs.c ** **	Author: **		Eric Allman, UCB/INGRES */
+comment|/* **  SCCS.C -- human-oriented front end to the SCCS system. ** **	Without trying to add any functionality to speak of, this **	program tries to make SCCS a little more accessible to human **	types.  The main thing it does is automatically put the **	string "SCCS/s." on the front of names.  Also, it has a **	couple of things that are designed to shorten frequent **	combinations, e.g., "delget" which expands to a "delta" **	and a "get". ** **	This program can also function as a setuid front end. **	To do this, you should copy the source, renaming it to **	whatever you want, e.g., "syssccs".  Change any defaults **	in the program (e.g., syssccs might default -d to **	"/usr/src/sys").  Then recompile and put the result **	as setuid to whomever you want.  In this mode, sccs **	knows to not run setuid for certain programs in order **	to preserve security, and so forth. ** **	Usage: **		sccs [flags] command [args] ** **	Flags: **		-d<dir><dir> represents a directory to search **				out of.  It should be a full pathname **				for general usage.  E.g., if<dir> is **				"/usr/src/sys", then a reference to the **				file "dev/bio.c" becomes a reference to **				"/usr/src/sys/dev/bio.c". **		-p<path>	prepends<path> to the final component **				of the pathname.  By default, this is **				"SCCS".  For example, in the -d example **				above, the path then gets modified to **				"/usr/src/sys/dev/SCCS/s.bio.c".  In **				more common usage (without the -d flag), **				"prog.c" would get modified to **				"SCCS/s.prog.c".  In both cases, the **				"s." gets automatically prepended. **		-r		run as the real user. ** **	Commands: **		admin, **		get, **		delta, **		rmdel, **		chghist, **		etc.		Straight out of SCCS; only difference **				is that pathnames get modified as **				described above. **		edit		Macro for "get -e". **		unedit		Removes a file being edited, knowing **				about p-files, etc. **		delget		Macro for "delta" followed by "get". **		deledit		Macro for "delta" followed by "get -e". **		info		Tell what files being edited. **		clean		Remove all files that can be **				regenerated from SCCS files. **		check		Like info, but return exit status, for **				use in makefiles. **		fix		Remove a top delta& reedit, but save **				the previous changes in that delta. ** **	Compilation Flags: **		UIDUSER -- determine who the user is by looking at the **			uid rather than the login name -- for machines **			where SCCS gets the user in this way. **		SRCDIR -- if defined, forces the -d flag to take on **			this value.  This is so that the setuid **			aspects of this program cannot be abused. ** **	Compilation Instructions: **		cc -O -n -s sccs.c ** **	Author: **		Eric Allman, UCB/INGRES */
 end_comment
 
 begin_ifdef
@@ -62,7 +62,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.26 %G%"
+literal|"@(#)sccs.c	1.27 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +116,15 @@ endif|#
 directive|endif
 endif|UIDUSER
 end_endif
+
+begin_decl_stmt
+name|char
+name|MyName
+index|[]
+init|=
+literal|"sccs"
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -549,6 +558,30 @@ begin_comment
 comment|/* pathname of SCCS files */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SRCDIR
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|SccsDir
+init|=
+name|SRCDIR
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* directory to begin search from */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -561,6 +594,11 @@ end_decl_stmt
 begin_comment
 comment|/* directory to begin search from */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|bool
@@ -633,7 +671,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: sccs [flags] command [flags]\n"
+literal|"Usage: %s [flags] command [flags]\n"
+argument_list|,
+name|MyName
 argument_list|)
 expr_stmt|;
 name|exit
@@ -704,6 +744,9 @@ name|RealUser
 operator|++
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|SRCDIR
 case|case
 literal|'p'
 case|:
@@ -724,6 +767,8 @@ operator|++
 name|p
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -738,11 +783,9 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|fprintf
+name|usrerr
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sccs: unknown option -%s\n"
+literal|"unknown option -%s"
 argument_list|,
 name|p
 argument_list|)
@@ -910,11 +953,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|usrerr
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sccs: Unknown command \"%s\"\n"
+literal|"Unknown command \"%s\""
 argument_list|,
 name|argv
 index|[
@@ -1102,11 +1143,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|fprintf
+name|syserr
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sccs internal error: CMACRO\n"
+literal|"internal error: CMACRO"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1135,11 +1174,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|usrerr
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sccs: -r flag needed for fix command\n"
+literal|"-r flag needed for fix command"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1195,11 +1232,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|syserr
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sccs internal error: FIX\n"
+literal|"FIX"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1291,11 +1326,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|syserr
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sccs internal error: oper %d\n"
+literal|"oper %d"
 argument_list|,
 name|cmd
 operator|->
@@ -1613,11 +1646,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syserr
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sccs: cannot fork"
+literal|"cannot fork"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1743,15 +1774,10 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|syserr
 argument_list|(
-name|stderr
+literal|"cannot execute %s"
 argument_list|,
-literal|"Sccs: cannot execute "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|progpath
 argument_list|)
 expr_stmt|;
@@ -2265,11 +2291,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|usrerr
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sccs: cannot open %s\n"
+literal|"cannot open %s"
 argument_list|,
 name|SccsPath
 argument_list|)
@@ -2673,11 +2697,9 @@ operator|!=
 literal|'.'
 condition|)
 block|{
-name|fprintf
+name|usrerr
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sccs: bad file name \"%s\"\n"
+literal|"bad file name \"%s\""
 argument_list|,
 name|fn
 argument_list|)
@@ -2746,11 +2768,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|usrerr
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sccs: cannot create \"%s\"\n"
+literal|"cannot create \"%s\""
 argument_list|,
 name|tfn
 argument_list|)
@@ -2779,11 +2799,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|syserr
 argument_list|(
-name|stderr
+literal|"who are you? (uid=%d)"
 argument_list|,
-literal|"Sccs: who are you?\n"
+name|getuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2895,11 +2916,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|syserr
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sccs: cannot reopen \"%s\"\n"
+literal|"cannot reopen \"%s\""
 argument_list|,
 name|tfn
 argument_list|)
@@ -2924,11 +2943,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|usrerr
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sccs: cannot create \"%s\"\n"
+literal|"cannot create \"%s\""
 argument_list|,
 name|pfn
 argument_list|)
@@ -3252,6 +3269,162 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  USRERR -- issue user-level error ** **	Parameters: **		f -- format string. **		p1-p3 -- parameters to a printf. ** **	Returns: **		-1 ** **	Side Effects: **		none. */
+end_comment
+
+begin_macro
+name|usrerr
+argument_list|(
+argument|f
+argument_list|,
+argument|p1
+argument_list|,
+argument|p2
+argument_list|,
+argument|p3
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|f
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n%s: "
+argument_list|,
+name|MyName
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|f
+argument_list|,
+name|p1
+argument_list|,
+name|p2
+argument_list|,
+name|p3
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SYSERR -- print system-generated error. ** **	Parameters: **		f -- format string to a printf. **		p1, p2, p3 -- parameters to f. ** **	Returns: **		never. ** **	Side Effects: **		none. */
+end_comment
+
+begin_macro
+name|syserr
+argument_list|(
+argument|f
+argument_list|,
+argument|p1
+argument_list|,
+argument|p2
+argument_list|,
+argument|p3
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|f
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n%s SYSERR: "
+argument_list|,
+name|MyName
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|f
+argument_list|,
+name|p1
+argument_list|,
+name|p2
+argument_list|,
+name|p3
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+literal|0
+condition|)
+name|exit
+argument_list|(
+name|EX_SOFTWARE
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|perror
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_block
 
 end_unit
 
