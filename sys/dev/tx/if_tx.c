@@ -284,7 +284,6 @@ specifier|static
 name|int
 name|epic_ifioctl
 parameter_list|(
-specifier|register
 name|struct
 name|ifnet
 modifier|*
@@ -1031,14 +1030,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|EPIC_USEIOSPACE
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -1135,7 +1131,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Preinitialize softc structure */
+comment|/* Preinitialize softc structure. */
 name|bzero
 argument_list|(
 name|sc
@@ -1158,7 +1154,7 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
-comment|/* Fill ifnet structure */
+comment|/* Fill ifnet structure. */
 name|ifp
 operator|=
 operator|&
@@ -1240,7 +1236,7 @@ name|TX_RING_SIZE
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Enable busmastering */
+comment|/* Enable busmastering. */
 name|pci_enable_busmaster
 argument_list|(
 name|dev
@@ -1319,7 +1315,7 @@ operator|->
 name|res
 argument_list|)
 expr_stmt|;
-comment|/* Allocate interrupt */
+comment|/* Allocate interrupt. */
 name|rid
 operator|=
 literal|0
@@ -1386,7 +1382,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Do OS independent part, including chip wakeup and reset */
+comment|/* Do OS independent part, including chip wakeup and reset. */
 name|error
 operator|=
 name|epic_common_attach
@@ -1433,7 +1429,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Do ifmedia setup */
+comment|/* Do ifmedia setup. */
 if|if
 condition|(
 name|mii_phy_probe
@@ -1585,7 +1581,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* Attach to OS's managers */
+comment|/* Attach to OS's managers. */
 name|ether_ifattach
 argument_list|(
 name|ifp
@@ -1619,7 +1615,7 @@ operator|->
 name|stat_ch
 argument_list|)
 expr_stmt|;
-comment|/* Initialize rings */
+comment|/* Initialize rings. */
 if|if
 condition|(
 name|epic_init_rings
@@ -1750,7 +1746,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detach driver and free resources  */
+comment|/*  * Detach driver and free resources.  */
 end_comment
 
 begin_function
@@ -1948,7 +1944,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2035,7 +2030,7 @@ operator|->
 name|ifr_mtu
 condition|)
 break|break;
-comment|/* XXX Though the datasheet doesn't imply any 		 * limitations on RX and TX sizes beside max 64Kb 		 * DMA transfer, seems we can't send more then 1600 		 * data bytes per ethernet packet. (Transmitter hangs 		 * up if more data is sent) 		 */
+comment|/* XXX Though the datasheet doesn't imply any 		 * limitations on RX and TX sizes beside max 64Kb 		 * DMA transfer, seems we can't send more then 1600 		 * data bytes per ethernet packet (transmitter hangs 		 * up if more data is sent). 		 */
 if|if
 condition|(
 name|ifr
@@ -2127,7 +2122,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* Handle IFF_PROMISC and IFF_ALLMULTI flags */
+comment|/* Handle IFF_PROMISC and IFF_ALLMULTI flags. */
 name|epic_stop_activity
 argument_list|(
 name|sc
@@ -2217,13 +2212,15 @@ name|x
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * OS-independed part of attach process. allocate memory for descriptors  * and frag lists, wake up chip, read MAC address and PHY identyfier.  * Return -1 on failure.  */
+comment|/*  * OS-independed part of attach process. allocate memory for descriptors  * and frag lists, wake up chip, read MAC address and PHY identyfier.  */
 end_comment
 
 begin_function
@@ -2400,7 +2397,7 @@ argument_list|(
 literal|500
 argument_list|)
 expr_stmt|;
-comment|/* Workaround for Application Note 7-15 */
+comment|/* Workaround for Application Note 7-15. */
 for|for
 control|(
 name|i
@@ -2423,7 +2420,7 @@ argument_list|,
 name|TEST1_CLOCK_TEST
 argument_list|)
 expr_stmt|;
-comment|/* Read mac address from EEPROM */
+comment|/* Read MAC address from EEPROM. */
 for|for
 control|(
 name|i
@@ -2462,7 +2459,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* Set Non-Volatile Control Register from EEPROM */
+comment|/* Set Non-Volatile Control Register from EEPROM. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -2479,7 +2476,7 @@ operator|&
 literal|0x1F
 argument_list|)
 expr_stmt|;
-comment|/* Set defaults */
+comment|/* Set defaults. */
 name|sc
 operator|->
 name|tx_threshold
@@ -2511,7 +2508,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Fetch card id */
+comment|/* Fetch card id. */
 name|sc
 operator|->
 name|cardvend
@@ -2564,7 +2561,9 @@ name|cardvend
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2613,14 +2612,10 @@ name|struct
 name|mbuf
 modifier|*
 name|m0
-decl_stmt|;
-specifier|register
-name|struct
-name|mbuf
+decl_stmt|,
 modifier|*
 name|m
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2663,7 +2658,7 @@ name|sc
 operator|->
 name|cur_tx
 expr_stmt|;
-comment|/* Get next packet to send */
+comment|/* Get next packet to send. */
 name|IF_DEQUEUE
 argument_list|(
 operator|&
@@ -2674,15 +2669,15 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-comment|/* If nothing to send, return */
+comment|/* If nothing to send, return. */
 if|if
 condition|(
-name|NULL
-operator|==
 name|m0
+operator|==
+name|NULL
 condition|)
 return|return;
-comment|/* Fill fragments list */
+comment|/* Fill fragments list. */
 for|for
 control|(
 name|m
@@ -2694,9 +2689,9 @@ operator|=
 literal|0
 init|;
 operator|(
-name|NULL
-operator|!=
 name|m
+operator|!=
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2754,13 +2749,12 @@ name|numfrags
 operator|=
 name|i
 expr_stmt|;
-comment|/* If packet was more than EPIC_MAX_FRAGS parts, */
-comment|/* recopy packet to new allocated mbuf cluster */
+comment|/* 		 * If packet was more than EPIC_MAX_FRAGS parts, 		 * recopy packet to a newly allocated mbuf cluster. 		 */
 if|if
 condition|(
-name|NULL
-operator|!=
 name|m
+operator|!=
+name|NULL
 condition|)
 block|{
 name|m
@@ -2776,9 +2770,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|==
 name|m
+operator|==
+name|NULL
 condition|)
 block|{
 name|m_freem
@@ -2944,7 +2938,7 @@ argument_list|,
 name|COMMAND_TXQUEUED
 argument_list|)
 expr_stmt|;
-comment|/* Set watchdog timer */
+comment|/* Set watchdog timer. */
 name|ifp
 operator|->
 name|if_timer
@@ -2965,7 +2959,6 @@ name|if_flags
 operator||=
 name|IFF_OACTIVE
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3053,7 +3046,7 @@ name|sc
 operator|->
 name|cur_rx
 expr_stmt|;
-comment|/* Switch to next descriptor */
+comment|/* Switch to next descriptor. */
 name|sc
 operator|->
 name|cur_rx
@@ -3095,7 +3088,7 @@ literal|0x8000
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Save packet length and mbuf contained packet */
+comment|/* Save packet length and mbuf contained packet. */
 name|len
 operator|=
 name|desc
@@ -3110,7 +3103,7 @@ name|buf
 operator|->
 name|mbuf
 expr_stmt|;
-comment|/* Try to get mbuf cluster */
+comment|/* Try to get an mbuf cluster. */
 name|buf
 operator|->
 name|mbuf
@@ -3126,11 +3119,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|==
 name|buf
 operator|->
 name|mbuf
+operator|==
+name|NULL
 condition|)
 block|{
 name|buf
@@ -3177,7 +3170,7 @@ argument_list|,
 name|ETHER_ALIGN
 argument_list|)
 expr_stmt|;
-comment|/* Point to new mbuf, and give descriptor to chip */
+comment|/* Point to new mbuf, and give descriptor to chip. */
 name|desc
 operator|->
 name|bufaddr
@@ -3221,7 +3214,7 @@ name|m_len
 operator|=
 name|len
 expr_stmt|;
-comment|/* Give mbuf to OS */
+comment|/* Give mbuf to OS. */
 call|(
 modifier|*
 name|ifp
@@ -3241,7 +3234,6 @@ name|if_ipackets
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3309,8 +3301,7 @@ name|desc
 operator|->
 name|status
 expr_stmt|;
-comment|/* If packet is not transmitted, thou followed */
-comment|/* packets are not transmitted too */
+comment|/* 		 * If packet is not transmitted, thou followed 		 * packets are not transmitted too. 		 */
 if|if
 condition|(
 name|status
@@ -3318,8 +3309,7 @@ operator|&
 literal|0x8000
 condition|)
 break|break;
-comment|/* Packet is transmitted. Switch to next and */
-comment|/* free mbuf */
+comment|/* Packet is transmitted. Switch to next and free mbuf. */
 name|sc
 operator|->
 name|pending_txs
@@ -3352,7 +3342,7 @@ name|mbuf
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Check for errors and collisions */
+comment|/* Check for errors and collisions. */
 if|if
 condition|(
 name|status
@@ -3388,12 +3378,9 @@ operator|)
 operator|&
 literal|0x1F
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|EPIC_DIAG
-argument_list|)
 if|if
 condition|(
 operator|(
@@ -3455,20 +3442,20 @@ block|{
 name|epic_softc_t
 modifier|*
 name|sc
-init|=
-operator|(
-name|epic_softc_t
-operator|*
-operator|)
-name|arg
 decl_stmt|;
 name|int
 name|status
 decl_stmt|,
 name|i
-init|=
-literal|4
 decl_stmt|;
+name|sc
+operator|=
+name|arg
+expr_stmt|;
+name|i
+operator|=
+literal|4
+expr_stmt|;
 while|while
 condition|(
 name|i
@@ -3528,12 +3515,9 @@ name|INTSTAT_OVW
 operator|)
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|EPIC_DIAG
-argument_list|)
 if|if
 condition|(
 name|status
@@ -3745,12 +3729,9 @@ operator|&
 name|INTSTAT_RXE
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|EPIC_DIAG
-argument_list|)
 name|device_printf
 argument_list|(
 name|sc
@@ -3792,7 +3773,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* If no packets are pending, then no timeouts */
+comment|/* If no packets are pending, then no timeouts. */
 if|if
 condition|(
 name|sc
@@ -3809,7 +3790,6 @@ name|if_timer
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3845,12 +3825,9 @@ operator|&=
 operator|~
 name|TXCON_EARLY_TRANSMIT_ENABLE
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|EPIC_DIAG
-argument_list|)
 name|device_printf
 argument_list|(
 name|sc
@@ -3871,12 +3848,9 @@ name|tx_threshold
 operator|+=
 literal|0x40
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|EPIC_DIAG
-argument_list|)
 name|device_printf
 argument_list|(
 name|sc
@@ -3893,7 +3867,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* We must set TXUGO to reset the stuck transmitter */
+comment|/* We must set TXUGO to reset the stuck transmitter. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -3919,7 +3893,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3943,10 +3916,6 @@ block|{
 name|epic_softc_t
 modifier|*
 name|sc
-init|=
-name|ifp
-operator|->
-name|if_softc
 decl_stmt|;
 name|int
 name|x
@@ -3955,6 +3924,12 @@ name|x
 operator|=
 name|splimp
 argument_list|()
+expr_stmt|;
+name|sc
+operator|=
+name|ifp
+operator|->
+name|if_softc
 expr_stmt|;
 name|device_printf
 argument_list|(
@@ -3969,13 +3944,13 @@ operator|->
 name|pending_txs
 argument_list|)
 expr_stmt|;
-comment|/* Try to finish queued packets */
+comment|/* Try to finish queued packets. */
 name|epic_tx_done
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* If not successful */
+comment|/* If not successful. */
 if|if
 condition|(
 name|sc
@@ -3993,7 +3968,7 @@ name|sc
 operator|->
 name|pending_txs
 expr_stmt|;
-comment|/* Reinitialize board */
+comment|/* Reinitialize board. */
 name|device_printf
 argument_list|(
 name|sc
@@ -4024,7 +3999,7 @@ argument_list|,
 literal|"seems we can continue normaly\n"
 argument_list|)
 expr_stmt|;
-comment|/* Start output */
+comment|/* Start output. */
 if|if
 condition|(
 name|ifp
@@ -4183,7 +4158,7 @@ name|ifm_cur
 operator|->
 name|ifm_media
 expr_stmt|;
-comment|/* Do not do anything if interface is not up */
+comment|/* Do not do anything if interface is not up. */
 if|if
 condition|(
 operator|(
@@ -4201,7 +4176,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Lookup current selected PHY 	 */
+comment|/* 	 * Lookup current selected PHY. 	 */
 if|if
 condition|(
 name|IFM_INST
@@ -4229,7 +4204,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* If we're not selecting serial interface, select MII mode */
+comment|/* If we're not selecting serial interface, select MII mode. */
 name|sc
 operator|->
 name|miicfg
@@ -4248,14 +4223,14 @@ operator|->
 name|miicfg
 argument_list|)
 expr_stmt|;
-comment|/* Default to unknown PHY */
+comment|/* Default to unknown PHY. */
 name|sc
 operator|->
 name|phyid
 operator|=
 name|EPIC_UNKN_PHY
 expr_stmt|;
-comment|/* Lookup selected PHY */
+comment|/* Lookup selected PHY. */
 for|for
 control|(
 name|miisc
@@ -4303,7 +4278,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* Identify selected PHY */
+comment|/* Identify selected PHY. */
 if|if
 condition|(
 name|sc
@@ -4414,14 +4389,14 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* 	 * Do PHY specific card setup 	 */
-comment|/* Call this, to isolate all not selected PHYs and 	 * set up selected 	 */
+comment|/* 	 * Do PHY specific card setup. 	 */
+comment|/* 	 * Call this, to isolate all not selected PHYs and 	 * set up selected. 	 */
 name|mii_mediachg
 argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
-comment|/* Do our own setup */
+comment|/* Do our own setup. */
 switch|switch
 condition|(
 name|sc
@@ -4436,7 +4411,7 @@ break|break;
 case|case
 name|EPIC_AC101_PHY
 case|:
-comment|/* We have to powerup fiber tranceivers */
+comment|/* We have to powerup fiber tranceivers. */
 if|if
 condition|(
 name|IFM_SUBTYPE
@@ -4475,7 +4450,7 @@ break|break;
 case|case
 name|EPIC_LXT970_PHY
 case|:
-comment|/* We have to powerup fiber tranceivers */
+comment|/* We have to powerup fiber tranceivers. */
 name|cfg
 operator|=
 name|PHY_READ
@@ -4527,7 +4502,7 @@ break|break;
 case|case
 name|EPIC_SERIAL
 case|:
-comment|/* Select serial PHY, (10base2/BNC usually) */
+comment|/* Select serial PHY (10base2/BNC usually). */
 name|sc
 operator|->
 name|miicfg
@@ -4547,7 +4522,7 @@ operator|->
 name|miicfg
 argument_list|)
 expr_stmt|;
-comment|/* There is no driver to fill this */
+comment|/* There is no driver to fill this. */
 name|mii
 operator|->
 name|mii_media_active
@@ -4560,7 +4535,7 @@ name|mii_media_status
 operator|=
 literal|0
 expr_stmt|;
-comment|/* We need to call this manualy as i wasn't called 		 * in mii_mediachg() 		 */
+comment|/* 		 * We need to call this manually as it wasn't called 		 * in mii_mediachg(). 		 */
 name|epic_miibus_statchg
 argument_list|(
 name|sc
@@ -4653,7 +4628,7 @@ name|mii
 operator|->
 name|mii_media
 expr_stmt|;
-comment|/* Nothing should be selected if interface is down */
+comment|/* Nothing should be selected if interface is down. */
 if|if
 condition|(
 operator|(
@@ -4681,7 +4656,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/* Call underlying pollstat, if not serial PHY */
+comment|/* Call underlying pollstat, if not serial PHY. */
 if|if
 condition|(
 name|sc
@@ -4695,7 +4670,7 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
-comment|/* Simply copy media info */
+comment|/* Simply copy media info. */
 name|ifmr
 operator|->
 name|ifm_active
@@ -4712,7 +4687,6 @@ name|mii
 operator|->
 name|mii_media_status
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4776,7 +4750,7 @@ operator||
 name|TXCON_FULL_DUPLEX
 operator|)
 expr_stmt|;
-comment|/* If we are in full-duplex mode or loopback operation, 	 * we need to decouple receiver and transmitter. 	 */
+comment|/* 	 * If we are in full-duplex mode or loopback operation, 	 * we need to decouple receiver and transmitter. 	 */
 if|if
 condition|(
 name|IFM_OPTIONS
@@ -4796,7 +4770,7 @@ name|txcon
 operator||=
 name|TXCON_FULL_DUPLEX
 expr_stmt|;
-comment|/* On some cards we need manualy set fullduplex led */
+comment|/* On some cards we need manualy set fullduplex led. */
 if|if
 condition|(
 name|sc
@@ -4847,7 +4821,7 @@ name|miicfg
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Update baudrate */
+comment|/* Update baudrate. */
 if|if
 condition|(
 name|IFM_SUBTYPE
@@ -4896,7 +4870,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4951,7 +4924,7 @@ name|mii
 operator|->
 name|mii_media
 expr_stmt|;
-comment|/* Add Serial Media Interface if present, this applies to 	 * SMC9432BTX serie 	 */
+comment|/* 	 * Add Serial Media Interface if present, this applies to 	 * SMC9432BTX serie. 	 */
 if|if
 condition|(
 name|CSR_READ_4
@@ -4964,7 +4937,7 @@ operator|&
 name|MIICFG_PHY_PRESENT
 condition|)
 block|{
-comment|/* Store its instance */
+comment|/* Store its instance. */
 name|sc
 operator|->
 name|serinst
@@ -4974,7 +4947,7 @@ operator|->
 name|mii_instance
 operator|++
 expr_stmt|;
-comment|/* Add as 10base2/BNC media */
+comment|/* Add as 10base2/BNC media. */
 name|media
 operator|=
 name|IFM_MAKEWORD
@@ -5001,7 +4974,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Report to user */
+comment|/* Report to user. */
 name|device_printf
 argument_list|(
 name|sc
@@ -5012,7 +4985,6 @@ literal|"serial PHY detected (10Base2/BNC)\n"
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -5058,7 +5030,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* If interface is already running, then we need not do anything */
+comment|/* If interface is already running, then we need not do anything. */
 if|if
 condition|(
 name|ifp
@@ -5075,7 +5047,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Soft reset the chip (we have to power up card before) */
+comment|/* Soft reset the chip (we have to power up card before). */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -5162,7 +5134,7 @@ name|tx_desc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Put node address to EPIC */
+comment|/* Put node address to EPIC. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -5223,7 +5195,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Set tx mode, includeing transmit threshold */
+comment|/* Set tx mode, includeing transmit threshold. */
 name|epic_set_tx_mode
 argument_list|(
 name|sc
@@ -5235,7 +5207,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Set multicast table */
+comment|/* Set multicast table. */
 name|epic_set_mc_table
 argument_list|(
 name|sc
@@ -5261,7 +5233,7 @@ operator||
 name|INTSTAT_FATAL
 argument_list|)
 expr_stmt|;
-comment|/* Acknowledge all pending interrupts */
+comment|/* Acknowledge all pending interrupts. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -5378,24 +5350,25 @@ decl_stmt|;
 block|{
 name|u_int32_t
 name|flags
-init|=
+decl_stmt|;
+name|u_int32_t
+name|rxcon
+decl_stmt|;
+name|flags
+operator|=
 name|sc
 operator|->
 name|sc_if
 operator|.
 name|if_flags
-decl_stmt|;
-name|u_int32_t
+expr_stmt|;
 name|rxcon
-init|=
+operator|=
 name|RXCON_DEFAULT
-decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+expr_stmt|;
+ifdef|#
+directive|ifdef
 name|EPIC_EARLY_RX
-argument_list|)
 name|rxcon
 operator||=
 name|RXCON_EARLY_RX
@@ -5423,7 +5396,6 @@ argument_list|,
 name|rxcon
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5496,11 +5468,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-init|=
-operator|&
-name|sc
-operator|->
-name|sc_if
 decl_stmt|;
 name|struct
 name|ifmultiaddr
@@ -5516,6 +5483,13 @@ decl_stmt|;
 name|u_int8_t
 name|h
 decl_stmt|;
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_if
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -5714,7 +5688,6 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * Synopsis: calculate EPIC's hash of multicast address.  */
 specifier|static
@@ -5851,7 +5824,7 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
-comment|/* Start rx process */
+comment|/* Start rx process. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -5891,7 +5864,7 @@ name|status
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* Stop Tx and Rx DMA */
+comment|/* Stop Tx and Rx DMA. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -5905,7 +5878,7 @@ operator||
 name|COMMAND_STOP_TDMA
 argument_list|)
 expr_stmt|;
-comment|/* Wait Rx and Tx DMA to stop (why 1 ms ??? XXX) */
+comment|/* Wait Rx and Tx DMA to stop (why 1 ms ??? XXX). */
 for|for
 control|(
 name|i
@@ -5952,7 +5925,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Catch all finished packets */
+comment|/* Catch all finished packets. */
 name|epic_rx_done
 argument_list|(
 name|sc
@@ -6143,16 +6116,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|==
 name|m0
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
 name|ENOBUFS
 operator|)
 return|;
-comment|/* Prepare mbuf */
+comment|/* Prepare mbuf. */
 name|m0
 operator|->
 name|m_len
@@ -6214,7 +6187,7 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
-comment|/* Fill fragments list */
+comment|/* Fill fragments list. */
 name|flist
 operator|->
 name|frag
@@ -6253,7 +6226,7 @@ name|numfrags
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Fill in descriptor */
+comment|/* Fill in descriptor. */
 name|buf
 operator|->
 name|mbuf
@@ -6308,7 +6281,7 @@ name|status
 operator|=
 literal|0x8000
 expr_stmt|;
-comment|/* Launch transmition */
+comment|/* Launch transmission. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -6384,7 +6357,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/*  *  Synopsis: Shut down board and deallocates rings.  */
@@ -6495,7 +6470,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/*  * Synopsis: This function should free all memory allocated for rings.  */
 specifier|static
@@ -6791,7 +6765,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EFAULT
+operator|)
 return|;
 block|}
 name|buf
@@ -6809,11 +6785,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|==
 name|buf
 operator|->
 name|mbuf
+operator|==
+name|NULL
 condition|)
 block|{
 name|epic_free_rings
@@ -6822,7 +6798,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|buf
@@ -6981,7 +6959,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EFAULT
+operator|)
 return|;
 block|}
 name|buf
@@ -7038,12 +7018,16 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EFAULT
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/*  * EEPROM operation functions  */
@@ -7088,6 +7072,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 operator|(
@@ -7104,7 +7089,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-return|return;
+block|}
 block|}
 specifier|static
 name|u_int8_t
@@ -7118,12 +7103,14 @@ name|sc
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|CSR_READ_1
 argument_list|(
 name|sc
 argument_list|,
 name|EECTL
 argument_list|)
+operator|)
 return|;
 block|}
 specifier|static
@@ -7168,10 +7155,12 @@ name|val
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|epic_read_eepromreg
 argument_list|(
 name|sc
 argument_list|)
+operator|)
 return|;
 block|}
 specifier|static
@@ -7288,7 +7277,9 @@ operator|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 specifier|static
@@ -7372,10 +7363,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|dataval
+operator|)
 return|;
 block|}
-comment|/*  * Here goes MII read/write routines  */
+comment|/*  * Here goes MII read/write routines.  */
 specifier|static
 name|int
 name|epic_read_phy_reg
@@ -7564,7 +7557,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 specifier|static
 name|int
