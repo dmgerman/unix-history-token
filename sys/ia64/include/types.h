@@ -155,12 +155,23 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Critical section value */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|register_t
+name|critical_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* Interrupt mask (spl, xxx_imask, etc) */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|__uint32_t
+name|__uint64_t
 name|intrmask_t
 typedef|;
 end_typedef

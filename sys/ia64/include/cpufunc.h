@@ -508,10 +508,6 @@ comment|/* TODO: implement this */
 block|}
 end_function
 
-begin_comment
-comment|/*  * Bogus interrupt manipulation  */
-end_comment
-
 begin_function
 specifier|static
 name|__inline
@@ -541,18 +537,23 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_int
-name|save_intr
+name|critical_t
+name|critical_enter
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|critical_t
 name|psr
 decl_stmt|;
 asm|__asm __volatile ("mov %0=psr;;" : "=r" (psr));
+name|disable_intr
+argument_list|()
+expr_stmt|;
 return|return
+operator|(
 name|psr
+operator|)
 return|;
 block|}
 end_function
@@ -561,9 +562,9 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|restore_intr
+name|critical_exit
 parameter_list|(
-name|u_int
+name|critical_t
 name|psr
 parameter_list|)
 block|{
