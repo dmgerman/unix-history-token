@@ -5267,6 +5267,7 @@ name|done
 expr_stmt|;
 else|else
 block|{
+comment|/* there is at least one */
 comment|/* Tack on at the end of sc_done. */
 name|ohci_physaddr_t
 name|ldone
@@ -5284,6 +5285,7 @@ expr_stmt|;
 comment|/* always non 0 */
 do|do
 block|{
+comment|/* use  do{}while here to silence gcc warnings */
 name|std
 operator|=
 name|ohci_hash_find_td
