@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.4 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1130,6 +1130,13 @@ argument_list|(
 name|SIGCHLD
 argument_list|,
 name|cleanup
+argument_list|)
+expr_stmt|;
+name|setpgrp
+argument_list|(
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Request to do remote echo. 	 */
