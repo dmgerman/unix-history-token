@@ -42,7 +42,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static const char sccsid[] = "@(#)env.c	8.3 (Berkeley) 4/2/94";
+unit|static char sccsid[] = "@(#)env.c	8.3 (Berkeley) 4/2/94";
 endif|#
 directive|endif
 end_endif
@@ -115,34 +115,15 @@ name|environ
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-decl|main
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-index|[]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -341,7 +322,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: env [-] [-i] [name=value ...] [command]\n"
+literal|"usage: env [-] [-i] [name=value ...] [utility [argument ...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
