@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.78 1997/03/05 00:54:00 gpalmer Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.79 1997/03/05 08:08:48 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1018,7 +1018,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine receives statistical clock interrupts from the RTC.  * As explained above, these occur at 128 interrupts per second.  * When profiling, we receive interrupts at a rate of 1024 Hz.  *  * This does not actually add as much overhead as it sounds, because  * when the statistical clock is active, the hardclock driver no longer  * needs to keep (inaccurate) statistics on its own.  This decouples  * statistics gathering from scheduling interrupts.  *  * The RTC chip requires that we read status register C (RTC_INTR)  * to acknowledge an interrupt, before it will generate the next one.  */
+comment|/*  * This routine receives statistical clock interrupts from the RTC.  * As explained above, these occur at 128 interrupts per second.  * When profiling, we receive interrupts at a rate of 1024 Hz.  *  * This does not actually add as much overhead as it sounds, because  * when the statistical clock is active, the hardclock driver no longer  * needs to keep (inaccurate) statistics on its own.  This decouples  * statistics gathering from scheduling interrupts.  *  * The RTC chip requires that we read status register C (RTC_INTR)  * to acknowledge an interrupt, before it will generate the next one.  * Under high interrupt load, rtcintr() can be indefinitely delayed and  * the clock can tick immediately after the read from RTC_INTR.  In this  * case, the mc146818A interrupt signal will not drop for long enough  * to register with the 8259 PIC.  If an interrupt is missed, the stat  * clock will halt, considerably degrading system performance.  This is  * why we use 'while' rather than a more straightforward 'if' below.  * Stat clock ticks can still be lost, causing minor loss of accuracy  * in the statistics, but the stat clock will no longer stop.  */
 end_comment
 
 begin_function
@@ -1031,30 +1031,21 @@ name|clockframe
 name|frame
 parameter_list|)
 block|{
-name|u_char
-name|stat
-decl_stmt|;
-name|stat
-operator|=
+while|while
+condition|(
 name|rtcin
 argument_list|(
 name|RTC_INTR
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stat
 operator|&
 name|RTCIR_PERIOD
 condition|)
-block|{
 name|statclock
 argument_list|(
 operator|&
 name|frame
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
