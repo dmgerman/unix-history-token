@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.78 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.79 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.78 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.79 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3764,15 +3764,10 @@ case|:
 return|return
 name|inet_ntoa
 argument_list|(
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
 name|sap
-operator|)
 operator|->
+name|sin
+operator|.
 name|sin_addr
 argument_list|)
 return|;
