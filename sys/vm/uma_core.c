@@ -5438,8 +5438,10 @@ if|if
 condition|(
 name|flags
 operator|&
-name|M_WAITOK
+name|M_NOWAIT
 condition|)
+break|break;
+else|else
 name|msleep
 argument_list|(
 name|zone
@@ -5456,8 +5458,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-else|else
-break|break;
 continue|continue;
 block|}
 name|zone
@@ -5506,13 +5506,9 @@ block|}
 comment|/*  		 * We might not have been able to get a slab but another cpu 		 * could have while we were unlocked.  Check again before we 		 * fail. 		 */
 if|if
 condition|(
-operator|(
 name|flags
 operator|&
-name|M_WAITOK
-operator|)
-operator|==
-literal|0
+name|M_NOWAIT
 condition|)
 name|flags
 operator||=
@@ -5866,11 +5862,6 @@ comment|/* Don't block on the next fill */
 name|flags
 operator||=
 name|M_NOWAIT
-expr_stmt|;
-name|flags
-operator|&=
-operator|~
-name|M_WAITOK
 expr_stmt|;
 block|}
 name|zone
