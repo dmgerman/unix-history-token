@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_systm.h	4.12	82/06/20	*/
+comment|/*	in_systm.h	4.13	82/06/24	*/
 end_comment
 
 begin_comment
@@ -56,50 +56,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The internet code runs off software interrupts.  *  * You can switch into the network by doing splnet() and return by splx().  * The software interrupt level for the network is higher than the software  * level for the clock (so you can enter the network in routines called  * at timeout time).  Splimp is an ipl high enough to block all imps.  * While manipulating the mbuf buffer pool you have to block imps.  */
+comment|/*  * The internet code runs off software interrupts.  *  * You can switch into the network by doing splnet() and return by splx().  * The software interrupt level for the network is higher than the software  * level for the clock (so you can enter the network in routines called  * at timeout time).  */
 end_comment
-
-begin_comment
-comment|/* splnet is defined in ../sys/asm.sed */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"ec.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NEC
-operator|>
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|splimp
-value|spl6
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|splimp
-value|spl5
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
