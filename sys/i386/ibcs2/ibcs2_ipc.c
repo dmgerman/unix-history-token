@@ -824,6 +824,11 @@ name|error
 condition|)
 name|cvt_msqid2imsqid
 argument_list|(
+operator|(
+expr|struct
+name|msqid_ds
+operator|*
+operator|)
 name|SCARG
 argument_list|(
 operator|&
@@ -865,6 +870,11 @@ argument_list|,
 name|a4
 argument_list|)
 argument_list|,
+operator|(
+expr|struct
+name|msqid_ds
+operator|*
+operator|)
 name|SCARG
 argument_list|(
 operator|&
