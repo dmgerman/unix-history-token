@@ -1,15 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* Copyright (c) 1981 Regents of the University of California */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clri.c 1.3 %G%"
+literal|"@(#)clri.c 2.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,6 +16,35 @@ end_comment
 begin_comment
 comment|/*  * clri filsys inumber ...  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIMFS
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fs.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -38,6 +63,11 @@ include|#
 directive|include
 file|"../h/fs.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -5,9 +5,38 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumpfs.c	1.11 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	2.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIMFS
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fs.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -18,14 +47,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"../h/inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"../h/fs.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * dumpfs  */

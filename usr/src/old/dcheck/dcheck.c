@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dcheck.c	1.8 (Berkeley) %G%"
+literal|"@(#)dcheck.c	2.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,35 @@ name|MAXNINDIR
 value|(MAXBSIZE / sizeof (daddr_t))
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIMFS
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fs.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -44,6 +73,11 @@ include|#
 directive|include
 file|"../h/fs.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
