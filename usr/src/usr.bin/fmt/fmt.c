@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)fmt.c	5.2 (Berkeley) %G%"
+literal|"@(#)fmt.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,11 @@ file|<ctype.h>
 end_include
 
 begin_comment
-comment|/*  * fmt -- format the concatenation of input files or standard input  * onto standard output.  Designed for use with Mail ~|  *  * Syntax: fmt [ -width ] [ name ... ]  * Author: Kurt Shoens (UCB) 12/7/78  */
+comment|/*  * fmt -- format the concatenation of input files or standard input  * onto standard output.  Designed for use with Mail ~|  *  * Syntax : fmt [ goal [ max ] ] [ name ... ]  * Authors: Kurt Shoens (UCB) 12/7/78;  *          Liz Allen (UMCP) 2/24/83 [Addition of goal length concept].  */
+end_comment
+
+begin_comment
+comment|/* LIZ@UOM 6/18/85 -- Don't need LENGTH any more.  * #define	LENGTH	72		Max line length in output  */
 end_comment
 
 begin_define
@@ -71,6 +75,34 @@ end_define
 
 begin_comment
 comment|/* Null string pointer for lint */
+end_comment
+
+begin_comment
+comment|/* LIZ@UOM 6/18/85 --New variables goal_length and max_length */
+end_comment
+
+begin_decl_stmt
+name|int
+name|goal_length
+init|=
+literal|65
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Target or goal line length in output */
+end_comment
+
+begin_decl_stmt
+name|int
+name|max_length
+init|=
+literal|75
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Max line length in output */
 end_comment
 
 begin_decl_stmt
@@ -101,18 +133,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Last place we saw a head line */
-end_comment
-
-begin_decl_stmt
-name|int
-name|width
-init|=
-literal|72
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Width that we will not exceed */
 end_comment
 
 begin_function_decl
@@ -156,6 +176,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -173,14 +196,10 @@ name|errs
 init|=
 literal|0
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|int
-name|nofile
+name|number
 decl_stmt|;
+comment|/* LIZ@UOM 6/18/85 */
 name|setout
 argument_list|()
 expr_stmt|;
@@ -193,6 +212,103 @@ operator|=
 operator|-
 literal|10
 expr_stmt|;
+comment|/* 	 * LIZ@UOM 6/18/85 -- Check for goal and max length arguments  	 */
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+operator|(
+literal|1
+operator|==
+operator|(
+name|sscanf
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|number
+argument_list|)
+operator|)
+operator|)
+condition|)
+block|{
+name|argv
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|goal_length
+operator|=
+name|number
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+operator|(
+literal|1
+operator|==
+operator|(
+name|sscanf
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|number
+argument_list|)
+operator|)
+operator|)
+condition|)
+block|{
+name|argv
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|max_length
+operator|=
+name|number
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|max_length
+operator|<=
+name|goal_length
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Max length must be greater than %s\n"
+argument_list|,
+literal|"goal length"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|argc
@@ -200,8 +316,6 @@ operator|<
 literal|2
 condition|)
 block|{
-name|single
-label|:
 name|fmt
 argument_list|(
 name|stdin
@@ -216,73 +330,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|nofile
-operator|=
-literal|1
-expr_stmt|;
 while|while
 condition|(
 operator|--
 name|argc
 condition|)
 block|{
-name|cp
-operator|=
-operator|*
-operator|++
-name|argv
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|cp
-operator|==
-literal|'-'
-condition|)
-block|{
-name|width
-operator|=
-name|atoi
-argument_list|(
-name|cp
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|width
-operator|<=
-literal|0
-operator|||
-name|width
-operator|>=
-name|BUFSIZ
-operator|-
-literal|2
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"fmt:  bad width: %d\n"
-argument_list|,
-name|width
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-continue|continue;
-block|}
-name|nofile
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -290,7 +343,9 @@ name|fi
 operator|=
 name|fopen
 argument_list|(
-name|cp
+operator|*
+operator|++
+name|argv
 argument_list|,
 literal|"r"
 argument_list|)
@@ -301,7 +356,8 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|cp
+operator|*
+name|argv
 argument_list|)
 expr_stmt|;
 name|errs
@@ -320,13 +376,6 @@ name|fi
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|nofile
-condition|)
-goto|goto
-name|single
-goto|;
 name|oflush
 argument_list|()
 expr_stmt|;
@@ -888,6 +937,10 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|int
+name|wordl
+decl_stmt|;
+comment|/* LIZ@UOM 6/18/85 */
 name|cp
 operator|=
 name|line
@@ -902,7 +955,12 @@ name|cp2
 operator|=
 name|word
 expr_stmt|;
-comment|/* 		 * Collect a 'word,' allowing it to contain escaped 		 * white space. 		 */
+name|wordl
+operator|=
+literal|0
+expr_stmt|;
+comment|/* LIZ@UOM 6/18/85 */
+comment|/* 		 * Collect a 'word,' allowing it to contain escaped white 		 * space.  		 */
 while|while
 condition|(
 operator|*
@@ -945,8 +1003,12 @@ operator|*
 name|cp
 operator|++
 expr_stmt|;
+name|wordl
+operator|++
+expr_stmt|;
+comment|/* LIZ@UOM 6/18/85 */
 block|}
-comment|/* 		 * Guarantee a space at end of line. 		 * Two spaces after end of sentence punctuation. 		 */
+comment|/* 		 * Guarantee a space at end of line. Two spaces after end of 		 * sentence punctuation.  		 */
 if|if
 condition|(
 operator|*
@@ -971,7 +1033,7 @@ operator|-
 literal|1
 index|]
 argument_list|,
-literal|".:!?"
+literal|".:!"
 argument_list|)
 condition|)
 operator|*
@@ -1001,9 +1063,12 @@ name|cp2
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* 		 * LIZ@UOM 6/18/85 pack(word);  		 */
 name|pack
 argument_list|(
 name|word
+argument_list|,
+name|wordl
 argument_list|)
 expr_stmt|;
 block|}
@@ -1057,13 +1122,19 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Pack a word onto the output line.  If this is the beginning of  * the line, push on the appropriately-sized string of blanks first.  * If the word won't fit on the current line, flush and begin a new  * line.  If the word is too long to fit all by itself on a line,  * just give it its own and hope for the best.  */
+comment|/*  * Pack a word onto the output line.  If this is the beginning of  * the line, push on the appropriately-sized string of blanks first.  * If the word won't fit on the current line, flush and begin a new  * line.  If the word is too long to fit all by itself on a line,  * just give it its own and hope for the best.  *  * LIZ@UOM 6/18/85 -- If the new word will fit in at less than the  *	goal length, take it.  If not, then check to see if the line  *	will be over the max length; if so put the word on the next  *	line.  If not, check to see if the line will be closer to the  *	goal length with or without the word and take it or put it on  *	the next line accordingly.  */
+end_comment
+
+begin_comment
+comment|/*  * LIZ@UOM 6/18/85 -- pass in the length of the word as well  * pack(word)  *	char word[];  */
 end_comment
 
 begin_macro
 name|pack
 argument_list|(
 argument|word
+argument_list|,
+argument|wl
 argument_list|)
 end_macro
 
@@ -1071,6 +1142,12 @@ begin_decl_stmt
 name|char
 name|word
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wl
 decl_stmt|;
 end_decl_stmt
 
@@ -1096,29 +1173,47 @@ condition|)
 name|leadin
 argument_list|()
 expr_stmt|;
-name|t
-operator|=
-name|strlen
-argument_list|(
-name|word
-argument_list|)
-expr_stmt|;
+comment|/* 	 * LIZ@UOM 6/18/85 -- change condition to check goal_length; s is the 	 * length of the line before the word is added; t is now the length 	 * of the line after the word is added 	 *	t = strlen(word); 	 *	if (t+s<= LENGTH)  	 */
 name|s
 operator|=
 name|outp
 operator|-
 name|outbuf
 expr_stmt|;
-if|if
-condition|(
 name|t
+operator|=
+name|wl
 operator|+
 name|s
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|t
 operator|<=
-name|width
+name|goal_length
+operator|)
+operator|||
+operator|(
+operator|(
+name|t
+operator|<=
+name|max_length
+operator|)
+operator|&&
+operator|(
+name|t
+operator|-
+name|goal_length
+operator|<=
+name|goal_length
+operator|-
+name|s
+operator|)
+operator|)
 condition|)
 block|{
-comment|/* 		 * In like flint! 		 */
+comment|/* 		 * In like flint!  		 */
 for|for
 control|(
 name|cp
