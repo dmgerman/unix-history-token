@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fingerd.c,v 1.10 1997/11/20 07:26:04 charnier Exp $"
+literal|"$Id: fingerd.c,v 1.11 1998/05/15 03:23:28 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,7 +70,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -193,11 +193,6 @@ modifier|*
 name|lp
 decl_stmt|;
 name|struct
-name|hostent
-modifier|*
-name|hp
-decl_stmt|;
-name|struct
 name|sockaddr_in
 name|sin
 decl_stmt|;
@@ -241,6 +236,14 @@ index|]
 decl_stmt|,
 modifier|*
 name|prog
+decl_stmt|;
+name|char
+name|rhost
+index|[
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
+index|]
 decl_stmt|;
 name|prog
 operator|=
@@ -535,46 +538,16 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|hp
-operator|=
-name|gethostbyaddr
+name|realhostname
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|sin
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
+name|rhost
 argument_list|,
 sizeof|sizeof
-argument_list|(
-name|sin
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-argument_list|)
+name|rhost
+operator|-
+literal|1
 argument_list|,
-name|AF_INET
-argument_list|)
-condition|)
-name|lp
-operator|=
-name|hp
-operator|->
-name|h_name
-expr_stmt|;
-else|else
-name|lp
-operator|=
-name|inet_ntoa
-argument_list|(
+operator|&
 name|sin
 operator|.
 name|sin_addr
@@ -586,7 +559,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"query from %s: `%s'"
 argument_list|,
-name|lp
+name|rhost
 argument_list|,
 name|t
 argument_list|)
