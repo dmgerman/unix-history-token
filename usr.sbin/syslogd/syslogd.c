@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.27 1997/10/20 12:55:49 charnier Exp $"
+literal|"$Id: syslogd.c,v 1.28 1998/02/28 15:14:00 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1892,6 +1892,12 @@ name|inetm
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|SecureMode
+condition|)
+block|{
 name|finet
 operator|=
 name|socket
@@ -1977,12 +1983,6 @@ name|s_port
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|SecureMode
-condition|)
-block|{
-if|if
-condition|(
 name|bind
 argument_list|(
 name|finet
@@ -2019,9 +2019,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
 name|inetm
 operator|=
 name|FDMASK
