@@ -4,7 +4,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c	2.21	(Berkeley)	%G%"
+literal|"@(#)main.c	2.22	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,6 +694,21 @@ name|char
 name|pathname
 index|[
 name|BUFSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|endpathname
+init|=
+operator|&
+name|pathname
+index|[
+name|BUFSIZ
+operator|-
+literal|2
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -4917,6 +4932,34 @@ name|thisname
 operator|=
 name|pathp
 expr_stmt|;
+if|if
+condition|(
+name|pathp
+operator|+
+name|dirp
+operator|->
+name|d_namlen
+operator|>=
+name|endpathname
+condition|)
+block|{
+operator|*
+name|pathp
+operator|=
+literal|'\0'
+expr_stmt|;
+name|errexit
+argument_list|(
+literal|"NAME TOO LONG %s%s\n"
+argument_list|,
+name|pathname
+argument_list|,
+name|dirp
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|p
