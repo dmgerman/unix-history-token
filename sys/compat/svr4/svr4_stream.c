@@ -11011,7 +11011,7 @@ expr_stmt|;
 name|SCARG
 argument_list|(
 operator|&
-name|osa
+name|ora
 argument_list|,
 name|from
 argument_list|)
@@ -11021,7 +11021,7 @@ expr_stmt|;
 name|SCARG
 argument_list|(
 operator|&
-name|osa
+name|ora
 argument_list|,
 name|fromlen
 argument_list|)
