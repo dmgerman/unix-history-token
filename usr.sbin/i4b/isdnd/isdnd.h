@@ -176,6 +176,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<net/if_sppp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/i4b_ioctl.h>
 end_include
 
@@ -1343,15 +1349,6 @@ define|#
 directive|define
 name|AUTH_REQUIRED
 value|0x02
-define|#
-directive|define
-name|AUTHNAMELEN
-value|42
-comment|/* AUTHNAMELEN must match in<machine/i4b_isppp.h> */
-define|#
-directive|define
-name|AUTHKEYLEN
-value|16
 name|char
 name|ppp_expect_name
 index|[
