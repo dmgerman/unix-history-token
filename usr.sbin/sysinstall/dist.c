@@ -66,6 +66,12 @@ name|SrcDists
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
+end_ifndef
+
 begin_decl_stmt
 name|unsigned
 name|int
@@ -86,6 +92,11 @@ name|int
 name|XF86FontDists
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -143,6 +154,12 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|Distribution
@@ -166,6 +183,11 @@ name|XF86ServerDistTable
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The top-level distribution categories */
@@ -417,6 +439,9 @@ block|,
 name|NULL
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 block|{
 literal|"XF86336"
 block|,
@@ -430,6 +455,8 @@ block|,
 name|XF86DistTable
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|}
@@ -771,6 +798,12 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
+end_ifndef
 
 begin_comment
 comment|/* The XFree86 distribution */
@@ -1522,6 +1555,15 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !X_AS_PKG */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -1590,6 +1632,9 @@ name|CRYPTODists
 operator||=
 name|DIST_CRYPTO_ALL
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 if|if
 condition|(
 name|XF86Dists
@@ -1624,26 +1669,35 @@ name|XF86ServerDists
 operator|||
 name|XF86FontDists
 condition|)
-block|{
 name|Dists
 operator||=
 name|DIST_XF86
 expr_stmt|;
-block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|isDebug
 argument_list|()
 condition|)
+block|{
 name|msgDebug
 argument_list|(
-literal|"Dist Masks: Dists: %0x, CRYPTO: %0x, Srcs: %0x\nXServer: %0x, XFonts: %0x, XDists: %0x\n"
+literal|"Dist Masks: Dists: %0x, CRYPTO: %0x, Srcs: %0x\n"
 argument_list|,
 name|Dists
 argument_list|,
 name|CRYPTODists
 argument_list|,
 name|SrcDists
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
+name|msgDebug
+argument_list|(
+literal|"XServer: %0x, XFonts: %0x, XDists: %0x\n"
 argument_list|,
 name|XF86ServerDists
 argument_list|,
@@ -1652,6 +1706,9 @@ argument_list|,
 name|XF86Dists
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 end_function
 
@@ -1676,6 +1733,9 @@ name|SrcDists
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 name|XF86Dists
 operator|=
 literal|0
@@ -1688,6 +1748,8 @@ name|XF86FontDists
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|DITEM_SUCCESS
 operator||
@@ -1774,6 +1836,38 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|X_AS_PKG
+if|if
+condition|(
+name|variable_get
+argument_list|(
+name|VAR_DIST_X11
+argument_list|)
+operator|!=
+name|NULL
+operator|||
+name|variable_get
+argument_list|(
+name|VAR_DIST_XSERVER
+argument_list|)
+operator|!=
+name|NULL
+operator|||
+name|variable_get
+argument_list|(
+name|VAR_DIST_XFONTS
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|Dists
+operator||=
+name|DIST_XF86
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -1834,6 +1928,8 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|distVerifyFlags
 argument_list|()
 expr_stmt|;
@@ -1857,6 +1953,9 @@ name|Dists
 operator||=
 name|DIST_XF86
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 name|XF86Dists
 operator|=
 name|DIST_XF86_BIN
@@ -1887,20 +1986,19 @@ name|XF86FontDists
 operator|=
 name|DIST_XF86_FONTS_MISC
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|X_AS_PKG
 return|return
 name|distSetXF86
 argument_list|(
 name|NULL
 argument_list|)
 return|;
-endif|#
-directive|endif
+else|#
+directive|else
 return|return
 name|DITEM_SUCCESS
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2195,6 +2293,9 @@ name|CRYPTODists
 operator|=
 name|DIST_CRYPTO_ALL
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 name|XF86Dists
 operator|=
 name|DIST_XF86_ALL
@@ -2207,6 +2308,8 @@ name|XF86FontDists
 operator|=
 name|DIST_XF86_FONTS_ALL
 expr_stmt|;
+endif|#
+directive|endif
 name|i
 operator|=
 name|distMaybeSetPorts
@@ -2868,6 +2971,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
+end_ifndef
+
 begin_function
 name|int
 name|distSetXF86
@@ -2910,6 +3019,11 @@ name|DITEM_RESTORE
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -4942,7 +5056,6 @@ operator|&=
 operator|~
 name|DIST_XF86
 expr_stmt|;
-comment|/*Dists&= ~(DIST_XF86 | XF86Dists | XF86ServerDists | XF86FontDists);*/
 endif|#
 directive|endif
 comment|/* Try for 3 times around the loop, then give up. */

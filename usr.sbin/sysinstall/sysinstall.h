@@ -1897,6 +1897,12 @@ begin_comment
 comment|/* Which src distributions we want		*/
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|unsigned
@@ -1932,6 +1938,11 @@ end_decl_stmt
 begin_comment
 comment|/* The XFree86 fonts we want			*/
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -2389,6 +2400,12 @@ begin_comment
 comment|/* XFree86 main menu				*/
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|DMenu
@@ -2444,16 +2461,10 @@ begin_comment
 comment|/* XFree86 font selection menu			*/
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|DMenu
-name|MenuXF86SelectFonts
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XFree86 font selection menu			*/
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -3568,6 +3579,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
+end_ifndef
+
 begin_function_decl
 specifier|extern
 name|int
@@ -3579,6 +3596,11 @@ name|self
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern

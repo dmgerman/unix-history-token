@@ -401,6 +401,12 @@ name|DIST_SRC_ALL
 value|0x0FFFF
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
+end_ifndef
+
 begin_comment
 comment|/* Subtypes for XFree86 distribution */
 end_comment
@@ -792,6 +798,11 @@ directive|define
 name|DIST_XF86_ALL
 value|0x1FFFF
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Canned distribution sets */

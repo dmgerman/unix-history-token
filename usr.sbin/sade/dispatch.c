@@ -262,12 +262,17 @@ block|,
 name|distSetSrc
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 block|{
 literal|"distSetXF86"
 block|,
 name|distSetXF86
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"distExtractAll"
 block|,

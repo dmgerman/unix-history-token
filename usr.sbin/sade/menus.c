@@ -113,6 +113,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -280,6 +286,15 @@ name|DITEM_REDRAW
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !X_AS_PKG */
+end_comment
 
 begin_define
 define|#
@@ -512,7 +527,6 @@ name|CRYPTODists
 operator|==
 name|DIST_CRYPTO_ALL
 operator|&&
-expr|\
 name|_IS_SET
 argument_list|(
 name|SrcDists
@@ -520,7 +534,9 @@ argument_list|,
 name|DIST_SRC_ALL
 argument_list|)
 operator|&&
-expr|\
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 name|_IS_SET
 argument_list|(
 name|XF86Dists
@@ -528,7 +544,6 @@ argument_list|,
 name|DIST_XF86_ALL
 argument_list|)
 operator|&&
-expr|\
 name|_IS_SET
 argument_list|(
 name|XF86ServerDists
@@ -536,7 +551,6 @@ argument_list|,
 name|DIST_XF86_SERVER_ALL
 argument_list|)
 operator|&&
-expr|\
 name|_IS_SET
 argument_list|(
 name|XF86FontDists
@@ -544,6 +558,12 @@ argument_list|,
 name|DIST_XF86_FONTS_ALL
 argument_list|)
 return|;
+else|#
+directive|else
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -813,6 +833,9 @@ block|,
 name|distExtractAll
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 block|{
 literal|" Distributions, XFree86"
 block|,
@@ -823,6 +846,8 @@ block|,
 name|distSetXF86
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|" Documentation"
 block|,
@@ -1544,6 +1569,9 @@ operator|&
 name|MenuUsermgmt
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 block|{
 literal|" XFree86, Fonts"
 block|,
@@ -1600,6 +1628,8 @@ operator|&
 name|MenuXF86SelectPC98Server
 block|}
 block|,
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|{
@@ -6504,6 +6534,12 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
+end_ifndef
+
 begin_decl_stmt
 name|DMenu
 name|MenuXF86Select
@@ -8000,6 +8036,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !X_AS_PKG */
+end_comment
 
 begin_decl_stmt
 name|DMenu
