@@ -35,25 +35,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<krb.h>
+file|<kerberosIV/krb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<des.h>
+file|<kerberosIV/des.h>
 end_include
 
 begin_function_decl
