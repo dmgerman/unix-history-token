@@ -478,7 +478,7 @@ condition|(
 name|dp
 operator|->
 name|d_drq
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{
