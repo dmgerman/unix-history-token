@@ -1989,6 +1989,31 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * Zero the spare stat fields 	 */
+name|sb
+operator|->
+name|st_lspare
+operator|=
+literal|0
+expr_stmt|;
+name|sb
+operator|->
+name|st_qspare
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|sb
+operator|->
+name|st_qspare
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Copy from vattr table 	 */
 if|if
 condition|(
