@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stat.c 1.11 %G%"
+literal|"@(#)stat.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -957,6 +957,7 @@ literal|2
 index|]
 control|)
 block|{
+comment|/* 		     *	no one uses the allocated temporary namelist entry, 		     *	since we have to use it before we know its type; 		     *	but we use its runtime location for the with pointer. 		     */
 name|tempnlp
 operator|=
 name|tmpalloc
@@ -967,7 +968,9 @@ name|int
 operator|*
 argument_list|)
 argument_list|,
-name|INT_TYP
+name|nl
+operator|+
+name|TPTR
 argument_list|,
 name|REGOK
 argument_list|)
