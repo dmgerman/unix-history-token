@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termout.c	4.1 (Berkeley) %G%"
+literal|"@(#)termout.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -685,6 +685,10 @@ name|columnsleft
 decl_stmt|;
 define|#
 directive|define
+name|NORMAL
+value|0
+define|#
+directive|define
 name|HIGHLIGHT
 value|1
 comment|/* Mask bits */
@@ -692,6 +696,11 @@ define|#
 directive|define
 name|NONDISPLAY
 value|4
+comment|/* Mask bits */
+define|#
+directive|define
+name|UNDETERMINED
+value|8
 comment|/* Mask bits */
 define|#
 directive|define
@@ -838,6 +847,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* what is the field attribute of the current position */
+if|if
+condition|(
+name|FormattedScreen
+argument_list|()
+condition|)
+block|{
 name|fieldattr
 operator|=
 name|FieldAttributes
@@ -850,6 +865,20 @@ argument_list|(
 name|fieldattr
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|fieldattr
+operator|=
+name|NORMAL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|TerminalFormattedScreen
+argument_list|()
+condition|)
+block|{
 name|termattr
 operator|=
 name|TermAttributes
@@ -862,6 +891,14 @@ argument_list|(
 name|termattr
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|termattr
+operator|=
+name|NORMAL
+expr_stmt|;
+block|}
 name|SetHighlightMode
 argument_list|(
 name|fieldattr
@@ -950,16 +987,9 @@ literal|0
 expr_stmt|;
 name|termattr
 operator|=
-name|GetTerminal
-argument_list|(
-name|pointer
-argument_list|)
+name|UNDETERMINED
 expr_stmt|;
-name|DoAttributes
-argument_list|(
-name|termattr
-argument_list|)
-expr_stmt|;
+comment|/* Need to find out AFTER update */
 block|}
 else|else
 block|{
@@ -1075,6 +1105,18 @@ name|pointer
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|termattr
+operator|=
+name|GetTerminal
+argument_list|(
+name|pointer
+argument_list|)
+expr_stmt|;
+name|DoAttributes
+argument_list|(
+name|termattr
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1088,6 +1130,57 @@ name|pointer
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 		     * If this USED to be a start field location, 		     * recompute the terminal attributes. 		     */
+if|if
+condition|(
+name|termattr
+operator|==
+name|UNDETERMINED
+condition|)
+block|{
+name|termattr
+operator|=
+name|WhereTermAttrByte
+argument_list|(
+name|pointer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|termattr
+operator|!=
+literal|0
+operator|)
+operator|||
+name|TermIsStartField
+argument_list|(
+literal|0
+argument_list|)
+condition|)
+block|{
+name|termattr
+operator|=
+name|GetTerminal
+argument_list|(
+name|termattr
+argument_list|)
+expr_stmt|;
+name|DoAttributes
+argument_list|(
+name|termattr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Unformatted screen */
+name|termattr
+operator|=
+name|NORMAL
+expr_stmt|;
+block|}
+block|}
 block|}
 name|pointer
 operator|=
