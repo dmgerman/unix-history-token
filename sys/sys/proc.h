@@ -2417,6 +2417,17 @@ begin_comment
 comment|/* Swapin in progress. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PS_MACPEND
+value|0x08000
+end_define
+
+begin_comment
+comment|/* Ast()-based MAC event pending. */
+end_comment
+
 begin_comment
 comment|/* used only in legacy conversion code */
 end_comment
