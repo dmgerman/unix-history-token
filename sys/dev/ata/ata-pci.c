@@ -1042,15 +1042,38 @@ case|:
 case|case
 literal|0x6268105a
 case|:
+block|{
+name|uintptr_t
+name|devid
+init|=
+literal|0
+decl_stmt|;
+comment|/* test if we are behind the right type of bridge */
 if|if
 condition|(
-name|pci_get_devid
+operator|!
+name|BUS_READ_IVAR
+argument_list|(
+name|device_get_parent
 argument_list|(
 name|GRANDPARENT
 argument_list|(
 name|dev
 argument_list|)
 argument_list|)
+argument_list|,
+name|GRANDPARENT
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|PCI_IVAR_DEVID
+argument_list|,
+operator|&
+name|devid
+argument_list|)
+operator|&&
+name|devid
 operator|==
 literal|0x00221011
 operator|&&
@@ -1150,6 +1173,7 @@ name|end
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 return|return
 literal|"Promise TX2 ATA100 controller"
