@@ -641,6 +641,41 @@ condition|)
 return|return
 name|ENXIO
 return|;
+switch|switch
+condition|(
+name|isa_get_logicalid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0x0100e7b1
+case|:
+comment|/* LHA-301 */
+case|case
+literal|0x110154dc
+case|:
+comment|/* SC-98III */
+case|case
+literal|0x4120acb4
+case|:
+comment|/* IFC-NN */
+comment|/* XXX - force to SMIT mode */
+name|device_set_flags
+argument_list|(
+name|dev
+argument_list|,
+name|device_get_flags
+argument_list|(
+name|dev
+argument_list|)
+operator||
+literal|0x40000
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|isa_get_port
