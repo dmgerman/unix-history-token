@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char	id_trapov[] = "@(#)trapov_.c	1.2";  *  *	Fortran/C floating-point overflow handler  *  *	The idea of these routines is to catch floating-point overflows  *	and print an eror message.  When we then get a reserved operand  *	exception, we then fix up the value to the highest possible  *	number.  Keen, no?  *	Messy, yes!  *  *	Synopsis:  *		call trapov(n)  *			causes overflows to be trapped, with the first 'n'  *			overflows getting an "Overflow!" message printed.  *		k = ovcnt(0)  *			causes 'k' to get the number of overflows since the  *			last call to trapov().  *  *	Gary Klimowicz, April 17, 1981  *	Integerated with libF77: David Wasley, UCB, July 1981.  */
+comment|/* char	id_trapov[] = "@(#)trapov_.c	1.3";  *  *	Fortran/C floating-point overflow handler  *  *	The idea of these routines is to catch floating-point overflows  *	and print an eror message.  When we then get a reserved operand  *	exception, we then fix up the value to the highest possible  *	number.  Keen, no?  *	Messy, yes!  *  *	Synopsis:  *		call trapov(n)  *			causes overflows to be trapped, with the first 'n'  *			overflows getting an "Overflow!" message printed.  *		k = ovcnt(0)  *			causes 'k' to get the number of overflows since the  *			last call to trapov().  *  *	Gary Klimowicz, April 17, 1981  *	Integerated with libF77: David Wasley, UCB, July 1981.  */
 end_comment
 
 begin_include

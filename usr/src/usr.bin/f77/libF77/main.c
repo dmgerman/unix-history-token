@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.15	%G%"
+literal|"@(#)main.c	2.16	%G%"
 decl_stmt|;
 end_decl_stmt
 
