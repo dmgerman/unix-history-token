@@ -78,6 +78,10 @@ condition|(
 name|error
 condition|)
 block|{
+name|errno
+operator|=
+name|error
+expr_stmt|;
 name|cap_free
 argument_list|(
 name|cap
