@@ -175,12 +175,6 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_zone.h>
-end_include
-
 begin_decl_stmt
 name|vm_zone_t
 name|smbfsmount_zone
