@@ -317,7 +317,7 @@ name|struct
 name|datalink
 modifier|*
 parameter_list|,
-name|int
+name|unsigned
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1764,10 +1764,6 @@ argument_list|(
 name|dl
 operator|->
 name|physical
-argument_list|,
-name|dl
-operator|->
-name|bundle
 argument_list|)
 operator|>=
 literal|0
@@ -8124,12 +8120,6 @@ condition|(
 name|dl
 operator|->
 name|state
-operator|<
-literal|0
-operator|||
-name|dl
-operator|->
-name|state
 operator|>=
 sizeof|sizeof
 name|states
@@ -8164,7 +8154,7 @@ name|datalink
 modifier|*
 name|dl
 parameter_list|,
-name|int
+name|unsigned
 name|state
 parameter_list|)
 block|{
@@ -8179,10 +8169,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|state
-operator|>=
-literal|0
-operator|&&
 name|state
 operator|<
 sizeof|sizeof

@@ -487,7 +487,7 @@ name|int
 name|open_mode
 decl_stmt|;
 comment|/* Delay before config REQ (-1 forever) */
-name|int
+name|unsigned
 name|state
 decl_stmt|;
 comment|/* State of the machine */
@@ -832,7 +832,7 @@ parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
-name|int
+name|unsigned
 parameter_list|,
 name|int
 parameter_list|)

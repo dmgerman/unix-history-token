@@ -502,7 +502,7 @@ name|char
 modifier|*
 name|protoname
 parameter_list|(
-name|int
+name|unsigned
 name|proto
 parameter_list|)
 block|{
@@ -591,10 +591,6 @@ block|}
 decl_stmt|;
 if|if
 condition|(
-name|proto
-operator|<
-literal|0
-operator|||
 name|proto
 operator|>
 sizeof|sizeof
@@ -2691,7 +2687,7 @@ name|CALLBACK_E164
 argument_list|)
 condition|)
 block|{
-name|int
+name|size_t
 name|sz
 init|=
 name|strlen
@@ -2728,7 +2724,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Truncating E164 data to %d octets (oops!)\n"
+literal|"Truncating E164 data to %u octets (oops!)\n"
 argument_list|,
 name|sz
 argument_list|)
@@ -3233,6 +3229,7 @@ name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|)
 block|{
 comment|/* Term REQ just sent by FSM */
@@ -3995,8 +3992,6 @@ name|fp
 argument_list|)
 decl_stmt|;
 name|int
-name|sz
-decl_stmt|,
 name|pos
 decl_stmt|,
 name|op
@@ -4004,6 +3999,9 @@ decl_stmt|,
 name|callback_req
 decl_stmt|,
 name|chap_type
+decl_stmt|;
+name|size_t
+name|sz
 decl_stmt|;
 name|u_int32_t
 name|magic
@@ -4067,6 +4065,8 @@ name|nak
 decl_stmt|;
 name|sz
 operator|=
+literal|0
+expr_stmt|;
 name|op
 operator|=
 name|callback_req
@@ -4079,6 +4079,9 @@ name|end
 operator|-
 name|cp
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|opt
@@ -6250,11 +6253,18 @@ name|len
 operator|==
 literal|2
 condition|)
+block|{
 name|op
 operator|=
 name|CALLBACK_NONE
 expr_stmt|;
+name|sz
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
+block|{
 name|op
 operator|=
 operator|(
@@ -6277,6 +6287,7 @@ name|len
 operator|-
 literal|3
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|op
@@ -6567,7 +6578,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Truncating option arg to %d octets\n"
+literal|"Truncating option arg to %u octets\n"
 argument_list|,
 name|sz
 argument_list|)
@@ -7256,8 +7267,6 @@ operator|->
 name|hdr
 operator|.
 name|len
-operator|-
-literal|3
 operator|<
 sizeof|sizeof
 name|p
@@ -7269,6 +7278,8 @@ operator|.
 name|enddisc
 operator|.
 name|address
+operator|+
+literal|3
 operator|&&
 name|opt
 operator|->
@@ -7487,14 +7498,14 @@ expr_stmt|;
 if|if
 condition|(
 name|sz
+operator|+
+literal|2
 operator|>
 name|opt
 operator|->
 name|hdr
 operator|.
 name|len
-operator|-
-literal|2
 condition|)
 name|sz
 operator|=
@@ -7943,6 +7954,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|link

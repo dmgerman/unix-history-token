@@ -782,11 +782,13 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|,
 name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|)
 block|{
 comment|/* The given FSM (ccp) is about to start up ! */
@@ -801,6 +803,7 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|,
 name|struct
 name|fsm
@@ -828,11 +831,13 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|,
 name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|)
 block|{
 comment|/* The given FSM (ccp) has been told to come down */
@@ -847,6 +852,7 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|,
 name|struct
 name|fsm
@@ -2398,7 +2404,7 @@ decl_stmt|,
 modifier|*
 name|last
 decl_stmt|;
-name|int32_t
+name|u_int32_t
 name|seq
 decl_stmt|;
 comment|/*    * When `m' and `p' are NULL, it means our oldest link has gone down.    * We want to determine a new min, and process any intermediate stuff    * as normal    */
@@ -2525,6 +2531,9 @@ name|seq
 operator|.
 name|min_in
 operator|==
+operator|(
+name|u_int32_t
+operator|)
 operator|-
 literal|1
 operator|||
@@ -2916,7 +2925,8 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|u_long
+name|long
+name|long
 name|first
 init|=
 operator|-
@@ -3153,8 +3163,11 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"MP: Reassembled frags %ld-%lu, length %d\n"
+literal|"MP: Reassembled frags %lu-%lu, length %d\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|first
 argument_list|,
 operator|(
@@ -4968,7 +4981,7 @@ name|char
 modifier|*
 name|address
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 block|{
@@ -4980,7 +4993,7 @@ literal|100
 index|]
 decl_stmt|;
 comment|/* Used immediately after it's returned */
-name|int
+name|unsigned
 name|f
 decl_stmt|,
 name|header
@@ -5155,13 +5168,13 @@ expr_stmt|;
 if|if
 condition|(
 name|len
+operator|+
+name|header
+operator|+
+literal|1
 operator|>
 sizeof|sizeof
 name|result
-operator|-
-name|header
-operator|-
-literal|1
 condition|)
 name|len
 operator|=
@@ -5245,13 +5258,13 @@ expr_stmt|;
 if|if
 condition|(
 name|len
+operator|+
+name|header
+operator|+
+literal|1
 operator|>
 sizeof|sizeof
 name|result
-operator|-
-name|header
-operator|-
-literal|1
 condition|)
 name|len
 operator|=
@@ -5650,9 +5663,6 @@ name|struct
 name|sockaddr_dl
 name|hwaddr
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 name|arg
@@ -5701,46 +5711,10 @@ name|ipcp
 operator|.
 name|my_ip
 expr_stmt|;
-name|s
-operator|=
-name|ID0socket
-argument_list|(
-name|PF_INET
-argument_list|,
-name|SOCK_DGRAM
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|<
-literal|0
-condition|)
-block|{
-name|log_Printf
-argument_list|(
-name|LogERROR
-argument_list|,
-literal|"set enddisc: socket(): %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-literal|2
-return|;
-block|}
 if|if
 condition|(
 name|arp_EtherAddr
 argument_list|(
-name|s
-argument_list|,
 name|addr
 argument_list|,
 operator|&
@@ -5810,20 +5784,10 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|4
 return|;
 block|}
-name|close
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -6318,6 +6282,7 @@ specifier|const
 name|fd_set
 modifier|*
 name|fdset
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -6351,16 +6316,19 @@ name|struct
 name|fdescriptor
 modifier|*
 name|d
+name|__unused
 parameter_list|,
 name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 specifier|const
 name|fd_set
 modifier|*
 name|fdset
+name|__unused
 parameter_list|)
 block|{
 comment|/* We never want to write here ! */
@@ -6575,6 +6543,9 @@ name|enddisc
 operator|.
 name|len
 operator|&&
+operator|(
+name|size_t
+operator|)
 name|l
 operator|<
 sizeof|sizeof

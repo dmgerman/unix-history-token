@@ -1556,8 +1556,6 @@ operator|.
 name|name
 argument_list|,
 name|key
-argument_list|,
-name|p
 argument_list|)
 condition|)
 name|pap_Success

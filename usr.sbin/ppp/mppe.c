@@ -366,7 +366,7 @@ decl_stmt|;
 name|int
 name|cohnum
 decl_stmt|;
-name|int
+name|unsigned
 name|keylen
 decl_stmt|;
 comment|/* 8 or 16 bytes */
@@ -632,9 +632,11 @@ name|struct
 name|link
 modifier|*
 name|l
+name|__unused
 parameter_list|,
 name|int
 name|pri
+name|__unused
 parameter_list|,
 name|u_short
 modifier|*
@@ -1004,6 +1006,7 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|)
 block|{
 name|log_Printf
@@ -1629,21 +1632,27 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|,
 name|struct
 name|ccp
 modifier|*
 name|ccp
+name|__unused
 parameter_list|,
 name|u_short
 name|proto
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|mi
+name|mp
+name|__unused
 parameter_list|)
-block|{ }
+block|{
+comment|/* Nothing to see here */
+block|}
 end_function
 
 begin_function

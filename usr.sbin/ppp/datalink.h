@@ -156,7 +156,7 @@ name|fdescriptor
 name|desc
 decl_stmt|;
 comment|/* We play either a physical or a chat */
-name|int
+name|unsigned
 name|state
 decl_stmt|;
 comment|/* Our DATALINK_* state */

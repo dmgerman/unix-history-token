@@ -575,6 +575,7 @@ parameter_list|,
 name|fd_set
 modifier|*
 name|w
+name|__unused
 parameter_list|,
 name|fd_set
 modifier|*
@@ -845,6 +846,7 @@ specifier|const
 name|fd_set
 modifier|*
 name|fdset
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1026,9 +1028,7 @@ operator|->
 name|owner
 condition|)
 name|Cleanup
-argument_list|(
-name|EX_NORMAL
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|prompt_Destroy
 argument_list|(
@@ -1401,16 +1401,19 @@ name|struct
 name|fdescriptor
 modifier|*
 name|d
+name|__unused
 parameter_list|,
 name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 specifier|const
 name|fd_set
 modifier|*
 name|fdset
+name|__unused
 parameter_list|)
 block|{
 comment|/* We never want to write here ! */
@@ -1934,7 +1937,7 @@ name|TermMode
 condition|)
 block|{
 comment|/* Stuff '\r' in front of '\n' 'cos we're in raw mode */
-name|int
+name|size_t
 name|len
 init|=
 name|strlen

@@ -896,7 +896,7 @@ parameter_list|,
 name|u_int32_t
 name|f
 parameter_list|,
-name|int
+name|unsigned
 name|max
 parameter_list|)
 block|{
@@ -947,6 +947,9 @@ name|flags
 operator|-
 name|name
 operator|<
+operator|(
+name|int
+operator|)
 name|max
 condition|;
 name|p
@@ -2985,7 +2988,7 @@ argument_list|(
 name|LogTCPIP
 argument_list|,
 literal|"route_UpdateMTU: Netif: %d (%s), dst %s,"
-literal|" mtu %d\n"
+literal|" mtu %lu\n"
 argument_list|,
 name|rtm
 operator|->

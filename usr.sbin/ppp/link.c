@@ -510,7 +510,7 @@ modifier|*
 name|l
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 name|size_t
@@ -563,7 +563,7 @@ modifier|*
 name|l
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 name|size_t
@@ -1167,6 +1167,9 @@ name|pri
 operator|<
 literal|0
 operator|||
+operator|(
+name|unsigned
+operator|)
 name|pri
 operator|>=
 name|LINK_QUEUES
@@ -1791,7 +1794,7 @@ name|u_short
 name|proto
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|f
 decl_stmt|;
 for|for

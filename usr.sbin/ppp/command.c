@@ -848,7 +848,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"3.2"
+literal|"3.3"
 decl_stmt|;
 end_decl_stmt
 
@@ -2287,6 +2287,10 @@ if|if
 condition|(
 name|argc
 operator|>=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 name|argv
 operator|/
@@ -2295,6 +2299,7 @@ name|argv
 index|[
 literal|0
 index|]
+argument_list|)
 condition|)
 block|{
 name|argc
@@ -2400,6 +2405,7 @@ name|cmdargs
 specifier|const
 modifier|*
 name|arg
+name|__unused
 parameter_list|)
 block|{
 name|log_Printf
@@ -4546,6 +4552,10 @@ if|if
 condition|(
 name|argc
 operator|>=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 name|argv
 operator|/
@@ -4554,6 +4564,7 @@ name|argv
 index|[
 literal|0
 index|]
+argument_list|)
 condition|)
 block|{
 name|argc
@@ -5102,6 +5113,8 @@ block|,
 literal|"static address translation"
 block|,
 literal|"nat addr [addr_local addr_alias]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5137,6 +5150,8 @@ block|,
 literal|"enable NAT"
 block|,
 literal|"nat enable yes|no"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5172,6 +5187,8 @@ block|,
 literal|"port redirection"
 block|,
 literal|"nat port proto localaddr:port[-port] aliasport[-aliasport]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5186,6 +5203,8 @@ block|,
 literal|"protocol redirection"
 block|,
 literal|"nat proto proto localIP [publicIP [remoteIP]]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5200,6 +5219,8 @@ block|,
 literal|"proxy control"
 block|,
 literal|"nat proxy server host[:port] ..."
+block|,
+name|NULL
 block|}
 block|,
 ifndef|#
@@ -5217,6 +5238,8 @@ block|,
 literal|"firewall control"
 block|,
 literal|"nat punch_fw [base count]"
+block|,
+name|NULL
 block|}
 block|,
 endif|#
@@ -5233,6 +5256,8 @@ block|,
 literal|"TCP port used by Skinny Station protocol"
 block|,
 literal|"nat skinny_port [port]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5268,6 +5293,8 @@ block|,
 literal|"Default address for incoming connections"
 block|,
 literal|"nat target addr"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5336,6 +5363,14 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|, }
 decl_stmt|;
@@ -5367,6 +5402,8 @@ block|,
 literal|"Only allow certain ppp modes"
 block|,
 literal|"allow modes mode..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5381,6 +5418,8 @@ block|,
 literal|"Only allow ppp access to certain users"
 block|,
 literal|"allow users logname..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5402,6 +5441,14 @@ name|AllowCommands
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
 name|NULL
 block|,
 name|NULL
@@ -5469,6 +5516,8 @@ block|,
 literal|"Clear iface address(es)"
 block|,
 literal|"iface clear [INET | INET6]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5539,6 +5588,8 @@ block|,
 literal|"Show iface address(es)"
 block|,
 literal|"iface show"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5560,6 +5611,14 @@ name|IfaceCommands
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
 name|NULL
 block|,
 name|NULL
@@ -5593,6 +5652,8 @@ block|,
 literal|"accept option request"
 block|,
 literal|"accept option .."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5659,6 +5720,8 @@ block|,
 literal|"Run a background command"
 block|,
 literal|"[!]bg command"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5675,6 +5738,8 @@ block|,
 literal|"Clear throughput statistics"
 block|,
 literal|"clear ipcp|ipv6cp|physical [current|overall|peak]..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5691,6 +5756,8 @@ block|,
 literal|"Clone a link"
 block|,
 literal|"clone newname..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5707,6 +5774,8 @@ block|,
 literal|"Close an FSM"
 block|,
 literal|"close [lcp|ccp]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5759,6 +5828,8 @@ block|,
 literal|"Deny option request"
 block|,
 literal|"deny option .."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5793,6 +5864,8 @@ block|,
 literal|"Disable option"
 block|,
 literal|"disable option .."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5809,6 +5882,8 @@ block|,
 literal|"Generate a down event"
 block|,
 literal|"down [ccp|lcp]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5825,6 +5900,8 @@ block|,
 literal|"Enable option"
 block|,
 literal|"enable option .."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5841,6 +5918,8 @@ block|,
 literal|"Set the link identity"
 block|,
 literal|"ident text..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5871,6 +5950,8 @@ block|,
 literal|"Link specific commands"
 block|,
 literal|"link name command ..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5887,6 +5968,8 @@ block|,
 literal|"Load settings"
 block|,
 literal|"load [system ...]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5903,6 +5986,8 @@ block|,
 literal|"log information"
 block|,
 literal|"log word ..."
+block|,
+name|NULL
 block|}
 block|,
 ifndef|#
@@ -5960,6 +6045,8 @@ block|,
 literal|"Password for manipulation"
 block|,
 literal|"passwd LocalPassword"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5976,6 +6063,8 @@ block|,
 literal|"Quit PPP program"
 block|,
 literal|"quit|bye [all]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -5992,6 +6081,8 @@ block|,
 literal|"Remove a link"
 block|,
 literal|"remove"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6008,6 +6099,8 @@ block|,
 literal|"Rename a link"
 block|,
 literal|"rename name"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6022,6 +6115,8 @@ block|,
 literal|"Manipulate resolv.conf"
 block|,
 literal|"resolv readonly|reload|restore|rewrite|writable"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6036,6 +6131,8 @@ block|,
 literal|"Save settings"
 block|,
 literal|"save"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6052,6 +6149,8 @@ block|,
 literal|"Transmit the link identity"
 block|,
 literal|"sendident"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6068,6 +6167,8 @@ block|,
 literal|"Set parameters"
 block|,
 literal|"set[up] var value"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6082,6 +6183,8 @@ block|,
 literal|"Run a subshell"
 block|,
 literal|"shell|! [sh command]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6098,6 +6201,8 @@ block|,
 literal|"Show status and stats"
 block|,
 literal|"show var"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6114,6 +6219,8 @@ block|,
 literal|"Enter terminal mode"
 block|,
 literal|"term"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6135,6 +6242,14 @@ name|Commands
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
 name|NULL
 block|,
 name|NULL
@@ -6580,6 +6695,8 @@ block|,
 literal|"bundle details"
 block|,
 literal|"show bundle"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6596,6 +6713,8 @@ block|,
 literal|"CCP status"
 block|,
 literal|"show cpp"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6610,6 +6729,8 @@ block|,
 literal|"VJ compression stats"
 block|,
 literal|"show compress"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6626,6 +6747,8 @@ block|,
 literal|"escape characters"
 block|,
 literal|"show escape"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6640,6 +6763,8 @@ block|,
 literal|"packet filters"
 block|,
 literal|"show filter [in|out|dial|alive]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6656,6 +6781,8 @@ block|,
 literal|"HDLC errors"
 block|,
 literal|"show hdlc"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6670,6 +6797,8 @@ block|,
 literal|"Interface status"
 block|,
 literal|"show iface"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6684,6 +6813,8 @@ block|,
 literal|"IPCP status"
 block|,
 literal|"show ipcp"
+block|,
+name|NULL
 block|}
 block|,
 ifndef|#
@@ -6701,6 +6832,8 @@ block|,
 literal|"IPV6CP status"
 block|,
 literal|"show ipv6cp"
+block|,
+name|NULL
 block|}
 block|,
 endif|#
@@ -6719,6 +6852,8 @@ block|,
 literal|"Protocol layers"
 block|,
 literal|"show layers"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6735,6 +6870,8 @@ block|,
 literal|"LCP status"
 block|,
 literal|"show lcp"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6751,6 +6888,8 @@ block|,
 literal|"(high-level) link info"
 block|,
 literal|"show link"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6765,6 +6904,8 @@ block|,
 literal|"available link names"
 block|,
 literal|"show links"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6779,6 +6920,8 @@ block|,
 literal|"log levels"
 block|,
 literal|"show log"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6793,6 +6936,8 @@ block|,
 literal|"mbuf allocations"
 block|,
 literal|"show mem"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6807,6 +6952,8 @@ block|,
 literal|"NCP status"
 block|,
 literal|"show ncp"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6823,6 +6970,8 @@ block|,
 literal|"(low-level) link info"
 block|,
 literal|"show physical"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6837,6 +6986,8 @@ block|,
 literal|"multilink setup"
 block|,
 literal|"show mp"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6853,6 +7004,8 @@ block|,
 literal|"protocol summary"
 block|,
 literal|"show proto"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6867,6 +7020,8 @@ block|,
 literal|"routing table"
 block|,
 literal|"show route"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6883,6 +7038,8 @@ block|,
 literal|"STOPPED timeout"
 block|,
 literal|"show stopped"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6897,6 +7054,8 @@ block|,
 literal|"alarm timers"
 block|,
 literal|"show timers"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6913,6 +7072,8 @@ block|,
 literal|"version string"
 block|,
 literal|"show version"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6927,6 +7088,8 @@ block|,
 literal|"client list"
 block|,
 literal|"show who"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6948,6 +7111,14 @@ name|ShowCommands
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
 name|NULL
 block|,
 name|NULL
@@ -7779,9 +7950,6 @@ specifier|static
 name|int
 name|arghidden
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
 name|char
 specifier|const
 modifier|*
@@ -7969,7 +8137,8 @@ index|]
 decl_stmt|;
 name|int
 name|f
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|n
 decl_stmt|;
 if|if
@@ -8074,8 +8243,6 @@ if|if
 condition|(
 name|arghidden
 argument_list|(
-name|argc
-argument_list|,
 name|argv
 argument_list|,
 name|f
@@ -8497,9 +8664,7 @@ operator|)
 operator|)
 condition|)
 name|Cleanup
-argument_list|(
-name|EX_NORMAL
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -9411,6 +9576,10 @@ if|if
 condition|(
 operator|*
 name|end
+operator|||
+name|speed
+operator|<
+literal|0
 condition|)
 block|{
 name|log_Printf
@@ -9680,7 +9849,7 @@ decl_stmt|,
 modifier|*
 name|mask
 decl_stmt|;
-name|int
+name|size_t
 name|mlen
 decl_stmt|;
 comment|/* What's what ? */
@@ -13517,20 +13686,37 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|int
+name|unsigned
+name|long
 name|timeout
 decl_stmt|,
 name|min
 decl_stmt|;
 name|timeout
 operator|=
-name|atoi
+name|strtoul
 argument_list|(
 name|argp
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 name|min
 operator|=
+name|arg
+operator|->
+name|bundle
+operator|->
+name|cfg
+operator|.
+name|idle
+operator|.
+name|min_timeout
+expr_stmt|;
+if|if
+condition|(
 name|arg
 operator|->
 name|argc
@@ -13540,8 +13726,10 @@ operator|->
 name|argn
 operator|+
 literal|2
-condition|?
-name|atoi
+condition|)
+name|min
+operator|=
+name|strtoul
 argument_list|(
 name|arg
 operator|->
@@ -13553,10 +13741,11 @@ name|argn
 operator|+
 literal|1
 index|]
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
 argument_list|)
-else|:
-operator|-
-literal|1
 expr_stmt|;
 name|bundle_SetIdleTimer
 argument_list|(
@@ -15935,6 +16124,8 @@ block|,
 literal|"datalink bandwidth"
 block|,
 literal|"set bandwidth value"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16227,6 +16418,8 @@ block|,
 literal|"Endpoint Discriminator"
 block|,
 literal|"set enddisc [IP|magic|label|psn value]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16243,6 +16436,8 @@ block|,
 literal|"escape characters"
 block|,
 literal|"set escape hex-digit ..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16259,6 +16454,8 @@ block|,
 literal|"set filter alive|dial|in|out rule-no permit|deny "
 literal|"[src_addr[/width]] [dst_addr[/width]] [proto "
 literal|"[src [lt|eq|gt port]] [dst [lt|eq|gt port]] [estab] [syn] [finrst]]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16296,6 +16493,8 @@ block|,
 literal|"destination address"
 block|,
 literal|"set ifaddr [src-addr [dst-addr [netmask [trg-addr]]]]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16397,6 +16596,8 @@ literal|"log level"
 block|,
 literal|"set log [local] [+|-]all|async|cbcp|ccp|chat|command|connect|debug|dns|hdlc|"
 literal|"id0|ipcp|lcp|lqm|phase|physical|radius|sync|tcp/ip|timer|tun..."
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16683,6 +16884,8 @@ block|,
 literal|"Process title"
 block|,
 literal|"set proctitle [value]"
+block|,
+name|NULL
 block|}
 block|,
 ifndef|#
@@ -16746,6 +16949,8 @@ block|,
 literal|"Reconnect timeout"
 block|,
 literal|"set reconnect value ntries"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16783,6 +16988,8 @@ block|,
 literal|"Redial timeout"
 block|,
 literal|"set redial secs[+inc[-incmax]][.next] [attempts]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16818,6 +17025,8 @@ block|,
 literal|"diagnostic port"
 block|,
 literal|"set server|socket TcpPort|LocalName|none|open|closed [password [mask]]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16834,6 +17043,8 @@ block|,
 literal|"physical speed"
 block|,
 literal|"set speed value|sync"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16850,6 +17061,8 @@ block|,
 literal|"STOPPED timeouts"
 block|,
 literal|"set stopped [LCPseconds [CCPseconds]]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16906,6 +17119,8 @@ block|,
 literal|"vj values"
 block|,
 literal|"set vj slots|slotcomp [value]"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -16950,6 +17165,14 @@ name|VAR_PPPOE
 block|}
 block|,
 block|{
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
 name|NULL
 block|,
 name|NULL
@@ -20849,6 +21072,14 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|, }
 decl_stmt|;
@@ -22333,7 +22564,7 @@ condition|(
 name|arg
 operator|->
 name|argc
-operator|==
+operator|<=
 name|arg
 operator|->
 name|argn
@@ -22350,6 +22581,9 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|argc
 operator|>=
 sizeof|sizeof

@@ -460,7 +460,7 @@ value|((d)->type == ETHER_DEVICE ? (struct etherdevice *)d : NULL)
 end_define
 
 begin_function
-name|int
+name|unsigned
 name|ether_DeviceSize
 parameter_list|(
 name|void
@@ -529,6 +529,9 @@ condition|?
 operator|-
 literal|1
 else|:
+operator|(
+name|ssize_t
+operator|)
 name|n
 return|;
 block|}
@@ -863,6 +866,7 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+name|__unused
 parameter_list|,
 name|int
 modifier|*
@@ -1673,6 +1677,7 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+name|__unused
 parameter_list|,
 name|int
 modifier|*
@@ -2237,13 +2242,16 @@ name|path
 decl_stmt|,
 modifier|*
 name|sessionid
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|mode
 decl_stmt|;
-name|int
+name|size_t
 name|ifacelen
-decl_stmt|,
+decl_stmt|;
+name|unsigned
 name|f
 decl_stmt|;
 name|dev

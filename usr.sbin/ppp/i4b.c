@@ -353,7 +353,7 @@ value|((d)->type == I4B_DEVICE ? (struct i4bdevice *)d : NULL)
 end_define
 
 begin_function
-name|int
+name|unsigned
 name|i4b_DeviceSize
 parameter_list|(
 name|void
@@ -1189,7 +1189,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|unsigned
 name|i4b_Speed
 parameter_list|(
 name|struct
@@ -1202,7 +1202,7 @@ name|struct
 name|termios
 name|ios
 decl_stmt|;
-name|int
+name|unsigned
 name|ret
 decl_stmt|;
 if|if
@@ -1223,7 +1223,7 @@ operator|||
 operator|(
 name|ret
 operator|=
-name|SpeedToInt
+name|SpeedToUnsigned
 argument_list|(
 name|cfgetispeed
 argument_list|(
@@ -1375,14 +1375,17 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+name|__unused
 parameter_list|,
 name|int
 modifier|*
 name|auxfd
+name|__unused
 parameter_list|,
 name|int
 modifier|*
 name|nauxfd
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1566,14 +1569,17 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+name|__unused
 parameter_list|,
 name|int
 modifier|*
 name|auxfd
+name|__unused
 parameter_list|,
 name|int
 modifier|*
 name|nauxfd
+name|__unused
 parameter_list|)
 block|{
 if|if

@@ -1478,11 +1478,6 @@ specifier|const
 name|char
 modifier|*
 name|key
-parameter_list|,
-name|struct
-name|physical
-modifier|*
-name|physical
 parameter_list|)
 block|{
 comment|/* Used by PAP routines */
@@ -1748,23 +1743,13 @@ name|char
 modifier|*
 name|auth_GetSecret
 parameter_list|(
-name|struct
-name|bundle
-modifier|*
-name|bundle
-parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|size_t
 name|len
-parameter_list|,
-name|struct
-name|physical
-modifier|*
-name|physical
 parameter_list|)
 block|{
 comment|/* Used by CHAP routines */
@@ -2352,7 +2337,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|len
@@ -2434,7 +2419,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"auth_ReadHeader: Short packet (%d> %d) !\n"
+literal|"auth_ReadHeader: Short packet (%u> %u) !\n"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -2470,7 +2455,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"auth_ReadHeader: Short packet header (%d> %d) !\n"
+literal|"auth_ReadHeader: Short packet header (%u> %u) !\n"
 argument_list|,
 call|(
 name|int
@@ -2515,7 +2500,7 @@ name|mbuf
 modifier|*
 name|bp
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 block|{
@@ -2536,14 +2521,14 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"auth_ReadName: Name too long (%d) !\n"
+literal|"auth_ReadName: Name too long (%u) !\n"
 argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|int
+name|size_t
 name|mlen
 init|=
 name|m_length
@@ -2561,7 +2546,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"auth_ReadName: Short packet (%d> %d) !\n"
+literal|"auth_ReadName: Short packet (%u> %u) !\n"
 argument_list|,
 name|len
 argument_list|,

@@ -359,7 +359,7 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|unsigned
 function_decl|(
 modifier|*
 name|speed
@@ -625,10 +625,6 @@ parameter_list|(
 name|struct
 name|physical
 modifier|*
-parameter_list|,
-name|struct
-name|bundle
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -647,7 +643,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|unsigned
 name|physical_GetSpeed
 parameter_list|(
 name|struct
@@ -666,7 +662,7 @@ name|struct
 name|physical
 modifier|*
 parameter_list|,
-name|int
+name|unsigned
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1114,7 +1110,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|unsigned
 name|physical_MaxDeviceSize
 parameter_list|(
 name|void
@@ -1177,7 +1173,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|physical_SetPPPoEnonstandatd
+name|physical_SetPPPoEnonstandard
 parameter_list|(
 name|struct
 name|physical

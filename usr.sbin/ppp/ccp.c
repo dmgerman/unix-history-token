@@ -581,6 +581,9 @@ name|proto
 operator|<
 literal|0
 operator|||
+operator|(
+name|unsigned
+operator|)
 name|proto
 operator|>
 sizeof|sizeof
@@ -1682,7 +1685,7 @@ modifier|*
 name|ccp
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|f
 decl_stmt|;
 for|for
@@ -1921,9 +1924,10 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-name|int
+name|unsigned
 name|f
-decl_stmt|,
+decl_stmt|;
+name|int
 name|alloc
 decl_stmt|;
 name|cp
@@ -2088,6 +2092,9 @@ operator|)
 operator|->
 name|algorithm
 operator|==
+operator|(
+name|int
+operator|)
 name|f
 condition|)
 break|break;
@@ -2396,6 +2403,7 @@ name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|)
 block|{
 comment|/* Term REQ just sent by FSM */
@@ -2923,7 +2931,7 @@ modifier|*
 modifier|*
 name|o
 decl_stmt|;
-name|int
+name|unsigned
 name|f
 decl_stmt|,
 name|fail
@@ -2985,6 +2993,9 @@ name|in
 operator|.
 name|algorithm
 operator|!=
+operator|(
+name|int
+operator|)
 name|f
 operator|||
 name|ccp
@@ -2993,6 +3004,9 @@ name|out
 operator|.
 name|algorithm
 operator|!=
+operator|(
+name|int
+operator|)
 name|f
 operator|)
 condition|)
@@ -3100,6 +3114,9 @@ name|in
 operator|.
 name|algorithm
 operator|<
+operator|(
+name|int
+operator|)
 name|NALGORITHMS
 condition|)
 block|{
@@ -3198,6 +3215,16 @@ name|out
 operator|.
 name|opt
 expr_stmt|;
+if|if
+condition|(
+name|ccp
+operator|->
+name|out
+operator|.
+name|algorithm
+operator|>
+literal|0
+condition|)
 for|for
 control|(
 name|f
@@ -3206,6 +3233,9 @@ literal|0
 init|;
 name|f
 operator|<
+operator|(
+name|unsigned
+operator|)
 name|ccp
 operator|->
 name|out
@@ -3268,6 +3298,9 @@ name|out
 operator|.
 name|algorithm
 operator|<
+operator|(
+name|int
+operator|)
 name|NALGORITHMS
 condition|)
 block|{
@@ -3497,9 +3530,9 @@ comment|/* In case we've received two REQs in a row */
 while|while
 condition|(
 name|end
-operator|-
-name|cp
 operator|>=
+name|cp
+operator|+
 sizeof|sizeof
 argument_list|(
 name|opt
@@ -3820,6 +3853,9 @@ name|in
 operator|.
 name|algorithm
 operator|=
+operator|(
+name|int
+operator|)
 name|f
 expr_stmt|;
 comment|/* This one'll do :-) */
@@ -4442,6 +4478,7 @@ name|struct
 name|bundle
 modifier|*
 name|b
+name|__unused
 parameter_list|,
 name|struct
 name|link
@@ -4622,6 +4659,7 @@ name|struct
 name|bundle
 modifier|*
 name|b
+name|__unused
 parameter_list|,
 name|struct
 name|link
@@ -5011,6 +5049,7 @@ name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -5027,6 +5066,7 @@ name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|)
 block|{
 return|return

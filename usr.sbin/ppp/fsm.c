@@ -1110,7 +1110,7 @@ name|u_char
 modifier|*
 name|ptr
 parameter_list|,
-name|int
+name|unsigned
 name|count
 parameter_list|,
 name|int
@@ -2767,6 +2767,9 @@ if|if
 condition|(
 name|flen
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -3567,6 +3570,9 @@ if|if
 condition|(
 name|flen
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -4019,6 +4025,9 @@ if|if
 condition|(
 name|flen
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -4354,6 +4363,7 @@ name|struct
 name|fsmheader
 modifier|*
 name|lhp
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
@@ -4543,9 +4553,10 @@ name|struct
 name|fsm_decode
 name|dec
 decl_stmt|;
-name|int
+name|size_t
 name|plen
-decl_stmt|,
+decl_stmt|;
+name|int
 name|flen
 decl_stmt|;
 name|u_char
@@ -4574,6 +4585,9 @@ name|lhp
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|plen
 operator|<
 name|flen
@@ -4744,6 +4758,9 @@ if|if
 condition|(
 name|flen
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -4865,11 +4882,13 @@ name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|,
 name|struct
 name|fsmheader
 modifier|*
 name|lhp
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
@@ -4899,6 +4918,7 @@ name|struct
 name|fsmheader
 modifier|*
 name|lhp
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
@@ -5417,6 +5437,7 @@ name|struct
 name|fsmheader
 modifier|*
 name|lhp
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
@@ -5457,11 +5478,13 @@ name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|,
 name|struct
 name|fsmheader
 modifier|*
 name|lhp
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
@@ -5640,11 +5663,13 @@ name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|,
 name|struct
 name|fsmheader
 modifier|*
 name|lhp
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf
@@ -5790,7 +5815,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|struct
@@ -5857,7 +5882,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"%s: Oops: Got %d bytes but %d byte payload "
+literal|"%s: Oops: Got %u bytes but %d byte payload "
 literal|"- dropped\n"
 argument_list|,
 name|fp
@@ -6162,6 +6187,7 @@ name|fp
 parameter_list|,
 name|u_char
 name|id
+name|__unused
 parameter_list|)
 block|{
 name|log_Printf
@@ -6471,7 +6497,7 @@ modifier|*
 name|o
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|cplen
 init|=
 name|o
@@ -6484,6 +6510,9 @@ if|if
 condition|(
 name|optlen
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -6496,6 +6525,9 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|cplen
 operator|>
 name|optlen

@@ -1976,12 +1976,14 @@ name|struct
 name|ipv6cp
 modifier|*
 name|ipv6cp
+name|__unused
 parameter_list|,
 specifier|const
 name|struct
 name|iface_addr
 modifier|*
 name|addr
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -1994,12 +1996,14 @@ name|struct
 name|ipv6cp
 modifier|*
 name|ipv6cp
+name|__unused
 parameter_list|,
 specifier|const
 name|struct
 name|iface_addr
 modifier|*
 name|addr
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -3361,6 +3365,7 @@ name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|)
 block|{
 comment|/* Term REQ just sent by FSM */
@@ -3407,7 +3412,7 @@ name|char
 modifier|*
 name|protoname
 parameter_list|(
-name|int
+name|unsigned
 name|proto
 parameter_list|)
 block|{
@@ -3681,6 +3686,9 @@ name|end
 operator|-
 name|cp
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|opt

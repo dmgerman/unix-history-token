@@ -238,7 +238,7 @@ end_include
 
 begin_function_decl
 specifier|static
-name|int
+name|unsigned
 name|filter_Nam2Op
 parameter_list|(
 specifier|const
@@ -355,12 +355,6 @@ modifier|*
 specifier|const
 modifier|*
 name|argv
-parameter_list|,
-specifier|const
-name|struct
-name|protoent
-modifier|*
-name|pe
 parameter_list|,
 name|struct
 name|filterent
@@ -852,19 +846,6 @@ name|ParseGeneric
 parameter_list|(
 name|int
 name|argc
-parameter_list|,
-name|char
-specifier|const
-modifier|*
-specifier|const
-modifier|*
-name|argv
-parameter_list|,
-specifier|const
-name|struct
-name|protoent
-modifier|*
-name|pe
 parameter_list|,
 name|struct
 name|filterent
@@ -1993,8 +1974,6 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-name|pe
-argument_list|,
 operator|&
 name|fe
 argument_list|)
@@ -2006,10 +1985,6 @@ operator|=
 name|ParseGeneric
 argument_list|(
 name|argc
-argument_list|,
-name|argv
-argument_list|,
-name|pe
 argument_list|,
 operator|&
 name|fe
@@ -2358,7 +2333,7 @@ name|char
 modifier|*
 name|filter_Action2Nam
 parameter_list|(
-name|int
+name|unsigned
 name|act
 parameter_list|)
 block|{
@@ -2387,10 +2362,6 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|act
-operator|>=
-literal|0
-operator|&&
 name|act
 operator|<
 name|MAXFILTERS
@@ -3114,7 +3085,7 @@ name|char
 modifier|*
 name|filter_Op2Nam
 parameter_list|(
-name|int
+name|unsigned
 name|op
 parameter_list|)
 block|{
@@ -3145,7 +3116,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|unsigned
 name|filter_Nam2Op
 parameter_list|(
 specifier|const
@@ -3154,7 +3125,7 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|op
 decl_stmt|;
 for|for

@@ -57,6 +57,23 @@ directive|include
 file|<paths.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOSUID
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -523,7 +540,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|int
+name|unsigned
 name|physical_DeviceSize
 parameter_list|(
 name|void
@@ -585,7 +602,7 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|unsigned
 function_decl|(
 modifier|*
 name|DeviceSize
@@ -1277,6 +1294,8 @@ block|,
 block|{
 name|NULL
 block|,
+name|NULL
+block|,
 literal|0
 block|}
 block|, }
@@ -1477,7 +1496,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|unsigned
 name|physical_GetSpeed
 parameter_list|(
 name|struct
@@ -1526,13 +1545,13 @@ name|physical
 modifier|*
 name|p
 parameter_list|,
-name|int
+name|unsigned
 name|speed
 parameter_list|)
 block|{
 if|if
 condition|(
-name|IntToSpeed
+name|UnsignedToSpeed
 argument_list|(
 name|speed
 argument_list|)
@@ -2260,11 +2279,13 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 specifier|const
 name|fd_set
 modifier|*
 name|fdset
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3236,6 +3257,7 @@ specifier|const
 name|fd_set
 modifier|*
 name|fdset
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3673,9 +3695,10 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|,
-name|h
-decl_stmt|,
 name|type
+decl_stmt|;
+name|unsigned
+name|h
 decl_stmt|;
 name|p
 operator|=
@@ -4415,11 +4438,11 @@ block|}
 end_function
 
 begin_function
-name|int
+name|unsigned
 name|physical_MaxDeviceSize
 parameter_list|()
 block|{
-name|int
+name|unsigned
 name|biggest
 decl_stmt|,
 name|sz
@@ -4436,8 +4459,6 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|sz
-operator|=
 name|n
 operator|=
 literal|0
@@ -5217,10 +5238,11 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+name|unsigned
+name|pos
+decl_stmt|;
 name|int
 name|f
-decl_stmt|,
-name|pos
 decl_stmt|;
 name|p
 operator|->
@@ -6675,25 +6697,21 @@ name|struct
 name|physical
 modifier|*
 name|p
-parameter_list|,
-name|struct
-name|bundle
-modifier|*
-name|bundle
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|dev
+decl_stmt|;
 name|int
 name|devno
-decl_stmt|,
-name|h
 decl_stmt|,
 name|wasfd
 decl_stmt|,
 name|err
 decl_stmt|;
-name|char
-modifier|*
-name|dev
+name|unsigned
+name|h
 decl_stmt|;
 if|if
 condition|(

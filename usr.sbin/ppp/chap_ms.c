@@ -751,6 +751,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ChallengeHash
 parameter_list|(
@@ -765,9 +766,6 @@ parameter_list|,
 name|char
 modifier|*
 name|UserName
-parameter_list|,
-name|int
-name|UserNameLen
 parameter_list|,
 name|char
 modifier|*
@@ -885,9 +883,6 @@ name|char
 modifier|*
 name|UserName
 parameter_list|,
-name|int
-name|UserNameLen
-parameter_list|,
 name|char
 modifier|*
 name|Password
@@ -919,8 +914,6 @@ argument_list|,
 name|AuthenticatorChallenge
 argument_list|,
 name|UserName
-argument_list|,
-name|UserNameLen
 argument_list|,
 name|Challenge
 argument_list|)
@@ -1120,9 +1113,6 @@ parameter_list|,
 name|char
 modifier|*
 name|UserName
-parameter_list|,
-name|int
-name|UserNameLen
 parameter_list|,
 name|char
 modifier|*
@@ -1405,8 +1395,6 @@ argument_list|,
 name|AuthenticatorChallenge
 argument_list|,
 name|UserName
-argument_list|,
-name|UserNameLen
 argument_list|,
 name|Challenge
 argument_list|)

@@ -400,26 +400,20 @@ specifier|const
 modifier|*
 modifier|*
 parameter_list|,
-name|int
+name|unsigned
 parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
+begin_define
+define|#
+directive|define
 name|hdlc_WrapperOctets
-parameter_list|(
-name|struct
-name|lcp
-modifier|*
-parameter_list|,
-name|u_short
-parameter_list|)
-function_decl|;
-end_function_decl
+parameter_list|()
+value|(2)
+end_define
 
 begin_decl_stmt
 specifier|extern

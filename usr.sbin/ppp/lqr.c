@@ -619,7 +619,7 @@ decl_stmt|,
 modifier|*
 name|dp
 decl_stmt|;
-name|int
+name|unsigned
 name|n
 decl_stmt|;
 name|sp
@@ -1112,6 +1112,7 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 name|struct
 name|link
@@ -2699,6 +2700,7 @@ name|struct
 name|bundle
 modifier|*
 name|b
+name|__unused
 parameter_list|,
 name|struct
 name|link
@@ -2712,6 +2714,7 @@ name|bp
 parameter_list|,
 name|int
 name|pri
+name|__unused
 parameter_list|,
 name|u_short
 modifier|*
@@ -2859,15 +2862,7 @@ operator|.
 name|ifOutOctets
 operator|+=
 name|hdlc_WrapperOctets
-argument_list|(
-operator|&
-name|l
-operator|->
-name|lcp
-argument_list|,
-operator|*
-name|proto
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -3210,11 +3205,13 @@ name|struct
 name|bundle
 modifier|*
 name|b
+name|__unused
 parameter_list|,
 name|struct
 name|link
 modifier|*
 name|l
+name|__unused
 parameter_list|,
 name|struct
 name|mbuf

@@ -2073,11 +2073,13 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 specifier|const
 name|fd_set
 modifier|*
 name|fdset
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2136,6 +2138,9 @@ if|if
 condition|(
 name|in
 operator|>
+operator|(
+name|ssize_t
+operator|)
 sizeof|sizeof
 name|c
 operator|->
@@ -2805,11 +2810,13 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
+name|__unused
 parameter_list|,
 specifier|const
 name|fd_set
 modifier|*
 name|fdset
+name|__unused
 parameter_list|)
 block|{
 name|struct

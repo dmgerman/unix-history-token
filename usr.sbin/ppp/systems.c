@@ -205,9 +205,10 @@ modifier|*
 name|pwd
 decl_stmt|;
 name|int
-name|len
-decl_stmt|,
 name|instring
+decl_stmt|;
+name|size_t
+name|len
 decl_stmt|;
 specifier|const
 name|char
@@ -374,6 +375,9 @@ name|endto
 operator|-
 name|to
 operator|<
+operator|(
+name|int
+operator|)
 name|len
 condition|)
 name|len
@@ -552,9 +556,14 @@ name|len
 operator|=
 name|ptr
 condition|?
+call|(
+name|size_t
+call|)
+argument_list|(
 name|ptr
 operator|-
 name|from
+argument_list|)
 else|:
 name|strlen
 argument_list|(

@@ -327,30 +327,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|u_short
-name|default_urgent_udp_ports
-index|[]
-init|=
-block|{ }
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
 name|NDEFTCPPORTS
 define|\
 value|(sizeof default_urgent_tcp_ports / sizeof default_urgent_tcp_ports[0])
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDEFUDPPORTS
-define|\
-value|(sizeof default_urgent_udp_ports / sizeof default_urgent_udp_ports[0])
 end_define
 
 begin_function
@@ -478,7 +460,7 @@ name|udp
 operator|.
 name|maxports
 operator|=
-name|NDEFUDPPORTS
+literal|0
 expr_stmt|;
 name|ncp
 operator|->
@@ -490,41 +472,7 @@ name|udp
 operator|.
 name|port
 operator|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|malloc
-argument_list|(
-name|NDEFUDPPORTS
-operator|*
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|ncp
-operator|->
-name|cfg
-operator|.
-name|urgent
-operator|.
-name|udp
-operator|.
-name|port
-argument_list|,
-name|default_urgent_udp_ports
-argument_list|,
-name|NDEFUDPPORTS
-operator|*
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-argument_list|)
+name|NULL
 expr_stmt|;
 name|mp_Init
 argument_list|(
@@ -1017,7 +965,7 @@ parameter_list|,
 name|int
 name|af
 parameter_list|,
-name|int
+name|unsigned
 name|pri
 parameter_list|,
 name|char
@@ -1070,10 +1018,6 @@ case|:
 if|if
 condition|(
 name|pri
-operator|<
-literal|0
-operator|||
-name|pri
 operator|>=
 name|IPCP_QUEUES
 argument_list|(
@@ -1085,7 +1029,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Can't store in ip queue %d\n"
+literal|"Can't store in ip queue %u\n"
 argument_list|,
 name|pri
 argument_list|)
@@ -1148,10 +1092,6 @@ case|:
 if|if
 condition|(
 name|pri
-operator|<
-literal|0
-operator|||
-name|pri
 operator|>=
 name|IPV6CP_QUEUES
 argument_list|(
@@ -1163,7 +1103,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Can't store in ipv6 queue %d\n"
+literal|"Can't store in ipv6 queue %u\n"
 argument_list|,
 name|pri
 argument_list|)
@@ -1590,6 +1530,7 @@ name|struct
 name|ncp
 modifier|*
 name|ncp
+name|__unused
 parameter_list|,
 name|int
 modifier|*
@@ -1748,7 +1689,7 @@ name|u_short
 name|dst
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|f
 decl_stmt|;
 for|for
@@ -1812,7 +1753,7 @@ name|u_short
 modifier|*
 name|newport
 decl_stmt|;
-name|int
+name|unsigned
 name|p
 decl_stmt|;
 if|if
@@ -2021,7 +1962,7 @@ name|u_short
 name|port
 parameter_list|)
 block|{
-name|int
+name|unsigned
 name|p
 decl_stmt|;
 for|for
@@ -2054,12 +1995,12 @@ block|{
 if|if
 condition|(
 name|p
+operator|+
+literal|1
 operator|!=
 name|range
 operator|->
 name|nports
-operator|-
-literal|1
 condition|)
 name|memmove
 argument_list|(
@@ -2162,7 +2103,7 @@ name|bundle
 operator|->
 name|ncp
 decl_stmt|;
-name|int
+name|unsigned
 name|p
 decl_stmt|;
 ifndef|#

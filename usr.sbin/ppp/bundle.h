@@ -358,11 +358,11 @@ struct|struct
 block|{
 struct|struct
 block|{
-name|int
+name|unsigned
 name|timeout
 decl_stmt|;
 comment|/* NCP Idle timeout value */
-name|int
+name|unsigned
 name|min_timeout
 decl_stmt|;
 comment|/* Don't idle out before this */
@@ -405,7 +405,7 @@ decl_stmt|;
 comment|/* Interface queue size */
 struct|struct
 block|{
-name|int
+name|unsigned
 name|timeout
 decl_stmt|;
 comment|/* How long to leave the output queue choked */
@@ -729,9 +729,9 @@ name|struct
 name|bundle
 modifier|*
 parameter_list|,
-name|int
+name|unsigned
 parameter_list|,
-name|int
+name|unsigned
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1050,7 +1050,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|unsigned
 name|bundle_HighestState
 parameter_list|(
 name|struct

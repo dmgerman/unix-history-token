@@ -455,10 +455,7 @@ end_decl_stmt
 begin_function
 name|void
 name|Cleanup
-parameter_list|(
-name|int
-name|excode
-parameter_list|)
+parameter_list|()
 block|{
 name|SignalBundle
 operator|->
@@ -600,9 +597,7 @@ name|signo
 argument_list|)
 expr_stmt|;
 name|Cleanup
-argument_list|(
-name|EX_TERM
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -658,6 +653,7 @@ name|TerminalCont
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|signal
@@ -682,6 +678,7 @@ name|TerminalStop
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|prompt_Suspend
@@ -711,6 +708,7 @@ name|BringDownServer
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 comment|/* Drops all child prompts too ! */
@@ -738,6 +736,7 @@ name|RestartServer
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 comment|/* Drops all child prompts and re-opens the socket */
@@ -1333,14 +1332,15 @@ decl_stmt|;
 name|int
 name|arg
 decl_stmt|,
-name|f
-decl_stmt|,
 name|holdfd
 index|[
 literal|3
 index|]
 decl_stmt|,
 name|label
+decl_stmt|;
+name|unsigned
+name|f
 decl_stmt|;
 name|struct
 name|bundle

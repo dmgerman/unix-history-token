@@ -673,7 +673,7 @@ block|}
 comment|/* 132: Secondary NBNS Server Address */
 block|}
 struct|;
-name|int
+name|unsigned
 name|f
 decl_stmt|;
 for|for
@@ -1857,8 +1857,7 @@ condition|)
 block|{
 name|ssize_t
 name|got
-decl_stmt|;
-name|size_t
+decl_stmt|,
 name|len
 decl_stmt|;
 name|int
@@ -1944,18 +1943,16 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Failed rewriting %s: wrote %lu of %lu\n"
+literal|"Failed rewriting %s: wrote %ld of %ld\n"
 argument_list|,
 name|_PATH_RESCONF
 argument_list|,
 operator|(
-name|unsigned
 name|long
 operator|)
 name|got
 argument_list|,
 operator|(
-name|unsigned
 name|long
 operator|)
 name|len
@@ -3395,7 +3392,8 @@ name|peer
 decl_stmt|;
 name|int
 name|pos
-decl_stmt|,
+decl_stmt|;
+name|unsigned
 name|n
 decl_stmt|;
 name|ipcp
@@ -3961,8 +3959,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|in_addr
-parameter_list|,
-name|int
 parameter_list|)
 parameter_list|,
 specifier|const
@@ -3995,8 +3991,6 @@ name|int
 name|n
 decl_stmt|,
 name|ret
-decl_stmt|,
-name|s
 decl_stmt|;
 if|if
 condition|(
@@ -4018,41 +4012,6 @@ argument_list|(
 name|LogERROR
 argument_list|,
 literal|"Oops, ipcp_proxyarp() called with unexpected addr\n"
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-if|if
-condition|(
-operator|(
-name|s
-operator|=
-name|ID0socket
-argument_list|(
-name|PF_INET
-argument_list|,
-name|SOCK_DGRAM
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|log_Printf
-argument_list|(
-name|LogERROR
-argument_list|,
-literal|"ipcp_proxyarp: socket: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4196,8 +4155,6 @@ argument_list|(
 name|bundle
 argument_list|,
 name|ip
-argument_list|,
-name|s
 argument_list|)
 operator|)
 condition|)
@@ -4249,13 +4206,6 @@ argument_list|(
 name|bundle
 argument_list|,
 name|peer
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -5190,6 +5140,7 @@ name|struct
 name|fsm
 modifier|*
 name|fp
+name|__unused
 parameter_list|)
 block|{
 comment|/* Term REQ just sent by FSM */
@@ -6250,7 +6201,7 @@ name|myaddr
 decl_stmt|,
 name|peer
 decl_stmt|;
-name|int
+name|unsigned
 name|n
 decl_stmt|;
 if|if
@@ -6769,6 +6720,9 @@ name|end
 operator|-
 name|cp
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|opt
@@ -7042,6 +6996,9 @@ literal|16
 operator|)
 operator|+
 operator|(
+operator|(
+name|int
+operator|)
 name|pcomp
 operator|->
 name|slots
@@ -7216,14 +7173,9 @@ operator|==
 name|PROTO_VJCOMP
 condition|)
 block|{
+comment|/* We know pcomp->slots' max value == MAX_VJ_STATES */
 if|if
 condition|(
-name|pcomp
-operator|->
-name|slots
-operator|<=
-name|MAX_VJ_STATES
-operator|&&
 name|pcomp
 operator|->
 name|slots
@@ -7265,15 +7217,7 @@ name|pcomp
 operator|->
 name|slots
 operator|=
-name|pcomp
-operator|->
-name|slots
-operator|<
 name|MIN_VJ_STATES
-condition|?
-name|MIN_VJ_STATES
-else|:
-name|MAX_VJ_STATES
 expr_stmt|;
 name|nak
 operator|.
@@ -7403,21 +7347,7 @@ operator|==
 name|PROTO_VJCOMP
 condition|)
 block|{
-if|if
-condition|(
-name|pcomp
-operator|->
-name|slots
-operator|>
-name|MAX_VJ_STATES
-condition|)
-name|pcomp
-operator|->
-name|slots
-operator|=
-name|MAX_VJ_STATES
-expr_stmt|;
-elseif|else
+comment|/* We know pcomp->slots' max value == MAX_VJ_STATES */
 if|if
 condition|(
 name|pcomp

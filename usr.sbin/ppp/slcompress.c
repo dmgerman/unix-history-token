@@ -1713,12 +1713,17 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|int
+call|)
+argument_list|(
 name|hlen
 operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|tcphdr
+argument_list|)
 argument_list|)
 operator|>
 name|len

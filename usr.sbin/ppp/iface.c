@@ -2183,8 +2183,6 @@ name|inskip
 decl_stmt|,
 name|in6skip
 decl_stmt|,
-name|n
-decl_stmt|,
 name|s4
 init|=
 operator|-
@@ -2197,6 +2195,9 @@ literal|1
 decl_stmt|,
 modifier|*
 name|s
+decl_stmt|;
+name|unsigned
+name|n
 decl_stmt|;
 if|if
 condition|(
@@ -2503,11 +2504,12 @@ block|{
 name|int
 name|af
 decl_stmt|,
-name|n
-decl_stmt|,
 name|removed
 decl_stmt|,
 name|s
+decl_stmt|;
+name|unsigned
+name|n
 decl_stmt|;
 name|struct
 name|ncpaddr
@@ -3078,9 +3080,10 @@ name|struct
 name|ncpaddr
 name|found
 decl_stmt|;
-name|int
+name|unsigned
 name|n
-decl_stmt|,
+decl_stmt|;
+name|int
 name|res
 decl_stmt|,
 name|s
@@ -3735,9 +3738,10 @@ decl_stmt|,
 modifier|*
 name|current
 decl_stmt|;
-name|int
+name|unsigned
 name|f
-decl_stmt|,
+decl_stmt|;
+name|int
 name|flags
 decl_stmt|;
 ifndef|#
@@ -3878,7 +3882,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"> mtu %d has %d address%s:\n"
+literal|"> mtu %lu has %d address%s:\n"
 argument_list|,
 name|iface
 operator|->

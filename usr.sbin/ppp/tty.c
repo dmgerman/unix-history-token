@@ -367,7 +367,7 @@ directive|ifndef
 name|NONETGRAPH
 struct|struct
 block|{
-name|int
+name|unsigned
 name|speed
 decl_stmt|;
 comment|/* Pre-line-discipline speed */
@@ -416,7 +416,7 @@ value|((d)->type == TTY_DEVICE ? (struct ttydevice *)d : NULL)
 end_define
 
 begin_function
-name|int
+name|unsigned
 name|tty_DeviceSize
 parameter_list|(
 name|void
@@ -1331,7 +1331,8 @@ decl_stmt|,
 name|ds
 decl_stmt|,
 name|hot
-decl_stmt|,
+decl_stmt|;
+name|unsigned
 name|speed
 decl_stmt|;
 comment|/*    * Don't use the netgraph line discipline for now.  Using it works, but    * carrier cannot be detected via TIOCMGET and the device doesn't become    * selectable with 0 bytes to read when carrier is lost :(    */
@@ -2356,6 +2357,9 @@ condition|?
 operator|-
 literal|1
 else|:
+operator|(
+name|ssize_t
+operator|)
 name|n
 return|;
 else|else
@@ -3007,7 +3011,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|unsigned
 name|tty_Speed
 parameter_list|(
 name|struct
@@ -3039,7 +3043,7 @@ return|return
 literal|0
 return|;
 return|return
-name|SpeedToInt
+name|SpeedToUnsigned
 argument_list|(
 name|cfgetispeed
 argument_list|(
@@ -3211,6 +3215,7 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+name|__unused
 parameter_list|,
 name|int
 modifier|*
@@ -3430,6 +3435,7 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+name|__unused
 parameter_list|,
 name|int
 modifier|*
@@ -4019,7 +4025,7 @@ argument_list|(
 operator|&
 name|ios
 argument_list|,
-name|IntToSpeed
+name|UnsignedToSpeed
 argument_list|(
 name|p
 operator|->
