@@ -2167,6 +2167,8 @@ operator|->
 name|if_flags
 operator|=
 name|IFF_BROADCAST
+operator||
+name|IFF_NEEDSGIANT
 expr_stmt|;
 name|ifp
 operator|->
