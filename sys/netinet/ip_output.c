@@ -2706,10 +2706,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-name|ifunit
-argument_list|(
-literal|"lo0"
-argument_list|)
+name|loif
 expr_stmt|;
 if|if
 condition|(
@@ -2798,10 +2795,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-name|ifunit
-argument_list|(
-literal|"lo0"
-argument_list|)
+name|loif
 expr_stmt|;
 if|if
 condition|(
