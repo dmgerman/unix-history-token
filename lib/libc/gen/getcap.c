@@ -1397,12 +1397,19 @@ condition|(
 operator|!
 name|foundit
 condition|)
+block|{
+name|free
+argument_list|(
+name|record
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 comment|/* 	 * Got the capability record, but now we have to expand all tc=name 	 * references in it ... 	 */
 name|tc_exp
 label|:
