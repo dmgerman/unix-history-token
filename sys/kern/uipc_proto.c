@@ -89,7 +89,8 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+operator|&
+name|uipc_ctloutput
 block|,
 literal|0
 block|,

@@ -42,6 +42,21 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Socket options. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCAL_PEERCRED
+value|0x001
+end_define
+
+begin_comment
+comment|/* retrieve peer credentails */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -88,6 +103,26 @@ expr|struct
 name|mbuf
 operator|*
 name|control
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|uipc_ctloutput
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+name|so
+operator|,
+expr|struct
+name|sockopt
+operator|*
+name|sopt
 operator|)
 argument_list|)
 decl_stmt|;
