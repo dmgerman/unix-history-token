@@ -705,10 +705,10 @@ name|freeit
 goto|;
 name|icmplen
 operator|=
-name|oiplen
-operator|+
 name|min
 argument_list|(
+name|oiplen
+operator|+
 literal|8
 argument_list|,
 name|oip
