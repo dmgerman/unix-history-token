@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	3.13	%G%	*/
+comment|/*	hp.c	3.14	%G%	*/
 end_comment
 
 begin_comment
@@ -1810,6 +1810,8 @@ name|b_flags
 operator|&
 name|B_WRITE
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|hpaddr
