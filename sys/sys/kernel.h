@@ -57,6 +57,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|long
 name|hostid
 decl_stmt|;
