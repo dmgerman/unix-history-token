@@ -8576,6 +8576,16 @@ operator|*
 name|p
 operator|!=
 literal|','
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|':'
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'%'
 condition|)
 break|break;
 name|host
