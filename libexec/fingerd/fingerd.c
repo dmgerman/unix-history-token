@@ -430,6 +430,13 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|av
+index|[
+literal|2
+index|]
+operator|=
+literal|"--"
+expr_stmt|;
 for|for
 control|(
 name|lp
@@ -441,7 +448,7 @@ operator|=
 operator|&
 name|av
 index|[
-literal|2
+literal|3
 index|]
 init|;
 condition|;
@@ -473,7 +480,7 @@ operator|==
 operator|&
 name|av
 index|[
-literal|2
+literal|3
 index|]
 condition|)
 block|{
