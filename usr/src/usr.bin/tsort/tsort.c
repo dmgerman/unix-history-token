@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tsort.c	5.6 (Berkeley) %G%"
+literal|"@(#)tsort.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -802,6 +802,8 @@ name|n2
 decl_stmt|;
 name|int
 name|bsize
+decl_stmt|,
+name|i
 decl_stmt|;
 name|n1
 operator|=
@@ -828,7 +830,35 @@ argument_list|(
 name|s2
 argument_list|)
 expr_stmt|;
-comment|/* 	 * could check to see if this arc is here already, but it isn't 	 * worth the bother -- there usually isn't and it doesn't hurt if 	 * there is (I think :-). 	 */
+comment|/* 	 * Check if this arc is already here. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|n1
+operator|->
+name|n_narcs
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|n1
+operator|->
+name|n_arcs
+index|[
+name|i
+index|]
+operator|==
+name|n2
+condition|)
+return|return;
+comment|/* 	 * Add it. 	 */
 if|if
 condition|(
 name|n1
@@ -1305,7 +1335,7 @@ operator|!
 name|cycle_buf
 condition|)
 block|{
-comment|/* 			 * allocate space for two cycle logs - one to be used 			 * as scratch space, the other to save the longest 			 * cycle. 			 */
+comment|/* 			 * Allocate space for two cycle logs - one to be used 			 * as scratch space, the other to save the longest 			 * cycle. 			 */
 for|for
 control|(
 name|cnt
