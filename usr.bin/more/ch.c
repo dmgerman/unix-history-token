@@ -140,7 +140,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The buffer pool is kept as a doubly-linked circular list, in order from  * most- to least-recently used.  The circular list is anchored by buf_anchor.  */
+comment|/*  * The buffer pool is kept as a doubly-linked circular list.  For the ispipe  * case, this list will always be ordered from highest-numbered block downto  * lowest-numbered block, skipping no blocks.  For the !ispipe case,  * it may become disordered.  It is not clear that this is a feature.  */
 end_comment
 
 begin_define
@@ -176,6 +176,10 @@ decl_stmt|,
 modifier|*
 name|prev
 decl_stmt|;
+name|long
+name|block
+decl_stmt|;
+comment|/* this is never changed from -1 */
 block|}
 name|buf_anchor
 init|=
@@ -183,9 +187,30 @@ block|{
 name|END_OF_CHAIN
 block|,
 name|END_OF_CHAIN
+block|,
+operator|(
+name|long
+operator|)
+operator|-
+literal|1
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * The last buffer in the circular list that was accessed, and correspondingly  * the most likely to be accessed in the future.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|buf
+modifier|*
+name|buf_lastacc
+init|=
+name|END_OF_CHAIN
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -248,7 +273,7 @@ directive|define
 name|ch_get
 parameter_list|()
 define|\
-value|((buf_head->block == ch_block&& \ 	    ch_offset< buf_head->datasize) ? \ 	    (unsigned char)buf_head->data[ch_offset] : fch_get())
+value|((buf_lastacc->block == ch_block&& \ 	    ch_offset< buf_lastacc->datasize) ? \ 	    (unsigned char)buf_lastacc->data[ch_offset] : fch_get())
 end_define
 
 begin_expr_stmt
@@ -263,12 +288,6 @@ operator|*
 name|bp
 block|;
 specifier|register
-name|int
-name|n
-block|,
-name|ch
-block|;
-specifier|register
 name|char
 operator|*
 name|p
@@ -276,29 +295,62 @@ block|,
 operator|*
 name|t
 block|;
+name|int
+name|n
+block|,
+name|gofor
+block|;
 name|off_t
 name|pos
 block|,
 name|lseek
 argument_list|()
 block|;
-comment|/* look for a buffer holding the desired block. */
-for|for
-control|(
-name|bp
-operator|=
-name|buf_head
-init|;
-name|bp
-operator|!=
-name|END_OF_CHAIN
-condition|;
-name|bp
-operator|=
-name|bp
+comment|/* 	 * look for a buffer holding the desired block. 	 */
+if|if
+condition|(
+name|abs
+argument_list|(
+name|buf_lastacc
 operator|->
 name|next
-control|)
+operator|->
+name|block
+operator|-
+name|ch_block
+argument_list|)
+operator|<
+name|abs
+argument_list|(
+name|buf_lastacc
+operator|->
+name|prev
+operator|->
+name|block
+operator|-
+name|ch_block
+argument_list|)
+condition|)
+name|gofor
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Look forwards through the buffer queue */
+else|else
+name|gofor
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Look backwards through the buffer queue */
+name|bp
+operator|=
+name|buf_lastacc
+expr_stmt|;
+end_expr_stmt
+
+begin_do
+do|do
+block|{
 if|if
 condition|(
 name|bp
@@ -308,6 +360,10 @@ operator|==
 name|ch_block
 condition|)
 block|{
+name|buf_lastacc
+operator|=
+name|bp
+expr_stmt|;
 if|if
 condition|(
 name|ch_offset
@@ -316,15 +372,9 @@ name|bp
 operator|->
 name|datasize
 condition|)
-comment|/* 				 * Need more data in this buffer. 				 */
 goto|goto
 name|read_more
 goto|;
-comment|/* 			 * On a pipe, we don't sort the buffers LRU 			 * because this can cause gaps in the buffers. 			 * For example, suppose we've got 12 1K buffers, 			 * and a 15K input stream.  If we read the first 12K 			 * sequentially, then jump to line 1, then jump to 			 * the end, the buffers have blocks 0,4,5,6,..,14. 			 * If we then jump to line 1 again and try to 			 * read sequentially, we're out of luck when we 			 * get to block 1 (we'd get the "pipe error" below). 			 * To avoid this, we only sort buffers on a pipe 			 * when we actually READ the data, not when we 			 * find it already buffered. 			 */
-if|if
-condition|(
-name|ispipe
-condition|)
 return|return
 operator|(
 operator|(
@@ -339,14 +389,36 @@ name|ch_offset
 index|]
 operator|)
 return|;
-goto|goto
-name|found
-goto|;
 block|}
-end_expr_stmt
+if|if
+condition|(
+name|gofor
+condition|)
+name|bp
+operator|=
+name|bp
+operator|->
+name|next
+expr_stmt|;
+else|else
+name|bp
+operator|=
+name|bp
+operator|->
+name|prev
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|bp
+operator|!=
+name|buf_lastacc
+condition|)
+do|;
+end_do
 
 begin_comment
-comment|/* 	 * Block is not in a buffer.  Take the least recently used buffer 	 * and read the desired block into it.  If the LRU buffer has data 	 * in it, and input is a pipe, then try to allocate a new buffer first. 	 */
+comment|/* 	 * Block is not in a buffer.  Take the buffer from the tail and 	 * read the desired block into it.  If the input is a pipe, we try 	 * to buffer as much input as possible since the input will be 	 * permanently lost if we throw it from the buffer queue. 	 */
 end_comment
 
 begin_if
@@ -461,7 +533,7 @@ expr_stmt|;
 end_if
 
 begin_comment
-comment|/* 	 * Read the block. 	 * If we read less than a full block, we just return the 	 * partial block and pick up the rest next time. 	 */
+comment|/* 	 * Read the block. 	 * 	 * If we read less than a full block, we just return the 	 * partial block and pick up the rest next time. 	 */
 end_comment
 
 begin_expr_stmt
@@ -571,7 +643,7 @@ block|}
 end_if
 
 begin_comment
-comment|/* 	 * Turn EOI (nul) characters into 0200 since EOI has special meaning.		 */
+comment|/* 	 * Turn other EOI (nul) chars into 0200 since EOI has special meaning. 	 */
 end_comment
 
 begin_for
@@ -627,7 +699,7 @@ operator|!=
 name|bp
 condition|)
 block|{
-comment|/* 		 * Move the buffer to the head of the buffer chain. 		 * This orders the buffer chain, most- to least-recently used. 		 */
+comment|/* 		 * Move the buffer to the head of the buffer chain.  This 		 * ensures correct order for the ispipe case and prevents 		 * needless buffer thrashing for the !ispipe case.  It's not 		 * clear that buffer thrashing isn't desirable in this latter 		 * case, since the VM should probably be handling the file 		 * buffer... 		 */
 name|bp
 operator|->
 name|next
@@ -707,7 +779,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * Determine if a specific block is currently in one of the buffers.  */
+comment|/*  * Determine if a specific block is currently in one of the buffers.  *  * In general, this function is only called for the ispipe case.  For the  * !ispipe case, ch.c generally assumes that any given block is accessible  * through ch_get(), even though ch_get() may not have it buffered.  */
 end_comment
 
 begin_macro
@@ -732,6 +804,31 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+comment|/* For the ispipe case, we know that the buffer queue is sequentially 	 * ordered from tail to head. */
+if|if
+condition|(
+name|ispipe
+operator|&&
+operator|(
+name|block
+operator|<=
+name|buf_head
+operator|->
+name|block
+operator|&&
+name|block
+operator|>=
+name|buf_tail
+operator|->
+name|block
+operator|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* 	 * XXX This is dead code. 	 */
 for|for
 control|(
 name|bp
@@ -927,7 +1024,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Can't get to position 0. 	 * Look thru the buffers for the one closest to position 0. 	 */
+comment|/* 	 * Can't get to position 0. 	 * Look thru the buffers for the one closest to position 0. 	 * 	 * This should use the obvious optimization that applies for the 	 * ispipe case (which is also the only case under which this 	 * code will be executed, ie. the only case under which ch_seek() 	 * will fail). 	 */
 name|firstbp
 operator|=
 name|bp
