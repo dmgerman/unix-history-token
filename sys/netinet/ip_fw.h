@@ -529,6 +529,10 @@ modifier|*
 name|next_rule
 decl_stmt|;
 comment|/* ptr to next [skipto] rule	*/
+name|u_int32_t
+name|set_disable
+decl_stmt|;
+comment|/* disabled sets (for userland)	*/
 name|u_int16_t
 name|act_ofs
 decl_stmt|;
@@ -699,6 +703,10 @@ name|u_int16_t
 name|count
 decl_stmt|;
 comment|/* refcount			*/
+name|u_int16_t
+name|rulenum
+decl_stmt|;
+comment|/* rule number (for userland)	*/
 block|}
 struct|;
 end_struct
