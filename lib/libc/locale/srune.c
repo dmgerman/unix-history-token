@@ -51,6 +51,12 @@ directive|include
 file|<wchar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mblocal.h"
+end_include
+
 begin_comment
 comment|/*  * Emulate the deprecated 4.4BSD sgetrune() function in terms of  * the ISO C mbrtowc() function.  */
 end_comment

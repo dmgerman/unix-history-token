@@ -23,20 +23,11 @@ directive|include
 file|<wchar.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|__mbsinit
-function_decl|)
-parameter_list|(
-specifier|const
-name|mbstate_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"mblocal.h"
+end_include
 
 begin_function
 name|int

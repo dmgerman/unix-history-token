@@ -23,31 +23,11 @@ directive|include
 file|<wchar.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|size_t
-function_decl|(
-modifier|*
-name|__mbrtowc
-function_decl|)
-parameter_list|(
-name|wchar_t
-modifier|*
-name|__restrict
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|__restrict
-parameter_list|,
-name|size_t
-parameter_list|,
-name|mbstate_t
-modifier|*
-name|__restrict
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"mblocal.h"
+end_include
 
 begin_function
 name|size_t
