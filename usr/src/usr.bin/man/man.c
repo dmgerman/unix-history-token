@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	5.15 (Berkeley) %G%"
+literal|"@(#)man.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -564,7 +564,7 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/* use system(3) in case someone's pager is "foo arg1 arg2" */
+comment|/* use system(3) in case someone's pager is "pager arg1 arg2" */
 if|if
 condition|(
 name|command
@@ -735,6 +735,7 @@ case|case
 literal|'l'
 case|:
 comment|/* local */
+comment|/* support the "{l,local,n,new}###"  syntax */
 for|for
 control|(
 name|p
@@ -783,22 +784,20 @@ name|argv
 argument_list|)
 condition|)
 block|{
+operator|++
+name|argv
+expr_stmt|;
 name|manpath
 operator|=
 name|locpath
 expr_stmt|;
-if|if
-condition|(
 name|section
 operator|=
 name|getsect
 argument_list|(
 name|p
 argument_list|)
-condition|)
-goto|goto
-name|argtest
-goto|;
+expr_stmt|;
 block|}
 break|break;
 case|case
@@ -853,22 +852,20 @@ name|argv
 argument_list|)
 condition|)
 block|{
+operator|++
+name|argv
+expr_stmt|;
 name|manpath
 operator|=
 name|newpath
 expr_stmt|;
-if|if
-condition|(
 name|section
 operator|=
 name|getsect
 argument_list|(
 name|p
 argument_list|)
-condition|)
-goto|goto
-name|argtest
-goto|;
+expr_stmt|;
 block|}
 break|break;
 comment|/* 		 * old isn't really a separate section of the manual, 		 * and its entries are all in a single directory. 		 */
@@ -924,6 +921,9 @@ name|argv
 argument_list|)
 condition|)
 block|{
+operator|++
+name|argv
+expr_stmt|;
 name|list3
 index|[
 literal|0
@@ -938,9 +938,6 @@ name|section
 operator|=
 name|list3
 expr_stmt|;
-goto|goto
-name|argtest
-goto|;
 block|}
 break|break;
 case|case
@@ -969,8 +966,6 @@ literal|'8'
 case|:
 if|if
 condition|(
-operator|!
-operator|(
 name|section
 operator|=
 name|getsect
@@ -978,37 +973,17 @@ argument_list|(
 operator|*
 name|argv
 argument_list|)
-operator|)
 condition|)
-break|break;
-name|argtest
-label|:
+operator|++
+name|argv
+expr_stmt|;
+block|}
 if|if
 condition|(
-operator|!
 operator|*
-operator|++
 name|argv
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"man: what do you want from the %s section of the manual?\n"
-argument_list|,
-name|section
-operator|->
-name|msg
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 name|section
@@ -1059,23 +1034,44 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|res
-operator|&&
-operator|!
-operator|(
+operator|||
 name|how
 operator|&
 name|WHERE
-operator|)
 condition|)
-block|{
+continue|continue;
+block|}
+name|fputs
+argument_list|(
+literal|"man: "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|manpath
-operator|==
-name|locpath
+operator|*
+name|argv
 condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"no entry for %s in the "
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+else|else
+name|fputs
+argument_list|(
+literal|"what do you want from the "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|section
@@ -1084,25 +1080,24 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"No entry for %s in the %s section of the local manual.\n"
-argument_list|,
-operator|*
-name|argv
+literal|"%s section of the "
 argument_list|,
 name|section
 operator|->
 name|msg
 argument_list|)
 expr_stmt|;
-else|else
-name|fprintf
+if|if
+condition|(
+name|manpath
+operator|==
+name|locpath
+condition|)
+name|fputs
 argument_list|(
+literal|"local "
+argument_list|,
 name|stderr
-argument_list|,
-literal|"No entry for %s in the local manual.\n"
-argument_list|,
-operator|*
-name|argv
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1112,63 +1107,31 @@ name|manpath
 operator|==
 name|newpath
 condition|)
+name|fputs
+argument_list|(
+literal|"new "
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|section
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"No entry for %s in the %s section of the new manual.\n"
-argument_list|,
 operator|*
 name|argv
+condition|)
+name|fputs
+argument_list|(
+literal|"manual.\n"
 argument_list|,
-name|section
-operator|->
-name|msg
+name|stderr
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|fputs
 argument_list|(
+literal|"manual?\n"
+argument_list|,
 name|stderr
-argument_list|,
-literal|"No entry for %s in the new manual.\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|section
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"No entry for %s in the %s section of the manual.\n"
-argument_list|,
-operator|*
-name|argv
-argument_list|,
-name|section
-operator|->
-name|msg
-argument_list|)
-expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"No entry for %s in the manual.\n"
-argument_list|,
-operator|*
-name|argv
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1176,7 +1139,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
