@@ -168,7 +168,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|u_long
-name|pcic_mem_start
+name|mem_start
 init|=
 name|IOM_BEGIN
 decl_stmt|;
@@ -177,7 +177,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|u_long
-name|pcic_mem_end
+name|mem_end
 init|=
 name|IOM_END
 decl_stmt|;
@@ -190,12 +190,12 @@ name|_machdep_pccard
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|pcic_mem_start
+name|mem_start
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|pcic_mem_start
+name|mem_start
 argument_list|,
 literal|0
 argument_list|,
@@ -211,12 +211,12 @@ name|_machdep_pccard
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|pcic_mem_end
+name|mem_end
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|pcic_mem_end
+name|mem_end
 argument_list|,
 literal|0
 argument_list|,
@@ -1012,11 +1012,11 @@ condition|)
 block|{
 name|start
 operator|=
-name|pcic_mem_start
+name|mem_start
 expr_stmt|;
 name|end
 operator|=
-name|pcic_mem_end
+name|mem_end
 expr_stmt|;
 block|}
 name|isdefault
@@ -1303,10 +1303,6 @@ name|ENOENT
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* Pass card requests up to pcic.  This may mean a bad design XXX */
-end_comment
 
 begin_function
 specifier|static
