@@ -138,6 +138,17 @@ begin_comment
 comment|/* Readonly mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MD_COMPRESS
+value|0x10
+end_define
+
+begin_comment
+comment|/* Compression mode */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
