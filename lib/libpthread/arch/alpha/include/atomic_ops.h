@@ -50,6 +50,70 @@ literal|"   beq     $2, 1b\n"
 comment|/* it didn't work, loop */
 literal|"   stq     $1, %0\n"
 comment|/* save value of *dst in *res */
+literal|"   mb            \n"
+operator|:
+literal|"+m"
+operator|(
+operator|*
+name|res
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|dst
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|val
+operator|)
+operator|:
+literal|"memory"
+operator|,
+literal|"$1"
+operator|,
+literal|"$2"
+block|)
+function|;
+end_function
+
+begin_comment
+comment|/* clobber t0 and t1 */
+end_comment
+
+begin_function
+unit|}  static
+specifier|inline
+name|void
+name|atomic_swap_int
+parameter_list|(
+name|int
+modifier|*
+name|dst
+parameter_list|,
+name|int
+name|val
+parameter_list|,
+name|int
+modifier|*
+name|res
+parameter_list|)
+block|{
+comment|/* $1 and $2 are t0 and t1 respectively. */
+asm|__asm (	"   ldl     $1, %1\n"
+comment|/* get cache line before lock */
+literal|"1: ldl_l   $1, %1\n"
+comment|/* load *dst asserting lock */
+literal|"   mov     %2, $2\n"
+comment|/* save value to be swapped */
+literal|"   stl_c   $2, %1\n"
+comment|/* attempt the store; $2 clobbered */
+literal|"   beq     $2, 1b\n"
+comment|/* it didn't work, loop */
+literal|"   stl     $1, %0\n"
+comment|/* save value of *dst in *res */
+literal|"   mb            \n"
 operator|:
 literal|"+m"
 operator|(

@@ -422,7 +422,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|long
+name|int
 name|lval
 decl_stmt|;
 comment|/** 	 * XXX - We probably want to remove these checks to optimize 	 *       performance.  It is also a bug if any one of the  	 *       checks fail, so it's probably better to just let it 	 *       SEGV and fix it. 	 */
@@ -629,10 +629,10 @@ literal|0
 condition|)
 break|break;
 block|}
-name|atomic_swap_long
+name|atomic_swap_int
 argument_list|(
 operator|(
-name|long
+name|int
 operator|*
 operator|)
 operator|&
@@ -720,7 +720,7 @@ decl_stmt|;
 name|int
 name|prio_h
 decl_stmt|;
-name|long
+name|int
 name|lval
 decl_stmt|;
 comment|/** 	 * XXX - We probably want to remove these checks to optimize 	 *       performance.  It is also a bug if any one of the  	 *       checks fail, so it's probably better to just let it 	 *       SEGV and fix it. 	 */
@@ -931,10 +931,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|atomic_swap_long
+name|atomic_swap_int
 argument_list|(
 operator|(
-name|long
+name|int
 operator|*
 operator|)
 operator|&
@@ -972,7 +972,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|atomic_store_rel_long
+name|atomic_store_rel_int
 argument_list|(
 operator|&
 name|lu_h
@@ -996,10 +996,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|atomic_swap_long
+name|atomic_swap_int
 argument_list|(
 operator|(
-name|long
+name|int
 operator|*
 operator|)
 operator|&
@@ -1034,7 +1034,7 @@ expr_stmt|;
 block|}
 else|else
 comment|/* Give the lock to the previous request. */
-name|atomic_store_rel_long
+name|atomic_store_rel_int
 argument_list|(
 operator|&
 name|myreq
@@ -1084,10 +1084,10 @@ operator|->
 name|l_wakeup
 condition|)
 block|{
-name|atomic_swap_long
+name|atomic_swap_int
 argument_list|(
 operator|(
-name|long
+name|int
 operator|*
 operator|)
 operator|&
@@ -1122,7 +1122,7 @@ expr_stmt|;
 block|}
 else|else
 comment|/* Give the lock to the previous request. */
-name|atomic_store_rel_long
+name|atomic_store_rel_int
 argument_list|(
 operator|&
 name|myreq
@@ -1160,7 +1160,7 @@ modifier|*
 name|lu
 parameter_list|)
 block|{
-name|atomic_store_rel_long
+name|atomic_store_rel_int
 argument_list|(
 operator|&
 name|lu

@@ -16,29 +16,72 @@ name|_ATOMIC_OPS_H_
 end_define
 
 begin_comment
-comment|/*  * Atomic swap:  *   Atomic (tmp = *dst, *dst = val), then *res = tmp  *  * void atomic_swap_long(long *dst, long val, long *res);  */
+comment|/*  * Atomic swap:  *   Atomic (tmp = *dst, *dst = val), then *res = tmp  *  * void atomic_swap64(intptr_t *dst, intptr_t val, intptr_t *res);  */
 end_comment
 
 begin_function
 specifier|static
 specifier|inline
 name|void
-name|atomic_swap_long
+name|atomic_swap64
 parameter_list|(
-name|long
+name|intptr_t
 modifier|*
 name|dst
 parameter_list|,
-name|long
+name|intptr_t
 name|val
 parameter_list|,
-name|long
+name|intptr_t
 modifier|*
 name|res
 parameter_list|)
 block|{
 asm|__asm __volatile(
 literal|"xchgq %2, %1; movq %2, %0"
+operator|:
+literal|"=m"
+operator|(
+operator|*
+name|res
+operator|)
+operator|:
+literal|"m"
+operator|(
+operator|*
+name|dst
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|val
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_function
+unit|}  static
+specifier|inline
+name|void
+name|atomic_swap_int
+parameter_list|(
+name|int
+modifier|*
+name|dst
+parameter_list|,
+name|int
+name|val
+parameter_list|,
+name|int
+modifier|*
+name|res
+parameter_list|)
+block|{
+asm|__asm __volatile(
+literal|"xchgl %2, %1; movl %2, %0"
 operator|:
 literal|"=m"
 operator|(
@@ -75,7 +118,7 @@ parameter_list|,
 name|r
 parameter_list|)
 define|\
-value|atomic_swap_long((long *)(d), (long)(v), (long *)(r))
+value|atomic_swap64((intptr_t *)(d), (intptr_t)(v), (intptr_t *)(r))
 end_define
 
 begin_endif

@@ -21,6 +21,18 @@ directive|include
 file|"thr_private.h"
 end_include
 
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|__sleep
+parameter_list|(
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(

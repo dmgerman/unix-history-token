@@ -111,11 +111,6 @@ begin_struct
 struct|struct
 name|lockreq
 block|{
-specifier|volatile
-name|long
-name|lr_locked
-decl_stmt|;
-comment|/* lock granted = 0, busy otherwise */
 name|struct
 name|lockuser
 modifier|*
@@ -128,6 +123,11 @@ modifier|*
 name|lr_owner
 decl_stmt|;
 comment|/* only used for priority locks */
+specifier|volatile
+name|int
+name|lr_locked
+decl_stmt|;
+comment|/* lock granted = 0, busy otherwise */
 specifier|volatile
 name|int
 name|lr_active

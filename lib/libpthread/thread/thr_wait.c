@@ -15,6 +15,17 @@ directive|include
 file|"thr_private.h"
 end_include
 
+begin_function_decl
+specifier|extern
+name|int
+name|__wait
+parameter_list|(
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
