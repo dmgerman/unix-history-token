@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	1.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	1.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -210,16 +210,12 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If going back up the directory tree, then the parent directory 	 * will have been unlocked, unless lookup found the last 	 * component.  In which case, re-lock the node here to allow 	 * it to be unlocked again (phew) in union_lookup. 	 */
+comment|/* 	 * The parent directory will have been unlocked, unless lookup 	 * found the last component.  In which case, re-lock the node 	 * here to allow it to be unlocked again (phew) in union_lookup. 	 */
 if|if
 condition|(
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|ISDOTDOT
-operator|)
+name|dvp
+operator|!=
+name|tdvp
 operator|&&
 operator|!
 operator|(
@@ -656,6 +652,13 @@ operator|~
 name|LOCKPARENT
 expr_stmt|;
 comment|/* 	 * at this point, we have uerror and lerror indicating 	 * possible errors with the lookups in the upper and lower 	 * layers.  additionally, uppervp and lowervp are (locked) 	 * references to existing vnodes in the upper and lower layers. 	 * 	 * there are now three cases to consider. 	 * 1. if both layers returned an error, then return whatever 	 *    error the upper layer generated. 	 * 	 * 2. if the top layer failed and the bottom layer succeeded 	 *    then two subcases occur. 	 *    a.  the bottom vnode is not a directory, in which 	 *	  case just return a new union vnode referencing 	 *	  an empty top layer and the existing bottom layer. 	 *    b.  the bottom vnode is a directory, in which case 	 *	  create a new directory in the top-level and 	 *	  continue as in case 3. 	 * 	 * 3. if the top layer succeeded then return a new union 	 *    vnode referencing whatever the new top layer and 	 *    whatever the bottom layer returned. 	 */
+operator|*
+name|ap
+operator|->
+name|a_vpp
+operator|=
+name|NULLVP
+expr_stmt|;
 comment|/* case 1. */
 if|if
 condition|(
@@ -672,13 +675,6 @@ literal|0
 operator|)
 condition|)
 block|{
-operator|*
-name|ap
-operator|->
-name|a_vpp
-operator|=
-name|NULLVP
-expr_stmt|;
 return|return
 operator|(
 name|uerror
@@ -1272,7 +1268,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 			 * Open the named file in the upper layer.  Note that 			 * the file may have come into existence *since* the 			 * lookup was done, since the upper layer may really 			 * be a loopback mount of some other filesystem... 			 * so open the file with exclusive create and barf if 			 * it already exists. 			 * XXX - perhaps shoudl re-lookup the node (once more 			 * with feeling) and simply open that.  Who knows. 			 */
+comment|/* 			 * Open the named file in the upper layer.  Note that 			 * the file may have come into existence *since* the 			 * lookup was done, since the upper layer may really 			 * be a loopback mount of some other filesystem... 			 * so open the file with exclusive create and barf if 			 * it already exists. 			 * XXX - perhaps should re-lookup the node (once more 			 * with feeling) and simply open that.  Who knows. 			 */
 name|error
 operator|=
 name|union_vn_create
@@ -1386,10 +1382,7 @@ operator|->
 name|un_uppervp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|VOP_CLOSE
+name|union_vn_close
 argument_list|(
 name|un
 operator|->
@@ -1412,7 +1405,7 @@ name|error
 condition|)
 name|uprintf
 argument_list|(
-literal|"union: copied up\n"
+literal|"union: copied up %s\n"
 argument_list|,
 name|un
 operator|->
@@ -1431,7 +1424,7 @@ name|i
 operator|<
 name|un
 operator|->
-name|un_open
+name|un_openl
 condition|;
 name|i
 operator|++
@@ -1466,7 +1459,7 @@ expr_stmt|;
 block|}
 name|un
 operator|->
-name|un_open
+name|un_openl
 operator|=
 literal|0
 expr_stmt|;
@@ -1506,7 +1499,7 @@ return|;
 block|}
 name|un
 operator|->
-name|un_open
+name|un_openl
 operator|++
 expr_stmt|;
 block|}
@@ -1589,18 +1582,18 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|UNION_DIAGNOSTIC
 if|if
 condition|(
 name|un
 operator|->
-name|un_open
+name|un_openl
 operator|<=
 literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"union: un_open cnt"
+literal|"union: un_openl cnt"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1608,7 +1601,7 @@ directive|endif
 operator|--
 name|un
 operator|->
-name|un_open
+name|un_openl
 expr_stmt|;
 name|vp
 operator|=
@@ -2447,6 +2440,17 @@ operator|->
 name|a_cnp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+name|union_removed_upper
+argument_list|(
+name|un
+argument_list|)
+expr_stmt|;
+comment|/* 		 * XXX: should create a whiteout here 		 */
 block|}
 else|else
 block|{
@@ -3233,6 +3237,17 @@ operator|->
 name|a_cnp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+name|union_removed_upper
+argument_list|(
+name|un
+argument_list|)
+expr_stmt|;
+comment|/* 		 * XXX: should create a whiteout here 		 */
 block|}
 else|else
 block|{
@@ -3639,7 +3654,7 @@ block|{
 comment|/* 	 * Do nothing (and _don't_ bypass). 	 * Wait to vrele lowervp until reclaim, 	 * so that until then our union_node is in the 	 * cache and reusable. 	 * 	 * NEEDSWORK: Someday, consider inactive'ing 	 * the lowervp and then trying to reactivate it 	 * with capabilities (v_id) 	 * like they do in the name lookup cache code. 	 * That's too much work for now. 	 */
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|UNION_DIAGNOSTIC
 name|struct
 name|union_node
 modifier|*

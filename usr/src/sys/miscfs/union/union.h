@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	1.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	1.7 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -126,15 +126,24 @@ name|un_path
 decl_stmt|;
 comment|/* saved component name */
 name|int
-name|un_open
+name|un_hash
+decl_stmt|;
+comment|/* saved un_path hash value */
+name|int
+name|un_openl
 decl_stmt|;
 comment|/* # of opens on lowervp */
 name|int
 name|un_flags
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|pid_t
 name|un_pid
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -267,6 +276,22 @@ operator|,
 expr|struct
 name|proc
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|union_removed_upper
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|union_node
+operator|*
+name|un
 operator|)
 argument_list|)
 decl_stmt|;
