@@ -5667,6 +5667,16 @@ name|bs
 operator|->
 name|blksz
 expr_stmt|;
+if|if
+condition|(
+name|irqhz
+operator|<
+literal|16
+condition|)
+name|irqhz
+operator|=
+literal|16
+expr_stmt|;
 name|b
 operator|->
 name|blksz
