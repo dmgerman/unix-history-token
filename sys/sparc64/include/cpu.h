@@ -44,7 +44,7 @@ name|CLKF_PC
 parameter_list|(
 name|cfp
 parameter_list|)
-value|((cfp)->cf_tf.tf_tpc)
+value|TRAPF_PC(&(cfp)->cf_tf)
 end_define
 
 begin_define
