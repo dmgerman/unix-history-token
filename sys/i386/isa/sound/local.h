@@ -7,12 +7,39 @@ begin_comment
 comment|/*  * $Id: local.h,v 1.11 1994/11/01 17:26:50 ache Exp  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_comment
+comment|/* If a soundcard uses DMA AUTO mode, DPS_BUFFSIZE must be< 64KB. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_BUFFSIZE
+value|61440
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|DSP_BUFFSIZE
 value|65536
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
