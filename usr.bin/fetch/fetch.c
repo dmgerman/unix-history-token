@@ -1997,7 +1997,7 @@ name|warnx
 argument_list|(
 literal|"%s: %s"
 argument_list|,
-name|path
+name|URL
 argument_list|,
 name|fetchLastErrString
 argument_list|)
@@ -2033,7 +2033,7 @@ name|warnx
 argument_list|(
 literal|"%s: size unknown"
 argument_list|,
-name|path
+name|URL
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2054,7 +2054,7 @@ name|warnx
 argument_list|(
 literal|"%s: size mismatch: expected %lld, actual %lld"
 argument_list|,
-name|path
+name|URL
 argument_list|,
 operator|(
 name|long
@@ -2146,7 +2146,7 @@ name|warnx
 argument_list|(
 literal|"%s: size of remote file is not known"
 argument_list|,
-name|path
+name|URL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2433,7 +2433,7 @@ name|warnx
 argument_list|(
 literal|"%s: file has changed"
 argument_list|,
-name|path
+name|URL
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -2535,7 +2535,7 @@ name|warnx
 argument_list|(
 literal|"%s: %s"
 argument_list|,
-name|path
+name|URL
 argument_list|,
 name|fetchLastErrString
 argument_list|)
