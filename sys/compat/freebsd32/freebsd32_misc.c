@@ -298,29 +298,27 @@ end_include
 begin_include
 include|#
 directive|include
-file|<amd64/ia32/ia32_util.h>
+file|<compat/freebsd32/freebsd32_util.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<amd64/ia32/ia32.h>
+file|<compat/freebsd32/freebsd32.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<amd64/ia32/ia32_proto.h>
+file|<compat/freebsd32/freebsd32_proto.h>
 end_include
 
 begin_decl_stmt
-specifier|static
+specifier|extern
 specifier|const
 name|char
-name|ia32_emul_path
+name|freebsd32_emul_path
 index|[]
-init|=
-literal|"/compat/ia32"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,7 +328,7 @@ end_comment
 
 begin_function
 name|int
-name|ia32_emul_find
+name|freebsd32_emul_find
 parameter_list|(
 name|td
 parameter_list|,
@@ -659,7 +657,7 @@ return|return
 name|error
 return|;
 block|}
-comment|/* 		 * We now compare the vnode of the ia32_root to the one 		 * vnode asked. If they resolve to be the same, then we 		 * ignore the match so that the real root gets used. 		 * This avoids the problem of traversing "../.." to find the 		 * root directory and never finding it, because "/" resolves 		 * to the emulation root directory. This is expensive :-( 		 */
+comment|/* 		 * We now compare the vnode of the freebsd32_root to the one 		 * vnode asked. If they resolve to be the same, then we 		 * ignore the match so that the real root gets used. 		 * This avoids the problem of traversing "../.." to find the 		 * root directory and never finding it, because "/" resolves 		 * to the emulation root directory. This is expensive :-( 		 */
 name|NDINIT
 argument_list|(
 operator|&
@@ -671,7 +669,7 @@ name|FOLLOW
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
-name|ia32_emul_path
+name|freebsd32_emul_path
 argument_list|,
 name|td
 argument_list|)
@@ -906,7 +904,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_open
+name|freebsd32_open
 parameter_list|(
 name|struct
 name|thread
@@ -914,7 +912,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_open_args
+name|freebsd32_open_args
 modifier|*
 name|uap
 parameter_list|)
@@ -957,7 +955,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_wait4
+name|freebsd32_wait4
 parameter_list|(
 name|struct
 name|thread
@@ -965,7 +963,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_wait4_args
+name|freebsd32_wait4_args
 modifier|*
 name|uap
 parameter_list|)
@@ -1485,7 +1483,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_getfsstat
+name|freebsd32_getfsstat
 parameter_list|(
 name|struct
 name|thread
@@ -1493,7 +1491,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_getfsstat_args
+name|freebsd32_getfsstat_args
 modifier|*
 name|uap
 parameter_list|)
@@ -1705,7 +1703,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_access
+name|freebsd32_access
 parameter_list|(
 name|struct
 name|thread
@@ -1713,7 +1711,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_access_args
+name|freebsd32_access_args
 modifier|*
 name|uap
 parameter_list|)
@@ -1756,7 +1754,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_chflags
+name|freebsd32_chflags
 parameter_list|(
 name|struct
 name|thread
@@ -1764,7 +1762,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_chflags_args
+name|freebsd32_chflags_args
 modifier|*
 name|uap
 parameter_list|)
@@ -1824,7 +1822,7 @@ end_struct
 
 begin_function
 name|int
-name|ia32_sigaltstack
+name|freebsd32_sigaltstack
 parameter_list|(
 name|struct
 name|thread
@@ -1832,7 +1830,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_sigaltstack_args
+name|freebsd32_sigaltstack_args
 modifier|*
 name|uap
 parameter_list|)
@@ -2006,7 +2004,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_execve
+name|freebsd32_execve
 parameter_list|(
 name|struct
 name|thread
@@ -2014,7 +2012,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_execve_args
+name|freebsd32_execve_args
 modifier|*
 name|uap
 parameter_list|)
@@ -2337,7 +2335,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|ia32_mmap_partial
+name|freebsd32_mmap_partial
 parameter_list|(
 name|struct
 name|thread
@@ -2595,7 +2593,7 @@ end_endif
 
 begin_function
 name|int
-name|ia32_mmap
+name|freebsd32_mmap
 parameter_list|(
 name|struct
 name|thread
@@ -2603,7 +2601,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_mmap_args
+name|freebsd32_mmap_args
 modifier|*
 name|uap
 parameter_list|)
@@ -2722,7 +2720,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|ia32_mmap_partial
+name|freebsd32_mmap_partial
 argument_list|(
 name|td
 argument_list|,
@@ -2784,7 +2782,7 @@ argument_list|)
 decl_stmt|;
 name|error
 operator|=
-name|ia32_mmap_partial
+name|freebsd32_mmap_partial
 argument_list|(
 name|td
 argument_list|,
@@ -3086,7 +3084,7 @@ end_struct
 
 begin_function
 name|int
-name|ia32_setitimer
+name|freebsd32_setitimer
 parameter_list|(
 name|struct
 name|thread
@@ -3094,7 +3092,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_setitimer_args
+name|freebsd32_setitimer_args
 modifier|*
 name|uap
 parameter_list|)
@@ -3375,7 +3373,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_select
+name|freebsd32_select
 parameter_list|(
 name|struct
 name|thread
@@ -3383,7 +3381,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_select_args
+name|freebsd32_select_args
 modifier|*
 name|uap
 parameter_list|)
@@ -3568,7 +3566,7 @@ end_struct
 
 begin_function
 name|int
-name|ia32_kevent
+name|freebsd32_kevent
 parameter_list|(
 name|struct
 name|thread
@@ -3576,7 +3574,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_kevent_args
+name|freebsd32_kevent_args
 modifier|*
 name|uap
 parameter_list|)
@@ -4094,7 +4092,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_gettimeofday
+name|freebsd32_gettimeofday
 parameter_list|(
 name|struct
 name|thread
@@ -4102,7 +4100,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_gettimeofday_args
+name|freebsd32_gettimeofday_args
 modifier|*
 name|uap
 parameter_list|)
@@ -4276,7 +4274,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_getrusage
+name|freebsd32_getrusage
 parameter_list|(
 name|struct
 name|thread
@@ -4284,7 +4282,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_getrusage_args
+name|freebsd32_getrusage_args
 modifier|*
 name|uap
 parameter_list|)
@@ -4596,7 +4594,7 @@ end_define
 
 begin_function
 name|int
-name|ia32_readv
+name|freebsd32_readv
 parameter_list|(
 name|struct
 name|thread
@@ -4604,7 +4602,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_readv_args
+name|freebsd32_readv_args
 modifier|*
 name|uap
 parameter_list|)
@@ -4867,7 +4865,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_writev
+name|freebsd32_writev
 parameter_list|(
 name|struct
 name|thread
@@ -4875,7 +4873,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_writev_args
+name|freebsd32_writev_args
 modifier|*
 name|uap
 parameter_list|)
@@ -5138,7 +5136,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_settimeofday
+name|freebsd32_settimeofday
 parameter_list|(
 name|struct
 name|thread
@@ -5146,7 +5144,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_settimeofday_args
+name|freebsd32_settimeofday_args
 modifier|*
 name|uap
 parameter_list|)
@@ -5301,7 +5299,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_utimes
+name|freebsd32_utimes
 parameter_list|(
 name|struct
 name|thread
@@ -5309,7 +5307,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_utimes_args
+name|freebsd32_utimes_args
 modifier|*
 name|uap
 parameter_list|)
@@ -5512,7 +5510,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_adjtime
+name|freebsd32_adjtime
 parameter_list|(
 name|struct
 name|thread
@@ -5520,7 +5518,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_adjtime_args
+name|freebsd32_adjtime_args
 modifier|*
 name|uap
 parameter_list|)
@@ -5799,7 +5797,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_statfs
+name|freebsd32_statfs
 parameter_list|(
 name|struct
 name|thread
@@ -5807,7 +5805,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_statfs_args
+name|freebsd32_statfs_args
 modifier|*
 name|uap
 parameter_list|)
@@ -5963,7 +5961,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_fstatfs
+name|freebsd32_fstatfs
 parameter_list|(
 name|struct
 name|thread
@@ -5971,7 +5969,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_fstatfs_args
+name|freebsd32_fstatfs_args
 modifier|*
 name|uap
 parameter_list|)
@@ -6127,7 +6125,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_semsys
+name|freebsd32_semsys
 parameter_list|(
 name|struct
 name|thread
@@ -6135,7 +6133,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_semsys_args
+name|freebsd32_semsys_args
 modifier|*
 name|uap
 parameter_list|)
@@ -6159,7 +6157,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_msgsys
+name|freebsd32_msgsys
 parameter_list|(
 name|struct
 name|thread
@@ -6167,7 +6165,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_msgsys_args
+name|freebsd32_msgsys_args
 modifier|*
 name|uap
 parameter_list|)
@@ -6191,7 +6189,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_shmsys
+name|freebsd32_shmsys
 parameter_list|(
 name|struct
 name|thread
@@ -6199,7 +6197,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_shmsys_args
+name|freebsd32_shmsys_args
 modifier|*
 name|uap
 parameter_list|)
@@ -6223,7 +6221,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_pread
+name|freebsd32_pread
 parameter_list|(
 name|struct
 name|thread
@@ -6231,7 +6229,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_pread_args
+name|freebsd32_pread_args
 modifier|*
 name|uap
 parameter_list|)
@@ -6301,7 +6299,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_pwrite
+name|freebsd32_pwrite
 parameter_list|(
 name|struct
 name|thread
@@ -6309,7 +6307,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_pwrite_args
+name|freebsd32_pwrite_args
 modifier|*
 name|uap
 parameter_list|)
@@ -6379,7 +6377,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_lseek
+name|freebsd32_lseek
 parameter_list|(
 name|struct
 name|thread
@@ -6387,7 +6385,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_lseek_args
+name|freebsd32_lseek_args
 modifier|*
 name|uap
 parameter_list|)
@@ -6495,7 +6493,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_truncate
+name|freebsd32_truncate
 parameter_list|(
 name|struct
 name|thread
@@ -6503,7 +6501,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_truncate_args
+name|freebsd32_truncate_args
 modifier|*
 name|uap
 parameter_list|)
@@ -6557,7 +6555,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_ftruncate
+name|freebsd32_ftruncate
 parameter_list|(
 name|struct
 name|thread
@@ -6565,7 +6563,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_ftruncate_args
+name|freebsd32_ftruncate_args
 modifier|*
 name|uap
 parameter_list|)
@@ -6625,7 +6623,7 @@ end_ifdef
 
 begin_function
 name|int
-name|freebsd4_ia32_sendfile
+name|freebsd4_freebsd32_sendfile
 parameter_list|(
 name|struct
 name|thread
@@ -6633,7 +6631,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|freebsd4_ia32_sendfile_args
+name|freebsd4_freebsd32_sendfile_args
 modifier|*
 name|uap
 parameter_list|)
@@ -6735,7 +6733,7 @@ end_endif
 
 begin_function
 name|int
-name|ia32_sendfile
+name|freebsd32_sendfile
 parameter_list|(
 name|struct
 name|thread
@@ -6743,7 +6741,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_sendfile_args
+name|freebsd32_sendfile_args
 modifier|*
 name|uap
 parameter_list|)
@@ -7080,7 +7078,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_stat
+name|freebsd32_stat
 parameter_list|(
 name|struct
 name|thread
@@ -7088,7 +7086,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_stat_args
+name|freebsd32_stat_args
 modifier|*
 name|uap
 parameter_list|)
@@ -7244,7 +7242,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_fstat
+name|freebsd32_fstat
 parameter_list|(
 name|struct
 name|thread
@@ -7252,7 +7250,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_fstat_args
+name|freebsd32_fstat_args
 modifier|*
 name|uap
 parameter_list|)
@@ -7408,7 +7406,7 @@ end_function
 
 begin_function
 name|int
-name|ia32_lstat
+name|freebsd32_lstat
 parameter_list|(
 name|struct
 name|thread
@@ -7416,7 +7414,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_lstat_args
+name|freebsd32_lstat_args
 modifier|*
 name|uap
 parameter_list|)
@@ -7576,7 +7574,7 @@ end_comment
 
 begin_function
 name|int
-name|ia32_sysctl
+name|freebsd32_sysctl
 parameter_list|(
 name|struct
 name|thread
@@ -7584,7 +7582,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_sysctl_args
+name|freebsd32_sysctl_args
 modifier|*
 name|uap
 parameter_list|)
@@ -7773,7 +7771,7 @@ end_struct
 
 begin_function
 name|int
-name|ia32_sigaction
+name|freebsd32_sigaction
 parameter_list|(
 name|struct
 name|thread
@@ -7781,7 +7779,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|ia32_sigaction_args
+name|freebsd32_sigaction_args
 modifier|*
 name|uap
 parameter_list|)
@@ -7969,7 +7967,7 @@ end_ifdef
 
 begin_function
 name|int
-name|freebsd4_ia32_sigaction
+name|freebsd4_freebsd32_sigaction
 parameter_list|(
 name|struct
 name|thread
@@ -7977,7 +7975,7 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|freebsd4_ia32_sigaction_args
+name|freebsd4_freebsd32_sigaction_args
 modifier|*
 name|uap
 parameter_list|)
@@ -8169,7 +8167,7 @@ literal|0
 end_if
 
 begin_comment
-unit|int ia32_xxx(struct thread *td, struct ia32_xxx_args *uap) { 	int error; 	caddr_t sg; 	struct yyy32 *p32, s32; 	struct yyy *p = NULL, s;  	p32 = uap->zzz; 	if (p32) { 		sg = stackgap_init(); 		p = stackgap_alloc(&sg, sizeof(struct yyy)); 		uap->zzz = (struct yyy32 *)p; 		error = copyin(p32,&s32, sizeof(s32)); 		if (error) 			return (error);
+unit|int freebsd32_xxx(struct thread *td, struct freebsd32_xxx_args *uap) { 	int error; 	caddr_t sg; 	struct yyy32 *p32, s32; 	struct yyy *p = NULL, s;  	p32 = uap->zzz; 	if (p32) { 		sg = stackgap_init(); 		p = stackgap_alloc(&sg, sizeof(struct yyy)); 		uap->zzz = (struct yyy32 *)p; 		error = copyin(p32,&s32, sizeof(s32)); 		if (error) 			return (error);
 comment|/* translate in */
 end_comment
 

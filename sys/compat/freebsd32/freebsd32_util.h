@@ -41,7 +41,7 @@ end_include
 
 begin_struct
 struct|struct
-name|ia32_ps_strings
+name|freebsd32_ps_strings
 block|{
 name|u_int32_t
 name|ps_argvstr
@@ -66,15 +66,9 @@ end_struct
 begin_define
 define|#
 directive|define
-name|IA32_USRSTACK
-value|((1ul<< 32) - PAGE_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IA32_PS_STRINGS
-value|(IA32_USRSTACK - sizeof(struct ia32_ps_strings))
+name|FREEBSD32_PS_STRINGS
+define|\
+value|(FREEBSD32_USRSTACK - sizeof(struct freebsd32_ps_strings))
 end_define
 
 begin_function_decl
@@ -123,7 +117,7 @@ operator|(
 operator|(
 name|caddr_t
 operator|)
-name|IA32_PS_STRINGS
+name|FREEBSD32_PS_STRINGS
 operator|)
 operator|-
 name|szsigcode
@@ -187,14 +181,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|char
-name|ia32_emul_path
+name|freebsd32_emul_path
 index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 name|int
-name|ia32_emul_find
+name|freebsd32_emul_find
 parameter_list|(
 name|struct
 name|thread
@@ -233,7 +227,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|do {								\ 		int _error;						\ 									\ 		_error = ia32_emul_find(p, sgp, ia32_emul_path, path,	\&path, i);			\ 		if (_error == EFAULT)					\ 			return (_error);				\ 	} while (0)
+value|do {								\ 		int _error;						\ 									\ 		_error = freebsd32_emul_find(p, sgp,			\ 					freebsd32_emul_path, path,	\&path, i);			\ 		if (_error == EFAULT)					\ 			return (_error);				\ 	} while (0)
 end_define
 
 begin_define
