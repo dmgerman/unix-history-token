@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.40 %G%"
+literal|"@(#)sccs.c	1.41 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1780,6 +1780,13 @@ operator|=
 name|np
 expr_stmt|;
 comment|/* for each file, do the diff */
+name|p
+operator|=
+name|argv
+index|[
+literal|1
+index|]
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -1796,13 +1803,10 @@ operator|*
 name|np
 operator|++
 expr_stmt|;
-name|p
-operator|=
-operator|*
-name|np
-expr_stmt|;
-operator|*
-name|np
+name|argv
+index|[
+literal|1
+index|]
 operator|=
 name|NULL
 expr_stmt|;
@@ -1829,8 +1833,10 @@ name|rval
 operator|=
 name|i
 expr_stmt|;
-operator|*
-name|np
+name|argv
+index|[
+literal|1
+index|]
 operator|=
 name|p
 expr_stmt|;
