@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	4.4 %G%"
+literal|"@(#)af.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,36 @@ include|#
 directive|include
 file|"rip.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|packet
+index|[
+name|MAXPACKETSIZE
+index|]
+decl_stmt|,
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|trace
+decl_stmt|,
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|tprintf
+value|if (trace) printf
+end_define
 
 begin_comment
 comment|/*  * Address family support routines  */
@@ -413,13 +443,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|char
-name|packet
-index|[
-name|MAXPACKETSIZE
-index|]
-decl_stmt|;
 name|struct
 name|sockaddr_in
 name|dst
@@ -483,9 +506,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|tprintf
 argument_list|(
-literal|"send"
+literal|"send to %x: %s\n"
+argument_list|,
+name|sin
+operator|->
+name|sin_addr
+argument_list|,
+name|sys_errlist
+index|[
+name|errno
+index|]
 argument_list|)
 expr_stmt|;
 block|}
