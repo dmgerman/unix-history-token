@@ -3208,7 +3208,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-default|default:
 block|}
 if|if
 condition|(
@@ -5222,8 +5221,6 @@ argument_list|)
 expr_stmt|;
 comment|/* this may recurse */
 break|break;
-default|default:
-comment|/* can't get here */
 block|}
 block|}
 name|checkupdates
