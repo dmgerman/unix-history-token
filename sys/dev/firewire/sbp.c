@@ -5391,6 +5391,12 @@ operator|->
 name|status
 operator|==
 name|SBP_DEV_ATTACHED
+operator|||
+name|sdev
+operator|->
+name|status
+operator|==
+name|SBP_DEV_PROBE
 condition|)
 name|xfer
 operator|->
