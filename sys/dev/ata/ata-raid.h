@@ -34,6 +34,10 @@ directive|define
 name|AR_F_SPAN
 value|0x0004
 comment|/* SPAN */
+define|#
+directive|define
+name|AR_F_CONF_DONE
+value|0x0008
 name|int
 name|num_subdisks
 decl_stmt|;
@@ -100,26 +104,6 @@ name|dev_t
 name|dev
 decl_stmt|;
 comment|/* device place holder */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ar_config
-block|{
-name|int
-name|num_raids
-decl_stmt|;
-name|struct
-name|ar_softc
-modifier|*
-name|raid
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* configs for each RAID */
 block|}
 struct|;
 end_struct
@@ -324,14 +308,8 @@ decl_stmt|;
 name|int32_t
 name|magic_0
 decl_stmt|;
-name|int16_t
+name|int32_t
 name|dummy_1
-decl_stmt|;
-name|int8_t
-name|channel
-decl_stmt|;
-name|int8_t
-name|device
 decl_stmt|;
 name|int32_t
 name|magic_1
@@ -359,32 +337,32 @@ name|int8_t
 name|dummy_0
 decl_stmt|;
 name|int8_t
-name|device_0
+name|disk_number
 decl_stmt|;
 name|int8_t
-name|dummy_1
+name|channel
 decl_stmt|;
 name|int8_t
-name|device_1
+name|device
 decl_stmt|;
 name|int32_t
 name|magic_0
 decl_stmt|;
 name|int32_t
-name|dummy_2
+name|dummy_1
 decl_stmt|;
 name|int32_t
-name|dummy_3
+name|dummy_2
 decl_stmt|;
 comment|/* 0x210 */
 name|int32_t
 name|disk_secs
 decl_stmt|;
 name|int32_t
-name|dummy_4
+name|dummy_3
 decl_stmt|;
 name|int16_t
-name|dummy_5
+name|dummy_4
 decl_stmt|;
 name|int8_t
 name|status
@@ -431,7 +409,7 @@ name|u_int8_t
 name|raid0_disks
 decl_stmt|;
 name|u_int8_t
-name|dummy_6
+name|array_number
 decl_stmt|;
 name|u_int32_t
 name|total_secs
@@ -449,7 +427,7 @@ name|int32_t
 name|magic_1
 decl_stmt|;
 name|int32_t
-name|dummy_7
+name|dummy_5
 decl_stmt|;
 comment|/* 0x230 */
 struct|struct
@@ -469,7 +447,6 @@ decl_stmt|;
 name|int32_t
 name|disk_number
 decl_stmt|;
-comment|/* subdisk # */
 block|}
 name|disk
 index|[
@@ -478,14 +455,11 @@ index|]
 struct|;
 block|}
 name|raid
-index|[
-literal|4
-index|]
 struct|;
 name|int32_t
 name|filler2
 index|[
-literal|235
+literal|346
 index|]
 decl_stmt|;
 name|uint32_t
