@@ -679,12 +679,6 @@ expr_stmt|;
 comment|/* lets create the disk device */
 name|adp
 operator|->
-name|max_iosize
-operator|=
-name|DEV_BSIZE
-expr_stmt|;
-name|adp
-operator|->
 name|disk
 operator|.
 name|d_open
