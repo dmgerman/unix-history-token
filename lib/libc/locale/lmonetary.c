@@ -71,8 +71,16 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|LCMONETARY_SIZE
+name|LCMONETARY_SIZE_FULL
 value|(sizeof(struct lc_monetary_T) / sizeof(char *))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCMONETARY_SIZE_MIN
+define|\
+value|(offsetof(struct lc_monetary_T, int_p_cs_precedes) / \ 		    sizeof(char *))
 end_define
 
 begin_decl_stmt
@@ -267,21 +275,9 @@ name|_monetary_locale_buf
 argument_list|,
 literal|"LC_MONETARY"
 argument_list|,
-name|LCMONETARY_SIZE
+name|LCMONETARY_SIZE_FULL
 argument_list|,
-name|offsetof
-argument_list|(
-expr|struct
-name|lc_monetary_T
-argument_list|,
-name|int_p_cs_precedes
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
+name|LCMONETARY_SIZE_MIN
 argument_list|,
 operator|(
 specifier|const
