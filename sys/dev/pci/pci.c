@@ -9154,7 +9154,7 @@ name|dinfo
 operator|->
 name|cfg
 operator|.
-name|subdevice
+name|subvendor
 argument_list|,
 literal|2
 argument_list|)
