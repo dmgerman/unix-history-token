@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_vnops.c	4.60	83/06/12	*/
+comment|/*	ffs_vnops.c	4.61	83/07/09	*/
 end_comment
 
 begin_include
