@@ -1672,7 +1672,8 @@ name|dev
 parameter_list|,
 name|flag
 parameter_list|)
-value|device_delete_child(device_get_parent(dev), dev)
+define|\
+value|do { \ 		free(device_get_ivars(dev), M_USB); \ 		device_delete_child(device_get_parent(dev), dev); \ 	} while (0);
 end_define
 
 begin_typedef
