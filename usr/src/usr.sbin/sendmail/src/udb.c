@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.8 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	5.9 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.8 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	5.9 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -917,11 +917,12 @@ name|up
 operator|=
 name|UdbEnts
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
+while|while
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
 block|{
 name|char
 modifier|*
