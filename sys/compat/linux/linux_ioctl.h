@@ -1136,6 +1136,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SOUND_MIXER_INFO
+value|0x4d65
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_OSS_GETVERSION
 value|0x4d76
 end_define
