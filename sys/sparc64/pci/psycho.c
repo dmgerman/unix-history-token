@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999, 2000 Matthew R. Green  * All rights reserved. 
 end_comment
 
 begin_comment
-comment|/*  * Support for `psycho' and `psycho+' UPA to PCI bridge and   * UltraSPARC IIi and IIe `sabre' PCI controllers.  */
+comment|/*  * Support for `psycho' and `psycho+' UPA to PCI bridge and  * UltraSPARC IIi and IIe `sabre' PCI controllers.  */
 end_comment
 
 begin_include
@@ -963,7 +963,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * "sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "simba"'s underneath the sabre.  *  * "psycho" and "psycho+" is a dual UPA to PCI bridge.  It sits on the UPA bus  * and manages two PCI buses.  "psycho" has two 64-bit 33MHz buses, while  * "psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "psycho+" since I don't think the original "psycho"  * ever shipped, and if it did it would be in the U30.    *  * Each "psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "sabre" itself usually takes pci0, with "simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "psycho+" ICs, each  * providing two PCI buses.    *  *  * XXXX The psycho/sabre node has an `interrupts' attribute.  They contain  * the values of the following interrupts in this order:  *  * PCI Bus Error	(30)  * DMA UE		(2e)  * DMA CE		(2f)  * Power Fail		(25)  *  * We really should attach handlers for each.  */
+comment|/*  * "sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "simba"'s underneath the sabre.  *  * "psycho" and "psycho+" is a dual UPA to PCI bridge.  It sits on the UPA bus  * and manages two PCI buses.  "psycho" has two 64-bit 33MHz buses, while  * "psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "psycho+" since I don't think the original "psycho"  * ever shipped, and if it did it would be in the U30.  *  * Each "psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "sabre" itself usually takes pci0, with "simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "psycho+" ICs, each  * providing two PCI buses.  *  *  * XXXX The psycho/sabre node has an `interrupts' attribute.  They contain  * the values of the following interrupts in this order:  *  * PCI Bus Error	(30)  * DMA UE		(2e)  * DMA CE		(2f)  * Power Fail		(25)  *  * We really should attach handlers for each.  */
 end_comment
 
 begin_define
@@ -1157,7 +1157,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SUNW,psycho initialisation ..  *	- find the per-psycho registers  *	- figure out the IGN.  *	- find our partner psycho  *	- configure ourselves  *	- bus range, bus,   *	- interrupt map,  *	- setup the chipsets.  *	- if we're the first of the pair, initialise the IOMMU, otherwise  *	  just copy it's tags and addresses.  */
+comment|/*  * SUNW,psycho initialisation ..  *	- find the per-psycho registers  *	- figure out the IGN.  *	- find our partner psycho  *	- configure ourselves  *	- bus range, bus,  *	- interrupt map,  *	- setup the chipsets.  *	- if we're the first of the pair, initialise the IOMMU, otherwise  *	  just copy it's tags and addresses.  */
 end_comment
 
 begin_function
@@ -4024,6 +4024,72 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Keep a table of quirky PCI devices that need fixups before the MI PCI code  * creates the resource lists. This needs to be moved around once other bus  * drivers are added. Moving it to the MI code should maybe be reconsidered  * if one of these devices appear in non-sparc64 boxen. It's likely that not  * all BIOSes/firmwares can deal with them.  */
+end_comment
+
+begin_struct
+struct|struct
+name|psycho_dquirk
+block|{
+name|u_int32_t
+name|dq_devid
+decl_stmt|;
+name|int
+name|dq_quirk
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Quirk types. May be or'ed together. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DQT_BAD_INTPIN
+value|1
+end_define
+
+begin_comment
+comment|/* Intpin reg 0, but intpin used */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|psycho_dquirk
+name|dquirks
+index|[]
+init|=
+block|{
+block|{
+literal|0x1001108e
+block|,
+name|DQT_BAD_INTPIN
+block|}
+block|,
+comment|/* Sun HME (PCIO func. 1) */
+block|{
+literal|0x1101108e
+block|,
+name|DQT_BAD_INTPIN
+block|}
+block|,
+comment|/* Sun GEM (PCIO2 func. 1) */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NDQUIRKS
+value|(sizeof(dquirks) / sizeof(dquirks[0]))
+end_define
+
 begin_function
 specifier|static
 name|u_int32_t
@@ -4063,10 +4129,19 @@ literal|0
 decl_stmt|;
 name|u_int32_t
 name|r
+decl_stmt|,
+name|devid
 decl_stmt|;
-comment|/* 	 * The psycho bridge does not tolerate accesses to unconfigured PCI 	 * devices' or function's config space, so look up the device in the 	 * first, and if it is not present, return a value that will make the 	 * detection think that there is no device here. This is somehow ugly... 	 */
+name|int
+name|i
+decl_stmt|;
+comment|/* 	 * The psycho bridge does not tolerate accesses to unconfigured PCI 	 * devices' or function's config space, so look up the device in the 	 * firmware device tree first, and if it is not present, return a value 	 * that will make the detection code think that there is no device here. 	 * This is ugly... 	 */
 if|if
 condition|(
+name|reg
+operator|==
+literal|0
+operator|&&
 name|ofw_pci_find_node
 argument_list|(
 name|bus
@@ -4179,6 +4254,85 @@ argument_list|(
 literal|"psycho_read_config: bad width"
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|reg
+operator|==
+name|PCIR_INTPIN
+operator|&&
+name|r
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Check for DQT_BAD_INTPIN quirk. */
+name|devid
+operator|=
+name|psycho_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|,
+name|PCIR_DEVVENDOR
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NDQUIRKS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|dquirks
+index|[
+name|i
+index|]
+operator|.
+name|dq_devid
+operator|==
+name|devid
+condition|)
+block|{
+comment|/* 				 * Need to set the intpin to a value != 0 so 				 * that the MI code will think that this device 				 * has an interrupt. 				 * Just use 1 (intpin a) for now. This is, of 				 * course, bogus, but since interrupts are 				 * routed in advance, this does not really 				 * matter. 				 */
+if|if
+condition|(
+operator|(
+name|dquirks
+index|[
+name|i
+index|]
+operator|.
+name|dq_quirk
+operator|&
+name|DQT_BAD_INTPIN
+operator|)
+operator|!=
+literal|0
+condition|)
+name|r
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+block|}
 block|}
 return|return
 operator|(
@@ -4610,7 +4764,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * Hunt through all the interrupt mapping regs to look for our 	 * interrupt vector. 	 * 	 * XXX We only compare INOs rather than IGNs since the firmware may 	 * not provide the IGN and the IGN is constant for all device on that 	 * PCI controller.  This could cause problems for the FFB/external 	 * interrupt which has a full vector that can be set arbitrarily.   	 */
+comment|/* 	 * Hunt through all the interrupt mapping regs to look for our 	 * interrupt vector. 	 * 	 * XXX We only compare INOs rather than IGNs since the firmware may 	 * not provide the IGN and the IGN is constant for all device on that 	 * PCI controller.  This could cause problems for the FFB/external 	 * interrupt which has a full vector that can be set arbitrarily. 	 */
 name|ino
 operator|=
 name|INTINO
@@ -4707,9 +4861,14 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|bus_setup_intr
+name|BUS_SETUP_INTR
+argument_list|(
+name|device_get_parent
 argument_list|(
 name|dev
+argument_list|)
+argument_list|,
+name|child
 argument_list|,
 name|ires
 argument_list|,
@@ -4819,9 +4978,14 @@ name|cookie
 expr_stmt|;
 name|error
 operator|=
-name|bus_teardown_intr
+name|BUS_TEARDOWN_INTR
+argument_list|(
+name|device_get_parent
 argument_list|(
 name|dev
+argument_list|)
+argument_list|,
+name|child
 argument_list|,
 name|vec
 argument_list|,
