@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)swapon.c	4.7 (Berkeley) %G%"
+literal|"@(#)swapon.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,15 +152,6 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-name|printf
-argument_list|(
-literal|"Adding %s as swap device\n"
-argument_list|,
-name|fsp
-operator|->
-name|fs_spec
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|syscall
@@ -220,6 +211,16 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+else|else
+name|printf
+argument_list|(
+literal|"Adding %s as swap device\n"
+argument_list|,
+name|fsp
+operator|->
+name|fs_spec
+argument_list|)
+expr_stmt|;
 block|}
 name|endfsent
 argument_list|()
