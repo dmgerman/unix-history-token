@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  $Id:$  */
+comment|/*  $Id: dist.h,v 1.33 1999/04/21 07:42:02 obrien Exp $  */
 end_comment
 
 begin_ifndef
@@ -154,7 +154,7 @@ define|#
 directive|define
 name|_DIST_DEVELOPER
 define|\
-value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_INFO | DIST_SRC | DIST_COMPAT22)
+value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_INFO | DIST_SRC )
 end_define
 
 begin_define
@@ -162,7 +162,7 @@ define|#
 directive|define
 name|_DIST_USER
 define|\
-value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_COMPAT22)
+value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT )
 end_define
 
 begin_comment
