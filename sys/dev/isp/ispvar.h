@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.11 1999/03/17 05:04:39 mjacob Exp $ */
+comment|/* $Id: ispvar.h,v 1.12 1999/03/25 22:52:45 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_03_25_99 */
+comment|/* release_4_3_99 */
 end_comment
 
 begin_comment
@@ -971,10 +971,16 @@ expr_stmt|;
 comment|/* HBA Type and Revision */
 name|u_int16_t
 name|isp_fwrev
+index|[
+literal|3
+index|]
 decl_stmt|;
 comment|/* Running F/W revision */
 name|u_int16_t
 name|isp_romfw_rev
+index|[
+literal|3
+index|]
 decl_stmt|;
 comment|/* 'ROM' F/W revision */
 name|void
@@ -1170,8 +1176,20 @@ parameter_list|(
 name|maj
 parameter_list|,
 name|min
+parameter_list|,
+name|mic
 parameter_list|)
-value|((maj)<< 10| (min))
+value|((maj<< 24) | (min<< 16) | mic)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_FW_REVX
+parameter_list|(
+name|xp
+parameter_list|)
+value|((xp[0 ]<< 24) | (xp[1]<< 16) | xp[2])
 end_define
 
 begin_comment
@@ -1251,6 +1269,13 @@ define|#
 directive|define
 name|ISP_HA_SCSI_1040B
 value|0x6
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_SCSI_1040C
+value|0x7
 end_define
 
 begin_define
