@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4333,9 +4333,9 @@ directive|ifndef
 name|lint
 specifier|register
 name|int
-name|br
+name|rbr
 decl_stmt|,
-name|cvec
+name|rcvec
 decl_stmt|;
 comment|/* MUST BE r11, r10 */
 else|#
@@ -4343,11 +4343,11 @@ directive|else
 comment|/* 	 * Lint doesn't realize that these 	 * can be initialized asynchronously 	 * when devices interrupt. 	 */
 specifier|register
 name|int
-name|br
+name|rbr
 init|=
 literal|0
 decl_stmt|,
-name|cvec
+name|rcvec
 init|=
 literal|0
 decl_stmt|;
@@ -4406,6 +4406,12 @@ name|catcher
 index|[
 literal|128
 index|]
+decl_stmt|;
+specifier|extern
+name|int
+name|br
+decl_stmt|,
+name|cvec
 decl_stmt|;
 if|#
 directive|if
@@ -4844,6 +4850,10 @@ name|cvec
 operator|=
 literal|0x200
 expr_stmt|;
+name|rcvec
+operator|=
+literal|0x200
+expr_stmt|;
 name|i
 operator|=
 call|(
@@ -4916,7 +4926,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cvec
+name|rcvec
 operator|==
 literal|0
 condition|)
@@ -4930,7 +4940,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|cvec
+name|rcvec
 operator|==
 literal|0x200
 condition|)
@@ -4946,9 +4956,9 @@ name|printf
 argument_list|(
 literal|"vec %o, ipl %x\n"
 argument_list|,
-name|cvec
+name|rcvec
 argument_list|,
-name|br
+name|rbr
 argument_list|)
 expr_stmt|;
 name|csralloc
@@ -5000,7 +5010,7 @@ name|um
 expr_stmt|;
 for|for
 control|(
-name|cvec
+name|rcvec
 operator|/=
 literal|4
 operator|,
@@ -5013,7 +5023,7 @@ init|;
 operator|*
 name|ivec
 condition|;
-name|cvec
+name|rcvec
 operator|++
 operator|,
 name|ivec
@@ -5023,7 +5033,7 @@ name|uhp
 operator|->
 name|uh_vec
 index|[
-name|cvec
+name|rcvec
 index|]
 operator|=
 name|scbentry
@@ -5390,6 +5400,10 @@ continue|continue;
 block|}
 endif|#
 directive|endif
+name|rcvec
+operator|=
+literal|0x200
+expr_stmt|;
 name|cvec
 operator|=
 literal|0x200
@@ -5464,7 +5478,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cvec
+name|rcvec
 operator|==
 literal|0
 condition|)
@@ -5478,7 +5492,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|cvec
+name|rcvec
 operator|==
 literal|0x200
 condition|)
@@ -5494,9 +5508,9 @@ name|printf
 argument_list|(
 literal|"vec %o, ipl %x\n"
 argument_list|,
-name|cvec
+name|rcvec
 argument_list|,
-name|br
+name|rbr
 argument_list|)
 expr_stmt|;
 name|csralloc
@@ -5516,7 +5530,7 @@ name|uhp
 expr_stmt|;
 for|for
 control|(
-name|cvec
+name|rcvec
 operator|/=
 literal|4
 operator|,
@@ -5529,7 +5543,7 @@ init|;
 operator|*
 name|ivec
 condition|;
-name|cvec
+name|rcvec
 operator|++
 operator|,
 name|ivec
@@ -5539,7 +5553,7 @@ name|uhp
 operator|->
 name|uh_vec
 index|[
-name|cvec
+name|rcvec
 index|]
 operator|=
 name|scbentry
@@ -6087,55 +6101,8 @@ operator|=
 name|nblks
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|dumplo
-operator|==
-literal|0
-operator|&&
-name|dumpdev
-operator|!=
-name|NODEV
-operator|&&
-name|bdevsw
-index|[
-name|major
-argument_list|(
-name|dumpdev
-argument_list|)
-index|]
-operator|.
-name|d_psize
-condition|)
-name|dumplo
-operator|=
-operator|(
-operator|*
-name|bdevsw
-index|[
-name|major
-argument_list|(
-name|dumpdev
-argument_list|)
-index|]
-operator|.
-name|d_psize
-operator|)
-operator|(
-name|dumpdev
-operator|)
-operator|-
-name|physmem
-expr_stmt|;
-if|if
-condition|(
-name|dumplo
-operator|<
-literal|0
-condition|)
-name|dumplo
-operator|=
-literal|0
+name|dumpconf
+argument_list|()
 expr_stmt|;
 block|}
 end_block
