@@ -708,9 +708,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|int
-name|err
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|XE_DEBUG
