@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.5 (Berkeley) %G%"
+literal|"@(#)w.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -465,14 +465,6 @@ begin_function_decl
 name|char
 modifier|*
 name|getargs
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|fread
 parameter_list|()
 function_decl|;
 end_function_decl
