@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_tun.h,v 1.5 1994/06/29 06:36:27 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988, Julian Onions<jpo@cs.nott.ac.uk>  * Nottingham University 1987.  *  * This source may be freely distributed, however I would be interested  * in any changes that are made.  *  * This driver takes packets off the IP i/f and hands them up to a  * user process to have its wicked way with. This driver has it's  * roots in a similar driver written by Phil Cockcroft (formerly) at  * UCL. This driver is based much more on read/write/select mode of  * operation though.  *  * $Id: if_tun.h,v 1.12 1998/01/26 19:52:34 brian Exp $  */
+comment|/*  * Copyright (c) 1988, Julian Onions<jpo@cs.nott.ac.uk>  * Nottingham University 1987.  *  * This source may be freely distributed, however I would be interested  * in any changes that are made.  *  * This driver takes packets off the IP i/f and hands them up to a  * user process to have its wicked way with. This driver has it's  * roots in a similar driver written by Phil Cockcroft (formerly) at  * UCL. This driver is based much more on read/write/select mode of  * operation though.  *  * $Id: if_tun.h,v 1.13 1998/04/17 22:36:56 des Exp $  */
 end_comment
 
 begin_ifndef
@@ -99,6 +99,20 @@ define|#
 directive|define
 name|TUNGIFINFO
 value|_IOR('t', 92, struct tuninfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUNSLMODE
+value|_IOW('t', 93, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUNSIFMODE
+value|_IOW('t', 94, int)
 end_define
 
 begin_endif
