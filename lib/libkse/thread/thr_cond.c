@@ -66,14 +66,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -125,14 +120,9 @@ break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
@@ -165,14 +155,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|ENOMEM
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|ENOMEM
 expr_stmt|;
 block|}
 else|else
@@ -241,14 +226,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -273,14 +253,9 @@ break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
@@ -368,14 +343,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -460,14 +430,9 @@ break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
@@ -526,14 +491,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -673,14 +633,9 @@ name|timeout
 condition|)
 block|{
 comment|/* Return a timeout error: */
-name|errno
-operator|=
-name|ETIMEDOUT
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|ETIMEDOUT
 expr_stmt|;
 block|}
 block|}
@@ -688,14 +643,9 @@ break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
@@ -747,14 +697,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -815,14 +760,9 @@ break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
@@ -918,14 +858,9 @@ break|break;
 comment|/* Trap invalid condition variable types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}

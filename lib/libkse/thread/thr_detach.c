@@ -75,14 +75,9 @@ name|NULL
 condition|)
 block|{
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 comment|/* Check if the thread has not been detached: */
@@ -148,14 +143,9 @@ block|}
 else|else
 block|{
 comment|/* Return an error: */
-name|errno
-operator|=
-name|ESRCH
-expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+name|ESRCH
 expr_stmt|;
 block|}
 comment|/* Unblock signals: */

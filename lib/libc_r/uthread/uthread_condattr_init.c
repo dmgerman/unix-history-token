@@ -75,14 +75,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|ENOMEM
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|ENOMEM
 expr_stmt|;
 block|}
 else|else

@@ -749,10 +749,6 @@ name|NULL
 condition|)
 block|{
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|data
 operator|=
 name|NULL

@@ -69,14 +69,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -114,14 +109,9 @@ name|MUTEX_TYPE_MAX
 condition|)
 block|{
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -166,14 +156,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|ENOMEM
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|ENOMEM
 expr_stmt|;
 block|}
 else|else
@@ -221,14 +206,9 @@ break|break;
 comment|/* Trap invalid mutex types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
@@ -332,14 +312,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -388,14 +363,9 @@ break|break;
 comment|/* Trap undefined mutex types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
@@ -474,14 +444,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -535,14 +500,9 @@ block|}
 else|else
 block|{
 comment|/* Return a busy error: */
-name|errno
-operator|=
-name|EBUSY
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EBUSY
 expr_stmt|;
 block|}
 break|break;
@@ -591,14 +551,9 @@ block|}
 else|else
 block|{
 comment|/* Return a busy error: */
-name|errno
-operator|=
-name|EBUSY
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EBUSY
 expr_stmt|;
 block|}
 block|}
@@ -619,14 +574,9 @@ break|break;
 comment|/* Trap invalid mutex types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
@@ -675,14 +625,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -883,14 +828,9 @@ break|break;
 comment|/* Trap invalid mutex types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
@@ -939,14 +879,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
@@ -987,14 +922,9 @@ name|_thread_run
 condition|)
 block|{
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 comment|/* 			 * Get the next thread from the queue of threads waiting on 			 * the mutex:  			 */
@@ -1057,14 +987,9 @@ name|_thread_run
 condition|)
 block|{
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 block|}
 comment|/* Check if there are still counts: */
@@ -1138,14 +1063,9 @@ break|break;
 comment|/* Trap invalid mutex types: */
 default|default:
 comment|/* Return an invalid argument error: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
