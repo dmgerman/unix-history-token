@@ -70,6 +70,12 @@ directive|include
 file|"indent_codes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"indent.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -97,6 +103,7 @@ begin_struct
 struct|struct
 name|templ
 block|{
+specifier|const
 name|char
 modifier|*
 name|rwd
@@ -692,7 +699,7 @@ operator|)
 condition|)
 block|{
 comment|/* 	 * we have a character or number 	 */
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|j
@@ -1196,10 +1203,10 @@ name|p
 operator|++
 control|)
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
-name|p
+name|q
 init|=
 name|s_token
 decl_stmt|;
@@ -1211,7 +1218,7 @@ name|j
 operator|++
 operator|!=
 operator|*
-name|p
+name|q
 operator|++
 operator|||
 operator|*
@@ -1219,14 +1226,14 @@ name|j
 operator|++
 operator|!=
 operator|*
-name|p
+name|q
 operator|++
 condition|)
 continue|continue;
 comment|/* This test depends on the fact that 				 * identifiers are always at least 1 character 				 * long (ie. the first two bytes of the 				 * identifier are always meaningful) */
 if|if
 condition|(
-name|p
+name|q
 index|[
 operator|-
 literal|1
@@ -1239,7 +1246,7 @@ comment|/* If its a one-character identifier */
 while|while
 condition|(
 operator|*
-name|p
+name|q
 operator|++
 operator|==
 operator|*

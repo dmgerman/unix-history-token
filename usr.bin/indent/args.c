@@ -221,6 +221,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|option_source
@@ -237,6 +238,7 @@ begin_struct
 struct|struct
 name|pro
 block|{
+specifier|const
 name|char
 modifier|*
 name|p_name
@@ -1389,6 +1391,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|param_start
@@ -1400,10 +1403,12 @@ specifier|static
 name|int
 name|eqin
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s1
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s2

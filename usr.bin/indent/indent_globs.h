@@ -710,7 +710,18 @@ begin_function_decl
 name|char
 modifier|*
 name|chfont
-parameter_list|()
+parameter_list|(
+name|struct
+name|fstate
+modifier|*
+parameter_list|,
+name|struct
+name|fstate
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 

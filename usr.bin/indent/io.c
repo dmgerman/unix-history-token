@@ -520,9 +520,14 @@ literal|"\t%.*s"
 else|:
 literal|"\t/* %.*s */"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|e_lab
 operator|-
 name|s
+argument_list|)
 argument_list|,
 name|s
 argument_list|)
@@ -535,9 +540,14 @@ name|output
 argument_list|,
 literal|"%.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|e_lab
 operator|-
 name|s_lab
+argument_list|)
 argument_list|,
 name|s_lab
 argument_list|)
@@ -2449,6 +2459,7 @@ parameter_list|(
 name|int
 name|level
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -2559,6 +2570,7 @@ parameter_list|(
 name|int
 name|level
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -2662,6 +2674,7 @@ parameter_list|(
 name|int
 name|level
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -2995,12 +3008,13 @@ name|fstate
 modifier|*
 name|f
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s0
 parameter_list|)
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|s

@@ -144,6 +144,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|in_name
@@ -157,6 +158,7 @@ comment|/* will always point to name of input 					 * file */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|out_name
@@ -240,7 +242,7 @@ name|int
 name|squest
 decl_stmt|;
 comment|/* when this is positive, we have seen a ? 				 * without the matching : in a<c>?<s>:<s> 				 * construct */
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|t_ptr
@@ -1245,7 +1247,7 @@ condition|(
 name|troff
 condition|)
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|p
@@ -2622,6 +2624,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+specifier|const
 name|char
 modifier|*
 name|res
@@ -2753,6 +2756,7 @@ operator|=
 literal|' '
 expr_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|res
@@ -5041,16 +5045,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|ifdef_level
 operator|<
 sizeof|sizeof
+argument_list|(
 name|state_stack
+argument_list|)
 operator|/
 sizeof|sizeof
+argument_list|(
 name|state_stack
 index|[
 literal|0
 index|]
+argument_list|)
 condition|)
 block|{
 name|match_state
@@ -5309,7 +5320,7 @@ operator|*
 literal|1024
 index|]
 decl_stmt|;
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|p
