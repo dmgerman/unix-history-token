@@ -23,10 +23,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* XXX should be 640 bytes long; check and see if __packed is needed */
-end_comment
-
 begin_struct
 struct|struct
 name|ia32_mcontext
@@ -131,10 +127,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* XXX should be 704 bytes long; check and see if __packed is needed */
-end_comment
 
 begin_struct
 struct|struct
