@@ -226,24 +226,32 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|ip6q_locked
+name|struct
+name|mtx
+name|ip6qlock
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * These fields all protected by ip6qlock.  */
+end_comment
+
 begin_decl_stmt
+specifier|static
 name|u_int
 name|frag6_nfragpackets
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|frag6_nfrags
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ip6q
 name|ip6q
@@ -254,91 +262,28 @@ begin_comment
 comment|/* ip6 reassemble queue */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|__inline
-name|int
-name|ip6q_lock_try
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|__inline
-name|void
-name|ip6q_unlock
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|__inline
-name|int
-name|ip6q_lock_try
+begin_define
+define|#
+directive|define
+name|IP6Q_LOCK_INIT
 parameter_list|()
-block|{
-if|if
-condition|(
-name|ip6q_locked
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|ip6q_locked
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|ip6q_unlock
-parameter_list|()
-block|{
-name|ip6q_locked
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-end_ifdef
+value|mtx_init(&ip6qlock, "ip6qlock", NULL, MTX_DEF);
+end_define
 
 begin_define
 define|#
 directive|define
 name|IP6Q_LOCK
 parameter_list|()
-define|\
-value|do {									\ 	if (ip6q_lock_try() == 0) {					\ 		printf("%s:%d: ip6q already locked\n", __FILE__, __LINE__); \ 		panic("ip6q_lock");					\ 	}								\ } while (
-comment|/*CONSTCOND*/
-value|0)
+value|mtx_lock(&ip6qlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP6Q_TRYLOCK
+parameter_list|()
+value|mtx_trylock(&ip6qlock)
 end_define
 
 begin_define
@@ -346,47 +291,15 @@ define|#
 directive|define
 name|IP6Q_LOCK_CHECK
 parameter_list|()
-define|\
-value|do {									\ 	if (ip6q_locked == 0) {						\ 		printf("%s:%d: ip6q lock not held\n", __FILE__, __LINE__); \ 		panic("ip6q lock check");				\ 	}								\ } while (
-comment|/*CONSTCOND*/
-value|0)
+value|mtx_assert(&ip6qlock, MA_OWNED)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|IP6Q_LOCK
-parameter_list|()
-value|(void) ip6q_lock_try()
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP6Q_LOCK_CHECK
-parameter_list|()
-end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
 directive|define
 name|IP6Q_UNLOCK
 parameter_list|()
-value|ip6q_unlock()
+value|mtx_unlock(&ip6qlock)
 end_define
 
 begin_expr_stmt
@@ -422,6 +335,9 @@ operator|=
 name|nmbclusters
 operator|/
 literal|4
+expr_stmt|;
+name|IP6Q_LOCK_INIT
+argument_list|()
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -2293,6 +2209,9 @@ name|nxt
 return|;
 name|dropfrag
 label|:
+name|IP6Q_UNLOCK
+argument_list|()
+expr_stmt|;
 name|in6_ifstat_inc
 argument_list|(
 name|dstifp
@@ -2309,9 +2228,6 @@ name|m_freem
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|IP6Q_UNLOCK
-argument_list|()
 expr_stmt|;
 return|return
 name|IPPROTO_DONE
@@ -2811,7 +2727,7 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|ip6q_lock_try
+name|IP6Q_TRYLOCK
 argument_list|()
 operator|==
 literal|0
