@@ -28,7 +28,7 @@ operator|)
 name|curdir
 operator|.
 name|c
-literal|4.2
+literal|4.3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -387,6 +387,11 @@ literal|0
 operator|)
 return|;
 block|}
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -492,6 +497,11 @@ operator|*
 name|curdirp
 operator|=
 literal|0
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
