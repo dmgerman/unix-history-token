@@ -1314,6 +1314,20 @@ name|dev
 argument_list|,
 literal|0x06861106
 argument_list|,
+literal|0x40
+argument_list|)
+condition|)
+return|return
+literal|"VIA 82C686 ATA100 controller"
+return|;
+if|if
+condition|(
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x06861106
+argument_list|,
 literal|0
 argument_list|)
 condition|)
