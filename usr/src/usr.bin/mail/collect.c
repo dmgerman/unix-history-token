@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)collect.c	5.4 (Berkeley) %G%"
+literal|"@(#)collect.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1258,7 +1258,7 @@ name|t
 operator|=
 name|getc
 argument_list|(
-name|fp
+name|fbuf
 argument_list|)
 operator|)
 operator|!=
