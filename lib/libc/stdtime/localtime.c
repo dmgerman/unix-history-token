@@ -4984,7 +4984,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|tzsetwall
+name|tzsetwall_basic
 argument_list|()
 expr_stmt|;
 return|return;
@@ -5485,7 +5485,7 @@ operator|&
 name|lcl_mutex
 argument_list|)
 expr_stmt|;
-name|tzset
+name|tzset_basic
 argument_list|()
 expr_stmt|;
 name|localsub
@@ -5651,7 +5651,7 @@ operator|&
 name|lcl_mutex
 argument_list|)
 expr_stmt|;
-name|tzset
+name|tzset_basic
 argument_list|()
 expr_stmt|;
 name|localsub
@@ -5677,7 +5677,7 @@ return|;
 block|}
 else|else
 block|{
-name|tzset
+name|tzset_basic
 argument_list|()
 expr_stmt|;
 name|localsub
@@ -8259,7 +8259,7 @@ operator|&
 name|lcl_mutex
 argument_list|)
 expr_stmt|;
-name|tzset
+name|tzset_basic
 argument_list|()
 expr_stmt|;
 name|mktime_return_value
