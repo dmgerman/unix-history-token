@@ -367,10 +367,6 @@ block|,
 name|c_xdev
 block|,
 name|O_ZERO
-block|,
-block|{
-name|NULL
-block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

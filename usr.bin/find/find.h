@@ -182,6 +182,10 @@ modifier|*
 name|_c_data
 decl_stmt|;
 comment|/* char pointer */
+name|int
+name|_m_flags
+decl_stmt|;
+comment|/* mount flage for fstype */
 block|}
 name|p_un
 union|;
@@ -237,6 +241,10 @@ define|#
 directive|define
 name|e_len
 value|p_un.ex._e_len
+define|#
+directive|define
+name|m_flags
+value|p_un._m_flags
 block|}
 name|PLAN
 typedef|;
