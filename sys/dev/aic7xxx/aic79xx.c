@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2003 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.c#190 $  *  * $FreeBSD$  */
+comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2003 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.c#191 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -21197,33 +21197,33 @@ argument_list|)
 expr_stmt|;
 name|ahd
 operator|->
-name|int_coalessing_timer
+name|int_coalescing_timer
 operator|=
-name|AHD_INT_COALESSING_TIMER_DEFAULT
+name|AHD_INT_COALESCING_TIMER_DEFAULT
 expr_stmt|;
 name|ahd
 operator|->
-name|int_coalessing_maxcmds
+name|int_coalescing_maxcmds
 operator|=
-name|AHD_INT_COALESSING_MAXCMDS_DEFAULT
+name|AHD_INT_COALESCING_MAXCMDS_DEFAULT
 expr_stmt|;
 name|ahd
 operator|->
-name|int_coalessing_mincmds
+name|int_coalescing_mincmds
 operator|=
-name|AHD_INT_COALESSING_MINCMDS_DEFAULT
+name|AHD_INT_COALESCING_MINCMDS_DEFAULT
 expr_stmt|;
 name|ahd
 operator|->
-name|int_coalessing_threshold
+name|int_coalescing_threshold
 operator|=
-name|AHD_INT_COALESSING_THRESHOLD_DEFAULT
+name|AHD_INT_COALESCING_THRESHOLD_DEFAULT
 expr_stmt|;
 name|ahd
 operator|->
-name|int_coalessing_stop_threshold
+name|int_coalescing_stop_threshold
 operator|=
-name|AHD_INT_COALESSING_STOP_THRESHOLD_DEFAULT
+name|AHD_INT_COALESCING_STOP_THRESHOLD_DEFAULT
 expr_stmt|;
 if|if
 condition|(
@@ -28463,12 +28463,12 @@ operator|&
 literal|0xFF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Default to coalessing disabled. 	 */
+comment|/* 	 * Default to coalescing disabled. 	 */
 name|ahd_outw
 argument_list|(
 name|ahd
 argument_list|,
-name|INT_COALESSING_CMDCOUNT
+name|INT_COALESCING_CMDCOUNT
 argument_list|,
 literal|0
 argument_list|)
@@ -28482,24 +28482,24 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ahd_update_coalessing_values
+name|ahd_update_coalescing_values
 argument_list|(
 name|ahd
 argument_list|,
 name|ahd
 operator|->
-name|int_coalessing_timer
+name|int_coalescing_timer
 argument_list|,
 name|ahd
 operator|->
-name|int_coalessing_maxcmds
+name|int_coalescing_maxcmds
 argument_list|,
 name|ahd
 operator|->
-name|int_coalessing_mincmds
+name|int_coalescing_mincmds
 argument_list|)
 expr_stmt|;
-name|ahd_enable_coalessing
+name|ahd_enable_coalescing
 argument_list|(
 name|ahd
 argument_list|,
@@ -29668,7 +29668,7 @@ end_function
 
 begin_function
 name|void
-name|ahd_update_coalessing_values
+name|ahd_update_coalescing_values
 parameter_list|(
 name|struct
 name|ahd_softc
@@ -29697,7 +29697,7 @@ name|AHD_TIMER_MAX_US
 expr_stmt|;
 name|ahd
 operator|->
-name|int_coalessing_timer
+name|int_coalescing_timer
 operator|=
 name|timer
 expr_stmt|;
@@ -29705,25 +29705,25 @@ if|if
 condition|(
 name|maxcmds
 operator|>
-name|AHD_INT_COALESSING_MAXCMDS_MAX
+name|AHD_INT_COALESCING_MAXCMDS_MAX
 condition|)
 name|maxcmds
 operator|=
-name|AHD_INT_COALESSING_MAXCMDS_MAX
+name|AHD_INT_COALESCING_MAXCMDS_MAX
 expr_stmt|;
 if|if
 condition|(
 name|mincmds
 operator|>
-name|AHD_INT_COALESSING_MINCMDS_MAX
+name|AHD_INT_COALESCING_MINCMDS_MAX
 condition|)
 name|mincmds
 operator|=
-name|AHD_INT_COALESSING_MINCMDS_MAX
+name|AHD_INT_COALESCING_MINCMDS_MAX
 expr_stmt|;
 name|ahd
 operator|->
-name|int_coalessing_maxcmds
+name|int_coalescing_maxcmds
 operator|=
 name|maxcmds
 expr_stmt|;
@@ -29731,7 +29731,7 @@ name|ahd_outw
 argument_list|(
 name|ahd
 argument_list|,
-name|INT_COALESSING_TIMER
+name|INT_COALESCING_TIMER
 argument_list|,
 name|timer
 operator|/
@@ -29742,7 +29742,7 @@ name|ahd_outb
 argument_list|(
 name|ahd
 argument_list|,
-name|INT_COALESSING_MAXCMDS
+name|INT_COALESCING_MAXCMDS
 argument_list|,
 operator|-
 name|maxcmds
@@ -29752,7 +29752,7 @@ name|ahd_outb
 argument_list|(
 name|ahd
 argument_list|,
-name|INT_COALESSING_MINCMDS
+name|INT_COALESCING_MINCMDS
 argument_list|,
 operator|-
 name|mincmds
@@ -29763,7 +29763,7 @@ end_function
 
 begin_function
 name|void
-name|ahd_enable_coalessing
+name|ahd_enable_coalescing
 parameter_list|(
 name|struct
 name|ahd_softc
@@ -29779,7 +29779,7 @@ operator|->
 name|hs_mailbox
 operator|&=
 operator|~
-name|ENINT_COALESS
+name|ENINT_COALESCE
 expr_stmt|;
 if|if
 condition|(
@@ -29789,7 +29789,7 @@ name|ahd
 operator|->
 name|hs_mailbox
 operator||=
-name|ENINT_COALESS
+name|ENINT_COALESCE
 expr_stmt|;
 name|ahd_outb
 argument_list|(
@@ -34312,7 +34312,7 @@ name|ahd
 operator|->
 name|hs_mailbox
 operator|&
-name|ENINT_COALESS
+name|ENINT_COALESCE
 expr_stmt|;
 if|if
 condition|(
@@ -34322,11 +34322,11 @@ name|cmdcmplt_total
 operator|>
 name|ahd
 operator|->
-name|int_coalessing_threshold
+name|int_coalescing_threshold
 condition|)
 name|enint_coal
 operator||=
-name|ENINT_COALESS
+name|ENINT_COALESCE
 expr_stmt|;
 elseif|else
 if|if
@@ -34337,12 +34337,12 @@ name|cmdcmplt_total
 operator|<
 name|ahd
 operator|->
-name|int_coalessing_stop_threshold
+name|int_coalescing_stop_threshold
 condition|)
 name|enint_coal
 operator|&=
 operator|~
-name|ENINT_COALESS
+name|ENINT_COALESCE
 expr_stmt|;
 if|if
 condition|(
@@ -34353,11 +34353,11 @@ name|ahd
 operator|->
 name|hs_mailbox
 operator|&
-name|ENINT_COALESS
+name|ENINT_COALESCE
 operator|)
 condition|)
 block|{
-name|ahd_enable_coalessing
+name|ahd_enable_coalescing
 argument_list|(
 name|ahd
 argument_list|,
@@ -34372,14 +34372,14 @@ condition|(
 operator|(
 name|ahd_debug
 operator|&
-name|AHD_SHOW_INT_COALESSING
+name|AHD_SHOW_INT_COALESCING
 operator|)
 operator|!=
 literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%s: Interrupt coalessing "
+literal|"%s: Interrupt coalescing "
 literal|"now %sabled. Cmds %d\n"
 argument_list|,
 name|ahd_name
@@ -34390,7 +34390,7 @@ argument_list|,
 operator|(
 name|enint_coal
 operator|&
-name|ENINT_COALESS
+name|ENINT_COALESCE
 operator|)
 condition|?
 literal|"en"

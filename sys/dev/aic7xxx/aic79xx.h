@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#89 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.h#90 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -3412,50 +3412,50 @@ comment|/* Selection Timer settings */
 name|int
 name|seltime
 decl_stmt|;
-comment|/* 	 * Interrupt coalessing settings. 	 */
+comment|/* 	 * Interrupt coalescing settings. 	 */
 define|#
 directive|define
-name|AHD_INT_COALESSING_TIMER_DEFAULT
+name|AHD_INT_COALESCING_TIMER_DEFAULT
 value|250
 comment|/*us*/
 define|#
 directive|define
-name|AHD_INT_COALESSING_MAXCMDS_DEFAULT
+name|AHD_INT_COALESCING_MAXCMDS_DEFAULT
 value|10
 define|#
 directive|define
-name|AHD_INT_COALESSING_MAXCMDS_MAX
+name|AHD_INT_COALESCING_MAXCMDS_MAX
 value|127
 define|#
 directive|define
-name|AHD_INT_COALESSING_MINCMDS_DEFAULT
+name|AHD_INT_COALESCING_MINCMDS_DEFAULT
 value|5
 define|#
 directive|define
-name|AHD_INT_COALESSING_MINCMDS_MAX
+name|AHD_INT_COALESCING_MINCMDS_MAX
 value|127
 define|#
 directive|define
-name|AHD_INT_COALESSING_THRESHOLD_DEFAULT
+name|AHD_INT_COALESCING_THRESHOLD_DEFAULT
 value|2000
 define|#
 directive|define
-name|AHD_INT_COALESSING_STOP_THRESHOLD_DEFAULT
+name|AHD_INT_COALESCING_STOP_THRESHOLD_DEFAULT
 value|1000
 name|u_int
-name|int_coalessing_timer
+name|int_coalescing_timer
 decl_stmt|;
 name|u_int
-name|int_coalessing_maxcmds
+name|int_coalescing_maxcmds
 decl_stmt|;
 name|u_int
-name|int_coalessing_mincmds
+name|int_coalescing_mincmds
 decl_stmt|;
 name|u_int
-name|int_coalessing_threshold
+name|int_coalescing_threshold
 decl_stmt|;
 name|u_int
-name|int_coalessing_stop_threshold
+name|int_coalescing_stop_threshold
 decl_stmt|;
 name|uint16_t
 name|user_discenable
@@ -4066,7 +4066,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ahd_update_coalessing_values
+name|ahd_update_coalescing_values
 parameter_list|(
 name|struct
 name|ahd_softc
@@ -4087,7 +4087,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ahd_enable_coalessing
+name|ahd_enable_coalescing
 parameter_list|(
 name|struct
 name|ahd_softc
@@ -5180,7 +5180,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AHD_SHOW_INT_COALESSING
+name|AHD_SHOW_INT_COALESCING
 value|0x10000
 end_define
 
