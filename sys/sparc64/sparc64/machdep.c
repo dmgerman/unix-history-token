@@ -1535,6 +1535,40 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+comment|/* Make sure we have a signal trampoline to return to. */
+if|if
+condition|(
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_sigtramp
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * No signal tramoline... kill the process. 		 */
+name|CTR0
+argument_list|(
+name|KTR_SIG
+argument_list|,
+literal|"sendsig: no sigtramp"
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|sigexit
+argument_list|(
+name|td
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 comment|/* Save user context. */
 name|bzero
 argument_list|(
@@ -2030,16 +2064,6 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-if|if
-condition|(
-name|p
-operator|->
-name|p_md
-operator|.
-name|md_sigtramp
-operator|!=
-name|NULL
-condition|)
 name|tf
 operator|->
 name|tf_tpc
@@ -2052,22 +2076,6 @@ operator|->
 name|p_md
 operator|.
 name|md_sigtramp
-expr_stmt|;
-else|else
-name|tf
-operator|->
-name|tf_tpc
-operator|=
-name|PS_STRINGS
-operator|-
-operator|*
-operator|(
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_szsigcode
-operator|)
 expr_stmt|;
 name|tf
 operator|->
