@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.33 (Berkeley) %G%"
+literal|"@(#)cp.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1305,7 +1305,7 @@ name|exit_val
 operator|=
 literal|1
 expr_stmt|;
-return|return;
+break|break;
 block|}
 if|if
 condition|(
