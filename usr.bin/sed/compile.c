@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: compile.c,v 1.9 1997/08/11 07:20:58 charnier Exp $"
+literal|"$Id: compile.c,v 1.10 1998/09/22 18:39:47 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2643,9 +2643,32 @@ operator|==
 name|c
 condition|)
 block|{
-name|p
+if|if
+condition|(
+operator|*
 operator|++
+name|p
+operator|==
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+name|cu_fgets
+argument_list|(
+name|lbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|lbuf
+argument_list|)
+argument_list|)
+condition|)
+name|p
+operator|=
+name|lbuf
 expr_stmt|;
+block|}
 operator|*
 name|sp
 operator|++
@@ -2728,8 +2751,10 @@ literal|2
 expr_stmt|;
 name|text
 operator|=
-name|xmalloc
+name|xrealloc
 argument_list|(
+name|text
+argument_list|,
 name|asize
 argument_list|)
 expr_stmt|;
