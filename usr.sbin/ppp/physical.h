@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.h,v 1.12 1999/06/01 19:08:59 brian Exp $  *  */
+comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.h,v 1.13 1999/06/05 21:35:52 brian Exp $  *  */
 end_comment
 
 begin_struct_decl
@@ -45,32 +45,68 @@ name|cmdargs
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/* Device types */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|TTY_DEVICE
+name|I4B_DEVICE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|TCP_DEVICE
+name|TTY_DEVICE
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|UDP_DEVICE
+name|TCP_DEVICE
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXEC_DEVICE
+name|UDP_DEVICE
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXEC_DEVICE
+value|5
+end_define
+
+begin_comment
+comment|/* Returns from awaitcarrier() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARRIER_PENDING
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARRIER_OK
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARRIER_LOST
+value|3
 end_define
 
 begin_struct
@@ -85,6 +121,17 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|awaitcarrier
+function_decl|)
+parameter_list|(
+name|struct
+name|physical
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -881,6 +928,18 @@ name|int
 name|physical_MaxDeviceSize
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|physical_AwaitCarrier
+parameter_list|(
+name|struct
+name|physical
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
