@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* symbols.c -symbol table-    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* symbols.c -symbol table-    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -5910,11 +5910,6 @@ specifier|const
 name|char
 modifier|*
 name|message_format
-init|=
-name|_
-argument_list|(
-literal|"\"%d\" (instance number %d of a %s label)"
-argument_list|)
 decl_stmt|;
 name|int
 name|index
@@ -6051,6 +6046,13 @@ operator|*
 name|p
 operator|-
 literal|'0'
+expr_stmt|;
+name|message_format
+operator|=
+name|_
+argument_list|(
+literal|"\"%d\" (instance number %d of a %s label)"
+argument_list|)
 expr_stmt|;
 name|symbol_decode
 operator|=
@@ -7118,6 +7120,49 @@ literal|0
 condition|)
 block|{
 comment|/* Let .weak override .global.  */
+return|return;
+block|}
+if|if
+condition|(
+name|s
+operator|->
+name|bsym
+operator|->
+name|flags
+operator|&
+name|BSF_SECTION_SYM
+condition|)
+block|{
+name|char
+modifier|*
+name|file
+decl_stmt|;
+name|unsigned
+name|int
+name|line
+decl_stmt|;
+comment|/* Do not reassign section symbols.  */
+name|as_where
+argument_list|(
+operator|&
+name|file
+argument_list|,
+operator|&
+name|line
+argument_list|)
+expr_stmt|;
+name|as_warn_where
+argument_list|(
+name|file
+argument_list|,
+name|line
+argument_list|,
+name|_
+argument_list|(
+literal|"Section symbols are already global"
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|s

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for the generic parts of most COFF variants, for BFD.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support for the generic parts of most COFF variants, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -409,6 +409,42 @@ operator|,
 name|PTR
 operator|,
 name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COFF_WITH_PE
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|flagword
+name|handle_COMDAT
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|flagword
+operator|,
+name|PTR
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|asection
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1716,16 +1752,14 @@ begin_comment
 comment|/* COFF_WITH_PE */
 end_comment
 
-begin_comment
-comment|/* The PE version; see above for the general comments.     Since to set the SEC_LINK_ONCE and associated flags, we have to    look at the symbol table anyway, we return the symbol table index    of the symbol being used as the COMDAT symbol.  This is admittedly    ugly, but there's really nowhere else that we have access to the    required information.  FIXME: Is the COMDAT symbol index used for    any purpose other than objdump?  */
-end_comment
-
 begin_function
 specifier|static
 name|flagword
-name|styp_to_sec_flags
+name|handle_COMDAT
 parameter_list|(
 name|abfd
+parameter_list|,
+name|sec_flags
 parameter_list|,
 name|hdr
 parameter_list|,
@@ -1736,7 +1770,9 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|flagword
+name|sec_flags
 decl_stmt|;
 name|PTR
 name|hdr
@@ -1763,241 +1799,6 @@ operator|*
 operator|)
 name|hdr
 decl_stmt|;
-name|long
-name|styp_flags
-init|=
-name|internal_s
-operator|->
-name|s_flags
-decl_stmt|;
-name|flagword
-name|sec_flags
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|STYP_DSECT
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* Don't know what to do */
-ifdef|#
-directive|ifdef
-name|SEC_NEVER_LOAD
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|STYP_NOLOAD
-condition|)
-name|sec_flags
-operator||=
-name|SEC_NEVER_LOAD
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|STYP_GROUP
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* Don't know what to do */
-comment|/* skip IMAGE_SCN_TYPE_NO_PAD */
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|STYP_COPY
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* Don't know what to do */
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_CNT_CODE
-condition|)
-name|sec_flags
-operator||=
-name|SEC_CODE
-operator||
-name|SEC_ALLOC
-operator||
-name|SEC_LOAD
-expr_stmt|;
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_CNT_INITIALIZED_DATA
-condition|)
-name|sec_flags
-operator||=
-name|SEC_DATA
-operator||
-name|SEC_ALLOC
-operator||
-name|SEC_LOAD
-expr_stmt|;
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_CNT_UNINITIALIZED_DATA
-condition|)
-name|sec_flags
-operator||=
-name|SEC_ALLOC
-expr_stmt|;
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_LNK_OTHER
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* Don't know what to do */
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_LNK_INFO
-condition|)
-block|{
-comment|/* We mark these as SEC_DEBUGGING, but only if COFF_PAGE_SIZE is 	 defined.  coff_compute_section_file_positions uses 	 COFF_PAGE_SIZE to ensure that the low order bits of the 	 section VMA and the file offset match.  If we don't know 	 COFF_PAGE_SIZE, we can't ensure the correct correspondence, 	 and demand page loading of the file will fail.  */
-ifdef|#
-directive|ifdef
-name|COFF_PAGE_SIZE
-name|sec_flags
-operator||=
-name|SEC_DEBUGGING
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|STYP_OVER
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* Don't know what to do */
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_LNK_REMOVE
-condition|)
-name|sec_flags
-operator||=
-name|SEC_EXCLUDE
-expr_stmt|;
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_MEM_SHARED
-condition|)
-name|sec_flags
-operator||=
-name|SEC_SHARED
-expr_stmt|;
-comment|/* COMDAT: see below */
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_MEM_DISCARDABLE
-condition|)
-name|sec_flags
-operator||=
-name|SEC_DEBUGGING
-expr_stmt|;
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_MEM_NOT_CACHED
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* Don't know what to do */
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_MEM_NOT_PAGED
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* Don't know what to do */
-comment|/* We infer from the distinct read/write/execute bits the settings      of some of the bfd flags; the actual values, should we need them,      are also in pei_section_data (abfd, section)->pe_flags.  */
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_MEM_EXECUTE
-condition|)
-name|sec_flags
-operator||=
-name|SEC_CODE
-expr_stmt|;
-comment|/* Probably redundant */
-comment|/* IMAGE_SCN_MEM_READ is simply ignored, assuming it always to be true.  */
-if|if
-condition|(
-operator|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_MEM_WRITE
-operator|)
-operator|==
-literal|0
-condition|)
-name|sec_flags
-operator||=
-name|SEC_READONLY
-expr_stmt|;
-comment|/* COMDAT gets very special treatment.  */
-if|if
-condition|(
-name|styp_flags
-operator|&
-name|IMAGE_SCN_LNK_COMDAT
-condition|)
-block|{
-name|sec_flags
-operator||=
-name|SEC_LINK_ONCE
-expr_stmt|;
-comment|/* Unfortunately, the PE format stores essential information in          the symbol table, of all places.  We need to extract that          information now, so that objdump and the linker will know how          to handle the section without worrying about the symbols.  We          can't call slurp_symtab, because the linker doesn't want the          swapped symbols.  */
-comment|/* COMDAT sections are special.  The first symbol is the section 	 symbol, which tells what kind of COMDAT section it is.  The 	 second symbol is the "comdat symbol" - the one with the 	 unique name.  GNU uses the section symbol for the unique 	 name; MS uses ".text" for every comdat section.  Sigh.  - DJ */
-comment|/* This is not mirrored in sec_to_styp_flags(), but there 	 doesn't seem to be a need to, either, and it would at best be 	 rather messy.  */
-if|if
-condition|(
-name|_bfd_coff_get_external_symbols
-argument_list|(
-name|abfd
-argument_list|)
-condition|)
-block|{
 name|bfd_byte
 modifier|*
 name|esymstart
@@ -2019,6 +1820,24 @@ name|target_name
 init|=
 name|NULL
 decl_stmt|;
+name|sec_flags
+operator||=
+name|SEC_LINK_ONCE
+expr_stmt|;
+comment|/* Unfortunately, the PE format stores essential information in      the symbol table, of all places.  We need to extract that      information now, so that objdump and the linker will know how      to handle the section without worrying about the symbols.  We      can't call slurp_symtab, because the linker doesn't want the      swapped symbols.  */
+comment|/* COMDAT sections are special.  The first symbol is the section      symbol, which tells what kind of COMDAT section it is.  The      second symbol is the "comdat symbol" - the one with the      unique name.  GNU uses the section symbol for the unique      name; MS uses ".text" for every comdat section.  Sigh.  - DJ */
+comment|/* This is not mirrored in sec_to_styp_flags(), but there      doesn't seem to be a need to, either, and it would at best be      rather messy.  */
+if|if
+condition|(
+operator|!
+name|_bfd_coff_get_external_symbols
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+return|return
+name|sec_flags
+return|;
 name|esymstart
 operator|=
 name|esym
@@ -2098,7 +1917,7 @@ operator|>
 name|SYMNMLEN
 condition|)
 block|{
-comment|/* This case implies that the matching symbol name                      will be in the string table.  */
+comment|/* This case implies that the matching 	     symbol name will be in the string table.  */
 name|abort
 argument_list|()
 expr_stmt|;
@@ -2114,7 +1933,7 @@ operator|->
 name|target_index
 condition|)
 block|{
-comment|/* According to the MSVC documentation, the first 		     TWO entries with the section # are both of 		     interest to us.  The first one is the "section 		     symbol" (section name).  The second is the comdat 		     symbol name.  Here, we've found the first 		     qualifying entry; we distinguish it from the 		     second with a state flag.  		     In the case of gas-generated (at least until that 		     is fixed) .o files, it isn't necessarily the 		     second one.  It may be some other later symbol.  		     Since gas also doesn't follow MS conventions and 		     emits the section similar to .text$<name>, where<something> is the name we're looking for, we 		     distinguish the two as follows:  		     If the section name is simply a section name (no 		     $) we presume it's MS-generated, and look at 		     precisely the second symbol for the comdat name. 		     If the section name has a $, we assume it's 		     gas-generated, and look for<something> (whatever 		     follows the $) as the comdat symbol.  */
+comment|/* According to the MSVC documentation, the first 	     TWO entries with the section # are both of 	     interest to us.  The first one is the "section 	     symbol" (section name).  The second is the comdat 	     symbol name.  Here, we've found the first 	     qualifying entry; we distinguish it from the 	     second with a state flag.  	     In the case of gas-generated (at least until that 	     is fixed) .o files, it isn't necessarily the 	     second one.  It may be some other later symbol.  	     Since gas also doesn't follow MS conventions and 	     emits the section similar to .text$<name>, where<something> is the name we're looking for, we 	     distinguish the two as follows:  	     If the section name is simply a section name (no 	     $) we presume it's MS-generated, and look at 	     precisely the second symbol for the comdat name. 	     If the section name has a $, we assume it's 	     gas-generated, and look for<something> (whatever 	     follows the $) as the comdat symbol.  */
 comment|/* All 3 branches use this */
 name|symname
 operator|=
@@ -2155,7 +1974,7 @@ name|seen_state
 operator|=
 literal|1
 expr_stmt|;
-comment|/* If it isn't the stuff we're expecting, die; 			   The MS documentation is vague, but it 			   appears that the second entry serves BOTH 			   as the comdat symbol and the defining 			   symbol record (either C_STAT or C_EXT, 			   possibly with an aux entry with debug 			   information if it's a function.)  It 			   appears the only way to find the second one 			   is to count.  (On Intel, they appear to be 			   adjacent, but on Alpha, they have been 			   found separated.)  			   Here, we think we've found the first one, 			   but there's some checking we can do to be 			   sure.  */
+comment|/* If it isn't the stuff we're expecting, die; 		   The MS documentation is vague, but it 		   appears that the second entry serves BOTH 		   as the comdat symbol and the defining 		   symbol record (either C_STAT or C_EXT, 		   possibly with an aux entry with debug 		   information if it's a function.)  It 		   appears the only way to find the second one 		   is to count.  (On Intel, they appear to be 		   adjacent, but on Alpha, they have been 		   found separated.)  		   Here, we think we've found the first one, 		   but there's some checking we can do to be 		   sure.  */
 if|if
 condition|(
 operator|!
@@ -2182,7 +2001,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* FIXME LATER: MSVC generates section names 			   like .text for comdats.  Gas generates 			   names like .text$foo__Fv (in the case of a 			   function).  See comment above for more.  */
+comment|/* FIXME LATER: MSVC generates section names 		   like .text for comdats.  Gas generates 		   names like .text$foo__Fv (in the case of a 		   function).  See comment above for more.  */
 if|if
 condition|(
 name|strcmp
@@ -2262,8 +2081,8 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
-comment|/* FIXME: Microsoft uses NODUPLICATES and 			   ASSOCIATIVE, but gnu uses ANY and 			   SAME_SIZE.  Unfortunately, gnu doesn't do 			   the comdat symbols right.  So, until we can 			   fix it to do the right thing, we are 			   temporarily disabling comdats for the MS 			   types (they're used in DLLs and C++, but we 			   don't support *their* C++ libraries anyway 			   - DJ.  */
-comment|/* Cygwin does not follow the MS style, and 			   uses ANY and SAME_SIZE where NODUPLICATES 			   and ASSOCIATIVE should be used.  For 			   Interix, we just do the right thing up 			   front.  */
+comment|/* FIXME: Microsoft uses NODUPLICATES and 		   ASSOCIATIVE, but gnu uses ANY and 		   SAME_SIZE.  Unfortunately, gnu doesn't do 		   the comdat symbols right.  So, until we can 		   fix it to do the right thing, we are 		   temporarily disabling comdats for the MS 		   types (they're used in DLLs and C++, but we 		   don't support *their* C++ libraries anyway 		   - DJ.  */
+comment|/* Cygwin does not follow the MS style, and 		   uses ANY and SAME_SIZE where NODUPLICATES 		   and ASSOCIATIVE should be used.  For 		   Interix, we just do the right thing up 		   front.  */
 switch|switch
 condition|(
 name|aux
@@ -2318,8 +2137,8 @@ operator||=
 name|SEC_LINK_DUPLICATES_SAME_CONTENTS
 expr_stmt|;
 break|break;
-comment|/* debug$S gets this case; other                              implications ??? */
-comment|/* There may be no symbol... we'll search 			     the whole table... Is this the right 			     place to play this game? Or should we do 			     it when reading it in.  */
+comment|/* debug$S gets this case; other 		       implications ??? */
+comment|/* There may be no symbol... we'll search 		       the whole table... Is this the right 		       place to play this game? Or should we do 		       it when reading it in.  */
 case|case
 name|IMAGE_COMDAT_SELECT_ASSOCIATIVE
 case|:
@@ -2343,7 +2162,7 @@ directive|endif
 break|break;
 default|default:
 comment|/* 0 means "no symbol" */
-comment|/* debug$F gets this case; other                                implications ??? */
+comment|/* debug$F gets this case; other 		       implications ??? */
 name|sec_flags
 operator||=
 name|SEC_LINK_DUPLICATES_DISCARD
@@ -2408,13 +2227,13 @@ comment|/* Fall through.  */
 case|case
 literal|1
 case|:
-comment|/* MSVC mode: the lexically second symbol (or 			 drop through from the above).  */
+comment|/* MSVC mode: the lexically second symbol (or 		 drop through from the above).  */
 block|{
 name|char
 modifier|*
 name|newname
 decl_stmt|;
-comment|/* This must the the second symbol with the 			   section #.  It is the actual symbol name. 			   Intel puts the two adjacent, but Alpha (at 			   least) spreads them out.  */
+comment|/* This must the the second symbol with the 		   section #.  It is the actual symbol name. 		   Intel puts the two adjacent, but Alpha (at 		   least) spreads them out.  */
 name|section
 operator|->
 name|comdat
@@ -2520,9 +2339,323 @@ expr_stmt|;
 block|}
 name|breakloop
 label|:
-comment|/* SunOS requires a statement after any label.  */
-empty_stmt|;
+return|return
+name|sec_flags
+return|;
 block|}
+end_function
+
+begin_comment
+comment|/* The PE version; see above for the general comments.     Since to set the SEC_LINK_ONCE and associated flags, we have to    look at the symbol table anyway, we return the symbol table index    of the symbol being used as the COMDAT symbol.  This is admittedly    ugly, but there's really nowhere else that we have access to the    required information.  FIXME: Is the COMDAT symbol index used for    any purpose other than objdump?  */
+end_comment
+
+begin_function
+specifier|static
+name|flagword
+name|styp_to_sec_flags
+parameter_list|(
+name|abfd
+parameter_list|,
+name|hdr
+parameter_list|,
+name|name
+parameter_list|,
+name|section
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|PTR
+name|hdr
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|asection
+modifier|*
+name|section
+decl_stmt|;
+block|{
+name|struct
+name|internal_scnhdr
+modifier|*
+name|internal_s
+init|=
+operator|(
+expr|struct
+name|internal_scnhdr
+operator|*
+operator|)
+name|hdr
+decl_stmt|;
+name|long
+name|styp_flags
+init|=
+name|internal_s
+operator|->
+name|s_flags
+decl_stmt|;
+name|flagword
+name|sec_flags
+decl_stmt|;
+comment|/* Assume read only unless IMAGE_SCN_MEM_WRITE is specified.  */
+name|sec_flags
+operator|=
+name|SEC_READONLY
+expr_stmt|;
+comment|/* Process each flag bit in styp_flags in turn.  */
+while|while
+condition|(
+name|styp_flags
+condition|)
+block|{
+name|long
+name|flag
+init|=
+name|styp_flags
+operator|&
+operator|-
+name|styp_flags
+decl_stmt|;
+name|char
+modifier|*
+name|unhandled
+init|=
+name|NULL
+decl_stmt|;
+name|styp_flags
+operator|&=
+operator|~
+name|flag
+expr_stmt|;
+comment|/* We infer from the distinct read/write/execute bits the settings 	 of some of the bfd flags; the actual values, should we need them, 	 are also in pei_section_data (abfd, section)->pe_flags.  */
+switch|switch
+condition|(
+name|flag
+condition|)
+block|{
+case|case
+name|STYP_DSECT
+case|:
+name|unhandled
+operator|=
+literal|"STYP_DSECT"
+expr_stmt|;
+break|break;
+case|case
+name|STYP_GROUP
+case|:
+name|unhandled
+operator|=
+literal|"STYP_GROUP"
+expr_stmt|;
+break|break;
+case|case
+name|STYP_COPY
+case|:
+name|unhandled
+operator|=
+literal|"STYP_COPY"
+expr_stmt|;
+break|break;
+case|case
+name|STYP_OVER
+case|:
+name|unhandled
+operator|=
+literal|"STYP_OVER"
+expr_stmt|;
+break|break;
+ifdef|#
+directive|ifdef
+name|SEC_NEVER_LOAD
+case|case
+name|STYP_NOLOAD
+case|:
+name|sec_flags
+operator||=
+name|SEC_NEVER_LOAD
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+case|case
+name|IMAGE_SCN_MEM_READ
+case|:
+comment|/* Ignored, assume it always to be true.  */
+break|break;
+case|case
+name|IMAGE_SCN_TYPE_NO_PAD
+case|:
+comment|/* Skip.  */
+break|break;
+case|case
+name|IMAGE_SCN_LNK_OTHER
+case|:
+name|unhandled
+operator|=
+literal|"IMAGE_SCN_LNK_OTHER"
+expr_stmt|;
+break|break;
+case|case
+name|IMAGE_SCN_MEM_NOT_CACHED
+case|:
+name|unhandled
+operator|=
+literal|"IMAGE_SCN_MEM_NOT_CACHED"
+expr_stmt|;
+break|break;
+case|case
+name|IMAGE_SCN_MEM_NOT_PAGED
+case|:
+name|unhandled
+operator|=
+literal|"IMAGE_SCN_MEM_NOT_PAGED"
+expr_stmt|;
+break|break;
+case|case
+name|IMAGE_SCN_MEM_EXECUTE
+case|:
+name|sec_flags
+operator||=
+name|SEC_CODE
+expr_stmt|;
+break|break;
+case|case
+name|IMAGE_SCN_MEM_WRITE
+case|:
+name|sec_flags
+operator|&=
+operator|~
+name|SEC_READONLY
+expr_stmt|;
+break|break;
+case|case
+name|IMAGE_SCN_MEM_DISCARDABLE
+case|:
+name|sec_flags
+operator||=
+name|SEC_DEBUGGING
+expr_stmt|;
+break|break;
+case|case
+name|IMAGE_SCN_MEM_SHARED
+case|:
+name|sec_flags
+operator||=
+name|SEC_SHARED
+expr_stmt|;
+break|break;
+case|case
+name|IMAGE_SCN_LNK_REMOVE
+case|:
+name|sec_flags
+operator||=
+name|SEC_EXCLUDE
+expr_stmt|;
+break|break;
+case|case
+name|IMAGE_SCN_CNT_CODE
+case|:
+name|sec_flags
+operator||=
+name|SEC_CODE
+operator||
+name|SEC_ALLOC
+operator||
+name|SEC_LOAD
+expr_stmt|;
+break|break;
+case|case
+name|IMAGE_SCN_CNT_INITIALIZED_DATA
+case|:
+name|sec_flags
+operator||=
+name|SEC_DATA
+operator||
+name|SEC_ALLOC
+operator||
+name|SEC_LOAD
+expr_stmt|;
+break|break;
+case|case
+name|IMAGE_SCN_CNT_UNINITIALIZED_DATA
+case|:
+name|sec_flags
+operator||=
+name|SEC_ALLOC
+expr_stmt|;
+break|break;
+case|case
+name|IMAGE_SCN_LNK_INFO
+case|:
+comment|/* We mark these as SEC_DEBUGGING, but only if COFF_PAGE_SIZE is 	     defined.  coff_compute_section_file_positions uses 	     COFF_PAGE_SIZE to ensure that the low order bits of the 	     section VMA and the file offset match.  If we don't know 	     COFF_PAGE_SIZE, we can't ensure the correct correspondence, 	     and demand page loading of the file will fail.  */
+ifdef|#
+directive|ifdef
+name|COFF_PAGE_SIZE
+name|sec_flags
+operator||=
+name|SEC_DEBUGGING
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
+name|IMAGE_SCN_LNK_COMDAT
+case|:
+comment|/* COMDAT gets very special treatment.  */
+name|sec_flags
+operator|=
+name|handle_COMDAT
+argument_list|(
+name|abfd
+argument_list|,
+name|sec_flags
+argument_list|,
+name|hdr
+argument_list|,
+name|name
+argument_list|,
+name|section
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/* Silently ignore for now.  */
+break|break;
+block|}
+comment|/* If the section flag was not handled, report it here.  This will allow 	 users of the BFD library to report a problem but continue executing. 	 Tools which need to be aware of these problems (such as the linker) 	 can override the default bfd_error_handler to intercept these reports.  */
+if|if
+condition|(
+name|unhandled
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
+argument_list|(
+name|_
+argument_list|(
+literal|"%s (%s): Section flag %s (0x%x) ignored"
+argument_list|)
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|abfd
+argument_list|)
+argument_list|,
+name|name
+argument_list|,
+name|unhandled
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
 block|}
 if|#
 directive|if
@@ -12413,7 +12546,7 @@ condition|)
 return|return
 name|false
 return|;
-name|coff_swap_filehdr_out
+name|bfd_coff_swap_filehdr_out
 argument_list|(
 name|abfd
 argument_list|,

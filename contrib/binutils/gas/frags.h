@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* frags.h - Header file for the frag concept.    Copyright (C) 1987, 92, 93, 94, 95, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* frags.h - Header file for the frag concept.    Copyright 1987, 1992, 1993, 1994, 1995, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -82,6 +82,13 @@ name|line
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* Flipped each relax pass so we can easily determine whether      fr_address has been adjusted.  */
+name|unsigned
+name|int
+name|relax_marker
+range|:
+literal|1
+decl_stmt|;
 comment|/* What state is my tail in? */
 name|relax_stateT
 name|fr_type

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* coff object file format    Copyright (C) 1989, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* coff object file format    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -1869,6 +1869,10 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OBJ_XCOFF
+comment|/* The native aix assembler accepts negative line number */
 if|if
 condition|(
 name|num
@@ -1890,6 +1894,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* OBJ_XCOFF */
 name|new_line
 operator|->
 name|next
@@ -5237,6 +5244,10 @@ operator|&=
 operator|~
 name|SEC_LOAD
 expr_stmt|;
+name|flags
+operator||=
+name|SEC_NEVER_LOAD
+expr_stmt|;
 break|break;
 case|case
 literal|'d'
@@ -5452,6 +5463,7 @@ comment|/* This section's attributes have already been set. Warn if the         
 name|flagword
 name|matchflags
 init|=
+operator|(
 name|SEC_ALLOC
 operator||
 name|SEC_LOAD
@@ -5463,6 +5475,9 @@ operator||
 name|SEC_DATA
 operator||
 name|SEC_SHARED
+operator||
+name|SEC_NEVER_LOAD
+operator|)
 decl_stmt|;
 if|if
 condition|(
@@ -8007,6 +8022,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|buffer
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -12751,7 +12768,17 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Turn a pointer to a symbol into the symbols' index */
+comment|/* Turn a pointer to a symbol into the symbols' index, 		     provided that it has been initialised.  */
+if|if
+condition|(
+name|line_ptr
+operator|->
+name|line
+operator|.
+name|l_addr
+operator|.
+name|l_symndx
+condition|)
 name|line_ptr
 operator|->
 name|line
@@ -15467,11 +15494,11 @@ return|return;
 if|#
 directive|if
 literal|0
-block|char *name;   char c;   int temp;   char *p;    symbolS *symbolP;    name = input_line_pointer;    c = get_symbol_end ();   p = input_line_pointer;   *p = c;   SKIP_WHITESPACE ();   if (*input_line_pointer != ',')     {       as_bad (_("Expected comma after name"));       ignore_rest_of_line ();       return;     }   if (*input_line_pointer == '\n')     {       as_bad (_("Missing size expression"));       return;     }   input_line_pointer++;   if ((temp = get_absolute_expression ())< 0)     {       as_warn (_("lcomm length (%d.)<0! Ignored."), temp);       ignore_rest_of_line ();       return;     }   *p = 0;    symbolP = symbol_find_or_make(name);    if (S_GET_SEGMENT(symbolP) == SEG_UNKNOWN&&       S_GET_VALUE(symbolP) == 0)     {       if (! need_pass_2) 	{ 	  char *p; 	  segT current_seg = now_seg;
+block|char *name;   char c;   int temp;   char *p;    symbolS *symbolP;    name = input_line_pointer;    c = get_symbol_end ();   p = input_line_pointer;   *p = c;   SKIP_WHITESPACE ();   if (*input_line_pointer != ',')     {       as_bad (_("Expected comma after name"));       ignore_rest_of_line ();       return;     }   if (*input_line_pointer == '\n')     {       as_bad (_("Missing size expression"));       return;     }   input_line_pointer++;   if ((temp = get_absolute_expression ())< 0)     {       as_warn (_("lcomm length (%d.)<0! Ignored."), temp);       ignore_rest_of_line ();       return;     }   *p = 0;    symbolP = symbol_find_or_make (name);    if (S_GET_SEGMENT (symbolP) == SEG_UNKNOWN&&       S_GET_VALUE (symbolP) == 0)     {       if (! need_pass_2) 	{ 	  char *p; 	  segT current_seg = now_seg;
 comment|/* save current seg     */
 block|subsegT current_subseg = now_subseg;  	  subseg_set (SEG_E2, 1); 	  symbolP->sy_frag = frag_now; 	  p = frag_var(rs_org, 1, 1, (relax_substateT)0, symbolP, 		       (offsetT) temp, (char *) 0); 	  *p = 0; 	  subseg_set (current_seg, current_subseg);
 comment|/* restore current seg */
-block|S_SET_SEGMENT(symbolP, SEG_E2); 	  S_SET_STORAGE_CLASS(symbolP, C_STAT); 	}     }   else     as_bad(_("Symbol %s already defined"), name);    demand_empty_rest_of_line();
+block|S_SET_SEGMENT (symbolP, SEG_E2); 	  S_SET_STORAGE_CLASS (symbolP, C_STAT); 	}     }   else     as_bad (_("Symbol %s already defined"), name);    demand_empty_rest_of_line ();
 endif|#
 directive|endif
 block|}

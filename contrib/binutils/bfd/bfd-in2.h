@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Contributed by Cygnus Support.  ** NOTE: bfd.h and bfd-in2.h are GENERATED files.  Don't change them; ** instead, change bfd-in.h or the other BFD source files processed to ** generate these files.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Contributed by Cygnus Support.  ** NOTE: bfd.h and bfd-in2.h are GENERATED files.  Don't change them; ** instead, change bfd-in.h or the other BFD source files processed to ** generate these files.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -3884,6 +3884,13 @@ name|linker_mark
 range|:
 literal|1
 decl_stmt|;
+comment|/* Another mark flag used by some of the linker backends.  Set for      output sections that have a input section.  */
+name|unsigned
+name|int
+name|linker_has_input
+range|:
+literal|1
+decl_stmt|;
 comment|/* A mark flag used by some linker backends for garbage collection.  */
 name|unsigned
 name|int
@@ -4465,6 +4472,22 @@ define|#
 directive|define
 name|bfd_mach_cpu32
 value|8
+define|#
+directive|define
+name|bfd_mach_mcf5200
+value|9
+define|#
+directive|define
+name|bfd_mach_mcf5206e
+value|10
+define|#
+directive|define
+name|bfd_mach_mcf5307
+value|11
+define|#
+directive|define
+name|bfd_mach_mcf5407
+value|12
 name|bfd_arch_vax
 block|,
 comment|/* DEC Vax */
@@ -4623,6 +4646,10 @@ define|#
 directive|define
 name|bfd_mach_mips10000
 value|10000
+define|#
+directive|define
+name|bfd_mach_mips12000
+value|12000
 define|#
 directive|define
 name|bfd_mach_mips16
@@ -5842,7 +5869,11 @@ name|BFD_RELOC_SPARC_JMP_SLOT
 block|,
 name|BFD_RELOC_SPARC_RELATIVE
 block|,
+name|BFD_RELOC_SPARC_UA16
+block|,
 name|BFD_RELOC_SPARC_UA32
+block|,
+name|BFD_RELOC_SPARC_UA64
 block|,
 comment|/* I think these are specific to SPARC a.out (e.g., Sun 4). */
 name|BFD_RELOC_SPARC_BASE13
@@ -5999,6 +6030,28 @@ block|,
 name|BFD_RELOC_MIPS_GOT_OFST
 block|,
 name|BFD_RELOC_MIPS_GOT_DISP
+block|,
+name|BFD_RELOC_MIPS_SHIFT5
+block|,
+name|BFD_RELOC_MIPS_SHIFT6
+block|,
+name|BFD_RELOC_MIPS_INSERT_A
+block|,
+name|BFD_RELOC_MIPS_INSERT_B
+block|,
+name|BFD_RELOC_MIPS_DELETE
+block|,
+name|BFD_RELOC_MIPS_HIGHEST
+block|,
+name|BFD_RELOC_MIPS_HIGHER
+block|,
+name|BFD_RELOC_MIPS_SCN_DISP
+block|,
+name|BFD_RELOC_MIPS_REL16
+block|,
+name|BFD_RELOC_MIPS_RELGOT
+block|,
+name|BFD_RELOC_MIPS_JALR
 block|,
 comment|/* i386/elf relocations */
 name|BFD_RELOC_386_GOT32

@@ -491,27 +491,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|Gb
-value|OP_G, b_mode
-end_define
-
-begin_define
-define|#
-directive|define
-name|Ev
-value|OP_E, v_mode
-end_define
-
-begin_define
-define|#
-directive|define
-name|Ed
-value|OP_E, d_mode
-end_define
-
-begin_define
-define|#
-directive|define
 name|indirEv
 value|OP_indirE, v_mode
 end_define
@@ -555,8 +534,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|Gb
+value|OP_G, b_mode
+end_define
+
+begin_define
+define|#
+directive|define
 name|Gv
 value|OP_G, v_mode
+end_define
+
+begin_define
+define|#
+directive|define
+name|Gd
+value|OP_G, d_mode
 end_define
 
 begin_define
@@ -1147,6 +1140,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|XS
+value|OP_XS, v_mode
+end_define
+
+begin_define
+define|#
+directive|define
 name|None
 value|OP_E, 0
 end_define
@@ -1163,6 +1163,20 @@ define|#
 directive|define
 name|OPSIMD
 value|OP_SIMD_Suffix, 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|cond_jump_flag
+value|NULL, cond_jump_mode
+end_define
+
+begin_define
+define|#
+directive|define
+name|loop_jcxz_flag
+value|NULL, loop_jcxz_mode
 end_define
 
 begin_comment
@@ -1647,6 +1661,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|OP_XS
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|OP_3DNowSuffix
 name|PARAMS
 argument_list|(
@@ -1934,6 +1963,20 @@ end_define
 begin_comment
 comment|/* d_mode in 32bit, q_mode in 64bit mode.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|cond_jump_mode
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|loop_jcxz_mode
+value|9
+end_define
 
 begin_define
 define|#
@@ -2618,7 +2661,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Upper case letters in the instruction names here are macros.    'A' => print 'b' if no register operands or suffix_always is true    'B' => print 'b' if suffix_always is true    'E' => print 'e' if 32-bit form of jcxz    'L' => print 'l' if suffix_always is true    'N' => print 'n' if instruction has no wait "prefix"    'O' => print 'd', or 'o'    'P' => print 'w', 'l' or 'q' if instruction has an operand size prefix,                               or suffix_always is true 	  print 'q' if rex prefix is present.    'I' => print 'q' in 64bit mode and behave as 'P' otherwise    'Q' => print 'w', 'l' or 'q' if no register operands or suffix_always is true    'R' => print 'w', 'l' or 'q' ("wd" or "dq" in intel mode)    'S' => print 'w', 'l' or 'q' if suffix_always is true    'T' => print 'q' in 64bit mode and behave as 'I' otherwise    'X' => print 's', 'd' depending on data16 prefix (for XMM)    'W' => print 'b' or 'w' ("w" or "de" in intel mode)    'Y' => 'q' if instruction has an REX 64bit overwrite prefix */
+comment|/* Upper case letters in the instruction names here are macros.    'A' => print 'b' if no register operands or suffix_always is true    'B' => print 'b' if suffix_always is true    'E' => print 'e' if 32-bit form of jcxz    'F' => print 'w' or 'l' depending on address size prefix (loop insns)    'L' => print 'l' if suffix_always is true    'N' => print 'n' if instruction has no wait "prefix"    'O' => print 'd', or 'o'    'P' => print 'w', 'l' or 'q' if instruction has an operand size prefix,                               or suffix_always is true 	  print 'q' if rex prefix is present.    'I' => print 'q' in 64bit mode and behave as 'P' otherwise    'Q' => print 'w', 'l' or 'q' if no register operands or suffix_always is true    'R' => print 'w', 'l' or 'q' ("wd" or "dq" in intel mode)    'S' => print 'w', 'l' or 'q' if suffix_always is true    'T' => print 'q' in 64bit mode and behave as 'I' otherwise    'X' => print 's', 'd' depending on data16 prefix (for XMM)    'W' => print 'b' or 'w' ("w" or "de" in intel mode)    'Y' => 'q' if instruction has an REX 64bit overwrite prefix */
 end_comment
 
 begin_decl_stmt
@@ -3781,7 +3824,7 @@ literal|"jo"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3791,7 +3834,7 @@ literal|"jno"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3801,7 +3844,7 @@ literal|"jb"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3811,7 +3854,7 @@ literal|"jae"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3821,7 +3864,7 @@ literal|"je"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3831,7 +3874,7 @@ literal|"jne"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3841,7 +3884,7 @@ literal|"jbe"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3851,7 +3894,7 @@ literal|"ja"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3862,7 +3905,7 @@ literal|"js"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3872,7 +3915,7 @@ literal|"jns"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3882,7 +3925,7 @@ literal|"jp"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3892,7 +3935,7 @@ literal|"jnp"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3902,7 +3945,7 @@ literal|"jl"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3912,7 +3955,7 @@ literal|"jge"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3922,7 +3965,7 @@ literal|"jle"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -3932,7 +3975,7 @@ literal|"jg"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -4811,31 +4854,31 @@ block|}
 block|,
 comment|/* e0 */
 block|{
-literal|"loopne"
+literal|"loopneF"
 block|,
 name|Jb
 block|,
-name|XX
+name|loop_jcxz_flag
 block|,
 name|XX
 block|}
 block|,
 block|{
-literal|"loope"
+literal|"loopeF"
 block|,
 name|Jb
 block|,
-name|XX
+name|loop_jcxz_flag
 block|,
 name|XX
 block|}
 block|,
 block|{
-literal|"loop"
+literal|"loopF"
 block|,
 name|Jb
 block|,
-name|XX
+name|loop_jcxz_flag
 block|,
 name|XX
 block|}
@@ -4845,7 +4888,7 @@ literal|"jEcxz"
 block|,
 name|Jb
 block|,
-name|XX
+name|loop_jcxz_flag
 block|,
 name|XX
 block|}
@@ -8790,7 +8833,7 @@ literal|"jo"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8800,7 +8843,7 @@ literal|"jno"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8810,7 +8853,7 @@ literal|"jb"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8820,7 +8863,7 @@ literal|"jae"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8830,7 +8873,7 @@ literal|"je"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8840,7 +8883,7 @@ literal|"jne"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8850,7 +8893,7 @@ literal|"jbe"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8860,7 +8903,7 @@ literal|"ja"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8871,7 +8914,7 @@ literal|"js"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8881,7 +8924,7 @@ literal|"jns"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8891,7 +8934,7 @@ literal|"jp"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8901,7 +8944,7 @@ literal|"jnp"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8911,7 +8954,7 @@ literal|"jl"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8921,7 +8964,7 @@ literal|"jge"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8931,7 +8974,7 @@ literal|"jle"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -8941,7 +8984,7 @@ literal|"jg"
 block|,
 name|Jb
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -9828,31 +9871,31 @@ block|}
 block|,
 comment|/* e0 */
 block|{
-literal|"loopne"
+literal|"loopneF"
 block|,
 name|Jb
 block|,
-name|XX
+name|loop_jcxz_flag
 block|,
 name|XX
 block|}
 block|,
 block|{
-literal|"loope"
+literal|"loopeF"
 block|,
 name|Jb
 block|,
-name|XX
+name|loop_jcxz_flag
 block|,
 name|XX
 block|}
 block|,
 block|{
-literal|"loop"
+literal|"loopF"
 block|,
 name|Jb
 block|,
-name|XX
+name|loop_jcxz_flag
 block|,
 name|XX
 block|}
@@ -9862,7 +9905,7 @@ literal|"jEcxz"
 block|,
 name|Jb
 block|,
-name|XX
+name|loop_jcxz_flag
 block|,
 name|XX
 block|}
@@ -13433,9 +13476,9 @@ comment|/* 50 */
 block|{
 literal|"movmskpX"
 block|,
-name|Gv
+name|Gd
 block|,
-name|EX
+name|XS
 block|,
 name|XX
 block|}
@@ -13801,7 +13844,7 @@ literal|"jo"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13811,7 +13854,7 @@ literal|"jno"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13821,7 +13864,7 @@ literal|"jb"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13831,7 +13874,7 @@ literal|"jae"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13841,7 +13884,7 @@ literal|"je"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13851,7 +13894,7 @@ literal|"jne"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13861,7 +13904,7 @@ literal|"jbe"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13871,7 +13914,7 @@ literal|"ja"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13882,7 +13925,7 @@ literal|"js"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13892,7 +13935,7 @@ literal|"jns"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13902,7 +13945,7 @@ literal|"jp"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13912,7 +13955,7 @@ literal|"jnp"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13922,7 +13965,7 @@ literal|"jl"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13932,7 +13975,7 @@ literal|"jge"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13942,7 +13985,7 @@ literal|"jle"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -13952,7 +13995,7 @@ literal|"jg"
 block|,
 name|Jv
 block|,
-name|XX
+name|cond_jump_flag
 block|,
 name|XX
 block|}
@@ -14473,7 +14516,7 @@ literal|"pinsrw"
 block|,
 name|MX
 block|,
-name|Ev
+name|Ed
 block|,
 name|Ib
 block|}
@@ -14481,9 +14524,9 @@ block|,
 block|{
 literal|"pextrw"
 block|,
-name|Ev
+name|Gd
 block|,
-name|MX
+name|MS
 block|,
 name|Ib
 block|}
@@ -14652,9 +14695,9 @@ block|,
 block|{
 literal|"pmovmskb"
 block|,
-name|Ev
+name|Gd
 block|,
-name|MX
+name|MS
 block|,
 name|XX
 block|}
@@ -15829,9 +15872,9 @@ comment|/* 50 */
 block|{
 literal|"movmskpX"
 block|,
-name|Gv
+name|Gd
 block|,
-name|EX
+name|XS
 block|,
 name|XX
 block|}
@@ -16867,7 +16910,7 @@ literal|"pinsrw"
 block|,
 name|MX
 block|,
-name|Ev
+name|Ed
 block|,
 name|Ib
 block|}
@@ -16875,9 +16918,9 @@ block|,
 block|{
 literal|"pextrw"
 block|,
-name|Ev
+name|Gd
 block|,
-name|MX
+name|MS
 block|,
 name|Ib
 block|}
@@ -17046,9 +17089,9 @@ block|,
 block|{
 literal|"pmovmskb"
 block|,
-name|Ev
+name|Gd
 block|,
-name|MX
+name|MS
 block|,
 name|XX
 block|}
@@ -18097,11 +18140,11 @@ literal|1
 block|,
 literal|1
 block|,
-literal|1
+literal|0
 block|,
 literal|1
 block|,
-literal|1
+literal|0
 block|,
 literal|1
 block|,
@@ -18209,9 +18252,9 @@ literal|1
 block|,
 literal|1
 block|,
-literal|0
+literal|1
 block|,
-literal|0
+literal|1
 block|,
 literal|1
 block|,
@@ -18247,9 +18290,9 @@ literal|1
 block|,
 literal|1
 block|,
-literal|0
+literal|1
 block|,
-literal|0
+literal|1
 block|,
 literal|1
 block|,
@@ -18371,9 +18414,9 @@ literal|1
 block|,
 literal|1
 block|,
-literal|1
+literal|0
 block|,
-literal|1
+literal|0
 block|,
 literal|0
 block|,
@@ -18473,7 +18516,7 @@ literal|1
 block|,
 literal|1
 block|,
-literal|0
+literal|1
 block|,
 literal|1
 block|,
@@ -18507,7 +18550,7 @@ literal|1
 block|,
 literal|1
 block|,
-literal|0
+literal|1
 block|,
 literal|1
 block|,
@@ -18537,7 +18580,7 @@ literal|1
 block|,
 literal|1
 block|,
-literal|0
+literal|1
 block|,
 literal|1
 block|,
@@ -19215,6 +19258,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|unsigned
+name|char
+name|need_modrm
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|oappend
 name|PARAMS
@@ -19228,6 +19279,17 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* If we are accessing mod/rm/reg without need_modrm set, then the    values are stale.  Hitting this abort likely indicates that you    need to update onebyte_has_modrm or twobyte_has_modrm.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MODRM_CHECK
+value|if (!need_modrm) abort ()
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -22209,7 +22271,7 @@ literal|"maskmovq"
 block|,
 name|MX
 block|,
-name|EM
+name|MS
 block|,
 name|XX
 block|}
@@ -22346,9 +22408,9 @@ block|,
 block|{
 literal|"movq2dq"
 block|,
-name|EX
+name|XM
 block|,
-name|EM
+name|MS
 block|,
 name|XX
 block|}
@@ -22366,9 +22428,9 @@ block|,
 block|{
 literal|"movdq2q"
 block|,
-name|EM
-block|,
 name|MX
+block|,
+name|XS
 block|,
 name|XX
 block|}
@@ -22432,9 +22494,9 @@ block|,
 block|{
 literal|"movq"
 block|,
-name|Ed
-block|,
 name|XM
+block|,
+name|EX
 block|,
 name|XX
 block|}
@@ -23335,10 +23397,6 @@ name|needcomma
 decl_stmt|;
 name|unsigned
 name|char
-name|need_modrm
-decl_stmt|;
-name|unsigned
-name|char
 name|uses_SSE_prefix
 decl_stmt|;
 name|VOLATILE
@@ -23918,21 +23976,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|uses_SSE_prefix
-operator|&&
-operator|(
-name|prefixes
-operator|&
-name|PREFIX_DATA
-operator|)
-condition|)
-name|sizeflag
-operator|^=
-name|DFLAG
-expr_stmt|;
-if|if
-condition|(
 name|prefixes
 operator|&
 name|PREFIX_ADDR
@@ -23942,6 +23985,15 @@ name|sizeflag
 operator|^=
 name|AFLAG
 expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|bytemode2
+operator|!=
+name|loop_jcxz_mode
+condition|)
+block|{
 if|if
 condition|(
 name|sizeflag
@@ -23963,6 +24015,127 @@ name|used_prefixes
 operator||=
 name|PREFIX_ADDR
 expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|uses_SSE_prefix
+operator|&&
+operator|(
+name|prefixes
+operator|&
+name|PREFIX_DATA
+operator|)
+condition|)
+block|{
+name|sizeflag
+operator|^=
+name|DFLAG
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|bytemode2
+operator|==
+name|cond_jump_mode
+operator|&&
+name|dp
+operator|->
+name|bytemode1
+operator|==
+name|v_mode
+condition|)
+block|{
+if|if
+condition|(
+name|sizeflag
+operator|&
+name|DFLAG
+condition|)
+name|oappend
+argument_list|(
+literal|"data32 "
+argument_list|)
+expr_stmt|;
+else|else
+name|oappend
+argument_list|(
+literal|"data16 "
+argument_list|)
+expr_stmt|;
+name|used_prefixes
+operator||=
+name|PREFIX_DATA
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|dp
+operator|->
+name|bytemode2
+operator|==
+name|cond_jump_mode
+operator|||
+name|dp
+operator|->
+name|bytemode2
+operator|==
+name|loop_jcxz_mode
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|prefixes
+operator|&
+operator|(
+name|PREFIX_CS
+operator||
+name|PREFIX_DS
+operator|)
+operator|)
+operator|==
+name|PREFIX_CS
+condition|)
+block|{
+name|oappend
+argument_list|(
+literal|"cs "
+argument_list|)
+expr_stmt|;
+name|used_prefixes
+operator||=
+name|PREFIX_CS
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|prefixes
+operator|&
+operator|(
+name|PREFIX_CS
+operator||
+name|PREFIX_DS
+operator|)
+operator|)
+operator|==
+name|PREFIX_DS
+condition|)
+block|{
+name|oappend
+argument_list|(
+literal|"ds "
+argument_list|)
+expr_stmt|;
+name|used_prefixes
+operator||=
+name|PREFIX_DS
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -25802,9 +25975,9 @@ block|,
 comment|/* df */
 block|{
 block|{
-literal|"(bad)"
+literal|"ffreep"
 block|,
-name|XX
+name|STi
 block|,
 name|XX
 block|,
@@ -26182,6 +26355,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* skip mod/rm byte */
+name|MODRM_CHECK
+expr_stmt|;
 name|codep
 operator|++
 expr_stmt|;
@@ -26509,6 +26685,66 @@ operator|++
 operator|=
 literal|'e'
 expr_stmt|;
+name|used_prefixes
+operator||=
+operator|(
+name|prefixes
+operator|&
+name|PREFIX_ADDR
+operator|)
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+if|if
+condition|(
+operator|(
+name|prefixes
+operator|&
+name|PREFIX_ADDR
+operator|)
+ifdef|#
+directive|ifdef
+name|SUFFIX_ALWAYS
+operator|||
+operator|(
+name|sizeflag
+operator|&
+name|SUFFIX_ALWAYS
+operator|)
+endif|#
+directive|endif
+condition|)
+block|{
+if|if
+condition|(
+name|sizeflag
+operator|&
+name|AFLAG
+condition|)
+operator|*
+name|obufp
+operator|++
+operator|=
+literal|'l'
+expr_stmt|;
+else|else
+operator|*
+name|obufp
+operator|++
+operator|=
+literal|'w'
+expr_stmt|;
+name|used_prefixes
+operator||=
+operator|(
+name|prefixes
+operator|&
+name|PREFIX_ADDR
+operator|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'I'
@@ -27723,6 +27959,8 @@ operator|+=
 literal|8
 expr_stmt|;
 comment|/* skip mod/rm byte */
+name|MODRM_CHECK
+expr_stmt|;
 name|codep
 operator|++
 expr_stmt|;
@@ -30663,14 +30901,6 @@ operator|=
 literal|0xffff
 expr_stmt|;
 block|}
-name|used_prefixes
-operator||=
-operator|(
-name|prefixes
-operator|&
-name|PREFIX_DATA
-operator|)
-expr_stmt|;
 break|break;
 default|default:
 name|oappend
@@ -31614,6 +31844,9 @@ name|add
 operator|=
 literal|8
 expr_stmt|;
+comment|/* skip mod/rm byte */
+name|MODRM_CHECK
+expr_stmt|;
 name|codep
 operator|++
 expr_stmt|;
@@ -31714,6 +31947,9 @@ name|add
 operator|=
 literal|8
 expr_stmt|;
+comment|/* skip mod/rm byte */
+name|MODRM_CHECK
+expr_stmt|;
 name|codep
 operator|++
 expr_stmt|;
@@ -31759,6 +31995,42 @@ operator|==
 literal|3
 condition|)
 name|OP_EM
+argument_list|(
+name|bytemode
+argument_list|,
+name|sizeflag
+argument_list|)
+expr_stmt|;
+else|else
+name|BadOp
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|OP_XS
+parameter_list|(
+name|bytemode
+parameter_list|,
+name|sizeflag
+parameter_list|)
+name|int
+name|bytemode
+decl_stmt|;
+name|int
+name|sizeflag
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|mod
+operator|==
+literal|3
+condition|)
+name|OP_EX
 argument_list|(
 name|bytemode
 argument_list|,

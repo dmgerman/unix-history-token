@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF executable support for BFD.    Copyright 1991, 92, 93, 94, 95, 96, 97, 98, 1999, 2000 Free    Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  Sufficient support for gdb.     Rewritten by Mark Eichin @ Cygnus Support, from information    published in "System V Application Binary Interface", chapters 4    and 5, as well as the various "Processor Supplement" documents    derived from it. Added support for assembler and other object file    utilities.  Further work done by Ken Raeburn (Cygnus Support), Michael    Meissner (Open Software Foundation), and Peter Hoogenboom (University    of Utah) to finish and extend this.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF executable support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001 Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  Sufficient support for gdb.     Rewritten by Mark Eichin @ Cygnus Support, from information    published in "System V Application Binary Interface", chapters 4    and 5, as well as the various "Processor Supplement" documents    derived from it. Added support for assembler and other object file    utilities.  Further work done by Ken Raeburn (Cygnus Support), Michael    Meissner (Open Software Foundation), and Peter Hoogenboom (University    of Utah) to finish and extend this.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -6904,13 +6904,10 @@ name|rel_hdr
 expr_stmt|;
 name|reloc_count
 operator|=
+name|NUM_SHDR_ENTRIES
+argument_list|(
 name|rel_hdr
-operator|->
-name|sh_size
-operator|/
-name|rel_hdr
-operator|->
-name|sh_entsize
+argument_list|)
 expr_stmt|;
 name|rel_hdr2
 operator|=
@@ -6923,15 +6920,10 @@ operator|=
 operator|(
 name|rel_hdr2
 condition|?
-operator|(
+name|NUM_SHDR_ENTRIES
+argument_list|(
 name|rel_hdr2
-operator|->
-name|sh_size
-operator|/
-name|rel_hdr2
-operator|->
-name|sh_entsize
-operator|)
+argument_list|)
 else|:
 literal|0
 operator|)
@@ -6994,13 +6986,10 @@ name|this_hdr
 expr_stmt|;
 name|reloc_count
 operator|=
+name|NUM_SHDR_ENTRIES
+argument_list|(
 name|rel_hdr
-operator|->
-name|sh_size
-operator|/
-name|rel_hdr
-operator|->
-name|sh_entsize
+argument_list|)
 expr_stmt|;
 name|rel_hdr2
 operator|=

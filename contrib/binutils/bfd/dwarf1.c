@@ -1604,14 +1604,21 @@ modifier|*
 name|eachUnit
 decl_stmt|;
 comment|/* What address are we looking for? */
-name|bfd_vma
+name|unsigned
+name|long
 name|addr
 init|=
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|offset
 operator|+
 name|section
 operator|->
 name|vma
+argument_list|)
 decl_stmt|;
 operator|*
 name|filename_ptr

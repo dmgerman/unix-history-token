@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic ECOFF (Extended-COFF) routines.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic ECOFF (Extended-COFF) routines.    Copyright 1990, 1991, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -406,61 +406,13 @@ name|asection
 name|bfd_debug_section
 init|=
 block|{
-comment|/* name,   index, next, flags, set_vma, reloc_done, linker_mark, gc_mark */
+comment|/* name,   id,  index, next, flags, user_set_vma, reloc_done,    */
 literal|"*DEBUG*"
 block|,
 literal|0
 block|,
 literal|0
 block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* vma, lma, _cooked_size, _raw_size, output_offset, output_section, */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|NULL
-block|,
-comment|/* alig, reloc..., orel..., reloc_count, filepos, rel_..., line_... */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* userdata, contents, lineno, lineno_count */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* comdat_info, moving_line_filepos, target_index, used_by_bfd,  */
 name|NULL
 block|,
 literal|0
@@ -469,11 +421,70 @@ literal|0
 block|,
 literal|0
 block|,
-comment|/* cons, owner, symbol */
+comment|/* linker_mark, linker_has_input, gc_mark, segment_mark,         */
 literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* vma, lma, _cooked_size, _raw_size,                            */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* output_offset, output_section, alignment_power,               */
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+comment|/* relocation, orelocation, reloc_count, filepos, rel_filepos,   */
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* line_filepos, userdata, contents, lineno, lineno_count,       */
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+comment|/* comdat, kept_section, moving_line_filepos,                    */
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+comment|/* target_index, used_by_bfd, constructor_chain, owner,          */
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* symbol,                                                       */
 operator|(
 expr|struct
 name|symbol_cache_entry
@@ -481,7 +492,7 @@ operator|*
 operator|)
 name|NULL
 block|,
-comment|/* symbol_ptr_ptr,                   link_order_head, ..._tail */
+comment|/* symbol_ptr_ptr,                                               */
 operator|(
 expr|struct
 name|symbol_cache_entry
@@ -490,6 +501,7 @@ operator|*
 operator|)
 name|NULL
 block|,
+comment|/* link_order_head, link_order_tail                              */
 name|NULL
 block|,
 name|NULL

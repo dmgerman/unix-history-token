@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic stabs parsing for gas.    Copyright (C) 1989, 90, 91, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic stabs parsing for gas.    Copyright 1989, 1990, 1991, 1993, 1995, 1996, 1997, 1998, 2000, 2001    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -607,6 +607,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|string
+decl_stmt|,
+modifier|*
+name|saved_string_obstack_end
 decl_stmt|;
 name|int
 name|type
@@ -624,10 +627,16 @@ name|what
 operator|!=
 literal|'s'
 condition|)
+block|{
 name|string
 operator|=
 literal|""
 expr_stmt|;
+name|saved_string_obstack_end
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
 block|{
 name|int
@@ -640,6 +649,13 @@ argument_list|(
 operator|&
 name|length
 argument_list|)
+expr_stmt|;
+comment|/* FIXME: We should probably find some other temporary storage 	 for string, rather than leaking memory if someone else 	 happens to use the notes obstack.  */
+name|saved_string_obstack_end
+operator|=
+name|notes
+operator|.
+name|next_free
 expr_stmt|;
 name|SKIP_WHITESPACE
 argument_list|()
@@ -1052,7 +1068,15 @@ operator|==
 literal|'s'
 condition|)
 block|{
-comment|/* release the string */
+comment|/* Release the string, if nobody else has used the obstack.  */
+if|if
+condition|(
+name|saved_string_obstack_end
+operator|==
+name|notes
+operator|.
+name|next_free
+condition|)
 name|obstack_free
 argument_list|(
 operator|&

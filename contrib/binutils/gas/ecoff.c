@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ECOFF debugging support.    Copyright (C) 1993, 94, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.  A    good deal of it comes directly from mips-tfile.c, by Michael    Meissner<meissner@osf.org>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ECOFF debugging support.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.  A    good deal of it comes directly from mips-tfile.c, by Michael    Meissner<meissner@osf.org>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -7190,6 +7190,7 @@ decl_stmt|;
 comment|/* file name */
 name|int
 name|indx
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|fake
@@ -8112,6 +8113,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -8248,6 +8250,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -8489,6 +8492,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -8673,6 +8677,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -8846,6 +8851,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -8912,6 +8918,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -9085,6 +9092,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -9350,6 +9358,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -9444,6 +9453,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|expressionS
@@ -9554,6 +9564,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10207,6 +10218,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10421,6 +10433,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10596,6 +10609,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10680,6 +10694,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -10765,6 +10780,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -10859,6 +10875,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -10986,6 +11003,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -11080,6 +11098,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|lineno_list_t
@@ -11409,6 +11428,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -11662,6 +11682,7 @@ name|desc
 parameter_list|)
 name|segT
 name|sec
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|what
@@ -12222,6 +12243,9 @@ argument_list|(
 name|sym
 argument_list|)
 operator|<=
+operator|(
+name|unsigned
+operator|)
 name|bfd_get_gp_size
 argument_list|(
 name|stdoutput
@@ -12544,6 +12568,11 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 operator|*
 name|bufend
 operator|-
@@ -12553,6 +12582,7 @@ name|buf
 operator|+
 name|offset
 operator|)
+argument_list|)
 operator|<
 name|add
 condition|)
@@ -14324,6 +14354,9 @@ literal|0
 operator|||
 name|s
 operator|>
+operator|(
+name|unsigned
+operator|)
 name|bfd_get_gp_size
 argument_list|(
 name|stdoutput
@@ -14387,6 +14420,9 @@ argument_list|(
 name|as_sym
 argument_list|)
 operator|<=
+operator|(
+name|unsigned
+operator|)
 name|bfd_get_gp_size
 argument_list|(
 name|stdoutput
@@ -15138,10 +15174,15 @@ condition|)
 block|{
 if|if
 condition|(
+call|(
+name|bfd_size_type
+call|)
+argument_list|(
 operator|*
 name|bufend
 operator|-
 name|sym_out
+argument_list|)
 operator|<
 name|external_sym_size
 condition|)
@@ -15697,10 +15738,15 @@ name|adr
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|bfd_size_type
+call|)
+argument_list|(
 operator|*
 name|bufend
 operator|-
 name|pdr_out
+argument_list|)
 operator|<
 name|external_pdr_size
 condition|)
@@ -16043,6 +16089,11 @@ control|)
 block|{
 if|if
 condition|(
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 operator|*
 name|bufend
 operator|-
@@ -16051,6 +16102,7 @@ name|char
 operator|*
 operator|)
 name|aux_out
+argument_list|)
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -16416,10 +16468,16 @@ name|objects_per_page
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 operator|*
 name|bufend
 operator|-
 name|str_out
+argument_list|)
 operator|<
 name|str_cnt
 condition|)
@@ -16842,10 +16900,15 @@ control|)
 block|{
 if|if
 condition|(
+call|(
+name|bfd_size_type
+call|)
+argument_list|(
 operator|*
 name|bufend
 operator|-
 name|fdr_out
+argument_list|)
 operator|<
 name|external_fdr_size
 condition|)
@@ -17562,6 +17625,10 @@ name|offset
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|bfd_size_type
+call|)
+argument_list|(
 name|bufend
 operator|-
 operator|(
@@ -17569,6 +17636,7 @@ name|buf
 operator|+
 name|offset
 operator|)
+argument_list|)
 operator|<
 name|proc_cnt
 operator|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ECOFF object file format.    Copyright (C) 1993, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ECOFF object file format.    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -311,6 +311,10 @@ block|,
 comment|/* Sentinel.  */
 block|{
 name|NULL
+block|,
+name|s_ignore
+block|,
+literal|0
 block|}
 block|}
 decl_stmt|;
@@ -400,7 +404,7 @@ decl_stmt|;
 define|#
 directive|define
 name|n_names
-value|(sizeof (names) / sizeof (names[0]))
+value|((int) (sizeof (names) / sizeof (names[0])))
 name|addr
 operator|=
 literal|0
@@ -1054,6 +1058,7 @@ parameter_list|)
 name|asection
 modifier|*
 name|sec
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
@@ -1078,6 +1083,7 @@ decl_stmt|;
 name|int
 modifier|*
 name|puntp
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|ecoff_frob_symbol

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-ppc.c -- Assemble for the PowerPC or POWER (RS/6000)    Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-ppc.c -- Assemble for the PowerPC or POWER (RS/6000)    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -11562,6 +11562,7 @@ argument_list|)
 operator|==
 name|C_STSYM
 condition|)
+block|{
 name|symbol_get_tc
 argument_list|(
 name|sym
@@ -11571,6 +11572,29 @@ name|within
 operator|=
 name|ppc_current_block
 expr_stmt|;
+comment|/* In this case :               .bs name        .stabx	"z",arrays_,133,0        .es                .comm arrays_,13768,3                resolve_symbol_value will copy the exp's "within" into sym's when the        offset is 0.  Since this seems to be corner case problem,        only do the correction for storage class C_STSYM.  A better solution        would be to have the tc	field updated in ppc_symbol_new_hook. */
+if|if
+condition|(
+name|exp
+operator|.
+name|X_op
+operator|==
+name|O_symbol
+condition|)
+block|{
+name|symbol_get_tc
+argument_list|(
+name|exp
+operator|.
+name|X_add_symbol
+argument_list|)
+operator|->
+name|within
+operator|=
+name|ppc_current_block
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|exp
