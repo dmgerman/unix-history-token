@@ -180,8 +180,6 @@ decl_stmt|,
 name|pflag
 decl_stmt|,
 name|rflag
-decl_stmt|,
-name|fflag
 decl_stmt|;
 end_decl_stmt
 
@@ -297,16 +295,6 @@ name|Rflag
 operator|=
 literal|0
 expr_stmt|;
-name|fflag
-operator|=
-name|iflag
-operator|=
-name|rflag
-operator|=
-name|pflag
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -318,7 +306,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPRfipr?"
+literal|"HLPRfipr"
 argument_list|)
 operator|)
 operator|!=
@@ -386,10 +374,6 @@ name|iflag
 operator|=
 literal|0
 expr_stmt|;
-name|fflag
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 literal|'i'
@@ -398,12 +382,11 @@ name|iflag
 operator|=
 name|isatty
 argument_list|(
-name|STDIN_FILENO
+name|fileno
+argument_list|(
+name|stdin
 argument_list|)
-expr_stmt|;
-name|fflag
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
