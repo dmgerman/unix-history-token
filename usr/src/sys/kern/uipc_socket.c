@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.26	82/01/17	*/
+comment|/*	uipc_socket.c	4.27	82/01/17	*/
 end_comment
 
 begin_include
@@ -3166,31 +3166,14 @@ return|return;
 block|}
 return|return;
 block|}
+comment|/* type/protocol specific ioctls */
 block|}
-switch|switch
-condition|(
-name|so
-operator|->
-name|so_type
-condition|)
-block|{
-case|case
-name|SOCK_STREAM
-case|:
-break|break;
-case|case
-name|SOCK_DGRAM
-case|:
-break|break;
-case|case
-name|SOCK_RDM
-case|:
-break|break;
-case|case
-name|SOCK_RAW
-case|:
-break|break;
-block|}
+name|u
+operator|.
+name|u_error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
 block|}
 end_block
 
