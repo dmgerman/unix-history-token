@@ -127,7 +127,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Describe one low-level request, part of a  * high-level request.  This is an extended  * struct buf buffer, and the first element  * *must* be a struct buf.  We pass this  * structure to the I/O routines instead of a  * struct buf in order to be able to locate the  * high-level request when it completes.  *  * All offsets and lengths are in "blocks",  * i.e. sectors.  */
+comment|/*  * Describe one low-level request, part of a  * high-level request.  This is an extended  * struct buf buffer, and the first element  * *must* be a struct buf.  We pass this  * structure to the I/O routines instead of a  * struct buf in order to be able to locate the  * high-level request when it completes.  *  * All offsets and lengths are in sectors.  */
 end_comment
 
 begin_struct
@@ -241,6 +241,12 @@ literal|0
 index|]
 decl_stmt|;
 comment|/* and the elements of this request */
+name|struct
+name|rangelock
+modifier|*
+name|lock
+decl_stmt|;
+comment|/* lock for this transfer */
 block|}
 struct|;
 end_struct
@@ -407,7 +413,17 @@ name|loginfo_raid5_data
 block|,
 comment|/* write RAID-5 data block */
 name|loginfo_raid5_parity
+block|,
 comment|/* write RAID-5 parity block */
+name|loginfo_lockwait
+block|,
+comment|/* wait for range lock */
+name|loginfo_lock
+block|,
+comment|/* lock range */
+name|loginfo_unlock
+block|,
+comment|/* unlock range */
 block|}
 enum|;
 end_enum
@@ -428,6 +444,11 @@ modifier|*
 name|rqe
 decl_stmt|;
 comment|/* address of request, for correlation */
+name|struct
+name|rangelock
+modifier|*
+name|lockinfo
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -471,6 +492,10 @@ name|rqelement
 name|rqe
 decl_stmt|;
 comment|/* and the whole rqe */
+name|struct
+name|rangelock
+name|lockinfo
+decl_stmt|;
 block|}
 name|info
 union|;
@@ -662,6 +687,42 @@ comment|/* don't update the disk config, for recovery */
 block|}
 enum|;
 end_enum
+
+begin_function_decl
+name|void
+name|freerq
+parameter_list|(
+name|struct
+name|request
+modifier|*
+name|rq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|unlockrange
+parameter_list|(
+name|struct
+name|rqgroup
+modifier|*
+name|rqg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
