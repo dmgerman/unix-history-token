@@ -926,6 +926,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|Var_AddCmdLine
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|Var_Parse
