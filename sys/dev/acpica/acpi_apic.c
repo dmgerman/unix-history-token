@@ -224,6 +224,13 @@ name|void
 modifier|*
 name|private
 decl_stmt|;
+if|#
+directive|if
+literal|1
+return|return;
+else|#
+directive|else
+comment|/* broken by new ACPICA update that doesn't support the APIC table */
 comment|/*      * Perform the tedious double-get to fetch the actual table.      */
 name|buf
 operator|.
@@ -534,6 +541,8 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

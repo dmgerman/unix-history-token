@@ -801,8 +801,7 @@ block|{
 name|device_t
 name|child
 decl_stmt|;
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 name|rsdp
 decl_stmt|;
 name|int
@@ -1030,7 +1029,7 @@ name|error
 operator|=
 name|AcpiGetTableHeader
 argument_list|(
-name|ACPI_TABLE_RSDT
+name|ACPI_TABLE_XSDT
 argument_list|,
 literal|1
 argument_list|,
@@ -1046,7 +1045,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"couldn't get RSDT header: %s\n"
+literal|"couldn't get XSDT header: %s\n"
 argument_list|,
 name|acpi_strerror
 argument_list|(
@@ -1363,11 +1362,11 @@ expr_stmt|;
 comment|/* Enable and clear fixed events and install handlers. */
 if|if
 condition|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|!=
 name|NULL
 operator|&&
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|PwrButton
 operator|==
@@ -1407,11 +1406,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|!=
 name|NULL
 operator|&&
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|SleepButton
 operator|==

@@ -576,7 +576,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*      * Get our base bus number by evaluating _BBN      * If this doesn't exist, we assume we're bus number 0.      *      * XXX note that it may also not exist in the case where we are       *     meant to use a private configuration space mechanism for this bus,      *     so we should dig out our resources and check to see if we have      *     anything like that.  How do we do this?      */
+comment|/*      * Get our base bus number by evaluating _BBN      * If this doesn't exist, we assume we're bus number 0.      *      * XXX note that it may also not exist in the case where we are       *     meant to use a private configuration space mechanism for this bus,      *     so we should dig out our resources and check to see if we have      *     anything like that.  How do we do this?      * XXX If we have the requisite information, and if we don't think the      *     default PCI configuration space handlers can deal with this bus,      *     we should attach our own handler.      * XXX invoke _REG on this for the PCI config space address space?      */
 if|if
 condition|(
 operator|(
@@ -633,7 +633,29 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*      * XXX we should check here to make sure that this bus number hasn't already      *     been attached.  It shouldn't really be an issue.      */
+comment|/*      * Make sure that this bus hasn't already been found.  If it has, return silently      * (should we complain here?).      */
+if|if
+condition|(
+name|devclass_get_device
+argument_list|(
+name|devclass_find
+argument_list|(
+literal|"pci"
+argument_list|)
+argument_list|,
+name|sc
+operator|->
+name|ap_bus
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/*      * Attach the PCI bus proper.      */
 if|if
 condition|(
 operator|(
@@ -670,15 +692,10 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*      *  XXX If we have the requisite information, and if we don't think the      *      default PCI configuration space handlers can deal with this bus,      *      we should attach our own handler.      */
-comment|/* XXX invoke _REG on this for the PCI config space address space? */
-comment|/*      * Now go scan the bus.      *      * XXX is it possible to defer this and count on the nexus getting to it      *     reliably after it's finished with ACPI?  Should we really care?      */
+comment|/*      * Note that we defer the actual scan of the child PCI bus; ACPI will call      * bus_generic_attach on its children a second time after the first pass      * is complete.  This leads to slightly neater output.      */
 return|return
 operator|(
-name|bus_generic_attach
-argument_list|(
-name|dev
-argument_list|)
+literal|0
 operator|)
 return|;
 block|}

@@ -193,8 +193,8 @@ name|parent
 parameter_list|)
 block|{
 specifier|static
-name|FIXED_ACPI_DESCRIPTION_TABLE
-name|facp
+name|FADT_DESCRIPTOR_REV1
+name|fadt
 decl_stmt|;
 name|ACPI_BUFFER
 name|buf
@@ -216,7 +216,7 @@ operator|.
 name|Pointer
 operator|=
 operator|&
-name|facp
+name|fadt
 expr_stmt|;
 name|buf
 operator|.
@@ -224,7 +224,7 @@ name|Length
 operator|=
 sizeof|sizeof
 argument_list|(
-name|facp
+name|fadt
 argument_list|)
 expr_stmt|;
 if|if
@@ -234,7 +234,7 @@ name|status
 operator|=
 name|AcpiGetTable
 argument_list|(
-name|ACPI_TABLE_FACP
+name|ACPI_TABLE_FADT
 argument_list|,
 literal|1
 argument_list|,
@@ -250,7 +250,7 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"can't locate FACP - %s\n"
+literal|"can't locate FADT - %s\n"
 argument_list|,
 name|acpi_strerror
 argument_list|(
@@ -268,7 +268,7 @@ name|Length
 operator|!=
 sizeof|sizeof
 argument_list|(
-name|facp
+name|fadt
 argument_list|)
 condition|)
 block|{
@@ -276,7 +276,7 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"invalid FACP\n"
+literal|"invalid FADT\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -335,7 +335,7 @@ name|desc
 argument_list|,
 literal|"%d-bit timer at 3.579545MHz"
 argument_list|,
-name|facp
+name|fadt
 operator|.
 name|TmrValExt
 condition|?
