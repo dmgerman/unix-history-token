@@ -5724,6 +5724,17 @@ break|break;
 case|case
 name|MODE_NAK
 case|:
+name|lcp
+operator|->
+name|want_lqrperiod
+operator|=
+name|ntohl
+argument_list|(
+name|req
+operator|->
+name|period
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|MODE_REJ
