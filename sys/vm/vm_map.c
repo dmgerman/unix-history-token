@@ -5069,8 +5069,6 @@ decl_stmt|;
 name|vm_map_entry_t
 name|temp_entry
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 switch|switch
 condition|(
 name|new_inheritance
