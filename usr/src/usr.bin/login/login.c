@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.77 (Berkeley) %G%"
+literal|"@(#)login.c	5.78 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,6 +293,40 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERBEROS
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|klogin
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|passwd
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -592,7 +626,7 @@ argument_list|,
 name|LOG_AUTH
 argument_list|)
 expr_stmt|;
-comment|/* 	 * -p is used by getty to tell login not to destroy the environment 	 * -r is used by rlogind to cause the autologin protocol;  	 * -f is used to skip a second login authentication  	 * -h is used by other servers to pass the name of the remote 	 *    host to login so that it may be placed in utmp and wtmp 	 */
+comment|/* 	 * -p is used by getty to tell login not to destroy the environment 	 * -r is used by rlogind to cause the autologin protocol; 	 * -f is used to skip a second login authentication 	 * -h is used by other servers to pass the name of the remote 	 *    host to login so that it may be placed in utmp and wtmp 	 */
 name|domain
 operator|=
 name|NULL
@@ -1949,6 +1983,9 @@ operator|.
 name|ut_time
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|utmp
@@ -2128,6 +2165,9 @@ index|]
 operator|==
 literal|'\0'
 condition|)
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|term
@@ -3138,6 +3178,9 @@ name|printf
 argument_list|(
 literal|"from %.*s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|ll
@@ -3158,6 +3201,9 @@ name|printf
 argument_list|(
 literal|"on %.*s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|ll
@@ -3220,6 +3266,9 @@ operator|.
 name|ll_time
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|ll
@@ -3240,6 +3289,9 @@ if|if
 condition|(
 name|hostname
 condition|)
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|ll
