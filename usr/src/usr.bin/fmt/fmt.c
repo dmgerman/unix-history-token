@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fmt.c	5.8 (Berkeley) %G%"
+literal|"@(#)fmt.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -909,6 +909,16 @@ name|pfx
 operator|=
 name|np
 expr_stmt|;
+if|if
+condition|(
+name|h
+condition|)
+name|pack
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+else|else
 name|split
 argument_list|(
 name|cp
