@@ -856,7 +856,10 @@ name|snprintf
 argument_list|(
 name|fmt
 argument_list|,
-literal|49
+sizeof|sizeof
+argument_list|(
+name|fmt
+argument_list|)
 argument_list|,
 literal|"#!/bin/sh\n# atrun uid=%%ld gid=%%ld\n# mail %%%ds %%d"
 argument_list|,
