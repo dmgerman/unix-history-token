@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	1.1 (Berkeley) %G%"
+literal|"@(#)format.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -506,6 +506,35 @@ name|w
 operator|=
 name|dot
 expr_stmt|;
+name|IF
+name|c
+operator|==
+literal|'b'
+name|ORF
+name|c
+operator|==
+literal|'B'
+name|ORF
+name|c
+operator|==
+literal|'c'
+name|ORF
+name|c
+operator|==
+literal|'C'
+name|ORF
+name|c
+operator|==
+literal|'1'
+name|THEN
+name|w
+operator|=
+name|btol
+argument_list|(
+name|wx
+argument_list|)
+expr_stmt|;
+name|FI
 name|ELSE
 name|wx
 init|=
@@ -699,7 +728,7 @@ name|printesc
 argument_list|(
 name|byte
 argument_list|(
-name|wx
+name|w
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -708,7 +737,7 @@ name|printc
 argument_list|(
 name|byte
 argument_list|(
-name|wx
+name|w
 argument_list|)
 argument_list|)
 decl_stmt|;
@@ -730,7 +759,7 @@ literal|"%-8o"
 argument_list|,
 name|byte
 argument_list|(
-name|wx
+name|w
 argument_list|)
 argument_list|)
 expr_stmt|;

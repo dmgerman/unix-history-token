@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	1.2	86/07/25	*/
+comment|/*	defs.h	1.3	86/11/20	*/
 end_comment
 
 begin_comment
@@ -538,6 +538,16 @@ parameter_list|)
 value|(((a)>> 24)& 0xff)
 end_define
 
+begin_define
+define|#
+directive|define
+name|btol
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)<< 24)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -583,6 +593,16 @@ parameter_list|(
 name|a
 parameter_list|)
 value|((a)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|btol
+parameter_list|(
+name|a
+parameter_list|)
+value|(a)
 end_define
 
 begin_endif
