@@ -1910,13 +1910,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The 'verrevpath' option checks that the interface that an IP packet  * arrives on is the same interface that traffic destined for the  * packet's source address would be routed out of. This is a measure  * to block forged packets. This is also commonly known as "anti-spoofing"  * or Unicast Reverse Path Forwarding (Unicast RFP) in Cisco-ese. The  * name of the knob is purposely reminisent of the Cisco IOS command,  *  *   ip verify unicast reverse-path  *  * which implements the same functionality. But note that syntax is  * misleading. The check may be performed on all IP packets whether unicast,  * multicast, or broadcast.  */
+comment|/*  * The verify_path function checks if a route to the src exists and  * if it is reachable via ifp (when provided).  *   * The 'verrevpath' option checks that the interface that an IP packet  * arrives on is the same interface that traffic destined for the  * packet's source address would be routed out of.  The 'versrcreach'  * option just checks that the source address is reachable via any route  * (except default) in the routing table.  These two are a measure to block  * forged packets.  This is also commonly known as "anti-spoofing" or Unicast  * Reverse Path Forwarding (Unicast RFP) in Cisco-ese. The name of the knobs  * is purposely reminiscent of the Cisco IOS command,  *  *   ip verify unicast reverse-path  *   ip verify unicast source reachable-via any  *  * which implements the same functionality. But note that syntax is  * misleading. The check may be performed on all IP packets whether unicast,  * multicast, or broadcast.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|verify_rev_path
+name|verify_path
 parameter_list|(
 name|struct
 name|in_addr
@@ -2003,27 +2003,20 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* if ifp is provided, check for equality with rtentry */
 if|if
 condition|(
-operator|(
 name|ifp
-operator|==
+operator|!=
 name|NULL
-operator|)
-operator|||
-operator|(
+operator|&&
 name|ro
 operator|.
 name|ro_rt
 operator|->
 name|rt_ifp
-operator|->
-name|if_index
 operator|!=
 name|ifp
-operator|->
-name|if_index
-operator|)
 condition|)
 block|{
 name|RTFREE
@@ -2037,6 +2030,42 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* if no ifp provided, check if rtentry is not default route */
+if|if
+condition|(
+name|ifp
+operator|==
+name|NULL
+operator|&&
+name|satosin
+argument_list|(
+name|rt_key
+argument_list|(
+name|ro
+operator|.
+name|ro_rt
+argument_list|)
+argument_list|)
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+operator|==
+name|INADDR_ANY
+condition|)
+block|{
+name|RTFREE
+argument_list|(
+name|ro
+operator|.
+name|ro_rt
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/* found valid route */
 name|RTFREE
 argument_list|(
 name|ro
@@ -8198,7 +8227,7 @@ operator|==
 name|NULL
 operator|)
 operator|||
-name|verify_rev_path
+name|verify_path
 argument_list|(
 name|src_ip
 argument_list|,
@@ -8207,6 +8236,28 @@ operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
+argument_list|)
+operator|)
+expr_stmt|;
+break|break;
+case|case
+name|O_VERSRCREACH
+case|:
+comment|/* Outgoing packets automatically pass/match */
+name|match
+operator|=
+operator|(
+operator|(
+name|oif
+operator|!=
+name|NULL
+operator|)
+operator|||
+name|verify_path
+argument_list|(
+name|src_ip
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 expr_stmt|;
@@ -10522,6 +10573,9 @@ name|O_ESTAB
 case|:
 case|case
 name|O_VERREVPATH
+case|:
+case|case
+name|O_VERSRCREACH
 case|:
 case|case
 name|O_IPSEC
