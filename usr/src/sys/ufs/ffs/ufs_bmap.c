@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_bmap.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_bmap.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -333,17 +333,7 @@ name|mnt_stat
 operator|.
 name|f_iosize
 operator|-
-operator|(
-name|MAXBSIZE
-operator|<
-literal|64
-operator|*
-literal|1024
-condition|?
 literal|1
-else|:
-literal|2
-operator|)
 expr_stmt|;
 block|}
 name|xap
@@ -431,7 +421,6 @@ if|if
 condition|(
 name|runp
 condition|)
-block|{
 for|for
 control|(
 operator|++
@@ -475,15 +464,6 @@ operator|*
 name|runp
 control|)
 empty_stmt|;
-name|printf
-argument_list|(
-literal|"ufs_bmaparray: runlength = %d\n"
-argument_list|,
-operator|*
-name|runp
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -724,7 +704,6 @@ name|daddr
 operator|&&
 name|runp
 condition|)
-block|{
 for|for
 control|(
 name|bn
@@ -780,15 +759,6 @@ operator|*
 name|runp
 control|)
 empty_stmt|;
-name|printf
-argument_list|(
-literal|"ufs_bmaparray: runlength = %d\n"
-argument_list|,
-operator|*
-name|runp
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
