@@ -2376,7 +2376,13 @@ name|fs_size
 argument_list|)
 operator|+
 operator|(
+name|numfrags
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|csfrags
+argument_list|)
 operator|>
 literal|0
 condition|?
@@ -2384,7 +2390,13 @@ name|sblock
 operator|.
 name|fs_frag
 operator|-
+name|numfrags
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|csfrags
+argument_list|)
 else|:
 literal|0
 operator|)
