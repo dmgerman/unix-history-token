@@ -238,7 +238,7 @@ begin_define
 define|#
 directive|define
 name|GETTY_SPACING
-value|60
+value|10
 end_define
 
 begin_comment
@@ -271,7 +271,7 @@ begin_define
 define|#
 directive|define
 name|DEATH_WATCH
-value|30
+value|10
 end_define
 
 begin_comment
@@ -665,6 +665,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|collect_child
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|pid_t
 name|start_getty
 name|__P
@@ -672,18 +684,6 @@ argument_list|(
 operator|(
 name|session_t
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|chld_handler
-name|__P
-argument_list|(
-operator|(
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -751,7 +751,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|start_session_db
 name|__P
 argument_list|(
@@ -808,17 +808,9 @@ name|session_db
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|sigset_t
-name|multi_sig_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|sigset_t
-name|death_mask
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * The mother of all processes.  */
+end_comment
 
 begin_function
 name|int
@@ -840,6 +832,10 @@ block|{
 name|int
 name|c
 decl_stmt|;
+name|struct
+name|sigaction
+name|sa
+decl_stmt|;
 name|sigset_t
 name|mask
 decl_stmt|;
@@ -860,8 +856,25 @@ argument_list|(
 literal|"init"
 argument_list|,
 name|LOG_CONS
+operator||
+name|LOG_ODELAY
 argument_list|,
-name|LOG_DAEMON
+name|LOG_AUTH
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Create an initial session. 	 */
+if|if
+condition|(
+name|setsid
+argument_list|()
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setsid failed (initial) %m"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This code assumes that we always get arguments through flags, 	 * never through bits set in some random machine register. 	 */
@@ -971,15 +984,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|handle
-argument_list|(
-name|chld_handler
-argument_list|,
-name|SIGCHLD
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|sigfillset
 argument_list|(
 operator|&
@@ -1007,6 +1011,14 @@ name|SIGXCPU
 argument_list|,
 name|SIGXFSZ
 argument_list|,
+name|SIGHUP
+argument_list|,
+name|SIGTERM
+argument_list|,
+name|SIGTSTP
+argument_list|,
+name|SIGALRM
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1024,38 +1036,60 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|multi_sig_mask
-operator|=
-name|mask
-expr_stmt|;
-name|delset
+name|sigemptyset
 argument_list|(
 operator|&
-name|multi_sig_mask
+name|sa
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|sa
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|sa
+operator|.
+name|sa_handler
+operator|=
+name|SIG_IGN
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaction
+argument_list|(
+name|SIGTTIN
 argument_list|,
-name|SIGHUP
+operator|&
+name|sa
 argument_list|,
-name|SIGTERM
-argument_list|,
-name|SIGTSTP
-argument_list|,
-name|SIGCHLD
-argument_list|,
+operator|(
+expr|struct
+name|sigaction
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|death_mask
-operator|=
-name|mask
-expr_stmt|;
-name|delset
+operator|(
+name|void
+operator|)
+name|sigaction
 argument_list|(
+name|SIGTTOU
+argument_list|,
 operator|&
-name|death_mask
+name|sa
 argument_list|,
-name|SIGCHLD
-argument_list|,
-name|SIGALRM
+operator|(
+expr|struct
+name|sigaction
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Paranoia. 	 */
@@ -1086,6 +1120,10 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Associate a function with a signal handler.  */
+end_comment
 
 begin_function
 name|void
@@ -1214,6 +1252,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Delete a set of signals from a mask.  */
+end_comment
 
 begin_function
 name|void
@@ -1603,12 +1645,18 @@ argument_list|(
 literal|"init"
 argument_list|,
 name|LOG_CONS
+operator||
+name|LOG_ODELAY
 argument_list|,
-name|LOG_DAEMON
+name|LOG_AUTH
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Catch an unexpected signal.  */
+end_comment
 
 begin_function
 name|void
@@ -1979,6 +2027,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Close out the accounting files for a login session.  */
+end_comment
+
 begin_function
 name|void
 name|clear_session_logs
@@ -2036,6 +2088,14 @@ block|{
 name|int
 name|fd
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|revoke
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2092,6 +2152,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Bring the system up single user.  */
+end_comment
 
 begin_function
 name|state_func_t
@@ -2389,14 +2453,17 @@ operator|)
 name|single_user
 return|;
 block|}
-while|while
+do|do
+block|{
+if|if
 condition|(
 operator|(
 name|wpid
 operator|=
 name|waitpid
 argument_list|(
-name|pid
+operator|-
+literal|1
 argument_list|,
 operator|&
 name|status
@@ -2405,26 +2472,29 @@ name|WUNTRACED
 argument_list|)
 operator|)
 operator|!=
-name|pid
-operator|||
-name|WIFSTOPPED
-argument_list|(
-name|status
-argument_list|)
+operator|-
+literal|1
 condition|)
-block|{
+name|collect_child
+argument_list|(
+name|wpid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|wpid
 operator|==
 operator|-
 literal|1
-operator|&&
-name|errno
-operator|!=
-name|EINTR
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
 name|warning
 argument_list|(
 literal|"wait for single-user shell failed: %m; restarting"
@@ -2461,8 +2531,20 @@ argument_list|,
 name|SIGCONT
 argument_list|)
 expr_stmt|;
+name|wpid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 block|}
+do|while
+condition|(
+name|wpid
+operator|!=
+name|pid
+condition|)
+do|;
 if|if
 condition|(
 operator|!
@@ -2497,6 +2579,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Run the system startup script.  */
+end_comment
+
 begin_function
 name|state_func_t
 name|runcom
@@ -2517,8 +2603,9 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|sigset_t
-name|mask
+name|struct
+name|sigaction
+name|sa
 decl_stmt|;
 if|if
 condition|(
@@ -2532,6 +2619,62 @@ operator|==
 literal|0
 condition|)
 block|{
+name|sigemptyset
+argument_list|(
+operator|&
+name|sa
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|sa
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|sa
+operator|.
+name|sa_handler
+operator|=
+name|SIG_IGN
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaction
+argument_list|(
+name|SIGTSTP
+argument_list|,
+operator|&
+name|sa
+argument_list|,
+operator|(
+expr|struct
+name|sigaction
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaction
+argument_list|(
+name|SIGHUP
+argument_list|,
+operator|&
+name|sa
+argument_list|,
+operator|(
+expr|struct
+name|sigaction
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
 name|setctty
 argument_list|(
 name|_PATH_CONSOLE
@@ -2571,18 +2714,14 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|sigemptyset
-argument_list|(
-operator|&
-name|mask
-argument_list|)
-expr_stmt|;
 name|sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
 operator|&
-name|mask
+name|sa
+operator|.
+name|sa_mask
 argument_list|,
 operator|(
 name|sigset_t
@@ -2631,6 +2770,25 @@ argument_list|,
 name|_PATH_RUNCOM
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|waitpid
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|,
+name|WNOHANG
+argument_list|)
+operator|>
+literal|0
+condition|)
+empty_stmt|;
 name|sleep
 argument_list|(
 name|STALL_TIMEOUT
@@ -2643,15 +2801,18 @@ operator|)
 name|single_user
 return|;
 block|}
-comment|/* 	 * Copied from single_user().  Is this too paranoid? 	 */
-while|while
+comment|/* 	 * Copied from single_user().  This is a bit paranoid. 	 */
+do|do
+block|{
+if|if
 condition|(
 operator|(
 name|wpid
 operator|=
 name|waitpid
 argument_list|(
-name|pid
+operator|-
+literal|1
 argument_list|,
 operator|&
 name|status
@@ -2660,26 +2821,29 @@ name|WUNTRACED
 argument_list|)
 operator|)
 operator|!=
-name|pid
-operator|||
-name|WIFSTOPPED
-argument_list|(
-name|status
-argument_list|)
+operator|-
+literal|1
 condition|)
-block|{
+name|collect_child
+argument_list|(
+name|wpid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|wpid
 operator|==
 operator|-
 literal|1
-operator|&&
-name|errno
-operator|!=
-name|EINTR
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
 name|warning
 argument_list|(
 literal|"wait for %s on %s failed: %m; going to single user mode"
@@ -2724,8 +2888,20 @@ argument_list|,
 name|SIGCONT
 argument_list|)
 expr_stmt|;
+name|wpid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 block|}
+do|while
+condition|(
+name|wpid
+operator|!=
+name|pid
+condition|)
+do|;
 if|if
 condition|(
 operator|!
@@ -2769,6 +2945,16 @@ operator|=
 name|AUTOBOOT
 expr_stmt|;
 comment|/* the default */
+name|logwtmp
+argument_list|(
+literal|"~"
+argument_list|,
+literal|"reboot"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 return|return
 operator|(
 name|state_func_t
@@ -2779,18 +2965,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The db library seems awfully heavyweight for this task.  * This code may get replaced later.  * We could pass in the size here; is it worth it?  */
+comment|/*  * Open the session database.  *  * NB: We could pass in the size here; is it necessary?  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|start_session_db
 parameter_list|()
 block|{
 if|if
 condition|(
 name|session_db
-condition|)
+operator|&&
 call|(
 modifier|*
 name|session_db
@@ -2800,30 +2986,64 @@ call|)
 argument_list|(
 name|session_db
 argument_list|)
+condition|)
+name|emergency
+argument_list|(
+literal|"session database close: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|session_db
 operator|=
 name|hash_open
 argument_list|(
-operator|(
-name|char
-operator|*
+name|NULL
+argument_list|,
+name|O_RDWR
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
 operator|)
+operator|==
 literal|0
+condition|)
+block|{
+name|emergency
+argument_list|(
+literal|"session database open: %s"
 argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-operator|(
-name|HASHINFO
-operator|*
-operator|)
-literal|0
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Add a new login session.  */
+end_comment
 
 begin_function
 name|void
@@ -2874,6 +3094,8 @@ operator|=
 sizeof|sizeof
 name|sp
 expr_stmt|;
+if|if
+condition|(
 call|(
 modifier|*
 name|session_db
@@ -2891,9 +3113,27 @@ name|data
 argument_list|,
 name|R_PUT
 argument_list|)
+condition|)
+name|emergency
+argument_list|(
+literal|"insert %d: %s"
+argument_list|,
+name|sp
+operator|->
+name|se_process
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Delete an old login session.  */
+end_comment
 
 begin_function
 name|void
@@ -2927,6 +3167,8 @@ name|sp
 operator|->
 name|se_process
 expr_stmt|;
+if|if
+condition|(
 call|(
 modifier|*
 name|session_db
@@ -2941,9 +3183,27 @@ name|key
 argument_list|,
 literal|0
 argument_list|)
+condition|)
+name|emergency
+argument_list|(
+literal|"delete %d: %s"
+argument_list|,
+name|sp
+operator|->
+name|se_process
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Look up a login session by pid.  */
+end_comment
 
 begin_function
 name|session_t
@@ -3026,6 +3286,10 @@ name|data
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Construct an argument vector from a command line.  */
+end_comment
 
 begin_function
 name|char
@@ -3137,6 +3401,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Deallocate a session descriptor.  */
+end_comment
+
 begin_function
 name|void
 name|free_session
@@ -3199,6 +3467,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Allocate a new session descriptor.  */
+end_comment
 
 begin_function
 name|session_t
@@ -3492,6 +3764,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Walk the list of ttys and create sessions for each active line.  */
+end_comment
+
 begin_function
 name|state_func_t
 name|read_ttys
@@ -3557,9 +3833,17 @@ name|sessions
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|start_session_db
 argument_list|()
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|state_func_t
+operator|)
+name|single_user
+return|;
 comment|/* 	 * Allocate a session entry for each active port. 	 * Note that sp starts at 0. 	 */
 while|while
 condition|(
@@ -3601,6 +3885,10 @@ name|multi_user
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Start a window system running.  */
+end_comment
 
 begin_function
 name|void
@@ -3669,6 +3957,18 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|setsid
+argument_list|()
+operator|<
+literal|0
+condition|)
+name|emergency
+argument_list|(
+literal|"setsid failed (window) %m"
+argument_list|)
+expr_stmt|;
 name|execv
 argument_list|(
 name|sp
@@ -3706,6 +4006,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Start a login session running.  */
+end_comment
 
 begin_function
 name|pid_t
@@ -3897,19 +4201,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Collect exit status for a child.  * If an exiting login, start a new login running.  */
+end_comment
+
 begin_function
 name|void
-name|chld_handler
+name|collect_child
 parameter_list|(
-name|sig
+name|pid
 parameter_list|)
-name|int
-name|sig
-decl_stmt|;
-block|{
 name|pid_t
 name|pid
 decl_stmt|;
+block|{
 specifier|register
 name|session_t
 modifier|*
@@ -3921,47 +4226,12 @@ decl_stmt|,
 modifier|*
 name|snext
 decl_stmt|;
-while|while
-condition|(
-name|pid
-operator|=
-name|waitpid
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
-argument_list|,
-name|WNOHANG
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|pid
-operator|==
-operator|-
-literal|1
-condition|)
-if|if
-condition|(
-name|errno
-operator|==
-name|EINTR
-condition|)
-continue|continue;
-else|else
-break|break;
 if|if
 condition|(
 operator|!
 name|sessions
 condition|)
-continue|continue;
+return|return;
 if|if
 condition|(
 operator|!
@@ -3974,7 +4244,7 @@ name|pid
 argument_list|)
 operator|)
 condition|)
-continue|continue;
+return|return;
 name|clear_session_logs
 argument_list|(
 name|sp
@@ -4044,7 +4314,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-continue|continue;
+return|return;
 block|}
 if|if
 condition|(
@@ -4093,12 +4363,11 @@ name|sp
 argument_list|)
 expr_stmt|;
 block|}
-name|requested_transition
-operator|=
-literal|0
-expr_stmt|;
-block|}
 end_function
+
+begin_comment
+comment|/*  * Catch a signal and request a state transition.  */
+end_comment
 
 begin_function
 name|void
@@ -4149,6 +4418,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Take the system multiuser.  */
+end_comment
+
 begin_function
 name|state_func_t
 name|multi_user
@@ -4184,14 +4457,14 @@ name|sp
 operator|->
 name|se_next
 control|)
+block|{
 if|if
 condition|(
-operator|!
 name|sp
 operator|->
 name|se_process
 condition|)
-block|{
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -4244,10 +4517,32 @@ condition|(
 operator|!
 name|requested_transition
 condition|)
-name|sigsuspend
+if|if
+condition|(
+operator|(
+name|pid
+operator|=
+name|waitpid
 argument_list|(
-operator|&
-name|multi_sig_mask
+operator|-
+literal|1
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|collect_child
+argument_list|(
+name|pid
 argument_list|)
 expr_stmt|;
 return|return
@@ -4437,6 +4732,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Block further logins.  */
+end_comment
+
 begin_function
 name|state_func_t
 name|catatonia
@@ -4476,6 +4775,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Note SIGALRM.  */
+end_comment
+
 begin_function
 name|void
 name|alrm_handler
@@ -4493,6 +4796,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Bring the system down to single user.  */
+end_comment
+
 begin_function
 name|state_func_t
 name|death
@@ -4506,6 +4813,9 @@ decl_stmt|;
 specifier|register
 name|int
 name|i
+decl_stmt|;
+name|pid_t
+name|pid
 decl_stmt|;
 specifier|static
 specifier|const
@@ -4543,6 +4853,16 @@ name|se_flags
 operator||=
 name|SE_SHUTDOWN
 expr_stmt|;
+name|logwtmp
+argument_list|(
+literal|"~"
+argument_list|,
+literal|"shutdown"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 name|logger_enable
 operator|=
 literal|0
@@ -4597,20 +4917,11 @@ name|DEATH_WATCH
 argument_list|)
 expr_stmt|;
 do|do
-name|sigsuspend
-argument_list|(
-operator|&
-name|death_mask
-argument_list|)
-expr_stmt|;
-do|while
-condition|(
-operator|!
-name|clang
-condition|)
-do|;
 if|if
 condition|(
+operator|(
+name|pid
+operator|=
 name|waitpid
 argument_list|(
 operator|-
@@ -4622,12 +4933,31 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-name|WNOHANG
+literal|0
 argument_list|)
-operator|==
+operator|)
+operator|!=
 operator|-
 literal|1
+condition|)
+name|collect_child
+argument_list|(
+name|pid
+argument_list|)
+expr_stmt|;
+do|while
+condition|(
+name|clang
+operator|==
+literal|0
 operator|&&
+name|errno
+operator|!=
+name|ECHILD
+condition|)
+do|;
+if|if
+condition|(
 name|errno
 operator|==
 name|ECHILD
