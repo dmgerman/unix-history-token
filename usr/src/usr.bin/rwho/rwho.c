@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwho.c	4.7 (Berkeley) 83/07/01"
+literal|"@(#)rwho.c	4.8 (Berkeley) 84/03/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ end_include
 begin_decl_stmt
 name|DIR
 modifier|*
-name|etc
+name|dirp
 decl_stmt|;
 end_decl_stmt
 
@@ -264,7 +264,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|etc
+name|dirp
 operator|=
 name|opendir
 argument_list|(
@@ -273,14 +273,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|etc
+name|dirp
 operator|==
 name|NULL
 condition|)
 block|{
 name|perror
 argument_list|(
-literal|"/etc"
+name|RWHODIR
 argument_list|)
 expr_stmt|;
 name|exit
@@ -299,7 +299,7 @@ name|dp
 operator|=
 name|readdir
 argument_list|(
-name|etc
+name|dirp
 argument_list|)
 condition|)
 block|{
