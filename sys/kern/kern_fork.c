@@ -1152,7 +1152,7 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Although process entries are dynamically created, we still keep 	 * a global limit on the maximum number we will create.  Don't allow 	 * a nonprivileged user to use the last process; don't let root 	 * exceed the limit. The variable nprocs is the current number of 	 * processes, maxproc is the limit. 	 */
+comment|/* 	 * Although process entries are dynamically created, we still keep 	 * a global limit on the maximum number we will create.  Don't allow 	 * a nonprivileged user to use the last ten processes; don't let root 	 * exceed the limit. The variable nprocs is the current number of 	 * processes, maxproc is the limit. 	 */
 name|sx_xlock
 argument_list|(
 operator|&
