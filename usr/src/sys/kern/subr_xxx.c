@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_xxx.c	3.2	%G%	*/
+comment|/*	subr_xxx.c	3.3	%G%	*/
 end_comment
 
 begin_include
@@ -199,6 +199,25 @@ operator|->
 name|b_blkno
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|i_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFDIR
+condition|)
+comment|/* 				 * Write directory blocks synchronously 				 * so they never appear with garbage in 				 * them on the disk. 				 */
+name|bwrite
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+else|else
 name|bdwrite
 argument_list|(
 name|bp
@@ -322,7 +341,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * fetch the address from the inode 	 */
+comment|/* 	 * fetch the first indirect block 	 */
 name|nb
 operator|=
 name|ip
@@ -378,7 +397,8 @@ operator|->
 name|b_blkno
 argument_list|)
 expr_stmt|;
-name|bdwrite
+comment|/* 		 * Write synchronously so that indirect blocks 		 * never point at garbage. 		 */
+name|bwrite
 argument_list|(
 name|bp
 argument_list|)
@@ -527,6 +547,29 @@ operator|->
 name|b_blkno
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|<
+literal|3
+operator|||
+operator|(
+name|ip
+operator|->
+name|i_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFDIR
+condition|)
+comment|/* 				 * Write synchronously so indirect blocks 				 * never point at garbage and blocks 				 * in directories never contain garbage. 				 */
+name|bwrite
+argument_list|(
+name|nbp
+argument_list|)
+expr_stmt|;
+else|else
 name|bdwrite
 argument_list|(
 name|nbp

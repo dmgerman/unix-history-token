@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_inode.c	3.4	%G%	*/
+comment|/*	ffs_inode.c	3.5	%G%	*/
 end_comment
 
 begin_include
@@ -909,6 +909,8 @@ name|time
 argument_list|,
 operator|&
 name|time
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|prele
@@ -1056,7 +1058,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Check accessed and update flags on  * an inode structure.  * If any is on, update the inode  * with the current time.  */
+comment|/*  * Check accessed and update flags on  * an inode structure.  * If any is on, update the inode  * with the current time.  * If waitfor is given, then must insure  * i/o order so wait for write to complete.  */
 end_comment
 
 begin_expr_stmt
@@ -1067,6 +1069,8 @@ argument_list|,
 name|ta
 argument_list|,
 name|tm
+argument_list|,
+name|waitfor
 argument_list|)
 specifier|register
 expr|struct
@@ -1083,6 +1087,12 @@ name|ta
 decl_stmt|,
 modifier|*
 name|tm
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|waitfor
 decl_stmt|;
 end_decl_stmt
 
@@ -1382,6 +1392,16 @@ operator||
 name|ICHG
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|waitfor
+condition|)
+name|bwrite
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+else|else
 name|bdwrite
 argument_list|(
 name|bp
@@ -1419,6 +1439,10 @@ decl_stmt|;
 name|daddr_t
 name|bn
 decl_stmt|;
+name|struct
+name|inode
+name|itmp
+decl_stmt|;
 if|if
 condition|(
 name|ip
@@ -1449,6 +1473,78 @@ operator|!=
 name|IFDIR
 condition|)
 return|return;
+comment|/* 	 * Clean inode on disk before freeing blocks 	 * to insure no duplicates if system crashes. 	 */
+name|itmp
+operator|=
+operator|*
+name|ip
+expr_stmt|;
+name|itmp
+operator|.
+name|i_size
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NADDR
+condition|;
+name|i
+operator|++
+control|)
+name|itmp
+operator|.
+name|i_un
+operator|.
+name|i_addr
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|itmp
+operator|.
+name|i_flag
+operator||=
+name|ICHG
+operator||
+name|IUPD
+expr_stmt|;
+name|iupdat
+argument_list|(
+operator|&
+name|itmp
+argument_list|,
+operator|&
+name|time
+argument_list|,
+operator|&
+name|time
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|i_flag
+operator|&=
+operator|~
+operator|(
+name|IUPD
+operator||
+name|IACC
+operator||
+name|ICHG
+operator|)
+expr_stmt|;
+comment|/* 	 * Now return blocks to free list... if machine 	 * crashes, they will be harmless MISSING blocks. 	 */
 name|dev
 operator|=
 name|ip
@@ -1578,14 +1674,7 @@ name|i_size
 operator|=
 literal|0
 expr_stmt|;
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|ICHG
-operator||
-name|IUPD
-expr_stmt|;
+comment|/* 	 * Inode was written and flags updated above. 	 * No need to modify flags here. 	 */
 block|}
 end_block
 
@@ -1873,6 +1962,20 @@ operator|=
 name|u
 operator|.
 name|u_gid
+expr_stmt|;
+comment|/* 	 * Make sure inode goes to disk before directory entry. 	 */
+name|iupdat
+argument_list|(
+name|ip
+argument_list|,
+operator|&
+name|time
+argument_list|,
+operator|&
+name|time
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|wdir
 argument_list|(
