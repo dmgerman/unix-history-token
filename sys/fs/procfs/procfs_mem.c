@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993 Sean Eric Fagan  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry and Sean Eric Fagan.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_mem.c	8.4 (Berkeley) 1/21/94  *  *	$Id: procfs_mem.c,v 1.15 1996/01/19 03:58:32 dyson Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993 Sean Eric Fagan  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry and Sean Eric Fagan.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_mem.c	8.4 (Berkeley) 1/21/94  *  *	$Id: procfs_mem.c,v 1.16 1996/01/24 18:41:06 peter Exp $  */
 end_comment
 
 begin_comment
@@ -229,6 +229,34 @@ name|uio
 operator|->
 name|uio_offset
 expr_stmt|;
+comment|/* 		 * Get the page number of this segment. 		 */
+name|pageno
+operator|=
+name|trunc_page
+argument_list|(
+name|uva
+argument_list|)
+expr_stmt|;
+name|page_offset
+operator|=
+name|uva
+operator|-
+name|pageno
+expr_stmt|;
+comment|/* 		 * How many bytes to copy 		 */
+name|len
+operator|=
+name|min
+argument_list|(
+name|PAGE_SIZE
+operator|-
+name|page_offset
+argument_list|,
+name|uio
+operator|->
+name|uio_resid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uva
@@ -259,21 +287,33 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* we are reading the "U area", fill it in */
+comment|/* we are reading the "U area", force it into core */
 name|PHOLD
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* sanity check */
 if|if
 condition|(
+operator|!
+operator|(
 name|p
 operator|->
 name|p_flag
 operator|&
 name|P_INMEM
+operator|)
 condition|)
 block|{
+comment|/* aiee! */
+name|error
+operator|=
+name|EFAULT
+expr_stmt|;
+break|break;
+block|}
+comment|/* populate the ptrace/procfs area */
 name|p
 operator|->
 name|p_addr
@@ -299,41 +339,43 @@ operator|.
 name|kp_eproc
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* locate the in-core address */
+name|kva
+operator|=
+operator|(
+name|u_int
+operator|)
+name|p
+operator|->
+name|p_addr
+operator|+
+name|uva
+operator|-
+name|VM_MAXUSER_ADDRESS
+expr_stmt|;
+comment|/* transfer it */
+name|error
+operator|=
+name|uiomove
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|kva
+argument_list|,
+name|len
+argument_list|,
+name|uio
+argument_list|)
+expr_stmt|;
+comment|/* let the pages go */
 name|PRELE
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
-comment|/* 		 * Get the page number of this segment. 		 */
-name|pageno
-operator|=
-name|trunc_page
-argument_list|(
-name|uva
-argument_list|)
-expr_stmt|;
-name|page_offset
-operator|=
-name|uva
-operator|-
-name|pageno
-expr_stmt|;
-comment|/* 		 * How many bytes to copy 		 */
-name|len
-operator|=
-name|min
-argument_list|(
-name|PAGE_SIZE
-operator|-
-name|page_offset
-argument_list|,
-name|uio
-operator|->
-name|uio_resid
-argument_list|)
-expr_stmt|;
 comment|/* 		 * The map we want... 		 */
 name|map
 operator|=
