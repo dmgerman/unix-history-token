@@ -1319,10 +1319,7 @@ parameter_list|)
 block|{
 name|pmap_zero_page
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1350,15 +1347,9 @@ parameter_list|)
 block|{
 name|pmap_copy_page
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|src_m
-argument_list|)
 argument_list|,
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|dest_m
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|dest_m
@@ -4562,13 +4553,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|pmap_zero_page_area
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|,
 name|frag
 argument_list|,
@@ -4577,7 +4564,6 @@ operator|-
 name|frag
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * If the ending offset is not DEV_BSIZE aligned and the  	 * valid bit is clear, we have to zero out a portion of 	 * the last block. 	 */
 name|endoff
 operator|=
@@ -4620,13 +4606,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|pmap_zero_page_area
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|,
 name|endoff
 argument_list|,
@@ -4643,7 +4625,6 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Set valid, clear dirty bits.  If validating the entire 	 * page we can safely clear the pmap modify bit.  We also 	 * use this opportunity to clear the PG_NOSYNC flag.  If a process 	 * takes a write fault on a MAP_NOSYNC memory area the flag will 	 * be set again. 	 * 	 * We set valid bits inclusive of any overlap, but we can only 	 * clear dirty bits for DEV_BSIZE chunks that are fully within 	 * the range. 	 */
 name|pagebits
 operator|=
@@ -4872,10 +4853,7 @@ condition|)
 block|{
 name|pmap_zero_page_area
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|,
 name|b
 operator|<<

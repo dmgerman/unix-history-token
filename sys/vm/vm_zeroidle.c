@@ -366,10 +366,7 @@ expr_stmt|;
 comment|/* maybe drop out of Giant here */
 name|pmap_zero_page
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* and return here */

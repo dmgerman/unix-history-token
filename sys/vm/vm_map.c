@@ -11526,15 +11526,9 @@ argument_list|)
 expr_stmt|;
 name|pmap_copy_page
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m_in
-argument_list|)
 argument_list|,
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m_out
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|m_out

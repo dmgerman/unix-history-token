@@ -156,9 +156,9 @@ begin_function_decl
 name|void
 name|pmap_copy_page
 parameter_list|(
-name|vm_offset_t
+name|vm_page_t
 parameter_list|,
-name|vm_offset_t
+name|vm_page_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -470,7 +470,7 @@ begin_function_decl
 name|void
 name|pmap_zero_page
 parameter_list|(
-name|vm_offset_t
+name|vm_page_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -479,7 +479,7 @@ begin_function_decl
 name|void
 name|pmap_zero_page_area
 parameter_list|(
-name|vm_offset_t
+name|vm_page_t
 parameter_list|,
 name|int
 name|off
