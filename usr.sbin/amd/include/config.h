@@ -1010,9 +1010,12 @@ begin_comment
 comment|/* Define if have NULLFS (loopback on bsd44) filesystem */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FS_NULLFS */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FS_NULLFS
+value|1
+end_define
 
 begin_comment
 comment|/* Define if have PCFS filesystem */
@@ -5558,9 +5561,12 @@ begin_comment
 comment|/* Mount-table entry name for NULLFS (loopback on bsd44) filesystem */
 end_comment
 
-begin_comment
-comment|/* #undef MNTTAB_TYPE_NULLFS */
-end_comment
+begin_define
+define|#
+directive|define
+name|MNTTAB_TYPE_NULLFS
+value|"nullfs"
+end_define
 
 begin_comment
 comment|/* Mount-table entry name for PCFS filesystem */
@@ -5731,9 +5737,12 @@ begin_comment
 comment|/* Mount(2) type/name for NULLFS (loopback on bsd44) filesystem */
 end_comment
 
-begin_comment
-comment|/* #undef MOUNT_TYPE_NULLFS */
-end_comment
+begin_define
+define|#
+directive|define
+name|MOUNT_TYPE_NULLFS
+value|"nullfs"
+end_define
 
 begin_comment
 comment|/* Mount(2) type/name for PCFS filesystem. XXX: conf/trap/trap_hpux.h may    override this definition for HPUX 9.0 */
