@@ -311,7 +311,7 @@ block|{
 if|if
 condition|(
 name|_vfs_index
-operator|>
+operator|>=
 name|_vfslistlen
 condition|)
 block|{
