@@ -1323,14 +1323,22 @@ name|rcb_baserc
 operator|=
 name|rc
 expr_stmt|;
+name|rcb
+operator|->
+name|rcb_unit
+operator|=
+name|dvp
+operator|->
+name|id_unit
+expr_stmt|;
 comment|/*rcb->rcb_chipid = 0x10 + dvp->id_unit;*/
 name|printf
 argument_list|(
 literal|"rc%d: %d chans, firmware rev. %c\n"
 argument_list|,
-name|dvp
+name|rcb
 operator|->
-name|id_unit
+name|rcb_unit
 argument_list|,
 name|CD180_NCHAN
 argument_list|,
@@ -1473,6 +1481,14 @@ operator|&
 name|rc_tty
 index|[
 name|chan
+operator|+
+operator|(
+name|dvp
+operator|->
+name|id_unit
+operator|*
+name|CD180_NCHAN
+operator|)
 index|]
 expr_stmt|;
 name|ttychars
