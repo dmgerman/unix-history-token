@@ -251,12 +251,19 @@ name|margc
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|MAX_MARGV
+value|20
+end_define
+
 begin_decl_stmt
 name|char
 modifier|*
 name|margv
 index|[
-literal|20
+name|MAX_MARGV
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -3644,6 +3651,12 @@ name|cp
 operator|=
 name|line
 init|;
+name|margc
+operator|<
+name|MAX_MARGV
+operator|-
+literal|1
+operator|&&
 operator|*
 name|cp
 condition|;
