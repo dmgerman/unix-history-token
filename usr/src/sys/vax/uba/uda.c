@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	6.15 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	6.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -707,6 +707,23 @@ end_decl_stmt
 
 begin_comment
 comment|/* to store microcode level */
+end_comment
+
+begin_decl_stmt
+name|int
+name|udaburst
+index|[
+name|NUDA
+index|]
+init|=
+block|{
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* DMA burst size, 0 is default */
 end_comment
 
 begin_comment
@@ -4066,12 +4083,27 @@ operator|&
 literal|0xF
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * Requesting the error status (|= 2) 		 * may hang older controllers. 		 */
 name|udaddr
 operator|->
 name|udasa
 operator|=
 name|UDA_GO
+operator||
+operator|(
+operator|(
+name|udaburst
+index|[
+name|d
+index|]
+operator|-
+literal|1
+operator|)
+operator|<<
+literal|2
+operator|)
 operator||
 operator|(
 name|udaerror
@@ -4081,8 +4113,6 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
 name|udaddr
 operator|->
 name|udasa
