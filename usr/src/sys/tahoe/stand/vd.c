@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	7.3	86/07/16	*/
+comment|/*	vd.c	7.4	86/11/04	*/
 end_comment
 
 begin_comment
@@ -268,7 +268,7 @@ name|io
 operator|->
 name|i_boff
 operator|>
-literal|5
+literal|8
 condition|)
 block|{
 name|printf
@@ -1026,12 +1026,6 @@ name|ounit
 expr_stmt|;
 name|DELAY
 argument_list|(
-operator|(
-name|unit
-operator|*
-literal|5500000
-operator|)
-operator|+
 literal|62000000
 argument_list|)
 expr_stmt|;
@@ -1193,7 +1187,7 @@ operator|=
 operator|(
 name|char
 operator|)
-literal|4
+literal|5
 expr_stmt|;
 name|dcb
 operator|.
@@ -1234,6 +1228,16 @@ operator|.
 name|info
 operator|.
 name|nslip
+expr_stmt|;
+name|dcb
+operator|.
+name|trail
+operator|.
+name|rstrail
+operator|.
+name|recovery
+operator|=
+literal|0x18f
 expr_stmt|;
 block|}
 else|else
@@ -1294,11 +1298,41 @@ operator|.
 name|vd_type
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|pass
+operator|==
+literal|0
+condition|)
+block|{
+name|VDDC_RESET
+argument_list|(
+name|ctlr_addr
+argument_list|,
+name|vdinfo
+index|[
+name|ctlr
+index|]
+operator|.
+name|vd_type
+argument_list|)
+expr_stmt|;
+name|vdconfigure
+argument_list|(
+name|io
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|_stop
 argument_list|(
 literal|" during drive configuration.\n"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1366,7 +1400,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Strategy is called to do the actual I/O to the disk drives.  *  * Some simple checks are made to make sure we don't do anything rediculus,  * If everything is sane then the request is issued.  *  * If no errors occured then the original byte count is returned,  * otherwise -1 is returned to indicate an error occured.  */
+comment|/*  * Strategy is called to do the actual I/O to the disk drives.  *  * Some simple checks are made to make sure we don't do anything rediculous,  * If everything is sane then the request is issued.  *  * If no errors occured then the original byte count is returned,  * otherwise -1 is returned to indicate an error occured.  */
 end_comment
 
 begin_expr_stmt
@@ -2514,6 +2548,14 @@ block|}
 name|DELAY
 argument_list|(
 literal|300
+argument_list|)
+expr_stmt|;
+name|uncache
+argument_list|(
+operator|&
+name|dcb
+operator|->
+name|err_code
 argument_list|)
 expr_stmt|;
 block|}
