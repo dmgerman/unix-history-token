@@ -8384,6 +8384,22 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* wrap the pi so the following test works */
+if|if
+condition|(
+name|pi
+operator|>=
+name|aac_qinfo
+index|[
+name|queue
+index|]
+operator|.
+name|size
+condition|)
+name|pi
+operator|=
+literal|0
+expr_stmt|;
 name|notify
 operator|=
 literal|0
