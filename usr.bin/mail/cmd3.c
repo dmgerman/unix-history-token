@@ -773,6 +773,13 @@ literal|"Replyall"
 argument_list|)
 operator|==
 name|NULL
+operator|&&
+name|value
+argument_list|(
+literal|"flipr"
+argument_list|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2832,6 +2839,13 @@ condition|(
 name|value
 argument_list|(
 literal|"Replyall"
+argument_list|)
+operator|==
+name|NULL
+operator|&&
+name|value
+argument_list|(
+literal|"flipr"
 argument_list|)
 operator|==
 name|NULL
