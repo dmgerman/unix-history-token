@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -517,6 +517,9 @@ name|symbols_init
 argument_list|()
 expr_stmt|;
 name|process_init
+argument_list|()
+expr_stmt|;
+name|optab_init
 argument_list|()
 expr_stmt|;
 if|if
