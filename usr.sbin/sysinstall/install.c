@@ -3564,6 +3564,62 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|X_AS_PKG
+end_ifdef
+
+begin_function
+name|int
+name|installX11package
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+name|msgNotify
+argument_list|(
+literal|"Installing XFree86 package..."
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|package_add
+argument_list|(
+literal|"XFree86-4"
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+return|return
+name|i
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Fix side-effects from the the XFree86 installation */
 end_comment
@@ -3604,6 +3660,9 @@ argument_list|(
 literal|"find /usr/X11R6 -type d | xargs chmod a+x"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 comment|/* Also do bogus minimal package registration so ports don't whine */
 if|if
 condition|(
@@ -3627,6 +3686,8 @@ literal|"tar xpzf /usr/X11R6/lib/X11/pkgreg.tar.gz -C /&& rm /usr/X11R6/lib/X11/
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 return|return
 name|DITEM_SUCCESS

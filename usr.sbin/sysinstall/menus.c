@@ -4988,22 +4988,47 @@ block|,
 block|{
 literal|" XFree86"
 block|,
-literal|"The XFree86 3.3.6 distribution"
+literal|"The XFree86 distribution"
 block|,
+ifdef|#
+directive|ifdef
+name|X_AS_PKG
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86
+block|}
+block|,
+else|#
+directive|else
 name|x11FlagCheck
 block|,
 name|distSetXF86
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|}
 block|}
-block|, }
-decl_stmt|;
+decl_stmt|,
 end_decl_stmt
 
 begin_decl_stmt
+unit|};
 name|DMenu
 name|MenuSrcDistributions
 init|=
@@ -5561,24 +5586,12 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please select the XFree86 configuration tool you want to use."
 block|,
-ifdef|#
-directive|ifdef
-name|__alpha__
-literal|"Due to problems with the VGA16 server right now, only the\n"
-literal|"text-mode configuration tool (xf86config) is currently supported."
-block|,
-else|#
-directive|else
-literal|"The first tool, XF86Setup, is fully graphical and requires the\n"
-literal|"VGA16 server in order to work (should have been selected by\n"
-literal|"default, but if you de-selected it then you won't be able to\n"
-literal|"use this fancy setup tool).  The second tool, xf86config, is\n"
+literal|"The first tool, xf86cfg, is fully graphical\n"
+literal|"The second tool, xf86config, is\n"
 literal|"a more simplistic shell-script based tool and less friendly to\n"
 literal|"new users, but it may work in situations where the fancier one\n"
 literal|"does not."
 block|,
-endif|#
-directive|endif
 name|NULL
 block|,
 name|NULL
@@ -5594,28 +5607,8 @@ block|,
 name|dmenuExit
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|__alpha__
 block|{
-literal|"2 xf86config"
-block|,
-literal|"Shell-script based XFree86 configuration tool."
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_XF86_CONFIG
-literal|"=xf86config"
-block|}
-block|,
-else|#
-directive|else
-block|{
-literal|"2 XF86Setup"
+literal|"2 xf86cfg"
 block|,
 literal|"Fully graphical XFree86 configuration tool."
 block|,
@@ -5626,7 +5619,7 @@ block|,
 name|NULL
 block|,
 name|VAR_XF86_CONFIG
-literal|"=XF86Setup"
+literal|"=xf86cfg"
 block|}
 block|,
 block|{
@@ -5644,28 +5637,6 @@ name|VAR_XF86_CONFIG
 literal|"=xf86config"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|PC98
-block|{
-literal|"4 XF98Setup"
-block|,
-literal|"Fully graphical XFree86 configuration tool (PC98)."
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_XF86_CONFIG
-literal|"=XF98Setup"
-block|}
-block|,
-endif|#
-directive|endif
-endif|#
-directive|endif
 block|{
 literal|"D XDesktop"
 block|,
@@ -5828,9 +5799,9 @@ init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"XFree86 3.3.6 Distribution"
+literal|"XFree86 Distribution"
 block|,
-literal|"Please select the components you need from the XFree86 3.3.6\n"
+literal|"Please select the components you need from the XFree86\n"
 literal|"distribution sets."
 block|,
 name|NULL
@@ -5910,7 +5881,7 @@ name|DMENU_CHECKLIST_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"XFree86 3.3.6 base distribution types"
+literal|"XFree86 base distribution types"
 block|,
 literal|"Please check off the basic XFree86 components you wish to install.\n"
 literal|"Bin, lib, and set are recommended for a minimum installaion."

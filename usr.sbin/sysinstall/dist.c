@@ -1881,12 +1881,17 @@ name|XF86FontDists
 operator|=
 name|DIST_XF86_FONTS_MISC
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 return|return
 name|distSetXF86
 argument_list|(
 name|NULL
 argument_list|)
 return|;
+endif|#
+directive|endif
 return|return
 name|DITEM_SUCCESS
 return|;
@@ -4747,6 +4752,16 @@ name|WINDOW
 modifier|*
 name|w
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|X_AS_PKG
+name|int
+name|want_x_package
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* paranoia */
 if|if
 condition|(
@@ -4807,6 +4822,28 @@ argument_list|(
 literal|"Attempting to install all selected distributions.."
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|X_AS_PKG
+comment|/* Clear any XFree86 dist flags, but remember they were present. */
+if|if
+condition|(
+name|Dists
+operator|&
+name|DIST_XF86
+condition|)
+name|want_x_package
+operator|=
+literal|1
+expr_stmt|;
+name|Dists
+operator|&=
+operator|~
+name|DIST_XF86
+expr_stmt|;
+comment|/*Dists&= ~(DIST_XF86 | XF86Dists | XF86ServerDists | XF86FontDists);*/
+endif|#
+directive|endif
 comment|/* Try for 3 times around the loop, then give up. */
 while|while
 condition|(
@@ -4824,6 +4861,22 @@ argument_list|,
 name|DistTable
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|X_AS_PKG
+if|if
+condition|(
+name|want_x_package
+condition|)
+name|status
+operator||=
+name|installX11package
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -4850,6 +4903,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|X_AS_PKG
 if|if
 condition|(
 name|old_dists
@@ -4863,6 +4919,8 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Clear any local dist flags now */
 name|Dists
 operator|&=
