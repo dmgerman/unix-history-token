@@ -1363,7 +1363,7 @@ name|rt_expire
 operator|=
 literal|0
 expr_stmt|;
-name|Bcopy
+name|bcopy
 argument_list|(
 name|IF_LLADDR
 argument_list|(
