@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mfs_vfsops.c	8.4 (Berkeley) 4/16/94  * $Id: mfs_vfsops.c,v 1.13 1995/08/30 01:34:28 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mfs_vfsops.c	8.4 (Berkeley) 4/16/94  * $Id: mfs_vfsops.c,v 1.14 1995/11/09 08:14:26 bde Exp $  */
 end_comment
 
 begin_include
@@ -1098,6 +1098,12 @@ specifier|register
 name|caddr_t
 name|base
 decl_stmt|;
+specifier|register
+name|int
+name|gotsig
+init|=
+literal|0
+decl_stmt|;
 name|base
 operator|=
 name|mfsp
@@ -1155,22 +1161,18 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * If a non-ignored signal is received, try to unmount. 		 * If that fails, clear the signal (it has been "processed"), 		 * otherwise we will loop here, as tsleep will always return 		 * EINTR/ERESTART. 		 */
+comment|/* 		 * Note that dounmount() may fail if work was queued after 		 * we slept. We have to jump hoops here to make sure that we 		 * process any buffers after the sleep, before we dounmount() 		 */
 if|if
 condition|(
-name|tsleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|vp
-argument_list|,
-name|mfs_pri
-argument_list|,
-literal|"mfsidl"
-argument_list|,
+name|gotsig
+condition|)
+block|{
+name|gotsig
+operator|=
 literal|0
-argument_list|)
-operator|&&
+expr_stmt|;
+if|if
+condition|(
 name|dounmount
 argument_list|(
 name|mp
@@ -1192,6 +1194,29 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* try sleep again.. */
+block|}
+elseif|else
+if|if
+condition|(
+name|tsleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|vp
+argument_list|,
+name|mfs_pri
+argument_list|,
+literal|"mfsidl"
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|gotsig
+operator|++
+expr_stmt|;
+comment|/* try to unmount in next pass */
 block|}
 return|return
 operator|(
