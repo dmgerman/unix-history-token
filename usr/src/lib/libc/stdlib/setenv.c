@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setenv.c	5.4 (Berkeley) %G%"
+literal|"@(#)setenv.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/*  * setenv --  *	Set the value of the environmental variable "name" to be  *	"value".  If rewrite is set, replace any current value.  */
 end_comment
@@ -63,14 +69,21 @@ argument_list|,
 name|rewrite
 argument_list|)
 specifier|register
+specifier|const
 name|char
 operator|*
 name|name
-operator|,
-operator|*
-name|value
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+specifier|const
+name|char
+modifier|*
+name|value
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -347,6 +360,10 @@ for|for
 control|(
 name|C
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|name
 init|;
 operator|*
@@ -463,6 +480,7 @@ name|unsetenv
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name

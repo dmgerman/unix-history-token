@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strtol.c	5.3 (Berkeley) %G%"
+literal|"@(#)strtol.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,26 +75,23 @@ name|endptr
 parameter_list|,
 name|base
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|nptr
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|char
+modifier|*
 modifier|*
 name|endptr
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 specifier|register
 name|int
 name|base
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|s
@@ -412,6 +409,10 @@ name|s
 operator|-
 literal|1
 else|:
+operator|(
+name|char
+operator|*
+operator|)
 name|nptr
 expr_stmt|;
 return|return
@@ -420,7 +421,7 @@ name|acc
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bsearch.c	5.3 (Berkeley) %G%"
+literal|"@(#)bsearch.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,7 +72,7 @@ name|size
 argument_list|,
 name|compar
 argument_list|)
-decl|register
+decl|register const
 name|void
 modifier|*
 name|key
@@ -80,6 +80,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|void
 modifier|*
 name|base0
@@ -99,20 +100,31 @@ name|size
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_expr_stmt
 specifier|register
 name|int
-function_decl|(
-modifier|*
-name|compar
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|(
+argument|*compar
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|base
@@ -126,6 +138,7 @@ decl_stmt|,
 name|cmp
 decl_stmt|;
 specifier|register
+specifier|const
 name|void
 modifier|*
 name|p
@@ -177,6 +190,10 @@ literal|0
 condition|)
 return|return
 operator|(
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 operator|)
 return|;

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getenv.c	5.7 (Berkeley) %G%"
+literal|"@(#)getenv.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ directive|include
 file|<stddef.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/*  * getenv --  *	Returns ptr to value associated with name, if any, else NULL.  */
 end_comment
@@ -60,6 +66,7 @@ name|getenv
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name

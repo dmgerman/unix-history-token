@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atol.c	5.6 (Berkeley) %G%"
+literal|"@(#)atol.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,7 @@ name|atol
 parameter_list|(
 name|str
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|str

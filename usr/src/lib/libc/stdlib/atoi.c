@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atoi.c	5.6 (Berkeley) %G%"
+literal|"@(#)atoi.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|str

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exit.c	5.3 (Berkeley) %G%"
+literal|"@(#)exit.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,18 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
@@ -57,20 +69,15 @@ begin_comment
 comment|/*  * Exit, flushing stdio buffers if necessary.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|exit
-argument_list|(
-argument|status
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|status
+parameter_list|)
 name|int
 name|status
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -137,7 +144,7 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

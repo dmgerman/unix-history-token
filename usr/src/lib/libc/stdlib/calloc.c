@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)calloc.c	5.5 (Berkeley) %G%"
+literal|"@(#)calloc.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_function
@@ -98,19 +104,10 @@ name|void
 name|cfree
 parameter_list|(
 name|p
-parameter_list|,
-name|num
-parameter_list|,
-name|size
 parameter_list|)
 name|void
 modifier|*
 name|p
-decl_stmt|;
-name|size_t
-name|num
-decl_stmt|,
-name|size
 decl_stmt|;
 block|{
 operator|(

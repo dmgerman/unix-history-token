@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)malloc.c	5.10 (Berkeley) %G%"
+literal|"@(#)malloc.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,12 +47,46 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|NULL
 value|0
 end_define
+
+begin_function_decl
+specifier|static
+name|void
+name|morecore
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|findbucket
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * The overhead on a block is at least 4 bytes.  When free, this space  * contains a pointer to the next free block, and the bottom two bits must  * be zero.  When in use, the first byte is set to MAGIC, and the second  * byte is the size index.  The remaining bytes are for alignment.  * If range checking is enabled then a second word holds the size of the  * requested block, less 1, rounded up to a multiple of sizeof(RMAGIC).  * The order of elements is critical: ov_magic must overlay the low order  * bits of ov_next, and ov_magic can not be a valid ov_next bit pattern.  */
@@ -339,13 +373,13 @@ directive|endif
 end_endif
 
 begin_function
-name|char
+name|void
 modifier|*
 name|malloc
 parameter_list|(
 name|nbytes
 parameter_list|)
-name|unsigned
+name|size_t
 name|nbytes
 decl_stmt|;
 block|{
@@ -721,18 +755,16 @@ begin_comment
 comment|/*  * Allocate more memory to the indicated bucket.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|morecore
-argument_list|(
-argument|bucket
-argument_list|)
+parameter_list|(
+name|bucket
+parameter_list|)
 name|int
 name|bucket
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|union
@@ -892,23 +924,18 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|free
-argument_list|(
-argument|cp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
+parameter_list|(
+name|cp
+parameter_list|)
+name|void
 modifier|*
 name|cp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1055,7 +1082,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * When a program attempts "storage compaction" as mentioned in the  * old malloc man page, it realloc's an already freed block.  Usually  * this is the last block it freed; occasionally it might be farther  * back.  We have to search all the free lists for the block in order  * to determine its bucket: 1st we make one pass thru the lists  * checking only the first block in each; if that fails we search  * ``realloc_srchlen'' blocks in each list for a match (the variable  * is extern so the caller can modify it).  If that fails we just copy  * however many bytes was given to realloc() and hope it's not huge.  */
@@ -1074,7 +1101,7 @@ comment|/* 4 should be plenty, -1 =>'s whole list */
 end_comment
 
 begin_function
-name|char
+name|void
 modifier|*
 name|realloc
 parameter_list|(
@@ -1082,11 +1109,11 @@ name|cp
 parameter_list|,
 name|nbytes
 parameter_list|)
-name|char
+name|void
 modifier|*
 name|cp
 decl_stmt|;
-name|unsigned
+name|size_t
 name|nbytes
 decl_stmt|;
 block|{

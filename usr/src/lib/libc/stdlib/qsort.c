@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)qsort.c	5.8 (Berkeley) %G%"
+literal|"@(#)qsort.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_comment
@@ -65,40 +71,52 @@ name|THRESH
 value|4
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|qsort
-argument_list|(
+parameter_list|(
 name|bot
-argument_list|,
+parameter_list|,
 name|nmemb
-argument_list|,
+parameter_list|,
 name|size
-argument_list|,
+parameter_list|,
 name|compar
-argument_list|)
-name|char
+parameter_list|)
+name|void
 modifier|*
 name|bot
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+name|size_t
 name|nmemb
 decl_stmt|,
 name|size
-decl_stmt|,
-argument_list|(
-operator|*
-name|compar
-argument_list|)
-argument_list|()
 decl_stmt|;
-end_decl_stmt
+function_decl|int
+parameter_list|(
+function_decl|*compar
+end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
+specifier|static
 name|void
 name|insertion_sort
 argument_list|()
@@ -250,6 +268,11 @@ name|char
 modifier|*
 name|bsv
 decl_stmt|;
+specifier|static
+name|void
+name|insertion_sort
+parameter_list|()
+function_decl|;
 comment|/* bot and nmemb must already be set. */
 name|partition
 label|:

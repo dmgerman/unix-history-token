@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)system.c	5.9 (Berkeley) %G%"
+literal|"@(#)system.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -81,6 +87,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|command
@@ -95,9 +102,6 @@ name|pstat
 decl_stmt|;
 name|pid_t
 name|pid
-decl_stmt|,
-name|waitpid
-argument_list|()
 decl_stmt|;
 name|int
 name|omask
@@ -227,6 +231,10 @@ name|waitpid
 argument_list|(
 name|pid
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|pstat
 argument_list|,
