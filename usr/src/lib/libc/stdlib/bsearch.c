@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bsearch.c	5.5 (Berkeley) %G%"
+literal|"@(#)bsearch.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,9 +128,11 @@ init|=
 name|base0
 decl_stmt|;
 specifier|register
-name|int
+name|size_t
 name|lim
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|cmp
 decl_stmt|;
 specifier|register
