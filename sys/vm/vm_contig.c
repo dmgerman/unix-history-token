@@ -966,6 +966,12 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 name|vm_pageq_remove_nowakeup
 argument_list|(
 name|m
@@ -1026,6 +1032,12 @@ operator|->
 name|object
 operator|=
 name|NULL
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * We've found a contiguous chunk that meets are requirements. 		 * Allocate kernel VM, unfree and assign the physical pages to it and 		 * return kernel VM pointer. 		 */
