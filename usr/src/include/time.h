@@ -220,10 +220,8 @@ name|difftime
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|time_t
 operator|,
-specifier|const
 name|time_t
 operator|)
 argument_list|)
@@ -268,7 +266,6 @@ name|mktime
 name|__P
 argument_list|(
 operator|(
-specifier|const
 expr|struct
 name|tm
 operator|*
