@@ -2803,7 +2803,7 @@ end_define
 
 begin_struct
 struct|struct
-name|key_t
+name|keyent_t
 block|{
 name|u_char
 name|map
@@ -2829,7 +2829,7 @@ name|u_short
 name|n_keys
 decl_stmt|;
 name|struct
-name|key_t
+name|keyent_t
 name|key
 index|[
 name|NUM_KEYS
