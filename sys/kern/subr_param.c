@@ -12,11 +12,29 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_maxusers.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
 begin_comment
-comment|/*  * System parameter formulae.  *  * This file is copied into each directory where we compile  * the kernel; it should be modified there to suit local taste  * if necessary.  *  * Compiled with -DMAXUSERS=xx  */
+comment|/*  * System parameter formulae.  */
 end_comment
 
 begin_ifndef
@@ -37,49 +55,30 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|int
-name|hz
-init|=
-name|HZ
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tick
-init|=
-literal|1000000
-operator|/
-name|HZ
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tickadj
-init|=
-name|howmany
-argument_list|(
-literal|30000
-argument_list|,
-literal|60
-operator|*
-name|HZ
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* can adjust 30ms in 60s */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|NPROC
-value|(20 + 16 * MAXUSERS)
+value|(20 + 16 * maxusers)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NBUF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NBUF
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -91,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|MAXFILES
-value|(NPROC*2)
+value|(maxproc * 2)
 end_define
 
 begin_endif
@@ -101,9 +100,39 @@ end_endif
 
 begin_decl_stmt
 name|int
+name|hz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tick
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tickadj
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* can adjust 30ms in 60s */
+end_comment
+
+begin_decl_stmt
+name|int
+name|maxusers
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* base tunable */
+end_comment
+
+begin_decl_stmt
+name|int
 name|maxproc
-init|=
-name|NPROC
 decl_stmt|;
 end_decl_stmt
 
@@ -114,10 +143,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|maxprocperuid
-init|=
-name|NPROC
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -128,8 +153,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|maxfiles
-init|=
-name|MAXFILES
 decl_stmt|;
 end_decl_stmt
 
@@ -140,8 +163,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|maxfilesperproc
-init|=
-name|MAXFILES
 decl_stmt|;
 end_decl_stmt
 
@@ -152,12 +173,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|ncallout
-init|=
-literal|16
-operator|+
-name|NPROC
-operator|+
-name|MAXFILES
 decl_stmt|;
 end_decl_stmt
 
@@ -165,47 +180,15 @@ begin_comment
 comment|/* maximum # of timer events */
 end_comment
 
-begin_comment
-comment|/*  * These may be set to nonzero here or by patching.  * If they are nonzero at bootstrap time then they are  * initialized to values dependent on the memory size.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NBUF
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|nbuf
-init|=
-name|NBUF
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|nbuf
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
 name|nswbuf
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -250,6 +233,127 @@ init|=
 name|LOCKMUTEX
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Boot time overrides  */
+end_comment
+
+begin_function
+name|void
+name|init_param
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Base parameters */
+name|maxusers
+operator|=
+name|MAXUSERS
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxusers"
+argument_list|,
+operator|&
+name|maxusers
+argument_list|)
+expr_stmt|;
+name|hz
+operator|=
+name|HZ
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.hz"
+argument_list|,
+operator|&
+name|hz
+argument_list|)
+expr_stmt|;
+name|tick
+operator|=
+literal|1000000
+operator|/
+name|hz
+expr_stmt|;
+name|tickadj
+operator|=
+name|howmany
+argument_list|(
+literal|30000
+argument_list|,
+literal|60
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
+comment|/* can adjust 30ms in 60s */
+comment|/* The following can be overridden after boot via sysctl */
+name|maxproc
+operator|=
+name|NPROC
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxproc"
+argument_list|,
+operator|&
+name|maxproc
+argument_list|)
+expr_stmt|;
+name|maxfiles
+operator|=
+name|MAXFILES
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxfiles"
+argument_list|,
+operator|&
+name|maxfiles
+argument_list|)
+expr_stmt|;
+name|maxprocperuid
+operator|=
+name|maxproc
+operator|-
+literal|1
+expr_stmt|;
+name|maxfilesperproc
+operator|=
+name|maxfiles
+expr_stmt|;
+comment|/* Cannot be changed after boot */
+name|nbuf
+operator|=
+name|NBUF
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.nbuf"
+argument_list|,
+operator|&
+name|nbuf
+argument_list|)
+expr_stmt|;
+name|ncallout
+operator|=
+literal|16
+operator|+
+name|maxproc
+operator|+
+name|maxfiles
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ncallout"
+argument_list|,
+operator|&
+name|ncallout
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

@@ -394,6 +394,27 @@ name|SYSCTL_INT
 argument_list|(
 name|_kern
 argument_list|,
+name|KERN_MAXPROCPERUID
+argument_list|,
+name|maxusers
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|maxusers
+argument_list|,
+literal|0
+argument_list|,
+literal|"Hint for kernel tuning"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
 name|KERN_ARGMAX
 argument_list|,
 name|argmax
