@@ -1537,7 +1537,7 @@ name|filename
 decl_stmt|;
 name|filename
 operator|=
-name|rindex
+name|c_rindex
 argument_list|(
 name|pathname
 argument_list|,
@@ -4893,7 +4893,7 @@ decl_stmt|;
 comment|/* qualified at all? */
 if|if
 condition|(
-name|index
+name|c_index
 argument_list|(
 name|name
 argument_list|,
