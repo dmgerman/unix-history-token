@@ -573,7 +573,7 @@ name|sdl_len
 expr_stmt|;
 if|if
 condition|(
-name|write
+name|ID0write
 argument_list|(
 name|routes
 argument_list|,
