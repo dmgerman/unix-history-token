@@ -3001,6 +3001,16 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* These are a bit premature.  The driver still tries to sleep with locks. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3020,6 +3030,36 @@ name|_sc
 parameter_list|)
 value|mtx_unlock(&(_sc)->xl_mtx)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|XL_LOCK
+parameter_list|(
+name|x
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XL_UNLOCK
+parameter_list|(
+name|x
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
