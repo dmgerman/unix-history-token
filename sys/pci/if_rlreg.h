@@ -3184,6 +3184,26 @@ parameter_list|)
 value|((x)>> 3)
 end_define
 
+begin_define
+define|#
+directive|define
+name|RL_ADDR_LO
+parameter_list|(
+name|y
+parameter_list|)
+value|((u_int64_t) (y)& 0xFFFFFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_ADDR_HI
+parameter_list|(
+name|y
+parameter_list|)
+value|((u_int64_t) (y)>> 32)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|rl_softc
@@ -3275,7 +3295,7 @@ name|rl_stats
 modifier|*
 name|rl_stats
 decl_stmt|;
-name|u_int32_t
+name|bus_addr_t
 name|rl_stats_addr
 decl_stmt|;
 name|bus_dma_tag_t
@@ -3289,7 +3309,7 @@ name|rl_desc
 modifier|*
 name|rl_rx_list
 decl_stmt|;
-name|u_int32_t
+name|bus_addr_t
 name|rl_rx_list_addr
 decl_stmt|;
 name|bus_dma_tag_t
@@ -3303,7 +3323,7 @@ name|rl_desc
 modifier|*
 name|rl_tx_list
 decl_stmt|;
-name|u_int32_t
+name|bus_addr_t
 name|rl_tx_list_addr
 decl_stmt|;
 block|}

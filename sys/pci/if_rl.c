@@ -8,7 +8,7 @@ comment|/*  * RealTek 8129/8139/8139C+/8169 PCI NIC driver  *  * Supports severa
 end_comment
 
 begin_comment
-comment|/*  * The RealTek 8139 PCI NIC redefines the meaning of 'low end.' This is  * probably the worst PCI ethernet controller ever made, with the possible  * exception of the FEAST chip made by SMC. The 8139 supports bus-master  * DMA, but it has a terrible interface that nullifies any performance  * gains that bus-master DMA usually offers.  *  * For transmission, the chip offers a series of four TX descriptor  * registers. Each transmit frame must be in a contiguous buffer, aligned  * on a longword (32-bit) boundary. This means we almost always have to  * do mbuf copies in order to transmit a frame, except in the unlikely  * case where a) the packet fits into a single mbuf, and b) the packet  * is 32-bit aligned within the mbuf's data area. The presence of only  * four descriptor registers means that we can never have more than four  * packets queued for transmission at any one time.  *  * Reception is not much better. The driver has to allocate a single large  * buffer area (up to 64K in size) into which the chip will DMA received  * frames. Because we don't know where within this region received packets  * will begin or end, we have no choice but to copy data from the buffer  * area into mbufs in order to pass the packets up to the higher protocol  * levels.  *  * It's impossible given this rotten design to really achieve decent  * performance at 100Mbps, unless you happen to have a 400Mhz PII or  * some equally overmuscled CPU to drive it.  *  * On the bright side, the 8139 does have a built-in PHY, although  * rather than using an MDIO serial interface like most other NICs, the  * PHY registers are directly accessible through the 8139's register  * space. The 8139 supports autonegotiation, as well as a 64-bit multicast  * filter.  *  * The 8129 chip is an older version of the 8139 that uses an external PHY  * chip. The 8129 has a serial MDIO interface for accessing the MII where  * the 8139 lets you directly access the on-board PHY registers. We need  * to select which interface to use depending on the chip type.  *  * Fast forward a few years. RealTek how has a new chip called the  * 8139C+ which at long last implements descriptor-based DMA. Not  * only that, in supports RX and TX TCP/IP checksum offload, VLAN  * tagging and insertion, TCP large send and 64-bit addressing.  * Better still, it allows arbitrary byte alignments for RX and  * TX buffers, meaning no copying is necessary on any architecture.  * There are a few limitations however: the RX and TX descriptor  * rings must be aligned on 256 byte boundaries, they must be in  * contiguous RAM, and each ring can have a maximum of 64 descriptors.  * There are two TX descriptor queues: one normal priority and one  * high. Descriptor ring addresses and DMA buffer addresses are  * 64 bits wide. The 8139C+ is also backwards compatible with the  * 8139, so the chip will still function with older drivers: C+  * mode has to be enabled by setting the appropriate bits in the C+  * command register. The PHY access mechanism appears to be unchanged.  *  * The 8169 is a 10/100/1000 ethernet MAC with built-in tri-speed  * copper PHY. It has almost the same programming API as the C+ mode  * of the 8139C+, with a couple of minor changes and additions: the  * TX start register is located at a different offset, and there are  * additional registers for GMII PHY status and control, as well as  * TBI-mode status and control. There is also a maximum RX packet  * size register to allow the chip to receive jumbo frames. The  * 8169 can only be programmed in C+ mode: the old 8139 programming  * method isn't supported with this chip. Also, RealTek has a LOM  * (LAN On Motherboard) gigabit MAC chip called the RTL8110S which  * I believe to be register compatible with the 8169.  *  * Unfortunately, RealTek has not released a programming manual for  * the 8169 or 8110 yet. The datasheet for the 8139C+ provides most  * of the information, but you must refer to RealTek's 8169 Linux  * driver to fill in the gaps.  *  * This driver now supports both the old 8139 and new 8139C+  * programming models. We detect the 8139C+ by looking for a PCI  * revision ID of 0x20 or higher, and we detect the 8169 by its  * PCI ID. Two new NIC type codes, RL_8139CPLUS and RL_8169 have  * been added to distinguish the chips at runtime. Separate RX and  * TX handling routines have been added to handle C+ mode, which  * are selected via function pointers that are initialized during  * the driver attach phase.  */
+comment|/*  * The RealTek 8139 PCI NIC redefines the meaning of 'low end.' This is  * probably the worst PCI ethernet controller ever made, with the possible  * exception of the FEAST chip made by SMC. The 8139 supports bus-master  * DMA, but it has a terrible interface that nullifies any performance  * gains that bus-master DMA usually offers.  *  * For transmission, the chip offers a series of four TX descriptor  * registers. Each transmit frame must be in a contiguous buffer, aligned  * on a longword (32-bit) boundary. This means we almost always have to  * do mbuf copies in order to transmit a frame, except in the unlikely  * case where a) the packet fits into a single mbuf, and b) the packet  * is 32-bit aligned within the mbuf's data area. The presence of only  * four descriptor registers means that we can never have more than four  * packets queued for transmission at any one time.  *  * Reception is not much better. The driver has to allocate a single large  * buffer area (up to 64K in size) into which the chip will DMA received  * frames. Because we don't know where within this region received packets  * will begin or end, we have no choice but to copy data from the buffer  * area into mbufs in order to pass the packets up to the higher protocol  * levels.  *  * It's impossible given this rotten design to really achieve decent  * performance at 100Mbps, unless you happen to have a 400Mhz PII or  * some equally overmuscled CPU to drive it.  *  * On the bright side, the 8139 does have a built-in PHY, although  * rather than using an MDIO serial interface like most other NICs, the  * PHY registers are directly accessible through the 8139's register  * space. The 8139 supports autonegotiation, as well as a 64-bit multicast  * filter.  *  * The 8129 chip is an older version of the 8139 that uses an external PHY  * chip. The 8129 has a serial MDIO interface for accessing the MII where  * the 8139 lets you directly access the on-board PHY registers. We need  * to select which interface to use depending on the chip type.  *  * Fast forward a few years. RealTek now has a new chip called the  * 8139C+ which at long last implements descriptor-based DMA. Not  * only that, it supports RX and TX TCP/IP checksum offload, VLAN  * tagging and insertion, TCP large send and 64-bit addressing.  * Better still, it allows arbitrary byte alignments for RX and  * TX buffers, meaning no copying is necessary on any architecture.  * There are a few limitations however: the RX and TX descriptor  * rings must be aligned on 256 byte boundaries, they must be in  * contiguous RAM, and each ring can have a maximum of 64 descriptors.  * There are two TX descriptor queues: one normal priority and one  * high. Descriptor ring addresses and DMA buffer addresses are  * 64 bits wide. The 8139C+ is also backwards compatible with the  * 8139, so the chip will still function with older drivers: C+  * mode has to be enabled by setting the appropriate bits in the C+  * command register. The PHY access mechanism appears to be unchanged.  *  * The 8169 is a 10/100/1000 ethernet MAC. It has almost the same  * programming API as the C+ mode of the 8139C+, with a couple of  * minor changes and additions: TX start register and timer interrupt  * register are located at different offsets, and there are additional  * registers for GMII PHY status and control, as well as TBI-mode  * status and control. There is also a maximum RX packet size  * register to allow the chip to receive jumbo frames. The 8169  * can only be programmed in C+ mode: the old 8139 programming  * method isn't supported with this chip. Also, RealTek has a LOM  * (LAN On Motherboard) gigabit MAC chip called the RTL8110S which  * I believe to be register compatible with the 8169. Unlike the  * 8139C+, the 8169 can have up to 1024 descriptors per DMA ring.  * The reference 8169 board design uses a Marvell 88E1000 'Alaska'  * copper PHY.  *  * The 8169S and 8110S are newer versions of the 8169. Available  * in both 32-bit and 64-bit forms, these devices have built-in  * copper 10/100/1000 PHYs. The 8110S is a lan-on-motherboard chip  * that is pin-for-pin compatible with the 8100. Unfortunately,  * RealTek has not released programming manuals for the 8169S and  * 8110S yet. The datasheet for the original 8169 provides most  * of the information, but you must refer to RealTek's 8169 Linux  * driver to fill in the gaps. Mostly, it appears that the built-in  * PHY requires some special initialization. The original 8169  * datasheet and the 8139C+ datasheet can be obtained from  * http://www.freebsd.org/~wpaul/RealTek.  *  * This driver now supports both the old 8139 and new 8139C+  * programming models. We detect the 8139C+ by looking for the  * corresponding hardware rev bits, and we detect the 8169 by its  * PCI ID. Two new NIC type codes, RL_8139CPLUS and RL_8169 have  * been added to distinguish the chips at runtime. Separate RX and  * TX handling routines have been added to handle C+ mode, which  * are selected via function pointers that are initialized during  * the driver attach phase.  */
 end_comment
 
 begin_include
@@ -4463,6 +4463,8 @@ name|rl_bufaddr_lo
 operator|=
 name|htole32
 argument_list|(
+name|RL_ADDR_LO
+argument_list|(
 name|segs
 index|[
 name|i
@@ -4470,12 +4472,24 @@ index|]
 operator|.
 name|ds_addr
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|d
 operator|->
 name|rl_bufaddr_hi
 operator|=
-literal|0
+name|htole32
+argument_list|(
+name|RL_ADDR_HI
+argument_list|(
+name|segs
+index|[
+name|i
+index|]
+operator|.
+name|ds_addr
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7705,6 +7719,16 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
+comment|/* Do RX checksumming if enabled */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_RXCSUM
+condition|)
+block|{
 comment|/* Check IP header checksum */
 if|if
 condition|(
@@ -7787,6 +7811,7 @@ name|csum_data
 operator|=
 literal|0xffff
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -11117,7 +11142,14 @@ name|sc
 argument_list|,
 name|RL_RXLIST_ADDR_HI
 argument_list|,
-literal|0
+name|RL_ADDR_HI
+argument_list|(
+name|sc
+operator|->
+name|rl_ldata
+operator|.
+name|rl_rx_list_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -11126,11 +11158,14 @@ name|sc
 argument_list|,
 name|RL_RXLIST_ADDR_LO
 argument_list|,
+name|RL_ADDR_LO
+argument_list|(
 name|sc
 operator|->
 name|rl_ldata
 operator|.
 name|rl_rx_list_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -11139,7 +11174,14 @@ name|sc
 argument_list|,
 name|RL_TXLIST_ADDR_HI
 argument_list|,
-literal|0
+name|RL_ADDR_HI
+argument_list|(
+name|sc
+operator|->
+name|rl_ldata
+operator|.
+name|rl_tx_list_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -11148,11 +11190,14 @@ name|sc
 argument_list|,
 name|RL_TXLIST_ADDR_LO
 argument_list|,
+name|RL_ADDR_LO
+argument_list|(
 name|sc
 operator|->
 name|rl_ldata
 operator|.
 name|rl_tx_list_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_1
@@ -11179,7 +11224,7 @@ name|sc
 argument_list|,
 name|RL_TIMERINT_8169
 argument_list|,
-literal|0x400
+literal|0x800
 argument_list|)
 expr_stmt|;
 else|else
