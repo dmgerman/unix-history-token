@@ -1877,27 +1877,6 @@ index|]
 operator|=
 literal|'='
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
-if|if
-condition|(
-name|c
-operator|->
-name|flags
-operator|&
-name|CHUNK_PAST_1024
-condition|)
-name|ret
-index|[
-name|i
-operator|++
-index|]
-operator|=
-literal|'>'
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|c
@@ -2037,14 +2016,7 @@ argument|); 	Print_Chunk(c1->part,offset +
 literal|2
 argument|); 	Print_Chunk(c1->next,offset); }  void Debug_Chunk(struct chunk *c1) { 	Print_Chunk(c1,
 literal|2
-argument|); }
-ifndef|#
-directive|ifndef
-name|PC98
-argument|void Bios_Limit_Chunk(struct chunk *c1, u_long limit) { 	if (c1->part) 		Bios_Limit_Chunk(c1->part,limit); 	if (c1->next) 		Bios_Limit_Chunk(c1->next,limit); 	if (c1->end>= limit) { 		c1->flags |= CHUNK_PAST_1024; 	} else { 		c1->flags&= ~CHUNK_PAST_1024; 	} }
-endif|#
-directive|endif
-argument|int Delete_Chunk(struct disk *d, struct chunk *c) { 	struct chunk *c1=
+argument|); }  int Delete_Chunk(struct disk *d, struct chunk *c) { 	struct chunk *c1=
 literal|0
 argument_list|,
 argument|*c2

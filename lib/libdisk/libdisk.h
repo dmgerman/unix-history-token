@@ -68,6 +68,9 @@ name|u_char
 modifier|*
 name|bootmgr
 decl_stmt|;
+name|size_t
+name|bootmgr_size
+decl_stmt|;
 name|u_char
 modifier|*
 name|boot1
@@ -149,11 +152,6 @@ decl_stmt|;
 name|u_long
 name|flags
 decl_stmt|;
-define|#
-directive|define
-name|CHUNK_PAST_1024
-value|1
-comment|/* this chunk cannot be booted from because it 		 * extends past cylinder 1024 		 */
 define|#
 directive|define
 name|CHUNK_BSD_COMPAT
@@ -534,6 +532,10 @@ specifier|const
 name|u_char
 modifier|*
 name|bootmgr
+parameter_list|,
+specifier|const
+name|size_t
+name|bootmgr_size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -913,19 +915,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-name|void
-name|Bios_Limit_Chunk
-parameter_list|(
-name|struct
-name|chunk
-modifier|*
-parameter_list|,
-name|u_long
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
