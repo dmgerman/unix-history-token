@@ -119,6 +119,14 @@ directive|include
 file|<dev/ata/ata-disk.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|NPCI
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/* prototypes */
 end_comment
@@ -185,14 +193,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|NPCI
-operator|>
-literal|0
-end_if
 
 begin_function
 name|void
@@ -4035,7 +4035,7 @@ comment|/* NPCI> 0 */
 end_comment
 
 begin_function
-name|int32_t
+name|void
 name|ata_dmainit
 parameter_list|(
 name|struct
@@ -4055,12 +4055,7 @@ parameter_list|,
 name|int32_t
 name|udmamode
 parameter_list|)
-block|{
-return|return
-operator|-
-literal|1
-return|;
-block|}
+block|{ }
 end_function
 
 begin_function
