@@ -878,6 +878,9 @@ name|ENETUNREACH
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|INET6
 comment|/* 	 * KAME requires that the packet to be contiguous on the 	 * mbuf.  We need to make that sure. 	 * this kind of code should be avoided. 	 * 	 * XXX: KAME may no longer need contiguous packets.  Once 	 * that has been verified, the following code _should_ be 	 * removed. 	 */
 if|if
 condition|(
@@ -925,6 +928,8 @@ name|n
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|ifp
 operator|->
 name|if_opackets
