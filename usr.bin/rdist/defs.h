@@ -673,6 +673,20 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
+name|target
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* target/source directory name */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
 modifier|*
 name|path_rsh
 decl_stmt|;
@@ -815,6 +829,8 @@ index|[]
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

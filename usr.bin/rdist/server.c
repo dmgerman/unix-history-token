@@ -619,6 +619,11 @@ argument_list|(
 name|target
 argument_list|,
 name|cp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|target
+argument_list|)
 argument_list|)
 operator|==
 name|NULL
@@ -802,6 +807,11 @@ argument_list|(
 name|buf
 argument_list|,
 name|cp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 operator|==
 name|NULL
@@ -1103,6 +1113,11 @@ argument_list|(
 name|target
 argument_list|,
 name|src
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|target
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
