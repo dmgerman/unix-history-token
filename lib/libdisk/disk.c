@@ -751,6 +751,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|d
+operator|->
+name|sector_size
+operator|=
+name|s
+expr_stmt|;
 if|if
 condition|(
 name|Add_Chunk
