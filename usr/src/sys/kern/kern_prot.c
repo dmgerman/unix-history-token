@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991 Regents of the University  * of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991 Regents of the University  * of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -803,7 +803,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * set process group (setpgid/old setpgrp)  *  * caller does setpgid(pid, pgid)  *  * pid must be caller or child of caller (ESRCH)  * if a child  *	pid must be in same session (EPERM)  *	pid can't have done an exec (EACCES)  * if pgid != pid  * 	there must exist some pid in same session having pgid (EPERM)  * pid must not be session leader (EPERM)  */
+comment|/*  * set process group (setpgid/old setpgrp)  *  * caller does setpgid(targpid, targpgid)  *  * pid must be caller or child of caller (ESRCH)  * if a child  *	pid must be in same session (EPERM)  *	pid can't have done an exec (EACCES)  * if pgid != pid  * 	there must exist some pid in same session having pgid (EPERM)  * pid must not be session leader (EPERM)  */
 end_comment
 
 begin_comment
@@ -813,7 +813,7 @@ end_comment
 begin_macro
 name|setpgid
 argument_list|(
-argument|cp
+argument|curp
 argument_list|,
 argument|uap
 argument_list|,
@@ -825,7 +825,7 @@ begin_decl_stmt
 name|struct
 name|proc
 modifier|*
-name|cp
+name|curp
 decl_stmt|;
 end_decl_stmt
 
@@ -835,11 +835,13 @@ struct|struct
 name|args
 block|{
 name|int
-name|pid
+name|targpid
 decl_stmt|;
+comment|/* target process id */
 name|int
-name|pgid
+name|targpgid
 decl_stmt|;
+comment|/* target pgrp id */
 block|}
 modifier|*
 name|uap
@@ -859,33 +861,41 @@ specifier|register
 name|struct
 name|proc
 modifier|*
-name|p
+name|targp
 decl_stmt|;
+comment|/* target process */
 specifier|register
 name|struct
 name|pgrp
 modifier|*
-name|pgrp
+name|targpgrp
 decl_stmt|;
+comment|/* target pgrp */
 if|if
 condition|(
 name|uap
 operator|->
-name|pid
+name|targpid
+operator|&&
+name|uap
+operator|->
+name|targpid
 operator|!=
-literal|0
+name|curp
+operator|->
+name|p_pid
 condition|)
 block|{
 if|if
 condition|(
 operator|(
-name|p
+name|targp
 operator|=
 name|pfind
 argument_list|(
 name|uap
 operator|->
-name|pid
+name|targpid
 argument_list|)
 operator|)
 operator|==
@@ -894,7 +904,7 @@ operator|||
 operator|!
 name|inferior
 argument_list|(
-name|p
+name|targp
 argument_list|)
 condition|)
 return|return
@@ -904,11 +914,11 @@ operator|)
 return|;
 if|if
 condition|(
-name|p
+name|targp
 operator|->
 name|p_session
 operator|!=
-name|cp
+name|curp
 operator|->
 name|p_session
 condition|)
@@ -919,7 +929,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|p
+name|targp
 operator|->
 name|p_flag
 operator|&
@@ -932,15 +942,15 @@ operator|)
 return|;
 block|}
 else|else
-name|p
+name|targp
 operator|=
-name|cp
+name|curp
 expr_stmt|;
 if|if
 condition|(
 name|SESS_LEADER
 argument_list|(
-name|p
+name|targp
 argument_list|)
 condition|)
 return|return
@@ -952,15 +962,15 @@ if|if
 condition|(
 name|uap
 operator|->
-name|pgid
+name|targpgid
 operator|==
 literal|0
 condition|)
 name|uap
 operator|->
-name|pgid
+name|targpgid
 operator|=
-name|p
+name|curp
 operator|->
 name|p_pid
 expr_stmt|;
@@ -969,38 +979,38 @@ if|if
 condition|(
 name|uap
 operator|->
-name|pgid
+name|targpgid
 operator|!=
-name|p
+name|curp
 operator|->
 name|p_pid
 condition|)
 if|if
 condition|(
 operator|(
-name|pgrp
+name|targpgrp
 operator|=
 name|pgfind
 argument_list|(
 name|uap
 operator|->
-name|pgid
+name|targpgid
 argument_list|)
 operator|)
 operator|==
 literal|0
 operator|||
-name|pgrp
+name|targpgrp
 operator|->
 name|pg_mem
 operator|==
 name|NULL
 operator|||
-name|pgrp
+name|targpgrp
 operator|->
 name|pg_session
 operator|!=
-name|cp
+name|curp
 operator|->
 name|p_session
 condition|)
@@ -1011,11 +1021,11 @@ operator|)
 return|;
 name|enterpgrp
 argument_list|(
-name|p
+name|targp
 argument_list|,
 name|uap
 operator|->
-name|pgid
+name|targpgid
 argument_list|,
 literal|0
 argument_list|)
