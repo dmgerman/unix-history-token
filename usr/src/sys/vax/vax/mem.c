@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	3.2	%H%	*/
+comment|/*	mem.c	3.3	%H%	*/
 end_comment
 
 begin_comment
@@ -206,6 +206,9 @@ call|(
 name|unsigned
 call|)
 argument_list|(
+name|NBPG
+operator|-
+operator|(
 operator|(
 name|int
 operator|)
@@ -214,6 +217,7 @@ operator|.
 name|u_base
 operator|&
 name|PGOFSET
+operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -654,6 +658,9 @@ call|(
 name|unsigned
 call|)
 argument_list|(
+name|NBPG
+operator|-
+operator|(
 operator|(
 name|int
 operator|)
@@ -662,6 +669,7 @@ operator|.
 name|u_base
 operator|&
 name|PGOFSET
+operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
