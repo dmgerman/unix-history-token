@@ -3320,7 +3320,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"dedicating disk"
+literal|"dedicating disk\n"
 argument_list|)
 expr_stmt|;
 name|All_FreeBSD

@@ -864,7 +864,7 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"%p: Execute(%s, %s)"
+literal|"%p: Execute(%s, %s)\n"
 argument_list|,
 name|func
 argument_list|,
