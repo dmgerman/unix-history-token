@@ -221,9 +221,6 @@ name|sc_geom
 decl_stmt|;
 comment|/* pseudo geometry info */
 name|int
-name|sc_openmask
-decl_stmt|;
-name|int
 name|sc_pick
 decl_stmt|;
 comment|/* side of mirror picked */
