@@ -46,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|QC_IOCTL_VERSION
-value|1
+value|2
 end_define
 
 begin_comment
@@ -81,10 +81,6 @@ name|int
 name|qc_bpp
 decl_stmt|;
 comment|/* bits per pixel (4 or 6) */
-name|int
-name|qc_mode
-decl_stmt|;
-comment|/* transfer mode */
 name|int
 name|qc_zoom
 decl_stmt|;
@@ -125,32 +121,6 @@ end_define
 
 begin_comment
 comment|/* pixels */
-end_comment
-
-begin_comment
-comment|/*  * mode flags  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QC_MODE_UNIDIR
-value|0x00
-end_define
-
-begin_comment
-comment|/* old slower printer ports */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QC_MODE_BIDIR
-value|0x01
-end_define
-
-begin_comment
-comment|/* bidirectional transfers */
 end_comment
 
 begin_comment
