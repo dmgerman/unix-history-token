@@ -2863,38 +2863,228 @@ name|err
 init|=
 literal|0
 decl_stmt|;
+specifier|extern
+specifier|const
+name|struct
+name|linker_set
+name|execsw_set
+decl_stmt|;
+specifier|const
+name|struct
+name|execsw
+modifier|*
+modifier|*
+name|execsw
+init|=
+operator|(
+specifier|const
+expr|struct
+name|execsw
+operator|*
+operator|*
+operator|)
+operator|&
+name|execsw_set
+operator|.
+name|ls_items
+index|[
+literal|0
+index|]
+decl_stmt|;
 if|#
 directive|if
-literal|0
-block|switch(cmd) { 	case LKM_E_LOAD:
+literal|1
+switch|switch
+condition|(
+name|cmd
+condition|)
+block|{
+case|case
+name|LKM_E_LOAD
+case|:
 comment|/* don't load twice! */
-block|if (lkmexists(lkmtp)) 			return(EEXIST); 		if ((i = args->lkm_offset) == -1) {
+if|if
+condition|(
+name|lkmexists
+argument_list|(
+name|lkmtp
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EEXIST
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|args
+operator|->
+name|lkm_offset
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
 comment|/* auto */
 comment|/* 			 * Search the table looking for a slot... 			 */
-block|for (i = 0; i< nexecs; i++) 				if (execsw[i].es_check == NULL) 					break;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|execsw
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|execsw
+index|[
+name|i
+index|]
+operator|->
+name|ex_imgact
+operator|==
+name|NULL
+condition|)
+break|break;
 comment|/* found it! */
 comment|/* out of allocable slots? */
-block|if (i == nexecs) { 				err = ENFILE; 				break; 			} 		} else {
+if|if
+condition|(
+name|execsw
+index|[
+name|i
+index|]
+operator|==
+name|NULL
+condition|)
+block|{
+name|err
+operator|=
+name|ENFILE
+expr_stmt|;
+break|break;
+block|}
+block|}
+else|else
+block|{
 comment|/* assign */
-block|if (i< 0 || i>= nexecs) { 				err = EINVAL; 				break; 			} 		}
+name|err
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
 comment|/* save old */
-block|bcopy(&execsw[i],&(args->lkm_oldexec), sizeof(struct execsw));
+name|bcopy
+argument_list|(
+operator|&
+name|execsw
+index|[
+name|i
+index|]
+argument_list|,
+operator|&
+operator|(
+name|args
+operator|->
+name|lkm_oldexec
+operator|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|execsw
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* replace with new */
-block|bcopy(args->lkm_exec,&execsw[i], sizeof(struct execsw));
-comment|/* realize need to recompute max header size */
-block|exec_maxhdrsz = 0;
+name|bcopy
+argument_list|(
+operator|&
+operator|(
+name|args
+operator|->
+name|lkm_exec
+operator|)
+argument_list|,
+operator|&
+name|execsw
+index|[
+name|i
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|execsw
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* done! */
-block|args->lkm_offset = i;
+name|args
+operator|->
+name|lkm_offset
+operator|=
+name|i
+expr_stmt|;
 comment|/* slot in execsw[] */
-block|break;  	case LKM_E_UNLOAD:
+break|break;
+case|case
+name|LKM_E_UNLOAD
+case|:
 comment|/* current slot... */
-block|i = args->lkm_offset;
+name|i
+operator|=
+name|args
+operator|->
+name|lkm_offset
+expr_stmt|;
 comment|/* replace current slot contents with old contents */
-block|bcopy(&(args->lkm_oldexec),&execsw[i], sizeof(struct execsw));
-comment|/* realize need to recompute max header size */
-block|exec_maxhdrsz = 0;  		break;  	case LKM_E_STAT:
+name|bcopy
+argument_list|(
+operator|&
+operator|(
+name|args
+operator|->
+name|lkm_oldexec
+operator|)
+argument_list|,
+operator|&
+name|execsw
+index|[
+name|i
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|execsw
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LKM_E_STAT
+case|:
 comment|/* no special handling... */
-block|break; 	}
+break|break;
+block|}
 else|#
 directive|else
 name|err
@@ -2910,6 +3100,61 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|execsw
+name|lkm_exec_dummy
+init|=
+block|{
+name|NULL
+block|,
+literal|"lkm"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TEXT_SET
+argument_list|(
+name|execsw_set
+argument_list|,
+name|lkm_exec_dummy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TEXT_SET
+argument_list|(
+name|execsw_set
+argument_list|,
+name|lkm_exec_dummy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TEXT_SET
+argument_list|(
+name|execsw_set
+argument_list|,
+name|lkm_exec_dummy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TEXT_SET
+argument_list|(
+name|execsw_set
+argument_list|,
+name|lkm_exec_dummy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * This code handles the per-module type "wiring-in" of loadable modules  * into existing kernel tables.  For "LM_MISC" modules, wiring and unwiring  * is assumed to be done in their entry routines internal to the module  * itself.  */
