@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	2.9 %G%"
+literal|"@(#)lex.c	2.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,31 +92,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|isedit
-condition|)
-name|perror
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"No mail for %s\n"
-argument_list|,
-name|myname
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 comment|/* 	 * Looks like all will be well.  We must now relinquish our 	 * hold on the current set of stuff.  Must hold signals 	 * while we are reading the new file, else we will ruin 	 * the message[] data structure. 	 */
 name|holdsigs
 argument_list|()
