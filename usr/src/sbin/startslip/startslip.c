@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startslip.c	5.9 (Berkeley) %G%"
+literal|"@(#)startslip.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1632,14 +1632,20 @@ name|wfd
 argument_list|,
 literal|"%s\r"
 argument_list|,
-name|pbuf
+name|argv
+index|[
+literal|2
+index|]
 argument_list|)
 expr_stmt|;
 name|printd
 argument_list|(
 literal|"Sent password: %s\n"
 argument_list|,
-name|pbuf
+name|argv
+index|[
+literal|2
+index|]
 argument_list|)
 expr_stmt|;
 break|break;
