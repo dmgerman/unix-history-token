@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.1 90/07/09$  *  *	@(#)cons.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.1 90/07/09$  *  *	@(#)cons.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ file|<pmax/stand/dec_prom.h>
 end_include
 
 begin_comment
-comment|/*  * Console I/O is redirected to the appropriate device, either a screen and  * keyboard or a serial port.  */
+comment|/*  * Console I/O is redirected to the appropriate device, either a screen and  * keyboard, a serial port, or the "virtual" console.  */
 end_comment
 
 begin_include
@@ -66,6 +66,19 @@ include|#
 directive|include
 file|<pmax/pmax/cons.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tty
+modifier|*
+name|constty
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* virtual console output device */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -392,6 +405,32 @@ begin_block
 block|{
 if|if
 condition|(
+name|constty
+condition|)
+return|return
+operator|(
+operator|(
+operator|*
+name|linesw
+index|[
+name|constty
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_write
+operator|)
+operator|(
+name|constty
+operator|,
+name|uio
+operator|,
+name|flag
+operator|)
+operator|)
+return|;
+if|if
+condition|(
 name|cn_tab
 operator|.
 name|cn_dev
@@ -475,6 +514,56 @@ block|{
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Superuser can always use this to wrest control of console 	 * output from the "virtual" console. 	 */
+if|if
+condition|(
+name|cmd
+operator|==
+name|TIOCCONS
+operator|&&
+name|constty
+condition|)
+block|{
+name|error
+operator|=
+name|suser
+argument_list|(
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+operator|(
+name|u_short
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|constty
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+if|#
+directive|if
+literal|0
+block|if (constty) { 		error = (*linesw[constty->t_line].l_ioctl) 			(constty, cmd, data, flag, p); 		if (error>= 0) 			return (error); 	}
+endif|#
+directive|endif
 if|if
 condition|(
 name|cn_tab
