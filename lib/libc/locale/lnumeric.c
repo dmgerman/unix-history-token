@@ -138,6 +138,8 @@ literal|"LC_NUMERIC"
 argument_list|,
 name|LCNUMERIC_SIZE
 argument_list|,
+name|LCNUMERIC_SIZE
+argument_list|,
 operator|(
 specifier|const
 name|char

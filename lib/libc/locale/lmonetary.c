@@ -184,6 +184,8 @@ literal|"LC_MONETARY"
 argument_list|,
 name|LCMONETARY_SIZE
 argument_list|,
+name|LCMONETARY_SIZE
+argument_list|,
 operator|(
 specifier|const
 name|char

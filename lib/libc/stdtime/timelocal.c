@@ -246,6 +246,8 @@ literal|"LC_TIME"
 argument_list|,
 name|LCTIME_SIZE
 argument_list|,
+name|LCTIME_SIZE
+argument_list|,
 operator|(
 specifier|const
 name|char
