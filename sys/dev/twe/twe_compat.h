@@ -847,7 +847,6 @@ name|TWE_BIO_STATS_START
 parameter_list|(
 name|bp
 parameter_list|)
-value|devstat_start_transaction(&((struct twed_softc *)TWE_BIO_SOFTC(bp))->twed_stats)
 end_define
 
 begin_define
@@ -857,7 +856,6 @@ name|TWE_BIO_STATS_END
 parameter_list|(
 name|bp
 parameter_list|)
-value|devstat_end_transaction_bio(&((struct twed_softc *)TWE_BIO_SOFTC(bp))->twed_stats, bp)
 end_define
 
 begin_endif

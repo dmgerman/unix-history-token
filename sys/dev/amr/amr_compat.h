@@ -246,7 +246,7 @@ name|AMR_BIO_FINISH
 parameter_list|(
 name|x
 parameter_list|)
-value|biofinish(x,&sc->amrd_stats, 0)
+value|biodone(x)
 end_define
 
 begin_endif

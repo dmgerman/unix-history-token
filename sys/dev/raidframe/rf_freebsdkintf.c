@@ -146,12 +146,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/devicestat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/uma.h>
 end_include
 
@@ -638,11 +632,6 @@ name|bio_queue_head
 name|bio_queue
 decl_stmt|;
 comment|/* used for the device queue */
-name|struct
-name|devstat
-name|device_stats
-decl_stmt|;
-comment|/* devstat gathering */
 block|}
 struct|;
 end_struct
@@ -2186,14 +2175,6 @@ operator|->
 name|raidPtr
 operator|->
 name|engine_tg
-argument_list|)
-expr_stmt|;
-name|devstat_remove_entry
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|device_stats
 argument_list|)
 expr_stmt|;
 name|disk_destroy
@@ -5291,31 +5272,6 @@ name|sc
 operator|=
 name|sc
 expr_stmt|;
-comment|/* Register with devstat */
-name|devstat_add_entry
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|device_stats
-argument_list|,
-literal|"raid"
-argument_list|,
-name|raidPtr
-operator|->
-name|raidid
-argument_list|,
-literal|0
-argument_list|,
-name|DEVSTAT_NO_BLOCKSIZE
-operator||
-name|DEVSTAT_NO_ORDERED_TAGS
-argument_list|,
-name|DEVSTAT_TYPE_IF_OTHER
-argument_list|,
-name|DEVSTAT_PRIORITY_ARRAY
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|sc
@@ -5854,14 +5810,6 @@ comment|/* 		 * Everything is async. 		 */
 name|do_async
 operator|=
 literal|1
-expr_stmt|;
-name|devstat_start_transaction
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|device_stats
-argument_list|)
 expr_stmt|;
 comment|/* XXX we're still at splbio() here... do we *really*  		   need to be? */
 comment|/* don't ever condition on bp->bio_cmd& BIO_WRITE.   		 * always condition on BIO_READ instead */
@@ -12478,16 +12426,6 @@ operator|)
 name|desc
 operator|->
 name|bp
-expr_stmt|;
-name|devstat_end_transaction_bio
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|device_stats
-argument_list|,
-name|bp
-argument_list|)
 expr_stmt|;
 block|}
 end_function

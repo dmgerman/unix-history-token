@@ -485,13 +485,9 @@ expr_stmt|;
 comment|/* XXX: probably not an error */
 return|return;
 block|}
-name|biofinish
+name|biodone
 argument_list|(
 name|bp
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return;

@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/devicestat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -1437,33 +1431,6 @@ name|ccg
 operator|->
 name|ccg_nsectors
 expr_stmt|;
-comment|/* 	 * Add a devstat entry for this device. 	 */
-name|devstat_add_entry
-argument_list|(
-operator|&
-name|cs
-operator|->
-name|device_stats
-argument_list|,
-literal|"ccd"
-argument_list|,
-name|cs
-operator|->
-name|sc_unit
-argument_list|,
-name|ccg
-operator|->
-name|ccg_secsize
-argument_list|,
-name|DEVSTAT_ALL_SUPPORTED
-argument_list|,
-name|DEVSTAT_TYPE_STORARRAY
-operator||
-name|DEVSTAT_TYPE_IF_OTHER
-argument_list|,
-name|DEVSTAT_PRIORITY_ARRAY
-argument_list|)
-expr_stmt|;
 name|cs
 operator|->
 name|sc_flags
@@ -2162,15 +2129,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-comment|/* Record the transaction start  */
-name|devstat_start_transaction
-argument_list|(
-operator|&
-name|cs
-operator|->
-name|device_stats
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Translate the partition-relative block number to an absolute. 	 */
 name|bn
 operator|=
@@ -3482,16 +3440,9 @@ name|bp
 operator|->
 name|bio_bcount
 expr_stmt|;
-name|biofinish
+name|biodone
 argument_list|(
 name|bp
-argument_list|,
-operator|&
-name|cs
-operator|->
-name|device_stats
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4960,15 +4911,6 @@ operator|->
 name|sc_vpp
 argument_list|,
 name|M_CCD
-argument_list|)
-expr_stmt|;
-comment|/* And remove the devstat entry. */
-name|devstat_remove_entry
-argument_list|(
-operator|&
-name|cs
-operator|->
-name|device_stats
 argument_list|)
 expr_stmt|;
 comment|/* This must be atomic. */

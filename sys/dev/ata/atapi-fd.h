@@ -182,10 +182,6 @@ name|disk
 name|disk
 decl_stmt|;
 comment|/* virtual drives */
-name|struct
-name|devstat
-name|stats
-decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -177,11 +177,6 @@ name|queue
 decl_stmt|;
 comment|/* head of request queue */
 name|struct
-name|devstat
-name|stats
-decl_stmt|;
-comment|/* devstat entry */
-name|struct
 name|disk
 name|disk
 decl_stmt|;

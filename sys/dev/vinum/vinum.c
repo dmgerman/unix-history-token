@@ -30,12 +30,6 @@ begin_comment
 comment|/* for sync(2) */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/devicestat.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef

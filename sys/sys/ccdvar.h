@@ -211,11 +211,6 @@ name|sc_itable
 decl_stmt|;
 comment|/* interleave table */
 name|struct
-name|devstat
-name|device_stats
-decl_stmt|;
-comment|/* device statistics */
-name|struct
 name|ccdgeom
 name|sc_geom
 decl_stmt|;

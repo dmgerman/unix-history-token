@@ -79,12 +79,6 @@ directive|include
 file|<dev/twe/twe_tables.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/devicestat.h>
-end_include
-
 begin_decl_stmt
 specifier|static
 name|devclass_t
@@ -2047,11 +2041,6 @@ name|disk
 name|twed_disk
 decl_stmt|;
 comment|/* generic disk handle */
-name|struct
-name|devstat
-name|twed_stats
-decl_stmt|;
-comment|/* accounting */
 block|}
 struct|;
 end_struct
@@ -2698,31 +2687,6 @@ operator|->
 name|td_size
 argument_list|)
 expr_stmt|;
-name|devstat_add_entry
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|twed_stats
-argument_list|,
-literal|"twed"
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|TWE_BLOCK_SIZE
-argument_list|,
-name|DEVSTAT_NO_ORDERED_TAGS
-argument_list|,
-name|DEVSTAT_TYPE_STORARRAY
-operator||
-name|DEVSTAT_TYPE_IF_OTHER
-argument_list|,
-name|DEVSTAT_PRIORITY_ARRAY
-argument_list|)
-expr_stmt|;
 comment|/* attach a generic disk device to ourselves */
 name|sc
 operator|->
@@ -2915,14 +2879,6 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-name|devstat_remove_entry
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|twed_stats
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FREEBSD_4

@@ -578,10 +578,6 @@ name|struct
 name|disk
 name|disk
 decl_stmt|;
-name|struct
-name|devstat
-name|stats
-decl_stmt|;
 name|int
 name|drive
 decl_stmt|;

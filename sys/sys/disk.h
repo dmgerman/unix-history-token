@@ -128,6 +128,12 @@ name|g_geom
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|devstat
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|disk
@@ -137,6 +143,11 @@ name|struct
 name|g_geom
 modifier|*
 name|d_geom
+decl_stmt|;
+name|struct
+name|devstat
+modifier|*
+name|d_devstat
 decl_stmt|;
 comment|/* Shared fields */
 name|u_int

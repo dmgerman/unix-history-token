@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/devicestat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/interrupt.h>
 end_include
 

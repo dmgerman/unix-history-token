@@ -404,7 +404,6 @@ name|MLX_BIO_STATS_START
 parameter_list|(
 name|bp
 parameter_list|)
-value|devstat_start_transaction(&((struct mlxd_softc *)MLX_BIO_SOFTC(bp))->mlxd_stats)
 end_define
 
 begin_define
@@ -414,7 +413,6 @@ name|MLX_BIO_STATS_END
 parameter_list|(
 name|bp
 parameter_list|)
-value|devstat_end_transaction_bio(&((struct mlxd_softc *)MLX_BIO_SOFTC(bp))->mlxd_stats, bp)
 end_define
 
 begin_endif

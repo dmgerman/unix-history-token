@@ -54,16 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/devicestat.h>
-end_include
-
-begin_comment
-comment|/* for struct devstat */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<cam/cam.h>
 end_include
 

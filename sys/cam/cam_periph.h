@@ -28,6 +28,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|devstat
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct

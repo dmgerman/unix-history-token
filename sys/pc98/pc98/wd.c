@@ -95,12 +95,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/devicestat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -650,11 +644,6 @@ modifier|*
 name|dk_dmacookie
 decl_stmt|;
 comment|/* handle for DMA services */
-name|struct
-name|devstat
-name|dk_stats
-decl_stmt|;
-comment|/* devstat entry */
 name|struct
 name|disk
 name|disk
@@ -2619,33 +2608,6 @@ argument_list|(
 name|du
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Export the drive to the devstat interface. 			 */
-name|devstat_add_entry
-argument_list|(
-operator|&
-name|du
-operator|->
-name|dk_stats
-argument_list|,
-literal|"wd"
-argument_list|,
-name|lunit
-argument_list|,
-name|du
-operator|->
-name|dk_dd
-operator|.
-name|d_secsize
-argument_list|,
-name|DEVSTAT_NO_ORDERED_TAGS
-argument_list|,
-name|DEVSTAT_TYPE_DIRECT
-operator||
-name|DEVSTAT_TYPE_IF_IDE
-argument_list|,
-name|DEVSTAT_PRIORITY_DISK
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Register this media as a disk 			 */
 name|du
 operator|->
@@ -3053,15 +3015,6 @@ name|dk_ctrlr
 argument_list|)
 expr_stmt|;
 comment|/* start controller */
-comment|/* Tell devstat that we have started a transaction on this drive */
-name|devstat_start_transaction
-argument_list|(
-operator|&
-name|du
-operator|->
-name|dk_stats
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -3738,9 +3691,7 @@ argument|; 		bp->bio_resid = bp->bio_bcount - du->dk_skip * DEV_BSIZE; 		wdutab[
 literal|0
 argument|; 		du->dk_skip =
 literal|0
-argument|; 		biofinish(bp,&du->dk_stats,
-literal|0
-argument|); 	}
+argument|; 		biodone(bp); 	}
 comment|/* controller idle */
 argument|wdtab[unit].b_active =
 literal|0

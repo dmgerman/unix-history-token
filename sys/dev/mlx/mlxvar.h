@@ -839,10 +839,6 @@ name|struct
 name|disk
 name|mlxd_disk
 decl_stmt|;
-name|struct
-name|devstat
-name|mlxd_stats
-decl_stmt|;
 name|int
 name|mlxd_unit
 decl_stmt|;
