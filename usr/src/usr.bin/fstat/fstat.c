@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -24,7 +24,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !lint */
+comment|/* not lint */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.9 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !lint */
+comment|/* not lint */
 end_comment
 
 begin_comment
@@ -299,13 +299,6 @@ name|WD
 value|-1
 end_define
 
-begin_define
-define|#
-directive|define
-name|vprintf
-value|if (vflg) printf
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -434,17 +427,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|off_t
-name|procp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|fflg
-decl_stmt|,
-name|hadfflg
 decl_stmt|,
 name|vflg
 decl_stmt|;
@@ -669,6 +653,7 @@ break|break;
 case|case
 literal|'v'
 case|:
+comment|/* undocumented: print read error messages */
 name|vflg
 operator|++
 expr_stmt|;
@@ -681,6 +666,16 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|*
+operator|(
+name|argv
+operator|+=
+name|optind
+operator|)
+condition|)
+block|{
 for|for
 control|(
 name|argv
@@ -694,10 +689,6 @@ operator|++
 name|argv
 control|)
 block|{
-name|hadfflg
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|getfname
@@ -713,8 +704,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|hadfflg
-operator|&&
 operator|!
 name|fflg
 condition|)
@@ -724,26 +713,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"USER\t CMD\t      PID    FD\tDEVICE\tINODE\t  SIZE TYPE"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fflg
-condition|)
-name|printf
-argument_list|(
-literal|" NAME\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
+block|}
 name|openfiles
 argument_list|()
 expr_stmt|;
@@ -811,21 +781,6 @@ index|]
 operator|.
 name|n_value
 expr_stmt|;
-name|procp
-operator|=
-name|lgetw
-argument_list|(
-operator|(
-name|off_t
-operator|)
-name|nl
-index|[
-name|X_PROC
-index|]
-operator|.
-name|n_value
-argument_list|)
-expr_stmt|;
 name|nproc
 operator|=
 operator|(
@@ -842,6 +797,29 @@ name|X_NPROC
 index|]
 operator|.
 name|n_value
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|lseek
+argument_list|(
+name|kmem
+argument_list|,
+name|lgetw
+argument_list|(
+operator|(
+name|off_t
+operator|)
+name|nl
+index|[
+name|X_PROC
+index|]
+operator|.
+name|n_value
+argument_list|)
+argument_list|,
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|size
@@ -889,21 +867,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|lseek
-argument_list|(
-name|kmem
-argument_list|,
-operator|(
-name|off_t
-operator|)
-name|procp
-argument_list|,
-name|L_SET
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|read
@@ -921,11 +884,22 @@ argument_list|)
 operator|!=
 name|size
 condition|)
-name|cantread
+name|rerr1
 argument_list|(
 literal|"proc table"
 argument_list|,
 name|N_KMEM
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"USER\t CMD\t      PID    FD\tDEVICE\tINODE\t  SIZE TYPE%s\n"
+argument_list|,
+name|fflg
+condition|?
+literal|" NAME"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 for|for
@@ -1495,7 +1469,7 @@ name|text
 argument_list|)
 condition|)
 block|{
-name|cantread
+name|rerr1
 argument_list|(
 literal|"text table"
 argument_list|,
@@ -1628,16 +1602,16 @@ name|inode
 argument_list|)
 condition|)
 block|{
-name|vprintf
+name|rerr2
 argument_list|(
-literal|"error %d reading inode at %x from kmem\n"
-argument_list|,
 name|errno
 argument_list|,
 operator|(
 name|int
 operator|)
 name|g
+argument_list|,
+literal|"inode"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2054,16 +2028,16 @@ name|socket
 argument_list|)
 condition|)
 block|{
-name|vprintf
+name|rerr2
 argument_list|(
-literal|"error %d reading socket at %x from kmem\n"
-argument_list|,
 name|errno
 argument_list|,
 operator|(
 name|int
 operator|)
 name|sock
+argument_list|,
+literal|"socket"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2113,10 +2087,8 @@ name|protosw
 argument_list|)
 condition|)
 block|{
-name|vprintf
+name|rerr2
 argument_list|(
-literal|"error %d reading protosw at %x from kmem\n"
-argument_list|,
 name|errno
 argument_list|,
 operator|(
@@ -2125,6 +2097,8 @@ operator|)
 name|so
 operator|.
 name|so_proto
+argument_list|,
+literal|"protosw"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2174,10 +2148,8 @@ name|domain
 argument_list|)
 condition|)
 block|{
-name|vprintf
+name|rerr2
 argument_list|(
-literal|"error %d reading domain at %x from kmem\n"
-argument_list|,
 name|errno
 argument_list|,
 operator|(
@@ -2186,6 +2158,8 @@ operator|)
 name|proto
 operator|.
 name|pr_domain
+argument_list|,
+literal|"domain"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2251,10 +2225,8 @@ operator|<
 literal|0
 condition|)
 block|{
-name|vprintf
+name|rerr2
 argument_list|(
-literal|"error %d reading char at %x from kmem\n"
-argument_list|,
 name|errno
 argument_list|,
 operator|(
@@ -2263,6 +2235,8 @@ operator|)
 name|dom
 operator|.
 name|dom_name
+argument_list|,
+literal|"char"
 argument_list|)
 expr_stmt|;
 name|dname
@@ -2327,7 +2301,7 @@ operator|.
 name|so_state
 argument_list|)
 expr_stmt|;
-comment|/*  	 * protocol specific formating  	 * 	 * Try to find interesting things to print.  For tcp, the interesting 	 * thing is the address of the tcpcb, for udp and others, just the 	 * inpcb (socket pcb).  For unix domain, its the address of the socket 	 * pcb and the address of the connected pcb (if connected).  Otherwise 	 * just print the protocol number and address of the socket itself. 	 * The idea is not to duplicate netstat, but to make available enough 	 * information for further analysis. 	 */
+comment|/*  	 * protocol specific formatting 	 * 	 * Try to find interesting things to print.  For tcp, the interesting 	 * thing is the address of the tcpcb, for udp and others, just the 	 * inpcb (socket pcb).  For unix domain, its the address of the socket 	 * pcb and the address of the connected pcb (if connected).  Otherwise 	 * just print the protocol number and address of the socket itself. 	 * The idea is not to duplicate netstat, but to make available enough 	 * information for further analysis. 	 */
 switch|switch
 condition|(
 name|dom
@@ -2405,10 +2379,8 @@ name|inpcb
 argument_list|)
 condition|)
 block|{
-name|vprintf
+name|rerr2
 argument_list|(
-literal|"error %d reading inpcb at %x from kmem\n"
-argument_list|,
 name|errno
 argument_list|,
 operator|(
@@ -2417,6 +2389,8 @@ operator|)
 name|so
 operator|.
 name|so_pcb
+argument_list|,
+literal|"inpcb"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2522,10 +2496,8 @@ name|unpcb
 argument_list|)
 condition|)
 block|{
-name|vprintf
+name|rerr2
 argument_list|(
-literal|"error %d reading unpcb at %x from kmem\n"
-argument_list|,
 name|errno
 argument_list|,
 operator|(
@@ -2534,6 +2506,8 @@ operator|)
 name|so
 operator|.
 name|so_pcb
+argument_list|,
+literal|"unpcb"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2862,7 +2836,7 @@ name|lfile
 argument_list|)
 condition|)
 block|{
-name|cantread
+name|rerr1
 argument_list|(
 literal|"file"
 argument_list|,
@@ -3243,7 +3217,7 @@ end_if
 
 begin_macro
 unit|}  static
-name|cantread
+name|rerr1
 argument_list|(
 argument|what
 argument_list|,
@@ -3263,13 +3237,61 @@ end_decl_stmt
 
 begin_block
 block|{
-name|vprintf
+if|if
+condition|(
+name|vflg
+condition|)
+name|printf
 argument_list|(
 literal|"fstat: error reading %s from %s"
 argument_list|,
 name|what
 argument_list|,
 name|fromwhat
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+specifier|static
+name|rerr2
+argument_list|(
+argument|err
+argument_list|,
+argument|address
+argument_list|,
+argument|what
+argument_list|)
+name|int
+name|err
+operator|,
+name|address
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|what
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|vflg
+condition|)
+name|printf
+argument_list|(
+literal|"error %d reading %s at %x from kmem\n"
+argument_list|,
+name|errno
+argument_list|,
+name|what
+argument_list|,
+name|address
 argument_list|)
 expr_stmt|;
 block|}
@@ -3328,11 +3350,16 @@ argument_list|(
 name|word
 argument_list|)
 condition|)
-name|vprintf
+name|rerr2
 argument_list|(
-literal|"error reading kmem at %lx\n"
+name|errno
 argument_list|,
+operator|(
+name|int
+operator|)
 name|loc
+argument_list|,
+literal|"word"
 argument_list|)
 expr_stmt|;
 return|return
