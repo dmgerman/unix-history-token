@@ -107,7 +107,6 @@ name|thread
 modifier|*
 name|uio_td
 decl_stmt|;
-empty_stmt|;
 block|}
 struct|;
 end_struct
