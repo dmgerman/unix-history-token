@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.26 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1308,10 +1308,12 @@ control|)
 block|{
 name|line
 index|[
-name|strlen
+sizeof|sizeof
 argument_list|(
 literal|"/dev/ptyp"
 argument_list|)
+operator|-
+literal|1
 index|]
 operator|=
 literal|"0123456789abcdef"
@@ -1325,7 +1327,7 @@ name|open
 argument_list|(
 name|line
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1417,8 +1419,67 @@ argument_list|(
 name|f
 argument_list|,
 name|line
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fchmod
+argument_list|(
+name|t
 argument_list|,
-name|errno
+literal|0
+argument_list|)
+condition|)
+name|fatalperror
+argument_list|(
+name|f
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|vhangup
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|t
+operator|=
+name|open
+argument_list|(
+name|line
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|<
+literal|0
+condition|)
+name|fatalperror
+argument_list|(
+name|f
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 name|ioctl
@@ -1546,8 +1607,6 @@ argument_list|(
 name|f
 argument_list|,
 literal|"fork"
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 if|if
@@ -1640,8 +1699,6 @@ argument_list|(
 name|f
 argument_list|,
 literal|"/bin/login"
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1719,8 +1776,6 @@ argument_list|(
 argument|f
 argument_list|,
 argument|msg
-argument_list|,
-argument|errno
 argument_list|)
 end_macro
 
@@ -1734,12 +1789,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|msg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|errno
 decl_stmt|;
 end_decl_stmt
 
@@ -1894,8 +1943,6 @@ argument_list|(
 name|pty
 argument_list|,
 literal|"select"
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 block|}
@@ -2223,8 +2270,6 @@ argument_list|,
 name|ptyibuf
 operator|+
 literal|1
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -5637,8 +5682,6 @@ argument_list|(
 name|cp
 argument_list|,
 name|where
-argument_list|,
-name|tty
 argument_list|)
 specifier|register
 name|char
@@ -5651,12 +5694,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|where
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tty
 decl_stmt|;
 end_decl_stmt
 
