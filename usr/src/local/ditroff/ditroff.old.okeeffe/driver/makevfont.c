@@ -30,7 +30,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makevfont.c	1.2	(Berkeley)	%G%"
+literal|"@(#)makevfont.c	1.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
