@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	5.22 (Berkeley) %G%"
+literal|"@(#)mountd.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4742,6 +4742,26 @@ expr_stmt|;
 if|if
 condition|(
 name|grp
+operator|==
+operator|(
+expr|struct
+name|grouplist
+operator|*
+operator|)
+literal|0
+condition|)
+name|ep
+operator|->
+name|ex_defdir
+operator|->
+name|dp_flag
+operator||=
+name|DP_DEFSET
+expr_stmt|;
+else|else
+while|while
+condition|(
+name|grp
 condition|)
 block|{
 name|hp
@@ -4773,16 +4793,13 @@ name|dp_hosts
 operator|=
 name|hp
 expr_stmt|;
-block|}
-else|else
-name|ep
+name|grp
+operator|=
+name|grp
 operator|->
-name|ex_defdir
-operator|->
-name|dp_flag
-operator||=
-name|DP_DEFSET
+name|gr_next
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
