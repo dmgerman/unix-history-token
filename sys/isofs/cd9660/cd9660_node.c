@@ -483,7 +483,9 @@ argument_list|(
 operator|&
 name|ip
 operator|->
-name|i_lock
+name|i_vnode
+operator|->
+name|v_lock
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,

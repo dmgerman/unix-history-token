@@ -63,11 +63,6 @@ struct|struct
 name|iso_node
 block|{
 name|struct
-name|lock
-name|i_lock
-decl_stmt|;
-comment|/* node lock> Keep this first< */
-name|struct
 name|iso_node
 modifier|*
 name|i_next
