@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.52
+literal|3.53
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.52
+literal|3.53
 operator|%
 name|G
 operator|%
@@ -1004,7 +1004,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MYHOSTNAME -- return the name of this host. ** **	Parameters: **		hostbuf -- a place to return the name of this host. ** **	Returns: **		A list of aliases for this host. ** **	Side Effects: **		none. */
+comment|/* **  MYHOSTNAME -- return the name of this host. ** **	Parameters: **		hostbuf -- a place to return the name of this host. **		size -- the size of hostbuf. ** **	Returns: **		A list of aliases for this host. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -1014,10 +1014,15 @@ modifier|*
 name|myhostname
 parameter_list|(
 name|hostbuf
+parameter_list|,
+name|size
 parameter_list|)
 name|char
 name|hostbuf
 index|[]
+decl_stmt|;
+name|int
+name|size
 decl_stmt|;
 block|{
 specifier|extern
@@ -1036,7 +1041,7 @@ specifier|auto
 name|int
 name|i
 init|=
-literal|30
+name|size
 decl_stmt|;
 specifier|register
 name|char
@@ -1116,7 +1121,7 @@ else|DAEMON
 end_else
 
 begin_comment
-comment|/* **  MYHOSTNAME -- stub version for case of no daemon code. ** **	Can't convert to upper case here because might be a UUCP name. */
+comment|/* **  MYHOSTNAME -- stub version for case of no daemon code. ** **	Can't convert to upper case here because might be a UUCP name. ** **	Mark, you can change this to be anything you want...... */
 end_comment
 
 begin_function
@@ -1126,10 +1131,15 @@ modifier|*
 name|myhostname
 parameter_list|(
 name|hostbuf
+parameter_list|,
+name|size
 parameter_list|)
 name|char
 name|hostbuf
 index|[]
+decl_stmt|;
+name|int
+name|size
 decl_stmt|;
 block|{
 specifier|register
@@ -1167,8 +1177,7 @@ name|fgets
 argument_list|(
 name|hostbuf
 argument_list|,
-sizeof|sizeof
-name|hostbuf
+name|size
 argument_list|,
 name|f
 argument_list|)

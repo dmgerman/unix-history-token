@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.159
+literal|3.160
 operator|%
 name|G
 operator|%
@@ -685,6 +685,9 @@ name|av
 operator|=
 name|myhostname
 argument_list|(
+name|jbuf
+argument_list|,
+sizeof|sizeof
 name|jbuf
 argument_list|)
 expr_stmt|;
