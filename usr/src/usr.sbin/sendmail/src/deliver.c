@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.151 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.152 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3654,6 +3654,10 @@ operator|&&
 name|m
 operator|!=
 name|ProgMailer
+operator|&&
+name|m
+operator|!=
+name|FileMailer
 operator|&&
 name|bitset
 argument_list|(
