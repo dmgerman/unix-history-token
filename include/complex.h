@@ -21,12 +21,25 @@ directive|ifdef
 name|__GNUC__
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|__STDC_VERSION__
+operator|<
+literal|199901
+end_if
+
 begin_define
 define|#
 directive|define
 name|_Complex
 value|__complex__
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
