@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispreg.h,v 1.6 1998/09/08 01:09:46 mjacob Exp $ */
+comment|/* $Id: ispreg.h,v 1.6 1998/09/08 01:09:46 mjacob Exp mjacob $ */
+end_comment
+
+begin_comment
+comment|/* ispreg.h 1.7 */
 end_comment
 
 begin_comment
@@ -4621,7 +4625,7 @@ name|ISP2100_NVRAM_HARDLOOPID
 parameter_list|(
 name|c
 parameter_list|)
-value|(c)[24]
+value|(c)[26]
 end_define
 
 begin_define
