@@ -96,6 +96,8 @@ literal|"/usr/lib/libm.a"
 block|,
 literal|"/usr/lib/libc.a"
 block|,
+literal|"/usr/lib/libcompat.a"
+block|,
 name|NULL
 block|}
 expr_stmt|;
@@ -120,6 +122,8 @@ block|,
 literal|"/usr/lib/libm_p.a"
 block|,
 literal|"/usr/lib/libc_p.a"
+block|,
+literal|"/usr/lib/libcompat_p.a"
 block|,
 name|NULL
 block|}
