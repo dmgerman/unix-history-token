@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	5.7 (Berkeley) %G%"
+literal|"@(#)rexecd.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,9 +112,18 @@ directive|include
 file|<netdb.h>
 end_include
 
-begin_extern
-extern|extern	errno;
-end_extern
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|struct
@@ -284,7 +293,7 @@ name|homedir
 block|,
 name|shell
 block|,
-literal|"PATH=:/usr/ucb:/bin:/usr/bin"
+name|_PATH_DEFPATH
 block|,
 name|username
 block|,
@@ -1145,7 +1154,7 @@ name|pwd
 operator|->
 name|pw_shell
 operator|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 expr_stmt|;
 if|if
 condition|(
