@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.39 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4510,6 +4510,16 @@ name|O_MHSA
 block|,
 name|TRUE
 block|,
+define|#
+directive|define
+name|O_DEFCHARSET
+value|0x85
+literal|"DefaultCharSet"
+block|,
+name|O_DEFCHARSET
+block|,
+name|TRUE
+block|,
 name|NULL
 block|,
 literal|'\0'
@@ -6562,6 +6572,18 @@ argument_list|(
 name|val
 argument_list|,
 literal|'m'
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|O_DEFCHARSET
+case|:
+comment|/* default character set for mimefying */
+name|DefCharSet
+operator|=
+name|newstr
+argument_list|(
+name|val
 argument_list|)
 expr_stmt|;
 break|break;
