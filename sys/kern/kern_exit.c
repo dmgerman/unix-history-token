@@ -447,7 +447,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Kill off the other threads. This requires 		 * Some co-operation from other parts of the kernel 		 * so it may not be instant. 		 * With this state set: 		 * Any thread entering the kernel from userspace will 		 * thread_exit() in trap().  Any thread attempting to 		 * sleep will return immediatly with EINTR or EWOULDBLOCK, 		 * which will hopefully force them to back out to userland, 		 * freeing resources as they go, and anything attempting 		 * to return to userland will thread_exit() from userret(). 		 * thread_exit() will unsuspend us when the last other 		 * thread exits. 		 */
+comment|/* 		 * Kill off the other threads. This requires 		 * Some co-operation from other parts of the kernel 		 * so it may not be instant. 		 * With this state set: 		 * Any thread entering the kernel from userspace will 		 * thread_exit() in trap().  Any thread attempting to 		 * sleep will return immediatly with EINTR or EWOULDBLOCK, 		 * which will hopefully force them to back out to userland, 		 * freeing resources as they go, and anything attempting 		 * to return to userland will thread_exit() from userret(). 		 * thread_exit() will unsuspend us when the last other 		 * thread exits. 		 * If there is already a thread singler after resumption, 		 * calling thread_single will fail, in the case, we just 		 * re-check all suspension request, the thread should 		 * either be suspended there or exit. 		 */
 if|if
 condition|(
 name|thread_single
