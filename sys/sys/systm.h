@@ -2260,29 +2260,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|await
-parameter_list|(
-name|pri
-parameter_list|,
-name|timo
-parameter_list|)
-value|mawait(NULL, pri, timo)
-end_define
-
 begin_decl_stmt
 name|int
-name|mawait
+name|await
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|mtx
-operator|*
-name|mtx
-operator|,
 name|int
 name|pri
 operator|,
