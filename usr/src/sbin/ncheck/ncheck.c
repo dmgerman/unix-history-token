@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ncheck.c	5.1 (Berkeley) %G%"
+literal|"@(#)ncheck.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ begin_define
 define|#
 directive|define
 name|HSIZE
-value|5651
+value|20011
 end_define
 
 begin_define
