@@ -256,13 +256,13 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: vidcontrol [-r fg bg] [-b color] [-c appearance] [-d] [-l scrmap]"
+literal|"usage: vidcontrol [-b color] [-c appearance] [-d] [-f [size] file] [-g geometry]"
 argument_list|,
-literal|"                  [-i adapter | mode] [-L] [-M char] [-m on|off]"
+literal|"                  [-i adapter | mode] [-l screen_map] [-L] [-m on | off]"
 argument_list|,
-literal|"                  [-f size file] [-s number] [-t N|off] [-x] [-g geometry]"
+literal|"                  [-M char] [-p] [-P] [-r foreground background] [-s number]"
 argument_list|,
-literal|"                  [-p] [-P] [mode] [fgcol [bgcol]] [show]"
+literal|"                  [-t N | off] [-x] [mode] [foreground [background]] [show]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3772,6 +3772,16 @@ argument_list|(
 name|info
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+comment|/* Not reached */
 if|if
 condition|(
 name|ioctl
