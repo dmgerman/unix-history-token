@@ -120,7 +120,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DUMMYNET
+name|IPFIREWALL
 argument_list|)
 end_if
 
@@ -136,11 +136,25 @@ directive|include
 file|<netinet/ip_fw.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DUMMYNET
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<netinet/ip_dummynet.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1931,6 +1945,9 @@ literal|1
 expr_stmt|;
 comment|/* and also canfree */
 block|}
+ifdef|#
+directive|ifdef
+name|IPFIREWALL
 comment|/*      * do filtering in a very similar way to what is done      * in ip_output. Only for IP packets, and only pass/fail/dummynet      * is supported. The tricky thing is to make sure that enough of      * the packet (basically, Eth+IP+TCP/UDP headers) is contiguous      * so that calls to m_pullup in ip_fw_chk will not kill the      * ethernet header.      */
 if|if
 condition|(
@@ -2342,6 +2359,9 @@ return|;
 block|}
 name|forward
 label|:
+endif|#
+directive|endif
+comment|/* IPFIREWALL */
 if|if
 condition|(
 name|canfree
