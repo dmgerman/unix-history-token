@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rtld.c,v 1.39 1996/10/10 23:16:50 jdp Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rtld.c,v 1.40 1996/10/24 16:24:19 jdp Exp $  */
 end_comment
 
 begin_include
@@ -689,6 +689,14 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
+name|ld_bind_now
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
 name|ld_library_path
 decl_stmt|;
 end_decl_stmt
@@ -922,6 +930,8 @@ operator|(
 expr|struct
 name|so_map
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1021,6 +1031,8 @@ operator|(
 expr|struct
 name|so_map
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1622,6 +1634,17 @@ name|crtp
 operator|->
 name|crt_prog
 expr_stmt|;
+comment|/* Some buggy versions of crt0.o have crt_ldso filled in as NULL. */
+if|if
+condition|(
+name|__progname
+operator|==
+name|NULL
+condition|)
+name|__progname
+operator|=
+name|us
+expr_stmt|;
 comment|/* Fill in some fields in _DYNAMIC or crt structure */
 if|if
 condition|(
@@ -1827,11 +1850,6 @@ condition|(
 name|ld_preload
 operator|!=
 name|NULL
-operator|&&
-operator|*
-name|ld_preload
-operator|!=
-literal|'\0'
 condition|)
 block|{
 if|if
@@ -1898,6 +1916,10 @@ condition|(
 name|reloc_and_init
 argument_list|(
 name|main_map
+argument_list|,
+name|ld_bind_now
+operator|!=
+name|NULL
 argument_list|)
 operator|==
 operator|-
@@ -4073,11 +4095,16 @@ name|int
 name|reloc_and_init
 parameter_list|(
 name|root
+parameter_list|,
+name|bind_now
 parameter_list|)
 name|struct
 name|so_map
 modifier|*
 name|root
+decl_stmt|;
+name|int
+name|bind_now
 decl_stmt|;
 block|{
 name|struct
@@ -4123,6 +4150,8 @@ condition|(
 name|reloc_map
 argument_list|(
 name|smp
+argument_list|,
+name|bind_now
 argument_list|)
 operator|<
 literal|0
@@ -4520,11 +4549,16 @@ name|int
 name|reloc_map
 parameter_list|(
 name|smp
+parameter_list|,
+name|bind_now
 parameter_list|)
 name|struct
 name|so_map
 modifier|*
 name|smp
+decl_stmt|;
+name|int
+name|bind_now
 decl_stmt|;
 block|{
 comment|/* 	 * Caching structure for reducing the number of calls to 	 * lookup() during relocation. 	 * 	 * While relocating a given shared object, the dynamic linker 	 * maintains a caching vector that is directly indexed by 	 * the symbol number in the relocation entry.  The first time 	 * a given symbol is looked up, the caching vector is 	 * filled in with a pointer to the symbol table entry, and 	 * a pointer to the so_map of the shared object in which the 	 * symbol was defined.  On subsequent uses of the same symbol, 	 * that information is retrieved directly from the caching 	 * vector, without calling lookup() again. 	 * 	 * A symbol that is referenced in a relocation entry is 	 * typically referenced in many relocation entries, so this 	 * caching reduces the number of calls to lookup() 	 * dramatically.  The overall improvement in the speed of 	 * dynamic linking is also dramatic -- as much as a factor 	 * of three for programs that use many shared libaries. 	 */
@@ -4802,10 +4836,13 @@ name|relocation
 decl_stmt|;
 if|if
 condition|(
-name|RELOC_LAZY_P
+name|RELOC_JMPTAB_P
 argument_list|(
 name|r
 argument_list|)
+operator|&&
+operator|!
+name|bind_now
 condition|)
 continue|continue;
 name|p
@@ -4894,8 +4931,10 @@ argument_list|,
 operator|&
 name|src_map
 argument_list|,
-literal|0
-comment|/*XXX-jumpslots!*/
+name|RELOC_JMPTAB_P
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Record the needed information about 				 * the symbol in the caching vector, 				 * so that we won't have to call 				 * lookup the next time we encounter 				 * the symbol. 				 */
@@ -4952,15 +4991,6 @@ block|}
 comment|/* 			 * Found symbol definition. 			 * If it's in a link map, adjust value 			 * according to the load address of that map. 			 * Otherwise it's a run-time allocated common 			 * whose value is already up-to-date. 			 */
 name|relocation
 operator|=
-name|md_get_addend
-argument_list|(
-name|r
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
-name|relocation
-operator|+=
 name|np
 operator|->
 name|nz_value
@@ -4977,6 +5007,32 @@ operator|)
 name|src_map
 operator|->
 name|som_addr
+expr_stmt|;
+if|if
+condition|(
+name|RELOC_JMPTAB_P
+argument_list|(
+name|r
+argument_list|)
+condition|)
+block|{
+name|md_bind_jmpslot
+argument_list|(
+name|relocation
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|relocation
+operator|+=
+name|md_get_addend
+argument_list|(
+name|r
+argument_list|,
+name|addr
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7541,6 +7597,14 @@ name|so_map
 modifier|*
 name|smp
 decl_stmt|;
+name|int
+name|bind_now
+init|=
+name|mode
+operator|==
+literal|2
+decl_stmt|;
+comment|/* XXX - s/2/RTLD_NOW/ in the above line, after putting the necessary 	   defines into<dlfcn.h> and testing for problems. */
 comment|/* 	 * path == NULL is handled by map_object() 	 */
 name|anon_open
 argument_list|()
@@ -7600,6 +7664,8 @@ condition|(
 name|reloc_and_init
 argument_list|(
 name|smp
+argument_list|,
+name|bind_now
 argument_list|)
 operator|==
 operator|-
@@ -8149,7 +8215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * rt_readenv() etc.  *  * Do a sweep over the environment once only, pick up what  * looks interesting.  *  * This is pretty obscure, but is relatively simple.  Simply  * look at each environment variable, if it starts with "LD_" then  * look closer at it.  If it's in our table, set the variable  * listed.  effectively, this is like:  *    ld_preload = careful ? NULL : getenv("LD_PRELOAD");  * except that the environment is scanned once only to pick up all  * known variables, rather than scanned multiple times for each  * variable.  */
+comment|/*  * rt_readenv() etc.  *  * Do a sweep over the environment once only, pick up what  * looks interesting.  *  * This is pretty obscure, but is relatively simple.  Simply  * look at each environment variable, if it starts with "LD_" then  * look closer at it.  If it's in our table, set the variable  * listed.  effectively, this is like:  *    ld_preload = careful ? NULL : getenv("LD_PRELOAD");  * except that the environment is scanned once only to pick up all  * known variables, rather than scanned multiple times for each  * variable.  *  * If an environment variable of interest is set to the empty string, we  * treat it as if it were unset.  */
 end_comment
 
 begin_define
@@ -8216,6 +8282,14 @@ argument|&ld_tracing
 argument_list|)
 name|L
 argument_list|(
+literal|"LD_BIND_NOW="
+argument_list|,
+literal|0
+argument_list|,
+argument|&ld_bind_now
+argument_list|)
+name|L
+argument_list|(
 literal|"LD_SUPPRESS_WARNINGS="
 argument_list|,
 literal|0
@@ -8248,6 +8322,7 @@ name|L
 end_undef
 
 begin_function
+specifier|static
 name|void
 name|rt_readenv
 parameter_list|()
@@ -8347,6 +8422,20 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+operator|(
+name|v
+operator|+
+name|t
+operator|->
+name|len
+operator|)
+operator|!=
+literal|'\0'
+condition|)
+comment|/* Not empty */
 operator|*
 name|t
 operator|->
