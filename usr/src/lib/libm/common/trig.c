@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trig.c	1.2 (Berkeley) 8/22/85; 1.4 (ucb.elefunt) %G%"
+literal|"@(#)trig.c	1.2 (Berkeley) 8/22/85; 1.5 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -440,11 +440,28 @@ decl_stmt|,
 name|c
 decl_stmt|;
 name|int
-name|finite
-argument_list|()
-decl_stmt|,
 name|k
 decl_stmt|;
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+specifier|extern
+name|int
+name|finite
+parameter_list|()
+function_decl|;
 comment|/* tan(NaN) and tan(INF) must be NaN */
 if|if
 condition|(
@@ -461,6 +478,8 @@ operator|-
 name|x
 operator|)
 return|;
+endif|#
+directive|endif
 name|x
 operator|=
 name|drem
@@ -657,6 +676,22 @@ name|c
 decl_stmt|,
 name|z
 decl_stmt|;
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+specifier|extern
 name|int
 name|finite
 parameter_list|()
@@ -677,6 +712,8 @@ operator|-
 name|x
 operator|)
 return|;
+endif|#
+directive|endif
 name|x
 operator|=
 name|drem
@@ -862,6 +899,22 @@ name|s
 init|=
 literal|1.0
 decl_stmt|;
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+specifier|extern
 name|int
 name|finite
 parameter_list|()
@@ -882,6 +935,8 @@ operator|-
 name|x
 operator|)
 return|;
+endif|#
+directive|endif
 name|x
 operator|=
 name|drem

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atan2.c	1.3 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
+literal|"@(#)atan2.c	1.3 (Berkeley) 8/21/85; 1.5 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -988,6 +988,21 @@ name|k
 decl_stmt|,
 name|m
 decl_stmt|;
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 comment|/* if x or y is NAN */
 if|if
 condition|(
@@ -1011,6 +1026,8 @@ operator|(
 name|y
 operator|)
 return|;
+endif|#
+directive|endif
 comment|/* copy down the sign of y and x */
 name|signy
 operator|=
@@ -1104,6 +1121,21 @@ name|signy
 argument_list|)
 operator|)
 return|;
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 comment|/* when x is INF */
 if|if
 condition|(
@@ -1179,6 +1211,8 @@ name|signy
 argument_list|)
 operator|)
 return|;
+endif|#
+directive|endif
 comment|/* compute y/x */
 name|x
 operator|=

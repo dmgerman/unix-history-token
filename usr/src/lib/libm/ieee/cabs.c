@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cabs.c	1.2 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
+literal|"@(#)cabs.c	1.2 (Berkeley) 8/21/85; 1.5 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,6 +361,21 @@ argument_list|()
 decl_stmt|,
 name|exp
 decl_stmt|;
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 name|finite
@@ -376,6 +391,8 @@ name|y
 argument_list|)
 condition|)
 block|{
+endif|#
+directive|endif
 name|x
 operator|=
 name|copysign
@@ -558,6 +575,21 @@ operator|+
 name|r
 operator|)
 return|;
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 block|}
 elseif|else
 if|if
@@ -641,6 +673,8 @@ argument_list|)
 operator|)
 return|;
 comment|/* y is INF */
+endif|#
+directive|endif
 block|}
 end_function
 

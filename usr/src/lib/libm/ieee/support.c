@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)support.c	1.1 (Berkeley) 5/23/85; 1.8 (ucb.elefunt) %G%"
+literal|"@(#)support.c	1.1 (Berkeley) 5/23/85; 1.9 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*   * Some IEEE standard p754 recommended functions and remainder and sqrt for   * supporting the C elementary functions.  ******************************************************************************  * WARNING:  *      These codes are developed (in double) to support the C elementary  * functions temporarily. They are not universal, and some of them are very  * slow (in particular, drem and sqrt is extremely inefficient). Each   * computer system should have its implementation of these functions using   * its own assembler.  ******************************************************************************  *  * IEEE p754 required operations:  *     drem(x,p)   *              returns  x REM y  =  x - [x/y]*y , where [x/y] is the integer  *              nearest x/y; in half way case, choose the even one.  *     sqrt(x)   *              returns the square root of x correctly rounded according to   *		the rounding mod.  *  * IEEE p754 recommended functions:  * (a) copysign(x,y)   *              returns x with the sign of y.   * (b) scalb(x,N)   *              returns  x * (2**N), for integer values N.  * (c) logb(x)   *              returns the unbiased exponent of x, a signed integer in   *              double precision, except that logb(0) is -INF, logb(INF)   *              is +INF, and logb(NAN) is that NAN.  * (d) finite(x)   *              returns the value TRUE if -INF< x< +INF and returns   *              FALSE otherwise.  *  *  * CODED IN C BY K.C. NG, 11/25/84;  * REVISED BY K.C. NG on 1/22/85, 2/13/85, 3/24/85.  */
+comment|/*   * Some IEEE standard 754 recommended functions and remainder and sqrt for   * supporting the C elementary functions.  ******************************************************************************  * WARNING:  *      These codes are developed (in double) to support the C elementary  * functions temporarily. They are not universal, and some of them are very  * slow (in particular, drem and sqrt is extremely inefficient). Each   * computer system should have its implementation of these functions using   * its own assembler.  ******************************************************************************  *  * IEEE 754 required operations:  *     drem(x,p)   *              returns  x REM y  =  x - [x/y]*y , where [x/y] is the integer  *              nearest x/y; in half way case, choose the even one.  *     sqrt(x)   *              returns the square root of x correctly rounded according to   *		the rounding mod.  *  * IEEE 754 recommended functions:  * (a) copysign(x,y)   *              returns x with the sign of y.   * (b) scalb(x,N)   *              returns  x * (2**N), for integer values N.  * (c) logb(x)   *              returns the unbiased exponent of x, a signed integer in   *              double precision, except that logb(0) is -INF, logb(INF)   *              is +INF, and logb(NAN) is that NAN.  * (d) finite(x)   *              returns the value TRUE if -INF< x< +INF and returns   *              FALSE otherwise.  *  *  * CODED IN C BY K.C. NG, 11/25/84;  * REVISED BY K.C. NG on 1/22/85, 2/13/85, 3/24/85.  */
 end_comment
 
 begin_if
@@ -48,6 +48,12 @@ end_if
 begin_comment
 comment|/* VAX D format */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -281,13 +287,29 @@ name|N
 operator|>
 literal|260
 condition|)
+block|{
+specifier|extern
+name|double
+name|infnan
+argument_list|()
+decl_stmt|,
+name|copysign
+argument_list|()
+decl_stmt|;
 return|return
 operator|(
-name|novf
-operator|+
-name|novf
+name|copysign
+argument_list|(
+name|infnan
+argument_list|(
+name|ERANGE
+argument_list|)
+argument_list|,
+name|x
+argument_list|)
 operator|)
 return|;
+block|}
 else|#
 directive|else
 comment|/* IEEE */
@@ -790,7 +812,7 @@ argument_list|)
 operator|)
 return|return
 operator|(
-literal|1.0
+literal|1
 operator|)
 return|;
 else|#
@@ -1018,6 +1040,7 @@ operator|==
 operator|~
 name|msign
 condition|)
+comment|/* is x a reserved operand? */
 else|#
 directive|else
 comment|/* IEEE */
@@ -1054,11 +1077,43 @@ name|p
 operator|==
 name|zero
 condition|)
+block|{
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+specifier|extern
+name|double
+name|infnan
+parameter_list|()
+function_decl|;
+return|return
+operator|(
+name|infnan
+argument_list|(
+name|EDOM
+argument_list|)
+operator|)
+return|;
+else|#
+directive|else
 return|return
 name|zero
 operator|/
 name|zero
 return|;
+endif|#
+directive|endif
+block|}
 if|#
 directive|if
 operator|(
@@ -1084,6 +1139,7 @@ operator|==
 operator|~
 name|msign
 condition|)
+comment|/* is p a reserved operand? */
 else|#
 directive|else
 comment|/* IEEE */
@@ -1459,6 +1515,37 @@ name|x
 operator|<
 name|zero
 condition|)
+block|{
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+specifier|extern
+name|double
+name|infnan
+parameter_list|()
+function_decl|;
+return|return
+operator|(
+name|infnan
+argument_list|(
+name|EDOM
+argument_list|)
+operator|)
+return|;
+comment|/* NaN */
+else|#
+directive|else
+comment|/* IEEE double */
 return|return
 operator|(
 name|zero
@@ -1466,6 +1553,9 @@ operator|/
 name|zero
 operator|)
 return|;
+endif|#
+directive|endif
+block|}
 comment|/* sqrt(INF) is INF */
 if|if
 condition|(
