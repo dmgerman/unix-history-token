@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.19 (Berkeley) %G%"
+literal|"@(#)tape.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,59 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sunos
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/inode.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -45,6 +98,11 @@ include|#
 directive|include
 file|<ufs/dinode.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
