@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: dec_eb164.c,v 1.4 1998/08/10 07:53:58 dfr Exp $ */
+comment|/* $Id: dec_eb164.c,v 1.5 1998/12/05 22:36:31 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -281,6 +281,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|comconsole
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX for forcing comconsole when srm serial console is used */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -340,10 +351,6 @@ case|:
 comment|/* serial console ... */
 comment|/* XXX */
 block|{
-specifier|extern
-name|int
-name|comconsole
-decl_stmt|;
 comment|/* 			 * Delay to allow PROM putchars to complete. 			 * FIFO depth * character time, 			 * character time = (1000000 / (defaultrate / 10)) 			 */
 name|DELAY
 argument_list|(
@@ -419,6 +426,9 @@ name|panic
 argument_list|(
 literal|"consinit: unknown console type %d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ctb
 operator|->
 name|ctb_term_type
