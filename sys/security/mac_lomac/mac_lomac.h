@@ -147,10 +147,6 @@ comment|/* Equivilent to any 					 * MAC_LOMAC_TYPE_LABEL. */
 end_comment
 
 begin_comment
-comment|/* XXXMAC: temporarily disabled because we still need struct oldmac. */
-end_comment
-
-begin_comment
 comment|/*  * Structures and constants associated with a LOMAC Integrity policy.  * mac_lomac represents a LOMAC label, with mb_type determining its properties,  * and mb_grade represents the hierarchal grade if valid for the current  * mb_type.  */
 end_comment
 
