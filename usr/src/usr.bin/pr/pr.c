@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 Keith Muller.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1991 Keith Muller.  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1991 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1993 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr.c	5.1 (Berkeley) %G%"
+literal|"@(#)pr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -86,19 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -403,28 +403,10 @@ begin_comment
 comment|/* page number translation map */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|)
-else|#
-directive|else
-function|int main
-parameter_list|(
 name|argc
 parameter_list|,
 name|argv
@@ -434,11 +416,9 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int
 name|ret_val
@@ -564,28 +544,10 @@ begin_comment
 comment|/*  * onecol:	print files with only one column of output.  *		Line length is unlimited.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|int
 name|onecol
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|)
-else|#
-directive|else
-function|int onecol
-parameter_list|(
 name|argc
 parameter_list|,
 name|argv
@@ -595,11 +557,9 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|int
@@ -1138,28 +1098,10 @@ begin_comment
 comment|/*  * vertcol:	print files with more than one column of output down a page  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|int
 name|vertcol
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|)
-else|#
-directive|else
-function|int vertcol
-parameter_list|(
 name|argc
 parameter_list|,
 name|argv
@@ -1169,11 +1111,9 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|char
@@ -2398,28 +2338,10 @@ begin_comment
 comment|/*  * horzcol:	print files with more than one column of output across a page  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|int
 name|horzcol
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|)
-else|#
-directive|else
-function|int horzcol
-parameter_list|(
 name|argc
 parameter_list|,
 name|argv
@@ -2429,11 +2351,9 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|char
@@ -2977,28 +2897,10 @@ begin_comment
 comment|/*  * mulfile:	print files with more than one column of output and  *		more than one file concurrently  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|int
 name|mulfile
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|)
-else|#
-directive|else
-function|int mulfile
-parameter_list|(
 name|argc
 parameter_list|,
 name|argv
@@ -3008,11 +2910,9 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|char
@@ -3803,43 +3703,10 @@ begin_comment
 comment|/*  * inln():	input a line of data (unlimited length lines supported)  *		Input is optionally expanded to spaces  *  *	inf:	file  *	buf:	buffer  *	lim:	buffer length  *	cps:	column positon 1st char in buffer (large line support)  *	trnc:	throw away data more than lim up to \n   *	mor:	set if more data in line (not truncated)  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|int
 name|inln
 parameter_list|(
-name|FILE
-modifier|*
-name|inf
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|,
-specifier|register
-name|int
-name|lim
-parameter_list|,
-name|int
-modifier|*
-name|cps
-parameter_list|,
-name|int
-name|trnc
-parameter_list|,
-name|int
-modifier|*
-name|mor
-parameter_list|)
-else|#
-directive|else
-function|int inln
-parameter_list|(
 name|inf
 parameter_list|,
 name|buf
@@ -3875,8 +3742,6 @@ name|int
 modifier|*
 name|mor
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|int
@@ -4207,89 +4072,39 @@ begin_comment
 comment|/*  * otln():	output a line of data. (Supports unlimited length lines)  *		output is optionally contracted to tabs  *  *	buf:	output buffer with data  *	cnt:	number of chars of valid data in buf  *	svips:	buffer input column position (for large lines)  *	svops:	buffer output column position (for large lines)  *	mor:	output line not complete in this buf; more data to come.	  *		1 is more, 0 is complete, -1 is no \n's  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_decl_stmt
+begin_function
 name|int
 name|otln
-argument_list|(
+parameter_list|(
+name|buf
+parameter_list|,
+name|cnt
+parameter_list|,
+name|svips
+parameter_list|,
+name|svops
+parameter_list|,
+name|mor
+parameter_list|)
 specifier|register
 name|char
-operator|*
-name|buf
-argument_list|,
-name|int
-name|cnt
-argument_list|,
-name|int
-operator|*
-name|svops
-argument_list|,
-name|int
-operator|*
-name|svips
-argument_list|,
-name|int
-name|mor
-argument_list|)
-else|#
-directive|else
-name|int
-name|otln
-argument_list|(
-name|buf
-argument_list|,
-name|cnt
-argument_list|,
-name|svips
-argument_list|,
-name|svops
-argument_list|,
-name|mor
-argument_list|)
-decl|register
-name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cnt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|svops
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|svips
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|mor
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -4706,38 +4521,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * inskip():	skip over pgcnt pages with lncnt lines per page  *		file is closed at EOF (if not stdin).  *  *	inf	FILE * to read from  *	pgcnt	number of pages to skip  *	lncnt	number of lines per page  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|int
 name|inskip
 parameter_list|(
-name|FILE
-modifier|*
-name|inf
-parameter_list|,
-specifier|register
-name|int
-name|pgcnt
-parameter_list|,
-specifier|register
-name|int
-name|lncnt
-parameter_list|)
-else|#
-directive|else
-function|int inskip
-parameter_list|(
 name|inf
 parameter_list|,
 name|pgcnt
@@ -4756,8 +4549,6 @@ specifier|register
 name|int
 name|lncnt
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|int
@@ -4850,41 +4641,11 @@ begin_comment
 comment|/*  * nxtfile:	returns a FILE * to next file in arg list and sets the  *		time field for this file (or current date).  *  *	buf	array to store proper date for the header.  *	dt	if set skips the date processing (used with -m)  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|FILE
 modifier|*
 name|nxtfile
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|fname
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|dt
-parameter_list|)
-else|#
-directive|else
-function|FILE * nxtfile
-parameter_list|(
 name|argc
 parameter_list|,
 name|argv
@@ -4915,8 +4676,6 @@ decl_stmt|;
 name|int
 name|dt
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|FILE
 modifier|*
@@ -5484,67 +5243,29 @@ begin_comment
 comment|/*  * addnum():	adds the line number to the column  *		Truncates from the front or pads with spaces as required.  *		Numbers are right justified.  *  *	buf	buffer to store the number  *	wdth	width of buffer to fill  *	line	line number  *  *		NOTE: numbers occupy part of the column. The posix  *		spec does not specify if -i processing should or should not  *		occur on number padding. The spec does say it occupies  *		part of the column. The usage of addnum	currently treats  *		numbers as part of the column so spaces may be replaced.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_decl_stmt
+begin_function
 name|void
 name|addnum
-argument_list|(
-specifier|register
-name|char
-operator|*
+parameter_list|(
 name|buf
-argument_list|,
-specifier|register
-name|int
+parameter_list|,
 name|wdth
-argument_list|,
+parameter_list|,
+name|line
+parameter_list|)
 specifier|register
-name|int
-name|line
-argument_list|)
-else|#
-directive|else
-name|void
-name|addnum
-argument_list|(
-name|buf
-argument_list|,
-name|wdth
-argument_list|,
-name|line
-argument_list|)
-decl|register
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|int
 name|wdth
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|int
 name|line
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -5598,37 +5319,16 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * prhead():	prints the top of page header  *  *	buf	buffer with time field (and offset)  *	cnt	number of chars in buf  *	fname	fname field for header  *	pagcnt	page number  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|int
 name|prhead
 parameter_list|(
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|char
-modifier|*
-name|fname
-parameter_list|,
-name|int
-name|pagcnt
-parameter_list|)
-else|#
-directive|else
-function|int prhead
-parameter_list|(
 name|buf
 parameter_list|,
 name|fname
@@ -5646,8 +5346,6 @@ decl_stmt|;
 name|int
 name|pagcnt
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int
 name|ips
@@ -5743,50 +5441,21 @@ begin_comment
 comment|/*  * prtail():	pad page with empty lines (if required) and print page trailer  *		if requested  *  *	cnt	number of lines of padding needed  *	incomp	was a '\n' missing from last line output  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_decl_stmt
+begin_function
 name|int
 name|prtail
-argument_list|(
+parameter_list|(
+name|cnt
+parameter_list|,
+name|incomp
+parameter_list|)
 specifier|register
 name|int
 name|cnt
-argument_list|,
-name|int
-name|incomp
-argument_list|)
-else|#
-directive|else
-name|int
-name|prtail
-argument_list|(
-name|cnt
-argument_list|,
-name|incomp
-argument_list|)
-decl|register
-name|int
-name|cnt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|incomp
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
 block|{
 if|if
 condition|(
@@ -5945,36 +5614,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * terminate():	when a SIGINT is recvd  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|void
 name|terminate
-parameter_list|(
-name|int
-name|which_sig
-parameter_list|)
-else|#
-directive|else
-function|void terminate
 parameter_list|(
 name|which_sig
 parameter_list|)
 name|int
 name|which_sig
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|flsh_errs
 argument_list|()
@@ -5991,25 +5645,10 @@ begin_comment
 comment|/*  * flsh_errs():	output saved up diagnostic messages after all normal  *		processing has completed  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_decl_stmt
+begin_function
 name|void
 name|flsh_errs
-argument_list|(
-name|void
-argument_list|)
-else|#
-directive|else
-name|void
-name|flsh_errs
-argument_list|()
-endif|#
-directive|endif
+parameter_list|()
 block|{
 name|char
 name|buf
@@ -6069,27 +5708,12 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_decl_stmt
+begin_function
 name|void
 name|mfail
-argument_list|(
-name|void
-argument_list|)
-else|#
-directive|else
-name|void
-name|mfail
-argument_list|()
-endif|#
-directive|endif
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -6102,27 +5726,12 @@ name|err
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_decl_stmt
+begin_function
 name|void
 name|pfail
-argument_list|(
-name|void
-argument_list|)
-else|#
-directive|else
-name|void
-name|pfail
-argument_list|()
-endif|#
-directive|endif
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -6140,27 +5749,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_decl_stmt
+begin_function
 name|void
 name|usage
-argument_list|(
-name|void
-argument_list|)
-else|#
-directive|else
-name|void
-name|usage
-argument_list|()
-endif|#
-directive|endif
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -6193,62 +5787,30 @@ name|err
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * setup:	Validate command args, initialize and perform sanity   *		checks on options  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_decl_stmt
+begin_function
 name|int
 name|setup
-argument_list|(
-specifier|register
-name|int
+parameter_list|(
 name|argc
-argument_list|,
+parameter_list|,
+name|argv
+parameter_list|)
 specifier|register
-name|char
-operator|*
-operator|*
-name|argv
-argument_list|)
-else|#
-directive|else
-name|int
-name|setup
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|)
-decl|register
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -7422,7 +6984,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1991 Keith Muller.  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)egetopt.c	5.1 (Berkeley) %G%"
+literal|"@(#)egetopt.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -121,34 +121,10 @@ name|EMSG
 value|""
 end_define
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function
 name|int
 name|egetopt
 parameter_list|(
-name|int
-name|nargc
-parameter_list|,
-name|char
-modifier|*
-specifier|const
-modifier|*
-name|nargv
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|ostr
-parameter_list|)
-else|#
-directive|else
-function|int egetopt
-parameter_list|(
 name|nargc
 parameter_list|,
 name|nargv
@@ -160,15 +136,15 @@ name|nargc
 decl_stmt|;
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|nargv
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ostr
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|static
 name|char
@@ -342,7 +318,7 @@ operator|!
 operator|(
 name|oli
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|ostr
 argument_list|,
@@ -374,7 +350,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|ostr
 argument_list|,
@@ -509,7 +485,7 @@ operator|!
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 operator|*
 name|nargv
@@ -579,7 +555,7 @@ operator|!
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 operator|*
 name|nargv
@@ -710,7 +686,7 @@ operator|!
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 operator|*
 name|nargv
