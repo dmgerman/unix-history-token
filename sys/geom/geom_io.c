@@ -1298,9 +1298,9 @@ name|mymutex
 argument_list|,
 literal|"g_xdown"
 argument_list|,
-name|MTX_DEF
+name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 for|for
@@ -1546,9 +1546,9 @@ name|mymutex
 argument_list|,
 literal|"g_xup"
 argument_list|,
-name|MTX_DEF
+name|NULL
 argument_list|,
-literal|0
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 for|for
