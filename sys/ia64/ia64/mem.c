@@ -176,7 +176,7 @@ begin_function
 name|int
 name|memrw
 parameter_list|(
-name|strct
+name|struct
 name|cdev
 modifier|*
 name|dev
@@ -528,7 +528,7 @@ begin_function
 name|int
 name|memmmap
 parameter_list|(
-name|strct
+name|struct
 name|cdev
 modifier|*
 name|dev
