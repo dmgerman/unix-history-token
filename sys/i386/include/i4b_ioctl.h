@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 2001 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 10 13:11:17 2001]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2001 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Sun Dec 16 15:09:12 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|REL
-value|0
+value|1
 end_define
 
 begin_comment
@@ -832,6 +832,17 @@ begin_comment
 comment|/* max length of datetime information (+ '\0')*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KEYPAD_MAX
+value|35
+end_define
+
+begin_comment
+comment|/* max length of a keypad string (+ '\0')     */
+end_comment
+
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	in case the src or dst telephone number is empty  *---------------------------------------------------------------------------*/
 end_comment
@@ -1139,6 +1150,10 @@ define|#
 directive|define
 name|MSG_PACKET_IND
 value|'q'
+define|#
+directive|define
+name|MSG_KEYPAD_IND
+value|'r'
 name|int
 name|cdid
 decl_stmt|;
@@ -1425,6 +1440,42 @@ decl_stmt|;
 comment|/* the number to dial	*/
 block|}
 name|msg_dialoutnumber_ind_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	send keypad string  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|msg_hdr_t
+name|header
+decl_stmt|;
+comment|/* common header	*/
+name|int
+name|driver
+decl_stmt|;
+comment|/* driver type		*/
+name|int
+name|driver_unit
+decl_stmt|;
+comment|/* driver unit number	*/
+name|int
+name|cmdlen
+decl_stmt|;
+comment|/* length of string	*/
+name|char
+name|cmd
+index|[
+name|KEYPAD_MAX
+index|]
+decl_stmt|;
+comment|/* keypad string	*/
+block|}
+name|msg_keypad_ind_t
 typedef|;
 end_typedef
 
@@ -1859,6 +1910,13 @@ name|TELNO_MAX
 index|]
 decl_stmt|;
 comment|/* source telephone number   */
+name|char
+name|keypad
+index|[
+name|KEYPAD_MAX
+index|]
+decl_stmt|;
+comment|/* keypad string 	     */
 block|}
 name|msg_connect_req_t
 typedef|;
