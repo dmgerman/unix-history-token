@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cleanerd.c	5.9 (Berkeley) %G%"
+literal|"@(#)cleanerd.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -608,9 +608,6 @@ decl_stmt|;
 block|{
 name|FS_INFO
 modifier|*
-name|lfp
-decl_stmt|,
-modifier|*
 name|fsp
 decl_stmt|;
 name|struct
@@ -628,18 +625,21 @@ name|fsid_t
 name|fsid
 decl_stmt|;
 name|int
-name|count
-decl_stmt|;
-comment|/* number of file systems */
-name|int
 name|i
-decl_stmt|,
-name|nclean
 decl_stmt|;
 name|int
 name|opt
 decl_stmt|,
 name|cmd_err
+decl_stmt|;
+name|char
+modifier|*
+name|fs_name
+decl_stmt|;
+comment|/* name of filesystem to clean */
+specifier|extern
+name|int
+name|optind
 decl_stmt|;
 name|cmd_err
 operator|=
@@ -691,16 +691,37 @@ name|cmd_err
 expr_stmt|;
 block|}
 block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
 name|cmd_err
+operator|||
+operator|(
+name|argc
+operator|!=
+literal|1
+operator|)
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"usage: lfs_cleanerd [-su]"
+literal|"usage: lfs_cleanerd [-sm] fs_name"
 argument_list|)
+expr_stmt|;
+name|fs_name
+operator|=
+name|argv
+index|[
+literal|0
+index|]
 expr_stmt|;
 name|signal
 argument_list|(
@@ -723,16 +744,32 @@ argument_list|,
 name|sig_report
 argument_list|)
 expr_stmt|;
-name|count
-operator|=
+if|if
+condition|(
 name|fs_getmntinfo
 argument_list|(
 operator|&
 name|lstatfsp
 argument_list|,
+name|fs_name
+argument_list|,
 name|MOUNT_LFS
 argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* didn't find the filesystem */
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"lfs_cleanerd: filesystem %s isn't an LFS!"
+argument_list|,
+name|fs_name
+argument_list|)
 expr_stmt|;
+block|}
 name|timeout
 operator|.
 name|tv_sec
@@ -774,8 +811,6 @@ name|get_fs_info
 argument_list|(
 name|lstatfsp
 argument_list|,
-name|count
-argument_list|,
 name|do_mmap
 argument_list|)
 init|;
@@ -784,47 +819,17 @@ name|reread_fs_info
 argument_list|(
 name|fsp
 argument_list|,
-name|count
-argument_list|,
 name|do_mmap
 argument_list|)
 control|)
 block|{
-for|for
-control|(
-name|nclean
-operator|=
-literal|0
-operator|,
-name|lfp
-operator|=
-name|fsp
-operator|,
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|count
-condition|;
-operator|++
-name|lfp
-operator|,
-operator|++
-name|i
-control|)
-name|nclean
-operator|+=
-name|clean_loop
-argument_list|(
-name|lfp
-argument_list|)
-expr_stmt|;
-comment|/* 		 * If some file systems were actually cleaned, run again 		 * to make sure that some nasty process hasn't just 		 * filled the disk system up. 		 */
+comment|/* 		 * clean the filesystem, and, if it needed cleaning 		 * (i.e. it returned nonzero) try it again 		 * to make sure that some nasty process hasn't just 		 * filled the disk system up. 		 */
 if|if
 condition|(
-name|nclean
+name|clean_loop
+argument_list|(
+name|fsp
+argument_list|)
 condition|)
 continue|continue;
 ifdef|#
