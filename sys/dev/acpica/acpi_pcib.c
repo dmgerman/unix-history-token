@@ -380,7 +380,7 @@ name|NULL
 expr_stmt|;
 name|interrupt
 operator|=
-literal|255
+name|PCI_INVALID_IRQ
 expr_stmt|;
 comment|/* ACPI numbers pins 0-3, not 1-4 like the BIOS. */
 name|pin
@@ -1538,7 +1538,6 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-comment|/* XXX APIC_IO interrupt mapping? */
 name|return_VALUE
 argument_list|(
 name|interrupt
