@@ -752,12 +752,6 @@ directive|include
 file|<i386/include/cputypes.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/include/vmparam.h>
-end_include
-
 begin_elif
 elif|#
 directive|elif
@@ -777,6 +771,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<machine/vmparam.h>
+end_include
 
 begin_include
 include|#
