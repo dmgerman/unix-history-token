@@ -5729,7 +5729,7 @@ name|td_base_pri
 operator|=
 name|prio
 expr_stmt|;
-comment|/* 	 * If the therad is borrowing another thread's priority, don't 	 * ever lower the priority. 	 */
+comment|/* 	 * If the thread is borrowing another thread's priority, don't 	 * ever lower the priority. 	 */
 if|if
 condition|(
 name|td
