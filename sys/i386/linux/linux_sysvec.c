@@ -2246,6 +2246,13 @@ name|oonstack
 decl_stmt|,
 name|i
 decl_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SIGISMEMBER
