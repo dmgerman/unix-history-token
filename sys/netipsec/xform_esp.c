@@ -1756,8 +1756,6 @@ operator|->
 name|crp_flags
 operator|=
 name|CRYPTO_F_IMBUF
-operator||
-name|CRYPTO_F_NODELAY
 expr_stmt|;
 name|crp
 operator|->

@@ -400,7 +400,11 @@ value|2
 name|u_int16_t
 name|flags
 decl_stmt|;
-comment|/* always 0 */
+define|#
+directive|define
+name|COP_F_BATCH
+value|0x0008
+comment|/* Batch op if possible */
 name|u_int
 name|len
 decl_stmt|;
@@ -891,9 +895,14 @@ value|0x0004
 comment|/* Must return data in same place */
 define|#
 directive|define
-name|CRYPTO_F_NODELAY
+name|CRYPTO_F_BATCH
 value|0x0008
-comment|/* Dispatch as quickly as possible */
+comment|/* Batch op if possible */
+define|#
+directive|define
+name|CRYPTO_F_CBIMM
+value|0x0010
+comment|/* Do callback immediately */
 name|caddr_t
 name|crp_buf
 decl_stmt|;

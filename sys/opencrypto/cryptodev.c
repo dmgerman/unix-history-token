@@ -1867,6 +1867,16 @@ operator|->
 name|crp_flags
 operator|=
 name|CRYPTO_F_IOV
+operator||
+name|CRYPTO_F_CBIMM
+operator||
+operator|(
+name|cop
+operator|->
+name|flags
+operator|&
+name|COP_F_BATCH
+operator|)
 expr_stmt|;
 name|crp
 operator|->
