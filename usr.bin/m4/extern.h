@@ -1063,6 +1063,10 @@ name|bp
 condition|)
 return|return
 operator|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|bp
 operator|)
