@@ -5778,6 +5778,29 @@ name|DIST_XF86_BIN
 block|}
 block|,
 block|{
+literal|" lib"
+block|,
+literal|"Data files needed at runtime"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_LIB
+block|}
+block|,
+block|{
 literal|" cfg"
 block|,
 literal|"Configuration files"
@@ -5798,6 +5821,52 @@ block|,
 literal|']'
 block|,
 name|DIST_XF86_CFG
+block|}
+block|,
+block|{
+literal|" set"
+block|,
+literal|"XFree86 Setup Utility"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_SET
+block|}
+block|,
+block|{
+literal|" man"
+block|,
+literal|"Manual pages"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|XF86Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86_MAN
 block|}
 block|,
 block|{
@@ -5847,29 +5916,6 @@ name|DIST_XF86_HTML
 block|}
 block|,
 block|{
-literal|" lib"
-block|,
-literal|"Data files needed at runtime"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_LIB
-block|}
-block|,
-block|{
 literal|" lkit"
 block|,
 literal|"Server link kit for all other machines"
@@ -5893,29 +5939,6 @@ name|DIST_XF86_LKIT
 block|}
 block|,
 block|{
-literal|" man"
-block|,
-literal|"Manual pages"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_MAN
-block|}
-block|,
-block|{
 literal|" prog"
 block|,
 literal|"Programmer's header and library files"
@@ -5936,29 +5959,6 @@ block|,
 literal|']'
 block|,
 name|DIST_XF86_PROG
-block|}
-block|,
-block|{
-literal|" set"
-block|,
-literal|"XFree86 Setup Utility"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SET
 block|}
 block|,
 if|#
