@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.38
+literal|3.39
 operator|%
 name|G
 operator|%
@@ -25,33 +25,6 @@ end_expr_stmt
 
 begin_comment
 comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn p f s r a	Define mailer.  n - internal name, **				p - pathname, f - flags, s - rewriting **				ruleset for sender, s - rewriting ruleset **				for recipients, a - argument vector. **		Oxvalue		Set option x to value. **		Pname=value	Set precedence name to value. ** **	Parameters: **		cfname -- control file name. **		safe -- set if this is a system configuration file. **			Non-system configuration files can not do **			certain things (e.g., leave the SUID bit on **			when executing mailers). ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXTRUST
-value|10
-end_define
-
-begin_comment
-comment|/* maximum number of trusted users */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|TrustedUsers
-index|[
-name|MAXTRUST
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list of trusted users */
 end_comment
 
 begin_macro
@@ -2292,7 +2265,7 @@ if|if
 condition|(
 name|index
 argument_list|(
-literal|"cfimosv"
+literal|"acfimosv"
 argument_list|,
 name|opt
 argument_list|)
@@ -2368,6 +2341,15 @@ condition|)
 name|AliasFile
 operator|=
 literal|"aliases"
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+comment|/* look for "@:@" in alias file */
+name|SafeAlias
+operator|=
+name|bval
 expr_stmt|;
 break|break;
 case|case

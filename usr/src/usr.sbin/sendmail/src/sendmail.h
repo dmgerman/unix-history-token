@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.92		%G%"
+literal|"@(#)sendmail.h	3.93		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,6 +208,17 @@ end_define
 
 begin_comment
 comment|/* max values for Precedence: field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXTRUST
+value|30
+end_define
+
+begin_comment
+comment|/* maximum number of trusted users */
 end_comment
 
 begin_define
@@ -1986,6 +1997,17 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|bool
+name|SafeAlias
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* alias file must have "@:@" to be complete */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|time_t
 name|TimeOut
 decl_stmt|;
@@ -2267,6 +2289,23 @@ end_decl_stmt
 
 begin_comment
 comment|/* location of queue directory */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|TrustedUsers
+index|[
+name|MAXTRUST
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list of trusted users */
 end_comment
 
 begin_decl_stmt

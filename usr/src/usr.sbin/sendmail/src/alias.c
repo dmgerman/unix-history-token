@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.38
+literal|3.39
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.38
+literal|3.39
 operator|%
 name|G
 operator|%
@@ -487,18 +487,23 @@ name|TRUE
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|DBM
 comment|/* 	**  Check to see that the alias file is complete. 	**	If not, we will assume that someone died, and it is up 	**	to us to rebuild it. 	*/
 name|dbminit
 argument_list|(
 name|aliasfile
 argument_list|)
 expr_stmt|;
-for|for
-control|(
 name|atcnt
 operator|=
 literal|10
-init|;
+expr_stmt|;
+while|while
+condition|(
+name|SafeAlias
+operator|&&
 operator|!
 name|init
 operator|&&
@@ -513,16 +518,12 @@ literal|"@"
 argument_list|)
 operator|==
 name|NULL
-condition|;
-control|)
+condition|)
 name|sleep
 argument_list|(
 literal|30
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DBM
 comment|/* 	**  See if the DBM version of the file is out of date with 	**  the text version.  If so, go into 'init' mode automatically. 	**	This only happens if our effective userid owns the DBM 	**	version or if the mode of the database is 666 -- this 	**	is an attempt to avoid protection problems.  Note the 	**	unpalatable hack to see if the stat succeeded. 	*/
 name|modtime
 operator|=
