@@ -339,8 +339,6 @@ name|int
 name|pid
 decl_stmt|,
 name|rtm_addrs
-decl_stmt|,
-name|uid
 decl_stmt|;
 end_decl_stmt
 
@@ -407,6 +405,12 @@ end_decl_stmt
 begin_decl_stmt
 name|u_long
 name|rtm_inits
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uid_t
+name|uid
 decl_stmt|;
 end_decl_stmt
 
@@ -773,11 +777,6 @@ argument_list|(
 name|EX_OSERR
 argument_list|,
 literal|"socket"
-argument_list|)
-expr_stmt|;
-name|setuid
-argument_list|(
-name|uid
 argument_list|)
 expr_stmt|;
 if|if
