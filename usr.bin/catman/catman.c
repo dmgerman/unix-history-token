@@ -3335,9 +3335,14 @@ name|lang_locale
 argument_list|,
 literal|"%.*s%s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|sep
 operator|-
 name|locale
+argument_list|)
 argument_list|,
 name|locale
 argument_list|,
