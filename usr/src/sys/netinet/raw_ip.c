@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_ip.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)raw_ip.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -336,6 +336,11 @@ name|last
 operator|->
 name|so_rcv
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|ripsrc
 argument_list|,
@@ -386,6 +391,11 @@ name|last
 operator|->
 name|so_rcv
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|ripsrc
 argument_list|,
