@@ -425,6 +425,11 @@ directive|define
 name|DF_EXTERNALSOFTC
 value|64
 comment|/* softc not allocated by us */
+define|#
+directive|define
+name|DF_REBID
+value|128
+comment|/* Can rebid after attach */
 name|u_char
 name|order
 decl_stmt|;
@@ -6200,6 +6205,7 @@ argument_list|(
 literal|"device_probe_child: parent device has no devclass"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the state is already probed, then return.  However, don't 	 * return if we can rebid this object. 	 */
 if|if
 condition|(
 name|child
@@ -6207,6 +6213,16 @@ operator|->
 name|state
 operator|==
 name|DS_ALIVE
+operator|&&
+operator|(
+name|child
+operator|->
+name|flags
+operator|&
+name|DF_REBID
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -6378,11 +6394,47 @@ condition|)
 break|break;
 block|}
 comment|/* 	 * If we found a driver, change state and initialise the devclass. 	 */
+comment|/* XXX What happens if we rebid and got no best? */
 if|if
 condition|(
 name|best
 condition|)
 block|{
+comment|/* 		 * If this device was atached, and we were asked to 		 * rescan, and it is a different driver, then we have 		 * to detach the old driver and reattach this new one. 		 * Note, we don't have to check for DF_REBID here 		 * because if the state is> DS_ALIVE, we know it must 		 * be. 		 * 		 * This assumes that all DF_REBID drivers can have 		 * their probe routine called at any time and that 		 * they are idempotent as well as completely benign in 		 * normal operations. 		 * 		 * We also have to make sure that the detach 		 * succeeded, otherwise we fail the operation (or 		 * maybe it should just fail silently?  I'm torn). 		 */
+if|if
+condition|(
+name|child
+operator|->
+name|state
+operator|>
+name|DS_ALIVE
+operator|&&
+name|best
+operator|->
+name|driver
+operator|!=
+name|child
+operator|->
+name|driver
+condition|)
+if|if
+condition|(
+operator|(
+name|result
+operator|=
+name|device_detach
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
 if|if
 condition|(
 operator|!
@@ -6423,7 +6475,21 @@ argument_list|(
 name|child
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|child->flags |= DF_REBID;
+endif|#
+directive|endif
 block|}
+else|else
+name|child
+operator|->
+name|flags
+operator|&=
+operator|~
+name|DF_REBID
+expr_stmt|;
 name|child
 operator|->
 name|state
@@ -7971,6 +8037,16 @@ operator|->
 name|state
 operator|>=
 name|DS_ALIVE
+operator|&&
+operator|(
+name|dev
+operator|->
+name|flags
+operator|&
+name|DF_REBID
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -10071,6 +10147,14 @@ operator|->
 name|state
 operator|==
 name|DS_NOTPRESENT
+operator|||
+operator|(
+name|child
+operator|->
+name|flags
+operator|&
+name|DF_REBID
+operator|)
 condition|)
 name|device_probe_and_attach
 argument_list|(
@@ -12606,6 +12690,18 @@ operator|&
 name|DF_DESCMALLOCED
 condition|?
 literal|"descmalloced,"
+else|:
+literal|""
+operator|)
+operator|,
+operator|(
+name|dev
+operator|->
+name|flags
+operator|&
+name|DF_REBID
+condition|?
+literal|"rebiddable,"
 else|:
 literal|""
 operator|)
