@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	5.7 (Berkeley) %G%"
+literal|"@(#)bt_split.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -653,6 +653,11 @@ goto|goto
 name|prefix
 goto|;
 block|}
+else|else
+name|nksize
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|P_BLEAF
@@ -824,6 +829,10 @@ operator|=
 name|NRINTERNAL
 expr_stmt|;
 break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* Split the parent page if necessary or shift the indices. */
 if|if
@@ -1347,6 +1356,10 @@ operator|->
 name|pgno
 expr_stmt|;
 break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 comment|/* Unpin the held pages. */
 if|if
@@ -2629,6 +2642,10 @@ operator|->
 name|pgno
 expr_stmt|;
 break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 name|h
 operator|->
@@ -2934,6 +2951,10 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 operator|++
 name|nxt
@@ -3251,6 +3272,10 @@ name|rl
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
 operator|++
 name|nxt
