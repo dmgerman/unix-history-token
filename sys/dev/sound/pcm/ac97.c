@@ -573,6 +573,14 @@ literal|"Avance Logic ALC200/200P"
 block|}
 block|,
 block|{
+literal|0x414c4720
+block|,
+literal|0
+block|,
+literal|"Realtek Semiconductor ALC650"
+block|}
+block|,
+block|{
 literal|0x43525900
 block|,
 literal|0
