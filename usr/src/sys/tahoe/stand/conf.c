@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	1.3	86/12/18	*/
+comment|/*	conf.c	1.4	87/10/27	*/
 end_comment
 
 begin_comment
@@ -412,6 +412,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|hdstrategy
+argument_list|()
+decl_stmt|,
+name|hdopen
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|cystrategy
 argument_list|()
 decl_stmt|,
@@ -448,6 +458,18 @@ block|,
 name|vdstrategy
 block|,
 name|vdopen
+block|,
+name|nullsys
+block|,
+name|noioctl
+block|}
+block|,
+block|{
+literal|"hd"
+block|,
+name|hdstrategy
+block|,
+name|hdopen
 block|,
 name|nullsys
 block|,
