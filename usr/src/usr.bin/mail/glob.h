@@ -4,7 +4,7 @@ comment|/*  * A bunch of global variable declarations lie herein.  * def.h must 
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)glob.h	2.4 %G%";  */
+comment|/*  * Sccs Id = "@(#)glob.h	2.5 %G%";  */
 end_comment
 
 begin_decl_stmt
@@ -273,6 +273,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* True if standard input a tty */
+end_comment
+
+begin_decl_stmt
+name|int
+name|baud
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Output baud rate */
 end_comment
 
 begin_decl_stmt
