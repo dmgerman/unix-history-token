@@ -4751,6 +4751,17 @@ block|}
 block|,
 block|{
 operator|&
+name|vop_pathconf_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|devfs_pathconf
+block|}
+block|,
+block|{
+operator|&
 name|vop_print_desc
 block|,
 operator|(
