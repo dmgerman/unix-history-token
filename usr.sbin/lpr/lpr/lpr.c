@@ -473,6 +473,18 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|Zflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* extra filter options for LPRng servers */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|stat
 name|statb
@@ -903,7 +915,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":#:1:2:3:4:C:J:L:P:T:U:cdfghi:lnmprstvw:"
+literal|":#:1:2:3:4:C:J:L:P:T:U:Z:cdfghi:lnmprstvw:"
 argument_list|)
 operator|)
 operator|!=
@@ -1036,6 +1048,14 @@ name|hdr
 operator|++
 expr_stmt|;
 name|Uflag
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+name|Zflag
 operator|=
 name|optarg
 expr_stmt|;
@@ -1638,6 +1658,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|format
+operator|!=
+literal|'p'
+operator|&&
+name|Zflag
+operator|!=
+literal|0
+condition|)
+name|card
+argument_list|(
+literal|'Z'
+argument_list|,
+name|Zflag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|iflag
 condition|)
 name|card
@@ -1722,6 +1759,7 @@ argument_list|,
 name|width
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX 	 * Our use of `Z' here is incompatible with LPRng's 	 * use.  We assume that the only use of our existing 	 * `Z' card is as shown for `p' format (pr) files. 	 */
 if|if
 condition|(
 name|format
@@ -3786,11 +3824,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
+literal|"%s\n"
 argument_list|,
-literal|"usage: lpr [-Pprinter] [-#num] [-C class] [-J job] [-T title] [-U user]"
-argument_list|,
-literal|"[-i[numcols]] [-1234 font] [-L locale] [-wnum] [-cdfghlnmprstv] [name ...]"
+literal|"usage: lpr [-Pprinter] [-#num] [-C class] [-J job] [-T title] [-U user]\n"
+literal|"\t[-Z daemon-options] [-i[numcols]] [-i[numcols]] [-1234 font]\n"
+literal|"\t[-L locale] [-wnum] [-cdfghlnmprstv] [name ...]"
 argument_list|)
 expr_stmt|;
 name|exit
