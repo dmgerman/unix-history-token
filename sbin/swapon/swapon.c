@@ -326,19 +326,6 @@ name|errno
 condition|)
 block|{
 case|case
-name|EINVAL
-case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"swapon: %s: device not configured\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|EBUSY
 case|:
 if|if
