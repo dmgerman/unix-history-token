@@ -874,6 +874,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pipe_zone
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"pipe_zone not initialized"
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -942,17 +953,6 @@ name|fd
 decl_stmt|,
 name|error
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|pipe_zone
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"pipe_zone not initialized"
-operator|)
-argument_list|)
-expr_stmt|;
 name|pmtx
 operator|=
 name|malloc
@@ -1510,14 +1510,6 @@ name|cpipe
 operator|->
 name|pipe_buffer
 operator|.
-name|object
-operator|=
-name|object
-expr_stmt|;
-name|cpipe
-operator|->
-name|pipe_buffer
-operator|.
 name|buffer
 operator|=
 name|buffer
@@ -1634,15 +1626,6 @@ name|cpipe
 operator|=
 operator|*
 name|cpipep
-expr_stmt|;
-comment|/* so pipespace()->pipe_free_kmem() doesn't follow junk pointer */
-name|cpipe
-operator|->
-name|pipe_buffer
-operator|.
-name|object
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* 	 * protect so pipeclose() doesn't follow a junk pointer 	 * if pipespace() fails. 	 */
 name|bzero

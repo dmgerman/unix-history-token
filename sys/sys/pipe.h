@@ -209,12 +209,6 @@ name|caddr_t
 name|buffer
 decl_stmt|;
 comment|/* kva of buffer */
-name|struct
-name|vm_object
-modifier|*
-name|object
-decl_stmt|;
-comment|/* VM object containing buffer */
 block|}
 struct|;
 end_struct
