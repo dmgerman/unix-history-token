@@ -171,20 +171,6 @@ name|kse_zombie_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|RANGEOF
-parameter_list|(
-name|type
-parameter_list|,
-name|start
-parameter_list|,
-name|end
-parameter_list|)
-value|(offsetof(type, end) - offsetof(type, start))
-end_define
-
 begin_macro
 name|TAILQ_HEAD
 argument_list|(
@@ -2721,7 +2707,7 @@ name|newkg
 operator|->
 name|kg_startzero
 argument_list|,
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|ksegrp
@@ -2744,7 +2730,7 @@ name|newkg
 operator|->
 name|kg_startcopy
 argument_list|,
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|ksegrp
@@ -4212,10 +4198,7 @@ name|spare
 operator|->
 name|td_startzero
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|thread
@@ -4365,10 +4348,7 @@ name|td2
 operator|->
 name|td_startcopy
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|thread

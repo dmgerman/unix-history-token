@@ -4075,17 +4075,6 @@ modifier|*
 name|dst
 parameter_list|)
 block|{
-define|#
-directive|define
-name|RANGEOF
-parameter_list|(
-name|type
-parameter_list|,
-name|start
-parameter_list|,
-name|end
-parameter_list|)
-value|(offsetof(type, end) - offsetof(type, start))
 name|bzero
 argument_list|(
 operator|&
@@ -4093,10 +4082,7 @@ name|dst
 operator|->
 name|pstat_startzero
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|pstats
@@ -4119,10 +4105,7 @@ name|dst
 operator|->
 name|pstat_startcopy
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|pstats
@@ -4133,9 +4116,6 @@ name|pstat_endcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|RANGEOF
 block|}
 end_function
 

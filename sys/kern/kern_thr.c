@@ -196,24 +196,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Back end support functions.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RANGEOF
-parameter_list|(
-name|type
-parameter_list|,
-name|start
-parameter_list|,
-name|end
-parameter_list|)
-value|(offsetof(type, end) - offsetof(type, start))
-end_define
-
-begin_comment
 comment|/*  * System call interface.  */
 end_comment
 
@@ -407,10 +389,7 @@ name|newtd
 operator|->
 name|td_startzero
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|thread
@@ -433,10 +412,7 @@ name|newtd
 operator|->
 name|td_startcopy
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|thread
@@ -459,10 +435,7 @@ name|newkg
 operator|->
 name|kg_startzero
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|ksegrp
@@ -485,10 +458,7 @@ name|newkg
 operator|->
 name|kg_startcopy
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
+name|__rangeof
 argument_list|(
 expr|struct
 name|ksegrp

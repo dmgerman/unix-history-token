@@ -3431,20 +3431,6 @@ directive|include
 file|<vm/uma.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|RANGEOF
-parameter_list|(
-name|type
-parameter_list|,
-name|start
-parameter_list|,
-name|end
-parameter_list|)
-value|(offsetof(type, end) - offsetof(type, start))
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -3485,20 +3471,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|RANGEOF
-parameter_list|(
-name|type
-parameter_list|,
-name|start
-parameter_list|,
-name|end
-parameter_list|)
-value|(offsetof(type, end) - offsetof(type, start))
-end_define
 
 begin_comment
 comment|/*  * thread is being either created or recycled.  * Fix up the per-scheduler resources associated with it.  * Called from:  *  sched_fork_thread()  *  thread_dtor()  (*may go away)  *  thread_init()  (*may go away)  */
