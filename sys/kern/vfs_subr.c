@@ -5032,6 +5032,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|vm_object_lock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_object_page_remove
 argument_list|(
 name|object
@@ -5049,6 +5054,11 @@ condition|?
 name|TRUE
 else|:
 name|FALSE
+argument_list|)
+expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 block|}

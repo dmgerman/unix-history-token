@@ -1101,6 +1101,11 @@ operator|->
 name|size
 condition|)
 block|{
+name|vm_object_lock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_object_page_remove
 argument_list|(
 name|object
@@ -1112,6 +1117,11 @@ operator|->
 name|size
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 block|}
