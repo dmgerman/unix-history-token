@@ -8,7 +8,7 @@ comment|/*  *  *  dpt.h:	Definitions and constants used by the SCSI side of the 
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt.h,v 1.2 1998/04/15 17:47:28 bde Exp $"
+empty|#ident "$Id: dpt.h,v 1.3 1998/06/02 00:32:37 eivind Exp $"
 end_empty
 
 begin_ifndef
@@ -111,21 +111,21 @@ begin_define
 define|#
 directive|define
 name|DPT_PATCH
-value|3
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPT_MONTH
-value|6
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|DPT_DAY
-value|1
+value|3
 end_define
 
 begin_define
@@ -157,7 +157,7 @@ begin_define
 define|#
 directive|define
 name|DPT_CTL_PATCH
-value|5
+value|6
 end_define
 
 begin_ifndef
@@ -947,6 +947,17 @@ directive|define
 name|EATA_CMD_RESET
 value|0xf9
 end_define
+
+begin_define
+define|#
+directive|define
+name|EATA_COLD_BOOT
+value|0x06
+end_define
+
+begin_comment
+comment|/* Last resort only! */
+end_comment
 
 begin_define
 define|#
@@ -1957,7 +1968,7 @@ name|TRNXFR
 range|:
 literal|1
 decl_stmt|,
-comment|/*  			 * Truncate Transfer Cmd not necessary Only 			 * used in PIO Mode 			 */
+comment|/*  							 * Truncate Transfer Cmd not necessary Only 							 * used in PIO Mode 							 */
 name|MORE_support
 range|:
 literal|1
@@ -1986,7 +1997,7 @@ comment|/* Hostadapter Address is valid */
 name|u_int16_t
 name|cppadlen
 decl_stmt|;
-comment|/* 			 * Number of pad bytes send after CD data set 			 * to zero for DMA commands. Ntohl()`ed 			 */
+comment|/* 							 * Number of pad bytes send after CD data set 							 * to zero for DMA commands. Ntohl()`ed 							 */
 name|u_int8_t
 name|scsi_idS
 decl_stmt|;
@@ -2008,7 +2019,7 @@ comment|/* CP length: number of valid cp bytes	*/
 name|u_int32_t
 name|splen
 decl_stmt|;
-comment|/* 			 * Number of bytes returned after we receive 			 * SP command 			 */
+comment|/* 							 * Number of bytes returned after we receive 							 * SP command 							 */
 name|u_int16_t
 name|queuesiz
 decl_stmt|;
@@ -2044,7 +2055,7 @@ comment|/* DRQ index, DRQ is 2comp of DRQX */
 name|u_int8_t
 name|sync
 decl_stmt|;
-comment|/* 				 * device at ID 7 tru 0 is running in 				 * synchronous mode, this will disappear 				 */
+comment|/* 								 * device at ID 7 tru 0 is running in 								 * synchronous mode, this will disappear 								 */
 name|u_int8_t
 name|DSBLE
 range|:
@@ -4739,6 +4750,12 @@ name|struct
 name|timeval
 name|intr_started
 decl_stmt|;
+name|u_int32_t
+name|warm_starts
+decl_stmt|;
+name|u_int32_t
+name|cold_boots
+decl_stmt|;
 block|}
 name|dpt_perf_t
 typedef|;
@@ -5112,22 +5129,18 @@ comment|/* status packet */
 comment|/* We put ALL conditional elements at the tail for the structure. 	 * If we do not, then userland code will crash or trash based on which 	 * kernel it is running with. 	 * This isi most visible with usr/sbin/dpt_softc(8) 	 */
 ifdef|#
 directive|ifdef
-name|DEVFS
-name|void
-modifier|*
-name|devfs_data_token
-decl_stmt|;
-name|void
-modifier|*
-name|devfs_ctl_token
+name|DPT_MEASURE_PERFORMANCE
+name|dpt_perf_t
+name|performance
 decl_stmt|;
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|DPT_MEASURE_PERFORMANCE
-name|dpt_perf_t
-name|performance
+name|DPT_RESET_HBA
+name|struct
+name|timeval
+name|last_contact
 decl_stmt|;
 endif|#
 directive|endif
@@ -5299,6 +5312,91 @@ end_typedef
 
 begin_comment
 comment|/*  * Externals:  * These all come from dpt_scsi.c  *  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_comment
+comment|/* This function gets the current hi-res time and returns it to the caller */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|timeval
+name|dpt_time_now
+argument_list|(
+argument|void
+argument_list|)
+block|{ 	struct
+name|timeval
+name|now
+block|;
+name|microtime
+argument_list|(
+operator|&
+name|now
+argument_list|)
+block|;
+return|return
+operator|(
+name|now
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/**  * Given a minor device number, get its SCSI Unit.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|dpt_minor2unit
+parameter_list|(
+name|int
+name|minor
+parameter_list|)
+block|{
+return|return
+operator|(
+name|minor2hba
+argument_list|(
+name|minor
+operator|&
+operator|~
+name|SCSI_CONTROL_MASK
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function_decl
+name|dpt_softc_t
+modifier|*
+name|dpt_minor2softc
+parameter_list|(
+name|int
+name|minor_no
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
 end_comment
 
 begin_comment
@@ -5672,6 +5770,17 @@ end_endif
 begin_comment
 comment|/* _DPT_C_ */
 end_comment
+
+begin_function_decl
+name|void
+name|dpt_reset_performance
+parameter_list|(
+name|dpt_softc_t
+modifier|*
+name|dpt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

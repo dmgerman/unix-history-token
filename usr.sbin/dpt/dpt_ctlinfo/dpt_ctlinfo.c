@@ -8,7 +8,7 @@ comment|/* dpt_ctlinfo.c:  Dunp a DPT HBA Information Block */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_ctlinfo.c,v 1.1 1998/01/22 23:32:27 ShimonR Exp ShimonR $"
+empty|#ident "$Id: dpt_ctlinfo.c,v 1.1 1998/01/26 06:20:37 julian Exp $"
 end_empty
 
 begin_include
@@ -256,7 +256,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s ERROR:  Failed to send IOCTL %x - %s\n"
+literal|"%s ERROR:  Failed to send IOCTL "
+literal|"%lx - %s\n"
 argument_list|,
 name|argv
 index|[
