@@ -148,6 +148,8 @@ name|uc_mcontext
 operator|.
 name|mc_rsp
 operator|-
+literal|128
+operator|-
 sizeof|sizeof
 argument_list|(
 name|ucontext_t
