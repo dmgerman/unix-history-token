@@ -1166,8 +1166,6 @@ name|m1
 decl_stmt|,
 name|m2
 decl_stmt|,
-name|s
-decl_stmt|,
 name|isp_debug
 decl_stmt|;
 name|u_int32_t
@@ -1190,6 +1188,8 @@ name|struct
 name|ispsoftc
 modifier|*
 name|isp
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|ispmdvec
@@ -1199,6 +1199,16 @@ decl_stmt|;
 name|bus_size_t
 name|lim
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
+name|int
+name|locksetup
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Figure out if we're supposed to skip this one. 	 */
 name|unit
 operator|=
@@ -2109,12 +2119,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * 	 */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Make sure that SERR, PERR, WRITE INVALIDATE and BUSMASTER 	 * are set. 	 */
 name|cmd
 operator||=
@@ -2294,11 +2298,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s: could not create master dma tag\n"
@@ -2722,11 +2721,6 @@ name|ih
 argument_list|)
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -2772,7 +2766,35 @@ name|isp_dblev
 operator||=
 name|ISP_LOGCONFIG
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
+comment|/* Make sure the lock is set up. */
+name|mtx_init
+argument_list|(
+operator|&
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|lock
+argument_list|,
+literal|"isp"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|locksetup
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Make sure we're in reset state. 	 */
+name|ISP_LOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 name|isp_reset
 argument_list|(
 name|isp
@@ -2787,9 +2809,9 @@ operator|!=
 name|ISP_RESETSTATE
 condition|)
 block|{
-name|splx
+name|ISP_UNLOCK
 argument_list|(
-name|s
+name|isp
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2824,9 +2846,9 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-name|splx
+name|ISP_UNLOCK
 argument_list|(
-name|s
+name|isp
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2862,9 +2884,9 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-name|splx
+name|ISP_UNLOCK
 argument_list|(
-name|s
+name|isp
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2872,12 +2894,12 @@ name|bad
 goto|;
 block|}
 block|}
-name|splx
+comment|/* 	 * XXXX: Here is where we might unload the f/w module 	 * XXXX: (or decrease the reference count to it). 	 */
+name|ISP_UNLOCK
 argument_list|(
-name|s
+name|isp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXX: Here is where we might unload the f/w module 	 * XXXX: (or decrease the reference count to it). 	 */
 return|return
 operator|(
 literal|0
@@ -2909,6 +2931,29 @@ name|ih
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ISP_SMPLOCK
+if|if
+condition|(
+name|locksetup
+operator|&&
+name|isp
+condition|)
+block|{
+name|mtx_destroy
+argument_list|(
+operator|&
+name|isp
+operator|->
+name|isp_osinfo
+operator|.
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|irq
