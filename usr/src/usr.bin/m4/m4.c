@@ -8,7 +8,7 @@ name|sent
 name|out
 name|in
 literal|4.1
-comment|/* @(#)m4.c	1.1 (Berkeley) %G% */
+comment|/* @(#)m4.c	1.2 (Berkeley) %G% */
 include|#
 directive|include
 file|<stdio.h>
@@ -503,6 +503,17 @@ literal|"\0"
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|RESERVED
+value|01
+end_define
+
+begin_comment
+comment|/* This is a reserved word with side action */
+end_comment
+
 begin_struct
 struct|struct
 name|nlist
@@ -514,6 +525,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|def
+decl_stmt|;
+name|char
+name|flag
 decl_stmt|;
 name|struct
 name|nlist
@@ -962,6 +976,8 @@ argument_list|(
 literal|"GCOS"
 argument_list|,
 name|eoa
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -974,6 +990,8 @@ argument_list|(
 literal|"gcos"
 argument_list|,
 name|eoa
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -991,6 +1009,8 @@ argument_list|(
 literal|"UNIX"
 argument_list|,
 name|eoa
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1003,6 +1023,8 @@ argument_list|(
 literal|"unix"
 argument_list|,
 name|eoa
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1019,6 +1041,8 @@ argument_list|(
 literal|"MAKETEMP"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|ifdefloc
@@ -1028,6 +1052,8 @@ argument_list|(
 literal|"IFDEF"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|lenloc
@@ -1037,6 +1063,8 @@ argument_list|(
 literal|"LEN"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|undefloc
@@ -1046,6 +1074,8 @@ argument_list|(
 literal|"UNDEFINE"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|shiftloc
@@ -1055,6 +1085,8 @@ argument_list|(
 literal|"SHIFT"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|cqloc
@@ -1064,6 +1096,8 @@ argument_list|(
 literal|"CHANGEQUOTE"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|defloc
@@ -1073,6 +1107,8 @@ argument_list|(
 literal|"DEFINE"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|evaloc
@@ -1082,6 +1118,8 @@ argument_list|(
 literal|"EVAL"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|inclloc
@@ -1091,6 +1129,8 @@ argument_list|(
 literal|"INCLUDE"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|sinclloc
@@ -1100,6 +1140,8 @@ argument_list|(
 literal|"SINCLUDE"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|syscmdloc
@@ -1109,6 +1151,8 @@ argument_list|(
 literal|"SYSCMD"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|dumploc
@@ -1118,6 +1162,8 @@ argument_list|(
 literal|"DUMPDEF"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|errploc
@@ -1127,6 +1173,8 @@ argument_list|(
 literal|"ERRPRINT"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|incrloc
@@ -1136,6 +1184,8 @@ argument_list|(
 literal|"INCR"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|substrloc
@@ -1145,6 +1195,8 @@ argument_list|(
 literal|"SUBSTR"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|indexloc
@@ -1154,6 +1206,8 @@ argument_list|(
 literal|"INDEX"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|transloc
@@ -1163,6 +1217,8 @@ argument_list|(
 literal|"TRANSLIT"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|ifloc
@@ -1172,6 +1228,8 @@ argument_list|(
 literal|"IFELSE"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|divloc
@@ -1181,6 +1239,8 @@ argument_list|(
 literal|"DIVERT"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|divnumloc
@@ -1190,6 +1250,8 @@ argument_list|(
 literal|"DIVNUM"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|undivloc
@@ -1199,6 +1261,8 @@ argument_list|(
 literal|"UNDIVERT"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|dnlloc
@@ -1208,6 +1272,8 @@ argument_list|(
 literal|"DNL"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1222,6 +1288,8 @@ argument_list|(
 literal|"maketemp"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|ifdefloc
@@ -1231,6 +1299,8 @@ argument_list|(
 literal|"ifdef"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|lenloc
@@ -1240,6 +1310,8 @@ argument_list|(
 literal|"len"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|undefloc
@@ -1249,6 +1321,8 @@ argument_list|(
 literal|"undefine"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|shiftloc
@@ -1258,6 +1332,8 @@ argument_list|(
 literal|"shift"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|cqloc
@@ -1267,6 +1343,8 @@ argument_list|(
 literal|"changequote"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|defloc
@@ -1276,6 +1354,8 @@ argument_list|(
 literal|"define"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|evaloc
@@ -1285,6 +1365,8 @@ argument_list|(
 literal|"eval"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|inclloc
@@ -1294,6 +1376,8 @@ argument_list|(
 literal|"include"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|sinclloc
@@ -1303,6 +1387,8 @@ argument_list|(
 literal|"sinclude"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|syscmdloc
@@ -1312,6 +1398,8 @@ argument_list|(
 literal|"syscmd"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|dumploc
@@ -1321,6 +1409,8 @@ argument_list|(
 literal|"dumpdef"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|errploc
@@ -1330,6 +1420,8 @@ argument_list|(
 literal|"errprint"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|incrloc
@@ -1339,6 +1431,8 @@ argument_list|(
 literal|"incr"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|substrloc
@@ -1348,6 +1442,8 @@ argument_list|(
 literal|"substr"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|indexloc
@@ -1357,6 +1453,8 @@ argument_list|(
 literal|"index"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|transloc
@@ -1366,6 +1464,8 @@ argument_list|(
 literal|"translit"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|ifloc
@@ -1375,6 +1475,8 @@ argument_list|(
 literal|"ifelse"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|divloc
@@ -1384,6 +1486,8 @@ argument_list|(
 literal|"divert"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|divnumloc
@@ -1393,6 +1497,8 @@ argument_list|(
 literal|"divnum"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|undivloc
@@ -1402,6 +1508,8 @@ argument_list|(
 literal|"undivert"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 name|dnlloc
@@ -1411,6 +1519,8 @@ argument_list|(
 literal|"dnl"
 argument_list|,
 name|eoa
+argument_list|,
+name|RESERVED
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3064,6 +3174,8 @@ parameter_list|(
 name|nam
 parameter_list|,
 name|val
+parameter_list|,
+name|flag
 parameter_list|)
 name|char
 modifier|*
@@ -3073,6 +3185,12 @@ decl|*
 name|val
 decl_stmt|;
 end_function
+
+begin_decl_stmt
+name|char
+name|flag
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3161,6 +3279,12 @@ index|[
 name|hshval
 index|]
 expr_stmt|;
+name|np
+operator|->
+name|flag
+operator|=
+name|flag
+expr_stmt|;
 name|hshtab
 index|[
 name|hshval
@@ -3182,6 +3306,12 @@ name|np
 operator|->
 name|def
 argument_list|)
+expr_stmt|;
+name|np
+operator|->
+name|flag
+operator|=
+name|flag
 expr_stmt|;
 name|np
 operator|->
@@ -3304,6 +3434,19 @@ operator|->
 name|next
 expr_stmt|;
 block|}
+comment|/* 	 * If this is a reserved word, it has been removed from the 	 * hastable.  We do not want to actually free the space because 	 * of the code in expand.  Expand wants to to pointer compairs 	 * to tell if this is a reserved word (e.g a special action 	 * needs to take place).  Thus if we do not free the space, 	 * expand will still work, but the name will never be found 	 * because it out of the symbol table! 	 */
+if|if
+condition|(
+name|np
+operator|->
+name|flag
+operator|&
+name|RESERVED
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* If not reserved free it */
 name|free
 argument_list|(
 name|np
@@ -3327,6 +3470,7 @@ operator|)
 name|np
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -3478,6 +3622,8 @@ name|ap
 index|[
 literal|2
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3496,6 +3642,8 @@ literal|1
 index|]
 argument_list|,
 literal|""
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
