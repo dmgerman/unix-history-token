@@ -3887,6 +3887,13 @@ name|rid
 decl_stmt|;
 endif|#
 directive|endif
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"APM BIOS"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|resource_int_value
@@ -3900,23 +3907,20 @@ argument_list|,
 operator|&
 name|disabled
 argument_list|)
-operator|==
-literal|0
-operator|&&
-name|disabled
 operator|!=
 literal|0
+condition|)
+name|disabled
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|disabled
 condition|)
 return|return
 name|ENXIO
 return|;
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"APM BIOS"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|device_get_unit
