@@ -604,7 +604,7 @@ value|"/dev/card%d"
 end_define
 
 begin_comment
-comment|/* String for sprintf */
+comment|/* String for snprintf */
 end_comment
 
 begin_endif
