@@ -65,7 +65,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|_MACHIN
+name|_MACHINE
 value|"powerpc"
 end_define
 
