@@ -1191,6 +1191,15 @@ name|__pure2
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|double
+name|round
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -1716,6 +1725,15 @@ name|fmodf
 parameter_list|(
 name|float
 parameter_list|,
+name|float
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|float
+name|roundf
+parameter_list|(
 name|float
 parameter_list|)
 function_decl|;
