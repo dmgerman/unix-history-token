@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.19	82/06/20	*/
+comment|/*	if_acc.c	4.20	82/10/09	*/
 end_comment
 
 begin_include
@@ -96,37 +96,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/in.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/in_systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../net/if.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if_acc.h"
+file|"../vaxif/if_acc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if_imp.h"
+file|"../netimp/if_imp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if_uba.h"
+file|"../vaxif/if_uba.h"
 end_include
 
 begin_decl_stmt
@@ -1295,6 +1283,12 @@ argument|unit
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -1461,6 +1455,12 @@ argument_list|(
 argument|unit
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

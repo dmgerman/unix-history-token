@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.6	82/08/01	*/
+comment|/*	if_vv.c	4.7	82/10/09	*/
 end_comment
 
 begin_comment
@@ -79,17 +79,40 @@ directive|include
 file|"../h/vmmac.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|"../net/in.h"
+file|"../netinet/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/in_systm.h"
+file|"../netinet/in_systm.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"../netinet/ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../netinet/ip_var.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -100,25 +123,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/if_vv.h"
+file|"../vaxif/if_vv.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if_uba.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/ip.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/ip_var.h"
+file|"../vaxif/if_uba.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.17	82/06/20	*/
+comment|/*	if_dmc.c	4.18	82/10/09	*/
 end_comment
 
 begin_include
@@ -117,13 +117,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/in.h"
+file|"../netinet/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/in_systm.h"
+file|"../netinet/in_systm.h"
 end_include
 
 begin_include
@@ -135,25 +135,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/if_uba.h"
+file|"../vaxif/if_uba.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if_dmc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/ip.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/ip_var.h"
+file|"../vaxif/if_dmc.h"
 end_include
 
 begin_include
