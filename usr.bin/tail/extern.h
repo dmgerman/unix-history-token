@@ -46,6 +46,34 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|file_info
+block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|char
+modifier|*
+name|file_name
+decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|file_info
+name|file_info_t
+typedef|;
+end_typedef
+
 begin_enum
 enum|enum
 name|STYLE
@@ -66,6 +94,21 @@ name|REVERSE
 block|}
 enum|;
 end_enum
+
+begin_function_decl
+name|void
+name|follow
+parameter_list|(
+name|file_info_t
+modifier|*
+parameter_list|,
+name|enum
+name|STYLE
+parameter_list|,
+name|off_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -185,6 +228,8 @@ decl_stmt|,
 name|rflag
 decl_stmt|,
 name|rval
+decl_stmt|,
+name|no_files
 decl_stmt|;
 end_decl_stmt
 
