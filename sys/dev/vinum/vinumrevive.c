@@ -16,7 +16,7 @@ file|<dev/vinum/request.h>
 end_include
 
 begin_comment
-comment|/*  * revive a block of a subdisk.  Return an error  * indication.  EAGAIN means successful copy, but  * that more blocks remain to be copied.  EINVAL means  * that the subdisk isn't associated with a plex (which  * means a programming error if we get here at all;  * FIXME)  * XXX We should specify a block size here.  At the moment,  * just take a default value.  FIXME   */
+comment|/*  * Revive a block of a subdisk.  Return an error  * indication.  EAGAIN means successful copy, but  * that more blocks remain to be copied.  EINVAL  * means that the subdisk isn't associated with a  * plex (which means a programming error if we get  * here at all; FIXME).  */
 end_comment
 
 begin_function
@@ -78,6 +78,12 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* set if this is the parity stripe */
+name|struct
+name|rangelock
+modifier|*
+name|lock
+decl_stmt|;
+comment|/* for locking */
 name|plexblkno
 operator|=
 literal|0
@@ -90,6 +96,10 @@ name|SD
 index|[
 name|sdno
 index|]
+expr_stmt|;
+name|lock
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -249,7 +259,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/*      * Amount to transfer: block size, unless it      * would overlap the end       */
+comment|/*      * Amount to transfer: block size, unless it      * would overlap the end      */
 name|bp
 operator|->
 name|b_bufsize
@@ -340,6 +350,20 @@ operator|->
 name|stripesize
 expr_stmt|;
 comment|/* offset from beginning of stripe */
+name|lock
+operator|=
+name|lockrange
+argument_list|(
+name|plexblkno
+operator|<<
+name|DEV_BSHIFT
+argument_list|,
+name|bp
+argument_list|,
+name|plex
+argument_list|)
+expr_stmt|;
+comment|/* lock it */
 break|break;
 case|case
 name|plex_raid5
@@ -428,7 +452,7 @@ operator|==
 name|sdno
 expr_stmt|;
 comment|/* note if it's the parity subdisk */
-comment|/* 	 * Now adjust for the strangenesses  	 * in RAID-5 striping  	 */
+comment|/* 	 * Now adjust for the strangenesses 	 * in RAID-5 striping. 	 */
 if|if
 condition|(
 name|sd
@@ -445,6 +469,20 @@ operator|->
 name|stripesize
 expr_stmt|;
 comment|/* one stripe less */
+name|lock
+operator|=
+name|lockrange
+argument_list|(
+name|plexblkno
+operator|<<
+name|DEV_BSHIFT
+argument_list|,
+name|bp
+argument_list|,
+name|plex
+argument_list|)
+expr_stmt|;
+comment|/* lock it */
 break|break;
 case|case
 name|plex_disorg
@@ -498,7 +536,7 @@ argument_list|)
 operator|)
 expr_stmt|;
 comment|/* number of ints in the buffer */
-comment|/* 	 * We have calculated plexblkno assuming it 	 * was a data block.  Go back to the beginning 	 * of the band  	 */
+comment|/* 	 * We have calculated plexblkno assuming it 	 * was a data block.  Go back to the beginning 	 * of the band. 	 */
 name|plexblkno
 operator|-=
 name|plex
@@ -509,7 +547,7 @@ name|sd
 operator|->
 name|plexsdno
 expr_stmt|;
-comment|/* 	 * Read each subdisk in turn, except for 	 * this one, and xor them together  	 */
+comment|/* 	 * Read each subdisk in turn, except for this 	 * one, and xor them together. 	 */
 name|parity_buf
 operator|=
 name|bp
@@ -567,7 +605,7 @@ operator|!=
 name|NULL
 condition|)
 comment|/* it's part of a volume, */
-comment|/* 		       * First, read the data from the volume.  We don't 		       * care which plex, that's the driver's job  		     */
+comment|/* 		       * First, read the data from the volume. 		       * We don't care which plex, that's the 		       * driver's job. 		     */
 name|bp
 operator|->
 name|b_dev
@@ -651,9 +689,9 @@ operator|&
 name|B_ERROR
 condition|)
 comment|/* can't read, */
-comment|/* 		       * If we have a read error, there's nothing 		       * we can do.  By this time, the daemon has 		       * already run out of magic  		     */
+comment|/* 		       * If we have a read error, there's 		       * nothing we can do.  By this time, the 		       * daemon has already run out of magic. 		     */
 break|break;
-comment|/* 		 * To save time, we do the XOR wordwise.  This 		 * requires sectors to be a multiple of the 		 * length of an int, which is currently always 		 * the case  		 */
+comment|/* 		 * To save time, we do the XOR wordwise. 		 * This requires sectors to be a multiple 		 * of the length of an int, which is 		 * currently always the case. 		 */
 for|for
 control|(
 name|i
@@ -722,7 +760,7 @@ operator|!=
 name|NULL
 condition|)
 comment|/* it's part of a volume, */
-comment|/* 	       * First, read the data from the volume.  We don't 	       * care which plex, that's bre's job  	     */
+comment|/* 	       * First, read the data from the volume.  We 	       * don't care which plex, that's bre's job. 	     */
 name|bp
 operator|->
 name|b_dev
@@ -962,6 +1000,21 @@ expr_stmt|;
 comment|/* we're done */
 block|}
 block|}
+if|if
+condition|(
+name|lock
+condition|)
+comment|/* we took a lock, */
+name|unlockrange
+argument_list|(
+name|sd
+operator|->
+name|plexno
+argument_list|,
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* give it back */
 while|while
 condition|(
 name|sd
@@ -1091,6 +1144,18 @@ name|error
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
