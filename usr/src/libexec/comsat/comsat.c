@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)comsat.c	4.8 83/07/01"
+literal|"@(#)comsat.c	4.9 83/07/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,21 +280,6 @@ operator|,
 name|exit
 argument_list|(
 literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|debug
-condition|)
-while|while
-condition|(
-name|fork
-argument_list|()
-condition|)
-name|wait
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -1020,6 +1005,9 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|int
+name|inheader
+decl_stmt|;
 name|dprintf
 argument_list|(
 literal|"HERE %s's mail starting at %d\n"
@@ -1061,7 +1049,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Print the first 7 lines or 560 characters of the new mail 	 * (whichever comes first).  Skip header crap other than 	 * From: and Subject:. 	 */
+comment|/*  	 * Print the first 7 lines or 560 characters of the new mail 	 * (whichever comes first).  Skip header crap other than 	 * From, Subject, To, and Date. 	 */
 name|linecnt
 operator|=
 literal|7
@@ -1069,6 +1057,10 @@ expr_stmt|;
 name|charcnt
 operator|=
 literal|560
+expr_stmt|;
+name|inheader
+operator|=
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -1097,6 +1089,9 @@ modifier|*
 name|index
 parameter_list|()
 function_decl|;
+name|int
+name|cnt
+decl_stmt|;
 if|if
 condition|(
 name|linecnt
@@ -1119,6 +1114,41 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|line
+argument_list|,
+literal|"From "
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
+name|inheader
+operator|&&
+operator|(
+name|line
+index|[
+literal|0
+index|]
+operator|==
+literal|' '
+operator|||
+name|line
+index|[
+literal|0
+index|]
+operator|==
+literal|'\t'
+operator|)
+condition|)
+continue|continue;
 name|cp
 operator|=
 name|index
@@ -1131,6 +1161,41 @@ expr_stmt|;
 if|if
 condition|(
 name|cp
+operator|==
+literal|0
+operator|||
+operator|(
+name|index
+argument_list|(
+name|line
+argument_list|,
+literal|' '
+argument_list|)
+operator|&&
+name|index
+argument_list|(
+name|line
+argument_list|,
+literal|' '
+argument_list|)
+operator|<
+name|cp
+operator|)
+condition|)
+name|inheader
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|cnt
+operator|=
+name|cp
+operator|-
+name|line
+expr_stmt|;
+if|if
+condition|(
+name|inheader
 operator|&&
 name|strncmp
 argument_list|(
@@ -1138,9 +1203,7 @@ name|line
 argument_list|,
 literal|"Date"
 argument_list|,
-name|cp
-operator|-
-name|line
+name|cnt
 argument_list|)
 operator|&&
 name|strncmp
@@ -1149,9 +1212,7 @@ name|line
 argument_list|,
 literal|"From"
 argument_list|,
-name|cp
-operator|-
-name|line
+name|cnt
 argument_list|)
 operator|&&
 name|strncmp
@@ -1160,9 +1221,7 @@ name|line
 argument_list|,
 literal|"Subject"
 argument_list|,
-name|cp
-operator|-
-name|line
+name|cnt
 argument_list|)
 operator|&&
 name|strncmp
@@ -1171,9 +1230,7 @@ name|line
 argument_list|,
 literal|"To"
 argument_list|,
-name|cp
-operator|-
-name|line
+name|cnt
 argument_list|)
 condition|)
 continue|continue;
