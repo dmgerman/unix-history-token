@@ -51,12 +51,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ipdivert.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -13028,14 +13022,15 @@ case|:
 case|case
 name|O_TEE
 case|:
-ifndef|#
-directive|ifndef
-name|IPDIVERT
+if|if
+condition|(
+name|ip_divert_ptr
+operator|==
+name|NULL
+condition|)
 return|return
 name|EINVAL
 return|;
-endif|#
-directive|endif
 case|case
 name|O_FORWARD_MAC
 case|:

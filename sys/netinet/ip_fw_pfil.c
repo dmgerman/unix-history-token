@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ipdivert.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -221,19 +215,22 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|DIV_DIR_IN
-value|1
-end_define
+begin_comment
+comment|/* Divert hooks. */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|DIV_DIR_OUT
-value|0
-end_define
+begin_decl_stmt
+name|ip_divert_packet_t
+modifier|*
+name|ip_divert_ptr
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Forward declarations. */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -251,6 +248,20 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|DIV_DIR_IN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIV_DIR_OUT
+value|0
+end_define
 
 begin_function
 name|int
@@ -1172,9 +1183,6 @@ name|tee
 parameter_list|)
 block|{
 comment|/* 	 * ipfw_chk() has already tagged the packet with the divert tag. 	 * If tee is set, copy packet and return original. 	 * If not tee, consume packet and send it to divert socket. 	 */
-ifdef|#
-directive|ifdef
-name|IPDIVERT
 name|struct
 name|mbuf
 modifier|*
@@ -1195,6 +1203,16 @@ name|reass
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Is divert module loaded? */
+if|if
+condition|(
+name|ip_divert_ptr
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|nodivert
+goto|;
 comment|/* Cloning needed for tee? */
 if|if
 condition|(
@@ -1389,8 +1407,12 @@ comment|/* Do the dirty job... */
 if|if
 condition|(
 name|clone
+operator|&&
+name|ip_divert_ptr
+operator|!=
+name|NULL
 condition|)
-name|divert_packet
+name|ip_divert_ptr
 argument_list|(
 name|clone
 argument_list|,
@@ -1411,8 +1433,8 @@ comment|/* Packet diverted and consumed */
 return|return
 literal|1
 return|;
-else|#
-directive|else
+name|nodivert
+label|:
 name|m_freem
 argument_list|(
 operator|*
@@ -1422,9 +1444,6 @@ expr_stmt|;
 return|return
 literal|1
 return|;
-endif|#
-directive|endif
-comment|/* ipdivert */
 block|}
 end_function
 
