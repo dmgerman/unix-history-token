@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pc98/pc98/atapi.h>
 end_include
 

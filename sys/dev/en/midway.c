@@ -597,16 +597,6 @@ end_elif
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_comment
-comment|/* for DELAY */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<dev/en/midwayreg.h>
 end_include
 

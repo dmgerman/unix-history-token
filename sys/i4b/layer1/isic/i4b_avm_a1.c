@@ -55,12 +55,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/i4b_debug.h>
 end_include
 

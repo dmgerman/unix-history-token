@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ppbus/ppbconf.h>
 end_include
 

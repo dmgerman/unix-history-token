@@ -168,16 +168,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_comment
-comment|/* XXX: temporal workaround for fxp issue */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<netinet6/in6_var.h>
 end_include
 

@@ -125,12 +125,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/cons.h>
 end_include
 
