@@ -69,7 +69,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: ascmagic.c,v 1.32 2002/07/03 18:26:37 christos Exp $"
+literal|"@(#)$Id: ascmagic.c,v 1.33 2003/02/08 18:33:53 christos Exp $"
 argument_list|)
 end_macro
 
@@ -274,6 +274,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|unsigned
 name|char
 name|nbuf
 index|[
@@ -899,6 +900,11 @@ if|if
 condition|(
 name|ascmatch
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|p
 operator|->
 name|name
@@ -2929,6 +2935,8 @@ return|;
 block|}
 return|return
 literal|1
+operator|+
+name|bigend
 return|;
 block|}
 end_function

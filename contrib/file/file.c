@@ -196,7 +196,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: file.c,v 1.66 2002/07/03 19:00:41 christos Exp $"
+literal|"@(#)$Id: file.c,v 1.68 2003/02/08 18:33:53 christos Exp $"
 argument_list|)
 end_macro
 
@@ -351,11 +351,16 @@ name|iflag
 init|=
 literal|0
 decl_stmt|,
+name|nopad
+init|=
+literal|0
+decl_stmt|,
+comment|/* Don't pad output			*/
 name|nobuffer
 init|=
 literal|0
 decl_stmt|,
-comment|/* Do not buffer stdout */
+comment|/* Do not buffer stdout 		*/
 name|kflag
 init|=
 literal|0
@@ -417,6 +422,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|separator
+init|=
+literal|':'
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Default field separator		*/
+end_comment
+
+begin_decl_stmt
+name|char
 modifier|*
 name|progname
 decl_stmt|;
@@ -461,7 +478,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_GETOPT_H
+name|HAVE_GETOPT_LONG
 end_ifdef
 
 begin_function_decl
@@ -562,10 +579,10 @@ decl_stmt|;
 define|#
 directive|define
 name|OPTSTRING
-value|"bcdf:ikm:nsvzCL"
+value|"bcdf:F:ikm:nNsvzCL"
 ifdef|#
 directive|ifdef
-name|HAVE_GETOPT_H
+name|HAVE_GETOPT_LONG
 name|int
 name|longindex
 decl_stmt|;
@@ -637,6 +654,16 @@ literal|'f'
 block|}
 block|,
 block|{
+literal|"separator"
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|'F'
+block|}
+block|,
+block|{
 literal|"mime"
 block|,
 literal|0
@@ -699,6 +726,16 @@ block|,
 literal|0
 block|,
 literal|'n'
+block|}
+block|,
+block|{
+literal|"no-pad"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'N'
 block|}
 block|,
 block|{
@@ -892,7 +929,7 @@ block|}
 block|}
 ifndef|#
 directive|ifndef
-name|HAVE_GETOPT_H
+name|HAVE_GETOPT_LONG
 while|while
 condition|(
 operator|(
@@ -945,7 +982,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|HAVE_GETOPT_H
+name|HAVE_GETOPT_LONG
 case|case
 literal|0
 case|:
@@ -1033,6 +1070,15 @@ name|didsomefiles
 expr_stmt|;
 break|break;
 case|case
+literal|'F'
+case|:
+name|separator
+operator|=
+operator|*
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'i'
 case|:
 name|iflag
@@ -1104,6 +1150,13 @@ literal|'n'
 case|:
 operator|++
 name|nobuffer
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+operator|++
+name|nopad
 expr_stmt|;
 break|break;
 case|case
@@ -1641,20 +1694,30 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s:%*s "
+literal|"%s%c%*s"
 argument_list|,
 name|inname
+argument_list|,
+name|separator
 argument_list|,
 call|(
 name|int
 call|)
 argument_list|(
+name|nopad
+condition|?
+literal|0
+else|:
+literal|1
+operator|+
+operator|(
 name|wid
 operator|-
 name|strlen
 argument_list|(
 name|inname
 argument_list|)
+operator|)
 argument_list|)
 argument_list|,
 literal|""
@@ -2108,7 +2171,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_GETOPT_H
+name|HAVE_GETOPT_LONG
 operator|(
 name|void
 operator|)
@@ -2132,7 +2195,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_GETOPT_H
+name|HAVE_GETOPT_LONG
 end_ifdef
 
 begin_function
