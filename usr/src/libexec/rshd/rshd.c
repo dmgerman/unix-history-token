@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.17.1.2 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,7 +222,7 @@ name|from
 decl_stmt|;
 name|openlog
 argument_list|(
-literal|"rsh"
+literal|"rshd"
 argument_list|,
 name|LOG_PID
 operator||
@@ -280,12 +280,8 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"usage: rshd [-l]"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -1155,13 +1151,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|c
-operator|==
-literal|0
-condition|)
-break|break;
 name|port
 operator|=
 name|port
@@ -2519,6 +2508,37 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_block
+
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
+block|{
+ifdef|#
+directive|ifdef
+name|KERBEROS
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"usage: rshd [-l] [-n]"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"usage: rshd [-l] [-n] [-k] [-v] [-e]"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
