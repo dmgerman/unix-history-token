@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pty.c,v 1.7 1997/08/13 20:42:18 steve Exp $"
+literal|"$Id: pty.c,v 1.8 1998/10/09 11:24:20 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,7 +169,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|static
 name|char
 name|line
 index|[]
