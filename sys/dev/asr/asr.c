@@ -1647,17 +1647,6 @@ begin_comment
 comment|/*  * devsw for asr hba driver  *  * only ioctl is used. the sd driver provides all other access.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|154
-end_define
-
-begin_comment
-comment|/* preferred default character major */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1694,11 +1683,6 @@ operator|.
 name|d_name
 operator|=
 literal|"asr"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt
