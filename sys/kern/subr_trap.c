@@ -414,17 +414,11 @@ name|struct
 name|thread
 modifier|*
 name|td
-init|=
-name|curthread
 decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|td
-operator|->
-name|td_proc
 decl_stmt|;
 name|struct
 name|kse
@@ -435,10 +429,6 @@ name|struct
 name|ksegrp
 modifier|*
 name|kg
-init|=
-name|td
-operator|->
-name|td_ksegrp
 decl_stmt|;
 name|struct
 name|rlimit
@@ -476,6 +466,16 @@ name|ucode
 decl_stmt|;
 endif|#
 directive|endif
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_SYSC
@@ -538,11 +538,12 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-name|prticks
+name|kg
 operator|=
-literal|0
+name|td
+operator|->
+name|td_ksegrp
 expr_stmt|;
-comment|/* XXX: Quiet warning. */
 name|td
 operator|->
 name|td_frame
@@ -568,17 +569,17 @@ name|ke
 operator|->
 name|ke_sticks
 expr_stmt|;
-name|sflag
-operator|=
-name|p
-operator|->
-name|p_sflag
-expr_stmt|;
 name|flags
 operator|=
 name|ke
 operator|->
 name|ke_flags
+expr_stmt|;
+name|sflag
+operator|=
+name|p
+operator|->
+name|p_sflag
 expr_stmt|;
 name|p
 operator|->
@@ -612,6 +613,10 @@ name|cnt
 operator|.
 name|v_soft
 operator|++
+expr_stmt|;
+name|prticks
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -865,7 +870,7 @@ name|rlim
 operator|->
 name|rlim_max
 condition|)
-comment|/* XXX: we should make a private copy */
+comment|/* XXX: we should make a private copy. */
 name|rlim
 operator|->
 name|rlim_cur
