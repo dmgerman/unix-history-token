@@ -1626,11 +1626,6 @@ name|mlx_v5_fw_handshake
 expr_stmt|;
 break|break;
 default|default:
-name|mlx_free
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -1734,11 +1729,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mlx_free
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -1805,11 +1795,6 @@ argument_list|,
 literal|"can't allocate interrupt\n"
 argument_list|)
 expr_stmt|;
-name|mlx_free
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -1854,11 +1839,6 @@ operator|->
 name|mlx_dev
 argument_list|,
 literal|"can't set up interrupt\n"
-argument_list|)
-expr_stmt|;
-name|mlx_free
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1933,11 +1913,6 @@ argument_list|,
 literal|"can't allocate buffer DMA tag\n"
 argument_list|)
 expr_stmt|;
-name|mlx_free
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -1966,11 +1941,6 @@ operator|->
 name|mlx_dev
 argument_list|,
 literal|"can't make initial s/g list mapping\n"
-argument_list|)
-expr_stmt|;
-name|mlx_free
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -2021,11 +1991,6 @@ operator|->
 name|mlx_dev
 argument_list|,
 literal|"ENQUIRY2 failed\n"
-argument_list|)
-expr_stmt|;
-name|mlx_free
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -2091,11 +2056,6 @@ operator|->
 name|mlx_dev
 argument_list|,
 literal|"ENQUIRY_OLD failed\n"
-argument_list|)
-expr_stmt|;
-name|mlx_free
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -2264,11 +2224,6 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|mlx_free
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -2298,11 +2253,6 @@ operator|->
 name|mlx_dev
 argument_list|,
 literal|"can't make final s/g list mapping\n"
-argument_list|)
-expr_stmt|;
-name|mlx_free
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return

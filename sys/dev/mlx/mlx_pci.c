@@ -932,6 +932,11 @@ name|error
 operator|!=
 literal|0
 condition|)
+name|mlx_free
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
