@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine deletes a window and releases it back to the system.  *  * %G% (Berkeley) @(#)delwin.c	1.5  */
+comment|/*  *	This routine deletes a window and releases it back to the system.  *  * @(#)delwin.c	1.6 (Berkeley) %G%  */
 end_comment
 
 begin_macro
@@ -70,7 +70,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|cfree
+name|free
 argument_list|(
 name|win
 operator|->
@@ -78,6 +78,20 @@ name|_y
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|win
+operator|->
+name|_firstch
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|win
+operator|->
+name|_lastch
 argument_list|)
 expr_stmt|;
 name|wp
@@ -112,7 +126,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * If we are a subwindow, take ourself out of the 		 * list.  NOTE: if we are a subwindow, the minimum list 		 * is orig followed by this subwindow, so there are 		 * always at least two windows in the list. 		 */
+comment|/* 		 * If we are a subwindow, take ourselves out of the 		 * list.  NOTE: if we are a subwindow, the minimum list 		 * is orig followed by this subwindow, so there are 		 * always at least two windows in the list. 		 */
 for|for
 control|(
 name|wp
@@ -143,28 +157,14 @@ operator|->
 name|_nextp
 expr_stmt|;
 block|}
-name|cfree
+name|free
 argument_list|(
 name|win
 operator|->
 name|_y
 argument_list|)
 expr_stmt|;
-name|cfree
-argument_list|(
-name|win
-operator|->
-name|_firstch
-argument_list|)
-expr_stmt|;
-name|cfree
-argument_list|(
-name|win
-operator|->
-name|_lastch
-argument_list|)
-expr_stmt|;
-name|cfree
+name|free
 argument_list|(
 name|win
 argument_list|)
