@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.32 1998/07/15 06:51:14 bde Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.33 1998/08/17 17:28:10 bde Exp $  */
 end_comment
 
 begin_comment
@@ -4261,9 +4261,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|caddr_t
-name|sa
-decl_stmt|;
 name|struct
 name|aiocb
 modifier|*
@@ -6276,8 +6273,6 @@ name|s
 decl_stmt|;
 name|int
 name|jobref
-decl_stmt|,
-name|status
 decl_stmt|;
 name|struct
 name|aiocblist
@@ -6296,11 +6291,6 @@ name|struct
 name|kaioinfo
 modifier|*
 name|ki
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|userp
 decl_stmt|;
 name|ki
 operator|=
@@ -7271,11 +7261,6 @@ name|ki
 decl_stmt|;
 name|int
 name|jobref
-decl_stmt|;
-name|int
-name|error
-decl_stmt|,
-name|status
 decl_stmt|;
 name|ki
 operator|=
