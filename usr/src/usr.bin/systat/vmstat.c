@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.22 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2816,6 +2816,8 @@ argument_list|(
 name|total
 operator|.
 name|t_rq
+operator|-
+literal|1
 argument_list|,
 name|PROCSROW
 operator|+
