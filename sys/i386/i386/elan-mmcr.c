@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $FreeBSD$  *  * The AMD Elan sc520 is a system-on-chip gadget which is used in embedded  * kind of things, see www.soekris.com for instance, and it has a few quirks  * we need to deal with.  * Unfortunately we cannot identify the gadget by CPUID output because it  * depends on strapping options and only the stepping field may be useful  * and those are undocumented from AMDs side.  *  * So instead we recognize the on-chip host-PCI bridge and call back from  * sys/i386/pci/pci_bus.c to here if we find it.  *  * #ifdef ELAN_PPS  *   The Elan has three general purpose counters, which when used just right  *   can hardware timestamp external events with approx 250 nanoseconds  *   resolution _and_ precision.  Connect the signal to TMR1IN and PIO7.  *   (You can use any PIO pin, look for PIO7 to change this).  Use the  *   PPS-API on the /dev/elan-mmcr device.  * #endif ELAN_PPS  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  *  * The AMD Elan sc520 is a system-on-chip gadget which is used in embedded  * kind of things, see www.soekris.com for instance, and it has a few quirks  * we need to deal with.  * Unfortunately we cannot identify the gadget by CPUID output because it  * depends on strapping options and only the stepping field may be useful  * and those are undocumented from AMDs side.  *  * So instead we recognize the on-chip host-PCI bridge and call back from  * sys/i386/pci/pci_bus.c to here if we find it.  *  * #ifdef ELAN_PPS  *   The Elan has three general purpose counters, which when used just right  *   can hardware timestamp external events with approx 250 nanoseconds  *   resolution _and_ precision.  Connect the signal to TMR1IN and PIO7.  *   (You can use any PIO pin, look for PIO7 to change this).  Use the  *   PPS-API on the /dev/elan-mmcr device.  * #endif ELAN_PPS  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

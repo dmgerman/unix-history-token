@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  * $FreeBSD$  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Limited emulation 27.12.91 - mostly loads/stores, which gcc wants  * even for soft-float, unless you use bruce evans' patches. The patches  * are great, but they have to be re-applied for every version, and the  * library is different for soft-float and 80387. So emulation is more  * practical, even though it's slower.  *  * 28.12.91 - loads/stores work, even BCD. I'll have to start thinking  * about add/sub/mul/div. Urgel. I should find some good source, but I'll  * just fake up something.  *  * 30.12.91 - add/sub/mul/div/com seem to work mostly. I should really  * test every possible combination.  */
