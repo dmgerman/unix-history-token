@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.32.1.1 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,7 +210,7 @@ name|use_kerberos
 init|=
 literal|1
 decl_stmt|,
-name|encrypt
+name|doencrypt
 decl_stmt|;
 end_decl_stmt
 
@@ -827,7 +827,7 @@ operator|=
 name|getservbyname
 argument_list|(
 operator|(
-name|encrypt
+name|doencrypt
 condition|?
 literal|"eklogin"
 else|:
@@ -852,7 +852,7 @@ name|warning
 argument_list|(
 literal|"can't get entry for %s/tcp service"
 argument_list|,
-name|encrypt
+name|doencrypt
 condition|?
 literal|"eklogin"
 else|:
@@ -1760,6 +1760,8 @@ begin_block
 block|{
 name|int
 name|w
+decl_stmt|,
+name|wstatus
 decl_stmt|;
 name|mode
 argument_list|(
@@ -1802,12 +1804,8 @@ name|w
 operator|=
 name|wait
 argument_list|(
-operator|(
-expr|union
-name|wait
-operator|*
-operator|)
-literal|0
+operator|&
+name|wstatus
 argument_list|)
 operator|)
 operator|>
@@ -1833,6 +1831,13 @@ name|dosigwinch
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|sigwinch
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * This is called when the reader process gets the out-of-band (urgent)  * request to turn on the window-changing protocol.  */
 end_comment
@@ -1842,10 +1847,6 @@ name|void
 name|writeroob
 parameter_list|()
 block|{
-name|void
-name|sigwinch
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|dosigwinch
@@ -1896,6 +1897,10 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,
