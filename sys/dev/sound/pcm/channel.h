@@ -236,6 +236,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_int32_t
+name|chn_getformats
+parameter_list|(
+name|pcm_channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|chn_allocbuf
 parameter_list|(
@@ -316,6 +327,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|fmtvalid
+parameter_list|(
+name|u_int32_t
+name|fmt
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|fmtlist
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|buf_isadma
 parameter_list|(
@@ -339,24 +364,6 @@ name|b
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|int
-name|chn_feedchain
-parameter_list|(
-name|pcm_channel
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|pcm_feeder
-name|feeder_root
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
