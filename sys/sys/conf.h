@@ -131,6 +131,15 @@ name|struct
 name|timespec
 name|si_mtime
 decl_stmt|;
+name|uid_t
+name|si_uid
+decl_stmt|;
+name|gid_t
+name|si_gid
+decl_stmt|;
+name|mode_t
+name|si_mode
+decl_stmt|;
 name|u_int
 name|si_drv0
 decl_stmt|;
@@ -149,13 +158,6 @@ argument|cdev
 argument_list|)
 name|si_clone
 expr_stmt|;
-name|LIST_ENTRY
-argument_list|(
-argument|cdev
-argument_list|)
-name|si_hash
-expr_stmt|;
-comment|/* UNUSED */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -741,17 +743,6 @@ begin_comment
 comment|/* cdevsw initialized */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|D_ALLOCMAJ
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* major# is allocated */
-end_comment
-
 begin_comment
 comment|/*  * Character device switch table  */
 end_comment
@@ -762,9 +753,6 @@ name|cdevsw
 block|{
 name|int
 name|d_version
-decl_stmt|;
-name|int
-name|d_maj
 decl_stmt|;
 name|u_int
 name|d_flags
@@ -1075,6 +1063,18 @@ name|struct
 name|cdev
 modifier|*
 name|_cdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dev_ref
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
