@@ -859,6 +859,12 @@ decl_stmt|;
 comment|/* User process */
 comment|/* Not td! */
 name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+comment|/* Active credential when created */
+name|struct
 name|file
 modifier|*
 name|fd_file
@@ -2622,6 +2628,13 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
+name|crfree
+argument_list|(
+name|aiocbe
+operator|->
+name|cred
+argument_list|)
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|aiocb_zone
@@ -3368,6 +3381,11 @@ name|aiocbe
 parameter_list|)
 block|{
 name|struct
+name|ucred
+modifier|*
+name|td_savedcred
+decl_stmt|;
+name|struct
 name|thread
 modifier|*
 name|td
@@ -3414,6 +3432,20 @@ decl_stmt|;
 name|td
 operator|=
 name|curthread
+expr_stmt|;
+name|td_savedcred
+operator|=
+name|td
+operator|->
+name|td_ucred
+expr_stmt|;
+name|td
+operator|->
+name|td_ucred
+operator|=
+name|aiocbe
+operator|->
+name|cred
 expr_stmt|;
 name|mycp
 operator|=
@@ -3718,6 +3750,12 @@ operator|.
 name|status
 operator|=
 name|cnt
+expr_stmt|;
+name|td
+operator|->
+name|td_ucred
+operator|=
+name|td_savedcred
 expr_stmt|;
 block|}
 end_function
@@ -6718,6 +6756,17 @@ operator|->
 name|userproc
 operator|=
 name|p
+expr_stmt|;
+name|aiocbe
+operator|->
+name|cred
+operator|=
+name|crhold
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|)
 expr_stmt|;
 name|aiocbe
 operator|->
