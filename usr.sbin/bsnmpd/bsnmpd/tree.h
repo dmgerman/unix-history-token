@@ -256,6 +256,13 @@ name|LEAF_begemotSnmpdTrap1Addr
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|LEAF_begemotSnmpdVersionEnable
+value|5
+end_define
+
 begin_function_decl
 name|int
 name|op_trapsink
@@ -495,7 +502,7 @@ end_define
 
 begin_function_decl
 name|int
-name|op_local_port
+name|op_lsock_port
 parameter_list|(
 name|struct
 name|snmp_context
@@ -520,6 +527,49 @@ define|#
 directive|define
 name|LEAF_begemotSnmpdLocalPortStatus
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LEAF_begemotSnmpdLocalPortType
+value|3
+end_define
+
+begin_function_decl
+name|int
+name|op_transport_table
+parameter_list|(
+name|struct
+name|snmp_context
+modifier|*
+parameter_list|,
+name|struct
+name|snmp_value
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
+name|enum
+name|snmp_op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|LEAF_begemotSnmpdTransportStatus
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LEAF_begemotSnmpdTransportOid
+value|3
 end_define
 
 begin_function_decl
@@ -555,7 +605,7 @@ begin_define
 define|#
 directive|define
 name|CTREE_SIZE
-value|40
+value|44
 end_define
 
 begin_decl_stmt

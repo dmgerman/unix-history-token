@@ -175,5 +175,68 @@ name|OIDX_authenticationFailure
 value|{ 10, { 1, 3, 6, 1, 6, 3, 1, 1, 5, 5, } }
 end_define
 
+begin_define
+define|#
+directive|define
+name|OID_begemotSnmpdTransUdp
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|OIDLEN_begemotSnmpdTransUdp
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|OIDX_begemotSnmpdTransUdp
+value|{ 12, { 1, 3, 6, 1, 4, 1, 12325, 1, 1, 1, 10, 2, } }
+end_define
+
+begin_define
+define|#
+directive|define
+name|OID_begemotSnmpdTransLsock
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|OIDLEN_begemotSnmpdTransLsock
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|OIDX_begemotSnmpdTransLsock
+value|{ 12, { 1, 3, 6, 1, 4, 1, 12325, 1, 1, 1, 10, 3, } }
+end_define
+
+begin_define
+define|#
+directive|define
+name|OID_begemotSnmpdLocalPortTable
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|OIDLEN_begemotSnmpdLocalPortTable
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|OIDX_begemotSnmpdLocalPortTable
+value|{ 11, { 1, 3, 6, 1, 4, 1, 12325, 1, 1, 1, 9, } }
+end_define
+
 end_unit
 
