@@ -27,6 +27,18 @@ directive|include
 file|<machine/elf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/elf32.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/elf64.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
