@@ -385,7 +385,7 @@ end_ifndef
 
 begin_function_decl
 name|void
-name|atpic_sched_ithd
+name|atpic_handle_intr
 parameter_list|(
 name|struct
 name|intrframe

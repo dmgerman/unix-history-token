@@ -882,9 +882,9 @@ modifier|*
 name|isrc
 parameter_list|)
 block|{
-name|TODO
+name|lapic_eoi
+argument_list|()
 expr_stmt|;
-comment|/* lapic_eoi(); */
 block|}
 end_function
 

@@ -35,6 +35,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|clkintr_pending
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|disable_rtc_set
 decl_stmt|;
 end_decl_stmt

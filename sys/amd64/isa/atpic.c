@@ -983,6 +983,10 @@ directive|endif
 block|}
 end_function
 
+begin_comment
+comment|/*  * The data sheet says no auto-EOI on slave, but it sometimes works.  * So, if AUTO_EOI_2 is enabled, we use it.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1631,7 +1635,7 @@ end_macro
 
 begin_function
 name|void
-name|atpic_sched_ithd
+name|atpic_handle_intr
 parameter_list|(
 name|struct
 name|intrframe
