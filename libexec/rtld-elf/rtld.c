@@ -11542,7 +11542,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* XXX not sure what variants to use for arm and powerpc. */
+comment|/* XXX not sure what variants to use for arm. */
 end_comment
 
 begin_if
@@ -11556,6 +11556,11 @@ operator|||
 name|defined
 argument_list|(
 name|__alpha__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
 argument_list|)
 end_if
 
@@ -11607,20 +11612,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|assert
-argument_list|(
-name|tcbsize
-operator|==
-literal|16
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|tcbalign
-operator|==
-literal|16
-argument_list|)
-expr_stmt|;
 name|size
 operator|=
 name|tls_static_space
