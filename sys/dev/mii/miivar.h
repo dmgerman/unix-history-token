@@ -26,7 +26,7 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/*  * Media Independent Interface autoconfiguration defintions.  *  * This file exports an interface which attempts to be compatible  * with the BSD/OS 3.0 interface.  */
+comment|/*  * Media Independent Interface configuration defintions.  */
 end_comment
 
 begin_struct_decl
@@ -267,15 +267,23 @@ name|mii_capabilities
 decl_stmt|;
 comment|/* capabilities from BMSR */
 name|int
+name|mii_extcapabilities
+decl_stmt|;
+comment|/* extended capabilities */
+name|int
 name|mii_ticks
 decl_stmt|;
 comment|/* MII_TICK counter */
 name|int
-name|mii_active
+name|mii_anegticks
+decl_stmt|;
+comment|/* ticks before retrying aneg */
+name|int
+name|mii_media_active
 decl_stmt|;
 comment|/* last active media */
 name|int
-name|mii_status
+name|mii_media_status
 decl_stmt|;
 comment|/* last active status */
 block|}

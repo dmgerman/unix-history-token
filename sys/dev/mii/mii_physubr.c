@@ -709,7 +709,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|mii_active
+name|mii_media_active
 operator|!=
 name|mii
 operator|->
@@ -729,7 +729,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|mii_active
+name|mii_media_active
 operator|=
 name|mii
 operator|->
@@ -740,7 +740,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|mii_status
+name|mii_media_status
 operator|!=
 name|mii
 operator|->
@@ -756,7 +756,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|mii_status
+name|mii_media_status
 operator|=
 name|mii
 operator|->
