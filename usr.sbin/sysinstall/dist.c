@@ -3687,10 +3687,15 @@ name|done
 goto|;
 block|}
 else|else
-name|numchunks
+block|{
+name|status
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 block|}
 comment|/* Fall through from "we got the attribute file, now get the pieces" step */
 if|if
