@@ -2187,13 +2187,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|cache_purgeleafdirs
+name|int
+name|cache_leaf_test
 name|__P
 argument_list|(
 operator|(
-name|int
-name|ndir
+expr|struct
+name|vnode
+operator|*
+name|vp
 operator|)
 argument_list|)
 decl_stmt|;
