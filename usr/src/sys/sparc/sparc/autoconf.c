@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	7.4 (Berkeley) %G%  *  * from: $Header: autoconf.c,v 1.31 93/04/07 01:34:47 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	7.5 (Berkeley) %G%  *  * from: $Header: autoconf.c,v 1.32 93/05/28 03:55:59 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -3874,11 +3874,8 @@ name|nswapdev
 operator|=
 name|nrootdev
 expr_stmt|;
-name|swaponroot
-operator|++
-expr_stmt|;
 goto|goto
-name|setswap
+name|gotswap
 goto|;
 block|}
 block|}
@@ -3988,6 +3985,13 @@ name|NULL
 condition|)
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|GENERIC
+name|gotswap
+label|:
+endif|#
+directive|endif
 name|rootdev
 operator|=
 name|nrootdev
