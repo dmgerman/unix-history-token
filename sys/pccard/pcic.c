@@ -465,7 +465,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|putw
+name|pcic_putw
 parameter_list|(
 name|struct
 name|pcic_slot
@@ -744,7 +744,7 @@ operator|>>
 literal|12
 decl_stmt|;
 comment|/* 		 * Write the addresses, card offsets and length. 		 * The values are all stored as the upper 12 bits of the 		 * 24 bit address i.e everything is allocated as 4 Kb chunks. 		 */
-name|putw
+name|pcic_putw
 argument_list|(
 name|sp
 argument_list|,
@@ -755,7 +755,7 @@ operator|&
 literal|0xFFF
 argument_list|)
 expr_stmt|;
-name|putw
+name|pcic_putw
 argument_list|(
 name|sp
 argument_list|,
@@ -780,7 +780,7 @@ operator|&
 literal|0xFFF
 argument_list|)
 expr_stmt|;
-name|putw
+name|pcic_putw
 argument_list|(
 name|sp
 argument_list|,
@@ -953,7 +953,7 @@ operator|<<
 name|win
 argument_list|)
 expr_stmt|;
-name|putw
+name|pcic_putw
 argument_list|(
 name|sp
 argument_list|,
@@ -962,7 +962,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|putw
+name|pcic_putw
 argument_list|(
 name|sp
 argument_list|,
@@ -973,7 +973,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|putw
+name|pcic_putw
 argument_list|(
 name|sp
 argument_list|,
@@ -1127,7 +1127,7 @@ name|x
 decl_stmt|,
 name|ioctlv
 decl_stmt|;
-name|putw
+name|pcic_putw
 argument_list|(
 name|sp
 argument_list|,
@@ -1138,7 +1138,7 @@ operator|->
 name|start
 argument_list|)
 expr_stmt|;
-name|putw
+name|pcic_putw
 argument_list|(
 name|sp
 argument_list|,
@@ -1314,7 +1314,7 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
-name|putw
+name|pcic_putw
 argument_list|(
 name|sp
 argument_list|,
@@ -1323,7 +1323,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|putw
+name|pcic_putw
 argument_list|(
 name|sp
 argument_list|,
@@ -1346,7 +1346,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|do_mgt_irq
+name|pcic_do_mgt_irq
 parameter_list|(
 name|struct
 name|pcic_slot
@@ -1867,7 +1867,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-name|do_mgt_irq
+name|pcic_do_mgt_irq
 argument_list|(
 name|sp
 argument_list|,
@@ -2337,7 +2337,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Technically, The A, B, C stepping didn't support the 3.3V 		 * cards.  However, many cardbus bridges are identified 		 * as AB cards by our probe routine, so we do both.  It 		 * won't hurt the A, B, C bridges that don't support this 		 * bit since it is one of the reserved bits. 		 */
+comment|/* 		 * Technically, The A, B, C stepping didn't support 		 * the 3.3V cards.  However, many cardbus bridges are 		 * identified as B step cards by our probe routine, so 		 * we do both.  It won't hurt the A, B, C bridges that 		 * don't support this bit since it is one of the 		 * reserved bits. 		 */
 if|if
 condition|(
 name|sc
@@ -3203,7 +3203,7 @@ name|slt
 operator|->
 name|cdata
 decl_stmt|;
-name|do_mgt_irq
+name|pcic_do_mgt_irq
 argument_list|(
 name|sp
 argument_list|,
