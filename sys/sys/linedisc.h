@@ -957,6 +957,9 @@ decl_stmt|;
 name|int
 name|sw_nblks
 decl_stmt|;
+name|int
+name|sw_used
+decl_stmt|;
 name|struct
 name|vnode
 modifier|*

@@ -346,6 +346,10 @@ begin_comment
 comment|/* maximum in-progress async I/O's	*/
 end_comment
 
+begin_comment
+comment|/* from vm_swap.c */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -355,9 +359,21 @@ name|swapdev_vp
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* from vm_swap.c */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|struct
+name|swdevt
+modifier|*
+name|swdevt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nswdev
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -379,6 +395,16 @@ literal|"Maximum running async swap ops"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|BLK2DEVIDX
+parameter_list|(
+name|blk
+parameter_list|)
+value|(nswdev> 1 ? blk / dmmax % nswdev : 0)
+end_define
 
 begin_comment
 comment|/*  * "named" and "unnamed" anon region objects.  Try to reduce the overhead  * of searching a named list by hashing it just a little.  */
@@ -1459,6 +1485,19 @@ name|vm_swap_size
 operator|-=
 name|npages
 expr_stmt|;
+comment|/* per-swap area stats */
+name|swdevt
+index|[
+name|BLK2DEVIDX
+argument_list|(
+name|blk
+argument_list|)
+index|]
+operator|.
+name|sw_used
+operator|+=
+name|npages
+expr_stmt|;
 name|swp_sizecheck
 argument_list|()
 expr_stmt|;
@@ -1503,6 +1542,19 @@ argument_list|)
 expr_stmt|;
 name|vm_swap_size
 operator|+=
+name|npages
+expr_stmt|;
+comment|/* per-swap area stats */
+name|swdevt
+index|[
+name|BLK2DEVIDX
+argument_list|(
+name|blk
+argument_list|)
+index|]
+operator|.
+name|sw_used
+operator|-=
 name|npages
 expr_stmt|;
 name|swp_sizecheck
