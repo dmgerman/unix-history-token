@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994, 1995 Jan-Simon Pendry.  * Copyright (c) 1992, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)union_vnops.c	8.32 (Berkeley) 6/23/95  * $Id: union_vnops.c,v 1.32 1997/05/02 03:21:54 kato Exp $  */
+comment|/*  * Copyright (c) 1992, 1993, 1994, 1995 Jan-Simon Pendry.  * Copyright (c) 1992, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)union_vnops.c	8.32 (Berkeley) 6/23/95  * $Id: union_vnops.c,v 1.33 1997/05/03 01:55:19 kato Exp $  */
 end_comment
 
 begin_include
@@ -132,7 +132,7 @@ value|(un)->un_flags&= ~UN_KLOCK
 end_define
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_abortop
 name|__P
@@ -148,7 +148,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_access
 name|__P
@@ -164,7 +164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_advlock
 name|__P
@@ -180,7 +180,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_bmap
 name|__P
@@ -196,7 +196,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_close
 name|__P
@@ -212,7 +212,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_create
 name|__P
@@ -249,7 +249,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_fsync
 name|__P
@@ -265,7 +265,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_getattr
 name|__P
@@ -281,7 +281,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_inactive
 name|__P
@@ -297,7 +297,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_ioctl
 name|__P
@@ -313,7 +313,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_islocked
 name|__P
@@ -329,7 +329,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_lease
 name|__P
@@ -345,7 +345,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_link
 name|__P
@@ -361,7 +361,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_lock
 name|__P
@@ -377,7 +377,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_lookup
 name|__P
@@ -426,7 +426,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_mkdir
 name|__P
@@ -442,7 +442,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_mknod
 name|__P
@@ -458,7 +458,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_mmap
 name|__P
@@ -474,7 +474,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_open
 name|__P
@@ -490,7 +490,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_pathconf
 name|__P
@@ -506,7 +506,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_print
 name|__P
@@ -522,7 +522,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_read
 name|__P
@@ -538,7 +538,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_readdir
 name|__P
@@ -554,7 +554,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_readlink
 name|__P
@@ -570,7 +570,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_reclaim
 name|__P
@@ -586,7 +586,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_remove
 name|__P
@@ -602,7 +602,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_rename
 name|__P
@@ -618,7 +618,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_revoke
 name|__P
@@ -634,7 +634,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_rmdir
 name|__P
@@ -650,7 +650,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_seek
 name|__P
@@ -666,7 +666,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_select
 name|__P
@@ -682,7 +682,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_setattr
 name|__P
@@ -698,7 +698,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_strategy
 name|__P
@@ -714,7 +714,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_symlink
 name|__P
@@ -730,7 +730,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_unlock
 name|__P
@@ -746,7 +746,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_whiteout
 name|__P
@@ -762,7 +762,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|union_write
 name|__P
@@ -1100,6 +1100,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_lookup
 parameter_list|(
@@ -2056,6 +2057,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_create
 parameter_list|(
@@ -2243,6 +2245,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_whiteout
 parameter_list|(
@@ -2325,6 +2328,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_mknod
 parameter_list|(
@@ -2520,6 +2524,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_open
 parameter_list|(
@@ -2737,6 +2742,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_close
 parameter_list|(
@@ -2838,6 +2844,7 @@ comment|/*  * Check access permission on the union vnode.  * The access check be
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|union_access
 parameter_list|(
@@ -3062,6 +3069,7 @@ comment|/*  * We handle getattr only to change the fsid and  * track object size
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|union_getattr
 parameter_list|(
@@ -3340,6 +3348,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_setattr
 parameter_list|(
@@ -3522,6 +3531,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_read
 parameter_list|(
@@ -3724,6 +3734,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_write
 parameter_list|(
@@ -3859,6 +3870,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_lease
 parameter_list|(
@@ -3909,6 +3921,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_ioctl
 parameter_list|(
@@ -3959,6 +3972,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_select
 parameter_list|(
@@ -4009,6 +4023,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_revoke
 parameter_list|(
@@ -4082,6 +4097,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_mmap
 parameter_list|(
@@ -4132,6 +4148,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_fsync
 parameter_list|(
@@ -4331,6 +4348,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_seek
 parameter_list|(
@@ -4381,6 +4399,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_remove
 parameter_list|(
@@ -4639,6 +4658,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_link
 parameter_list|(
@@ -4930,6 +4950,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_rename
 parameter_list|(
@@ -5309,6 +5330,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_mkdir
 parameter_list|(
@@ -5509,6 +5531,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_rmdir
 parameter_list|(
@@ -5769,6 +5792,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_symlink
 parameter_list|(
@@ -5917,6 +5941,7 @@ comment|/*  * union_readdir works in concert with getdirentries and  * readdir(3
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|union_readdir
 parameter_list|(
@@ -6004,6 +6029,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_readlink
 parameter_list|(
@@ -6133,6 +6159,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_abortop
 parameter_list|(
@@ -6291,6 +6318,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_inactive
 parameter_list|(
@@ -6420,6 +6448,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_reclaim
 parameter_list|(
@@ -6448,6 +6477,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_lock
 parameter_list|(
@@ -6550,6 +6580,8 @@ condition|)
 block|{
 if|if
 condition|(
+literal|0
+operator|&&
 name|VOP_ISLOCKED
 argument_list|(
 name|un
@@ -6726,6 +6758,7 @@ comment|/*  * When operations want to vput() a union node yet retain a lock on  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|union_unlock
 parameter_list|(
@@ -6906,6 +6939,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_bmap
 parameter_list|(
@@ -7025,6 +7059,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_print
 parameter_list|(
@@ -7110,6 +7145,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_islocked
 parameter_list|(
@@ -7146,6 +7182,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_pathconf
 parameter_list|(
@@ -7265,6 +7302,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|union_advlock
 parameter_list|(
@@ -7319,6 +7357,7 @@ comment|/*  * XXX - vop_strategy must be hand coded because it has no  * vnode i
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|union_strategy
 parameter_list|(
