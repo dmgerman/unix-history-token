@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makekey.c	5.3 (Berkeley) %G%"
+literal|"@(#)makekey.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -82,18 +88,30 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|void
-name|error
-argument_list|()
-decl_stmt|,
 name|get
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|()
 block|{
@@ -165,8 +183,12 @@ argument_list|)
 operator|!=
 name|len
 condition|)
-name|error
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"stdout"
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
@@ -233,36 +255,11 @@ name|errno
 operator|=
 name|EFTYPE
 expr_stmt|;
-name|error
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|error
-parameter_list|()
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"makekey: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"stdin"
 argument_list|)
 expr_stmt|;
 block|}
