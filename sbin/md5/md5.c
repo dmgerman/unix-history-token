@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: md5.c,v 1.13 1998/07/06 07:04:50 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,14 +83,14 @@ begin_define
 define|#
 directive|define
 name|TEST_BLOCK_LEN
-value|1000
+value|10000
 end_define
 
 begin_define
 define|#
 directive|define
 name|TEST_BLOCK_COUNT
-value|1000
+value|100000
 end_define
 
 begin_decl_stmt
@@ -423,6 +423,11 @@ argument_list|,
 name|TEST_BLOCK_COUNT
 argument_list|,
 name|TEST_BLOCK_LEN
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 comment|/* Initialize block */
