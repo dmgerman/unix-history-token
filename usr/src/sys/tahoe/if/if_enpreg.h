@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_enpreg.h	1.1	86/07/20	*/
+comment|/*	if_enpreg.h	1.2	86/11/29	*/
 end_comment
 
 begin_comment
-comment|/*	Copyright (c) 1984 by Communication Machinery Corporation  *  *	This file contains material which is proprietary to  *	Communication Machinery Corporation (CMC) and which  *	may not be divulged without the written permission  *	of CMC.  *  *	ENP-10 Ram Definition  *  *	3/15/85 Jon Phares  *	Update 7/10/85 S. Holmgren  *	ENP-10 update 7/21/85 J. Mullen  *	ENP-20 update 8/11/85 J. Mullen  *	Mods for CCI TAHOE system 8/14/85 J. Mullen  *   */
+comment|/*	Copyright (c) 1984 by Communication Machinery Corporation  *  *	This file contains material which is proprietary to  *	Communication Machinery Corporation (CMC) and which  *	may not be divulged without the written permission  *	of CMC.  *  *	ENP-10 Ram Definition  *  *	3/15/85 Jon Phares  *	Update 7/10/85 S. Holmgren  *	ENP-10 update 7/21/85 J. Mullen  *	ENP-20 update 8/11/85 J. Mullen  *	Mods for CCI TAHOE system 8/14/85 J. Mullen  */
 end_comment
 
 begin_define
@@ -13,332 +13,6 @@ directive|define
 name|K
 value|*1024
 end_define
-
-begin_define
-define|#
-directive|define
-name|ENPSIZE
-value|(124 K)
-end_define
-
-begin_comment
-comment|/* VME bus space allocated to enp */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MINPKTSIZE
-value|60
-end_define
-
-begin_comment
-comment|/* minimum ethernet packet size */
-end_comment
-
-begin_comment
-comment|/* Note: paged window (4 K) is identity mapped by ENP kernel to provide  * 124 K contiguous RAM (as reflected in RAM_SIZE)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RAM_WINDOW
-value|(128 K)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOACCESS_WINDOW
-value|(512)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIXED_WINDOW
-value|(RAM_WINDOW - IOACCESS_WINDOW)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAMROM_SWAP
-value|(4 K)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAM_SIZE
-value|(FIXED_WINDOW - RAMROM_SWAP)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HOST_RAMSIZE
-value|(48 K)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENP_RAMSIZE
-value|(20 K)
-end_define
-
-begin_comment
-comment|/* ...top of 4K local i/o space for ENP */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|iow10
-block|{
-name|char
-name|pad1
-index|[
-literal|0x81
-index|]
-decl_stmt|;
-comment|/* written to: causes an interrupt on the host at the vector written    read from : returns the most significant 8 bits of the slave address */
-name|char
-name|vector
-decl_stmt|;
-name|char
-name|pad2
-index|[
-literal|0x1F
-index|]
-decl_stmt|;
-name|char
-name|csrarr
-index|[
-literal|0x1E
-index|]
-decl_stmt|;
-name|char
-name|pad3
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|char
-name|ier
-decl_stmt|;
-comment|/* intr. enable reg., 0x80 == enable,0 == off*/
-name|char
-name|pad4
-index|[
-literal|1
-index|]
-decl_stmt|;
-name|char
-name|tir
-decl_stmt|;
-comment|/* transmit intr. (Level 4 INP autovector) */
-name|char
-name|pad5
-index|[
-literal|1
-index|]
-decl_stmt|;
-name|char
-name|rir
-decl_stmt|;
-comment|/* receive intr. (Level 5 INP autovector) */
-name|char
-name|pad6
-index|[
-literal|1
-index|]
-decl_stmt|;
-name|char
-name|uir
-decl_stmt|;
-comment|/* utility intr. (Level 1 INP autovector) */
-name|char
-name|pad7
-index|[
-literal|7
-index|]
-decl_stmt|;
-name|char
-name|mapfirst4k
-decl_stmt|;
-comment|/* bit 7 set means ram, clear means rom */
-name|char
-name|pad8
-index|[
-literal|0x11
-index|]
-decl_stmt|;
-name|char
-name|exr
-decl_stmt|;
-comment|/* exception register, see bit defines above */
-name|char
-name|pad9
-index|[
-literal|0xD1F
-index|]
-decl_stmt|;
-name|char
-name|hst2enp_interrupt
-decl_stmt|;
-comment|/* R or W interrupts ENP */
-name|char
-name|pad10
-index|[
-literal|0xFF
-index|]
-decl_stmt|;
-name|char
-name|hst2enp_reset
-decl_stmt|;
-comment|/* R or W resets ENP */
-block|}
-name|iow10
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-endif|notdef
-end_endif
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|iow20
-block|{
-name|char
-name|pad0
-decl_stmt|;
-name|char
-name|hst2enp_interrupt
-decl_stmt|;
-name|char
-name|pad1
-index|[
-literal|510
-index|]
-decl_stmt|;
-block|}
-name|iow20
-typedef|;
-end_typedef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|iow30
-block|{
-name|char
-name|pad0
-decl_stmt|;
-name|char
-name|impucsr
-decl_stmt|;
-name|char
-name|pad1
-index|[
-literal|0x1d
-index|]
-decl_stmt|;
-name|short
-name|bus2mpu_interrupt
-decl_stmt|;
-name|short
-name|bs2enp_wsctl
-decl_stmt|;
-name|short
-name|bs2enp_rsctl
-decl_stmt|;
-name|short
-name|enp2hst_clear_intr
-decl_stmt|;
-comment|/* 0x27 */
-name|short
-name|enp_rcv_intr
-decl_stmt|;
-name|short
-name|enp_xmit_intr
-decl_stmt|;
-name|short
-name|hst2enp_interrupt
-decl_stmt|;
-comment|/* 0x2d */
-name|short
-name|pad2
-decl_stmt|;
-name|char
-name|pad3
-index|[
-literal|0xf
-index|]
-decl_stmt|;
-name|short
-name|bus_page
-decl_stmt|;
-comment|/* Bus page register */
-name|char
-name|pad4
-index|[
-literal|0x1d
-index|]
-decl_stmt|;
-name|short
-name|lock_ctrl
-decl_stmt|;
-name|char
-name|pad5
-index|[
-literal|0x1d
-index|]
-decl_stmt|;
-name|short
-name|duart
-index|[
-literal|0x10
-index|]
-decl_stmt|;
-comment|/* 16 duart regs */
-name|char
-name|pad6
-index|[
-literal|0x1f
-index|]
-decl_stmt|;
-name|short
-name|bus_window
-decl_stmt|;
-block|}
-name|iow30
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-endif|notdef
-end_endif
 
 begin_struct
 struct|struct
@@ -354,24 +28,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|ETHADDR
-value|struct ether_addr
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHADDR_SIZE
-value|6
-end_define
-
-begin_comment
-comment|/* size of ethernet address	*/
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -381,11 +37,13 @@ name|int
 name|e_listsize
 decl_stmt|;
 comment|/* active addr entries */
-name|ETHADDR
+name|struct
+name|ether_addr
 name|e_baseaddr
 decl_stmt|;
 comment|/* addr lance is working with */
-name|ETHADDR
+name|struct
+name|ether_addr
 name|e_addrs
 index|[
 literal|16
@@ -400,97 +58,77 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|enpstat
 block|{
-name|unsigned
-name|long
+name|u_long
 name|e_xmit_successful
 decl_stmt|;
 comment|/* Successful transmissions */
-name|unsigned
-name|long
+name|u_long
 name|e_mult_retry
 decl_stmt|;
 comment|/* multiple retries on xmit */
-name|unsigned
-name|long
+name|u_long
 name|e_one_retry
 decl_stmt|;
 comment|/* single retries */
-name|unsigned
-name|long
+name|u_long
 name|e_fail_retry
 decl_stmt|;
 comment|/* too many retries */
-name|unsigned
-name|long
+name|u_long
 name|e_deferrals
 decl_stmt|;
-comment|/* transmission delayed due 						   to active medium */
-name|unsigned
-name|long
+comment|/* xmit delayed 'cuz cable busy */
+name|u_long
 name|e_xmit_buff_err
 decl_stmt|;
 comment|/* xmit data chaining failed -- 						   "can't happen" */
-name|unsigned
-name|long
+name|u_long
 name|e_silo_underrun
 decl_stmt|;
 comment|/* transmit data fetch failed */
-name|unsigned
-name|long
+name|u_long
 name|e_late_coll
 decl_stmt|;
 comment|/* collision after xmit */
-name|unsigned
-name|long
+name|u_long
 name|e_lost_carrier
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|e_babble
 decl_stmt|;
 comment|/* xmit length> 1518 */
-name|unsigned
-name|long
+name|u_long
 name|e_collision
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|e_xmit_mem_err
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|e_rcv_successful
 decl_stmt|;
 comment|/* good receptions */
-name|unsigned
-name|long
+name|u_long
 name|e_rcv_missed
 decl_stmt|;
 comment|/* no recv buff available */
-name|unsigned
-name|long
+name|u_long
 name|e_crc_err
 decl_stmt|;
 comment|/* checksum failed */
-name|unsigned
-name|long
+name|u_long
 name|e_frame_err
 decl_stmt|;
-comment|/* crc error AND 						   data length != 0 mod 8 */
-name|unsigned
-name|long
+comment|/* crc error& data length != 0 mod 8 */
+name|u_long
 name|e_rcv_buff_err
 decl_stmt|;
 comment|/* rcv data chain failure -- 						   "can't happen" */
-name|unsigned
-name|long
+name|u_long
 name|e_silo_overrun
 decl_stmt|;
 comment|/* receive data store failed */
-name|unsigned
-name|long
+name|u_long
 name|e_rcv_mem_err
 decl_stmt|;
 block|}
@@ -556,11 +194,85 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * 	ENP Ram data layout  *  *	If you don't put it here - it isn't there  *  */
+comment|/*  * ENP Ram data layout  */
 end_comment
+
+begin_comment
+comment|/*  * Note: paged window (4 K) is identity mapped by ENP kernel to provide  * 124 K contiguous RAM (as reflected in RAM_SIZE)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAM_WINDOW
+value|(128 K)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOACCESS_WINDOW
+value|(512)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIXED_WINDOW
+value|(RAM_WINDOW - IOACCESS_WINDOW)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAMROM_SWAP
+value|(4 K)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAM_SIZE
+value|(FIXED_WINDOW - RAMROM_SWAP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_RAMSIZE
+value|(48 K)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENP_RAMSIZE
+value|(20 K)
+end_define
 
 begin_typedef
 typedef|typedef
+struct|struct
+name|iow20
+block|{
+name|char
+name|pad0
+decl_stmt|;
+name|char
+name|hst2enp_interrupt
+decl_stmt|;
+name|char
+name|pad1
+index|[
+literal|510
+index|]
+decl_stmt|;
+block|}
+name|iow20
+typedef|;
+end_typedef
+
+begin_struct
 struct|struct
 name|enpdevice
 block|{
@@ -587,12 +299,10 @@ index|]
 decl_stmt|;
 struct|struct
 block|{
-name|unsigned
-name|int
+name|u_int
 name|t_go
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|t_pstart
 decl_stmt|;
 block|}
@@ -652,12 +362,10 @@ name|int
 name|e_enprun
 decl_stmt|;
 comment|/* 1108 */
-name|unsigned
-name|short
+name|u_short
 name|e_intrvec
 decl_stmt|;
-name|unsigned
-name|short
+name|u_short
 name|e_dummy
 index|[
 literal|3
@@ -692,9 +400,8 @@ name|iow20
 name|enp_iow
 decl_stmt|;
 block|}
-name|ENPDEVICE
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -830,7 +537,7 @@ value|0xff
 end_define
 
 begin_comment
-comment|/* value to poke in enp_iow.hst2enp_interrupt */
+comment|/* enp_iow.hst2enp_interrupt poke value */
 end_comment
 
 begin_define
@@ -841,7 +548,7 @@ value|0x00
 end_define
 
 begin_comment
-comment|/* value to poke in enp_iow.enp2hst_clear_intr */
+comment|/* enp_iow.enp2hst_clear_intr poke value */
 end_comment
 
 begin_define
@@ -851,7 +558,7 @@ name|INTR_ENP
 parameter_list|(
 name|addr
 parameter_list|)
-value|addr->enp_iow.hst2enp_interrupt = ENPVAL
+value|(addr->enp_iow.hst2enp_interrupt = ENPVAL)
 end_define
 
 begin_if
@@ -869,7 +576,7 @@ name|ACK_ENP_INTR
 parameter_list|(
 name|addr
 parameter_list|)
-value|addr->enp_iow.enp2hst_clear_intr = RESETVAL
+value|(addr->enp_iow.enp2hst_clear_intr = RESETVAL)
 end_define
 
 begin_define
@@ -903,7 +610,7 @@ name|IS_ENP_INTR
 parameter_list|(
 name|addr
 parameter_list|)
-value|( 1 )
+value|(1)
 end_define
 
 begin_endif
@@ -925,7 +632,7 @@ name|RESET_ENP
 parameter_list|(
 name|addr
 parameter_list|)
-value|addr->enp_iow.hst2enp_reset = 01
+value|(addr->enp_iow.hst2enp_reset = 01)
 end_define
 
 begin_else
@@ -963,7 +670,7 @@ name|addr
 parameter_list|,
 name|start
 parameter_list|)
-value|{int v; v = start; \ 			enpcopy(&v,&addr->enp_prog_start, sizeof(v) ); \ 			v = 0x80800000; \ 			enpcopy(&v,&addr->enp_go, sizeof(v) ); }
+value|{ \ 	int v = start; \ 	enpcopy(&v,&addr->enp_prog_start, sizeof(v) ); \ 	v = 0x80800000; \ 	enpcopy(&v,&addr->enp_go, sizeof(v) ); \ }
 end_define
 
 begin_else
@@ -982,7 +689,7 @@ name|start
 parameter_list|,
 name|intvec
 parameter_list|)
-value|{ addr->enp_prog_start = (unsigned int)(start); \ 				addr->enp_intrvec = (unsigned short) intvec; \ 				addr->enp_go = 0x80800000; }
+value|{ \ 	addr->enp_prog_start = (u_int)(start); \ 	addr->enp_intrvec = (u_short) intvec; \ 	addr->enp_go = 0x80800000; \ }
 end_define
 
 begin_endif
@@ -991,15 +698,8 @@ directive|endif
 endif|TAHOE
 end_endif
 
-begin_define
-define|#
-directive|define
-name|SPL_ENP
-value|spl4
-end_define
-
 begin_comment
-comment|/*  * state bits  */
+comment|/*  * State bits  */
 end_comment
 
 begin_define
@@ -1025,7 +725,7 @@ comment|/* enp is in run state */
 end_comment
 
 begin_comment
-comment|/*  * mode bits  */
+comment|/*  * Mode bits  */
 end_comment
 
 begin_define
@@ -1091,7 +791,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/*enp should examine addrlist */
+comment|/* enp should examine addrlist */
 end_comment
 
 begin_define
@@ -1102,30 +802,18 @@ value|0x40000000
 end_define
 
 begin_comment
-comment|/*enp should use supplied addr*/
+comment|/* enp should use supplied addr */
 end_comment
 
 begin_comment
-comment|/*  * 	Download ioctl definitions  */
+comment|/*  * Download ioctl definitions  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|mkioctl
-parameter_list|(
-name|type
-parameter_list|,
-name|value
-parameter_list|)
-value|(0x20000000|('type'<<8)|value)
-end_define
 
 begin_define
 define|#
 directive|define
 name|ENPIOGO
-value|mkioctl( S,1 )
+value|_IO(S,1)
 end_define
 
 begin_comment
@@ -1136,7 +824,7 @@ begin_define
 define|#
 directive|define
 name|ENPIORESET
-value|mkioctl( S,2 )
+value|_IO(S,2)
 end_define
 
 begin_comment
@@ -1144,7 +832,7 @@ comment|/* reset the enp */
 end_comment
 
 begin_comment
-comment|/*  * 	The ENP Data Buffer Structure  */
+comment|/*  * The ENP Data Buffer Structure  */
 end_comment
 
 begin_typedef
@@ -1177,68 +865,6 @@ block|}
 name|BCB
 typedef|;
 end_typedef
-
-begin_struct
-struct|struct
-name|enp_softc
-block|{
-name|struct
-name|arpcom
-name|es_ac
-decl_stmt|;
-comment|/* common ethernet structures */
-name|struct
-name|ether_addr
-name|es_boardaddr
-decl_stmt|;
-comment|/* board ethernet address */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|es_if
-value|es_ac.ac_if
-end_define
-
-begin_comment
-comment|/* network-visible interface */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|es_enaddr
-value|es_ac.ac_enaddr
-end_define
-
-begin_comment
-comment|/* hardware ethernet address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENP_OPEN
-value|1
-end_define
-
-begin_comment
-comment|/* device enpram opened	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENP_CLOSE
-value|2
-end_define
-
-begin_comment
-comment|/* device enpram closed	*/
-end_comment
 
 end_unit
 
