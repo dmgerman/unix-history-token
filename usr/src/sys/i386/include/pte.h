@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 386 page table entry and page table directory  * W.Jolitz, 8/89  *  * There are two major kinds of pte's: those which have ever existed (and are  * thus either now in core or on the swap device), and those which have  * never existed, but which will be filled on demand at first reference.  * There is a structure describing each.  There is also an ancillary  * structure used in page clustering.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)pte.h	5.1 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * 386 page table entry and page directory entry  * W.Jolitz, 8/89  *  * There are two major kinds of pte's: those which have ever existed (and are  * thus either now in core or on the swap device), and those which have  * never existed, but which will be filled on demand at first reference.  * There is a structure describing each.  There is also an ancillary  * structure used in page clustering.  */
 end_comment
 
 begin_ifndef
@@ -11,26 +15,26 @@ end_ifndef
 
 begin_struct
 struct|struct
-name|ptd
+name|pde
 block|{
 name|unsigned
 name|int
-name|pg_v
+name|pd_v
 range|:
 literal|1
 decl_stmt|,
 comment|/* valid bit */
-name|pg_prot
+name|pd_prot
 range|:
 literal|2
 decl_stmt|,
 comment|/* access control */
-name|pg_mbz1
+name|pd_mbz1
 range|:
 literal|2
 decl_stmt|,
 comment|/* reserved, must be zero */
-name|pg_u
+name|pd_u
 range|:
 literal|1
 decl_stmt|,
@@ -39,7 +43,7 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* not used */
-name|pg_mbz2
+name|pd_mbz2
 range|:
 literal|2
 decl_stmt|,
@@ -48,7 +52,7 @@ range|:
 literal|3
 decl_stmt|,
 comment|/* reserved for software */
-name|pg_pfnum
+name|pd_pfnum
 range|:
 literal|20
 decl_stmt|;
@@ -181,6 +185,28 @@ end_endif
 begin_define
 define|#
 directive|define
+name|PD_MASK
+value|0xffc00000
+end_define
+
+begin_comment
+comment|/* page directory address bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PD_SHIFT
+value|22
+end_define
+
+begin_comment
+comment|/* page directory address bits */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PG_V
 value|0x00000001
 end_define
@@ -242,7 +268,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_PFNUM
+name|PG_FRAME
 value|0xfffff000
 end_define
 

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)pcb.h	5.1 (Berkeley) %G%  */
+end_comment
+
+begin_comment
 comment|/*  * Intel 386 process control block  */
 end_comment
 
@@ -48,6 +52,19 @@ directive|define
 name|pcb_fp
 value|pcbtss.tss_ebp
 comment|/*  * Software pcb (extension)  */
+name|int
+name|pcb_fpsav
+decl_stmt|;
+define|#
+directive|define
+name|FP_NEEDSAVE
+value|0x1
+comment|/* need save on next context switch */
+define|#
+directive|define
+name|FP_NEEDRESTORE
+value|0x2
+comment|/* need restore on next DNA fault */
 name|struct
 name|save87
 name|pcb_savefpu

@@ -1,30 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	1.7	86/12/15	*/
+comment|/*  * 386 Trap and System call handleing  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/psl.h"
+file|"../i386/psl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/reg.h"
+file|"../i386/reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/pte.h"
+file|"../i386/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/mtpr.h"
+file|"../i386/segments.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../i386/frame.h"
 end_include
 
 begin_include
@@ -75,33 +81,22 @@ directive|include
 file|"kernel.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|SYSCALLTRACE
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSCALLTRACE
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"../sys/syscalls.c"
+file|"vm.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"cmap.h"
+end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/trap.h"
+file|"../i386/trap.h"
 end_include
 
 begin_define
@@ -129,91 +124,32 @@ name|nsysent
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|char
-modifier|*
-name|trap_type
-index|[]
-init|=
-block|{
-literal|"Reserved addressing mode"
-block|,
-comment|/* T_RESADFLT */
-literal|"Privileged instruction"
-block|,
-comment|/* T_PRIVINFLT */
-literal|"Reserved operand"
-block|,
-comment|/* T_RESOPFLT */
-literal|"Breakpoint"
-block|,
-comment|/* T_BPTFLT */
-literal|0
-block|,
-literal|"Kernel call"
-block|,
-comment|/* T_SYSCALL */
-literal|"Arithmetic trap"
-block|,
-comment|/* T_ARITHTRAP */
-literal|"System forced exception"
-block|,
-comment|/* T_ASTFLT */
-literal|"Segmentation fault"
-block|,
-comment|/* T_SEGFLT */
-literal|"Protection fault"
-block|,
-comment|/* T_PROTFLT */
-literal|"Trace trap"
-block|,
-comment|/* T_TRCTRAP */
-literal|0
-block|,
-literal|"Page fault"
-block|,
-comment|/* T_PAGEFLT */
-literal|"Page table fault"
-block|,
-comment|/* T_TABLEFLT */
-literal|"Alignment fault"
-block|,
-comment|/* T_ALIGNFLT */
-literal|"Kernel stack not valid"
-block|,
-comment|/* T_KSPNOTVAL */
-literal|"Bus error"
-block|,
-comment|/* T_BUSERR */
-literal|"Kernel debugger trap"
-block|,
-comment|/* T_KDBTRAP */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|TRAP_TYPES
-init|=
-sizeof|sizeof
-argument_list|(
-name|trap_type
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|trap_type
-index|[
-literal|0
-index|]
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"dbg.h"
+end_include
 
 begin_comment
 comment|/*  * Called from the trap handler when a processor trap occurs.  */
 end_comment
+
+begin_decl_stmt
+name|unsigned
+modifier|*
+name|rcr2
+argument_list|()
+decl_stmt|,
+name|Sysbase
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|short
+name|cpl
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -222,42 +158,40 @@ end_comment
 begin_macro
 name|trap
 argument_list|(
-argument|sp
-argument_list|,
-argument|type
-argument_list|,
-argument|hfs
-argument_list|,
-argument|accmst
-argument_list|,
-argument|acclst
-argument_list|,
-argument|dbl
-argument_list|,
-argument|code
-argument_list|,
-argument|pc
-argument_list|,
-argument|psl
+argument|frame
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|unsigned
-name|type
-decl_stmt|,
-name|code
+name|struct
+name|trapframe
+name|frame
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|type
+value|frame.tf_trapno
+end_define
+
+begin_define
+define|#
+directive|define
+name|code
+value|frame.tf_err
+end_define
+
+begin_define
+define|#
+directive|define
+name|pc
+value|frame.tf_eip
+end_define
+
 begin_block
 block|{
-name|int
-name|r0
-decl_stmt|,
-name|r1
-decl_stmt|;
-comment|/* must reserve space */
 specifier|register
 name|int
 modifier|*
@@ -269,10 +203,9 @@ name|int
 operator|*
 operator|)
 operator|&
-name|psl
+name|frame
 operator|)
-operator|-
-name|PS
+comment|/*-PS*/
 decl_stmt|;
 specifier|register
 name|int
@@ -288,27 +221,150 @@ name|struct
 name|timeval
 name|syst
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|lint
-name|r0
-operator|=
-literal|0
+specifier|extern
+name|int
+name|nofault
+decl_stmt|;
+name|dprintf
+argument_list|(
+name|DALLTRAPS
+argument_list|,
+literal|"%d. trap"
+argument_list|,
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_pid
+argument_list|)
 expr_stmt|;
-name|r0
-operator|=
-name|r0
+name|dprintf
+argument_list|(
+name|DALLTRAPS
+argument_list|,
+literal|"\npc:%x cs:%x ds:%x eflags:%x isp %x\n"
+argument_list|,
+name|frame
+operator|.
+name|tf_eip
+argument_list|,
+name|frame
+operator|.
+name|tf_cs
+argument_list|,
+name|frame
+operator|.
+name|tf_ds
+argument_list|,
+name|frame
+operator|.
+name|tf_eflags
+argument_list|,
+name|frame
+operator|.
+name|tf_isp
+argument_list|)
 expr_stmt|;
-name|r1
-operator|=
-literal|0
+name|dprintf
+argument_list|(
+name|DALLTRAPS
+argument_list|,
+literal|"edi %x esi %x ebp %x ebx %x esp %x\n"
+argument_list|,
+name|frame
+operator|.
+name|tf_edi
+argument_list|,
+name|frame
+operator|.
+name|tf_esi
+argument_list|,
+name|frame
+operator|.
+name|tf_ebp
+argument_list|,
+name|frame
+operator|.
+name|tf_ebx
+argument_list|,
+name|frame
+operator|.
+name|tf_esp
+argument_list|)
 expr_stmt|;
-name|r1
-operator|=
-name|r1
+name|dprintf
+argument_list|(
+name|DALLTRAPS
+argument_list|,
+literal|"edx %x ecx %x eax %x\n"
+argument_list|,
+name|frame
+operator|.
+name|tf_edx
+argument_list|,
+name|frame
+operator|.
+name|tf_ecx
+argument_list|,
+name|frame
+operator|.
+name|tf_eax
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|dprintf
+argument_list|(
+name|DALLTRAPS
+operator||
+name|DPAUSE
+argument_list|,
+literal|"ec %x type %x cr0 %x cr2 %x cpl %x \n"
+argument_list|,
+name|frame
+operator|.
+name|tf_err
+argument_list|,
+name|frame
+operator|.
+name|tf_trapno
+argument_list|,
+name|rcr0
+argument_list|()
+argument_list|,
+name|rcr2
+argument_list|()
+argument_list|,
+name|cpl
+argument_list|)
+expr_stmt|;
+name|locr0
+index|[
+name|tEFLAGS
+index|]
+operator|&=
+operator|~
+name|PSL_NT
+expr_stmt|;
+comment|/* clear nested trap */
+if|if
+condition|(
+name|nofault
+operator|&&
+name|frame
+operator|.
+name|tf_trapno
+operator|!=
+literal|0xc
+condition|)
+block|{
+name|locr0
+index|[
+name|tEIP
+index|]
+operator|=
+name|nofault
+expr_stmt|;
+return|return;
+block|}
 name|syst
 operator|=
 name|u
@@ -319,13 +375,15 @@ name|ru_stime
 expr_stmt|;
 if|if
 condition|(
-name|USERMODE
+name|ISPL
 argument_list|(
 name|locr0
 index|[
-name|PS
+name|tCS
 index|]
 argument_list|)
+operator|==
+name|SEL_UPL
 condition|)
 block|{
 name|type
@@ -361,13 +419,21 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"trap type %d, code = %x, pc = %x\n"
+literal|"trap type %d, code = %x, pc = %x cs = %x, eflags = %x\n"
 argument_list|,
 name|type
 argument_list|,
 name|code
 argument_list|,
 name|pc
+argument_list|,
+name|frame
+operator|.
+name|tf_cs
+argument_list|,
+name|frame
+operator|.
+name|tf_eflags
 argument_list|)
 expr_stmt|;
 name|type
@@ -375,26 +441,6 @@ operator|&=
 operator|~
 name|USER
 expr_stmt|;
-if|if
-condition|(
-name|type
-operator|<
-name|TRAP_TYPES
-operator|&&
-name|trap_type
-index|[
-name|type
-index|]
-condition|)
-name|panic
-argument_list|(
-name|trap_type
-index|[
-name|type
-index|]
-argument_list|)
-expr_stmt|;
-else|else
 name|panic
 argument_list|(
 literal|"trap"
@@ -430,12 +476,6 @@ operator|+
 name|USER
 case|:
 comment|/* resereved operand fault */
-case|case
-name|T_ALIGNFLT
-operator|+
-name|USER
-case|:
-comment|/* unaligned data fault */
 name|u
 operator|.
 name|u_code
@@ -511,6 +551,11 @@ name|T_ARITHTRAP
 operator|+
 name|USER
 case|:
+case|case
+name|T_DIVIDE
+operator|+
+name|USER
+case|:
 name|u
 operator|.
 name|u_code
@@ -523,6 +568,11 @@ name|SIGFPE
 expr_stmt|;
 break|break;
 comment|/* 	 * If the user SP is above the stack segment, 	 * grow the stack automatically. 	 */
+case|case
+name|T_STKFLT
+operator|+
+name|USER
+case|:
 case|case
 name|T_SEGFLT
 operator|+
@@ -537,18 +587,16 @@ name|unsigned
 operator|)
 name|locr0
 index|[
-name|SP
+name|tESP
 index|]
 argument_list|)
-operator|||
-name|grow
-argument_list|(
-name|code
-argument_list|)
+comment|/*|| grow(code)*/
 condition|)
 goto|goto
 name|out
 goto|;
+name|xxx
+label|:
 name|i
 operator|=
 name|SIGSEGV
@@ -579,6 +627,123 @@ operator|+
 name|USER
 case|:
 comment|/* page fault */
+block|{
+specifier|register
+name|u_int
+name|vp
+decl_stmt|;
+name|struct
+name|pte
+modifier|*
+name|pte
+decl_stmt|;
+if|if
+condition|(
+name|rcr2
+argument_list|()
+operator|>=
+operator|&
+name|Sysbase
+condition|)
+goto|goto
+name|xxx
+goto|;
+name|vp
+operator|=
+name|btop
+argument_list|(
+operator|(
+name|int
+operator|)
+name|rcr2
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|>=
+name|dptov
+argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|,
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_dsize
+argument_list|)
+operator|&&
+name|vp
+operator|<
+name|sptov
+argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|,
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_ssize
+operator|-
+literal|1
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|grow
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|locr0
+index|[
+name|tESP
+index|]
+argument_list|)
+operator|||
+name|grow
+argument_list|(
+name|rcr2
+argument_list|()
+argument_list|)
+condition|)
+goto|goto
+name|out
+goto|;
+else|else
+block|{
+if|if
+condition|(
+name|nofault
+condition|)
+block|{
+name|locr0
+index|[
+name|tEIP
+index|]
+operator|=
+name|nofault
+expr_stmt|;
+return|return;
+block|}
+name|printf
+argument_list|(
+literal|"didnt"
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|SIGSEGV
+expr_stmt|;
+break|break;
+block|}
+block|}
 name|i
 operator|=
 name|u
@@ -587,7 +752,8 @@ name|u_error
 expr_stmt|;
 name|pagein
 argument_list|(
-name|code
+name|rcr2
+argument_list|()
 argument_list|,
 literal|0
 argument_list|)
@@ -605,9 +771,24 @@ operator|==
 name|T_PAGEFLT
 condition|)
 return|return;
+if|if
+condition|(
+name|nofault
+condition|)
+block|{
+name|locr0
+index|[
+name|tEIP
+index|]
+operator|=
+name|nofault
+expr_stmt|;
+return|return;
+block|}
 goto|goto
 name|out
 goto|;
+block|}
 case|case
 name|T_BPTFLT
 operator|+
@@ -622,7 +803,7 @@ case|:
 comment|/* trace trap */
 name|locr0
 index|[
-name|PS
+name|tEFLAGS
 index|]
 operator|&=
 operator|~
@@ -718,6 +899,37 @@ condition|(
 name|p
 operator|->
 name|p_cursig
+condition|)
+name|printf
+argument_list|(
+literal|"out cursig %x flg %x sig %x ign %x msk %x\n"
+argument_list|,
+name|p
+operator|->
+name|p_cursig
+argument_list|,
+name|p
+operator|->
+name|p_flag
+argument_list|,
+name|p
+operator|->
+name|p_sig
+argument_list|,
+name|p
+operator|->
+name|p_sigignore
+argument_list|,
+name|p
+operator|->
+name|p_sigmask
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_cursig
 operator|||
 name|ISSIG
 argument_list|(
@@ -725,7 +937,9 @@ name|p
 argument_list|)
 condition|)
 name|psig
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
@@ -827,10 +1041,7 @@ name|ticks
 condition|)
 name|addupc
 argument_list|(
-name|locr0
-index|[
-name|PC
-index|]
+name|pc
 argument_list|,
 operator|&
 name|u
@@ -847,31 +1058,27 @@ name|p
 operator|->
 name|p_pri
 expr_stmt|;
+undef|#
+directive|undef
+name|type
+undef|#
+directive|undef
+name|code
+undef|#
+directive|undef
+name|pc
 block|}
 end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSCALLTRACE
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|syscalltrace
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Called from locore when a system call occurs  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|fuckup
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -880,40 +1087,37 @@ end_comment
 begin_macro
 name|syscall
 argument_list|(
-argument|sp
-argument_list|,
-argument|type
-argument_list|,
-argument|hfs
-argument_list|,
-argument|accmst
-argument_list|,
-argument|acclst
-argument_list|,
-argument|dbl
-argument_list|,
-argument|code
-argument_list|,
-argument|pc
-argument_list|,
-argument|psl
+argument|frame
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|unsigned
-name|code
+name|struct
+name|syscframe
+name|frame
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|code
+value|frame.sf_eax
+end_define
+
+begin_comment
+comment|/* note: written over! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|pc
+value|frame.sf_eip
+end_define
+
 begin_block
 block|{
-name|int
-name|r0
-decl_stmt|,
-name|r1
-decl_stmt|;
-comment|/* must reserve space */
 specifier|register
 name|int
 modifier|*
@@ -925,10 +1129,9 @@ name|int
 operator|*
 operator|)
 operator|&
-name|psl
+name|frame
 operator|)
-operator|-
-name|PS
+comment|/*-PS*/
 decl_stmt|;
 specifier|register
 name|caddr_t
@@ -988,14 +1191,15 @@ name|ru_stime
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|USERMODE
+name|ISPL
 argument_list|(
 name|locr0
 index|[
-name|PS
+name|sCS
 index|]
 argument_list|)
+operator|!=
+name|SEL_UPL
 condition|)
 name|panic
 argument_list|(
@@ -1008,23 +1212,9 @@ name|u_ar0
 operator|=
 name|locr0
 expr_stmt|;
-if|if
-condition|(
-name|code
-operator|==
-literal|139
-condition|)
-block|{
-comment|/* 4.2 COMPATIBILTY XXX */
-name|osigcleanup
+name|svfpsp
 argument_list|()
 expr_stmt|;
-comment|/* 4.2 COMPATIBILTY XXX */
-goto|goto
-name|done
-goto|;
-comment|/* 4.2 COMPATIBILTY XXX */
-block|}
 name|params
 operator|=
 operator|(
@@ -1032,7 +1222,7 @@ name|caddr_t
 operator|)
 name|locr0
 index|[
-name|FP
+name|sESP
 index|]
 operator|+
 name|NBPW
@@ -1043,51 +1233,13 @@ name|u_error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* BEGIN GROT */
-comment|/* 	 * Try to reconstruct pc, assuming code 	 * is an immediate constant 	 */
+comment|/* 	 * Reconstruct pc, assuming lcall $X,y is 7 bytes, as it is always. 	 */
 name|opc
 operator|=
 name|pc
 operator|-
-literal|2
+literal|7
 expr_stmt|;
-comment|/* short literal */
-if|if
-condition|(
-name|code
-operator|>
-literal|0x3f
-condition|)
-block|{
-name|opc
-operator|--
-expr_stmt|;
-comment|/* byte immediate */
-if|if
-condition|(
-name|code
-operator|>
-literal|0x7f
-condition|)
-block|{
-name|opc
-operator|--
-expr_stmt|;
-comment|/* word immediate */
-if|if
-condition|(
-name|code
-operator|>
-literal|0x7fff
-condition|)
-name|opc
-operator|-=
-literal|2
-expr_stmt|;
-comment|/* long immediate */
-block|}
-block|}
-comment|/* END GROT */
 name|callp
 operator|=
 operator|(
@@ -1147,6 +1299,7 @@ name|code
 index|]
 expr_stmt|;
 block|}
+comment|/*dprintf(DALLSYSC,"%d. call %d\n", u.u_procp->p_pid, code);*/
 if|if
 condition|(
 operator|(
@@ -1190,7 +1343,7 @@ condition|)
 block|{
 name|locr0
 index|[
-name|R0
+name|sEAX
 index|]
 operator|=
 name|u
@@ -1199,7 +1352,7 @@ name|u_error
 expr_stmt|;
 name|locr0
 index|[
-name|PS
+name|sEFLAGS
 index|]
 operator||=
 name|PSL_C
@@ -1225,7 +1378,7 @@ name|r_val2
 operator|=
 name|locr0
 index|[
-name|R1
+name|sEDX
 index|]
 expr_stmt|;
 if|if
@@ -1268,102 +1421,6 @@ name|u_eosys
 operator|=
 name|NORMALRETURN
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSCALLTRACE
-if|if
-condition|(
-name|syscalltrace
-condition|)
-block|{
-specifier|register
-name|int
-name|a
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-if|if
-condition|(
-name|code
-operator|>=
-name|nsysent
-condition|)
-name|printf
-argument_list|(
-literal|"0x%x"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|syscallnames
-index|[
-name|code
-index|]
-argument_list|)
-expr_stmt|;
-name|cp
-operator|=
-literal|"("
-expr_stmt|;
-for|for
-control|(
-name|a
-operator|=
-literal|0
-init|;
-name|a
-operator|<
-name|callp
-operator|->
-name|sy_narg
-condition|;
-name|a
-operator|++
-control|)
-block|{
-name|printf
-argument_list|(
-literal|"%s%x"
-argument_list|,
-name|cp
-argument_list|,
-name|u
-operator|.
-name|u_arg
-index|[
-name|a
-index|]
-argument_list|)
-expr_stmt|;
-name|cp
-operator|=
-literal|", "
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|a
-condition|)
-name|printf
-argument_list|(
-literal|")"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 call|(
 modifier|*
 name|callp
@@ -1373,6 +1430,7 @@ call|)
 argument_list|()
 expr_stmt|;
 block|}
+comment|/*rsfpsp();*/
 if|if
 condition|(
 name|u
@@ -1389,9 +1447,10 @@ operator|.
 name|u_error
 condition|)
 block|{
+comment|/*dprintf(DSYSFAIL,"%d. fail %d %d\n",u.u_procp->p_pid,  code, u.u_error);*/
 name|locr0
 index|[
-name|R0
+name|sEAX
 index|]
 operator|=
 name|u
@@ -1400,7 +1459,7 @@ name|u_error
 expr_stmt|;
 name|locr0
 index|[
-name|PS
+name|sEFLAGS
 index|]
 operator||=
 name|PSL_C
@@ -1411,7 +1470,7 @@ else|else
 block|{
 name|locr0
 index|[
-name|PS
+name|sEFLAGS
 index|]
 operator|&=
 operator|~
@@ -1420,7 +1479,7 @@ expr_stmt|;
 comment|/* clear carry bit */
 name|locr0
 index|[
-name|R0
+name|sEAX
 index|]
 operator|=
 name|u
@@ -1431,7 +1490,7 @@ name|r_val1
 expr_stmt|;
 name|locr0
 index|[
-name|R1
+name|sEDX
 index|]
 operator|=
 name|u
@@ -1477,7 +1536,9 @@ name|p
 argument_list|)
 condition|)
 name|psig
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
@@ -1579,10 +1640,7 @@ name|ticks
 condition|)
 name|addupc
 argument_list|(
-name|locr0
-index|[
-name|PC
-index|]
+name|opc
 argument_list|,
 operator|&
 name|u

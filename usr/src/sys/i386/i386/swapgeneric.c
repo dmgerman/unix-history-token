@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	swapgeneric.c	1.5	86/11/25	*/
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)swapgeneric.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -45,30 +45,6 @@ directive|include
 file|"reboot.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../tahoe/cpu.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/cp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoe/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../tahoevba/vbavar.h"
-end_include
-
 begin_comment
 comment|/*  * Generic configuration;  all in one  */
 end_comment
@@ -77,7 +53,7 @@ begin_decl_stmt
 name|dev_t
 name|rootdev
 init|=
-name|NODEV
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -85,7 +61,7 @@ begin_decl_stmt
 name|dev_t
 name|argdev
 init|=
-name|NODEV
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -93,7 +69,7 @@ begin_decl_stmt
 name|dev_t
 name|dumpdev
 init|=
-name|NODEV
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -111,18 +87,19 @@ index|[]
 init|=
 block|{
 block|{
-operator|-
-literal|1
-block|,
 literal|1
 block|,
 literal|0
+block|,
+literal|4
+operator|*
+literal|4096
 block|}
 block|,
 block|{
 literal|0
 block|,
-literal|0
+literal|1
 block|,
 literal|0
 block|}
@@ -149,8 +126,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|vba_driver
-name|vddriver
+name|driver
+name|wddriver
 decl_stmt|;
 end_decl_stmt
 
@@ -178,9 +155,9 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|vddriver
+name|wddriver
 block|,
-literal|"dk"
+literal|"wd"
 block|,
 name|makedev
 argument_list|(
@@ -204,12 +181,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|vba_device
-modifier|*
-name|ui
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 specifier|register
 name|struct
 name|genericconf
@@ -530,6 +504,8 @@ name|rootdev
 operator|=
 name|dumpdev
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

@@ -1,24 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)genassym.c	1.7 (Berkeley) 10/28/87"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)genassym.c	5.1 (Berkeley) %G%  */
+end_comment
 
 begin_include
 include|#
@@ -311,6 +294,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tP_CR3 %d\n"
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_cr3
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tSSLEEP %d\n"
 argument_list|,
 name|SSLEEP
@@ -371,6 +364,13 @@ operator|&
 name|vm
 operator|->
 name|v_soft
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tP1PAGES %d\n"
+argument_list|,
+name|P1PAGES
 argument_list|)
 expr_stmt|;
 name|printf
@@ -764,12 +764,62 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tPCB_FPSAV %d\n"
+argument_list|,
+operator|&
+name|pcb
+operator|->
+name|pcb_fpsav
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tPCB_SAVEFPU %d\n"
 argument_list|,
 operator|&
 name|pcb
 operator|->
 name|pcb_savefpu
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPCB_P0BR %d\n"
+argument_list|,
+operator|&
+name|pcb
+operator|->
+name|pcb_p0br
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPCB_P1BR %d\n"
+argument_list|,
+operator|&
+name|pcb
+operator|->
+name|pcb_p1br
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPCB_P0LR %d\n"
+argument_list|,
+operator|&
+name|pcb
+operator|->
+name|pcb_p0lr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPCB_P1LR %d\n"
+argument_list|,
+operator|&
+name|pcb
+operator|->
+name|pcb_p1lr
 argument_list|)
 expr_stmt|;
 name|printf
