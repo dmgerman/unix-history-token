@@ -9,6 +9,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
