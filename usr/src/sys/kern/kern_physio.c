@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_physio.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_physio.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -194,6 +194,14 @@ end_block
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_decl_stmt
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|s
@@ -560,7 +568,11 @@ argument_list|(
 literal|"big push"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 name|bp
 operator|->
@@ -613,6 +625,10 @@ name|p
 argument_list|,
 literal|"swap: read error from swap device"
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EIO
 expr_stmt|;
 block|}
 name|nbytes
@@ -727,6 +743,14 @@ name|s
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_return
+return|return
+operator|(
+name|error
+operator|)
+return|;
+end_return
 
 begin_comment
 unit|}
