@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: servconf.h,v 1.54 2002/03/04 17:27:39 stevesk Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Definitions for server configuration data and for the functions reading it.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
-end_comment
-
-begin_comment
-comment|/* RCSID("$OpenBSD: servconf.h,v 1.41 2001/04/13 22:46:53 beck Exp $"); */
-end_comment
-
-begin_comment
-comment|/* RCSID("$FreeBSD$"); */
 end_comment
 
 begin_ifndef
@@ -219,7 +219,7 @@ comment|/* If true, print lastlog */
 name|int
 name|check_mail
 decl_stmt|;
-comment|/* If true, check for new mail. */
+comment|/* If true, check for new mail */
 name|int
 name|x11_forwarding
 decl_stmt|;
@@ -228,6 +228,10 @@ name|int
 name|x11_display_offset
 decl_stmt|;
 comment|/* What DISPLAY number to start 					 * searching at */
+name|int
+name|x11_use_localhost
+decl_stmt|;
+comment|/* If true, use localhost for fake X11 server. */
 name|char
 modifier|*
 name|xauth_location
@@ -287,6 +291,10 @@ name|int
 name|rsa_authentication
 decl_stmt|;
 comment|/* If true, permit RSA authentication. */
+name|int
+name|pubkey_authentication
+decl_stmt|;
+comment|/* If true, permit ssh2 pubkey authentication. */
 if|#
 directive|if
 name|defined
@@ -301,43 +309,37 @@ argument_list|)
 name|int
 name|kerberos_authentication
 decl_stmt|;
-comment|/* If true, permit Kerberos auth. */
-endif|#
-directive|endif
-comment|/* KRB4 || KRB5 */
+comment|/* If true, permit Kerberos 						 * authentication. */
 name|int
-name|pubkey_authentication
+name|kerberos_or_local_passwd
 decl_stmt|;
-comment|/* If true, permit ssh2 pubkey authentication. */
-ifdef|#
-directive|ifdef
-name|KRB4
+comment|/* If true, permit kerberos 						 * and any other password 						 * authentication mechanism, 						 * such as SecurID or 						 * /etc/passwd */
 name|int
-name|krb4_or_local_passwd
-decl_stmt|;
-comment|/* If true, permit kerberos v4 						 * and any other password 						 * authentication mechanism, 						 * such as SecurID or 						 * /etc/passwd */
-name|int
-name|krb4_ticket_cleanup
+name|kerberos_ticket_cleanup
 decl_stmt|;
 comment|/* If true, destroy ticket 						 * file on logout. */
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AFS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|KRB5
+argument_list|)
 name|int
-name|krb5_tgt_passing
+name|kerberos_tgt_passing
 decl_stmt|;
+comment|/* If true, permit Kerberos TGT 					 * passing. */
 endif|#
 directive|endif
-comment|/* KRB5 */
 ifdef|#
 directive|ifdef
 name|AFS
-name|int
-name|krb4_tgt_passing
-decl_stmt|;
-comment|/* If true, permit Kerberos v4 tgt 					 * passing. */
 name|int
 name|afs_token_passing
 decl_stmt|;
@@ -353,7 +355,7 @@ name|kbd_interactive_authentication
 decl_stmt|;
 comment|/* If true, permit */
 name|int
-name|challenge_reponse_authentication
+name|challenge_response_authentication
 decl_stmt|;
 name|int
 name|permit_empty_passwd
@@ -408,11 +410,6 @@ index|]
 decl_stmt|;
 name|unsigned
 name|int
-name|connections_per_period
-decl_stmt|;
-comment|/* 						 * If not 0, number of sshd 						 * connections accepted per 						 * connections_period. 						 */
-name|unsigned
-name|int
 name|connections_period
 decl_stmt|;
 name|u_int
@@ -447,25 +444,30 @@ name|banner
 decl_stmt|;
 comment|/* SSH-2 banner message */
 name|int
-name|reverse_mapping_check
+name|verify_reverse_mapping
 decl_stmt|;
 comment|/* cross-check ip and dns */
 name|int
 name|client_alive_interval
 decl_stmt|;
-comment|/* 					 * poke the client this often to  					 * see if it's still there  					 */
+comment|/* 					 * poke the client this often to 					 * see if it's still there 					 */
 name|int
 name|client_alive_count_max
 decl_stmt|;
-comment|/* 					 *If the client is unresponsive 					 * for this many intervals, above 					 * diconnect the session  					 */
+comment|/* 					 * If the client is unresponsive 					 * for this many intervals above, 					 * disconnect the session 					 */
+name|char
+modifier|*
+name|authorized_keys_file
+decl_stmt|;
+comment|/* File containing public keys */
+name|char
+modifier|*
+name|authorized_keys_file2
+decl_stmt|;
 block|}
 name|ServerOptions
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * Initializes the server options to special values that indicate that they  * have not yet been set.  */
-end_comment
 
 begin_function_decl
 name|void
@@ -473,14 +475,9 @@ name|initialize_server_options
 parameter_list|(
 name|ServerOptions
 modifier|*
-name|options
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Reads the server configuration file.  This only sets the values for those  * options that have the special value indicating they have not been set.  */
-end_comment
 
 begin_function_decl
 name|void
@@ -488,19 +485,13 @@ name|read_server_config
 parameter_list|(
 name|ServerOptions
 modifier|*
-name|options
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|filename
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Sets values for those values that have not yet been set. */
-end_comment
 
 begin_function_decl
 name|void
@@ -508,7 +499,25 @@ name|fill_default_server_options
 parameter_list|(
 name|ServerOptions
 modifier|*
-name|options
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|process_server_config_line
+parameter_list|(
+name|ServerOptions
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

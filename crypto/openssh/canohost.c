@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: canohost.c,v 1.26 2001/04/18 14:15:00 markus Exp $"
+literal|"$OpenBSD: canohost.c,v 1.31 2002/02/27 21:23:13 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -50,15 +50,14 @@ file|"canohost.h"
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|check_ip_options
 parameter_list|(
 name|int
-name|socket
 parameter_list|,
 name|char
 modifier|*
-name|ipaddr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -68,6 +67,7 @@ comment|/*  * Return the canonical name of the host at the other end of the sock
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|get_remote_hostname
@@ -76,7 +76,7 @@ name|int
 name|socket
 parameter_list|,
 name|int
-name|reverse_mapping_check
+name|verify_reverse_mapping
 parameter_list|)
 block|{
 name|struct
@@ -329,7 +329,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|reverse_mapping_check
+name|verify_reverse_mapping
 condition|)
 return|return
 name|xstrdup
@@ -503,6 +503,7 @@ comment|/* IPv4 only */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|check_ip_options
 parameter_list|(
@@ -587,10 +588,6 @@ name|ipproto
 argument_list|,
 name|IP_OPTIONS
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|options
 argument_list|,
 operator|&
@@ -682,7 +679,7 @@ modifier|*
 name|get_canonical_hostname
 parameter_list|(
 name|int
-name|reverse_mapping_check
+name|verify_reverse_mapping
 parameter_list|)
 block|{
 specifier|static
@@ -694,7 +691,7 @@ name|NULL
 decl_stmt|;
 specifier|static
 name|int
-name|reverse_mapping_checked
+name|verify_reverse_mapping_done
 init|=
 literal|0
 decl_stmt|;
@@ -708,9 +705,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|reverse_mapping_checked
+name|verify_reverse_mapping_done
 operator|!=
-name|reverse_mapping_check
+name|verify_reverse_mapping
 condition|)
 name|xfree
 argument_list|(
@@ -735,7 +732,7 @@ argument_list|(
 name|packet_get_connection_in
 argument_list|()
 argument_list|,
-name|reverse_mapping_check
+name|verify_reverse_mapping
 argument_list|)
 expr_stmt|;
 else|else
@@ -746,9 +743,9 @@ argument_list|(
 literal|"UNKNOWN"
 argument_list|)
 expr_stmt|;
-name|reverse_mapping_checked
+name|verify_reverse_mapping_done
 operator|=
-name|reverse_mapping_check
+name|verify_reverse_mapping
 expr_stmt|;
 return|return
 name|canonical_host_name
@@ -761,6 +758,7 @@ comment|/*  * Returns the remote IP-address of socket as a string.  The returned
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|get_socket_address
@@ -1015,7 +1013,9 @@ specifier|const
 name|char
 modifier|*
 name|get_remote_ipaddr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -1084,7 +1084,7 @@ name|u_int
 name|utmp_len
 parameter_list|,
 name|int
-name|reverse_mapping_check
+name|verify_reverse_mapping
 parameter_list|)
 block|{
 specifier|static
@@ -1105,7 +1105,7 @@ name|remote
 operator|=
 name|get_canonical_hostname
 argument_list|(
-name|reverse_mapping_check
+name|verify_reverse_mapping
 argument_list|)
 expr_stmt|;
 if|if
@@ -1137,6 +1137,7 @@ comment|/* Returns the local/remote port for the socket. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|get_sock_port
 parameter_list|(
@@ -1310,6 +1311,7 @@ comment|/* Returns remote/local port number for the current connection. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|get_port
 parameter_list|(
@@ -1362,7 +1364,9 @@ end_function
 begin_function
 name|int
 name|get_remote_port
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|get_port
@@ -1376,7 +1380,9 @@ end_function
 begin_function
 name|int
 name|get_local_port
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|get_port

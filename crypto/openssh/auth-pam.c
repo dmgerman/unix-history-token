@@ -979,7 +979,7 @@ name|get_canonical_hostname
 argument_list|(
 name|options
 operator|.
-name|reverse_mapping_check
+name|verify_reverse_mapping
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -995,7 +995,7 @@ name|get_canonical_hostname
 argument_list|(
 name|options
 operator|.
-name|reverse_mapping_check
+name|verify_reverse_mapping
 argument_list|)
 argument_list|)
 expr_stmt|;

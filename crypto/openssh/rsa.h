@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: rsa.h,v 1.15 2002/03/04 17:27:39 stevesk Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
+begin_comment
 comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * RSA key generation, encryption and decryption.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
-end_comment
-
-begin_comment
-comment|/* RCSID("$OpenBSD: rsa.h,v 1.11 2001/03/26 23:23:24 markus Exp $"); */
-end_comment
-
-begin_comment
-comment|/* RCSID("$FreeBSD$"); */
 end_comment
 
 begin_ifndef
@@ -35,63 +35,47 @@ directive|include
 file|<openssl/rsa.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|rsa_public_encrypt
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|BIGNUM
-operator|*
-name|out
-operator|,
+modifier|*
+parameter_list|,
 name|BIGNUM
-operator|*
-name|in
-operator|,
+modifier|*
+parameter_list|,
 name|RSA
-operator|*
-name|prv
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|rsa_private_decrypt
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|BIGNUM
-operator|*
-name|out
-operator|,
+modifier|*
+parameter_list|,
 name|BIGNUM
-operator|*
-name|in
-operator|,
+modifier|*
+parameter_list|,
 name|RSA
-operator|*
-name|prv
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
-name|generate_additional_parameters
-name|__P
-argument_list|(
-operator|(
+name|rsa_generate_additional_parameters
+parameter_list|(
 name|RSA
-operator|*
-name|rsa
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

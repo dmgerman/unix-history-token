@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshpty.c,v 1.1 2001/03/04 01:46:30 djm Exp $"
+literal|"$OpenBSD: sshpty.c,v 1.4 2001/12/19 07:18:56 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1274,7 +1274,7 @@ operator||
 name|S_IWOTH
 expr_stmt|;
 block|}
-comment|/* 	 * Change owner and mode of the tty as required. 	 * Warn but continue if filesystem is read-only and the uids match. 	 */
+comment|/* 	 * Change owner and mode of the tty as required. 	 * Warn but continue if filesystem is read-only and the uids match/ 	 * tty is owned by root. 	 */
 if|if
 condition|(
 name|stat
@@ -1336,6 +1336,7 @@ name|errno
 operator|==
 name|EROFS
 operator|&&
+operator|(
 name|st
 operator|.
 name|st_uid
@@ -1343,6 +1344,13 @@ operator|==
 name|pw
 operator|->
 name|pw_uid
+operator|||
+name|st
+operator|.
+name|st_uid
+operator|==
+literal|0
+operator|)
 condition|)
 name|error
 argument_list|(

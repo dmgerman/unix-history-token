@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pathnames.h,v 1.5 2001/04/12 19:15:24 markus Exp $	*/
+comment|/*	$OpenBSD: pathnames.h,v 1.11 2002/02/09 17:37:34 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -15,7 +15,14 @@ begin_define
 define|#
 directive|define
 name|ETCDIR
-value|"/etc/ssh"
+value|"/etc"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSHDIR
+value|ETCDIR "/ssh"
 end_define
 
 begin_define
@@ -33,14 +40,18 @@ begin_define
 define|#
 directive|define
 name|_PATH_SSH_SYSTEM_HOSTFILE
-value|ETCDIR "/ssh_known_hosts"
+value|SSHDIR "/ssh_known_hosts"
 end_define
+
+begin_comment
+comment|/* backward compat for protocol 2 */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|_PATH_SSH_SYSTEM_HOSTFILE2
-value|ETCDIR "/ssh_known_hosts2"
+value|SSHDIR "/ssh_known_hosts2"
 end_define
 
 begin_comment
@@ -51,42 +62,53 @@ begin_define
 define|#
 directive|define
 name|_PATH_SERVER_CONFIG_FILE
-value|ETCDIR "/sshd_config"
+value|SSHDIR "/sshd_config"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_HOST_CONFIG_FILE
-value|ETCDIR "/ssh_config"
+value|SSHDIR "/ssh_config"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_HOST_KEY_FILE
-value|ETCDIR "/ssh_host_key"
+value|SSHDIR "/ssh_host_key"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_HOST_DSA_KEY_FILE
-value|ETCDIR "/ssh_host_dsa_key"
+value|SSHDIR "/ssh_host_dsa_key"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_HOST_RSA_KEY_FILE
-value|ETCDIR "/ssh_host_rsa_key"
+value|SSHDIR "/ssh_host_rsa_key"
 end_define
 
 begin_define
 define|#
 directive|define
+name|_PATH_DH_MODULI
+value|SSHDIR "/moduli"
+end_define
+
+begin_comment
+comment|/* Backwards compatibility */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_PATH_DH_PRIMES
-value|ETCDIR "/primes"
+value|SSHDIR "/primes"
 end_define
 
 begin_define
@@ -128,6 +150,10 @@ directive|define
 name|_PATH_SSH_USER_HOSTFILE
 value|"~/.ssh/known_hosts"
 end_define
+
+begin_comment
+comment|/* backward compat for protocol 2 */
+end_comment
 
 begin_define
 define|#
@@ -183,6 +209,10 @@ name|_PATH_SSH_USER_PERMITTED_KEYS
 value|".ssh/authorized_keys"
 end_define
 
+begin_comment
+comment|/* backward compat for protocol v2 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -205,7 +235,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SSH_SYSTEM_RC
-value|ETCDIR "/sshrc"
+value|SSHDIR "/sshrc"
 end_define
 
 begin_comment
@@ -216,7 +246,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SSH_HOSTS_EQUIV
-value|ETCDIR "/shosts.equiv"
+value|SSHDIR "/shosts.equiv"
 end_define
 
 begin_define
@@ -235,6 +265,28 @@ define|#
 directive|define
 name|_PATH_SSH_ASKPASS_DEFAULT
 value|"/usr/X11R6/bin/ssh-askpass"
+end_define
+
+begin_comment
+comment|/* xauth for X11 forwarding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_XAUTH
+value|"/usr/X11R6/bin/xauth"
+end_define
+
+begin_comment
+comment|/* UNIX domain socket for X11 server; displaynum will replace %u */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX_X
+value|"/tmp/.X11-unix/X%u"
 end_define
 
 begin_comment
