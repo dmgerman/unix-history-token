@@ -31,34 +31,45 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|SYNCH_IN
+value|{y = win->_cury; x = win->_curx;}
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYNCH_OUT
+value|{win->_cury = y; win->_curx = x;}
+end_define
+
 begin_comment
-comment|/*  *	This routine adds the character to the current position  *  */
+comment|/*  * waddbytes --  *	Add the character to the current position in the given window.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|waddbytes
 argument_list|(
-argument|win
-argument_list|,
-argument|bytes
-argument_list|,
-argument|count
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
-name|WINDOW
-modifier|*
 name|win
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|bytes
+argument_list|,
+name|count
+argument_list|)
+specifier|register
+name|WINDOW
+operator|*
+name|win
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-name|reg
+specifier|register
 name|char
 modifier|*
 name|bytes
@@ -66,7 +77,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|reg
+specifier|register
 name|int
 name|count
 decl_stmt|;
@@ -74,36 +85,30 @@ end_decl_stmt
 
 begin_block
 block|{
-define|#
-directive|define
-name|SYNCH_OUT
-parameter_list|()
-value|{win->_cury = y; win->_curx = x;}
-define|#
-directive|define
-name|SYNCH_IN
-parameter_list|()
-value|{y = win->_cury; x = win->_curx;}
-name|reg
+specifier|static
+name|char
+name|blanks
+index|[]
+init|=
+literal|"        "
+decl_stmt|;
+specifier|register
 name|int
+name|c
+decl_stmt|,
+name|newx
+decl_stmt|,
 name|x
 decl_stmt|,
 name|y
 decl_stmt|;
-name|reg
-name|int
-name|newx
-decl_stmt|;
 name|SYNCH_IN
-argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FULLDEBUG
-name|fprintf
+name|DEBUG
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
 literal|"ADDBYTES('%c') at (%d, %d)\n"
 argument_list|,
 name|c
@@ -121,17 +126,6 @@ name|count
 operator|--
 condition|)
 block|{
-specifier|register
-name|int
-name|c
-decl_stmt|;
-specifier|static
-name|char
-name|blanks
-index|[]
-init|=
-literal|"        "
-decl_stmt|;
 name|c
 operator|=
 operator|*
@@ -147,7 +141,6 @@ case|case
 literal|'\t'
 case|:
 name|SYNCH_IN
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -168,23 +161,20 @@ argument_list|)
 operator|==
 name|ERR
 condition|)
-block|{
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
-block|}
 name|SYNCH_OUT
-argument_list|()
 expr_stmt|;
 break|break;
 default|default:
 ifdef|#
 directive|ifdef
-name|FULLDEBUG
-name|fprintf
+name|DEBUG
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
 literal|"ADDBYTES: 1: y = %d, x = %d, firstch = %d, lastch = %d\n"
 argument_list|,
 name|y
@@ -220,14 +210,11 @@ name|c
 operator||=
 name|_STANDOUT
 expr_stmt|;
-block|{
 ifdef|#
 directive|ifdef
-name|FULLDEBUG
-name|fprintf
+name|DEBUG
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
 literal|"ADDBYTES(%0.2o, %d, %d)\n"
 argument_list|,
 name|win
@@ -273,7 +260,6 @@ index|]
 operator|==
 name|_NOCHANGE
 condition|)
-block|{
 name|win
 operator|->
 name|_firstch
@@ -290,7 +276,6 @@ index|]
 operator|=
 name|newx
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -335,11 +320,9 @@ name|newx
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|FULLDEBUG
-name|fprintf
+name|__TRACE
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
 literal|"ADDBYTES: change gives f/l: %d/%d [%d/%d]\n"
 argument_list|,
 name|win
@@ -381,7 +364,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 block|}
 name|win
 operator|->
@@ -428,7 +410,6 @@ name|_scroll
 condition|)
 block|{
 name|SYNCH_OUT
-argument_list|()
 expr_stmt|;
 name|scroll
 argument_list|(
@@ -436,7 +417,6 @@ name|win
 argument_list|)
 expr_stmt|;
 name|SYNCH_IN
-argument_list|()
 expr_stmt|;
 operator|--
 name|y
@@ -444,16 +424,16 @@ expr_stmt|;
 block|}
 else|else
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 block|}
 ifdef|#
 directive|ifdef
-name|FULLDEBUG
-name|fprintf
+name|DEBUG
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
 literal|"ADDBYTES: 2: y = %d, x = %d, firstch = %d, lastch = %d\n"
 argument_list|,
 name|y
@@ -482,7 +462,6 @@ case|case
 literal|'\n'
 case|:
 name|SYNCH_OUT
-argument_list|()
 expr_stmt|;
 name|wclrtoeol
 argument_list|(
@@ -490,7 +469,6 @@ name|win
 argument_list|)
 expr_stmt|;
 name|SYNCH_IN
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -530,10 +508,11 @@ break|break;
 block|}
 block|}
 name|SYNCH_OUT
-argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|OK
+operator|)
 return|;
 block|}
 end_block
