@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.4 (Berkeley) %G%"
+literal|"@(#)main.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,8 +100,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|im_on
+index|[]
+init|=
+literal|"/dev/tty"
 decl_stmt|;
 end_decl_stmt
 
@@ -513,10 +515,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|im_on
-operator|=
-literal|"/dev/tty"
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -531,6 +529,11 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|query
 condition|)
 block|{
 name|fprintf
@@ -549,6 +552,7 @@ argument_list|(
 literal|9
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

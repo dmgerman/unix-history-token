@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)touch.c	1.5 (Berkeley) %G%"
+literal|"@(#)touch.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3056,6 +3056,12 @@ literal|1
 operator|)
 return|;
 block|}
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 end_block
@@ -3231,6 +3237,17 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|queryfile
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 for|for
 control|(
 init|;
