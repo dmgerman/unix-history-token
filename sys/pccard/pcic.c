@@ -251,7 +251,7 @@ name|bridges
 index|[]
 init|=
 block|{
-literal|"Intel i82365"
+literal|"Intel i82365SL-A/B"
 block|,
 literal|"IBM PCIC"
 block|,
@@ -272,7 +272,9 @@ block|,
 literal|"Ricoh RF5C396"
 block|,
 literal|"IBM KING PCMCIA Controller"
-block|, }
+block|,
+literal|"Intel i82365SL-DF"
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1226,10 +1228,6 @@ begin_comment
 comment|/*  *	Look for an Intel PCIC (or compatible).  *	For each available slot, allocate a PC-CARD slot.  */
 end_comment
 
-begin_comment
-comment|/*  *	VLSI 82C146 has incompatibilities about the I/O address of slot 1.  *	Assume it's the only PCIC whose vendor ID is 0x84,  *	contact Warner Losh<imp@freebsd.org> if correct.  */
-end_comment
-
 begin_function
 name|int
 name|pcic_probe
@@ -1250,6 +1248,20 @@ name|pcic_slot
 modifier|*
 name|sp
 decl_stmt|;
+name|struct
+name|pcic_slot
+modifier|*
+name|sp0
+decl_stmt|;
+name|struct
+name|pcic_slot
+modifier|*
+name|sp1
+decl_stmt|;
+name|struct
+name|pcic_slot
+name|spsave
+decl_stmt|;
 name|unsigned
 name|char
 name|c
@@ -1261,12 +1273,6 @@ name|r
 decl_stmt|;
 name|int
 name|rid
-decl_stmt|;
-specifier|static
-name|int
-name|maybe_vlsi
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|pcic_softc
@@ -1496,20 +1502,53 @@ name|slotnum
 operator|*
 name|PCIC_SLOT_SIZE
 expr_stmt|;
-comment|/* 		 * XXX - Screwed up slot 1 on the VLSI chips.  According to 		 * the Linux PCMCIA code from David Hinds, working chipsets 		 * return 0x84 from their (correct) ID ports, while the broken 		 * ones would need to be probed at the new offset we set after 		 * we assume it's broken. 		 */
+name|sp
+operator|->
+name|controller
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+comment|/* 	 * Prescan for the broken VLSI chips. 	 * 	 * According to the Linux PCMCIA code from David Hinds, 	 * working chipsets return 0x84 from their (correct) ID ports, 	 * while the broken ones would need to be probed at the new 	 * offset we set after we assume it's broken. 	 * 	 * Note: because of this, we may incorrectly detect a single 	 * slot vlsi chip as a i82365sl step D.  I cannot find a 	 * datasheet for the affected chip, so that's the best we can 	 * do for now. 	 */
+name|sp0
+operator|=
+operator|&
+name|sc
+operator|->
+name|slots
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|sp1
+operator|=
+operator|&
+name|sc
+operator|->
+name|slots
+index|[
+literal|1
+index|]
+expr_stmt|;
 if|if
 condition|(
-name|slotnum
-operator|==
-literal|1
-operator|&&
-name|maybe_vlsi
-operator|&&
-name|sp
+name|sp0
 operator|->
 name|getb
 argument_list|(
-name|sp
+name|sp0
+argument_list|,
+name|PCIC_ID_REV
+argument_list|)
+operator|==
+name|PCIC_VLSI82C146
+operator|&&
+name|sp1
+operator|->
+name|getb
+argument_list|(
+name|sp1
 argument_list|,
 name|PCIC_ID_REV
 argument_list|)
@@ -1517,19 +1556,24 @@ operator|!=
 name|PCIC_VLSI82C146
 condition|)
 block|{
-name|sp
+name|spsave
+operator|=
+operator|*
+name|sp1
+expr_stmt|;
+name|sp1
 operator|->
 name|index
 operator|+=
 literal|4
 expr_stmt|;
-name|sp
+name|sp1
 operator|->
 name|data
 operator|+=
 literal|4
 expr_stmt|;
-name|sp
+name|sp1
 operator|->
 name|offset
 operator|=
@@ -1537,7 +1581,70 @@ name|PCIC_SLOT_SIZE
 operator|<<
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|sp1
+operator|->
+name|getb
+argument_list|(
+name|sp1
+argument_list|,
+name|PCIC_ID_REV
+argument_list|)
+operator|!=
+name|PCIC_VLSI82C146
+condition|)
+block|{
+operator|*
+name|sp1
+operator|=
+name|spsave
+expr_stmt|;
 block|}
+else|else
+block|{
+name|sp0
+operator|->
+name|controller
+operator|=
+name|PCIC_VLSI
+expr_stmt|;
+name|sp1
+operator|->
+name|controller
+operator|=
+name|PCIC_VLSI
+expr_stmt|;
+block|}
+block|}
+comment|/* 	 * Look for normal chipsets here. 	 */
+name|sp
+operator|=
+operator|&
+name|sc
+operator|->
+name|slots
+index|[
+literal|0
+index|]
+expr_stmt|;
+for|for
+control|(
+name|slotnum
+operator|=
+literal|0
+init|;
+name|slotnum
+operator|<
+name|PCIC_CARD_SLOTS
+condition|;
+name|slotnum
+operator|++
+operator|,
+name|sp
+operator|++
+control|)
+block|{
 comment|/* 		 * see if there's a PCMCIA controller here 		 * Intel PCMCIA controllers use 0x82 and 0x83 		 * IBM clone chips use 0x88 and 0x89, apparently 		 */
 name|c
 operator|=
@@ -1717,19 +1824,24 @@ name|PCIC_RF5C396
 expr_stmt|;
 block|}
 break|break;
-comment|/* 		 *	VLSI chips. 		 */
+comment|/* 		 *	Intel i82365D or maybe a vlsi 82c146 		 * we detected the vlsi case earlier, so if the controller 		 * isn't set, we know it is a i82365sl step D. 		 */
 case|case
-name|PCIC_VLSI82C146
+name|PCIC_INTEL2
 case|:
+if|if
+condition|(
+name|sp
+operator|->
+name|controller
+operator|==
+operator|-
+literal|1
+condition|)
 name|sp
 operator|->
 name|controller
 operator|=
-name|PCIC_VLSI
-expr_stmt|;
-name|maybe_vlsi
-operator|=
-literal|1
+name|PCIC_I82365SL_DF
 expr_stmt|;
 break|break;
 case|case
@@ -2726,6 +2838,10 @@ parameter_list|)
 block|{
 name|unsigned
 name|char
+name|c
+decl_stmt|;
+name|unsigned
+name|char
 name|reg
 init|=
 name|PCIC_DISRST
@@ -2749,6 +2865,40 @@ name|controller
 condition|)
 block|{
 case|case
+name|PCIC_I82365SL_DF
+case|:
+comment|/*  		 * Check to see if the power on bit is clear.  If so, we're 		 * using the wrong voltage and should try 3.3V instead. 		 */
+name|c
+operator|=
+name|sp
+operator|->
+name|getb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_CDGC
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|c
+operator|&
+name|PCIC_POW
+operator|)
+operator|==
+literal|0
+condition|)
+name|slt
+operator|->
+name|pwr
+operator|.
+name|vcc
+operator|=
+literal|33
+expr_stmt|;
+comment|/* FALL THROUGH */
+case|case
 name|PCIC_PD672X
 case|:
 case|case
@@ -2770,13 +2920,7 @@ case|case
 name|PCIC_RF5C396
 case|:
 case|case
-name|PCIC_VLSI
-case|:
-case|case
 name|PCIC_IBM_KING
-case|:
-case|case
-name|PCIC_I82365
 case|:
 switch|switch
 condition|(
@@ -3041,7 +3185,7 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Some chips are smarter than us it seems, so if we weren't 	 * allowed to use 5V, try 3.3 instead 	 */
+comment|/* 	 * Some chips are smarter than us it seems, so if we weren't 	 * allowed to use 5V, try 3.3 instead 	 */
 if|if
 condition|(
 operator|!

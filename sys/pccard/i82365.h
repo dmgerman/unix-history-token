@@ -11,7 +11,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Intel chip */
+comment|/* Intel i82365SL-A/B or clone */
 end_comment
 
 begin_define
@@ -127,27 +127,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_PC98
+name|PCIC_I82365SL_DF
 value|11
 end_define
 
 begin_comment
-comment|/* NEC PC98 PCMCIA Controller */
-end_comment
-
-begin_comment
-comment|/* These last ones aren't in normal freebsd */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIC_TI1130
-value|12
-end_define
-
-begin_comment
-comment|/* TI PCI1130 CardBus */
+comment|/* Intel i82365sl-DF step */
 end_comment
 
 begin_comment
@@ -481,6 +466,17 @@ end_define
 
 begin_comment
 comment|/* Intel 82365SL Rev. 1; Both Memory and I/O */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_INTEL2
+value|0x84
+end_define
+
+begin_comment
+comment|/* Intel 82365SL step D */
 end_comment
 
 begin_define
