@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ring.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)ring.c	8.2 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1040,7 +1040,7 @@ name|ring
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|ring
 operator|->
@@ -1123,7 +1123,7 @@ name|ring
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|memmove
 argument_list|(
 name|buffer
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	8.2 (Berkeley) 12/15/93"
+literal|"@(#)telnet.c	8.4 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,7 +114,7 @@ name|strip
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)&0x7f)
+value|((my_want_state_is_wont(TELOPT_BINARY)) ? ((x)&0x7f) : (x))
 end_define
 
 begin_decl_stmt
@@ -2272,6 +2272,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|name
@@ -3026,6 +3029,9 @@ condition|(
 name|tname
 operator|&&
 operator|(
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|tname
@@ -9498,7 +9504,7 @@ block|thisitem = netobuf;      while ((next = nextitem(thisitem))<= netobuf.send
 comment|/* Now, thisitem is first before/at boundary. */
 block|good = netobuf;
 comment|/* where the good bytes go */
-block|while (netoring.add> thisitem) { 	if (wewant(thisitem)) { 	    int length;  	    next = thisitem; 	    do { 		next = nextitem(next); 	    } while (wewant(next)&& (nfrontp> next)); 	    length = next-thisitem; 	    memcpy(good, thisitem, length); 	    good += length; 	    thisitem = next; 	} else { 	    thisitem = nextitem(thisitem); 	}     }
+block|while (netoring.add> thisitem) { 	if (wewant(thisitem)) { 	    int length;  	    next = thisitem; 	    do { 		next = nextitem(next); 	    } while (wewant(next)&& (nfrontp> next)); 	    length = next-thisitem; 	    memmove(good, thisitem, length); 	    good += length; 	    thisitem = next; 	} else { 	    thisitem = nextitem(thisitem); 	}     }
 endif|#
 directive|endif
 comment|/* 0 */
