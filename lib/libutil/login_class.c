@@ -93,19 +93,6 @@ directive|include
 file|<sys/rtprio.h>
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|UNKNOWN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|UNKNOWN
-value|"su"
-end_define
-
 begin_struct
 specifier|static
 struct|struct
@@ -548,7 +535,7 @@ literal|"term"
 block|,
 literal|"TERM"
 block|,
-name|UNKNOWN
+name|NULL
 block|}
 block|,
 block|{
