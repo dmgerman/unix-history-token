@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)vm_machdep.c	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)vm_machdep.c	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,7 +18,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"pte.h"
+file|"machine/pte.h"
 end_include
 
 begin_include
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dir.h"
 end_include
 
 begin_include
@@ -216,15 +210,9 @@ operator|.
 name|rlim_cur
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|ENOMEM
-expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ENOMEM
 operator|)
 return|;
 block|}
@@ -293,7 +281,7 @@ name|u
 operator|.
 name|u_pcb
 operator|.
-name|pcb_ptd
+name|pcb_cr3
 argument_list|)
 expr_stmt|;
 block|}
@@ -366,19 +354,11 @@ argument_list|,
 name|v
 argument_list|)
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|EFAULT
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|EFAULT
 operator|)
 return|;
-block|}
 name|tp
 operator|=
 name|vtotp
@@ -432,23 +412,12 @@ condition|(
 name|c
 operator|->
 name|c_blkno
-operator|&&
-name|c
-operator|->
-name|c_mdev
-operator|!=
-name|MSWAPX
 condition|)
 name|munhash
 argument_list|(
-name|mount
-index|[
 name|c
 operator|->
-name|c_mdev
-index|]
-operator|.
-name|m_dev
+name|c_vp
 argument_list|,
 operator|(
 name|daddr_t
@@ -487,12 +456,12 @@ name|u
 operator|.
 name|u_pcb
 operator|.
-name|pcb_ptd
+name|pcb_cr3
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -570,7 +539,7 @@ name|u
 operator|.
 name|u_pcb
 operator|.
-name|pcb_ptd
+name|pcb_cr3
 argument_list|)
 expr_stmt|;
 block|}
@@ -737,7 +706,7 @@ name|u
 operator|.
 name|u_pcb
 operator|.
-name|pcb_ptd
+name|pcb_cr3
 argument_list|)
 expr_stmt|;
 block|}
@@ -836,7 +805,7 @@ name|u
 operator|.
 name|u_pcb
 operator|.
-name|pcb_ptd
+name|pcb_cr3
 argument_list|)
 expr_stmt|;
 block|}
@@ -960,7 +929,7 @@ name|u
 operator|.
 name|u_pcb
 operator|.
-name|pcb_ptd
+name|pcb_cr3
 argument_list|)
 expr_stmt|;
 block|}
@@ -1682,7 +1651,6 @@ name|pg_pfnum
 argument_list|)
 operator|)
 return|;
-comment|/*return((int)Usrptmap[btokmx(p->p_p0br) + p->p_szpt].pg_pfnum);*/
 block|}
 end_block
 
@@ -1740,7 +1708,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*bzero(pde, NBPG); */
+comment|/*bzero(pde, NBPG);*/
 comment|/* map kernel */
 name|pde
 operator|=
@@ -1836,6 +1804,7 @@ index|]
 operator|.
 name|pg_pfnum
 expr_stmt|;
+comment|/*printf("%d.u. pde %x pfnum %x virt %x\n", p->p_pid, pde, pde->pd_pfnum, p->p_addr);*/
 comment|/* otherwise, fill in user map */
 name|k
 operator|=
@@ -1879,6 +1848,7 @@ operator|->
 name|p_dsize
 argument_list|)
 expr_stmt|;
+comment|/*dprintf(DEXPAND,"textdata 0 to %d\n",sz-1);*/
 for|for
 control|(
 name|i
@@ -1919,6 +1889,7 @@ index|]
 operator|.
 name|pg_pfnum
 expr_stmt|;
+comment|/*dprintf(DEXPAND,"%d.pde %x pf %x\n", p->p_pid, pde, *(int *)pde);*/
 block|}
 comment|/* 	 * Bogus!  The kernelmap may map unused PT pages 	 * (since we don't shrink PTs) so we need to skip over 	 * those PDEs.  We should really free the unused PT 	 * pages in expand(). 	 */
 name|sz
@@ -1968,6 +1939,7 @@ name|Sysbase
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/*dprintf(DEXPAND,"zero %d upto %d\n", i, sz-1);*/
 for|for
 control|(
 init|;
@@ -1981,6 +1953,8 @@ operator|,
 name|pde
 operator|++
 control|)
+comment|/* definite bug here... does not hit all entries, but point moot due to bzero above XXX*/
+block|{
 operator|*
 operator|(
 name|int
@@ -1990,6 +1964,8 @@ name|pde
 operator|=
 literal|0
 expr_stmt|;
+comment|/*pg("pde %x pf %x", pde, *(int *)pde);*/
+block|}
 comment|/* stack and u-area */
 name|sz
 operator|=
@@ -2006,6 +1982,7 @@ name|Sysbase
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/*dprintf(DEXPAND,"stack %d upto %d\n", i, sz-1);*/
 for|for
 control|(
 init|;
@@ -2043,6 +2020,7 @@ index|]
 operator|.
 name|pg_pfnum
 expr_stmt|;
+comment|/*pg("pde %x pf %x", pde, *(int *)pde);*/
 block|}
 return|return
 operator|(
@@ -2498,6 +2476,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|bp
+operator|->
+name|b_saveaddr
+operator|=
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_addr
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|addr
 operator|=
 name|bp
@@ -2523,16 +2514,6 @@ name|off
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|a
-operator|=
-name|btop
-argument_list|(
-name|addr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_while
 while|while
 condition|(
@@ -2544,12 +2525,17 @@ name|mapin
 argument_list|(
 name|iopte
 argument_list|,
-name|a
+operator|(
+name|u_int
+operator|)
+name|addr
 argument_list|,
 name|pte
 operator|->
 name|pg_pfnum
 argument_list|,
+name|PG_KW
+operator||
 name|PG_V
 argument_list|)
 expr_stmt|;
@@ -2559,8 +2545,9 @@ operator|,
 name|pte
 operator|++
 expr_stmt|;
-name|a
-operator|++
+name|addr
+operator|+=
+name|NBPG
 expr_stmt|;
 block|}
 end_while
@@ -2572,14 +2559,14 @@ name|u
 operator|.
 name|u_pcb
 operator|.
-name|pcb_ptd
+name|pcb_cr3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
 unit|}
-comment|/*  * Free the io map PTEs associated with this IO operation.  * We also invalidate the TLB entries.  */
+comment|/*  * Free the io map PTEs associated with this IO operation.  * We also invalidate the TLB entries and restore the original b_addr.  */
 end_comment
 
 begin_expr_stmt
@@ -2738,29 +2725,14 @@ name|pte
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * If we just completed a dirty page push, we must reconstruct 	 * the original b_addr since cleanup() needs it. 	 */
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_DIRTY
-condition|)
-block|{
-name|a
-operator|=
-operator|(
-operator|(
-name|bp
-operator|-
-name|swbuf
-operator|)
-operator|*
-name|CLSIZE
-operator|)
-operator|*
-name|KLMAX
+name|load_cr3
+argument_list|(
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_cr3
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
@@ -2768,32 +2740,15 @@ name|b_un
 operator|.
 name|b_addr
 operator|=
-operator|(
-name|caddr_t
-operator|)
-name|ctob
-argument_list|(
-name|dptov
-argument_list|(
-operator|&
-name|proc
-index|[
-literal|2
-index|]
-argument_list|,
-name|a
-argument_list|)
-argument_list|)
+name|bp
+operator|->
+name|b_saveaddr
 expr_stmt|;
-block|}
-name|load_cr3
-argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
-name|pcb_ptd
-argument_list|)
+name|bp
+operator|->
+name|b_saveaddr
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_block
