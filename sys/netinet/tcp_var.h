@@ -210,103 +210,113 @@ decl_stmt|;
 define|#
 directive|define
 name|TF_ACKNOW
-value|0x00001
+value|0x000001
 comment|/* ack peer immediately */
 define|#
 directive|define
 name|TF_DELACK
-value|0x00002
+value|0x000002
 comment|/* ack, but try to delay it */
 define|#
 directive|define
 name|TF_NODELAY
-value|0x00004
+value|0x000004
 comment|/* don't delay packets to coalesce */
 define|#
 directive|define
 name|TF_NOOPT
-value|0x00008
+value|0x000008
 comment|/* don't use tcp options */
 define|#
 directive|define
 name|TF_SENTFIN
-value|0x00010
+value|0x000010
 comment|/* have sent FIN */
 define|#
 directive|define
 name|TF_REQ_SCALE
-value|0x00020
+value|0x000020
 comment|/* have/will request window scaling */
 define|#
 directive|define
 name|TF_RCVD_SCALE
-value|0x00040
+value|0x000040
 comment|/* other side has requested scaling */
 define|#
 directive|define
 name|TF_REQ_TSTMP
-value|0x00080
+value|0x000080
 comment|/* have/will request timestamps */
 define|#
 directive|define
 name|TF_RCVD_TSTMP
-value|0x00100
+value|0x000100
 comment|/* a timestamp was received in SYN */
 define|#
 directive|define
 name|TF_SACK_PERMIT
-value|0x00200
+value|0x000200
 comment|/* other side said I could SACK */
 define|#
 directive|define
 name|TF_NEEDSYN
-value|0x00400
+value|0x000400
 comment|/* send SYN (implicit state) */
 define|#
 directive|define
 name|TF_NEEDFIN
-value|0x00800
+value|0x000800
 comment|/* send FIN (implicit state) */
 define|#
 directive|define
 name|TF_NOPUSH
-value|0x01000
+value|0x001000
 comment|/* don't push */
 define|#
 directive|define
 name|TF_REQ_CC
-value|0x02000
+value|0x002000
 comment|/* have/will request CC */
 define|#
 directive|define
 name|TF_RCVD_CC
-value|0x04000
+value|0x004000
 comment|/* a CC was received in SYN */
 define|#
 directive|define
 name|TF_SENDCCNEW
-value|0x08000
+value|0x008000
 comment|/* send CCnew instead of CC in SYN */
 define|#
 directive|define
 name|TF_MORETOCOME
-value|0x10000
+value|0x010000
 comment|/* More data to be appended to sock */
 define|#
 directive|define
 name|TF_LQ_OVERFLOW
-value|0x20000
+value|0x020000
 comment|/* listen queue overflow */
 define|#
 directive|define
 name|TF_LASTIDLE
-value|0x40000
+value|0x040000
 comment|/* connection was previously idle */
 define|#
 directive|define
 name|TF_RXWIN0SENT
-value|0x80000
+value|0x080000
 comment|/* sent a receiver win 0 in response */
+define|#
+directive|define
+name|TF_FASTRECOVERY
+value|0x100000
+comment|/* in NewReno Fast Recovery */
+define|#
+directive|define
+name|TF_WASFRECOVERY
+value|0x200000
+comment|/* was in NewReno Fast Recovery */
 name|int
 name|t_force
 decl_stmt|;
@@ -381,10 +391,6 @@ decl_stmt|;
 comment|/* calculated bandwidth or 0 */
 name|tcp_seq
 name|snd_recover
-decl_stmt|;
-comment|/* for use in NewReno Fast Recovery */
-name|tcp_seq
-name|snd_high
 decl_stmt|;
 comment|/* for use in NewReno Fast Recovery */
 name|u_int
@@ -518,9 +524,9 @@ name|snd_ssthresh_prev
 decl_stmt|;
 comment|/* ssthresh prior to retransmit */
 name|tcp_seq
-name|snd_high_prev
+name|snd_recover_prev
 decl_stmt|;
-comment|/* snd_high prior to retransmit */
+comment|/* snd_recover prior to retransmit */
 name|u_long
 name|t_badrxtwin
 decl_stmt|;
@@ -532,6 +538,36 @@ comment|/* segments limited transmitted */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IN_FASTRECOVERY
+parameter_list|(
+name|tp
+parameter_list|)
+value|(tp->t_flags& TF_FASTRECOVERY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENTER_FASTRECOVERY
+parameter_list|(
+name|tp
+parameter_list|)
+value|tp->t_flags |= TF_FASTRECOVERY
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXIT_FASTRECOVERY
+parameter_list|(
+name|tp
+parameter_list|)
+value|tp->t_flags&= ~TF_FASTRECOVERY
+end_define
 
 begin_comment
 comment|/*  * Structure to hold TCP options that are only used during segment  * processing (in tcp_input), but not held in the tcpcb.  * It's basically used to reduce the number of parameters  * to tcp_dooptions.  */
