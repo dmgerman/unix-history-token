@@ -1510,9 +1510,10 @@ name|printf
 argument_list|(
 literal|"coda_close: destroying container ref %d, ufs vp %p of vp %p/cp %p\n"
 argument_list|,
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 argument_list|,
 name|cp
 operator|->
@@ -2149,7 +2150,7 @@ argument|CODA_RDWR
 argument_list|,
 argument|myprintf((
 literal|"indirect rdwr: fid = (%lx.%lx.%lx), refcnt = %d\n"
-argument|, 			      cp->c_fid.Volume, cp->c_fid.Vnode,  			      cp->c_fid.Unique, CTOV(cp)->v_usecount));
+argument|, 			      cp->c_fid.Volume, cp->c_fid.Vnode,  			      cp->c_fid.Unique, vrefcnt(CTOV(cp))));
 argument_list|)
 if|if
 condition|(
@@ -3695,7 +3696,7 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/*      * We see fsyncs with usecount == 1 then usecount == 0.      * For now we ignore them.      */
-comment|/*     if (!vp->v_usecount) {     	printf("coda_fsync on vnode %p with %d usecount.  c_flags = %x (%x)\n", 		vp, vp->v_usecount, cp->c_flags, cp->c_flags&C_PURGING);     }     */
+comment|/*     VI_LOCK(vp);     if (!vp->v_usecount) {     	printf("coda_fsync on vnode %p with %d usecount.  c_flags = %x (%x)\n", 		vp, vp->v_usecount, cp->c_flags, cp->c_flags&C_PURGING);     }     VI_UNLOCK(vp);     */
 comment|/*      * We can expect fsync on any vnode at all if venus is pruging it.      * Venus can't very well answer the fsync request, now can it?      * Hopefully, it won't have to, because hopefully, venus preserves      * the (possibly untrue) invariant that it never purges an open      * vnode.  Hopefully.      */
 if|if
 condition|(
@@ -3959,9 +3960,10 @@ name|printf
 argument_list|(
 literal|"coda_inactive: IS_UNMOUNTING use %d: vp %p, cp %p\n"
 argument_list|,
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 argument_list|,
 name|vp
 argument_list|,
@@ -3980,9 +3982,10 @@ name|printf
 argument_list|(
 literal|"coda_inactive: cp->ovp != NULL use %d: vp %p, cp %p\n"
 argument_list|,
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 argument_list|,
 name|vp
 argument_list|,
@@ -4016,12 +4019,13 @@ directive|ifdef
 name|OLD_DIAGNOSTIC
 if|if
 condition|(
+name|vrefcnt
+argument_list|(
 name|CTOV
 argument_list|(
 name|cp
 argument_list|)
-operator|->
-name|v_usecount
+argument_list|)
 condition|)
 block|{
 name|panic
@@ -7332,7 +7336,7 @@ argument|CODA_READDIR
 argument_list|,
 argument|myprintf((
 literal|"indirect readdir: fid = (%lx.%lx.%lx), refcnt = %d\n"
-argument|,cp->c_fid.Volume, cp->c_fid.Vnode, cp->c_fid.Unique, vp->v_usecount));
+argument|,cp->c_fid.Volume, cp->c_fid.Vnode, cp->c_fid.Unique, vrefcnt(vp)));
 argument_list|)
 name|error
 operator|=
@@ -7733,9 +7737,10 @@ directive|ifdef
 name|OLD_DIAGNOSTIC
 if|if
 condition|(
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|!=
 literal|0
 condition|)

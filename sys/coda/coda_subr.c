@@ -667,7 +667,7 @@ argument|CODA_FLUSH
 argument_list|,
 argument|myprintf((
 literal|"Live cnode fid %lx.%lx.%lx flags %d count %d\n"
-argument|, 						   (cp->c_fid).Volume, 						   (cp->c_fid).Vnode, 						   (cp->c_fid).Unique,  						   cp->c_flags, 						   CTOV(cp)->v_usecount));
+argument|, 						   (cp->c_fid).Volume, 						   (cp->c_fid).Vnode, 						   (cp->c_fid).Unique,  						   cp->c_flags, 						   vrefcnt(CTOV(cp))));
 argument_list|)
 empty_stmt|;
 block|}
@@ -862,12 +862,13 @@ operator|)
 operator|.
 name|Unique
 operator|,
+name|vrefcnt
+argument_list|(
 name|CTOV
 argument_list|(
 name|cp
 argument_list|)
-operator|->
-name|v_usecount
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1449,19 +1450,20 @@ argument|CODA_ZAPFILE
 argument_list|,
 argument|myprintf((
 literal|"zapfile: fid = (%lx.%lx.%lx), refcnt = %d, error = %d\n"
-argument|, 		  cp->c_fid.Volume, cp->c_fid.Vnode, cp->c_fid.Unique, 		  CTOV(cp)->v_usecount -
+argument|, 		  cp->c_fid.Volume, cp->c_fid.Vnode, cp->c_fid.Unique, 		  vrefcnt(CTOV(cp)) -
 literal|1
 argument|, error));
 argument_list|)
 empty_stmt|;
 if|if
 condition|(
+name|vrefcnt
+argument_list|(
 name|CTOV
 argument_list|(
 name|cp
 argument_list|)
-operator|->
-name|v_usecount
+argument_list|)
 operator|==
 literal|1
 condition|)
@@ -1562,19 +1564,20 @@ argument|CODA_ZAPDIR
 argument_list|,
 argument|myprintf((
 literal|"zapdir: fid = (%lx.%lx.%lx), refcnt = %d\n"
-argument|, 		  cp->c_fid.Volume, cp->c_fid.Vnode, cp->c_fid.Unique, 		  CTOV(cp)->v_usecount -
+argument|, 		  cp->c_fid.Volume, cp->c_fid.Vnode, cp->c_fid.Unique, 		  vrefcnt(CTOV(cp)) -
 literal|1
 argument|));
 argument_list|)
 empty_stmt|;
 if|if
 condition|(
+name|vrefcnt
+argument_list|(
 name|CTOV
 argument_list|(
 name|cp
 argument_list|)
-operator|->
-name|v_usecount
+argument_list|)
 operator|==
 literal|1
 condition|)
@@ -1753,19 +1756,20 @@ argument|CODA_PURGEFID
 argument_list|,
 argument|myprintf((
 literal|"purgefid: fid = (%lx.%lx.%lx), refcnt = %d, error = %d\n"
-argument|,                                             cp->c_fid.Volume, cp->c_fid.Vnode,                                             cp->c_fid.Unique,  					    CTOV(cp)->v_usecount -
+argument|,                                             cp->c_fid.Volume, cp->c_fid.Vnode,                                             cp->c_fid.Unique,  					    vrefcnt(CTOV(cp)) -
 literal|1
 argument|, error));
 argument_list|)
 empty_stmt|;
 if|if
 condition|(
+name|vrefcnt
+argument_list|(
 name|CTOV
 argument_list|(
 name|cp
 argument_list|)
-operator|->
-name|v_usecount
+argument_list|)
 operator|==
 literal|1
 condition|)
