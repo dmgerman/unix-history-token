@@ -646,6 +646,9 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|char
+name|possible_help_request
+decl_stmt|;
 comment|/* 	 * Use a pointer for consistency, but stack-allocated storage 	 * for ease of cleanup. 	 */
 name|bsdtar
 operator|=
@@ -696,6 +699,10 @@ expr_stmt|;
 name|mode
 operator|=
 literal|'\0'
+expr_stmt|;
+name|possible_help_request
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Look up uid/uname of current user for future reference */
 name|bsdtar
@@ -1094,6 +1101,11 @@ operator|->
 name|symlink_mode
 operator|=
 literal|'L'
+expr_stmt|;
+comment|/* Hack: -h by itself is the "help" command. */
+name|possible_help_request
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 ifdef|#
@@ -1580,6 +1592,26 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Sanity-check options. 	 */
+if|if
+condition|(
+name|mode
+operator|==
+literal|'\0'
+operator|&&
+name|possible_help_request
+condition|)
+block|{
+name|long_help
+argument_list|(
+name|bsdtar
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|mode
@@ -2346,6 +2378,18 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_GETOPT_LONG
+name|printf
+argument_list|(
+literal|"  Help:    %s --help\n"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printf
 argument_list|(
 literal|"  Help:    %s -h\n"
@@ -2353,6 +2397,8 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|1
