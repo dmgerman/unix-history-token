@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	5.19 (Berkeley) %G%"
+literal|"@(#)savemail.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1810,6 +1810,25 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
+block|{
+name|expand
+argument_list|(
+name|buf
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 name|putline
 argument_list|(
 name|buf
@@ -1819,6 +1838,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1838,9 +1858,27 @@ block|}
 block|}
 else|else
 block|{
-name|putline
+name|expand
 argument_list|(
 name|ErrMsgFile
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+operator|-
+literal|1
+index|]
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
 argument_list|,
 name|fp
 argument_list|,
