@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	8.2 (Berkeley) %G%"
+literal|"@(#)pass5.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -432,7 +432,7 @@ operator|(
 operator|&
 name|ocg
 operator|->
-name|cg_link
+name|cg_firstfield
 operator|)
 expr_stmt|;
 name|sumsize
@@ -446,7 +446,7 @@ literal|0
 index|]
 operator|-
 operator|(
-name|char
+name|u_int8_t
 operator|*
 operator|)
 operator|(
@@ -530,7 +530,7 @@ operator|(
 operator|&
 name|newcg
 operator|->
-name|cg_link
+name|cg_firstfield
 operator|)
 expr_stmt|;
 name|newcg
@@ -745,7 +745,7 @@ operator|(
 operator|&
 name|newcg
 operator|->
-name|cg_link
+name|cg_firstfield
 operator|)
 expr_stmt|;
 name|sumsize

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	8.3 (Berkeley) %G%"
+literal|"@(#)setup.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1049,7 +1049,7 @@ operator|(
 operator|&
 name|sblock
 operator|.
-name|fs_link
+name|fs_firstfield
 operator|)
 expr_stmt|;
 name|sblock
@@ -1072,7 +1072,7 @@ operator|(
 operator|&
 name|sblock
 operator|.
-name|fs_link
+name|fs_firstfield
 operator|)
 expr_stmt|;
 name|sblock
@@ -1945,22 +1945,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|altsblock
-operator|.
-name|fs_link
-operator|=
-name|sblock
-operator|.
-name|fs_link
-expr_stmt|;
-name|altsblock
-operator|.
-name|fs_rlink
-operator|=
-name|sblock
-operator|.
-name|fs_rlink
-expr_stmt|;
 name|altsblock
 operator|.
 name|fs_time
