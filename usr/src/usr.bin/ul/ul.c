@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ul.c	5.1 (Berkeley) %G%"
+literal|"@(#)ul.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -950,7 +950,7 @@ index|[
 name|col
 index|]
 operator|.
-name|c_mode
+name|c_char
 operator|=
 name|c
 expr_stmt|;
