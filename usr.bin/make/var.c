@@ -6568,6 +6568,10 @@ name|Boolean
 name|doFree
 decl_stmt|;
 comment|/* Set true if val should be freed */
+name|char
+modifier|*
+name|result
+decl_stmt|;
 specifier|static
 name|Boolean
 name|errorReported
@@ -6642,6 +6646,7 @@ literal|'$'
 condition|)
 block|{
 comment|/* 	     * Skip as many characters as possible -- either to the end of 	     * the string or to the next dollar sign (variable invocation). 	     */
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -7070,7 +7075,7 @@ argument_list|,
 literal|'\0'
 argument_list|)
 expr_stmt|;
-name|str
+name|result
 operator|=
 operator|(
 name|char
@@ -7096,7 +7101,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|str
+name|result
 operator|)
 return|;
 block|}
