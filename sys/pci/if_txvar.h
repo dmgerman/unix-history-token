@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_txvar.h,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*      $Id: if_txvar.h,v 1.2 1999/03/14 08:30:23 semenu Exp $ */
+comment|/*      $Id: if_txvar.h,v 1.1.4.1 1999/04/23 05:47:53 semenu Exp $ */
 end_comment
 
 begin_comment
@@ -1842,6 +1842,10 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|struct
+name|arpcom
+name|arpcom
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -1896,10 +1900,6 @@ name|ifmedia
 decl_stmt|;
 endif|#
 directive|endif
-name|struct
-name|arpcom
-name|arpcom
-decl_stmt|;
 name|u_int32_t
 name|unit
 decl_stmt|;
