@@ -774,7 +774,27 @@ name|int
 name|slot
 parameter_list|)
 block|{
-comment|/* 	 * If you success to power-off the PCMCIA slots and 	 * resume safely, please tell me your way to implement it. 	 * 	 *  HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp> 	 */
+name|pcic_putb
+argument_list|(
+name|slot
+argument_list|,
+name|PCIC_POWER
+argument_list|,
+name|pcic_getb
+argument_list|(
+name|slot
+argument_list|,
+name|PCIC_POWER
+argument_list|)
+operator|&
+operator|~
+operator|(
+name|PCIC_OUTENA
+operator||
+name|PCIC_PCPWRE
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
