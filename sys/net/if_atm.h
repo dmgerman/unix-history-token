@@ -702,6 +702,10 @@ parameter_list|)
 value|{ \ 	(X)->atm_ph[2] = ((V)>> 8)& 0xff; \ 	(X)->atm_ph[3] = ((V)& 0xff); \ }
 end_define
 
+begin_comment
+comment|/* use AAL5? (0 == aal0) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -710,19 +714,15 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* use AAL5? (0 == aal0) */
+comment|/* use the LLC SNAP encoding (iff aal5) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ATM_PH_LLCSNAP
-value|0x02
+value|ATMIO_FLAG_LLCSNAP
 end_define
-
-begin_comment
-comment|/* use the LLC SNAP encoding (iff aal5) */
-end_comment
 
 begin_define
 define|#
