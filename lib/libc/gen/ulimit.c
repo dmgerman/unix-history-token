@@ -64,8 +64,6 @@ name|ap
 decl_stmt|;
 name|long
 name|arg
-decl_stmt|,
-name|size
 decl_stmt|;
 if|if
 condition|(
