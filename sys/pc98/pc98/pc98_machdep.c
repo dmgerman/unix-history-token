@@ -497,12 +497,6 @@ block|}
 block|}
 end_function
 
-begin_include
-include|#
-directive|include
-file|"da.h"
-end_include
-
 begin_comment
 comment|/*  * Read a geometry information of SCSI HDD from BIOS work area.  *  * XXX - Before reading BIOS work area, we should check whether  * host adapter support it.  */
 end_comment
@@ -517,11 +511,6 @@ modifier|*
 name|ccg
 parameter_list|)
 block|{
-if|#
-directive|if
-name|NDA
-operator|>
-literal|0
 name|u_char
 modifier|*
 name|tmp
@@ -683,9 +672,6 @@ return|return
 literal|1
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* NDA> 0 */
 return|return
 literal|0
 return|;
