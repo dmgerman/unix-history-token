@@ -22,54 +22,6 @@ file|<machine/alpha_cpu.h>
 end_include
 
 begin_comment
-comment|/*  * Quick and dirty workaround for compiling LINT. The kernel is too  * large to jump between sections without linker stubs/trampolines.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPILING_LINT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__COLD_SECTION
-value|"br 3f\n"
-end_define
-
-begin_define
-define|#
-directive|define
-name|__HOT_SECTION
-value|"3:\n"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__COLD_SECTION
-value|".section .text3,\"ax\"\n"
-end_define
-
-begin_define
-define|#
-directive|define
-name|__HOT_SECTION
-value|".previous\n"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and SMP safe.  */
 end_comment
 
@@ -205,13 +157,8 @@ literal|"bis %0, %3, %0\n\t"
 comment|/* calculate new value */
 literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
-literal|"beq %0, 2f\n\t"
+literal|"beq %0, 1b\n"
 comment|/* spin if failed */
-name|__COLD_SECTION
-comment|/* improve branch prediction */
-literal|"2:\tbr 1b\n"
-comment|/* try again */
-name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -273,13 +220,8 @@ literal|"bic %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
-literal|"beq %0, 2f\n\t"
+literal|"beq %0, 1b\n"
 comment|/* spin if failed */
-name|__COLD_SECTION
-comment|/* improve branch prediction */
-literal|"2:\tbr 1b\n"
-comment|/* try again */
-name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -335,13 +277,8 @@ literal|"addl %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
-literal|"beq %0, 2f\n\t"
+literal|"beq %0, 1b\n"
 comment|/* spin if failed */
-name|__COLD_SECTION
-comment|/* improve branch prediction */
-literal|"2:\tbr 1b\n"
-comment|/* try again */
-name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -397,13 +334,8 @@ literal|"subl %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
-literal|"beq %0, 2f\n\t"
+literal|"beq %0, 1b\n"
 comment|/* spin if failed */
-name|__COLD_SECTION
-comment|/* improve branch prediction */
-literal|"2:\tbr 1b\n"
-comment|/* try again */
-name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -460,14 +392,8 @@ literal|"ldiq %1,0\n\t"
 comment|/* value to store */
 literal|"stl_c %1,%2\n\t"
 comment|/* attempt to store */
-literal|"beq %1,2f\n\t"
+literal|"beq %1,1b\n"
 comment|/* if the store failed, spin */
-literal|"br 3f\n"
-comment|/* it worked, exit */
-literal|"2:\tbr 1b\n"
-comment|/* *addr not updated, loop */
-literal|"3:\n"
-comment|/* it worked */
 operator|:
 literal|"=&r"
 operator|(
@@ -530,13 +456,8 @@ literal|"bis %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
-literal|"beq %0, 2f\n\t"
+literal|"beq %0, 1b\n"
 comment|/* spin if failed */
-name|__COLD_SECTION
-comment|/* improve branch prediction */
-literal|"2:\tbr 1b\n"
-comment|/* try again */
-name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -592,13 +513,8 @@ literal|"bic %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
-literal|"beq %0, 2f\n\t"
+literal|"beq %0, 1b\n"
 comment|/* spin if failed */
-name|__COLD_SECTION
-comment|/* improve branch prediction */
-literal|"2:\tbr 1b\n"
-comment|/* try again */
-name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -654,13 +570,8 @@ literal|"addq %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
-literal|"beq %0, 2f\n\t"
+literal|"beq %0, 1b\n"
 comment|/* spin if failed */
-name|__COLD_SECTION
-comment|/* improve branch prediction */
-literal|"2:\tbr 1b\n"
-comment|/* try again */
-name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -716,13 +627,8 @@ literal|"subq %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
-literal|"beq %0, 2f\n\t"
+literal|"beq %0, 1b\n"
 comment|/* spin if failed */
-name|__COLD_SECTION
-comment|/* improve branch prediction */
-literal|"2:\tbr 1b\n"
-comment|/* try again */
-name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -779,14 +685,8 @@ literal|"ldiq %1,0\n\t"
 comment|/* value to store */
 literal|"stq_c %1,%2\n\t"
 comment|/* attempt to store */
-literal|"beq %1,2f\n\t"
+literal|"beq %1,1b\n"
 comment|/* if the store failed, spin */
-literal|"br 3f\n"
-comment|/* it worked, exit */
-literal|"2:\tbr 1b\n"
-comment|/* *addr not updated, loop */
-literal|"3:\n"
-comment|/* it worked */
 operator|:
 literal|"=&r"
 operator|(
@@ -1163,15 +1063,9 @@ literal|"mov %3, %0\n\t"
 comment|/* value to store */
 literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
-literal|"beq %0, 3f\n\t"
+literal|"beq %0, 1b\n\t"
 comment|/* if it failed, spin */
 literal|"2:\n"
-comment|/* done */
-name|__COLD_SECTION
-comment|/* improve branch prediction */
-literal|"3:\tbr 1b\n"
-comment|/* try again */
-name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -1256,15 +1150,9 @@ literal|"mov %3, %0\n\t"
 comment|/* value to store */
 literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
-literal|"beq %0, 3f\n\t"
+literal|"beq %0, 1b\n\t"
 comment|/* if it failed, spin */
 literal|"2:\n"
-comment|/* done */
-name|__COLD_SECTION
-comment|/* improve branch prediction */
-literal|"3:\tbr 1b\n"
-comment|/* try again */
-name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
