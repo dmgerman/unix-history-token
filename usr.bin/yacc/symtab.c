@@ -12,6 +12,7 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+specifier|const
 name|sccsid
 index|[]
 init|=
@@ -27,6 +28,18 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
@@ -48,6 +61,20 @@ directive|define
 name|TABLE_SIZE
 value|1024
 end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|hash
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|bucket
@@ -72,6 +99,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|hash
 parameter_list|(
@@ -112,11 +140,13 @@ name|s
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 operator|++
 name|s
+operator|)
 condition|)
 name|k
 operator|=
@@ -387,12 +417,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|create_symbol_table
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -488,14 +516,12 @@ operator|=
 name|bp
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|free_symbol_table
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|FREE
 argument_list|(
@@ -507,14 +533,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|free_symbols
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|bucket
@@ -550,7 +574,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

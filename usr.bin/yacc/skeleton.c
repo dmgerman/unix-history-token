@@ -12,6 +12,7 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+specifier|const
 name|sccsid
 index|[]
 init|=
@@ -710,22 +711,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|write_section
-argument_list|(
-argument|section
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|section
+parameter_list|)
 name|char
 modifier|*
 name|section
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -755,12 +751,14 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
 name|s
 operator|=
 name|section
 index|[
 name|i
 index|]
+operator|)
 condition|;
 operator|++
 name|i
@@ -771,10 +769,12 @@ name|outline
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|s
+operator|)
 condition|)
 block|{
 name|putc
@@ -797,7 +797,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
