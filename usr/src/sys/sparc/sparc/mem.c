@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)mem.c	7.1 (Berkeley) %G%  *  * from: $Header: mem.c,v 1.8 92/06/17 05:22:16 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)mem.c	7.2 (Berkeley) %G%  *  * from: $Header: mem.c,v 1.8 92/06/17 05:22:16 torek Exp $  */
 end_comment
 
 begin_comment
@@ -309,7 +309,7 @@ name|PGOFSET
 expr_stmt|;
 name|c
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|uio
 operator|->
@@ -376,7 +376,7 @@ name|uio_offset
 expr_stmt|;
 name|c
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|iov
 operator|->
@@ -506,7 +506,7 @@ expr_stmt|;
 block|}
 name|c
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|iov
 operator|->
