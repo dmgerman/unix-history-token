@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_resource.c	8.5 (Berkeley) 1/21/94  * $Id: kern_resource.c,v 1.8 1994/12/01 20:20:21 ats Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_resource.c	8.5 (Berkeley) 1/21/94  * $Id: kern_resource.c,v 1.9 1994/12/02 23:00:40 ats Exp $  */
 end_comment
 
 begin_include
@@ -1584,6 +1584,35 @@ index|[
 name|which
 index|]
 expr_stmt|;
+comment|/* 	 * Preserve historical bugs by treating negative limits as unsigned. 	 */
+if|if
+condition|(
+name|limp
+operator|->
+name|rlim_cur
+operator|<
+literal|0
+condition|)
+name|limp
+operator|->
+name|rlim_cur
+operator|=
+name|RLIM_INFINITY
+expr_stmt|;
+if|if
+condition|(
+name|limp
+operator|->
+name|rlim_max
+operator|<
+literal|0
+condition|)
+name|limp
+operator|->
+name|rlim_max
+operator|=
+name|RLIM_INFINITY
+expr_stmt|;
 if|if
 condition|(
 name|limp
@@ -1705,9 +1734,6 @@ name|RLIMIT_DATA
 case|:
 if|if
 condition|(
-operator|(
-name|u_quad_t
-operator|)
 name|limp
 operator|->
 name|rlim_cur
@@ -1722,9 +1748,6 @@ name|MAXDSIZ
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|u_quad_t
-operator|)
 name|limp
 operator|->
 name|rlim_max
@@ -1743,9 +1766,6 @@ name|RLIMIT_STACK
 case|:
 if|if
 condition|(
-operator|(
-name|u_quad_t
-operator|)
 name|limp
 operator|->
 name|rlim_cur
@@ -1760,9 +1780,6 @@ name|MAXSSIZ
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|u_quad_t
-operator|)
 name|limp
 operator|->
 name|rlim_max
@@ -1798,16 +1815,10 @@ name|prot
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|u_quad_t
-operator|)
 name|limp
 operator|->
 name|rlim_cur
 operator|>
-operator|(
-name|u_quad_t
-operator|)
 name|alimp
 operator|->
 name|rlim_cur
