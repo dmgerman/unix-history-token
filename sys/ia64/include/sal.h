@@ -358,6 +358,31 @@ name|SAL_UPDATE_PAL
 value|0x01000020
 end_define
 
+begin_comment
+comment|/* SAL_SET_VECTORS event handler types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAL_OS_MCA
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAL_OS_INIT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAL_OS_BOOT_RENDEZ
+value|2
+end_define
+
 begin_struct
 struct|struct
 name|ia64_sal_result

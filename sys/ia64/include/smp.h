@@ -22,42 +22,56 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Interprocessor interrupts for SMP.  */
+comment|/*  * Interprocessor interrupts for SMP. The following values are indices  * into the IPI vector table. The SAL gives us the vector used for AP  * wake-up. Keep the IPI_AP_WAKEUP at index 0.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IPI_INVLTLB
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPI_RENDEZVOUS
-value|0x0002
+name|IPI_AP_WAKEUP
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPI_AST
-value|0x0004
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPI_CHECKSTATE
-value|0x0008
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_INVLTLB
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_RENDEZVOUS
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPI_STOP
-value|0x0010
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_COUNT
+value|6
 end_define
 
 begin_ifndef
@@ -66,31 +80,18 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
-begin_comment
-comment|/* global data in mp_machdep.c */
-end_comment
-
 begin_decl_stmt
 specifier|extern
-specifier|volatile
-name|u_int
-name|checkstate_probed_cpus
+name|int
+name|mp_hardware
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-specifier|volatile
-name|u_int
-name|checkstate_need_ast
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|u_int
-name|resched_cpus
+name|int
+name|mp_ipi_vector
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -98,7 +99,7 @@ begin_function_decl
 name|void
 name|ipi_all
 parameter_list|(
-name|u_int64_t
+name|int
 name|ipi
 parameter_list|)
 function_decl|;
@@ -108,7 +109,7 @@ begin_function_decl
 name|void
 name|ipi_all_but_self
 parameter_list|(
-name|u_int64_t
+name|int
 name|ipi
 parameter_list|)
 function_decl|;
@@ -118,10 +119,10 @@ begin_function_decl
 name|void
 name|ipi_selected
 parameter_list|(
-name|u_int
+name|u_int64_t
 name|cpus
 parameter_list|,
-name|u_int64_t
+name|int
 name|ipi
 parameter_list|)
 function_decl|;
@@ -131,17 +132,8 @@ begin_function_decl
 name|void
 name|ipi_self
 parameter_list|(
-name|u_int64_t
+name|int
 name|ipi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|smp_init_secondary
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
