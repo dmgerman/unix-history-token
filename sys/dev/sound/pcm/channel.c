@@ -3484,9 +3484,7 @@ argument_list|)
 condition|)
 name|sndbuf_free
 argument_list|(
-name|c
-operator|->
-name|bufhard
+name|b
 argument_list|)
 expr_stmt|;
 name|c
