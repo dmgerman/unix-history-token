@@ -1129,10 +1129,6 @@ operator|&
 name|rfd2
 argument_list|,
 name|dest_realm
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
