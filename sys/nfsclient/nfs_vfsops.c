@@ -263,6 +263,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NFSDIRECTIO
+argument_list|,
+literal|"NFS DirectIO"
+argument_list|,
+literal|"NFS Direct IO async write state"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|uma_zone_t
 name|nfsmount_zone

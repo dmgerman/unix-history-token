@@ -319,6 +319,9 @@ decl_stmt|;
 name|daddr_t
 name|ra_expect_lbn
 decl_stmt|;
+name|int
+name|n_directio_opens
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -466,6 +469,17 @@ end_define
 
 begin_comment
 comment|/* File size has changed: need cache inval */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NNONCACHE
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Node marked as noncacheable */
 end_comment
 
 begin_comment

@@ -532,6 +532,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_NFSDIRECTIO
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1422,6 +1430,17 @@ modifier|*
 parameter_list|,
 name|struct
 name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nfs_doio_directwrite
+parameter_list|(
+name|struct
+name|buf
 modifier|*
 parameter_list|)
 function_decl|;
