@@ -1274,6 +1274,14 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|srandomdev
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|srandom
 argument_list|(
 call|(
@@ -1292,6 +1300,8 @@ name|mypid
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* prepare socket connected to the kernel. 	 */
 name|rt_sock
 operator|=
