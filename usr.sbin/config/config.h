@@ -184,42 +184,13 @@ decl_stmt|;
 comment|/* DEVICE, bus adaptor */
 name|char
 modifier|*
-name|d_conn
-decl_stmt|;
-comment|/* what it is connected to */
-name|int
-name|d_connunit
-decl_stmt|;
-comment|/* unit of connection */
-name|char
-modifier|*
 name|d_name
 decl_stmt|;
 comment|/* name of device (e.g. rk11) */
 name|int
-name|d_unit
-decl_stmt|;
-comment|/* unit number */
-name|int
-name|d_drive
-decl_stmt|;
-comment|/* drive number */
-name|int
-name|d_target
-decl_stmt|;
-comment|/* target number */
-name|int
-name|d_lun
-decl_stmt|;
-comment|/* unit number */
-name|int
-name|d_bus
-decl_stmt|;
-comment|/* controller bus number */
-name|int
 name|d_count
 decl_stmt|;
-comment|/* pseudo-device count */
+comment|/* device count */
 define|#
 directive|define
 name|QUES
@@ -230,39 +201,6 @@ directive|define
 name|UNKNOWN
 value|-2
 comment|/* -2 means not set yet */
-name|int
-name|d_flags
-decl_stmt|;
-comment|/* flags for device init */
-name|int
-name|d_disabled
-decl_stmt|;
-comment|/* nonzero to skip probe/attach */
-name|char
-modifier|*
-name|d_port
-decl_stmt|;
-comment|/* io port base manifest constant */
-name|int
-name|d_portn
-decl_stmt|;
-comment|/* io port base (if number not manifest) */
-name|int
-name|d_maddr
-decl_stmt|;
-comment|/* io memory base */
-name|int
-name|d_msize
-decl_stmt|;
-comment|/* io memory size */
-name|int
-name|d_drq
-decl_stmt|;
-comment|/* DMA request  */
-name|int
-name|d_irq
-decl_stmt|;
-comment|/* interrupt request  */
 name|struct
 name|device
 modifier|*
@@ -417,170 +355,131 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|hints
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|do_trace
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|get_word
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|get_quoted_word
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|path
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|raisestr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|moveifchanged
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|void
-name|init_dev
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|device
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 name|void
 name|newbus_ioconf
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|yyparse
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|yylex
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|options
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|makefile
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|headers
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern

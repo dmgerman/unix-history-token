@@ -10,31 +10,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"wd.h"
+file|"wdc.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NWDC
-end_ifdef
 
 begin_undef
 undef|#
 directive|undef
-name|NWDC
+name|NWD
 end_undef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NWD
+value|(NWDC * 4)
+end_define
 
-begin_include
-include|#
-directive|include
-file|"wdc.h"
-end_include
+begin_comment
+comment|/* 4 drives per wdc on PC98 */
+end_comment
 
 begin_if
 if|#
