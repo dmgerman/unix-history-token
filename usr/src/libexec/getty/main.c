@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -950,6 +950,11 @@ name|ldisp
 init|=
 name|OTTYDISC
 decl_stmt|;
+name|int
+name|off
+init|=
+literal|0
+decl_stmt|;
 name|gettable
 argument_list|(
 name|tname
@@ -989,6 +994,28 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* clear out the crap */
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|FIONBIO
+argument_list|,
+operator|&
+name|off
+argument_list|)
+expr_stmt|;
+comment|/* turn off non-blocking mode */
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|FIOASYNC
+argument_list|,
+operator|&
+name|off
+argument_list|)
+expr_stmt|;
+comment|/* ditto for asynchronous mode */
 if|if
 condition|(
 name|IS
@@ -1395,6 +1422,15 @@ operator|)
 literal|0
 argument_list|,
 name|env
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: %m"
+argument_list|,
+name|LO
 argument_list|)
 expr_stmt|;
 name|exit
