@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: boot1.c,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  * From	$NetBSD: bootxx.c,v 1.4 1997/09/06 14:08:29 drochner Exp $   */
+comment|/*  * $Id: boot1.c,v 1.2 1998/09/26 10:51:36 dfr Exp $  * From	$NetBSD: bootxx.c,v 1.4 1997/09/06 14:08:29 drochner Exp $   */
 end_comment
 
 begin_comment
@@ -557,7 +557,7 @@ argument_list|()
 expr_stmt|;
 name|loadfile
 argument_list|(
-literal|"/boot/boot2"
+literal|"/boot/loader"
 argument_list|,
 name|loadaddr
 argument_list|)
