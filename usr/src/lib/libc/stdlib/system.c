@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)system.c	5.6 (Berkeley) %G%"
+literal|"@(#)system.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stddef.h>
 end_include
 
 begin_include
@@ -101,6 +101,17 @@ name|intsave
 decl_stmt|,
 name|quitsave
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|command
+condition|)
+comment|/* just checking... */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|omask
 operator|=
 name|sigblock
