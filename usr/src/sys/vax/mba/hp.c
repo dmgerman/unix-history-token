@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.50	82/06/27	*/
+comment|/*	hp.c	4.51	82/08/01	*/
 end_comment
 
 begin_ifdef
@@ -143,6 +143,12 @@ begin_include
 include|#
 directive|include
 file|"../h/dkbad.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ioctl.h"
 end_include
 
 begin_include
@@ -3521,7 +3527,7 @@ argument|dev
 argument_list|,
 argument|cmd
 argument_list|,
-argument|addr
+argument|data
 argument_list|,
 argument|flag
 argument_list|)
@@ -3541,7 +3547,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
-name|addr
+name|data
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tb.c	4.1	82/06/26	*/
+comment|/*	tty_tb.c	4.2	82/08/01	*/
 end_comment
 
 begin_include
@@ -972,7 +972,9 @@ argument|tp
 argument_list|,
 argument|cmd
 argument_list|,
-argument|addr
+argument|data
+argument_list|,
+argument|flag
 argument_list|)
 end_macro
 
@@ -986,7 +988,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
-name|addr
+name|data
 decl_stmt|;
 end_decl_stmt
 

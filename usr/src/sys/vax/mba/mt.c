@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mt.c	4.5	82/07/15	*/
+comment|/*	mt.c	4.6	82/08/01	*/
 end_comment
 
 begin_include
@@ -90,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mtio.h"
+file|"../h/ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ioctl.h"
+file|"../h/mtio.h"
 end_include
 
 begin_include
@@ -2953,7 +2953,7 @@ argument|dev
 argument_list|,
 argument|cmd
 argument_list|,
-argument|addr
+argument|data
 argument_list|,
 argument|flag
 argument_list|)
@@ -2973,7 +2973,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
-name|addr
+name|data
 decl_stmt|;
 end_decl_stmt
 
@@ -3027,10 +3027,12 @@ name|fcount
 decl_stmt|;
 name|struct
 name|mtop
+modifier|*
 name|mtop
 decl_stmt|;
 name|struct
 name|mtget
+modifier|*
 name|mtget
 decl_stmt|;
 comment|/* we depend of the values and order of the MT codes here */
@@ -3065,40 +3067,19 @@ case|case
 name|MTIOCTOP
 case|:
 comment|/* tape operation */
-if|if
-condition|(
-name|copyin
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|addr
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
 name|mtop
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mtop
-argument_list|)
-argument_list|)
-condition|)
-block|{
-name|u
-operator|.
-name|u_error
 operator|=
-name|EFAULT
+operator|(
+expr|struct
+name|mtop
+operator|*
+operator|)
+name|mtop
 expr_stmt|;
-return|return;
-block|}
 switch|switch
 condition|(
 name|mtop
-operator|.
+operator|->
 name|mt_op
 condition|)
 block|{
@@ -3108,7 +3089,7 @@ case|:
 name|callcount
 operator|=
 name|mtop
-operator|.
+operator|->
 name|mt_count
 expr_stmt|;
 name|fcount
@@ -3125,7 +3106,7 @@ case|:
 name|callcount
 operator|=
 name|mtop
-operator|.
+operator|->
 name|mt_count
 expr_stmt|;
 name|fcount
@@ -3146,7 +3127,7 @@ expr_stmt|;
 name|fcount
 operator|=
 name|mtop
-operator|.
+operator|->
 name|mt_count
 expr_stmt|;
 break|break;
@@ -3198,7 +3179,7 @@ operator|=
 name|mtops
 index|[
 name|mtop
-operator|.
+operator|->
 name|mt_op
 index|]
 expr_stmt|;
@@ -3260,13 +3241,13 @@ if|if
 condition|(
 operator|(
 name|mtop
-operator|.
+operator|->
 name|mt_op
 operator|==
 name|MTFSR
 operator|||
 name|mtop
-operator|.
+operator|->
 name|mt_op
 operator|==
 name|MTBSR
@@ -3305,7 +3286,16 @@ case|case
 name|MTIOCGET
 case|:
 name|mtget
-operator|.
+operator|=
+operator|(
+expr|struct
+name|mtget
+operator|*
+operator|)
+name|data
+expr_stmt|;
+name|mtget
+operator|->
 name|mt_erreg
 operator|=
 name|sc
@@ -3313,7 +3303,7 @@ operator|->
 name|sc_erreg
 expr_stmt|;
 name|mtget
-operator|.
+operator|->
 name|mt_resid
 operator|=
 name|sc
@@ -3331,7 +3321,7 @@ argument_list|)
 expr_stmt|;
 comment|/* update drive status */
 name|mtget
-operator|.
+operator|->
 name|mt_dsreg
 operator|=
 name|sc
@@ -3339,34 +3329,10 @@ operator|->
 name|sc_dsreg
 expr_stmt|;
 name|mtget
-operator|.
+operator|->
 name|mt_type
 operator|=
 name|MT_ISMT
-expr_stmt|;
-if|if
-condition|(
-name|copyout
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|mtget
-argument_list|,
-name|addr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mtget
-argument_list|)
-argument_list|)
-condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|EFAULT
 expr_stmt|;
 return|return;
 default|default:

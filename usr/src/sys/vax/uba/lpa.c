@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpa.c	4.2	82/07/15	*/
+comment|/*	lpa.c	4.3	82/08/01	*/
 end_comment
 
 begin_include
@@ -2274,7 +2274,7 @@ argument|dev
 argument_list|,
 argument|cmd
 argument_list|,
-argument|addr
+argument|data
 argument_list|,
 argument|flag
 argument_list|)
@@ -2288,8 +2288,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
-modifier|*
-name|addr
+name|data
 decl_stmt|;
 end_decl_stmt
 
@@ -2369,6 +2368,7 @@ name|short
 name|wc
 decl_stmt|;
 block|}
+modifier|*
 name|iocb
 struct|;
 name|TRACER
@@ -2428,38 +2428,15 @@ return|return;
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|copyin
-argument_list|(
-name|addr
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
 name|iocb
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|iocb
-argument_list|)
-argument_list|)
-condition|)
-block|{
-name|TRACER
-argument_list|(
-literal|"COPYIN FAULT\n"
-argument_list|)
-expr_stmt|;
-name|u
-operator|.
-name|u_error
 operator|=
-name|EFAULT
+operator|(
+expr|struct
+name|iocb
+operator|*
+operator|)
+name|data
 expr_stmt|;
-return|return;
-block|}
 name|p
 operator|=
 operator|(
@@ -2501,7 +2478,7 @@ operator|*
 name|p
 operator|=
 name|iocb
-operator|.
+operator|->
 name|rate
 expr_stmt|;
 comment|/* clock preset */
@@ -2562,7 +2539,7 @@ operator|->
 name|sc_count
 operator|=
 name|iocb
-operator|.
+operator|->
 name|wc
 operator|&
 literal|017777
@@ -2667,7 +2644,7 @@ name|sc_nbuf
 operator|=
 operator|(
 name|iocb
-operator|.
+operator|->
 name|wc
 operator|>>
 literal|13
@@ -2705,7 +2682,7 @@ operator|(
 name|caddr_t
 operator|)
 name|iocb
-operator|.
+operator|->
 name|baddr
 argument_list|,
 name|sc

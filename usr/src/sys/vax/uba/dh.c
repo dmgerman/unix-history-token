@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.46	82/07/15	*/
+comment|/*	dh.c	4.47	82/08/01	*/
 end_comment
 
 begin_include
@@ -2185,12 +2185,12 @@ argument|dev
 argument_list|,
 argument|cmd
 argument_list|,
-argument|addr
+argument|data
 argument_list|,
 argument|flag
 argument_list|)
 name|caddr_t
-name|addr
+name|data
 decl_stmt|;
 block|{
 specifier|register
@@ -2233,7 +2233,9 @@ name|tp
 operator|,
 name|cmd
 operator|,
-name|addr
+name|data
+operator|,
+name|flag
 operator|)
 expr_stmt|;
 if|if
@@ -2251,7 +2253,7 @@ name|tp
 argument_list|,
 name|cmd
 argument_list|,
-name|addr
+name|data
 argument_list|,
 name|flag
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ps.c	4.2	82/07/15	*/
+comment|/*	ps.c	4.3	82/08/01	*/
 end_comment
 
 begin_comment
@@ -871,13 +871,13 @@ name|dev
 argument_list|,
 name|cmd
 argument_list|,
-name|addr
+name|data
 argument_list|,
 name|flag
 argument_list|)
 specifier|register
 name|caddr_t
-name|addr
+name|data
 expr_stmt|;
 end_expr_stmt
 
@@ -916,11 +916,13 @@ name|int
 modifier|*
 name|waddr
 init|=
+operator|*
 operator|(
 name|int
 operator|*
+operator|*
 operator|)
-name|addr
+name|data
 decl_stmt|;
 name|int
 name|n
@@ -935,23 +937,22 @@ name|cmd
 condition|)
 block|{
 case|case
-name|PSGETADDR
+name|PSIOGETADDR
 case|:
+operator|*
 operator|(
-name|void
+name|caddr_t
+operator|*
 operator|)
-name|suword
-argument_list|(
-name|addr
-argument_list|,
+name|data
+operator|=
 name|ui
 operator|->
 name|ui_addr
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PSAUTOREFRESH
+name|PSIOAUTOREFRESH
 case|:
 name|n
 operator|=
@@ -1086,7 +1087,7 @@ block|}
 block|}
 break|break;
 case|case
-name|PSAUTOMAP
+name|PSIOAUTOMAP
 case|:
 name|n
 operator|=
@@ -1258,7 +1259,7 @@ block|}
 block|}
 break|break;
 case|case
-name|PSSINGLEREFRESH
+name|PSIOSINGLEREFRESH
 case|:
 name|psp
 operator|->
@@ -1270,7 +1271,7 @@ name|SINGLE_STEP_RF
 expr_stmt|;
 break|break;
 case|case
-name|PSSINGLEMAP
+name|PSIOSINGLEMAP
 case|:
 name|psp
 operator|->
@@ -1282,7 +1283,7 @@ name|SINGLE_STEP_MAP
 expr_stmt|;
 break|break;
 case|case
-name|PSDOUBLEBUFFER
+name|PSIODOUBLEBUFFER
 case|:
 if|if
 condition|(
@@ -1406,7 +1407,7 @@ block|}
 block|}
 break|break;
 case|case
-name|PSSINGLEBUFFER
+name|PSIOSINGLEBUFFER
 case|:
 name|psp
 operator|->
@@ -1418,7 +1419,7 @@ name|OFF_DB
 expr_stmt|;
 break|break;
 case|case
-name|PSWAITREFRESH
+name|PSIOWAITREFRESH
 case|:
 if|if
 condition|(
@@ -1434,7 +1435,7 @@ comment|/* not running */
 return|return;
 comment|/* dont wait */
 case|case
-name|PSSTOPREFRESH
+name|PSSIOTOPREFRESH
 case|:
 if|if
 condition|(
@@ -1486,7 +1487,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-name|PSWAITMAP
+name|PSIOWAITMAP
 case|:
 if|if
 condition|(
@@ -1502,7 +1503,7 @@ comment|/* not running */
 return|return;
 comment|/* dont wait */
 case|case
-name|PSSTOPMAP
+name|PSIOSTOPMAP
 case|:
 if|if
 condition|(
