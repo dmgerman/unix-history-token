@@ -205,12 +205,33 @@ decl_stmt|;
 comment|/* reference count */
 name|struct
 name|mtx
-name|ui_mtx
+modifier|*
+name|ui_mtxp
 decl_stmt|;
 comment|/* protect all counts/limits */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|UIDINFO_LOCK
+parameter_list|(
+name|ui
+parameter_list|)
+value|mtx_lock((ui)->ui_mtxp);
+end_define
+
+begin_define
+define|#
+directive|define
+name|UIDINFO_UNLOCK
+parameter_list|(
+name|ui
+parameter_list|)
+value|mtx_unlock((ui)->ui_mtxp);
+end_define
 
 begin_struct_decl
 struct_decl|struct
