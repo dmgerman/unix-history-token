@@ -308,6 +308,9 @@ block|,
 comment|/* lfs_tstamp */
 literal|0
 block|,
+comment|/* lfs_maxsymlinklen */
+name|MAXSYMLINKLEN
+block|,
 comment|/* lfs_minfree */
 name|MINFREE
 block|,
@@ -444,6 +447,11 @@ literal|0
 block|}
 block|,
 comment|/* lfs_pad */
+block|{
+literal|0
+block|}
+block|,
+comment|/* lfs_pad2 */
 block|{
 literal|0
 block|}
