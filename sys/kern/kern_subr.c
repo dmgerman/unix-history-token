@@ -2284,7 +2284,7 @@ end_function
 
 begin_function
 name|int
-name|iov_to_uio
+name|uiofromiov
 parameter_list|(
 name|struct
 name|iovec

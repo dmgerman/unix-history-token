@@ -8190,7 +8190,7 @@ name|UIO_WRITE
 expr_stmt|;
 name|error
 operator|=
-name|iov_to_uio
+name|uiofromiov
 argument_list|(
 name|hdtr
 operator|.
