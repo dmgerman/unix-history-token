@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.14	%G%	*/
+comment|/*	dz.c	4.15	%G%	*/
 end_comment
 
 begin_include
@@ -127,10 +127,10 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|dzcntrlr
+name|dzprobe
 argument_list|()
 decl_stmt|,
-name|dzslave
+name|dzattach
 argument_list|()
 decl_stmt|,
 name|dzrint
@@ -166,11 +166,11 @@ name|uba_driver
 name|dzdriver
 init|=
 block|{
-name|dzcntrlr
-block|,
-name|dzslave
+name|dzprobe
 block|,
 literal|0
+block|,
+name|dzattach
 block|,
 literal|0
 block|,
@@ -522,21 +522,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|dzcntrlr
+name|dzprobe
 argument_list|(
-argument|ui
-argument_list|,
 argument|reg
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|struct
-name|uba_dinfo
-modifier|*
-name|ui
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
@@ -565,6 +555,23 @@ operator|*
 operator|)
 name|reg
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+endif|#
+directive|endif
 name|dzaddr
 operator|->
 name|dzcsr
@@ -612,16 +619,10 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * Called by auto-configure to initialize good dz's;  * set up pdma structures.  */
-end_comment
-
 begin_expr_stmt
-name|dzslave
+name|dzattach
 argument_list|(
 name|ui
-argument_list|,
-name|reg
 argument_list|)
 specifier|register
 expr|struct
@@ -630,12 +631,6 @@ operator|*
 name|ui
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|caddr_t
-name|reg
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -673,19 +668,19 @@ index|]
 decl_stmt|;
 specifier|register
 name|int
-name|cnt
+name|cntr
 decl_stmt|;
 for|for
 control|(
-name|cnt
+name|cntr
 operator|=
 literal|0
 init|;
-name|cnt
+name|cntr
 operator|<
 literal|8
 condition|;
-name|cnt
+name|cntr
 operator|++
 control|)
 block|{
@@ -698,7 +693,9 @@ expr|struct
 name|device
 operator|*
 operator|)
-name|reg
+name|ui
+operator|->
+name|ui_addr
 expr_stmt|;
 name|pdp
 operator|->
@@ -1323,9 +1320,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|unit
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 if|if
 condition|(
@@ -2628,6 +2622,8 @@ operator|(
 name|dzsoftCAR
 index|[
 name|i
+operator|>>
+literal|3
 index|]
 operator|&
 name|bit

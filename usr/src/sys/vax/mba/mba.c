@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.7	81/02/19	*/
+comment|/*	mba.c	4.8	81/02/21	*/
 end_comment
 
 begin_comment
@@ -423,12 +423,6 @@ name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|;
-specifier|register
-name|struct
-name|mba_drv
-modifier|*
-name|daddr
 decl_stmt|;
 specifier|register
 name|struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.19	81/02/19	*/
+comment|/*	dh.c	4.20	81/02/21	*/
 end_comment
 
 begin_include
@@ -121,10 +121,10 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|dhcntrlr
+name|dhprobe
 argument_list|()
 decl_stmt|,
-name|dhslave
+name|dhattach
 argument_list|()
 decl_stmt|,
 name|dhrint
@@ -163,11 +163,11 @@ name|uba_driver
 name|dhdriver
 init|=
 block|{
-name|dhcntrlr
-block|,
-name|dhslave
+name|dhprobe
 block|,
 literal|0
+block|,
+name|dhattach
 block|,
 literal|0
 block|,
@@ -182,10 +182,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|dmcntrlr
+name|dmprobe
 argument_list|()
 decl_stmt|,
-name|dmslave
+name|dmattach
 argument_list|()
 decl_stmt|,
 name|dmintr
@@ -221,11 +221,11 @@ name|uba_driver
 name|dmdriver
 init|=
 block|{
-name|dmcntrlr
-block|,
-name|dmslave
+name|dmprobe
 block|,
 literal|0
+block|,
+name|dmattach
 block|,
 literal|0
 block|,
@@ -885,21 +885,11 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|dhcntrlr
+name|dhprobe
 argument_list|(
-argument|ui
-argument_list|,
 argument|reg
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|struct
-name|uba_dinfo
-modifier|*
-name|ui
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
@@ -929,9 +919,23 @@ operator|*
 operator|)
 name|reg
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|notdef
@@ -1052,15 +1056,13 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Routine called to init slave tables.  */
+comment|/*  * Routine called to attach a dh.  */
 end_comment
 
 begin_macro
-name|dhslave
+name|dhattach
 argument_list|(
 argument|ui
-argument_list|,
-argument|reg
 argument_list|)
 end_macro
 
@@ -1069,12 +1071,6 @@ name|struct
 name|uba_dinfo
 modifier|*
 name|ui
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|caddr_t
-name|reg
 decl_stmt|;
 end_decl_stmt
 
@@ -1099,25 +1095,15 @@ comment|/*  * Configuration routine to cause a dm to interrupt.  */
 end_comment
 
 begin_macro
-name|dmcntrlr
+name|dmprobe
 argument_list|(
-argument|um
-argument_list|,
-argument|addr
+argument|reg
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|struct
-name|uba_minfo
-modifier|*
-name|um
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
-name|addr
+name|reg
 decl_stmt|;
 end_decl_stmt
 
@@ -1141,8 +1127,25 @@ expr|struct
 name|dmdevice
 operator|*
 operator|)
-name|addr
+name|reg
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+endif|#
+directive|endif
 name|dmaddr
 operator|->
 name|dmcsr
@@ -1162,17 +1165,22 @@ name|dmcsr
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
-name|dmslave
+name|dmattach
 argument_list|(
 argument|ui
-argument_list|,
-argument|addr
-argument_list|,
-argument|slave
 argument_list|)
 end_macro
 
@@ -1181,18 +1189,6 @@ name|struct
 name|uba_dinfo
 modifier|*
 name|ui
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|caddr_t
-name|addr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|slave
 decl_stmt|;
 end_decl_stmt
 
@@ -1844,9 +1840,6 @@ name|struct
 name|uba_dinfo
 modifier|*
 name|ui
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|ui
 operator|=
@@ -2536,11 +2529,8 @@ specifier|register
 name|int
 name|unit
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|u_short
-name|cnt
+name|cntr
 decl_stmt|;
 name|ui
 operator|=
@@ -2715,7 +2705,7 @@ literal|5
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Do arithmetic in a short to make up 				 * for lost 16&17 bits. 				 */
-name|cnt
+name|cntr
 operator|=
 name|addr
 operator|->
@@ -2741,7 +2731,7 @@ name|tp
 operator|->
 name|t_outq
 argument_list|,
-name|cnt
+name|cntr
 argument_list|)
 expr_stmt|;
 block|}
