@@ -67,7 +67,7 @@ end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_uint16_t
+name|__uint16_t
 name|in_port_t
 typedef|;
 end_typedef
