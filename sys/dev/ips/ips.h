@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sema.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -1733,6 +1739,10 @@ name|u_int32_t
 name|command_phys_addr
 decl_stmt|;
 comment|/*WARNING! must be changed if 64bit addressing ever used*/
+name|struct
+name|sema
+name|cmd_sema
+decl_stmt|;
 name|ips_cmd_status_t
 name|status
 decl_stmt|;
@@ -1970,7 +1980,11 @@ name|copper_queue
 decl_stmt|;
 name|struct
 name|mtx
-name|cmd_mtx
+name|queue_mtx
+decl_stmt|;
+name|struct
+name|bio_queue_head
+name|queue
 decl_stmt|;
 block|}
 name|ips_softc_t
@@ -2043,11 +2057,6 @@ parameter_list|(
 name|ips_softc_t
 modifier|*
 name|sc
-parameter_list|,
-name|struct
-name|bio
-modifier|*
-name|iobuf
 parameter_list|)
 function_decl|;
 end_function_decl
