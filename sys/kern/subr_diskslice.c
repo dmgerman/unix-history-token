@@ -4224,7 +4224,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: bad sector table no supported\n"
+literal|"%s: bad sector table not supported\n"
 argument_list|,
 name|sname
 argument_list|)
