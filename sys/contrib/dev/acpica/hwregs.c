@@ -1063,7 +1063,7 @@ name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_DO_NOT_LOCK
 argument_list|,
-name|RegisterId
+name|ACPI_REGISTER_PM1_CONTROL
 argument_list|,
 operator|(
 name|UINT16
