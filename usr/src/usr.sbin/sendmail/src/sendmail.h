@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.10		%G%"
+literal|"@(#)sendmail.h	6.11		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,12 +588,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_NOCOMMENT
+value|'c'
+end_define
+
+begin_comment
+comment|/* don't include comment part of address */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_CANONICAL
 value|'C'
 end_define
 
 begin_comment
 comment|/* make addresses canonical "u@dom" */
+end_comment
+
+begin_comment
+comment|/*	'D'	/* CF: include Date: */
 end_comment
 
 begin_define
@@ -629,6 +644,10 @@ begin_comment
 comment|/* mailer takes picky -f flag */
 end_comment
 
+begin_comment
+comment|/*	'F'	/* CF: include From: or Resent-From: */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -638,6 +657,10 @@ end_define
 
 begin_comment
 comment|/* preserve host case distinction */
+end_comment
+
+begin_comment
+comment|/*	'H'	/* UIUC: MAIL11V3: preview headers */
 end_comment
 
 begin_define
@@ -684,6 +707,10 @@ begin_comment
 comment|/* can handle multiple users at once */
 end_comment
 
+begin_comment
+comment|/*	'M'	/* CF: include Message-Id: */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -695,6 +722,10 @@ begin_comment
 comment|/* don't insert From line */
 end_comment
 
+begin_comment
+comment|/*	'N'	/* UIUC: MAIL11V3: DATA returns multi-status */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -704,6 +735,10 @@ end_define
 
 begin_comment
 comment|/* use reverse-path in MAIL FROM: */
+end_comment
+
+begin_comment
+comment|/*	'P'	/* CF: include Return-Path: */
 end_comment
 
 begin_define
@@ -770,6 +805,10 @@ end_define
 
 begin_comment
 comment|/* this wants an ugly UUCP from line */
+end_comment
+
+begin_comment
+comment|/*	'V'	/* UIUC: !-relativize all addresses */
 end_comment
 
 begin_define
