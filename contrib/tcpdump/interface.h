@@ -741,7 +741,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* True if  "l" bytes of "var" were captured */
+comment|/*  * True if  "l" bytes of "var" were captured.  *  * The "snapend - (l)<= snapend" checks to make sure "l" isn't so large  * that "snapend - (l)" underflows.  *  * The check is for<= rather than< because "l" might be 0.  */
 end_comment
 
 begin_define
@@ -753,7 +753,7 @@ name|var
 parameter_list|,
 name|l
 parameter_list|)
-value|((u_char *)&(var)<= snapend - (l))
+value|(snapend - (l)<= snapend&& \ 			(const u_char *)&(var)<= snapend - (l))
 end_define
 
 begin_comment
