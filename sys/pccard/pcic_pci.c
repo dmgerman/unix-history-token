@@ -1335,7 +1335,12 @@ argument_list|,
 literal|"TI113X PCI Config Reg: "
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The TI-1130 (and 1030 and 1131) have a different 		 * interrupt routing control than the newer cards.  The 		 * newer cards also use offset 0x3e (the Bridge Control 		 * register). 		 */
+comment|/* 		 * The TI-1130 (and 1030 and 1131) have a different 		 * interrupt routing control than the newer cards. 		 * assume we're not routing PCI, but enable as necessary 		 * when we find someone uses PCI interrupts.  In order to 		 * get any pci interrupts, PCI_IRQ_ENA (bit 5) must 		 * be set.  If either PCI_IREQ (bit 4) or PCI_CSC (bit 3) 		 * are set, then set bit 5 at the same time, since setting 		 * them enables the PCI interrupt routing. 		 */
+name|cardcntl
+operator|&=
+operator|~
+name|TI113X_CARDCNTL_PCI_IRQ_ENA
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1344,24 +1349,18 @@ name|func_route
 operator|==
 name|pcic_iw_pci
 condition|)
-block|{
 name|cardcntl
 operator||=
 name|TI113X_CARDCNTL_PCI_IRQ_ENA
+operator||
+name|TI113X_CARDCNTL_PCI_IREQ
 expr_stmt|;
+else|else
 name|cardcntl
 operator|&=
 operator|~
 name|TI113X_CARDCNTL_PCI_IREQ
 expr_stmt|;
-block|}
-else|else
-block|{
-name|cardcntl
-operator||=
-name|TI113X_CARDCNTL_PCI_IREQ
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
@@ -1372,6 +1371,8 @@ name|pcic_iw_pci
 condition|)
 name|cardcntl
 operator||=
+name|TI113X_CARDCNTL_PCI_IRQ_ENA
+operator||
 name|TI113X_CARDCNTL_PCI_CSC
 expr_stmt|;
 else|else
@@ -2452,6 +2453,21 @@ name|desc
 operator|=
 literal|"YENTA PCI-CARDBUS Bridge"
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+operator|&&
+name|desc
+condition|)
+name|printf
+argument_list|(
+literal|"Found unknown %s devid 0x%x\n"
+argument_list|,
+name|desc
+argument_list|,
+name|device_id
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2471,7 +2487,7 @@ argument_list|,
 name|desc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Take us out of power down mode. 	 */
+comment|/* 	 * Take us out of power down mode, if necessary.  It also 	 * appears that even reading the power register is enough on 	 * some systems to cause correct behavior. 	 */
 if|if
 condition|(
 name|pci_get_powerstate
@@ -3175,6 +3191,8 @@ literal|"No PCI interrupt routed, trying ISA.\n"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|intr
 operator|=
 name|pcic_pci_intr
@@ -3186,6 +3204,7 @@ argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -3715,7 +3734,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_setup_intr
 argument_list|,
-name|bus_generic_setup_intr
+name|pcic_setup_intr
 argument_list|)
 block|,
 name|DEVMETHOD
