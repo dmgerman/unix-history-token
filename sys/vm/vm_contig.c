@@ -1097,15 +1097,9 @@ operator|&
 name|PG_ZERO
 operator|)
 condition|)
-name|bzero
+name|pmap_zero_page
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|tmp_addr
-argument_list|,
-name|PAGE_SIZE
+name|m
 argument_list|)
 expr_stmt|;
 name|m
