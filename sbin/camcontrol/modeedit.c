@@ -246,6 +246,17 @@ begin_comment
 comment|/* Mode/Log sense data buffer size. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PAGE_CTRL_SHIFT
+value|6
+end_define
+
+begin_comment
+comment|/* Bit offset to page control field. */
+end_comment
+
 begin_comment
 comment|/* Macros for working with mode pages. */
 end_comment
@@ -1211,7 +1222,7 @@ name|RESOLUTION_MAX
 parameter_list|(
 name|size
 parameter_list|)
-value|((resolution * (size) == 32)? 		\ 	0xffffffff: 1<< (resolution * (size)) - 1)
+value|((resolution * (size) == 32)? 		\ 	0xffffffff: (1<< (resolution * (size))) - 1)
 name|assert
 argument_list|(
 name|newvalue
@@ -2678,6 +2689,8 @@ name|device
 argument_list|,
 operator|(
 name|page_control
+operator|<<
+name|PAGE_CTRL_SHIFT
 operator|==
 name|SMS_PAGE_CTRL_SAVED
 operator|)
@@ -3792,10 +3805,14 @@ block|{
 if|if
 condition|(
 name|page_control
+operator|<<
+name|PAGE_CTRL_SHIFT
 operator|!=
 name|SMS_PAGE_CTRL_CURRENT
 operator|&&
 name|page_control
+operator|<<
+name|PAGE_CTRL_SHIFT
 operator|!=
 name|SMS_PAGE_CTRL_SAVED
 condition|)
