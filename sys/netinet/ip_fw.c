@@ -118,12 +118,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_fw.h>
 end_include
 
@@ -289,7 +283,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Returns 1 if the port is matched by the vector, 0 otherwise  */
+comment|/*  * Returns TRUE if the port is matched by the vector, FALSE otherwise  */
 end_comment
 
 begin_function
@@ -325,7 +319,7 @@ operator|!
 name|nports
 condition|)
 return|return
-literal|1
+name|TRUE
 return|;
 if|if
 condition|(
@@ -350,7 +344,7 @@ index|]
 condition|)
 block|{
 return|return
-literal|1
+name|TRUE
 return|;
 block|}
 name|nports
@@ -380,18 +374,18 @@ name|port
 condition|)
 block|{
 return|return
-literal|1
+name|TRUE
 return|;
 block|}
 block|}
 return|return
-literal|0
+name|FALSE
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Returns 0 if packet should be dropped, 1 or more if it should be accepted  */
+comment|/*  * Returns TRUE if it should be accepted, FALSE otherwise.  */
 end_comment
 
 begin_ifdef
@@ -549,9 +543,7 @@ operator|!
 name|chain
 condition|)
 return|return
-operator|(
-literal|1
-operator|)
+name|TRUE
 return|;
 comment|/* 		 * This way we handle fragmented packets. 		 * we ignore all fragments but the first one 		 * so the whole packet can't be reassembled. 		 * This way we relay on the full info which 		 * stored only in first packet. 		 */
 if|if
@@ -563,9 +555,7 @@ operator|&
 name|IP_OFFMASK
 condition|)
 return|return
-operator|(
-literal|1
-operator|)
+name|TRUE
 return|;
 name|src
 operator|=
@@ -1108,9 +1098,9 @@ goto|goto
 name|bad_packet
 goto|;
 else|else
-goto|goto
-name|good_packet
-goto|;
+return|return
+name|TRUE
+return|;
 name|got_match
 label|:
 ifdef|#
@@ -1272,38 +1262,34 @@ name|fw_flg
 operator|&
 name|IP_FW_F_ACCEPT
 condition|)
-goto|goto
-name|good_packet
-goto|;
-ifdef|#
-directive|ifdef
-name|noneed
-else|else
-goto|goto
-name|bad_packet
-goto|;
-endif|#
-directive|endif
+return|return
+name|TRUE
+return|;
 name|bad_packet
 label|:
+name|m
+operator|=
+name|dtom
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|f
+operator|!=
+name|NULL
 condition|)
 block|{
-comment|/* 			 * Do not ICMP reply to icmp 			 * packets....:) 			 */
+comment|/* 		 * Do not ICMP reply to icmp 		 * packets....:) or to packets 		 * rejected by entry without 		 * the special ICMP reply flag. 		 */
 if|if
 condition|(
+operator|(
 name|f_prt
 operator|==
 name|IP_FW_F_ICMP
-condition|)
-goto|goto
-name|return_0
-goto|;
-comment|/* 			 * Reply to packets rejected 			 * by entry with this flag 			 * set only. 			 */
-if|if
-condition|(
+operator|)
+operator|||
 operator|!
 operator|(
 name|f
@@ -1313,16 +1299,16 @@ operator|&
 name|IP_FW_F_ICMPRPL
 operator|)
 condition|)
-goto|goto
-name|return_0
-goto|;
-name|m
-operator|=
-name|dtom
+block|{
+name|m_freem
 argument_list|(
-name|ip
+name|m
 argument_list|)
 expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 if|if
 condition|(
 name|f_prt
@@ -1357,30 +1343,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|FALSE
 return|;
 block|}
-else|else
-block|{
-comment|/* 		 * If global icmp flag set we will do 		 * something here...later.. 		 */
-goto|goto
-name|return_0
-goto|;
-block|}
-name|return_0
-label|:
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
-return|;
-name|good_packet
-label|:
-return|return
-literal|1
+name|FALSE
 return|;
 block|}
 end_function
