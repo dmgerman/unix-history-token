@@ -429,6 +429,8 @@ name|tmp_addr
 decl_stmt|;
 name|int
 name|pass
+decl_stmt|,
+name|pqtype
 decl_stmt|;
 name|vm_page_t
 name|pga
@@ -519,7 +521,7 @@ argument_list|()
 expr_stmt|;
 name|again
 label|:
-comment|/* 		 * Find first page in array that is free, within range, aligned, and 		 * such that the boundary won't be crossed. 		 */
+comment|/* 		 * Find first page in array that is free, within range, 		 * aligned, and such that the boundary won't be crossed. 		 */
 for|for
 control|(
 name|i
@@ -536,9 +538,6 @@ name|i
 operator|++
 control|)
 block|{
-name|int
-name|pqtype
-decl_stmt|;
 name|phys
 operator|=
 name|VM_PAGE_TO_PHYS
@@ -723,9 +722,6 @@ name|i
 operator|++
 control|)
 block|{
-name|int
-name|pqtype
-decl_stmt|;
 name|pqtype
 operator|=
 name|pga
@@ -925,7 +921,7 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-comment|/* 		 * We've found a contiguous chunk that meets are requirements. 		 * Allocate kernel VM, unfree and assign the physical pages to it and 		 * return kernel VM pointer. 		 */
+comment|/* 		 * We've found a contiguous chunk that meets are requirements. 		 * Allocate kernel VM, unfree and assign the physical pages to 		 * it and return kernel VM pointer. 		 */
 name|vm_map_lock
 argument_list|(
 name|map
@@ -1092,7 +1088,9 @@ operator|)
 return|;
 block|}
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
