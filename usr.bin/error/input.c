@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)input.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)input.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +44,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -198,6 +211,18 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|Errorclass
+name|catchall
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  *	Eat all of the lines in the input file, attempting to categorize  *	them by their various flavors  */
 end_comment
@@ -212,36 +237,24 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|eaterrors
-argument_list|(
-argument|r_errorc
-argument_list|,
-argument|r_errorv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|r_errorc
+parameter_list|,
+name|r_errorv
+parameter_list|)
 name|int
 modifier|*
 name|r_errorc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|Eptr
 modifier|*
 modifier|*
 name|r_errorv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|extern
-name|boolean
-name|piflag
-decl_stmt|;
 name|Errorclass
 name|errorclass
 init|=
@@ -492,52 +505,38 @@ name|er_head
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	create a new error entry, given a zero based array and count  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|erroradd
-argument_list|(
-argument|errorlength
-argument_list|,
-argument|errorv
-argument_list|,
-argument|errorclass
-argument_list|,
-argument|errorsubclass
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|errorlength
+parameter_list|,
+name|errorv
+parameter_list|,
+name|errorclass
+parameter_list|,
+name|errorsubclass
+parameter_list|)
 name|int
 name|errorlength
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|errorv
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|Errorclass
 name|errorclass
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|Errorclass
 name|errorsubclass
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|reg
 name|Eptr
@@ -773,7 +772,7 @@ expr_stmt|;
 block|}
 comment|/* length> 0 */
 block|}
-end_block
+end_function
 
 begin_function
 name|Errorclass
@@ -2118,12 +2117,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|Errorclass
 name|f77
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -2304,7 +2301,7 @@ name|C_UNKNOWN
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of f77 */

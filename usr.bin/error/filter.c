@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)filter.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)filter.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,25 +50,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -68,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -102,14 +115,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|processname
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
 name|lexsort
@@ -121,21 +126,16 @@ begin_comment
 comment|/*  *	Read the file ERRORNAME of the names of functions in lint  *	to ignore complaints about.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|getignored
-argument_list|(
-argument|auxname
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|auxname
+parameter_list|)
 name|char
 modifier|*
 name|auxname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|reg
 name|int
@@ -312,13 +312,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|FULLDEBUG
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't open file \"%s\"\n"
-argument_list|,
-name|processname
+literal|"can't open file \"%s\""
 argument_list|,
 name|filename
 argument_list|)
@@ -391,13 +387,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|FULLDEBUG
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Failure to open \"%s\" for second read.\n"
-argument_list|,
-name|processname
+literal|"failure to open \"%s\" for second read"
 argument_list|,
 name|filename
 argument_list|)
@@ -512,7 +504,7 @@ block|}
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_function
 name|int
