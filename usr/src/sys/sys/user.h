@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)user.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)user.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -92,6 +92,17 @@ end_define
 
 begin_comment
 comment|/*<= MAXNAMLEN,>= sizeof(ac_comm) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXLOGNAME
+value|12
+end_define
+
+begin_comment
+comment|/*>= UT_NAMESIZE */
 end_comment
 
 begin_struct
@@ -372,12 +383,13 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-name|int
-name|u_XXX
+name|char
+name|u_logname
 index|[
-literal|3
+name|MAXLOGNAME
 index|]
 decl_stmt|;
+comment|/* login name, if available */
 name|struct
 name|timeval
 name|u_start
