@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * make the current screen look like "win" over the area coverd by  * win.  *  * %G% (Berkeley) @(#)refresh.c	1.7  */
+comment|/*  * make the current screen look like "win" over the area coverd by  * win.  *  * %G% (Berkeley) @(#)refresh.c	1.8  */
 end_comment
 
 begin_include
@@ -1321,19 +1321,6 @@ end_expr_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|ny
-operator|==
-literal|0
-operator|&&
-name|nx
-operator|==
-literal|0
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|curscr
