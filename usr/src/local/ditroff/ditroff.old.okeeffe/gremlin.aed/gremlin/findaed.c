@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)findaed.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  * This file contains a single routine which will find the correct  * AED display to use from the current terminal.    *  * (Modified from software written by John Ousterhout for the caesar  *  program)  */
+comment|/* @(#)findaed.c	1.3	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  * This file contains a single routine which will find the correct  * AED display to use from the current terminal.    *  * (Modified from software written by John Ousterhout for the caesar  *  program)  */
 end_comment
 
 begin_include
@@ -56,13 +56,15 @@ index|[
 literal|100
 index|]
 decl_stmt|,
+modifier|*
+name|tty
+decl_stmt|;
+specifier|static
+name|char
 name|name2
 index|[
 literal|100
 index|]
-decl_stmt|,
-modifier|*
-name|tty
 decl_stmt|;
 name|FILE
 modifier|*
@@ -162,6 +164,17 @@ return|return
 name|name2
 return|;
 block|}
+while|while
+condition|(
+name|getc
+argument_list|(
+name|f
+argument_list|)
+operator|>
+literal|10
+condition|)
+empty_stmt|;
+comment|/* ignore extra characters on a line */
 block|}
 block|}
 end_function
