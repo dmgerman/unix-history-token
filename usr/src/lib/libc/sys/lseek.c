@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lseek.c	5.1 (Berkeley) %G%"
+literal|"@(#)lseek.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_comment
 
 begin_function
 name|off_t
-name|__lseek
+name|lseek
 parameter_list|(
 name|fd
 parameter_list|,
@@ -85,7 +85,7 @@ argument_list|(
 operator|(
 name|quad_t
 operator|)
-name|SYS___lseek
+name|SYS_lseek
 argument_list|,
 name|fd
 argument_list|,

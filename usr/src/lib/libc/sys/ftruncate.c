@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftruncate.c	5.1 (Berkeley) %G%"
+literal|"@(#)ftruncate.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_comment
 
 begin_function
 name|int
-name|__ftruncate
+name|ftruncate
 parameter_list|(
 name|fd
 parameter_list|,
@@ -75,7 +75,7 @@ argument_list|(
 operator|(
 name|quad_t
 operator|)
-name|SYS___ftruncate
+name|SYS_ftruncate
 argument_list|,
 name|fd
 argument_list|,

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)truncate.c	5.1 (Berkeley) %G%"
+literal|"@(#)truncate.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_comment
 
 begin_function
 name|int
-name|__truncate
+name|truncate
 parameter_list|(
 name|path
 parameter_list|,
@@ -76,7 +76,7 @@ argument_list|(
 operator|(
 name|quad_t
 operator|)
-name|SYS___truncate
+name|SYS_truncate
 argument_list|,
 name|path
 argument_list|,
