@@ -5793,6 +5793,13 @@ operator|==
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|retval
+operator|==
+name|PFL_NFSDENIED
+condition|)
+block|{
 comment|/* Queue the lock */
 name|debuglog
 argument_list|(
@@ -5801,15 +5808,7 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-operator|(
-name|retval
-operator|==
-name|PFL_NFSDENIED
-condition|?
 name|PFL_NFSBLOCKED
-else|:
-name|PFL_HWBLOCKED
-operator|)
 expr_stmt|;
 name|add_blockingfilelock
 argument_list|(
@@ -5821,6 +5820,21 @@ argument_list|(
 name|fl
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* retval is okay as PFL_HWDENIED */
+name|debuglog
+argument_list|(
+literal|"BLOCKING LOCK DENIED IN HARDWARE\n"
+argument_list|)
+expr_stmt|;
+name|dump_filelock
+argument_list|(
+name|fl
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
