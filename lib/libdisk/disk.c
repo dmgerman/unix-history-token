@@ -2489,6 +2489,8 @@ literal|"amrd"
 block|,
 literal|"twed"
 block|,
+literal|"ar"
+block|,
 literal|0
 block|}
 decl_stmt|;
