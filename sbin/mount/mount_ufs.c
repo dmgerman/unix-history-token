@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_ufs.c,v 1.10 1997/08/25 21:14:22 bde Exp $"
+literal|"$Id: mount_ufs.c,v 1.11 1998/03/08 14:50:04 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,6 +229,8 @@ decl_stmt|,
 name|part
 decl_stmt|,
 name|result
+decl_stmt|,
+name|unit
 decl_stmt|;
 name|char
 name|devbuf
@@ -601,10 +603,11 @@ name|mntflags
 argument_list|,
 operator|&
 name|args
+argument_list|)
 operator|<
 literal|0
-argument_list|)
 operator|)
+condition|)
 block|{
 else|#
 directive|else
