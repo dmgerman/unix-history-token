@@ -365,7 +365,7 @@ end_function
 
 begin_function_decl
 specifier|static
-name|critical_t
+name|register_t
 name|enter_prom
 parameter_list|(
 name|void
@@ -417,7 +417,7 @@ operator|*
 operator|)
 literal|0x20000000
 decl_stmt|;
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 name|s
@@ -488,7 +488,7 @@ block|{
 name|prom_return_t
 name|ret
 decl_stmt|;
-name|int
+name|register_t
 name|s
 decl_stmt|;
 for|for
@@ -564,7 +564,7 @@ block|{
 name|prom_return_t
 name|ret
 decl_stmt|;
-name|int
+name|register_t
 name|s
 decl_stmt|;
 name|s
@@ -625,7 +625,7 @@ end_function
 
 begin_function
 specifier|static
-name|critical_t
+name|register_t
 name|enter_prom
 parameter_list|()
 block|{
@@ -633,12 +633,12 @@ name|pt_entry_t
 modifier|*
 name|lev1map
 decl_stmt|;
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 if|if
@@ -767,7 +767,7 @@ name|leave_prom
 parameter_list|(
 name|s
 parameter_list|)
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 block|{
@@ -814,7 +814,7 @@ argument_list|()
 expr_stmt|;
 comment|/* XXX */
 block|}
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)
@@ -874,7 +874,7 @@ decl_stmt|;
 name|prom_return_t
 name|ret
 decl_stmt|;
-name|int
+name|register_t
 name|s
 decl_stmt|;
 name|s
@@ -964,7 +964,7 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* 	 * Turn off interrupts, for sanity. 	 */
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Set "boot request" part of the CPU state depending on what 	 * we want to happen when we halt. 	 */

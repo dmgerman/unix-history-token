@@ -286,7 +286,7 @@ name|u_int32_t
 name|pa
 parameter_list|)
 block|{
-name|int
+name|register_t
 name|s
 decl_stmt|;
 name|u_int32_t
@@ -326,7 +326,7 @@ expr_stmt|;
 comment|/* t2 puts high bits in the bottom of the register */
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 if|if
@@ -374,7 +374,7 @@ operator|->
 name|hae0_1
 expr_stmt|;
 block|}
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)

@@ -316,7 +316,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 endif|#
@@ -327,7 +327,7 @@ directive|ifdef
 name|SMP
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 endif|#
@@ -356,7 +356,7 @@ operator|.
 name|md_kernnest
 operator|++
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)

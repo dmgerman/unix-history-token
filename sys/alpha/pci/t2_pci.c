@@ -272,7 +272,7 @@ name|s
 parameter_list|,
 name|old_hae3
 parameter_list|)
-value|if((b)) {			\         do {							\ 		(s) = cpu_critical_enter();			\ 		(old_hae3) = REGVAL(T2_HAE0_3);			\ 		alpha_mb();					\ 		REGVAL(T2_HAE0_3) = (old_hae3) | (1<<30);	\ 		alpha_mb();					\         } while(0);						\ }
+value|if((b)) {			\         do {							\ 		(s) = intr_disable();				\ 		(old_hae3) = REGVAL(T2_HAE0_3);			\ 		alpha_mb();					\ 		REGVAL(T2_HAE0_3) = (old_hae3) | (1<<30);	\ 		alpha_mb();					\         } while(0);						\ }
 end_define
 
 begin_define
@@ -286,7 +286,7 @@ name|s
 parameter_list|,
 name|old_hae3
 parameter_list|)
-value|if((b)) {	\         do {						\ 		alpha_mb();				\ 		REGVAL(T2_HAE0_3) = (old_hae3);		\ 		alpha_mb();				\ 		cpu_critical_exit((s));			\         } while(0);					\ }
+value|if((b)) {	\         do {						\ 		alpha_mb();				\ 		REGVAL(T2_HAE0_3) = (old_hae3);		\ 		alpha_mb();				\ 		intr_restore((s));			\         } while(0);					\ }
 end_define
 
 begin_define
@@ -306,7 +306,7 @@ name|width
 parameter_list|,
 name|type
 parameter_list|)
-value|do {			 \ 	type val = ~0;							 \ 	int ipl = 0;							 \ 	u_int32_t old_hae3 = 0;						 \ 	vm_offset_t off = T2_CFGOFF(b, s, f, r);			 \ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(KV(T2_PCI_CONF), off); \ 	alpha_mb();							 \ 	T2_TYPE1_SETUP(b,ipl,old_hae3);					 \ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			 \ 		val = SPARSE_##width##_EXTRACT(off, SPARSE_READ(kv));	 \ 	}								 \         T2_TYPE1_TEARDOWN(b,ipl,old_hae3);				 \ 	return val;							 \ } while (0)
+value|do {			 \ 	type val = ~0;							 \ 	register_t ipl = 0;						 \ 	u_int32_t old_hae3 = 0;						 \ 	vm_offset_t off = T2_CFGOFF(b, s, f, r);			 \ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(KV(T2_PCI_CONF), off); \ 	alpha_mb();							 \ 	T2_TYPE1_SETUP(b,ipl,old_hae3);					 \ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			 \ 		val = SPARSE_##width##_EXTRACT(off, SPARSE_READ(kv));	 \ 	}								 \         T2_TYPE1_TEARDOWN(b,ipl,old_hae3);				 \ 	return val;							 \ } while (0)
 end_define
 
 begin_define
@@ -328,7 +328,7 @@ name|width
 parameter_list|,
 name|type
 parameter_list|)
-value|do {		 \ 	int ipl = 0;							 \ 	u_int32_t old_hae3 = 0;						 \ 	vm_offset_t off = T2_CFGOFF(b, s, f, r);			 \ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(KV(T2_PCI_CONF), off); \ 	alpha_mb();							 \ 	T2_TYPE1_SETUP(b,ipl,old_hae3);					 \ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			 \                 SPARSE_WRITE(kv, SPARSE_##width##_INSERT(off, data));	 \ 		alpha_wmb();						 \ 	}								 \         T2_TYPE1_TEARDOWN(b,ipl,old_hae3);				 \ 	return;								 \ } while (0)
+value|do {		 \ 	register_t ipl = 0;							 \ 	u_int32_t old_hae3 = 0;						 \ 	vm_offset_t off = T2_CFGOFF(b, s, f, r);			 \ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(KV(T2_PCI_CONF), off); \ 	alpha_mb();							 \ 	T2_TYPE1_SETUP(b,ipl,old_hae3);					 \ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			 \                 SPARSE_WRITE(kv, SPARSE_##width##_INSERT(off, data));	 \ 		alpha_wmb();						 \ 	}								 \         T2_TYPE1_TEARDOWN(b,ipl,old_hae3);				 \ 	return;								 \ } while (0)
 end_define
 
 begin_function

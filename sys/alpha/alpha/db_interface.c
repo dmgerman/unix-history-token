@@ -832,7 +832,7 @@ operator|&
 name|RB_GDB
 operator|)
 decl_stmt|;
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 comment|/* 	 * Don't bother checking for usermode, since a benign entry 	 * by the kernel (call to Debugger() or a breakpoint) has 	 * already checked for usermode.  If neither of those 	 * conditions exist, something Bad has happened. 	 */
@@ -900,7 +900,7 @@ name|regs
 expr_stmt|;
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -996,7 +996,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)

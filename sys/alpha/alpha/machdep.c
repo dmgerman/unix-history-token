@@ -9219,12 +9219,12 @@ comment|/* 	 * For SMP, we should check the fpcurthread of each cpu. 	 */
 ifndef|#
 directive|ifndef
 name|SMP
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 if|if
@@ -9253,7 +9253,7 @@ argument_list|(
 literal|"alpha_check_fpcurthread: bogus"
 argument_list|)
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)
@@ -9302,12 +9302,12 @@ name|int
 name|write
 parameter_list|)
 block|{
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 if|if
@@ -9397,7 +9397,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)
@@ -9419,12 +9419,12 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 if|if
@@ -9468,7 +9468,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)
@@ -9490,13 +9490,13 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|critical_t
+name|register_t
 name|s
 decl_stmt|;
 comment|/* 	 * Enable FEN so that we can access the fp registers. 	 */
 name|s
 operator|=
-name|cpu_critical_enter
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|alpha_pal_wrfen
@@ -9583,7 +9583,7 @@ name|md_flags
 operator||=
 name|MDP_FPUSED
 expr_stmt|;
-name|cpu_critical_exit
+name|intr_restore
 argument_list|(
 name|s
 argument_list|)
