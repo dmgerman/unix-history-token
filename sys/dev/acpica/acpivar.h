@@ -799,6 +799,17 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|ACPI_STATUS
+name|acpi_OverrideInterruptLevel
+parameter_list|(
+name|UINT32
+name|InterruptNumber
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|ACPI_STATUS
 name|acpi_SetIntrModel
 parameter_list|(
 name|int
