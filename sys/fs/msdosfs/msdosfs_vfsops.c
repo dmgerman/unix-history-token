@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.21 1997/10/11 18:31:30 phk Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.22 1997/10/12 20:25:01 phk Exp $ */
 end_comment
 
 begin_comment
@@ -629,9 +629,9 @@ operator|&&
 operator|(
 name|mp
 operator|->
-name|mnt_flag
+name|mnt_kern_flag
 operator|&
-name|MNT_WANTRDWR
+name|MNTK_WANTRDWR
 operator|)
 condition|)
 name|pmp

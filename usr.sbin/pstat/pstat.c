@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pstat.c,v 1.31 1997/10/09 07:22:08 charnier Exp $"
+literal|"$Id: pstat.c,v 1.32 1997/10/19 18:41:23 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -767,24 +767,12 @@ block|,
 literal|"force"
 block|}
 block|,
-block|{
-name|MNT_UNMOUNT
-block|,
-literal|"unmount"
-block|}
-block|,
-block|{
-name|MNT_MWAIT
-block|,
-literal|"mwait"
-block|}
-block|,
-block|{
-name|MNT_WANTRDWR
-block|,
-literal|"wantrdwr"
-block|}
-block|,
+if|#
+directive|if
+literal|0
+block|{ MNT_UNMOUNT, "unmount" }, 	{ MNT_MWAIT, "mwait" }, 	{ MNT_WANTRDWR, "wantrdwr" },
+endif|#
+directive|endif
 block|{
 literal|0
 block|}

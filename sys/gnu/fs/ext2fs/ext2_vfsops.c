@@ -1318,9 +1318,9 @@ operator|&&
 operator|(
 name|mp
 operator|->
-name|mnt_flag
+name|mnt_kern_flag
 operator|&
-name|MNT_WANTRDWR
+name|MNTK_WANTRDWR
 operator|)
 condition|)
 name|fs
