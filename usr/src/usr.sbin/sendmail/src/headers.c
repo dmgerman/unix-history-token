@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	5.2 (Berkeley) %G%"
+literal|"@(#)headers.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1763,6 +1763,9 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf
@@ -1814,6 +1817,9 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf
@@ -1821,6 +1827,9 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -2043,6 +2052,9 @@ operator|!
 name|gotaddr
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|bp
@@ -2095,6 +2107,9 @@ name|rhs
 operator|=
 literal|'>'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|bp

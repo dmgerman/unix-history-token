@@ -45,7 +45,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.2 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.3 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.2 (Berkeley) %G%"
+literal|"@(#)queue.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -754,6 +754,9 @@ block|{
 name|int
 name|j
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 literal|'?'
@@ -785,6 +788,9 @@ operator|->
 name|h_mflags
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 name|j
@@ -792,6 +798,9 @@ argument_list|,
 name|tfp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putc
 argument_list|(
 literal|'?'
@@ -2712,6 +2721,9 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|lf
@@ -2796,6 +2808,9 @@ case|case
 literal|'M'
 case|:
 comment|/* error message */
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|message
@@ -2868,6 +2883,9 @@ case|case
 literal|'T'
 case|:
 comment|/* creation time */
+operator|(
+name|void
+operator|)
 name|sscanf
 argument_list|(
 operator|&
@@ -2931,6 +2949,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|f
@@ -3060,6 +3081,9 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|lf
@@ -3074,6 +3098,9 @@ index|]
 operator|=
 literal|'l'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|nf

@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -506,12 +506,18 @@ name|ConfFile
 operator|=
 literal|"sendmail.cf"
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|setgid
 argument_list|(
 name|getrgid
 argument_list|()
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|setuid
 argument_list|(
 name|getruid
@@ -1488,12 +1494,18 @@ case|case
 name|MD_FREEZE
 case|:
 comment|/* this is critical to avoid forgeries of the frozen config */
+operator|(
+name|void
+operator|)
 name|setgid
 argument_list|(
 name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|setuid
 argument_list|(
 name|getuid
@@ -1880,6 +1892,9 @@ operator|->
 name|m_flags
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 name|j
@@ -1987,6 +2002,9 @@ argument_list|(
 literal|"> "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -3090,6 +3108,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|fhdr
@@ -3392,6 +3413,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* oops!  we have trashed memory..... */
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|2
@@ -3496,6 +3520,9 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* be sure we don't get nasty signals */
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -3503,6 +3530,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -3510,6 +3540,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -3696,6 +3729,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|setpgrp
 argument_list|(
 literal|0
