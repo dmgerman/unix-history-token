@@ -305,6 +305,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_BSD_VA_LIST_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_BSD_VA_LIST_
+value|__va_list
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -324,7 +342,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__va_list
+name|_BSD_VA_LIST_
 parameter_list|)
 function_decl|__attribute__
 parameter_list|(
@@ -360,7 +378,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|__va_list
+name|_BSD_VA_LIST_
 parameter_list|)
 function_decl|;
 end_function_decl
