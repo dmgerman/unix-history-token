@@ -3436,7 +3436,9 @@ name|lowaddr
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-literal|0
+name|dmat
+operator|->
+name|boundary
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
