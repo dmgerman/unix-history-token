@@ -868,6 +868,17 @@ begin_comment
 comment|/* read data */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATAPI_POLL_DSC
+value|0xff
+end_define
+
+begin_comment
+comment|/* poll DSC status bit */
+end_comment
+
 begin_comment
 comment|/* ATAPI request sense structure */
 end_comment
