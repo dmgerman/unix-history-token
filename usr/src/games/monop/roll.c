@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)roll.c	5.5 (Berkeley) %G%"
+literal|"@(#)roll.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,16 +42,9 @@ end_define
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|vax
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|tahoe
+name|pdp11
 argument_list|)
 end_if
 
