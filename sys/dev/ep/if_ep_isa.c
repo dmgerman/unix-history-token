@@ -189,6 +189,13 @@ end_function_decl
 begin_define
 define|#
 directive|define
+name|ISA_ID_3C509_XXX
+value|0x0506d509
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISA_ID_3C509_TP
 value|0x506d5090
 end_define
@@ -212,6 +219,13 @@ define|#
 directive|define
 name|ISA_ID_3C509_TPO
 value|0x506d5095
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_ID_3C509_TPC
+value|0x506d5098
 end_define
 
 begin_decl_stmt
@@ -244,6 +258,12 @@ block|{
 name|ISA_ID_3C509_TPO
 block|,
 literal|"3Com 3C509-TPO EtherLink III"
+block|}
+block|,
+block|{
+name|ISA_ID_3C509_TPC
+block|,
+literal|"3Com 3C509-TPC EtherLink III"
 block|}
 block|,
 block|{
@@ -291,6 +311,13 @@ literal|"3Com 3C509B-TPO EtherLink III (PnP)"
 block|}
 block|,
 comment|/* TCM5095 */
+block|{
+literal|0x98506d50
+block|,
+literal|"3Com 3C509B-TPC EtherLink III (PnP)"
+block|}
+block|,
+comment|/* TCM5098 */
 block|{
 literal|0xf780d041
 block|,
@@ -449,6 +476,24 @@ return|;
 name|i
 operator|++
 expr_stmt|;
+block|}
+comment|/* 	 * If we see a card that is likely to be a 3c509 	 * return something so that it will work; be annoying 	 * so that the user will tell us about it though. 	 */
+if|if
+condition|(
+operator|(
+name|id
+operator|>>
+literal|8
+operator|)
+operator|==
+name|ISA_ID_3C509_XXX
+condition|)
+block|{
+return|return
+operator|(
+literal|"Unknown 3c509; notify maintainer!"
+operator|)
+return|;
 block|}
 return|return
 operator|(
