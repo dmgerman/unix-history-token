@@ -2603,9 +2603,9 @@ name|VOP_SETACL
 argument_list|(
 name|vp
 argument_list|,
-name|ACL_TYPE_DEFAULT
+name|type
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|td
 operator|->
