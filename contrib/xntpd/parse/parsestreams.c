@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsestreams.c,v 3.12 1994/01/25 19:05:30 kardel Exp  *    * parsestreams.c,v 3.12 1994/01/25 19:05:30 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS4.x)  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsestreams.c,v 3.19 1994/02/24 16:33:54 kardel Exp  *    * parsestreams.c,v 3.19 1994/02/24 16:33:54 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS4.x)  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"parsestreams.c,v 3.12 1994/01/25 19:05:30 kardel Exp"
+literal|"parsestreams.c,v 3.19 1994/02/24 16:33:54 kardel Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -759,7 +759,7 @@ name|char
 name|revision
 index|[]
 init|=
-literal|"3.12"
+literal|"3.19"
 decl_stmt|;
 name|char
 modifier|*
@@ -2094,7 +2094,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: Copyright (c) 1991-1993, Frank Kardel\n"
+literal|"%s: Copyright (c) 1991-1994, Frank Kardel\n"
 argument_list|,
 name|parsesync_vd
 operator|.
@@ -2112,6 +2112,19 @@ return|;
 block|}
 else|else
 block|{
+name|kmem_free
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|parse
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|parsestream_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VDDRV
@@ -4479,6 +4492,34 @@ begin_comment
 comment|/* maximum allowed stream crawl */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
+end_ifdef
+
+begin_extern
+extern|extern hardpps(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|timeval
+name|time
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * take external status interrupt (only CD interests us)  */
 end_comment
@@ -4537,15 +4578,23 @@ name|int
 name|loopcheck
 decl_stmt|;
 specifier|register
-name|unsigned
-name|char
-name|cdstate
-decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|dname
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
+specifier|register
+name|int
+name|s
+decl_stmt|;
+specifier|register
+name|long
+name|usec
+decl_stmt|;
+endif|#
+directive|endif
 comment|/*    * pick up current state    */
 name|zsstatus
 operator|=
@@ -4555,16 +4604,18 @@ name|zscc_control
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|za
 operator|->
 name|za_rr0
 operator|^
-operator|(
-name|cdstate
-operator|=
 name|zsstatus
+operator|)
 operator|&
+operator|(
 name|ZSRR0_CD
+operator||
+name|ZSRR0_SYNC
 operator|)
 condition|)
 block|{
@@ -4578,10 +4629,32 @@ decl_stmt|;
 comment|/*        * CONDITIONAL external measurement support        */
 name|SET_LED
 argument_list|(
-name|cdstate
+name|zsstatus
+operator|&
+operator|(
+name|ZSRR0_CD
+operator||
+name|ZSRR0_SYNC
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 				 * inconsistent with upper SET_LED, but this 				 * is for oscilloscope business anyway and we 				 * are just interested in edge delays in the 				 * lower us range 				 */
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
+name|s
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
+name|usec
+operator|=
+name|time
+operator|.
+name|tv_usec
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*        * time stamp        */
 name|uniqtime
 argument_list|(
@@ -4591,6 +4664,86 @@ operator|.
 name|tv
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*        * logical state        */
+name|status
+operator|=
+name|cd_invert
+condition|?
+operator|(
+name|zsstatus
+operator|&
+operator|(
+name|ZSRR0_CD
+operator||
+name|ZSRR0_SYNC
+operator|)
+operator|)
+operator|==
+literal|0
+else|:
+operator|(
+name|zsstatus
+operator|&
+operator|(
+name|ZSRR0_CD
+operator||
+name|ZSRR0_SYNC
+operator|)
+operator|)
+operator|!=
+literal|0
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
+if|if
+condition|(
+name|status
+condition|)
+block|{
+name|usec
+operator|=
+name|cdevent
+operator|.
+name|tv
+operator|.
+name|tv_usec
+operator|-
+name|usec
+expr_stmt|;
+if|if
+condition|(
+name|usec
+operator|<
+literal|0
+condition|)
+name|usec
+operator|+=
+literal|1000000
+expr_stmt|;
+name|hardpps
+argument_list|(
+operator|&
+name|cdevent
+operator|.
+name|tv
+argument_list|,
+name|usec
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|TIMEVAL_USADD
 argument_list|(
 operator|&
@@ -4608,19 +4761,6 @@ operator|->
 name|za_ttycommon
 operator|.
 name|t_readq
-expr_stmt|;
-comment|/*        * logical state        */
-name|status
-operator|=
-name|cd_invert
-condition|?
-name|cdstate
-operator|==
-literal|0
-else|:
-name|cdstate
-operator|!=
-literal|0
 expr_stmt|;
 comment|/*        * ok - now the hard part - find ourself        */
 name|loopcheck
@@ -4826,11 +4966,19 @@ operator|->
 name|za_rr0
 operator|&
 operator|~
+operator|(
 name|ZSRR0_CD
+operator||
+name|ZSRR0_SYNC
+operator|)
 operator||
 name|zsstatus
 operator|&
+operator|(
 name|ZSRR0_CD
+operator||
+name|ZSRR0_SYNC
+operator|)
 expr_stmt|;
 name|ZSDELAY
 argument_list|(
@@ -4850,7 +4998,11 @@ name|zsstatus
 operator|)
 operator|&
 operator|~
+operator|(
 name|ZSRR0_CD
+operator||
+name|ZSRR0_SYNC
+operator|)
 operator|)
 condition|)
 block|{
@@ -5071,7 +5223,7 @@ comment|/* sun */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * parsestreams.c,v  * Revision 3.12  1994/01/25  19:05:30  kardel  * 94/01/23 reconcilation  *  * Revision 3.11  1994/01/23  17:22:07  kardel  * 1994 reconcilation  *  * Revision 3.10  1993/12/15  12:48:58  kardel  * fixed message loss on M_*HANHUP messages  *  * Revision 3.9  1993/11/05  15:34:55  kardel  * shut up nice feature detection  *  * Revision 3.8  1993/10/22  14:27:56  kardel  * Oct. 22nd 1993 reconcilation  *  * Revision 3.7  1993/10/10  18:13:53  kardel  * Makefile reorganisation, file relocation  *  * Revision 3.6  1993/10/09  15:01:18  kardel  * file structure unified  *  * Revision 3.5  1993/10/04  07:59:31  kardel  * Well, at least we should know that a the tv_usec field should be in the range 0..999999  *  * Revision 3.4  1993/09/26  23:41:33  kardel  * new parse driver logic  *  * Revision 3.3  1993/09/11  00:38:34  kardel  * LINEMON must also cover M_[UN]HANGUP handling  *  * Revision 3.2  1993/07/06  10:02:56  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * parsestreams.c,v  * Revision 3.19  1994/02/24  16:33:54  kardel  * CD events can also be posted on sync flag  *  * Revision 3.18  1994/02/24  14:12:58  kardel  * initial PPS_SYNC support version  *  * Revision 3.17  1994/02/20  15:18:02  kardel  * rcs id cleanup  *  * Revision 3.16  1994/02/15  22:39:50  kardel  * memory leak on open failure closed  *  * Revision 3.15  1994/02/13  19:16:50  kardel  * updated verbose Copyright message  *  * Revision 3.14  1994/02/02  17:45:38  kardel  * rcs ids fixed  *  * Revision 3.12  1994/01/25  19:05:30  kardel  * 94/01/23 reconcilation  *  * Revision 3.11  1994/01/23  17:22:07  kardel  * 1994 reconcilation  *  * Revision 3.10  1993/12/15  12:48:58  kardel  * fixed message loss on M_*HANHUP messages  *  * Revision 3.9  1993/11/05  15:34:55  kardel  * shut up nice feature detection  *  * Revision 3.8  1993/10/22  14:27:56  kardel  * Oct. 22nd 1993 reconcilation  *  * Revision 3.7  1993/10/10  18:13:53  kardel  * Makefile reorganisation, file relocation  *  * Revision 3.6  1993/10/09  15:01:18  kardel  * file structure unified  *  * Revision 3.5  1993/10/04  07:59:31  kardel  * Well, at least we should know that a the tv_usec field should be in the range 0..999999  *  * Revision 3.4  1993/09/26  23:41:33  kardel  * new parse driver logic  *  * Revision 3.3  1993/09/11  00:38:34  kardel  * LINEMON must also cover M_[UN]HANGUP handling  *  * Revision 3.2  1993/07/06  10:02:56  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

@@ -166,13 +166,14 @@ comment|/* log2 of desired system poll interval */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|LONG
 name|sys_clock
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* second part of current time */
+comment|/* second part of current time - now in systime.c */
 end_comment
 
 begin_decl_stmt
@@ -321,6 +322,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* sys_peer held to prevent wandering */
+end_comment
+
+begin_decl_stmt
+name|U_LONG
+name|sys_limitrejected
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pkts rejected due toclient count per net */
 end_comment
 
 begin_comment
@@ -1489,6 +1500,47 @@ operator|&
 name|RES_DONTSERVE
 condition|)
 return|return;
+comment|/* 	 * See if we only accept limited number of clients 	 * from the net this guy is from. 	 * Note: the flag is determined dynamically within restrictions() 	 */
+if|if
+condition|(
+specifier|restrict
+operator|&
+name|RES_LIMITED
+condition|)
+block|{
+specifier|extern
+name|U_LONG
+name|client_limit
+decl_stmt|;
+name|sys_limitrejected
+operator|++
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"rejected mode %d request from %s - per net client limit (%d) exceeded"
+argument_list|,
+name|PKT_MODE
+argument_list|(
+name|pkt
+operator|->
+name|li_vn_mode
+argument_list|)
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|rbufp
+operator|->
+name|recv_srcadr
+argument_list|)
+argument_list|,
+name|client_limit
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Dump anything with a putrid stratum.  These will most likely 	 * come from someone trying to poll us with ntpdc. 	 */
 if|if
 condition|(
@@ -8393,6 +8445,10 @@ expr_stmt|;
 name|sys_stattime
 operator|=
 name|current_time
+expr_stmt|;
+name|sys_limitrejected
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

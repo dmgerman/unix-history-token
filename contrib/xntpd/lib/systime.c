@@ -129,6 +129,12 @@ end_comment
 
 begin_decl_stmt
 name|LONG
+name|sys_clock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LONG
 name|adj_precision
 decl_stmt|;
 end_decl_stmt
@@ -156,12 +162,6 @@ end_decl_stmt
 begin_comment
 comment|/* same as above, as LONG format */
 end_comment
-
-begin_decl_stmt
-name|LONG
-name|sys_clock
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|l_fp

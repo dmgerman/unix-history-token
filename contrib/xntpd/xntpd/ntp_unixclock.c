@@ -2303,9 +2303,11 @@ directive|ifdef
 name|SYS_LINUX
 end_ifdef
 
-begin_comment
-comment|/* XXX should look this up somewhere ! */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/timex.h>
+end_include
 
 begin_function
 specifier|static
@@ -2325,6 +2327,22 @@ modifier|*
 name|tick
 decl_stmt|;
 block|{
+name|struct
+name|timex
+name|txc
+decl_stmt|;
+name|txc
+operator|.
+name|mode
+operator|=
+literal|0
+expr_stmt|;
+name|__adjtimex
+argument_list|(
+operator|&
+name|txc
+argument_list|)
+expr_stmt|;
 operator|*
 name|tickadj
 operator|=
@@ -2333,13 +2351,16 @@ name|U_LONG
 operator|)
 literal|1
 expr_stmt|;
+comment|/* our adjtime is accurate */
 operator|*
 name|tick
 operator|=
 operator|(
 name|U_LONG
 operator|)
-literal|10000
+name|txc
+operator|.
+name|tick
 expr_stmt|;
 block|}
 end_function
