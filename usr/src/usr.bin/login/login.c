@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.68 (Berkeley) %G%"
+literal|"@(#)login.c	5.69 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1794,16 +1794,6 @@ else|:
 name|pwd
 operator|->
 name|pw_gid
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|chmod
-argument_list|(
-name|ttyn
-argument_list|,
-literal|0620
 argument_list|)
 expr_stmt|;
 operator|(
