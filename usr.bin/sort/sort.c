@@ -38,7 +38,7 @@ end_ifndef
 begin_expr_stmt
 name|__COPYRIGHT
 argument_list|(
-literal|"@(#) Copyright (c) 1993\nThe Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1993 The Regents of the University of California.  All rights reserved."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
