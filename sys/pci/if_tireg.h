@@ -4096,6 +4096,18 @@ name|int
 name|ti_hdrsplit
 decl_stmt|;
 comment|/* enable header splitting */
+name|bus_dma_tag_t
+name|ti_parent_dmat
+decl_stmt|;
+name|bus_dma_tag_t
+name|ti_rdata_dmat
+decl_stmt|;
+name|bus_dmamap_t
+name|ti_rdata_dmamap
+decl_stmt|;
+name|uint32_t
+name|ti_rdata_phys
+decl_stmt|;
 name|struct
 name|ti_ring_data
 modifier|*
