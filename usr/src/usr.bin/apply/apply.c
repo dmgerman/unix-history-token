@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)apply.c	8.3 (Berkeley) %G%"
+literal|"@(#)apply.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -372,7 +372,7 @@ operator|-
 literal|'0'
 expr_stmt|;
 block|}
-comment|/* 	 * If there were any %digit references, then use those, otherwise 	 * build a new command string with sufficient %digit references at 	 * the end to consume (nargs) arguments each time round the loop. 	 */
+comment|/* 	 * If there were any %digit references, then use those, otherwise 	 * build a new command string with sufficient %digit references at 	 * the end to consume (nargs) arguments each time round the loop. 	 * Allocate enough space to hold the maximum command. 	 */
 if|if
 condition|(
 operator|(
@@ -382,8 +382,10 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-literal|"exec"
+literal|"exec "
 argument_list|)
+operator|-
+literal|1
 operator|+
 name|strlen
 argument_list|(
@@ -393,9 +395,16 @@ literal|0
 index|]
 argument_list|)
 operator|+
-literal|3
+literal|9
 operator|*
-name|nargs
+operator|(
+sizeof|sizeof
+argument_list|(
+literal|" %1"
+argument_list|)
+operator|-
+literal|1
+operator|)
 operator|+
 literal|1
 argument_list|)
