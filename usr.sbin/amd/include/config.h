@@ -1815,6 +1815,17 @@ comment|/* #undef HAVE_MSDOSFS_MSDOSFSMOUNT_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<fs/msdosfs/msdosfsmount.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FS_MSDOSFS_MSDOSFSMOUNT_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<ndbm.h> header file. */
 end_comment
 
@@ -2187,25 +2198,34 @@ begin_comment
 comment|/* Define if `fspec' is member of `pcfs_args_t'. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PCFS_ARGS_T_FSPEC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PCFS_ARGS_T_FSPEC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if `gid' is member of `pcfs_args_t'. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PCFS_ARGS_T_GID */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PCFS_ARGS_T_GID
+value|1
+end_define
 
 begin_comment
 comment|/* Define if `mask' is member of `pcfs_args_t'. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PCFS_ARGS_T_MASK */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PCFS_ARGS_T_MASK
+value|1
+end_define
 
 begin_comment
 comment|/* Define if `secondswest' is member of `pcfs_args_t'. */
@@ -2219,9 +2239,12 @@ begin_comment
 comment|/* Define if `uid' is member of `pcfs_args_t'. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_PCFS_ARGS_T_UID */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PCFS_ARGS_T_UID
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `plock' function. */
@@ -6189,9 +6212,12 @@ begin_comment
 comment|/* Define a type for the pcfs_args structure */
 end_comment
 
-begin_comment
-comment|/* #undef pcfs_args_t */
-end_comment
+begin_define
+define|#
+directive|define
+name|pcfs_args_t
+value|struct msdosfs_args
+end_define
 
 begin_comment
 comment|/* Define to `int' if<sys/types.h> does not define. */
