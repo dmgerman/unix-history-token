@@ -1294,7 +1294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_object_reference:  *  *	Gets another reference to the given object.  */
+comment|/*  *	vm_object_reference:  *  *	Gets another reference to the given object.  Note: OBJ_DEAD  *	objects can be referenced during final cleaning.  */
 end_comment
 
 begin_function
@@ -1312,22 +1312,32 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|vm_object_lock
+if|if
+condition|(
+name|object
+operator|!=
+name|kmem_object
+condition|)
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* object can be re-referenced during final cleaning */
-block|KASSERT(!(object->flags& OBJ_DEAD), 	    ("vm_object_reference: attempting to reference dead obj"));
-endif|#
-directive|endif
 name|object
 operator|->
 name|ref_count
 operator|++
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1364,9 +1374,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|vm_object_unlock
-argument_list|(
+if|if
+condition|(
 name|object
+operator|!=
+name|kmem_object
+condition|)
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}
