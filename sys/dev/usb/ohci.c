@@ -2795,17 +2795,15 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The OHCI hardware can handle at most one 4k crossing. 		 * XXX - currently we only allocate contigous buffers, but 		 * the OHCI spec says: If during the data transfer the buffer 		 * address contained in the HC's working copy of 		 * CurrentBufferPointer crosses a 4K boundary, the upper 20 		 * bits of Buffer End are copied to the working value of 		 * CurrentBufferPointer causing the next buffer address to 		 * be the 0th byte in the same 4K page that contains the 		 * last byte of the buffer (the 4K boundary crossing may 		 * occur within a data packet transfer.) 		 * 		 * If/when dma has multiple segments, this will need to 		 * properly handle fragmenting TD's. 		 * 		 * We can describe the above using maxsegsz = 4k and nsegs = 2 		 * in the future. 		 */
+comment|/* 		 * The OHCI hardware can handle at most one 4k crossing. 		 * XXX - currently we only allocate contigous buffers, but 		 * the OHCI spec says: If during the data transfer the buffer 		 * address contained in the HC's working copy of 		 * CurrentBufferPointer crosses a 4K boundary, the upper 20 		 * bits of Buffer End are copied to the working value of 		 * CurrentBufferPointer causing the next buffer address to 		 * be the 0th byte in the same 4K page that contains the 		 * last byte of the buffer (the 4K boundary crossing may 		 * occur within a data packet transfer.) 		 * 		 * If/when dma has multiple segments, this will need to 		 * properly handle fragmenting TD's. 		 *  		 * Note that if we are gathering data from multiple SMALL 		 * segments, e.g. mbufs, we need to do special gymnastics, 		 * e.g. bounce buffering or data aggregation, 		 * BEFORE WE GET HERE because a bulk USB transfer must 		 * consist of maximally sized packets right up to the end. 		 * A shorter than maximal packet means that it is the end 		 * of the transfer. If the data transfer length is a 		 * multiple of the packet size, then a 0 byte 		 * packet will be the signal of the end of transfer. 		 * Since packets can't cross TDs this means that 		 * each TD except the last one must cover an exact multiple 		 * of the maximal packet length. 		 */
 if|if
 condition|(
-operator|(
 name|OHCI_PAGE_OFFSET
 argument_list|(
 name|dataphys
 argument_list|)
 operator|+
 name|len
-operator|)
 operator|<=
 operator|(
 literal|2
@@ -2814,7 +2812,7 @@ name|OHCI_PAGE_SIZE
 operator|)
 condition|)
 block|{
-comment|/* we can handle it in this TD */
+comment|/* We can handle all that remains in this TD */
 name|curlen
 operator|=
 name|len
@@ -2822,7 +2820,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* XXX The calculation below is wrong and could 			 * result in a packet that is not a multiple of the 			 * MaxPacketSize in the case where the buffer does not 			 * start on an appropriate address (like for example in 			 * the case of an mbuf cluster). You'll get an early 			 * short packet. 			 */
 comment|/* must use multiple TDs, fill as much as possible. */
 name|curlen
 operator|=
@@ -2853,22 +2850,19 @@ operator|->
 name|wMaxPacketSize
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
+name|KASSERT
+argument_list|(
+operator|(
 name|curlen
 operator|==
 literal|0
-condition|)
-name|panic
-argument_list|(
+operator|)
+argument_list|,
+operator|(
 literal|"ohci_alloc_std: curlen == 0"
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|DPRINTFN
 argument_list|(
