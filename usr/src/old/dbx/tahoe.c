@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tahoe.c	5.2 (Berkeley) %G%"
+literal|"@(#)tahoe.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3980,12 +3980,6 @@ struct|;
 name|long
 name|dest
 decl_stmt|;
-name|error
-argument_list|(
-literal|"Can't do a \"call\" right now...sorry"
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 literal|4
