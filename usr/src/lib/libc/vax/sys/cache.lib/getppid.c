@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -21,7 +21,7 @@ end_if
 begin_expr_stmt
 operator|.
 name|asciz
-literal|"@(#)getppid.c	5.2 (Berkeley) %G%"
+literal|"@(#)getppid.c	8.1 (Berkeley) %G%"
 endif|#
 directive|endif
 comment|/* LIBC_SCCS and not lint */
