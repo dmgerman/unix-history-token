@@ -213,9 +213,9 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 operator|)
 operator|!=
 literal|0
@@ -959,9 +959,9 @@ block|{
 comment|/* plex operation, */
 name|ubp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 comment|/* yes, propagate to user */
 name|ubp
@@ -1216,9 +1216,9 @@ name|sbp
 operator|->
 name|b
 operator|.
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 condition|)
 block|{
 comment|/* had an error */
@@ -1226,9 +1226,9 @@ name|sbp
 operator|->
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 comment|/* propagate upwards */
 name|sbp

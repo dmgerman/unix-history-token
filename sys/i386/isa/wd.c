@@ -2539,9 +2539,9 @@ name|EINVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 goto|goto
 name|done
@@ -4483,9 +4483,9 @@ name|EIO
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 comment|/* flag the error */
 block|}
@@ -4523,9 +4523,9 @@ operator|!
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 operator|)
 operator|)
 operator|&&
@@ -4818,9 +4818,9 @@ operator|(
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 operator|)
 operator|==
 literal|0
@@ -4885,9 +4885,9 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 operator|)
 operator|==
 literal|0
@@ -6034,9 +6034,9 @@ expr_stmt|;
 comment|/* XXX needs translation */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 return|return
 operator|(

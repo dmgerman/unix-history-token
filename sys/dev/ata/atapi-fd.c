@@ -1800,9 +1800,9 @@ name|EIO
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -2142,9 +2142,9 @@ name|error
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 block|}
 name|bp
@@ -2201,9 +2201,9 @@ operator|||
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 operator|)
 condition|)
 block|{
@@ -2217,9 +2217,9 @@ name|error
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 block|}
 else|else

@@ -2090,8 +2090,12 @@ operator|->
 name|b_flags
 operator||=
 name|B_INVAL
-operator||
-name|B_ERROR
+expr_stmt|;
+name|rabp
+operator|->
+name|b_ioflags
+operator||=
+name|BIO_ERROR
 expr_stmt|;
 name|vfs_unbusy_pages
 argument_list|(
@@ -2415,9 +2419,9 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|brelse
 argument_list|(
@@ -2889,8 +2893,12 @@ operator|->
 name|b_flags
 operator||=
 name|B_INVAL
-operator||
-name|B_ERROR
+expr_stmt|;
+name|rabp
+operator|->
+name|b_ioflags
+operator||=
+name|BIO_ERROR
 expr_stmt|;
 name|vfs_unbusy_pages
 argument_list|(
@@ -4009,11 +4017,14 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-operator|(
-name|B_ERROR
-operator||
 name|B_INVAL
-operator|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_ioflags
+operator|&=
+operator|~
+name|BIO_ERROR
 expr_stmt|;
 block|}
 if|if
@@ -4359,9 +4370,9 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|brelse
 argument_list|(
@@ -5151,7 +5162,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initiate asynchronous I/O. Return an error if no nfsiods are available.  * This is mainly to avoid queueing async I/O requests when the nfsiods  * are all hung on a dead server.  *  * Note: nfs_asyncio() does not clear (B_ERROR|B_INVAL) but when the bp  * is eventually dequeued by the async daemon, nfs_doio() *will*.  */
+comment|/*  * Initiate asynchronous I/O. Return an error if no nfsiods are available.  * This is mainly to avoid queueing async I/O requests when the nfsiods  * are all hung on a dead server.  *  * Note: nfs_asyncio() does not clear (BIO_ERROR|B_INVAL) but when the bp  * is eventually dequeued by the async daemon, nfs_doio() *will*.  */
 end_comment
 
 begin_function
@@ -5750,17 +5761,20 @@ name|uio_procp
 operator|=
 name|p
 expr_stmt|;
-comment|/* 	 * clear B_ERROR and B_INVAL state prior to initiating the I/O.  We 	 * do this here so we do not have to do it in all the code that 	 * calls us. 	 */
+comment|/* 	 * clear BIO_ERROR and B_INVAL state prior to initiating the I/O.  We 	 * do this here so we do not have to do it in all the code that 	 * calls us. 	 */
 name|bp
 operator|->
 name|b_flags
 operator|&=
 operator|~
-operator|(
-name|B_ERROR
-operator||
 name|B_INVAL
-operator|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_ioflags
+operator|&=
+operator|~
+name|BIO_ERROR
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -5904,9 +5918,9 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -6291,9 +6305,9 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -6660,7 +6674,7 @@ operator|&=
 operator|~
 name|B_WRITEINPROG
 expr_stmt|;
-comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set B_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 * 		 * If the buffer is marked B_PAGING, it does not reside on 		 * the vp's paging queues so we cannot call bdirty().  The 		 * bp in this case is not an NFS cache block so we should 		 * be safe. XXX 		 */
+comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set BIO_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 * 		 * If the buffer is marked B_PAGING, it does not reside on 		 * the vp's paging queues so we cannot call bdirty().  The 		 * bp in this case is not an NFS cache block so we should 		 * be safe. XXX 		 */
 if|if
 condition|(
 name|error
@@ -6761,9 +6775,9 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->

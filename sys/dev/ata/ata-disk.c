@@ -3041,9 +3041,9 @@ name|request
 operator|->
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 block|}
 else|else
@@ -3409,9 +3409,9 @@ name|request
 operator|->
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|devstat_end_transaction_buf
 argument_list|(

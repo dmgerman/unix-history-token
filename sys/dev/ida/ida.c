@@ -2477,9 +2477,9 @@ name|qcb
 operator|->
 name|buf
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|id_intr
 argument_list|(

@@ -1847,7 +1847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a buffer with the specified data.  Look in the cache first.  We  * must clear B_ERROR and B_INVAL prior to initiating I/O.  If B_CACHE  * is set, the buffer is valid and we do not have to do anything ( see  * getblk() ).  */
+comment|/*  * Get a buffer with the specified data.  Look in the cache first.  We  * must clear BIO_ERROR and B_INVAL prior to initiating I/O.  If B_CACHE  * is set, the buffer is valid and we do not have to do anything ( see  * getblk() ).  */
 end_comment
 
 begin_function
@@ -1960,11 +1960,14 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-operator|(
-name|B_ERROR
-operator||
 name|B_INVAL
-operator|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_ioflags
+operator|&=
+operator|~
+name|BIO_ERROR
 expr_stmt|;
 if|if
 condition|(
@@ -2025,7 +2028,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Operates like bread, but also starts asynchronous I/O on  * read-ahead blocks.  We must clear B_ERROR and B_INVAL prior  * to initiating I/O . If B_CACHE is set, the buffer is valid   * and we do not have to do anything.  */
+comment|/*  * Operates like bread, but also starts asynchronous I/O on  * read-ahead blocks.  We must clear BIO_ERROR and B_INVAL prior  * to initiating I/O . If B_CACHE is set, the buffer is valid   * and we do not have to do anything.  */
 end_comment
 
 begin_function
@@ -2144,11 +2147,14 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-operator|(
-name|B_ERROR
-operator||
 name|B_INVAL
-operator|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_ioflags
+operator|&=
+operator|~
+name|BIO_ERROR
 expr_stmt|;
 if|if
 condition|(
@@ -2282,11 +2288,14 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-operator|(
-name|B_ERROR
-operator||
 name|B_INVAL
-operator|)
+expr_stmt|;
+name|rabp
+operator|->
+name|b_ioflags
+operator|&=
+operator|~
+name|BIO_ERROR
 expr_stmt|;
 name|rabp
 operator|->
@@ -2694,11 +2703,14 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-operator|(
 name|B_DONE
-operator||
-name|B_ERROR
-operator|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_ioflags
+operator|&=
+operator|~
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -3343,10 +3355,14 @@ parameter_list|)
 block|{
 name|bp
 operator|->
+name|b_ioflags
+operator||=
+name|BIO_ORDERED
+expr_stmt|;
+name|bp
+operator|->
 name|b_flags
 operator||=
-name|B_ORDERED
-operator||
 name|B_ASYNC
 expr_stmt|;
 return|return
@@ -3491,10 +3507,10 @@ name|B_LOCKED
 condition|)
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&=
 operator|~
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 if|if
 condition|(
@@ -3507,25 +3523,28 @@ operator|&&
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
+name|BIO_ERROR
+operator|)
+operator|&&
+operator|!
 operator|(
-name|B_ERROR
-operator||
-name|B_INVAL
-operator|)
-operator|)
-operator|==
-name|B_ERROR
-condition|)
-block|{
-comment|/* 		 * Failed write, redirty.  Must clear B_ERROR to prevent 		 * pages from being scrapped.  If B_INVAL is set then 		 * this case is not run and the next case is run to  		 * destroy the buffer.  B_INVAL can occur if the buffer 		 * is outside the range supported by the underlying device. 		 */
 name|bp
 operator|->
 name|b_flags
+operator|&
+name|B_INVAL
+operator|)
+condition|)
+block|{
+comment|/* 		 * Failed write, redirty.  Must clear BIO_ERROR to prevent 		 * pages from being scrapped.  If B_INVAL is set then 		 * this case is not run and the next case is run to  		 * destroy the buffer.  B_INVAL can occur if the buffer 		 * is outside the range supported by the underlying device. 		 */
+name|bp
+operator|->
+name|b_ioflags
 operator|&=
 operator|~
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bdirty
 argument_list|(
@@ -3545,9 +3564,15 @@ operator|(
 name|B_NOCACHE
 operator||
 name|B_INVAL
-operator||
-name|B_ERROR
 operator|)
+operator|)
+operator|||
+operator|(
+name|bp
+operator|->
+name|b_ioflags
+operator|&
+name|BIO_ERROR
 operator|)
 operator|||
 name|bp
@@ -3680,7 +3705,7 @@ operator|&=
 operator|~
 name|B_RELBUF
 expr_stmt|;
-comment|/* 	 * VMIO buffer rundown.  It is not very necessary to keep a VMIO buffer 	 * constituted, not even NFS buffers now.  Two flags effect this.  If 	 * B_INVAL, the struct buf is invalidated but the VM object is kept 	 * around ( i.e. so it is trivial to reconstitute the buffer later ). 	 * 	 * If B_ERROR or B_NOCACHE is set, pages in the VM object will be 	 * invalidated.  B_ERROR cannot be set for a failed write unless the 	 * buffer is also B_INVAL because it hits the re-dirtying code above. 	 * 	 * Normally we can do this whether a buffer is B_DELWRI or not.  If 	 * the buffer is an NFS buffer, it is tracking piecemeal writes or 	 * the commit state and we cannot afford to lose the buffer. If the 	 * buffer has a background write in progress, we need to keep it 	 * around to prevent it from being reconstituted and starting a second 	 * background write. 	 */
+comment|/* 	 * VMIO buffer rundown.  It is not very necessary to keep a VMIO buffer 	 * constituted, not even NFS buffers now.  Two flags effect this.  If 	 * B_INVAL, the struct buf is invalidated but the VM object is kept 	 * around ( i.e. so it is trivial to reconstitute the buffer later ). 	 * 	 * If BIO_ERROR or B_NOCACHE is set, pages in the VM object will be 	 * invalidated.  BIO_ERROR cannot be set for a failed write unless the 	 * buffer is also B_INVAL because it hits the re-dirtying code above. 	 * 	 * Normally we can do this whether a buffer is B_DELWRI or not.  If 	 * the buffer is an NFS buffer, it is tracking piecemeal writes or 	 * the commit state and we cannot afford to lose the buffer. If the 	 * buffer has a background write in progress, we need to keep it 	 * around to prevent it from being reconstituted and starting a second 	 * background write. 	 */
 if|if
 condition|(
 operator|(
@@ -3933,14 +3958,20 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
-operator|(
 name|B_NOCACHE
-operator||
-name|B_ERROR
+operator|)
+operator|||
+operator|(
+name|bp
+operator|->
+name|b_ioflags
+operator|&
+name|BIO_ERROR
 operator|)
 condition|)
 block|{
@@ -4210,13 +4241,19 @@ operator|->
 name|b_flags
 operator|&
 operator|(
-name|B_ERROR
-operator||
 name|B_INVAL
 operator||
 name|B_NOCACHE
 operator||
 name|B_RELBUF
+operator|)
+operator|||
+operator|(
+name|bp
+operator|->
+name|b_ioflags
+operator|&
+name|BIO_ERROR
 operator|)
 condition|)
 block|{
@@ -4523,8 +4560,6 @@ name|b_flags
 operator|&=
 operator|~
 operator|(
-name|B_ORDERED
-operator||
 name|B_ASYNC
 operator||
 name|B_NOCACHE
@@ -4533,6 +4568,13 @@ name|B_AGE
 operator||
 name|B_RELBUF
 operator|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_ioflags
+operator|&=
+operator|~
+name|BIO_ORDERED
 expr_stmt|;
 name|splx
 argument_list|(
@@ -4638,10 +4680,10 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&=
 operator|~
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -4789,8 +4831,6 @@ name|b_flags
 operator|&=
 operator|~
 operator|(
-name|B_ORDERED
-operator||
 name|B_ASYNC
 operator||
 name|B_NOCACHE
@@ -4799,6 +4839,13 @@ name|B_AGE
 operator||
 name|B_RELBUF
 operator|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_ioflags
+operator|&=
+operator|~
+name|BIO_ORDERED
 expr_stmt|;
 name|splx
 argument_list|(
@@ -6061,6 +6108,12 @@ expr_stmt|;
 name|bp
 operator|->
 name|b_flags
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
+name|b_ioflags
 operator|=
 literal|0
 expr_stmt|;
@@ -7667,7 +7720,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	getblk:  *  *	Get a block given a specified block and offset into a file/device.  *	The buffers B_DONE bit will be cleared on return, making it almost  * 	ready for an I/O initiation.  B_INVAL may or may not be set on   *	return.  The caller should clear B_INVAL prior to initiating a  *	READ.  *  *	For a non-VMIO buffer, B_CACHE is set to the opposite of B_INVAL for  *	an existing buffer.  *  *	For a VMIO buffer, B_CACHE is modified according to the backing VM.  *	If getblk()ing a previously 0-sized invalid buffer, B_CACHE is set  *	and then cleared based on the backing VM.  If the previous buffer is  *	non-0-sized but invalid, B_CACHE will be cleared.  *  *	If getblk() must create a new buffer, the new buffer is returned with  *	both B_INVAL and B_CACHE clear unless it is a VMIO buffer, in which  *	case it is returned with B_INVAL clear and B_CACHE set based on the  *	backing VM.  *  *	getblk() also forces a VOP_BWRITE() for any B_DELWRI buffer whos  *	B_CACHE bit is clear.  *	  *	What this means, basically, is that the caller should use B_CACHE to  *	determine whether the buffer is fully valid or not and should clear  *	B_INVAL prior to issuing a read.  If the caller intends to validate  *	the buffer by loading its data area with something, the caller needs  *	to clear B_INVAL.  If the caller does this without issuing an I/O,   *	the caller should set B_CACHE ( as an optimization ), else the caller  *	should issue the I/O and biodone() will set B_CACHE if the I/O was  *	a write attempt or if it was a successfull read.  If the caller   *	intends to issue a READ, the caller must clear B_INVAL and B_ERROR  *	prior to issuing the READ.  biodone() will *not* clear B_INVAL.  */
+comment|/*  *	getblk:  *  *	Get a block given a specified block and offset into a file/device.  *	The buffers B_DONE bit will be cleared on return, making it almost  * 	ready for an I/O initiation.  B_INVAL may or may not be set on   *	return.  The caller should clear B_INVAL prior to initiating a  *	READ.  *  *	For a non-VMIO buffer, B_CACHE is set to the opposite of B_INVAL for  *	an existing buffer.  *  *	For a VMIO buffer, B_CACHE is modified according to the backing VM.  *	If getblk()ing a previously 0-sized invalid buffer, B_CACHE is set  *	and then cleared based on the backing VM.  If the previous buffer is  *	non-0-sized but invalid, B_CACHE will be cleared.  *  *	If getblk() must create a new buffer, the new buffer is returned with  *	both B_INVAL and B_CACHE clear unless it is a VMIO buffer, in which  *	case it is returned with B_INVAL clear and B_CACHE set based on the  *	backing VM.  *  *	getblk() also forces a VOP_BWRITE() for any B_DELWRI buffer whos  *	B_CACHE bit is clear.  *	  *	What this means, basically, is that the caller should use B_CACHE to  *	determine whether the buffer is fully valid or not and should clear  *	B_INVAL prior to issuing a read.  If the caller intends to validate  *	the buffer by loading its data area with something, the caller needs  *	to clear B_INVAL.  If the caller does this without issuing an I/O,   *	the caller should set B_CACHE ( as an optimization ), else the caller  *	should issue the I/O and biodone() will set B_CACHE if the I/O was  *	a write attempt or if it was a successfull read.  If the caller   *	intends to issue a READ, the caller must clear B_INVAL and BIO_ERROR  *	prior to issuing the READ.  biodone() will *not* clear B_INVAL.  */
 end_comment
 
 begin_function
@@ -9752,9 +9805,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 condition|)
 block|{
 return|return
@@ -10153,9 +10206,16 @@ operator|(
 name|B_INVAL
 operator||
 name|B_NOCACHE
-operator||
-name|B_ERROR
 operator|)
+operator|)
+operator|&&
+operator|!
+operator|(
+name|bp
+operator|->
+name|b_ioflags
+operator|&
+name|BIO_ERROR
 operator|)
 condition|)
 block|{
@@ -10565,13 +10625,17 @@ name|B_NOCACHE
 operator||
 name|B_INVAL
 operator||
-name|B_ERROR
-operator||
 name|B_RELBUF
 operator|)
 operator|)
-operator|!=
-literal|0
+operator|||
+operator|(
+name|bp
+operator|->
+name|b_ioflags
+operator|&
+name|BIO_ERROR
+operator|)
 condition|)
 name|brelse
 argument_list|(
@@ -10869,7 +10933,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is called before a device strategy routine.  * It is used to tell the VM system that paging I/O is in  * progress, and treat the pages associated with the buffer  * almost as being PG_BUSY.  Also the object paging_in_progress  * flag is handled to make sure that the object doesn't become  * inconsistant.  *  * Since I/O has not been initiated yet, certain buffer flags  * such as B_ERROR or B_INVAL may be in an inconsistant state  * and should be ignored.  */
+comment|/*  * This routine is called before a device strategy routine.  * It is used to tell the VM system that paging I/O is in  * progress, and treat the pages associated with the buffer  * almost as being PG_BUSY.  Also the object paging_in_progress  * flag is handled to make sure that the object doesn't become  * inconsistant.  *  * Since I/O has not been initiated yet, certain buffer flags  * such as BIO_ERROR or B_INVAL may be in an inconsistant state  * and should be ignored.  */
 end_comment
 
 begin_function
@@ -11407,7 +11471,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vfs_bio_clrbuf:  *  *	clear a buffer.  This routine essentially fakes an I/O, so we need  *	to clear B_ERROR and B_INVAL.  *  *	Note that while we only theoretically need to clear through b_bcount,  *	we go ahead and clear through b_bufsize.  */
+comment|/*  *	vfs_bio_clrbuf:  *  *	clear a buffer.  This routine essentially fakes an I/O, so we need  *	to clear BIO_ERROR and B_INVAL.  *  *	Note that while we only theoretically need to clear through b_bcount,  *	we go ahead and clear through b_bufsize.  */
 end_comment
 
 begin_function
@@ -11454,11 +11518,14 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
-operator|(
 name|B_INVAL
-operator||
-name|B_ERROR
-operator|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_ioflags
+operator|&=
+operator|~
+name|BIO_ERROR
 expr_stmt|;
 if|if
 condition|(

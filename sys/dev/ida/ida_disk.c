@@ -672,9 +672,9 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|done
 label|:
@@ -724,9 +724,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 condition|)
 name|bp
 operator|->

@@ -665,9 +665,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 condition|)
 name|error
 operator|=
@@ -690,9 +690,9 @@ expr_stmt|;
 comment|/* create the device number */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|=
-name|B_ORDERED
+name|BIO_ORDERED
 expr_stmt|;
 comment|/* and make this an ordered write */
 name|bp
@@ -748,9 +748,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 condition|)
 name|error
 operator|=
@@ -967,10 +967,10 @@ name|B_INVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&=
 operator|~
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|brelse
 argument_list|(
@@ -1204,9 +1204,9 @@ condition|(
 operator|(
 name|pbp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 operator|)
 operator|==
 literal|0
@@ -1417,9 +1417,9 @@ if|if
 condition|(
 name|pbp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 condition|)
 name|reply
 operator|->
@@ -1437,10 +1437,10 @@ name|B_INVAL
 expr_stmt|;
 name|pbp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&=
 operator|~
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|brelse
 argument_list|(
@@ -1981,9 +1981,9 @@ index|[
 name|sdno
 index|]
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 condition|)
 comment|/* can't read, */
 name|error
@@ -2120,9 +2120,9 @@ condition|)
 block|{
 name|pbp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|pbp
 operator|->
@@ -2445,9 +2445,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 condition|)
 name|error
 operator|=
@@ -2473,10 +2473,10 @@ name|B_INVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&=
 operator|~
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|brelse
 argument_list|(
@@ -2605,9 +2605,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 condition|)
 name|error
 operator|=
@@ -2698,10 +2698,10 @@ name|B_INVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&=
 operator|~
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|brelse
 argument_list|(

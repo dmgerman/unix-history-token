@@ -1655,9 +1655,9 @@ name|EINVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 goto|goto
 name|bad
@@ -1816,9 +1816,9 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|done
 label|:
@@ -5351,9 +5351,9 @@ name|EIO
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->

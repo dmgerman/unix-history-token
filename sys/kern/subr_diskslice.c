@@ -1474,9 +1474,9 @@ name|b_bcount
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 return|return
 operator|(
@@ -2673,9 +2673,9 @@ operator|!
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 operator|)
 operator|&&
 name|bp

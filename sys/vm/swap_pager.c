@@ -2082,10 +2082,14 @@ name|EINVAL
 expr_stmt|;
 name|bp
 operator|->
+name|b_ioflags
+operator||=
+name|BIO_ERROR
+expr_stmt|;
+name|bp
+operator|->
 name|b_flags
 operator||=
-name|B_ERROR
-operator||
 name|B_INVAL
 expr_stmt|;
 name|biodone
@@ -2129,10 +2133,10 @@ literal|0
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&=
 operator|~
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -2270,9 +2274,9 @@ name|ENOMEM
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 break|break;
 block|}
@@ -4033,9 +4037,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 condition|)
 block|{
 name|printf
@@ -4153,9 +4157,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 condition|)
 block|{
 comment|/* 			 * If an error occurs I'd love to throw the swapblk 			 * away without freeing it back to swapspace, so it 			 * can never be used again.  But I can't from an  			 * interrupt. 			 */

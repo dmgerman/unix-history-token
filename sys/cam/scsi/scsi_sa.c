@@ -2946,9 +2946,9 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|done
 label|:
@@ -5111,9 +5111,9 @@ name|ENXIO
 expr_stmt|;
 name|q_bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -6393,9 +6393,9 @@ name|b_bcount
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 if|if
 condition|(
@@ -7046,9 +7046,9 @@ name|EIO
 expr_stmt|;
 name|q_bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -7085,9 +7085,9 @@ name|error
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 comment|/* 			 * In the error case, position is updated in saerror. 			 */
 block|}
@@ -7118,9 +7118,9 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 block|}
 if|if

@@ -8941,7 +8941,7 @@ block|if (bp->b_blkno< 0 || bp->b_blkno + sz> maxsz) {
 comment|/* if exactly at end of disk, return an EOF */
 block|if (bp->b_blkno == maxsz) {                         bp->b_resid = bp->b_bcount;                         return(0);                 }
 comment|/* or truncate if part of it fits */
-block|sz = maxsz - bp->b_blkno;                 if (sz<= 0) {                         bp->b_error = EINVAL;                         goto bad;                 }                 bp->b_bcount = sz<< DEV_BSHIFT;         }          bp->b_pblkno = bp->b_blkno + p->p_offset;         return(1);  bad:         bp->b_flags |= B_ERROR;
+block|sz = maxsz - bp->b_blkno;                 if (sz<= 0) {                         bp->b_error = EINVAL;                         goto bad;                 }                 bp->b_bcount = sz<< DEV_BSHIFT;         }          bp->b_pblkno = bp->b_blkno + p->p_offset;         return(1);  bad:         bp->b_ioflags |= BIO_ERROR;
 endif|#
 directive|endif
 return|return

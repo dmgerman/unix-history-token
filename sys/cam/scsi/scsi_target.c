@@ -5115,9 +5115,9 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 comment|/* 	 * Correctly set the buf to indicate a completed xfer 	 */
 name|bp
@@ -7635,9 +7635,9 @@ condition|)
 comment|/* Short transfer */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|CAM_DEBUG
 argument_list|(
@@ -7838,9 +7838,9 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -8104,9 +8104,9 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -8143,9 +8143,9 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -9682,9 +9682,9 @@ name|desc
 operator|->
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 if|if
 condition|(

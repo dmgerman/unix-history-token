@@ -1615,9 +1615,9 @@ name|ENXIO
 expr_stmt|;
 name|q_bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -5432,9 +5432,9 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 comment|/* 	 * Correctly set the buf to indicate a completed xfer 	 */
 name|bp
@@ -5659,9 +5659,9 @@ argument_list|,
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ORDERED
+name|BIO_ORDERED
 operator|)
 operator|!=
 literal|0
@@ -6173,9 +6173,9 @@ name|EIO
 expr_stmt|;
 name|q_bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -6204,9 +6204,9 @@ name|error
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|cam_release_devq
 argument_list|(
@@ -6258,9 +6258,9 @@ block|{
 comment|/* Short transfer ??? */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 block|}
 block|}

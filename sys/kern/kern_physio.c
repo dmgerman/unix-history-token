@@ -511,9 +511,9 @@ operator|!
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 operator|)
 condition|)
 goto|goto
@@ -558,9 +558,9 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 condition|)
 block|{
 name|error

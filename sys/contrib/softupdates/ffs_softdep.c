@@ -20836,9 +20836,9 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ERROR
+name|BIO_ERROR
 operator|)
 operator|==
 literal|0

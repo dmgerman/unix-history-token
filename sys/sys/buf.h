@@ -214,7 +214,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The bio structure descripes an I/O operation in the kernel.  */
+comment|/*  * The bio structure describes an I/O operation in the kernel.  */
 end_comment
 
 begin_struct
@@ -224,11 +224,11 @@ block|{
 name|u_int
 name|bio_cmd
 decl_stmt|;
-comment|/* BIO_READ, BIO_WRITE, BIO_DELETE */
+comment|/* I/O operation. */
 name|dev_t
 name|bio_dev
 decl_stmt|;
-comment|/* Device to do I/O on */
+comment|/* Device to do I/O on. */
 name|daddr_t
 name|bio_blkno
 decl_stmt|;
@@ -236,21 +236,21 @@ comment|/* Underlying physical block number. */
 name|u_int
 name|bio_flags
 decl_stmt|;
-comment|/* BIO_ORDERED, BIO_ERROR */
+comment|/* BIO_ flags. */
 name|struct
 name|buf
 modifier|*
-name|__bio_buf
+name|_bio_buf
 decl_stmt|;
-comment|/* Parent buffer */
+comment|/* Parent buffer. */
 name|int
 name|bio_error
 decl_stmt|;
-comment|/* Errno for BIO_ERROR */
+comment|/* Errno for BIO_ERROR. */
 name|long
 name|bio_resid
 decl_stmt|;
-comment|/* Remaining I/0 in bytes */
+comment|/* Remaining I/0 in bytes. */
 name|void
 argument_list|(
 argument|*bio_done
@@ -268,22 +268,39 @@ name|void
 modifier|*
 name|bio_driver1
 decl_stmt|;
-comment|/* for private use by the driver */
+comment|/* Private use by the callee. */
 name|void
 modifier|*
 name|bio_driver2
 decl_stmt|;
-comment|/* for private use by the driver */
+comment|/* Private use by the callee. */
 name|void
 modifier|*
 name|bio_caller1
 decl_stmt|;
-comment|/* for private use by the caller */
+comment|/* Private use by the caller. */
 name|void
 modifier|*
 name|bio_caller2
 decl_stmt|;
-comment|/* for private use by the caller */
+comment|/* Private use by the caller. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|bio
+argument_list|)
+name|bio_queue
+expr_stmt|;
+comment|/* Disksort queue. */
+comment|/* XXX: these go away when bio chaining is introduced */
+name|daddr_t
+name|bio_pblkno
+decl_stmt|;
+comment|/* physical block number */
+name|struct
+name|iodone_chain
+modifier|*
+name|bio_done_chain
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -296,55 +313,64 @@ begin_struct
 struct|struct
 name|buf
 block|{
+comment|/* XXX: b_io must be the first element of struct buf for now /phk */
 name|struct
 name|bio
-name|b_bio
+name|b_io
 decl_stmt|;
-comment|/* I/O request 					 * XXX: Must be first element for now 					 */
-define|#
-directive|define
-name|b_iocmd
-value|b_bio.bio_cmd
-define|#
-directive|define
-name|b_ioflags
-value|b_bio.bio_flags
-define|#
-directive|define
-name|b_iodone
-value|b_bio.bio_done
-define|#
-directive|define
-name|b_error
-value|b_bio.bio_error
-define|#
-directive|define
-name|b_resid
-value|b_bio.bio_resid
+comment|/* "Builtin" I/O request. */
 define|#
 directive|define
 name|b_blkno
-value|b_bio.bio_blkno
-define|#
-directive|define
-name|b_driver1
-value|b_bio.bio_driver1
-define|#
-directive|define
-name|b_driver2
-value|b_bio.bio_driver2
+value|b_io.bio_blkno
 define|#
 directive|define
 name|b_caller1
-value|b_bio.bio_caller1
+value|b_io.bio_caller1
 define|#
 directive|define
 name|b_caller2
-value|b_bio.bio_caller2
+value|b_io.bio_caller2
 define|#
 directive|define
 name|b_dev
-value|b_bio.bio_dev
+value|b_io.bio_dev
+define|#
+directive|define
+name|b_driver1
+value|b_io.bio_driver1
+define|#
+directive|define
+name|b_driver2
+value|b_io.bio_driver2
+define|#
+directive|define
+name|b_error
+value|b_io.bio_error
+define|#
+directive|define
+name|b_iocmd
+value|b_io.bio_cmd
+define|#
+directive|define
+name|b_iodone
+value|b_io.bio_done
+define|#
+directive|define
+name|b_iodone_chain
+value|b_io.bio_done_chain
+define|#
+directive|define
+name|b_ioflags
+value|b_io.bio_flags
+define|#
+directive|define
+name|b_pblkno
+value|b_io.bio_pblkno
+define|#
+directive|define
+name|b_resid
+value|b_io.bio_resid
 name|LIST_ENTRY
 argument_list|(
 argument|buf
@@ -420,12 +446,6 @@ name|off_t
 name|b_offset
 decl_stmt|;
 comment|/* Offset into file */
-comment|/* Function to call upon completion. */
-name|struct
-name|iodone_chain
-modifier|*
-name|b_iodone_chain
-decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -452,10 +472,6 @@ modifier|*
 name|b_wcred
 decl_stmt|;
 comment|/* Write credentials reference. */
-name|daddr_t
-name|b_pblkno
-decl_stmt|;
-comment|/* physical block number */
 name|void
 modifier|*
 name|b_saveaddr
@@ -540,7 +556,7 @@ value|b_pager.pg_spc
 end_define
 
 begin_comment
-comment|/*  * These flags are kept in b_flags.  *  * Notes:  *  *	B_ASYNC		VOP calls on bp's are usually async whether or not  *			B_ASYNC is set, but some subsystems, such as NFS, like   *			to know what is best for the caller so they can  *			optimize the I/O.  *  *	B_PAGING	Indicates that bp is being used by the paging system or  *			some paging system and that the bp is not linked into  *			the b_vp's clean/dirty linked lists or ref counts.  *			Buffer vp reassignments are illegal in this case.  *  *	B_CACHE		This may only be set if the buffer is entirely valid.  *			The situation where B_DELWRI is set and B_CACHE is  *			clear MUST be committed to disk by getblk() so   *			B_DELWRI can also be cleared.  See the comments for  *			getblk() in kern/vfs_bio.c.  If B_CACHE is clear,  *			the caller is expected to clear B_ERROR|B_INVAL,  *			set BIO_READ, and initiate an I/O.  *  *			The 'entire buffer' is defined to be the range from  *			0 through b_bcount.  *  *	B_MALLOC	Request that the buffer be allocated from the malloc  *			pool, DEV_BSIZE aligned instead of PAGE_SIZE aligned.  *  *	B_CLUSTEROK	This flag is typically set for B_DELWRI buffers  *			by filesystems that allow clustering when the buffer  *			is fully dirty and indicates that it may be clustered  *			with other adjacent dirty buffers.  Note the clustering  *			may not be used with the stage 1 data write under NFS  *			but may be used for the commit rpc portion.  *  *	B_VMIO		Indicates that the buffer is tied into an VM object.  *			The buffer's data is always PAGE_SIZE aligned even  *			if b_bufsize and b_bcount are not.  ( b_bufsize is   *			always at least DEV_BSIZE aligned, though ).  *	  */
+comment|/*  * These flags are kept in b_flags.  *  * Notes:  *  *	B_ASYNC		VOP calls on bp's are usually async whether or not  *			B_ASYNC is set, but some subsystems, such as NFS, like   *			to know what is best for the caller so they can  *			optimize the I/O.  *  *	B_PAGING	Indicates that bp is being used by the paging system or  *			some paging system and that the bp is not linked into  *			the b_vp's clean/dirty linked lists or ref counts.  *			Buffer vp reassignments are illegal in this case.  *  *	B_CACHE		This may only be set if the buffer is entirely valid.  *			The situation where B_DELWRI is set and B_CACHE is  *			clear MUST be committed to disk by getblk() so   *			B_DELWRI can also be cleared.  See the comments for  *			getblk() in kern/vfs_bio.c.  If B_CACHE is clear,  *			the caller is expected to clear BIO_ERROR and B_INVAL,  *			set BIO_READ, and initiate an I/O.  *  *			The 'entire buffer' is defined to be the range from  *			0 through b_bcount.  *  *	B_MALLOC	Request that the buffer be allocated from the malloc  *			pool, DEV_BSIZE aligned instead of PAGE_SIZE aligned.  *  *	B_CLUSTEROK	This flag is typically set for B_DELWRI buffers  *			by filesystems that allow clustering when the buffer  *			is fully dirty and indicates that it may be clustered  *			with other adjacent dirty buffers.  Note the clustering  *			may not be used with the stage 1 data write under NFS  *			but may be used for the commit rpc portion.  *  *	B_VMIO		Indicates that the buffer is tied into an VM object.  *			The buffer's data is always PAGE_SIZE aligned even  *			if b_bufsize and b_bcount are not.  ( b_bufsize is   *			always at least DEV_BSIZE aligned, though ).  *	  */
 end_comment
 
 begin_define
@@ -562,6 +578,20 @@ define|#
 directive|define
 name|BIO_DELETE
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIO_ERROR
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIO_ORDERED
+value|0x00000002
 end_define
 
 begin_define
@@ -1723,9 +1753,9 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ORDERED
+name|BIO_ORDERED
 operator|)
 operator|!=
 literal|0

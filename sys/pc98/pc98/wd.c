@@ -3034,9 +3034,9 @@ name|EINVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 goto|goto
 name|done
@@ -3787,13 +3787,13 @@ argument|) { 			du->dk_flags |= DKFL_ERROR; 			goto outt; 		}  		if (du->dk_stat
 literal|0
 argument|; 			} else { 				wderror(bp, du,
 literal|"hard error"
-argument|); 				bp->b_error = EIO; 				bp->b_flags |= B_ERROR;
+argument|); 				bp->b_error = EIO; 				bp->b_ioflags |= BIO_ERROR;
 comment|/* flag the error */
 argument|} 		} else if (du->dk_status& WDCS_ECCCOR) 			wderror(bp, du,
 literal|"soft ecc"
 argument|); 	}
 comment|/* 	 * If this was a successful read operation, fetch the data. 	 */
-argument|if (bp->b_iocmd == BIO_READ&& !(bp->b_flags& B_ERROR)&& !((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA)&& wdtab[unit].b_active) { 		u_int	chk, dummy, multisize; 		multisize = chk = du->dk_currentiosize * DEV_BSIZE; 		if( du->dk_bc< chk) { 			chk = du->dk_bc; 			if( ((chk + DEV_BSIZE -
+argument|if (bp->b_iocmd == BIO_READ&& !(bp->b_ioflags& BIO_ERROR)&& !((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA)&& wdtab[unit].b_active) { 		u_int	chk, dummy, multisize; 		multisize = chk = du->dk_currentiosize * DEV_BSIZE; 		if( du->dk_bc< chk) { 			chk = du->dk_bc; 			if( ((chk + DEV_BSIZE -
 literal|1
 argument|) / DEV_BSIZE)< du->dk_currentiosize) { 				du->dk_currentiosize = (chk + DEV_BSIZE -
 literal|1
@@ -3813,9 +3813,9 @@ argument|while (chk< multisize) { 			insw(du->dk_port + wd_data,&dummy,
 literal|1
 argument|); 			chk += sizeof(short); 		}  	}
 comment|/* final cleanup on DMA */
-argument|if (((bp->b_flags& B_ERROR) ==
+argument|if (((bp->b_ioflags& BIO_ERROR) ==
 literal|0
-argument|)&& ((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA)&& wdtab[unit].b_active) { 		int iosize;  		iosize = du->dk_currentiosize * DEV_BSIZE;  		du->dk_bc -= iosize;  	}  outt: 	if (wdtab[unit].b_active) { 		if ((bp->b_flags& B_ERROR) ==
+argument|)&& ((du->dk_flags& (DKFL_DMA|DKFL_SINGLE)) == DKFL_DMA)&& wdtab[unit].b_active) { 		int iosize;  		iosize = du->dk_currentiosize * DEV_BSIZE;  		du->dk_bc -= iosize;  	}  outt: 	if (wdtab[unit].b_active) { 		if ((bp->b_ioflags& BIO_ERROR) ==
 literal|0
 argument|) { 			du->dk_skip += du->dk_currentiosize;
 comment|/* add to successful sectors */
@@ -3991,7 +3991,7 @@ argument|) { 			wderror(bp, du,
 literal|"wdcontrol: recal failed"
 argument|); maybe_retry: 			if (du->dk_status& WDCS_ERR) 				wdunwedge(du); 			du->dk_state = WANTOPEN; 			if (++wdtab[ctrlr].b_errcnt< RETRIES) 				goto tryagainrecal; 			bp->b_error = ENXIO;
 comment|/* XXX needs translation */
-argument|bp->b_flags |= B_ERROR; 			return (
+argument|bp->b_ioflags |= BIO_ERROR; 			return (
 literal|2
 argument|); 		} 		wdtab[ctrlr].b_errcnt =
 literal|0

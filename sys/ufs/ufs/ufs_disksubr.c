@@ -112,9 +112,9 @@ operator|||
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ORDERED
+name|BIO_ORDERED
 operator|)
 operator|!=
 literal|0

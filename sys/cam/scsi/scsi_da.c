@@ -2018,9 +2018,9 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 comment|/* 	 * Correctly set the buf to indicate a completed xfer 	 */
 name|bp
@@ -3170,9 +3170,9 @@ name|ENXIO
 expr_stmt|;
 name|q_bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -4147,9 +4147,9 @@ condition|(
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ORDERED
+name|BIO_ORDERED
 operator|)
 operator|!=
 literal|0
@@ -4704,9 +4704,9 @@ name|EIO
 expr_stmt|;
 name|q_bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -4735,9 +4735,9 @@ name|b_bcount
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 block|}
 else|else
@@ -4768,9 +4768,9 @@ block|{
 comment|/* Short transfer ??? */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 block|}
 block|}
@@ -4830,9 +4830,9 @@ literal|0
 condition|)
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 block|}
 comment|/* 		 * Block out any asyncronous callbacks 		 * while we touch the pending ccb list. 		 */

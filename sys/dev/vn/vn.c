@@ -1120,9 +1120,9 @@ name|ENXIO
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -1166,6 +1166,7 @@ operator|<=
 literal|0
 condition|)
 block|{
+comment|/* XXX: Normal B_ERROR processing, instead ? */
 name|bp
 operator|->
 name|b_flags
@@ -1228,9 +1229,13 @@ name|bp
 operator|->
 name|b_flags
 operator||=
-name|B_ERROR
-operator||
 name|B_INVAL
+expr_stmt|;
+name|bp
+operator|->
+name|b_ioflags
+operator||=
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -1299,9 +1304,13 @@ name|bp
 operator|->
 name|b_flags
 operator||=
-name|B_ERROR
-operator||
 name|B_INVAL
+expr_stmt|;
+name|bp
+operator|->
+name|b_ioflags
+operator||=
+name|BIO_ERROR
 expr_stmt|;
 block|}
 name|biodone
@@ -1385,7 +1394,7 @@ operator|->
 name|sc_vp
 condition|)
 block|{
-comment|/* 		 * VNODE I/O 		 * 		 * If an error occurs, we set B_ERROR but we do not set  		 * B_INVAL because (for a write anyway), the buffer is  		 * still valid. 		 */
+comment|/* 		 * VNODE I/O 		 * 		 * If an error occurs, we set BIO_ERROR but we do not set  		 * B_INVAL because (for a write anyway), the buffer is  		 * still valid. 		 */
 name|aiov
 operator|.
 name|iov_base
@@ -1589,9 +1598,9 @@ name|error
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 block|}
 name|biodone
@@ -1675,9 +1684,9 @@ else|else
 block|{
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->

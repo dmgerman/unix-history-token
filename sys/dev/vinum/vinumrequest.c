@@ -555,9 +555,9 @@ expr_stmt|;
 comment|/* I/O error */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -605,9 +605,9 @@ expr_stmt|;
 comment|/* I/O error */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -752,9 +752,9 @@ expr_stmt|;
 comment|/* invalid size */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -800,9 +800,9 @@ expr_stmt|;
 comment|/* can't get memory */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -1073,9 +1073,9 @@ expr_stmt|;
 comment|/* I/O error */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 block|}
 name|biodone
@@ -1207,9 +1207,9 @@ expr_stmt|;
 comment|/* I/O error */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 block|}
 if|if
@@ -2149,9 +2149,9 @@ block|{
 comment|/* malloc failed */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -2379,9 +2379,9 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -2533,9 +2533,9 @@ block|{
 comment|/* malloc failed */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -2834,9 +2834,9 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -3515,12 +3515,20 @@ operator|->
 name|b_flags
 operator|&
 operator|(
-name|B_ORDERED
-operator||
 name|B_NOCACHE
 operator||
 name|B_ASYNC
 operator|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_ioflags
+operator|=
+name|ubp
+operator|->
+name|b_ioflags
+operator|&
+name|BIO_ORDERED
 expr_stmt|;
 name|bp
 operator|->
@@ -3802,9 +3810,9 @@ decl_stmt|;
 comment|/* user buffer */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -3996,9 +4004,9 @@ expr_stmt|;
 block|}
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -4026,9 +4034,9 @@ block|{
 comment|/* nothing to talk to, */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -4069,9 +4077,9 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->
@@ -4575,9 +4583,9 @@ expr_stmt|;
 comment|/* read-only */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 return|return
 operator|-
@@ -4662,9 +4670,9 @@ name|EINVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 return|return
 operator|-

@@ -2976,9 +2976,9 @@ name|bad
 label|:
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 comment|/*Request bad in some way*/
 name|done
@@ -8178,9 +8178,9 @@ block|}
 comment|/*<14>	The other error types are either something very bad or the media<14>	has been removed by the user.  In both cases there is no retry<14>	for this call.  We will invalidate the label in both cases. */
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|bp
 operator|->

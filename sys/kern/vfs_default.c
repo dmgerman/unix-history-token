@@ -538,7 +538,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vop_nostrategy:  *  *	Strategy routine for VFS devices that have none.  *  *	B_ERROR and B_INVAL must be cleared prior to calling any strategy  *	routine.  Typically this is done for a BIO_READ strategy call.  *	Typically B_INVAL is assumed to already be clear prior to a write   *	and should not be cleared manually unless you just made the buffer  *	invalid.  B_ERROR should be cleared either way.  */
+comment|/*  *	vop_nostrategy:  *  *	Strategy routine for VFS devices that have none.  *  *	BIO_ERROR and B_INVAL must be cleared prior to calling any strategy  *	routine.  Typically this is done for a BIO_READ strategy call.  *	Typically B_INVAL is assumed to already be clear prior to a write   *	and should not be cleared manually unless you just made the buffer  *	invalid.  BIO_ERROR should be cleared either way.  */
 end_comment
 
 begin_function
@@ -585,9 +585,9 @@ name|ap
 operator|->
 name|a_bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
-name|B_ERROR
+name|BIO_ERROR
 expr_stmt|;
 name|ap
 operator|->

@@ -752,9 +752,9 @@ argument_list|,
 operator|(
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator|&
-name|B_ORDERED
+name|BIO_ORDERED
 operator|)
 condition|?
 name|DEVSTAT_TAG_ORDERED
