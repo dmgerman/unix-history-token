@@ -123,6 +123,14 @@ directive|include
 file|<netatm/atm_var.h>
 end_include
 
+begin_expr_stmt
+name|NET_NEEDS_GIANT
+argument_list|(
+literal|"netatm"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|struct
 name|protosw

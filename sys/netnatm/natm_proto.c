@@ -103,6 +103,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|NET_NEEDS_GIANT
+argument_list|(
+literal|"netnatm"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|struct
