@@ -1054,7 +1054,16 @@ parameter_list|(
 name|address
 parameter_list|,
 name|length
+parameter_list|,
+name|copyin
 parameter_list|)
+name|int
+name|address
+decl_stmt|,
+name|length
+decl_stmt|,
+name|copyin
+decl_stmt|;
 block|{
 name|struct
 name|storage_descriptor
@@ -1127,6 +1136,11 @@ name|storage_length
 operator|=
 name|length
 expr_stmt|;
+if|if
+condition|(
+name|copyin
+condition|)
+block|{
 name|sd
 operator|.
 name|location
@@ -1225,6 +1239,7 @@ operator|-
 literal|1
 return|;
 block|}
+block|}
 return|return
 literal|0
 return|;
@@ -1301,6 +1316,8 @@ argument_list|(
 name|di
 argument_list|,
 name|length
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1425,12 +1442,17 @@ parameter_list|(
 name|location
 parameter_list|,
 name|length
+parameter_list|,
+name|copyin
 parameter_list|)
 name|int
 name|location
 decl_stmt|,
 name|length
+decl_stmt|,
+name|copyin
 decl_stmt|;
+comment|/* Do we need to copy in initially? */
 block|{
 if|if
 condition|(
@@ -1475,6 +1497,8 @@ argument_list|(
 name|location
 argument_list|,
 name|length
+argument_list|,
+name|copyin
 argument_list|)
 expr_stmt|;
 name|storage_accessed
@@ -1500,6 +1524,8 @@ argument_list|,
 argument|local
 argument_list|,
 argument|length
+argument_list|,
+argument|copyout
 argument_list|)
 end_macro
 
@@ -1559,9 +1585,9 @@ literal|0
 expr_stmt|;
 name|storage_must_send
 operator|=
-literal|1
+name|copyout
 expr_stmt|;
-comment|/* Needs to go back */
+comment|/* if needs to go back */
 block|}
 end_block
 
