@@ -2113,7 +2113,7 @@ modifier|*
 name|bsc
 decl_stmt|;
 name|struct
-name|ccb
+name|bsccb
 modifier|*
 name|cb
 decl_stmt|;

@@ -104,7 +104,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ccb
+name|bsccb
 modifier|*
 name|bs_request_sense
 name|__P
@@ -133,7 +133,7 @@ name|targ_info
 operator|*
 operator|,
 expr|struct
-name|ccb
+name|bsccb
 operator|*
 operator|,
 name|int
@@ -167,7 +167,7 @@ name|targ_info
 operator|*
 operator|,
 expr|struct
-name|ccb
+name|bsccb
 operator|*
 operator|)
 argument_list|)
@@ -208,7 +208,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ccb
+name|bsccb
 modifier|*
 name|bs_force_abort
 name|__P
@@ -242,7 +242,7 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|ccb
+name|bsccb
 modifier|*
 name|bs_make_internal_ccb
 name|__P
@@ -274,7 +274,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ccb
+name|bsccb
 modifier|*
 name|bs_make_msg_ccb
 name|__P
@@ -287,7 +287,7 @@ operator|,
 name|u_int
 operator|,
 expr|struct
-name|ccb
+name|bsccb
 operator|*
 operator|,
 expr|struct
@@ -468,7 +468,7 @@ name|targ_info
 operator|*
 operator|,
 expr|struct
-name|ccb
+name|bsccb
 operator|*
 operator|)
 argument_list|)
@@ -504,7 +504,7 @@ name|targ_info
 operator|*
 operator|,
 expr|struct
-name|ccb
+name|bsccb
 operator|*
 operator|)
 argument_list|)
@@ -605,13 +605,13 @@ modifier|*
 name|ti
 decl_stmt|;
 name|struct
-name|ccb
+name|bsccb
 modifier|*
 name|cb
 decl_stmt|;
 block|{
 name|struct
-name|ccb
+name|bsccb
 modifier|*
 name|nextcb
 decl_stmt|;
@@ -638,7 +638,7 @@ operator|&&
 operator|(
 name|nextcb
 operator|->
-name|flags
+name|bsccb_flags
 operator|&
 name|BSLINK
 operator|)
@@ -698,7 +698,7 @@ modifier|*
 name|ti
 decl_stmt|;
 name|struct
-name|ccb
+name|bsccb
 modifier|*
 name|cb
 decl_stmt|;
@@ -721,7 +721,7 @@ index|]
 decl_stmt|;
 name|cb
 operator|->
-name|flags
+name|bsccb_flags
 operator||=
 operator|(
 operator|(
@@ -741,7 +741,7 @@ operator|)
 expr_stmt|;
 name|cb
 operator|->
-name|flags
+name|bsccb_flags
 operator|&=
 name|ti
 operator|->
@@ -757,7 +757,7 @@ name|DEV_BSIZE
 condition|)
 name|cb
 operator|->
-name|flags
+name|bsccb_flags
 operator|&=
 operator|~
 name|BSSMIT
@@ -766,13 +766,13 @@ if|if
 condition|(
 name|cb
 operator|->
-name|flags
+name|bsccb_flags
 operator|&
 name|BSFORCEIOPOLL
 condition|)
 name|cb
 operator|->
-name|flags
+name|bsccb_flags
 operator|&=
 operator|~
 operator|(
