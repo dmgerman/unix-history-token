@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations for getopt.    Copyright (C) 1989, 1990, 1991, 1992, 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Declarations for getopt.    Copyright (C) 1989,90,91,92,93,94,96,97, 98 Free Software Foundation, Inc.     This file is part of the GNU C Library.  Its master source is NOT part of    the C library, however.  The master source lives in /gd/gnu/lib.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -34,7 +38,7 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
-comment|/* Index in ARGV of the next element to be scanned.    This is used for communication to and from the caller    and for communication between successive calls to `getopt'.     On entry to `getopt', zero means this is the first call; initialize.     When `getopt' returns EOF, this is the index of the first of the    non-option elements that the caller should itself scan.     Otherwise, `optind' communicates from one call to the next    how much of ARGV has been scanned so far.  */
+comment|/* Index in ARGV of the next element to be scanned.    This is used for communication to and from the caller    and for communication between successive calls to `getopt'.     On entry to `getopt', zero means this is the first call; initialize.     When `getopt' returns -1, this is the index of the first of the    non-option elements that the caller should itself scan.     Otherwise, `optind' communicates from one call to the next    how much of ARGV has been scanned so far.  */
 specifier|extern
 name|int
 name|optind
@@ -55,6 +59,11 @@ name|option
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|&&
 name|__STDC__
 specifier|const
 name|char
@@ -97,13 +106,15 @@ name|optional_argument
 value|2
 if|#
 directive|if
-name|__STDC__
-if|#
-directive|if
 name|defined
 argument_list|(
-name|__GNU_LIBRARY__
+name|__STDC__
 argument_list|)
+operator|&&
+name|__STDC__
+ifdef|#
+directive|ifdef
+name|__GNU_LIBRARY__
 comment|/* Many other libraries have conflicting prototypes for getopt, with    differences in the consts, in stdlib.h.  To avoid compilation    errors, only prototype getopt for the GNU C library.  */
 specifier|extern
 name|int
@@ -134,7 +145,7 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
-comment|/* not __GNU_LIBRARY__ */
+comment|/* __GNU_LIBRARY__ */
 specifier|extern
 name|int
 name|getopt_long
@@ -251,7 +262,7 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
-comment|/* not __STDC__ */
+comment|/* __STDC__ */
 ifdef|#
 directive|ifdef
 name|__cplusplus
