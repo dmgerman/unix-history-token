@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	4.9 (Berkeley) %G%"
+literal|"@(#)date.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,17 +103,6 @@ directive|define
 name|WTMP
 value|"/usr/adm/wtmp"
 end_define
-
-begin_define
-define|#
-directive|define
-name|TRIES
-value|3
-end_define
-
-begin_comment
-comment|/* attempts to contact time server */
-end_comment
 
 begin_define
 define|#
@@ -841,20 +830,22 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
-name|timevalsub
-argument_list|(
-operator|&
-name|tv
-argument_list|,
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
 name|msg
 operator|.
 name|tsp_time
 operator|=
 name|tv
+expr_stmt|;
+name|timevalsub
+argument_list|(
+operator|&
+name|msg
+operator|.
+name|tsp_time
+argument_list|,
+operator|&
+name|now
+argument_list|)
 expr_stmt|;
 name|bytenetorder
 argument_list|(
@@ -1071,7 +1062,7 @@ case|case
 name|TSP_DATEACK
 case|:
 goto|goto
-name|oldway
+name|display
 goto|;
 default|default:
 name|printf
