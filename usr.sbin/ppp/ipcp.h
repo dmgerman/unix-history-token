@@ -101,6 +101,27 @@ end_struct
 
 begin_struct
 struct|struct
+name|port_range
+block|{
+name|unsigned
+name|nports
+decl_stmt|;
+comment|/* How many ports */
+name|unsigned
+name|maxports
+decl_stmt|;
+comment|/* How many allocated (malloc) ports */
+name|u_short
+modifier|*
+name|port
+decl_stmt|;
+comment|/* The actual ports */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ipcp
 block|{
 name|struct
@@ -199,19 +220,13 @@ name|ns
 struct|;
 struct|struct
 block|{
-name|unsigned
-name|nports
+name|struct
+name|port_range
+name|tcp
+decl_stmt|,
+name|udp
 decl_stmt|;
-comment|/* How many urgent ports */
-name|unsigned
-name|maxports
-decl_stmt|;
-comment|/* How many allocated urgent ports */
-name|u_short
-modifier|*
-name|port
-decl_stmt|;
-comment|/* The urgent ports */
+comment|/* The range of urgent ports */
 block|}
 name|urgent
 struct|;
@@ -290,7 +305,7 @@ name|struct
 name|mqueue
 name|Queue
 index|[
-literal|3
+literal|4
 index|]
 decl_stmt|;
 comment|/* Output packet queues */
@@ -542,7 +557,7 @@ name|int
 name|ipcp_IsUrgentPort
 parameter_list|(
 name|struct
-name|ipcp
+name|port_range
 modifier|*
 parameter_list|,
 name|u_short
@@ -558,7 +573,7 @@ name|void
 name|ipcp_AddUrgentPort
 parameter_list|(
 name|struct
-name|ipcp
+name|port_range
 modifier|*
 parameter_list|,
 name|u_short
@@ -572,7 +587,7 @@ name|void
 name|ipcp_RemoveUrgentPort
 parameter_list|(
 name|struct
-name|ipcp
+name|port_range
 modifier|*
 parameter_list|,
 name|u_short
@@ -586,7 +601,7 @@ name|void
 name|ipcp_ClearUrgentPorts
 parameter_list|(
 name|struct
-name|ipcp
+name|port_range
 modifier|*
 parameter_list|)
 function_decl|;
@@ -603,6 +618,110 @@ name|in_addr
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ipcp_IsUrgentTcpPort
+parameter_list|(
+name|ipcp
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|)
+define|\
+value|ipcp_IsUrgentPort(&(ipcp)->cfg.urgent.tcp, p1, p2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ipcp_IsUrgentUdpPort
+parameter_list|(
+name|ipcp
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|)
+define|\
+value|ipcp_IsUrgentPort(&(ipcp)->cfg.urgent.udp, p1, p2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ipcp_AddUrgentTcpPort
+parameter_list|(
+name|ipcp
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|ipcp_AddUrgentPort(&(ipcp)->cfg.urgent.tcp, p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ipcp_AddUrgentUdpPort
+parameter_list|(
+name|ipcp
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|ipcp_AddUrgentPort(&(ipcp)->cfg.urgent.udp, p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ipcp_RemoveUrgentTcpPort
+parameter_list|(
+name|ipcp
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|ipcp_RemoveUrgentPort(&(ipcp)->cfg.urgent.tcp, p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ipcp_RemoveUrgentUdpPort
+parameter_list|(
+name|ipcp
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|ipcp_RemoveUrgentPort(&(ipcp)->cfg.urgent.udp, p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ipcp_ClearUrgentTcpPorts
+parameter_list|(
+name|ipcp
+parameter_list|)
+define|\
+value|ipcp_ClearUrgentPorts(&(ipcp)->cfg.urgent.tcp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ipcp_ClearUrgentUdpPorts
+parameter_list|(
+name|ipcp
+parameter_list|)
+define|\
+value|ipcp_ClearUrgentPorts(&(ipcp)->cfg.urgent.udp)
+end_define
 
 end_unit
 
