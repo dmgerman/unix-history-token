@@ -2531,7 +2531,7 @@ name|sc
 operator|->
 name|tunable_noflow
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 operator|(
 name|void
