@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.32	82/12/17	*/
+comment|/*	if_acc.c	4.33	83/01/03	*/
 end_comment
 
 begin_include
@@ -385,15 +385,6 @@ name|cvec
 operator|-=
 literal|4
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ECHACK
-name|br
-operator|=
-literal|0x16
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
