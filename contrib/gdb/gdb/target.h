@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Interface between GDB and target environments, including files and processes    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by John Gilmore.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Interface between GDB and target environments, including files and processes     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.     Contributed by Cygnus Support.  Written by John Gilmore.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -19,8 +19,32 @@ directive|define
 name|TARGET_H
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|objfile
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ui_file
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mem_attrib
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|target_ops
+struct_decl|;
+end_struct_decl
+
 begin_comment
-comment|/* This include file defines the interface between the main part    of the debugger, and the part which is target-specific, or    specific to the communications interface between us and the    target.     A TARGET is an interface between the debugger and a particular     kind of file or process.  Targets can be STACKED in STRATA,     so that more than one target can potentially respond to a request.    In particular, memory accesses will walk down the stack of targets    until they find a target that is interested in handling that particular    address.  STRATA are artificial boundaries on the stack, within    which particular kinds of targets live.  Strata exist so that    people don't get confused by pushing e.g. a process target and then    a file target, and wondering why they can't see the current values    of variables any more (the file target is handling them and they    never get to the process target).  So when you push a file target,    it goes into the file stratum, which is always below the process    stratum.  */
+comment|/* This include file defines the interface between the main part    of the debugger, and the part which is target-specific, or    specific to the communications interface between us and the    target.     A TARGET is an interface between the debugger and a particular    kind of file or process.  Targets can be STACKED in STRATA,    so that more than one target can potentially respond to a request.    In particular, memory accesses will walk down the stack of targets    until they find a target that is interested in handling that particular    address.  STRATA are artificial boundaries on the stack, within    which particular kinds of targets live.  Strata exist so that    people don't get confused by pushing e.g. a process target and then    a file target, and wondering why they can't see the current values    of variables any more (the file target is handling them and they    never get to the process target).  So when you push a file target,    it goes into the file stratum, which is always below the process    stratum.  */
 end_comment
 
 begin_include
@@ -135,7 +159,7 @@ block|,
 comment|/* Nothing happened, but we stopped anyway.  This perhaps should be handled        within target_wait, but I'm not sure target_wait should be resuming the        inferior.  */
 name|TARGET_WAITKIND_SPURIOUS
 block|,
-comment|/* This is used for target async and extended-async        only. Remote_async_wait() returns this when there is an event        on the inferior, but the rest of the world is not interested in        it. The inferior has not stopped, but has just sent some output        to the console, for instance. In this case, we want to go back        to the event loop and wait there for another event from the        inferior, rather than being stuck in the remote_async_wait()        function. This way the event loop is responsive to other events,        like for instance the user typing.  */
+comment|/* An event has occured, but we should wait again.        Remote_async_wait() returns this when there is an event        on the inferior, but the rest of the world is not interested in        it. The inferior has not stopped, but has just sent some output        to the console, for instance. In this case, we want to go back        to the event loop and wait there for another event from the        inferior, rather than being stuck in the remote_async_wait()        function. This way the event loop is responsive to other events,        like for instance the user typing.  */
 name|TARGET_WAITKIND_IGNORE
 block|}
 enum|;
@@ -256,6 +280,219 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* Request the transfer of up to LEN 8-bit bytes of the target's    OBJECT.  The OFFSET, for a seekable object, specifies the starting    point.  The ANNEX can be used to provide additional data-specific    information to the target.     Return the number of bytes actually transfered, zero when no    further transfer is possible, and -1 when the transfer is not    supported.     NOTE: cagney/2003-10-17: The current interface does not support a    "retry" mechanism.  Instead it assumes that at least one byte will    be transfered on each call.     NOTE: cagney/2003-10-17: The current interface can lead to    fragmented transfers.  Lower target levels should not implement    hacks, such as enlarging the transfer, in an attempt to compensate    for this.  Instead, the target stack should be extended so that it    implements supply/collect methods and a look-aside object cache.    With that available, the lowest target can safely and freely "push"    data up the stack.     NOTE: cagney/2003-10-17: Unlike the old query and the memory    transfer mechanisms, these methods are explicitly parameterized by    the target that it should be applied to.     NOTE: cagney/2003-10-17: Just like the old query and memory xfer    methods, these new methods perform partial transfers.  The only    difference is that these new methods thought to include "partial"    in the name.  The old code's failure to do this lead to much    confusion and duplication of effort as each target object attempted    to locally take responsibility for something it didn't have to    worry about.     NOTE: cagney/2003-10-17: With a TARGET_OBJECT_KOD object, for    backward compatibility with the "target_query" method that this    replaced, when OFFSET and LEN are both zero, return the "minimum"    buffer size.  See "remote.c" for further information.  */
+end_comment
+
+begin_enum
+enum|enum
+name|target_object
+block|{
+comment|/* Kernel Object Display transfer.  See "kod.c" and "remote.c".  */
+name|TARGET_OBJECT_KOD
+block|,
+comment|/* AVR target specific transfer.  See "avr-tdep.c" and "remote.c".  */
+name|TARGET_OBJECT_AVR
+block|,
+comment|/* Transfer up-to LEN bytes of memory starting at OFFSET.  */
+name|TARGET_OBJECT_MEMORY
+block|,
+comment|/* Kernel Unwind Table.  See "ia64-tdep.c".  */
+name|TARGET_OBJECT_UNWIND_TABLE
+block|,
+comment|/* Transfer auxilliary vector.  */
+name|TARGET_OBJECT_AUXV
+block|,
+comment|/* StackGhost cookie.  See "sparc-tdep.c".  */
+name|TARGET_OBJECT_WCOOKIE
+comment|/* Possible future objects: TARGET_OBJECT_FILE, TARGET_OBJECT_PROC, ... */
+block|}
+enum|;
+end_enum
+
+begin_function_decl
+specifier|extern
+name|LONGEST
+name|target_read_partial
+parameter_list|(
+name|struct
+name|target_ops
+modifier|*
+name|ops
+parameter_list|,
+name|enum
+name|target_object
+name|object
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|annex
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|ULONGEST
+name|offset
+parameter_list|,
+name|LONGEST
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|LONGEST
+name|target_write_partial
+parameter_list|(
+name|struct
+name|target_ops
+modifier|*
+name|ops
+parameter_list|,
+name|enum
+name|target_object
+name|object
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|annex
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|ULONGEST
+name|offset
+parameter_list|,
+name|LONGEST
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Wrappers to perform the full transfer.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|LONGEST
+name|target_read
+parameter_list|(
+name|struct
+name|target_ops
+modifier|*
+name|ops
+parameter_list|,
+name|enum
+name|target_object
+name|object
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|annex
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|ULONGEST
+name|offset
+parameter_list|,
+name|LONGEST
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|LONGEST
+name|target_write
+parameter_list|(
+name|struct
+name|target_ops
+modifier|*
+name|ops
+parameter_list|,
+name|enum
+name|target_object
+name|object
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|annex
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|ULONGEST
+name|offset
+parameter_list|,
+name|LONGEST
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Wrappers to target read/write that perform memory transfers.  They    throw an error if the memory transfer fails.     NOTE: cagney/2003-10-23: The naming schema is lifted from    "frame.h".  The parameter order is lifted from get_frame_memory,    which in turn lifted it from read_memory.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|get_target_memory
+parameter_list|(
+name|struct
+name|target_ops
+modifier|*
+name|ops
+parameter_list|,
+name|CORE_ADDR
+name|addr
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|LONGEST
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|ULONGEST
+name|get_target_memory_unsigned
+parameter_list|(
+name|struct
+name|target_ops
+modifier|*
+name|ops
+parameter_list|,
+name|CORE_ADDR
+name|addr
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* If certain kinds of activity happen, target_wait should perform    callbacks.  */
 end_comment
 
@@ -304,6 +541,12 @@ begin_struct
 struct|struct
 name|target_ops
 block|{
+name|struct
+name|target_ops
+modifier|*
+name|beneath
+decl_stmt|;
+comment|/* To the target under this one.  */
 name|char
 modifier|*
 name|to_shortname
@@ -319,6 +562,12 @@ modifier|*
 name|to_doc
 decl_stmt|;
 comment|/* Documentation.  Does not include trailing 				   newline, and starts with a one-line descrip- 				   tion (probably similar to to_longname).  */
+comment|/* Per-target scratch pad.  */
+name|void
+modifier|*
+name|to_data
+decl_stmt|;
+comment|/* The open routine takes the rest of the parameters from the        command, and (if successful) pushes a new target onto the        stack.  Targets should supply this routine, if only to provide        an error message.  */
 name|void
 function_decl|(
 modifier|*
@@ -329,6 +578,22 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+comment|/* Old targets with a static target vector provide "to_close".        New re-entrant targets provide "to_xclose" and that is expected        to xfree everything (including the "struct target_ops").  */
+name|void
+function_decl|(
+modifier|*
+name|to_xclose
+function_decl|)
+parameter_list|(
+name|struct
+name|target_ops
+modifier|*
+name|targ
+parameter_list|,
+name|int
+name|quitting
 parameter_list|)
 function_decl|;
 name|void
@@ -364,18 +629,6 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|to_require_attach
-function_decl|)
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
 name|to_detach
 function_decl|)
 parameter_list|(
@@ -388,11 +641,9 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|to_require_detach
+name|to_disconnect
 function_decl|)
 parameter_list|(
-name|int
-parameter_list|,
 name|char
 modifier|*
 parameter_list|,
@@ -495,39 +746,6 @@ modifier|*
 name|target
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-literal|0
-comment|/* Enable this after 4.12.  */
-comment|/* Search target memory.  Start at STARTADDR and take LEN bytes of        target memory, and them with MASK, and compare to DATA.  If they        match, set *ADDR_FOUND to the address we found it at, store the data        we found at LEN bytes starting at DATA_FOUND, and return.  If        not, add INCREMENT to the search address and keep trying until        the search address is outside of the range [LORANGE,HIRANGE).         If we don't find anything, set *ADDR_FOUND to (CORE_ADDR)0 and        return.  */
-block|void (*to_search) (int len, char *data, char *mask, 		       CORE_ADDR startaddr, int increment, 		       CORE_ADDR lorange, CORE_ADDR hirange, 		       CORE_ADDR * addr_found, char *data_found);
-define|#
-directive|define
-name|target_search
-parameter_list|(
-name|len
-parameter_list|,
-name|data
-parameter_list|,
-name|mask
-parameter_list|,
-name|startaddr
-parameter_list|,
-name|increment
-parameter_list|,
-name|lorange
-parameter_list|,
-name|hirange
-parameter_list|,
-name|addr_found
-parameter_list|,
-name|data_found
-parameter_list|)
-define|\
-value|(*current_target.to_search) (len, data, mask, startaddr, increment, \ 				 lorange, hirange, addr_found, data_found)
-endif|#
-directive|endif
-comment|/* 0 */
 name|void
 function_decl|(
 modifier|*
@@ -563,6 +781,99 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|to_can_use_hw_breakpoint
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|to_insert_hw_breakpoint
+function_decl|)
+parameter_list|(
+name|CORE_ADDR
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|to_remove_hw_breakpoint
+function_decl|)
+parameter_list|(
+name|CORE_ADDR
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|to_remove_watchpoint
+function_decl|)
+parameter_list|(
+name|CORE_ADDR
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|to_insert_watchpoint
+function_decl|)
+parameter_list|(
+name|CORE_ADDR
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|to_stopped_by_watchpoint
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|int
+name|to_have_continuable_watchpoint
+decl_stmt|;
+name|CORE_ADDR
+function_decl|(
+modifier|*
+name|to_stopped_data_address
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|to_region_size_ok_for_hw_watchpoint
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
 name|void
 function_decl|(
 modifier|*
@@ -594,6 +905,15 @@ name|void
 function_decl|(
 modifier|*
 name|to_terminal_ours
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|to_terminal_save_ours
 function_decl|)
 parameter_list|(
 name|void
@@ -680,27 +1000,6 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|to_clone_and_follow_inferior
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|to_post_follow_inferior_by_clone
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -740,48 +1039,9 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|to_has_forked
+name|to_follow_fork
 function_decl|)
 parameter_list|(
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|to_has_vforked
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|to_can_follow_vfork_prior_to_exec
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|to_post_follow_vfork
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -806,39 +1066,10 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|to_has_execd
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
 name|to_reported_exec_events_per_exec_call
 function_decl|)
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|to_has_syscall_event
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|enum
-name|target_waitkind
-modifier|*
-parameter_list|,
-name|int
-modifier|*
 parameter_list|)
 function_decl|;
 name|int
@@ -933,25 +1164,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|to_query
-function_decl|)
-parameter_list|(
-name|int
-comment|/*char */
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
 name|void
 function_decl|(
 modifier|*
@@ -1008,12 +1220,6 @@ name|enum
 name|strata
 name|to_stratum
 decl_stmt|;
-name|struct
-name|target_ops
-modifier|*
-name|DONT_USE
-decl_stmt|;
-comment|/* formerly to_next */
 name|int
 name|to_has_all_memory
 decl_stmt|;
@@ -1134,6 +1340,62 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* Return the thread-local address at OFFSET in the        thread-local storage for the thread PTID and the shared library        or executable file given by OBJFILE.  If that block of        thread-local storage hasn't been allocated yet, this function        may return an error.  */
+name|CORE_ADDR
+function_decl|(
+modifier|*
+name|to_get_thread_local_address
+function_decl|)
+parameter_list|(
+name|ptid_t
+name|ptid
+parameter_list|,
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|,
+name|CORE_ADDR
+name|offset
+parameter_list|)
+function_decl|;
+comment|/* Perform partial transfers on OBJECT.  See target_read_partial        and target_write_partial for details of each variant.  One, and        only one, of readbuf or writebuf must be non-NULL.  */
+name|LONGEST
+function_decl|(
+modifier|*
+name|to_xfer_partial
+function_decl|)
+parameter_list|(
+name|struct
+name|target_ops
+modifier|*
+name|ops
+parameter_list|,
+name|enum
+name|target_object
+name|object
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|annex
+parameter_list|,
+name|void
+modifier|*
+name|readbuf
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|writebuf
+parameter_list|,
+name|ULONGEST
+name|offset
+parameter_list|,
+name|LONGEST
+name|len
+parameter_list|)
+function_decl|;
 name|int
 name|to_magic
 decl_stmt|;
@@ -1166,41 +1428,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* An item on the target stack.  */
-end_comment
-
-begin_struct
-struct|struct
-name|target_stack_item
-block|{
-name|struct
-name|target_stack_item
-modifier|*
-name|next
-decl_stmt|;
-name|struct
-name|target_ops
-modifier|*
-name|target_ops
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* The target stack.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|target_stack_item
-modifier|*
-name|target_stack
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Define easy words for doing these operations on our current target.  */
 end_comment
 
@@ -1219,39 +1446,26 @@ value|(current_target.to_longname)
 end_define
 
 begin_comment
-comment|/* The open routine takes the rest of the parameters from the command,    and (if successful) pushes a new target onto the stack.    Targets should supply this routine, if only to provide an error message.  */
+comment|/* Does whatever cleanup is required for a target that we are no    longer going to be calling.  QUITTING indicates that GDB is exiting    and should not get hung on an error (otherwise it is important to    perform clean termination, even if it takes a while).  This routine    is automatically always called when popping the target off the    target stack (to_beneath is undefined).  Closing file descriptors    and freeing all memory allocated memory are typical things it    should do.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|target_open
-parameter_list|(
-name|name
-parameter_list|,
-name|from_tty
-parameter_list|)
-define|\
-value|do {									\     dcache_invalidate (target_dcache);					\     (*current_target.to_open) (name, from_tty);				\   } while (0)
-end_define
-
-begin_comment
-comment|/* Does whatever cleanup is required for a target that we are no longer    going to be calling.  Argument says whether we are quitting gdb and    should not get hung in case of errors, or whether we want a clean    termination even if it takes a while.  This routine is automatically    always called just before a routine is popped off the target stack.    Closing file descriptors and freeing memory are typical things it should    do.  */
-end_comment
-
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|void
 name|target_close
 parameter_list|(
+name|struct
+name|target_ops
+modifier|*
+name|targ
+parameter_list|,
+name|int
 name|quitting
 parameter_list|)
-define|\
-value|(*current_target.to_close) (quitting)
-end_define
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Attaches to a process on the target side.  Arguments are as passed    to the `attach' command by the user.  This routine can be called    when the target is not on the target-stack, if the target_can_run    routine returns 1; in that case, it must push itself onto the stack.      Upon exit, the target should be ready for normal operations, and    should be ready to deliver the status of the process immediately     (without waiting) to an upcoming target_wait call.  */
+comment|/* Attaches to a process on the target side.  Arguments are as passed    to the `attach' command by the user.  This routine can be called    when the target is not on the target-stack, if the target_can_run    routine returns 1; in that case, it must push itself onto the stack.    Upon exit, the target should be ready for normal operations, and    should be ready to deliver the status of the process immediately    (without waiting) to an upcoming target_wait call.  */
 end_comment
 
 begin_define
@@ -1283,23 +1497,6 @@ value|(*current_target.to_post_attach) (pid)
 end_define
 
 begin_comment
-comment|/* Attaches to a process on the target side, if not already attached.    (If already attached, takes no action.)     This operation can be used to follow the child process of a fork.    On some targets, such child processes of an original inferior process    are automatically under debugger control, and thus do not require an    actual attach operation.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|target_require_attach
-parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
-define|\
-value|(*current_target.to_require_attach) (args, from_tty)
-end_define
-
-begin_comment
 comment|/* Takes a program previously attached to and detaches it.    The program may resume execution (some targets do, some don't) and will    no longer stop on signals, etc.  We better not have left any breakpoints    in the program or it'll die when it hits one.  ARGS is arguments    typed by the user (e.g. a signal to send the process).  FROM_TTY    says whether to be verbose or not.  */
 end_comment
 
@@ -1317,23 +1514,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Detaches from a process on the target side, if not already dettached.    (If already detached, takes no action.)     This operation can be used to follow the parent process of a fork.    On some targets, such child processes of an original inferior process    are automatically under debugger control, and thus do require an actual    detach operation.     PID is the process id of the child to detach from.    ARGS is arguments typed by the user (e.g. a signal to send the process).    FROM_TTY says whether to be verbose or not.  */
+comment|/* Disconnect from the current target without resuming it (leaving it    waiting for a debugger).  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|target_require_detach
+begin_function_decl
+specifier|extern
+name|void
+name|target_disconnect
 parameter_list|(
-name|pid
+name|char
+modifier|*
 parameter_list|,
-name|args
-parameter_list|,
-name|from_tty
+name|int
 parameter_list|)
-define|\
-value|(*current_target.to_require_detach) (pid, args, from_tty)
-end_define
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Resume execution of the target process PTID.  STEP says whether to    single-step or to run free; SIGGNAL is the signal to be given to    the target, or TARGET_SIGNAL_0 for no signal.  The caller may not    pass TARGET_SIGNAL_DEFAULT.  */
@@ -1699,29 +1894,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|child_clone_and_follow_inferior
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|child_post_follow_inferior_by_clone
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|child_insert_fork_catchpoint
 parameter_list|(
@@ -1762,32 +1934,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|child_has_forked
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|child_has_vforked
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|child_acknowledge_created_inferior
 parameter_list|(
@@ -1799,24 +1945,8 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|child_can_follow_vfork_prior_to_exec
+name|child_follow_fork
 parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|child_post_follow_vfork
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -1845,40 +1975,9 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|child_has_execd
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|child_reported_exec_events_per_exec_call
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|child_has_syscall_event
-parameter_list|(
-name|int
-parameter_list|,
-name|enum
-name|target_waitkind
-modifier|*
-parameter_list|,
-name|int
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1904,6 +2003,56 @@ name|int
 name|child_thread_alive
 parameter_list|(
 name|ptid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* From infrun.c.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|inferior_has_forked
+parameter_list|(
+name|int
+name|pid
+parameter_list|,
+name|int
+modifier|*
+name|child_pid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|inferior_has_vforked
+parameter_list|(
+name|int
+name|pid
+parameter_list|,
+name|int
+modifier|*
+name|child_pid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|inferior_has_execd
+parameter_list|(
+name|int
+name|pid
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|execd_pathname
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1941,7 +2090,7 @@ value|(*current_target.to_files_info) (&current_target)
 end_define
 
 begin_comment
-comment|/* Insert a breakpoint at address ADDR in the target machine.    SAVE is a pointer to memory allocated for saving the    target contents.  It is guaranteed by the caller to be long enough    to save "sizeof BREAKPOINT" bytes.  Result is 0 for success, or    an errno value.  */
+comment|/* Insert a breakpoint at address ADDR in the target machine.  SAVE is    a pointer to memory allocated for saving the target contents.  It    is guaranteed by the caller to be long enough to save the number of    breakpoint bytes indicated by BREAKPOINT_FROM_PC.  Result is 0 for    success, or an errno value.  */
 end_comment
 
 begin_define
@@ -1958,7 +2107,7 @@ value|(*current_target.to_insert_breakpoint) (addr, save)
 end_define
 
 begin_comment
-comment|/* Remove a breakpoint at address ADDR in the target machine.    SAVE is a pointer to the same save area     that was previously passed to target_insert_breakpoint.      Result is 0 for success, or an errno value.  */
+comment|/* Remove a breakpoint at address ADDR in the target machine.    SAVE is a pointer to the same save area    that was previously passed to target_insert_breakpoint.    Result is 0 for success, or an errno value.  */
 end_comment
 
 begin_define
@@ -2024,6 +2173,19 @@ name|target_terminal_ours
 parameter_list|()
 define|\
 value|(*current_target.to_terminal_ours) ()
+end_define
+
+begin_comment
+comment|/* Save our terminal settings.    This is called from TUI after entering or leaving the curses    mode.  Since curses modifies our terminal this call is here    to take this change into account.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|target_terminal_save_ours
+parameter_list|()
+define|\
+value|(*current_target.to_terminal_save_ours) ()
 end_define
 
 begin_comment
@@ -2142,36 +2304,6 @@ value|(*current_target.to_acknowledge_created_inferior) (pid)
 end_define
 
 begin_comment
-comment|/* An inferior process has been created via a fork() or similar    system call.  This function will clone the debugger, then ensure    that CHILD_PID is attached to by that debugger.     FOLLOWED_CHILD is set TRUE on return *for the clone debugger only*,    and FALSE otherwise.  (The original and clone debuggers can use this    to determine which they are, if need be.)     (This is not a terribly useful feature without a GUI to prevent    the two debuggers from competing for shell input.)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|target_clone_and_follow_inferior
-parameter_list|(
-name|child_pid
-parameter_list|,
-name|followed_child
-parameter_list|)
-define|\
-value|(*current_target.to_clone_and_follow_inferior) (child_pid, followed_child)
-end_define
-
-begin_comment
-comment|/* This operation is intended to be used as the last in a sequence of    steps taken when following both parent and child of a fork.  This    is used by a clone of the debugger, which will follow the child.     The original debugger has detached from this process, and the    clone has attached to it.     On some targets, this requires a bit of cleanup to make it work    correctly.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|target_post_follow_inferior_by_clone
-parameter_list|()
-define|\
-value|(*current_target.to_post_follow_inferior_by_clone) ()
-end_define
-
-begin_comment
 comment|/* On some targets, we can catch an inferior fork or vfork event when    it occurs.  These functions insert/remove an already-created    catchpoint for such events.  */
 end_comment
 
@@ -2220,71 +2352,18 @@ value|(*current_target.to_remove_vfork_catchpoint) (pid)
 end_define
 
 begin_comment
-comment|/* Returns TRUE if PID has invoked the fork() system call.  And,    also sets CHILD_PID to the process id of the other ("child")    inferior process that was created by that call.  */
+comment|/* If the inferior forks or vforks, this function will be called at    the next resume in order to perform any bookkeeping and fiddling    necessary to continue debugging either the parent or child, as    requested, and releasing the other.  Information about the fork    or vfork event is available via get_last_target_status ().    This function returns 1 if the inferior should not be resumed    (i.e. there is another event pending).  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|target_has_forked
+name|target_follow_fork
 parameter_list|(
-name|pid
-parameter_list|,
-name|child_pid
+name|follow_child
 parameter_list|)
 define|\
-value|(*current_target.to_has_forked) (pid,child_pid)
-end_define
-
-begin_comment
-comment|/* Returns TRUE if PID has invoked the vfork() system call.  And,     also sets CHILD_PID to the process id of the other ("child")     inferior process that was created by that call.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|target_has_vforked
-parameter_list|(
-name|pid
-parameter_list|,
-name|child_pid
-parameter_list|)
-define|\
-value|(*current_target.to_has_vforked) (pid,child_pid)
-end_define
-
-begin_comment
-comment|/* Some platforms (such as pre-10.20 HP-UX) don't allow us to do    anything to a vforked child before it subsequently calls exec().    On such platforms, we say that the debugger cannot "follow" the    child until it has vforked.     This function should be defined to return 1 by those targets    which can allow the debugger to immediately follow a vforked    child, and 0 if they cannot.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|target_can_follow_vfork_prior_to_exec
-parameter_list|()
-define|\
-value|(*current_target.to_can_follow_vfork_prior_to_exec) ()
-end_define
-
-begin_comment
-comment|/* An inferior process has been created via a vfork() system call.    The debugger has followed the parent, the child, or both.  The    process of setting up for that follow may have required some    target-specific trickery to track the sequence of reported events.    If so, this function should be defined by those targets that    require the debugger to perform cleanup or initialization after    the vfork follow.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|target_post_follow_vfork
-parameter_list|(
-name|parent_pid
-parameter_list|,
-name|followed_parent
-parameter_list|,
-name|child_pid
-parameter_list|,
-name|followed_child
-parameter_list|)
-define|\
-value|(*current_target.to_post_follow_vfork) (parent_pid,followed_parent,child_pid,followed_child)
+value|(*current_target.to_follow_fork) (follow_child)
 end_define
 
 begin_comment
@@ -2314,23 +2393,6 @@ value|(*current_target.to_remove_exec_catchpoint) (pid)
 end_define
 
 begin_comment
-comment|/* Returns TRUE if PID has invoked a flavor of the exec() system call.    And, also sets EXECD_PATHNAME to the pathname of the executable    file that was passed to exec(), and is now being executed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|target_has_execd
-parameter_list|(
-name|pid
-parameter_list|,
-name|execd_pathname
-parameter_list|)
-define|\
-value|(*current_target.to_has_execd) (pid,execd_pathname)
-end_define
-
-begin_comment
 comment|/* Returns the number of exec events that are reported when a process    invokes a flavor of the exec() system call on this target, if exec    events are being reported.  */
 end_comment
 
@@ -2341,25 +2403,6 @@ name|target_reported_exec_events_per_exec_call
 parameter_list|()
 define|\
 value|(*current_target.to_reported_exec_events_per_exec_call) ()
-end_define
-
-begin_comment
-comment|/* Returns TRUE if PID has reported a syscall event.  And, also sets    KIND to the appropriate TARGET_WAITKIND_, and sets SYSCALL_ID to    the unique integer ID of the syscall.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|target_has_syscall_event
-parameter_list|(
-name|pid
-parameter_list|,
-name|kind
-parameter_list|,
-name|syscall_id
-parameter_list|)
-define|\
-value|(*current_target.to_has_syscall_event) (pid,kind,syscall_id)
 end_define
 
 begin_comment
@@ -2382,7 +2425,7 @@ value|(*current_target.to_has_exited) (pid,wait_status,exit_status)
 end_define
 
 begin_comment
-comment|/* The debugger has completed a blocking wait() call.  There is now    some process event that must be processed.  This function should     be defined by those targets that require the debugger to perform    cleanup or internal state changes in response to the process event.  */
+comment|/* The debugger has completed a blocking wait() call.  There is now    some process event that must be processed.  This function should    be defined by those targets that require the debugger to perform    cleanup or internal state changes in response to the process event.  */
 end_comment
 
 begin_comment
@@ -2469,27 +2512,6 @@ value|current_target.to_stop
 end_define
 
 begin_comment
-comment|/* Queries the target side for some information.  The first argument is a    letter specifying the type of the query, which is used to determine who    should process it.  The second argument is a string that specifies which     information is desired and the third is a buffer that carries back the     response from the target side. The fourth parameter is the size of the    output buffer supplied.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|target_query
-parameter_list|(
-name|query_type
-parameter_list|,
-name|query
-parameter_list|,
-name|resp_buffer
-parameter_list|,
-name|bufffer_size
-parameter_list|)
-define|\
-value|(*current_target.to_query) (query_type, query, resp_buffer, bufffer_size)
-end_define
-
-begin_comment
 comment|/* Send the specified COMMAND to the target's monitor    (shell,interpreter) for execution.  The result of the query is    placed in OUTBUF.  */
 end_comment
 
@@ -2507,7 +2529,7 @@ value|(*current_target.to_rcmd) (command, outbuf)
 end_define
 
 begin_comment
-comment|/* Get the symbol information for a breakpointable routine called when    an exception event occurs.     Intended mainly for C++, and for those    platforms/implementations where such a callback mechanism is available,    e.g. HP-UX with ANSI C++ (aCC).  Some compilers (e.g. g++) support    different mechanisms for debugging exceptions.  */
+comment|/* Get the symbol information for a breakpointable routine called when    an exception event occurs.    Intended mainly for C++, and for those    platforms/implementations where such a callback mechanism is available,    e.g. HP-UX with ANSI C++ (aCC).  Some compilers (e.g. g++) support    different mechanisms for debugging exceptions.  */
 end_comment
 
 begin_define
@@ -2534,18 +2556,6 @@ name|target_get_current_exception_event
 parameter_list|()
 define|\
 value|(*current_target.to_get_current_exception_event) ()
-end_define
-
-begin_comment
-comment|/* Pointer to next target in the chain, e.g. a core file and an exec file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|target_next
-define|\
-value|(current_target.to_next)
 end_define
 
 begin_comment
@@ -2670,7 +2680,7 @@ value|(current_target.to_async((CALLBACK), (CONTEXT)))
 end_define
 
 begin_comment
-comment|/* This is to be used ONLY within run_stack_dummy(). It    provides a workaround, to have inferior function calls done in    sychronous mode, even though the target is asynchronous. After    target_async_mask(0) is called, calls to target_can_async_p() will    return FALSE , so that target_resume() will not try to start the    target asynchronously. After the inferior stops, we IMMEDIATELY    restore the previous nature of the target, by calling    target_async_mask(1). After that, target_can_async_p() will return    TRUE. ANY OTHER USE OF THIS FEATURE IS DEPRECATED.      FIXME ezannoni 1999-12-13: we won't need this once we move    the turning async on and off to the single execution commands,    from where it is done currently, in remote_resume().  */
+comment|/* This is to be used ONLY within call_function_by_hand(). It provides    a workaround, to have inferior function calls done in sychronous    mode, even though the target is asynchronous. After    target_async_mask(0) is called, calls to target_can_async_p() will    return FALSE , so that target_resume() will not try to start the    target asynchronously. After the inferior stops, we IMMEDIATELY    restore the previous nature of the target, by calling    target_async_mask(1). After that, target_can_async_p() will return    TRUE. ANY OTHER USE OF THIS FEATURE IS DEPRECATED.     FIXME ezannoni 1999-12-13: we won't need this once we move    the turning async on and off to the single execution commands,    from where it is done currently, in remote_resume().  */
 end_comment
 
 begin_define
@@ -2776,7 +2786,7 @@ value|(current_target.to_extra_thread_info (TP))
 end_define
 
 begin_comment
-comment|/*  * New Objfile Event Hook:  *  * Sometimes a GDB component wants to get notified whenever a new  * objfile is loaded.  Mainly this is used by thread-debugging   * implementations that need to know when symbols for the target  * thread implemenation are available.  *  * The old way of doing this is to define a macro 'target_new_objfile'  * that points to the function that you want to be called on every  * objfile/shlib load.  *  * The new way is to grab the function pointer, 'target_new_objfile_hook',  * and point it to the function that you want to be called on every  * objfile/shlib load.  *  * If multiple clients are willing to be cooperative, they can each  * save a pointer to the previous value of target_new_objfile_hook  * before modifying it, and arrange for their function to call the  * previous function in the chain.  In that way, multiple clients  * can receive this notification (something like with signal handlers).  */
+comment|/*  * New Objfile Event Hook:  *  * Sometimes a GDB component wants to get notified whenever a new  * objfile is loaded.  Mainly this is used by thread-debugging  * implementations that need to know when symbols for the target  * thread implemenation are available.  *  * The old way of doing this is to define a macro 'target_new_objfile'  * that points to the function that you want to be called on every  * objfile/shlib load.  *  * The new way is to grab the function pointer, 'target_new_objfile_hook',  * and point it to the function that you want to be called on every  * objfile/shlib load.  *  * If multiple clients are willing to be cooperative, they can each  * save a pointer to the previous value of target_new_objfile_hook  * before modifying it, and arrange for their function to call the  * previous function in the chain.  In that way, multiple clients  * can receive this notification (something like with signal handlers).  */
 end_comment
 
 begin_function_decl
@@ -2832,7 +2842,7 @@ value|(current_target.to_pid_to_exec_file) (pid)
 end_define
 
 begin_comment
-comment|/*  * Iterator function for target memory regions.  * Calls a callback function once for each memory region 'mapped'  * in the child process.  Defined as a simple macro rather than  * as a function macro so that it can be tested for nullity.    */
+comment|/*  * Iterator function for target memory regions.  * Calls a callback function once for each memory region 'mapped'  * in the child process.  Defined as a simple macro rather than  * as a function macro so that it can be tested for nullity.  */
 end_comment
 
 begin_define
@@ -2866,28 +2876,25 @@ value|(current_target.to_make_corefile_notes) (BFD, SIZE_P)
 end_define
 
 begin_comment
-comment|/* Hook to call target-dependent code after reading in a new symbol table.  */
+comment|/* Thread-local values.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TARGET_SYMFILE_POSTREAD
-end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TARGET_SYMFILE_POSTREAD
-parameter_list|(
-name|OBJFILE
-parameter_list|)
+name|target_get_thread_local_address
+define|\
+value|(current_target.to_get_thread_local_address)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|target_get_thread_local_address_p
+parameter_list|()
+define|\
+value|(target_get_thread_local_address != NULL)
+end_define
 
 begin_comment
 comment|/* Hook to call target dependent code just after inferior target process has    started.  */
@@ -2934,7 +2941,31 @@ name|STOPPED_BY_WATCHPOINT
 parameter_list|(
 name|w
 parameter_list|)
-value|0
+define|\
+value|(*current_target.to_stopped_by_watchpoint) ()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Non-zero if we have continuable watchpoints  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_CONTINUABLE_WATCHPOINT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_CONTINUABLE_WATCHPOINT
+define|\
+value|(current_target.to_have_continuable_watchpoint)
 end_define
 
 begin_endif
@@ -2995,18 +3026,22 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Provide defaults for systems that don't support hardware watchpoints.  */
+comment|/* Provide defaults for hardware watchpoint functions.  */
+end_comment
+
+begin_comment
+comment|/* If the *_hw_beakpoint functions have not been defined    elsewhere use the definitions in the target vector.  */
+end_comment
+
+begin_comment
+comment|/* Returns non-zero if we can set a hardware watchpoint of type TYPE.  TYPE is    one of bp_hardware_watchpoint, bp_read_watchpoint, bp_write_watchpoint, or    bp_hardware_breakpoint.  CNT is the number of such watchpoints used so far    (including this one?).  OTHERTYPE is who knows what...  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TARGET_HAS_HARDWARE_WATCHPOINTS
+name|TARGET_CAN_USE_HARDWARE_WATCHPOINT
 end_ifndef
-
-begin_comment
-comment|/* Returns non-zero if we can set a hardware watchpoint of type TYPE.  TYPE is    one of bp_hardware_watchpoint, bp_read_watchpoint, bp_write_watchpoint, or    bp_hardware_breakpoint.  CNT is the number of such watchpoints used so far    (including this one?).  OTHERTYPE is who knows what...  */
-end_comment
 
 begin_define
 define|#
@@ -3019,8 +3054,14 @@ name|CNT
 parameter_list|,
 name|OTHERTYPE
 parameter_list|)
-value|0
+define|\
+value|(*current_target.to_can_use_hw_breakpoint) (TYPE, CNT, OTHERTYPE);
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -3040,7 +3081,7 @@ parameter_list|(
 name|byte_count
 parameter_list|)
 define|\
-value|((LONGEST)(byte_count)<= REGISTER_SIZE)
+value|(*current_target.to_region_size_ok_for_hw_watchpoint) (byte_count)
 end_define
 
 begin_endif
@@ -3052,42 +3093,46 @@ begin_comment
 comment|/* Set/clear a hardware watchpoint starting at ADDR, for LEN bytes.  TYPE is 0    for write, 1 for read, and 2 for read/write accesses.  Returns 0 for    success, non-zero for failure.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|target_remove_watchpoint
-parameter_list|(
-name|ADDR
-parameter_list|,
-name|LEN
-parameter_list|,
-name|TYPE
-parameter_list|)
-value|-1
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|target_insert_watchpoint
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|target_insert_watchpoint
 parameter_list|(
-name|ADDR
+name|addr
 parameter_list|,
-name|LEN
+name|len
 parameter_list|,
-name|TYPE
+name|type
 parameter_list|)
-value|-1
+define|\
+value|(*current_target.to_insert_watchpoint) (addr, len, type)
+end_define
+
+begin_define
+define|#
+directive|define
+name|target_remove_watchpoint
+parameter_list|(
+name|addr
+parameter_list|,
+name|len
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|(*current_target.to_remove_watchpoint) (addr, len, type)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* TARGET_HAS_HARDWARE_WATCHPOINTS */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -3098,25 +3143,27 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|target_remove_hw_breakpoint
+name|target_insert_hw_breakpoint
 parameter_list|(
-name|ADDR
+name|addr
 parameter_list|,
-name|SHADOW
+name|save
 parameter_list|)
-value|-1
+define|\
+value|(*current_target.to_insert_hw_breakpoint) (addr, save)
 end_define
 
 begin_define
 define|#
 directive|define
-name|target_insert_hw_breakpoint
+name|target_remove_hw_breakpoint
 parameter_list|(
-name|ADDR
+name|addr
 parameter_list|,
-name|SHADOW
+name|save
 parameter_list|)
-value|-1
+define|\
+value|(*current_target.to_remove_hw_breakpoint) (addr, save)
 end_define
 
 begin_endif
@@ -3135,29 +3182,8 @@ define|#
 directive|define
 name|target_stopped_data_address
 parameter_list|()
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* If defined, then we need to decr pc by this much after a hardware break-    point.  Presumably this overrides DECR_PC_AFTER_BREAK...  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DECR_PC_AFTER_HW_BREAK
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DECR_PC_AFTER_HW_BREAK
-value|0
+define|\
+value|(*current_target.to_stopped_data_address) ()
 end_define
 
 begin_endif
@@ -3326,7 +3352,9 @@ name|CORE_ADDR
 name|endaddr
 decl_stmt|;
 comment|/* 1+highest address in section */
-name|sec_ptr
+name|struct
+name|bfd_section
+modifier|*
 name|the_bfd_section
 decl_stmt|;
 name|bfd
@@ -3339,26 +3367,22 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Builds a section table, given args BFD, SECTABLE_PTR, SECEND_PTR.    Returns 0 if OK, 1 on error.  */
+comment|/* Return the "section" containing the specified address.  */
 end_comment
 
 begin_function_decl
-specifier|extern
-name|int
-name|build_section_table
+name|struct
+name|section_table
+modifier|*
+name|target_section_by_addr
 parameter_list|(
-name|bfd
-modifier|*
-parameter_list|,
 name|struct
-name|section_table
+name|target_ops
 modifier|*
-modifier|*
+name|target
 parameter_list|,
-name|struct
-name|section_table
-modifier|*
-modifier|*
+name|CORE_ADDR
+name|addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3419,13 +3443,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|breakpoint_from_pc_fn
-name|memory_breakpoint_from_pc
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* From target.c */
 end_comment
@@ -3466,34 +3483,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|find_default_require_attach
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|find_default_require_detach
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|find_default_create_inferior
 parameter_list|(
 name|char
@@ -3504,19 +3493,6 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|find_default_clone_and_follow_inferior
-parameter_list|(
-name|int
-parameter_list|,
-name|int
 modifier|*
 parameter_list|)
 function_decl|;

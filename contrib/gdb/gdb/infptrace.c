@@ -887,6 +887,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KILL_INFERIOR
+end_ifndef
+
 begin_function
 name|void
 name|kill_inferior
@@ -940,6 +946,15 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KILL_INFERIOR */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1170,9 +1185,11 @@ if|if
 condition|(
 name|errno
 condition|)
-name|perror_with_name
+name|print_sys_errmsg
 argument_list|(
 literal|"ptrace"
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 name|attach_flag
@@ -1426,7 +1443,6 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* For messages */
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1436,13 +1452,10 @@ name|offset
 decl_stmt|;
 comment|/* Offset of registers within the u area.  */
 name|char
-modifier|*
 name|buf
-init|=
-name|alloca
-argument_list|(
-name|MAX_REGISTER_RAW_SIZE
-argument_list|)
+index|[
+name|MAX_REGISTER_SIZE
+index|]
 decl_stmt|;
 name|int
 name|tid
@@ -1461,7 +1474,7 @@ name|buf
 argument_list|,
 literal|'\0'
 argument_list|,
-name|REGISTER_RAW_SIZE
+name|DEPRECATED_REGISTER_RAW_SIZE
 argument_list|(
 name|regno
 argument_list|)
@@ -1520,7 +1533,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|REGISTER_RAW_SIZE
+name|DEPRECATED_REGISTER_RAW_SIZE
 argument_list|(
 name|regno
 argument_list|)
@@ -1682,7 +1695,6 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* For messages */
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1695,13 +1707,10 @@ name|int
 name|tid
 decl_stmt|;
 name|char
-modifier|*
 name|buf
-init|=
-name|alloca
-argument_list|(
-name|MAX_REGISTER_RAW_SIZE
-argument_list|)
+index|[
+name|MAX_REGISTER_SIZE
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -1765,7 +1774,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|REGISTER_RAW_SIZE
+name|DEPRECATED_REGISTER_RAW_SIZE
 argument_list|(
 name|regno
 argument_list|)
@@ -2043,6 +2052,95 @@ name|old_chain
 init|=
 name|NULL
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PT_IO
+comment|/* OpenBSD 3.1, NetBSD 1.6 and FreeBSD 5.0 have a new PT_IO request      that promises to be much more efficient in reading and writing      data in the traced process's address space.  */
+block|{
+name|struct
+name|ptrace_io_desc
+name|piod
+decl_stmt|;
+comment|/* NOTE: We assume that there are no distinct address spaces for        instruction and data.  */
+name|piod
+operator|.
+name|piod_op
+operator|=
+name|write
+condition|?
+name|PIOD_WRITE_D
+else|:
+name|PIOD_READ_D
+expr_stmt|;
+name|piod
+operator|.
+name|piod_offs
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|memaddr
+expr_stmt|;
+name|piod
+operator|.
+name|piod_addr
+operator|=
+name|myaddr
+expr_stmt|;
+name|piod
+operator|.
+name|piod_len
+operator|=
+name|len
+expr_stmt|;
+if|if
+condition|(
+name|ptrace
+argument_list|(
+name|PT_IO
+argument_list|,
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|piod
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* If the PT_IO request is somehow not supported, fallback on            using PT_WRITE_D/PT_READ_D.  Otherwise we will return zero            to indicate failure.  */
+if|if
+condition|(
+name|errno
+operator|!=
+name|EINVAL
+condition|)
+return|return
+literal|0
+return|;
+block|}
+else|else
+block|{
+comment|/* Return the actual number of bytes read or written.  */
+return|return
+name|piod
+operator|.
+name|piod_len
+return|;
+block|}
+block|}
+endif|#
+directive|endif
 comment|/* Allocate buffer of that many longwords.  */
 if|if
 condition|(
@@ -2429,7 +2527,7 @@ name|defined
 argument_list|(
 name|KERNEL_U_SIZE
 argument_list|)
-name|int
+name|long
 name|udot_off
 decl_stmt|;
 comment|/* Offset into user struct */
@@ -2517,9 +2615,12 @@ expr_stmt|;
 block|}
 name|printf_filtered
 argument_list|(
-literal|"%04x:"
+literal|"%s:"
 argument_list|,
+name|paddr
+argument_list|(
 name|udot_off
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2553,9 +2654,12 @@ name|sprintf
 argument_list|(
 name|mess
 argument_list|,
-literal|"\nreading user struct at offset 0x%x"
+literal|"\nreading user struct at offset 0x%s"
 argument_list|,
+name|paddr_nz
+argument_list|(
 name|udot_off
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|perror_with_name

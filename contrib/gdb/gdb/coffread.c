@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read coff symbol tables and convert to internal format, for GDB.    Copyright 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,    1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by David D. Johnson, Brown University (ddj@cs.brown.edu).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Read coff symbol tables and convert to internal format, for GDB.    Copyright 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,    1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by David D. Johnson, Brown University (ddj@cs.brown.edu).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"obstack.h"
+file|"gdb_obstack.h"
 end_include
 
 begin_include
@@ -76,12 +76,6 @@ end_include
 begin_comment
 comment|/* FIXME secret internal data from BFD */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"symfile.h"
-end_include
 
 begin_include
 include|#
@@ -123,6 +117,24 @@ begin_include
 include|#
 directive|include
 file|"gdb_assert.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"block.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dictionary.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coff-pe-read.h"
 end_include
 
 begin_function_decl
@@ -372,175 +384,6 @@ name|opaque_type_chain
 index|[
 name|HASHSIZE
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Complaints about various problems in the file being read  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|ef_complaint
-init|=
-block|{
-literal|"Unmatched .ef symbol(s) ignored starting at symnum %d"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|ef_stack_complaint
-init|=
-block|{
-literal|"`.ef' symbol without matching `.bf' symbol ignored starting at symnum %d"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|eb_stack_complaint
-init|=
-block|{
-literal|"`.eb' symbol without matching `.bb' symbol ignored starting at symnum %d"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|bf_no_aux_complaint
-init|=
-block|{
-literal|"`.bf' symbol %d has no aux entry"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|ef_no_aux_complaint
-init|=
-block|{
-literal|"`.ef' symbol %d has no aux entry"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|lineno_complaint
-init|=
-block|{
-literal|"Line number pointer %d lower than start of line numbers"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|unexpected_type_complaint
-init|=
-block|{
-literal|"Unexpected type for symbol %s"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|bad_sclass_complaint
-init|=
-block|{
-literal|"Bad n_sclass for symbol %s"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|misordered_blocks_complaint
-init|=
-block|{
-literal|"Blocks out of order at address %x"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|tagndx_bad_complaint
-init|=
-block|{
-literal|"Symbol table entry for %s has bad tagndx value"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|eb_complaint
-init|=
-block|{
-literal|"Mismatched .eb symbol ignored starting at symnum %d"
-block|,
-literal|0
-block|,
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -898,7 +741,6 @@ modifier|*
 name|csip
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|coff_symfile_info
 modifier|*
@@ -929,7 +771,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|name
 argument_list|,
@@ -993,7 +835,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|name
 argument_list|,
@@ -1471,7 +1313,6 @@ modifier|*
 modifier|*
 name|coff_lookup_type
 parameter_list|(
-specifier|register
 name|int
 name|index
 parameter_list|)
@@ -1581,7 +1422,6 @@ name|int
 name|index
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|type
 modifier|*
@@ -1593,7 +1433,6 @@ argument_list|(
 name|index
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|type
 modifier|*
@@ -1751,7 +1590,7 @@ name|current_objfile
 operator|->
 name|ei
 operator|.
-name|entry_file_lowpc
+name|deprecated_entry_file_lowpc
 operator|=
 name|current_source_start_addr
 expr_stmt|;
@@ -1759,7 +1598,7 @@ name|current_objfile
 operator|->
 name|ei
 operator|.
-name|entry_file_highpc
+name|deprecated_entry_file_highpc
 operator|=
 name|current_source_end_addr
 expr_stmt|;
@@ -1984,10 +1823,6 @@ begin_comment
 comment|/* This function is called for every section; it finds the outer limits    of the line table (minimum and maximum file offset) so that the    mainline code can read the whole thing for efficiency.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -1997,7 +1832,9 @@ name|bfd
 modifier|*
 name|abfd
 parameter_list|,
-name|sec_ptr
+name|struct
+name|bfd_section
+modifier|*
 name|asect
 parameter_list|,
 name|void
@@ -2117,10 +1954,6 @@ begin_comment
 comment|/* Read a symbol file, after initialization by coff_symfile_init.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -2171,7 +2004,6 @@ argument_list|(
 name|abfd
 argument_list|)
 decl_stmt|;
-specifier|register
 name|int
 name|val
 decl_stmt|;
@@ -2189,6 +2021,9 @@ name|struct
 name|cleanup
 modifier|*
 name|back_to
+decl_stmt|,
+modifier|*
+name|cleanup_minimal_symbols
 decl_stmt|;
 name|int
 name|stabstrsize
@@ -2364,7 +2199,6 @@ operator|==
 literal|0
 expr_stmt|;
 comment|/* End of warning */
-comment|/* Read the line number table, all at once.  */
 name|info
 operator|->
 name|min_lineno_offset
@@ -2377,6 +2211,15 @@ name|max_lineno_offset
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Only read line number information if we have symbols.       On Windows NT, some of the system's DLL's have sections with      PointerToLinenumbers fields that are non-zero, but point at      random places within the image file.  (In the case I found,      KERNEL32.DLL's .text section has a line number info pointer that      points into the middle of the string `lib\\i386\kernel32.dll'.)       However, these DLL's also have no symbols.  The line number      tables are meaningless without symbols.  And in fact, GDB never      uses the line number information unless there are symbols.  So we      can avoid spurious error messages (and maybe run a little      faster!) by not even reading the line number table unless we have      symbols.  */
+if|if
+condition|(
+name|num_symbols
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* Read the line number table, all at once.  */
 name|bfd_map_over_sections
 argument_list|(
 name|abfd
@@ -2430,6 +2273,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Now read the string table, all at once.  */
 name|make_cleanup
 argument_list|(
@@ -2464,6 +2308,8 @@ expr_stmt|;
 name|init_minimal_symbol_collection
 argument_list|()
 expr_stmt|;
+name|cleanup_minimal_symbols
+operator|=
 name|make_cleanup_discard_minimal_symbols
 argument_list|()
 expr_stmt|;
@@ -2480,41 +2326,16 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
-comment|/* Sort symbols alphabetically within each block.  */
-block|{
-name|struct
-name|symtab
-modifier|*
-name|s
-decl_stmt|;
-for|for
-control|(
-name|s
-operator|=
-name|objfile
-operator|->
-name|symtabs
-init|;
-name|s
-operator|!=
-name|NULL
-condition|;
-name|s
-operator|=
-name|s
-operator|->
-name|next
-control|)
-name|sort_symtab_syms
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Install any minimal symbols that have been collected as the current      minimal symbols for this objfile.  */
 name|install_minimal_symbols
 argument_list|(
 name|objfile
+argument_list|)
+expr_stmt|;
+comment|/* Free the installed minimal symbol data.  */
+name|do_cleanups
+argument_list|(
+name|cleanup_minimal_symbols
 argument_list|)
 expr_stmt|;
 name|bfd_map_over_sections
@@ -2714,7 +2535,6 @@ modifier|*
 name|objfile
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|context_stack
 modifier|*
@@ -2724,7 +2544,6 @@ name|struct
 name|coff_symbol
 name|coff_symbol
 decl_stmt|;
-specifier|register
 name|struct
 name|coff_symbol
 modifier|*
@@ -3143,10 +2962,12 @@ case|:
 case|case
 name|C_HIDDEN
 case|:
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|bad_sclass_complaint
+name|symfile_complaints
+argument_list|,
+literal|"Bad n_sclass for symbol %s"
 argument_list|,
 name|cs
 operator|->
@@ -3243,7 +3064,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|cs
 operator|->
@@ -3434,7 +3255,6 @@ name|C_EXT
 case|:
 block|{
 comment|/* Record it in the minimal symbols regardless of 	       SDB_TYPE.  This parallels what we do for other debug 	       formats, and probably is needed to make 	       print_address_symbolic work right without the (now 	       gone) "set fast-symbolic-addr off" kludge.  */
-comment|/* FIXME: should use mst_abs, and not relocate, if absolute.  */
 name|enum
 name|minimal_symbol_type
 name|ms_type
@@ -3500,6 +3320,37 @@ else|:
 name|mst_file_bss
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|cs
+operator|->
+name|c_secnum
+operator|==
+name|N_ABS
+condition|)
+block|{
+comment|/* Use the correct minimal symbol type (and don't  		   relocate) for absolute values. */
+name|ms_type
+operator|=
+name|mst_abs
+expr_stmt|;
+name|sec
+operator|=
+name|cs_to_section
+argument_list|(
+name|cs
+argument_list|,
+name|objfile
+argument_list|)
+expr_stmt|;
+name|tmpaddr
+operator|=
+name|cs
+operator|->
+name|c_value
+expr_stmt|;
+block|}
 else|else
 block|{
 name|sec
@@ -3517,6 +3368,7 @@ name|cs
 operator|->
 name|c_value
 expr_stmt|;
+comment|/* Statics in a PE file also get relocated */
 if|if
 condition|(
 name|cs
@@ -3536,6 +3388,18 @@ operator|->
 name|c_sclass
 operator|==
 name|C_THUMBEXT
+operator|||
+operator|(
+name|pe_file
+operator|&&
+operator|(
+name|cs
+operator|->
+name|c_sclass
+operator|==
+name|C_STAT
+operator|)
+operator|)
 condition|)
 name|tmpaddr
 operator|+=
@@ -3674,23 +3538,6 @@ name|minimal_symbol
 modifier|*
 name|msym
 decl_stmt|;
-comment|/* FIXME: cagney/2001-02-01: The nasty (int) -> (long)                    -> (void*) cast is to ensure that that the value of                    cs->c_sclass can be correctly stored in a void                    pointer in MSYMBOL_INFO.  Better solutions                    welcome. */
-name|gdb_assert
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|cs
-operator|->
-name|c_sclass
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|msym
 operator|=
 name|prim_record_minimal_symbol_and_info
@@ -3703,16 +3550,7 @@ name|tmpaddr
 argument_list|,
 name|ms_type
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|long
-operator|)
-name|cs
-operator|->
-name|c_sclass
+name|NULL
 argument_list|,
 name|sec
 argument_list|,
@@ -3784,7 +3622,7 @@ name|C_FCN
 case|:
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|cs
 operator|->
@@ -3808,10 +3646,12 @@ name|c_naux
 operator|!=
 literal|1
 condition|)
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|bf_no_aux_complaint
+name|symfile_complaints
+argument_list|,
+literal|"`.bf' symbol %d has no aux entry"
 argument_list|,
 name|cs
 operator|->
@@ -3879,7 +3719,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|cs
 operator|->
@@ -3909,10 +3749,12 @@ literal|0
 condition|)
 block|{
 comment|/* We attempted to pop an empty context stack */
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|ef_stack_complaint
+name|symfile_complaints
+argument_list|,
+literal|"`.ef' symbol without matching `.bf' symbol ignored starting at symnum %d"
 argument_list|,
 name|cs
 operator|->
@@ -3942,10 +3784,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|ef_complaint
+name|symfile_complaints
+argument_list|,
+literal|"Unmatched .ef symbol(s) ignored starting at symnum %d"
 argument_list|,
 name|cs
 operator|->
@@ -3967,10 +3811,12 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|ef_no_aux_complaint
+name|symfile_complaints
+argument_list|,
+literal|"`.ef' symbol %d has no aux entry"
 argument_list|,
 name|cs
 operator|->
@@ -4109,7 +3955,7 @@ name|C_BLOCK
 case|:
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|cs
 operator|->
@@ -4151,7 +3997,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|cs
 operator|->
@@ -4169,10 +4015,12 @@ literal|0
 condition|)
 block|{
 comment|/* We attempted to pop an empty context stack */
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|eb_stack_complaint
+name|symfile_complaints
+argument_list|,
+literal|"`.eb' symbol without matching `.bb' symbol ignored starting at symnum %d"
 argument_list|,
 name|cs
 operator|->
@@ -4196,10 +4044,12 @@ operator|->
 name|depth
 condition|)
 block|{
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|eb_complaint
+name|symfile_complaints
+argument_list|,
+literal|"Mismatched .eb symbol ignored starting at symnum %d"
 argument_list|,
 name|symnum
 argument_list|)
@@ -4280,6 +4130,26 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
+name|nsyms
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|pe_file
+operator|)
+condition|)
+block|{
+comment|/* We've got no debugging symbols, but it's is a portable 	 executable, so try to read the export table */
+name|read_pe_exported_syms
+argument_list|(
+name|objfile
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|last_source_file
 condition|)
 name|coff_end_symtab
@@ -4322,19 +4192,16 @@ specifier|static
 name|void
 name|read_one_sym
 parameter_list|(
-specifier|register
 name|struct
 name|coff_symbol
 modifier|*
 name|cs
 parameter_list|,
-specifier|register
 name|struct
 name|internal_syment
 modifier|*
 name|sym
 parameter_list|,
-specifier|register
 name|union
 name|internal_auxent
 modifier|*
@@ -4948,7 +4815,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|temp
@@ -5259,11 +5125,9 @@ parameter_list|(
 name|long
 name|file_offset
 parameter_list|,
-specifier|register
 name|int
 name|first_line
 parameter_list|,
-specifier|register
 name|int
 name|last_line
 parameter_list|,
@@ -5273,7 +5137,6 @@ modifier|*
 name|objfile
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|rawptr
@@ -5295,10 +5158,12 @@ operator|<
 name|linetab_offset
 condition|)
 block|{
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|lineno_complaint
+name|symfile_complaints
+argument_list|,
+literal|"Line number pointer %ld lower than start of line numbers"
 argument_list|,
 name|file_offset
 argument_list|)
@@ -5336,11 +5201,19 @@ comment|/* line numbers start at one for the first line of the function */
 name|first_line
 operator|--
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
+comment|/* If the line number table is full (e.g. 64K lines in COFF debug      info), the next function's L_LNNO32 might not be zero, so don't      overstep the table's end in any case.  */
+while|while
+condition|(
+name|rawptr
+operator|<=
+operator|&
+name|linetab
+index|[
+literal|0
+index|]
+operator|+
+name|linetab_size
+condition|)
 block|{
 name|bfd_coff_swap_lineno_in
 argument_list|(
@@ -5356,7 +5229,7 @@ name|rawptr
 operator|+=
 name|local_linesz
 expr_stmt|;
-comment|/* The next function, or the sentinel, will have L_LNNO32 zero; we exit. */
+comment|/* The next function, or the sentinel, will have L_LNNO32 zero; 	 we exit. */
 if|if
 condition|(
 name|L_LNNO32
@@ -5429,7 +5302,6 @@ modifier|*
 name|real_type
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|type
 modifier|*
@@ -5440,7 +5312,6 @@ argument_list|(
 name|type
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|type
 modifier|*
@@ -5574,17 +5445,15 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|block
 modifier|*
 name|b
 decl_stmt|;
-specifier|register
-name|int
-name|i
+name|struct
+name|dict_iterator
+name|iter
 decl_stmt|;
-specifier|register
 name|struct
 name|symbol
 modifier|*
@@ -5603,35 +5472,16 @@ argument_list|,
 name|STATIC_BLOCK
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|BLOCK_NSYMS
+name|ALL_BLOCK_SYMBOLS
 argument_list|(
-name|b
+argument|b
+argument_list|,
+argument|iter
+argument_list|,
+argument|real_sym
 argument_list|)
-operator|-
-literal|1
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
 block|{
 comment|/* Find completed typedefs to use to fix opaque ones.          Remove syms from the chain when their types are stored,          but search the whole chain, as there may be several syms          from different files with the same name.  */
-name|real_sym
-operator|=
-name|BLOCK_SYM
-argument_list|(
-name|b
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|SYMBOL_CLASS
@@ -5641,12 +5491,12 @@ argument_list|)
 operator|==
 name|LOC_TYPEDEF
 operator|&&
-name|SYMBOL_NAMESPACE
+name|SYMBOL_DOMAIN
 argument_list|(
 name|real_sym
 argument_list|)
 operator|==
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 operator|&&
 name|TYPE_CODE
 argument_list|(
@@ -5672,17 +5522,15 @@ operator|!=
 literal|0
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|name
 init|=
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|real_sym
 argument_list|)
 decl_stmt|;
-specifier|register
 name|int
 name|hash
 init|=
@@ -5691,7 +5539,6 @@ argument_list|(
 name|name
 argument_list|)
 decl_stmt|;
-specifier|register
 name|struct
 name|symbol
 modifier|*
@@ -5724,7 +5571,7 @@ index|[
 literal|0
 index|]
 operator|==
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -5732,19 +5579,21 @@ index|[
 literal|0
 index|]
 operator|&&
-name|STREQ
+name|strcmp
 argument_list|(
 name|name
 operator|+
 literal|1
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
 operator|+
 literal|1
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -5843,13 +5692,11 @@ name|symbol
 modifier|*
 name|process_coff_symbol
 parameter_list|(
-specifier|register
 name|struct
 name|coff_symbol
 modifier|*
 name|cs
 parameter_list|,
-specifier|register
 name|union
 name|internal_auxent
 modifier|*
@@ -5861,7 +5708,6 @@ modifier|*
 name|objfile
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|symbol
 modifier|*
@@ -5877,7 +5723,7 @@ argument_list|(
 operator|&
 name|objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5920,26 +5766,6 @@ operator|->
 name|obfd
 argument_list|)
 expr_stmt|;
-name|SYMBOL_NAME
-argument_list|(
-name|sym
-argument_list|)
-operator|=
-name|obsavestring
-argument_list|(
-name|name
-argument_list|,
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-argument_list|,
-operator|&
-name|objfile
-operator|->
-name|symbol_obstack
-argument_list|)
-expr_stmt|;
 name|SYMBOL_LANGUAGE
 argument_list|(
 name|sym
@@ -5947,14 +5773,18 @@ argument_list|)
 operator|=
 name|language_auto
 expr_stmt|;
-name|SYMBOL_INIT_DEMANGLED_NAME
+name|SYMBOL_SET_NAMES
 argument_list|(
 name|sym
 argument_list|,
-operator|&
+name|name
+argument_list|,
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+argument_list|,
 name|objfile
-operator|->
-name|symbol_obstack
 argument_list|)
 expr_stmt|;
 comment|/* default assumptions */
@@ -5967,12 +5797,12 @@ name|cs
 operator|->
 name|c_value
 expr_stmt|;
-name|SYMBOL_NAMESPACE
+name|SYMBOL_DOMAIN
 argument_list|(
 name|sym
 argument_list|)
 operator|=
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 expr_stmt|;
 name|SYMBOL_SECTION
 argument_list|(
@@ -6546,12 +6376,12 @@ argument_list|)
 operator|=
 name|LOC_TYPEDEF
 expr_stmt|;
-name|SYMBOL_NAMESPACE
+name|SYMBOL_DOMAIN
 argument_list|(
 name|sym
 argument_list|)
 operator|=
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 expr_stmt|;
 comment|/* If type has no name, give it one */
 if|if
@@ -6604,7 +6434,7 @@ argument_list|)
 operator|=
 name|concat
 argument_list|(
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -6613,26 +6443,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|CXUX_TARGET
-comment|/* Ignore vendor section for Harris CX/UX targets. */
-elseif|else
-if|if
-condition|(
-name|cs
-operator|->
-name|c_name
-index|[
-literal|0
-index|]
-operator|==
-literal|'$'
-condition|)
-break|break;
-endif|#
-directive|endif
-comment|/* CXUX_TARGET */
 comment|/* Keep track of any type which points to empty structured type, 	     so it can be filled from a definition from another file.  A 	     simple forward reference (TYPE_CODE_UNDEF) is not an 	     empty structured type, though; the forward references 	     work themselves out via the magic of coff_lookup_type.  */
 if|if
 condition|(
@@ -6673,13 +6483,12 @@ operator|!=
 name|TYPE_CODE_UNDEF
 condition|)
 block|{
-specifier|register
 name|int
 name|i
 init|=
 name|hashname
 argument_list|(
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -6728,12 +6537,12 @@ argument_list|)
 operator|=
 name|LOC_TYPEDEF
 expr_stmt|;
-name|SYMBOL_NAMESPACE
+name|SYMBOL_DOMAIN
 argument_list|(
 name|sym
 argument_list|)
 operator|=
-name|STRUCT_NAMESPACE
+name|STRUCT_DOMAIN
 expr_stmt|;
 comment|/* Some compilers try to be helpful by inventing "fake" 	     names for anonymous enums, structures, and unions, like 	     "~0fake" or ".0fake".  Thanks, but no thanks... */
 if|if
@@ -6750,7 +6559,7 @@ literal|0
 condition|)
 if|if
 condition|(
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -6758,7 +6567,7 @@ operator|!=
 name|NULL
 operator|&&
 operator|*
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -6766,7 +6575,7 @@ operator|!=
 literal|'~'
 operator|&&
 operator|*
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -6783,7 +6592,7 @@ argument_list|)
 operator|=
 name|concat
 argument_list|(
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -6824,7 +6633,6 @@ name|type
 modifier|*
 name|decode_type
 parameter_list|(
-specifier|register
 name|struct
 name|coff_symbol
 modifier|*
@@ -6834,14 +6642,12 @@ name|unsigned
 name|int
 name|c_type
 parameter_list|,
-specifier|register
 name|union
 name|internal_auxent
 modifier|*
 name|aux
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|type
 modifier|*
@@ -6937,7 +6743,6 @@ name|i
 decl_stmt|,
 name|n
 decl_stmt|;
-specifier|register
 name|unsigned
 name|short
 modifier|*
@@ -7169,10 +6974,12 @@ return|;
 block|}
 else|else
 block|{
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|tagndx_bad_complaint
+name|symfile_complaints
+argument_list|,
+literal|"Symbol table entry for %s has bad tagndx value"
 argument_list|,
 name|cs
 operator|->
@@ -7209,7 +7016,6 @@ name|type
 modifier|*
 name|decode_function_type
 parameter_list|(
-specifier|register
 name|struct
 name|coff_symbol
 modifier|*
@@ -7219,7 +7025,6 @@ name|unsigned
 name|int
 name|c_type
 parameter_list|,
-specifier|register
 name|union
 name|internal_auxent
 modifier|*
@@ -7275,7 +7080,6 @@ name|type
 modifier|*
 name|decode_base_type
 parameter_list|(
-specifier|register
 name|struct
 name|coff_symbol
 modifier|*
@@ -7285,7 +7089,6 @@ name|unsigned
 name|int
 name|c_type
 parameter_list|,
-specifier|register
 name|union
 name|internal_auxent
 modifier|*
@@ -7314,22 +7117,6 @@ argument_list|,
 name|FT_VOID
 argument_list|)
 return|;
-if|#
-directive|if
-literal|0
-comment|/* DGUX actually defines both T_ARG and T_VOID to the same value.  */
-ifdef|#
-directive|ifdef
-name|T_ARG
-block|case T_ARG:
-comment|/* Shows up in DGUX, I think.  Not sure where.  */
-block|return lookup_fundamental_type (current_objfile, FT_VOID);
-comment|/* shouldn't show up here */
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* 0 */
 ifdef|#
 directive|ifdef
 name|T_VOID
@@ -7851,10 +7638,12 @@ name|FT_UNSIGNED_LONG
 argument_list|)
 return|;
 block|}
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|unexpected_type_complaint
+name|symfile_complaints
+argument_list|,
+literal|"Unexpected type for symbol %s"
 argument_list|,
 name|cs
 operator|->
@@ -7914,13 +7703,11 @@ name|field
 decl_stmt|;
 block|}
 struct|;
-specifier|register
 name|struct
 name|type
 modifier|*
 name|type
 decl_stmt|;
-specifier|register
 name|struct
 name|nextfield
 modifier|*
@@ -7938,7 +7725,6 @@ name|nfields
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -7950,7 +7736,6 @@ name|struct
 name|coff_symbol
 name|member_sym
 decl_stmt|;
-specifier|register
 name|struct
 name|coff_symbol
 modifier|*
@@ -8099,7 +7884,7 @@ argument_list|,
 operator|&
 name|current_objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|)
 expr_stmt|;
 name|FIELD_TYPE
@@ -8135,6 +7920,15 @@ operator|->
 name|c_value
 expr_stmt|;
 name|FIELD_BITSIZE
+argument_list|(
+name|list
+operator|->
+name|field
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|FIELD_STATIC_KIND
 argument_list|(
 name|list
 operator|->
@@ -8196,7 +7990,7 @@ argument_list|,
 operator|&
 name|current_objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|)
 expr_stmt|;
 name|FIELD_TYPE
@@ -8245,6 +8039,15 @@ operator|.
 name|x_lnsz
 operator|.
 name|x_size
+expr_stmt|;
+name|FIELD_STATIC_KIND
+argument_list|(
+name|list
+operator|->
+name|field
+argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 name|nfields
 operator|++
@@ -8331,10 +8134,6 @@ begin_comment
 comment|/* Read a definition of an enumeration type,    and create and return a suitable type object.    Also defines the symbols that represent the values of the type.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|struct
@@ -8352,13 +8151,11 @@ name|int
 name|lastsym
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|symbol
 modifier|*
 name|sym
 decl_stmt|;
-specifier|register
 name|struct
 name|type
 modifier|*
@@ -8384,7 +8181,6 @@ name|struct
 name|coff_symbol
 name|member_sym
 decl_stmt|;
-specifier|register
 name|struct
 name|coff_symbol
 modifier|*
@@ -8412,7 +8208,6 @@ decl_stmt|;
 name|int
 name|o_nsyms
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
@@ -8526,7 +8321,7 @@ argument_list|(
 operator|&
 name|current_objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -8548,7 +8343,7 @@ name|symbol
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -8565,7 +8360,7 @@ argument_list|,
 operator|&
 name|current_objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|)
 expr_stmt|;
 name|SYMBOL_CLASS
@@ -8575,12 +8370,12 @@ argument_list|)
 operator|=
 name|LOC_CONST
 expr_stmt|;
-name|SYMBOL_NAMESPACE
+name|SYMBOL_DOMAIN
 argument_list|(
 name|sym
 argument_list|)
 operator|=
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 expr_stmt|;
 name|SYMBOL_VALUE
 argument_list|(
@@ -8754,7 +8549,7 @@ argument_list|,
 name|n
 argument_list|)
 operator|=
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|xsym
 argument_list|)
@@ -8785,6 +8580,15 @@ operator|=
 literal|0
 expr_stmt|;
 name|TYPE_FIELD_BITSIZE
+argument_list|(
+name|type
+argument_list|,
+name|n
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|TYPE_FIELD_STATIC_KIND
 argument_list|(
 name|type
 argument_list|,

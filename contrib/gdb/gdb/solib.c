@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Handle shared libraries for GDB, the GNU Debugger.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Handle shared libraries for GDB, the GNU Debugger.     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -124,7 +124,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"exec.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"solist.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"readline/readline.h"
 end_include
 
 begin_comment
@@ -182,7 +194,8 @@ specifier|static
 name|void
 name|do_clear_solib
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -216,7 +229,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*     GLOBAL FUNCTION     solib_open -- Find a shared library file and open it.     SYNOPSIS     int solib_open (char *in_patname, char **found_pathname);     DESCRIPTION     Global variable SOLIB_ABSOLUTE_PREFIX is used as a prefix directory    to search for shared libraries if they have an absolute path.     Global variable SOLIB_SEARCH_PATH is used as a prefix directory    (or set of directories, as in LD_LIBRARY_PATH) to search for all    shared libraries if not found in SOLIB_ABSOLUTE_PREFIX.     Search order:    * If path is absolute, look in SOLIB_ABSOLUTE_PREFIX.    * If path is absolute or relative, look for it literally (unmodified).    * Look in SOLIB_SEARCH_PATH.    * Look in inferior's $PATH.    * Look in inferior's $LD_LIBRARY_PATH.     RETURNS     file handle for opened solib, or -1 for failure.  */
+comment|/*     GLOBAL FUNCTION     solib_open -- Find a shared library file and open it.     SYNOPSIS     int solib_open (char *in_patname, char **found_pathname);     DESCRIPTION     Global variable SOLIB_ABSOLUTE_PREFIX is used as a prefix directory    to search for shared libraries if they have an absolute path.     Global variable SOLIB_SEARCH_PATH is used as a prefix directory    (or set of directories, as in LD_LIBRARY_PATH) to search for all    shared libraries if not found in SOLIB_ABSOLUTE_PREFIX.     Search algorithm:    * If there is a solib_absolute_prefix and path is absolute:    *   Search for solib_absolute_prefix/path.    * else    *   Look for it literally (unmodified).    * Look in SOLIB_SEARCH_PATH.    * If available, use target defined search function.    * If solib_absolute_prefix is NOT set, perform the following two searches:    *   Look in inferior's $PATH.    *   Look in inferior's $LD_LIBRARY_PATH.    *       * The last check avoids doing this search when targetting remote    * machines since solib_absolute_prefix will almost always be set.     RETURNS     file handle for opened solib, or -1 for failure.  */
 end_comment
 
 begin_function
@@ -409,7 +422,7 @@ name|in_pathname
 operator|++
 expr_stmt|;
 block|}
-comment|/* If not found, next search the solib_search_path (if any).  */
+comment|/* If not found, search the solib_search_path (if any).  */
 if|if
 condition|(
 name|found_file
@@ -470,6 +483,29 @@ operator|&
 name|temp_pathname
 argument_list|)
 expr_stmt|;
+comment|/* If not found, try to use target supplied solib search method */
+if|if
+condition|(
+name|found_file
+operator|<
+literal|0
+operator|&&
+name|TARGET_SO_FIND_AND_OPEN_SOLIB
+operator|!=
+name|NULL
+condition|)
+name|found_file
+operator|=
+name|TARGET_SO_FIND_AND_OPEN_SOLIB
+argument_list|(
+name|in_pathname
+argument_list|,
+name|O_RDONLY
+argument_list|,
+operator|&
+name|temp_pathname
+argument_list|)
+expr_stmt|;
 comment|/* If not found, next search the inferior's $PATH environment variable. */
 if|if
 condition|(
@@ -477,8 +513,8 @@ name|found_file
 operator|<
 literal|0
 operator|&&
-name|solib_search_path
-operator|!=
+name|solib_absolute_prefix
+operator|==
 name|NULL
 condition|)
 name|found_file
@@ -511,8 +547,8 @@ name|found_file
 operator|<
 literal|0
 operator|&&
-name|solib_search_path
-operator|!=
+name|solib_absolute_prefix
+operator|==
 name|NULL
 condition|)
 name|found_file
@@ -572,7 +608,8 @@ specifier|static
 name|int
 name|solib_map_sections
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|arg
 parameter_list|)
 block|{
@@ -699,11 +736,12 @@ name|abfd
 operator|=
 name|abfd
 expr_stmt|;
+name|bfd_set_cacheable
+argument_list|(
 name|abfd
-operator|->
-name|cacheable
-operator|=
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 comment|/* copy full path name into so_name, so that later symbol_file_add      can find it */
 if|if
@@ -817,7 +855,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|p
 operator|->
@@ -827,6 +865,8 @@ name|name
 argument_list|,
 literal|".text"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|so
@@ -955,11 +995,11 @@ specifier|static
 name|int
 name|symbol_add_stub
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|arg
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|so_list
 modifier|*
@@ -1057,6 +1097,7 @@ comment|/* LOCAL FUNCTION     update_solib_list --- synchronize GDB's shared obj
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|update_solib_list
 parameter_list|(
@@ -1099,9 +1140,6 @@ name|catch_errors
 argument_list|(
 name|TARGET_SO_OPEN_SYMBOL_FILE_OBJECT
 argument_list|,
-operator|(
-name|PTR
-operator|)
 operator|&
 name|from_tty
 argument_list|,
@@ -1621,7 +1659,6 @@ name|int
 name|from_tty
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|so_list
 modifier|*
@@ -1764,7 +1801,7 @@ name|textsection
 operator|!=
 name|NULL
 condition|?
-name|longest_local_hex_string_custom
+name|local_hex_string_custom
 argument_list|(
 operator|(
 name|LONGEST
@@ -1793,7 +1830,7 @@ name|textsection
 operator|!=
 name|NULL
 condition|?
-name|longest_local_hex_string_custom
+name|local_hex_string_custom
 argument_list|(
 operator|(
 name|LONGEST
@@ -1863,7 +1900,6 @@ name|CORE_ADDR
 name|address
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|so_list
 modifier|*
@@ -2019,7 +2055,8 @@ specifier|static
 name|void
 name|do_clear_solib
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|dummy
 parameter_list|)
 block|{
@@ -2138,6 +2175,51 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|reload_shared_libraries
+parameter_list|(
+name|char
+modifier|*
+name|ignored
+parameter_list|,
+name|int
+name|from_tty
+parameter_list|)
+block|{
+name|no_shared_libraries
+argument_list|(
+name|NULL
+argument_list|,
+name|from_tty
+argument_list|)
+expr_stmt|;
+name|solib_add
+argument_list|(
+name|NULL
+argument_list|,
+name|from_tty
+argument_list|,
+name|NULL
+argument_list|,
+name|auto_solib_add
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_decl_stmt
+specifier|extern
+name|initialize_file_ftype
+name|_initialize_solib
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -Wmissing-prototypes */
+end_comment
+
+begin_function
 name|void
 name|_initialize_solib
 parameter_list|(
@@ -2238,11 +2320,27 @@ operator|&
 name|showlist
 argument_list|)
 expr_stmt|;
+name|set_cmd_cfunc
+argument_list|(
 name|c
-operator|->
-name|completer
-operator|=
+argument_list|,
+name|reload_shared_libraries
+argument_list|)
+expr_stmt|;
+name|set_cmd_completer
+argument_list|(
+name|c
+argument_list|,
 name|filename_completer
+argument_list|)
+expr_stmt|;
+comment|/* Set the default value of "solib-absolute-prefix" from the sysroot, if      one is set.  */
+name|solib_absolute_prefix
+operator|=
+name|xstrdup
+argument_list|(
+name|gdb_sysroot
+argument_list|)
 expr_stmt|;
 name|c
 operator|=
@@ -2275,11 +2373,19 @@ operator|&
 name|showlist
 argument_list|)
 expr_stmt|;
+name|set_cmd_cfunc
+argument_list|(
 name|c
-operator|->
-name|completer
-operator|=
+argument_list|,
+name|reload_shared_libraries
+argument_list|)
+expr_stmt|;
+name|set_cmd_completer
+argument_list|(
+name|c
+argument_list|,
 name|filename_completer
+argument_list|)
 expr_stmt|;
 block|}
 end_function

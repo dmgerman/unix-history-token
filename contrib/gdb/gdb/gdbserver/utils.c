@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* General utility routines for the remote server for GDB.    Copyright 1986, 1989, 1993, 1995, 1996, 1997, 1999, 2000, 2002    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* General utility routines for the remote server for GDB.    Copyright 1986, 1989, 1993, 1995, 1996, 1997, 1999, 2000, 2002, 2003    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -43,16 +43,6 @@ directive|ifndef
 name|STDC_HEADERS
 specifier|extern
 name|int
-name|sys_nerr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-specifier|extern
-name|int
 name|errno
 decl_stmt|;
 endif|#
@@ -66,20 +56,19 @@ name|char
 modifier|*
 name|combined
 decl_stmt|;
-if|if
-condition|(
-name|errno
-operator|<
-name|sys_nerr
-condition|)
 name|err
 operator|=
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|err
+operator|==
+name|NULL
+condition|)
 name|err
 operator|=
 literal|"unknown error"
@@ -141,7 +130,6 @@ comment|/* Print an error message and return to command level.    STRING is the 
 end_comment
 
 begin_function
-name|NORETURN
 name|void
 name|error
 parameter_list|(
@@ -207,7 +195,6 @@ comment|/* VARARGS */
 end_comment
 
 begin_function
-name|NORETURN
 name|void
 name|fatal
 parameter_list|(
