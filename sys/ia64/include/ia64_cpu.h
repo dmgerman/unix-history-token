@@ -1259,7 +1259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the value of ar.itm.  */
+comment|/*  * Read the value of cr.itm.  */
 end_comment
 
 begin_function
@@ -1282,7 +1282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write the value of ar.itm.  */
+comment|/*  * Write the value of cr.itm.  */
 end_comment
 
 begin_function
@@ -1300,7 +1300,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write the value of ar.itv.  */
+comment|/*  * Write the value of cr.itv.  */
 end_comment
 
 begin_function
@@ -1314,6 +1314,29 @@ name|v
 parameter_list|)
 block|{
 asm|__asm __volatile("mov cr.itv=%0" :: "r" (v));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Read the value of cr.lid.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_lid
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=cr.lid" : "=r" (result));
+return|return
+name|result
+return|;
 block|}
 end_function
 
