@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* XXX _G_VTABLE_LABLE_PREFIX is different between ELF and a.out */
+end_comment
+
+begin_comment
 comment|/* AUTOMATICALLY GENERATED; DO NOT EDIT! */
 end_comment
 
@@ -36,12 +40,35 @@ name|_G_VTABLE_LABEL_HAS_LENGTH
 value|1
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ELF__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_G_VTABLE_LABEL_PREFIX
+value|"_vt."
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|_G_VTABLE_LABEL_PREFIX
 value|"__vt$"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
