@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_f_errlist[] = "@(#)f_errlist.c	1.5";  *  * f77 I/O error messages  */
+comment|/* char id_f_errlist[] = "@(#)f_errlist.c	1.6";  *  * f77 I/O error messages  */
 end_comment
 
 begin_decl_stmt
@@ -17,16 +17,16 @@ comment|/* 101 */
 literal|"illegal unit number"
 block|,
 comment|/* 102 */
-literal|"formatted io not allowed"
+literal|"formatted i/o not allowed"
 block|,
 comment|/* 103 */
-literal|"unformatted io not allowed"
+literal|"unformatted i/o not allowed"
 block|,
 comment|/* 104 */
-literal|"direct io not allowed"
+literal|"direct i/o not allowed"
 block|,
 comment|/* 105 */
-literal|"sequential io not allowed"
+literal|"sequential i/o not allowed"
 block|,
 comment|/* 106 */
 literal|"can't backspace file"
@@ -59,7 +59,7 @@ comment|/* 115 */
 literal|"invalid data for integer format term"
 block|,
 comment|/* 116 */
-literal|"blank logical input field"
+literal|"invalid data for logical format term"
 block|,
 comment|/* 117 */
 literal|"'new' file exists"

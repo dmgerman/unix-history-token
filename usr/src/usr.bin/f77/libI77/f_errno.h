@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_f_errno[] = "@(#)f_errno.h	1.7";  *  * f77 I/O error definitions  */
+comment|/* char id_f_errno[] = "@(#)f_errno.h	1.8";  *  * f77 I/O error definitions  */
 end_comment
 
 begin_include
@@ -64,7 +64,7 @@ value|102
 end_define
 
 begin_comment
-comment|/* formatted io not allowed */
+comment|/* formatted i/o not allowed */
 end_comment
 
 begin_define
@@ -75,7 +75,7 @@ value|103
 end_define
 
 begin_comment
-comment|/* unformatted io not allowed */
+comment|/* unformatted i/o not allowed */
 end_comment
 
 begin_define
@@ -86,7 +86,7 @@ value|104
 end_define
 
 begin_comment
-comment|/* direct io not allowed */
+comment|/* direct i/o not allowed */
 end_comment
 
 begin_define
@@ -97,7 +97,7 @@ value|105
 end_define
 
 begin_comment
-comment|/* sequential io not allowed */
+comment|/* sequential i/o not allowed */
 end_comment
 
 begin_define
@@ -218,7 +218,7 @@ value|116
 end_define
 
 begin_comment
-comment|/* blank logical input field */
+comment|/* invalid data for logical format term */
 end_comment
 
 begin_define
