@@ -519,6 +519,8 @@ name|c_iflag
 operator|&=
 operator|~
 operator|(
+name|IMAXBEL
+operator||
 name|IGNBRK
 operator||
 name|BRKINT
@@ -577,7 +579,24 @@ name|c_cflag
 operator||=
 name|CS8
 expr_stmt|;
-comment|/* XXX set MIN/TIME */
+name|t
+operator|->
+name|c_cc
+index|[
+name|VMIN
+index|]
+operator|=
+literal|1
+expr_stmt|;
+name|t
+operator|->
+name|c_cc
+index|[
+name|VTIME
+index|]
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
