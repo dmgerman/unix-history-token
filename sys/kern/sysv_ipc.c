@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_ipc.c,v 1.8 1997/11/18 12:52:10 bde Exp $ */
+comment|/*	$Id: sysv_ipc.c,v 1.9 1999/01/30 12:21:48 phk Exp $ */
 end_comment
 
 begin_comment
@@ -55,7 +55,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Check for ipc permission  *  * XXX: Should pass proc argument so that we can pass   * XXX: proc->p_acflag to suser()  */
+comment|/*  * Check for ipc permission  *  * XXX: Should pass proc argument so that we can pass   * XXX: proc->p_acflag to suser_xxx()  */
 end_comment
 
 begin_function
@@ -84,7 +84,7 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|suser
+name|suser_xxx
 argument_list|(
 name|cred
 argument_list|,

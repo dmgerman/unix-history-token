@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.19 1998/12/09 03:30:51 eivind Exp $ */
+comment|/* $Id: if_wl.c,v 1.20 1999/01/12 00:36:31 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -5467,13 +5467,6 @@ operator|(
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|==
 literal|0
@@ -5554,13 +5547,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 condition|)
@@ -5796,13 +5782,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 condition|)
@@ -5899,13 +5878,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 condition|)
@@ -6031,13 +6003,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 condition|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: promcons.c,v 1.3 1998/07/12 16:15:02 dfr Exp $ */
+comment|/* $Id: promcons.c,v 1.4 1999/01/30 12:17:22 phk Exp $ */
 end_comment
 
 begin_comment
@@ -515,13 +515,6 @@ operator|&&
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 condition|)
 block|{

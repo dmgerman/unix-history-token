@@ -1869,13 +1869,6 @@ operator|&&
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 condition|)
 return|return
@@ -5327,13 +5320,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 expr_stmt|;
 if|if

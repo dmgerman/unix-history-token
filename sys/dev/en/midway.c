@@ -6284,13 +6284,6 @@ operator|=
 name|suser
 argument_list|(
 name|curproc
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|curproc
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|==
@@ -6347,13 +6340,6 @@ operator|=
 name|suser
 argument_list|(
 name|curproc
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|curproc
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|!=

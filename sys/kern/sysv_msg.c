@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_msg.c,v 1.19 1999/01/30 12:21:48 phk Exp $ */
+comment|/*	$Id: sysv_msg.c,v 1.20 1999/04/21 13:30:01 sada Exp $ */
 end_comment
 
 begin_comment
@@ -1255,7 +1255,7 @@ condition|)
 block|{
 name|eval
 operator|=
-name|suser
+name|suser_xxx
 argument_list|(
 name|cred
 argument_list|,

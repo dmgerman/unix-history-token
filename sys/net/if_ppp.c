@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.58 1998/06/07 17:12:03 dfr Exp $ */
+comment|/* $Id: if_ppp.c,v 1.59 1998/06/20 16:28:01 peter Exp $ */
 end_comment
 
 begin_comment
@@ -1578,13 +1578,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|!=
@@ -1671,13 +1664,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|!=
@@ -1743,13 +1729,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|!=
@@ -1806,13 +1785,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|!=
@@ -1846,13 +1818,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|!=
@@ -2289,13 +2254,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|!=
@@ -2864,13 +2822,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|!=

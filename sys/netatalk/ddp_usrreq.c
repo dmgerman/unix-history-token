@@ -1262,7 +1262,7 @@ name|sat_port
 operator|<
 name|ATPORT_RESERVED
 operator|&&
-name|suser
+name|suser_xxx
 argument_list|(
 name|p
 operator|->

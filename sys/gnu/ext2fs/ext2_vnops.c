@@ -5238,7 +5238,7 @@ operator|->
 name|cn_cred
 argument_list|)
 operator|&&
-name|suser
+name|suser_xxx
 argument_list|(
 name|cnp
 operator|->

@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.37 1998/06/20 16:39:35 peter Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.38 1999/01/17 20:53:47 peter Exp $ */
 end_comment
 
 begin_include
@@ -698,13 +698,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|!=
@@ -2084,13 +2077,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|!=
@@ -2141,13 +2127,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|!=
@@ -2192,13 +2171,6 @@ operator|=
 name|suser
 argument_list|(
 name|p
-operator|->
-name|p_ucred
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_acflag
 argument_list|)
 operator|)
 operator|!=
