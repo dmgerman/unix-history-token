@@ -1166,11 +1166,17 @@ name|int
 name|flags
 init|=
 operator|(
+operator|(
 name|so
 operator|->
 name|so_options
 operator|&
 name|SO_DONTROUTE
+operator|)
+condition|?
+name|IP_ROUTETOIF
+else|:
+literal|0
 operator|)
 operator||
 name|IP_ALLOWBROADCAST

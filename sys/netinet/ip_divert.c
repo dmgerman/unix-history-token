@@ -1224,11 +1224,17 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|(
+operator|(
 name|so
 operator|->
 name|so_options
 operator|&
 name|SO_DONTROUTE
+operator|)
+condition|?
+name|IP_ROUTETOIF
+else|:
+literal|0
 operator|)
 operator||
 name|IP_ALLOWBROADCAST
