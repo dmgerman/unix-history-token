@@ -236,8 +236,6 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
-operator||
-name|D_CANFREE
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1492,6 +1490,14 @@ name|DEVSTAT_TYPE_IF_OTHER
 argument_list|,
 name|DEVSTAT_PRIORITY_DISK
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|disk
+operator|.
+name|d_flags
+operator||=
+name|DISKFLAG_CANDELETE
 expr_stmt|;
 name|sc
 operator|->
