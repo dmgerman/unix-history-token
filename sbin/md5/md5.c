@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md5.c,v 1.10 1997/02/22 14:32:37 peter Exp $  *  * Derived from:  */
+comment|/*  * $Id: md5.c,v 1.11 1997/12/29 03:40:37 steve Exp $  *  * Derived from:  */
 end_comment
 
 begin_comment
@@ -159,7 +159,7 @@ index|[]
 decl_stmt|;
 block|{
 name|int
-name|i
+name|ch
 decl_stmt|;
 name|char
 modifier|*
@@ -181,7 +181,7 @@ block|{
 while|while
 condition|(
 operator|(
-name|i
+name|ch
 operator|=
 name|getopt
 argument_list|(
@@ -193,12 +193,13 @@ literal|"ps:tx"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
 condition|(
-name|i
+name|ch
 condition|)
 block|{
 case|case
@@ -608,9 +609,11 @@ specifier|static
 name|void
 name|MDFilter
 parameter_list|(
-name|int
 name|pipe
 parameter_list|)
+name|int
+name|pipe
+decl_stmt|;
 block|{
 name|MD5_CTX
 name|context
@@ -713,26 +716,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Displays a usage summary.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: md5 [-ptx] [-s string] [file ...]\n"
+literal|"usage: md5 [-ptx] [-s string] [files ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
