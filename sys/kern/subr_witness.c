@@ -1401,6 +1401,27 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * netatalk 	 */
+block|{
+literal|"ddp_list_mtx"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"ddp_mtx"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * spin locks 	 */
 ifdef|#
 directive|ifdef
