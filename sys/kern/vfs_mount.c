@@ -316,27 +316,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|vfs_nmount
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|fsflags
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|fsopts
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -2547,7 +2526,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|vfs_nmount
 parameter_list|(

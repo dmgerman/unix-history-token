@@ -2342,6 +2342,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vfs_nmount
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|fsflags
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|fsoptions
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vfs_setpublicfs
 comment|/* set publicly exported fs */
 parameter_list|(
