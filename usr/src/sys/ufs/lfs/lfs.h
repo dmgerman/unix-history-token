@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -23,17 +23,6 @@ end_define
 
 begin_comment
 comment|/* LFS superblock size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXMNTLEN
-value|512
-end_define
-
-begin_comment
-comment|/* XXX move from fs.h to mount.h */
 end_comment
 
 begin_comment
@@ -331,17 +320,10 @@ modifier|*
 name|lfs_ivnode
 decl_stmt|;
 comment|/* vnode for the ifile */
-name|SEGUSE
-modifier|*
-name|lfs_segtab
+name|u_long
+name|lfs_seglock
 decl_stmt|;
-comment|/* in-memory segment usage table */
-comment|/* XXX NOT USED */
-name|void
-modifier|*
-name|XXXlfs_seglist
-decl_stmt|;
-comment|/* list of segments being written */
+comment|/* single-thread the segment writer */
 name|u_long
 name|lfs_iocount
 decl_stmt|;
@@ -377,7 +359,7 @@ comment|/* currently unused flag */
 name|u_char
 name|lfs_fsmnt
 index|[
-name|MAXMNTLEN
+name|MNAMELEN
 index|]
 decl_stmt|;
 comment|/* name mounted on */
@@ -864,7 +846,7 @@ name|LFS_UBWRITE
 parameter_list|(
 name|BP
 parameter_list|)
-value|{ \ 	USES_VOP_BWRITE; \ 	VTOI((BP)->b_vp)->i_flag |= ICHG | IUPD; \ 	VOP_BWRITE(BP); \ }
+value|{ \ 	VTOI((BP)->b_vp)->i_flag |= ICHG | IUPD; \ 	VOP_BWRITE(BP); \ }
 end_define
 
 begin_comment
