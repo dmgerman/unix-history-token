@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	5.2 (Berkeley) %G%"
+literal|"@(#)mbuf.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,7 +316,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"%d/%d mbufs in use:\n"
+literal|"%u/%u mbufs in use:\n"
 argument_list|,
 name|mbstat
 operator|.
@@ -374,7 +374,7 @@ name|YES
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d mbufs allocated to %s\n"
+literal|"\t%u mbufs allocated to %s\n"
 argument_list|,
 name|mbstat
 operator|.
@@ -440,7 +440,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\t%d mbufs allocated to<mbuf type %d>\n"
+literal|"\t%u mbufs allocated to<mbuf type %d>\n"
 argument_list|,
 name|mbstat
 operator|.
@@ -479,7 +479,7 @@ index|]
 condition|)
 name|printf
 argument_list|(
-literal|"*** %d mbufs missing ***\n"
+literal|"*** %u mbufs missing ***\n"
 argument_list|,
 operator|(
 name|mbstat
@@ -499,7 +499,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d/%d mapped pages in use\n"
+literal|"%u/%u mapped pages in use\n"
 argument_list|,
 name|mbstat
 operator|.
@@ -514,6 +514,15 @@ operator|.
 name|m_clusters
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%u interface pages allocated\n"
+argument_list|,
+name|mbstat
+operator|.
+name|m_space
+argument_list|)
+expr_stmt|;
 name|totmem
 operator|=
 name|mbstat
@@ -525,6 +534,12 @@ operator|+
 name|mbstat
 operator|.
 name|m_clusters
+operator|*
+name|CLBYTES
+operator|+
+name|mbstat
+operator|.
+name|m_space
 operator|*
 name|CLBYTES
 expr_stmt|;
@@ -547,7 +562,7 @@ name|CLBYTES
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d Kbytes allocated to network (%d%% in use)\n"
+literal|"%u Kbytes allocated to network (%d%% in use)\n"
 argument_list|,
 name|totmem
 operator|/
@@ -566,11 +581,29 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d requests for memory denied\n"
+literal|"%u requests for memory denied\n"
 argument_list|,
 name|mbstat
 operator|.
 name|m_drops
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%u requests for memory delayed\n"
+argument_list|,
+name|mbstat
+operator|.
+name|m_wait
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%u calls to protocol drain routines\n"
+argument_list|,
+name|mbstat
+operator|.
+name|m_drain
 argument_list|)
 expr_stmt|;
 block|}
