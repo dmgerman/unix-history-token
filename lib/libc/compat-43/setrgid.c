@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: setrgid.c,v 1.2 1994/04/04 19:33:57 wollman Exp $"
+literal|"$Id: setrgid.c,v 1.4 1994/04/23 20:39:02 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,7 +94,7 @@ name|char
 modifier|*
 name|__progname
 decl_stmt|;
-name|writye
+name|write
 argument_list|(
 literal|2
 argument_list|,
