@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.23 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -722,7 +722,7 @@ name|strcat
 argument_list|(
 name|tbuf
 argument_list|,
-literal|"\r"
+literal|"\r\n"
 argument_list|)
 expr_stmt|;
 name|p
