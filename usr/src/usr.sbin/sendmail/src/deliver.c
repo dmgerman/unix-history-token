@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.59 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.60 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6280,7 +6280,7 @@ block|}
 comment|/* it died a horrid death */
 name|syserr
 argument_list|(
-literal|"mailer %s died with signal %o"
+literal|"451 mailer %s died with signal %o"
 argument_list|,
 name|mci
 operator|->
