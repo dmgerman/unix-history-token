@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	6.1	83/08/16	*/
+comment|/*	ip_input.c	6.2	84/04/14	*/
 end_comment
 
 begin_include
@@ -2169,6 +2169,7 @@ operator|=
 literal|1
 expr_stmt|;
 else|else
+block|{
 name|optlen
 operator|=
 name|cp
@@ -2176,6 +2177,14 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|optlen
+operator|<=
+literal|0
+condition|)
+break|break;
+block|}
 switch|switch
 condition|(
 name|opt
