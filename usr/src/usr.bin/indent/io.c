@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.4 (Berkeley) %G%"
+literal|"@(#)io.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,6 @@ begin_include
 include|#
 directive|include
 file|"indent_globs.h"
-include|;
 end_include
 
 begin_decl_stmt
@@ -470,6 +469,9 @@ condition|(
 operator|*
 name|p
 operator|==
+operator|(
+name|char
+operator|)
 literal|0200
 condition|)
 name|fprintf
