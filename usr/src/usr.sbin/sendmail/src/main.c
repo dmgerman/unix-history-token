@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.9 (Berkeley) %G%"
+literal|"@(#)main.c	5.9.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -529,22 +529,20 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|CurEnv
-operator|=
-operator|&
+name|STRUCTCOPY
+argument_list|(
 name|BlankEnvelope
+argument_list|,
+name|MainEnvelope
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STRUCTCOPY
-argument_list|(
-name|NullAddress
-argument_list|,
+name|CurEnv
+operator|=
+operator|&
 name|MainEnvelope
-operator|.
-name|e_from
-argument_list|)
 expr_stmt|;
 end_expr_stmt
 
