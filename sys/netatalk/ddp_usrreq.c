@@ -6,18 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -72,18 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netatalk/at.h>
 end_include
 
@@ -97,18 +73,6 @@ begin_include
 include|#
 directive|include
 file|<netatalk/ddp_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatalk/aarp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netatalk/endian.h>
 end_include
 
 begin_include

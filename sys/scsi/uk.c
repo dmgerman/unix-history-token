@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Driver for a device we can't identify.  * by Julian Elischer (julian@tfs.com)  *  *      $Id: uk.c,v 1.16 1997/02/22 09:44:41 peter Exp $  *  * If you find that you are adding any code to this file look closely  * at putting it in "scsi_driver.c" instead.  */
+comment|/*  * Driver for a device we can't identify.  * by Julian Elischer (julian@tfs.com)  *  *      $Id: uk.c,v 1.17 1997/03/23 06:33:54 bde Exp $  *  * If you find that you are adding any code to this file look closely  * at putting it in "scsi_driver.c" instead.  */
 end_comment
 
 begin_include
@@ -47,12 +47,6 @@ end_endif
 begin_comment
 comment|/*DEVFS*/
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsi_all.h>
-end_include
 
 begin_include
 include|#

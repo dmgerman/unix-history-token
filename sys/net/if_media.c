@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_media.c,v 1.1 1997/03/17 02:55:15 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: if_media.c,v 1.2 1997/05/03 20:58:10 peter Exp $ */
 end_comment
 
 begin_comment
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_include
@@ -61,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_media.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/netisr.h>
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.17 1997/05/03 21:19:54 joerg Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.18 1997/07/14 04:30:22 julian Exp $  *  *  */
 end_comment
 
 begin_include
@@ -13,18 +13,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/namei.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -48,18 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -68,16 +44,6 @@ include|#
 directive|include
 file|<miscfs/devfs/devfsdefs.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<miscfs/specfs/specdev.h>
-end_include
-
-begin_comment
-comment|/* defines v_rdev	*/
-end_comment
 
 begin_function_decl
 specifier|static

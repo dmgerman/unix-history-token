@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -56,25 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/radix.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
 end_include
 
 begin_include

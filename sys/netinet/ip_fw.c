@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.58 1997/06/02 05:02:36 julian Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.59 1997/06/04 22:09:15 julian Exp $  */
 end_comment
 
 begin_comment
@@ -51,12 +51,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -69,12 +63,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -82,12 +70,6 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
 end_include
 
 begin_include

@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sysentvec for native FreeBSD a.out executable format.  *  * $Id$  */
+comment|/*  * sysentvec for native FreeBSD a.out executable format.  *  * $Id: init_sysvec.c,v 1.4 1997/02/22 09:38:59 peter Exp $  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -18,19 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysproto.h>
 end_include
 
 begin_include
