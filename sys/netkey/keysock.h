@@ -150,8 +150,11 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|_NETKEY_KEYSOCK_H_
 end_endif
+
+begin_comment
+comment|/* _NETKEY_KEYSOCK_H_ */
+end_comment
 
 end_unit
 
