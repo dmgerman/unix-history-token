@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_acct.c	8.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_acct.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -87,6 +87,12 @@ directive|include
 file|<sys/syslog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/syscallargs.h>
+end_include
+
 begin_comment
 comment|/*  * Values associated with enabling and disabling accounting  */
 end_comment
@@ -151,18 +157,6 @@ begin_comment
 comment|/*  * Enable or disable process accounting.  *  * If a non-null filename is given, that file is used to store accounting  * records on process exit. If a null filename is given process accounting  * is suspended. If accounting is enabled, the system checks the amount  * of freespace on the filesystem at timeval intervals. If the amount of  * freespace is below acctsuspend percent, accounting is suspended. If  * accounting has been suspended, and freespace rises above acctresume,  * accounting is resumed.  */
 end_comment
 
-begin_struct
-struct|struct
-name|acct_args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_macro
 name|acct
 argument_list|(
@@ -185,13 +179,14 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|acct_args
+comment|/* { 		syscallarg(char *) path; 	} */
 modifier|*
 name|uap
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|register_t
 modifier|*
 name|retval
 decl_stmt|;
@@ -265,9 +260,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SCARG
+argument_list|(
 name|uap
-operator|->
-name|fname
+argument_list|,
+name|path
+argument_list|)
 operator|==
 name|NULL
 condition|)
@@ -323,9 +321,12 @@ name|FOLLOW
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
+name|SCARG
+argument_list|(
 name|uap
-operator|->
-name|fname
+argument_list|,
+name|path
+argument_list|)
 argument_list|,
 name|p
 argument_list|)

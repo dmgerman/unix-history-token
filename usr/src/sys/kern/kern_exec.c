@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	8.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -85,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syscallargs.h>
 end_include
 
 begin_include
@@ -234,13 +240,14 @@ begin_decl_stmt
 specifier|register
 name|struct
 name|execve_args
+comment|/* { 		syscallarg(char *) path; 		syscallarg(char **) argp;   		syscallarg(char **) envp; 	} */
 modifier|*
 name|uap
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|register_t
 modifier|*
 name|retval
 decl_stmt|;
@@ -399,9 +406,12 @@ name|SAVENAME
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
+name|SCARG
+argument_list|(
 name|uap
-operator|->
-name|fname
+argument_list|,
+name|path
+argument_list|)
 argument_list|,
 name|p
 argument_list|)
@@ -1455,9 +1465,12 @@ expr_stmt|;
 comment|/* 	 * Copy arguments into file in argdev area. 	 */
 if|if
 condition|(
+name|SCARG
+argument_list|(
 name|uap
-operator|->
+argument_list|,
 name|argp
+argument_list|)
 condition|)
 for|for
 control|(
@@ -1497,9 +1510,12 @@ name|int
 operator|)
 name|sharg
 expr_stmt|;
+name|SCARG
+argument_list|(
 name|uap
-operator|->
+argument_list|,
 name|argp
+argument_list|)
 operator|++
 expr_stmt|;
 comment|/* ignore argv[0] */
@@ -1558,16 +1574,22 @@ operator|=
 operator|(
 name|int
 operator|)
+name|SCARG
+argument_list|(
 name|uap
-operator|->
-name|fname
+argument_list|,
+name|path
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|SCARG
+argument_list|(
 name|uap
-operator|->
+argument_list|,
 name|argp
+argument_list|)
 condition|)
 block|{
 name|ap
@@ -1577,14 +1599,20 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
+name|SCARG
+argument_list|(
 name|uap
-operator|->
+argument_list|,
 name|argp
 argument_list|)
+argument_list|)
 expr_stmt|;
+name|SCARG
+argument_list|(
 name|uap
-operator|->
+argument_list|,
 name|argp
+argument_list|)
 operator|++
 expr_stmt|;
 block|}
@@ -1594,14 +1622,20 @@ name|ap
 operator|==
 name|NULL
 operator|&&
+name|SCARG
+argument_list|(
 name|uap
-operator|->
+argument_list|,
 name|envp
+argument_list|)
 condition|)
 block|{
+name|SCARG
+argument_list|(
 name|uap
-operator|->
-name|argp
+argument_list|,
+name|envp
+argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
@@ -1615,17 +1649,23 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
+name|SCARG
+argument_list|(
 name|uap
-operator|->
+argument_list|,
 name|envp
+argument_list|)
 argument_list|)
 operator|)
 operator|!=
 name|NULL
 condition|)
+name|SCARG
+argument_list|(
 name|uap
-operator|->
+argument_list|,
 name|envp
+argument_list|)
 operator|++
 operator|,
 name|ne
