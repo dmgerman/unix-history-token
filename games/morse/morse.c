@@ -515,7 +515,7 @@ specifier|static
 specifier|const
 name|struct
 name|morsetab
-name|iso8859tab
+name|iso8859_1tab
 index|[]
 init|=
 block|{
@@ -579,6 +579,277 @@ block|,
 literal|"..--"
 block|}
 block|,
+block|{
+literal|'\0'
+block|,
+literal|""
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|morsetab
+name|iso8859_7tab
+index|[]
+init|=
+block|{
+comment|/* 	 * The greek alphabet; you'll need an 8859-7 font in order 	 * to see the actual characters. 	 * This table does not implement: 	 * - the special sequences for the seven diphthongs, 	 * - the punctuation differences. 	 * Implementing these features would introduce too many 	 * special-cases in the program's main loop. 	 * The diphtong sequences are: 	 * alpha iota		.-.- 	 * alpha upsilon	..-- 	 * epsilon upsilon	---. 	 * eta upsilon		...- 	 * omikron iota		---.. 	 * omikron upsilon	..- 	 * upsilon iota		.--- 	 * The different punctuation symbols are: 	 * ;	..-.- 	 * !	--..-- 	 */
+block|{
+literal|'á'
+block|,
+literal|".-"
+block|}
+block|,
+comment|/* alpha */
+block|{
+literal|'Ü'
+block|,
+literal|".-"
+block|}
+block|,
+comment|/* alpha with acute */
+block|{
+literal|'â'
+block|,
+literal|"-..."
+block|}
+block|,
+comment|/* beta */
+block|{
+literal|'ã'
+block|,
+literal|"--."
+block|}
+block|,
+comment|/* gamma */
+block|{
+literal|'ä'
+block|,
+literal|"-.."
+block|}
+block|,
+comment|/* delta */
+block|{
+literal|'å'
+block|,
+literal|"."
+block|}
+block|,
+comment|/* epsilon */
+block|{
+literal|'Ý'
+block|,
+literal|"."
+block|}
+block|,
+comment|/* epsilon with acute */
+block|{
+literal|'æ'
+block|,
+literal|"--.."
+block|}
+block|,
+comment|/* zeta */
+block|{
+literal|'ç'
+block|,
+literal|"...."
+block|}
+block|,
+comment|/* eta */
+block|{
+literal|'Þ'
+block|,
+literal|"...."
+block|}
+block|,
+comment|/* eta with acute */
+block|{
+literal|'è'
+block|,
+literal|"-.-."
+block|}
+block|,
+comment|/* theta */
+block|{
+literal|'é'
+block|,
+literal|".."
+block|}
+block|,
+comment|/* iota */
+block|{
+literal|'ß'
+block|,
+literal|".."
+block|}
+block|,
+comment|/* iota with acute */
+block|{
+literal|'ú'
+block|,
+literal|".."
+block|}
+block|,
+comment|/* iota with diairesis */
+block|{
+literal|'À'
+block|,
+literal|".."
+block|}
+block|,
+comment|/* iota with acute and diairesis */
+block|{
+literal|'ê'
+block|,
+literal|"-.-"
+block|}
+block|,
+comment|/* kappa */
+block|{
+literal|'ë'
+block|,
+literal|".-.."
+block|}
+block|,
+comment|/* lamda */
+block|{
+literal|'ì'
+block|,
+literal|"--"
+block|}
+block|,
+comment|/* mu */
+block|{
+literal|'í'
+block|,
+literal|"-."
+block|}
+block|,
+comment|/* nu */
+block|{
+literal|'î'
+block|,
+literal|"-..-"
+block|}
+block|,
+comment|/* xi */
+block|{
+literal|'ï'
+block|,
+literal|"---"
+block|}
+block|,
+comment|/* omicron */
+block|{
+literal|'ü'
+block|,
+literal|"---"
+block|}
+block|,
+comment|/* omicron with acute */
+block|{
+literal|'ð'
+block|,
+literal|".--."
+block|}
+block|,
+comment|/* pi */
+block|{
+literal|'ñ'
+block|,
+literal|".-."
+block|}
+block|,
+comment|/* rho */
+block|{
+literal|'ó'
+block|,
+literal|"..."
+block|}
+block|,
+comment|/* sigma */
+block|{
+literal|'ò'
+block|,
+literal|"..."
+block|}
+block|,
+comment|/* final sigma */
+block|{
+literal|'ô'
+block|,
+literal|"-"
+block|}
+block|,
+comment|/* tau */
+block|{
+literal|'õ'
+block|,
+literal|"-.--"
+block|}
+block|,
+comment|/* upsilon */
+block|{
+literal|'ý'
+block|,
+literal|"-.--"
+block|}
+block|,
+comment|/* upsilon with acute */
+block|{
+literal|'û'
+block|,
+literal|"-.--"
+block|}
+block|,
+comment|/* upsilon and diairesis */
+block|{
+literal|'à'
+block|,
+literal|"-.--"
+block|}
+block|,
+comment|/* upsilon with acute and diairesis */
+block|{
+literal|'ö'
+block|,
+literal|"..-."
+block|}
+block|,
+comment|/* phi */
+block|{
+literal|'÷'
+block|,
+literal|"----"
+block|}
+block|,
+comment|/* chi */
+block|{
+literal|'ø'
+block|,
+literal|"--.-"
+block|}
+block|,
+comment|/* psi */
+block|{
+literal|'ù'
+block|,
+literal|".--"
+block|}
+block|,
+comment|/* omega */
+block|{
+literal|'þ'
+block|,
+literal|".--"
+block|}
+block|,
+comment|/* omega with acute */
 block|{
 literal|'\0'
 block|,
@@ -1028,7 +1299,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: morse [-s] [-p] [-e] [-d device] [-w speed] [-f frequency] [string ...]\n"
+value|"usage: morse [-elps] [-d device] [-w speed] [-f frequency] [string ...]\n"
 end_define
 
 begin_endif
@@ -1585,7 +1856,23 @@ literal|0
 condition|)
 name|hightab
 operator|=
-name|iso8859tab
+name|iso8859_1tab
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|codeset
+argument_list|,
+literal|"ISO8859-7"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|hightab
+operator|=
+name|iso8859_7tab
 expr_stmt|;
 block|}
 if|if
