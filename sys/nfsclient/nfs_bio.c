@@ -5731,26 +5731,16 @@ name|tv_sec
 operator|)
 condition|)
 block|{
-name|uprintf
-argument_list|(
-literal|"Process killed due to text file modification\n"
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|psignal
+name|killproc
 argument_list|(
 name|p
 argument_list|,
-name|SIGKILL
-argument_list|)
-expr_stmt|;
-name|_PHOLD
-argument_list|(
-name|p
+literal|"text file modification"
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
