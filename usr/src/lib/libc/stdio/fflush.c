@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fflush.c	5.2 (Berkeley) %G%"
+literal|"@(#)fflush.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<errno.h>
 end_include
 
 begin_include

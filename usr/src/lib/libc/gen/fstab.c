@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstab.c	5.15 (Berkeley) %G%"
+literal|"@(#)fstab.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,19 +40,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<fstab.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include
@@ -73,6 +67,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|FILE
@@ -89,12 +89,29 @@ name|_fs_fstab
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|error
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|fstabscan
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 specifier|static
