@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -1469,7 +1475,7 @@ value|do { FREE((item), M_NETGRAPH_ITEM); } while (0)
 end_define
 
 begin_comment
-comment|/* Set this to Debugger("X") to catch all errors as they occur */
+comment|/* Set this to kdb_enter("X") to catch all errors as they occur */
 end_comment
 
 begin_ifndef
@@ -12544,7 +12550,7 @@ define|#
 directive|define
 name|ITEM_DEBUG_CHECKS
 define|\
-value|do {								\ 		if (NGI_NODE(item) ) {					\ 			printf("item already has node");		\ 			Debugger("has node");				\ 			NGI_CLR_NODE(item);				\ 		}							\ 		if (NGI_HOOK(item) ) {					\ 			printf("item already has hook");		\ 			Debugger("has hook");				\ 			NGI_CLR_HOOK(item);				\ 		}							\ 	} while (0)
+value|do {								\ 		if (NGI_NODE(item) ) {					\ 			printf("item already has node");		\ 			kdb_enter("has node");				\ 			NGI_CLR_NODE(item);				\ 		}							\ 		if (NGI_HOOK(item) ) {					\ 			printf("item already has hook");		\ 			kdb_enter("has hook");				\ 			NGI_CLR_HOOK(item);				\ 		}							\ 	} while (0)
 end_define
 
 begin_else

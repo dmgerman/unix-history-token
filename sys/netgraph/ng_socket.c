@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -565,7 +571,7 @@ value|((struct ngpcb *)(so)->so_pcb)
 end_define
 
 begin_comment
-comment|/* If getting unexplained errors returned, set this to "Debugger("X"); */
+comment|/* If getting unexplained errors returned, set this to "kdb_enter("X"); */
 end_comment
 
 begin_ifndef
