@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_syscalls.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_syscalls.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -83,10 +83,18 @@ begin_comment
 comment|/*  * mount system call  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|mount
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -116,9 +124,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -127,9 +135,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 name|struct
 name|vnode
@@ -151,14 +159,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|scp
+operator|->
+name|sc_cred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|scp
+operator|->
+name|sc_acflag
 argument_list|)
 condition|)
 name|RETURN
@@ -424,10 +432,18 @@ begin_comment
 comment|/*  * Unmount system call.  *  * Note: unmount takes a path to the vnode mounted on as argument,  * not special file (as before).  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|unmount
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -450,9 +466,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -473,9 +489,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 name|struct
 name|vnode
@@ -492,14 +508,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|scp
+operator|->
+name|sc_cred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|scp
+operator|->
+name|sc_acflag
 argument_list|)
 condition|)
 name|RETURN
@@ -684,10 +700,18 @@ begin_comment
 comment|/*  * Sync system call.  * Sync each mounted filesystem.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|sync
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -743,10 +767,18 @@ begin_comment
 comment|/*  * get filesystem statistics  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|statfs
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -771,9 +803,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -788,9 +820,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 name|struct
 name|statfs
@@ -898,10 +930,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
 name|fstatfs
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -925,9 +965,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 name|struct
 name|file
@@ -947,6 +987,10 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
+name|scp
+operator|->
+name|sc_ofile
+argument_list|,
 name|uap
 operator|->
 name|fd
@@ -1019,10 +1063,18 @@ begin_comment
 comment|/*  * get statistics on all filesystems  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|getfsstat
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1046,9 +1098,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -1151,20 +1203,16 @@ name|count
 operator|>
 name|maxcount
 condition|)
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
+name|scp
+operator|->
+name|sc_retval1
 operator|=
 name|maxcount
 expr_stmt|;
 else|else
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
+name|scp
+operator|->
+name|sc_retval1
 operator|=
 name|count
 expr_stmt|;
@@ -1180,10 +1228,18 @@ begin_comment
 comment|/*  * Change current working directory to a given file descriptor.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|fchdir
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1202,9 +1258,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -1226,6 +1282,10 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
+name|scp
+operator|->
+name|sc_ofile
+argument_list|,
 name|uap
 operator|->
 name|fd
@@ -1276,9 +1336,9 @@ name|vp
 argument_list|,
 name|VEXEC
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|scp
+operator|->
+name|sc_cred
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -1288,14 +1348,14 @@ argument_list|)
 expr_stmt|;
 name|vrele
 argument_list|(
-name|u
-operator|.
-name|u_cdir
+name|scp
+operator|->
+name|sc_cdir
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_cdir
+name|scp
+operator|->
+name|sc_cdir
 operator|=
 name|vp
 expr_stmt|;
@@ -1311,10 +1371,18 @@ begin_comment
 comment|/*  * Change current working directory (``.'').  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|chdir
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1334,9 +1402,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -1345,9 +1413,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 name|int
 name|error
@@ -1392,14 +1460,14 @@ argument_list|)
 expr_stmt|;
 name|vrele
 argument_list|(
-name|u
-operator|.
-name|u_cdir
+name|scp
+operator|->
+name|sc_cdir
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_cdir
+name|scp
+operator|->
+name|sc_cdir
 operator|=
 name|ndp
 operator|->
@@ -1417,10 +1485,18 @@ begin_comment
 comment|/*  * Change notion of root (``/'') directory.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|chroot
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1440,9 +1516,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -1451,9 +1527,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 name|int
 name|error
@@ -1464,14 +1540,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|scp
+operator|->
+name|sc_cred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|scp
+operator|->
+name|sc_acflag
 argument_list|)
 condition|)
 name|RETURN
@@ -1519,14 +1595,14 @@ argument_list|)
 expr_stmt|;
 name|vrele
 argument_list|(
-name|u
-operator|.
-name|u_rdir
+name|scp
+operator|->
+name|sc_rdir
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_rdir
+name|scp
+operator|->
+name|sc_rdir
 operator|=
 name|ndp
 operator|->
@@ -1639,10 +1715,18 @@ begin_comment
 comment|/*  * Open system call.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|open
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1668,9 +1752,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 name|struct
 name|nameidata
@@ -1678,9 +1762,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 name|ndp
 operator|->
@@ -1700,6 +1784,8 @@ name|RETURN
 argument_list|(
 name|copen
 argument_list|(
+name|scp
+argument_list|,
 name|uap
 operator|->
 name|mode
@@ -1711,18 +1797,16 @@ operator|->
 name|crtmode
 operator|&
 operator|~
-name|u
-operator|.
-name|u_cmask
+name|scp
+operator|->
+name|sc_cmask
 argument_list|,
 name|ndp
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
+name|scp
+operator|->
+name|sc_retval1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1733,10 +1817,18 @@ begin_comment
 comment|/*  * Creat system call.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|creat
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1759,9 +1851,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 name|struct
 name|nameidata
@@ -1769,9 +1861,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 name|ndp
 operator|->
@@ -1791,6 +1883,8 @@ name|RETURN
 argument_list|(
 name|copen
 argument_list|(
+name|scp
+argument_list|,
 name|FWRITE
 operator||
 name|FCREAT
@@ -1802,18 +1896,16 @@ operator|->
 name|fmode
 operator|&
 operator|~
-name|u
-operator|.
-name|u_cmask
+name|scp
+operator|->
+name|sc_cmask
 argument_list|,
 name|ndp
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
+name|scp
+operator|->
+name|sc_retval1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1824,18 +1916,26 @@ begin_comment
 comment|/*  * Common code for open and creat.  * Check permissions, allocate an open file structure,  * and call the device open routine if any.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|copen
 argument_list|(
-argument|fmode
+name|scp
 argument_list|,
-argument|cmode
+name|fmode
 argument_list|,
-argument|ndp
+name|cmode
 argument_list|,
-argument|resultfd
+name|ndp
+argument_list|,
+name|resultfd
 argument_list|)
-end_macro
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -1905,11 +2005,9 @@ name|fp
 operator|=
 name|nfp
 expr_stmt|;
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
+name|scp
+operator|->
+name|sc_retval1
 operator|=
 name|indx
 expr_stmt|;
@@ -1935,9 +2033,9 @@ name|ISVTX
 argument_list|)
 condition|)
 block|{
-name|u
-operator|.
-name|u_ofile
+name|scp
+operator|->
+name|sc_ofile
 index|[
 name|indx
 index|]
@@ -2015,10 +2113,18 @@ begin_comment
 comment|/*  * Mknod system call  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|mknod
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -2045,9 +2151,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -2056,9 +2162,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -2079,14 +2185,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|scp
+operator|->
+name|sc_cred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|scp
+operator|->
+name|sc_acflag
 argument_list|)
 condition|)
 name|RETURN
@@ -2219,9 +2325,9 @@ literal|07777
 operator|)
 operator|&
 operator|~
-name|u
-operator|.
-name|u_cmask
+name|scp
+operator|->
+name|sc_cmask
 expr_stmt|;
 name|vattr
 operator|.
@@ -2269,10 +2375,18 @@ begin_comment
 comment|/*  * link system call  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|link
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -2297,9 +2411,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -2308,9 +2422,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -2379,14 +2493,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|scp
+operator|->
+name|sc_cred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|scp
+operator|->
+name|sc_acflag
 argument_list|)
 operator|)
 condition|)
@@ -2505,10 +2619,18 @@ begin_comment
 comment|/*  * symlink -- make a symbolic link  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|symlink
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -2532,9 +2654,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -2543,9 +2665,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -2674,9 +2796,9 @@ operator|=
 literal|0777
 operator|&
 operator|~
-name|u
-operator|.
-name|u_cmask
+name|scp
+operator|->
+name|sc_cmask
 expr_stmt|;
 name|out
 label|:
@@ -2723,10 +2845,18 @@ begin_comment
 comment|/*  * Unlink system call.  * Hard to avoid races here, especially  * in unlinking directories.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|unlink
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -2746,9 +2876,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -2757,9 +2887,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -2827,14 +2957,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|scp
+operator|->
+name|sc_cred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|scp
+operator|->
+name|sc_acflag
 argument_list|)
 operator|)
 condition|)
@@ -2904,10 +3034,18 @@ begin_comment
 comment|/*  * Seek system call  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|lseek
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -2939,9 +3077,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 name|struct
 name|vattr
@@ -2964,9 +3102,9 @@ operator|||
 operator|(
 name|fp
 operator|=
-name|u
-operator|.
-name|u_ofile
+name|scp
+operator|->
+name|sc_ofile
 index|[
 name|uap
 operator|->
@@ -3034,9 +3172,9 @@ argument_list|,
 operator|&
 name|vattr
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|scp
+operator|->
+name|sc_cred
 argument_list|)
 condition|)
 name|RETURN
@@ -3076,11 +3214,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 block|}
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_off
+name|scp
+operator|->
+name|sc_offset
 operator|=
 name|fp
 operator|->
@@ -3098,10 +3234,18 @@ begin_comment
 comment|/*  * Access system call  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|saccess
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -3125,9 +3269,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -3136,9 +3280,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -3157,31 +3301,31 @@ name|svgid
 decl_stmt|;
 name|svuid
 operator|=
-name|u
-operator|.
-name|u_uid
+name|scp
+operator|->
+name|sc_uid
 expr_stmt|;
 name|svgid
 operator|=
-name|u
-operator|.
-name|u_gid
+name|scp
+operator|->
+name|sc_gid
 expr_stmt|;
-name|u
-operator|.
-name|u_uid
+name|scp
+operator|->
+name|sc_uid
 operator|=
-name|u
-operator|.
-name|u_ruid
+name|scp
+operator|->
+name|sc_ruid
 expr_stmt|;
-name|u
-operator|.
-name|u_gid
+name|scp
+operator|->
+name|sc_gid
 operator|=
-name|u
-operator|.
-name|u_rgid
+name|scp
+operator|->
+name|sc_rgid
 expr_stmt|;
 name|ndp
 operator|->
@@ -3307,15 +3451,15 @@ argument_list|)
 expr_stmt|;
 name|out1
 label|:
-name|u
-operator|.
-name|u_uid
+name|scp
+operator|->
+name|sc_uid
 operator|=
 name|svuid
 expr_stmt|;
-name|u
-operator|.
-name|u_gid
+name|scp
+operator|->
+name|sc_gid
 operator|=
 name|svgid
 expr_stmt|;
@@ -3333,13 +3477,25 @@ end_comment
 
 begin_macro
 name|stat
-argument_list|()
+argument_list|(
+argument|scp
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|syscontext
+modifier|*
+name|scp
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
 name|stat1
 argument_list|(
+name|scp
+argument_list|,
 name|FOLLOW
 argument_list|)
 expr_stmt|;
@@ -3352,25 +3508,45 @@ end_comment
 
 begin_macro
 name|lstat
-argument_list|()
+argument_list|(
+argument|scp
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|syscontext
+modifier|*
+name|scp
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
 name|stat1
 argument_list|(
+name|scp
+argument_list|,
 name|NOFOLLOW
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
 name|stat1
 argument_list|(
-argument|follow
+name|scp
+argument_list|,
+name|follow
 argument_list|)
-end_macro
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -3402,9 +3578,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -3413,9 +3589,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 name|struct
 name|stat
@@ -3525,10 +3701,18 @@ begin_comment
 comment|/*  * Return target name of a symbolic link  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|readlink
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -3556,9 +3740,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -3567,9 +3751,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -3723,11 +3907,9 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
+name|scp
+operator|->
+name|sc_retval1
 operator|=
 name|uap
 operator|->
@@ -3749,10 +3931,18 @@ begin_comment
 comment|/*  * Change flags of a file given path name.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|chflags
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -3775,9 +3965,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -3786,9 +3976,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -3913,10 +4103,18 @@ begin_comment
 comment|/*  * Change flags of a file given a file descriptor.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|fchflags
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -3938,9 +4136,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 name|struct
 name|vattr
@@ -3965,6 +4163,10 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
+name|scp
+operator|->
+name|sc_ofile
+argument_list|,
 name|uap
 operator|->
 name|fd
@@ -4060,10 +4262,18 @@ begin_comment
 comment|/*  * Change mode of a file given path name.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|chmod
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -4086,9 +4296,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -4097,9 +4307,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -4226,10 +4436,18 @@ begin_comment
 comment|/*  * Change mode of a file given a file descriptor.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|fchmod
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -4251,9 +4469,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 name|struct
 name|vattr
@@ -4278,6 +4496,10 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
+name|scp
+operator|->
+name|sc_ofile
+argument_list|,
 name|uap
 operator|->
 name|fd
@@ -4375,10 +4597,18 @@ begin_comment
 comment|/*  * Set ownership given a path name.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|chown
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -4404,9 +4634,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -4415,9 +4645,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -4550,10 +4780,18 @@ begin_comment
 comment|/*  * Set ownership given a file descriptor.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|fchown
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -4578,9 +4816,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 name|struct
 name|vattr
@@ -4605,6 +4843,10 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
+name|scp
+operator|->
+name|sc_ofile
+argument_list|,
 name|uap
 operator|->
 name|fd
@@ -4704,10 +4946,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
 name|utimes
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -4733,9 +4983,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -4744,9 +4994,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -4917,10 +5167,18 @@ begin_comment
 comment|/*  * Truncate a file given its path name.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|truncate
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -4943,9 +5201,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -4954,9 +5212,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -5108,10 +5366,18 @@ begin_comment
 comment|/*  * Truncate a file given a file descriptor.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|ftruncate
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -5133,9 +5399,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 name|struct
 name|vattr
@@ -5160,6 +5426,10 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
+name|scp
+operator|->
+name|sc_ofile
+argument_list|,
 name|uap
 operator|->
 name|fd
@@ -5282,10 +5552,18 @@ begin_comment
 comment|/*  * Synch an open file.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|fsync
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -5304,9 +5582,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 name|struct
 name|file
@@ -5322,6 +5600,10 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
+name|scp
+operator|->
+name|sc_ofile
+argument_list|,
 name|uap
 operator|->
 name|fd
@@ -5369,10 +5651,18 @@ begin_comment
 comment|/*  * Rename system call.  *  * Source and destination must either both be directories, or both  * not be directories.  If target is a directory, it must be empty.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|rename
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -5396,9 +5686,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -5419,9 +5709,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 name|struct
 name|nameidata
@@ -5680,10 +5970,18 @@ begin_comment
 comment|/*  * Mkdir system call  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|mkdir
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -5706,9 +6004,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -5717,9 +6015,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -5819,9 +6117,9 @@ literal|0777
 operator|)
 operator|&
 operator|~
-name|u
-operator|.
-name|u_cmask
+name|scp
+operator|->
+name|sc_cmask
 expr_stmt|;
 name|error
 operator|=
@@ -5857,10 +6155,18 @@ begin_comment
 comment|/*  * Rmdir system call.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|rmdir
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -5880,9 +6186,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 specifier|register
 name|struct
@@ -5891,9 +6197,9 @@ modifier|*
 name|ndp
 init|=
 operator|&
-name|u
-operator|.
-name|u_nd
+name|scp
+operator|->
+name|sc_nd
 decl_stmt|;
 specifier|register
 name|struct
@@ -6027,10 +6333,18 @@ begin_comment
 comment|/*  * Read a block of directory entries in a file system independent format  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|getdirentries
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -6061,9 +6375,9 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
 name|struct
 name|file
@@ -6090,6 +6404,10 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
+name|scp
+operator|->
+name|sc_ofile
+argument_list|,
 name|uap
 operator|->
 name|fd
@@ -6233,11 +6551,9 @@ name|long
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
+name|scp
+operator|->
+name|sc_retval1
 operator|=
 name|uap
 operator|->
@@ -6259,10 +6575,18 @@ begin_comment
 comment|/*  * mode mask for creation of files  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|umask
-argument_list|()
-end_macro
+argument_list|(
+name|scp
+argument_list|)
+specifier|register
+expr|struct
+name|syscontext
+operator|*
+name|scp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -6282,23 +6606,21 @@ expr|struct
 name|a
 operator|*
 operator|)
-name|u
-operator|.
-name|u_ap
+name|scp
+operator|->
+name|sc_ap
 struct|;
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
+name|scp
+operator|->
+name|sc_retval1
 operator|=
-name|u
-operator|.
-name|u_cmask
+name|scp
+operator|->
+name|sc_cmask
 expr_stmt|;
-name|u
-operator|.
-name|u_cmask
+name|scp
+operator|->
+name|sc_cmask
 operator|=
 name|uap
 operator|->
@@ -6317,11 +6639,22 @@ end_block
 begin_macro
 name|getvnode
 argument_list|(
+argument|ofile
+argument_list|,
 argument|fdes
 argument_list|,
 argument|fpp
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|file
+modifier|*
+name|ofile
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -6357,9 +6690,7 @@ operator|||
 operator|(
 name|fp
 operator|=
-name|u
-operator|.
-name|u_ofile
+name|ofile
 index|[
 name|fdes
 index|]
