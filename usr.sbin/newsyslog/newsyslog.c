@@ -1004,7 +1004,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * All the following are defined to work on an 'int', in the  * range 0 to 255, plus EOF.  Define wrappers which can take  * values of type 'char', either signed or unsigned.  */
+comment|/*  * All the following take a parameter of 'int', but expect values in the  * range of unsigned char.  Define wrappers which take values of type 'char',  * whether signed or unsigned, and ensure they end up in the right range.  */
 end_comment
 
 begin_define
@@ -1014,7 +1014,7 @@ name|isdigitch
 parameter_list|(
 name|Anychar
 parameter_list|)
-value|isdigit(((int) Anychar)& 255)
+value|isdigit((u_char)(Anychar))
 end_define
 
 begin_define
@@ -1024,7 +1024,7 @@ name|isprintch
 parameter_list|(
 name|Anychar
 parameter_list|)
-value|isprint(((int) Anychar)& 255)
+value|isprint((u_char)(Anychar))
 end_define
 
 begin_define
@@ -1034,7 +1034,7 @@ name|isspacech
 parameter_list|(
 name|Anychar
 parameter_list|)
-value|isspace(((int) Anychar)& 255)
+value|isspace((u_char)(Anychar))
 end_define
 
 begin_define
@@ -1044,7 +1044,7 @@ name|tolowerch
 parameter_list|(
 name|Anychar
 parameter_list|)
-value|tolower(((int) Anychar)& 255)
+value|tolower((u_char)(Anychar))
 end_define
 
 begin_function
