@@ -1633,7 +1633,7 @@ name|debug
 condition|)
 name|warnx
 argument_list|(
-literal|"Handling signal flag %c"
+literal|"handling signal flag %c"
 argument_list|,
 name|c
 argument_list|)
@@ -2638,7 +2638,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s/%s: %s: No such user"
+literal|"%s/%s: %s: no such user"
 argument_list|,
 name|sep
 operator|->
@@ -2711,7 +2711,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s/%s: %s: No such group"
+literal|"%s/%s: %s: no such group"
 argument_list|,
 name|sep
 operator|->
@@ -3549,7 +3549,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s/%s: No such user '%s', service ignored"
+literal|"%s/%s: no such user '%s', service ignored"
 argument_list|,
 name|new
 operator|->
@@ -3586,7 +3586,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s/%s: No such group '%s', service ignored"
+literal|"%s/%s: no such group '%s', service ignored"
 argument_list|,
 name|new
 operator|->
