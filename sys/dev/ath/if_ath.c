@@ -11484,13 +11484,19 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_STATE
 argument_list|,
-literal|"ibss merge, rstamp %u tsf %llu "
-literal|"tstamp %llu\n"
+literal|"ibss merge, rstamp %u tsf %ju "
+literal|"tstamp %ju\n"
 argument_list|,
 name|rstamp
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|tsf
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ni
 operator|->
 name|ni_tstamp
