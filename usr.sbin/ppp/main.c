@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.90 1997/11/09 14:18:45 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.91 1997/11/09 18:51:23 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -789,6 +789,9 @@ name|int
 name|excode
 parameter_list|)
 block|{
+name|ServerClose
+argument_list|()
+expr_stmt|;
 name|OsInterfaceDown
 argument_list|(
 literal|1
@@ -892,9 +895,6 @@ argument_list|(
 name|excode
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ServerClose
-argument_list|()
 expr_stmt|;
 name|TtyOldMode
 argument_list|()
@@ -1082,6 +1082,13 @@ block|{
 name|int
 name|res
 decl_stmt|;
+name|VarHaveLocalAuthKey
+operator|=
+literal|0
+expr_stmt|;
+name|LocalAuthInit
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1109,6 +1116,28 @@ name|SERVER_PORT
 operator|+
 name|tunno
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|BringDownServer
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
+block|{
+name|VarHaveLocalAuthKey
+operator|=
+literal|0
+expr_stmt|;
+name|LocalAuthInit
+argument_list|()
+expr_stmt|;
+name|ServerClose
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1849,6 +1878,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SIGUSR2
+if|if
+condition|(
+name|mode
+operator|!=
+name|MODE_INTER
+condition|)
+name|pending_signal
+argument_list|(
+name|SIGUSR2
+argument_list|,
+name|BringDownServer
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dstsystem
@@ -1955,21 +2002,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Create server socket and listen (initial value is -2) */
-if|if
-condition|(
-name|server
-operator|==
-operator|-
-literal|2
-condition|)
-name|ServerTcpOpen
-argument_list|(
-name|SERVER_PORT
-operator|+
-name|tunno
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2627,9 +2659,6 @@ name|LogPHASE
 argument_list|,
 literal|"client connection closed.\n"
 argument_list|)
-expr_stmt|;
-name|LocalAuthInit
-argument_list|()
 expr_stmt|;
 name|mode
 operator|&=
@@ -4134,6 +4163,9 @@ name|netfd
 argument_list|,
 literal|"a+"
 argument_list|)
+expr_stmt|;
+name|LocalAuthInit
+argument_list|()
 expr_stmt|;
 name|mode
 operator||=

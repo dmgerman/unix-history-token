@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: server.c,v 1.7 1997/11/09 06:22:47 brian Exp $  */
+comment|/*  * $Id: server.c,v 1.8 1997/11/09 14:18:51 brian Exp $  */
 end_comment
 
 begin_include
@@ -134,7 +134,7 @@ name|int
 name|server
 init|=
 operator|-
-literal|2
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -318,6 +318,16 @@ sizeof|sizeof
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mask
+operator|!=
+operator|(
+name|mode_t
+operator|)
+operator|-
+literal|1
+condition|)
 name|mask
 operator|=
 name|umask
@@ -348,6 +358,16 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|mask
+operator|!=
+operator|(
+name|mode_t
+operator|)
+operator|-
+literal|1
+condition|)
 name|umask
 argument_list|(
 name|mask
@@ -394,6 +414,16 @@ return|return
 literal|4
 return|;
 block|}
+if|if
+condition|(
+name|mask
+operator|!=
+operator|(
+name|mode_t
+operator|)
+operator|-
+literal|1
+condition|)
 name|umask
 argument_list|(
 name|mask

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP configuration variables  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.c,v 1.31 1997/10/26 01:03:58 brian Exp $  *  */
+comment|/*  *		PPP configuration variables  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.c,v 1.32 1997/10/29 01:19:51 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -113,7 +113,7 @@ name|char
 name|VarLocalVersion
 index|[]
 init|=
-literal|"$Date: 1997/10/26 01:03:58 $"
+literal|"$Date: 1997/10/29 01:19:51 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -830,6 +830,24 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
+if|if
+condition|(
+name|VarHaveLocalAuthKey
+condition|)
+name|VarLocalAuth
+operator|=
+name|strcmp
+argument_list|(
+name|VarLocalAuthKey
+argument_list|,
+name|pass
+argument_list|)
+condition|?
+name|LOCAL_NO_AUTH
+else|:
+name|LOCAL_AUTH
+expr_stmt|;
+else|else
 switch|switch
 condition|(
 name|LocalAuthValidate
@@ -845,9 +863,7 @@ block|{
 case|case
 name|INVALID
 case|:
-name|pppVars
-operator|.
-name|lauth
+name|VarLocalAuth
 operator|=
 name|LOCAL_NO_AUTH
 expr_stmt|;
@@ -855,9 +871,7 @@ break|break;
 case|case
 name|VALID
 case|:
-name|pppVars
-operator|.
-name|lauth
+name|VarLocalAuth
 operator|=
 name|LOCAL_AUTH
 expr_stmt|;
@@ -865,9 +879,7 @@ break|break;
 case|case
 name|NOT_FOUND
 case|:
-name|pppVars
-operator|.
-name|lauth
+name|VarLocalAuth
 operator|=
 name|LOCAL_AUTH
 expr_stmt|;
@@ -880,9 +892,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|pppVars
-operator|.
-name|lauth
+name|VarLocalAuth
 operator|=
 name|LOCAL_NO_AUTH
 expr_stmt|;
