@@ -116,32 +116,26 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|getstops
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -169,6 +163,9 @@ decl_stmt|;
 specifier|register
 name|int
 name|n
+decl_stmt|;
+name|int
+name|rval
 decl_stmt|;
 comment|/* handle obsolete syntax */
 while|while
@@ -269,6 +266,10 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+name|rval
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -294,10 +295,9 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|errx
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s"
 argument_list|,
 name|argv
@@ -306,6 +306,18 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 name|argc
 operator|--
 operator|,
@@ -520,7 +532,7 @@ condition|)
 do|;
 name|exit
 argument_list|(
-literal|0
+name|rval
 argument_list|)
 expr_stmt|;
 block|}
