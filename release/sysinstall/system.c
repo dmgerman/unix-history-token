@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.40 1995/05/29 00:50:05 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.41 1995/05/29 02:13:31 phk Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -372,17 +372,10 @@ condition|(
 name|RunningAsInit
 condition|)
 block|{
-name|int
-name|fd
-decl_stmt|,
-name|on
-init|=
-literal|1
-decl_stmt|;
 comment|/* Put the console back */
 name|ioctl
 argument_list|(
-literal|0
+name|DebugFD
 argument_list|,
 name|VT_RELDISP
 argument_list|,
@@ -719,11 +712,6 @@ argument_list|,
 name|COLS
 argument_list|)
 expr_stmt|;
-name|unlink
-argument_list|(
-name|fname
-argument_list|)
-expr_stmt|;
 name|touchwin
 argument_list|(
 name|w
@@ -764,6 +752,14 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+specifier|static
+name|char
+name|oldfile
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* Should be FILENAME_MAX but I don't feel like wasting that much space */
 if|if
 condition|(
 operator|!
@@ -799,9 +795,46 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|oldfile
+index|[
+literal|0
+index|]
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
+name|oldfile
+argument_list|)
+condition|)
+return|return
+name|oldfile
+return|;
+else|else
+block|{
+name|unlink
+argument_list|(
+name|oldfile
+argument_list|)
+expr_stmt|;
+name|oldfile
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+block|}
 name|vsystem
 argument_list|(
-literal|"cd /stand&& zcat help.tgz | cpio --format=tar -idv %s"
+literal|"cd /stand&& zcat help.tgz | cpio --format=tar -idv %s> /dev/null 2>&1"
 argument_list|,
 name|buf
 argument_list|)
@@ -826,9 +859,18 @@ argument_list|(
 name|buf
 argument_list|)
 condition|)
+block|{
+name|strcpy
+argument_list|(
+name|oldfile
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 name|buf
 return|;
+block|}
 block|}
 comment|/* Fall back to normal imperialistic mode :-) */
 name|cp
@@ -848,9 +890,46 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|oldfile
+index|[
+literal|0
+index|]
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
+name|oldfile
+argument_list|)
+condition|)
+return|return
+name|oldfile
+return|;
+else|else
+block|{
+name|unlink
+argument_list|(
+name|oldfile
+argument_list|)
+expr_stmt|;
+name|oldfile
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+block|}
 name|vsystem
 argument_list|(
-literal|"cd /stand&& zcat help.tgz | cpio --format=tar -idv %s"
+literal|"cd /stand&& zcat help.tgz | cpio --format=tar -idv %s> /dev/null 2>&1"
 argument_list|,
 name|buf
 argument_list|)
@@ -875,9 +954,18 @@ argument_list|(
 name|buf
 argument_list|)
 condition|)
+block|{
+name|strcpy
+argument_list|(
+name|oldfile
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 name|buf
 return|;
+block|}
 return|return
 name|NULL
 return|;
@@ -1235,6 +1323,11 @@ name|SIGCHLD
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"Executing command `%s' (Magic=%d)\n"
@@ -1292,6 +1385,9 @@ block|{
 if|if
 condition|(
 name|OnVTY
+operator|&&
+name|isDebug
+argument_list|()
 condition|)
 name|msgInfo
 argument_list|(
@@ -1599,6 +1695,11 @@ argument_list|(
 name|pstat
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"Command `%s' returns status of %d\n"
