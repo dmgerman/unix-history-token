@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2216,45 +2216,6 @@ define|#
 directive|define
 name|METHOD_FLAGS_SYNCH_LEVEL
 value|0xF0
-end_define
-
-begin_comment
-comment|/* Array sizes.  Used for range checking also */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NUM_ACCESS_TYPES
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUM_UPDATE_RULES
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUM_MATCH_OPS
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUM_OPCODES
-value|256
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUM_FIELD_NAMES
-value|2
 end_define
 
 begin_endif

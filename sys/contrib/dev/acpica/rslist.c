@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rslist - Linked list utilities  *              $Revision: 30 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rslist - Linked list utilities  *              $Revision: 31 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -943,6 +943,19 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/*              * If we get here, everything is out of sync,              *  so exit with an error              */
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Invalid descriptor type (%X) in resource list\n"
+operator|,
+name|LinkedList
+operator|->
+name|Id
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AE_BAD_DATA

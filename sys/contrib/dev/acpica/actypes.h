@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 237 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 238 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -707,15 +707,61 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_LOGICAL_POINTER
+name|ACPI_PHYSICAL_POINTER
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_PHYSICAL_POINTER
+name|ACPI_LOGICAL_POINTER
 value|0x02
+end_define
+
+begin_comment
+comment|/* Processor mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PHYSICAL_ADDRESSING
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOGICAL_ADDRESSING
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEMORY_MODE
+value|0x0C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PHYSMODE_PHYSPTR
+value|ACPI_PHYSICAL_ADDRESSING | ACPI_PHYSICAL_POINTER
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOGMODE_PHYSPTR
+value|ACPI_LOGICAL_ADDRESSING  | ACPI_PHYSICAL_POINTER
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOGMODE_LOGPTR
+value|ACPI_LOGICAL_ADDRESSING  | ACPI_LOGICAL_POINTER
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 167 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 168 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -244,6 +244,9 @@ condition|)
 block|{
 case|case
 name|AML_NAME_OP
+case|:
+case|case
+name|AML_REF_OF_OP
 case|:
 comment|/* Storing an object into a Name "container" */
 name|Status

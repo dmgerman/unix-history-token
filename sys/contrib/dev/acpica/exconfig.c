@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 66 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 67 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -310,37 +310,15 @@ argument_list|(
 literal|"ExLoadTableOp"
 argument_list|)
 expr_stmt|;
-comment|/*      * Make sure that the signature does not match one of the tables that      * is already loaded.      */
-name|Status
-operator|=
-name|AcpiTbMatchSignature
-argument_list|(
-name|Operand
-index|[
+if|#
+directive|if
 literal|0
-index|]
-operator|->
-name|String
-operator|.
-name|Pointer
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Status
-operator|==
-name|AE_OK
-condition|)
-block|{
+comment|/*      * Make sure that the signature does not match one of the tables that      * is already loaded.      */
+block|Status = AcpiTbMatchSignature (Operand[0]->String.Pointer, NULL);     if (Status == AE_OK)     {
 comment|/* Signature matched -- don't allow override */
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_ALREADY_EXISTS
-argument_list|)
-expr_stmt|;
-block|}
+block|return_ACPI_STATUS (AE_ALREADY_EXISTS);     }
+endif|#
+directive|endif
 comment|/* Find the ACPI table */
 name|Status
 operator|=

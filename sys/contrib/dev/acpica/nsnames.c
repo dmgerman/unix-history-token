@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 77 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 78 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -344,8 +344,12 @@ expr_stmt|;
 while|while
 condition|(
 name|NextNode
+operator|&&
+operator|(
+name|NextNode
 operator|!=
 name|AcpiGbl_RootNode
+operator|)
 condition|)
 block|{
 name|Size

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 41 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 42 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -127,10 +127,6 @@ parameter_list|(
 name|ACPI_TABLE_DESC
 modifier|*
 name|TableInfo
-parameter_list|,
-name|UINT32
-modifier|*
-name|NumberOfTables
 parameter_list|)
 block|{
 name|ACPI_SIZE
@@ -146,19 +142,6 @@ decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/* Get the number of tables defined in the RSDT or XSDT */
-operator|*
-name|NumberOfTables
-operator|=
-name|AcpiTbGetTableCount
-argument_list|(
-name|AcpiGbl_RSDP
-argument_list|,
-name|TableInfo
-operator|->
-name|Pointer
-argument_list|)
-expr_stmt|;
 comment|/* Compute size of the converted XSDT */
 name|TableSize
 operator|=
@@ -166,8 +149,7 @@ operator|(
 operator|(
 name|ACPI_SIZE
 operator|)
-operator|*
-name|NumberOfTables
+name|AcpiGbl_RsdtTableCount
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -235,8 +217,7 @@ literal|0
 init|;
 name|i
 operator|<
-operator|*
-name|NumberOfTables
+name|AcpiGbl_RsdtTableCount
 condition|;
 name|i
 operator|++

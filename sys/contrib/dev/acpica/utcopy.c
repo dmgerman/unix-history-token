@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 101 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 103 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -681,19 +681,13 @@ name|Info
 operator|.
 name|Length
 operator|=
-literal|0
-expr_stmt|;
-name|Info
-operator|.
-name|ObjectSpace
-operator|=
-literal|0
-expr_stmt|;
-name|Info
-operator|.
-name|NumPackages
-operator|=
-literal|1
+name|ACPI_ROUND_UP_TO_NATIVE_WORD
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_OBJECT
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|Info
 operator|.
@@ -708,6 +702,18 @@ argument_list|(
 name|ACPI_OBJECT
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|Info
+operator|.
+name|ObjectSpace
+operator|=
+literal|0
+expr_stmt|;
+name|Info
+operator|.
+name|NumPackages
+operator|=
+literal|1
 expr_stmt|;
 name|ExternalObject
 operator|->
@@ -745,7 +751,28 @@ operator|.
 name|FreeSpace
 argument_list|)
 expr_stmt|;
-comment|/*      * Build an array of ACPI_OBJECTS in the buffer      * and move the free space past it      */
+comment|/*      * Leave room for an array of ACPI_OBJECTS in the buffer      * and move the free space past it      */
+name|Info
+operator|.
+name|Length
+operator|+=
+operator|(
+name|ACPI_SIZE
+operator|)
+name|ExternalObject
+operator|->
+name|Package
+operator|.
+name|Count
+operator|*
+name|ACPI_ROUND_UP_TO_NATIVE_WORD
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_OBJECT
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|Info
 operator|.
 name|FreeSpace

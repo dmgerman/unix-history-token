@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsio - IO and DMA resource descriptors  *              $Revision: 20 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsio - IO and DMA resource descriptors  *              $Revision: 22 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -805,7 +805,7 @@ operator|=
 operator|*
 name|Buffer
 expr_stmt|;
-comment|/* Decode the IRQ bits */
+comment|/* Decode the DMA channel bits */
 for|for
 control|(
 name|i
@@ -853,20 +853,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|i
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Zero channels is invalid! */
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BAD_DATA
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* Zero DMA channels is valid */
 name|OutputStruct
 operator|->
 name|Data
@@ -877,26 +864,28 @@ name|NumberOfChannels
 operator|=
 name|i
 expr_stmt|;
-comment|/*      * Calculate the structure size based upon the number of interrupts      */
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
+comment|/*          * Calculate the structure size based upon the number of interrupts          */
 name|StructSize
 operator|+=
 operator|(
 operator|(
 name|ACPI_SIZE
 operator|)
-name|OutputStruct
-operator|->
-name|Data
-operator|.
-name|Dma
-operator|.
-name|NumberOfChannels
+name|i
 operator|-
 literal|1
 operator|)
 operator|*
 literal|4
 expr_stmt|;
+block|}
 comment|/*      * Point to Byte 2      */
 name|Buffer
 operator|+=
@@ -933,6 +922,15 @@ operator|.
 name|Transfer
 condition|)
 block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Invalid DMA.Transfer preference (3)\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_DATA

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 167 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 173 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -40,27 +40,6 @@ name|UINT32
 name|ACPI_MUTEX_HANDLE
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|ACPI_MEMORY_MODE
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_LOGICAL_ADDRESSING
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PHYSICAL_ADDRESSING
-value|0x01
-end_define
 
 begin_comment
 comment|/* Total number of aml opcodes defined */
@@ -1406,14 +1385,22 @@ typedef|typedef
 struct|struct
 name|acpi_opcode_info
 block|{
-ifdef|#
-directive|ifdef
-name|_OPCODE_NAMES
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ACPI_DISASSEMBLER
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ACPI_DEBUG
+argument_list|)
 name|NATIVE_CHAR
 modifier|*
 name|Name
 decl_stmt|;
-comment|/* Opcode name (debug only) */
+comment|/* Opcode name (disassembler/debug only) */
 endif|#
 directive|endif
 name|UINT32
@@ -1517,22 +1504,58 @@ value|\     union acpi_parse_obj    *Parent;
 comment|/* parent op */
 value|\     union acpi_parse_obj    *Next;
 comment|/* next op */
-value|\     ACPI_DEBUG_ONLY_MEMBERS (\     NATIVE_CHAR             AmlOpName[16])
+value|\     ACPI_DISASM_ONLY_MEMBERS (\     UINT8                   DisasmFlags;
+comment|/* Used during AML disassembly */
+value|\     UINT8                   DisasmOpcode;
+comment|/* Subtype used for disassembly */
+value|\     NATIVE_CHAR             AmlOpName[16])
 comment|/* op name (debug only) */
 value|\
 comment|/* NON-DEBUG members below: */
 value|\     ACPI_NAMESPACE_NODE     *Node;
 comment|/* for use by interpreter */
 value|\     ACPI_PARSE_VALUE        Value;
+comment|/* Value or args associated with the opcode */
+value|\  #define ACPI_DASM_BUFFER        0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_RESOURCE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_STRING
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_UNICODE
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_EISAID
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DASM_MATCHOP
+value|0x05
 end_define
 
 begin_comment
-comment|/* Value or args associated with the opcode */
-end_comment
-
-begin_comment
-unit|\
-comment|/*  * generic operation (eg. If, While, Store)  */
+comment|/*  * generic operation (for example:  If, While, Store)  */
 end_comment
 
 begin_typedef
@@ -1556,6 +1579,10 @@ struct|struct
 name|acpi_parseobj_named
 block|{
 name|ACPI_PARSE_COMMON
+name|UINT8
+modifier|*
+name|Path
+decl_stmt|;
 name|UINT8
 modifier|*
 name|Data
@@ -1627,9 +1654,6 @@ decl_stmt|;
 name|UINT32
 name|EndLogicalLine
 decl_stmt|;
-name|UINT16
-name|ParseOpcode
-decl_stmt|;
 name|UINT32
 name|AcpiBtype
 decl_stmt|;
@@ -1645,14 +1669,17 @@ decl_stmt|;
 name|UINT32
 name|FinalAmlOffset
 decl_stmt|;
+name|UINT16
+name|ParseOpcode
+decl_stmt|;
+name|UINT16
+name|CompileFlags
+decl_stmt|;
 name|UINT8
 name|AmlOpcodeLength
 decl_stmt|;
 name|UINT8
 name|AmlPkgLenBytes
-decl_stmt|;
-name|UINT16
-name|CompileFlags
 decl_stmt|;
 name|UINT8
 name|Extra
@@ -1788,6 +1815,38 @@ define|#
 directive|define
 name|ACPI_PARSEOP_IN_CACHE
 value|0x80
+end_define
+
+begin_comment
+comment|/* Parse object DisasmFlags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_IGNORE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_PARAMLIST
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_EMPTY_TERMLIST
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_SPECIAL
+value|0x10
 end_define
 
 begin_comment

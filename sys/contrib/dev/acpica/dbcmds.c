@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 84 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 85 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"acresrc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acdisasm.h"
 end_include
 
 begin_ifdef
@@ -726,7 +732,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiDbDisplayOp
+name|AcpiDmDisassemble
 argument_list|(
 name|NULL
 argument_list|,

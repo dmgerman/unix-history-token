@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 42 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -495,6 +495,14 @@ block|}
 name|AcpiGbl_PsFindCount
 operator|++
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if ((Create)&& (Opcode == AML_SCOPE_OP))     {         Op = AcpiPsAllocOp (AML_SCOPE_OP);         if (Op)         {             AcpiPsSetName (Op, 'XXXX');             AcpiPsAppendArg (Scope, Op);         }
+comment|/*        return_PTR (Op);*/
+block|}
+endif|#
+directive|endif
 comment|/* Handle all prefixes in the name path */
 while|while
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 116 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 117 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1006,9 +1006,16 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Returning obj %p\n"
+literal|"Returning object %p [%s]\n"
 operator|,
-name|ResolvedNode
+operator|*
+name|ReturnObjDesc
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+operator|*
+name|ReturnObjDesc
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

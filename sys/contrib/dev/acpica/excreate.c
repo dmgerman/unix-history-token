@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 92 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 93 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -62,6 +62,12 @@ argument_list|(
 literal|"excreate"
 argument_list|)
 end_macro
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_NO_METHOD_EXECUTION
+end_ifndef
 
 begin_comment
 comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateAlias  *  * PARAMETERS:  WalkState            - Current state, contains operands  *  * RETURN:      Status  *  * DESCRIPTION: Create a new named alias  *  ****************************************************************************/
@@ -1183,6 +1189,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateMethod  *  * PARAMETERS:  AmlStart        - First byte of the method's AML  *              AmlLength       - AML byte count for this method  *              WalkState       - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new method object  *  ****************************************************************************/

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 61 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 62 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -747,11 +747,9 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_NAMESPACE_NODE
+name|ACPI_OPERAND_OBJECT
 modifier|*
-name|MethodNode
-init|=
-name|NULL
+name|MethodDesc
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -872,18 +870,23 @@ operator|==
 name|ACPI_TYPE_METHOD
 condition|)
 block|{
-name|MethodNode
+name|MethodDesc
 operator|=
+name|AcpiNsGetAttachedObject
+argument_list|(
 name|Node
+argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_PARSE
 operator|,
-literal|"method - %p Path=%p\n"
+literal|"Control Method - %p Desc %p Path=%p\n"
 operator|,
-name|MethodNode
+name|Node
+operator|,
+name|MethodDesc
 operator|,
 name|Path
 operator|)
@@ -898,9 +901,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|NameOp
 condition|)
 block|{
+name|return_VOID
+expr_stmt|;
+block|}
 comment|/* Change arg into a METHOD CALL and attach name to it */
 name|AcpiPsInitOp
 argument_list|(
@@ -926,7 +933,7 @@ name|Common
 operator|.
 name|Node
 operator|=
-name|MethodNode
+name|Node
 expr_stmt|;
 name|AcpiPsAppendArg
 argument_list|(
@@ -938,30 +945,49 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|AcpiNsGetAttachedObject
-argument_list|(
-name|MethodNode
-argument_list|)
+name|MethodDesc
 condition|)
 block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_PARSE
+operator|,
+literal|"Control Method - %p has no attached object\n"
+operator|,
+name|Node
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_PARSE
+operator|,
+literal|"Control Method - %p Args %X\n"
+operator|,
+name|Node
+operator|,
+name|MethodDesc
+operator|->
+name|Method
+operator|.
+name|ParamCount
+operator|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|ArgCount
 operator|=
-operator|(
-name|AcpiNsGetAttachedObject
-argument_list|(
-name|MethodNode
-argument_list|)
-operator|)
+name|MethodDesc
 operator|->
 name|Method
 operator|.
 name|ParamCount
 expr_stmt|;
-block|}
 name|return_VOID
 expr_stmt|;
 block|}
