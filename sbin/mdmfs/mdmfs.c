@@ -170,6 +170,17 @@ end_struct
 begin_decl_stmt
 specifier|static
 name|bool
+name|compat
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Full compatibility with mount_mfs? */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
 name|debug
 decl_stmt|;
 end_decl_stmt
@@ -556,6 +567,25 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
+comment|/* If we were started as mount_*, imply -C. */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|getprogname
+argument_list|()
+argument_list|,
+literal|"mount_"
+argument_list|,
+literal|6
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|compat
+operator|=
+name|true
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -567,7 +597,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:c:Dd:e:F:f:hi:LMm:Nn:O:o:p:Ss:t:w:X"
+literal|"a:b:Cc:Dd:e:F:f:hi:LMm:Nn:O:o:p:Ss:t:Uw:X"
 argument_list|)
 operator|)
 operator|!=
@@ -608,6 +638,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'C'
+case|:
+if|if
+condition|(
+name|compat
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|compat
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
 literal|'c'
 case|:
 name|argappend
@@ -624,6 +669,13 @@ break|break;
 case|case
 literal|'D'
 case|:
+if|if
+condition|(
+name|compat
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 name|detach
 operator|=
 name|false
@@ -724,6 +776,13 @@ break|break;
 case|case
 literal|'L'
 case|:
+if|if
+condition|(
+name|compat
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 name|loudsubs
 operator|=
 name|true
@@ -765,6 +824,13 @@ break|break;
 case|case
 literal|'N'
 case|:
+if|if
+condition|(
+name|compat
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 name|norun
 operator|=
 name|true
@@ -817,6 +883,13 @@ literal|'p'
 case|:
 if|if
 condition|(
+name|compat
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 operator|*
 name|optarg
 operator|>=
@@ -866,6 +939,13 @@ break|break;
 case|case
 literal|'S'
 case|:
+if|if
+condition|(
+name|compat
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 name|softdep
 operator|=
 name|false
@@ -886,8 +966,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'U'
+case|:
+name|softdep
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
 literal|'w'
 case|:
+if|if
+condition|(
+name|compat
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 name|extract_ugid
 argument_list|(
 name|optarg
@@ -900,6 +995,13 @@ break|break;
 case|case
 literal|'X'
 case|:
+if|if
+condition|(
+name|compat
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 name|debug
 operator|=
 name|true
@@ -927,6 +1029,25 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* Make compatibility assumptions. */
+if|if
+condition|(
+name|compat
+condition|)
+block|{
+name|mi
+operator|.
+name|mi_mode
+operator|=
+literal|01777
+expr_stmt|;
+name|mi
+operator|.
+name|mi_have_mode
+operator|=
+name|true
+expr_stmt|;
+block|}
 comment|/* Derive 'unit' (global). */
 name|unitstr
 operator|=
@@ -2922,18 +3043,53 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+if|if
+condition|(
+name|compat
+condition|)
+name|name
+operator|=
+name|getprogname
+argument_list|()
+expr_stmt|;
+else|else
+name|name
+operator|=
+literal|"mdmfs"
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|compat
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-DLMNSX] [-a maxcontig] [-b block-size] [-c cylinders]\n"
+literal|"Usage: %s [-DLMNSUX] [-a maxcontig [-b block-size] [-c cylinders]\n"
 literal|"\t[-d rotdelay] [-e maxbpg] [-F file] [-f frag-size] [-i bytes]\n"
 literal|"\t[-m percent-free] [-n rotational-positions] [-O optimization]\n"
 literal|"\t[-o mount-options] [-p permissions] [-s size] [-w user:group]\n"
 literal|"\tmd-device mount-point\n"
 argument_list|,
-name|getprogname
-argument_list|()
+name|name
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: %s -C [-NU] [-a maxcontig] [-b block-size] [-c cylinders]\n"
+literal|"\t[-d rotdelay] [-e maxbpg] [-F file] [-f frag-size] [-i bytes]\n"
+literal|"\t[-m percent-free] [-n rotational-positions] [-O optimization]\n"
+literal|"\t[-o mount-options] [-s size] md-device mount-point\n"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 name|exit
