@@ -836,7 +836,6 @@ comment|/* Not APIC_IO */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|register_pcic_intr
 parameter_list|(
@@ -880,7 +879,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|unregister_pcic_intr
 parameter_list|(
