@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.9 1994/08/13 03:50:14 wollman Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.10 1994/10/14 16:37:58 ache Exp $  */
 end_comment
 
 begin_include
@@ -238,9 +238,12 @@ name|PPI_SPKR
 argument_list|)
 expr_stmt|;
 comment|/*      * Set timeout to endtone function, then give up the timeslice.      * This is so other processes can execute while the tone is being      * emitted.      */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+name|ticks
+operator|>
+literal|0
+condition|)
 name|tsleep
 argument_list|(
 operator|(
@@ -306,9 +309,12 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
+name|ticks
+operator|>
+literal|0
+condition|)
 name|tsleep
 argument_list|(
 operator|(
