@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)siglist.c	5.6 (Berkeley) %G%"
+literal|"@(#)siglist.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,11 +43,113 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
+begin_decl_stmt
+name|char
+modifier|*
+name|sys_signame
+index|[
+name|NSIG
+index|]
+init|=
+block|{
+literal|"Signal 0"
+block|,
+literal|"hup"
+block|,
+comment|/* SIGHUP */
+literal|"int"
+block|,
+comment|/* SIGINT */
+literal|"quit"
+block|,
+comment|/* SIGQUIT */
+literal|"ill"
+block|,
+comment|/* SIGILL */
+literal|"trap"
+block|,
+comment|/* SIGTRAP */
+literal|"abrt"
+block|,
+comment|/* SIGABRT */
+literal|"emt"
+block|,
+comment|/* SIGEMT */
+literal|"fpe"
+block|,
+comment|/* SIGFPE */
+literal|"kill"
+block|,
+comment|/* SIGKILL */
+literal|"bus"
+block|,
+comment|/* SIGBUS */
+literal|"segv"
+block|,
+comment|/* SIGSEGV */
+literal|"sys"
+block|,
+comment|/* SIGSYS */
+literal|"pipe"
+block|,
+comment|/* SIGPIPE */
+literal|"alrm"
+block|,
+comment|/* SIGALRM */
+literal|"term"
+block|,
+comment|/* SIGTERM */
+literal|"urg"
+block|,
+comment|/* SIGURG */
+literal|"stop"
+block|,
+comment|/* SIGSTOP */
+literal|"tstp"
+block|,
+comment|/* SIGTSTP */
+literal|"cont"
+block|,
+comment|/* SIGCONT */
+literal|"chld"
+block|,
+comment|/* SIGCHLD */
+literal|"ttin"
+block|,
+comment|/* SIGTTIN */
+literal|"ttou"
+block|,
+comment|/* SIGTTOU */
+literal|"io"
+block|,
+comment|/* SIGIO */
+literal|"xcpu"
+block|,
+comment|/* SIGXCPU */
+literal|"xfsz"
+block|,
+comment|/* SIGXFSZ */
+literal|"vtalrm"
+block|,
+comment|/* SIGVTALRM */
+literal|"prof"
+block|,
+comment|/* SIGPROF */
+literal|"winch"
+block|,
+comment|/* SIGWINCH */
+literal|"info"
+block|,
+comment|/* SIGINFO */
+literal|"usr1"
+block|,
+comment|/* SIGUSR1 */
+literal|"usr2"
+block|,
+comment|/* SIGUSR2 */
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -108,10 +210,10 @@ comment|/* SIGTERM */
 literal|"Urgent I/O condition"
 block|,
 comment|/* SIGURG */
-literal|"Stopped (signal)"
+literal|"Suspended (signal)"
 block|,
 comment|/* SIGSTOP */
-literal|"Stopped"
+literal|"Suspended"
 block|,
 comment|/* SIGTSTP */
 literal|"Continued"
