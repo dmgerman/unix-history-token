@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	3.19	%G%	*/
+comment|/*	tty.c	3.20	%G%	*/
 end_comment
 
 begin_comment
@@ -1544,6 +1544,22 @@ operator|>=
 literal|0
 condition|)
 empty_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|tp
+operator|->
+name|t_rawq
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
@@ -1662,6 +1678,9 @@ argument_list|(
 literal|"ioccom canq"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|tp
@@ -1679,6 +1698,8 @@ name|t_chan
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|wakeup
 argument_list|(
 operator|(
