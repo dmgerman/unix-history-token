@@ -103,9 +103,11 @@ file|<string.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|nosig
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -113,6 +115,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|printsignals
 parameter_list|(
@@ -123,9 +126,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|signame_to_signum
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -133,6 +138,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -647,9 +653,11 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|signame_to_signum
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|sig
@@ -720,9 +728,11 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|nosig
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -749,6 +759,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|printsignals
 parameter_list|(
@@ -833,6 +844,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
