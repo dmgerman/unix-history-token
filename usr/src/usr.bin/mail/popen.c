@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.15 (Berkeley) %G%"
+literal|"@(#)popen.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1391,12 +1391,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|sigchild
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|pid
@@ -1418,6 +1416,10 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,
@@ -1425,7 +1427,7 @@ name|WNOHANG
 argument_list|,
 operator|(
 expr|struct
-name|timeval
+name|rusage
 operator|*
 operator|)
 literal|0
@@ -1470,7 +1472,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|union

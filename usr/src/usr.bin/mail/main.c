@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.27 (Berkeley) %G%"
+literal|"@(#)main.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,17 +118,13 @@ name|nosrc
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|void
 name|hdrstop
 parameter_list|()
 function_decl|;
 name|sig_t
 name|prevint
 decl_stmt|;
-name|int
-name|sigchild
-parameter_list|()
-function_decl|;
 specifier|extern
 name|int
 name|getopt
@@ -143,6 +139,10 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
+name|void
+name|sigchild
+parameter_list|()
+function_decl|;
 comment|/* 	 * Set up a reasonable environment. 	 * Figure out whether we are being run interactively, 	 * start the SIGCHLD catcher, and so forth. 	 */
 operator|(
 name|void
@@ -764,12 +764,10 @@ begin_comment
 comment|/*  * Interrupt printing of the headers.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|hdrstop
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fflush
 argument_list|(
@@ -791,7 +789,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Compute what the screen size for printing headers should be.  * We use the following algorithm for the height:  *	If baud rate< 1200, use  9  *	If baud rate = 1200, use 14  *	If baud rate> 1200, use 24 or ws_row  * Width is either 80 or ws_col;  */

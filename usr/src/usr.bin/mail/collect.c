@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.23 (Berkeley) %G%"
+literal|"@(#)collect.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,16 +191,6 @@ name|escape
 decl_stmt|,
 name|eofcount
 decl_stmt|;
-name|int
-name|collint
-argument_list|()
-decl_stmt|,
-name|collhup
-argument_list|()
-decl_stmt|,
-name|collstop
-argument_list|()
-decl_stmt|;
 specifier|register
 name|int
 name|c
@@ -226,6 +216,16 @@ name|getsub
 decl_stmt|;
 name|int
 name|omask
+decl_stmt|;
+name|void
+name|collint
+argument_list|()
+decl_stmt|,
+name|collhup
+argument_list|()
+decl_stmt|,
+name|collstop
+argument_list|()
 decl_stmt|;
 name|collf
 operator|=
@@ -2299,14 +2299,12 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|collstop
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|s
+parameter_list|)
 block|{
 name|sig_t
 name|old_action
@@ -2376,7 +2374,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * On interrupt, come here to save the partial message in ~/dead.letter.  * Then jump out of the collection loop.  */
@@ -2386,14 +2384,12 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|collint
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|s
+parameter_list|)
 block|{
 comment|/* 	 * the control flow is subtle, because we can be called from ~q. 	 */
 if|if
@@ -2468,20 +2464,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|collhup
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|s
+parameter_list|)
 block|{
 name|rewind
 argument_list|(
@@ -2500,7 +2494,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|savedeadletter

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.21 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1190,14 +1190,14 @@ decl_stmt|;
 name|int
 name|nlines
 decl_stmt|;
-name|int
-name|brokpipe
-parameter_list|()
-function_decl|;
 name|FILE
 modifier|*
 name|obuf
 decl_stmt|;
+name|void
+name|brokpipe
+parameter_list|()
+function_decl|;
 name|obuf
 operator|=
 name|stdout
@@ -1474,12 +1474,10 @@ begin_comment
 comment|/*  * Respond to a broken pipe signal --  * probably caused by quitting more.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|brokpipe
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|longjmp
 argument_list|(
@@ -1489,7 +1487,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print the top so many lines of each desired message.  * The number of lines is taken from the variable "toplines"  * and defaults to 5.  */

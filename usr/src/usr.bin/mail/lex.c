@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.22 (Berkeley) %G%"
+literal|"@(#)lex.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -523,7 +523,7 @@ index|[
 name|LINESIZE
 index|]
 decl_stmt|;
-name|int
+name|void
 name|intr
 argument_list|()
 decl_stmt|,
@@ -531,9 +531,6 @@ name|stop
 argument_list|()
 decl_stmt|,
 name|hangup
-argument_list|()
-decl_stmt|,
-name|contin
 argument_list|()
 decl_stmt|;
 if|if
@@ -1761,14 +1758,12 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|intr
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|s
+parameter_list|)
 block|{
 name|noreset
 operator|=
@@ -1827,20 +1822,18 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * When we wake up after ^Z, reprint the prompt.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|stop
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|s
+parameter_list|)
 block|{
 name|sig_t
 name|old_action
@@ -1904,7 +1897,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Branch here on hangup signal and simulate "exit".  */
@@ -1914,14 +1907,12 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|hangup
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|s
+parameter_list|)
 block|{
 comment|/* nothing to do? */
 name|exit
@@ -1930,7 +1921,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Announce the presence of the current Mail version,  * give the message count, and print a header listing.  */

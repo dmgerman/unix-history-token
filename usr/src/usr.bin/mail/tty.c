@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.11 (Berkeley) %G%"
+literal|"@(#)tty.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,7 +154,7 @@ decl_stmt|;
 name|int
 name|errs
 decl_stmt|;
-name|int
+name|void
 name|ttyint
 parameter_list|()
 function_decl|;
@@ -676,7 +676,7 @@ decl_stmt|,
 modifier|*
 name|cp2
 decl_stmt|;
-name|int
+name|void
 name|ttystop
 parameter_list|()
 function_decl|;
@@ -1176,14 +1176,12 @@ begin_comment
 comment|/*  * Receipt continuation.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ttystop
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|s
+parameter_list|)
 block|{
 name|sig_t
 name|old_action
@@ -1239,20 +1237,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ttyint
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|s
+parameter_list|)
 block|{
 name|longjmp
 argument_list|(
@@ -1262,7 +1258,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
