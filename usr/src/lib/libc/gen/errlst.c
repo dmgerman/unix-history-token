@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)errlst.c	5.9 (Berkeley) %G%"
+literal|"@(#)errlst.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,7 +147,7 @@ comment|/* math software */
 literal|"Numerical argument out of domain"
 block|,
 comment|/* 33 - EDOM */
-literal|"Numerical result out of range"
+literal|"Result too large"
 block|,
 comment|/* 34 - ERANGE */
 comment|/* non-blocking and interrupt i/o */
