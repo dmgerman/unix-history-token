@@ -2170,6 +2170,15 @@ expr_stmt|;
 comment|/* xxx: RSVP */
 if|if
 condition|(
+name|so
+operator|==
+name|ip6_mrouter
+condition|)
+name|ip6_mrouter_done
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|inp
 operator|->
 name|in6p_icmp6filt
