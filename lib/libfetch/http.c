@@ -2576,6 +2576,8 @@ literal|3
 operator|)
 operator|*
 literal|4
+operator|+
+literal|1
 argument_list|)
 operator|)
 operator|==
