@@ -3099,12 +3099,6 @@ case|case
 literal|1
 case|:
 comment|/* Assert reset */
-if|#
-directive|if
-literal|0
-block|printf("R");
-endif|#
-directive|endif
 name|clrb
 argument_list|(
 name|sp
@@ -3140,12 +3134,6 @@ case|case
 literal|2
 case|:
 comment|/* Deassert it again */
-if|#
-directive|if
-literal|0
-block|printf("r");
-endif|#
-directive|endif
 name|setb
 argument_list|(
 name|sp
@@ -3196,12 +3184,6 @@ operator|&
 name|PCIC_READY
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|printf("_");
-endif|#
-directive|endif
 name|timeout
 argument_list|(
 name|pcic_reset
@@ -3220,12 +3202,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-if|#
-directive|if
-literal|0
-block|printf(".\n");
-endif|#
-directive|endif
 name|slotp
 operator|->
 name|insert_seq

@@ -1495,13 +1495,6 @@ name|unsigned
 name|int
 name|mask
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/*  	 * this overrides IRQ masks specified by pccardd, 	 * so I removed this code. (hosokawa@mt.cs.keio.ac.jp) 	 */
-block|imask =  1<< 3; 	imask |= 1<< 5; 	imask |= 1<< 9; 	imask |= 1<<11; 	imask |= 1<<15;
-endif|#
-directive|endif
 for|for
 control|(
 name|irq
