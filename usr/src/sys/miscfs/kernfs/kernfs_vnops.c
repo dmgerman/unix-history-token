@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vnops.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vnops.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -216,6 +216,21 @@ block|,
 name|VREAD
 block|,
 name|VDIR
+block|}
+block|,
+block|{
+literal|"boottime"
+block|,
+operator|&
+name|boottime
+operator|.
+name|tv_sec
+block|,
+name|KTT_INT
+block|,
+name|VREAD
+block|,
+name|VREG
 block|}
 block|,
 block|{
