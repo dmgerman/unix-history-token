@@ -379,7 +379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Get process group ID; note that POSIX getpgrp takes no parameter.  */
+comment|/*  * Get process group ID; note that POSIX getpgrp takes no parameter.  */
 end_comment
 
 begin_ifndef
@@ -4160,7 +4160,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * MPSAFE  */
+comment|/*  * MPSAFE  */
 end_comment
 
 begin_comment
@@ -4356,11 +4356,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 goto|goto
 name|done2
 goto|;
-block|}
 name|newcred
 operator|=
 name|crdup
@@ -5297,6 +5295,7 @@ name|td
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|suser_xxx
 argument_list|(
 literal|0
@@ -5307,6 +5306,7 @@ name|td_proc
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
