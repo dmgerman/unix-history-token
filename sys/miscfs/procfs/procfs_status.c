@@ -771,11 +771,15 @@ operator|(
 name|ps_argsopen
 operator|||
 operator|!
-name|p_trespass
+name|p_can
 argument_list|(
 name|curp
 argument_list|,
 name|p
+argument_list|,
+name|P_CAN_SEE
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 condition|)

@@ -1117,6 +1117,34 @@ begin_comment
 comment|/* have alternate signal stack */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|P_CAN_SEE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_CAN_KILL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_CAN_SCHED
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_CAN_DEBUG
+value|4
+end_define
+
 begin_comment
 comment|/*  * MOVE TO ucred.h?  *  * Shareable process credentials (always resident).  This includes a reference  * to the current user credentials as well as real and saved ids that may be  * used to change ids.  */
 end_comment
@@ -1735,6 +1763,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|ps_showallprocs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
@@ -1927,19 +1962,28 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|p_trespass
+name|p_can
 name|__P
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|proc
 operator|*
 name|p1
 operator|,
+specifier|const
 expr|struct
 name|proc
 operator|*
 name|p2
+operator|,
+name|int
+name|operation
+operator|,
+name|int
+operator|*
+name|privused
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2031,6 +2075,7 @@ name|suser
 name|__P
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|proc
 operator|*
@@ -2045,11 +2090,13 @@ name|suser_xxx
 name|__P
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|ucred
 operator|*
 name|cred
 operator|,
+specifier|const
 expr|struct
 name|proc
 operator|*

@@ -1070,12 +1070,15 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
-name|PRISON_CHECK
+name|p_can
 argument_list|(
 name|curproc
 argument_list|,
 name|p
+argument_list|,
+name|P_CAN_SEE
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 return|return

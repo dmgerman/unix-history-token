@@ -144,7 +144,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ps_showallprocs
 init|=
@@ -2734,12 +2733,15 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
-name|PRISON_CHECK
+name|p_can
 argument_list|(
 name|curproc
 argument_list|,
 name|p
+argument_list|,
+name|P_CAN_SEE
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 return|return
@@ -2885,19 +2887,18 @@ name|p_list
 argument_list|)
 control|)
 block|{
-comment|/* 			 * Show a user only their processes. 			 */
+comment|/* 			 * Show a user only appropriate processes. 			 */
 if|if
 condition|(
-operator|(
-operator|!
-name|ps_showallprocs
-operator|)
-operator|&&
-name|p_trespass
+name|p_can
 argument_list|(
 name|curproc
 argument_list|,
 name|p
+argument_list|,
+name|P_CAN_SEE
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 continue|continue;
@@ -3054,12 +3055,15 @@ break|break;
 block|}
 if|if
 condition|(
-operator|!
-name|PRISON_CHECK
+name|p_can
 argument_list|(
 name|curproc
 argument_list|,
 name|p
+argument_list|,
+name|P_CAN_SEE
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 continue|continue;
@@ -3176,11 +3180,15 @@ operator|!
 name|ps_argsopen
 operator|)
 operator|&&
-name|p_trespass
+name|p_can
 argument_list|(
 name|curproc
 argument_list|,
 name|p
+argument_list|,
+name|P_CAN_SEE
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 return|return

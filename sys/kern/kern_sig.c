@@ -435,7 +435,7 @@ parameter_list|,
 name|sig
 parameter_list|)
 define|\
-value|(!p_trespass(p, q) || \ 	((sig) == SIGCONT&& (q)->p_session == (p)->p_session))
+value|(!p_can(p, q, P_CAN_KILL, NULL) || \ 	((sig) == SIGCONT&& (q)->p_session == (p)->p_session))
 end_define
 
 begin_comment

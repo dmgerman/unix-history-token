@@ -2549,7 +2549,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return true if caller has permission to set the ktracing state  * of target.  Essentially, the target can't possess any  * more permissions than the caller.  KTRFAC_ROOT signifies that  * root previously set the tracing status on the target process, and  * so, only root may further change it.  *  * TODO: check groups.  use caller effective gid.  */
+comment|/*  * Return true if caller has permission to set the ktracing state  * of target.  Essentially, the target can't possess any  * more permissions than the caller.  KTRFAC_ROOT signifies that  * root previously set the tracing status on the target process, and  * so, only root may further change it.  *  * XXX: These checks are stronger than for ptrace()  *  * TODO: check groups.  use caller effective gid.  */
 end_comment
 
 begin_function
