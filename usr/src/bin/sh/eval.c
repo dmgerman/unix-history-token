@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	5.2 (Berkeley) %G%"
+literal|"@(#)eval.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -930,6 +930,12 @@ break|break;
 case|case
 name|NIF
 case|:
+block|{
+name|int
+name|status
+init|=
+literal|0
+decl_stmt|;
 name|evaltree
 argument_list|(
 name|n
@@ -966,6 +972,10 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+name|exitstatus
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -988,8 +998,17 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+name|exitstatus
+expr_stmt|;
 block|}
+name|exitstatus
+operator|=
+name|status
+expr_stmt|;
 break|break;
+block|}
 case|case
 name|NWHILE
 case|:
