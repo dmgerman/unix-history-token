@@ -478,6 +478,10 @@ name|void
 modifier|*
 name|set
 decl_stmt|;
+name|unsigned
+name|long
+name|ul
+decl_stmt|;
 comment|/* Misc. initialization. */
 operator|(
 name|void
@@ -1120,7 +1124,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|unit
+name|ul
 operator|=
 name|strtoul
 argument_list|(
@@ -1134,14 +1138,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|unsigned
-operator|)
-name|unit
+name|ul
 operator|==
-operator|(
-name|unsigned
-operator|)
 name|ULONG_MAX
 operator|||
 operator|*
@@ -1157,6 +1155,10 @@ literal|"bad device unit: %s"
 argument_list|,
 name|unitstr
 argument_list|)
+expr_stmt|;
+name|unit
+operator|=
+name|ul
 expr_stmt|;
 block|}
 name|mtpoint
@@ -1590,6 +1592,10 @@ decl_stmt|;
 name|size_t
 name|linelen
 decl_stmt|;
+name|unsigned
+name|long
+name|ul
+decl_stmt|;
 switch|switch
 condition|(
 name|mdtype
@@ -1770,7 +1776,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|unit
+name|ul
 operator|=
 name|strtoul
 argument_list|(
@@ -1784,14 +1790,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|unsigned
-operator|)
-name|unit
+name|ul
 operator|==
-operator|(
-name|unsigned
-operator|)
 name|ULONG_MAX
 operator|||
 operator|*
@@ -1805,6 +1805,10 @@ literal|1
 argument_list|,
 literal|"unexpected output from mdconfig (attach)"
 argument_list|)
+expr_stmt|;
+name|unit
+operator|=
+name|ul
 expr_stmt|;
 name|fclose
 argument_list|(
