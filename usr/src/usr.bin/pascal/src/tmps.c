@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmps.c 1.2 %G%"
+literal|"@(#)tmps.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,6 +46,12 @@ end_endif
 begin_comment
 comment|/*  * This routine defines the register allocation strategy  * All temporaries are allocated here, and this routines decides  * where they are to be put.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC
+end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -142,6 +148,12 @@ begin_endif
 endif|#
 directive|endif
 endif|VAX
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|PC
 end_endif
 
 begin_comment
@@ -413,6 +425,12 @@ end_escape
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|PC
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|VAX
 end_ifdef
 
@@ -486,6 +504,12 @@ begin_endif
 endif|#
 directive|endif
 endif|VAX
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|PC
 end_endif
 
 end_unit
