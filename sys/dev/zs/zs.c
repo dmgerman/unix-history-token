@@ -4297,7 +4297,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|uint8_t
+name|int
 name|c
 decl_stmt|;
 name|c
