@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_tty.c	7.20 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_tty.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -135,6 +135,10 @@ argument_list|(
 name|ttyvp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PARANOID
+comment|/* 	 * Since group is tty and mode is 620 on all terminal lines 	 * and since sessions protect terminals from processes outside 	 * your session, this check is probably no longer necessary. 	 * Since it inhibits setuid root programs that later switch  	 * to another user from accessing /dev/tty, we have decided 	 * to delete this test for now. 	 */
 name|error
 operator|=
 name|VOP_ACCESS
@@ -173,6 +177,9 @@ condition|(
 operator|!
 name|error
 condition|)
+endif|#
+directive|endif
+comment|/* PARANOID */
 name|error
 operator|=
 name|VOP_OPEN
