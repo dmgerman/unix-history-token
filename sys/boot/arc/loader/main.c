@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * Copyright (c) 1998 Doug Rabson<dfr@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * Copyright (c) 1998 Doug Rabson<dfr@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: main.c,v 1.1.1.1 1999/07/28 20:28:47 se Exp $  */
 end_comment
 
 begin_include
@@ -406,80 +406,62 @@ literal|"SecondaryCache"
 block|,
 literal|"eisa"
 block|,
-literal|"TcAdapter"
+literal|"tc"
 block|,
-comment|/* XXX ? */
 literal|"scsi"
 block|,
-literal|"DtiAdapter"
+literal|"dti"
 block|,
-comment|/* XXX ? */
 literal|"multi"
 block|,
 literal|"disk"
 block|,
-literal|"TapeController"
+literal|"tape"
 block|,
-comment|/* XXX ? */
-literal|"CdromController"
+literal|"cdrom"
 block|,
-comment|/* XXX ? */
-literal|"WormController"
+literal|"worm"
 block|,
-comment|/* XXX ? */
 literal|"serial"
 block|,
-literal|"NetworkController"
+literal|"network"
 block|,
-comment|/* XXX ? */
 literal|"video"
 block|,
 literal|"par"
 block|,
-literal|"PointerController"
+literal|"point"
 block|,
-comment|/* XXX ? */
 literal|"key"
 block|,
-literal|"AudioController"
+literal|"audio"
 block|,
-comment|/* XXX ? */
-literal|"OtherController"
+literal|"other"
 block|,
-comment|/* XXX ? */
 literal|"rdisk"
 block|,
 literal|"fdisk"
 block|,
-literal|"TapePeripheral"
+literal|"tape"
 block|,
-comment|/* XXX ? */
-literal|"ModemPeripheral"
+literal|"modem"
 block|,
-comment|/* XXX ? */
-literal|"MonitorPeripheral"
+literal|"monitor"
 block|,
-comment|/* XXX ? */
-literal|"PrinterPeripheral"
+literal|"print"
 block|,
-comment|/* XXX ? */
-literal|"PointerPeripheral"
+literal|"pointer"
 block|,
-comment|/* XXX ? */
 literal|"keyboard"
 block|,
-literal|"TerminalPeripheral"
+literal|"term"
 block|,
-comment|/* XXX ? */
-literal|"OtherPeripheral"
+literal|"other"
 block|,
-comment|/* XXX ? */
-literal|"LinePeripheral"
+literal|"line"
 block|,
-comment|/* XXX ? */
-literal|"NetworkPeripheral"
+literal|"network"
 block|,
-comment|/* XXX ? */
 literal|"Memory"
 block|,
 literal|"MaximumType"
