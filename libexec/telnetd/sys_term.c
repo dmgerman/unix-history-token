@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: sys_term.c,v 1.18 1997/12/03 07:16:03 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2638,7 +2638,7 @@ name|__hpux
 operator|(
 name|void
 operator|)
-name|sprintf
+name|strcpy
 argument_list|(
 name|line
 argument_list|,
@@ -2666,7 +2666,7 @@ directive|else
 operator|(
 name|void
 operator|)
-name|sprintf
+name|strcpy
 argument_list|(
 name|line
 argument_list|,
@@ -6699,9 +6699,14 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"Can't open %s\n"
 argument_list|,
@@ -6858,9 +6863,14 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"Can't write to %s\n"
 argument_list|,
@@ -6944,9 +6954,14 @@ name|gotalarm
 operator|=
 literal|0
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"telnetd: waiting for /etc/init to start login process on %s\r\n"
 argument_list|,
@@ -7717,9 +7732,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|speed
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|speed
+argument_list|)
 argument_list|,
 literal|"%s/%d"
 argument_list|,
