@@ -575,6 +575,10 @@ expr|\
 name|NUART
 operator|==
 literal|0
+operator|&&
+name|NMSS
+operator|==
+literal|0
 end_if
 
 begin_ifndef
@@ -640,6 +644,11 @@ operator|==
 literal|0
 operator|&&
 name|NOPL
+operator|==
+literal|0
+operator|&&
+expr|\
+name|NMSS
 operator|==
 literal|0
 end_if

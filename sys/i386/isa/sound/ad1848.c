@@ -756,7 +756,7 @@ condition|)
 return|return;
 name|timeout
 operator|=
-literal|10000
+literal|20000
 expr_stmt|;
 while|while
 condition|(
@@ -5204,7 +5204,7 @@ name|__FreeBSD__
 argument_list|)
 name|printk
 argument_list|(
-literal|"\ngus0:<%s>"
+literal|"gus0:<%s>"
 argument_list|,
 name|ad1848_pcm_operations
 index|[
