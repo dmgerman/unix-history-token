@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pmerge.c	5.1 (Berkeley) %G%"
+literal|"@(#)pmerge.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,24 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -186,14 +204,6 @@ begin_comment
 comment|/* current output file */
 end_comment
 
-begin_function_decl
-name|FILE
-modifier|*
-name|fopen
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|char
 name|labelopen
@@ -214,32 +224,16 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-name|mktemp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Remove temporary files if interrupted  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|onintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|unused
+parameter_list|)
 block|{
 name|int
 name|i
@@ -275,7 +269,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Program to merge separately compiled pascal modules into a  * single standard Pascal program.  */
@@ -418,7 +412,10 @@ index|]
 operator|=
 name|mktemp
 argument_list|(
+name|strdup
+argument_list|(
 name|TMPNAME
+argument_list|)
 argument_list|)
 argument_list|,
 literal|"w"
@@ -438,7 +435,10 @@ index|]
 operator|=
 name|mktemp
 argument_list|(
+name|strdup
+argument_list|(
 name|TMPNAME
+argument_list|)
 argument_list|)
 argument_list|,
 literal|"w"
@@ -458,7 +458,10 @@ index|]
 operator|=
 name|mktemp
 argument_list|(
+name|strdup
+argument_list|(
 name|TMPNAME
+argument_list|)
 argument_list|)
 argument_list|,
 literal|"w"
@@ -478,7 +481,10 @@ index|]
 operator|=
 name|mktemp
 argument_list|(
+name|strdup
+argument_list|(
 name|TMPNAME
+argument_list|)
 argument_list|)
 argument_list|,
 literal|"w"
@@ -498,7 +504,10 @@ index|]
 operator|=
 name|mktemp
 argument_list|(
+name|strdup
+argument_list|(
 name|TMPNAME
+argument_list|)
 argument_list|)
 argument_list|,
 literal|"w"
@@ -518,7 +527,10 @@ index|]
 operator|=
 name|mktemp
 argument_list|(
+name|strdup
+argument_list|(
 name|TMPNAME
+argument_list|)
 argument_list|)
 argument_list|,
 literal|"w"
@@ -538,7 +550,10 @@ index|]
 operator|=
 name|mktemp
 argument_list|(
+name|strdup
+argument_list|(
 name|TMPNAME
+argument_list|)
 argument_list|)
 argument_list|,
 literal|"w"
@@ -685,7 +700,9 @@ name|printout
 argument_list|()
 expr_stmt|;
 name|onintr
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
@@ -2230,7 +2247,9 @@ name|fp
 argument_list|)
 expr_stmt|;
 name|onintr
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
