@@ -36,12 +36,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/timespec.h>
+file|<sys/_timeval.h>
 end_include
 
-begin_comment
-comment|/*  * XXX  * Other things required for this header which we do not presently implement:  *  * struct timeval (with suseconds_t)  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/timespec.h>
+end_include
 
 begin_typedef
 typedef|typedef
@@ -290,12 +292,6 @@ ifndef|#
 directive|ifndef
 name|_KERNEL
 end_ifndef
-
-begin_struct_decl
-struct_decl|struct
-name|timeval
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|__BEGIN_DECLS
