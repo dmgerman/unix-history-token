@@ -744,6 +744,15 @@ block|,
 name|MOUSE_MODEL_GENERIC
 block|}
 block|,
+comment|/* MouseSystems SmartScroll Mouse (OEM from Genius?) */
+block|{
+literal|"KYE0002"
+block|,
+name|MOUSE_PROTO_MS
+block|,
+name|MOUSE_MODEL_EASYSCROLL
+block|}
+block|,
 comment|/* Genius NetMouse */
 block|{
 literal|"KYE0003"
