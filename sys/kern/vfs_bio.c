@@ -1037,6 +1037,12 @@ name|needsbuffer
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
+end_ifdef
+
 begin_comment
 comment|/*  * Mask for index into the buffer hash table, which needs to be power of 2 in  * size.  Set in kern_vfs_bio_buffer_alloc.  */
 end_comment
@@ -1076,6 +1082,11 @@ name|bufhashhdr
 name|invalhash
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Definitions for the buffer free lists.  */
@@ -1241,6 +1252,12 @@ begin_comment
 comment|/* wait for buf space, lo hysteresis */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
+end_ifdef
+
 begin_comment
 comment|/*  * Buffer hash table code.  Note that the logical block scans linearly, which  * gives us some L1 cache locality.  */
 end_comment
@@ -1287,6 +1304,11 @@ operator|)
 return|;
 block|}
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *	numdirtywakeup:  *  *	If someone is blocked due to there being too many dirty buffers,  *	and numdirtybuffers is now reasonable, wake them up.  */
@@ -1820,6 +1842,9 @@ operator|+
 name|nbuf
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
 comment|/* 	 * Calculate the hash table size and reserve space 	 */
 for|for
 control|(
@@ -1860,6 +1885,8 @@ expr_stmt|;
 operator|--
 name|bufhashmask
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|v
@@ -1889,12 +1916,17 @@ name|i
 decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
 name|LIST_INIT
 argument_list|(
 operator|&
 name|invalhash
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|mtx_init
 argument_list|(
 operator|&
@@ -1907,6 +1939,9 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
 for|for
 control|(
 name|i
@@ -1929,6 +1964,8 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* next, make a null set of free lists */
 for|for
 control|(
@@ -2047,6 +2084,9 @@ argument_list|,
 name|b_freelist
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -2057,6 +2097,8 @@ argument_list|,
 name|b_hash
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * maxbufspace is the absolute maximum amount of buffer space we are  	 * allowed to reserve in KVM and in real terms.  The absolute maximum 	 * is nominally used by buf_daemon.  hibufspace is the nominal maximum 	 * used by most other processes.  The differential is required to  	 * ensure that buf_daemon is able to run when other processes might  	 * be blocked waiting for buffer space. 	 * 	 * maxbufspace is based on BKVASIZE.  Allocating buffers larger then 	 * this may result in KVM fragmentation which is not handled optimally 	 * by the system. 	 */
 name|maxbufspace
@@ -3033,7 +3075,7 @@ operator|->
 name|b_bufsize
 argument_list|)
 expr_stmt|;
-comment|/* set it to be identical to the old block */
+comment|/* 		 * set it to be identical to the old block.  We have to 		 * set b_lblkno and BKGRDMARKER before calling bgetvp() 		 * to avoid confusing the splay tree and gbincore(). 		 */
 name|memcpy
 argument_list|(
 name|newbp
@@ -3049,6 +3091,20 @@ operator|->
 name|b_bufsize
 argument_list|)
 expr_stmt|;
+name|newbp
+operator|->
+name|b_lblkno
+operator|=
+name|bp
+operator|->
+name|b_lblkno
+expr_stmt|;
+name|newbp
+operator|->
+name|b_xflags
+operator||=
+name|BX_BKGRDMARKER
+expr_stmt|;
 name|bgetvp
 argument_list|(
 name|bp
@@ -3057,14 +3113,6 @@ name|b_vp
 argument_list|,
 name|newbp
 argument_list|)
-expr_stmt|;
-name|newbp
-operator|->
-name|b_lblkno
-operator|=
-name|bp
-operator|->
-name|b_lblkno
 expr_stmt|;
 name|newbp
 operator|->
@@ -4725,6 +4773,9 @@ argument_list|,
 name|b_freelist
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
 name|LIST_REMOVE
 argument_list|(
 name|bp
@@ -4742,6 +4793,8 @@ argument_list|,
 name|b_hash
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bp
 operator|->
 name|b_dev
@@ -4819,6 +4872,9 @@ argument_list|,
 name|b_freelist
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
 name|LIST_REMOVE
 argument_list|(
 name|bp
@@ -4836,6 +4892,8 @@ argument_list|,
 name|b_hash
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bp
 operator|->
 name|b_dev
@@ -4938,32 +4996,41 @@ name|b_freelist
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If B_INVAL, clear B_DELWRI.  We've already placed the buffer 	 * on the correct queue. 	 */
+comment|/* 	 * If B_INVAL and B_DELWRI is set, clear B_DELWRI.  We have already 	 * placed the buffer on the correct queue.  We must also disassociate 	 * the device and vnode for a B_INVAL buffer so gbincore() doesn't 	 * find it. 	 */
 if|if
 condition|(
-operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
-operator|(
 name|B_INVAL
-operator||
+condition|)
+block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
 name|B_DELWRI
-operator|)
-operator|)
-operator|==
-operator|(
-name|B_INVAL
-operator||
-name|B_DELWRI
-operator|)
 condition|)
 name|bundirty
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_vp
+condition|)
+name|brelvp
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Fixup numfreebuffers count.  The bp is on an appropriate queue 	 * unless locked.  We then bump numfreebuffers if it is not B_DELWRI. 	 * We've already handled the B_INVAL case ( B_DELWRI will be clear 	 * if B_INVAL is set ). 	 */
 if|if
 condition|(
@@ -5597,8 +5664,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
+end_ifdef
+
 begin_comment
-comment|/*  * Check to see if a block is currently memory resident.  */
+comment|/*  * XXX MOVED TO VFS_SUBR.C  *  * Check to see if a block is currently memory resident.  */
 end_comment
 
 begin_function
@@ -5681,6 +5754,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *	vfs_bio_awrite:  *  *	Implement clustered async writes for clearing out B_DELWRI buffers.  *	This is much better then the old way of writing only one buffer at  *	a time.  Note that we may not be presented with the buffers in the   *	correct order, so we search for the cluster in both directions.  */
@@ -6539,6 +6617,9 @@ argument_list|(
 literal|"losing buffer 3"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
 name|LIST_REMOVE
 argument_list|(
 name|bp
@@ -6556,6 +6637,8 @@ argument_list|,
 name|b_hash
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bp
@@ -8060,11 +8143,16 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
 name|struct
 name|bufhashhdr
 modifier|*
 name|bh
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|size
@@ -8558,7 +8646,7 @@ goto|goto
 name|loop
 goto|;
 block|}
-comment|/* 		 * This code is used to make sure that a buffer is not 		 * created while the getnewbuf routine is blocked. 		 * This can be a problem whether the vnode is locked or not. 		 * If the buffer is created out from under us, we have to 		 * throw away the one we just created.  There is now window 		 * race because we are safely running at splbio() from the 		 * point of the duplicate buffer creation through to here, 		 * and we've locked the buffer. 		 */
+comment|/* 		 * This code is used to make sure that a buffer is not 		 * created while the getnewbuf routine is blocked. 		 * This can be a problem whether the vnode is locked or not. 		 * If the buffer is created out from under us, we have to 		 * throw away the one we just created.  There is now window 		 * race because we are safely running at splbio() from the 		 * point of the duplicate buffer creation through to here, 		 * and we've locked the buffer. 		 * 		 * Note: this must occur before we associate the buffer 		 * with the vp especially considering limitations in 		 * the splay tree implementation when dealing with duplicate 		 * lblkno's. 		 */
 if|if
 condition|(
 name|gbincore
@@ -8608,6 +8696,9 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
 name|LIST_REMOVE
 argument_list|(
 name|bp
@@ -8633,6 +8724,8 @@ argument_list|,
 name|b_hash
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * set B_VMIO bit.  allocbuf() the buffer bigger.  Since the 		 * buffer size starts out as 0, B_CACHE will be set by 		 * allocbuf() for the VMIO case prior to it testing the 		 * backing store for validity. 		 */
 if|if
 condition|(

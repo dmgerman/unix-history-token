@@ -280,12 +280,24 @@ name|struct
 name|buflists
 name|v_cleanblkhd
 decl_stmt|;
-comment|/* clean blocklist head */
+comment|/* SORTED clean blocklist */
+name|struct
+name|buf
+modifier|*
+name|v_cleanblkroot
+decl_stmt|;
+comment|/* clean buf splay tree root */
 name|struct
 name|buflists
 name|v_dirtyblkhd
 decl_stmt|;
-comment|/* dirty blocklist head */
+comment|/* SORTED dirty blocklist */
+name|struct
+name|buf
+modifier|*
+name|v_dirtyblkroot
+decl_stmt|;
+comment|/* dirty buf splay tree root */
 name|LIST_ENTRY
 argument_list|(
 argument|vnode

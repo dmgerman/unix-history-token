@@ -19640,7 +19640,7 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-comment|/* 			 * If we have a buffer and it is marked B_DELWRI we 			 * have to lock and write it.  Otherwise the prior 			 * write is assumed to have already been committed. 			 */
+comment|/* 			 * If we have a buffer and it is marked B_DELWRI we 			 * have to lock and write it.  Otherwise the prior 			 * write is assumed to have already been committed. 			 * 			 * gbincore() can return invalid buffers now so we 			 * have to check that bit as well (though B_DELWRI 			 * should not be set if B_INVAL is set there could be 			 * a race here since we haven't locked the buffer). 			 */
 if|if
 condition|(
 operator|(
@@ -19661,8 +19661,14 @@ name|bp
 operator|->
 name|b_flags
 operator|&
+operator|(
 name|B_DELWRI
+operator||
+name|B_INVAL
 operator|)
+operator|)
+operator|==
+name|B_DELWRI
 condition|)
 block|{
 if|if

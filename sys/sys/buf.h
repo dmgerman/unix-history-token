@@ -183,6 +183,14 @@ name|vm_object
 struct_decl|;
 end_struct_decl
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|b_xflags_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * The buffer header describes an I/O operation in the kernel.  *  * NOTES:  *	b_bufsize, b_bcount.  b_bufsize is the allocation size of the  *	buffer, either DEV_BSIZE or PAGE_SIZE aligned.  b_bcount is the  *	originally requested buffer size and can serve as a bounds check  *	against EOF.  For most, but not all uses, b_bcount == b_bufsize.  *  *	b_dirtyoff, b_dirtyend.  Buffers support piecemeal, unaligned  *	ranges of dirty data that need to be written to backing store.  *	The range is typically clipped at b_bcount ( not b_bufsize ).  *  *	b_resid.  Number of bytes remaining in I/O.  After an I/O operation  *	completes, b_resid is usually 0 indicating 100% success.  */
 end_comment
@@ -284,6 +292,9 @@ name|off_t
 name|b_offset
 decl_stmt|;
 comment|/* Offset into file. */
+ifdef|#
+directive|ifdef
+name|USE_BUFHASH
 name|LIST_ENTRY
 argument_list|(
 argument|buf
@@ -291,6 +302,8 @@ argument_list|)
 name|b_hash
 expr_stmt|;
 comment|/* Hash chain. */
+endif|#
+directive|endif
 name|TAILQ_ENTRY
 argument_list|(
 argument|buf
@@ -298,6 +311,18 @@ argument_list|)
 name|b_vnbufs
 expr_stmt|;
 comment|/* Buffer's associated vnode. */
+name|struct
+name|buf
+modifier|*
+name|b_left
+decl_stmt|;
+comment|/* splay tree link (V) */
+name|struct
+name|buf
+modifier|*
+name|b_right
+decl_stmt|;
+comment|/* splay tree link (V) */
 name|TAILQ_ENTRY
 argument_list|(
 argument|buf
@@ -314,8 +339,7 @@ name|short
 name|b_qindex
 decl_stmt|;
 comment|/* buffer queue index */
-name|unsigned
-name|char
+name|b_xflags_t
 name|b_xflags
 decl_stmt|;
 comment|/* extra flags */
@@ -864,6 +888,17 @@ end_define
 
 begin_comment
 comment|/* Background write waiting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BX_BKGRDMARKER
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Mark buffer for splay tree */
 end_comment
 
 begin_define

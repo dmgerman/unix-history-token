@@ -529,13 +529,10 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|!
-operator|(
+comment|/* 				 * Stop if the buffer does not exist or it 				 * is invalid (about to go away?) 				 */
 name|tbp
 operator|=
-name|incore
+name|gbincore
 argument_list|(
 name|vp
 argument_list|,
@@ -543,11 +540,22 @@ name|lblkno
 operator|+
 name|i
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tbp
+operator|==
+name|NULL
+operator|||
+operator|(
+name|tbp
+operator|->
+name|b_flags
+operator|&
+name|B_INVAL
 operator|)
 condition|)
-block|{
 break|break;
-block|}
 comment|/* 				 * Set another read-ahead mark so we know  				 * to check again. 				 */
 if|if
 condition|(
@@ -1724,6 +1732,16 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|&&
+operator|(
+name|tbp
+operator|->
+name|b_flags
+operator|&
+name|B_INVAL
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if

@@ -1794,13 +1794,14 @@ name|nra
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|incore
 argument_list|(
 name|vp
 argument_list|,
 name|rabn
 argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|rabp
@@ -2585,7 +2586,6 @@ operator|->
 name|n_direofoffset
 operator|)
 operator|&&
-operator|!
 name|incore
 argument_list|(
 name|vp
@@ -2594,6 +2594,8 @@ name|lbn
 operator|+
 literal|1
 argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|rabp
