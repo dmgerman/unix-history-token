@@ -485,7 +485,7 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|tolower
+name|toupper
 end_undef
 
 begin_function
@@ -525,7 +525,7 @@ end_function
 begin_undef
 undef|#
 directive|undef
-name|toupper
+name|tolower
 end_undef
 
 begin_function
