@@ -209,8 +209,6 @@ parameter_list|)
 block|{
 name|u_int32_t
 name|vid
-decl_stmt|,
-name|imsreg
 decl_stmt|;
 name|device_t
 name|child
