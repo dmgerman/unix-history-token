@@ -1517,7 +1517,7 @@ name|dp
 decl_stmt|;
 if|if
 condition|(
-name|slot
+name|sp
 operator|->
 name|state
 operator|==
@@ -1709,7 +1709,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|slot
+name|sp
 operator|->
 name|state
 operator|==
