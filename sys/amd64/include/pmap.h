@@ -775,12 +775,6 @@ name|pmap_statistics
 name|pm_stats
 decl_stmt|;
 comment|/* pmap statistics */
-name|struct
-name|vm_page
-modifier|*
-name|pm_ptphint
-decl_stmt|;
-comment|/* pmap ptp hint */
 name|LIST_ENTRY
 argument_list|(
 argument|pmap
