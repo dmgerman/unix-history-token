@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * USB Universal Host Controller driver.  * Handles PIIX3 and PIIX4.  *  * Data sheets: ftp://download.intel.com/design/intarch/datashts/29055002.pdf  *              ftp://download.intel.com/design/intarch/datashts/29056201.pdf  * UHCI spec: http://www.intel.com/design/usb/uhci11d.pdf  * USB spec: http://www.usb.org/cgi-usb/mailmerge.cgi/home/usb/docs/developers/cgiform.tpl  */
+comment|/*  * USB Universal Host Controller driver.  * Handles PIIX3 and PIIX4.  *  * Data sheets: ftp://download.intel.com/design/intarch/datashts/29055002.pdf  *              ftp://download.intel.com/design/intarch/datashts/29056201.pdf  * UHCI spec: http://www.intel.com/design/usb/uhci11d.pdf  * USB spec: http://www.usb.org/cgi-usb/mailmerge.cgi/home/usb/docs/developers/ cgiform.tpl  */
 end_comment
 
 begin_include
@@ -2228,12 +2228,11 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"%s: regs: cmd=%04x, sts=%04x, intr=%04x, frnum=%04x, "
 literal|"flbase=%08x, sof=%02x, portsc1=%04x, portsc2=%04x, "
-operator|,
+argument_list|,
 name|USBDEVNAME
 argument_list|(
 name|sc
@@ -2242,63 +2241,62 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|)
-operator|,
+argument_list|,
 name|UREAD2
 argument_list|(
 name|sc
 argument_list|,
 name|UHCI_CMD
 argument_list|)
-operator|,
+argument_list|,
 name|UREAD2
 argument_list|(
 name|sc
 argument_list|,
 name|UHCI_STS
 argument_list|)
-operator|,
+argument_list|,
 name|UREAD2
 argument_list|(
 name|sc
 argument_list|,
 name|UHCI_INTR
 argument_list|)
-operator|,
+argument_list|,
 name|UREAD2
 argument_list|(
 name|sc
 argument_list|,
 name|UHCI_FRNUM
 argument_list|)
-operator|,
+argument_list|,
 name|UREAD4
 argument_list|(
 name|sc
 argument_list|,
 name|UHCI_FLBASEADDR
 argument_list|)
-operator|,
+argument_list|,
 name|UREAD1
 argument_list|(
 name|sc
 argument_list|,
 name|UHCI_SOF
 argument_list|)
-operator|,
+argument_list|,
 name|UREAD2
 argument_list|(
 name|sc
 argument_list|,
 name|UHCI_PORTSC1
 argument_list|)
-operator|,
+argument_list|,
 name|UREAD2
 argument_list|(
 name|sc
 argument_list|,
 name|UHCI_PORTSC2
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2323,20 +2321,19 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"TD(%p) at %08lx link=0x%08lx st=0x%08lx tok=0x%08lx buf=0x%08lx\n"
-operator|,
+argument_list|,
 name|p
-operator|,
+argument_list|,
 operator|(
 name|long
 operator|)
 name|p
 operator|->
 name|physaddr
-operator|,
+argument_list|,
 operator|(
 name|long
 operator|)
@@ -2345,7 +2342,7 @@ operator|->
 name|td
 operator|->
 name|td_link
-operator|,
+argument_list|,
 operator|(
 name|long
 operator|)
@@ -2354,7 +2351,7 @@ operator|->
 name|td
 operator|->
 name|td_status
-operator|,
+argument_list|,
 operator|(
 name|long
 operator|)
@@ -2363,7 +2360,7 @@ operator|->
 name|td
 operator|->
 name|td_token
-operator|,
+argument_list|,
 operator|(
 name|long
 operator|)
@@ -2372,19 +2369,17 @@ operator|->
 name|td
 operator|->
 name|td_buffer
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|uhci_longtd
 condition|)
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
-literal|" %b %b,errcnt=%d,actlen=%d pid=%02x,addr=%d,endpt=%d,"
+literal|"  %b %b,errcnt=%d,actlen=%d pid=%02x,addr=%d,endpt=%d,"
 literal|"D=%d,maxlen=%d\n"
-operator|,
+argument_list|,
 operator|(
 name|int
 operator|)
@@ -2393,9 +2388,9 @@ operator|->
 name|td
 operator|->
 name|td_link
-operator|,
+argument_list|,
 literal|"\20\1T\2Q\3VF"
-operator|,
+argument_list|,
 operator|(
 name|int
 operator|)
@@ -2404,10 +2399,10 @@ operator|->
 name|td
 operator|->
 name|td_status
-operator|,
+argument_list|,
 literal|"\20\22BITSTUFF\23CRCTO\24NAK\25BABBLE\26DBUFFER\27"
 literal|"STALLED\30ACTIVE\31IOC\32ISO\33LS\36SPD"
-operator|,
+argument_list|,
 name|UHCI_TD_GET_ERRCNT
 argument_list|(
 name|p
@@ -2416,7 +2411,7 @@ name|td
 operator|->
 name|td_status
 argument_list|)
-operator|,
+argument_list|,
 name|UHCI_TD_GET_ACTLEN
 argument_list|(
 name|p
@@ -2425,7 +2420,7 @@ name|td
 operator|->
 name|td_status
 argument_list|)
-operator|,
+argument_list|,
 name|UHCI_TD_GET_PID
 argument_list|(
 name|p
@@ -2434,7 +2429,7 @@ name|td
 operator|->
 name|td_token
 argument_list|)
-operator|,
+argument_list|,
 name|UHCI_TD_GET_DEVADDR
 argument_list|(
 name|p
@@ -2443,7 +2438,7 @@ name|td
 operator|->
 name|td_token
 argument_list|)
-operator|,
+argument_list|,
 name|UHCI_TD_GET_ENDPT
 argument_list|(
 name|p
@@ -2452,7 +2447,7 @@ name|td
 operator|->
 name|td_token
 argument_list|)
-operator|,
+argument_list|,
 name|UHCI_TD_GET_DT
 argument_list|(
 name|p
@@ -2461,7 +2456,7 @@ name|td
 operator|->
 name|td_token
 argument_list|)
-operator|,
+argument_list|,
 name|UHCI_TD_GET_MAXLEN
 argument_list|(
 name|p
@@ -2470,7 +2465,6 @@ name|td
 operator|->
 name|td_token
 argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2487,32 +2481,30 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"QH(%p) at %08x: hlink=%08x elink=%08x\n"
-operator|,
+argument_list|,
 name|p
-operator|,
+argument_list|,
 operator|(
 name|int
 operator|)
 name|p
 operator|->
 name|physaddr
-operator|,
+argument_list|,
 name|p
 operator|->
 name|qh
 operator|->
 name|qh_hlink
-operator|,
+argument_list|,
 name|p
 operator|->
 name|qh
 operator|->
 name|qh_elink
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2525,7 +2517,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void uhci_dump() { 	uhci_softc_t *sc = uhci;  	uhci_dumpregs(sc); 	DPRINTF("intrs=%d\n", sc->sc_intrs); 	DPRINTF("framelist[i].link = %08x\n", sc->sc_framelist[0].link); 	uhci_dump_qh(sc->sc_ctl_start->qh->hlink); }
+unit|void uhci_dump() { 	uhci_softc_t *sc = uhci;  	uhci_dumpregs(sc); 	printf("intrs=%d\n", sc->sc_intrs); 	printf("framelist[i].link = %08x\n", sc->sc_framelist[0].link); 	uhci_dump_qh(sc->sc_ctl_start->qh->hlink); }
 endif|#
 directive|endif
 end_endif
@@ -3197,11 +3189,9 @@ operator|&
 name|UHCI_PTR_T
 condition|)
 block|{
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"uhci_remove_ctrl: QH not found\n"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3423,11 +3413,9 @@ operator|&
 name|UHCI_PTR_T
 condition|)
 block|{
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"uhci_remove_bulk: QH not found\n"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4454,18 +4442,6 @@ name|ii
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-name|uhci_dump_tds
-argument_list|(
-name|ii
-operator|->
-name|stdstart
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|s
 operator|=
 name|splusb
@@ -5623,7 +5599,7 @@ argument_list|(
 literal|15
 argument_list|,
 operator|(
-literal|"uhci_alloc_std_chain: addr=%d endpt=%d len=%d lowspeed=%d "
+literal|"uhci_alloc_std_chain: addr=%d endpt=%d len=%d ls=%d "
 literal|"spd=%d\n"
 operator|,
 name|addr
@@ -6221,7 +6197,6 @@ name|length
 operator|=
 name|len
 expr_stmt|;
-comment|/* XXX FreeBSD can do without dmap, all mem is dma-able */
 name|r
 operator|=
 name|usb_allocmem
@@ -6468,16 +6443,27 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
 ifdef|#
 directive|ifdef
 name|UHCI_DEBUG
-comment|/* this fails, as the transfer is finished before this one 	 * gets anywhere near the end -> traverse of non-existing list 	 */
-block|if (uhcidebug> 100) { 		DPRINTF(("uhci_device_bulk_transfer: xfer(2)\n")); 		uhci_dump_tds(xfer); 	}
-endif|#
-directive|endif
+if|if
+condition|(
+name|uhcidebug
+operator|>
+literal|10
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"uhci_device_bulk_transfer: xfer(2)\n"
+argument_list|)
+expr_stmt|;
+name|uhci_dump_tds
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return
@@ -7031,11 +7017,9 @@ operator|>
 literal|10
 condition|)
 block|{
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"uhci_device_intr_transfer: xfer(1)\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|uhci_dump_tds
@@ -7182,11 +7166,9 @@ operator|>
 literal|10
 condition|)
 block|{
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"uhci_device_intr_transfer: xfer(2)\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|uhci_dump_tds
@@ -7728,7 +7710,7 @@ name|int
 name|len
 decl_stmt|;
 name|u_int32_t
-name|lowspeed
+name|ls
 decl_stmt|;
 name|usbd_status
 name|r
@@ -7782,13 +7764,13 @@ name|endpt
 operator|)
 argument_list|)
 expr_stmt|;
-name|lowspeed
+name|ls
 operator|=
 name|dev
 operator|->
 name|lowspeed
 condition|?
-name|UHCI_TD_LOWSPEED
+name|UHCI_TD_LS
 else|:
 literal|0
 expr_stmt|;
@@ -8042,10 +8024,10 @@ name|td_status
 operator|=
 name|UHCI_TD_SET_ERRCNT
 argument_list|(
-literal|3
+literal|2
 argument_list|)
 operator||
-name|lowspeed
+name|ls
 operator||
 name|UHCI_TD_ACTIVE
 expr_stmt|;
@@ -8110,10 +8092,10 @@ name|td_status
 operator|=
 name|UHCI_TD_SET_ERRCNT
 argument_list|(
-literal|3
+literal|2
 argument_list|)
 operator||
-name|lowspeed
+name|ls
 operator||
 name|UHCI_TD_ACTIVE
 operator||
@@ -8167,11 +8149,9 @@ operator|>
 literal|20
 condition|)
 block|{
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"uhci_device_request: setup\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|uhci_dump_td
@@ -8179,11 +8159,9 @@ argument_list|(
 name|setup
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"uhci_device_request: stat\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|uhci_dump_td
@@ -8318,11 +8296,9 @@ decl_stmt|;
 name|uhci_physaddr_t
 name|link
 decl_stmt|;
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"uhci_enter_ctl_q: follow from [0]\n"
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -8434,12 +8410,11 @@ name|sxqh
 argument_list|)
 expr_stmt|;
 block|}
-name|DPRINTF
+name|printf
 argument_list|(
-argument|(
 literal|"Enqueued QH:\n"
-argument|)
 argument_list|)
+expr_stmt|;
 name|uhci_dump_qh
 argument_list|(
 name|sqh
@@ -9674,11 +9649,9 @@ operator|>
 literal|10
 condition|)
 block|{
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"uhci_device_intr_done: xfer(1)\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|uhci_dump_tds
@@ -10384,11 +10357,9 @@ operator|&
 name|UHCI_PTR_T
 condition|)
 block|{
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"uhci_remove_intr: QH not found\n"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
