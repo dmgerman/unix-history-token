@@ -935,6 +935,10 @@ directive|endif
 case|case
 name|_SC_AIO_LISTIO_MAX
 case|:
+name|defaultresult
+operator|=
+name|_POSIX_AIO_LISTIO_MAX
+expr_stmt|;
 name|mib
 index|[
 literal|0
@@ -955,6 +959,10 @@ goto|;
 case|case
 name|_SC_AIO_MAX
 case|:
+name|defaultresult
+operator|=
+name|_POSIX_AIO_MAX
+expr_stmt|;
 name|mib
 index|[
 literal|0
@@ -975,6 +983,10 @@ goto|;
 case|case
 name|_SC_AIO_PRIO_DELTA_MAX
 case|:
+name|defaultresult
+operator|=
+literal|0
+expr_stmt|;
 name|mib
 index|[
 literal|0
