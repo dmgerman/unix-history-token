@@ -2937,6 +2937,10 @@ name|ueq
 operator|->
 name|ue
 operator|.
+name|u
+operator|.
+name|ue_driver
+operator|.
 name|ue_cookie
 operator|=
 name|dev
@@ -2951,6 +2955,8 @@ operator|&
 name|ueq
 operator|->
 name|ue
+operator|.
+name|u
 operator|.
 name|ue_device
 argument_list|)

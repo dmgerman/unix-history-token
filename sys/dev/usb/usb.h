@@ -165,16 +165,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|USB_OHCI
-value|"ohci/usb"
+name|USB_UHUB
+value|"usb/uhub"
 end_define
 
-begin_define
-define|#
-directive|define
-name|USB_UHCI
-value|"uhci/usb"
-end_define
+begin_comment
+comment|/* root hub */
+end_comment
 
 begin_define
 define|#
@@ -2824,18 +2821,30 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int32_t
+name|cookie
+decl_stmt|;
+block|}
+name|usb_event_cookie_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
-name|MAXDEVNAMES
+name|USB_MAX_DEVNAMES
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAXDEVNAMELEN
-value|10
+name|USB_MAX_DEVNAMELEN
+value|16
 end_define
 
 begin_struct
@@ -2849,16 +2858,9 @@ name|u_int8_t
 name|udi_addr
 decl_stmt|;
 comment|/* device address */
-name|char
-name|udi_devnames
-index|[
-name|MAXDEVNAMES
-index|]
-index|[
-name|MAXDEVNAMELEN
-index|]
+name|usb_event_cookie_t
+name|udi_cookie
 decl_stmt|;
-comment|/* device names */
 name|char
 name|udi_product
 index|[
@@ -2907,6 +2909,15 @@ decl_stmt|;
 comment|/* power consumption in mA, 0 if selfpowered */
 name|int
 name|udi_nports
+decl_stmt|;
+name|char
+name|udi_devnames
+index|[
+name|USB_MAX_DEVNAMES
+index|]
+index|[
+name|USB_MAX_DEVNAMELEN
+index|]
 decl_stmt|;
 name|u_int8_t
 name|udi_ports
@@ -2968,18 +2979,6 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_int32_t
-name|cookie
-decl_stmt|;
-block|}
-name|usb_event_cookie_t
-typedef|;
-end_typedef
-
 begin_comment
 comment|/* Events that can be read from /dev/usb */
 end_comment
@@ -2993,23 +2992,77 @@ name|ue_type
 decl_stmt|;
 define|#
 directive|define
-name|USB_EVENT_ATTACH
+name|USB_EVENT_CTRLR_ATTACH
 value|1
 define|#
 directive|define
-name|USB_EVENT_DETACH
+name|USB_EVENT_CTRLR_DETACH
 value|2
-name|struct
-name|usb_device_info
-name|ue_device
-decl_stmt|;
+define|#
+directive|define
+name|USB_EVENT_DEVICE_ATTACH
+value|3
+define|#
+directive|define
+name|USB_EVENT_DEVICE_DETACH
+value|4
+define|#
+directive|define
+name|USB_EVENT_DRIVER_ATTACH
+value|5
+define|#
+directive|define
+name|USB_EVENT_DRIVER_DETACH
+value|6
+define|#
+directive|define
+name|USB_EVENT_IS_ATTACH
+parameter_list|(
+name|n
+parameter_list|)
+value|((n) == USB_EVENT_CTRLR_ATTACH || (n) == USB_EVENT_DEVICE_ATTACH || (n) == USB_EVENT_DRIVER_ATTACH)
+define|#
+directive|define
+name|USB_EVENT_IS_DETACH
+parameter_list|(
+name|n
+parameter_list|)
+value|((n) == USB_EVENT_CTRLR_DETACH || (n) == USB_EVENT_DEVICE_DETACH || (n) == USB_EVENT_DRIVER_DETACH)
 name|struct
 name|timespec
 name|ue_time
 decl_stmt|;
+union|union
+block|{
+struct|struct
+block|{
+name|int
+name|ue_bus
+decl_stmt|;
+block|}
+name|ue_ctrlr
+struct|;
+name|struct
+name|usb_device_info
+name|ue_device
+decl_stmt|;
+struct|struct
+block|{
 name|usb_event_cookie_t
 name|ue_cookie
 decl_stmt|;
+name|char
+name|ue_devname
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+name|ue_driver
+struct|;
+block|}
+name|u
+union|;
 block|}
 struct|;
 end_struct

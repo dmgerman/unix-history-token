@@ -410,7 +410,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MAXDEVNAMES
+name|USB_MAX_DEVNAMES
 condition|;
 name|i
 operator|++
