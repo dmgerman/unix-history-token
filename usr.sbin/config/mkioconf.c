@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkioconf.c,v 1.33 1997/09/21 22:12:50 gibbs Exp $"
+literal|"$Id: mkioconf.c,v 1.34 1998/04/02 04:25:41 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3815,11 +3815,25 @@ argument_list|,
 literal|"#include<i386/isa/icu.h>\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|machine
+operator|==
+name|MACHINE_I386
+condition|)
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
 literal|"#include<i386/isa/isa.h>\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include<pc98/pc98/pc98.h>\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3959,11 +3973,19 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|dp
 operator|->
 name|d_irq
 operator|==
 literal|2
+operator|)
+operator|&&
+operator|(
+name|machine
+operator|==
+name|MACHINE_I386
+operator|)
 condition|)
 block|{
 name|fprintf

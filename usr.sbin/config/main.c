@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.22 1998/03/16 11:19:10 eivind Exp $"
+literal|"$Id: main.c,v 1.23 1998/04/23 16:37:06 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,6 +588,9 @@ expr_stmt|;
 break|break;
 case|case
 name|MACHINE_I386
+case|:
+case|case
+name|MACHINE_PC98
 case|:
 name|i386_ioconf
 argument_list|()
