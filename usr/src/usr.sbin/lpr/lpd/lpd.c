@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	4.11 (Berkeley) %G%"
+literal|"@(#)lpd.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * lpd -- line printer daemon.  *  * Listen for a connection and perform the requested operation.  * Operations are:  *	\1printer\n  *		check the queue for jobs and print any found.  *	\2printer\n  *		receive a job from another machine and queue it.  *	\3printer [users ...] [jobs ...]\n  *		return the current state of the queue (short form).  *	\4printer [users ...] [jobs ...]\n  *		return the current state of the queue (long form).  *	\5printer person [users ...] [jobs ...]\n  *		remove jobs from the queue.  *	\6printer\n  *		enable queuing on the specified printer queue.  *	\7printer\n  *		disable queuing on the specified printer queue.  *	\8printer\n  *		return the queue status (queuing enabled or disabled).  *  * Strategy to maintain protected spooling area:  *	1. Spooling area is writable only by daemon and spooling group  *	2. lpr runs setuid root and setgrp spooling group; it uses  *	   root to access any file it wants (verifying things before  *	   with an access call) and group id to know how it should  *	   set up ownership of files in the spooling area.  *	3. Files in spooling area are owned by root, group spooling  *	   group, with mode 660.  *	4. lpd, lpq and lprm run setuid daemon and setgrp spooling group to  *	   access files and printer.  Users can't get to anything  *	   w/o help of lpq and lprm programs.  */
+comment|/*  * lpd -- line printer daemon.  *  * Listen for a connection and perform the requested operation.  * Operations are:  *	\1printer\n  *		check the queue for jobs and print any found.  *	\2printer\n  *		receive a job from another machine and queue it.  *	\3printer [users ...] [jobs ...]\n  *		return the current state of the queue (short form).  *	\4printer [users ...] [jobs ...]\n  *		return the current state of the queue (long form).  *	\5printer person [users ...] [jobs ...]\n  *		remove jobs from the queue.  *  * Strategy to maintain protected spooling area:  *	1. Spooling area is writable only by daemon and spooling group  *	2. lpr runs setuid root and setgrp spooling group; it uses  *	   root to access any file it wants (verifying things before  *	   with an access call) and group id to know how it should  *	   set up ownership of files in the spooling area.  *	3. Files in spooling area are owned by root, group spooling  *	   group, with mode 660.  *	4. lpd, lpq and lprm run setuid daemon and setgrp spooling group to  *	   access files and printer.  Users can't get to anything  *	   w/o help of lpq and lprm programs.  */
 end_comment
 
 begin_include
@@ -31,7 +31,6 @@ file|"lp.h"
 end_include
 
 begin_decl_stmt
-specifier|static
 name|int
 name|lflag
 decl_stmt|;
@@ -40,16 +39,6 @@ end_decl_stmt
 begin_comment
 comment|/* log requests flag */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|logfile
-init|=
-name|DEFLOGF
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int
@@ -60,7 +49,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cleanup
+name|mcleanup
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -177,19 +166,6 @@ name|lflag
 operator|++
 expr_stmt|;
 break|break;
-case|case
-literal|'L'
-case|:
-name|argc
-operator|--
-expr_stmt|;
-name|logfile
-operator|=
-operator|*
-operator|++
-name|argv
-expr_stmt|;
-break|break;
 block|}
 block|}
 ifndef|#
@@ -214,7 +190,7 @@ literal|0
 init|;
 name|f
 operator|<
-literal|3
+literal|5
 condition|;
 name|f
 operator|++
@@ -250,13 +226,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|open
+name|dup
 argument_list|(
-name|logfile
-argument_list|,
-name|O_WRONLY
-operator||
-name|O_APPEND
+literal|1
 argument_list|)
 expr_stmt|;
 name|f
@@ -295,6 +267,15 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|openlog
+argument_list|(
+literal|"lpd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -323,9 +304,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"cannot create %s"
+name|LOG_ERR
+argument_list|,
+literal|"%s: %m"
 argument_list|,
 name|MASTERLOCK
 argument_list|)
@@ -362,9 +345,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|log
+name|syslog
 argument_list|(
-literal|"cannot lock %s"
+name|LOG_ERR
+argument_list|,
+literal|"%s: %m"
 argument_list|,
 name|MASTERLOCK
 argument_list|)
@@ -414,9 +399,13 @@ operator|!=
 name|f
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
-literal|"cannot write daemon pid"
+name|LOG_ERR
+argument_list|,
+literal|"%s: %m"
+argument_list|,
+name|MASTERLOCK
 argument_list|)
 expr_stmt|;
 name|exit
@@ -462,9 +451,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|logerr
+name|syslog
 argument_list|(
-literal|"socket"
+name|LOG_ERR
+argument_list|,
+literal|"socket: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -509,28 +500,28 @@ name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|cleanup
+name|mcleanup
 argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|cleanup
+name|mcleanup
 argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
-name|cleanup
+name|mcleanup
 argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
-name|cleanup
+name|mcleanup
 argument_list|)
 expr_stmt|;
 name|sun
@@ -570,9 +561,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|logerr
+name|syslog
 argument_list|(
-literal|"unix domain bind"
+name|LOG_ERR
+argument_list|,
+literal|"ubind: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -646,12 +639,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|logerr
+name|syslog
 argument_list|(
-literal|"setsockopt (SO_DEBUG)"
+name|LOG_ERR
+argument_list|,
+literal|"setsockopt (SO_DEBUG): %m"
 argument_list|)
 expr_stmt|;
-name|cleanup
+name|mcleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -671,12 +666,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"printer/tcp: unknown service"
 argument_list|)
 expr_stmt|;
-name|cleanup
+name|mcleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -714,12 +711,14 @@ operator|<
 literal|0
 condition|)
 block|{
-name|logerr
+name|syslog
 argument_list|(
-literal|"internet domain bind"
+name|LOG_ERR
+argument_list|,
+literal|"bind: %m"
 argument_list|)
 expr_stmt|;
-name|cleanup
+name|mcleanup
 argument_list|()
 expr_stmt|;
 block|}
@@ -788,17 +787,13 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-block|{
-name|logerr
+name|syslog
 argument_list|(
-literal|"select"
+name|LOG_WARNING
+argument_list|,
+literal|"select: %m"
 argument_list|)
 expr_stmt|;
-name|cleanup
-argument_list|()
-expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
 continue|continue;
 block|}
 if|if
@@ -884,18 +879,17 @@ block|{
 if|if
 condition|(
 name|errno
-operator|==
+operator|!=
 name|EINTR
 condition|)
-continue|continue;
-name|logerr
+name|syslog
 argument_list|(
-literal|"accept"
+name|LOG_WARNING
+argument_list|,
+literal|"accept: %m"
 argument_list|)
 expr_stmt|;
-name|cleanup
-argument_list|()
-expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -1004,15 +998,17 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|reapchild
 argument_list|()
+end_macro
+
+begin_block
 block|{
-expr|union
+name|union
 name|wait
 name|status
-block|;
+decl_stmt|;
 while|while
 condition|(
 name|wait3
@@ -1029,20 +1025,24 @@ literal|0
 condition|)
 empty_stmt|;
 block|}
-end_expr_stmt
+end_block
 
-begin_expr_stmt
-specifier|static
-name|cleanup
+begin_macro
+name|mcleanup
 argument_list|()
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
 name|lflag
 condition|)
-name|log
+name|syslog
 argument_list|(
-literal|"cleanup()"
+name|LOG_INFO
+argument_list|,
+literal|"exiting"
 argument_list|)
 expr_stmt|;
 name|unlink
@@ -1050,30 +1050,27 @@ argument_list|(
 name|SOCKETNAME
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * Stuff for handling job specifications  */
 end_comment
 
-begin_expr_stmt
-unit|char
-operator|*
+begin_decl_stmt
+name|char
+modifier|*
 name|user
 index|[
 name|MAXUSERS
 index|]
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* users to process */
@@ -1124,7 +1121,6 @@ comment|/* name of person doing lprm */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|fromb
 index|[
@@ -1138,7 +1134,6 @@ comment|/* buffer for client's machine name */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 name|cbuf
 index|[
@@ -1152,7 +1147,6 @@ comment|/* command line buffer */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|cmdnames
@@ -1174,20 +1168,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|doit
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|char
-operator|*
+modifier|*
 name|cp
-block|;
+decl_stmt|;
 specifier|register
 name|int
 name|n
-block|;
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -1251,41 +1247,33 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|} while
-operator|(
+block|}
+do|while
+condition|(
 operator|*
 name|cp
 operator|++
 operator|!=
 literal|'\n'
-operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+condition|)
+do|;
 operator|*
 operator|--
 name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|cp
 operator|=
 name|cbuf
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|lflag
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|*
 name|cp
 operator|>=
@@ -1296,13 +1284,10 @@ name|cp
 operator|<=
 literal|'\5'
 condition|)
-block|{
-name|printer
-operator|=
-name|NULL
-expr_stmt|;
-name|log
+name|syslog
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"%s requests %s %s"
 argument_list|,
 name|from
@@ -1318,10 +1303,20 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+else|else
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"bad request (%d) from %s"
+argument_list|,
+operator|*
+name|cp
+argument_list|,
+name|from
+argument_list|)
+expr_stmt|;
 block|}
-end_if
-
-begin_switch
 switch|switch
 condition|(
 operator|*
@@ -1621,44 +1616,44 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-end_switch
-
-begin_expr_stmt
 name|fatal
 argument_list|(
 literal|"Illegal service request"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+block|}
+end_block
 
 begin_comment
-unit|} }
 comment|/*  * Make a pass through the printcap database and start printing any  * files left from the last time the machine went down.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|startup
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|char
 name|buf
 index|[
 name|BUFSIZ
 index|]
-block|;
+decl_stmt|;
 specifier|register
 name|char
-operator|*
+modifier|*
 name|cp
-block|;
+decl_stmt|;
 name|int
 name|pid
-block|;
+decl_stmt|;
 name|printer
 operator|=
 name|buf
-block|;
+expr_stmt|;
 comment|/* 	 * Restart the daemons. 	 */
 while|while
 condition|(
@@ -1702,9 +1697,6 @@ literal|'\0'
 expr_stmt|;
 break|break;
 block|}
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1717,18 +1709,17 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|syslog
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"startup: cannot fork"
 argument_list|)
 expr_stmt|;
-name|cleanup
+name|mcleanup
 argument_list|()
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -1742,25 +1733,28 @@ name|printjob
 argument_list|()
 expr_stmt|;
 block|}
-end_if
+block|}
+block|}
+end_block
 
 begin_comment
-unit|} }
 comment|/*  * Check to see if the from host has access to the line printer.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|chkhost
 argument_list|(
 argument|f
 argument_list|)
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|sockaddr_in
-operator|*
+modifier|*
 name|f
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2007,217 +2001,6 @@ block|}
 name|fatal
 argument_list|(
 literal|"Your host does not have line printer access"
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*VARARGS1*/
-end_comment
-
-begin_macro
-name|log
-argument_list|(
-argument|msg
-argument_list|,
-argument|a1
-argument_list|,
-argument|a2
-argument_list|,
-argument|a3
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|short
-name|console
-init|=
-name|isatty
-argument_list|(
-name|fileno
-argument_list|(
-name|stderr
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|console
-condition|?
-literal|"\r\n%s: "
-else|:
-literal|"%s: "
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|printer
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|printer
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|msg
-argument_list|,
-name|a1
-argument_list|,
-name|a2
-argument_list|,
-name|a3
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|console
-condition|)
-name|putc
-argument_list|(
-literal|'\r'
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|putc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_expr_stmt
-specifier|static
-name|logerr
-argument_list|(
-argument|msg
-argument_list|)
-name|char
-operator|*
-name|msg
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-specifier|register
-name|int
-name|err
-init|=
-name|errno
-decl_stmt|;
-name|short
-name|console
-init|=
-name|isatty
-argument_list|(
-name|fileno
-argument_list|(
-name|stderr
-argument_list|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|console
-condition|?
-literal|"\r\n%s: "
-else|:
-literal|"%s: "
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|msg
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-name|err
-operator|<
-name|sys_nerr
-condition|?
-name|sys_errlist
-index|[
-name|err
-index|]
-else|:
-literal|"Unknown error"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|console
-condition|)
-name|putc
-argument_list|(
-literal|'\r'
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|putc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
 argument_list|)
 expr_stmt|;
 block|}
