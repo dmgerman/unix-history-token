@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wall.c	5.14 (Berkeley) %G%"
+literal|"@(#)wall.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -378,6 +378,10 @@ argument_list|,
 name|utmp
 operator|.
 name|ut_line
+argument_list|,
+literal|60
+operator|*
+literal|5
 argument_list|)
 condition|)
 operator|(

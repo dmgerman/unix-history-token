@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.45 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3721,6 +3721,10 @@ operator|.
 name|ut_line
 argument_list|,
 literal|1
+argument_list|,
+literal|60
+operator|*
+literal|5
 argument_list|)
 condition|)
 block|{
@@ -3805,6 +3809,10 @@ operator|.
 name|ut_line
 argument_list|,
 literal|1
+argument_list|,
+literal|60
+operator|*
+literal|5
 argument_list|)
 condition|)
 block|{
