@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.202 (Berkeley) %G%"
+literal|"@(#)conf.c	8.203 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -11463,10 +11463,6 @@ name|defined
 argument_list|(
 name|__svr4
 argument_list|)
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
 if|#
 directive|if
 name|SOLARIS
@@ -11821,10 +11817,6 @@ operator|&&
 name|SOLARIS
 operator|<
 literal|204
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
 if|#
 directive|if
 name|SOLARIS

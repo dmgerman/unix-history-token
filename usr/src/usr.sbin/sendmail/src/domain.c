@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.46 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.47 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.46 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.47 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -279,10 +279,6 @@ modifier|*
 name|rcode
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
 specifier|register
 name|u_char
 modifier|*
@@ -1821,10 +1817,6 @@ modifier|*
 name|statp
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
 specifier|register
 name|u_char
 modifier|*

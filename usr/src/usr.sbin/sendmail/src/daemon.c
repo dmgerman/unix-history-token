@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.104 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.105 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.104 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.105 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -611,15 +611,6 @@ decl_stmt|;
 name|bool
 name|firstconnect
 decl_stmt|;
-if|#
-directive|if
-name|NAMED_BIND
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	**  Set up the address for the mailer. 	**	Accept "[a.b.c.d]" syntax for host name. 	*/
 if|#
 directive|if
@@ -1778,10 +1769,6 @@ name|bool
 name|getcanonname
 parameter_list|()
 function_decl|;
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
 if|if
 condition|(
 name|gethostname
@@ -3312,15 +3299,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|NAMED_BIND
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	**  See if we have already looked up this name.  If so, just 	**  return it. 	*/
 name|s
 operator|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.78 (Berkeley) %G%"
+literal|"@(#)map.c	8.79 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1780,10 +1780,6 @@ name|mapreturn
 index|[
 name|MAXMAPACTIONS
 index|]
-decl_stmt|;
-specifier|extern
-name|int
-name|h_errno
 decl_stmt|;
 name|nmaps
 operator|=
