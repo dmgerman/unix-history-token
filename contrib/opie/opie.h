@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opie.h: Data structures and values for the OPIE authentication 	system that a program might need.  %%% portions-copyright-cmetz Portions of this software are Copyright 1996 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.3. Renamed PTR to VOIDPTR. Added 		re-init key and extension file fields to struct opie. Added 		opie_ prefix on struct opie members. Added opie_flags field 		and definitions. Added more prototypes. Changed opiehash() 		prototype. 	Modified by cmetz for OPIE 2.22. Define __P correctly if this file 		is included in a third-party program. 	Modified by cmetz for OPIE 2.2. Re-did prototypes. Added FUNCTION                 definition et al. Multiple-include protection. Added struct 		utsname fake. Got rid of gethostname() cruft. Moved UINT4                 here. Provide for *seek whence values. Move MDx context here                 and unify. Re-did prototypes. 	Modified at NRL for OPIE 2.0. 	Written at Bellcore for the S/Key Version 1 software distribution 		(skey.h). */
+comment|/* opie.h: Data structures and values for the OPIE authentication 	system that a program might need.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.31. Removed active attack protection. 	Modified by cmetz for OPIE 2.3. Renamed PTR to VOIDPTR. Added 		re-init key and extension file fields to struct opie. Added 		opie_ prefix on struct opie members. Added opie_flags field 		and definitions. Added more prototypes. Changed opiehash() 		prototype. 	Modified by cmetz for OPIE 2.22. Define __P correctly if this file 		is included in a third-party program. 	Modified by cmetz for OPIE 2.2. Re-did prototypes. Added FUNCTION                 definition et al. Multiple-include protection. Added struct 		utsname fake. Got rid of gethostname() cruft. Moved UINT4                 here. Provide for *seek whence values. Move MDx context here                 and unify. Re-did prototypes. 	Modified at NRL for OPIE 2.0. 	Written at Bellcore for the S/Key Version 1 software distribution 		(skey.h). */
 end_comment
 
 begin_ifndef
@@ -13,6 +13,7 @@ begin_define
 define|#
 directive|define
 name|_OPIE_H
+value|1
 end_define
 
 begin_if
@@ -523,20 +524,6 @@ name|opie_val
 decl_stmt|;
 name|long
 name|opie_recstart
-decl_stmt|;
-name|char
-name|opie_extbuf
-index|[
-literal|129
-index|]
-decl_stmt|;
-comment|/*> OPIE_PRINCIPAL_MAX + 1 + 16 + 2 + 1 */
-name|long
-name|opie_extrecstart
-decl_stmt|;
-name|char
-modifier|*
-name|opie_reinitkey
 decl_stmt|;
 block|}
 struct|;

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* popen.c: A "safe" pipe open routine.  %%% portions-copyright-cmetz Portions of this software are Copyright 1996 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.                 Removed useless string. ifdef around some headers.         Modified at NRL for OPIE 2.1. Optimized for only one pipe at a time.                 Added minimal version of sigprocmask(). Moved some pid_t 		dancing to the config headers. 	Modified at NRL for OPIE 2.0. 	Originally from BSD.  */
+comment|/* popen.c: A "safe" pipe open routine.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.31. Merged in some 4.4BSD-Lite fixes. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.                 Removed useless string. ifdef around some headers.         Modified at NRL for OPIE 2.1. Optimized for only one pipe at a time.                 Added minimal version of sigprocmask(). Moved some pid_t 		dancing to the config headers. 	Modified at NRL for OPIE 2.0. 	Originally from BSD.  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software written by Ken Arnold and  * published in UNIX Review, Vol. 6, No. 8.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1988, 1993, 1994  *     The Regents of the University of California.  All rights reserved.  *  * This code is derived from software written by Ken Arnold and  * published in UNIX Review, Vol. 6, No. 8.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -189,7 +189,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Special version of popen which avoids call to shell.  This insures noone  * may create a pipe to a hidden program as a side effect of a list or dir  * command.  */
+comment|/*  * Special version of popen which avoids call to shell.  This ensures noone  * may create a pipe to a hidden program as a side effect of a list or dir  * command.  */
 end_comment
 
 begin_decl_stmt
@@ -206,6 +206,15 @@ begin_decl_stmt
 specifier|static
 name|int
 name|pipe_fd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
 decl_stmt|;
 end_decl_stmt
 
@@ -230,7 +239,6 @@ operator|*
 name|type
 argument_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -602,6 +610,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|environ
+operator|=
+name|NULL
+expr_stmt|;
 name|execv
 argument_list|(
 name|gargv
@@ -865,28 +877,43 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|WEXITSTATUS
-comment|/* this is the fully POSIX compliant implementation */
-return|return
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|WIFEXITED
+argument_list|)
+if|if
+condition|(
 operator|(
 name|pid
-operator|==
-operator|-
-literal|1
-condition|?
-operator|-
-literal|1
-else|:
+operator|>
+literal|0
+operator|)
+operator|&&
+name|WIFEXITED
+argument_list|(
+name|status
+argument_list|)
+condition|)
+return|return
 name|WEXITSTATUS
 argument_list|(
 name|status
 argument_list|)
-operator|)
+return|;
+return|return
+operator|-
+literal|1
 return|;
 else|#
 directive|else
+comment|/* defined(WEXITSTATUS)&& defined(WIFEXITED) */
 return|return
 operator|(
 name|pid
@@ -904,6 +931,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* defined(WEXITSTATUS)&& defined(WIFEXITED) */
 block|}
 end_decl_stmt
 

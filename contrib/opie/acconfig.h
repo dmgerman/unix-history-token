@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* acconfig.h: Extra commentary for Autoheader  %%% portions-copyright-cmetz Portions of this software are Copyright 1996 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  /* Define if the closedir function returns void instead of int.  */
+comment|/* acconfig.h: Extra commentary for Autoheader  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  /* Define if the closedir function returns void instead of int.  */
 end_comment
 
 begin_undef
@@ -337,6 +337,116 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_UT_HOST
+end_undef
+
+begin_comment
+comment|/* Define if the system has getutline() */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_GETUTLINE
+end_undef
+
+begin_comment
+comment|/* Defined if the system has SunOS C2 security shadow passwords */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SUNOS_C2_SHADOW
+end_undef
+
+begin_comment
+comment|/* Defined if you want to disable utmp support */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DISABLE_UTMP
+end_undef
+
+begin_comment
+comment|/* Defined if you want to disable wtmp support */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DISABLE_WTMP
+end_undef
+
+begin_comment
+comment|/* Defined if you want to allow users to override the insecure checks */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|INSECURE_OVERRIDE
+end_undef
+
+begin_comment
+comment|/* Defined to the default hash value, always defined */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|MDX
+end_undef
+
+begin_comment
+comment|/* Defined if new-style prompts are to be used */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NEW_PROMPTS
+end_undef
+
+begin_comment
+comment|/* Defined to the path of the OPIE lock directory */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|OPIE_LOCK_DIR
+end_undef
+
+begin_comment
+comment|/* Defined if users are to be asked to re-type secret pass phrases */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|RETYPE
+end_undef
+
+begin_comment
+comment|/* Defined if su should not switch to disabled accounts */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SU_STAR_CHECK
+end_undef
+
+begin_comment
+comment|/* Defined if user locking is to be used */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USER_LOCKING
 end_undef
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opietest.c: Quick, though definitely not complete, regression test for                libopie. This is intended to catch two things:  	(1) when changes break something         (2) if some system wierdness (libc, compiler, or CPU/hardware) is             not getting along at all with OPIE.          It's safe to say that, if tests fail, OPIE isn't going to work right on your system. The converse is not such a safe statement.  %%% copyright-cmetz This software is Copyright 1996 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.3. Use new calling conventions for 		opiebtoa8()/atob8(). opiegenerator() outputs hex now. 	Modified by cmetz for OPIE 2.22. Test opielock()/opieunlock() 		refcount support. 	Created by cmetz for OPIE 2.2. */
+comment|/* opietest.c: Quick, though definitely not complete, regression test for                libopie. This is intended to catch two things:  	(1) when changes break something         (2) if some system wierdness (libc, compiler, or CPU/hardware) is             not getting along at all with OPIE.          It's safe to say that, if tests fail, OPIE isn't going to work right on your system. The converse is not such a safe statement.  %%% copyright-cmetz-96 This software is Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.31. Added a couple of new checks, 		removed a few commented-out checks for functions that 		no longer exist, added test-skip capability. 	Modified by cmetz for OPIE 2.3. Use new calling conventions for 		opiebtoa8()/atob8(). opiegenerator() outputs hex now. 	Modified by cmetz for OPIE 2.22. Test opielock()/opieunlock() 		refcount support. 	Created by cmetz for OPIE 2.2. */
 end_comment
 
 begin_include
@@ -27,34 +27,6 @@ name|buffer
 index|[
 literal|1024
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tests_passed
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tests_failed
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ntests
-init|=
-literal|0
-decl_stmt|,
-name|testn
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -626,6 +598,20 @@ end_function
 
 begin_function
 name|int
+name|testinsecure
+parameter_list|()
+block|{
+name|opieinsecure
+argument_list|()
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|testkeycrunch
 parameter_list|()
 block|{
@@ -716,6 +702,15 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|getuid
+argument_list|()
+condition|)
+return|return
+operator|-
+literal|2
+return|;
 for|for
 control|(
 name|i
@@ -796,12 +791,60 @@ end_function
 
 begin_function
 name|int
+name|testrandomchallenge
+parameter_list|()
+block|{
+name|char
+name|buffer
+index|[
+name|OPIE_CHALLENGE_MAX
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|opierandomchallenge
+argument_list|(
+name|buffer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|buffer
+argument_list|,
+literal|"otp-"
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|testunlock
 parameter_list|()
 block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|getuid
+argument_list|()
+condition|)
+return|return
+operator|-
+literal|2
+return|;
 for|for
 control|(
 name|i
@@ -893,7 +936,7 @@ block|,
 literal|"etob"
 block|}
 block|,
-comment|/* { testchallenge, "challenge" }, */
+comment|/*  { testchallenge, "challenge" }, */
 block|{
 name|testgenerator
 block|,
@@ -906,7 +949,6 @@ block|,
 literal|"getsequence"
 block|}
 block|,
-comment|/* { testgetutmpentry, "getutmpentry" }, */
 block|{
 name|testhashmd4
 block|,
@@ -919,7 +961,12 @@ block|,
 literal|"hash(MD5)"
 block|}
 block|,
-comment|/* { testinsecure, "insecure" }, */
+block|{
+name|testinsecure
+block|,
+literal|"insecure"
+block|}
+block|,
 block|{
 name|testkeycrunch
 block|,
@@ -932,8 +979,12 @@ block|,
 literal|"lock"
 block|}
 block|,
-comment|/* { testpututmpentry, "pututmpentry" }, */
-comment|/* { testrandomchallenge, "randomchallenge" }, */
+block|{
+name|testrandomchallenge
+block|,
+literal|"randomchallenge"
+block|}
+block|,
 comment|/* { testreadpass, "readpass" }, */
 block|{
 name|testunlock
@@ -941,8 +992,7 @@ block|,
 literal|"unlock"
 block|}
 block|,
-comment|/* { testverify, "verify" }, */
-comment|/*  { testversion, "version" }, */
+comment|/*  { testverify, "verify" }, */
 block|{
 name|NULL
 block|,
@@ -977,6 +1027,53 @@ name|opietest
 modifier|*
 name|opietest
 decl_stmt|;
+name|int
+name|tests_passed
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|tests_failed
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|tests_skipped
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|ntests
+init|=
+literal|0
+decl_stmt|,
+name|testn
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+name|geteuid
+argument_list|()
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"opietest: do not make this program setuid!\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 for|for
 control|(
 name|opietest
@@ -1032,7 +1129,7 @@ operator|->
 name|n
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|opietest
 operator|->
@@ -1040,6 +1137,29 @@ name|f
 argument_list|()
 condition|)
 block|{
+case|case
+operator|-
+literal|2
+case|:
+name|printf
+argument_list|(
+literal|"skipped\n"
+argument_list|)
+expr_stmt|;
+name|tests_skipped
+operator|++
+expr_stmt|;
+name|opietest
+operator|->
+name|f
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+case|case
+operator|-
+literal|1
+case|:
 name|printf
 argument_list|(
 literal|"FAILED!\n"
@@ -1048,9 +1168,10 @@ expr_stmt|;
 name|tests_failed
 operator|++
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+literal|0
+case|:
 name|printf
 argument_list|(
 literal|"passed\n"
@@ -1065,15 +1186,18 @@ name|f
 operator|=
 name|NULL
 expr_stmt|;
+break|break;
 block|}
 block|}
 name|printf
 argument_list|(
-literal|"opietest: completed %d tests. %d tests passed, %d tests failed.\n"
+literal|"opietest: completed %d tests. %d tests passed, %d tests skipped, %d tests failed.\n"
 argument_list|,
 name|ntests
 argument_list|,
 name|tests_passed
+argument_list|,
+name|tests_skipped
 argument_list|,
 name|tests_failed
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* insecure.c: The opieinsecure() library function.  %%% portions-copyright-cmetz Portions of this software are Copyright 1996 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.          History:  	Modified by cmetz for OPIE 2.3. Added result caching. Use 	     __opiegetutmpentry(). Ifdef around ut_host check. Eliminate 	     unused variable. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.              Allow IP loopback. DISPLAY and ut_host must match exactly,              not just the part before the colon. Added work-around for               Sun CDE dtterm bug. Leave the environment as it was              found. Use uname().         Created at NRL for OPIE 2.2 from opiesubr.c. Fixed pointer              assignment that should have been a comparison. */
+comment|/* insecure.c: The opieinsecure() library function.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.          History:  	Modified by cmetz for OPIE 2.31. Fixed a logic bug. Call endut[x]ent(). 	Modified by cmetz for OPIE 2.3. Added result caching. Use 	     __opiegetutmpentry(). Ifdef around ut_host check. Eliminate 	     unused variable. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.              Allow IP loopback. DISPLAY and ut_host must match exactly,              not just the part before the colon. Added work-around for               Sun CDE dtterm bug. Leave the environment as it was              found. Use uname().         Created at NRL for OPIE 2.2 from opiesubr.c. Fixed pointer              assignment that should have been a comparison. */
 end_comment
 
 begin_include
@@ -68,6 +68,13 @@ name|utmp
 value|utmpx
 end_define
 
+begin_define
+define|#
+directive|define
+name|endutent
+value|endutxent
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -103,6 +110,24 @@ include|#
 directive|include
 file|"opie.h"
 end_include
+
+begin_decl_stmt
+name|char
+modifier|*
+name|remote_terms
+index|[]
+init|=
+block|{
+literal|"xterm"
+block|,
+literal|"xterms"
+block|,
+literal|"kterm"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -360,7 +385,7 @@ name|nodename
 argument_list|,
 name|display_name
 argument_list|,
-name|n
+name|n2
 argument_list|)
 condition|)
 name|insecure
@@ -396,15 +421,37 @@ condition|(
 operator|!
 name|display_name
 operator|&&
-operator|!
 name|term_name
-operator|&&
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|remote_terms
+index|[
+name|i
+index|]
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
 operator|!
 name|strcmp
 argument_list|(
-literal|"xterm"
-argument_list|,
 name|term_name
+argument_list|,
+name|remote_terms
+index|[
+name|i
+index|]
 argument_list|)
 condition|)
 return|return
@@ -414,6 +461,8 @@ operator|=
 literal|1
 operator|)
 return|;
+block|}
+empty_stmt|;
 if|#
 directive|if
 name|HAVE_UT_HOST
@@ -431,9 +480,10 @@ name|utmp
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
+block|{
+name|int
+name|i
+init|=
 name|__opiegetutmpentry
 argument_list|(
 name|ttyname
@@ -444,6 +494,14 @@ argument_list|,
 operator|&
 name|utmp
 argument_list|)
+decl_stmt|;
+name|endutent
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|i
 operator|&&
 name|utmp
 operator|.
@@ -579,6 +637,8 @@ comment|/* SOLARIS */
 block|}
 block|}
 block|}
+block|}
+empty_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_UT_HOST */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* login.c: The opielogin() library function.  %%% copyright-cmetz This software is Copyright 1996 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:          Created by cmetz for OPIE 2.3. */
+comment|/* login.c: The opielogin() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.31. If the OS won't tell us where 		_PATH_WTMP[X] is, try playing the SVID game, then use 		Autoconf-discovered values. Fixed gettimeofday() call 		and updwtmpx() call. Call endutxent for utmpx. Added 		DISABLE_UTMP.         Created by cmetz for OPIE 2.3. */
 end_comment
 
 begin_include
@@ -47,6 +47,13 @@ parameter_list|(
 name|x
 parameter_list|)
 value|pututxline(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|endutent
+value|endutxent
 end_define
 
 begin_define
@@ -160,6 +167,10 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|DISABLE_UTMP
 if|if
 condition|(
 name|__opiegetutmpentry
@@ -324,6 +335,8 @@ name|u
 operator|.
 name|ut_name
 argument_list|)
+operator|-
+literal|1
 index|]
 operator|=
 literal|0
@@ -366,6 +379,8 @@ name|u
 operator|.
 name|ut_host
 argument_list|)
+operator|-
+literal|1
 index|]
 operator|=
 literal|0
@@ -383,7 +398,7 @@ name|gettimeofday
 argument_list|(
 operator|&
 name|u
-operator|->
+operator|.
 name|ut_tv
 argument_list|)
 expr_stmt|;
@@ -394,7 +409,7 @@ name|gettimeofday
 argument_list|(
 operator|&
 name|u
-operator|->
+operator|.
 name|ut_tv
 argument_list|,
 name|NULL
@@ -439,146 +454,29 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
+endif|#
+directive|endif
+comment|/* !DISABLE_UTMP */
 name|dowtmp
 label|:
-block|{
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
-if|#
-directive|if
-name|DOUTMPX
-name|updutmpx
+name|opielogwtmp
 argument_list|(
-name|_PATH_WTMPX
+name|line
 argument_list|,
-operator|&
-name|u
+name|name
+argument_list|,
+name|host
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* DOUTMPX */
-if|if
-condition|(
-operator|!
-operator|(
-name|f
-operator|=
-name|__opieopen
+name|opielogwtmp
 argument_list|(
-name|_PATH_WTMP
+name|NULL
 argument_list|,
-literal|2
+name|NULL
 argument_list|,
-literal|0664
-argument_list|)
-operator|)
-condition|)
-block|{
-name|rval
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-if|#
-directive|if
-name|DEBUG
-name|syslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"opielogin: wtmp open failed: %s (%d)"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|,
-name|errno
+name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
-goto|goto
-name|dosetlogin
-goto|;
-block|}
-if|if
-condition|(
-name|fwrite
-argument_list|(
-operator|&
-name|u
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|utmp
-argument_list|)
-argument_list|,
-literal|1
-argument_list|,
-name|f
-argument_list|)
-operator|!=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|utmp
-argument_list|)
-condition|)
-block|{
-if|#
-directive|if
-name|DEBUG
-name|syslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"opielogin: wtmp write failed: %s (%d)"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
-name|rval
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DOUTMPX */
-block|}
-if|#
-directive|if
-name|DEBUG
-name|syslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"opielogin: wtmp suceeded"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
 name|dosetlogin
 label|:
 if|#

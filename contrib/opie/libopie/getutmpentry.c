@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* getutmpentry.c: The __opiegetutmpentry() library function.  %%% copyright-cmetz This software is Copyright 1996 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:          Created by cmetz for OPIE 2.3 (re-write). */
+comment|/* getutmpentry.c: The __opiegetutmpentry() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.31. Cache result.         Created by cmetz for OPIE 2.3 (re-write). */
 end_comment
 
 begin_include
@@ -38,6 +38,13 @@ include|#
 directive|include
 file|<utmpx.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|setutent
+value|setutxent
+end_define
 
 begin_define
 define|#
@@ -118,6 +125,9 @@ if|#
 directive|if
 operator|!
 name|HAVE_GETUTLINE
+operator|&&
+operator|!
+name|DOUTMPX
 end_if
 
 begin_decl_stmt
@@ -142,8 +152,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_GETUTLINE */
+comment|/* HAVE_GETUTLINE&& !DOUTMPX */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|utmp
+name|u
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -168,11 +186,29 @@ argument_list|)
 block|{
 name|struct
 name|utmp
-name|u
-decl_stmt|,
 modifier|*
 name|pu
 decl_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|ut_line
+index|[
+literal|0
+index|]
+condition|)
+block|{
+name|pu
+operator|=
+operator|&
+name|u
+expr_stmt|;
+goto|goto
+name|gotit
+goto|;
+block|}
+empty_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -216,6 +252,9 @@ operator|.
 name|ut_line
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|setutent
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -266,6 +305,9 @@ operator|-
 literal|4
 argument_list|)
 expr_stmt|;
+name|setutent
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -300,6 +342,9 @@ operator|.
 name|ut_line
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|setutent
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
