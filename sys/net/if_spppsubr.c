@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-1996 Cronyx Engineering Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.4, Thu Apr 30 17:17:21 MSD 1997  *  * $Id: if_spppsubr.c,v 1.50 1998/12/26 12:43:26 phk Exp $  */
+comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-1996 Cronyx Engineering Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.4, Thu Apr 30 17:17:21 MSD 1997  *  * $Id: if_spppsubr.c,v 1.51 1998/12/26 13:14:45 phk Exp $  */
 end_comment
 
 begin_include
@@ -105,6 +105,30 @@ directive|include
 file|<sys/syslog.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/random.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -164,6 +188,12 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
 end_include
 
 begin_if
@@ -443,6 +473,13 @@ parameter_list|)
 value|handle = timeout(fun, arg1, arg2)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IOCTL_CMD_T
+value|u_long
+end_define
+
 begin_else
 else|#
 directive|else
@@ -476,6 +513,13 @@ parameter_list|,
 name|handle
 parameter_list|)
 value|timeout(fun, arg1, arg2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCTL_CMD_T
+value|int
 end_define
 
 begin_endif
@@ -1678,28 +1722,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
-begin_function_decl
-specifier|static
-name|void
-name|sppp_cp_timeout
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* static void sppp_cp_timeout(void *arg); */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -1739,10 +1764,12 @@ name|sppp
 modifier|*
 name|sp
 parameter_list|,
-name|u_char
+name|unsigned
+name|int
 name|type
 parameter_list|,
-name|u_char
+name|unsigned
+name|int
 name|id
 parameter_list|,
 modifier|...
@@ -3965,7 +3992,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
-comment|/* 	 * Put low delay, telnet, rlogin and ftp control packets 	 * in front of the queue. 	 */
 if|if
 condition|(
 name|dst
@@ -4012,6 +4038,50 @@ operator|->
 name|ip_hl
 operator|)
 decl_stmt|;
+comment|/* 		 * When using dynamic local IP address assignment by using 		 * 0.0.0.0 as a local address, the first TCP session will 		 * not connect because the local TCP checksum is computed 		 * using 0.0.0.0 which will later become our real IP address 		 * so the TCP checksum computed at the remote end will 		 * become invalid. So we 		 * - don't let packets with src ip addr 0 thru 		 * - we flag TCP packets with src ip 0 as an error 		 */
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+operator|==
+name|INADDR_ANY
+condition|)
+comment|/* -hm */
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_p
+operator|==
+name|IPPROTO_TCP
+condition|)
+return|return
+operator|(
+name|EADDRNOTAVAIL
+operator|)
+return|;
+else|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 		 * Put low delay, telnet, rlogin and ftp control packets 		 * in front of the queue. 		 */
 if|if
 condition|(
 name|IF_QFULL
@@ -4565,12 +4635,12 @@ name|if_output
 operator|=
 name|sppp_output
 expr_stmt|;
-name|sp
-operator|->
-name|pp_flags
-operator|=
-name|PP_KEEPALIVE
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|sp->pp_flags = PP_KEEPALIVE;
+endif|#
+directive|endif
 name|sp
 operator|->
 name|pp_fastq
@@ -5165,7 +5235,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|u_long
+name|IOCTL_CMD_T
 name|cmd
 parameter_list|,
 name|void
@@ -12256,6 +12326,27 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+comment|/* notify low-level driver of state change */
+if|if
+condition|(
+name|sp
+operator|->
+name|pp_chg
+condition|)
+name|sp
+operator|->
+name|pp_chg
+argument_list|(
+name|sp
+argument_list|,
+operator|(
+name|int
+operator|)
+name|sp
+operator|->
+name|pp_phase
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sp
@@ -13132,6 +13223,21 @@ name|myaddr
 decl_stmt|,
 name|hisaddr
 decl_stmt|;
+name|sp
+operator|->
+name|ipcp
+operator|.
+name|flags
+operator|&=
+operator|~
+operator|(
+name|IPCP_HISADDR_SEEN
+operator||
+name|IPCP_MYADDR_SEEN
+operator||
+name|IPCP_MYADDR_DYN
+operator|)
+expr_stmt|;
 name|sppp_get_ip_addrs
 argument_list|(
 name|sp
@@ -13202,6 +13308,15 @@ name|IPCP_OPT_ADDRESS
 operator|)
 expr_stmt|;
 block|}
+else|else
+name|sp
+operator|->
+name|ipcp
+operator|.
+name|flags
+operator||=
+name|IPCP_MYADDR_SEEN
+expr_stmt|;
 name|sppp_open_event
 argument_list|(
 operator|&
@@ -13339,6 +13454,11 @@ name|u_long
 name|hisaddr
 decl_stmt|,
 name|desiredaddr
+decl_stmt|;
+name|int
+name|gotmyaddr
+init|=
+literal|0
 decl_stmt|;
 name|len
 operator|-=
@@ -13721,6 +13841,7 @@ directive|endif
 case|case
 name|IPCP_OPT_ADDRESS
 case|:
+comment|/* This is the address he wants in his end */
 name|desiredaddr
 operator|=
 name|p
@@ -13755,6 +13876,7 @@ name|desiredaddr
 operator|==
 name|hisaddr
 operator|||
+operator|(
 name|hisaddr
 operator|==
 literal|1
@@ -13762,6 +13884,7 @@ operator|&&
 name|desiredaddr
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
 comment|/* 				 * Peer's address is same as our value, 				 * or we have set it to 0.0.0.1 to  				 * indicate that we do not really care, 				 * this is agreeable.  Gonna conf-ack 				 * it. 				 */
@@ -13775,7 +13898,7 @@ literal|"%s [ack] "
 argument_list|,
 name|sppp_dotted_quad
 argument_list|(
-name|desiredaddr
+name|hisaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -13790,7 +13913,7 @@ name|IPCP_HISADDR_SEEN
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * The address wasn't agreeable.  This is either 			 * he sent us 0.0.0.0, asking to assign him an 			 * address, or he send us another address not 			 * matching our value.  Either case, we gonna 			 * conf-nak it with our value. 			 */
+comment|/* 			 * The address wasn't agreeable.  This is either 			 * he sent us 0.0.0.0, asking to assign him an 			 * address, or he send us another address not 			 * matching our value.  Either case, we gonna 			 * conf-nak it with our value. 			 * XXX: we should "rej" if hisaddr == 0 			 */
 if|if
 condition|(
 name|debug
@@ -13900,6 +14023,9 @@ name|flags
 operator|&
 name|IPCP_HISADDR_SEEN
 operator|)
+operator|&&
+operator|!
+name|gotmyaddr
 condition|)
 block|{
 name|buf
@@ -14194,7 +14320,7 @@ block|{
 case|case
 name|IPCP_OPT_ADDRESS
 case|:
-comment|/* 			 * Peer doesn't grok address option.  This is 			 * bad.  XXX  Should we better give up here? 			 */
+comment|/* 			 * Peer doesn't grok address option.  This is 			 * bad.  XXX  Should we better give up here? 			 * XXX We could try old "addresses" option... 			 */
 name|sp
 operator|->
 name|ipcp
@@ -14475,7 +14601,7 @@ name|wantaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 				 * When doing dynamic address assignment, 				 * we accept his offer.  Otherwise, we 				 * ignore it and thus continue to negotiate 				 * our already existing value. 				 */
+comment|/* 				 * When doing dynamic address assignment, 				 * we accept his offer.  Otherwise, we 				 * ignore it and thus continue to negotiate 				 * our already existing value. 			 	 * XXX: Bogus, if he said no once, he'll 				 * just say no again, might as well die. 				 */
 if|if
 condition|(
 name|sp
@@ -14502,6 +14628,14 @@ name|addlog
 argument_list|(
 literal|"[agree] "
 argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|ipcp
+operator|.
+name|flags
+operator||=
+name|IPCP_MYADDR_SEEN
 expr_stmt|;
 block|}
 block|}
@@ -14548,7 +14682,22 @@ name|sppp
 modifier|*
 name|sp
 parameter_list|)
-block|{ }
+block|{
+comment|/* we are up - notify isdn daemon */
+if|if
+condition|(
+name|sp
+operator|->
+name|pp_con
+condition|)
+name|sp
+operator|->
+name|pp_con
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -16771,23 +16920,6 @@ decl_stmt|;
 name|u_char
 name|clen
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* Compute random challenge. */
 name|ch
 operator|=
@@ -16822,6 +16954,11 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+block|{
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 name|microtime
 argument_list|(
 operator|&
@@ -16838,6 +16975,7 @@ name|tv
 operator|.
 name|tv_usec
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|ch
@@ -18556,7 +18694,7 @@ comment|/*  * Random miscellaneous functions.  */
 end_comment
 
 begin_comment
-comment|/*  * Send a PAP or CHAP proto packet.  *  * Varadic function, each of the elements for the ellipsis is of type  * ``size_t mlen, const u_char *msg''.  Processing will stop iff  * mlen == 0.  */
+comment|/*  * Send a PAP or CHAP proto packet.  *  * Varadic function, each of the elements for the ellipsis is of type  * ``size_t mlen, const u_char *msg''.  Processing will stop iff  * mlen == 0.  * NOTE: never declare variadic functions with types subject to type  * promotion (i.e. u_char). This is asking for big trouble depending  * on the architecture you are on...  */
 end_comment
 
 begin_function
@@ -18575,10 +18713,12 @@ name|sppp
 modifier|*
 name|sp
 parameter_list|,
-name|u_char
+name|unsigned
+name|int
 name|type
 parameter_list|,
-name|u_char
+name|unsigned
+name|int
 name|id
 parameter_list|,
 modifier|...
@@ -18608,7 +18748,8 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|size_t
+name|unsigned
+name|int
 name|mlen
 decl_stmt|;
 specifier|const
@@ -18731,6 +18872,10 @@ condition|(
 operator|(
 name|mlen
 operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|va_arg
 argument_list|(
 name|ap
@@ -19410,8 +19555,17 @@ argument|&ifp->if_addrhead
 argument_list|,
 argument|ifa_link
 argument_list|)
-else|#
-directive|else
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 for|for
 control|(
 name|ifa
@@ -19431,6 +19585,24 @@ operator|->
 name|ifa_list
 operator|.
 name|tqe_next
+control|)
+else|#
+directive|else
+for|for
+control|(
+name|ifa
+operator|=
+name|ifp
+operator|->
+name|if_addrlist
+init|;
+name|ifa
+condition|;
+name|ifa
+operator|=
+name|ifa
+operator|->
+name|ifa_next
 control|)
 endif|#
 directive|endif
@@ -19589,16 +19761,8 @@ name|u_long
 name|src
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sp
-operator|->
-name|pp_if
-decl_stmt|;
+name|STDDCL
+expr_stmt|;
 name|struct
 name|ifaddr
 modifier|*
@@ -19632,8 +19796,17 @@ argument|&ifp->if_addrhead
 argument_list|,
 argument|ifa_link
 argument_list|)
-else|#
-directive|else
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 for|for
 control|(
 name|ifa
@@ -19653,6 +19826,24 @@ operator|->
 name|ifa_list
 operator|.
 name|tqe_next
+control|)
+else|#
+directive|else
+for|for
+control|(
+name|ifa
+operator|=
+name|ifp
+operator|->
+name|if_addrlist
+init|;
+name|ifa
+condition|;
+name|ifa
+operator|=
+name|ifa
+operator|->
+name|ifa_next
 control|)
 endif|#
 directive|endif
@@ -19692,6 +19883,115 @@ name|ifa
 operator|&&
 name|si
 condition|)
+block|{
+name|int
+name|error
+decl_stmt|;
+if|#
+directive|if
+name|__NetBSD_Version__
+operator|>=
+literal|103080000
+name|struct
+name|sockaddr_in
+name|new_sin
+init|=
+operator|*
+name|si
+decl_stmt|;
+name|new_sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|src
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|in_ifinit
+argument_list|(
+name|ifp
+argument_list|,
+name|ifatoia
+argument_list|(
+name|ifa
+argument_list|)
+argument_list|,
+operator|&
+name|new_sin
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|debug
+operator|&&
+name|error
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+name|SPP_FMT
+literal|"sppp_set_ip_addr: in_ifinit "
+literal|" failed, error=%d\n"
+argument_list|,
+name|SPP_ARGS
+argument_list|(
+name|ifp
+argument_list|)
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* delete old route */
+name|error
+operator|=
+name|rtinit
+argument_list|(
+name|ifa
+argument_list|,
+operator|(
+name|int
+operator|)
+name|RTM_DELETE
+argument_list|,
+name|RTF_HOST
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|debug
+operator|&&
+name|error
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+name|SPP_FMT
+literal|"sppp_set_ip_addr: rtinit DEL failed, error=%d\n"
+argument_list|,
+name|SPP_ARGS
+argument_list|(
+name|ifp
+argument_list|)
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* set new address */
 name|si
 operator|->
 name|sin_addr
@@ -19703,6 +20003,47 @@ argument_list|(
 name|src
 argument_list|)
 expr_stmt|;
+comment|/* add new route */
+name|error
+operator|=
+name|rtinit
+argument_list|(
+name|ifa
+argument_list|,
+operator|(
+name|int
+operator|)
+name|RTM_ADD
+argument_list|,
+name|RTF_HOST
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|debug
+operator|&&
+name|error
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+name|SPP_FMT
+literal|"sppp_set_ip_addr: rtinit ADD failed, error=%d"
+argument_list|,
+name|SPP_ARGS
+argument_list|(
+name|ifp
+argument_list|)
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
 block|}
 end_function
 
@@ -21170,10 +21511,6 @@ block|{
 comment|/* do just nothing */
 block|}
 end_function
-
-begin_comment
-comment|/*  * This file is large.  Tell emacs to highlight it nevertheless.  *  * Local Variables:  * hilit-auto-highlight-maxout: 120000  * End:  */
-end_comment
 
 end_unit
 
