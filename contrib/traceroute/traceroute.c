@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.2 1996/09/30 19:39:25 fenner Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.3 1996/10/05 01:43:13 sef Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -792,6 +792,11 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|sump
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|sockerrno
 decl_stmt|;
 comment|/* 	 * Do the setuid-required stuff first, then lose priveleges ASAP. 	 * Do error checking for these two calls where they appeared in 	 * the original code. 	 */
@@ -910,7 +915,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dnrvg:m:p:q:s:t:w:"
+literal|"Sdnrvg:m:p:q:s:t:w:"
 argument_list|)
 operator|)
 operator|!=
@@ -921,6 +926,14 @@ condition|(
 name|op
 condition|)
 block|{
+case|case
+literal|'S'
+case|:
+name|sump
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
@@ -2691,27 +2704,25 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sump
+condition|)
+block|{
 name|Printf
 argument_list|(
 literal|" (%d%% loss)"
 argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
 operator|(
-operator|(
-name|float
-operator|)
-name|loss
-operator|/
-name|nprobes
-operator|)
+name|lost
 operator|*
 literal|100
-argument_list|)
+operator|)
+operator|/
+name|nprobes
 argument_list|)
 expr_stmt|;
+block|}
 name|putchar
 argument_list|(
 literal|'\n'
