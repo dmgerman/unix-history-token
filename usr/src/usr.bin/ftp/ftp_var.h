@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ftp_var.h	4.2	83/02/21	*/
+comment|/*	ftp_var.h	4.3	83/03/01	*/
 end_comment
 
 begin_comment
@@ -79,6 +79,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* ring bell on cmd completion */
+end_comment
+
+begin_decl_stmt
+name|int
+name|doglob
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* glob local file names */
 end_comment
 
 begin_decl_stmt
