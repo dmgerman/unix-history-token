@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.34 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|<sys/vmmac.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/text.h>
 end_include
 
 begin_endif
@@ -1350,6 +1356,8 @@ argument_list|(
 name|filed
 operator|.
 name|fd_lastfile
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1375,9 +1383,13 @@ name|fd_ofiles
 argument_list|,
 name|ofiles
 argument_list|,
+operator|(
 name|filed
 operator|.
 name|fd_lastfile
+operator|+
+literal|1
+operator|)
 operator|*
 name|FPSIZE
 argument_list|)
@@ -1408,9 +1420,13 @@ name|fd_dfiles
 argument_list|,
 name|ofiles
 argument_list|,
+operator|(
 name|filed
 operator|.
 name|fd_lastfile
+operator|+
+literal|1
+operator|)
 operator|*
 name|FPSIZE
 argument_list|)
@@ -1498,7 +1514,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|filed
 operator|.
 name|fd_lastfile
