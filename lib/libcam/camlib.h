@@ -431,6 +431,7 @@ name|ccb_scsiio
 modifier|*
 name|csio
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -458,6 +459,7 @@ name|ccb_scsiio
 modifier|*
 name|csio
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -500,6 +502,7 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -529,6 +532,7 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -585,6 +589,7 @@ parameter_list|,
 name|int
 name|timeout
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|cmd_spec
@@ -619,6 +624,7 @@ parameter_list|,
 name|int
 name|timeout
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|cmd_spec
@@ -654,6 +660,7 @@ name|ccb_scsiio
 modifier|*
 name|csio
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -683,6 +690,7 @@ parameter_list|,
 name|size_t
 name|len
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -718,6 +726,7 @@ name|ccb_scsiio
 modifier|*
 name|csio
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
