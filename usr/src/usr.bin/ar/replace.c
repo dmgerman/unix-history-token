@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)replace.c	5.3 (Berkeley) %G%"
+literal|"@(#)replace.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,25 +43,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<dirent.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dirent.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -370,6 +370,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* Read from disk, write to an archive; pad on write */
 name|SETCF
 argument_list|(
 name|sfd
@@ -383,23 +384,13 @@ argument_list|,
 name|WPAD
 argument_list|)
 expr_stmt|;
-name|put_header
+name|put_object
 argument_list|(
 operator|&
 name|cf
 argument_list|,
 operator|&
 name|sb
-argument_list|)
-expr_stmt|;
-name|copyfile
-argument_list|(
-operator|&
-name|cf
-argument_list|,
-name|sb
-operator|.
-name|st_size
 argument_list|)
 expr_stmt|;
 operator|(
@@ -410,15 +401,9 @@ argument_list|(
 name|sfd
 argument_list|)
 expr_stmt|;
-name|SKIP
+name|skipobj
 argument_list|(
 name|afd
-argument_list|,
-name|chdr
-operator|.
-name|size
-argument_list|,
-name|archive
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -447,6 +432,7 @@ name|curfd
 operator|=
 name|tfd2
 expr_stmt|;
+comment|/* Read and write to an archive; pad on both. */
 name|SETCF
 argument_list|(
 name|afd
@@ -462,7 +448,7 @@ operator||
 name|WPAD
 argument_list|)
 expr_stmt|;
-name|put_header
+name|put_object
 argument_list|(
 operator|&
 name|cf
@@ -473,16 +459,6 @@ name|stat
 operator|*
 operator|)
 name|NULL
-argument_list|)
-expr_stmt|;
-name|copyfile
-argument_list|(
-operator|&
-name|cf
-argument_list|,
-name|chdr
-operator|.
-name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -498,6 +474,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Read and write to an archive; pad on both. */
 name|useold
 label|:
 name|SETCF
@@ -515,7 +492,7 @@ operator||
 name|WPAD
 argument_list|)
 expr_stmt|;
-name|put_header
+name|put_object
 argument_list|(
 operator|&
 name|cf
@@ -526,16 +503,6 @@ name|stat
 operator|*
 operator|)
 name|NULL
-argument_list|)
-expr_stmt|;
-name|copyfile
-argument_list|(
-operator|&
-name|cf
-argument_list|,
-name|chdr
-operator|.
-name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -649,6 +616,7 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
+comment|/* Read from disk, write to an archive; pad on write. */
 name|SETCF
 argument_list|(
 name|sfd
@@ -672,23 +640,13 @@ argument_list|,
 name|WPAD
 argument_list|)
 expr_stmt|;
-name|put_header
+name|put_object
 argument_list|(
 operator|&
 name|cf
 argument_list|,
 operator|&
 name|sb
-argument_list|)
-expr_stmt|;
-name|copyfile
-argument_list|(
-operator|&
-name|cf
-argument_list|,
-name|sb
-operator|.
-name|st_size
 argument_list|)
 expr_stmt|;
 operator|(
@@ -725,7 +683,7 @@ name|afd
 argument_list|,
 name|archive
 argument_list|,
-literal|0
+name|NOPAD
 argument_list|)
 expr_stmt|;
 if|if
