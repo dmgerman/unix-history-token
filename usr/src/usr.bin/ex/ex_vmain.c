@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vmain.c	7.9 (Berkeley) %G%"
+literal|"@(#)ex_vmain.c	7.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1602,7 +1602,7 @@ literal|0
 condition|?
 literal|0
 else|:
-literal|' '
+literal|'l'
 expr_stmt|;
 name|mbuf
 index|[
