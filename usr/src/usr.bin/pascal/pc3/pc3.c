@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc3.c 1.3 %G%"
+literal|"@(#)pc3.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,7 +25,7 @@ name|char
 name|program
 index|[]
 init|=
-literal|"pc3"
+literal|"pc"
 decl_stmt|;
 end_decl_stmt
 
