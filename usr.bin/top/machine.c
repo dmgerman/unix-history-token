@@ -2755,12 +2755,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"top: sysctl(%s...) expected %d, got %d\n"
+literal|"top: sysctl(%s...) expected %lu, got %lu\n"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|len
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|nlen
 argument_list|)
 expr_stmt|;
