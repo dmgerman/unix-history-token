@@ -1387,31 +1387,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|bio_ops
-name|bioops
-init|=
-block|{
-name|softdep_disk_io_initiation
-block|,
-comment|/* io_start */
-name|softdep_disk_write_complete
-block|,
-comment|/* io_complete */
-name|softdep_deallocate_dependencies
-block|,
-comment|/* io_deallocate */
-name|softdep_move_dependencies
-block|,
-comment|/* io_movedeps */
-name|softdep_count_dependencies
-block|,
-comment|/* io_countdeps */
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Locking primitives.  *  * For a uniprocessor, all we need to do is protect against disk  * interrupts. For a multiprocessor, this lock would have to be  * a mutex. A single mutex is used throughout this file, though  * finer grain locking could be used if contention warranted it.  *  * For a multiprocessor, the sleep call would accept a lock and  * release it after the sleep processing was complete. In a uniprocessor  * implementation there is no such interlock, so we simple mark  * the places where it needs to be done with the `interlocked' form  * of the lock calls. Since the uniprocessor sleep already interlocks  * the spl, there is nothing that really needs to be done.  */
 end_comment
@@ -5450,6 +5425,37 @@ name|PRIBIO
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+comment|/* initialise bioops hack */
+name|bioops
+operator|.
+name|io_start
+operator|=
+name|softdep_disk_io_initiation
+expr_stmt|;
+name|bioops
+operator|.
+name|io_complete
+operator|=
+name|softdep_disk_write_complete
+expr_stmt|;
+name|bioops
+operator|.
+name|io_deallocate
+operator|=
+name|softdep_deallocate_dependencies
+expr_stmt|;
+name|bioops
+operator|.
+name|io_movedeps
+operator|=
+name|softdep_move_dependencies
+expr_stmt|;
+name|bioops
+operator|.
+name|io_countdeps
+operator|=
+name|softdep_count_dependencies
 expr_stmt|;
 block|}
 end_function
