@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)join.c	5.3 (Berkeley) %G%"
+literal|"@(#)join.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -150,6 +150,10 @@ modifier|*
 name|set
 decl_stmt|;
 comment|/* set of lines with same field */
+name|int
+name|pushbool
+decl_stmt|;
+comment|/* if pushback is set */
 name|u_long
 name|pushback
 decl_stmt|;
@@ -1294,9 +1298,6 @@ name|bp
 decl_stmt|,
 modifier|*
 name|fieldp
-decl_stmt|,
-modifier|*
-name|token
 decl_stmt|;
 comment|/* 	 * Read all of the lines from an input file that have the same 	 * join field. 	 */
 name|F
@@ -1344,7 +1345,7 @@ name|F
 operator|->
 name|setalloc
 operator|+=
-literal|100
+literal|50
 expr_stmt|;
 if|if
 condition|(
@@ -1383,17 +1384,16 @@ name|set
 operator|+
 name|cnt
 argument_list|,
-literal|100
+literal|50
 operator|*
 sizeof|sizeof
 argument_list|(
 name|LINE
-operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Get any pushed back line, else get the next line.  Allocate 		 * space as necessary.  If taking the line from the stack swap 		 * the two structures so that we don't lose the allocated space. 		 * This could be avoided by doing another level of indirection, 		 * but it's probably okay as is. 		 */
+comment|/* 		 * Get any pushed back line, else get the next line.  Allocate 		 * space as necessary.  If taking the line from the stack swap 		 * the two structures so that we don't lose space allocated to 		 * either structure.  This could be avoided by doing another 		 * level of indirection, but it's probably okay as is. 		 * but it's probably okay as is. 		 */
 name|lp
 operator|=
 operator|&
@@ -1410,10 +1410,7 @@ if|if
 condition|(
 name|F
 operator|->
-name|pushback
-operator|!=
-operator|-
-literal|1
+name|pushbool
 condition|)
 block|{
 name|tmp
@@ -1458,10 +1455,9 @@ name|tmp
 expr_stmt|;
 name|F
 operator|->
-name|pushback
+name|pushbool
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 continue|continue;
 block|}
@@ -1497,7 +1493,14 @@ name|lp
 operator|->
 name|linealloc
 operator|+=
+name|MAX
+argument_list|(
 literal|100
+argument_list|,
+name|len
+operator|+
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1515,11 +1518,6 @@ argument_list|,
 name|lp
 operator|->
 name|linealloc
-operator|*
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -1538,13 +1536,17 @@ operator|->
 name|line
 argument_list|,
 name|len
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Split the line into fields, allocate space as necessary. */
-name|token
-operator|=
 name|bp
+operator|=
+name|lp
+operator|->
+name|line
 expr_stmt|;
+comment|/* Split the line into fields, allocate space as necessary. */
 name|lp
 operator|->
 name|fieldcnt
@@ -1559,7 +1561,7 @@ operator|=
 name|strsep
 argument_list|(
 operator|&
-name|token
+name|bp
 argument_list|,
 name|tabchar
 argument_list|)
@@ -1593,7 +1595,7 @@ name|lp
 operator|->
 name|fieldalloc
 operator|+=
-literal|100
+literal|50
 expr_stmt|;
 if|if
 condition|(
@@ -1662,6 +1664,12 @@ name|joinf
 argument_list|)
 condition|)
 block|{
+name|F
+operator|->
+name|pushbool
+operator|=
+literal|1
+expr_stmt|;
 name|F
 operator|->
 name|pushback
