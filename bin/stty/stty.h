@@ -39,6 +39,7 @@ name|int
 name|wset
 decl_stmt|;
 comment|/* need window set */
+specifier|const
 name|char
 modifier|*
 name|arg
@@ -62,6 +63,7 @@ begin_struct
 struct|struct
 name|cchar
 block|{
+specifier|const
 name|char
 modifier|*
 name|name

@@ -96,6 +96,25 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
+specifier|static
+name|int
+name|c_key
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|f_all
 name|__P
@@ -311,6 +330,7 @@ specifier|static
 expr|struct
 name|key
 block|{
+specifier|const
 name|char
 operator|*
 name|name
@@ -529,6 +549,7 @@ name|strcmp
 argument_list|(
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|key
 operator|*
@@ -540,6 +561,7 @@ name|name
 argument_list|,
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|key
 operator|*
@@ -1094,6 +1116,9 @@ name|ip
 operator|->
 name|t
 argument_list|,
+operator|(
+name|speed_t
+operator|)
 name|atoi
 argument_list|(
 name|ip
@@ -1196,6 +1221,9 @@ name|ip
 operator|->
 name|t
 argument_list|,
+operator|(
+name|speed_t
+operator|)
 name|atoi
 argument_list|(
 name|ip

@@ -77,6 +77,22 @@ directive|include
 file|"extern.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|void
+name|gerr
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|s
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -84,6 +100,7 @@ name|gerr
 parameter_list|(
 name|s
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
