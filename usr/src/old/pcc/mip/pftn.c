@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.9 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3534,7 +3534,9 @@ argument|); 		case PTR: 			return( SZPOINT * mult ); 		case ARY: 			mult *= (uns
 literal|0
 argument|: 			break;  			} 		}  	if( dimtab[s]==
 literal|0
-argument|) { 		uerror(
+argument|) { 		if( ty == STRTY ) 			uerror(
+literal|"undefined structure"
+argument|); 		else 			uerror(
 literal|"unknown size"
 argument|); 		return( SZINT ); 		} 	return( (unsigned int) dimtab[ s ] * mult ); 	}  inforce( n ) OFFSZ n; {
 comment|/* force inoff to have the value n */
@@ -3624,7 +3626,13 @@ argument|; 			}  		if( (iclass==AUTO || iclass == REGISTER )&& 			(ISARY(t) || t
 literal|"no automatic aggregate initialization"
 argument|);
 comment|/* now, if this is not a scalar, put on another element */
-argument|if( ISARY(t) ){ 			t = DECREF(t); 			++d; 			continue; 			} 		else if( t == STRTY ){ 			id = dimtab[pstk->in_x]; 			p =&stab[id]; 			if( p->sclass != MOS&& !(p->sclass&FIELD) ) cerror(
+argument|if( ISARY(t) ){ 			t = DECREF(t); 			++d; 			continue; 			} 		else if( t == STRTY ){ 			if( dimtab[pstk->in_s] ==
+literal|0
+argument|){ 				uerror(
+literal|"can't initialize undefined structure"
+argument|); 				iclass = -
+literal|1
+argument|; 				return; 				} 			id = dimtab[pstk->in_x]; 			p =&stab[id]; 			if( p->sclass != MOS&& !(p->sclass&FIELD) ) cerror(
 literal|"insane structure member list"
 argument|); 			t = p->stype; 			d = p->dimoff; 			s = p->sizoff; 			off += p->offset; 			continue; 			} 		else return; 		} 	}  NODE * getstr(){
 comment|/* decide if the string is external or an initializer, and get the contents accordingly */
@@ -3684,7 +3692,9 @@ literal|"endinit(), inoff = %d\n"
 argument|, inoff );
 endif|#
 directive|endif
-argument|switch( iclass ){  	case EXTERN: 	case AUTO: 	case REGISTER: 		return; 		}  	pstk = instack;  	t = pstk->in_t; 	d = pstk->in_d; 	s = pstk->in_s; 	n = pstk->in_n;  	if( ISARY(t) ){ 		d1 = dimtab[d];  		vfdalign( pstk->in_sz );
+argument|switch( iclass ){  	case EXTERN: 	case AUTO: 	case REGISTER: 	case -
+literal|1
+argument|: 		return; 		}  	pstk = instack;  	t = pstk->in_t; 	d = pstk->in_d; 	s = pstk->in_s; 	n = pstk->in_n;  	if( ISARY(t) ){ 		d1 = dimtab[d];  		vfdalign( pstk->in_sz );
 comment|/* fill out part of the last element, if needed */
 argument|n = inoff/pstk->in_sz;
 comment|/* real number of initializers */
