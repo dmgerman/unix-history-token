@@ -68,7 +68,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|void _Qp_ ## qname ## toq(u_int *c, ntype n); \ void \ _Qp_ ## qname ## toq(u_int *c, ntype n) \ { \ 	struct fpemu fe; \ 	atype *a; \ 	__asm __volatile("stx %%fsr, %0" : "=m" (fe.fe_fsr) :); \ 	a = (atype *)&n; \ 	fe.fe_f1.fp_sign = a[0]>> 31; \ 	fe.fe_f1.fp_sticky = 0; \ 	fe.fe_f1.fp_class = __fpu_ ## fname ## tof(&fe.fe_f1, __VA_ARGS__); \ 	c[0] = __fpu_ftoq(&fe,&fe.fe_f1, c); \ }
+value|void _Qp_ ## qname ## toq(u_int *c, ntype n); \ void \ _Qp_ ## qname ## toq(u_int *c, ntype n) \ { \ 	struct fpemu fe; \ 	union { atype a[2]; ntype n; } u = { .n = n }; \ 	__asm __volatile("stx %%fsr, %0" : "=m" (fe.fe_fsr) :); \ 	fe.fe_f1.fp_sign = u.a[0]>> 31; \ 	fe.fe_f1.fp_sticky = 0; \ 	fe.fe_f1.fp_class = __fpu_ ## fname ## tof(&fe.fe_f1, __VA_ARGS__); \ 	c[0] = __fpu_ftoq(&fe,&fe.fe_f1, c); \ }
 end_define
 
 begin_define
@@ -85,7 +85,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|type _Qp_qto ## qname(u_int *c); \ type \ _Qp_qto ## qname(u_int *c) \ { \ 	struct fpemu fe; \ 	u_int *a; \ 	type n; \ 	__asm __volatile("stx %%fsr, %0" : "=m" (fe.fe_fsr) :); \ 	a = (u_int *)&n; \ 	fe.fe_f1.fp_sign = c[0]>> 31; \ 	fe.fe_f1.fp_sticky = 0; \ 	fe.fe_f1.fp_class = __fpu_qtof(&fe.fe_f1, c[0], c[1], c[2], c[3]); \ 	a[0] = __fpu_fto ## fname(&fe,&fe.fe_f1, ## __VA_ARGS__); \ 	return (n); \ }
+value|type _Qp_qto ## qname(u_int *c); \ type \ _Qp_qto ## qname(u_int *c) \ { \ 	struct fpemu fe; \ 	union { u_int a; type n; } u; \ 	__asm __volatile("stx %%fsr, %0" : "=m" (fe.fe_fsr) :); \ 	fe.fe_f1.fp_sign = c[0]>> 31; \ 	fe.fe_f1.fp_sticky = 0; \ 	fe.fe_f1.fp_class = __fpu_qtof(&fe.fe_f1, c[0], c[1], c[2], c[3]); \ 	u.a = __fpu_fto ## fname(&fe,&fe.fe_f1, ## __VA_ARGS__); \ 	return (u.n); \ }
 end_define
 
 begin_define
@@ -321,11 +321,11 @@ argument|double
 argument_list|,
 argument|u_int
 argument_list|,
-argument|a[
+argument|u.a[
 literal|0
 argument|]
 argument_list|,
-argument|a[
+argument|u.a[
 literal|1
 argument|]
 argument_list|)
@@ -342,7 +342,7 @@ argument|int
 argument_list|,
 argument|u_int
 argument_list|,
-argument|a[
+argument|u.a[
 literal|0
 argument|]
 argument_list|)
@@ -359,7 +359,7 @@ argument|float
 argument_list|,
 argument|u_int
 argument_list|,
-argument|a[
+argument|u.a[
 literal|0
 argument|]
 argument_list|)
@@ -376,7 +376,7 @@ argument|long
 argument_list|,
 argument|u_long
 argument_list|,
-argument|a[
+argument|u.a[
 literal|0
 argument|]
 argument_list|)
@@ -393,7 +393,7 @@ argument|u_int
 argument_list|,
 argument|u_int
 argument_list|,
-argument|a[
+argument|u.a[
 literal|0
 argument|]
 argument_list|)
@@ -410,7 +410,7 @@ argument|u_long
 argument_list|,
 argument|u_long
 argument_list|,
-argument|a[
+argument|u.a[
 literal|0
 argument|]
 argument_list|)
@@ -425,7 +425,7 @@ argument|d
 argument_list|,
 argument|double
 argument_list|,
-argument|a
+argument|&u.a
 argument_list|)
 end_macro
 
@@ -460,7 +460,7 @@ argument|x
 argument_list|,
 argument|long
 argument_list|,
-argument|a
+argument|&u.a
 argument_list|)
 end_macro
 
@@ -484,7 +484,7 @@ argument|x
 argument_list|,
 argument|u_long
 argument_list|,
-argument|a
+argument|&u.a
 argument_list|)
 end_macro
 
