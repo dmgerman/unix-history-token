@@ -890,9 +890,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|pci_load_vendor_data
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|bus_generic_attach
