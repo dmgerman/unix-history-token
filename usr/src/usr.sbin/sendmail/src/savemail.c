@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.10 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1039,6 +1039,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|q
+operator|!=
+name|NULL
+operator|&&
 name|deliver
 argument_list|(
 name|e
