@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	3.9	%G%	*/
+comment|/*	vfs_bio.c	3.10	%G%	*/
 end_comment
 
 begin_include
@@ -2244,6 +2244,19 @@ specifier|register
 name|int
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_DONE
+condition|)
+name|panic
+argument_list|(
+literal|"dup iodone"
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|b_flags

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	3.19	%G%	*/
+comment|/*	up.c	3.20	%G%	*/
 end_comment
 
 begin_comment
@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../h/mba.h"
 end_include
 
@@ -65,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|"../h/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include
