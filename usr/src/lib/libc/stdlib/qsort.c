@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)qsort.c	5.9 (Berkeley) %G%"
+literal|"@(#)qsort.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,10 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_comment
+comment|/*  * XXX  * Report from John Bentley at ATT:  the BSD qsort goes quadratic on random  * 0 and 1  (N/2 of each.)  This is because it does not keep = elements  * together.   (<= go before test element;> go after,> so everything gets  * shoved before the test element, which is qsort's worst case.)  */
+end_comment
 
 begin_comment
 comment|/*  * MTHRESH is the smallest partition for which we compare for a median  * value instead of using the middle value.  */
