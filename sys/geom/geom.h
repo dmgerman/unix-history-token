@@ -990,25 +990,6 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|g_geom
-modifier|*
-name|g_insert_geom
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|class
-parameter_list|,
-name|struct
-name|g_consumer
-modifier|*
-name|cp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
 name|g_consumer
 modifier|*
 name|g_new_consumer
