@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.22 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.23 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.22 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.23 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1655,6 +1655,8 @@ name|fd
 argument_list|,
 operator|&
 name|sa
+operator|.
+name|sa
 argument_list|,
 operator|&
 name|salen
@@ -1675,10 +1677,14 @@ name|gethostbyaddr
 argument_list|(
 name|sa
 operator|.
+name|sa
+operator|.
 name|sa_data
 argument_list|,
 name|salen
 argument_list|,
+name|sa
+operator|.
 name|sa
 operator|.
 name|sa_family
