@@ -33,6 +33,17 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
