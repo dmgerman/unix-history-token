@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *      for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.3 1993/11/25 01:31:43 wollman Exp $  */
+comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II    * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *      for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.3 1993/11/25 01:31:43 wollman Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -201,9 +201,9 @@ name|b
 parameter_list|,
 name|c
 parameter_list|,
-name|xd
+name|d
 parameter_list|)
-value|{if (mcd_data[unit].debug) {printf("mcd%d st=%02x: ",unit,mcd_data[unit].status); printf(fmt,a,b,c,xd);}}
+value|{if (mcd_data[unit].debug) {printf("mcd%d st=%02x: ",unit,mcd_data[unit].status); printf(fmt,a,b,c,d);}}
 end_define
 
 begin_endif
@@ -847,9 +847,13 @@ specifier|static
 name|void
 name|mcd_doread
 parameter_list|(
-name|caddr_t
-parameter_list|,
 name|int
+name|state
+parameter_list|,
+name|struct
+name|mcd_mbx
+modifier|*
+name|mbxin
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2086,14 +2090,8 @@ expr_stmt|;
 comment|/* calling the read routine */
 name|mcd_doread
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|MCD_S_BEGIN
 argument_list|,
-operator|(
-name|int
-operator|)
 operator|&
 operator|(
 name|cd
@@ -2844,11 +2842,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* check if there is a cdrom */
-end_comment
-
-begin_comment
-comment|/* Heavly hacked by gclarkii@sugar.neosoft.com */
+comment|/* check to see if a Mitsumi CD-ROM is attached to the ISA bus */
 end_comment
 
 begin_function
@@ -2877,6 +2871,8 @@ name|id_unit
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|int
 name|st
@@ -2935,15 +2931,29 @@ name|port
 operator|+
 name|MCD_FLAGS
 argument_list|,
-literal|0
+name|M_RESET
 argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|100000
+literal|30000
 argument_list|)
 expr_stmt|;
-comment|/* get any pending status and throw away...*/
+for|for
+control|(
+name|j
+operator|=
+literal|3
+init|;
+name|j
+operator|!=
+literal|0
+condition|;
+name|j
+operator|--
+control|)
+block|{
+comment|/* get any pending garbage (old data) and throw away...*/
 for|for
 control|(
 name|i
@@ -2966,84 +2976,6 @@ name|MCD_DATA
 argument_list|)
 expr_stmt|;
 block|}
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|port
-operator|+
-name|MCD_DATA
-argument_list|,
-name|MCD_CMDGETSTAT
-argument_list|)
-expr_stmt|;
-comment|/* Send get status command */
-comment|/* Loop looking for avail of status */
-comment|/* XXX May have to increase for fast machinces */
-for|for
-control|(
-name|i
-operator|=
-literal|1000
-init|;
-name|i
-operator|!=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-block|{
-if|if
-condition|(
-operator|(
-name|inb
-argument_list|(
-name|port
-operator|+
-name|MCD_FLAGS
-argument_list|)
-operator|&
-literal|0xF
-operator|)
-operator|==
-name|STATUS_AVAIL
-condition|)
-block|{
-break|break;
-block|}
-name|DELAY
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* get status */
-if|if
-condition|(
-name|i
-operator|==
-literal|0
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"Mitsumi drive NOT detected\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-literal|0
-return|;
-block|}
-comment|/*  * The following code uses the 0xDC command, it returns a M from the  * second byte and a number in the third.  Does anyone know what the  * number is for? Better yet, how about someone thats REAL good in  * i80x86 asm looking at the Dos driver... Most of this info came  * from a friend of mine spending a whole weekend.....  */
 name|DELAY
 argument_list|(
 literal|2000
@@ -3066,7 +2998,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|100000
+literal|300000
 condition|;
 name|i
 operator|++
@@ -3082,37 +3014,15 @@ operator|+
 name|MCD_FLAGS
 argument_list|)
 operator|&
-literal|0xF
+name|M_STATUS_AVAIL
 operator|)
 operator|==
-name|STATUS_AVAIL
-condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|i
-operator|>
-literal|100000
+name|M_STATUS_AVAIL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"Mitsumi drive error\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-literal|0
-return|;
-block|}
 name|DELAY
 argument_list|(
-literal|40000
+literal|4000
 argument_list|)
 expr_stmt|;
 name|st
@@ -3181,14 +3091,12 @@ argument_list|(
 literal|"Mitsumi drive NOT detected\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Mitsumi drive error\n"
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
+block|}
+block|}
 block|}
 block|}
 end_function
@@ -4079,42 +3987,20 @@ name|mbxsave
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Good thing Alphas come with real CD players...  */
-end_comment
-
 begin_function
 specifier|static
 name|void
 name|mcd_doread
 parameter_list|(
-name|caddr_t
-name|xstate
-parameter_list|,
-name|int
-name|xmbxin
-parameter_list|)
-block|{
 name|int
 name|state
-init|=
-operator|(
-name|int
-operator|)
-name|xstate
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mcd_mbx
 modifier|*
 name|mbxin
-init|=
-operator|(
-expr|struct
-name|mcd_mbx
-operator|*
-operator|)
-name|xmbxin
-decl_stmt|;
+parameter_list|)
+block|{
 name|struct
 name|mcd_mbx
 modifier|*
@@ -4240,9 +4126,6 @@ name|untimeout
 argument_list|(
 name|mcd_doread
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|MCD_S_WAITSTAT
 argument_list|)
 expr_stmt|;
@@ -4438,9 +4321,6 @@ name|untimeout
 argument_list|(
 name|mcd_doread
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|MCD_S_WAITMODE
 argument_list|)
 expr_stmt|;
@@ -4718,9 +4598,6 @@ name|untimeout
 argument_list|(
 name|mcd_doread
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|MCD_S_WAITREAD
 argument_list|)
 expr_stmt|;
