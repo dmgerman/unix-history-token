@@ -718,6 +718,27 @@ comment|/* number of cpus */
 end_comment
 
 begin_decl_stmt
+name|int
+name|promcons_dly_mkdev
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* need to delay call to make_dev() */
+end_comment
+
+begin_function_decl
+name|void
+name|promcons_delayed_makedev
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|vm_offset_t
 name|phys_avail
 index|[
@@ -3541,6 +3562,20 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+comment|/* 	 * Check to see if promcons needs to make_dev() now, 	 * doing it before now crashes with kernel stack issues. 	 */
+if|if
+condition|(
+name|promcons_dly_mkdev
+operator|>
+literal|1
+condition|)
+name|promcons_delayed_makedev
+argument_list|()
+expr_stmt|;
+name|promcons_dly_mkdev
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Initialize the virtual memory system, and set the 	 * page table base register in proc 0's PCB. 	 */
 name|pmap_bootstrap
 argument_list|(
