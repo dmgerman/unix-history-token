@@ -12412,12 +12412,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (IN6_IS_ADDR_LINKLOCAL(&ip6->ip6_src)) 		ip6->ip6_src.s6_addr16[1] = 0; 	if (IN6_IS_ADDR_LINKLOCAL(&ip6->ip6_dst)) 		ip6->ip6_dst.s6_addr16[1] = 0;
-endif|#
-directive|endif
 if|if
 condition|(
 name|IN6_IS_ADDR_LINKLOCAL
