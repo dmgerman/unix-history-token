@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1990, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1990, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rm.c	8.3 (Berkeley) %G%"
+literal|"@(#)rm.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -439,12 +439,16 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|fts_read
 argument_list|(
 name|fts
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 switch|switch
@@ -462,18 +466,27 @@ condition|(
 operator|!
 name|fflag
 operator|||
-name|errno
+name|p
+operator|->
+name|fts_errno
 operator|!=
 name|ENOENT
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
-literal|"%s"
+literal|"%s: %s"
 argument_list|,
 name|p
 operator|->
 name|fts_path
+argument_list|,
+name|strerror
+argument_list|(
+name|p
+operator|->
+name|fts_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|eval
@@ -485,15 +498,22 @@ continue|continue;
 case|case
 name|FTS_ERR
 case|:
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
+literal|"%s: %s"
 argument_list|,
 name|p
 operator|->
 name|fts_path
+argument_list|,
+name|strerror
+argument_list|(
+name|p
+operator|->
+name|fts_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 case|case
@@ -511,18 +531,27 @@ condition|(
 operator|!
 name|fflag
 operator|||
-name|errno
+name|p
+operator|->
+name|fts_errno
 operator|!=
 name|ENOENT
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
-literal|"%s"
+literal|"%s: %s"
 argument_list|,
 name|p
 operator|->
 name|fts_path
+argument_list|,
+name|strerror
+argument_list|(
+name|p
+operator|->
+name|fts_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|eval
@@ -704,6 +733,17 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|errno
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"fts_read"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -737,11 +777,15 @@ expr_stmt|;
 comment|/* 	 * Remove a file.  POSIX 1003.2 states that, by default, attempting 	 * to remove a directory is an error, so must always stat the file. 	 */
 while|while
 condition|(
+operator|(
 name|f
 operator|=
 operator|*
 name|argv
 operator|++
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* Assume if can't stat the file, can't unlink it. */
@@ -1104,6 +1148,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|strrchr
@@ -1113,6 +1158,9 @@ name|t
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|++
 name|p
@@ -1152,6 +1200,7 @@ name|save
 operator|=
 name|t
 init|;
+operator|(
 name|t
 index|[
 literal|0
@@ -1161,6 +1210,9 @@ name|t
 index|[
 literal|1
 index|]
+operator|)
+operator|!=
+name|NULL
 condition|;
 operator|++
 name|t
