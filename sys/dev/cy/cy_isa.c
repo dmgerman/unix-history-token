@@ -62,13 +62,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/cyreg.h>
+file|<isa/isavar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/ic/cd1400.h>
+file|<dev/cy/cyreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/cy/cyvar.h>
 end_include
 
 begin_function_decl
@@ -130,7 +136,7 @@ name|driver_t
 name|cy_isa_driver
 init|=
 block|{
-name|driver_name
+name|cy_driver_name
 block|,
 name|cy_isa_methods
 block|,

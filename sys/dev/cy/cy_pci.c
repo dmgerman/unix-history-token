@@ -87,6 +87,12 @@ directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/cy/cyvar.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -189,35 +195,6 @@ name|PLX_9080
 value|0x0d
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|devclass_t
-name|cy_devclass
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-modifier|*
-name|cyattach_common
-parameter_list|(
-name|u_char
-specifier|volatile
-modifier|*
-name|iobase
-parameter_list|,
-name|int
-name|cy_align
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|driver_intr_t
-name|cyintr
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -277,7 +254,7 @@ name|driver_t
 name|cy_pci_driver
 init|=
 block|{
-literal|"cy"
+name|cy_driver_name
 block|,
 name|cy_pci_methods
 block|,

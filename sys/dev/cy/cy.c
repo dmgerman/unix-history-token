@@ -169,13 +169,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/cyreg.h>
+file|<dev/ic/cd1400.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/ic/cd1400.h>
+file|<dev/cy/cyreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/cy/cyvar.h>
 end_include
 
 begin_define
@@ -1171,6 +1177,15 @@ name|cy_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|cy_driver_name
+index|[]
+init|=
+literal|"cy"
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -1459,16 +1474,6 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|char
-name|driver_name
-index|[]
-init|=
-literal|"cy"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|mtx
 name|sio_lock
@@ -1571,7 +1576,7 @@ block|,
 operator|.
 name|d_name
 operator|=
-name|driver_name
+name|cy_driver_name
 block|,
 operator|.
 name|d_flags
@@ -1774,7 +1779,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|int
 name|cy_units
 parameter_list|(
@@ -2019,7 +2023,7 @@ argument_list|(
 operator|&
 name|sio_lock
 argument_list|,
-name|driver_name
+name|cy_driver_name
 argument_list|,
 name|NULL
 argument_list|,
