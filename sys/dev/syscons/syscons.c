@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.248 1998/02/11 14:56:02 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.249 1998/02/11 14:58:15 yokota Exp $  */
 end_comment
 
 begin_include
@@ -612,6 +612,15 @@ name|ROW
 operator|*
 name|COL
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|font_loading_in_progress
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -8469,6 +8478,12 @@ name|ysize
 operator|=
 literal|60
 expr_stmt|;
+name|scp
+operator|->
+name|font_size
+operator|=
+literal|8
+expr_stmt|;
 break|break;
 case|case
 name|M_VGA_C80x50
@@ -8499,6 +8514,12 @@ operator|->
 name|ysize
 operator|=
 literal|50
+expr_stmt|;
+name|scp
+operator|->
+name|font_size
+operator|=
+literal|8
 expr_stmt|;
 break|break;
 case|case
@@ -8531,6 +8552,12 @@ name|ysize
 operator|=
 literal|43
 expr_stmt|;
+name|scp
+operator|->
+name|font_size
+operator|=
+literal|8
+expr_stmt|;
 break|break;
 case|case
 name|M_VGA_C80x30
@@ -8549,6 +8576,15 @@ operator|->
 name|ysize
 operator|=
 literal|30
+expr_stmt|;
+name|scp
+operator|->
+name|font_size
+operator|=
+name|mp
+index|[
+literal|2
+index|]
 expr_stmt|;
 break|break;
 case|case
@@ -8612,6 +8648,15 @@ literal|1
 index|]
 operator|+
 name|rows_offset
+expr_stmt|;
+name|scp
+operator|->
+name|font_size
+operator|=
+name|mp
+index|[
+literal|2
+index|]
 expr_stmt|;
 break|break;
 block|}
@@ -9035,6 +9080,12 @@ name|mp
 index|[
 literal|2
 index|]
+expr_stmt|;
+name|scp
+operator|->
+name|font_size
+operator|=
+name|FONT_NONE
 expr_stmt|;
 if|if
 condition|(
@@ -11728,6 +11779,9 @@ condition|(
 name|scp
 operator|==
 name|cur_console
+operator|&&
+operator|!
+name|font_loading_in_progress
 condition|)
 block|{
 if|if
@@ -11888,10 +11942,31 @@ name|cur_console
 decl_stmt|;
 name|int
 name|s
-init|=
+decl_stmt|;
+comment|/* don't do anything when we are touching font */
+if|if
+condition|(
+name|font_loading_in_progress
+condition|)
+block|{
+name|timeout
+argument_list|(
+name|scrn_timer
+argument_list|,
+name|NULL
+argument_list|,
+name|hz
+operator|/
+literal|10
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|s
+operator|=
 name|spltty
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 comment|/*       * With release 2.1 of the Xaccel server, the keyboard is left      * hanging pretty often. Apparently an interrupt from the      * keyboard is lost, and I don't know why (yet).      * This ugly hack calls scintr if input is ready for the keyboard      * and conveniently hides the problem.			XXX      */
 comment|/* Try removing anything stuck in the keyboard controller; whether      * it's a keyboard scan code or mouse data. `scintr()' doesn't      * read the mouse data directly, but `kbdio' routines will, as a      * side effect.      */
 if|if
@@ -23774,6 +23849,10 @@ init|=
 name|splhigh
 argument_list|()
 decl_stmt|;
+name|font_loading_in_progress
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* save register values */
 name|outb
 argument_list|(
@@ -23886,7 +23965,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* setup vga for loading fonts (graphics plane mode) */
+comment|/* setup vga for loading fonts */
 name|inb
 argument_list|(
 name|crtc_addr
@@ -23906,6 +23985,12 @@ name|outb
 argument_list|(
 name|ATC
 argument_list|,
+name|buf
+index|[
+literal|5
+index|]
+operator|&
+operator|~
 literal|0x01
 argument_list|)
 expr_stmt|;
@@ -23953,7 +24038,7 @@ name|outb
 argument_list|(
 name|TSREG
 argument_list|,
-literal|0x06
+literal|0x07
 argument_list|)
 expr_stmt|;
 name|outb
@@ -23995,7 +24080,7 @@ name|outb
 argument_list|(
 name|GDCREG
 argument_list|,
-literal|0x05
+literal|0x04
 argument_list|)
 expr_stmt|;
 else|#
@@ -24011,7 +24096,7 @@ name|outw
 argument_list|(
 name|TSIDX
 argument_list|,
-literal|0x0604
+literal|0x0704
 argument_list|)
 expr_stmt|;
 name|outw
@@ -24032,7 +24117,7 @@ name|outw
 argument_list|(
 name|GDCIDX
 argument_list|,
-literal|0x0506
+literal|0x0406
 argument_list|)
 expr_stmt|;
 comment|/* addr = a0000, 64kb */
@@ -24359,6 +24444,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|font_loading_in_progress
+operator|=
+name|FALSE
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
