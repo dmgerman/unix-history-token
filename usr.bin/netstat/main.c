@@ -1334,6 +1334,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|cflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show mbuf cache information */
+end_comment
+
+begin_decl_stmt
+name|int
 name|dflag
 decl_stmt|;
 end_decl_stmt
@@ -1543,7 +1553,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aabdf:gI:iLlM:mN:np:rSstuWw:z"
+literal|"Aabcdf:gI:iLlM:mN:np:rSstuWw:z"
 argument_list|)
 operator|)
 operator|!=
@@ -1575,6 +1585,14 @@ case|case
 literal|'b'
 case|:
 name|bflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|cflag
 operator|=
 literal|1
 expr_stmt|;
@@ -2059,6 +2077,28 @@ name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cflag
+operator|&&
+operator|!
+name|mflag
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-c only valid with -m\n"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|mflag
@@ -3422,9 +3462,9 @@ argument_list|,
 literal|"       netstat -i | -I interface -s [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -m [-M core] [-N system]"
+literal|"       netstat -m [-c] [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -r [-AanW] [-f address_family] [-M core] [-N system]"
+literal|"       netstat -r [-AenW] [-f address_family] [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -rs [-s] [-M core] [-N system]"
 argument_list|,
