@@ -542,6 +542,12 @@ name|struct
 name|ath_desc
 modifier|*
 name|ds
+parameter_list|,
+specifier|const
+name|struct
+name|ath_desc
+modifier|*
+name|ds0
 parameter_list|)
 block|{
 name|struct

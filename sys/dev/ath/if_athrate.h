@@ -249,6 +249,13 @@ specifier|const
 name|struct
 name|ath_desc
 modifier|*
+name|last
+parameter_list|,
+specifier|const
+name|struct
+name|ath_desc
+modifier|*
+name|first
 parameter_list|)
 function_decl|;
 end_function_decl

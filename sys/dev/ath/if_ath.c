@@ -16251,6 +16251,8 @@ argument_list|,
 name|an
 argument_list|,
 name|ds
+argument_list|,
+name|ds0
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Reclaim reference to node. 			 * 			 * NB: the node may be reclaimed here if, for example 			 *     this is a DEAUTH message that was sent and the 			 *     node was timed out due to inactivity. 			 */
