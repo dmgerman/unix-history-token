@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_var.h	6.1	83/07/29	*/
+comment|/*	ip_var.h	6.2	84/08/29	*/
 end_comment
 
 begin_comment
@@ -204,18 +204,18 @@ begin_define
 define|#
 directive|define
 name|IP_ROUTETOIF
-value|0x10
+value|SO_DONTROUTE
 end_define
 
 begin_comment
-comment|/* same as SO_DONTROUTE */
+comment|/* bypass routing tables */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_ALLOWBROADCAST
-value|SS_PRIV
+value|SO_BROADCAST
 end_define
 
 begin_comment
