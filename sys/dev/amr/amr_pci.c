@@ -491,6 +491,15 @@ block|}
 block|,
 comment|/* perc4/di Verde*/
 block|{
+literal|0x1028
+block|,
+literal|0x0013
+block|,
+literal|0
+block|}
+block|,
+comment|/* perc4/di */
+block|{
 literal|0
 block|,
 literal|0
@@ -741,6 +750,15 @@ name|dev
 argument_list|)
 operator|==
 literal|0x000f
+operator|)
+operator|||
+operator|(
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0x0013
 operator|)
 condition|)
 block|{
