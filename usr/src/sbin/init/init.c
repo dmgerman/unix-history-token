@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.18 (Berkeley) %G%"
+literal|"@(#)init.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,6 +330,17 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+comment|/* insure proper semantics for setjmp/longjmp */
+specifier|static
+name|int
+name|howto
+decl_stmt|,
+name|oldhowto
+decl_stmt|,
+name|started
+init|=
+literal|0
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -359,46 +370,12 @@ name|defined
 argument_list|(
 name|hp300
 argument_list|)
+comment|/* howto passed in high-order register XXX */
 specifier|register
 name|int
 name|r11
 decl_stmt|;
 comment|/* passed thru from boot */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__GNUC__
-comment|/* insure proper semantics for setjmp/longjmp */
-specifier|static
-endif|#
-directive|endif
-name|int
-name|howto
-decl_stmt|,
-name|oldhowto
-decl_stmt|,
-name|started
-init|=
-literal|0
-decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|hp300
-argument_list|)
-comment|/* howto passed in high-order register XXX */
 ifdef|#
 directive|ifdef
 name|__GNUC__
@@ -422,8 +399,16 @@ directive|endif
 comment|/* __GNUC__ */
 else|#
 directive|else
-comment|/* defined(vax) || defined(tahoe) || defined(hp300) */
+comment|/* vax || tahoe || hp300 */
 comment|/* howto passed as argument */
+name|howto
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ! (vax || tahoe || hp300) */
+comment|/* 	 * We expect a single options argument from the kernel. 	 * If it is present, we ignore anything in registers from above. 	 */
 if|if
 condition|(
 name|argc
@@ -472,14 +457,19 @@ name|cp
 operator|++
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|notyet
 case|case
-literal|'a'
+literal|'f'
 case|:
 name|howto
 operator||=
-name|RB_ASKNAME
+name|RB_FASTBOOT
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'s'
 case|:
@@ -490,13 +480,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-else|else
-name|howto
-operator|=
-name|RB_SINGLE
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|getuid
