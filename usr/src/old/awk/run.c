@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	run.c	4.2	83/02/09	*/
+comment|/*	run.c	4.3	83/06/17	*/
 end_comment
 
 begin_include
@@ -15,13 +15,6 @@ directive|include
 file|"math.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|RECSIZE
-value|512
-end_define
-
 begin_include
 include|#
 directive|include
@@ -33,6 +26,13 @@ include|#
 directive|include
 file|"stdio.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|RECSIZE
+value|BUFSIZ
+end_define
 
 begin_define
 define|#
@@ -4614,6 +4614,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+name|true
+operator|)
+return|;
 block|}
 end_function
 
