@@ -43,6 +43,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -232,7 +238,7 @@ block|,
 name|CYCLE
 block|,
 name|ENDCYCLE
-block|,     }
+block|}
 name|made
 enum|;
 comment|/* Set to reflect the state of processing 				 * on this node: 				 *  UNMADE - Not examined yet 				 *  BEINGMADE - Target is already being made. 				 *  	Indicates a cycle in the graph. (compat 				 *  	mode only) 				 *  MADE - Was out-of-date and has been made 				 *  UPTODATE - Was already up-to-date 				 *  ERROR - An error occured while it was being 				 *  	made (used only in compat mode) 				 *  ABORTED - The target was aborted due to 				 *  	an error making an inferior (compat). 				 *  CYCLE - Marked as potentially being part of 				 *  	a graph cycle. If we come back to a 				 *  	node marked this way, it is printed 				 *  	and 'made' is changed to ENDCYCLE. 				 *  ENDCYCLE - the cycle has been completely 				 *  	printed. Go back and unmark all its 				 *  	members. 				 */
@@ -1242,6 +1248,26 @@ parameter_list|(
 name|module
 parameter_list|)
 value|(debug& CONCAT(DEBUG_,module))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISDOT
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[0] == '.'&& (((c)[1] == '\0') || ((c)[1] == '/')))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISDOTDOT
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)[0] == '.'&& ISDOT(&((c)[1])))
 end_define
 
 begin_comment

@@ -3516,9 +3516,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|path
+argument_list|,
+name|MAXPATHLEN
 argument_list|,
 literal|"%s/%s"
 argument_list|,

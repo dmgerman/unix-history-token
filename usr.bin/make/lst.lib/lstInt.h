@@ -216,7 +216,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|_LSTINT_H_
 end_endif
 
 end_unit

@@ -345,6 +345,23 @@ comment|/* The job is stopped */
 end_comment
 
 begin_comment
+comment|/*  * tfile is used to build temp file names to store shell commands to  * execute.   */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|tfile
+index|[
+sizeof|sizeof
+argument_list|(
+name|TMPPAT
+argument_list|)
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Descriptions for various shells.  */
 end_comment
 
@@ -3531,24 +3548,12 @@ operator|&&
 name|Job_Empty
 argument_list|()
 condition|)
-block|{
 comment|/* 	 * If we are aborting and the job table is now empty, we finish. 	 */
-operator|(
-name|void
-operator|)
-name|eunlink
-argument_list|(
-name|job
-operator|->
-name|tfile
-argument_list|)
-expr_stmt|;
 name|Finish
 argument_list|(
 name|errors
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -6243,53 +6248,6 @@ name|flags
 operator||=
 name|flags
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|job
-operator|->
-name|tfile
-argument_list|,
-name|TMPPAT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tfd
-operator|=
-name|mkstemp
-argument_list|(
-name|job
-operator|->
-name|tfile
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|Punt
-argument_list|(
-literal|"cannot create temp file: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|tfd
-argument_list|)
-expr_stmt|;
 comment|/*      * Check the commands now so any attributes from .DEFAULT have a chance      * to migrate to the node      */
 if|if
 condition|(
@@ -6351,17 +6309,54 @@ name|DieHorribly
 argument_list|()
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|tfile
+argument_list|,
+name|TMPPAT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tfd
+operator|=
+name|mkstemp
+argument_list|(
+name|tfile
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|Punt
+argument_list|(
+literal|"Cannot create temp file: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|job
 operator|->
 name|cmdFILE
 operator|=
-name|fopen
+name|fdopen
 argument_list|(
-name|job
-operator|->
-name|tfile
+name|tfd
 argument_list|,
 literal|"w+"
+argument_list|)
+expr_stmt|;
+name|eunlink
+argument_list|(
+name|tfile
 argument_list|)
 expr_stmt|;
 if|if
@@ -6373,12 +6368,15 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|close
+argument_list|(
+name|tfd
+argument_list|)
+expr_stmt|;
 name|Punt
 argument_list|(
 literal|"Could not open %s"
 argument_list|,
-name|job
-operator|->
 name|tfile
 argument_list|)
 expr_stmt|;
@@ -6647,16 +6645,6 @@ operator|!=
 name|stdout
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|eunlink
-argument_list|(
-name|job
-operator|->
-name|tfile
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|job
@@ -6789,16 +6777,6 @@ argument_list|(
 name|job
 operator|->
 name|cmdFILE
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|eunlink
-argument_list|(
-name|job
-operator|->
-name|tfile
 argument_list|)
 expr_stmt|;
 block|}
@@ -10058,6 +10036,8 @@ comment|/* element in job table */
 name|Job
 modifier|*
 name|job
+init|=
+name|NULL
 decl_stmt|;
 comment|/* job descriptor in that element */
 name|GNode
@@ -10633,21 +10613,11 @@ comment|/* RMT_WILL_WATCH */
 block|}
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|eunlink
-argument_list|(
-name|job
-operator|->
-name|tfile
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  *-----------------------------------------------------------------------  * Job_End --  *	Do final processing such as the running of the commands  *	attached to the .END target.  *  * Results:  *	Number of errors reported.  *  * Side Effects:  *	The process' temporary file (tfile) is removed if it still  *	existed.  *-----------------------------------------------------------------------  */
+comment|/*  *-----------------------------------------------------------------------  * Job_End --  *	Do final processing such as the running of the commands  *	attached to the .END target.  *  * Results:  *	Number of errors reported.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -10903,16 +10873,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* RMT_WANTS_SIGNALS */
-operator|(
-name|void
-operator|)
-name|eunlink
-argument_list|(
-name|job
-operator|->
-name|tfile
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 comment|/*      * Catch as many children as want to report in at first, then give up      */

@@ -666,26 +666,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|ISDOT
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)[0] == '.'&& (((c)[1] == '\0') || ((c)[1] == '/')))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISDOTDOT
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)[0] == '.'&& ISDOT(&((c)[1])))
-end_define
-
 begin_comment
 comment|/* strrcpy():  *	Like strcpy, going backwards and returning the new pointer  */
 end_comment
@@ -994,12 +974,14 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pathname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pathname
+argument_list|)
 argument_list|,
 literal|"getwd: Cannot stat directory \"%s\" (%s)"
 argument_list|,
@@ -1031,12 +1013,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pathname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pathname
+argument_list|)
 argument_list|,
 literal|"getwd: Cannot open directory \"%s\" (%s)"
 argument_list|,
@@ -1169,12 +1153,14 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pathname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pathname
+argument_list|)
 argument_list|,
 literal|"getwd: Cannot stat \"%s\" (%s)"
 argument_list|,
