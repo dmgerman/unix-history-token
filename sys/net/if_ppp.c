@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/*  *	$Id: if_ppp.c,v 1.2 1993/08/31 05:40:40 rgrimes Exp $  * 	From: if_ppp.c,v 1.22 1993/08/31 23:20:40 paulus Exp  *	From: if_ppp.c,v 1.21 1993/08/29 11:22:37 paulus Exp  *	From: if_sl.c,v 1.11 84/10/04 12:54:47 rick Exp   */
+comment|/*  *	$Id: if_ppp.c,v 1.3 1993/09/06 19:48:58 rgrimes Exp $  * 	From: if_ppp.c,v 1.22 1993/08/31 23:20:40 paulus Exp  *	From: if_ppp.c,v 1.21 1993/08/29 11:22:37 paulus Exp  *	From: if_sl.c,v 1.11 84/10/04 12:54:47 rick Exp   */
 end_comment
 
 begin_include
@@ -3455,20 +3455,7 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|CCOUNT
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_ttyp
-operator|->
-name|t_outq
-argument_list|)
-operator|==
-literal|0
-condition|)
+comment|/*      * The next statement used to be subject to:      *     if (CCOUNT(&sc->sc_ttyp->t_outq) == 0)      * which was removed so that we don't hang up completely      * if the serial transmitter loses an interrupt.      */
 name|pppstart
 argument_list|(
 name|sc
@@ -4144,7 +4131,7 @@ directive|else
 ifdef|#
 directive|ifdef
 name|NetBSD
-comment|/* NetBSD, 0.8 or earlier */
+comment|/* NetBSD with 2-byte ring buffer entries */
 name|ndone
 operator|=
 name|rb_cwrite
@@ -4161,7 +4148,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* 386BSD */
+comment|/* 386BSD, FreeBSD */
 name|int
 name|cc
 decl_stmt|,
@@ -4215,6 +4202,10 @@ name|char
 operator|*
 operator|)
 name|start
+operator|+
+name|n
+operator|-
+name|nleft
 argument_list|,
 name|tp
 operator|->
