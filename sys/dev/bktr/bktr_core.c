@@ -13475,6 +13475,9 @@ name|u_char
 operator|*
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|target
 argument_list|,
@@ -13536,6 +13539,9 @@ name|u_char
 operator|*
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|target
 argument_list|,
@@ -13584,6 +13590,9 @@ specifier|volatile
 name|u_char
 operator|*
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 operator|&
 name|target
@@ -13821,6 +13830,9 @@ name|u_char
 operator|*
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|target
 argument_list|,
@@ -13882,6 +13894,9 @@ name|u_char
 operator|*
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|target
 argument_list|,
@@ -13930,6 +13945,9 @@ specifier|volatile
 name|u_char
 operator|*
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 operator|&
 name|target
@@ -14400,6 +14418,9 @@ name|u_char
 operator|*
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|target
 argument_list|,
@@ -14461,6 +14482,9 @@ name|u_char
 operator|*
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|target
 argument_list|,
@@ -14509,6 +14533,9 @@ specifier|volatile
 name|u_char
 operator|*
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 operator|&
 name|target
@@ -14770,6 +14797,9 @@ name|u_char
 operator|*
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|target
 argument_list|,
@@ -14831,6 +14861,9 @@ name|u_char
 operator|*
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 operator|&
 name|target
 argument_list|,
@@ -14879,6 +14912,9 @@ specifier|volatile
 name|u_char
 operator|*
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 operator|&
 name|target

@@ -1022,6 +1022,7 @@ expr_stmt|;
 case|case
 literal|0
 case|:
+break|break;
 block|}
 name|free
 argument_list|(

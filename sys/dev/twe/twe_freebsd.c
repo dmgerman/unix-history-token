@@ -3628,6 +3628,7 @@ block|}
 break|break;
 default|default:
 comment|/* no s/g list, nothing to do */
+break|break;
 block|}
 block|}
 end_function
