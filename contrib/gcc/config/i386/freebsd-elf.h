@@ -202,6 +202,98 @@ name|WCHAR_TYPE_SIZE
 value|BITS_PER_WORD
 end_define
 
+begin_comment
+comment|/* FREEBSD_NATIVE is defined when gcc is integrated into the FreeBSD    source tree so it can be configured appropriately without using    the GNU configure/build mechanism. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_NATIVE
+end_ifdef
+
+begin_comment
+comment|/* Look for the include files in the system-defined places.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GPLUSPLUS_INCLUDE_DIR
+value|"/usr/include/g++"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GCC_INCLUDE_DIR
+value|"/usr/include"
+end_define
+
+begin_comment
+comment|/* FreeBSD has GCC_INCLUDE_DIR first.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INCLUDE_DEFAULTS
+define|\
+value|{					\     { GCC_INCLUDE_DIR, 0, 0 },		\     { GPLUSPLUS_INCLUDE_DIR, 1, 1 },	\     { 0, 0, 0 }				\   }
+end_define
+
+begin_comment
+comment|/* Under FreeBSD, the normal location of the compiler back ends is the    /usr/libexec directory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STANDARD_EXEC_PREFIX
+value|"/usr/libexec/"
+end_define
+
+begin_comment
+comment|/* Under FreeBSD, the normal location of the various *crt*.o files is the    /usr/lib directory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STANDARD_STARTFILE_PREFIX
+value|"/usr/lib/"
+end_define
+
+begin_comment
+comment|/* On FreeBSD, gcc is called 'cc' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCC_NAME
+value|"cc"
+end_define
+
+begin_comment
+comment|/* FreeBSD is 4.4BSD derived */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bsd4_4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FREEBSD_NATIVE */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
