@@ -1471,17 +1471,11 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: can't handle af%d\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"can't handle af%d\n"
 argument_list|,
 name|dst
 operator|->

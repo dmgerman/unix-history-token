@@ -1860,17 +1860,11 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: %s called?"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"%s called?"
 argument_list|,
 name|__func__
 argument_list|)

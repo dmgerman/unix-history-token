@@ -11006,17 +11006,11 @@ operator|&
 name|MAC_FLAG_INITIALIZED
 operator|)
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: not initialized\n"
-argument_list|,
 name|ifnet
-operator|->
-name|if_name
 argument_list|,
-name|ifnet
-operator|->
-name|if_unit
+literal|"not initialized\n"
 argument_list|)
 expr_stmt|;
 name|MAC_CHECK

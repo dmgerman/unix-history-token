@@ -1115,21 +1115,13 @@ name|ENXIO
 condition|)
 block|{
 comment|/* 			 * ENXIO can happen if a pccard is unplugged 			 * Something is really wrong if we were able to put 			 * the driver into promiscuous mode, but can't 			 * take it out. 			 */
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: ifpromisc failed %d\n"
-argument_list|,
 name|bp
 operator|->
 name|bif_ifp
-operator|->
-name|if_name
 argument_list|,
-name|bp
-operator|->
-name|bif_ifp
-operator|->
-name|if_unit
+literal|"ifpromisc failed %d\n"
 argument_list|,
 name|error
 argument_list|)
