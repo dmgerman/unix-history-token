@@ -2545,7 +2545,7 @@ name|sprintf
 argument_list|(
 name|path
 argument_list|,
-literal|"%s/obj"
+literal|"/usr/obj/%s"
 argument_list|,
 name|p
 operator|->
