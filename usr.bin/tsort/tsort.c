@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Michael Rendell of Memorial University of Newfoundland.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Michael Rendell of Memorial University of Newfoundland.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: tsort.c,v 1.3 1996/06/10 16:12:43 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tsort.c	8.2 (Berkeley) 3/30/94"
+literal|"@(#)tsort.c	8.3 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,7 +108,7 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/*  *  Topological sort.  Input is a list of pairs of strings separated by  *  white space (spaces, tabs, and/or newlines); strings are written to  *  standard output in sorted order, one per line.  *  *  usage:  *     tsort [-l] [inputfile]  *  If no input file is specified, standard input is read.  *  *  Should be compatable with AT&T tsort HOWEVER the output is not identical  *  (i.e. for most graphs there is more than one sorted order, and this tsort  *  usually generates a different one then the AT&T tsort).  Also, cycle  *  reporting seems to be more accurate in this version (the AT&T tsort  *  sometimes says a node is in a cycle when it isn't).  *  *  Michael Rendell, michael@stretch.cs.mun.ca - Feb 26, '90  */
+comment|/*  *  Topological sort.  Input is a list of pairs of strings separated by  *  white space (spaces, tabs, and/or newlines); strings are written to  *  standard output in sorted order, one per line.  *  *  usage:  *     tsort [-dlq] [inputfile]  *  If no input file is specified, standard input is read.  *  *  Should be compatable with AT&T tsort HOWEVER the output is not identical  *  (i.e. for most graphs there is more than one sorted order, and this tsort  *  usually generates a different one then the AT&T tsort).  Also, cycle  *  reporting seems to be more accurate in this version (the AT&T tsort  *  sometimes says a node is in a cycle when it isn't).  *  *  Michael Rendell, michael@stretch.cs.mun.ca - Feb 26, '90  */
 end_comment
 
 begin_define
@@ -255,6 +255,8 @@ name|int
 name|debug
 decl_stmt|,
 name|longest
+decl_stmt|,
+name|quiet
 decl_stmt|;
 end_decl_stmt
 
@@ -417,7 +419,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dl"
+literal|"dlq"
 argument_list|)
 operator|)
 operator|!=
@@ -440,6 +442,14 @@ case|case
 literal|'l'
 case|:
 name|longest
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|quiet
 operator|=
 literal|1
 expr_stmt|;
@@ -1499,6 +1509,7 @@ operator|)
 condition|)
 if|if
 condition|(
+operator|(
 name|cnt
 operator|=
 name|find_cycle
@@ -1511,6 +1522,13 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|quiet
 condition|)
 block|{
 name|warnx
@@ -1543,6 +1561,7 @@ operator|->
 name|n_name
 argument_list|)
 expr_stmt|;
+block|}
 name|remove_node
 argument_list|(
 name|n
@@ -1966,7 +1985,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tsort [-dl] [file]\n"
+literal|"usage: tsort [-dlq] [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
