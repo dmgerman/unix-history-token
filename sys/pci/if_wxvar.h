@@ -1271,6 +1271,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|T_PREV_IDX
+parameter_list|(
+name|x
+parameter_list|)
+value|((x - 1)& (WX_MAX_TDESC - 1))
+end_define
+
+begin_define
+define|#
+directive|define
 name|WX_MAX_RDESC
 value|64
 end_define
