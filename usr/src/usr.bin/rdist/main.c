@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.11 (Berkeley) 84/04/06"
+literal|"@(#)main.c	4.11 (Berkeley) 84/04/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,28 +109,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* act as remote server for transfering files */
-end_comment
-
-begin_decl_stmt
-name|int
-name|filec
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of files to update */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|filev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list of files/directories to update */
 end_comment
 
 begin_decl_stmt
@@ -923,6 +901,8 @@ expr_stmt|;
 block|}
 name|insert
 argument_list|(
+name|NULL
+argument_list|,
 name|files
 argument_list|,
 name|hosts
