@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|"curses.h"
+file|"curses.ext"
 end_include
 
 begin_define
@@ -18,7 +18,7 @@ value|(a< b ? a : b)
 end_define
 
 begin_comment
-comment|/*  *	This routine writes win1 on win2 destructively.  *  * %G% (Berkeley) @(#)overwrite.c	1.1  */
+comment|/*  *	This routine writes win1 on win2 destructively.  *  * %G% (Berkeley) @(#)overwrite.c	1.2  */
 end_comment
 
 begin_macro
