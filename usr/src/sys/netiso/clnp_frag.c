@@ -8,11 +8,11 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: clnp_frag.c,v 4.2 88/06/29 14:58:40 hagens Exp $ */
+comment|/* $Header: /var/src/sys/netiso/RCS/clnp_frag.c,v 5.1 89/02/09 16:20:26 hagens Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp_frag.c,v $ */
+comment|/* $Source: /var/src/sys/netiso/RCS/clnp_frag.c,v $ */
 end_comment
 
 begin_ifndef
@@ -27,7 +27,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Header: clnp_frag.c,v 4.2 88/06/29 14:58:40 hagens Exp $"
+literal|"$Header: /var/src/sys/netiso/RCS/clnp_frag.c,v 5.1 89/02/09 16:20:26 hagens Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -425,8 +425,70 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* true if this is the last fragment */
-name|frag_size
+name|IFDEBUG
+argument_list|(
+argument|D_FRAG
+argument_list|)
+name|struct
+name|mbuf
+modifier|*
+name|mdump
+init|=
+name|frag_hdr
+decl_stmt|;
+name|int
+name|tot_mlen
+init|=
+literal|0
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"clnp_fragment: total_len %d:\n"
+argument_list|,
+name|total_len
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|mdump
+operator|!=
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\tmbuf x%x, m_len %d\n"
+argument_list|,
+name|mdump
+argument_list|,
+name|mdump
+operator|->
+name|m_len
+argument_list|)
+expr_stmt|;
+name|tot_mlen
+operator|+=
+name|mdump
+operator|->
+name|m_len
+expr_stmt|;
+name|mdump
 operator|=
+name|mdump
+operator|->
+name|m_next
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"clnp_fragment: sum of mbuf chain %d:\n"
+argument_list|,
+name|tot_mlen
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
+name|frag_size
+init|=
 name|min
 argument_list|(
 name|total_len
@@ -439,7 +501,7 @@ name|clnp
 operator|->
 name|cnf_hdr_len
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/* 			 *	For some stupid reason, fragments must be at least 8 bytes 			 *	in length. If this fragment will cause the last one to  			 *	be less than 8 bytes, shorten this fragment a bit. 			 */
 if|if
 condition|(
@@ -780,7 +842,6 @@ argument_list|(
 literal|"clnp_fragment: sending dg:\n"
 argument_list|)
 expr_stmt|;
-comment|/* 				dump_buf(mtod(mdump, caddr_t), mdump->m_len);*/
 while|while
 condition|(
 name|mdump
@@ -790,7 +851,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mbuf x%x, m_len %d\n"
+literal|"\tmbuf x%x, m_len %d\n"
 argument_list|,
 name|mdump
 argument_list|,
@@ -799,7 +860,6 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
-comment|/*  					dump_buf(mtod(mdump, caddr_t), mdump->m_len);*/
 name|mdump
 operator|=
 name|mdump
@@ -1953,6 +2013,20 @@ name|cnf_hdr_len
 operator|-
 name|pad
 expr_stmt|;
+name|IFDEBUG
+argument_list|(
+argument|D_REASS
+argument_list|)
+name|printf
+argument_list|(
+literal|"clnp_insert_frag: clnp x%x requires %d alignment\n"
+argument_list|,
+name|clnp
+argument_list|,
+name|pad
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
 comment|/* make it word aligned if necessary */
 if|if
 condition|(
@@ -1982,6 +2056,22 @@ name|cfr_bytes
 operator|=
 name|bytes
 expr_stmt|;
+name|IFDEBUG
+argument_list|(
+argument|D_REASS
+argument_list|)
+name|printf
+argument_list|(
+literal|"clnp_insert_frag: cf now x%x, cfr_bytes %d\n"
+argument_list|,
+name|cf
+argument_list|,
+name|cf
+operator|->
+name|cfr_bytes
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
 block|}
 name|cf
 operator|->
@@ -2150,6 +2240,9 @@ name|mbuf
 modifier|*
 name|mdump
 decl_stmt|;
+name|int
+name|l
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"clnp_comp_pdu: merging fragments\n"
@@ -2157,7 +2250,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"clnp_comp_pdu: 1st: [%d ... %d]\n"
+literal|"clnp_comp_pdu: 1st: [%d ... %d] (bytes %d)\n"
 argument_list|,
 name|cf
 operator|->
@@ -2166,6 +2259,10 @@ argument_list|,
 name|cf
 operator|->
 name|cfr_last
+argument_list|,
+name|cf
+operator|->
+name|cfr_bytes
 argument_list|)
 expr_stmt|;
 name|mdump
@@ -2173,6 +2270,10 @@ operator|=
 name|cf
 operator|->
 name|cfr_data
+expr_stmt|;
+name|l
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -2192,6 +2293,12 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
+name|l
+operator|+=
+name|mdump
+operator|->
+name|m_len
+expr_stmt|;
 name|mdump
 operator|=
 name|mdump
@@ -2201,7 +2308,14 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"clnp_comp_pdu: 2nd: [%d ... %d]\n"
+literal|"\ttotal len: %d\n"
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"clnp_comp_pdu: 2nd: [%d ... %d] (bytes %d)\n"
 argument_list|,
 name|cf_next
 operator|->
@@ -2210,6 +2324,10 @@ argument_list|,
 name|cf_next
 operator|->
 name|cfr_last
+argument_list|,
+name|cf_next
+operator|->
+name|cfr_bytes
 argument_list|)
 expr_stmt|;
 name|mdump
@@ -2217,6 +2335,10 @@ operator|=
 name|cf_next
 operator|->
 name|cfr_data
+expr_stmt|;
+name|l
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -2236,6 +2358,12 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
+name|l
+operator|+=
+name|mdump
+operator|->
+name|m_len
+expr_stmt|;
 name|mdump
 operator|=
 name|mdump
@@ -2243,6 +2371,13 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"\ttotal len: %d\n"
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
 name|ENDDEBUG
 name|cf
 operator|->
@@ -2253,6 +2388,20 @@ operator|->
 name|cfr_last
 decl_stmt|;
 comment|/* 			 *	After this m_adj, the cf_next ptr is useless because we 			 *	have adjusted the clnp_frag structure away... 			 */
+name|IFDEBUG
+argument_list|(
+argument|D_REASS
+argument_list|)
+name|printf
+argument_list|(
+literal|"clnp_comp_pdu: shaving off %d bytes\n"
+argument_list|,
+name|cf_next_hdr
+operator|.
+name|cfr_bytes
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
 name|m_adj
 argument_list|(
 name|cf_next_hdr
@@ -2263,7 +2412,7 @@ name|cf_next_hdr
 operator|.
 name|cfr_bytes
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|m_cat
 argument_list|(
 name|cf
