@@ -114,7 +114,8 @@ name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
-name|u_int
+name|enum
+name|esource
 parameter_list|)
 parameter_list|)
 function_decl|;

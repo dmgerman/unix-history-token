@@ -45,6 +45,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_enum
+enum|enum
+name|esource
+block|{
+name|RANDOM_KEYBOARD
+block|,
+name|RANDOM_MOUSE
+block|}
+enum|;
+end_enum
+
 begin_function_decl
 name|void
 name|random_harvest

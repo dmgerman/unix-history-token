@@ -122,7 +122,8 @@ parameter_list|,
 name|u_int
 name|frac
 parameter_list|,
-name|u_int
+name|enum
+name|esource
 name|source
 parameter_list|)
 function_decl|;
@@ -148,11 +149,13 @@ specifier|static
 name|struct
 name|task
 name|regate_task
+index|[
+literal|2
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_struct
-specifier|static
 struct|struct
 name|context
 block|{
@@ -161,9 +164,18 @@ name|pool
 decl_stmt|;
 block|}
 name|context
+index|[
+literal|2
+index|]
 init|=
 block|{
+block|{
 literal|0
+block|}
+block|,
+block|{
+literal|1
+block|}
 block|}
 struct|;
 end_struct
@@ -275,8 +287,11 @@ name|TASK_INIT
 argument_list|(
 operator|&
 name|regate_task
+index|[
+name|FAST
+index|]
 argument_list|,
-literal|0
+name|FAST
 argument_list|,
 operator|&
 name|regate
@@ -287,6 +302,33 @@ operator|*
 operator|)
 operator|&
 name|context
+index|[
+name|FAST
+index|]
+argument_list|)
+expr_stmt|;
+name|TASK_INIT
+argument_list|(
+operator|&
+name|regate_task
+index|[
+name|SLOW
+index|]
+argument_list|,
+name|SLOW
+argument_list|,
+operator|&
+name|regate
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|context
+index|[
+name|SLOW
+index|]
 argument_list|)
 expr_stmt|;
 name|random_init_harvester
@@ -1633,7 +1675,8 @@ parameter_list|,
 name|u_int
 name|frac
 parameter_list|,
-name|u_int
+name|enum
+name|esource
 name|origin
 parameter_list|)
 block|{
@@ -1801,12 +1844,6 @@ operator|%=
 literal|1024
 expr_stmt|;
 block|}
-name|context
-operator|.
-name|pool
-operator|=
-name|which
-expr_stmt|;
 if|if
 condition|(
 name|source
@@ -1818,13 +1855,16 @@ operator|->
 name|thresh
 condition|)
 block|{
-comment|/* XXX Needs to be multiply queued? */
+comment|/* XXX Slowoverthresh nees to be considered */
 name|taskqueue_enqueue
 argument_list|(
 name|taskqueue_swi
 argument_list|,
 operator|&
 name|regate_task
+index|[
+name|which
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -1835,7 +1875,7 @@ name|current
 operator|=
 name|insert
 expr_stmt|;
-comment|/* toggle the pool for next time */
+comment|/* toggle the pool for next insertion */
 name|random_state
 operator|.
 name|which
