@@ -183,12 +183,6 @@ name|XINVLTLB_OFFSET
 value|(ICU_OFFSET + 112)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BETTER_CLOCK
-end_ifdef
-
 begin_comment
 comment|/* inter-cpu clock handling */
 end_comment
@@ -199,11 +193,6 @@ directive|define
 name|XCPUCHECKSTATE_OFFSET
 value|(ICU_OFFSET + 113)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* inter-CPU rendezvous */
@@ -714,14 +703,9 @@ name|inthand_t
 name|Xinvltlb
 decl_stmt|,
 comment|/* TLB shootdowns */
-ifdef|#
-directive|ifdef
-name|BETTER_CLOCK
 name|Xcpucheckstate
 decl_stmt|,
 comment|/* Check cpu state */
-endif|#
-directive|endif
 name|Xcpuast
 decl_stmt|,
 comment|/* Additional software trap on other cpu */

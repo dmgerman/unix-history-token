@@ -717,12 +717,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BETTER_CLOCK
-end_ifdef
-
 begin_decl_stmt
 name|void
 name|forward_statclock
@@ -748,15 +742,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BETTER_CLOCK */
-end_comment
 
 begin_decl_stmt
 name|void

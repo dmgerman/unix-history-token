@@ -90,22 +90,11 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BETTER_CLOCK
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/dkstat.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -147,12 +136,6 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BETTER_CLOCK
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -182,11 +165,6 @@ include|#
 directive|include
 file|<sys/gmon.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -2752,9 +2730,6 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BETTER_CLOCK
 comment|/* install an inter-CPU IPI for reading processor state */
 name|setidt
 argument_list|(
@@ -2774,8 +2749,6 @@ name|SEL_KPL
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* install an inter-CPU IPI for all-CPU rendezvous */
 name|setidt
 argument_list|(
@@ -9899,9 +9872,6 @@ literal|"scheduler returned us to ap_init"
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|BETTER_CLOCK
 define|#
 directive|define
 name|CHECKSTATE_USER
@@ -10619,7 +10589,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|BETTER_CLOCK_DIAGNOSTIC
+name|DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"forward_statclock: checkstate %x\n"
@@ -10733,7 +10703,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|BETTER_CLOCK_DIAGNOSTIC
+name|DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"forward_statclock: dropped ast 0x%x\n"
@@ -10851,7 +10821,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|BETTER_CLOCK_DIAGNOSTIC
+name|DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"forward_hardclock: checkstate %x\n"
@@ -11091,7 +11061,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|BETTER_CLOCK_DIAGNOSTIC
+name|DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"forward_hardclock: dropped ast 0x%x\n"
@@ -11108,9 +11078,6 @@ block|}
 block|}
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* BETTER_CLOCK */
 name|void
 name|forward_signal
 parameter_list|(
