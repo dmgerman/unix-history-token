@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mtio.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mtio.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -119,6 +119,28 @@ begin_comment
 comment|/* no operation, sets status only */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MTCACHE
+value|8
+end_define
+
+begin_comment
+comment|/* enable controller cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTNOCACHE
+value|9
+end_define
+
+begin_comment
+comment|/* disable controller cache */
+end_comment
+
 begin_comment
 comment|/* structure for MTIOCGET - mag tape get status command */
 end_comment
@@ -160,7 +182,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Constants for mt_type byte  */
+comment|/*  * Constants for mt_type byte.  These are the same  * for controllers compatible with the types listed.  */
 end_comment
 
 begin_define
@@ -170,12 +192,20 @@ name|MT_ISTS
 value|0x01
 end_define
 
+begin_comment
+comment|/* TS-11 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MT_ISHT
 value|0x02
 end_define
+
+begin_comment
+comment|/* TM03 Massbus: TE16, TU45, TU77 */
+end_comment
 
 begin_define
 define|#
@@ -184,12 +214,20 @@ name|MT_ISTM
 value|0x03
 end_define
 
+begin_comment
+comment|/* TM11/TE10 Unibus */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MT_ISMT
 value|0x04
 end_define
+
+begin_comment
+comment|/* TM78/TU78 Massbus */
+end_comment
 
 begin_define
 define|#
@@ -198,6 +236,10 @@ name|MT_ISUT
 value|0x05
 end_define
 
+begin_comment
+comment|/* SI TU-45 emulation on Unibus */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -205,12 +247,31 @@ name|MT_ISCPC
 value|0x06
 end_define
 
+begin_comment
+comment|/* SUN */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MT_ISAR
 value|0x07
 end_define
+
+begin_comment
+comment|/* SUN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_ISTMSCP
+value|0x08
+end_define
+
+begin_comment
+comment|/* DEC TMSCP protocol (TU81, TK50) */
+end_comment
 
 begin_comment
 comment|/* mag tape io control commands */
