@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fsdb.c	5.12 (Berkeley) %G%"
+literal|"@(#)fsdb.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,6 +96,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -1103,19 +1115,6 @@ name|env
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|calloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|char
 name|getachar
@@ -1484,11 +1483,16 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+call|(
+name|off_t
+call|)
+argument_list|(
 name|SBLOCK
 operator|*
 name|DEV_BSIZE
+argument_list|)
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 operator|==
 operator|-
@@ -1989,9 +1993,6 @@ block|{
 case|case
 name|DIRECTORY
 case|:
-if|if
-condition|(
-operator|(
 name|addr
 operator|=
 name|getdirslot
@@ -2000,7 +2001,10 @@ name|dirslot
 operator|+
 literal|1
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
 operator|==
 literal|0
 condition|)
@@ -2061,16 +2065,16 @@ case|:
 name|cur_cgrp
 operator|++
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|addr
 operator|=
 name|cgrp_check
 argument_list|(
 name|cur_cgrp
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
 operator|==
 literal|0
 condition|)
@@ -11218,7 +11222,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * get - read a byte, short or long from the file system.  *	The entire block containing the desired item is read  *	and the appropriate data is extracted and returned.   */
+comment|/*  * get - read a byte, short or long from the file system.  *	The entire block containing the desired item is read  *	and the appropriate data is extracted and returned.  */
 end_comment
 
 begin_function
@@ -12358,9 +12362,10 @@ name|long
 modifier|*
 name|vptr
 decl_stmt|;
-name|long
+name|off_t
 name|s_err
-decl_stmt|,
+decl_stmt|;
+name|long
 name|nbytes
 decl_stmt|;
 name|long
@@ -12515,13 +12520,18 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+call|(
+name|off_t
+call|)
+argument_list|(
 name|addr
 operator|&
 name|fs
 operator|->
 name|fs_bmask
+argument_list|)
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 operator|)
 operator|==
@@ -12575,7 +12585,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"            : s_err  = %x\n"
+literal|"            : s_err  = %qx\n"
 argument_list|,
 name|s_err
 argument_list|)
@@ -12712,9 +12722,10 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|long
+name|off_t
 name|s_err
-decl_stmt|,
+decl_stmt|;
+name|long
 name|nbytes
 decl_stmt|;
 name|unsigned
@@ -12816,24 +12827,29 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|s_err
 operator|=
 name|lseek
 argument_list|(
 name|fd
 argument_list|,
+call|(
+name|off_t
+call|)
+argument_list|(
 name|address
 operator|&
 name|fs
 operator|->
 name|fs_bmask
-argument_list|,
-literal|0
 argument_list|)
-operator|)
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s_err
 operator|==
 operator|-
 literal|1
@@ -12887,7 +12903,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"           : s_err  = %x\n"
+literal|"           : s_err  = %qx\n"
 argument_list|,
 name|s_err
 argument_list|)
@@ -13074,7 +13090,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * devcheck - check that the given mode represents a   *	special device. The IFCHR bit is on for both  *	character and block devices.  */
+comment|/*  * devcheck - check that the given mode represents a  *	special device. The IFCHR bit is on for both  *	character and block devices.  */
 end_comment
 
 begin_expr_stmt
@@ -13206,11 +13222,12 @@ decl_stmt|;
 name|long
 name|maxchars
 decl_stmt|,
-name|s_err
-decl_stmt|,
 name|nbytes
 decl_stmt|,
 name|temp
+decl_stmt|;
+name|off_t
+name|s_err
 decl_stmt|;
 name|long
 name|taddr
@@ -13521,13 +13538,18 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+call|(
+name|off_t
+call|)
+argument_list|(
 name|addr
 operator|&
 name|fs
 operator|->
 name|fs_bmask
+argument_list|)
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 operator|)
 operator|==
@@ -13581,7 +13603,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"            : s_err  = %x\n"
+literal|"            : s_err  = %qx\n"
 argument_list|,
 name|s_err
 argument_list|)
@@ -18459,7 +18481,7 @@ directive|endif
 block|}
 name|printf
 argument_list|(
-literal|"\ncs[].cs_(nbfree,ndir,nifree,nffree):\n\t"
+literal|"\ncs[].cs_(nbfree, ndir, nifree, nffree):\n\t"
 argument_list|)
 expr_stmt|;
 for|for
@@ -18529,6 +18551,9 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|fd
@@ -18561,7 +18586,7 @@ argument_list|,
 literal|1
 argument_list|)
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 if|if
