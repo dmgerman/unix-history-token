@@ -1539,6 +1539,14 @@ name|mousemode_t
 name|mode
 decl_stmt|;
 comment|/* protocol information */
+name|float
+name|accelx
+decl_stmt|;
+comment|/* Acceleration in the X axis */
+name|float
+name|accely
+decl_stmt|;
+comment|/* Acceleration in the Y axis */
 block|}
 name|rodent
 init|=
@@ -1615,6 +1623,14 @@ block|,
 name|button2timeout
 operator|:
 name|DFLT_BUTTON2TIMEOUT
+block|,
+name|accelx
+operator|:
+literal|1.0
+block|,
+name|accely
+operator|:
+literal|1.0
 block|, }
 struct|;
 end_struct
@@ -2525,7 +2541,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"3C:DE:F:I:PRS:cdfhi:l:m:p:r:st:w:z:"
+literal|"3C:DE:F:I:PRS:a:cdfhi:l:m:p:r:st:w:z:"
 argument_list|)
 operator|)
 operator|!=
@@ -2589,6 +2605,61 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'a'
+case|:
+name|i
+operator|=
+name|sscanf
+argument_list|(
+name|optarg
+argument_list|,
+literal|"%f,%f"
+argument_list|,
+operator|&
+name|rodent
+operator|.
+name|accelx
+argument_list|,
+operator|&
+name|rodent
+operator|.
+name|accely
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"invalid acceleration argument '%s'"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|i
+operator|==
+literal|1
+condition|)
+name|rodent
+operator|.
+name|accely
+operator|=
+name|rodent
+operator|.
+name|accelx
+expr_stmt|;
 break|break;
 case|case
 literal|'c'
@@ -4809,6 +4880,10 @@ operator|=
 name|action2
 operator|.
 name|dx
+operator|*
+name|rodent
+operator|.
+name|accelx
 expr_stmt|;
 name|mouse
 operator|.
@@ -4821,6 +4896,10 @@ operator|=
 name|action2
 operator|.
 name|dy
+operator|*
+name|rodent
+operator|.
+name|accely
 expr_stmt|;
 name|mouse
 operator|.
@@ -4885,6 +4964,10 @@ operator|=
 name|action2
 operator|.
 name|dx
+operator|*
+name|rodent
+operator|.
+name|accelx
 expr_stmt|;
 name|mouse
 operator|.
@@ -4897,6 +4980,10 @@ operator|=
 name|action2
 operator|.
 name|dy
+operator|*
+name|rodent
+operator|.
+name|accely
 expr_stmt|;
 name|mouse
 operator|.
@@ -5157,9 +5244,9 @@ literal|"%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: moused [-DRcdfs] [-I file] [-F rate] [-r resolution] [-S baudrate]"
 argument_list|,
-literal|"              [-C threshold] [-m N=M] [-w N] [-z N] [-t<mousetype>]"
+literal|"              [-a X [,Y]] [-C threshold] [-m N=M] [-w N] [-z N]"
 argument_list|,
-literal|"              [-3 [-E timeout]] -p<port>"
+literal|"              [-t<mousetype>] [-3 [-E timeout]] -p<port>"
 argument_list|,
 literal|"       moused [-d] -i<info> -p<port>"
 argument_list|)
