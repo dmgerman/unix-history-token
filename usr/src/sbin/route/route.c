@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.6 (Berkeley) %G%"
+literal|"@(#)route.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1304,8 +1304,9 @@ decl_stmt|,
 name|mask
 decl_stmt|;
 specifier|register
+name|u_long
 name|i
-expr_stmt|;
+decl_stmt|;
 name|int
 name|subnetshift
 decl_stmt|;
@@ -1337,6 +1338,8 @@ operator|)
 operator|->
 name|sin_addr
 expr_stmt|;
+name|i
+operator|=
 name|in
 operator|.
 name|s_addr
