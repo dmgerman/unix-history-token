@@ -8000,6 +8000,34 @@ literal|"pccard_ifconfig"
 block|}
 block|,
 block|{
+literal|" usbd"
+block|,
+literal|"Enable USB daemon (detect USB attach / detach)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"usbd_enable=YES"
+block|}
+block|,
+block|{
+literal|" usbd flags"
+block|,
+literal|"Set default flags to usbd (if enabled)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuISetVariable
+block|,
+name|NULL
+block|,
+literal|"usbd_flags"
+block|}
+block|,
+block|{
 literal|" "
 block|,
 literal|" -- "
