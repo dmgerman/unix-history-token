@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	1.6 83/07/27"
+literal|"@(#)cmd2.c	1.7 83/07/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,7 +72,9 @@ name|w
 operator|=
 name|openwin
 argument_list|(
-literal|22
+name|wwncol
+operator|-
+literal|1
 argument_list|,
 literal|"Help"
 argument_list|)
@@ -129,21 +131,14 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"C       Close all empty windows.\r\n"
+literal|"C       Close all windows.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"Z       Close all windows.\r\n"
-argument_list|)
-expr_stmt|;
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"Q       Show all windows in sequence.\r\n"
+literal|"S       Show all windows in sequence.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
@@ -829,6 +824,19 @@ expr_stmt|;
 name|wwlabel
 argument_list|(
 name|w
+argument_list|,
+operator|(
+name|wwncol
+operator|-
+name|strlen
+argument_list|(
+name|label
+argument_list|)
+operator|)
+operator|/
+literal|2
+operator|+
+literal|1
 argument_list|,
 name|label
 argument_list|,
