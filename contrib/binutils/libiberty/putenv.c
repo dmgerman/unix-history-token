@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.    This file based on putenv.c in the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1991, 1994, 1995, 1996, 2002 Free Software Foundation, Inc.    This file based on putenv.c in the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+end_comment
+
+begin_comment
+comment|/*  @deftypefn Supplemental int putenv (const char *@var{string})  Uses @code{setenv} or @code{unsetenv} to put @var{string} into the environment or remove it.  If @var{string} is of the form @samp{name=value} the string is added; if no @samp{=} is present the name is unset/removed.  @end deftypefn  */
 end_comment
 
 begin_if
@@ -51,6 +55,13 @@ include|#
 directive|include
 file|"ansidecl.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|putenv
+value|libiberty_putenv
+end_define
 
 begin_if
 if|#
@@ -162,6 +173,12 @@ end_endif
 begin_comment
 comment|/* HAVE_ALLOCA_H */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|putenv
+end_undef
 
 begin_comment
 comment|/* Below this point, it's verbatim code from the glibc-2.0 implementation */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-c30.c -- Assembly code for the Texas Instruments TMS320C30    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-c30.c -- Assembly code for the Texas Instruments TMS320C30    Copyright 1998, 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|"as.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -856,12 +862,12 @@ control|)
 block|{
 if|if
 condition|(
-name|islower
+name|ISLOWER
 argument_list|(
 name|c
 argument_list|)
 operator|||
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|c
 argument_list|)
@@ -885,7 +891,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|isupper
+name|ISUPPER
 argument_list|(
 name|c
 argument_list|)
@@ -896,7 +902,7 @@ index|[
 name|c
 index|]
 operator|=
-name|tolower
+name|TOLOWER
 argument_list|(
 name|c
 argument_list|)
@@ -934,17 +940,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|isupper
+name|ISUPPER
 argument_list|(
 name|c
 argument_list|)
 operator|||
-name|islower
+name|ISLOWER
 argument_list|(
 name|c
 argument_list|)
 operator|||
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|c
 argument_list|)
@@ -958,7 +964,7 @@ name|c
 expr_stmt|;
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|c
 argument_list|)
@@ -976,7 +982,7 @@ name|c
 expr_stmt|;
 if|if
 condition|(
-name|isalpha
+name|ISALPHA
 argument_list|(
 name|c
 argument_list|)
@@ -989,7 +995,7 @@ name|c
 operator|==
 literal|'.'
 operator|||
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|c
 argument_list|)
@@ -7893,7 +7899,7 @@ index|[
 name|buffer_posn
 index|]
 operator|=
-name|tolower
+name|TOLOWER
 argument_list|(
 operator|*
 operator|(
@@ -9082,7 +9088,7 @@ name|char_ptr
 operator|++
 index|]
 operator|=
-name|tolower
+name|TOLOWER
 argument_list|(
 name|c
 argument_list|)
@@ -9111,7 +9117,7 @@ name|char_ptr
 operator|++
 index|]
 operator|=
-name|tolower
+name|TOLOWER
 argument_list|(
 name|c
 argument_list|)
@@ -9394,12 +9400,14 @@ block|}
 end_function
 
 begin_function
-name|int
-name|md_apply_fix
+name|void
+name|md_apply_fix3
 parameter_list|(
 name|fixP
 parameter_list|,
 name|valP
+parameter_list|,
+name|seg
 parameter_list|)
 name|fixS
 modifier|*
@@ -9408,6 +9416,10 @@ decl_stmt|;
 name|valueT
 modifier|*
 name|valP
+decl_stmt|;
+name|segT
+name|seg
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|valueT
@@ -9497,7 +9509,6 @@ name|fx_size
 operator|==
 literal|1
 condition|)
-block|{
 comment|/* Special fix for LDP instruction.  */
 name|value
 operator|=
@@ -9509,7 +9520,6 @@ operator|)
 operator|>>
 literal|16
 expr_stmt|;
-block|}
 name|debug
 argument_list|(
 literal|"new value = %ld\n"
@@ -9532,9 +9542,26 @@ name|fx_size
 argument_list|)
 expr_stmt|;
 block|}
-return|return
+if|if
+condition|(
+name|fixP
+operator|->
+name|fx_addsy
+operator|==
+name|NULL
+operator|&&
+name|fixP
+operator|->
+name|fx_pcrel
+operator|==
+literal|0
+condition|)
+name|fixP
+operator|->
+name|fx_done
+operator|=
 literal|1
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -10727,7 +10754,7 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|isprint
+name|ISPRINT
 argument_list|(
 name|c
 argument_list|)

@@ -1117,12 +1117,6 @@ name|S_GET_VALUE
 argument_list|(
 name|ptr
 argument_list|)
-operator|+
-name|ptr
-operator|->
-name|sy_frag
-operator|->
-name|fr_address
 argument_list|)
 expr_stmt|;
 if|if
@@ -2266,6 +2260,11 @@ name|frag_root
 argument_list|,
 name|i
 argument_list|)
+expr_stmt|;
+comment|/* Relaxation has completed.  Freeze all syms.  */
+name|finalize_syms
+operator|=
+literal|1
 expr_stmt|;
 comment|/* Now the addresses of the frags are correct within the segment.  */
 name|bfd_as_write_hook

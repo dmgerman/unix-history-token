@@ -2152,8 +2152,6 @@ comment|/* if pusing data into text */
 name|resolve_symbol_value
 argument_list|(
 name|symbolP
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Skip symbols which were equated to undefined or common 	 symbols.  */
@@ -3272,8 +3270,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|BFD_ASSEMBLER
 end_endif
+
+begin_comment
+comment|/* BFD_ASSEMBLER */
+end_comment
 
 end_unit
 

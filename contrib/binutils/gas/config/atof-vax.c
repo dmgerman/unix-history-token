@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* atof_vax.c - turn a Flonum into a VAX floating point number    Copyright (C) 1987, 1992, 93, 95, 97, 98, 1999    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* atof_vax.c - turn a Flonum into a VAX floating point number    Copyright 1987, 1992, 1993, 1995, 1997, 1999, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -89,7 +89,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Precision in LittleNums. */
+comment|/* Precision in LittleNums.  */
 end_comment
 
 begin_define
@@ -128,7 +128,7 @@ value|(2)
 end_define
 
 begin_comment
-comment|/* Length in LittleNums of guard bits. */
+comment|/* Length in LittleNums of guard bits.  */
 end_comment
 
 begin_define
@@ -160,7 +160,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of chars in flonum type 'letter'. */
+comment|/* Number of chars in flonum type 'letter'.  */
 end_comment
 
 begin_function
@@ -488,7 +488,7 @@ end_escape
 begin_function
 specifier|static
 name|int
-comment|/* 0 means letter is OK. */
+comment|/* 0 means letter is OK.  */
 name|what_kind_of_float
 parameter_list|(
 name|letter
@@ -505,17 +505,17 @@ name|int
 modifier|*
 name|precisionP
 decl_stmt|;
-comment|/* Number of 16-bit words in the float. */
+comment|/* Number of 16-bit words in the float.  */
 name|long
 modifier|*
 name|exponent_bitsP
 decl_stmt|;
-comment|/* Number of exponent bits. */
+comment|/* Number of exponent bits.  */
 block|{
 name|int
 name|retval
 decl_stmt|;
-comment|/* 0: OK. */
+comment|/* 0: OK.  */
 name|retval
 operator|=
 literal|0
@@ -607,7 +607,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-comment|/* Return pointer past text consumed. */
+comment|/* Return pointer past text consumed.  */
 name|atof_vax
 parameter_list|(
 name|str
@@ -620,7 +620,7 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-comment|/* Text to convert to binary. */
+comment|/* Text to convert to binary.  */
 name|int
 name|what_kind
 decl_stmt|;
@@ -629,7 +629,7 @@ name|LITTLENUM_TYPE
 modifier|*
 name|words
 decl_stmt|;
-comment|/* Build the binary here. */
+comment|/* Build the binary here.  */
 block|{
 name|FLONUM_TYPE
 name|f
@@ -644,9 +644,9 @@ operator|+
 name|GUARD
 index|]
 decl_stmt|;
-comment|/* Extra bits for zeroed low-order bits. */
+comment|/* Extra bits for zeroed low-order bits.  */
 comment|/* The 1st MAX_PRECISION are zeroed, */
-comment|/* the last contain flonum bits. */
+comment|/* the last contain flonum bits.  */
 name|char
 modifier|*
 name|return_value
@@ -654,7 +654,7 @@ decl_stmt|;
 name|int
 name|precision
 decl_stmt|;
-comment|/* Number of 16-bit words in the format. */
+comment|/* Number of 16-bit words in the format.  */
 name|long
 name|exponent_bits
 decl_stmt|;
@@ -712,7 +712,7 @@ name|return_value
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* We lost. */
+comment|/* We lost.  */
 name|make_invalid_floating_point_number
 argument_list|(
 name|words
@@ -740,7 +740,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Use more LittleNums than seems */
 comment|/* necessary: the highest flonum may have */
-comment|/* 15 leading 0 bits, so could be useless. */
+comment|/* 15 leading 0 bits, so could be useless.  */
 name|f
 operator|.
 name|high
@@ -825,7 +825,7 @@ end_comment
 
 begin_function
 name|int
-comment|/* 0: OK. */
+comment|/* 0: OK.  */
 name|flonum_gen2vax
 parameter_list|(
 name|format_letter
@@ -837,7 +837,7 @@ parameter_list|)
 name|int
 name|format_letter
 decl_stmt|;
-comment|/* One of 'd' 'f' 'g' 'h'. */
+comment|/* One of 'd' 'f' 'g' 'h'.  */
 name|FLONUM_TYPE
 modifier|*
 name|f
@@ -846,7 +846,7 @@ name|LITTLENUM_TYPE
 modifier|*
 name|words
 decl_stmt|;
-comment|/* Deliver answer here. */
+comment|/* Deliver answer here.  */
 block|{
 name|LITTLENUM_TYPE
 modifier|*
@@ -861,7 +861,7 @@ decl_stmt|;
 name|int
 name|return_value
 decl_stmt|;
-comment|/* 0 == OK. */
+comment|/* 0 == OK.  */
 name|return_value
 operator|=
 name|what_kind_of_float
@@ -901,7 +901,7 @@ operator|->
 name|leader
 condition|)
 block|{
-comment|/* 0.0e0 seen. */
+comment|/* 0.0e0 seen.  */
 name|memset
 argument_list|(
 name|words
@@ -1054,21 +1054,21 @@ name|f
 operator|->
 name|low
 expr_stmt|;
-comment|/* Radix LITTLENUM_RADIX, point just higher than f->leader. */
+comment|/* Radix LITTLENUM_RADIX, point just higher than f->leader.  */
 name|exponent_2
 operator|=
 name|exponent_1
 operator|*
 name|LITTLENUM_NUMBER_OF_BITS
 expr_stmt|;
-comment|/* Radix 2. */
+comment|/* Radix 2.  */
 name|exponent_3
 operator|=
 name|exponent_2
 operator|-
 name|exponent_skippage
 expr_stmt|;
-comment|/* Forget leading zeros, forget 1st bit. */
+comment|/* Forget leading zeros, forget 1st bit.  */
 name|exponent_4
 operator|=
 name|exponent_3
@@ -1083,7 +1083,7 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-comment|/* Offset exponent. */
+comment|/* Offset exponent.  */
 if|if
 condition|(
 name|exponent_4
@@ -1109,8 +1109,8 @@ name|lp
 operator|=
 name|words
 expr_stmt|;
-comment|/* Word 1. Sign, exponent and perhaps high bits. */
-comment|/* Assume 2's complement integers. */
+comment|/* Word 1. Sign, exponent and perhaps high bits.  */
+comment|/* Assume 2's complement integers.  */
 name|word1
 operator|=
 operator|(
@@ -1159,7 +1159,7 @@ operator|++
 operator|=
 name|word1
 expr_stmt|;
-comment|/* The rest of the words are just mantissa bits. */
+comment|/* The rest of the words are just mantissa bits.  */
 for|for
 control|(
 init|;
@@ -1297,7 +1297,7 @@ value|(8)
 end_define
 
 begin_comment
-comment|/* For .hfloats. */
+comment|/* For .hfloats.  */
 end_comment
 
 begin_function

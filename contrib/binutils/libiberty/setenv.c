@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1992, 1995, 1996, 1997 Free Software Foundation, Inc.    This file based on setenv.c in the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1992, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.    This file based on setenv.c in the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+end_comment
+
+begin_comment
+comment|/*  @deftypefn Supplemental int setenv (const char *@var{name}, const char *@var{value}, int @var{overwrite}) @deftypefnx Supplemental void unsetenv (const char *@var{name})  @code{setenv} adds @var{name} to the environment with value @var{value}.  If the name was already present in the environment, the new value will be stored only if @var{overwrite} is nonzero. The companion @code{unsetenv} function removes @var{name} from the environment.  This implementation is not safe for multithreaded code.  @end deftypefn  */
 end_comment
 
 begin_if
@@ -19,6 +23,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|setenv
+value|libiberty_setenv
+end_define
+
+begin_define
+define|#
+directive|define
+name|unsetenv
+value|libiberty_unsetenv
+end_define
 
 begin_include
 include|#
@@ -167,6 +185,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|setenv
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|unsetenv
+end_undef
 
 begin_comment
 comment|/* LOCK and UNLOCK are defined as no-ops.  This makes the libiberty  * implementation MT-Unsafe. */

@@ -415,6 +415,47 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|OBJ_MAYBE_ELF
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OBJ_ELF
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|md_end
+value|i386_elf_emit_arch_note
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|i386_elf_emit_arch_note
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -491,7 +532,7 @@ name|TC_COFF_SIZEMACHDEP
 parameter_list|(
 name|frag
 parameter_list|)
-value|tc_coff_sizemachdep(frag)
+value|tc_coff_sizemachdep (frag)
 end_define
 
 begin_decl_stmt
@@ -1336,11 +1377,6 @@ directive|define
 name|Cpu3dnow
 value|0x4000
 comment|/* 3dnow! support required */
-define|#
-directive|define
-name|CpuUnknown
-value|0x8000
-comment|/* The CPU is unknown,  be on the safe side.  */
 comment|/* These flags are set by gas depending on the flag_code.  */
 define|#
 directive|define
@@ -1871,36 +1907,61 @@ end_comment
 
 begin_typedef
 typedef|typedef
-struct|struct
-block|{
-name|unsigned
 name|int
-name|mode64
-decl_stmt|;
-name|unsigned
-name|int
-name|extX
-decl_stmt|;
-comment|/* Used to extend modrm reg field.  */
-name|unsigned
-name|int
-name|extY
-decl_stmt|;
-comment|/* Used to extend SIB index field.  */
-name|unsigned
-name|int
-name|extZ
-decl_stmt|;
-comment|/* Used to extend modrm reg/mem, SIB base, modrm base fields.  */
-name|unsigned
-name|int
-name|empty
-decl_stmt|;
-comment|/* Used to old-style byte registers to new style.  */
-block|}
 name|rex_byte
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|REX_OPCODE
+value|0x40
+end_define
+
+begin_comment
+comment|/* Indicates 64 bit operand size.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REX_MODE64
+value|8
+end_define
+
+begin_comment
+comment|/* High extension to reg field of modrm byte.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REX_EXTX
+value|4
+end_define
+
+begin_comment
+comment|/* High extension to SIB index field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REX_EXTY
+value|2
+end_define
+
+begin_comment
+comment|/* High extension to base field of modrm or SIB, or reg field of opcode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REX_EXTZ
+value|1
+end_define
 
 begin_comment
 comment|/* 386 opcode byte to code indirect addressing.  */
@@ -2095,16 +2156,6 @@ name|fragP
 parameter_list|)
 define|\
 value|if (fragP->fr_type == rs_align_code) 					\   i386_align_code (fragP, (fragP->fr_next->fr_address			\ 			   - fragP->fr_address				\ 			   - fragP->fr_fix));
-end_define
-
-begin_comment
-comment|/* call md_apply_fix3 with segment instead of md_apply_fix */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MD_APPLY_FIX3
 end_define
 
 begin_decl_stmt

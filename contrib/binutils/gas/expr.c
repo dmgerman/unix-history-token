@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -35,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"as.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -311,7 +311,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"bignum invalid; zero assumed"
+literal|"bignum invalid"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -320,7 +320,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"floating point number invalid; zero assumed"
+literal|"floating point number invalid"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -401,8 +401,6 @@ condition|)
 name|resolve_symbol_value
 argument_list|(
 name|symbolP
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|n
@@ -859,7 +857,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"bad floating-point constant: exponent overflow, probably assembling junk"
+literal|"bad floating-point constant: exponent overflow"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -870,7 +868,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"bad floating-point constant: unknown error code=%d."
+literal|"bad floating-point constant: unknown error code=%d"
 argument_list|)
 argument_list|,
 name|error_code
@@ -1139,12 +1137,8 @@ name|suffix
 operator|=
 name|input_line_pointer
 init|;
-name|isalnum
+name|ISALNUM
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|suffix
 argument_list|)
@@ -1194,20 +1188,9 @@ operator|*
 operator|--
 name|suffix
 expr_stmt|;
-if|if
-condition|(
-name|islower
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-name|c
-argument_list|)
-condition|)
 name|c
 operator|=
-name|toupper
+name|TOUPPER
 argument_list|(
 name|c
 argument_list|)
@@ -1548,7 +1531,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"A bignum with underscores may not have more than 8 hex digits in any word."
+literal|"a bignum with underscores may not have more than 8 hex digits in any word"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1646,7 +1629,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"A bignum with underscores must have exactly 4 words."
+literal|"a bignum with underscores must have exactly 4 words"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2053,7 +2036,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"backw. ref to unknown label \"%d:\", 0 assumed."
+literal|"backward ref to unknown label \"%d:\""
 argument_list|)
 argument_list|,
 operator|(
@@ -2506,7 +2489,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Character constant too large"
+literal|"character constant too large"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2735,7 +2718,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* In:	Input_line_pointer points to 1st char of operand, which may 	be a space.     Out:	A expressionS. 	The operand may have been empty: in this case X_op == O_absent. 	Input_line_pointer->(next non-blank) char after operand.  */
+comment|/* In:	Input_line_pointer points to 1st char of operand, which may 	be a space.     Out:	An expressionS. 	The operand may have been empty: in this case X_op == O_absent. 	Input_line_pointer->(next non-blank) char after operand.  */
 end_comment
 
 begin_function
@@ -2856,6 +2839,17 @@ name|LITERAL_PREFIXDOLLAR_HEX
 case|case
 literal|'$'
 case|:
+comment|/* $L is the start of a local label, not a hex constant.  */
+if|if
+condition|(
+operator|*
+name|input_line_pointer
+operator|==
+literal|'L'
+condition|)
+goto|goto
+name|isname
+goto|;
 name|integer_constant
 argument_list|(
 literal|16
@@ -3013,23 +3007,10 @@ operator|->
 name|X_add_number
 operator|=
 operator|-
-operator|(
-name|isupper
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-name|c
-argument_list|)
-condition|?
-name|tolower
+name|TOLOWER
 argument_list|(
 name|c
 argument_list|)
-else|:
-name|c
-operator|)
 expr_stmt|;
 block|}
 else|else
@@ -3382,23 +3363,10 @@ operator|->
 name|X_add_number
 operator|=
 operator|-
-operator|(
-name|isupper
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-name|c
-argument_list|)
-condition|?
-name|tolower
+name|TOLOWER
 argument_list|(
 name|c
 argument_list|)
-else|:
-name|c
-operator|)
 expr_stmt|;
 break|break;
 case|case
@@ -3484,7 +3452,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Missing '%c' assumed"
+literal|"missing '%c'"
 argument_list|)
 argument_list|,
 name|c
@@ -4247,6 +4215,9 @@ argument_list|(
 name|name
 argument_list|,
 name|expressionP
+argument_list|,
+operator|&
+name|c
 argument_list|)
 condition|)
 block|{
@@ -4533,7 +4504,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Bad expression"
+literal|"bad expression"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4625,7 +4596,7 @@ comment|/* Internal.  Simplify a struct expression for use by expr ().  */
 end_comment
 
 begin_comment
-comment|/* In:	address of a expressionS. 	The X_op field of the expressionS may only take certain values. 	Elsewise we waste time special-case testing. Sigh. Ditto SEG_ABSENT.     Out:	expressionS may have been modified: 	'foo-foo' symbol references cancelled to 0, which changes X_op 	from O_subtract to O_constant. 	Unused fields zeroed to help expr ().  */
+comment|/* In:	address of an expressionS. 	The X_op field of the expressionS may only take certain values. 	Elsewise we waste time special-case testing. Sigh. Ditto SEG_ABSENT.     Out:	expressionS may have been modified: 	'foo-foo' symbol references cancelled to 0, which changes X_op 	from O_subtract to O_constant. 	Unused fields zeroed to help expr ().  */
 end_comment
 
 begin_function
@@ -4809,7 +4780,7 @@ comment|/* Expression parser.  */
 end_comment
 
 begin_comment
-comment|/* We allow an empty expression, and just assume (absolute,0) silently.    Unary operators and parenthetical expressions are treated as operands.    As usual, Q==quantity==operand, O==operator, X==expression mnemonics.     We used to do a aho/ullman shift-reduce parser, but the logic got so    warped that I flushed it and wrote a recursive-descent parser instead.    Now things are stable, would anybody like to write a fast parser?    Most expressions are either register (which does not even reach here)    or 1 symbol. Then "symbol+constant" and "symbol-symbol" are common.    So I guess it doesn't really matter how inefficient more complex expressions    are parsed.     After expr(RANK,resultP) input_line_pointer->operator of rank<= RANK.    Also, we have consumed any leading or trailing spaces (operand does that)    and done all intervening operators.     This returns the segment of the result, which will be    absolute_section or the segment of a symbol.  */
+comment|/* We allow an empty expression, and just assume (absolute,0) silently.    Unary operators and parenthetical expressions are treated as operands.    As usual, Q==quantity==operand, O==operator, X==expression mnemonics.     We used to do an aho/ullman shift-reduce parser, but the logic got so    warped that I flushed it and wrote a recursive-descent parser instead.    Now things are stable, would anybody like to write a fast parser?    Most expressions are either register (which does not even reach here)    or 1 symbol. Then "symbol+constant" and "symbol-symbol" are common.    So I guess it doesn't really matter how inefficient more complex expressions    are parsed.     After expr(RANK,resultP) input_line_pointer->operator of rank<= RANK.    Also, we have consumed any leading or trailing spaces (operand does that)    and done all intervening operators.     This returns the segment of the result, which will be    absolute_section or the segment of a symbol.  */
 end_comment
 
 begin_undef
@@ -5364,7 +5335,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Rank	Examples    0	operand, (expression)    1	||    2&&    3	=<><<=>=>    4	+ -    5	used for * / % in MRI mode    6& ^ ! |    7	* / %<<>>    8	unary - unary ~ */
+comment|/* Rank	Examples    0	operand, (expression)    1	||    2&&    3	==<><<=>=>    4	+ -    5	used for * / % in MRI mode    6& ^ ! |    7	* / %<<>>    8	unary - unary ~ */
 end_comment
 
 begin_decl_stmt
@@ -6098,67 +6069,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|retval
-operator|==
-name|undefined_section
-condition|)
-block|{
-if|if
-condition|(
-name|SEG_NORMAL
-argument_list|(
-name|rightseg
-argument_list|)
-condition|)
-name|retval
-operator|=
-name|rightseg
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|SEG_NORMAL
-argument_list|(
-name|retval
-argument_list|)
-condition|)
-name|retval
-operator|=
-name|rightseg
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|SEG_NORMAL
-argument_list|(
-name|rightseg
-argument_list|)
-operator|&&
-name|retval
-operator|!=
-name|rightseg
-ifdef|#
-directive|ifdef
-name|DIFF_EXPR_OK
-operator|&&
-name|op_left
-operator|!=
-name|O_subtract
-endif|#
-directive|endif
-condition|)
-name|as_bad
-argument_list|(
-name|_
-argument_list|(
-literal|"operation combines symbols in different segments"
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|op_right
 operator|=
 name|operator
@@ -6419,12 +6329,7 @@ operator|)
 operator|&&
 name|SEG_NORMAL
 argument_list|(
-name|S_GET_SEGMENT
-argument_list|(
-name|right
-operator|.
-name|X_add_symbol
-argument_list|)
+name|rightseg
 argument_list|)
 condition|)
 block|{
@@ -6973,6 +6878,7 @@ name|op_left
 operator|==
 name|O_subtract
 condition|)
+block|{
 name|resultP
 operator|->
 name|X_add_number
@@ -6981,6 +6887,28 @@ name|right
 operator|.
 name|X_add_number
 expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|==
+name|rightseg
+operator|&&
+name|SEG_NORMAL
+argument_list|(
+name|retval
+argument_list|)
+condition|)
+block|{
+name|retval
+operator|=
+name|absolute_section
+expr_stmt|;
+name|rightseg
+operator|=
+name|absolute_section
+expr_stmt|;
+block|}
+block|}
 block|}
 else|else
 block|{
@@ -7021,6 +6949,64 @@ operator|->
 name|X_unsigned
 operator|=
 literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|retval
+operator|!=
+name|rightseg
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|SEG_NORMAL
+argument_list|(
+name|retval
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|retval
+operator|!=
+name|undefined_section
+operator|||
+name|SEG_NORMAL
+argument_list|(
+name|rightseg
+argument_list|)
+condition|)
+name|retval
+operator|=
+name|rightseg
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|SEG_NORMAL
+argument_list|(
+name|rightseg
+argument_list|)
+ifdef|#
+directive|ifdef
+name|DIFF_EXPR_OK
+operator|&&
+name|op_left
+operator|!=
+name|O_subtract
+endif|#
+directive|endif
+condition|)
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"operation combines symbols in different segments"
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 name|op_left

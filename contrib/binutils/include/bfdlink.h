@@ -46,6 +46,9 @@ begin_enum
 enum|enum
 name|bfd_link_discard
 block|{
+name|discard_sec_merge
+block|,
+comment|/* Discard local temporary symbols in SEC_MERGE 			   sections.  */
 name|discard_none
 block|,
 comment|/* Don't discard any locals.  */
@@ -54,6 +57,21 @@ block|,
 comment|/* Discard local temporary symbols.  */
 name|discard_all
 comment|/* Discard all locals.  */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Describes the type of hash table entry structure being used.    Different hash table structure have different fields and so    support different linking features.  */
+end_comment
+
+begin_enum
+enum|enum
+name|bfd_link_hash_table_type
+block|{
+name|bfd_link_generic_hash_table
+block|,
+name|bfd_link_elf_hash_table
 block|}
 enum|;
 end_enum
@@ -234,6 +252,11 @@ name|bfd_link_hash_entry
 modifier|*
 name|undefs_tail
 decl_stmt|;
+comment|/* The type of the ink hash table.  */
+name|enum
+name|bfd_link_hash_table_type
+name|type
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -400,6 +423,10 @@ comment|/* true if BFD should pre-bind symbols in a shared object.  */
 name|boolean
 name|symbolic
 decl_stmt|;
+comment|/* true if BFD should export all symbols in the dynamic symbol table      of an executable, rather than only those used.  */
+name|boolean
+name|export_dynamic
+decl_stmt|;
 comment|/* true if shared objects should be linked directly, not shared.  */
 name|boolean
 name|static_link
@@ -503,6 +530,27 @@ decl_stmt|;
 comment|/* May be used to set DT_FLAGS_1 for ELF. */
 name|bfd_vma
 name|flags_1
+decl_stmt|;
+comment|/* True if auto-import thunks for DATA items in pei386 DLLs       should be generated/linked against.  */
+name|boolean
+name|pei386_auto_import
+decl_stmt|;
+comment|/* True if non-PLT relocs should be merged into one reloc section      and sorted so that relocs against the same symbol come together.  */
+name|boolean
+name|combreloc
+decl_stmt|;
+comment|/* True if executable should not contain copy relocs.      Setting this true may result in a non-sharable text segment.  */
+name|boolean
+name|nocopyreloc
+decl_stmt|;
+comment|/* True if .eh_frame_hdr section and PT_GNU_EH_FRAME ELF segment      should be created.  */
+name|boolean
+name|eh_frame_hdr
+decl_stmt|;
+comment|/* How many spare .dynamic DT_NULL entries should be added?  */
+name|unsigned
+name|int
+name|spare_dynamic_tags
 decl_stmt|;
 block|}
 struct|;

@@ -1,33 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic COFF swapping routines, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic COFF swapping routines, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000,    2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* This file contains routines used to swap COFF data.  It is a header    file because the details of swapping depend on the details of the    structures used by each COFF implementation.  This is included by    coffcode.h, as well as by the ECOFF backend.     Any file which uses this must first include "coff/internal.h" and    "coff/CPU.h".  The functions will then be correct for that CPU.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PUTWORD
-value|bfd_h_put_32
-end_define
-
-begin_define
-define|#
-directive|define
-name|PUTHALF
-value|bfd_h_put_16
-end_define
-
-begin_define
-define|#
-directive|define
-name|PUTBYTE
-value|bfd_h_put_8
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -43,7 +22,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_32(abfd, (bfd_byte *) ext->x_sym.x_fcnary.x_fcn.x_lnnoptr)
+define|\
+value|H_GET_32 (abfd, ext->x_sym.x_fcnary.x_fcn.x_lnnoptr)
 end_define
 
 begin_endif
@@ -66,7 +46,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_32(abfd, (bfd_byte *) ext->x_sym.x_fcnary.x_fcn.x_endndx)
+define|\
+value|H_GET_32 (abfd, ext->x_sym.x_fcnary.x_fcn.x_endndx)
 end_define
 
 begin_endif
@@ -91,7 +72,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|PUTWORD(abfd,  in, (bfd_byte *) ext->x_sym.x_fcnary.x_fcn.x_lnnoptr)
+define|\
+value|H_PUT_32 (abfd,  in, ext->x_sym.x_fcnary.x_fcn.x_lnnoptr)
 end_define
 
 begin_endif
@@ -116,7 +98,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|PUTWORD(abfd, in, (bfd_byte *) ext->x_sym.x_fcnary.x_fcn.x_endndx)
+define|\
+value|H_PUT_32 (abfd, in, ext->x_sym.x_fcnary.x_fcn.x_endndx)
 end_define
 
 begin_endif
@@ -139,7 +122,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_16(abfd, (bfd_byte *) ext->x_sym.x_misc.x_lnsz.x_lnno)
+define|\
+value|H_GET_16 (abfd, ext->x_sym.x_misc.x_lnsz.x_lnno)
 end_define
 
 begin_endif
@@ -162,7 +146,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_16(abfd, (bfd_byte *) ext->x_sym.x_misc.x_lnsz.x_size)
+define|\
+value|H_GET_16 (abfd, ext->x_sym.x_misc.x_lnsz.x_size)
 end_define
 
 begin_endif
@@ -187,7 +172,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_16(abfd, in, (bfd_byte *)ext->x_sym.x_misc.x_lnsz.x_lnno)
+define|\
+value|H_PUT_16 (abfd, in, ext->x_sym.x_misc.x_lnsz.x_lnno)
 end_define
 
 begin_endif
@@ -212,7 +198,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_16(abfd, in, (bfd_byte*) ext->x_sym.x_misc.x_lnsz.x_size)
+define|\
+value|H_PUT_16 (abfd, in, ext->x_sym.x_misc.x_lnsz.x_size)
 end_define
 
 begin_endif
@@ -235,7 +222,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_32(abfd, (bfd_byte *) ext->x_scn.x_scnlen)
+define|\
+value|H_GET_32 (abfd, ext->x_scn.x_scnlen)
 end_define
 
 begin_endif
@@ -258,7 +246,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_16(abfd, (bfd_byte *)ext->x_scn.x_nreloc)
+define|\
+value|H_GET_16 (abfd, ext->x_scn.x_nreloc)
 end_define
 
 begin_endif
@@ -281,7 +270,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_16(abfd, (bfd_byte *)ext->x_scn.x_nlinno)
+define|\
+value|H_GET_16 (abfd, ext->x_scn.x_nlinno)
 end_define
 
 begin_endif
@@ -306,7 +296,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_32(abfd, in, (bfd_byte *) ext->x_scn.x_scnlen)
+define|\
+value|H_PUT_32 (abfd, in, ext->x_scn.x_scnlen)
 end_define
 
 begin_endif
@@ -331,7 +322,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_16(abfd, in, (bfd_byte *)ext->x_scn.x_nreloc)
+define|\
+value|H_PUT_16 (abfd, in, ext->x_scn.x_nreloc)
 end_define
 
 begin_endif
@@ -356,7 +348,8 @@ name|in
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_16(abfd,in, (bfd_byte  *) ext->x_scn.x_nlinno)
+define|\
+value|H_PUT_16 (abfd, in, ext->x_scn.x_nlinno)
 end_define
 
 begin_endif
@@ -379,7 +372,8 @@ name|abfd
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_get_16(abfd, (bfd_byte *) (ext->l_lnno));
+define|\
+value|H_GET_16 (abfd, ext->l_lnno);
 end_define
 
 begin_endif
@@ -404,7 +398,8 @@ name|val
 parameter_list|,
 name|ext
 parameter_list|)
-value|bfd_h_put_16(abfd,val,  (bfd_byte *) (ext->l_lnno));
+define|\
+value|H_PUT_16 (abfd, val, ext->l_lnno);
 end_define
 
 begin_endif
@@ -426,7 +421,7 @@ begin_define
 define|#
 directive|define
 name|GET_FILEHDR_SYMPTR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -444,7 +439,7 @@ begin_define
 define|#
 directive|define
 name|PUT_FILEHDR_SYMPTR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -466,7 +461,7 @@ begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_TSIZE
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -484,7 +479,7 @@ begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_TSIZE
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -502,7 +497,7 @@ begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_DSIZE
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -520,7 +515,7 @@ begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_DSIZE
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -538,7 +533,7 @@ begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_BSIZE
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -556,7 +551,7 @@ begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_BSIZE
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -574,7 +569,7 @@ begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_ENTRY
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -592,7 +587,7 @@ begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_ENTRY
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -610,7 +605,7 @@ begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_TEXT_START
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -628,7 +623,7 @@ begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_TEXT_START
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -646,7 +641,7 @@ begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_DATA_START
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -664,7 +659,7 @@ begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_DATA_START
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -686,7 +681,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_PADDR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -704,7 +699,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_PADDR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -722,7 +717,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_VADDR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -740,7 +735,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_VADDR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -758,7 +753,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_SIZE
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -776,7 +771,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_SIZE
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -794,7 +789,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_SCNPTR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -812,7 +807,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_SCNPTR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -830,7 +825,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_RELPTR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -848,7 +843,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_RELPTR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -866,7 +861,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_LNNOPTR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -884,7 +879,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_LNNOPTR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -902,7 +897,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_NRELOC
-value|bfd_h_get_16
+value|H_GET_16
 end_define
 
 begin_endif
@@ -938,7 +933,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_NRELOC
-value|bfd_h_put_16
+value|H_PUT_16
 end_define
 
 begin_endif
@@ -956,7 +951,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_NLNNO
-value|bfd_h_get_16
+value|H_GET_16
 end_define
 
 begin_endif
@@ -992,7 +987,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_NLNNO
-value|bfd_h_put_16
+value|H_PUT_16
 end_define
 
 begin_endif
@@ -1010,7 +1005,7 @@ begin_define
 define|#
 directive|define
 name|GET_SCNHDR_FLAGS
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -1028,7 +1023,7 @@ begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_FLAGS
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -1046,7 +1041,7 @@ begin_define
 define|#
 directive|define
 name|GET_RELOC_VADDR
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_endif
@@ -1064,7 +1059,7 @@ begin_define
 define|#
 directive|define
 name|PUT_RELOC_VADDR
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_endif
@@ -1450,10 +1445,6 @@ name|GET_RELOC_VADDR
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_src
 operator|->
 name|r_vaddr
@@ -1463,14 +1454,10 @@ name|reloc_dst
 operator|->
 name|r_symndx
 operator|=
-name|bfd_h_get_signed_32
+name|H_GET_S32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_src
 operator|->
 name|r_symndx
@@ -1483,7 +1470,7 @@ name|reloc_dst
 operator|->
 name|r_type
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -1496,7 +1483,7 @@ name|reloc_dst
 operator|->
 name|r_size
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -1511,14 +1498,10 @@ name|reloc_dst
 operator|->
 name|r_type
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_src
 operator|->
 name|r_type
@@ -1537,10 +1520,6 @@ name|SWAP_IN_RELOC_OFFSET
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_src
 operator|->
 name|r_offset
@@ -1606,16 +1585,12 @@ name|reloc_src
 operator|->
 name|r_vaddr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_dst
 operator|->
 name|r_vaddr
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -1623,10 +1598,6 @@ name|reloc_src
 operator|->
 name|r_symndx
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_dst
 operator|->
 name|r_symndx
@@ -1635,7 +1606,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RS6000COFF_C
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -1643,16 +1614,12 @@ name|reloc_src
 operator|->
 name|r_type
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_dst
 operator|->
 name|r_type
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -1660,10 +1627,6 @@ name|reloc_src
 operator|->
 name|r_size
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_dst
 operator|->
 name|r_size
@@ -1671,7 +1634,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -1679,10 +1642,6 @@ name|reloc_src
 operator|->
 name|r_type
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_dst
 operator|->
 name|r_type
@@ -1701,10 +1660,6 @@ name|reloc_src
 operator|->
 name|r_offset
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_dst
 operator|->
 name|r_offset
@@ -1806,14 +1761,10 @@ name|filehdr_dst
 operator|->
 name|f_magic
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_src
 operator|->
 name|f_magic
@@ -1823,14 +1774,10 @@ name|filehdr_dst
 operator|->
 name|f_nscns
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_src
 operator|->
 name|f_nscns
@@ -1840,14 +1787,10 @@ name|filehdr_dst
 operator|->
 name|f_timdat
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_src
 operator|->
 name|f_timdat
@@ -1861,10 +1804,6 @@ name|GET_FILEHDR_SYMPTR
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_src
 operator|->
 name|f_symptr
@@ -1874,14 +1813,10 @@ name|filehdr_dst
 operator|->
 name|f_nsyms
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_src
 operator|->
 name|f_nsyms
@@ -1891,14 +1826,10 @@ name|filehdr_dst
 operator|->
 name|f_opthdr
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_src
 operator|->
 name|f_opthdr
@@ -1908,14 +1839,10 @@ name|filehdr_dst
 operator|->
 name|f_flags
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_src
 operator|->
 name|f_flags
@@ -1928,14 +1855,10 @@ name|filehdr_dst
 operator|->
 name|f_target_id
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_src
 operator|->
 name|f_target_id
@@ -2019,7 +1942,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -2027,16 +1950,12 @@ name|filehdr_in
 operator|->
 name|f_magic
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_out
 operator|->
 name|f_magic
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -2044,16 +1963,12 @@ name|filehdr_in
 operator|->
 name|f_nscns
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_out
 operator|->
 name|f_nscns
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -2061,10 +1976,6 @@ name|filehdr_in
 operator|->
 name|f_timdat
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_out
 operator|->
 name|f_timdat
@@ -2074,23 +1985,16 @@ name|PUT_FILEHDR_SYMPTR
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|filehdr_in
 operator|->
 name|f_symptr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_out
 operator|->
 name|f_symptr
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -2098,16 +2002,12 @@ name|filehdr_in
 operator|->
 name|f_nsyms
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_out
 operator|->
 name|f_nsyms
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -2115,16 +2015,12 @@ name|filehdr_in
 operator|->
 name|f_opthdr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_out
 operator|->
 name|f_opthdr
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -2132,10 +2028,6 @@ name|filehdr_in
 operator|->
 name|f_flags
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_out
 operator|->
 name|f_flags
@@ -2144,7 +2036,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TIC80_TARGET_ID
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -2152,10 +2044,6 @@ name|filehdr_in
 operator|->
 name|f_target_id
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|filehdr_out
 operator|->
 name|f_target_id
@@ -2268,14 +2156,10 @@ name|_n_n
 operator|.
 name|_n_offset
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|e
@@ -2333,14 +2217,10 @@ name|in
 operator|->
 name|n_value
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|e_value
@@ -2350,14 +2230,10 @@ name|in
 operator|->
 name|n_scnum
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|e_scnum
@@ -2379,14 +2255,10 @@ name|in
 operator|->
 name|n_type
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|e_type
@@ -2399,14 +2271,10 @@ name|in
 operator|->
 name|n_type
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|e_type
@@ -2417,7 +2285,7 @@ name|in
 operator|->
 name|n_sclass
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -2430,7 +2298,7 @@ name|in
 operator|->
 name|n_numaux
 operator|=
-name|bfd_h_get_8
+name|H_GET_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -2515,16 +2383,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|e
@@ -2534,7 +2398,7 @@ operator|.
 name|e_zeroes
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -2546,10 +2410,6 @@ name|_n_n
 operator|.
 name|_n_offset
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|e
@@ -2603,7 +2463,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -2611,16 +2471,12 @@ name|in
 operator|->
 name|n_value
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|e_value
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -2628,10 +2484,6 @@ name|in
 operator|->
 name|n_scnum
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|e_scnum
@@ -2649,7 +2501,7 @@ operator|==
 literal|2
 condition|)
 block|{
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -2657,10 +2509,6 @@ name|in
 operator|->
 name|n_type
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|e_type
@@ -2669,7 +2517,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -2677,17 +2525,13 @@ name|in
 operator|->
 name|n_type
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|e_type
 argument_list|)
 expr_stmt|;
 block|}
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -2700,7 +2544,7 @@ operator|->
 name|e_sclass
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_8
+name|H_PUT_8
 argument_list|(
 name|abfd
 argument_list|,
@@ -2859,14 +2703,10 @@ name|x_n
 operator|.
 name|x_offset
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_file
@@ -3061,14 +2901,10 @@ name|x_tagndx
 operator|.
 name|l
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3085,14 +2921,10 @@ name|x_sym
 operator|.
 name|x_tvndx
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3185,14 +3017,10 @@ index|[
 literal|0
 index|]
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3220,14 +3048,10 @@ index|[
 literal|1
 index|]
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3255,14 +3079,10 @@ index|[
 literal|2
 index|]
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3290,14 +3110,10 @@ index|[
 literal|3
 index|]
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3329,14 +3145,10 @@ name|x_misc
 operator|.
 name|x_fsize
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3387,7 +3199,6 @@ block|}
 name|end
 label|:
 empty_stmt|;
-comment|/* the semicolon is because MSVC doesn't like labels at      end of block.  */
 ifdef|#
 directive|ifdef
 name|COFF_ADJUST_AUX_IN_POST
@@ -3536,16 +3347,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|PUTWORD
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_file
@@ -3555,7 +3362,7 @@ operator|.
 name|x_zeroes
 argument_list|)
 expr_stmt|;
-name|PUTWORD
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -3567,10 +3374,6 @@ name|x_n
 operator|.
 name|x_offset
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_file
@@ -3693,7 +3496,7 @@ goto|;
 block|}
 break|break;
 block|}
-name|PUTWORD
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -3705,10 +3508,6 @@ name|x_tagndx
 operator|.
 name|l
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3719,7 +3518,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NO_TVNDX
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -3729,10 +3528,6 @@ name|x_sym
 operator|.
 name|x_tvndx
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3812,7 +3607,7 @@ directive|error
 error|we need to cope with truncating or extending DIMNUM
 endif|#
 directive|endif
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -3829,10 +3624,6 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3847,7 +3638,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -3864,10 +3655,6 @@ index|[
 literal|1
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3882,7 +3669,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -3899,10 +3686,6 @@ index|[
 literal|2
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3917,7 +3700,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -3934,10 +3717,6 @@ index|[
 literal|3
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -3960,7 +3739,7 @@ argument_list|(
 name|type
 argument_list|)
 condition|)
-name|PUTWORD
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -3972,10 +3751,6 @@ name|x_misc
 operator|.
 name|x_fsize
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|x_sym
@@ -4117,14 +3892,10 @@ name|l_addr
 operator|.
 name|l_symndx
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|l_addr
@@ -4193,7 +3964,7 @@ operator|*
 operator|)
 name|outp
 decl_stmt|;
-name|PUTWORD
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4203,10 +3974,6 @@ name|l_addr
 operator|.
 name|l_symndx
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|l_addr
@@ -4265,37 +4032,37 @@ block|{
 name|AOUTHDR
 modifier|*
 name|aouthdr_ext
-init|=
-operator|(
-name|AOUTHDR
-operator|*
-operator|)
-name|aouthdr_ext1
 decl_stmt|;
 name|struct
 name|internal_aouthdr
 modifier|*
 name|aouthdr_int
-init|=
+decl_stmt|;
+name|aouthdr_ext
+operator|=
+operator|(
+name|AOUTHDR
+operator|*
+operator|)
+name|aouthdr_ext1
+expr_stmt|;
+name|aouthdr_int
+operator|=
 operator|(
 expr|struct
 name|internal_aouthdr
 operator|*
 operator|)
 name|aouthdr_int1
-decl_stmt|;
+expr_stmt|;
 name|aouthdr_int
 operator|->
 name|magic
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|magic
@@ -4305,14 +4072,10 @@ name|aouthdr_int
 operator|->
 name|vstamp
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|vstamp
@@ -4326,10 +4089,6 @@ name|GET_AOUTHDR_TSIZE
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|tsize
@@ -4343,10 +4102,6 @@ name|GET_AOUTHDR_DSIZE
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|dsize
@@ -4360,10 +4115,6 @@ name|GET_AOUTHDR_BSIZE
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|bsize
@@ -4377,10 +4128,6 @@ name|GET_AOUTHDR_ENTRY
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|entry
@@ -4394,10 +4141,6 @@ name|GET_AOUTHDR_TEXT_START
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|text_start
@@ -4411,10 +4154,6 @@ name|GET_AOUTHDR_DATA_START
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|data_start
@@ -4427,14 +4166,10 @@ name|aouthdr_int
 operator|->
 name|tagentries
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|tagentries
@@ -4445,7 +4180,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|APOLLO_M68
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4453,16 +4188,12 @@ name|aouthdr_int
 operator|->
 name|o_inlib
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|o_inlib
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4470,16 +4201,12 @@ name|aouthdr_int
 operator|->
 name|o_sri
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|o_sri
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4490,16 +4217,12 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|vid
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4510,10 +4233,6 @@ index|[
 literal|1
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_ext
 operator|->
 name|vid
@@ -4533,7 +4252,7 @@ name|aouthdr_int
 operator|->
 name|o_toc
 operator|=
-name|bfd_h_get_64
+name|H_GET_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -4548,7 +4267,7 @@ name|aouthdr_int
 operator|->
 name|o_toc
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4563,7 +4282,7 @@ name|aouthdr_int
 operator|->
 name|o_snentry
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -4576,7 +4295,7 @@ name|aouthdr_int
 operator|->
 name|o_sntext
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -4589,7 +4308,7 @@ name|aouthdr_int
 operator|->
 name|o_sndata
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -4602,7 +4321,7 @@ name|aouthdr_int
 operator|->
 name|o_sntoc
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -4615,7 +4334,7 @@ name|aouthdr_int
 operator|->
 name|o_snloader
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -4628,7 +4347,7 @@ name|aouthdr_int
 operator|->
 name|o_snbss
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -4641,7 +4360,7 @@ name|aouthdr_int
 operator|->
 name|o_algntext
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -4654,7 +4373,7 @@ name|aouthdr_int
 operator|->
 name|o_algndata
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -4667,7 +4386,7 @@ name|aouthdr_int
 operator|->
 name|o_modtype
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -4680,7 +4399,7 @@ name|aouthdr_int
 operator|->
 name|o_cputype
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -4696,7 +4415,7 @@ name|aouthdr_int
 operator|->
 name|o_maxstack
 operator|=
-name|bfd_h_get_64
+name|H_GET_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -4709,7 +4428,7 @@ name|aouthdr_int
 operator|->
 name|o_maxdata
 operator|=
-name|bfd_h_get_64
+name|H_GET_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -4724,7 +4443,7 @@ name|aouthdr_int
 operator|->
 name|o_maxstack
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4737,7 +4456,7 @@ name|aouthdr_int
 operator|->
 name|o_maxdata
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4757,7 +4476,7 @@ name|aouthdr_int
 operator|->
 name|bss_start
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4770,7 +4489,7 @@ name|aouthdr_int
 operator|->
 name|gp_value
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4783,7 +4502,7 @@ name|aouthdr_int
 operator|->
 name|gprmask
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4799,7 +4518,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4818,7 +4537,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4837,7 +4556,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4856,7 +4575,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4877,7 +4596,7 @@ name|aouthdr_int
 operator|->
 name|bss_start
 operator|=
-name|bfd_h_get_64
+name|H_GET_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -4890,7 +4609,7 @@ name|aouthdr_int
 operator|->
 name|gp_value
 operator|=
-name|bfd_h_get_64
+name|H_GET_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -4903,7 +4622,7 @@ name|aouthdr_int
 operator|->
 name|gprmask
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4916,7 +4635,7 @@ name|aouthdr_int
 operator|->
 name|fprmask
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -4975,7 +4694,7 @@ operator|*
 operator|)
 name|out
 decl_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -4983,16 +4702,12 @@ name|aouthdr_in
 operator|->
 name|magic
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|magic
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -5000,10 +4715,6 @@ name|aouthdr_in
 operator|->
 name|vstamp
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|vstamp
@@ -5017,10 +4728,6 @@ name|aouthdr_in
 operator|->
 name|tsize
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|tsize
@@ -5034,10 +4741,6 @@ name|aouthdr_in
 operator|->
 name|dsize
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|dsize
@@ -5051,10 +4754,6 @@ name|aouthdr_in
 operator|->
 name|bsize
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|bsize
@@ -5068,10 +4767,6 @@ name|aouthdr_in
 operator|->
 name|entry
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|entry
@@ -5085,10 +4780,6 @@ name|aouthdr_in
 operator|->
 name|text_start
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|text_start
@@ -5102,10 +4793,6 @@ name|aouthdr_in
 operator|->
 name|data_start
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|data_start
@@ -5114,7 +4801,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|I960
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5122,10 +4809,6 @@ name|aouthdr_in
 operator|->
 name|tagentries
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|tagentries
@@ -5139,7 +4822,7 @@ name|RS6000COFF_C
 ifdef|#
 directive|ifdef
 name|XCOFF64
-name|bfd_h_put_64
+name|H_PUT_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -5154,7 +4837,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5169,7 +4852,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -5182,7 +4865,7 @@ operator|->
 name|o_snentry
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -5195,7 +4878,7 @@ operator|->
 name|o_sntext
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -5208,7 +4891,7 @@ operator|->
 name|o_sndata
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -5221,7 +4904,7 @@ operator|->
 name|o_sntoc
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -5234,7 +4917,7 @@ operator|->
 name|o_snloader
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -5247,7 +4930,7 @@ operator|->
 name|o_snbss
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -5260,7 +4943,7 @@ operator|->
 name|o_algntext
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -5273,7 +4956,7 @@ operator|->
 name|o_algndata
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -5286,7 +4969,7 @@ operator|->
 name|o_modtype
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -5302,7 +4985,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|XCOFF64
-name|bfd_h_put_64
+name|H_PUT_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -5315,7 +4998,7 @@ operator|->
 name|o_maxstack
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_64
+name|H_PUT_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -5330,7 +5013,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5343,7 +5026,7 @@ operator|->
 name|o_maxstack
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5410,7 +5093,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|MIPSECOFF
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5418,16 +5101,12 @@ name|aouthdr_in
 operator|->
 name|bss_start
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|bss_start
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5435,16 +5114,12 @@ name|aouthdr_in
 operator|->
 name|gp_value
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|gp_value
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5452,16 +5127,12 @@ name|aouthdr_in
 operator|->
 name|gprmask
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|gprmask
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5472,10 +5143,6 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|cprmask
@@ -5484,7 +5151,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5495,10 +5162,6 @@ index|[
 literal|1
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|cprmask
@@ -5507,7 +5170,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5518,10 +5181,6 @@ index|[
 literal|2
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|cprmask
@@ -5530,7 +5189,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5541,10 +5200,6 @@ index|[
 literal|3
 index|]
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|cprmask
@@ -5559,43 +5214,29 @@ ifdef|#
 directive|ifdef
 name|ALPHAECOFF
 comment|/* FIXME: What does bldrev mean?  */
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 literal|2
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|bldrev
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 literal|0
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|padding
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_64
+name|H_PUT_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -5603,16 +5244,12 @@ name|aouthdr_in
 operator|->
 name|bss_start
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|bss_start
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_64
+name|H_PUT_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -5620,16 +5257,12 @@ name|aouthdr_in
 operator|->
 name|gp_value
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|gp_value
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5637,16 +5270,12 @@ name|aouthdr_in
 operator|->
 name|gprmask
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|gprmask
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -5654,10 +5283,6 @@ name|aouthdr_in
 operator|->
 name|fprmask
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|aouthdr_out
 operator|->
 name|fprmask
@@ -5755,10 +5380,6 @@ name|GET_SCNHDR_VADDR
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_vaddr
@@ -5772,10 +5393,6 @@ name|GET_SCNHDR_PADDR
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_paddr
@@ -5789,10 +5406,6 @@ name|GET_SCNHDR_SIZE
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_size
@@ -5806,10 +5419,6 @@ name|GET_SCNHDR_SCNPTR
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_scnptr
@@ -5823,10 +5432,6 @@ name|GET_SCNHDR_RELPTR
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_relptr
@@ -5840,10 +5445,6 @@ name|GET_SCNHDR_LNNOPTR
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_lnnoptr
@@ -5857,10 +5458,6 @@ name|GET_SCNHDR_FLAGS
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_flags
@@ -5874,10 +5471,6 @@ name|GET_SCNHDR_NRELOC
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_nreloc
@@ -5891,10 +5484,6 @@ name|GET_SCNHDR_NLNNO
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_nlnno
@@ -5911,10 +5500,6 @@ name|GET_SCNHDR_ALIGN
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_align
@@ -6033,10 +5618,6 @@ name|scnhdr_int
 operator|->
 name|s_vaddr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_vaddr
@@ -6050,10 +5631,6 @@ name|scnhdr_int
 operator|->
 name|s_paddr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_paddr
@@ -6067,10 +5644,6 @@ name|scnhdr_int
 operator|->
 name|s_size
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_size
@@ -6084,10 +5657,6 @@ name|scnhdr_int
 operator|->
 name|s_scnptr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_scnptr
@@ -6101,10 +5670,6 @@ name|scnhdr_int
 operator|->
 name|s_relptr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_relptr
@@ -6118,10 +5683,6 @@ name|scnhdr_int
 operator|->
 name|s_lnnoptr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_lnnoptr
@@ -6135,10 +5696,6 @@ name|scnhdr_int
 operator|->
 name|s_flags
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_flags
@@ -6150,7 +5707,7 @@ name|defined
 argument_list|(
 name|M88
 argument_list|)
-name|PUTWORD
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -6158,16 +5715,12 @@ name|scnhdr_int
 operator|->
 name|s_nlnno
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_nlnno
 argument_list|)
 expr_stmt|;
-name|PUTWORD
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -6175,10 +5728,6 @@ name|scnhdr_int
 operator|->
 name|s_nreloc
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_nreloc
@@ -6202,10 +5751,6 @@ name|scnhdr_int
 operator|->
 name|s_nlnno
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_nlnno
@@ -6282,10 +5827,6 @@ name|abfd
 argument_list|,
 literal|0xffff
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_nlnno
@@ -6308,10 +5849,6 @@ name|scnhdr_int
 operator|->
 name|s_nreloc
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_nreloc
@@ -6393,10 +5930,6 @@ name|abfd
 argument_list|,
 literal|0xffff
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_nreloc
@@ -6420,10 +5953,6 @@ name|scnhdr_int
 operator|->
 name|s_align
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|scnhdr_ext
 operator|->
 name|s_align

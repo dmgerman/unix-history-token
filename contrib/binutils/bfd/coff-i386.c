@@ -495,6 +495,9 @@ name|bfd_put_16
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|x
 argument_list|,
 name|addr
@@ -525,6 +528,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|x
 argument_list|,
 name|addr

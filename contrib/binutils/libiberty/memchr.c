@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* FUNCTION<<memchr>>---find character in memory  INDEX 	memchr  ANSI_SYNOPSIS 	#include<string.h> 	void *memchr(const void *<[src]>, int<[c]>, size_t<[length]>);  TRAD_SYNOPSIS 	#include<string.h> 	void *memchr(<[src]>,<[c]>,<[length]>) 	void *<[src]>; 	void *<[c]>; 	size_t<[length]>;  DESCRIPTION 	This function searches memory starting at<<*<[src]>>> for the 	character<[c]>.  The search only ends with the first 	occurrence of<[c]>, or after<[length]> characters; in 	particular,<<NULL>> does not terminate the search.  RETURNS 	If the character<[c]> is found within<[length]> characters 	of<<*<[src]>>>, a pointer to the character is returned. If<[c]> is not found, then<<NULL>> is returned. 	  PORTABILITY<<memchr>>  requires no supporting OS subroutines.  QUICKREF 	memchr ansi pure  */
+comment|/*  @deftypefn Supplemental void* memchr (const void *@var{s}, int @var{c}, size_t @var{n})  This function searches memory starting at @code{*@var{s}} for the character @var{c}.  The search only ends with the first occurrence of @var{c}, or after @var{length} characters; in particular, a null character does not terminate the search.  If the character @var{c} is found within @var{length} characters of @code{*@var{s}}, a pointer to the character is returned.  If @var{c} is not found, then @code{NULL} is returned.  @end deftypefn  */
 end_comment
 
 begin_include
@@ -76,9 +76,9 @@ name|src_void
 decl_stmt|;
 while|while
 condition|(
-operator|--
 name|length
-operator|>=
+operator|--
+operator|>
 literal|0
 condition|)
 block|{

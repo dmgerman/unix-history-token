@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for MIPS Extended-Coff files.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for MIPS Extended-Coff files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1304,7 +1304,7 @@ value|(sizeof mips_howto_table / sizeof mips_howto_table[0])
 end_define
 
 begin_comment
-comment|/* When the linker is doing relaxing, it may change a external PCREL16    reloc.  This typically represents an instruction like        bal foo    We change it to        .set  noreorder        bal   $L1        lui   $at,%hi(foo - $L1)      $L1:        addiu $at,%lo(foo - $L1)        addu  $at,$at,$31        jalr  $at    PCREL16_EXPANSION_ADJUSTMENT is the number of bytes this changes the    instruction by.  */
+comment|/* When the linker is doing relaxing, it may change an external PCREL16    reloc.  This typically represents an instruction like        bal foo    We change it to        .set  noreorder        bal   $L1        lui   $at,%hi(foo - $L1)      $L1:        addiu $at,%lo(foo - $L1)        addu  $at,$at,$31        jalr  $at    PCREL16_EXPANSION_ADJUSTMENT is the number of bytes this changes the    instruction by.  */
 end_comment
 
 begin_define
@@ -1452,14 +1452,10 @@ name|intern
 operator|->
 name|r_vaddr
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|r_vaddr
@@ -1851,7 +1847,7 @@ operator|&
 literal|0xffffff
 expr_stmt|;
 block|}
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -1859,10 +1855,6 @@ name|intern
 operator|->
 name|r_vaddr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|r_vaddr
@@ -2568,6 +2560,9 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 expr|*
 name|n
@@ -2816,6 +2811,9 @@ operator|(
 name|insn
 operator|&
 operator|~
+operator|(
+name|unsigned
+operator|)
 literal|0xffff
 operator|)
 operator||
@@ -2833,6 +2831,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|insn
 argument_list|,
 name|l
@@ -3162,7 +3163,7 @@ operator|++
 control|)
 block|{
 specifier|register
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3372,6 +3373,9 @@ operator|(
 name|insn
 operator|&
 operator|~
+operator|(
+name|unsigned
+operator|)
 literal|0xffff
 operator|)
 operator||
@@ -3385,6 +3389,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|insn
 argument_list|,
 operator|(
@@ -3415,13 +3422,20 @@ expr_stmt|;
 comment|/* Make sure it fit in 16 bits.  */
 if|if
 condition|(
+operator|(
+name|long
+operator|)
 name|val
 operator|>=
 literal|0x8000
-operator|&&
+operator|||
+operator|(
+name|long
+operator|)
 name|val
 operator|<
-literal|0xffff8000
+operator|-
+literal|0x8000
 condition|)
 return|return
 name|bfd_reloc_overflow
@@ -3662,6 +3676,9 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 expr|*
 name|n
@@ -3949,6 +3966,9 @@ operator|(
 name|insn
 operator|&
 operator|~
+operator|(
+name|unsigned
+operator|)
 literal|0xffff
 operator|)
 operator||
@@ -3966,6 +3986,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|insn
 argument_list|,
 name|l
@@ -4078,10 +4101,6 @@ end_function
 
 begin_comment
 comment|/* This is the special function for the MIPS_R_SWITCH reloc.  This    special reloc is normally correct in the object file, and only    requires special handling when relaxing.  We don't want    bfd_perform_relocation to tamper with it at all.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -4220,7 +4239,7 @@ name|MIPS_R_REFLO
 expr_stmt|;
 break|break;
 case|case
-name|BFD_RELOC_MIPS_GPREL
+name|BFD_RELOC_GPREL16
 case|:
 name|mips_type
 operator|=
@@ -4501,6 +4520,9 @@ operator|(
 name|insn
 operator|&
 operator|~
+operator|(
+name|unsigned
+operator|)
 literal|0xffff
 operator|)
 operator||
@@ -4630,6 +4652,9 @@ name|struct
 name|internal_reloc
 name|lo_int_rel
 decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
 name|BFD_ASSERT
 argument_list|(
 name|input_bfd
@@ -4667,9 +4692,18 @@ operator|)
 name|NULL
 condition|)
 block|{
+name|amt
+operator|=
+name|NUM_RELOC_SECTIONS
+operator|*
+sizeof|sizeof
+argument_list|(
+name|asection
+operator|*
+argument_list|)
+expr_stmt|;
 name|symndx_to_section
 operator|=
-operator|(
 operator|(
 name|asection
 operator|*
@@ -4679,17 +4713,8 @@ name|bfd_alloc
 argument_list|(
 name|input_bfd
 argument_list|,
-operator|(
-name|NUM_RELOC_SECTIONS
-operator|*
-sizeof|sizeof
-argument_list|(
-name|asection
-operator|*
+name|amt
 argument_list|)
-operator|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -5360,7 +5385,7 @@ name|info
 argument_list|,
 name|_
 argument_list|(
-literal|"GP relative relocation when GP not defined"
+literal|"GP relative relocation used when GP not defined"
 argument_list|)
 argument_list|,
 name|input_bfd
@@ -7023,6 +7048,9 @@ name|ecoff_section_tdata
 modifier|*
 name|section_tdata
 decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
 name|section_tdata
 operator|=
 name|ecoff_section_data
@@ -7044,6 +7072,14 @@ operator|)
 name|NULL
 condition|)
 block|{
+name|amt
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ecoff_section_tdata
+argument_list|)
+expr_stmt|;
 name|sec
 operator|->
 name|used_by_bfd
@@ -7055,11 +7091,7 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ecoff_section_tdata
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -7110,23 +7142,20 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_size_type
-name|external_relocs_size
-decl_stmt|;
-name|external_relocs_size
+name|amt
 operator|=
-operator|(
 name|ecoff_backend
 argument_list|(
 name|abfd
 argument_list|)
 operator|->
 name|external_reloc_size
-operator|*
+expr_stmt|;
+name|amt
+operator|*=
 name|sec
 operator|->
 name|reloc_count
-operator|)
 expr_stmt|;
 name|section_tdata
 operator|->
@@ -7139,7 +7168,7 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-name|external_relocs_size
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -7150,7 +7179,7 @@ name|external_relocs
 operator|==
 name|NULL
 operator|&&
-name|external_relocs_size
+name|amt
 operator|!=
 literal|0
 condition|)
@@ -7172,22 +7201,18 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-operator|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|section_tdata
 operator|->
 name|external_relocs
 argument_list|,
-literal|1
-argument_list|,
-name|external_relocs_size
+name|amt
 argument_list|,
 name|abfd
 argument_list|)
 operator|!=
-name|external_relocs_size
-operator|)
+name|amt
 condition|)
 return|return
 name|false
@@ -7485,6 +7510,9 @@ name|ecoff_value_adjust
 modifier|*
 name|adjust
 decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
 comment|/* If we have already expanded this reloc, we certainly don't 	 need to do it again.  */
 if|if
 condition|(
@@ -7772,9 +7800,6 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
-operator|(
-name|size_t
-operator|)
 name|sec
 operator|->
 name|_raw_size
@@ -7853,7 +7878,7 @@ argument_list|)
 operator|!=
 literal|0x0411ffff
 condition|)
-comment|/* bgezal $0,. == bal . */
+comment|/* bgezal $0,. == bal .  */
 continue|continue;
 comment|/* Bother.  We need to expand this reloc, and we will need to 	 make another relaxation pass since this change may put other 	 relocs out of range.  We need to examine the local branches 	 and we need to allocate memory to hold the offsets we must 	 add to them.  We also need to adjust the values of all 	 symbols in the object file following this location.  */
 name|sec
@@ -7878,11 +7903,14 @@ operator|)
 name|NULL
 condition|)
 block|{
-name|size_t
+name|bfd_size_type
 name|size
 decl_stmt|;
 name|size
 operator|=
+operator|(
+name|bfd_size_type
+operator|)
 name|sec
 operator|->
 name|reloc_count
@@ -7924,6 +7952,9 @@ name|offsets
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -8490,9 +8521,16 @@ name|PCREL16_EXPANSION_ADJUSTMENT
 expr_stmt|;
 block|}
 comment|/* Add an entry to the symbol value adjust list.  This is used 	 by bfd_ecoff_debug_accumulate to adjust the values of 	 internal symbols and FDR's.  */
+name|amt
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ecoff_value_adjust
+argument_list|)
+expr_stmt|;
 name|adjust
 operator|=
-operator|(
 operator|(
 expr|struct
 name|ecoff_value_adjust
@@ -8502,13 +8540,8 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ecoff_value_adjust
+name|amt
 argument_list|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -8757,6 +8790,9 @@ name|bfd_put_32
 argument_list|(
 name|input_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0x04110001
 argument_list|,
 name|location
@@ -8807,6 +8843,9 @@ name|bfd_put_32
 argument_list|(
 name|input_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0x003f0821
 argument_list|,
 name|location
@@ -8819,6 +8858,9 @@ name|bfd_put_32
 argument_list|(
 name|input_bfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0x0020f809
 argument_list|,
 name|location
@@ -8899,6 +8941,9 @@ name|bfd_byte
 modifier|*
 name|p
 decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
 name|BFD_ASSERT
 argument_list|(
 operator|!
@@ -8945,6 +8990,17 @@ condition|)
 return|return
 name|false
 return|;
+name|amt
+operator|=
+operator|(
+name|bfd_size_type
+operator|)
+name|datasec
+operator|->
+name|reloc_count
+operator|*
+literal|4
+expr_stmt|;
 name|relsec
 operator|->
 name|contents
@@ -8957,11 +9013,7 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-name|datasec
-operator|->
-name|reloc_count
-operator|*
-literal|4
+name|amt
 argument_list|)
 expr_stmt|;
 if|if
@@ -9474,6 +9526,10 @@ name|false
 block|,
 literal|4
 block|,
+name|false
+block|,
+literal|2
+block|,
 name|mips_ecoff_swap_filehdr_in
 block|,
 name|mips_ecoff_swap_aouthdr_in
@@ -9727,6 +9783,17 @@ define|#
 directive|define
 name|_bfd_ecoff_bfd_gc_sections
 value|bfd_generic_gc_sections
+end_define
+
+begin_comment
+comment|/* Merging of sections is not done.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_bfd_ecoff_bfd_merge_sections
+value|bfd_generic_merge_sections
 end_define
 
 begin_decl_stmt

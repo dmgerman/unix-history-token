@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* addr2line.c -- convert addresses to line number and function name    Copyright 1997, 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Ulrich Lauther<Ulrich.Lauther@mchp.siemens.de>     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* addr2line.c -- convert addresses to line number and function name    Copyright 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Ulrich Lauther<Ulrich.Lauther@mchp.siemens.de>     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* Derived from objdump.c and nm.c by Ulrich.Lauther@mchp.siemens.de     Usage:     addr2line [options] addr addr ...    or    addr2line [options]      both forms write results to stdout, the second form reads addresses    to be converted from stdin.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -48,14 +42,6 @@ include|#
 directive|include
 file|"bucomm.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|program_version
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -330,10 +316,40 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\ Usage: %s [-CfsHV] [-b bfdname] [--target=bfdname]\n\        [-e executable] [--exe=executable] [--demangle[=style]]\n\        [--basenames] [--functions] [addr addr ...]\n"
+literal|"Usage: %s [option(s)] [addr(s)]\n"
 argument_list|)
 argument_list|,
 name|program_name
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|" Convert addresses into line number/file name pairs.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|" If no addresses are specified on the command line, they will be read from stdin\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|" The options are:\n\   -b --target=<bfdname>  Set the binary file format\n\   -e --exe=<executable>  Set the input file name (default is a.out)\n\   -s --basenames         Strip directory names\n\   -f --functions         Show function names\n\   -C --demangle[=style]  Demangle function names\n\   -h --help              Display this information\n\   -v --version           Display the program's version\n\ \n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|list_supported_targets
@@ -1059,6 +1075,22 @@ end_function
 begin_escape
 end_escape
 
+begin_decl_stmt
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -1102,6 +1134,21 @@ argument_list|)
 name|setlocale
 argument_list|(
 name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
 argument_list|,
 literal|""
 argument_list|)
@@ -1155,7 +1202,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Ce:sfHV"
+literal|"b:Ce:sfHhVv"
 argument_list|,
 name|long_options
 argument_list|,
@@ -1179,7 +1226,7 @@ case|case
 literal|0
 case|:
 break|break;
-comment|/* we've been given a long option */
+comment|/* We've been given a long option.  */
 case|case
 literal|'b'
 case|:
@@ -1261,6 +1308,9 @@ name|true
 expr_stmt|;
 break|break;
 case|case
+literal|'v'
+case|:
+case|case
 literal|'V'
 case|:
 name|print_version
@@ -1269,6 +1319,9 @@ literal|"addr2line"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'h'
+case|:
 case|case
 literal|'H'
 case|:

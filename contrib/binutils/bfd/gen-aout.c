@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate parameters for an a.out system.    Copyright 1990, 1991, 1992, 1993, 1994, 1995    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate parameters for an a.out system.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 2001    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -315,14 +315,29 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"#define DEFAULT_ARCH bfd_arch_%s\n"
+literal|"#define DEFAULT_ARCH bfd_arch_%s\n\n"
 argument_list|,
 name|arch
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n#define MY(OP) CAT(%s_,OP)\n"
+literal|"/* Do not \"beautify\" the CONCAT* macro args.  Traditional C will not"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   remove whitespace added here, and thus will fail to concatenate"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   the tokens.  */"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n#define MY(OP) CONCAT2 (%s_,OP)\n\n"
 argument_list|,
 name|target
 argument_list|)

@@ -431,182 +431,182 @@ begin_define
 define|#
 directive|define
 name|GET_FILEHDR_SYMPTR
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_FILEHDR_SYMPTR
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_TSIZE
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_TSIZE
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_DSIZE
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_DSIZE
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_BSIZE
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_BSIZE
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_ENTRY
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_ENTRY
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_TEXT_START
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_TEXT_START
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_AOUTHDR_DATA_START
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_AOUTHDR_DATA_START
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_SCNHDR_PADDR
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_PADDR
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_SCNHDR_VADDR
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_VADDR
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_SCNHDR_SIZE
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_SIZE
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_SCNHDR_SCNPTR
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_SCNPTR
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_SCNHDR_RELPTR
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_RELPTR
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|GET_SCNHDR_LNNOPTR
-value|bfd_h_get_64
+value|H_GET_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUT_SCNHDR_LNNOPTR
-value|bfd_h_put_64
+value|H_PUT_64
 end_define
 
 begin_define
@@ -1875,14 +1875,10 @@ name|intern
 operator|->
 name|r_vaddr
 operator|=
-name|bfd_h_get_64
+name|H_GET_64
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|r_vaddr
@@ -1892,14 +1888,10 @@ name|intern
 operator|->
 name|r_symndx
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|r_symndx
@@ -2221,7 +2213,7 @@ literal|14
 operator|)
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_64
+name|H_PUT_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -2229,25 +2221,17 @@ name|intern
 operator|->
 name|r_vaddr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|r_vaddr
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
 name|symndx
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext
 operator|->
 name|r_symndx
@@ -2868,6 +2852,9 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
+operator|(
+name|bfd_size_type
+operator|)
 name|reloc_size
 argument_list|)
 expr_stmt|;
@@ -4729,6 +4716,10 @@ argument_list|)
 expr_stmt|;
 name|r_symndx
 operator|=
+operator|(
+name|unsigned
+name|long
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -5018,6 +5009,10 @@ if|if
 condition|(
 name|r_symndx
 operator|==
+operator|(
+name|unsigned
+name|long
+operator|)
 operator|-
 literal|1
 condition|)
@@ -5063,6 +5058,10 @@ if|if
 condition|(
 name|r_symndx
 operator|==
+operator|(
+name|unsigned
+name|long
+operator|)
 operator|-
 literal|1
 condition|)
@@ -5079,19 +5078,12 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* Write out the new r_symndx value.  */
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|input_bfd
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 name|r_symndx
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext_rel
 operator|->
 name|r_symndx
@@ -5190,6 +5182,9 @@ name|external_reloc
 modifier|*
 name|ext_rel_end
 decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
 comment|/* We keep a table mapping the symndx found in an internal reloc to      the appropriate section.  This is faster than looking up the      section by name each time.  */
 name|symndx_to_section
 operator|=
@@ -5212,9 +5207,18 @@ operator|)
 name|NULL
 condition|)
 block|{
+name|amt
+operator|=
+name|NUM_RELOC_SECTIONS
+operator|*
+sizeof|sizeof
+argument_list|(
+name|asection
+operator|*
+argument_list|)
+expr_stmt|;
 name|symndx_to_section
 operator|=
-operator|(
 operator|(
 name|asection
 operator|*
@@ -5224,17 +5228,8 @@ name|bfd_alloc
 argument_list|(
 name|input_bfd
 argument_list|,
-operator|(
-name|NUM_RELOC_SECTIONS
-operator|*
-sizeof|sizeof
-argument_list|(
-name|asection
-operator|*
+name|amt
 argument_list|)
-operator|)
-argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -5494,6 +5489,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|amt
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ecoff_section_tdata
+argument_list|)
+expr_stmt|;
 name|lita_sec_data
 operator|=
 operator|(
@@ -5506,11 +5509,7 @@ name|bfd_zalloc
 argument_list|(
 name|input_bfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ecoff_section_tdata
-argument_list|)
+name|amt
 argument_list|)
 operator|)
 expr_stmt|;
@@ -5784,14 +5783,10 @@ name|addend
 decl_stmt|;
 name|r_vaddr
 operator|=
-name|bfd_h_get_64
+name|H_GET_64
 argument_list|(
 name|input_bfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext_rel
 operator|->
 name|r_vaddr
@@ -5799,14 +5794,10 @@ argument_list|)
 expr_stmt|;
 name|r_symndx
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|input_bfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext_rel
 operator|->
 name|r_symndx
@@ -5914,7 +5905,7 @@ name|info
 operator|->
 name|relocateable
 condition|)
-name|bfd_h_put_64
+name|H_PUT_64
 argument_list|(
 name|input_bfd
 argument_list|,
@@ -5924,10 +5915,6 @@ name|output_offset
 operator|+
 name|r_vaddr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext_rel
 operator|->
 name|r_vaddr
@@ -6620,16 +6607,12 @@ name|relocateable
 condition|)
 block|{
 comment|/* Adjust r_vaddr by the addend.  */
-name|bfd_h_put_64
+name|H_PUT_64
 argument_list|(
 name|input_bfd
 argument_list|,
 name|addend
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext_rel
 operator|->
 name|r_vaddr
@@ -7401,7 +7384,7 @@ name|adjust_addrp
 condition|)
 block|{
 comment|/* Change the address of the relocation.  */
-name|bfd_h_put_64
+name|H_PUT_64
 argument_list|(
 name|input_bfd
 argument_list|,
@@ -7423,10 +7406,6 @@ operator|+
 name|r_vaddr
 operator|)
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|ext_rel
 operator|->
 name|r_vaddr
@@ -7457,7 +7436,7 @@ name|info
 argument_list|,
 name|_
 argument_list|(
-literal|"GP relative relocation when GP not defined"
+literal|"GP relative relocation used when GP not defined"
 argument_list|)
 argument_list|,
 name|input_bfd
@@ -7751,6 +7730,9 @@ name|bfd_seek
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|file_ptr
+operator|)
 name|FILHSZ
 argument_list|,
 name|SEEK_CUR
@@ -7758,12 +7740,13 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|ab
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|8
 argument_list|,
 name|abfd
@@ -7775,12 +7758,17 @@ name|bfd_seek
 argument_list|(
 name|abfd
 argument_list|,
+call|(
+name|file_ptr
+call|)
+argument_list|(
 operator|-
 operator|(
 name|FILHSZ
 operator|+
 literal|8
 operator|)
+argument_list|)
 argument_list|,
 name|SEEK_CUR
 argument_list|)
@@ -7794,7 +7782,7 @@ name|ret
 operator|->
 name|parsed_size
 operator|=
-name|bfd_h_get_64
+name|H_GET_64
 argument_list|(
 name|abfd
 argument_list|,
@@ -7946,7 +7934,7 @@ condition|)
 return|return
 name|nbfd
 return|;
-comment|/* We must uncompress this element.  We do this by copying it into a      memory buffer, and making bfd_read and bfd_seek use that buffer.      This can use a lot of memory, but it's simpler than getting a      temporary file, making that work with the file descriptor caching      code, and making sure that it is deleted at all appropriate      times.  It can be changed if it ever becomes important.  */
+comment|/* We must uncompress this element.  We do this by copying it into a      memory buffer, and making bfd_bread and bfd_seek use that buffer.      This can use a lot of memory, but it's simpler than getting a      temporary file, making that work with the file descriptor caching      code, and making sure that it is deleted at all appropriate      times.  It can be changed if it ever becomes important.  */
 comment|/* The compressed file starts with a dummy ECOFF file header.  */
 if|if
 condition|(
@@ -7954,6 +7942,9 @@ name|bfd_seek
 argument_list|(
 name|nbfd
 argument_list|,
+operator|(
+name|file_ptr
+operator|)
 name|FILHSZ
 argument_list|,
 name|SEEK_SET
@@ -7967,12 +7958,13 @@ goto|;
 comment|/* The next eight bytes are the real file size.  */
 if|if
 condition|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|ab
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|8
 argument_list|,
 name|nbfd
@@ -7985,7 +7977,7 @@ name|error_return
 goto|;
 name|size
 operator|=
-name|bfd_h_get_64
+name|H_GET_64
 argument_list|(
 name|nbfd
 argument_list|,
@@ -8053,12 +8045,13 @@ expr_stmt|;
 comment|/* I don't know what the next eight bytes are for.  */
 if|if
 condition|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|ab
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|8
 argument_list|,
 name|nbfd
@@ -8086,13 +8079,14 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|bfd_read
+name|bfd_bread
 argument_list|(
 operator|&
 name|b
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|1
 argument_list|,
 name|nbfd
@@ -8148,13 +8142,14 @@ block|{
 if|if
 condition|(
 operator|!
-name|bfd_read
+name|bfd_bread
 argument_list|(
 operator|&
 name|n
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 literal|1
 argument_list|,
 name|nbfd
@@ -8225,6 +8220,9 @@ name|bfd_alloc
 argument_list|(
 name|nbfd
 argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -8953,6 +8951,13 @@ define|#
 directive|define
 name|_bfd_ecoff_bfd_gc_sections
 value|bfd_generic_gc_sections
+end_define
+
+begin_define
+define|#
+directive|define
+name|_bfd_ecoff_bfd_merge_sections
+value|bfd_generic_merge_sections
 end_define
 
 begin_decl_stmt

@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sysdep.h"
 end_include
 
@@ -219,7 +225,7 @@ literal|16
 block|,
 literal|"1011 1011 ssN0 1001 0000 rrrr ddN0 1000"
 block|,
-literal|"ldd @rs,@rd,rr"
+literal|"ldd @rd,@rs,rr"
 block|,
 literal|0
 block|,
@@ -231,7 +237,7 @@ literal|16
 block|,
 literal|"1011 1011 ssN0 1001 0000 rrrr ddN0 0000"
 block|,
-literal|"lddr @rs,@rd,rr"
+literal|"lddr @rd,@rs,rr"
 block|,
 literal|0
 block|,
@@ -241,9 +247,9 @@ literal|11
 block|,
 literal|8
 block|,
-literal|"1011 1011 ssN0 1001 0000 rrrr ddN0 0000"
+literal|"1011 1010 ssN0 1001 0000 rrrr ddN0 0000"
 block|,
-literal|"lddrb @rs,@rd,rr"
+literal|"lddrb @rd,@rs,rr"
 block|,
 literal|0
 block|,
@@ -339,7 +345,7 @@ literal|8
 block|,
 literal|"1011 1010 ssN0 1001 0000 rrrr ddN0 1000"
 block|,
-literal|"lddb @rs,@rd,rr"
+literal|"lddb @rd,@rs,rr"
 block|,
 literal|0
 block|,
@@ -1201,7 +1207,7 @@ literal|7
 block|,
 literal|16
 block|,
-literal|"1000 1101 imm4 0101"
+literal|"1000 1101 flags 0101"
 block|,
 literal|"comflg flags"
 block|,
@@ -1477,7 +1483,7 @@ literal|11
 block|,
 literal|16
 block|,
-literal|"1111 dddd 1disp7"
+literal|"1111 dddd 0disp7"
 block|,
 literal|"dbjnz rbd,disp7"
 block|,
@@ -1717,7 +1723,7 @@ literal|11
 block|,
 literal|16
 block|,
-literal|"1111 dddd 0disp7"
+literal|"1111 dddd 1disp7"
 block|,
 literal|"djnz rd,disp7"
 block|,
@@ -1921,7 +1927,7 @@ literal|10
 block|,
 literal|8
 block|,
-literal|"0011 1100 dddd 0100 imm16"
+literal|"0011 1010 dddd 0100 imm16"
 block|,
 literal|"inb rbd,imm16"
 block|,
@@ -2053,7 +2059,7 @@ literal|21
 block|,
 literal|8
 block|,
-literal|"0011 1100 ssN0 0000 0000 aaaa ddN0 1000"
+literal|"0011 1010 ssN0 0000 0000 aaaa ddN0 1000"
 block|,
 literal|"inib @rd,@rs,ra"
 block|,
@@ -2065,7 +2071,7 @@ literal|21
 block|,
 literal|16
 block|,
-literal|"0011 1100 ssN0 0000 0000 aaaa ddN0 0000"
+literal|"0011 1010 ssN0 0000 0000 aaaa ddN0 0000"
 block|,
 literal|"inibr @rd,@rs,ra"
 block|,
@@ -2353,7 +2359,7 @@ literal|12
 block|,
 literal|8
 block|,
-literal|"0100 1110 ddN0 ssN0 address_dst"
+literal|"0110 1110 ddN0 ssss address_dst"
 block|,
 literal|"ldb address_dst(rd),rbs"
 block|,
@@ -2749,7 +2755,7 @@ literal|15
 block|,
 literal|16
 block|,
-literal|"0101 1100 ddN0 1001 0000 ssN0 0000 nminus1 address_dst"
+literal|"0101 1100 ddN0 1001 0000 ssss 0000 nminus1 address_dst"
 block|,
 literal|"ldm address_dst(rd),rs,n"
 block|,
@@ -3371,7 +3377,7 @@ literal|"---V--"
 block|,
 literal|0
 block|,
-literal|8
+literal|16
 block|,
 literal|"0011 1010 ssN0 1010 0000 aaaa ddN0 1000"
 block|,
@@ -3383,9 +3389,21 @@ literal|"---V--"
 block|,
 literal|0
 block|,
-literal|8
+literal|16
 block|,
-literal|"0011 1100 ssN0 0010 0000 aaaa ddN0 1000"
+literal|"0011 1011 ssN0 0010 0000 aaaa ddN0 1000"
+block|,
+literal|"outi @rd,@rs,ra"
+block|,
+literal|0
+block|,
+literal|"---V--"
+block|,
+literal|0
+block|,
+literal|16
+block|,
+literal|"0011 1010 ssN0 0010 0000 aaaa ddN0 1000"
 block|,
 literal|"outib @rd,@rs,ra"
 block|,
@@ -3397,7 +3415,7 @@ literal|0
 block|,
 literal|16
 block|,
-literal|"0011 1100 ssN0 0010 0000 aaaa ddN0 0000"
+literal|"0011 1010 ssN0 0010 0000 aaaa ddN0 0000"
 block|,
 literal|"outibr @rd,@rs,ra"
 block|,
@@ -3733,9 +3751,9 @@ literal|7
 block|,
 literal|16
 block|,
-literal|"1000 1101 imm4 0011"
+literal|"1000 1101 flags 0011"
 block|,
-literal|"resflg imm4"
+literal|"resflg flags"
 block|,
 literal|0
 block|,
@@ -4105,9 +4123,9 @@ literal|7
 block|,
 literal|16
 block|,
-literal|"1000 1101 imm4 0001"
+literal|"1000 1101 flags 0001"
 block|,
-literal|"setflg imm4"
+literal|"setflg flags"
 block|,
 literal|0
 block|,
@@ -4117,7 +4135,7 @@ literal|0
 block|,
 literal|8
 block|,
-literal|"0011 1100 dddd 0101 imm16"
+literal|"0011 1010 dddd 0101 imm16"
 block|,
 literal|"sinb rbd,imm16"
 block|,
@@ -4129,9 +4147,9 @@ literal|0
 block|,
 literal|8
 block|,
-literal|"0011 1101 dddd 0101 imm16"
+literal|"0011 1011 dddd 0101 imm16"
 block|,
-literal|"sinb rd,imm16"
+literal|"sin rd,imm16"
 block|,
 literal|0
 block|,
@@ -4165,7 +4183,7 @@ literal|0
 block|,
 literal|8
 block|,
-literal|"0011 1100 ssN0 0001 0000 aaaa ddN0 1000"
+literal|"0011 1010 ssN0 0001 0000 aaaa ddN0 1000"
 block|,
 literal|"sinib @rd,@rs,ra"
 block|,
@@ -4177,7 +4195,7 @@ literal|0
 block|,
 literal|16
 block|,
-literal|"0011 1100 ssN0 0001 0000 aaaa ddN0 0000"
+literal|"0011 1010 ssN0 0001 0000 aaaa ddN0 0000"
 block|,
 literal|"sinibr @rd,@rs,ra"
 block|,
@@ -4309,7 +4327,7 @@ literal|0
 block|,
 literal|8
 block|,
-literal|"0011 1100 ssN0 0011 0000 aaaa ddN0 1000"
+literal|"0011 1010 ssN0 0011 0000 aaaa ddN0 1000"
 block|,
 literal|"soutib @rd,@rs,ra"
 block|,
@@ -4321,7 +4339,7 @@ literal|0
 block|,
 literal|16
 block|,
-literal|"0011 1100 ssN0 0011 0000 aaaa ddN0 0000"
+literal|"0011 1010 ssN0 0011 0000 aaaa ddN0 0000"
 block|,
 literal|"soutibr @rd,@rs,ra"
 block|,
@@ -4345,7 +4363,7 @@ literal|13
 block|,
 literal|8
 block|,
-literal|"1011 0010 dddd 1001 1111 1111 nim8"
+literal|"1011 0010 dddd 1001 0000 0000 nim8"
 block|,
 literal|"srab rbd,imm8"
 block|,
@@ -4381,7 +4399,7 @@ literal|13
 block|,
 literal|8
 block|,
-literal|"1011 0010 dddd 0001 1111 1111 nim8"
+literal|"1011 0010 dddd 0001 0000 0000 nim8"
 block|,
 literal|"srlb rbd,imm8"
 block|,
@@ -4441,7 +4459,7 @@ literal|7
 block|,
 literal|16
 block|,
-literal|"0000 0010 0000 dddd imm16"
+literal|"0000 0011 0000 dddd imm16"
 block|,
 literal|"sub rd,imm16"
 block|,
@@ -4801,6 +4819,18 @@ literal|25
 block|,
 literal|8
 block|,
+literal|"1011 1000 aaN0 1010 0000 rrrr bbN0 0000"
+block|,
+literal|"trtdb @ra,@rb,rbr"
+block|,
+literal|0
+block|,
+literal|"-ZSV--"
+block|,
+literal|25
+block|,
+literal|8
+block|,
 literal|"1011 1000 aaN0 1110 0000 rrrr bbN0 1110"
 block|,
 literal|"trtdrb @ra,@rb,rbr"
@@ -4815,7 +4845,7 @@ literal|8
 block|,
 literal|"1011 1000 aaN0 0010 0000 rrrr bbN0 0000"
 block|,
-literal|"trtib @ra,@rb,rr"
+literal|"trtib @ra,@rb,rbr"
 block|,
 literal|0
 block|,
@@ -5056,6 +5086,30 @@ block|,
 literal|"1000 1000 ssss dddd"
 block|,
 literal|"xorb rbd,rbs"
+block|,
+literal|0
+block|,
+literal|"------"
+block|,
+literal|7
+block|,
+literal|32
+block|,
+literal|"1000 1100 dddd 0001"
+block|,
+literal|"ldctlb rbd,ctrl"
+block|,
+literal|0
+block|,
+literal|"CZSVDH"
+block|,
+literal|7
+block|,
+literal|32
+block|,
+literal|"1000 1100 ssss 1001"
+block|,
+literal|"ldctlb ctrl,rbs"
 block|,
 literal|0
 block|,
@@ -6473,6 +6527,11 @@ name|op
 modifier|*
 name|new
 init|=
+operator|(
+expr|struct
+name|op
+operator|*
+operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -6733,6 +6792,11 @@ name|op
 modifier|*
 name|new
 init|=
+operator|(
+expr|struct
+name|op
+operator|*
+operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -7960,6 +8024,26 @@ argument_list|(
 literal|"#define OPC_rsvdbf 172\n"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define OPC_outi 173\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define OPC_ldctlb 174\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define OPC_sin 175\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define OPC_trtdb 176\n"
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -8013,7 +8097,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"void (*func)();\n"
+literal|"void (*func) PARAMS ((void));\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -8238,7 +8322,17 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"0,0};\n"
+literal|"\n/* end marker */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"{\n#ifdef NICENAMES\nNULL,0,0,\n0,\n#endif\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"NULL,0,0,{0,0,0,0},{0,0,0,0,0,0,0,0,0,0},0,0,0}\n};\n"
 argument_list|)
 expr_stmt|;
 name|printf

@@ -4,7 +4,7 @@ comment|/* Simple implementation of strstr for systems without it.    This funct
 end_comment
 
 begin_comment
-comment|/*  NAME  	strstr -- locate first occurance of a substring  SYNOPSIS  	#include<string.h>  	char *strstr (char *s1, char *s2)  DESCRIPTION  	Locates the first occurance in the string pointed to by S1 of 	the string pointed to by S2.  Returns a pointer to the substring 	found, or a NULL pointer if not found.  If S2 points to a string 	with zero length, the function returns S1. 	 BUGS  */
+comment|/*  @deftypefn Supplemental char* strstr (const char *@var{string}, const char *@var{sub})  This function searches for the substring @var{sub} in the string @var{string}, not including the terminating null characters.  A pointer to the first occurrence of @var{sub} is returned, or @code{NULL} if the substring is absent.  If @var{sub} points to a string with zero length, the function returns @var{string}.  @end deftypefn   */
 end_comment
 
 begin_comment

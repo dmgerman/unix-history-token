@@ -376,6 +376,18 @@ specifier|extern
 name|htab_eq
 name|htab_eq_pointer
 decl_stmt|;
+comment|/* A hash function for null-terminated strings.  */
+specifier|extern
+name|hashval_t
+name|htab_hash_string
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

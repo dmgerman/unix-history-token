@@ -4,15 +4,6 @@ comment|/* ldver.h -- Header file for ldver.c.    Copyright 1991, 1992, 1993, 19
 end_comment
 
 begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|ld_program_version
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|ldversion
 name|PARAMS

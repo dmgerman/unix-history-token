@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for MIPS PE COFF files.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.    Modified from coff-i386.c by DJ Delorie, dj@cygnus.com  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for MIPS PE COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001 Free Software Foundation, Inc.    Modified from coff-i386.c by DJ Delorie, dj@cygnus.com  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -140,6 +140,116 @@ unit|static void mips_ecoff_swap_reloc_in PARAMS ((bfd *, PTR, 					      struct
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|in_reloc_p
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|reloc_howto_type
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|coff_mips_reloc_type_lookup
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|bfd_reloc_code_real_type
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|mips_swap_reloc_in
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|mips_swap_reloc_out
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|coff_pe_mips_relocate_section
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|bfd_byte
+operator|*
+operator|,
+expr|struct
+name|internal_reloc
+operator|*
+operator|,
+expr|struct
+name|internal_syment
+operator|*
+operator|,
+name|asection
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -391,6 +501,9 @@ name|bfd_put_16
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|x
 argument_list|,
 name|addr
@@ -421,6 +534,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|x
 argument_list|,
 name|addr
@@ -448,7 +564,7 @@ name|COFF_WITH_PE
 end_ifdef
 
 begin_comment
-comment|/* Return true if this relocation should    appear in the output .reloc section. */
+comment|/* Return true if this relocation should    appear in the output .reloc section.  */
 end_comment
 
 begin_function
@@ -1478,7 +1594,7 @@ name|MIPS_R_REFLO
 expr_stmt|;
 break|break;
 case|case
-name|BFD_RELOC_MIPS_GPREL
+name|BFD_RELOC_GPREL16
 case|:
 name|mips_type
 operator|=
@@ -1574,14 +1690,10 @@ name|reloc_dst
 operator|->
 name|r_vaddr
 operator|=
-name|bfd_h_get_32
+name|H_GET_32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_src
 operator|->
 name|r_vaddr
@@ -1591,14 +1703,10 @@ name|reloc_dst
 operator|->
 name|r_symndx
 operator|=
-name|bfd_h_get_signed_32
+name|H_GET_S32
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_src
 operator|->
 name|r_symndx
@@ -1608,14 +1716,10 @@ name|reloc_dst
 operator|->
 name|r_type
 operator|=
-name|bfd_h_get_16
+name|H_GET_16
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_src
 operator|->
 name|r_type
@@ -1680,7 +1784,7 @@ name|r_offset
 operator|-=
 literal|0x10000
 expr_stmt|;
-comment|/*printf("dj: pair offset is %08x\n", reloc_dst->r_offset);*/
+comment|/*printf ("dj: pair offset is %08x\n", reloc_dst->r_offset);*/
 name|reloc_dst
 operator|->
 name|r_symndx
@@ -1789,7 +1893,7 @@ name|prev_addr
 condition|)
 block|{
 comment|/* FIXME: only slightly hackish.  If we see a REFLO pointing to 	     the same address as a REFHI, we assume this is the matching 	     PAIR reloc and output it accordingly.  The symndx is really 	     the low 16 bits of the addend */
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -1797,16 +1901,12 @@ name|reloc_src
 operator|->
 name|r_vaddr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_dst
 operator|->
 name|r_vaddr
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -1814,25 +1914,17 @@ name|reloc_src
 operator|->
 name|r_symndx
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_dst
 operator|->
 name|r_symndx
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
 name|MIPS_R_PAIR
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_dst
 operator|->
 name|r_type
@@ -1844,7 +1936,7 @@ return|;
 block|}
 break|break;
 block|}
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -1852,16 +1944,12 @@ name|reloc_src
 operator|->
 name|r_vaddr
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_dst
 operator|->
 name|r_vaddr
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_32
+name|H_PUT_32
 argument_list|(
 name|abfd
 argument_list|,
@@ -1869,16 +1957,12 @@ name|reloc_src
 operator|->
 name|r_symndx
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_dst
 operator|->
 name|r_symndx
 argument_list|)
 expr_stmt|;
-name|bfd_h_put_16
+name|H_PUT_16
 argument_list|(
 name|abfd
 argument_list|,
@@ -1886,10 +1970,6 @@ name|reloc_src
 operator|->
 name|r_type
 argument_list|,
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|reloc_dst
 operator|->
 name|r_type
@@ -2022,7 +2102,7 @@ argument_list|(
 literal|"\ %s: `ld -r' not supported with PE MIPS objects\n"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|input_bfd
 argument_list|)
@@ -2055,7 +2135,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("dj: relocate %s(%s) %08x\n", 	 input_bfd->filename, input_section->name, 	 input_section->output_section->vma + input_section->output_offset);
+block|printf ("dj: relocate %s(%s) %08x\n", 	 input_bfd->filename, input_section->name, 	 input_section->output_section->vma + input_section->output_offset);
 endif|#
 directive|endif
 name|gp
@@ -2502,7 +2582,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("dj: reloc %02x %-8s a=%08x/%08x(%08x) v=%08x+%08x %s\n", 	     rel->r_type, howto_table[rel->r_type].name, 	     src, rel->r_vaddr, *(unsigned long *)mem, val, rel->r_offset, 	     h?h->root.root.string:"(none)");
+block|printf ("dj: reloc %02x %-8s a=%08x/%08x(%08x) v=%08x+%08x %s\n", 	     rel->r_type, howto_table[rel->r_type].name, 	     src, rel->r_vaddr, *(unsigned long *)mem, val, rel->r_offset, 	     h?h->root.root.string:"(none)");
 endif|#
 directive|endif
 comment|/* OK, at this point the following variables are set up: 	   src = VMA of the memory we're fixing up 	   mem = pointer to memory we're fixing up 	   val = VMA of what we need to refer to       */
@@ -2512,7 +2592,7 @@ name|UI
 parameter_list|(
 name|x
 parameter_list|)
-value|(*_bfd_error_handler)(_("%s: unimplemented %s\n"), \ 				    bfd_get_filename (input_bfd), x); \ 	      bfd_set_error (bfd_error_bad_value);
+value|(*_bfd_error_handler) (_("%s: unimplemented %s\n"), \ 				     bfd_archive_filename (input_bfd), x); \ 	      bfd_set_error (bfd_error_bad_value);
 switch|switch
 condition|(
 name|rel
@@ -2546,7 +2626,7 @@ argument_list|,
 name|mem
 argument_list|)
 expr_stmt|;
-comment|/* printf("refword: src=%08x targ=%08x+%08x\n", src, tmp, val); */
+comment|/* printf ("refword: src=%08x targ=%08x+%08x\n", src, tmp, val); */
 name|tmp
 operator|+=
 name|val
@@ -2610,7 +2690,7 @@ argument_list|(
 literal|"%s: jump too far away\n"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|input_bfd
 argument_list|)
@@ -2759,7 +2839,7 @@ argument_list|(
 literal|"%s: bad pair/reflo after refhi\n"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|input_bfd
 argument_list|)
@@ -2820,7 +2900,7 @@ operator|&
 literal|0xffff
 operator|)
 expr_stmt|;
-comment|/* printf("refword: src=%08x targ=%08x\n", src, targ); */
+comment|/* printf ("refword: src=%08x targ=%08x\n", src, targ); */
 name|tmp
 operator|&=
 literal|0xffff0000
@@ -2901,7 +2981,7 @@ argument_list|,
 name|mem
 argument_list|)
 expr_stmt|;
-comment|/* printf("rva: src=%08x targ=%08x+%08x\n", src, tmp, val); */
+comment|/* printf ("rva: src=%08x targ=%08x+%08x\n", src, tmp, val); */
 name|tmp
 operator|+=
 name|val
@@ -3199,7 +3279,7 @@ block|,
 name|bfd_putl16
 block|,
 comment|/* hdrs */
-comment|/* Note that we allow an object file to be treated as a core file as well. */
+comment|/* Note that we allow an object file to be treated as a core file as well.  */
 block|{
 name|_bfd_dummy_target
 block|,

@@ -350,6 +350,7 @@ name|N_HEADER_IN_TEXT
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|(((x).a_entry& (TARGET_PAGE_SIZE-1))>= EXEC_BYTES_SIZE)
 end_define
 
@@ -438,13 +439,9 @@ value|(
 comment|/* The address of a QMAGIC file is always one page in, */
 value|\
 comment|/* with the header in the text.  */
-value|\      N_IS_QMAGIC (x) ? TARGET_PAGE_SIZE + EXEC_BYTES_SIZE : \      N_MAGIC(x) != ZMAGIC ? 0 :
+value|\      N_IS_QMAGIC (x)							\      ? (bfd_vma) TARGET_PAGE_SIZE + EXEC_BYTES_SIZE			\      : (N_MAGIC (x) != ZMAGIC						\ 	? (bfd_vma) 0
 comment|/* object file or NMAGIC */
-value|\      N_SHARED_LIB(x) ? 0 :	\      N_HEADER_IN_TEXT(x)  ?	\ 	    TEXT_START_ADDR + EXEC_BYTES_SIZE :
-comment|/* no padding */
-value|\ 	    TEXT_START_ADDR
-comment|/* a page of padding */
-value|\     )
+value|\ 	: (N_SHARED_LIB (x)						\ 	   ? (bfd_vma) 0						\ 	   : (N_HEADER_IN_TEXT (x)					\ 	      ? (bfd_vma) TEXT_START_ADDR + EXEC_BYTES_SIZE		\ 	      : (bfd_vma) TEXT_START_ADDR))))
 end_define
 
 begin_endif
@@ -505,11 +502,11 @@ parameter_list|)
 define|\
 value|(
 comment|/* For {O,N,Q}MAGIC, no padding.  */
-value|\      N_MAGIC(x) != ZMAGIC ? EXEC_BYTES_SIZE : \      N_SHARED_LIB(x) ? 0 : \      N_HEADER_IN_TEXT(x) ?	\ 	    EXEC_BYTES_SIZE :
+value|\      N_MAGIC (x) != ZMAGIC						\      ? EXEC_BYTES_SIZE							\      : (N_SHARED_LIB (x)						\ 	? 0								\ 	: (N_HEADER_IN_TEXT (x)						\ 	   ? EXEC_BYTES_SIZE
 comment|/* no padding */
-value|\ 	    ZMAGIC_DISK_BLOCK_SIZE
+value|\ 	   : ZMAGIC_DISK_BLOCK_SIZE
 comment|/* a page of padding */
-value|\     )
+value|)))
 end_define
 
 begin_endif
@@ -537,11 +534,11 @@ parameter_list|)
 define|\
 value|(
 comment|/* For QMAGIC, we don't consider the header part of the text section.  */
-value|\      N_IS_QMAGIC (x) ? (x).a_text - EXEC_BYTES_SIZE : \      (N_MAGIC(x) != ZMAGIC || N_SHARED_LIB(x)) ? (x).a_text : \      N_HEADER_IN_TEXT(x)  ?	\ 	    (x).a_text - EXEC_BYTES_SIZE:
+value|\    N_IS_QMAGIC (x)							\    ? (x).a_text - EXEC_BYTES_SIZE					\    : ((N_MAGIC (x) != ZMAGIC || N_SHARED_LIB (x))			\       ? (x).a_text							\       : (N_HEADER_IN_TEXT (x)						\ 	 ? (x).a_text - EXEC_BYTES_SIZE
 comment|/* no padding */
-value|\ 	    (x).a_text
+value|\ 	 : (x).a_text
 comment|/* a page of padding */
-value|\     )
+value|)))
 end_define
 
 begin_endif
@@ -567,7 +564,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(N_MAGIC(x)==OMAGIC? (N_TXTADDR(x)+N_TXTSIZE(x)) \      :  (N_SEGSIZE(x) + ((N_TXTADDR(x)+N_TXTSIZE(x)-1)& ~(N_SEGSIZE(x)-1))))
+value|(N_MAGIC (x) == OMAGIC						\    ? (N_TXTADDR (x) + N_TXTSIZE (x))					\    : (N_SEGSIZE (x) + ((N_TXTADDR (x) + N_TXTSIZE (x) - 1)		\& ~ (bfd_vma) (N_SEGSIZE (x) - 1))))
 end_define
 
 begin_endif
@@ -586,7 +583,7 @@ name|N_BSSADDR
 parameter_list|(
 name|x
 parameter_list|)
-value|(N_DATADDR(x) + (x).a_data)
+value|(N_DATADDR (x) + (x).a_data)
 end_define
 
 begin_comment
@@ -610,8 +607,7 @@ name|N_DATOFF
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|(N_TXTOFF(x) + N_TXTSIZE(x))
+value|( N_TXTOFF (x) + N_TXTSIZE (x) )
 end_define
 
 begin_endif
@@ -632,7 +628,7 @@ name|N_TRELOFF
 parameter_list|(
 name|x
 parameter_list|)
-value|( N_DATOFF(x) + (x).a_data )
+value|( N_DATOFF (x) + (x).a_data )
 end_define
 
 begin_endif
@@ -653,7 +649,7 @@ name|N_DRELOFF
 parameter_list|(
 name|x
 parameter_list|)
-value|( N_TRELOFF(x) + (x).a_trsize )
+value|( N_TRELOFF (x) + (x).a_trsize )
 end_define
 
 begin_endif
@@ -674,7 +670,7 @@ name|N_SYMOFF
 parameter_list|(
 name|x
 parameter_list|)
-value|( N_DRELOFF(x) + (x).a_drsize )
+value|( N_DRELOFF (x) + (x).a_drsize )
 end_define
 
 begin_endif
@@ -695,7 +691,7 @@ name|N_STROFF
 parameter_list|(
 name|x
 parameter_list|)
-value|( N_SYMOFF(x) + (x).a_syms )
+value|( N_SYMOFF (x) + (x).a_syms )
 end_define
 
 begin_endif

@@ -1444,7 +1444,7 @@ name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Partial line at end of file ignored"
+literal|"partial line at end of file ignored"
 argument_list|)
 argument_list|)
 expr_stmt|;

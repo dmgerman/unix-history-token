@@ -3,6 +3,10 @@ begin_comment
 comment|/* Stub implementation of (obsolete) index(). */
 end_comment
 
+begin_comment
+comment|/*  @deftypefn Supplemental char* index (char *@var{s}, int @var{c})  Returns a pointer to the first occurrence of the character @var{c} in the string @var{s}, or @code{NULL} if not found.  The use of @code{index} is deprecated in new programs in favor of @code{strchr}.  @end deftypefn  */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|char

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for NN-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for NN-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -249,6 +249,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|elf_backend_can_refcount
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_can_refcount
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|elf_backend_want_got_plt
 end_ifndef
 
@@ -372,7 +390,8 @@ begin_define
 define|#
 directive|define
 name|bfd_elfNN_bfd_debug_info_accumulate
-value|(PROTO(void,(*),(bfd*, struct sec *))) bfd_void
+define|\
+value|(void (*) PARAMS ((bfd*, struct sec *))) bfd_void
 end_define
 
 begin_ifndef
@@ -433,6 +452,42 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|elf_backend_can_refcount
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_can_refcount
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_want_got_sym
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_want_got_sym
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|elf_backend_gc_mark_hook
 end_ifndef
 
@@ -477,6 +532,25 @@ define|#
 directive|define
 name|bfd_elfNN_bfd_gc_sections
 value|_bfd_elfNN_gc_sections
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|bfd_elfNN_bfd_merge_sections
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|bfd_elfNN_bfd_merge_sections
+define|\
+value|_bfd_elf_merge_sections
 end_define
 
 begin_endif
@@ -552,7 +626,7 @@ define|#
 directive|define
 name|bfd_elfNN_bfd_copy_private_bfd_data
 define|\
-value|((boolean (*) PARAMS ((bfd *, bfd *))) bfd_true)
+value|_bfd_elf_copy_private_bfd_data
 end_define
 
 begin_endif
@@ -707,7 +781,7 @@ comment|/* ! defined (elf_backend_relocate_section) */
 end_comment
 
 begin_comment
-comment|/* If no backend relocate_section routine, use the generic linker.  */
+comment|/* If no backend relocate_section routine, use the generic linker.    Note - this will prevent the port from being able to use some of    the other features of the ELF linker, because the generic hash structure    does not have the fields needed by the ELF linker.  In particular it    means that linking directly to S-records will not work.  */
 end_comment
 
 begin_ifndef
@@ -1590,6 +1664,186 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_emit_relocs
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_emit_relocs
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_count_relocs
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_count_relocs
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_grok_prstatus
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_grok_prstatus
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_grok_psinfo
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_grok_psinfo
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_sprintf_vma
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_sprintf_vma
+value|_bfd_elf_sprintf_vma
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_fprintf_vma
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_fprintf_vma
+value|_bfd_elf_fprintf_vma
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_reloc_type_class
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_reloc_type_class
+value|_bfd_elf_reloc_type_class
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_discard_info
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_discard_info
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_ignore_discarded_relocs
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_ignore_discarded_relocs
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_write_section
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_write_section
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Previously, backends could only use SHT_REL or SHT_RELA relocation    sections, but not both.  They defined USE_REL to indicate SHT_REL    sections, and left it undefined to indicated SHT_RELA sections.    For backwards compatibility, we still support this usage.  */
 end_comment
@@ -1691,6 +1945,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|elf_backend_rela_normal
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_rela_normal
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ELF_MACHINE_ALT1
 end_ifndef
 
@@ -1775,13 +2047,13 @@ directive|ifndef
 name|INCLUDED_TARGET_FILE
 end_ifndef
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|CONST
-expr|struct
+specifier|const
+name|struct
 name|elf_backend_data
 name|elfNN_bed
-operator|=
+init|=
 block|{
 name|ELF_ARCH
 block|,
@@ -1860,6 +2132,26 @@ name|elf_backend_copy_indirect_symbol
 block|,
 name|elf_backend_hide_symbol
 block|,
+name|elf_backend_emit_relocs
+block|,
+name|elf_backend_count_relocs
+block|,
+name|elf_backend_grok_prstatus
+block|,
+name|elf_backend_grok_psinfo
+block|,
+name|elf_backend_sprintf_vma
+block|,
+name|elf_backend_fprintf_vma
+block|,
+name|elf_backend_reloc_type_class
+block|,
+name|elf_backend_discard_info
+block|,
+name|elf_backend_ignore_discarded_relocs
+block|,
+name|elf_backend_write_section
+block|,
 name|elf_backend_ecoff_debug_swap
 block|,
 name|ELF_MACHINE_ALT1
@@ -1885,6 +2177,8 @@ name|elf_backend_may_use_rela_p
 block|,
 name|elf_backend_default_use_rela_p
 block|,
+name|elf_backend_rela_normal
+block|,
 name|elf_backend_sign_extend_vma
 block|,
 name|elf_backend_want_got_plt
@@ -1899,10 +2193,14 @@ name|elf_backend_plt_alignment
 block|,
 name|elf_backend_can_gc_sections
 block|,
+name|elf_backend_can_refcount
+block|,
+name|elf_backend_want_got_sym
+block|,
 name|elf_backend_want_dynbss
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -1998,6 +2296,16 @@ operator||
 name|SEC_EXCLUDE
 operator||
 name|SEC_SORT_ENTRIES
+operator||
+name|SEC_ARCH_BIT_0
+operator||
+name|SEC_SMALL_DATA
+operator||
+name|SEC_MERGE
+operator||
+name|SEC_STRINGS
+operator||
+name|SEC_GROUP
 operator|)
 block|,
 comment|/* leading_symbol_char: is the first char of a user symbol       predictable, and if so what is it */
@@ -2006,8 +2314,8 @@ block|,
 comment|/* ar_pad_char: pad character for filenames within an archive header      FIXME:  this really has nothing to do with ELF, this is a characteristic      of the archiver and/or os and should be independently tunable */
 literal|'/'
 block|,
-comment|/* ar_max_namelen: maximum number of characters in an archive header      FIXME:  this really has nothing to do with ELF, this is a characteristic      of the archiver and should be independently tunable.  This value is      a WAG (wild a** guess) */
-literal|14
+comment|/* ar_max_namelen: maximum number of characters in an archive header      FIXME:  this really has nothing to do with ELF, this is a characteristic      of the archiver and should be independently tunable.  The System V ABI,      Chapter 7 (Formats& Protocols), Archive section sets this as 15.  */
+literal|15
 block|,
 comment|/* Routines to byte-swap various sized integers from the data sections */
 name|bfd_getb64
@@ -2235,6 +2543,16 @@ operator||
 name|SEC_EXCLUDE
 operator||
 name|SEC_SORT_ENTRIES
+operator||
+name|SEC_ARCH_BIT_0
+operator||
+name|SEC_SMALL_DATA
+operator||
+name|SEC_MERGE
+operator||
+name|SEC_STRINGS
+operator||
+name|SEC_GROUP
 operator|)
 block|,
 comment|/* leading_symbol_char: is the first char of a user symbol       predictable, and if so what is it */
@@ -2243,8 +2561,8 @@ block|,
 comment|/* ar_pad_char: pad character for filenames within an archive header      FIXME:  this really has nothing to do with ELF, this is a characteristic      of the archiver and/or os and should be independently tunable */
 literal|'/'
 block|,
-comment|/* ar_max_namelen: maximum number of characters in an archive header      FIXME:  this really has nothing to do with ELF, this is a characteristic      of the archiver and should be independently tunable.  This value is      a WAG (wild a** guess) */
-literal|14
+comment|/* ar_max_namelen: maximum number of characters in an archive header      FIXME:  this really has nothing to do with ELF, this is a characteristic      of the archiver and should be independently tunable.  The System V ABI,      Chapter 7 (Formats& Protocols), Archive section sets this as 15.  */
+literal|15
 block|,
 comment|/* Routines to byte-swap various sized integers from the data sections */
 name|bfd_getl64

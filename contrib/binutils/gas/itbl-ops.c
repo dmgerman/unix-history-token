@@ -582,7 +582,7 @@ name|fopen
 argument_list|(
 name|insntbl
 argument_list|,
-literal|"r"
+name|FOPEN_RT
 argument_list|)
 expr_stmt|;
 if|if
@@ -603,15 +603,12 @@ return|return
 literal|1
 return|;
 block|}
-else|else
-block|{
 while|while
 condition|(
 name|yyparse
 argument_list|()
 condition|)
 empty_stmt|;
-block|}
 name|fclose
 argument_list|(
 name|yyin
@@ -1788,7 +1785,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* error!  must have a opcode name/expr */
+comment|/* error!  must have an opcode name/expr */
 comment|/* find entry in list of instructions for all processors */
 for|for
 control|(

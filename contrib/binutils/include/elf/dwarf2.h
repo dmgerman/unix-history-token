@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations and definitions of codes relating to the DWARF2 symbolic    debugging information format.    Copyright 1992, 1993, 1995, 1996, 1999, 2000, 2001    Free Software Foundation, Inc.     Written by Gary Funck (gary@intrepid.com) The Ada Joint Program    Office (AJPO), Florida State Unviversity and Silicon Graphics Inc.    provided support for this effort -- June 21, 1995.     Derived from the DWARF 1 implementation written by Ron Guilmette    (rfg@netcom.com), November 1990.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Declarations and definitions of codes relating to the DWARF2 symbolic    debugging information format.    Copyright (C) 1992, 1993, 1995, 1996, 1997, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     Written by Gary Funck (gary@intrepid.com) The Ada Joint Program    Office (AJPO), Florida State Unviversity and Silicon Graphics Inc.    provided support for this effort -- June 21, 1995.     Derived from the DWARF 1 implementation written by Ron Guilmette    (rfg@netcom.com), November 1990.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* This file is derived from the DWARF specification (a public document)    Revision 2.0.0 (July 27, 1993) developed by the UNIX International    Programming Languages Special Interest Group (UI/PLSIG) and distributed    by UNIX International.  Copies of this specification are available from    UNIX International, 20 Waterview Boulevard, Parsippany, NJ, 07054.      This file also now contains definitions from the DWARF 2.1 specification.  */
+comment|/* This file is derived from the DWARF specification (a public document)    Revision 2.0.0 (July 27, 1993) developed by the UNIX International    Programming Languages Special Interest Group (UI/PLSIG) and distributed    by UNIX International.  Copies of this specification are available from    UNIX International, 20 Waterview Boulevard, Parsippany, NJ, 07054.     This file also now contains definitions from the DWARF 3 specification.  */
 end_comment
 
 begin_comment
@@ -537,6 +537,39 @@ name|DW_TAG_volatile_type
 init|=
 literal|0x35
 block|,
+comment|/* DWARF 3.  */
+name|DW_TAG_dwarf_procedure
+init|=
+literal|0x36
+block|,
+name|DW_TAG_restrict_type
+init|=
+literal|0x37
+block|,
+name|DW_TAG_interface_type
+init|=
+literal|0x38
+block|,
+name|DW_TAG_namespace
+init|=
+literal|0x39
+block|,
+name|DW_TAG_imported_module
+init|=
+literal|0x3a
+block|,
+name|DW_TAG_unspecified_type
+init|=
+literal|0x3b
+block|,
+name|DW_TAG_partial_unit
+init|=
+literal|0x3c
+block|,
+name|DW_TAG_imported_unit
+init|=
+literal|0x3d
+block|,
 comment|/* SGI/MIPS Extensions.  */
 name|DW_TAG_MIPS_loop
 init|=
@@ -552,12 +585,12 @@ name|DW_TAG_function_template
 init|=
 literal|0x4102
 block|,
-comment|/* for C++ */
+comment|/* For C++.  */
 name|DW_TAG_class_template
 init|=
 literal|0x4103
 block|,
-comment|/* for C++ */
+comment|/* For C++.  */
 name|DW_TAG_GNU_BINCL
 init|=
 literal|0x4104
@@ -952,7 +985,7 @@ name|DW_AT_vtable_elem_location
 init|=
 literal|0x4d
 block|,
-comment|/* DWARF 2.1 values.  */
+comment|/* DWARF 3 values.  */
 name|DW_AT_allocated
 init|=
 literal|0x4e
@@ -1070,6 +1103,15 @@ block|,
 name|DW_AT_body_end
 init|=
 literal|0x2106
+block|,
+name|DW_AT_GNU_vector
+init|=
+literal|0x2107
+block|,
+comment|/* VMS Extensions.  */
+name|DW_AT_VMS_rtnbeg_pd_address
+init|=
+literal|0x2201
 block|}
 enum|;
 end_enum
@@ -1684,7 +1726,7 @@ name|DW_OP_nop
 init|=
 literal|0x96
 block|,
-comment|/* DWARF 2.1 extensions.  */
+comment|/* DWARF 3 extensions.  */
 name|DW_OP_push_object_address
 init|=
 literal|0x97
@@ -1693,12 +1735,10 @@ name|DW_OP_call2
 init|=
 literal|0x98
 block|,
-comment|/* 1 2-byte offset of DIE.  */
 name|DW_OP_call4
 init|=
 literal|0x99
 block|,
-comment|/* 1 4-byte offset of DIE.  */
 name|DW_OP_calli
 init|=
 literal|0x9a
@@ -1771,6 +1811,11 @@ block|,
 name|DW_ATE_unsigned_char
 init|=
 literal|0x8
+block|,
+comment|/* DWARF 3.  */
+name|DW_ATE_imaginary_float
+init|=
+literal|0x9
 block|}
 enum|;
 end_enum
@@ -1969,12 +2014,12 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* Descriminant lists.  */
+comment|/* Discriminant lists.  */
 end_comment
 
 begin_enum
 enum|enum
-name|dwarf_descrim_list
+name|dwarf_discrim_list
 block|{
 name|DW_DSC_label
 init|=
@@ -2034,6 +2079,19 @@ block|,
 name|DW_LNS_fixed_advance_pc
 init|=
 literal|9
+block|,
+comment|/* DWARF 3.  */
+name|DW_LNS_set_prologue_end
+init|=
+literal|10
+block|,
+name|DW_LNS_set_epilogue_begin
+init|=
+literal|11
+block|,
+name|DW_LNS_set_isa
+init|=
+literal|12
 block|}
 enum|;
 end_enum
@@ -2141,6 +2199,7 @@ name|DW_CFA_def_cfa_offset
 init|=
 literal|0x0e
 block|,
+comment|/* DWARF 3.  */
 name|DW_CFA_def_cfa_expression
 init|=
 literal|0x0f
@@ -2149,7 +2208,6 @@ name|DW_CFA_expression
 init|=
 literal|0x10
 block|,
-comment|/* Dwarf 2.1.  */
 name|DW_CFA_offset_extended_sf
 init|=
 literal|0x11
@@ -2289,8 +2347,22 @@ literal|0x000a
 block|,
 name|DW_LANG_Java
 init|=
-literal|0x9af4
+literal|0x000b
 block|,
+comment|/* DWARF 3.  */
+name|DW_LANG_C99
+init|=
+literal|0x000c
+block|,
+name|DW_LANG_Ada95
+init|=
+literal|0x000d
+block|,
+name|DW_LANG_Fortran95
+init|=
+literal|0x000e
+block|,
+comment|/* MIPS.  */
 name|DW_LANG_Mips_Assembler
 init|=
 literal|0x8001
@@ -2350,6 +2422,132 @@ literal|255
 block|}
 enum|;
 end_enum
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* @@@ For use with GNU frame unwind information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_absptr
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_omit
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_uleb128
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_udata2
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_udata4
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_udata8
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_sleb128
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_sdata2
+value|0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_sdata4
+value|0x0B
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_sdata8
+value|0x0C
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_signed
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_pcrel
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_textrel
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_datarel
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_funcrel
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_aligned
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW_EH_PE_indirect
+value|0x80
+end_define
 
 begin_endif
 endif|#

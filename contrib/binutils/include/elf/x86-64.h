@@ -237,6 +237,32 @@ comment|/* 8 bit sign extended pc relative*/
 end_comment
 
 begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_X86_64_GNU_VTINHERIT
+argument_list|,
+literal|250
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* GNU C++ hack  */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_X86_64_GNU_VTENTRY
+argument_list|,
+literal|251
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* GNU C++ hack  */
+end_comment
+
+begin_macro
 name|END_RELOC_NUMBERS
 argument_list|(
 argument|R_X86_64_max

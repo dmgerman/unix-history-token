@@ -1483,7 +1483,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPC_trtdb
+name|OPC_trtrb
 value|159
 end_define
 
@@ -1662,6 +1662,27 @@ name|OPC_outi
 value|173
 end_define
 
+begin_define
+define|#
+directive|define
+name|OPC_ldctlb
+value|174
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPC_sin
+value|175
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPC_trtdb
+value|176
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1693,12 +1714,16 @@ name|char
 name|opcode
 decl_stmt|;
 name|void
-function_decl|(
-modifier|*
-name|func
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*func
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
 name|unsigned
 name|int
 name|arg_info
@@ -16307,6 +16332,142 @@ block|,
 literal|192
 block|}
 block|,
+comment|/* 1000 1100 ssss 1001 *** ldctlb ctrl,rbs */
+block|{
+ifdef|#
+directive|ifdef
+name|NICENAMES
+literal|"ldctlb ctrl,rbs"
+block|,
+literal|32
+block|,
+literal|7
+block|,
+literal|0x3f
+block|,
+endif|#
+directive|endif
+literal|"ldctlb"
+block|,
+name|OPC_ldctlb
+block|,
+literal|0
+block|,
+block|{
+name|CLASS_CTRL
+block|,
+name|CLASS_REG_BYTE
+operator|+
+operator|(
+name|ARG_RS
+operator|)
+block|,}
+block|,
+block|{
+name|CLASS_BIT
+operator|+
+literal|8
+block|,
+name|CLASS_BIT
+operator|+
+literal|0xc
+block|,
+name|CLASS_REG
+operator|+
+operator|(
+name|ARG_RS
+operator|)
+block|,
+name|CLASS_BIT
+operator|+
+literal|9
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,}
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|193
+block|}
+block|,
+comment|/* 1000 1100 dddd 0001 *** ldctlb rbd,ctrl */
+block|{
+ifdef|#
+directive|ifdef
+name|NICENAMES
+literal|"ldctlb rbd,ctrl"
+block|,
+literal|32
+block|,
+literal|7
+block|,
+literal|0x00
+block|,
+endif|#
+directive|endif
+literal|"ldctlb"
+block|,
+name|OPC_ldctlb
+block|,
+literal|0
+block|,
+block|{
+name|CLASS_REG_BYTE
+operator|+
+operator|(
+name|ARG_RD
+operator|)
+block|,
+name|CLASS_CTRL
+block|,}
+block|,
+block|{
+name|CLASS_BIT
+operator|+
+literal|8
+block|,
+name|CLASS_BIT
+operator|+
+literal|0xc
+block|,
+name|CLASS_REG
+operator|+
+operator|(
+name|ARG_RD
+operator|)
+block|,
+name|CLASS_BIT
+operator|+
+literal|1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,}
+block|,
+literal|2
+block|,
+literal|2
+block|,
+literal|194
+block|}
+block|,
 comment|/* 1011 1011 ssN0 1001 0000 rrrr ddN0 1000 *** ldd @rd,@rs,rr */
 block|{
 ifdef|#
@@ -16394,7 +16555,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|193
+literal|195
 block|}
 block|,
 comment|/* 1011 1010 ssN0 1001 0000 rrrr ddN0 1000 *** lddb @rd,@rs,rr */
@@ -16484,7 +16645,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|194
+literal|196
 block|}
 block|,
 comment|/* 1011 1011 ssN0 1001 0000 rrrr ddN0 0000 *** lddr @rd,@rs,rr */
@@ -16574,7 +16735,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|195
+literal|197
 block|}
 block|,
 comment|/* 1011 1010 ssN0 1001 0000 rrrr ddN0 0000 *** lddrb @rd,@rs,rr */
@@ -16664,7 +16825,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|196
+literal|198
 block|}
 block|,
 comment|/* 1011 1011 ssN0 0001 0000 rrrr ddN0 1000 *** ldi @rd,@rs,rr */
@@ -16754,7 +16915,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|197
+literal|199
 block|}
 block|,
 comment|/* 1011 1010 ssN0 0001 0000 rrrr ddN0 1000 *** ldib @rd,@rs,rr */
@@ -16844,7 +17005,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|198
+literal|200
 block|}
 block|,
 comment|/* 1011 1011 ssN0 0001 0000 rrrr ddN0 0000 *** ldir @rd,@rs,rr */
@@ -16934,7 +17095,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|199
+literal|201
 block|}
 block|,
 comment|/* 1011 1010 ssN0 0001 0000 rrrr ddN0 0000 *** ldirb @rd,@rs,rr */
@@ -17024,7 +17185,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|200
+literal|202
 block|}
 block|,
 comment|/* 1011 1101 dddd imm4 *** ldk rd,imm4 */
@@ -17098,7 +17259,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|201
+literal|203
 block|}
 block|,
 comment|/* 0001 1101 ddN0 ssss *** ldl @rd,rrs */
@@ -17172,7 +17333,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|202
+literal|204
 block|}
 block|,
 comment|/* 0101 1101 ddN0 ssss address_dst *** ldl address_dst(rd),rrs */
@@ -17250,7 +17411,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|203
+literal|205
 block|}
 block|,
 comment|/* 0101 1101 0000 ssss address_dst *** ldl address_dst,rrs */
@@ -17326,7 +17487,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|204
+literal|206
 block|}
 block|,
 comment|/* 0011 0111 ddN0 ssss imm16 *** ldl rd(imm16),rrs */
@@ -17404,7 +17565,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|205
+literal|207
 block|}
 block|,
 comment|/* 0111 0111 ddN0 ssss 0000 xxxx 0000 0000 *** ldl rd(rx),rrs */
@@ -17488,7 +17649,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|206
+literal|208
 block|}
 block|,
 comment|/* 0001 0100 ssN0 dddd *** ldl rrd,@rs */
@@ -17562,7 +17723,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|207
+literal|209
 block|}
 block|,
 comment|/* 0101 0100 0000 dddd address_src *** ldl rrd,address_src */
@@ -17638,7 +17799,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|208
+literal|210
 block|}
 block|,
 comment|/* 0101 0100 ssN0 dddd address_src *** ldl rrd,address_src(rs) */
@@ -17716,7 +17877,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|209
+literal|211
 block|}
 block|,
 comment|/* 0001 0100 0000 dddd imm32 *** ldl rrd,imm32 */
@@ -17792,7 +17953,7 @@ literal|2
 block|,
 literal|6
 block|,
-literal|210
+literal|212
 block|}
 block|,
 comment|/* 1001 0100 ssss dddd *** ldl rrd,rrs */
@@ -17866,7 +18027,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|211
+literal|213
 block|}
 block|,
 comment|/* 0011 0101 ssN0 dddd imm16 *** ldl rrd,rs(imm16) */
@@ -17944,7 +18105,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|212
+literal|214
 block|}
 block|,
 comment|/* 0111 0101 ssN0 dddd 0000 xxxx 0000 0000 *** ldl rrd,rs(rx) */
@@ -18028,7 +18189,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|213
+literal|215
 block|}
 block|,
 comment|/* 0001 1100 ddN0 1001 0000 ssss 0000 nminus1 *** ldm @rd,rs,n */
@@ -18118,7 +18279,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|214
+literal|216
 block|}
 block|,
 comment|/* 0101 1100 ddN0 1001 0000 ssss 0000 nminus1 address_dst *** ldm address_dst(rd),rs,n */
@@ -18212,7 +18373,7 @@ literal|3
 block|,
 literal|6
 block|,
-literal|215
+literal|217
 block|}
 block|,
 comment|/* 0101 1100 0000 1001 0000 ssss 0000 nminus1 address_dst *** ldm address_dst,rs,n */
@@ -18304,7 +18465,7 @@ literal|3
 block|,
 literal|6
 block|,
-literal|216
+literal|218
 block|}
 block|,
 comment|/* 0001 1100 ssN0 0001 0000 dddd 0000 nminus1 *** ldm rd,@rs,n */
@@ -18394,7 +18555,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|217
+literal|219
 block|}
 block|,
 comment|/* 0101 1100 ssN0 0001 0000 dddd 0000 nminus1 address_src *** ldm rd,address_src(rs),n */
@@ -18488,7 +18649,7 @@ literal|3
 block|,
 literal|6
 block|,
-literal|218
+literal|220
 block|}
 block|,
 comment|/* 0101 1100 0000 0001 0000 dddd 0000 nminus1 address_src *** ldm rd,address_src,n */
@@ -18580,7 +18741,7 @@ literal|3
 block|,
 literal|6
 block|,
-literal|219
+literal|221
 block|}
 block|,
 comment|/* 0011 1001 ssN0 0000 *** ldps @rs */
@@ -18646,7 +18807,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|220
+literal|222
 block|}
 block|,
 comment|/* 0111 1001 0000 0000 address_src *** ldps address_src */
@@ -18714,7 +18875,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|221
+literal|223
 block|}
 block|,
 comment|/* 0111 1001 ssN0 0000 address_src *** ldps address_src(rs) */
@@ -18784,7 +18945,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|222
+literal|224
 block|}
 block|,
 comment|/* 0011 0011 0000 ssss disp16 *** ldr disp16,rs */
@@ -18856,7 +19017,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|223
+literal|225
 block|}
 block|,
 comment|/* 0011 0001 0000 dddd disp16 *** ldr rd,disp16 */
@@ -18928,7 +19089,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|224
+literal|226
 block|}
 block|,
 comment|/* 0011 0010 0000 ssss disp16 *** ldrb disp16,rbs */
@@ -19000,7 +19161,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|225
+literal|227
 block|}
 block|,
 comment|/* 0011 0000 0000 dddd disp16 *** ldrb rbd,disp16 */
@@ -19072,7 +19233,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|226
+literal|228
 block|}
 block|,
 comment|/* 0011 0111 0000 ssss disp16 *** ldrl disp16,rrs */
@@ -19144,7 +19305,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|227
+literal|229
 block|}
 block|,
 comment|/* 0011 0101 0000 dddd disp16 *** ldrl rrd,disp16 */
@@ -19216,7 +19377,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|228
+literal|230
 block|}
 block|,
 comment|/* 0111 1011 0000 1010 *** mbit */
@@ -19276,7 +19437,7 @@ literal|0
 block|,
 literal|2
 block|,
-literal|229
+literal|231
 block|}
 block|,
 comment|/* 0111 1011 dddd 1101 *** mreq rd */
@@ -19342,7 +19503,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|230
+literal|232
 block|}
 block|,
 comment|/* 0111 1011 0000 1001 *** mres */
@@ -19402,7 +19563,7 @@ literal|0
 block|,
 literal|2
 block|,
-literal|231
+literal|233
 block|}
 block|,
 comment|/* 0111 1011 0000 1000 *** mset */
@@ -19462,7 +19623,7 @@ literal|0
 block|,
 literal|2
 block|,
-literal|232
+literal|234
 block|}
 block|,
 comment|/* 0001 1001 ssN0 dddd *** mult rrd,@rs */
@@ -19536,7 +19697,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|233
+literal|235
 block|}
 block|,
 comment|/* 0101 1001 0000 dddd address_src *** mult rrd,address_src */
@@ -19612,7 +19773,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|234
+literal|236
 block|}
 block|,
 comment|/* 0101 1001 ssN0 dddd address_src *** mult rrd,address_src(rs) */
@@ -19690,7 +19851,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|235
+literal|237
 block|}
 block|,
 comment|/* 0001 1001 0000 dddd imm16 *** mult rrd,imm16 */
@@ -19766,7 +19927,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|236
+literal|238
 block|}
 block|,
 comment|/* 1001 1001 ssss dddd *** mult rrd,rs */
@@ -19840,7 +20001,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|237
+literal|239
 block|}
 block|,
 comment|/* 0001 1000 ssN0 dddd *** multl rqd,@rs */
@@ -19914,7 +20075,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|238
+literal|240
 block|}
 block|,
 comment|/* 0101 1000 0000 dddd address_src *** multl rqd,address_src */
@@ -19990,7 +20151,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|239
+literal|241
 block|}
 block|,
 comment|/* 0101 1000 ssN0 dddd address_src *** multl rqd,address_src(rs) */
@@ -20068,7 +20229,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|240
+literal|242
 block|}
 block|,
 comment|/* 0001 1000 0000 dddd imm32 *** multl rqd,imm32 */
@@ -20144,7 +20305,7 @@ literal|2
 block|,
 literal|6
 block|,
-literal|241
+literal|243
 block|}
 block|,
 comment|/* 1001 1000 ssss dddd *** multl rqd,rrs */
@@ -20218,7 +20379,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|242
+literal|244
 block|}
 block|,
 comment|/* 0000 1101 ddN0 0010 *** neg @rd */
@@ -20284,7 +20445,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|243
+literal|245
 block|}
 block|,
 comment|/* 0100 1101 0000 0010 address_dst *** neg address_dst */
@@ -20352,7 +20513,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|244
+literal|246
 block|}
 block|,
 comment|/* 0100 1101 ddN0 0010 address_dst *** neg address_dst(rd) */
@@ -20422,7 +20583,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|245
+literal|247
 block|}
 block|,
 comment|/* 1000 1101 dddd 0010 *** neg rd */
@@ -20488,7 +20649,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|246
+literal|248
 block|}
 block|,
 comment|/* 0000 1100 ddN0 0010 *** negb @rd */
@@ -20554,7 +20715,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|247
+literal|249
 block|}
 block|,
 comment|/* 0100 1100 0000 0010 address_dst *** negb address_dst */
@@ -20622,7 +20783,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|248
+literal|250
 block|}
 block|,
 comment|/* 0100 1100 ddN0 0010 address_dst *** negb address_dst(rd) */
@@ -20692,7 +20853,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|249
+literal|251
 block|}
 block|,
 comment|/* 1000 1100 dddd 0010 *** negb rbd */
@@ -20758,7 +20919,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|250
+literal|252
 block|}
 block|,
 comment|/* 1000 1101 0000 0111 *** nop */
@@ -20818,7 +20979,7 @@ literal|0
 block|,
 literal|2
 block|,
-literal|251
+literal|253
 block|}
 block|,
 comment|/* 0000 0101 ssN0 dddd *** or rd,@rs */
@@ -20892,7 +21053,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|252
+literal|254
 block|}
 block|,
 comment|/* 0100 0101 0000 dddd address_src *** or rd,address_src */
@@ -20968,7 +21129,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|253
+literal|255
 block|}
 block|,
 comment|/* 0100 0101 ssN0 dddd address_src *** or rd,address_src(rs) */
@@ -21046,7 +21207,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|254
+literal|256
 block|}
 block|,
 comment|/* 0000 0101 0000 dddd imm16 *** or rd,imm16 */
@@ -21122,7 +21283,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|255
+literal|257
 block|}
 block|,
 comment|/* 1000 0101 ssss dddd *** or rd,rs */
@@ -21196,7 +21357,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|256
+literal|258
 block|}
 block|,
 comment|/* 0000 0100 ssN0 dddd *** orb rbd,@rs */
@@ -21270,7 +21431,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|257
+literal|259
 block|}
 block|,
 comment|/* 0100 0100 0000 dddd address_src *** orb rbd,address_src */
@@ -21346,7 +21507,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|258
+literal|260
 block|}
 block|,
 comment|/* 0100 0100 ssN0 dddd address_src *** orb rbd,address_src(rs) */
@@ -21424,7 +21585,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|259
+literal|261
 block|}
 block|,
 comment|/* 0000 0100 0000 dddd imm8 imm8 *** orb rbd,imm8 */
@@ -21504,7 +21665,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|260
+literal|262
 block|}
 block|,
 comment|/* 1000 0100 ssss dddd *** orb rbd,rbs */
@@ -21578,7 +21739,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|261
+literal|263
 block|}
 block|,
 comment|/* 0011 1111 ddN0 ssss *** out @rd,rs */
@@ -21652,7 +21813,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|262
+literal|264
 block|}
 block|,
 comment|/* 0011 1011 ssss 0110 imm16 *** out imm16,rs */
@@ -21728,7 +21889,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|263
+literal|265
 block|}
 block|,
 comment|/* 0011 1110 ddN0 ssss *** outb @rd,rbs */
@@ -21802,7 +21963,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|264
+literal|266
 block|}
 block|,
 comment|/* 0011 1010 ssss 0110 imm16 *** outb imm16,rbs */
@@ -21878,7 +22039,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|265
+literal|267
 block|}
 block|,
 comment|/* 0011 1011 ssN0 1010 0000 aaaa ddN0 1000 *** outd @rd,@rs,ra */
@@ -21968,7 +22129,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|266
+literal|268
 block|}
 block|,
 comment|/* 0011 1010 ssN0 1010 0000 aaaa ddN0 1000 *** outdb @rd,@rs,rba */
@@ -22058,7 +22219,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|267
+literal|269
 block|}
 block|,
 comment|/* 0011 1011 ssN0 0010 0000 aaaa ddN0 1000 *** outi @rd,@rs,ra */
@@ -22148,7 +22309,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|268
+literal|270
 block|}
 block|,
 comment|/* 0011 1010 ssN0 0010 0000 aaaa ddN0 1000 *** outib @rd,@rs,ra */
@@ -22238,7 +22399,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|269
+literal|271
 block|}
 block|,
 comment|/* 0011 1010 ssN0 0010 0000 aaaa ddN0 0000 *** outibr @rd,@rs,ra */
@@ -22328,7 +22489,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|270
+literal|272
 block|}
 block|,
 comment|/* 0001 0111 ssN0 ddN0 *** pop @rd,@rs */
@@ -22402,7 +22563,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|271
+literal|273
 block|}
 block|,
 comment|/* 0101 0111 ssN0 ddN0 address_dst *** pop address_dst(rd),@rs */
@@ -22480,7 +22641,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|272
+literal|274
 block|}
 block|,
 comment|/* 0101 0111 ssN0 0000 address_dst *** pop address_dst,@rs */
@@ -22556,7 +22717,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|273
+literal|275
 block|}
 block|,
 comment|/* 1001 0111 ssN0 dddd *** pop rd,@rs */
@@ -22630,7 +22791,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|274
+literal|276
 block|}
 block|,
 comment|/* 0001 0101 ssN0 ddN0 *** popl @rd,@rs */
@@ -22704,7 +22865,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|275
+literal|277
 block|}
 block|,
 comment|/* 0101 0101 ssN0 ddN0 address_dst *** popl address_dst(rd),@rs */
@@ -22782,7 +22943,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|276
+literal|278
 block|}
 block|,
 comment|/* 0101 0101 ssN0 0000 address_dst *** popl address_dst,@rs */
@@ -22858,7 +23019,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|277
+literal|279
 block|}
 block|,
 comment|/* 1001 0101 ssN0 dddd *** popl rrd,@rs */
@@ -22932,7 +23093,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|278
+literal|280
 block|}
 block|,
 comment|/* 0001 0011 ddN0 ssN0 *** push @rd,@rs */
@@ -23006,7 +23167,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|279
+literal|281
 block|}
 block|,
 comment|/* 0101 0011 ddN0 0000 address_src *** push @rd,address_src */
@@ -23082,7 +23243,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|280
+literal|282
 block|}
 block|,
 comment|/* 0101 0011 ddN0 ssN0 address_src *** push @rd,address_src(rs) */
@@ -23160,7 +23321,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|281
+literal|283
 block|}
 block|,
 comment|/* 0000 1101 ddN0 1001 imm16 *** push @rd,imm16 */
@@ -23236,7 +23397,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|282
+literal|284
 block|}
 block|,
 comment|/* 1001 0011 ddN0 ssss *** push @rd,rs */
@@ -23310,7 +23471,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|283
+literal|285
 block|}
 block|,
 comment|/* 0001 0001 ddN0 ssN0 *** pushl @rd,@rs */
@@ -23384,7 +23545,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|284
+literal|286
 block|}
 block|,
 comment|/* 0101 0001 ddN0 0000 address_src *** pushl @rd,address_src */
@@ -23460,7 +23621,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|285
+literal|287
 block|}
 block|,
 comment|/* 0101 0001 ddN0 ssN0 address_src *** pushl @rd,address_src(rs) */
@@ -23538,7 +23699,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|286
+literal|288
 block|}
 block|,
 comment|/* 1001 0001 ddN0 ssss *** pushl @rd,rrs */
@@ -23612,7 +23773,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|287
+literal|289
 block|}
 block|,
 comment|/* 0010 0011 ddN0 imm4 *** res @rd,imm4 */
@@ -23686,7 +23847,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|288
+literal|290
 block|}
 block|,
 comment|/* 0110 0011 ddN0 imm4 address_dst *** res address_dst(rd),imm4 */
@@ -23764,7 +23925,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|289
+literal|291
 block|}
 block|,
 comment|/* 0110 0011 0000 imm4 address_dst *** res address_dst,imm4 */
@@ -23840,7 +24001,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|290
+literal|292
 block|}
 block|,
 comment|/* 1010 0011 dddd imm4 *** res rd,imm4 */
@@ -23914,7 +24075,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|291
+literal|293
 block|}
 block|,
 comment|/* 0010 0011 0000 ssss 0000 dddd 0000 0000 *** res rd,rs */
@@ -23996,7 +24157,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|292
+literal|294
 block|}
 block|,
 comment|/* 0010 0010 ddN0 imm4 *** resb @rd,imm4 */
@@ -24070,7 +24231,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|293
+literal|295
 block|}
 block|,
 comment|/* 0110 0010 ddN0 imm4 address_dst *** resb address_dst(rd),imm4 */
@@ -24148,7 +24309,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|294
+literal|296
 block|}
 block|,
 comment|/* 0110 0010 0000 imm4 address_dst *** resb address_dst,imm4 */
@@ -24224,7 +24385,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|295
+literal|297
 block|}
 block|,
 comment|/* 1010 0010 dddd imm4 *** resb rbd,imm4 */
@@ -24298,7 +24459,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|296
+literal|298
 block|}
 block|,
 comment|/* 0010 0010 0000 ssss 0000 dddd 0000 0000 *** resb rbd,rs */
@@ -24380,7 +24541,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|297
+literal|299
 block|}
 block|,
 comment|/* 1000 1101 flags 0011 *** resflg flags */
@@ -24438,7 +24599,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|298
+literal|300
 block|}
 block|,
 comment|/* 1001 1110 0000 cccc *** ret cc */
@@ -24496,7 +24657,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|299
+literal|301
 block|}
 block|,
 comment|/* 1011 0011 dddd 00I0 *** rl rd,imm1or2 */
@@ -24568,7 +24729,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|300
+literal|302
 block|}
 block|,
 comment|/* 1011 0010 dddd 00I0 *** rlb rbd,imm1or2 */
@@ -24640,7 +24801,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|301
+literal|303
 block|}
 block|,
 comment|/* 1011 0011 dddd 10I0 *** rlc rd,imm1or2 */
@@ -24712,7 +24873,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|302
+literal|304
 block|}
 block|,
 comment|/* 1011 0010 dddd 10I0 *** rlcb rbd,imm1or2 */
@@ -24784,7 +24945,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|303
+literal|305
 block|}
 block|,
 comment|/* 1011 1110 aaaa bbbb *** rldb rbb,rba */
@@ -24858,7 +25019,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|304
+literal|306
 block|}
 block|,
 comment|/* 1011 0011 dddd 01I0 *** rr rd,imm1or2 */
@@ -24930,7 +25091,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|305
+literal|307
 block|}
 block|,
 comment|/* 1011 0010 dddd 01I0 *** rrb rbd,imm1or2 */
@@ -25002,7 +25163,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|306
+literal|308
 block|}
 block|,
 comment|/* 1011 0011 dddd 11I0 *** rrc rd,imm1or2 */
@@ -25074,7 +25235,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|307
+literal|309
 block|}
 block|,
 comment|/* 1011 0010 dddd 11I0 *** rrcb rbd,imm1or2 */
@@ -25146,7 +25307,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|308
+literal|310
 block|}
 block|,
 comment|/* 1011 1100 aaaa bbbb *** rrdb rbb,rba */
@@ -25220,7 +25381,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|309
+literal|311
 block|}
 block|,
 comment|/* 0011 0110 imm8 *** rsvd36 */
@@ -25280,7 +25441,7 @@ literal|0
 block|,
 literal|2
 block|,
-literal|310
+literal|312
 block|}
 block|,
 comment|/* 0011 1000 imm8 *** rsvd38 */
@@ -25340,7 +25501,7 @@ literal|0
 block|,
 literal|2
 block|,
-literal|311
+literal|313
 block|}
 block|,
 comment|/* 0111 1000 imm8 *** rsvd78 */
@@ -25400,7 +25561,7 @@ literal|0
 block|,
 literal|2
 block|,
-literal|312
+literal|314
 block|}
 block|,
 comment|/* 0111 1110 imm8 *** rsvd7e */
@@ -25460,7 +25621,7 @@ literal|0
 block|,
 literal|2
 block|,
-literal|313
+literal|315
 block|}
 block|,
 comment|/* 1001 1101 imm8 *** rsvd9d */
@@ -25520,7 +25681,7 @@ literal|0
 block|,
 literal|2
 block|,
-literal|314
+literal|316
 block|}
 block|,
 comment|/* 1001 1111 imm8 *** rsvd9f */
@@ -25580,7 +25741,7 @@ literal|0
 block|,
 literal|2
 block|,
-literal|315
+literal|317
 block|}
 block|,
 comment|/* 1011 1001 imm8 *** rsvdb9 */
@@ -25640,7 +25801,7 @@ literal|0
 block|,
 literal|2
 block|,
-literal|316
+literal|318
 block|}
 block|,
 comment|/* 1011 1111 imm8 *** rsvdbf */
@@ -25700,7 +25861,7 @@ literal|0
 block|,
 literal|2
 block|,
-literal|317
+literal|319
 block|}
 block|,
 comment|/* 1011 0111 ssss dddd *** sbc rd,rs */
@@ -25774,7 +25935,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|318
+literal|320
 block|}
 block|,
 comment|/* 1011 0110 ssss dddd *** sbcb rbd,rbs */
@@ -25848,7 +26009,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|319
+literal|321
 block|}
 block|,
 comment|/* 0111 1111 imm8 *** sc imm8 */
@@ -25912,7 +26073,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|320
+literal|322
 block|}
 block|,
 comment|/* 1011 0011 dddd 1011 0000 ssss 0000 0000 *** sda rd,rs */
@@ -25994,7 +26155,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|321
+literal|323
 block|}
 block|,
 comment|/* 1011 0010 dddd 1011 0000 ssss 0000 0000 *** sdab rbd,rs */
@@ -26076,7 +26237,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|322
+literal|324
 block|}
 block|,
 comment|/* 1011 0011 dddd 1111 0000 ssss 0000 0000 *** sdal rrd,rs */
@@ -26158,7 +26319,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|323
+literal|325
 block|}
 block|,
 comment|/* 1011 0011 dddd 0011 0000 ssss 0000 0000 *** sdl rd,rs */
@@ -26240,7 +26401,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|324
+literal|326
 block|}
 block|,
 comment|/* 1011 0010 dddd 0011 0000 ssss 0000 0000 *** sdlb rbd,rs */
@@ -26322,7 +26483,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|325
+literal|327
 block|}
 block|,
 comment|/* 1011 0011 dddd 0111 0000 ssss 0000 0000 *** sdll rrd,rs */
@@ -26404,7 +26565,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|326
+literal|328
 block|}
 block|,
 comment|/* 0010 0101 ddN0 imm4 *** set @rd,imm4 */
@@ -26478,7 +26639,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|327
+literal|329
 block|}
 block|,
 comment|/* 0110 0101 ddN0 imm4 address_dst *** set address_dst(rd),imm4 */
@@ -26556,7 +26717,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|328
+literal|330
 block|}
 block|,
 comment|/* 0110 0101 0000 imm4 address_dst *** set address_dst,imm4 */
@@ -26632,7 +26793,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|329
+literal|331
 block|}
 block|,
 comment|/* 1010 0101 dddd imm4 *** set rd,imm4 */
@@ -26706,7 +26867,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|330
+literal|332
 block|}
 block|,
 comment|/* 0010 0101 0000 ssss 0000 dddd 0000 0000 *** set rd,rs */
@@ -26788,7 +26949,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|331
+literal|333
 block|}
 block|,
 comment|/* 0010 0100 ddN0 imm4 *** setb @rd,imm4 */
@@ -26862,7 +27023,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|332
+literal|334
 block|}
 block|,
 comment|/* 0110 0100 ddN0 imm4 address_dst *** setb address_dst(rd),imm4 */
@@ -26940,7 +27101,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|333
+literal|335
 block|}
 block|,
 comment|/* 0110 0100 0000 imm4 address_dst *** setb address_dst,imm4 */
@@ -27016,7 +27177,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|334
+literal|336
 block|}
 block|,
 comment|/* 1010 0100 dddd imm4 *** setb rbd,imm4 */
@@ -27090,7 +27251,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|335
+literal|337
 block|}
 block|,
 comment|/* 0010 0100 0000 ssss 0000 dddd 0000 0000 *** setb rbd,rs */
@@ -27172,7 +27333,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|336
+literal|338
 block|}
 block|,
 comment|/* 1000 1101 flags 0001 *** setflg flags */
@@ -27230,7 +27391,83 @@ literal|1
 block|,
 literal|2
 block|,
-literal|337
+literal|339
+block|}
+block|,
+comment|/* 0011 1011 dddd 0101 imm16 *** sin rd,imm16 */
+block|{
+ifdef|#
+directive|ifdef
+name|NICENAMES
+literal|"sin rd,imm16"
+block|,
+literal|8
+block|,
+literal|0
+block|,
+literal|0x00
+block|,
+endif|#
+directive|endif
+literal|"sin"
+block|,
+name|OPC_sin
+block|,
+literal|0
+block|,
+block|{
+name|CLASS_REG_WORD
+operator|+
+operator|(
+name|ARG_RD
+operator|)
+block|,
+name|CLASS_IMM
+operator|+
+operator|(
+name|ARG_IMM16
+operator|)
+block|,}
+block|,
+block|{
+name|CLASS_BIT
+operator|+
+literal|3
+block|,
+name|CLASS_BIT
+operator|+
+literal|0xb
+block|,
+name|CLASS_REG
+operator|+
+operator|(
+name|ARG_RD
+operator|)
+block|,
+name|CLASS_BIT
+operator|+
+literal|5
+block|,
+name|CLASS_IMM
+operator|+
+operator|(
+name|ARG_IMM16
+operator|)
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,}
+block|,
+literal|2
+block|,
+literal|4
+block|,
+literal|340
 block|}
 block|,
 comment|/* 0011 1010 dddd 0101 imm16 *** sinb rbd,imm16 */
@@ -27306,83 +27543,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|338
-block|}
-block|,
-comment|/* 0011 1011 dddd 0101 imm16 *** sinb rd,imm16 */
-block|{
-ifdef|#
-directive|ifdef
-name|NICENAMES
-literal|"sinb rd,imm16"
-block|,
-literal|8
-block|,
-literal|0
-block|,
-literal|0x00
-block|,
-endif|#
-directive|endif
-literal|"sinb"
-block|,
-name|OPC_sinb
-block|,
-literal|0
-block|,
-block|{
-name|CLASS_REG_WORD
-operator|+
-operator|(
-name|ARG_RD
-operator|)
-block|,
-name|CLASS_IMM
-operator|+
-operator|(
-name|ARG_IMM16
-operator|)
-block|,}
-block|,
-block|{
-name|CLASS_BIT
-operator|+
-literal|3
-block|,
-name|CLASS_BIT
-operator|+
-literal|0xb
-block|,
-name|CLASS_REG
-operator|+
-operator|(
-name|ARG_RD
-operator|)
-block|,
-name|CLASS_BIT
-operator|+
-literal|5
-block|,
-name|CLASS_IMM
-operator|+
-operator|(
-name|ARG_IMM16
-operator|)
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,}
-block|,
-literal|2
-block|,
-literal|4
-block|,
-literal|339
+literal|341
 block|}
 block|,
 comment|/* 0011 1011 ssN0 1000 0001 aaaa ddN0 1000 *** sind @rd,@rs,ra */
@@ -27472,7 +27633,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|340
+literal|342
 block|}
 block|,
 comment|/* 0011 1010 ssN0 1000 0001 aaaa ddN0 1000 *** sindb @rd,@rs,rba */
@@ -27562,7 +27723,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|341
+literal|343
 block|}
 block|,
 comment|/* 0011 1010 ssN0 0001 0000 aaaa ddN0 1000 *** sinib @rd,@rs,ra */
@@ -27652,7 +27813,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|342
+literal|344
 block|}
 block|,
 comment|/* 0011 1010 ssN0 0001 0000 aaaa ddN0 0000 *** sinibr @rd,@rs,ra */
@@ -27742,7 +27903,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|343
+literal|345
 block|}
 block|,
 comment|/* 1011 0011 dddd 1001 0000 0000 imm8 *** sla rd,imm8 */
@@ -27822,7 +27983,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|344
+literal|346
 block|}
 block|,
 comment|/* 1011 0010 dddd 1001  0000 0000 imm8 *** slab rbd,imm8 */
@@ -27902,7 +28063,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|345
+literal|347
 block|}
 block|,
 comment|/* 1011 0011 dddd 1101 0000 0000 imm8 *** slal rrd,imm8 */
@@ -27982,7 +28143,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|346
+literal|348
 block|}
 block|,
 comment|/* 1011 0011 dddd 0001 0000 0000 imm8 *** sll rd,imm8 */
@@ -28062,7 +28223,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|347
+literal|349
 block|}
 block|,
 comment|/* 1011 0010 dddd 0001  0000 0000 imm8 *** sllb rbd,imm8 */
@@ -28142,7 +28303,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|348
+literal|350
 block|}
 block|,
 comment|/* 1011 0011 dddd 0101 0000 0000 imm8 *** slll rrd,imm8 */
@@ -28222,7 +28383,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|349
+literal|351
 block|}
 block|,
 comment|/* 0011 1011 ssss 0111 imm16 *** sout imm16,rs */
@@ -28298,7 +28459,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|350
+literal|352
 block|}
 block|,
 comment|/* 0011 1010 ssss 0111 imm16 *** soutb imm16,rbs */
@@ -28374,7 +28535,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|351
+literal|353
 block|}
 block|,
 comment|/* 0011 1011 ssN0 1011 0000 aaaa ddN0 1000 *** soutd @rd,@rs,ra */
@@ -28464,7 +28625,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|352
+literal|354
 block|}
 block|,
 comment|/* 0011 1010 ssN0 1011 0000 aaaa ddN0 1000 *** soutdb @rd,@rs,rba */
@@ -28554,7 +28715,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|353
+literal|355
 block|}
 block|,
 comment|/* 0011 1010 ssN0 0011 0000 aaaa ddN0 1000 *** soutib @rd,@rs,ra */
@@ -28644,7 +28805,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|354
+literal|356
 block|}
 block|,
 comment|/* 0011 1010 ssN0 0011 0000 aaaa ddN0 0000 *** soutibr @rd,@rs,ra */
@@ -28734,7 +28895,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|355
+literal|357
 block|}
 block|,
 comment|/* 1011 0011 dddd 1001 1111 1111 nim8 *** sra rd,imm8 */
@@ -28814,7 +28975,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|356
+literal|358
 block|}
 block|,
 comment|/* 1011 0010 dddd 1001 0000 0000 nim8 *** srab rbd,imm8 */
@@ -28894,7 +29055,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|357
+literal|359
 block|}
 block|,
 comment|/* 1011 0011 dddd 1101 1111 1111 nim8 *** sral rrd,imm8 */
@@ -28974,7 +29135,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|358
+literal|360
 block|}
 block|,
 comment|/* 1011 0011 dddd 0001 1111 1111 nim8 *** srl rd,imm8 */
@@ -29054,7 +29215,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|359
+literal|361
 block|}
 block|,
 comment|/* 1011 0010 dddd 0001 0000 0000 nim8 *** srlb rbd,imm8 */
@@ -29134,7 +29295,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|360
+literal|362
 block|}
 block|,
 comment|/* 1011 0011 dddd 0101 1111 1111 nim8 *** srll rrd,imm8 */
@@ -29214,7 +29375,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|361
+literal|363
 block|}
 block|,
 comment|/* 0000 0011 ssN0 dddd *** sub rd,@rs */
@@ -29288,7 +29449,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|362
+literal|364
 block|}
 block|,
 comment|/* 0100 0011 0000 dddd address_src *** sub rd,address_src */
@@ -29364,7 +29525,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|363
+literal|365
 block|}
 block|,
 comment|/* 0100 0011 ssN0 dddd address_src *** sub rd,address_src(rs) */
@@ -29442,7 +29603,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|364
+literal|366
 block|}
 block|,
 comment|/* 0000 0011 0000 dddd imm16 *** sub rd,imm16 */
@@ -29518,7 +29679,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|365
+literal|367
 block|}
 block|,
 comment|/* 1000 0011 ssss dddd *** sub rd,rs */
@@ -29592,7 +29753,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|366
+literal|368
 block|}
 block|,
 comment|/* 0000 0010 ssN0 dddd *** subb rbd,@rs */
@@ -29666,7 +29827,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|367
+literal|369
 block|}
 block|,
 comment|/* 0100 0010 0000 dddd address_src *** subb rbd,address_src */
@@ -29742,7 +29903,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|368
+literal|370
 block|}
 block|,
 comment|/* 0100 0010 ssN0 dddd address_src *** subb rbd,address_src(rs) */
@@ -29820,7 +29981,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|369
+literal|371
 block|}
 block|,
 comment|/* 0000 0010 0000 dddd imm8 imm8 *** subb rbd,imm8 */
@@ -29900,7 +30061,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|370
+literal|372
 block|}
 block|,
 comment|/* 1000 0010 ssss dddd *** subb rbd,rbs */
@@ -29974,7 +30135,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|371
+literal|373
 block|}
 block|,
 comment|/* 0001 0010 ssN0 dddd *** subl rrd,@rs */
@@ -30048,7 +30209,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|372
+literal|374
 block|}
 block|,
 comment|/* 0101 0010 0000 dddd address_src *** subl rrd,address_src */
@@ -30124,7 +30285,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|373
+literal|375
 block|}
 block|,
 comment|/* 0101 0010 ssN0 dddd address_src *** subl rrd,address_src(rs) */
@@ -30202,7 +30363,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|374
+literal|376
 block|}
 block|,
 comment|/* 0001 0010 0000 dddd imm32 *** subl rrd,imm32 */
@@ -30278,7 +30439,7 @@ literal|2
 block|,
 literal|6
 block|,
-literal|375
+literal|377
 block|}
 block|,
 comment|/* 1001 0010 ssss dddd *** subl rrd,rrs */
@@ -30352,7 +30513,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|376
+literal|378
 block|}
 block|,
 comment|/* 1010 1111 dddd cccc *** tcc cc,rd */
@@ -30418,7 +30579,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|377
+literal|379
 block|}
 block|,
 comment|/* 1010 1110 dddd cccc *** tccb cc,rbd */
@@ -30484,7 +30645,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|378
+literal|380
 block|}
 block|,
 comment|/* 0000 1101 ddN0 0100 *** test @rd */
@@ -30550,7 +30711,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|379
+literal|381
 block|}
 block|,
 comment|/* 0100 1101 0000 0100 address_dst *** test address_dst */
@@ -30618,7 +30779,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|380
+literal|382
 block|}
 block|,
 comment|/* 0100 1101 ddN0 0100 address_dst *** test address_dst(rd) */
@@ -30688,7 +30849,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|381
+literal|383
 block|}
 block|,
 comment|/* 1000 1101 dddd 0100 *** test rd */
@@ -30754,7 +30915,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|382
+literal|384
 block|}
 block|,
 comment|/* 0000 1100 ddN0 0100 *** testb @rd */
@@ -30820,7 +30981,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|383
+literal|385
 block|}
 block|,
 comment|/* 0100 1100 0000 0100 address_dst *** testb address_dst */
@@ -30888,7 +31049,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|384
+literal|386
 block|}
 block|,
 comment|/* 0100 1100 ddN0 0100 address_dst *** testb address_dst(rd) */
@@ -30958,7 +31119,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|385
+literal|387
 block|}
 block|,
 comment|/* 1000 1100 dddd 0100 *** testb rbd */
@@ -31024,7 +31185,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|386
+literal|388
 block|}
 block|,
 comment|/* 0001 1100 ddN0 1000 *** testl @rd */
@@ -31090,7 +31251,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|387
+literal|389
 block|}
 block|,
 comment|/* 0101 1100 0000 1000 address_dst *** testl address_dst */
@@ -31158,7 +31319,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|388
+literal|390
 block|}
 block|,
 comment|/* 0101 1100 ddN0 1000 address_dst *** testl address_dst(rd) */
@@ -31228,7 +31389,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|389
+literal|391
 block|}
 block|,
 comment|/* 1001 1100 dddd 1000 *** testl rrd */
@@ -31294,7 +31455,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|390
+literal|392
 block|}
 block|,
 comment|/* 1011 1000 ddN0 1000 0000 aaaa ssN0 0000 *** trdb @rd,@rs,rba */
@@ -31384,7 +31545,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|391
+literal|393
 block|}
 block|,
 comment|/* 1011 1000 ddN0 1100 0000 aaaa ssN0 0000 *** trdrb @rd,@rs,rba */
@@ -31474,7 +31635,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|392
+literal|394
 block|}
 block|,
 comment|/* 1011 1000 ddN0 0000 0000 rrrr ssN0 0000 *** trib @rd,@rs,rbr */
@@ -31564,7 +31725,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|393
+literal|395
 block|}
 block|,
 comment|/* 1011 1000 ddN0 0100 0000 rrrr ssN0 0000 *** trirb @rd,@rs,rbr */
@@ -31654,7 +31815,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|394
+literal|396
 block|}
 block|,
 comment|/* 1011 1000 aaN0 1010 0000 rrrr bbN0 0000 *** trtdb @ra,@rb,rbr */
@@ -31744,7 +31905,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|395
+literal|397
 block|}
 block|,
 comment|/* 1011 1000 aaN0 1110 0000 rrrr bbN0 1110 *** trtdrb @ra,@rb,rbr */
@@ -31834,7 +31995,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|396
+literal|398
 block|}
 block|,
 comment|/* 1011 1000 aaN0 0010 0000 rrrr bbN0 0000 *** trtib @ra,@rb,rbr */
@@ -31924,7 +32085,7 @@ literal|3
 block|,
 literal|4
 block|,
-literal|397
+literal|399
 block|}
 block|,
 comment|/* 1011 1000 aaN0 0110 0000 rrrr bbN0 1110 *** trtirb @ra,@rb,rbr */
@@ -32014,7 +32175,97 @@ literal|3
 block|,
 literal|4
 block|,
-literal|398
+literal|400
+block|}
+block|,
+comment|/* 1011 1000 aaN0 1010 0000 rrrr bbN0 0000 *** trtrb @ra,@rb,rbr */
+block|{
+ifdef|#
+directive|ifdef
+name|NICENAMES
+literal|"trtrb @ra,@rb,rbr"
+block|,
+literal|8
+block|,
+literal|25
+block|,
+literal|0x1c
+block|,
+endif|#
+directive|endif
+literal|"trtrb"
+block|,
+name|OPC_trtrb
+block|,
+literal|0
+block|,
+block|{
+name|CLASS_IR
+operator|+
+operator|(
+name|ARG_RA
+operator|)
+block|,
+name|CLASS_IR
+operator|+
+operator|(
+name|ARG_RB
+operator|)
+block|,
+name|CLASS_REG_BYTE
+operator|+
+operator|(
+name|ARG_RR
+operator|)
+block|,}
+block|,
+block|{
+name|CLASS_BIT
+operator|+
+literal|0xb
+block|,
+name|CLASS_BIT
+operator|+
+literal|8
+block|,
+name|CLASS_REGN0
+operator|+
+operator|(
+name|ARG_RA
+operator|)
+block|,
+name|CLASS_BIT
+operator|+
+literal|0xa
+block|,
+name|CLASS_BIT
+operator|+
+literal|0
+block|,
+name|CLASS_REG
+operator|+
+operator|(
+name|ARG_RR
+operator|)
+block|,
+name|CLASS_REGN0
+operator|+
+operator|(
+name|ARG_RB
+operator|)
+block|,
+name|CLASS_BIT
+operator|+
+literal|0
+block|,
+literal|0
+block|,}
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|401
 block|}
 block|,
 comment|/* 0000 1101 ddN0 0110 *** tset @rd */
@@ -32080,7 +32331,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|399
+literal|402
 block|}
 block|,
 comment|/* 0100 1101 0000 0110 address_dst *** tset address_dst */
@@ -32148,7 +32399,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|400
+literal|403
 block|}
 block|,
 comment|/* 0100 1101 ddN0 0110 address_dst *** tset address_dst(rd) */
@@ -32218,7 +32469,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|401
+literal|404
 block|}
 block|,
 comment|/* 1000 1101 dddd 0110 *** tset rd */
@@ -32284,7 +32535,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|402
+literal|405
 block|}
 block|,
 comment|/* 0000 1100 ddN0 0110 *** tsetb @rd */
@@ -32350,7 +32601,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|403
+literal|406
 block|}
 block|,
 comment|/* 0100 1100 0000 0110 address_dst *** tsetb address_dst */
@@ -32418,7 +32669,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|404
+literal|407
 block|}
 block|,
 comment|/* 0100 1100 ddN0 0110 address_dst *** tsetb address_dst(rd) */
@@ -32488,7 +32739,7 @@ literal|1
 block|,
 literal|4
 block|,
-literal|405
+literal|408
 block|}
 block|,
 comment|/* 1000 1100 dddd 0110 *** tsetb rbd */
@@ -32554,7 +32805,7 @@ literal|1
 block|,
 literal|2
 block|,
-literal|406
+literal|409
 block|}
 block|,
 comment|/* 0000 1001 ssN0 dddd *** xor rd,@rs */
@@ -32628,7 +32879,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|407
+literal|410
 block|}
 block|,
 comment|/* 0100 1001 0000 dddd address_src *** xor rd,address_src */
@@ -32704,7 +32955,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|408
+literal|411
 block|}
 block|,
 comment|/* 0100 1001 ssN0 dddd address_src *** xor rd,address_src(rs) */
@@ -32782,7 +33033,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|409
+literal|412
 block|}
 block|,
 comment|/* 0000 1001 0000 dddd imm16 *** xor rd,imm16 */
@@ -32858,7 +33109,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|410
+literal|413
 block|}
 block|,
 comment|/* 1000 1001 ssss dddd *** xor rd,rs */
@@ -32932,7 +33183,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|411
+literal|414
 block|}
 block|,
 comment|/* 0000 1000 ssN0 dddd *** xorb rbd,@rs */
@@ -33006,7 +33257,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|412
+literal|415
 block|}
 block|,
 comment|/* 0100 1000 0000 dddd address_src *** xorb rbd,address_src */
@@ -33082,7 +33333,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|413
+literal|416
 block|}
 block|,
 comment|/* 0100 1000 ssN0 dddd address_src *** xorb rbd,address_src(rs) */
@@ -33160,7 +33411,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|414
+literal|417
 block|}
 block|,
 comment|/* 0000 1000 0000 dddd imm8 imm8 *** xorb rbd,imm8 */
@@ -33240,7 +33491,7 @@ literal|2
 block|,
 literal|4
 block|,
-literal|415
+literal|418
 block|}
 block|,
 comment|/* 1000 1000 ssss dddd *** xorb rbd,rbs */
@@ -33314,7 +33565,7 @@ literal|2
 block|,
 literal|2
 block|,
-literal|416
+literal|419
 block|}
 block|,
 comment|/* 1000 1000 ssss dddd *** xorb rbd,rbs */
@@ -33388,12 +33639,68 @@ literal|2
 block|,
 literal|2
 block|,
-literal|417
+literal|420
+block|}
+block|,
+comment|/* end marker */
+block|{
+ifdef|#
+directive|ifdef
+name|NICENAMES
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+endif|#
+directive|endif
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

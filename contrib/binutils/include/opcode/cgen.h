@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Header file for targets using CGEN: Cpu tools GENerator.  Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.  This file is part of GDB, the GNU debugger, and the GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Header file for targets using CGEN: Cpu tools GENerator.  Copyright 1996, 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GDB, the GNU debugger, and the GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|CGEN_H
 end_define
 
 begin_comment
-comment|/* ??? This file requires bfd.h but only to get bfd_vma.    Seems like an awful lot to require just to get such a fundamental type.    Perhaps the definition of bfd_vma can be moved outside of bfd.h.    Or perhaps one could duplicate its definition in another file.    Until such time, this file conditionally compiles definitions that require    bfd_vma using BFD_VERSION.  */
+comment|/* ??? This file requires bfd.h but only to get bfd_vma.    Seems like an awful lot to require just to get such a fundamental type.    Perhaps the definition of bfd_vma can be moved outside of bfd.h.    Or perhaps one could duplicate its definition in another file.    Until such time, this file conditionally compiles definitions that require    bfd_vma using BFD_VERSION_DATE.  */
 end_comment
 
 begin_comment
@@ -431,6 +431,11 @@ comment|/* one of enum mach_attr */
 name|int
 name|num
 decl_stmt|;
+comment|/* parameter from mach->cpu */
+name|unsigned
+name|int
+name|insn_chunk_bitsize
+decl_stmt|;
 block|}
 name|CGEN_MACH
 typedef|;
@@ -554,7 +559,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 end_ifdef
 
 begin_typedef
@@ -618,7 +623,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 end_ifdef
 
 begin_typedef
@@ -682,7 +687,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 end_ifdef
 
 begin_typedef
@@ -806,7 +811,7 @@ end_enum
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 end_ifdef
 
 begin_comment
@@ -1086,6 +1091,7 @@ argument_list|(
 operator|(
 name|CGEN_CPU_DESC
 operator|,
+name|unsigned
 name|int
 operator|)
 argument_list|)
@@ -1187,6 +1193,13 @@ specifier|const
 name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|null_entry
+decl_stmt|;
+comment|/* String containing non-alphanumeric characters used      in keywords.        At present, the highest number of entries used is 1.  */
+name|char
+name|nonalpha_chars
+index|[
+literal|8
+index|]
 decl_stmt|;
 block|}
 name|CGEN_KEYWORD
@@ -1361,7 +1374,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 end_ifdef
 
 begin_comment
@@ -1607,6 +1620,45 @@ value|CGEN_OPERAND_MAX
 end_define
 
 begin_comment
+comment|/* A tree of these structs represents the multi-ifield    structure of an operand's hw-index value, if it exists.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|cgen_ifld
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|cgen_maybe_multi_ifield
+block|{
+name|int
+name|count
+decl_stmt|;
+comment|/* 0: indexed by single cgen_ifld (possibly null: dead entry); 		n: indexed by array of more cgen_maybe_multi_ifields.  */
+union|union
+block|{
+name|struct
+name|cgen_maybe_multi_ifield
+modifier|*
+name|multi
+decl_stmt|;
+name|struct
+name|cgen_ifld
+modifier|*
+name|leaf
+decl_stmt|;
+block|}
+name|val
+union|;
+block|}
+name|CGEN_MAYBE_MULTI_IFLD
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* This struct defines each entry in the operand table.  */
 end_comment
 
@@ -1639,6 +1691,10 @@ comment|/* The number of bits in the operand.      This is just a hint, and may 
 name|unsigned
 name|char
 name|length
+decl_stmt|;
+comment|/* The (possibly-multi) ifield used as an index for this operand, if it      is indexed by a field at all. This substitutes / extends the start and      length fields above, but unsure at this time whether they are used      anywhere.  */
+name|CGEN_MAYBE_MULTI_IFLD
+name|index_fields
 decl_stmt|;
 if|#
 directive|if
@@ -1867,18 +1923,45 @@ begin_comment
 comment|/* Syntax string.     Each insn format and subexpression has one of these.     The syntax "string" consists of characters (n> 0&& n< 128), and operand    values (n>= 128), and is terminated by 0.  Operand values are 128 + index    into the operand table.  The operand table doesn't exist in C, per se, as    the data is recorded in the parse/insert/extract/print switch statements. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CGEN_MAX_SYNTAX_BYTES
-end_ifndef
+begin_comment
+comment|/* This should be at least as large as necessary for any target. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CGEN_MAX_SYNTAX_BYTES
-value|16
+name|CGEN_MAX_SYNTAX_ELEMENTS
+value|48
 end_define
+
+begin_comment
+comment|/* A target may know its own precise maximum.  Assert that it falls below    the above limit. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CGEN_ACTUAL_MAX_SYNTAX_ELEMENTS
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|CGEN_ACTUAL_MAX_SYNTAX_ELEMENTS
+operator|>
+name|CGEN_MAX_SYNTAX_ELEMENTS
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"CGEN_ACTUAL_MAX_SYNTAX_ELEMENTS too high - enlarge CGEN_MAX_SYNTAX_ELEMENTS"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1887,13 +1970,20 @@ end_endif
 
 begin_typedef
 typedef|typedef
+name|unsigned
+name|short
+name|CGEN_SYNTAX_CHAR_TYPE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 block|{
-name|unsigned
-name|char
+name|CGEN_SYNTAX_CHAR_TYPE
 name|syntax
 index|[
-name|CGEN_MAX_SYNTAX_BYTES
+name|CGEN_MAX_SYNTAX_ELEMENTS
 index|]
 decl_stmt|;
 block|}
@@ -1928,7 +2018,7 @@ name|CGEN_SYNTAX_CHAR
 parameter_list|(
 name|c
 parameter_list|)
-value|(c)
+value|((unsigned char)c)
 end_define
 
 begin_define
@@ -2132,18 +2222,45 @@ name|CGEN_IFMT_IFLD
 typedef|;
 end_typedef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CGEN_MAX_IFMT_OPERANDS
-end_ifndef
+begin_comment
+comment|/* This should be at least as large as necessary for any target. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|CGEN_MAX_IFMT_OPERANDS
-value|1
+value|16
 end_define
+
+begin_comment
+comment|/* A target may know its own precise maximum.  Assert that it falls below    the above limit. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CGEN_ACTUAL_MAX_IFMT_OPERANDS
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|CGEN_ACTUAL_MAX_IFMT_OPERANDS
+operator|>
+name|CGEN_MAX_IFMT_OPERANDS
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"CGEN_ACTUAL_MAX_IFMT_OPERANDS too high - enlarge CGEN_MAX_IFMT_OPERANDS"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2544,6 +2661,22 @@ name|CGEN_OPINST
 modifier|*
 name|opinst
 decl_stmt|;
+comment|/* Regex to disambiguate overloaded opcodes */
+name|void
+modifier|*
+name|rx
+decl_stmt|;
+define|#
+directive|define
+name|CGEN_INSN_RX
+parameter_list|(
+name|insn
+parameter_list|)
+value|((insn)->rx)
+define|#
+directive|define
+name|CGEN_MAX_RX_ELEMENTS
+value|(CGEN_MAX_SYNTAX_ELEMENTS * 5)
 block|}
 struct|;
 end_struct
@@ -3023,6 +3156,11 @@ name|unsigned
 name|int
 name|word_bitsize
 decl_stmt|;
+comment|/* Instruction chunk size (in bits), for purposes of endianness      conversion.  */
+name|unsigned
+name|int
+name|insn_chunk_bitsize
+decl_stmt|;
 comment|/* Indicator if sizes are unknown.      This is used by default_insn_bitsize,base_insn_bitsize if there is a      difference between the selected isa's.  */
 define|#
 directive|define
@@ -3138,7 +3276,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 specifier|const
 name|char
 operator|*
@@ -3357,7 +3495,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BFD_VERSION
+name|BFD_VERSION_DATE
 name|bfd_vma
 argument_list|(
 argument|*get_vma_operand
@@ -3775,6 +3913,28 @@ parameter_list|)
 function_decl|PARAMS
 parameter_list|(
 function_decl|(CGEN_CPU_DESC cd_
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* build the insn selection regex.    called by init_opcode_table */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|CGEN_SYM
+parameter_list|(
+name|build_insn_regex
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(CGEN_INSN *insn_
 end_function_decl
 
 begin_empty_stmt

@@ -694,14 +694,20 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
+begin_decl_stmt
 name|struct
 name|coff_ofile
 modifier|*
 name|coff_grok
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

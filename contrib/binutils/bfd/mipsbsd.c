@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for MIPS BSD (a.out) binaries.    Copyright (C) 1993, 94, 95, 97, 98, 1999 Free Software Foundation, Inc.    Written by Ralph Campbell.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD backend for MIPS BSD (a.out) binaries.    Copyright 1993, 1994, 1995, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Ralph Campbell.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -104,6 +104,10 @@ name|MY_symbol_leading_char
 value|'\0'
 end_define
 
+begin_comment
+comment|/* Do not "beautify" the CONCAT* macro args.  Traditional C will not    remove whitespace added here, and thus will fail to concatenate    the tokens.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -111,7 +115,7 @@ name|MY
 parameter_list|(
 name|OP
 parameter_list|)
-value|CAT(mipsbsd_,OP)
+value|CONCAT2 (mipsbsd_,OP)
 end_define
 
 begin_include
@@ -148,7 +152,7 @@ parameter_list|,
 name|EXEC
 parameter_list|)
 define|\
-value|MY(set_arch_mach)(ABFD, N_MACHTYPE (EXEC)); \   MY(choose_reloc_size)(ABFD);
+value|MY(set_arch_mach) (ABFD, N_MACHTYPE (EXEC)); \   MY(choose_reloc_size) (ABFD);
 end_define
 
 begin_function_decl
@@ -165,7 +169,8 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|,
-name|int
+name|unsigned
+name|long
 name|machtype
 decl_stmt|)
 end_function_decl
@@ -217,7 +222,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* We can't use MY(x) here because it leads to a recursive call to CAT    when expanded inside JUMP_TABLE.  */
+comment|/* We can't use MY(x) here because it leads to a recursive call to CONCAT2    when expanded inside JUMP_TABLE.  */
 end_comment
 
 begin_define
@@ -281,6 +286,81 @@ directive|include
 file|"aout-target.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|bfd_reloc_status_type
+name|mips_fix_jmp_addr
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|arelent
+operator|*
+operator|,
+expr|struct
+name|symbol_cache_entry
+operator|*
+operator|,
+name|PTR
+operator|,
+name|asection
+operator|*
+operator|,
+name|bfd
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|MY
+parameter_list|(
+name|reloc_howto_type_lookup
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(bfd *
+operator|,
+function_decl|bfd_reloc_code_real_type
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|long
+name|MY
+parameter_list|(
+name|canonicalize_reloc
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(bfd *
+operator|,
+function_decl|sec_ptr
+operator|,
+function_decl|arelent **
+operator|,
+function_decl|asymbol **
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
 begin_function
 specifier|static
 name|void
@@ -297,7 +377,8 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-name|int
+name|unsigned
+name|long
 name|machtype
 decl_stmt|;
 block|{
@@ -305,10 +386,11 @@ name|enum
 name|bfd_architecture
 name|arch
 decl_stmt|;
-name|long
+name|unsigned
+name|int
 name|machine
 decl_stmt|;
-comment|/* Determine the architecture and machine type of the object file. */
+comment|/* Determine the architecture and machine type of the object file.  */
 switch|switch
 condition|(
 name|machtype
@@ -604,7 +686,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * MIPS relocation types.  */
+comment|/* MIPS relocation types.  */
 end_comment
 
 begin_define
@@ -650,7 +732,7 @@ value|5
 end_define
 
 begin_comment
-comment|/*  * This is only called when performing a BFD_RELOC_MIPS_JMP relocation.  * The jump destination address is formed from the upper 4 bits of the  * "current" program counter concatenated with the jump instruction's  * 26 bit field and two trailing zeros.  * If the destination address is not in the same segment as the "current"  * program counter, then we need to signal an error.  */
+comment|/* This is only called when performing a BFD_RELOC_MIPS_JMP relocation.    The jump destination address is formed from the upper 4 bits of the    "current" program counter concatenated with the jump instruction's    26 bit field and two trailing zeros.    If the destination address is not in the same segment as the "current"    program counter, then we need to signal an error.  */
 end_comment
 
 begin_function
@@ -669,6 +751,8 @@ parameter_list|,
 name|input_section
 parameter_list|,
 name|output_bfd
+parameter_list|,
+name|error_message
 parameter_list|)
 name|bfd
 modifier|*
@@ -696,13 +780,19 @@ name|bfd
 modifier|*
 name|output_bfd
 decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|error_message
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 name|bfd_vma
 name|relocation
 decl_stmt|,
 name|pc
 decl_stmt|;
-comment|/* If this is a partial relocation, just continue. */
+comment|/* If this is a partial relocation, just continue.  */
 if|if
 condition|(
 name|output_bfd
@@ -739,7 +829,7 @@ condition|)
 return|return
 name|bfd_reloc_undefined
 return|;
-comment|/*     * Work out which section the relocation is targetted at and the    * initial relocation command value.    */
+comment|/* Work out which section the relocation is targetted at and the      initial relocation command value.  */
 if|if
 condition|(
 name|bfd_is_com_section
@@ -826,7 +916,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is only called when performing a BFD_RELOC_HI16_S relocation.  * We need to see if bit 15 is set in the result. If it is, we add  * 0x10000 and continue normally. This will compensate for the sign extension  * when the low bits are added at run time.  */
+comment|/* This is only called when performing a BFD_RELOC_HI16_S relocation.    We need to see if bit 15 is set in the result. If it is, we add    0x10000 and continue normally. This will compensate for the sign extension    when the low bits are added at run time.  */
 end_comment
 
 begin_decl_stmt
@@ -916,7 +1006,7 @@ block|{
 name|bfd_vma
 name|relocation
 decl_stmt|;
-comment|/* If this is a partial relocation, just continue. */
+comment|/* If this is a partial relocation, just continue.  */
 if|if
 condition|(
 name|output_bfd
@@ -930,7 +1020,7 @@ condition|)
 return|return
 name|bfd_reloc_continue
 return|;
-comment|/* If this is an undefined symbol, return error */
+comment|/* If this is an undefined symbol, return error.  */
 if|if
 condition|(
 name|bfd_is_und_section
@@ -953,7 +1043,7 @@ condition|)
 return|return
 name|bfd_reloc_undefined
 return|;
-comment|/*     * Work out which section the relocation is targetted at and the    * initial relocation command value.    */
+comment|/* Work out which section the relocation is targetted at and the      initial relocation command value.  */
 if|if
 condition|(
 name|bfd_is_com_section
@@ -1316,7 +1406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is just like the standard aoutx.h version but we need to do our  * own mapping of external reloc type values to howto entries.  */
+comment|/* This is just like the standard aoutx.h version but we need to do our    own mapping of external reloc type values to howto entries.  */
 end_comment
 
 begin_function
@@ -1376,7 +1466,7 @@ name|ext_howto_table
 argument_list|)
 decl|[]
 decl_stmt|;
-comment|/* If we have already read in the relocation table, return the values. */
+comment|/* If we have already read in the relocation table, return the values.  */
 if|if
 condition|(
 name|section
@@ -1505,7 +1595,7 @@ name|section
 operator|->
 name|relocation
 expr_stmt|;
-comment|/* fix up howto entries */
+comment|/* fix up howto entries.  */
 for|for
 control|(
 name|count
@@ -1565,59 +1655,61 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
-name|CONST
-expr|struct
+specifier|const
+name|struct
 name|aout_backend_data
 name|MY
-argument_list|(
+parameter_list|(
 name|backend_data
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 block|{
 literal|0
-block|,
+operator|,
 comment|/* zmagic contiguous */
-literal|1
-block|,
+function_decl|1
+operator|,
 comment|/* text incl header */
-literal|0
-block|,
+function_decl|0
+operator|,
 comment|/* entry is text address */
-literal|0
-block|,
+function_decl|0
+operator|,
 comment|/* exec_hdr_flags */
-name|TARGET_PAGE_SIZE
-block|,
+function_decl|TARGET_PAGE_SIZE
+operator|,
 comment|/* text vma */
-name|MY_set_sizes
-block|,
-literal|0
-block|,
+function_decl|MY_set_sizes
+operator|,
+function_decl|0
+operator|,
 comment|/* text size includes exec header */
-literal|0
-block|,
+function_decl|0
+operator|,
 comment|/* add_dynamic_symbols */
-literal|0
-block|,
+function_decl|0
+operator|,
 comment|/* add_one_symbol */
-literal|0
-block|,
+function_decl|0
+operator|,
 comment|/* link_dynamic_object */
-literal|0
-block|,
+function_decl|0
+operator|,
 comment|/* write_dynamic_symbol */
-literal|0
-block|,
+function_decl|0
+operator|,
 comment|/* check_dynamic_reloc */
-literal|0
+function_decl|0
+end_function_decl
+
+begin_comment
 comment|/* finish_dynamic_link */
-block|}
-expr_stmt|;
-end_expr_stmt
+end_comment
 
 begin_decl_stmt
+unit|};
 specifier|extern
 specifier|const
 name|bfd_target

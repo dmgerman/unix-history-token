@@ -7,6 +7,10 @@ begin_comment
 comment|/* This function is in the public domain.  --Per Bothner. */
 end_comment
 
+begin_comment
+comment|/*  @deftypefn Supplemental void* memmove (void *@var{from}, const void *@var{to}, size_t @var{count})  Copies @var{count} bytes from memory area @var{from} to memory area @var{to}, returning a pointer to @var{to}.  @end deftypefn  */
+end_comment
+
 begin_include
 include|#
 directive|include

@@ -4,6 +4,10 @@ comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All
 end_comment
 
 begin_comment
+comment|/*  @deftypefun int xatexit (void (*@var{fn}) (void))  Behaves as the standard @code{atexit} function, but with no limit on the number of registered functions.  Returns 0 on success, or @minus{}1 on failure.  If you use @code{xatexit} to register functions, you must use @code{xexit} to terminate your program.  @end deftypefun  */
+end_comment
+
+begin_comment
 comment|/* Adapted from newlib/libc/stdlib/{,at}exit.[ch].    If you use xatexit, you must call xexit instead of exit.  */
 end_comment
 

@@ -32,6 +32,13 @@ name|sys_siglist
 value|no_such_symbol
 end_define
 
+begin_define
+define|#
+directive|define
+name|sys_nsig
+value|sys_nsig__no_such_symbol
+end_define
+
 begin_include
 include|#
 directive|include
@@ -116,6 +123,12 @@ begin_undef
 undef|#
 directive|undef
 name|sys_siglist
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|sys_nsig
 end_undef
 
 begin_ifndef
@@ -203,6 +216,7 @@ begin_struct
 struct|struct
 name|signal_info
 block|{
+specifier|const
 name|int
 name|value
 decl_stmt|;
@@ -210,6 +224,7 @@ comment|/* The numeric value from<signal.h> */
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|name
 decl_stmt|;
 comment|/* The equivalent symbolic value */
@@ -219,6 +234,7 @@ name|HAVE_SYS_SIGLIST
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|msg
 decl_stmt|;
 comment|/* Short message about this value */
@@ -1407,7 +1423,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  NAME  	signo_max -- return the max signo value  SYNOPSIS  	int signo_max ();  DESCRIPTION  	Returns the maximum signo value for which a corresponding symbolic 	name or message is available.  Note that in the case where 	we use the sys_siglist supplied by the system, it is possible for 	there to be more symbolic names than messages, or vice versa. 	In fact, the manual page for psignal(3b) explicitly warns that one 	should check the size of the table (NSIG) before indexing it, 	since new signal codes may be added to the system before they are 	added to the table.  Thus NSIG might be smaller than value 	implied by the largest signo value defined in<signal.h>.  	We return the maximum value that can be used to obtain a meaningful 	symbolic name or message.  */
+comment|/*  @deftypefn Extension int signo_max (void)  Returns the maximum signal value for which a corresponding symbolic name or message is available.  Note that in the case where we use the @code{sys_siglist} supplied by the system, it is possible for there to be more symbolic names than messages, or vice versa.  In fact, the manual page for @code{psignal(3b)} explicitly warns that one should check the size of the table (@code{NSIG}) before indexing it, since new signal codes may be added to the system before they are added to the table.  Thus @code{NSIG} might be smaller than value implied by the largest signo value defined in @code{<signal.h>}.  We return the maximum value that can be used to obtain a meaningful symbolic name or message.  @end deftypefn  */
 end_comment
 
 begin_function
@@ -1449,7 +1465,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  NAME  	strsignal -- map a signal number to a signal message string  SYNOPSIS  	const char *strsignal (int signo)  DESCRIPTION  	Maps an signal number to an signal message string, the contents of 	which are implementation defined.  On systems which have the external 	variable sys_siglist, these strings will be the same as the ones used 	by psignal().  	If the supplied signal number is within the valid range of indices 	for the sys_siglist, but no message is available for the particular 	signal number, then returns the string "Signal NUM", where NUM is the 	signal number.  	If the supplied signal number is not a valid index into sys_siglist, 	returns NULL.  	The returned string is only guaranteed to be valid only until the 	next call to strsignal.  */
+comment|/*  @deftypefn Supplemental {const char *} strsignal (int @var{signo})  Maps an signal number to an signal message string, the contents of which are implementation defined.  On systems which have the external variable @code{sys_siglist}, these strings will be the same as the ones used by @code{psignal()}.  If the supplied signal number is within the valid range of indices for the @code{sys_siglist}, but no message is available for the particular signal number, then returns the string @samp{Signal @var{num}}, where @var{num} is the signal number.  If the supplied signal number is not a valid index into @code{sys_siglist}, returns @code{NULL}.  The returned string is only guaranteed to be valid only until the next call to @code{strsignal}.  @end deftypefn  */
 end_comment
 
 begin_ifndef
@@ -1592,7 +1608,7 @@ comment|/* ! HAVE_STRSIGNAL */
 end_comment
 
 begin_comment
-comment|/*  NAME  	strsigno -- map an signal number to a symbolic name string  SYNOPSIS  	const char *strsigno (int signo)  DESCRIPTION  	Given an signal number, returns a pointer to a string containing 	the symbolic name of that signal number, as found in<signal.h>.  	If the supplied signal number is within the valid range of indices 	for symbolic names, but no name is available for the particular 	signal number, then returns the string "Signal NUM", where NUM is 	the signal number.  	If the supplied signal number is not within the range of valid 	indices, then returns NULL.  BUGS  	The contents of the location pointed to are only guaranteed to be 	valid until the next call to strsigno.  */
+comment|/*  @deftypefn Extension {const char*} strsigno (int @var{signo})  Given an signal number, returns a pointer to a string containing the symbolic name of that signal number, as found in @code{<signal.h>}.  If the supplied signal number is within the valid range of indices for symbolic names, but no name is available for the particular signal number, then returns the string @samp{Signal @var{num}}, where @var{num} is the signal number.  If the supplied signal number is not within the range of valid indices, then returns @code{NULL}.  The contents of the location pointed to are only guaranteed to be valid until the next call to @code{strsigno}.  @end deftypefn  */
 end_comment
 
 begin_function
@@ -1710,7 +1726,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  NAME  	strtosigno -- map a symbolic signal name to a numeric value  SYNOPSIS  	int strtosigno (char *name)  DESCRIPTION  	Given the symbolic name of a signal, map it to a signal number. 	If no translation is found, returns 0.  */
+comment|/*  @deftypefn Extension int strtosigno (const char *@var{name})  Given the symbolic name of a signal, map it to a signal number.  If no translation is found, returns 0.  @end deftypefn  */
 end_comment
 
 begin_function
@@ -1813,7 +1829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  NAME  	psignal -- print message about signal to stderr  SYNOPSIS  	void psignal (unsigned signo, char *message);  DESCRIPTION  	Print to the standard error the message, followed by a colon, 	followed by the description of the signal specified by signo, 	followed by a newline. */
+comment|/*  @deftypefn Supplemental void psignal (unsigned @var{signo}, char *@var{message})  Print @var{message} to the standard error, followed by a colon, followed by the description of the signal specified by @var{signo}, followed by a newline.  @end deftypefn  */
 end_comment
 
 begin_ifndef

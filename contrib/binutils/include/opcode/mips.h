@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mips.h.  Mips opcode list for GDB, the GNU debugger.    Copyright 1993, 94, 95, 96, 1997 Free Software Foundation, Inc.    Contributed by Ralph Campbell and OSF    Commented and modified by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* mips.h.  Mips opcode list for GDB, the GNU debugger.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Ralph Campbell and OSF    Commented and modified by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|_MIPS_H_
 end_define
 
 begin_comment
-comment|/* These are bit masks and shift counts to use to access the various    fields of an instruction.  To retrieve the X field of an    instruction, use the expression 	(i>> OP_SH_X)& OP_MASK_X    To set the same field (to j), use 	i = (i&~ (OP_MASK_X<< OP_SH_X)) | (j<< OP_SH_X)     Make sure you use fields that are appropriate for the instruction,    of course.       The 'i' format uses OP, RS, RT and IMMEDIATE.       The 'j' format uses OP and TARGET.     The 'r' format uses OP, RS, RT, RD, SHAMT and FUNCT.     The 'b' format uses OP, RS, RT and DELTA.     The floating point 'i' format uses OP, RS, RT and IMMEDIATE.     The floating point 'r' format uses OP, FMT, FT, FS, FD and FUNCT.     A breakpoint instruction uses OP, CODE and SPEC (10 bits of the    breakpoint instruction are not defined; Kane says the breakpoint    code field in BREAK is 20 bits; yet MIPS assemblers and debuggers    only use ten bits).  An optional two-operand form of break/sdbbp    allows the lower ten bits to be set too.     The syscall instruction uses SYSCALL.     The general coprocessor instructions use COPZ.  */
+comment|/* These are bit masks and shift counts to use to access the various    fields of an instruction.  To retrieve the X field of an    instruction, use the expression 	(i>> OP_SH_X)& OP_MASK_X    To set the same field (to j), use 	i = (i&~ (OP_MASK_X<< OP_SH_X)) | (j<< OP_SH_X)     Make sure you use fields that are appropriate for the instruction,    of course.     The 'i' format uses OP, RS, RT and IMMEDIATE.     The 'j' format uses OP and TARGET.     The 'r' format uses OP, RS, RT, RD, SHAMT and FUNCT.     The 'b' format uses OP, RS, RT and DELTA.     The floating point 'i' format uses OP, RS, RT and IMMEDIATE.     The floating point 'r' format uses OP, FMT, FT, FS, FD and FUNCT.     A breakpoint instruction uses OP, CODE and SPEC (10 bits of the    breakpoint instruction are not defined; Kane says the breakpoint    code field in BREAK is 20 bits; yet MIPS assemblers and debuggers    only use ten bits).  An optional two-operand form of break/sdbbp    allows the lower ten bits to be set too, and MIPS32 and later    architectures allow 20 bits to be set with a signal operand    (using CODE20).     The syscall instruction uses CODE20.     The general coprocessor instructions use COPZ.  */
 end_comment
 
 begin_define
@@ -218,14 +218,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|OP_MASK_SYSCALL
+name|OP_MASK_CODE20
 value|0xfffff
 end_define
+
+begin_comment
+comment|/* 20 bit syscall/breakpoint code.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|OP_SH_SYSCALL
+name|OP_SH_CODE20
 value|6
 end_define
 
@@ -349,7 +353,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* FP condition code */
+comment|/* FP condition code.  */
 end_comment
 
 begin_define
@@ -360,7 +364,7 @@ value|18
 end_define
 
 begin_comment
-comment|/* FP condition code */
+comment|/* FP condition code.  */
 end_comment
 
 begin_define
@@ -378,7 +382,7 @@ value|25
 end_define
 
 begin_comment
-comment|/* Normal COP1 encoding */
+comment|/* Normal COP1 encoding.  */
 end_comment
 
 begin_define
@@ -389,7 +393,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* a single bit */
+comment|/* a single bit.  */
 end_comment
 
 begin_define
@@ -400,7 +404,7 @@ value|21
 end_define
 
 begin_comment
-comment|/* COP1 encodings */
+comment|/* COP1 encodings.  */
 end_comment
 
 begin_define
@@ -439,7 +443,7 @@ value|21
 end_define
 
 begin_comment
-comment|/* FP short format field */
+comment|/* FP short format field.  */
 end_comment
 
 begin_define
@@ -513,7 +517,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Multimedia (parallel) op */
+comment|/* Multimedia (parallel) op.  */
 end_comment
 
 begin_define
@@ -545,7 +549,7 @@ value|0x1f
 end_define
 
 begin_comment
-comment|/* Performance monitoring */
+comment|/* Performance monitoring.  */
 end_comment
 
 begin_define
@@ -553,6 +557,46 @@ define|#
 directive|define
 name|OP_SH_PERFREG
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_SH_SEL
+value|0
+end_define
+
+begin_comment
+comment|/* Coprocessor select field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OP_MASK_SEL
+value|0x7
+end_define
+
+begin_comment
+comment|/* The sel field of mfcZ and mtcZ.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OP_SH_CODE19
+value|6
+end_define
+
+begin_comment
+comment|/* 19 bit wait code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OP_MASK_CODE19
+value|0x7ffff
 end_define
 
 begin_comment
@@ -600,7 +644,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* These are the characters which may appears in the args field of an    instruction.  They appear in the order in which the fields appear    when the instruction is used.  Commas and parentheses in the args    string are ignored when assembling, and written into the output    when disassembling.     Each of these characters corresponds to a mask field defined above.     "<" 5 bit shift amount (OP_*_SHAMT)    ">" shift amount between 32 and 63, stored after subtracting 32 (OP_*_SHAMT)    "a" 26 bit target address (OP_*_TARGET)    "b" 5 bit base register (OP_*_RS)    "c" 10 bit breakpoint code (OP_*_CODE)    "d" 5 bit destination register specifier (OP_*_RD)    "h" 5 bit prefx hint (OP_*_PREFX)    "i" 16 bit unsigned immediate (OP_*_IMMEDIATE)    "j" 16 bit signed immediate (OP_*_DELTA)    "k" 5 bit cache opcode in target register position (OP_*_CACHE)    "o" 16 bit signed offset (OP_*_DELTA)    "p" 16 bit PC relative branch target address (OP_*_DELTA)    "q" 10 bit extra breakpoint code (OP_*_CODE2)    "r" 5 bit same register used as both source and target (OP_*_RS)    "s" 5 bit source register specifier (OP_*_RS)    "t" 5 bit target register (OP_*_RT)    "u" 16 bit upper 16 bits of address (OP_*_IMMEDIATE)    "v" 5 bit same register used as both source and destination (OP_*_RS)    "w" 5 bit same register used as both target and destination (OP_*_RT)    "C" 25 bit coprocessor function code (OP_*_COPZ)    "B" 20 bit syscall function code (OP_*_SYSCALL)    "x" accept and ignore register name    "z" must be zero register     Floating point instructions:    "D" 5 bit destination register (OP_*_FD)    "M" 3 bit compare condition code (OP_*_CCC) (only used for mips4 and up)    "N" 3 bit branch condition code (OP_*_BCC) (only used for mips4 and up)    "S" 5 bit fs source 1 register (OP_*_FS)    "T" 5 bit ft source 2 register (OP_*_FT)    "R" 5 bit fr source 3 register (OP_*_FR)    "V" 5 bit same register used as floating source and destination (OP_*_FS)    "W" 5 bit same register used as floating target and destination (OP_*_FT)     Coprocessor instructions:    "E" 5 bit target register (OP_*_RT)    "G" 5 bit destination register (OP_*_RD)    "P" 5 bit performance-monitor register (OP_*_PERFREG)     Macro instructions:    "A" General 32 bit expression    "I" 32 bit immediate    "F" 64 bit floating point constant in .rdata    "L" 64 bit floating point constant in .lit8    "f" 32 bit floating point constant    "l" 32 bit floating point constant in .lit4     Other:    "()" parens surrounding optional value    ","  separates operands     Characters used so far, for quick reference when adding more:    "<>(),"    "ABCDEFGILMNSTRVW"    "abcdfhijklopqrstuvwxz" */
+comment|/* These are the characters which may appears in the args field of an    instruction.  They appear in the order in which the fields appear    when the instruction is used.  Commas and parentheses in the args    string are ignored when assembling, and written into the output    when disassembling.     Each of these characters corresponds to a mask field defined above.     "<" 5 bit shift amount (OP_*_SHAMT)    ">" shift amount between 32 and 63, stored after subtracting 32 (OP_*_SHAMT)    "a" 26 bit target address (OP_*_TARGET)    "b" 5 bit base register (OP_*_RS)    "c" 10 bit breakpoint code (OP_*_CODE)    "d" 5 bit destination register specifier (OP_*_RD)    "h" 5 bit prefx hint (OP_*_PREFX)    "i" 16 bit unsigned immediate (OP_*_IMMEDIATE)    "j" 16 bit signed immediate (OP_*_DELTA)    "k" 5 bit cache opcode in target register position (OP_*_CACHE)    "o" 16 bit signed offset (OP_*_DELTA)    "p" 16 bit PC relative branch target address (OP_*_DELTA)    "q" 10 bit extra breakpoint code (OP_*_CODE2)    "r" 5 bit same register used as both source and target (OP_*_RS)    "s" 5 bit source register specifier (OP_*_RS)    "t" 5 bit target register (OP_*_RT)    "u" 16 bit upper 16 bits of address (OP_*_IMMEDIATE)    "v" 5 bit same register used as both source and destination (OP_*_RS)    "w" 5 bit same register used as both target and destination (OP_*_RT)    "U" 5 bit same destination register in both OP_*_RD and OP_*_RT        (used by clo and clz)    "C" 25 bit coprocessor function code (OP_*_COPZ)    "B" 20 bit syscall/breakpoint function code (OP_*_CODE20)    "J" 19 bit wait function code (OP_*_CODE19)    "x" accept and ignore register name    "z" must be zero register     Floating point instructions:    "D" 5 bit destination register (OP_*_FD)    "M" 3 bit compare condition code (OP_*_CCC) (only used for mips4 and up)    "N" 3 bit branch condition code (OP_*_BCC) (only used for mips4 and up)    "S" 5 bit fs source 1 register (OP_*_FS)    "T" 5 bit ft source 2 register (OP_*_FT)    "R" 5 bit fr source 3 register (OP_*_FR)    "V" 5 bit same register used as floating source and destination (OP_*_FS)    "W" 5 bit same register used as floating target and destination (OP_*_FT)     Coprocessor instructions:    "E" 5 bit target register (OP_*_RT)    "G" 5 bit destination register (OP_*_RD)    "H" 3 bit sel field for (d)mtc* and (d)mfc* (OP_*_SEL)    "P" 5 bit performance-monitor register (OP_*_PERFREG)     Macro instructions:    "A" General 32 bit expression    "I" 32 bit immediate    "F" 64 bit floating point constant in .rdata    "L" 64 bit floating point constant in .lit8    "f" 32 bit floating point constant    "l" 32 bit floating point constant in .lit4     Other:    "()" parens surrounding optional value    ","  separates operands     Characters used so far, for quick reference when adding more:    "<>(),"    "ABCDEFGHIJLMNPRSTUVW"    "abcdfhijklopqrstuvwxz" */
 end_comment
 
 begin_comment
@@ -971,76 +1015,63 @@ value|0xffffffff
 end_define
 
 begin_comment
-comment|/* MIPS ISA field--CPU level at which insn is supported.  */
+comment|/* Masks used to mark instructions to indicate which MIPS ISA level    they were introduced in.  ISAs, as defined below, are logical    ORs of these bits, indicatingthat they support the instructions    defined at the given level.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INSN_ISA
-value|0x0000000F
+name|INSN_ISA_MASK
+value|0x00000fff
 end_define
-
-begin_comment
-comment|/* An instruction which is not part of any basic MIPS ISA.    (ie it is a chip specific instruction)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INSN_NO_ISA
-value|0x00000000
-end_define
-
-begin_comment
-comment|/* MIPS ISA 1 instruction.  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INSN_ISA1
-value|0x00000001
+value|0x00000010
 end_define
-
-begin_comment
-comment|/* MIPS ISA 2 instruction (R6000 or R4000).  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INSN_ISA2
-value|0x00000002
+value|0x00000020
 end_define
-
-begin_comment
-comment|/* MIPS ISA 3 instruction (R4000).  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INSN_ISA3
-value|0x00000003
+value|0x00000040
 end_define
-
-begin_comment
-comment|/* MIPS ISA 4 instruction (R8000).  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|INSN_ISA4
-value|0x00000004
+value|0x00000080
 end_define
 
 begin_define
 define|#
 directive|define
 name|INSN_ISA5
-value|0x00000005
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|INSN_ISA32
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|INSN_ISA64
+value|0x00000400
 end_define
 
 begin_comment
@@ -1055,7 +1086,7 @@ begin_define
 define|#
 directive|define
 name|INSN_4650
-value|0x00000010
+value|0x00010000
 end_define
 
 begin_comment
@@ -1066,18 +1097,18 @@ begin_define
 define|#
 directive|define
 name|INSN_4010
-value|0x00000020
+value|0x00020000
 end_define
 
 begin_comment
-comment|/* NEC VR4100 instruction. */
+comment|/* NEC VR4100 instruction.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INSN_4100
-value|0x00000040
+value|0x00040000
 end_define
 
 begin_comment
@@ -1088,22 +1119,263 @@ begin_define
 define|#
 directive|define
 name|INSN_3900
-value|0x00000080
+value|0x00080000
 end_define
 
 begin_comment
-comment|/* 32-bit code running on a ISA3+ CPU. */
+comment|/* MIPS R10000 instruction.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INSN_GP32
-value|0x00001000
+name|INSN_10000
+value|0x00100000
 end_define
 
 begin_comment
-comment|/* Test for membership in an ISA including chip specific ISAs.    INSN is pointer to an element of the opcode table; ISA is the    specified ISA to test against; and CPU is the CPU specific ISA    to test, or zero if no CPU specific ISA test is desired.      The gp32 arg is set when you need to force 32-bit register usage on    a machine with 64-bit registers; see the documentation under -mgp32    in the MIPS gas docs. */
+comment|/* Broadcom SB-1 instruction.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSN_SB1
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* MIPS ISA defines, use instead of hardcoding ISA level.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISA_UNKNOWN
+value|0
+end_define
+
+begin_comment
+comment|/* Gas internal use.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISA_MIPS1
+value|(INSN_ISA1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_MIPS2
+value|(ISA_MIPS1 | INSN_ISA2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_MIPS3
+value|(ISA_MIPS2 | INSN_ISA3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_MIPS4
+value|(ISA_MIPS3 | INSN_ISA4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_MIPS5
+value|(ISA_MIPS4 | INSN_ISA5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_MIPS32
+value|(ISA_MIPS2 | INSN_ISA32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_MIPS64
+value|(ISA_MIPS5 | INSN_ISA32 | INSN_ISA64)
+end_define
+
+begin_comment
+comment|/* CPU defines, use instead of hardcoding processor number. Keep this    in sync with bfd/archures.c in order for machine selection to work.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_UNKNOWN
+value|0
+end_define
+
+begin_comment
+comment|/* Gas internal use.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_R2000
+value|2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R3000
+value|3000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R3900
+value|3900
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R4000
+value|4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R4010
+value|4010
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_VR4100
+value|4100
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R4111
+value|4111
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R4300
+value|4300
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R4400
+value|4400
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R4600
+value|4600
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R4650
+value|4650
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R5000
+value|5000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R6000
+value|6000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R8000
+value|8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R10000
+value|10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_R12000
+value|12000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_MIPS16
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_MIPS32
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_MIPS5
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_MIPS64
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPU_SB1
+value|12310201
+end_define
+
+begin_comment
+comment|/* octal 'SB', 01.  */
+end_comment
+
+begin_comment
+comment|/* Test for membership in an ISA including chip specific ISAs.    INSN is pointer to an element of the opcode table; ISA is the    specified ISA to test against; and CPU is the CPU specific ISA    to test, or zero if no CPU specific ISA test is desired.  */
 end_comment
 
 begin_define
@@ -1116,15 +1388,17 @@ parameter_list|,
 name|isa
 parameter_list|,
 name|cpu
-parameter_list|,
-name|gp32
 parameter_list|)
 define|\
-value|((((insn)->membership& INSN_ISA) != 0			\&& ((insn)->membership& INSN_ISA)<= isa			\&& ((insn)->membership& INSN_GP32 ? gp32 : 1))		\      || (cpu == 4650						\&& ((insn)->membership& INSN_4650) != 0)		\      || (cpu == 4010						\&& ((insn)->membership& INSN_4010) != 0)		\      || ((cpu == 4100						\ 	  || cpu == 4111					\ 	  )							\&& ((insn)->membership& INSN_4100) != 0)		\      || (cpu == 3900						\&& ((insn)->membership& INSN_3900) != 0))
+value|(((insn)->membership& isa) != 0					\      || (cpu == CPU_R4650&& ((insn)->membership& INSN_4650) != 0)	\      || (cpu == CPU_R4010&& ((insn)->membership& INSN_4010) != 0)	\      || ((cpu == CPU_VR4100 || cpu == CPU_R4111)			\&& ((insn)->membership& INSN_4100) != 0)			\      || (cpu == CPU_R3900&& ((insn)->membership& INSN_3900) != 0)	\      || ((cpu == CPU_R10000 || cpu == CPU_R12000)			\&& ((insn)->membership& INSN_10000) != 0)			\      || (cpu == CPU_SB1&& ((insn)->membership& INSN_SB1) != 0)	\      || 0)
 end_define
 
 begin_comment
-comment|/* This is a list of macro expanded instructions.  *  * _I appended means immediate  * _A appended means address  * _AB appended means address with base register  * _D appended means 64 bit floating point constant  * _S appended means 32 bit floating point constant  */
+comment|/* Please keep this term for easier source merging.  */
+end_comment
+
+begin_comment
+comment|/* This is a list of macro expanded instructions.     _I appended means immediate    _A appended means address    _AB appended means address with base register    _D appended means 64 bit floating point constant    _S appended means 32 bit floating point constant.  */
 end_comment
 
 begin_enum
@@ -1357,6 +1631,8 @@ block|,
 name|M_LWR_AB
 block|,
 name|M_LWU_AB
+block|,
+name|M_MOVE
 block|,
 name|M_MUL
 block|,

@@ -11,6 +11,21 @@ directive|include
 file|"emul.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|i386aout_bfd_name
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 specifier|const

@@ -188,7 +188,7 @@ name|asymbol
 modifier|*
 name|lsy_marker
 decl_stmt|;
-comment|/* The symbol section.  This also serves as a flag.  If this is      reg_section, then this symbol has been converted into a regular      symbol, and sy_sym points to it.  */
+comment|/* The symbol section.  This also serves as a flag.  If this is      reg_section, then this symbol has been converted into a regular      symbol, and lsy_sym points to it.  */
 name|segT
 name|lsy_section
 decl_stmt|;
@@ -198,7 +198,7 @@ name|char
 modifier|*
 name|lsy_name
 decl_stmt|;
-comment|/* The symbol frag or the real symbol, depending upon the value in      sy_section.  If the symbol has been fully resolved, lsy_frag is      set to NULL.  */
+comment|/* The symbol frag or the real symbol, depending upon the value in      lsy_section.  If the symbol has been fully resolved, lsy_frag is      set to NULL.  */
 union|union
 block|{
 name|fragS
@@ -212,10 +212,18 @@ decl_stmt|;
 block|}
 name|u
 union|;
-comment|/* The offset within the frag.  */
+comment|/* The value of the symbol.  */
 name|valueT
-name|lsy_offset
+name|lsy_value
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TC_LOCAL_SYMFIELD_TYPE
+name|TC_LOCAL_SYMFIELD_TYPE
+name|lsy_tc
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

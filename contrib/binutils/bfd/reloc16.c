@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 8 and 16 bit COFF relocation functions, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* 8 and 16 bit COFF relocation functions, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -489,7 +489,7 @@ name|bfd_coff_reloc16_relax_section
 parameter_list|(
 name|abfd
 parameter_list|,
-name|i
+name|input_section
 parameter_list|,
 name|link_info
 parameter_list|,
@@ -501,7 +501,7 @@ name|abfd
 decl_stmt|;
 name|asection
 modifier|*
-name|i
+name|input_section
 decl_stmt|;
 name|struct
 name|bfd_link_info
@@ -518,21 +518,15 @@ name|bfd
 modifier|*
 name|input_bfd
 init|=
-name|i
+name|input_section
 operator|->
 name|owner
 decl_stmt|;
-name|asection
-modifier|*
-name|input_section
-init|=
-name|i
-decl_stmt|;
-name|int
+name|unsigned
 modifier|*
 name|shrinks
 decl_stmt|;
-name|int
+name|unsigned
 name|shrink
 init|=
 literal|0
@@ -581,6 +575,9 @@ operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
+operator|(
+name|bfd_size_type
+operator|)
 name|reloc_size
 argument_list|)
 expr_stmt|;
@@ -642,25 +639,32 @@ name|another_pass
 init|=
 literal|0
 decl_stmt|;
+name|bfd_size_type
+name|amt
+decl_stmt|;
 comment|/* Allocate and initialize the shrinks array for this section.          The last element is used as an accumlator of shrinks.  */
+name|amt
+operator|=
+name|reloc_count
+operator|+
+literal|1
+expr_stmt|;
+name|amt
+operator|*=
+sizeof|sizeof
+argument_list|(
+name|unsigned
+argument_list|)
+expr_stmt|;
 name|shrinks
 operator|=
 operator|(
-name|int
+name|unsigned
 operator|*
 operator|)
 name|bfd_malloc
 argument_list|(
-operator|(
-name|reloc_count
-operator|+
-literal|1
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 name|memset
@@ -670,15 +674,9 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|reloc_count
-operator|+
-literal|1
+name|size_t
 operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 comment|/* Loop until nothing changes in this section.  */
@@ -959,6 +957,9 @@ name|input_section
 argument_list|,
 name|data
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0
 argument_list|,
 name|input_section
@@ -979,7 +980,7 @@ operator|)
 name|bfd_malloc
 argument_list|(
 operator|(
-name|size_t
+name|bfd_size_type
 operator|)
 name|reloc_size
 argument_list|)

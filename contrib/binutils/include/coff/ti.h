@@ -16,6 +16,10 @@ name|COFF_TI_H
 end_define
 
 begin_comment
+comment|/* Note "coff/external.h is not used because TI adds extra fields to the structures.  */
+end_comment
+
+begin_comment
 comment|/********************** FILE HEADER **********************/
 end_comment
 
@@ -373,7 +377,7 @@ parameter_list|,
 name|dst
 parameter_list|)
 define|\
-value|do { ((struct internal_filehdr *)(dst))->f_target_id = \ bfd_h_get_16(abfd, (bfd_byte *)(((FILHDR *)(src))->f_target_id)); \ } while(0)
+value|do									\     {									\       ((struct internal_filehdr *)(dst))->f_target_id =			\ 	H_GET_16 (abfd, ((FILHDR *)(src))->f_target_id);		\     }									\   while (0)
 end_define
 
 begin_endif
@@ -399,7 +403,7 @@ parameter_list|,
 name|dst
 parameter_list|)
 define|\
-value|do { bfd_h_put_16(abfd, ((struct internal_filehdr *)(src))->f_target_id, \              (bfd_byte *)(((FILHDR *)(dst))->f_target_id)); \ } while(0)
+value|do									\     {									\       H_PUT_16 (abfd, ((struct internal_filehdr *)(src))->f_target_id,	\ 	       ((FILHDR *)(dst))->f_target_id);				\     }									\   while (0)
 end_define
 
 begin_endif
@@ -885,7 +889,7 @@ parameter_list|,
 name|PTR
 parameter_list|)
 define|\
-value|(COFF2_P(ABFD) ? bfd_h_get_32 (ABFD,PTR) : bfd_h_get_16 (ABFD, PTR))
+value|(COFF2_P (ABFD) ? H_GET_32 (ABFD, PTR) : H_GET_16 (ABFD, PTR))
 end_define
 
 begin_define
@@ -900,7 +904,7 @@ parameter_list|,
 name|PTR
 parameter_list|)
 define|\
-value|(COFF2_P(ABFD) ? bfd_h_put_32 (ABFD,VAL,PTR) : bfd_h_put_16 (ABFD,VAL,PTR))
+value|(COFF2_P (ABFD) ? H_PUT_32 (ABFD, VAL, PTR) : H_PUT_16 (ABFD, VAL, PTR))
 end_define
 
 begin_define
@@ -913,7 +917,7 @@ parameter_list|,
 name|PTR
 parameter_list|)
 define|\
-value|(COFF2_P(ABFD) ? bfd_h_get_32 (ABFD,PTR) : bfd_h_get_16 (ABFD, (PTR)-2))
+value|(COFF2_P (ABFD) ? H_GET_32 (ABFD, PTR) : H_GET_16 (ABFD, (PTR) -2))
 end_define
 
 begin_define
@@ -928,7 +932,7 @@ parameter_list|,
 name|PTR
 parameter_list|)
 define|\
-value|(COFF2_P(ABFD) ? bfd_h_put_32 (ABFD,VAL,PTR) : bfd_h_put_16 (ABFD,VAL,(PTR)-2))
+value|(COFF2_P (ABFD) ? H_PUT_32 (ABFD, VAL, PTR) : H_PUT_16 (ABFD, VAL, (PTR) -2))
 end_define
 
 begin_define
@@ -941,7 +945,7 @@ parameter_list|,
 name|PTR
 parameter_list|)
 define|\
-value|(COFF2_P(ABFD) ? bfd_h_get_32 (ABFD,PTR) : bfd_h_get_16 (ABFD, (PTR)-4))
+value|(COFF2_P (ABFD) ? H_GET_32 (ABFD, PTR) : H_GET_16 (ABFD, (PTR) -4))
 end_define
 
 begin_define
@@ -956,7 +960,7 @@ parameter_list|,
 name|PTR
 parameter_list|)
 define|\
-value|(COFF2_P(ABFD) ? bfd_h_put_32 (ABFD,VAL,PTR) : bfd_h_put_16 (ABFD,VAL,(PTR)-4))
+value|(COFF2_P (ABFD) ? H_PUT_32 (ABFD, VAL, PTR) : H_PUT_16 (ABFD, VAL, (PTR) -4))
 end_define
 
 begin_define
@@ -969,7 +973,7 @@ parameter_list|,
 name|PTR
 parameter_list|)
 define|\
-value|(COFF2_P(ABFD) ? bfd_h_get_16 (ABFD,PTR) : bfd_h_get_8 (ABFD, (PTR)-7))
+value|(COFF2_P (ABFD) ? H_GET_16 (ABFD, PTR) : (unsigned) H_GET_8 (ABFD, (PTR) -7))
 end_define
 
 begin_comment
@@ -988,7 +992,7 @@ parameter_list|,
 name|PTR
 parameter_list|)
 define|\
-value|(COFF2_P(ABFD) ? bfd_h_put_16 (ABFD,VAL,PTR) : \ bfd_h_put_8 (ABFD,VAL,(PTR)-7), bfd_h_put_8 (ABFD, 0, (PTR)-8))
+value|(COFF2_P (ABFD) \    ? H_PUT_16 (ABFD, VAL, PTR) \    : H_PUT_8 (ABFD, VAL, (PTR) -7), H_PUT_8 (ABFD, 0, (PTR) -8))
 end_define
 
 begin_comment
@@ -1005,7 +1009,7 @@ parameter_list|,
 name|SZP
 parameter_list|)
 define|\
-value|(bfd_h_get_32(ABFD,SZP)*bfd_octets_per_byte(ABFD))
+value|(H_GET_32 (ABFD, SZP) * bfd_octets_per_byte (ABFD))
 end_define
 
 begin_define
@@ -1020,7 +1024,7 @@ parameter_list|,
 name|SZP
 parameter_list|)
 define|\
-value|bfd_h_put_32(ABFD,(SZ)/bfd_octets_per_byte(ABFD),SZP)
+value|H_PUT_32 (ABFD, (SZ) / bfd_octets_per_byte (ABFD), SZP)
 end_define
 
 begin_define
@@ -1035,7 +1039,7 @@ parameter_list|,
 name|INT
 parameter_list|)
 define|\
-value|do { ((struct internal_scnhdr *)(INT))->s_page = \ GET_SCNHDR_PAGE(ABFD,(bfd_byte *)((SCNHDR *)(EXT))->s_page); \ } while(0)
+value|do									\     {									\       ((struct internal_scnhdr *)(INT))->s_page =			\ 	GET_SCNHDR_PAGE (ABFD, ((SCNHDR *)(EXT))->s_page);		\     }									\    while (0)
 end_define
 
 begin_comment
@@ -1054,64 +1058,7 @@ parameter_list|,
 name|EXT
 parameter_list|)
 define|\
-value|do { \ PUT_SCNHDR_NLNNO(ABFD,((struct internal_scnhdr *)(INT))->s_nlnno,\                 (bfd_byte *)((SCNHDR *)(EXT))->s_nlnno); \ PUT_SCNHDR_NRELOC(ABFD,((struct internal_scnhdr *)(INT))->s_nreloc,\                 (bfd_byte *)((SCNHDR *)(EXT))->s_nreloc); \ PUT_SCNHDR_FLAGS(ABFD,((struct internal_scnhdr *)(INT))->s_flags, \                 (bfd_byte *)((SCNHDR *)(EXT))->s_flags); \ PUT_SCNHDR_PAGE(ABFD,((struct internal_scnhdr *)(INT))->s_page, \                 (bfd_byte *)((SCNHDR *)(EXT))->s_page); \ } while(0)
-end_define
-
-begin_comment
-comment|/* Page macros     The first GDB port requires flags in its remote memory access commands to    distinguish between data/prog space.  Hopefully we can make this go away    eventually.  Stuff the page in the upper bits of a 32-bit address, since    the c5x family only uses 16 or 23 bits.     c2x, c5x and most c54x devices have 16-bit addresses, but the c548 has    23-bit program addresses.  Make sure the page flags don't interfere.    These flags are used by GDB to identify the destination page for    addresses.  */
-end_comment
-
-begin_comment
-comment|/* recognized load pages */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PG_PROG
-value|0x0
-end_define
-
-begin_comment
-comment|/* PROG page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PG_DATA
-value|0x1
-end_define
-
-begin_comment
-comment|/* DATA page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADDR_MASK
-value|0x00FFFFFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|PG_TO_FLAG
-parameter_list|(
-name|p
-parameter_list|)
-value|(((unsigned long)(p)& 0xFF)<< 24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FLAG_TO_PG
-parameter_list|(
-name|f
-parameter_list|)
-value|(((f)>> 24)& 0xFF)
+value|do									   \     {									   \       PUT_SCNHDR_NLNNO (ABFD, ((struct internal_scnhdr *)(INT))->s_nlnno,  \ 			((SCNHDR *)(EXT))->s_nlnno);			   \       PUT_SCNHDR_NRELOC (ABFD, ((struct internal_scnhdr *)(INT))->s_nreloc,\ 			 ((SCNHDR *)(EXT))->s_nreloc);			   \       PUT_SCNHDR_FLAGS (ABFD, ((struct internal_scnhdr *)(INT))->s_flags,  \ 			((SCNHDR *)(EXT))->s_flags);			   \       PUT_SCNHDR_PAGE (ABFD, ((struct internal_scnhdr *)(INT))->s_page,    \ 		       ((SCNHDR *)(EXT))->s_page);			   \     }									   \    while (0)
 end_define
 
 begin_comment
@@ -1620,7 +1567,7 @@ parameter_list|,
 name|EXT
 parameter_list|)
 define|\
-value|(bfd_h_get_32(ABFD,(bfd_byte *)(EXT)->x_scn.x_scnlen)*bfd_octets_per_byte(ABFD))
+value|(H_GET_32 (ABFD, (EXT)->x_scn.x_scnlen) * bfd_octets_per_byte (ABFD))
 end_define
 
 begin_define
@@ -1635,7 +1582,7 @@ parameter_list|,
 name|EXT
 parameter_list|)
 define|\
-value|bfd_h_put_32(ABFD,(INT)/bfd_octets_per_byte(ABFD),\              (bfd_byte *)(EXT)->x_scn.x_scnlen)
+value|H_PUT_32 (ABFD, (INT) / bfd_octets_per_byte (ABFD), (EXT)->x_scn.x_scnlen)
 end_define
 
 begin_comment
@@ -1652,7 +1599,7 @@ parameter_list|,
 name|ext
 parameter_list|)
 define|\
-value|(bfd_h_get_16(abfd, (bfd_byte *)ext->x_sym.x_misc.x_lnsz.x_size) / \  (class != C_FIELD ? 8 : 1))
+value|(H_GET_16 (abfd, ext->x_sym.x_misc.x_lnsz.x_size) / (class != C_FIELD ? 8 : 1))
 end_define
 
 begin_define
@@ -1667,12 +1614,40 @@ parameter_list|,
 name|ext
 parameter_list|)
 define|\
-value|bfd_h_put_16(abfd, ((class != C_FIELD) ? (in)*8 : (in)), \               (bfd_byte*) ext->x_sym.x_misc.x_lnsz.x_size)
+value|H_PUT_16 (abfd, ((class != C_FIELD) ? (in) * 8 : (in)), \ 	   ext->x_sym.x_misc.x_lnsz.x_size)
 end_define
 
 begin_comment
-comment|/* TI COFF stores offsets for MOS and MOU in bits; BFD expects bytes */
+comment|/* TI COFF stores offsets for MOS and MOU in bits; BFD expects bytes     Also put the load page flag of the section into the symbol value if it's an    address.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEEDS_PAGE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NEEDS_PAGE
+parameter_list|(
+name|X
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_MASK
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1686,7 +1661,7 @@ parameter_list|,
 name|INT
 parameter_list|)
 define|\
-value|do { struct internal_syment *dst = (struct internal_syment *)(INT); \ if (dst->n_sclass == C_MOS || dst->n_sclass == C_MOU) dst->n_value /= 8; \ } while (0)
+value|do									\     {									\       struct internal_syment *dst = (struct internal_syment *)(INT);	\       if (dst->n_sclass == C_MOS || dst->n_sclass == C_MOU)		\ 	dst->n_value /= 8;						\       else if (NEEDS_PAGE (dst->n_sclass)) {                            \         asection *scn = coff_section_from_bfd_index (abfd, dst->n_scnum); \         dst->n_value |= (scn->lma& PAGE_MASK);                         \       }									\     }									\    while (0)
 end_define
 
 begin_define
@@ -1701,7 +1676,7 @@ parameter_list|,
 name|EXT
 parameter_list|)
 define|\
-value|do { struct internal_syment *src = (struct internal_syment *)(INT); \ SYMENT *dst = (SYMENT *)(EXT); \ if(src->n_sclass == C_MOU || src->n_sclass == C_MOS) \ bfd_h_put_32(abfd,src->n_value * 8,(bfd_byte *)dst->e_value); \ } while (0)
+value|do									\     {									\        struct internal_syment *src = (struct internal_syment *)(INT);	\        SYMENT *dst = (SYMENT *)(EXT);					\        if (src->n_sclass == C_MOU || src->n_sclass == C_MOS)		\ 	 H_PUT_32 (abfd, src->n_value * 8, dst->e_value);		\        else if (NEEDS_PAGE (src->n_sclass)) {                           \          H_PUT_32 (abfd, src->n_value&= ~PAGE_MASK, dst->e_value);     \        }								\     }									\    while (0)
 end_define
 
 begin_comment

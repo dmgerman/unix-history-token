@@ -139,7 +139,14 @@ init|=
 name|_sch_isvsp
 operator||
 name|_sch_isnvsp
+block|,
 comment|/* isspace + \0 */
+name|_sch_isbasic
+init|=
+name|_sch_isprint
+operator||
+name|_sch_iscppsp
+comment|/* basic charset of ISO C 						   (plus ` and @)  */
 block|}
 enum|;
 end_enum
@@ -169,7 +176,7 @@ name|c
 parameter_list|,
 name|bit
 parameter_list|)
-value|(_sch_istable[(c)& 0xff]& (bit))
+value|(_sch_istable[(c)& 0xff]& (unsigned short)(bit))
 end_define
 
 begin_define
@@ -310,6 +317,16 @@ parameter_list|(
 name|c
 parameter_list|)
 value|_sch_test(c, _sch_isidst)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_ISOBASIC
+parameter_list|(
+name|c
+parameter_list|)
+value|_sch_test(c, _sch_isbasic)
 end_define
 
 begin_define

@@ -4,7 +4,7 @@ comment|/* memcpy (the standard C function)    This function is in the public do
 end_comment
 
 begin_comment
-comment|/* NAME 	memcpy -- copy memory regions of arbitary length  SYNOPSIS 	void* memcpy (void *out, const void *in, size_t n);  DESCRIPTION 	Copy LENGTH bytes from memory region pointed to by IN to memory 	region pointed to by OUT. */
+comment|/*  @deftypefn Supplemental void* memcpy (void *@var{out}, const void *@var{in}, size_t @var{length})  Copies @var{length} bytes from memory region @var{in} to region @var{out}.  Returns a pointer to @var{out}.  @end deftypefn  */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ARM ELF support for BFD.    Copyright 1998, 1999, 2000, 2001 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ARM ELF support for BFD.    Copyright 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -42,35 +42,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|EF_INTERWORK
+name|EF_ARM_INTERWORK
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|EF_APCS_26
+name|EF_ARM_APCS_26
 value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
-name|EF_APCS_FLOAT
+name|EF_ARM_APCS_FLOAT
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|EF_PIC
+name|EF_ARM_PIC
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
-name|EF_ALIGN8
+name|EF_ARM_ALIGN8
 value|0x40
 end_define
 
@@ -81,26 +81,33 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EF_NEW_ABI
+name|EF_ARM_NEW_ABI
 value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|EF_OLD_ABI
+name|EF_ARM_OLD_ABI
 value|0x100
 end_define
 
 begin_define
 define|#
 directive|define
-name|EF_SOFT_FLOAT
+name|EF_ARM_SOFT_FLOAT
 value|0x200
 end_define
 
+begin_define
+define|#
+directive|define
+name|EF_ARM_VFP_FLOAT
+value|0x400
+end_define
+
 begin_comment
-comment|/* Other constants defined in the ARM ELF spec. version A-08.  */
+comment|/* Other constants defined in the ARM ELF spec. version B-01.  */
 end_comment
 
 begin_define
@@ -112,6 +119,28 @@ end_define
 
 begin_comment
 comment|/* NB conflicts with EF_INTERWORK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_ARM_DYNSYMSUSESEGIDX
+value|0x08
+end_define
+
+begin_comment
+comment|/* NB conflicts with EF_APCS26 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_ARM_MAPSYMSFIRST
+value|0x10
+end_define
+
+begin_comment
+comment|/* NB conflicts with EF_APCS_FLOAT */
 end_comment
 
 begin_define
@@ -145,6 +174,13 @@ name|EF_ARM_EABI_VER1
 value|0x01000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|EF_ARM_EABI_VER2
+value|0x02000000
+end_define
+
 begin_comment
 comment|/* Local aliases for some flags to match names used by COFF port.  */
 end_comment
@@ -153,35 +189,42 @@ begin_define
 define|#
 directive|define
 name|F_INTERWORK
-value|EF_INTERWORK
+value|EF_ARM_INTERWORK
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_APCS26
-value|EF_APCS_26
+value|EF_ARM_APCS_26
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_APCS_FLOAT
-value|EF_APCS_FLOAT
+value|EF_ARM_APCS_FLOAT
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_PIC
-value|EF_PIC
+value|EF_ARM_PIC
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_SOFT_FLOAT
-value|EF_SOFT_FLOAT
+value|EF_ARM_SOFT_FLOAT
+end_define
+
+begin_define
+define|#
+directive|define
+name|F_VFP_FLOAT
+value|EF_ARM_VFP_FLOAT
 end_define
 
 begin_comment
@@ -719,6 +762,78 @@ name|FAKE_RELOC
 argument_list|(
 argument|LAST_INVALID_RELOC1
 argument_list|,
+literal|31
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_ALU_PCREL7_0
+argument_list|,
+literal|32
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_ALU_PCREL15_8
+argument_list|,
+literal|33
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_ALU_PCREL23_15
+argument_list|,
+literal|34
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_LDR_SBREL11_0
+argument_list|,
+literal|35
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_ALU_SBREL19_12
+argument_list|,
+literal|36
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_ALU_SBREL27_20
+argument_list|,
+literal|37
+argument_list|)
+end_macro
+
+begin_macro
+name|FAKE_RELOC
+argument_list|(
+argument|FIRST_INVALID_RELOC2
+argument_list|,
+literal|38
+argument_list|)
+end_macro
+
+begin_macro
+name|FAKE_RELOC
+argument_list|(
+argument|LAST_INVALID_RELOC2
+argument_list|,
 literal|99
 argument_list|)
 end_macro
@@ -770,7 +885,7 @@ end_comment
 begin_macro
 name|FAKE_RELOC
 argument_list|(
-argument|FIRST_INVALID_RELOC2
+argument|FIRST_INVALID_RELOC3
 argument_list|,
 literal|104
 argument_list|)
@@ -779,7 +894,7 @@ end_macro
 begin_macro
 name|FAKE_RELOC
 argument_list|(
-argument|LAST_INVALID_RELOC2
+argument|LAST_INVALID_RELOC3
 argument_list|,
 literal|248
 argument_list|)

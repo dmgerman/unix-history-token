@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  @deftypefn Supplemental char* strdup (const char *@var{s})  Returns a pointer to a copy of @var{s} in memory obtained from @code{malloc}, or @code{NULL} if insufficient memory was available.  @end deftypefn  */
+end_comment
+
 begin_function
 name|char
 modifier|*

@@ -21,7 +21,7 @@ name|emulation
 block|{
 name|void
 argument_list|(
-argument|*match
+argument|*                   match
 argument_list|)
 name|PARAMS
 argument_list|(
@@ -39,7 +39,7 @@ name|name
 decl_stmt|;
 name|void
 argument_list|(
-argument|*init
+argument|*                   init
 argument_list|)
 name|PARAMS
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ar.c - Archive modify and extract.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ar.c - Archive modify and extract.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -1160,6 +1160,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 comment|/* xgettext:c-format */
 name|fprintf
 argument_list|(
@@ -1167,12 +1168,33 @@ name|s
 argument_list|,
 name|_
 argument_list|(
-literal|"Usage: %s [-vV] archive\n"
+literal|"Usage: %s [options] archive\n"
 argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|" Generate an index to speed access to archives\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|" The options are:\n\   -h --help                    Print this help message\n\   -V --version                 Print version information\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|list_supported_targets
 argument_list|(
 name|program_name
@@ -1511,6 +1533,22 @@ begin_comment
 comment|/* The option parsing should be in its own function.    It will be when I have getopt working.  */
 end_comment
 
+begin_decl_stmt
+name|int
+decl|main
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -1591,6 +1629,21 @@ argument_list|)
 name|setlocale
 argument_list|(
 name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
 argument_list|,
 literal|""
 argument_list|)
@@ -1897,6 +1950,30 @@ literal|1
 index|]
 argument_list|,
 literal|"--help"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-h"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-H"
 argument_list|)
 operator|==
 literal|0
@@ -3174,6 +3251,9 @@ name|bfd_seek
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|file_ptr
+operator|)
 literal|0
 argument_list|,
 name|SEEK_SET
@@ -3214,18 +3294,18 @@ name|BUFSIZE
 expr_stmt|;
 name|nread
 operator|=
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|cbuf
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 name|tocopy
 argument_list|,
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* oops -- broke 							   abstraction!  */
 if|if
 condition|(
 name|nread
@@ -3388,6 +3468,9 @@ name|bfd_seek
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|file_ptr
+operator|)
 literal|0
 argument_list|,
 name|SEEK_SET
@@ -3476,12 +3559,13 @@ name|BUFSIZE
 expr_stmt|;
 name|nread
 operator|=
-name|bfd_read
+name|bfd_bread
 argument_list|(
 name|cbuf
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
 name|tocopy
 argument_list|,
 name|abfd

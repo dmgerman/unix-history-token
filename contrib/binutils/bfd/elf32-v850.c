@@ -43,8 +43,14 @@ directive|include
 file|"elf/v850.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libiberty.h"
+end_include
+
 begin_comment
-comment|/* sign-extend a 24-bit number */
+comment|/* Sign-extend a 24-bit number.  */
 end_comment
 
 begin_define
@@ -54,7 +60,7 @@ name|SEXT24
 parameter_list|(
 name|x
 parameter_list|)
-value|((((x)& 0xffffff) ^ (~ 0x7fffff)) + 0x800000)
+value|((((x)& 0xffffff) ^ 0x800000) - 0x800000)
 end_define
 
 begin_decl_stmt
@@ -213,6 +219,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
+name|unsigned
 name|int
 operator|,
 name|bfd_vma
@@ -395,23 +402,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|boolean
-name|v850_elf_copy_private_bfd_data
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|boolean
 name|v850_elf_merge_private_bfd_data
 name|PARAMS
 argument_list|(
@@ -450,9 +440,6 @@ name|PARAMS
 argument_list|(
 operator|(
 name|bfd
-operator|*
-operator|,
-name|Elf32_Internal_Shdr
 operator|*
 operator|,
 name|asection
@@ -567,8 +554,62 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|boolean
+name|v850_elf_gc_sweep_hook
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+specifier|const
+name|Elf_Internal_Rela
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|asection
+modifier|*
+name|v850_elf_gc_mark_hook
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+name|Elf_Internal_Rela
+operator|*
+operator|,
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|,
+name|Elf_Internal_Sym
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* Note: It is REQUIRED that the 'type' value of each entry in this array    match the index of the entry in the array.  */
+comment|/* Note: It is REQUIRED that the 'type' value of each entry    in this array match the index of the entry in the array.  */
 end_comment
 
 begin_decl_stmt
@@ -1670,7 +1711,7 @@ name|bfd_reloc_code_real_type
 name|bfd_reloc_val
 decl_stmt|;
 name|unsigned
-name|char
+name|int
 name|elf_reloc_val
 decl_stmt|;
 block|}
@@ -1843,7 +1884,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Map a bfd relocation into the appropriate howto structure */
+comment|/* Map a bfd relocation into the appropriate howto structure.  */
 end_comment
 
 begin_function
@@ -1873,25 +1914,15 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|ARRAY_SIZE
+argument_list|(
+name|v850_elf_reloc_map
+argument_list|)
 init|;
 name|i
-operator|<
-sizeof|sizeof
-argument_list|(
-name|v850_elf_reloc_map
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|v850_elf_reloc_map
-argument_list|)
+operator|--
 condition|;
-name|i
-operator|++
 control|)
-block|{
 if|if
 condition|(
 name|v850_elf_reloc_map
@@ -1904,41 +1935,34 @@ operator|==
 name|code
 condition|)
 block|{
-name|BFD_ASSERT
-argument_list|(
-name|v850_elf_howto_table
-index|[
+name|unsigned
+name|int
+name|elf_reloc_val
+init|=
 name|v850_elf_reloc_map
 index|[
 name|i
 index|]
 operator|.
+name|elf_reloc_val
+decl_stmt|;
+name|BFD_ASSERT
+argument_list|(
+name|v850_elf_howto_table
+index|[
 name|elf_reloc_val
 index|]
 operator|.
 name|type
 operator|==
-name|v850_elf_reloc_map
-index|[
-name|i
-index|]
-operator|.
 name|elf_reloc_val
 argument_list|)
 expr_stmt|;
 return|return
-operator|&
 name|v850_elf_howto_table
-index|[
-name|v850_elf_reloc_map
-index|[
-name|i
-index|]
-operator|.
+operator|+
 name|elf_reloc_val
-index|]
 return|;
-block|}
 block|}
 return|return
 name|NULL
@@ -2199,7 +2223,7 @@ argument_list|,
 name|sec
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|abfd
 argument_list|)
@@ -2378,7 +2402,7 @@ return|return
 name|false
 return|;
 break|break;
-comment|/* This relocation describes which C++ vtable entries are actually            used.  Record for later use during GC.  */
+comment|/* This relocation describes which C++ vtable entries 	   are actually used.  Record for later use during GC.  */
 case|case
 name|R_V850_GNU_VTENTRY
 case|:
@@ -2480,13 +2504,13 @@ condition|(
 name|h
 condition|)
 block|{
+comment|/* Flag which type of relocation was used.  */
 name|h
 operator|->
 name|other
 operator||=
 name|other
 expr_stmt|;
-comment|/* flag which type of relocation was used */
 if|if
 condition|(
 operator|(
@@ -2645,6 +2669,9 @@ name|def
 operator|.
 name|section
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2714,7 +2741,9 @@ block|{
 name|asection
 modifier|*
 name|section
-init|=
+decl_stmt|;
+name|section
+operator|=
 name|h
 operator|->
 name|root
@@ -2733,7 +2762,7 @@ name|abfd
 argument_list|,
 name|common
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|section
 operator|->
 name|flags
@@ -2809,7 +2838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * In the old version, when an entry was checked out from the table,  * it was deleted.  This produced an error if the entry was needed  * more than once, as the second attempted retry failed.  *  * In the current version, the entry is not deleted, instead we set  * the field 'found' to true.  If a second lookup matches the same  * entry, then we know that the hi16s reloc has already been updated  * and does not need to be updated a second time.  *  * TODO - TOFIX: If it is possible that we need to restore 2 different  * addresses from the same table entry, where the first generates an  * overflow, whilst the second do not, then this code will fail.  */
+comment|/* In the old version, when an entry was checked out from the table,    it was deleted.  This produced an error if the entry was needed    more than once, as the second attempted retry failed.     In the current version, the entry is not deleted, instead we set    the field 'found' to true.  If a second lookup matches the same    entry, then we know that the hi16s reloc has already been updated    and does not need to be updated a second time.     TODO - TOFIX: If it is possible that we need to restore 2 different    addresses from the same table entry, where the first generates an    overflow, whilst the second do not, then this code will fail.  */
 end_comment
 
 begin_typedef
@@ -2894,6 +2923,15 @@ name|entry
 init|=
 name|NULL
 decl_stmt|;
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|free_hi16s
+argument_list|)
+decl_stmt|;
 comment|/* Find a free structure.  */
 if|if
 condition|(
@@ -2911,11 +2949,7 @@ name|bfd_zalloc
 argument_list|(
 name|abfd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|free_hi16s
-argument_list|)
+name|amt
 argument_list|)
 expr_stmt|;
 name|entry
@@ -3160,6 +3194,7 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
+name|unsigned
 name|int
 name|r_type
 decl_stmt|;
@@ -3280,6 +3315,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|insn
 argument_list|,
 name|address
@@ -3447,7 +3485,7 @@ break|break;
 case|case
 name|R_V850_LO16
 case|:
-comment|/* Calculate the sum of the value stored in the instruction and the 	 addend and check for overflow from the low 16 bits into the high 	 16 bits.  The assembler has already done some of this:  If the 	 value stored in the instruction has its 15th bit set, (counting 	 from zero) then the assembler will have added 1 to the value 	 stored in the associated HI16S reloc.  So for example, these 	 relocations:  	     movhi hi( fred ), r0, r1 	     movea lo( fred ), r1, r1  	 will store 0 in the value fields for the MOVHI and MOVEA instructions 	 and addend will be the address of fred, but for these instructions:  	     movhi hi( fred + 0x123456), r0, r1 	     movea lo( fred + 0x123456), r1, r1  	 the value stored in the MOVHI instruction will be 0x12 and the value 	 stored in the MOVEA instruction will be 0x3456.  If however the 	 instructions were:  	     movhi hi( fred + 0x10ffff), r0, r1 	     movea lo( fred + 0x10ffff), r1, r1  	 then the value stored in the MOVHI instruction would be 0x11 (not 	 0x10) and the value stored in the MOVEA instruction would be 0xffff. 	 Thus (assuming for the moment that the addend is 0), at run time the 	 MOVHI instruction loads 0x110000 into r1, then the MOVEA instruction 	 adds 0xffffffff (sign extension!) producing 0x10ffff.  Similarly if 	 the instructions were:  	     movhi hi( fred - 1), r0, r1 	     movea lo( fred - 1), r1, r1  	 then 0 is stored in the MOVHI instruction and -1 is stored in the 	 MOVEA instruction.  	 Overflow can occur if the addition of the value stored in the 	 instruction plus the addend sets the 15th bit when before it was clear. 	 This is because the 15th bit will be sign extended into the high part, 	 thus reducing its value by one, but since the 15th bit was originally 	 clear, the assembler will not have added 1 to the previous HI16S reloc 	 to compensate for this effect.  For example:  	    movhi hi( fred + 0x123456), r0, r1 	    movea lo( fred + 0x123456), r1, r1  	 The value stored in HI16S reloc is 0x12, the value stored in the LO16 	 reloc is 0x3456.  If we assume that the address of fred is 0x00007000 	 then the relocations become:  	   HI16S: 0x0012 + (0x00007000>> 16)    = 0x12 	   LO16:  0x3456 + (0x00007000& 0xffff) = 0xa456  	 but when the instructions are executed, the MOVEA instruction's value 	 is signed extended, so the sum becomes:  	      0x00120000 	    + 0xffffa456 	    ------------ 	      0x0011a456    but 'fred + 0x123456' = 0x0012a456  	 Note that if the 15th bit was set in the value stored in the LO16 	 reloc, then we do not have to do anything:  	    movhi hi( fred + 0x10ffff), r0, r1 	    movea lo( fred + 0x10ffff), r1, r1  	    HI16S:  0x0011 + (0x00007000>> 16)    = 0x11 	    LO16:   0xffff + (0x00007000& 0xffff) = 0x6fff  	      0x00110000 	    + 0x00006fff 	    ------------ 	      0x00116fff  = fred + 0x10ffff = 0x7000 + 0x10ffff  	 Overflow can also occur if the computation carries into the 16th bit 	 and it also results in the 15th bit having the same value as the 15th 	 bit of the original value.   What happens is that the HI16S reloc 	 will have already examined the 15th bit of the original value and 	 added 1 to the high part if the bit is set.  This compensates for the 	 sign extension of 15th bit of the result of the computation.  But now 	 there is a carry into the 16th bit, and this has not been allowed for.  	 So, for example if fred is at address 0xf000:  	   movhi hi( fred + 0xffff), r0, r1    [bit 15 of the offset is set] 	   movea lo( fred + 0xffff), r1, r1  	   HI16S: 0x0001 + (0x0000f000>> 16)    = 0x0001 	   LO16:  0xffff + (0x0000f000& 0xffff) = 0xefff   (carry into bit 16 is lost)  	     0x00010000 	   + 0xffffefff 	   ------------ 	     0x0000efff   but 'fred + 0xffff' = 0x0001efff  	 Similarly, if the 15th bit remains clear, but overflow occurs into 	 the 16th bit then (assuming the address of fred is 0xf000):  	   movhi hi( fred + 0x7000), r0, r1    [bit 15 of the offset is clear] 	   movea lo( fred + 0x7000), r1, r1  	   HI16S: 0x0000 + (0x0000f000>> 16)    = 0x0000 	   LO16:  0x7000 + (0x0000f000& 0xffff) = 0x6fff  (carry into bit 16 is lost)  	     0x00000000 	   + 0x00006fff 	   ------------ 	     0x00006fff   but 'fred + 0x7000' = 0x00016fff  	 Note - there is no need to change anything if a carry occurs, and the 	 15th bit changes its value from being set to being clear, as the HI16S 	 reloc will have already added in 1 to the high part for us:  	   movhi hi( fred + 0xffff), r0, r1     [bit 15 of the offset is set] 	   movea lo( fred + 0xffff), r1, r1  	   HI16S: 0x0001 + (0x00007000>> 16) 	   LO16:  0xffff + (0x00007000& 0xffff) = 0x6fff  (carry into bit 16 is lost)  	     0x00010000 	   + 0x00006fff   (bit 15 not set, so the top half is zero) 	   ------------ 	     0x00016fff   which is right (assuming that fred is at 0x7000)  	 but if the 15th bit goes from being clear to being set, then we must 	 once again handle overflow:  	   movhi hi( fred + 0x7000), r0, r1     [bit 15 of the offset is clear] 	   movea lo( fred + 0x7000), r1, r1  	   HI16S: 0x0000 + (0x0000ffff>> 16) 	   LO16:  0x7000 + (0x0000ffff& 0xffff) = 0x6fff  (carry into bit 16)  	     0x00000000 	   + 0x00006fff   (bit 15 not set, so the top half is zero) 	   ------------ 	     0x00006fff   which is wrong (assuming that fred is at 0xffff) 	 */
+comment|/* Calculate the sum of the value stored in the instruction and the 	 addend and check for overflow from the low 16 bits into the high 	 16 bits.  The assembler has already done some of this:  If the 	 value stored in the instruction has its 15th bit set, (counting 	 from zero) then the assembler will have added 1 to the value 	 stored in the associated HI16S reloc.  So for example, these 	 relocations:  	     movhi hi( fred ), r0, r1 	     movea lo( fred ), r1, r1  	 will store 0 in the value fields for the MOVHI and MOVEA instructions 	 and addend will be the address of fred, but for these instructions:  	     movhi hi( fred + 0x123456), r0, r1 	     movea lo( fred + 0x123456), r1, r1  	 the value stored in the MOVHI instruction will be 0x12 and the value 	 stored in the MOVEA instruction will be 0x3456.  If however the 	 instructions were:  	     movhi hi( fred + 0x10ffff), r0, r1 	     movea lo( fred + 0x10ffff), r1, r1  	 then the value stored in the MOVHI instruction would be 0x11 (not 	 0x10) and the value stored in the MOVEA instruction would be 0xffff. 	 Thus (assuming for the moment that the addend is 0), at run time the 	 MOVHI instruction loads 0x110000 into r1, then the MOVEA instruction 	 adds 0xffffffff (sign extension!) producing 0x10ffff.  Similarly if 	 the instructions were:  	     movhi hi( fred - 1), r0, r1 	     movea lo( fred - 1), r1, r1  	 then 0 is stored in the MOVHI instruction and -1 is stored in the 	 MOVEA instruction.  	 Overflow can occur if the addition of the value stored in the 	 instruction plus the addend sets the 15th bit when before it was clear. 	 This is because the 15th bit will be sign extended into the high part, 	 thus reducing its value by one, but since the 15th bit was originally 	 clear, the assembler will not have added 1 to the previous HI16S reloc 	 to compensate for this effect.  For example:  	    movhi hi( fred + 0x123456), r0, r1 	    movea lo( fred + 0x123456), r1, r1  	 The value stored in HI16S reloc is 0x12, the value stored in the LO16 	 reloc is 0x3456.  If we assume that the address of fred is 0x00007000 	 then the relocations become:  	   HI16S: 0x0012 + (0x00007000>> 16)    = 0x12 	   LO16:  0x3456 + (0x00007000& 0xffff) = 0xa456  	 but when the instructions are executed, the MOVEA instruction's value 	 is signed extended, so the sum becomes:  	      0x00120000 	    + 0xffffa456 	    ------------ 	      0x0011a456    but 'fred + 0x123456' = 0x0012a456  	 Note that if the 15th bit was set in the value stored in the LO16 	 reloc, then we do not have to do anything:  	    movhi hi( fred + 0x10ffff), r0, r1 	    movea lo( fred + 0x10ffff), r1, r1  	    HI16S:  0x0011 + (0x00007000>> 16)    = 0x11 	    LO16:   0xffff + (0x00007000& 0xffff) = 0x6fff  	      0x00110000 	    + 0x00006fff 	    ------------ 	      0x00116fff  = fred + 0x10ffff = 0x7000 + 0x10ffff  	 Overflow can also occur if the computation carries into the 16th bit 	 and it also results in the 15th bit having the same value as the 15th 	 bit of the original value.   What happens is that the HI16S reloc 	 will have already examined the 15th bit of the original value and 	 added 1 to the high part if the bit is set.  This compensates for the 	 sign extension of 15th bit of the result of the computation.  But now 	 there is a carry into the 16th bit, and this has not been allowed for.  	 So, for example if fred is at address 0xf000:  	   movhi hi( fred + 0xffff), r0, r1    [bit 15 of the offset is set] 	   movea lo( fred + 0xffff), r1, r1  	   HI16S: 0x0001 + (0x0000f000>> 16)    = 0x0001 	   LO16:  0xffff + (0x0000f000& 0xffff) = 0xefff   (carry into bit 16 is lost)  	     0x00010000 	   + 0xffffefff 	   ------------ 	     0x0000efff   but 'fred + 0xffff' = 0x0001efff  	 Similarly, if the 15th bit remains clear, but overflow occurs into 	 the 16th bit then (assuming the address of fred is 0xf000):  	   movhi hi( fred + 0x7000), r0, r1    [bit 15 of the offset is clear] 	   movea lo( fred + 0x7000), r1, r1  	   HI16S: 0x0000 + (0x0000f000>> 16)    = 0x0000 	   LO16:  0x7000 + (0x0000f000& 0xffff) = 0x6fff  (carry into bit 16 is lost)  	     0x00000000 	   + 0x00006fff 	   ------------ 	     0x00006fff   but 'fred + 0x7000' = 0x00016fff  	 Note - there is no need to change anything if a carry occurs, and the 	 15th bit changes its value from being set to being clear, as the HI16S 	 reloc will have already added in 1 to the high part for us:  	   movhi hi( fred + 0xffff), r0, r1     [bit 15 of the offset is set] 	   movea lo( fred + 0xffff), r1, r1  	   HI16S: 0x0001 + (0x00007000>> 16) 	   LO16:  0xffff + (0x00007000& 0xffff) = 0x6fff  (carry into bit 16 is lost)  	     0x00010000 	   + 0x00006fff   (bit 15 not set, so the top half is zero) 	   ------------ 	     0x00016fff   which is right (assuming that fred is at 0x7000)  	 but if the 15th bit goes from being clear to being set, then we must 	 once again handle overflow:  	   movhi hi( fred + 0x7000), r0, r1     [bit 15 of the offset is clear] 	   movea lo( fred + 0x7000), r1, r1  	   HI16S: 0x0000 + (0x0000ffff>> 16) 	   LO16:  0x7000 + (0x0000ffff& 0xffff) = 0x6fff  (carry into bit 16)  	     0x00000000 	   + 0x00006fff   (bit 15 not set, so the top half is zero) 	   ------------ 	     0x00006fff   which is wrong (assuming that fred is at 0xffff).  */
 block|{
 name|long
 name|result
@@ -3571,6 +3609,9 @@ name|bfd_put_16
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|insn
 argument_list|,
 name|hi16s_address
@@ -3796,6 +3837,9 @@ operator|(
 name|addend
 operator|&
 operator|~
+operator|(
+name|bfd_vma
+operator|)
 literal|1
 operator|)
 operator||
@@ -4176,6 +4220,9 @@ operator|(
 name|addend
 operator|&
 operator|~
+operator|(
+name|bfd_vma
+operator|)
 literal|1
 operator|)
 operator|<<
@@ -4185,6 +4232,9 @@ name|bfd_put_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|insn
 argument_list|,
 name|address
@@ -4273,6 +4323,9 @@ name|bfd_put_16
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 name|insn
 argument_list|,
 name|address
@@ -4345,7 +4398,7 @@ block|{
 name|long
 name|relocation
 decl_stmt|;
-comment|/* If there is an output BFD,      and the symbol is not a section name (which is only defined at final link time),      and either we are not putting the addend into the instruction          or the addend is zero, so there is nothing to add into the instruction      then just fixup the address and return.  */
+comment|/* If there is an output BFD,      and the symbol is not a section name (which is only defined at final link time),      and either we are not putting the addend into the instruction       or the addend is zero, so there is nothing to add into the instruction      then just fixup the address and return.  */
 if|if
 condition|(
 name|obfd
@@ -4397,7 +4450,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|else if (obfd != NULL)     {       return bfd_reloc_continue;     }
+block|else if (obfd != NULL)     return bfd_reloc_continue;
 endif|#
 directive|endif
 comment|/* Catch relocs involving undefined symbols.  */
@@ -4492,11 +4545,11 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* Since this reloc is going to be processed later on, we should 	 not make it pc-relative here.  To test this, try assembling and 	 linking this program:  	 	.text 		.globl _start 		nop 	_start:                  	jr foo  	        .section ".foo","ax" 		nop 	foo:         	nop       */
+comment|/* Since this reloc is going to be processed later on, we should 	 not make it pc-relative here.  To test this, try assembling and 	 linking this program:  	 	.text 		.globl _start 		nop 	_start:         	jr foo  	        .section ".foo","ax" 		nop 	foo:         	nop      */
 block|if (reloc->howto->pc_relative == true)     {
 comment|/* Here the variable relocation holds the final address of the 	 symbol we are relocating against, plus any addend.  */
 block|relocation -= isection->output_section->vma + isection->output_offset;
-comment|/* Deal with pcrel_offset */
+comment|/* Deal with pcrel_offset.  */
 block|relocation -= reloc->address;     }
 endif|#
 directive|endif
@@ -4675,7 +4728,7 @@ name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|unsigned
-name|long
+name|int
 name|r_type
 init|=
 name|howto
@@ -4763,6 +4816,7 @@ condition|)
 return|return
 name|bfd_reloc_overflow
 return|;
+comment|/* Only the bottom 24 bits of the PC are valid */
 name|value
 operator|=
 name|SEXT24
@@ -4770,7 +4824,6 @@ argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-comment|/* Only the bottom 24 bits of the PC are valid */
 break|break;
 case|case
 name|R_V850_HI16_S
@@ -5003,10 +5056,10 @@ name|type
 operator|!=
 name|bfd_link_hash_defined
 condition|)
+comment|/* Actually this indicates that __ep could not be found.  */
 return|return
 name|bfd_reloc_continue
 return|;
-comment|/* Actually this indicates that __ep could not be found.  */
 name|ep
 operator|=
 operator|(
@@ -5095,14 +5148,12 @@ name|type
 operator|!=
 name|bfd_link_hash_defined
 condition|)
+comment|/* Actually this indicates that __ctbp could not be found.  */
 return|return
-operator|(
 name|bfd_reloc_dangerous
 operator|+
 literal|1
-operator|)
 return|;
-comment|/* Actually this indicates that __ctbp could not be found.  */
 name|ctbp
 operator|=
 operator|(
@@ -5419,6 +5470,9 @@ name|input_bfd
 argument_list|,
 name|input_section
 argument_list|,
+operator|(
+name|bfd_vma
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -5622,26 +5676,21 @@ index|]
 expr_stmt|;
 name|relocation
 operator|=
-operator|(
-name|sec
-operator|->
-name|output_section
-operator|->
-name|vma
-operator|+
-name|sec
-operator|->
-name|output_offset
-operator|+
+name|_bfd_elf_rela_local_sym
+argument_list|(
+name|output_bfd
+argument_list|,
 name|sym
-operator|->
-name|st_value
-operator|)
+argument_list|,
+name|sec
+argument_list|,
+name|rel
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
 literal|0
-block|{ 	    char * name; 	    name = bfd_elf_string_from_elf_section (input_bfd, symtab_hdr->sh_link, sym->st_name); 	    name = (name == NULL) ? "<none>" : name; fprintf (stderr, "local: sec: %s, sym: %s (%d), value: %x + %x + %x addend %x\n", 	 sec->name, name, sym->st_name, 	 sec->output_section->vma, sec->output_offset, sym->st_value, rel->r_addend); 	  }
+block|{ 	    char * name;  	    name = bfd_elf_string_from_elf_section (input_bfd, symtab_hdr->sh_link, sym->st_name); 	    name = (name == NULL) ? "<none>" : name; 	    fprintf (stderr, "local: sec: %s, sym: %s (%d), value: %x + %x + %x addend %x\n", 		     sec->name, name, sym->st_name, 		     sec->output_section->vma, sec->output_offset, sym->st_value, rel->r_addend); 	  }
 endif|#
 directive|endif
 block|}
@@ -5751,7 +5800,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|fprintf (stderr, "defined: sec: %s, name: %s, value: %x + %x + %x gives: %x\n", 	 sec->name, h->root.root.string, h->root.u.def.value, sec->output_section->vma, sec->output_offset, relocation);
+block|fprintf (stderr, "defined: sec: %s, name: %s, value: %x + %x + %x gives: %x\n", 		       sec->name, h->root.root.string, h->root.u.def.value, sec->output_section->vma, sec->output_offset, relocation);
 endif|#
 directive|endif
 block|}
@@ -5770,7 +5819,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|fprintf (stderr, "undefined: sec: %s, name: %s\n", 	 sec->name, h->root.root.string);
+block|fprintf (stderr, "undefined: sec: %s, name: %s\n", 		       sec->name, h->root.root.string);
 endif|#
 directive|endif
 name|relocation
@@ -5830,7 +5879,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* FIXME: We should use the addend, but the COFF relocations          don't.  */
+comment|/* FIXME: We should use the addend, but the COFF relocations don't.  */
 name|r
 operator|=
 name|v850_elf_final_link_relocate
@@ -6199,7 +6248,7 @@ name|relocs
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-comment|/* No got and plt entries for v850-elf */
+comment|/* No got and plt entries for v850-elf.  */
 return|return
 name|true
 return|;
@@ -6320,49 +6369,6 @@ block|}
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|elf_bad_symtab
-argument_list|(
-name|abfd
-argument_list|)
-operator|&&
-name|ELF_ST_BIND
-argument_list|(
-name|sym
-operator|->
-name|st_info
-argument_list|)
-operator|!=
-name|STB_LOCAL
-operator|)
-operator|&&
-operator|!
-operator|(
-operator|(
-name|sym
-operator|->
-name|st_shndx
-operator|<=
-literal|0
-operator|||
-name|sym
-operator|->
-name|st_shndx
-operator|>=
-name|SHN_LORESERVE
-operator|)
-operator|&&
-name|sym
-operator|->
-name|st_shndx
-operator|!=
-name|SHN_COMMON
-operator|)
-condition|)
-block|{
 return|return
 name|bfd_section_from_elf_index
 argument_list|(
@@ -6373,7 +6379,6 @@ operator|->
 name|st_shndx
 argument_list|)
 return|;
-block|}
 block|}
 return|return
 name|NULL
@@ -6609,110 +6614,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy backend specific data from one object module to another */
-end_comment
-
-begin_function
-specifier|static
-name|boolean
-name|v850_elf_copy_private_bfd_data
-parameter_list|(
-name|ibfd
-parameter_list|,
-name|obfd
-parameter_list|)
-name|bfd
-modifier|*
-name|ibfd
-decl_stmt|;
-name|bfd
-modifier|*
-name|obfd
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|bfd_get_flavour
-argument_list|(
-name|ibfd
-argument_list|)
-operator|!=
-name|bfd_target_elf_flavour
-operator|||
-name|bfd_get_flavour
-argument_list|(
-name|obfd
-argument_list|)
-operator|!=
-name|bfd_target_elf_flavour
-condition|)
-return|return
-name|true
-return|;
-name|BFD_ASSERT
-argument_list|(
-operator|!
-name|elf_flags_init
-argument_list|(
-name|obfd
-argument_list|)
-operator|||
-operator|(
-name|elf_elfheader
-argument_list|(
-name|obfd
-argument_list|)
-operator|->
-name|e_flags
-operator|==
-name|elf_elfheader
-argument_list|(
-name|ibfd
-argument_list|)
-operator|->
-name|e_flags
-operator|)
-argument_list|)
-expr_stmt|;
-name|elf_gp
-argument_list|(
-name|obfd
-argument_list|)
-operator|=
-name|elf_gp
-argument_list|(
-name|ibfd
-argument_list|)
-expr_stmt|;
-name|elf_elfheader
-argument_list|(
-name|obfd
-argument_list|)
-operator|->
-name|e_flags
-operator|=
-name|elf_elfheader
-argument_list|(
-name|ibfd
-argument_list|)
-operator|->
-name|e_flags
-expr_stmt|;
-name|elf_flags_init
-argument_list|(
-name|obfd
-argument_list|)
-operator|=
-name|true
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Merge backend specific data from an object file to the output    object file when linking.  */
+comment|/* Merge backend specific data from an object file    to the output object file when linking.  */
 end_comment
 
 begin_function
@@ -6833,7 +6735,6 @@ argument_list|)
 operator|->
 name|the_default
 condition|)
-block|{
 return|return
 name|bfd_set_arch_mach
 argument_list|(
@@ -6850,7 +6751,6 @@ name|ibfd
 argument_list|)
 argument_list|)
 return|;
-block|}
 return|return
 name|true
 return|;
@@ -6894,7 +6794,7 @@ argument_list|(
 literal|"%s: Architecture mismatch with previous modules"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
+name|bfd_archive_filename
 argument_list|(
 name|ibfd
 argument_list|)
@@ -6907,7 +6807,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Display the flags field */
+comment|/* Display the flags field.  */
 end_comment
 
 begin_function
@@ -7113,7 +7013,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Given a BFD section, try to locate the corresponding ELF section    index.  */
+comment|/* Given a BFD section, try to locate the    corresponding ELF section index.  */
 end_comment
 
 begin_function
@@ -7123,8 +7023,6 @@ name|v850_elf_section_from_bfd_section
 parameter_list|(
 name|abfd
 parameter_list|,
-name|hdr
-parameter_list|,
 name|sec
 parameter_list|,
 name|retval
@@ -7132,11 +7030,6 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|Elf32_Internal_Shdr
-modifier|*
-name|hdr
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
@@ -7256,10 +7149,10 @@ operator|)
 name|asym
 decl_stmt|;
 name|unsigned
-name|short
-name|index
+name|int
+name|indx
 decl_stmt|;
-name|index
+name|indx
 operator|=
 name|elfsym
 operator|->
@@ -7270,17 +7163,12 @@ expr_stmt|;
 comment|/* If the section index is an "ordinary" index, then it may      refer to a v850 specific section created by the assembler.      Check the section's type and change the index it matches.       FIXME: Should we alter the st_shndx field as well ?  */
 if|if
 condition|(
-name|index
+name|indx
 operator|<
-name|elf_elfheader
+name|elf_numsections
 argument_list|(
 name|abfd
 argument_list|)
-index|[
-literal|0
-index|]
-operator|.
-name|e_shnum
 condition|)
 switch|switch
 condition|(
@@ -7289,7 +7177,7 @@ argument_list|(
 name|abfd
 argument_list|)
 index|[
-name|index
+name|indx
 index|]
 operator|->
 name|sh_type
@@ -7298,7 +7186,7 @@ block|{
 case|case
 name|SHT_V850_SCOMMON
 case|:
-name|index
+name|indx
 operator|=
 name|SHN_V850_SCOMMON
 expr_stmt|;
@@ -7306,7 +7194,7 @@ break|break;
 case|case
 name|SHT_V850_TCOMMON
 case|:
-name|index
+name|indx
 operator|=
 name|SHN_V850_TCOMMON
 expr_stmt|;
@@ -7314,7 +7202,7 @@ break|break;
 case|case
 name|SHT_V850_ZCOMMON
 case|:
-name|index
+name|indx
 operator|=
 name|SHN_V850_ZCOMMON
 expr_stmt|;
@@ -7324,7 +7212,7 @@ break|break;
 block|}
 switch|switch
 condition|(
-name|index
+name|indx
 condition|)
 block|{
 case|case
@@ -7662,8 +7550,9 @@ modifier|*
 name|valp
 decl_stmt|;
 block|{
+name|unsigned
 name|int
-name|index
+name|indx
 init|=
 name|sym
 operator|->
@@ -7672,17 +7561,12 @@ decl_stmt|;
 comment|/* If the section index is an "ordinary" index, then it may      refer to a v850 specific section created by the assembler.      Check the section's type and change the index it matches.       FIXME: Should we alter the st_shndx field as well ?  */
 if|if
 condition|(
-name|index
+name|indx
 operator|<
-name|elf_elfheader
+name|elf_numsections
 argument_list|(
 name|abfd
 argument_list|)
-index|[
-literal|0
-index|]
-operator|.
-name|e_shnum
 condition|)
 switch|switch
 condition|(
@@ -7691,7 +7575,7 @@ argument_list|(
 name|abfd
 argument_list|)
 index|[
-name|index
+name|indx
 index|]
 operator|->
 name|sh_type
@@ -7700,7 +7584,7 @@ block|{
 case|case
 name|SHT_V850_SCOMMON
 case|:
-name|index
+name|indx
 operator|=
 name|SHN_V850_SCOMMON
 expr_stmt|;
@@ -7708,7 +7592,7 @@ break|break;
 case|case
 name|SHT_V850_TCOMMON
 case|:
-name|index
+name|indx
 operator|=
 name|SHN_V850_TCOMMON
 expr_stmt|;
@@ -7716,7 +7600,7 @@ break|break;
 case|case
 name|SHT_V850_ZCOMMON
 case|:
-name|index
+name|indx
 operator|=
 name|SHN_V850_ZCOMMON
 expr_stmt|;
@@ -7726,7 +7610,7 @@ break|break;
 block|}
 switch|switch
 condition|(
-name|index
+name|indx
 condition|)
 block|{
 case|case
@@ -7825,10 +7709,6 @@ name|true
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSIGNORED*/
-end_comment
 
 begin_function
 specifier|static
@@ -8039,7 +7919,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set the correct type for a V850 ELF section.  We do this by the    section name, which is a hack, but ought to work.  */
+comment|/* Set the correct type for a V850 ELF section.  We do this    by the section name, which is a hack, but ought to work.  */
 end_comment
 
 begin_function
@@ -8173,6 +8053,13 @@ begin_define
 define|#
 directive|define
 name|ELF_MACHINE_CODE
+value|EM_V850
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_MACHINE_ALT1
 value|EM_CYGNUS_V850
 end_define
 
@@ -8300,13 +8187,6 @@ define|#
 directive|define
 name|bfd_elf32_bfd_reloc_type_lookup
 value|v850_elf_reloc_type_lookup
-end_define
-
-begin_define
-define|#
-directive|define
-name|bfd_elf32_bfd_copy_private_bfd_data
-value|v850_elf_copy_private_bfd_data
 end_define
 
 begin_define

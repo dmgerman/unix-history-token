@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"as.h"
 end_include
 
@@ -23,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|<obstack.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -1208,13 +1208,8 @@ decl_stmt|;
 comment|/* Omit control characters in the listing.  */
 if|if
 condition|(
-name|isascii
-argument_list|(
-name|c
-argument_list|)
-operator|&&
 operator|!
-name|iscntrl
+name|ISCNTRL
 argument_list|(
 name|c
 argument_list|)
@@ -1640,7 +1635,7 @@ name|file
 operator|->
 name|filename
 argument_list|,
-literal|"r"
+name|FOPEN_RT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1738,6 +1733,15 @@ name|at_end
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|count
+operator|+
+literal|2
+operator|<
+name|size
+condition|)
+block|{
 operator|*
 name|p
 operator|++
@@ -1756,6 +1760,7 @@ operator|++
 operator|=
 literal|'.'
 expr_stmt|;
+block|}
 block|}
 name|file
 operator|->
@@ -3436,12 +3441,8 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|isspace
+name|ISSPACE
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|line
 argument_list|)
@@ -4299,7 +4300,7 @@ name|fopen
 argument_list|(
 name|name
 argument_list|,
-literal|"w"
+name|FOPEN_WT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4832,7 +4833,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"New line in title"
+literal|"new line in title"
 argument_list|)
 argument_list|)
 expr_stmt|;

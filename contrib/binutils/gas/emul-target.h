@@ -174,7 +174,7 @@ block|,
 name|emul_fake_label_name
 block|,
 name|emul_format
-block|, }
+block|,   }
 decl_stmt|;
 end_decl_stmt
 

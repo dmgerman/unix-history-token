@@ -532,6 +532,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Define offsetof for those systems which lack it */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|offsetof
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|offsetof
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|MEMBER
+parameter_list|)
+value|((size_t)&((TYPE *)0)->MEMBER)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef

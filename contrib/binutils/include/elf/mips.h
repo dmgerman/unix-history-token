@@ -821,13 +821,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|E_MIPS_MACH_MIPS32_4K
-value|0x00890000
-end_define
-
-begin_define
-define|#
-directive|define
 name|E_MIPS_MACH_SB1
 value|0x008a0000
 end_define

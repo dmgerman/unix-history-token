@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GAS interface for targets using CGEN: Cpu tools GENerator.    Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* GAS interface for targets using CGEN: Cpu tools GENerator.    Copyright 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -56,6 +56,30 @@ include|#
 directive|include
 file|"cgen.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"dwarf2dbg.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|queue_fixup
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|expressionS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Opcode table descriptor, must be set by md_begin.  */
@@ -179,6 +203,9 @@ parameter_list|)
 name|int
 name|opindex
 decl_stmt|;
+name|int
+name|opinfo
+decl_stmt|;
 name|expressionS
 modifier|*
 name|expP
@@ -234,43 +261,112 @@ block|}
 end_function
 
 begin_comment
-comment|/* The following three functions allow a backup of the fixup chain to be made,    and to have this backup be swapped with the current chain.  This allows    certain ports, eg the m32r, to swap two instructions and swap their fixups    at the same time.  */
+comment|/* The following functions allow fixup chains to be stored, retrieved,    and swapped.  They are a generalization of a pre-existing scheme    for storing, restoring and swapping fixup chains that was used by    the m32r port.  The functionality is essentially the same, only    instead of only being able to store a single fixup chain, an entire    array of fixup chains can be stored.  It is the user's responsibility    to keep track of how many fixup chains have been stored and which    elements of the array they are in.     The algorithms used are the same as in the old scheme.  Other than the     "array-ness" of the whole thing, the functionality is identical to the     old scheme.     gas_cgen_initialize_saved_fixups_array():       Sets num_fixups_in_chain to 0 for each element. Call this from       md_begin() if you plan to use these functions and you want the       fixup count in each element to be set to 0 intially.  This is       not necessary, but it's included just in case.  It performs       the same function for each element in the array of fixup chains       that gas_init_parse() performs for the current fixups.     gas_cgen_save_fixups (element):       element - element number of the array you wish to store the fixups                 to.  No mechanism is built in for tracking what element                 was last stored to.     gas_cgen_restore_fixups (element):       element - element number of the array you wish to restore the fixups                 from.     gas_cgen_swap_fixups(int element):        element - swap the current fixups with those in this element number. */
 end_comment
 
-begin_comment
-comment|/* ??? I think with cgen_asm_finish_insn (or something else) there is no    more need for this.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
+begin_struct
+struct|struct
+name|saved_fixups
+block|{
 name|struct
 name|fixup
-name|saved_fixups
+name|fixup_chain
 index|[
 name|GAS_CGEN_MAX_FIXUPS
 index|]
 decl_stmt|;
-end_decl_stmt
+name|int
+name|num_fixups_in_chain
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|static
-name|int
-name|saved_num_fixups
+name|struct
+name|saved_fixups
+name|stored_fixups
+index|[
+name|MAX_SAVED_FIXUP_CHAINS
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_function
 name|void
-name|gas_cgen_save_fixups
+name|gas_cgen_initialize_saved_fixups_array
 parameter_list|()
 block|{
-name|saved_num_fixups
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
+while|while
+condition|(
+name|i
+operator|<
+name|MAX_SAVED_FIXUP_CHAINS
+condition|)
+name|stored_fixups
+index|[
+name|i
+operator|++
+index|]
+operator|.
+name|num_fixups_in_chain
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|gas_cgen_save_fixups
+parameter_list|(
+name|i
+parameter_list|)
+name|int
+name|i
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+operator|||
+name|i
+operator|>=
+name|MAX_SAVED_FIXUP_CHAINS
+condition|)
+block|{
+name|as_fatal
+argument_list|(
+literal|"index into stored_fixups[] out of bounds"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|stored_fixups
+index|[
+name|i
+index|]
+operator|.
+name|num_fixups_in_chain
 operator|=
 name|num_fixups
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|saved_fixups
+name|stored_fixups
+index|[
+name|i
+index|]
+operator|.
+name|fixup_chain
 argument_list|,
 name|fixups
 argument_list|,
@@ -295,30 +391,75 @@ end_function
 begin_function
 name|void
 name|gas_cgen_restore_fixups
-parameter_list|()
+parameter_list|(
+name|i
+parameter_list|)
+name|int
+name|i
+decl_stmt|;
 block|{
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+operator|||
+name|i
+operator|>=
+name|MAX_SAVED_FIXUP_CHAINS
+condition|)
+block|{
+name|as_fatal
+argument_list|(
+literal|"index into stored_fixups[] out of bounds"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|num_fixups
 operator|=
-name|saved_num_fixups
+name|stored_fixups
+index|[
+name|i
+index|]
+operator|.
+name|num_fixups_in_chain
 expr_stmt|;
 name|memcpy
 argument_list|(
 name|fixups
 argument_list|,
-name|saved_fixups
+name|stored_fixups
+index|[
+name|i
+index|]
+operator|.
+name|fixup_chain
 argument_list|,
+operator|(
 sizeof|sizeof
 argument_list|(
-name|fixups
+name|stored_fixups
+index|[
+name|i
+index|]
+operator|.
+name|fixup_chain
 index|[
 literal|0
 index|]
 argument_list|)
+operator|)
 operator|*
 name|num_fixups
 argument_list|)
 expr_stmt|;
-name|saved_num_fixups
+name|stored_fixups
+index|[
+name|i
+index|]
+operator|.
+name|num_fixups_in_chain
 operator|=
 literal|0
 expr_stmt|;
@@ -328,7 +469,60 @@ end_function
 begin_function
 name|void
 name|gas_cgen_swap_fixups
-parameter_list|()
+parameter_list|(
+name|i
+parameter_list|)
+name|int
+name|i
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+operator|||
+name|i
+operator|>=
+name|MAX_SAVED_FIXUP_CHAINS
+condition|)
+block|{
+name|as_fatal
+argument_list|(
+literal|"index into stored_fixups[] out of bounds"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|num_fixups
+operator|==
+literal|0
+condition|)
+name|gas_cgen_restore_fixups
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|stored_fixups
+index|[
+name|i
+index|]
+operator|.
+name|num_fixups_in_chain
+operator|==
+literal|0
+condition|)
+name|gas_cgen_save_fixups
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+else|else
 block|{
 name|int
 name|tmp
@@ -337,36 +531,21 @@ name|struct
 name|fixup
 name|tmp_fixup
 decl_stmt|;
-if|if
-condition|(
-name|num_fixups
-operator|==
-literal|0
-condition|)
-block|{
-name|gas_cgen_restore_fixups
-argument_list|()
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|saved_num_fixups
-operator|==
-literal|0
-condition|)
-block|{
-name|gas_cgen_save_fixups
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-block|{
 name|tmp
 operator|=
-name|saved_num_fixups
+name|stored_fixups
+index|[
+name|i
+index|]
+operator|.
+name|num_fixups_in_chain
 expr_stmt|;
-name|saved_num_fixups
+name|stored_fixups
+index|[
+name|i
+index|]
+operator|.
+name|num_fixups_in_chain
 operator|=
 name|num_fixups
 expr_stmt|;
@@ -387,12 +566,22 @@ control|)
 block|{
 name|tmp_fixup
 operator|=
-name|saved_fixups
+name|stored_fixups
+index|[
+name|i
+index|]
+operator|.
+name|fixup_chain
 index|[
 name|tmp
 index|]
 expr_stmt|;
-name|saved_fixups
+name|stored_fixups
+index|[
+name|i
+index|]
+operator|.
+name|fixup_chain
 index|[
 name|tmp
 index|]
@@ -415,7 +604,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Default routine to record a fixup.    This is a cover function to fix_new.    It exists because we record INSN with the fixup.     FRAG and WHERE are their respective arguments to fix_new_exp.    LENGTH is in bits.    OPINFO is something the caller chooses to help in reloc determination.     At this point we do not use a bfd_reloc_code_real_type for    operands residing in the insn, but instead just use the    operand index.  This lets us easily handle fixups for any    operand type.  We pick a BFD reloc type in md_apply_fix.  */
+comment|/* Default routine to record a fixup.    This is a cover function to fix_new.    It exists because we record INSN with the fixup.     FRAG and WHERE are their respective arguments to fix_new_exp.    LENGTH is in bits.    OPINFO is something the caller chooses to help in reloc determination.     At this point we do not use a bfd_reloc_code_real_type for    operands residing in the insn, but instead just use the    operand index.  This lets us easily handle fixups for any    operand type.  We pick a BFD reloc type in md_apply_fix3.  */
 end_comment
 
 begin_function
@@ -539,7 +728,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Default routine to record a fixup given an expression.    This is a cover function to fix_new_exp.    It exists because we record INSN with the fixup.     FRAG and WHERE are their respective arguments to fix_new_exp.    LENGTH is in bits.    OPINFO is something the caller chooses to help in reloc determination.     At this point we do not use a bfd_reloc_code_real_type for    operands residing in the insn, but instead just use the    operand index.  This lets us easily handle fixups for any    operand type.  We pick a BFD reloc type in md_apply_fix.  */
+comment|/* Default routine to record a fixup given an expression.    This is a cover function to fix_new_exp.    It exists because we record INSN with the fixup.     FRAG and WHERE are their respective arguments to fix_new_exp.    LENGTH is in bits.    OPINFO is something the caller chooses to help in reloc determination.     At this point we do not use a bfd_reloc_code_real_type for    operands residing in the insn, but instead just use the    operand index.  This lets us easily handle fixups for any    operand type.  We pick a BFD reloc type in md_apply_fix3.  */
 end_comment
 
 begin_function
@@ -666,6 +855,13 @@ name|expr_jmp_buf
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|expr_jmp_buf_p
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Callback for cgen interface.  Parse the expression at *STRP.    The result is an error message or NULL for success (in which case    *STRP is advanced past the parsed text).    WANT is an indication of what the caller is looking for.    If WANT == CGEN_ASM_PARSE_INIT the caller is beginning to try to match    a table entry with the insn, reset the queued fixups counter.    An enum cgen_parse_operand_result is stored in RESULTP.    OPINDEX is the operand's table entry index.    OPINFO is something the caller chooses to help in reloc determination.    The resulting value is stored in VALUEP.  */
 end_comment
@@ -692,6 +888,7 @@ name|valueP
 parameter_list|)
 name|CGEN_CPU_DESC
 name|cd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|enum
 name|cgen_parse_operand_type
@@ -753,8 +950,6 @@ specifier|const
 name|char
 modifier|*
 name|errmsg
-init|=
-name|NULL
 decl_stmt|;
 name|expressionS
 name|exp
@@ -801,6 +996,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|expr_jmp_buf_p
+operator|=
+literal|0
+expr_stmt|;
 name|input_line_pointer
 operator|=
 operator|(
@@ -815,14 +1014,29 @@ operator|=
 name|CGEN_PARSE_OPERAND_RESULT_ERROR
 expr_stmt|;
 return|return
+name|_
+argument_list|(
 literal|"illegal operand"
+argument_list|)
 return|;
 block|}
+name|expr_jmp_buf_p
+operator|=
+literal|1
+expr_stmt|;
 name|expression
 argument_list|(
 operator|&
 name|exp
 argument_list|)
+expr_stmt|;
+name|expr_jmp_buf_p
+operator|=
+literal|0
+expr_stmt|;
+name|errmsg
+operator|=
+name|NULL
 expr_stmt|;
 operator|*
 name|strP
@@ -905,7 +1119,7 @@ operator|=
 name|CGEN_PARSE_OPERAND_RESULT_REGISTER
 expr_stmt|;
 break|break;
-default|default :
+default|default:
 name|queue_fixup
 argument_list|(
 name|opindex
@@ -947,8 +1161,14 @@ parameter_list|)
 name|expressionS
 modifier|*
 name|expressionP
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
+comment|/* Don't longjmp if we're not called from within cgen_parse_operand().  */
+if|if
+condition|(
+name|expr_jmp_buf_p
+condition|)
 name|longjmp
 argument_list|(
 name|expr_jmp_buf
@@ -1026,10 +1246,10 @@ argument_list|,
 name|CGEN_INSN_RELAX
 argument_list|)
 condition|)
+comment|/* These currently shouldn't get here.  */
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* These currently shouldn't get here.  */
 comment|/* Is there a relaxable insn with the relaxable operand needing a fixup?  */
 name|relax_operand
 operator|=
@@ -1106,6 +1326,17 @@ name|fragS
 modifier|*
 name|old_frag
 decl_stmt|;
+name|expressionS
+modifier|*
+name|exp
+decl_stmt|;
+name|symbolS
+modifier|*
+name|sym
+decl_stmt|;
+name|offsetT
+name|off
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|TC_CGEN_MAX_RELAX
@@ -1146,6 +1377,56 @@ name|old_frag
 operator|=
 name|frag_now
 expr_stmt|;
+name|exp
+operator|=
+operator|&
+name|fixups
+index|[
+name|relax_operand
+index|]
+operator|.
+name|exp
+expr_stmt|;
+name|sym
+operator|=
+name|exp
+operator|->
+name|X_add_symbol
+expr_stmt|;
+name|off
+operator|=
+name|exp
+operator|->
+name|X_add_number
+expr_stmt|;
+if|if
+condition|(
+name|exp
+operator|->
+name|X_op
+operator|!=
+name|O_constant
+operator|&&
+name|exp
+operator|->
+name|X_op
+operator|!=
+name|O_symbol
+condition|)
+block|{
+comment|/* Handle complex expressions.  */
+name|sym
+operator|=
+name|make_expr_symbol
+argument_list|(
+name|exp
+argument_list|)
+expr_stmt|;
+name|off
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|frag_var
 argument_list|(
 name|rs_machine_dependent
@@ -1162,23 +1443,9 @@ comment|/* FIXME: When we machine generate the relax table, 		   machine generat
 literal|1
 comment|/* subtype */
 argument_list|,
-name|fixups
-index|[
-name|relax_operand
-index|]
-operator|.
-name|exp
-operator|.
-name|X_add_symbol
+name|sym
 argument_list|,
-name|fixups
-index|[
-name|relax_operand
-index|]
-operator|.
-name|exp
-operator|.
-name|X_add_number
+name|off
 argument_list|,
 name|f
 argument_list|)
@@ -1278,6 +1545,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Emit DWARF2 debugging information.  */
+name|dwarf2_emit_insn
+argument_list|(
+name|byte_len
+argument_list|)
+expr_stmt|;
 comment|/* Create any fixups.  */
 for|for
 control|(
@@ -1421,12 +1694,12 @@ comment|/* FIXME: This function handles some of the fixups and bfd_install_reloc
 end_comment
 
 begin_function
-name|int
+name|void
 name|gas_cgen_md_apply_fix3
 parameter_list|(
 name|fixP
 parameter_list|,
-name|valueP
+name|valP
 parameter_list|,
 name|seg
 parameter_list|)
@@ -1436,10 +1709,11 @@ name|fixP
 decl_stmt|;
 name|valueT
 modifier|*
-name|valueP
+name|valP
 decl_stmt|;
 name|segT
 name|seg
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -1458,8 +1732,11 @@ name|fx_where
 decl_stmt|;
 name|valueT
 name|value
+init|=
+operator|*
+name|valP
 decl_stmt|;
-comment|/* canonical name, since used a lot */
+comment|/* Canonical name, since used a lot.  */
 name|CGEN_CPU_DESC
 name|cd
 init|=
@@ -1478,19 +1755,12 @@ operator|*
 operator|)
 name|NULL
 condition|)
-block|{
-name|value
-operator|=
-operator|*
-name|valueP
-expr_stmt|;
 name|fixP
 operator|->
 name|fx_done
 operator|=
 literal|1
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -1498,11 +1768,7 @@ name|fixP
 operator|->
 name|fx_pcrel
 condition|)
-name|value
-operator|=
-operator|*
-name|valueP
-expr_stmt|;
+empty_stmt|;
 else|else
 block|{
 name|value
@@ -1702,7 +1968,7 @@ name|insn
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|/* ??? 0 is passed for `pc' */
+comment|/* ??? 0 is passed for `pc'.  */
 name|errmsg
 operator|=
 name|CGEN_CPU_INSERT_OPERAND
@@ -1742,7 +2008,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* ??? 0 is passed for `pc' */
+comment|/* ??? 0 is passed for `pc'.  */
 name|errmsg
 operator|=
 name|CGEN_CPU_INSERT_OPERAND
@@ -1792,9 +2058,7 @@ name|fixP
 operator|->
 name|fx_done
 condition|)
-return|return
-literal|1
-return|;
+return|return;
 comment|/* The operand isn't fully resolved.  Determine a BFD reloc value 	 based on the operand information and leave it to 	 bfd_install_relocation.  Note that this doesn't work when 	 partial_inplace == false.  */
 name|reloc_type
 operator|=
@@ -1813,14 +2077,12 @@ name|reloc_type
 operator|!=
 name|BFD_RELOC_NONE
 condition|)
-block|{
 name|fixP
 operator|->
 name|fx_r_type
 operator|=
 name|reloc_type
 expr_stmt|;
-block|}
 else|else
 block|{
 name|as_bad_where
@@ -1845,9 +2107,7 @@ name|fx_done
 operator|=
 literal|1
 expr_stmt|;
-return|return
-literal|1
-return|;
+return|return;
 block|}
 block|}
 elseif|else
@@ -1905,7 +2165,19 @@ literal|4
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* FIXME: later add support for 64 bits.  */
+case|case
+name|BFD_RELOC_64
+case|:
+name|md_number_to_chars
+argument_list|(
+name|where
+argument_list|,
+name|value
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|as_bad_where
 argument_list|(
@@ -1937,10 +2209,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-else|else
-block|{
-comment|/* bfd_install_relocation will be called to finish things up.  */
-block|}
+comment|/* else      bfd_install_relocation will be called to finish things up.  */
 comment|/* Tuck `value' away for use by tc_gen_reloc.      See the comment describing fx_addnumber in write.h.      This field is misnamed (or misused :-).  */
 name|fixP
 operator|->
@@ -1948,9 +2217,6 @@ name|fx_addnumber
 operator|=
 name|value
 expr_stmt|;
-return|return
-literal|1
-return|;
 block|}
 end_function
 
@@ -1970,6 +2236,7 @@ parameter_list|)
 name|asection
 modifier|*
 name|section
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|fixS
 modifier|*
@@ -2032,18 +2299,7 @@ name|fx_line
 argument_list|,
 name|_
 argument_list|(
-literal|"internal error: can't export reloc type %d (`%s')"
-argument_list|)
-argument_list|,
-name|fixP
-operator|->
-name|fx_r_type
-argument_list|,
-name|bfd_get_reloc_code_name
-argument_list|(
-name|fixP
-operator|->
-name|fx_r_type
+literal|"relocation is not supported"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2096,7 +2352,7 @@ operator|->
 name|fx_addsy
 argument_list|)
 expr_stmt|;
-comment|/* Use fx_offset for these cases */
+comment|/* Use fx_offset for these cases.  */
 if|if
 condition|(
 name|fixP

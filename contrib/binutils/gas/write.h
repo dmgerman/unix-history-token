@@ -280,6 +280,13 @@ name|fixS
 typedef|;
 end_typedef
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|finalize_syms
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -547,7 +554,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|relax_segment
 name|PARAMS
 argument_list|(

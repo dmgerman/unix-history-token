@@ -3,6 +3,10 @@ begin_comment
 comment|/* alloca.c -- allocate automatically reclaimed memory    (Mostly) portable public-domain implementation -- D A Gwyn     This implementation of the PWB library alloca function,    which is used to allocate space off the run-time stack so    that it is automatically reclaimed upon procedure exit,    was inspired by discussions with J. Q. Johnson of Cornell.    J.Otto Tennant<jot@cray.com> contributed the Cray support.     There are some preprocessor constants that can    be defined when compiling for your specific system, for    improved efficiency; however, the defaults should be okay.     The general concept of this implementation is to keep    track of all alloca-allocated blocks, and reclaim any    that are found to be deeper in the stack than the current    invocation.  This heuristic does not reclaim storage as    soon as it becomes invalid, but it will do so eventually.     As a special case, alloca(0) reclaims storage without    allocating any.  It is a good idea to use alloca(0) in    your main control loop, etc. to force garbage collection.  */
 end_comment
 
+begin_comment
+comment|/*  @deftypefn Replacement void* alloca (size_t @var{size})  This function allocates memory which will be automatically reclaimed after the procedure exits.  The @libib{} implementation does not free the memory immediately but will do so eventually during subsequent calls to this function.  Memory is allocated using @code{xmalloc} under normal circumstances.  The header file @file{alloca-conf.h} can be used in conjunction with the GNU Autoconf test @code{AC_FUNC_ALLOCA} to test for and properly make available this function.  The @code{AC_FUNC_ALLOCA} test requires that client code use a block of preprocessor code to be safe (see the Autoconf manual for more); this header incorporates that logic and more, including the possibility of a GCC built-in function.  @end deftypefn  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -19,6 +23,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<libiberty.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -54,99 +64,37 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|emacs
-end_ifdef
+begin_comment
+comment|/* These variables are used by the ASTRDUP implementation that relies    on C_alloca.  */
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"blockinput.h"
-end_include
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|libiberty_optr
+decl_stmt|;
+end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|char
+modifier|*
+name|libiberty_nptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|long
+name|libiberty_len
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* If compiling with GCC 2, this file's not needed.  Except of course if    the C alloca is explicitly requested.  */
+comment|/* If your stack is a linked list of frames, you have to    provide an "address metric" ADDRESS_FUNCTION macro.  */
 end_comment
 
 begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_C_ALLOCA
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|__GNUC__
-operator|<
-literal|2
-end_if
-
-begin_comment
-comment|/* If someone has defined alloca as a macro,    there must be some other way alloca is supposed to work.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|alloca
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|emacs
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|static
-end_ifdef
-
-begin_comment
-comment|/* actually, only want this if static is defined as ""    -- this is for usg, in which emacs must undefine static    in order to make unexec workable    */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STACK_DIRECTION
-end_ifndef
-
-begin_expr_stmt
-name|you
-name|lose
-operator|--
-name|must
-name|know
-name|STACK_DIRECTION
-name|at
-name|compile
-operator|-
-name|time
-endif|#
-directive|endif
-comment|/* STACK_DIRECTION undefined */
-endif|#
-directive|endif
-comment|/* static */
-endif|#
-directive|endif
-comment|/* emacs */
-comment|/* If your stack is a linked list of frames, you have to    provide an "address metric" ADDRESS_FUNCTION macro.  */
 if|#
 directive|if
 name|defined
@@ -158,11 +106,15 @@ name|defined
 argument_list|(
 name|CRAY_STACKSEG_END
 argument_list|)
+end_if
+
+begin_function_decl
+specifier|static
 name|long
 name|i00afunc
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -194,38 +146,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_typedef
-typedef|typedef
-name|void
-modifier|*
-name|pointer
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|pointer
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -243,36 +163,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Different portions of Emacs need to call different versions of    malloc.  The Emacs executable needs alloca to call xmalloc, because    ordinary malloc isn't protected from input signals.  On the other    hand, the utilities in lib-src need alloca to call malloc; some of    them are very simple, and don't have an xmalloc routine.     Non-Emacs programs expect this to call use xmalloc.     Callers below should use malloc.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|emacs
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|malloc
-value|xmalloc
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-specifier|extern
-name|pointer
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* Define STACK_DIRECTION if you know the direction of stack    growth for your system; otherwise it will be automatically    deduced at run-time.     STACK_DIRECTION> 0 => grows toward higher addresses    STACK_DIRECTION< 0 => grows toward lower addresses    STACK_DIRECTION = 0 => direction of growth unknown  */
@@ -495,13 +385,17 @@ begin_comment
 comment|/* Return a pointer to at least SIZE bytes of storage,    which will be automatically reclaimed upon exit from    the procedure that called alloca.  Originally, this space    was supposed to be taken from the current stack frame of the    caller, but that method cannot be made to work for some    implementations of C, for example under Gould's UTX/32.  */
 end_comment
 
+begin_comment
+comment|/* @undocumented C_alloca */
+end_comment
+
 begin_function
-name|pointer
-name|alloca
+name|PTR
+name|C_alloca
 parameter_list|(
 name|size
 parameter_list|)
-name|unsigned
+name|size_t
 name|size
 decl_stmt|;
 block|{
@@ -545,13 +439,6 @@ modifier|*
 name|hp
 decl_stmt|;
 comment|/* Traverses linked list.  */
-ifdef|#
-directive|ifdef
-name|emacs
-name|BLOCK_INPUT
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|hp
@@ -608,7 +495,7 @@ decl_stmt|;
 name|free
 argument_list|(
 operator|(
-name|pointer
+name|PTR
 operator|)
 name|hp
 argument_list|)
@@ -628,13 +515,6 @@ operator|=
 name|hp
 expr_stmt|;
 comment|/* -> last valid storage.  */
-ifdef|#
-directive|ifdef
-name|emacs
-name|UNBLOCK_INPUT
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -649,10 +529,10 @@ comment|/* No allocation required.  */
 comment|/* Allocate combined header + user data storage.  */
 block|{
 specifier|register
-name|pointer
+name|PTR
 name|new
 init|=
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -711,7 +591,7 @@ expr_stmt|;
 comment|/* User storage begins just after header.  */
 return|return
 call|(
-name|pointer
+name|PTR
 call|)
 argument_list|(
 operator|(
@@ -1558,24 +1438,6 @@ end_endif
 
 begin_comment
 comment|/* CRAY */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* no alloca */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not GCC version 2 */
 end_comment
 
 end_unit

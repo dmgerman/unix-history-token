@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ARC-specific support for 32-bit ELF    Copyright (C) 1994, 1995, 1997, 1999 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ARC-specific support for 32-bit ELF    Copyright 1994, 1995, 1997, 1999, 2001 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"elf/arc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libiberty.h"
 end_include
 
 begin_decl_stmt
@@ -102,6 +108,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|bfd_reloc_status_type
+name|arc_elf_b22_pcrel
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|arelent
+operator|*
+operator|,
+name|asymbol
+operator|*
+operator|,
+name|PTR
+operator|,
+name|asection
+operator|*
+operator|,
+name|bfd
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Try to minimize the amount of space occupied by relocation tables    on the ROM (not that the ROM won't be swamped by other ELF overhead).  */
 end_comment
@@ -124,173 +162,173 @@ name|HOWTO
 argument_list|(
 name|R_ARC_NONE
 argument_list|,
-comment|/* type */
+comment|/* type  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* rightshift  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* size (0 = byte, 1 = short, 2 = long)  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* bitsize  */
 name|false
 argument_list|,
-comment|/* pc_relative */
+comment|/* pc_relative  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* bitpos  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* complain_on_overflow  */
 name|bfd_elf_generic_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* special_function  */
 literal|"R_ARC_NONE"
 argument_list|,
-comment|/* name */
-name|false
+comment|/* name  */
+name|true
 argument_list|,
-comment|/* partial_inplace */
+comment|/* partial_inplace  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* src_mask  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* dst_mask  */
 name|false
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* pcrel_offset  */
 comment|/* A standard 32 bit relocation.  */
 name|HOWTO
 argument_list|(
 name|R_ARC_32
 argument_list|,
-comment|/* type */
+comment|/* type  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* rightshift  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* size (0 = byte, 1 = short, 2 = long)  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* bitsize  */
 name|false
 argument_list|,
-comment|/* pc_relative */
+comment|/* pc_relative  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* bitpos  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* complain_on_overflow  */
 name|bfd_elf_generic_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* special_function  */
 literal|"R_ARC_32"
 argument_list|,
-comment|/* name */
-name|false
+comment|/* name  */
+name|true
 argument_list|,
-comment|/* partial_inplace */
+comment|/* partial_inplace  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* src_mask  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* dst_mask  */
 name|false
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* pcrel_offset  */
 comment|/* A 26 bit absolute branch, right shifted by 2.  */
 name|HOWTO
 argument_list|(
 name|R_ARC_B26
 argument_list|,
-comment|/* type */
+comment|/* type  */
 literal|2
 argument_list|,
-comment|/* rightshift */
+comment|/* rightshift  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* size (0 = byte, 1 = short, 2 = long)  */
 literal|26
 argument_list|,
-comment|/* bitsize */
+comment|/* bitsize  */
 name|false
 argument_list|,
-comment|/* pc_relative */
+comment|/* pc_relative  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* bitpos  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* complain_on_overflow  */
 name|bfd_elf_generic_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* special_function  */
 literal|"R_ARC_B26"
 argument_list|,
-comment|/* name */
-name|false
+comment|/* name  */
+name|true
 argument_list|,
-comment|/* partial_inplace */
+comment|/* partial_inplace  */
 literal|0x00ffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* src_mask  */
 literal|0x00ffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* dst_mask  */
 name|false
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* pcrel_offset  */
 comment|/* A relative 22 bit branch; bits 21-2 are stored in bits 26-7.  */
 name|HOWTO
 argument_list|(
 name|R_ARC_B22_PCREL
 argument_list|,
-comment|/* type */
+comment|/* type  */
 literal|2
 argument_list|,
-comment|/* rightshift */
+comment|/* rightshift  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* size (0 = byte, 1 = short, 2 = long)  */
 literal|22
 argument_list|,
-comment|/* bitsize */
+comment|/* bitsize  */
 name|true
 argument_list|,
-comment|/* pc_relative */
+comment|/* pc_relative  */
 literal|7
 argument_list|,
-comment|/* bitpos */
+comment|/* bitpos  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
+comment|/* complain_on_overflow  */
+name|arc_elf_b22_pcrel
 argument_list|,
-comment|/* special_function */
+comment|/* special_function  */
 literal|"R_ARC_B22_PCREL"
 argument_list|,
-comment|/* name */
-name|false
-argument_list|,
-comment|/* partial_inplace */
-literal|0x07ffff80
-argument_list|,
-comment|/* src_mask */
-literal|0x07ffff80
-argument_list|,
-comment|/* dst_mask */
+comment|/* name  */
 name|true
+argument_list|,
+comment|/* partial_inplace  */
+literal|0x07ffff80
+argument_list|,
+comment|/* src_mask  */
+literal|0x07ffff80
+argument_list|,
+comment|/* dst_mask  */
+name|false
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* pcrel_offset  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -383,25 +421,15 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|ARRAY_SIZE
+argument_list|(
+name|arc_reloc_map
+argument_list|)
 init|;
 name|i
-operator|<
-sizeof|sizeof
-argument_list|(
-name|arc_reloc_map
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|arc_reloc_map
-argument_list|)
+operator|--
 condition|;
-name|i
-operator|++
 control|)
-block|{
 if|if
 condition|(
 name|arc_reloc_map
@@ -414,18 +442,15 @@ operator|==
 name|code
 condition|)
 return|return
-operator|&
 name|elf_arc_howto_table
-index|[
+operator|+
 name|arc_reloc_map
 index|[
 name|i
 index|]
 operator|.
 name|elf_reloc_val
-index|]
 return|;
-block|}
 return|return
 name|NULL
 return|;
@@ -514,9 +539,24 @@ modifier|*
 name|abfd
 decl_stmt|;
 block|{
+name|unsigned
 name|int
 name|mach
+init|=
+name|bfd_mach_arc_6
 decl_stmt|;
+if|if
+condition|(
+name|elf_elfheader
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|e_machine
+operator|==
+name|EM_ARC
+condition|)
+block|{
 name|unsigned
 name|long
 name|arch
@@ -536,22 +576,41 @@ name|arch
 condition|)
 block|{
 case|case
-name|E_ARC_MACH_BASE
+name|E_ARC_MACH_ARC5
 case|:
 name|mach
 operator|=
-name|bfd_mach_arc_base
+name|bfd_mach_arc_5
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Unknown cpu type.  ??? What to do?  */
-return|return
-name|false
-return|;
+case|case
+name|E_ARC_MACH_ARC6
+case|:
+name|mach
+operator|=
+name|bfd_mach_arc_6
+expr_stmt|;
+break|break;
+case|case
+name|E_ARC_MACH_ARC7
+case|:
+name|mach
+operator|=
+name|bfd_mach_arc_7
+expr_stmt|;
+break|break;
+case|case
+name|E_ARC_MACH_ARC8
+case|:
+name|mach
+operator|=
+name|bfd_mach_arc_8
+expr_stmt|;
+break|break;
 block|}
-operator|(
-name|void
-operator|)
+block|}
+return|return
 name|bfd_default_set_arch_mach
 argument_list|(
 name|abfd
@@ -560,9 +619,6 @@ name|bfd_arch_arc
 argument_list|,
 name|mach
 argument_list|)
-expr_stmt|;
-return|return
-name|true
 return|;
 block|}
 end_function
@@ -589,17 +645,12 @@ name|linker
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-name|int
-name|mach
-decl_stmt|;
 name|unsigned
 name|long
 name|val
 decl_stmt|;
 switch|switch
 condition|(
-name|mach
-operator|=
 name|bfd_get_mach
 argument_list|(
 name|abfd
@@ -607,15 +658,38 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|bfd_mach_arc_base
+name|bfd_mach_arc_5
 case|:
 name|val
 operator|=
-name|E_ARC_MACH_BASE
+name|E_ARC_MACH_ARC5
 expr_stmt|;
 break|break;
 default|default:
-return|return;
+case|case
+name|bfd_mach_arc_6
+case|:
+name|val
+operator|=
+name|E_ARC_MACH_ARC6
+expr_stmt|;
+break|break;
+case|case
+name|bfd_mach_arc_7
+case|:
+name|val
+operator|=
+name|E_ARC_MACH_ARC7
+expr_stmt|;
+break|break;
+case|case
+name|bfd_mach_arc_8
+case|:
+name|val
+operator|=
+name|E_ARC_MACH_ARC8
+expr_stmt|;
+break|break;
 block|}
 name|elf_elfheader
 argument_list|(
@@ -636,6 +710,94 @@ name|e_flags
 operator||=
 name|val
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|bfd_reloc_status_type
+name|arc_elf_b22_pcrel
+parameter_list|(
+name|abfd
+parameter_list|,
+name|reloc_entry
+parameter_list|,
+name|symbol
+parameter_list|,
+name|data
+parameter_list|,
+name|input_section
+parameter_list|,
+name|output_bfd
+parameter_list|,
+name|error_message
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|arelent
+modifier|*
+name|reloc_entry
+decl_stmt|;
+name|asymbol
+modifier|*
+name|symbol
+decl_stmt|;
+name|PTR
+name|data
+decl_stmt|;
+name|asection
+modifier|*
+name|input_section
+decl_stmt|;
+name|bfd
+modifier|*
+name|output_bfd
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|error_message
+decl_stmt|;
+block|{
+comment|/* If linking, back up the final symbol address by the address of the      reloc.  This cannot be accomplished by setting the pcrel_offset      field to true, as bfd_install_relocation will detect this and refuse      to install the offset in the first place, but bfd_perform_relocation      will still insist on removing it.  */
+if|if
+condition|(
+name|output_bfd
+operator|==
+operator|(
+name|bfd
+operator|*
+operator|)
+name|NULL
+condition|)
+name|reloc_entry
+operator|->
+name|addend
+operator|-=
+name|reloc_entry
+operator|->
+name|address
+expr_stmt|;
+comment|/* Fall through to the default elf reloc handler.  */
+return|return
+name|bfd_elf_generic_reloc
+argument_list|(
+name|abfd
+argument_list|,
+name|reloc_entry
+argument_list|,
+name|symbol
+argument_list|,
+name|data
+argument_list|,
+name|input_section
+argument_list|,
+name|output_bfd
+argument_list|,
+name|error_message
+argument_list|)
+return|;
 block|}
 end_function
 
@@ -678,7 +840,7 @@ begin_define
 define|#
 directive|define
 name|ELF_MACHINE_CODE
-value|EM_CYGNUS_ARC
+value|EM_ARC
 end_define
 
 begin_define
@@ -713,7 +875,6 @@ begin_define
 define|#
 directive|define
 name|elf_backend_final_write_processing
-define|\
 value|arc_elf_final_write_processing
 end_define
 

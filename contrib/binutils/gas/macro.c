@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* macro.c - macro support for gas and gasp    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* macro.c - macro support for gas and gasp    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -9,65 +9,11 @@ directive|include
 file|"config.h"
 end_include
 
-begin_comment
-comment|/* AIX requires this to be the first thing in the file.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|alloca
+name|__GNUC__
 end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|alloca
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|alloca
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_if
 if|#
@@ -91,6 +37,10 @@ ifdef|#
 directive|ifdef
 name|_AIX
 end_ifdef
+
+begin_comment
+comment|/* Indented so that pre-ansi C compilers will ignore it, rather than    choke on it.  Some versions of AIX require this to be the first    thing in the file.  */
+end_comment
 
 begin_pragma
 pragma|#
@@ -193,6 +143,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __GNUC__ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -227,12 +181,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -254,6 +202,12 @@ begin_include
 include|#
 directive|include
 file|"libiberty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
 end_include
 
 begin_include
@@ -843,12 +797,8 @@ operator|->
 name|len
 operator|&&
 operator|(
-name|isalnum
+name|ISALNUM
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|ptr
 operator|->
 name|ptr
@@ -990,7 +940,7 @@ name|from_len
 operator|)
 operator|||
 operator|!
-name|isalnum
+name|ISALNUM
 argument_list|(
 name|ptr
 operator|->
@@ -1035,7 +985,7 @@ name|to_len
 operator|)
 operator|||
 operator|!
-name|isalnum
+name|ISALNUM
 argument_list|(
 name|ptr
 operator|->
@@ -1137,12 +1087,8 @@ operator|->
 name|len
 operator|&&
 operator|(
-name|isalpha
+name|ISALPHA
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|in
 operator|->
 name|ptr
@@ -1193,12 +1139,8 @@ operator|->
 name|len
 operator|&&
 operator|(
-name|isalnum
+name|ISALNUM
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|in
 operator|->
 name|ptr
@@ -1812,6 +1754,7 @@ literal|20
 index|]
 decl_stmt|;
 comment|/* Turns the next expression into a string.  */
+comment|/* xgettext: no-c-format */
 name|idx
 operator|=
 call|(
@@ -2782,22 +2725,6 @@ condition|;
 name|idx
 operator|++
 control|)
-if|if
-condition|(
-name|isupper
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-name|name
-operator|.
-name|ptr
-index|[
-name|idx
-index|]
-argument_list|)
-condition|)
 name|name
 operator|.
 name|ptr
@@ -2805,7 +2732,7 @@ index|[
 name|idx
 index|]
 operator|=
-name|tolower
+name|TOLOWER
 argument_list|(
 name|name
 operator|.
@@ -3542,12 +3469,8 @@ if|if
 condition|(
 name|macro_mri
 operator|&&
-name|isalnum
+name|ISALNUM
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|in
 operator|->
 name|ptr
@@ -3566,12 +3489,8 @@ name|f
 decl_stmt|;
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|in
 operator|->
 name|ptr
@@ -3594,12 +3513,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|isupper
+name|ISUPPER
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|in
 operator|->
 name|ptr
@@ -3741,12 +3656,8 @@ name|macro_mri
 operator|)
 operator|&&
 operator|(
-name|isalpha
+name|ISALPHA
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|in
 operator|->
 name|ptr
@@ -4595,6 +4506,37 @@ operator|==
 literal|'.'
 condition|)
 block|{
+comment|/* The Microtec assembler ignores this if followed by a white space.     		   (Macro invocation with empty extension) */
+name|idx
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|idx
+operator|<
+name|in
+operator|->
+name|len
+operator|&&
+name|in
+operator|->
+name|ptr
+index|[
+name|idx
+index|]
+operator|!=
+literal|' '
+operator|&&
+name|in
+operator|->
+name|ptr
+index|[
+name|idx
+index|]
+operator|!=
+literal|'\t'
+condition|)
+block|{
 name|formal_entry
 modifier|*
 name|n
@@ -4662,8 +4604,6 @@ operator|=
 name|get_any_string
 argument_list|(
 name|idx
-operator|+
-literal|1
 argument_list|,
 name|in
 argument_list|,
@@ -4677,6 +4617,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Peel off the actuals and store them away in the hash tables' actuals.  */
@@ -5466,12 +5407,8 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|isalpha
+name|ISALPHA
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|line
 argument_list|)
@@ -5507,12 +5444,8 @@ literal|1
 expr_stmt|;
 while|while
 condition|(
-name|isalnum
+name|ISALNUM
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|s
 argument_list|)
@@ -5579,22 +5512,10 @@ condition|;
 name|cs
 operator|++
 control|)
-if|if
-condition|(
-name|isupper
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
-operator|*
-name|cs
-argument_list|)
-condition|)
 operator|*
 name|cs
 operator|=
-name|tolower
+name|TOLOWER
 argument_list|(
 operator|*
 name|cs

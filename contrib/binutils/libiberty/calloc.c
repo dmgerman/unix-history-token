@@ -3,6 +3,10 @@ begin_comment
 comment|/* calloc -- allocate memory which has been initialized to zero.    This function is in the public domain. */
 end_comment
 
+begin_comment
+comment|/*  @deftypefn Supplemental void* calloc (size_t @var{nelem}, size_t @var{elsize})  Uses @code{malloc} to allocate storage for @var{nelem} objects of @var{elsize} bytes each, then zeros the memory.  @end deftypefn  */
+end_comment
+
 begin_include
 include|#
 directive|include
