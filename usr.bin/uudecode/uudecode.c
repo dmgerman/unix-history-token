@@ -1712,11 +1712,15 @@ argument_list|,
 literal|"b64_pton: error decoding base64 input stream"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fwrite
 argument_list|(
-literal|"%s"
-argument_list|,
 name|out
+argument_list|,
+literal|1
+argument_list|,
+name|rv
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 block|}
