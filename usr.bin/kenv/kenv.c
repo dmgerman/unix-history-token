@@ -69,11 +69,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|errx
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: kenv [-h] [variable]\n"
+argument_list|)
+expr_stmt|;
+name|exit
 argument_list|(
 literal|1
-argument_list|,
-literal|"usage: [-h] [variable]"
 argument_list|)
 expr_stmt|;
 block|}
