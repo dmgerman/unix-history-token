@@ -3892,8 +3892,6 @@ decl_stmt|,
 name|islastcn
 decl_stmt|;
 name|int
-name|wantparent
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -4050,16 +4048,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|wantparent
-operator|=
-name|flags
-operator|&
-operator|(
-name|LOCKPARENT
-operator||
-name|WANTPARENT
-operator|)
-expr_stmt|;
 name|nmp
 operator|=
 name|VFSTONWFS
@@ -4607,8 +4595,6 @@ operator|==
 name|RENAME
 operator|)
 operator|&&
-name|wantparent
-operator|&&
 name|islastcn
 condition|)
 block|{
@@ -4745,8 +4731,6 @@ operator|==
 name|RENAME
 operator|&&
 name|islastcn
-operator|&&
-name|wantparent
 condition|)
 block|{
 name|error

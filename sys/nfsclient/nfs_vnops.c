@@ -3713,8 +3713,6 @@ modifier|*
 name|np
 decl_stmt|;
 name|int
-name|wantparent
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -3795,16 +3793,6 @@ operator|(
 name|ENOTDIR
 operator|)
 return|;
-name|wantparent
-operator|=
-name|flags
-operator|&
-operator|(
-name|LOCKPARENT
-operator||
-name|WANTPARENT
-operator|)
-expr_stmt|;
 name|nmp
 operator|=
 name|VFSTONFS
@@ -4122,8 +4110,6 @@ operator|->
 name|cn_nameiop
 operator|==
 name|RENAME
-operator|&&
-name|wantparent
 operator|&&
 operator|(
 name|flags
