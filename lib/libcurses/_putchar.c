@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)putchar.c	8.2 (Berkeley) 5/4/94"
+literal|"@(#)_putchar.c	8.2 (Berkeley) 5/4/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,8 +35,8 @@ file|"curses.h"
 end_include
 
 begin_function
-name|void
-name|__cputchar
+name|int
+name|_putchar
 parameter_list|(
 name|ch
 parameter_list|)
@@ -44,29 +44,14 @@ name|int
 name|ch
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|__CTRACE
-argument_list|(
-literal|"__cputchar: %s\n"
-argument_list|,
-name|unctrl
-argument_list|(
-name|ch
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|putchar
+name|__cputchar
 argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
