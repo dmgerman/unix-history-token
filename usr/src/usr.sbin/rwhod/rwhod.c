@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.13 (Berkeley) 83/06/02"
+literal|"@(#)rwhod.c	4.14 (Berkeley) 83/06/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -1591,12 +1591,17 @@ index|]
 operator|=
 name|htonl
 argument_list|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|avenrun
 index|[
 name|i
 index|]
 operator|*
 literal|100
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cc
