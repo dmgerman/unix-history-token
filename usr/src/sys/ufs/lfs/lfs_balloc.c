@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.39 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.40 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -490,11 +490,25 @@ name|b_blkno
 operator|=
 name|daddr
 expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator|!=
+name|B_READ
+expr_stmt|;
 name|VOP_STRATEGY
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|biowait
+argument_list|(
+name|bp
+argument_list|)
+operator|)
+return|;
 block|}
 block|}
 return|return
