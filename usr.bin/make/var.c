@@ -433,7 +433,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarPossiblyExpand --  *	Expand a variable name's embedded variables in the given context.  *  * Results:  *	The contents of name, possibly expanded.  *  * Side Effects:  *	The caller must free the new contents or old contents of name.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarPossiblyExpand --  *	Expand a variable name's embedded variables in the given context.  *  * Results:  *	The contents of name, possibly expanded.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
