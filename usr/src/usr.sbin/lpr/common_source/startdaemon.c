@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	startdaemon.c	4.3	83/05/18	*/
+comment|/*	startdaemon.c	4.4	83/05/27	*/
 end_comment
 
 begin_comment
@@ -49,11 +49,16 @@ name|rem
 operator|<
 literal|0
 condition|)
+block|{
+name|perr
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 operator|(
 name|void
 operator|)
@@ -87,6 +92,9 @@ operator|!=
 name|i
 condition|)
 block|{
+name|perr
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -140,6 +148,15 @@ name|err
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+name|perr
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -161,6 +178,51 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_expr_stmt
+specifier|static
+name|perr
+argument_list|()
+block|{
+specifier|extern
+name|int
+name|sys_nerr
+block|;
+specifier|extern
+name|char
+operator|*
+name|sys_errlist
+index|[]
+block|;
+name|printf
+argument_list|(
+literal|"%s: "
+argument_list|,
+name|name
+argument_list|)
+block|;
+name|fputs
+argument_list|(
+name|errno
+operator|<
+name|sys_nerr
+condition|?
+name|sys_errlist
+index|[
+name|errno
+index|]
+else|:
+literal|"Unknown error"
+argument_list|,
+name|stdout
+argument_list|)
+block|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+block|; }
+end_expr_stmt
 
 end_unit
 
