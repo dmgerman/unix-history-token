@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)system.c	4.3 (Berkeley) %G%"
+literal|"@(#)system.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,6 +136,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -2479,9 +2485,11 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|child_died
-parameter_list|()
+parameter_list|(
+name|code
+parameter_list|)
 block|{
 name|union
 name|wait
@@ -2498,6 +2506,10 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,
@@ -2693,7 +2705,10 @@ name|keyname
 operator|=
 name|mktemp
 argument_list|(
+name|strdup
+argument_list|(
 literal|"/tmp/apiXXXXXX"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fd
