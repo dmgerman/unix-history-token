@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.13 (Berkeley) %G%"
+literal|"@(#)scan.c	2.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1298,6 +1298,9 @@ block|,
 literal|0
 block|,
 comment|/* character constant */
+ifdef|#
+directive|ifdef
+name|gcos
 literal|'`'
 block|,
 name|A_BCD
@@ -1307,6 +1310,8 @@ block|,
 literal|0
 block|,
 comment|/* GCOS BCD constant */
+endif|#
+directive|endif
 literal|'('
 block|,
 name|A_1C
@@ -1548,11 +1553,25 @@ decl_stmt|;
 comment|/* set up character classes */
 name|lxenter
 argument_list|(
-literal|"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_$"
+literal|"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
 argument_list|,
 name|LEXLET
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMS
+name|lxmask
+index|[
+literal|'$'
+operator|+
+literal|1
+index|]
+operator||=
+name|LEXLET
+expr_stmt|;
+endif|#
+directive|endif
 name|lxenter
 argument_list|(
 literal|"0123456789"
@@ -1567,10 +1586,9 @@ argument_list|,
 name|LEXHEX
 argument_list|)
 expr_stmt|;
-comment|/* \013 should become \v someday; \013 is OK for ASCII and EBCDIC */
 name|lxenter
 argument_list|(
-literal|" \t\r\b\f\013"
+literal|" \t\r\b\f\v"
 argument_list|,
 name|LEXWS
 argument_list|)
@@ -1650,7 +1668,7 @@ comment|/* handle letters, digits, and whitespace */
 comment|/* by convention, first, second, and third places */
 name|cp
 operator|=
-literal|"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$"
+literal|"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 expr_stmt|;
 while|while
 condition|(
@@ -1672,6 +1690,24 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMS
+name|lxcp
+index|[
+literal|'$'
+operator|+
+literal|1
+index|]
+operator|=
+operator|&
+name|lxdope
+index|[
+literal|1
+index|]
+expr_stmt|;
+endif|#
+directive|endif
 name|cp
 operator|=
 literal|"123456789"
@@ -1698,7 +1734,7 @@ index|]
 expr_stmt|;
 name|cp
 operator|=
-literal|"\t\b\r\f\013"
+literal|"\t\b\r\f\v"
 expr_stmt|;
 while|while
 condition|(
@@ -1819,6 +1855,38 @@ name|lineno
 expr_stmt|;
 continue|continue;
 default|default:
+ifdef|#
+directive|ifdef
+name|LINT
+if|if
+condition|(
+name|hflag
+condition|)
+name|uerror
+argument_list|(
+literal|"superfluous backslash in %s constant"
+argument_list|,
+name|lxmatch
+operator|==
+literal|'\''
+condition|?
+literal|"char"
+else|:
+literal|"string"
+argument_list|)
+expr_stmt|;
+comment|/*FALLTHROUGH*/
+endif|#
+directive|endif
+case|case
+literal|'\\'
+case|:
+case|case
+literal|'\"'
+case|:
+case|case
+literal|'\''
+case|:
 name|val
 operator|=
 name|c
@@ -1881,7 +1949,7 @@ literal|'v'
 case|:
 name|val
 operator|=
-literal|'\013'
+literal|'\v'
 expr_stmt|;
 goto|goto
 name|mkcc
@@ -2615,7 +2683,8 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-break|break;
+continue|continue;
+comment|/* ignore it and see if we find more */
 case|case
 name|A_LET
 case|:
@@ -2800,7 +2869,11 @@ argument|; 			lxstr(
 literal|0
 argument|); 			yylval.intval =
 literal|0
-argument|; 			return( ICON );  		case A_BCD: 			{ 				register i; 				int j; 				for( i=
+argument|; 			return( ICON );
+ifdef|#
+directive|ifdef
+name|gcos
+argument|case A_BCD: 			{ 				register i; 				int j; 				for( i=
 literal|0
 argument|; i<LXTSZ; ++i ){ 					if( ( j = getchar() ) ==
 literal|'`'
@@ -2815,9 +2888,9 @@ literal|6
 argument|) uerror(
 literal|"BCD constant exceeds 6 characters"
 argument|);
-ifdef|#
-directive|ifdef
-name|gcos
+ifndef|#
+directive|ifndef
+name|unix
 argument|else strtob( yytext,&lastcon, i ); 				lastcon>>=
 literal|6
 argument|*(
@@ -2834,7 +2907,10 @@ argument|yylval.intval =
 literal|0
 argument|;
 comment|/* not long */
-argument|return( ICON ); 				}  		case A_SL:
+argument|return( ICON ); 				}
+endif|#
+directive|endif
+argument|case A_SL:
 comment|/* / */
 argument|if( (lxchar=getchar()) !=
 literal|'*'
