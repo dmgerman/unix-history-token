@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_ktrace.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -65,6 +65,9 @@ name|ktrgetheader
 parameter_list|(
 name|type
 parameter_list|)
+name|int
+name|type
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -610,6 +613,14 @@ name|iov
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|len
+decl_stmt|,
+name|error
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -845,8 +856,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|sig
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|sig_t
 name|action
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mask
+decl_stmt|,
+name|code
 decl_stmt|;
 end_decl_stmt
 
@@ -1621,29 +1646,35 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|ktrops
-argument_list|(
-argument|curp
-argument_list|,
-argument|p
-argument_list|,
-argument|ops
-argument_list|,
-argument|facs
-argument_list|,
-argument|vp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|curp
+parameter_list|,
+name|p
+parameter_list|,
+name|ops
+parameter_list|,
+name|facs
+parameter_list|,
+name|vp
+parameter_list|)
 name|struct
 name|proc
 modifier|*
-name|curp
-decl_stmt|,
-modifier|*
 name|p
+decl_stmt|,
+decl|*
+name|curp
+decl_stmt|;
+end_function
+
+begin_decl_stmt
+name|int
+name|ops
+decl_stmt|,
+name|facs
 decl_stmt|;
 end_decl_stmt
 
@@ -1823,6 +1854,14 @@ name|curp
 decl_stmt|,
 modifier|*
 name|top
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ops
+decl_stmt|,
+name|facs
 decl_stmt|;
 end_decl_stmt
 
