@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|4.9
+literal|4.10
 operator|%
 name|G
 operator|%
@@ -2503,7 +2503,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|MAXATOM
+name|MAXNAME
 operator|+
 literal|1
 index|]
@@ -2655,7 +2655,7 @@ operator|)
 return|;
 block|}
 comment|/* append it to the token list */
-name|rvp
+name|avp
 operator|=
 operator|--
 name|hbrvp
@@ -2664,7 +2664,7 @@ while|while
 condition|(
 operator|(
 operator|*
-name|rvp
+name|avp
 operator|++
 operator|=
 operator|*
@@ -2676,7 +2676,7 @@ name|NULL
 condition|)
 if|if
 condition|(
-name|rvp
+name|avp
 operator|>=
 operator|&
 name|npvp
@@ -2694,12 +2694,12 @@ name|xpvp
 operator|=
 name|pvpb1
 operator|,
-name|rvp
+name|avp
 operator|--
 init|;
 operator|(
 operator|*
-name|rvp
+name|avp
 operator|++
 operator|=
 operator|*
@@ -2712,7 +2712,7 @@ condition|;
 control|)
 if|if
 condition|(
-name|rvp
+name|avp
 operator|>=
 operator|&
 name|npvp
