@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pcb.h	6.1	83/07/29	*/
+comment|/*	pcb.h	6.2	84/07/31	*/
 end_comment
 
 begin_comment
@@ -183,7 +183,7 @@ directive|define
 name|aston
 parameter_list|()
 define|\
-value|{ \ 		u.u_pcb.pcb_p0lr = (u.u_pcb.pcb_p0lr&~ AST_CLR) | AST_USER; \ 		mtpr(ASTLVL, ASTLVL_USER); \ 	}
+value|{ \ 		mtpr(ASTLVL, ASTLVL_USER); \ 	}
 end_define
 
 begin_define
@@ -192,7 +192,7 @@ directive|define
 name|astoff
 parameter_list|()
 define|\
-value|{ \ 		u.u_pcb.pcb_p0lr = (u.u_pcb.pcb_p0lr&~ AST_CLR) | AST_NONE; \ 		mtpr(ASTLVL, ASTLVL_NONE); \ 	}
+value|{ \ 		mtpr(ASTLVL, ASTLVL_NONE); \ 	}
 end_define
 
 end_unit
