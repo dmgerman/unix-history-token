@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.24 1995/11/18 08:39:28 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.25 1995/12/05 02:01:16 davidg Exp $  */
 end_comment
 
 begin_include
@@ -460,7 +460,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|ze_probe
 name|__P
@@ -476,7 +476,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|ze_setup
 name|__P
@@ -522,7 +522,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|ze_attach
 name|__P
@@ -538,7 +538,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|ze_reset
 name|__P
@@ -552,7 +552,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|ze_stop
 name|__P
@@ -566,7 +566,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|ze_watchdog
 name|__P
@@ -582,7 +582,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|ze_init
 name|__P
@@ -613,7 +613,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|ze_start
 name|__P
@@ -644,7 +644,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|ze_ioctl
 name|__P
@@ -666,7 +666,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|ze_get_packet
 name|__P
@@ -718,7 +718,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|struct
 name|mbuf
 modifier|*
@@ -1362,6 +1362,7 @@ comment|/*  * Determine if the device is present  *  *   on entry:  * 	a pointer
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ze_probe
 parameter_list|(
@@ -1743,6 +1744,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ze_setup
 parameter_list|(
@@ -2128,6 +2130,7 @@ comment|/*  * Install interface into kernel networking data structures  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ze_attach
 parameter_list|(
@@ -2634,6 +2637,7 @@ comment|/*  * Reset interface.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ze_reset
 parameter_list|(
@@ -2678,6 +2682,7 @@ comment|/*  * Take interface offline.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ze_stop
 parameter_list|(
@@ -2756,6 +2761,7 @@ comment|/*  * Device timeout/watchdog routine. Entered if the device neglects to
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ze_watchdog
 parameter_list|(
@@ -2941,6 +2947,7 @@ comment|/*  * Initialize device.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ze_init
 parameter_list|(
@@ -3593,6 +3600,7 @@ comment|/*  * Start output on interface.  * We make two assumptions here:  *  1)
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ze_start
 parameter_list|(
@@ -4565,6 +4573,7 @@ comment|/*  * Process an ioctl request. This code needs some work - it looks  *	
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ze_ioctl
 parameter_list|(
@@ -5107,6 +5116,7 @@ comment|/*  * Retreive packet from shared memory and send to the next level up v
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ze_get_packet
 parameter_list|(
@@ -5528,6 +5538,7 @@ comment|/*  * Copy data from receive buffer to end of mbuf chain  * allocate add
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|mbuf
 modifier|*
