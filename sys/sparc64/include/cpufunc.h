@@ -208,6 +208,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|flushw
+parameter_list|()
+value|do {							\ 	__asm __volatile("flushw" : :);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ldxa
 parameter_list|(
 name|va
