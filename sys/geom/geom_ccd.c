@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.28 1998/01/31 03:19:06 eivind Exp $ */
+comment|/* $Id: ccd.c,v 1.29 1998/02/15 08:14:39 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -4380,11 +4380,6 @@ modifier|*
 name|bp
 decl_stmt|;
 block|{
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
