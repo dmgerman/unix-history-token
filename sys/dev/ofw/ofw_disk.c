@@ -389,6 +389,7 @@ operator|.
 name|d_fwheads
 operator|=
 literal|1
+expr_stmt|;
 name|sc
 operator|->
 name|ofwd_flags
