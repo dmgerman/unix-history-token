@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.11.2.5 1997/04/30 18:41:22 pst Exp $"
+literal|"$Id: mountd.c,v 1.11.2.6 1997/05/14 08:19:21 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2148,7 +2148,7 @@ decl_stmt|;
 name|int
 name|bad
 init|=
-name|ENOENT
+literal|0
 decl_stmt|,
 name|defset
 decl_stmt|,
@@ -2347,30 +2347,11 @@ argument_list|,
 name|dirpath
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|svc_sendreply
-argument_list|(
-name|transp
-argument_list|,
-name|xdr_long
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
 name|bad
-argument_list|)
-condition|)
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Can't send reply"
-argument_list|)
+operator|=
+name|ENOENT
 expr_stmt|;
-return|return;
+comment|/* We will send error reply later */
 block|}
 comment|/* Check in the exports list */
 name|sigprocmask
@@ -2475,6 +2456,46 @@ operator|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|bad
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|svc_sendreply
+argument_list|(
+name|transp
+argument_list|,
+name|xdr_long
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|bad
+argument_list|)
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Can't send reply"
+argument_list|)
+expr_stmt|;
+name|sigprocmask
+argument_list|(
+name|SIG_UNBLOCK
+argument_list|,
+operator|&
+name|sighup_mask
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|hostset
@@ -2674,13 +2695,14 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|bad
 operator|=
 name|EACCES
 expr_stmt|;
 if|if
 condition|(
+name|bad
+operator|&&
 operator|!
 name|svc_sendreply
 argument_list|(
@@ -2702,7 +2724,6 @@ argument_list|,
 literal|"Can't send reply"
 argument_list|)
 expr_stmt|;
-block|}
 name|sigprocmask
 argument_list|(
 name|SIG_UNBLOCK
