@@ -8326,10 +8326,13 @@ operator|->
 name|list
 condition|)
 block|{
-comment|/* FIXME: This case would seem to imply that the RCS file is            somehow invalid.  Should we give an error message?  */
+comment|/* This happens when you have a couple of branches off a revision, 	   and your branch has not diverged, but another has. */
 return|return
 operator|(
-name|NULL
+name|xstrdup
+argument_list|(
+name|cur_rev
+argument_list|)
 operator|)
 return|;
 block|}
