@@ -22287,7 +22287,7 @@ name|vp
 operator|->
 name|v_iflag
 operator|&
-name|VI_XLOCK
+name|VI_DOOMED
 condition|)
 break|break;
 comment|/* 		 * We prevent deadlock by always fetching inodes from the 		 * root, moving down the directory tree. Thus, when fetching 		 * our parent directory, we first try to get the lock. If 		 * that fails, we must unlock ourselves before requesting 		 * the lock on our parent. See the comment in ufs_lookup 		 * for details on possible races. 		 */
