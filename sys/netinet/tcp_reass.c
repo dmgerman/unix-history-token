@@ -4229,6 +4229,20 @@ goto|;
 block|}
 name|after_listen
 label|:
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"tcp_input(): after_listen head is not locked"
+operator|)
+argument_list|)
+expr_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 comment|/* XXX temp debugging */
 comment|/* should not happen - syncache should pick up these connections */
 if|if
@@ -6073,6 +6087,20 @@ block|}
 block|}
 name|trimthenstep6
 label|:
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"tcp_input(): trimthenstep6 head is not locked"
+operator|)
+argument_list|)
+expr_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Advance th->th_seq to correspond to first data byte. 		 * If data, trim to stay within window, 		 * dropping FIN if necessary. 		 */
 name|th
 operator|->
@@ -8060,6 +8088,20 @@ block|}
 block|}
 name|process_ACK
 label|:
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"tcp_input(): process_ACK head is not locked"
+operator|)
+argument_list|)
+expr_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|acked
 operator|=
 name|th
@@ -8727,6 +8769,20 @@ block|}
 block|}
 name|step6
 label|:
+name|KASSERT
+argument_list|(
+name|headlocked
+argument_list|,
+operator|(
+literal|"tcp_input(): step6 head is not locked"
+operator|)
+argument_list|)
+expr_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Update window information. 	 * Don't look at window if no ACK: TAC's send garbage on first SYN. 	 */
 if|if
 condition|(
@@ -9088,8 +9144,13 @@ argument_list|(
 name|headlocked
 argument_list|,
 operator|(
-literal|"headlocked"
+literal|"tcp_input(): dodata head is not locked"
 operator|)
+argument_list|)
+expr_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Process the segment text, merging it into the TCP sequencing queue, 	 * and arranging for acknowledgment of receipt if necessary. 	 * This process logically involves adjusting tp->rcv_wnd as data 	 * is presented to the user (this happens in tcp_usrreq.c, 	 * case PRU_RCVD).  If a FIN has already been received on this 	 * connection then we just ignore the text. 	 */
@@ -9524,6 +9585,11 @@ argument_list|)
 expr_stmt|;
 name|check_delack
 label|:
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
