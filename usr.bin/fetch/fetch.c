@@ -3625,7 +3625,7 @@ expr_stmt|;
 comment|/* authentication */
 if|if
 condition|(
-name|vtty
+name|v_tty
 condition|)
 name|fetchAuthMethod
 operator|=
