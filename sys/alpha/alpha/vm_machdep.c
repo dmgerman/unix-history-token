@@ -799,12 +799,6 @@ name|pcb
 modifier|*
 name|pcb2
 decl_stmt|;
-name|td
-operator|->
-name|td_flags
-operator||=
-name|TDF_UPCALLING
-expr_stmt|;
 comment|/* Point the pcb to the top of the stack. */
 name|pcb2
 operator|=
