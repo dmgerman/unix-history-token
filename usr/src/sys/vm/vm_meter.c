@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.12	81/06/07	*/
+comment|/*	vm_meter.c	4.13	81/08/30	*/
 end_comment
 
 begin_include
@@ -377,17 +377,9 @@ literal|2
 operator|*
 name|fastscan
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BERT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ERNIE
-argument_list|)
+ifdef|#
+directive|ifdef
+name|notdef
 name|printf
 argument_list|(
 literal|"slowscan %d, fastscan %d, maxpgio %d\n"
