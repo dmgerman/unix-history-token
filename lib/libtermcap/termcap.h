@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1994,1995 by Andrey A. Chernov, Moscow, Russia.  * A
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD4.H - header file for MD4C.C  * $FreeBSD$  */
+comment|/* MD4.H - header file for MD4C.C  * $Id$  */
 end_comment
 
 begin_comment
