@@ -324,6 +324,9 @@ return|return
 literal|0
 return|;
 default|default:
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"IBCS2: 'sysi86' function %d(0x%x) "
@@ -341,6 +344,8 @@ operator|->
 name|cmd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|EINVAL
 return|;
