@@ -218,6 +218,11 @@ decl_stmt|;
 name|int
 name|isfile
 decl_stmt|;
+name|int
+name|line
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -267,12 +272,24 @@ operator|)
 return|;
 block|}
 block|}
+name|printf
+argument_list|(
+literal|".lf %d %s\n"
+argument_list|,
+name|line
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
 condition|;
 control|)
 block|{
+name|line
+operator|++
+expr_stmt|;
 name|c
 operator|=
 name|getc
@@ -456,6 +473,15 @@ argument_list|(
 literal|".so %s\n"
 argument_list|,
 name|fname
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|".lf %d %s\n"
+argument_list|,
+name|line
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 continue|continue;
