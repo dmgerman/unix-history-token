@@ -8,7 +8,7 @@ comment|/* Header files used by all modules */
 end_comment
 
 begin_comment
-comment|/* $Id: vinumhdr.h,v 1.2 1998/11/06 01:34:06 peter Exp $ */
+comment|/* $Id: vinumhdr.h,v 1.4 1998/12/28 04:56:24 peter Exp $ */
 end_comment
 
 begin_ifdef
@@ -219,6 +219,29 @@ directive|include
 file|<sys/dkbad.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -230,6 +253,11 @@ include|#
 directive|include
 file|<stdarg.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -297,25 +325,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<vinumvar.h>
+file|<dev/vinum/vinumvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vinumio.h>
+file|<dev/vinum/vinumio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vinumkw.h"
+file|<dev/vinum/vinumkw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vinumext.h"
+file|<dev/vinum/vinumext.h>
 end_include
 
 begin_undef
@@ -332,6 +360,12 @@ begin_ifdef
 ifdef|#
 directive|ifdef
 name|REALLYKERNEL
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
 end_ifdef
 
 begin_define
@@ -392,6 +426,36 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|Malloc
+parameter_list|(
+name|x
+parameter_list|)
+value|malloc((x), M_DEVBUF, M_WAITOK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Free
+parameter_list|(
+name|x
+parameter_list|)
+value|free((x), M_DEVBUF)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: parser.c,v 1.1.1.1 1998/09/16 05:56:21 grog Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: parser.c,v 1.3 1998/12/28 04:56:23 peter Exp $  */
 end_comment
 
 begin_comment
@@ -10,6 +10,23 @@ end_comment
 begin_comment
 comment|/* Go through a text and split up into text tokens.  These are either non-blank  * sequences, or any sequence (except \0) enclosed in ' or ".  Embedded ' or  * " characters may be escaped by \, which otherwise has no special meaning.  *  * Delimit by following with a \0, and return pointers to the starts at token [].  * Return the number of tokens found as the return value.  *  * This method has the restriction that a closing " or ' must be followed by  * grey space.  *  * Error conditions are end of line before end of quote, or no space after  * a closing quote.  In this case, tokenize() returns -1. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_vinum.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -110,31 +127,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vinumvar.h>
+file|<dev/vinum/vinumvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vinumkw.h"
+file|<dev/vinum/vinumkw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vinumio.h"
+file|<dev/vinum/vinumio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vinumext.h"
+file|<dev/vinum/vinumext.h>
 end_include
 
 begin_ifdef
@@ -366,7 +383,7 @@ name|KERNEL
 comment|/* for vinum(8) only */
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|VINUMDEBUG
 name|keypair
 argument_list|(
 name|debug
