@@ -222,7 +222,7 @@ value|\ "	cmpl	%%eax,%3;"
 comment|/* already have it? */
 value|\ "	je	2f;"
 comment|/* yes, recurse */
-value|\ "	pushl	%4;"							\ "	pushl	%5;"							\ "	call	mtx_enter_hard;"					\ "	addl	$8,%%esp;"						\ "	jmp	1f;"							\ "2:	lock; orl $" _V(MTX_RECURSE) ",%1;"				\ "	incl	%2;"							\ "1:"									\ "# getlock_sleep"							\ 	: "=&a" (_res),
+value|\ "	pushl	%4;"							\ "	pushl	%5;"							\ "	call	mtx_enter_hard;"					\ "	addl	$8,%%esp;"						\ "	jmp	1f;"							\ "2:"									\ "	" MPLOCKED ""							\ "	orl $" _V(MTX_RECURSE) ",%1;"					\ "	incl	%2;"							\ "1:"									\ "# getlock_sleep"							\ 	: "=&a" (_res),
 comment|/* 0 (dummy output) */
 value|\ 	  "+m" (mtxp->mtx_lock),
 comment|/* 1 */
@@ -262,7 +262,7 @@ value|\ "	jz	2f;"
 comment|/* got it */
 value|\ "	pushl	%4;"							\ "	pushl	%5;"							\ "	call	mtx_enter_hard;"
 comment|/* mtx_enter_hard(mtxp, type, oflags) */
-value|\ "	addl	$0xc,%%esp;"						\ "	jmp	1f;"							\ "2:	popl	%2;"
+value|\ "	addl	$12,%%esp;"						\ "	jmp	1f;"							\ "2:	popl	%2;"
 comment|/* save flags */
 value|\ "1:"									\ "# getlock_spin_block"							\ 	: "=&a" (_res),
 comment|/* 0 (dummy output) */
@@ -472,6 +472,19 @@ end_if
 begin_define
 define|#
 directive|define
+name|MTX_ENTER
+parameter_list|(
+name|reg
+parameter_list|,
+name|lck
+parameter_list|)
+define|\
+value|pushf;								\ 	cli;								\ 	movl	reg,lck+MTX_LOCK;					\ 	popl	lck+MTX_SAVEINTR
+end_define
+
+begin_define
+define|#
+directive|define
 name|MTX_EXIT
 parameter_list|(
 name|lck
@@ -501,7 +514,7 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|pushf								\ 	cli								\ 9:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	jnz	9b;							\ 	popl	lck+MTX_SAVEINTR;
+value|pushf;								\ 	cli;								\ 9:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	jnz	9b;							\ 	popl	lck+MTX_SAVEINTR;
 end_define
 
 begin_comment
@@ -531,7 +544,7 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|pushf								\ 	cli								\ 	movl	lck+MTX_LOCK,%eax;					\ 	cmpl	_curproc,%eax;						\ 	jne	9f;							\ 	incw	lck+MTX_RECURS;						\ 	jmp	8f;							\ 9:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;      				\ 	jnz	9b;							\ 	popl	lck+MTX_SAVEINTR;					\ 	jmp	10f;							\ 8:	add	$4,%esp;						\ 10:
+value|pushf;								\ 	cli;								\ 	movl	lck+MTX_LOCK,%eax;					\ 	cmpl	_curproc,%eax;						\ 	jne	7f;							\ 	incl	lck+MTX_RECURSE;					\ 	jmp	8f;							\ 7:	movl	$ MTX_UNOWNED,%eax;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;      				\ 	jnz	9b;							\ 	popl	lck+MTX_SAVEINTR;					\ 	jmp	9f;							\ 8:	add	$4,%esp;						\ 9:
 end_define
 
 begin_define
@@ -544,7 +557,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|movl	lck+MTX_RECURSE,%eax;					\ 	decl	%eax;							\ 	js	9f;							\ 	movl	%eax,lck+MTX_RECURSE;					\ 	jmp	8f;							\ 9:	pushl	lck+MTX_SAVEINTR;					\ 	movl	lck+MTX_LOCK,%eax;					\ 	movl	$ MTX_UNOWNED,reg;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	popf								\ 8:
+value|movl	lck+MTX_RECURSE,%eax;					\ 	decl	%eax;							\ 	js	8f;							\ 	movl	%eax,lck+MTX_RECURSE;					\ 	jmp	9f;							\ 8:	pushl	lck+MTX_SAVEINTR;					\ 	movl	lck+MTX_LOCK,%eax;					\ 	movl	$ MTX_UNOWNED,reg;					\ 	MPLOCKED							\ 	cmpxchgl reg,lck+MTX_LOCK;					\ 	popf;								\ 9:
 end_define
 
 begin_endif
