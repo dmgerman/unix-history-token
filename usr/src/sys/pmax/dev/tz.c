@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)tz.c	7.1 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/RCS/devSCSITape.c,  *	v 8.14 89/07/31 17:26:13 mendel Exp $ SPRITE (Berkeley)  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)tz.c	7.2 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/RCS/devSCSITape.c,  *	v 8.14 89/07/31 17:26:13 mendel Exp $ SPRITE (Berkeley)  */
 end_comment
 
 begin_comment
@@ -1031,11 +1031,6 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|extern
-name|int
-name|sii_debug
-decl_stmt|;
-comment|/* XXX */
 name|sc
 operator|->
 name|sc_cmd
@@ -1075,7 +1070,7 @@ name|sc
 operator|->
 name|sc_cmd
 operator|.
-name|dataToDevice
+name|flags
 operator|=
 operator|!
 operator|(
@@ -1085,6 +1080,10 @@ name|b_flags
 operator|&
 name|B_READ
 operator|)
+condition|?
+name|SCSICMD_DATA_TO_DEVICE
+else|:
+literal|0
 expr_stmt|;
 name|sc
 operator|->
@@ -1126,7 +1125,7 @@ name|sc
 operator|->
 name|sc_cmd
 operator|.
-name|dataToDevice
+name|flags
 operator|=
 literal|0
 expr_stmt|;
@@ -1145,9 +1144,9 @@ name|sc
 operator|->
 name|sc_cmd
 operator|.
-name|dataToDevice
+name|flags
 operator|=
-literal|1
+name|SCSICMD_DATA_TO_DEVICE
 expr_stmt|;
 name|sc
 operator|->
@@ -1291,11 +1290,6 @@ index|]
 operator|==
 name|SCSI_READ
 condition|)
-name|sii_debug
-operator|=
-literal|5
-expr_stmt|;
-comment|/* XXX */
 call|(
 modifier|*
 name|sc
@@ -1376,11 +1370,6 @@ specifier|extern
 name|int
 name|cold
 decl_stmt|;
-specifier|extern
-name|int
-name|sii_debug
-decl_stmt|;
-comment|/* XXX */
 name|printf
 argument_list|(
 literal|"tzdone(%d, %d, %d, %x) %x flags %x\n"
@@ -1453,9 +1442,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sii_DumpLog
-argument_list|()
-expr_stmt|;
 name|panic
 argument_list|(
 literal|"tzdone"
@@ -1797,11 +1783,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|sii_debug
-operator|=
-literal|1
-expr_stmt|;
-comment|/* XXX */
 name|sc
 operator|->
 name|sc_tab
@@ -2032,9 +2013,9 @@ literal|0
 expr_stmt|;
 name|uprintf
 argument_list|(
-literal|"tu%d: no write ring\n"
+literal|"tz%d: no write ring\n"
 argument_list|,
-name|tuunit
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
