@@ -8,7 +8,7 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.173 2004/02/06 05:24:31 dtucker Exp $ */
+comment|/* $Id: acconfig.h,v 1.177 2004/04/15 23:22:40 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -338,6 +338,14 @@ comment|/* #undef AIX_LOGINFAILED_4ARG */
 end_comment
 
 begin_comment
+comment|/* Define if your skeychallenge() function takes 4 arguments (eg NetBSD) */
+end_comment
+
+begin_comment
+comment|/* #undef SKEYCHALLENGE_4ARG */
+end_comment
+
+begin_comment
 comment|/* Define if you have/want arrays (cluster-wide session managment, not C arrays) */
 end_comment
 
@@ -561,6 +569,14 @@ end_comment
 
 begin_comment
 comment|/* #undef NO_SSH_LASTLOG */
+end_comment
+
+begin_comment
+comment|/* Define if have krb5_init_ets */
+end_comment
+
+begin_comment
+comment|/* #undef KRB5_INIT_ETS */
 end_comment
 
 begin_comment
@@ -1077,6 +1093,14 @@ end_comment
 
 begin_comment
 comment|/* #undef BROKEN_GETADDRINFO */
+end_comment
+
+begin_comment
+comment|/* updwtmpx is broken (if present) */
+end_comment
+
+begin_comment
+comment|/* #undef BROKEN_UPDWTMPX */
 end_comment
 
 begin_comment
@@ -2202,6 +2226,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `prctl' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PRCTL */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `pstat' function. */
 end_comment
 
@@ -2803,6 +2835,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/prctl.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_PRCTL_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/pstat.h> header file. */
 end_comment
 
@@ -2998,6 +3038,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_UNISTD_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `unsetenv' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_UNSETENV
 value|1
 end_define
 
