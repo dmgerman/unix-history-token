@@ -2100,6 +2100,37 @@ begin_comment
 comment|/*  * Global variables for the uthread kernel.  */
 end_comment
 
+begin_decl_stmt
+name|SCLASS
+name|void
+modifier|*
+name|_usrstack
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+name|USRSTACK
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Kernel thread structure used when there are no running threads: */
 end_comment
