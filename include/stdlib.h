@@ -1292,7 +1292,7 @@ name|char
 modifier|*
 name|getbsize
 parameter_list|(
-name|size_t
+name|int
 modifier|*
 parameter_list|,
 name|long
