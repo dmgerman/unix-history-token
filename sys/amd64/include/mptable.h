@@ -10572,10 +10572,6 @@ name|cpuid
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|printf
 argument_list|(
 literal|"SMP: AP CPU #%d Launched!\n"
