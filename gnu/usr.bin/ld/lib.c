@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: lib.c,v 1.11 1994/12/23 22:30:45 nate Exp $	- library routines  */
+comment|/*  * $Id: lib.c,v 1.12 1995/03/04 17:46:08 nate Exp $	- library routines  */
 end_comment
 
 begin_include
@@ -2136,7 +2136,7 @@ condition|)
 comment|/* Weak symbols don't pull archive members */
 continue|continue;
 block|}
-comment|/* 			 * At this point, either the new symbol is a common 			 * and the shared object reference is undefined -- 			 * in which case we note the common -- or the shared 			 * object reference has a definition -- in which case 			 * the library member takes precedence. 			 */
+comment|/*  			 * If the shared object referenced is undefined  			 * then note is as a common.  			 */
 if|if
 condition|(
 name|iscommon
@@ -2176,7 +2176,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|" needed due to shared lib ref %s (%d)\n"
+literal|" uneeded due to shared lib ref %s (%d)\n"
 argument_list|,
 name|sp
 operator|->
@@ -2197,8 +2197,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * The shared object reference has a definition.   			 * Since it was previously defined in a shlib, it 			 * takes precedence over the new definition in the 			 * library member. 			 */
 return|return
-literal|1
+literal|0
 return|;
 block|}
 block|}
