@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.48 (Berkeley) %G%"
+literal|"@(#)ps.c	5.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,7 +103,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kinfo.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -1272,7 +1272,7 @@ condition|)
 block|{
 name|what
 operator|=
-name|KINFO_PROC_UID
+name|KERN_PROC_UID
 expr_stmt|;
 name|flag
 operator|=
@@ -1289,7 +1289,7 @@ condition|)
 block|{
 name|what
 operator|=
-name|KINFO_PROC_TTY
+name|KERN_PROC_TTY
 expr_stmt|;
 name|flag
 operator|=
@@ -1307,7 +1307,7 @@ condition|)
 block|{
 name|what
 operator|=
-name|KINFO_PROC_PID
+name|KERN_PROC_PID
 expr_stmt|;
 name|flag
 operator|=
