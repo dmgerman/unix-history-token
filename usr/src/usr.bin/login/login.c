@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.60 (Berkeley) %G%"
+literal|"@(#)login.c	5.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1244,6 +1244,10 @@ operator|)
 operator|)
 condition|)
 break|break;
+name|fflag
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 		 * If trying to log in as root, but with insecure terminal, 		 * refuse the login attempt. 		 */
 if|if
 condition|(
@@ -2187,11 +2191,16 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
+comment|/* if fflag is on, assume caller/authenticator has logged root login */
 if|if
 condition|(
 name|pwd
 operator|->
 name|pw_uid
+operator|==
+literal|0
+operator|&&
+name|fflag
 operator|==
 literal|0
 condition|)
