@@ -13173,7 +13173,8 @@ literal|7
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -13186,7 +13187,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 name|xl_init_locked
 argument_list|(
 name|sc
