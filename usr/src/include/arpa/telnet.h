@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -774,23 +774,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TELOPT_ENCRYPT
+value|38
+end_define
+
+begin_comment
+comment|/* Encryption option */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TELOPT_EXOPL
 value|255
 end_define
 
 begin_comment
 comment|/* extended-options-list */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TELOPT_ENCRYPT
-value|51
-end_define
-
-begin_comment
-comment|/* Encryption option - EXPERIMENTAL */
 end_comment
 
 begin_define
@@ -893,33 +893,7 @@ literal|"ENVIRON"
 block|,
 literal|"AUTHENTICATION"
 block|,
-literal|"38"
-block|,
-literal|"39"
-block|,
-literal|"40"
-block|,
-literal|"41"
-block|,
-literal|"42"
-block|,
-literal|"43"
-block|,
-literal|"44"
-block|,
-literal|"45"
-block|,
-literal|"46"
-block|,
-literal|"47"
-block|,
-literal|"48"
-block|,
-literal|"49"
-block|,
-literal|"50"
-block|,
-literal|"X-ENCRYPT"
+literal|"ENCRYPT"
 block|,
 literal|0
 block|, }
