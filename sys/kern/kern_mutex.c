@@ -164,11 +164,6 @@ decl_stmt|;
 name|int
 name|mtxd_line
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|mtxd_description
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -176,52 +171,29 @@ end_struct
 begin_define
 define|#
 directive|define
-name|mtx_description
-value|mtx_union.mtxu_debug->mtxd_description
-end_define
-
-begin_define
-define|#
-directive|define
 name|mtx_held
-value|mtx_union.mtxu_debug->mtxd_held
+value|mtx_debug->mtxd_held
 end_define
 
 begin_define
 define|#
 directive|define
 name|mtx_file
-value|mtx_union.mtxu_debug->mtxd_file
+value|mtx_debug->mtxd_file
 end_define
 
 begin_define
 define|#
 directive|define
 name|mtx_line
-value|mtx_union.mtxu_debug->mtxd_line
+value|mtx_debug->mtxd_line
 end_define
 
 begin_define
 define|#
 directive|define
 name|mtx_witness
-value|mtx_union.mtxu_debug->mtxd_witness
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* WITNESS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|mtx_description
-value|mtx_union.mtxu_description
+value|mtx_debug->mtxd_witness
 end_define
 
 begin_endif
@@ -579,50 +551,6 @@ block|,
 name|NULL
 block|,
 literal|0
-block|,
-literal|"All mutexes queue head"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|all_mtx
-init|=
-block|{
-name|MTX_UNOWNED
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-block|{
-operator|&
-name|all_mtx_debug
-block|}
-block|,
-name|TAILQ_HEAD_INITIALIZER
-argument_list|(
-name|all_mtx
-operator|.
-name|mtx_blocked
-argument_list|)
-block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|,
-operator|&
-name|all_mtx
-block|,
-operator|&
-name|all_mtx
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -648,51 +576,6 @@ end_else
 begin_comment
 comment|/* WITNESS */
 end_comment
-
-begin_comment
-comment|/* All mutexes in system (used for debug/panic) */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|all_mtx
-init|=
-block|{
-name|MTX_UNOWNED
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-block|{
-literal|"All mutexes queue head"
-block|}
-block|,
-name|TAILQ_HEAD_INITIALIZER
-argument_list|(
-name|all_mtx
-operator|.
-name|mtx_blocked
-argument_list|)
-block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|,
-operator|&
-name|all_mtx
-block|,
-operator|&
-name|all_mtx
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * flag++ is slezoid way of shutting up unused parameter warning  * in mtx_init()  */
@@ -742,6 +625,60 @@ end_endif
 begin_comment
 comment|/* WITNESS */
 end_comment
+
+begin_comment
+comment|/* All mutexes in system (used for debug/panic) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|all_mtx
+init|=
+block|{
+name|MTX_UNOWNED
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"All mutexes queue head"
+block|,
+name|TAILQ_HEAD_INITIALIZER
+argument_list|(
+name|all_mtx
+operator|.
+name|mtx_blocked
+argument_list|)
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+operator|&
+name|all_mtx
+block|,
+operator|&
+name|all_mtx
+block|,
+ifdef|#
+directive|ifdef
+name|WITNESS
+operator|&
+name|all_mtx_debug
+else|#
+directive|else
+name|NULL
+endif|#
+directive|endif
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1227,7 +1164,7 @@ name|CTR4
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"propagate_priority: p 0x%p moved before 0x%p on [0x%p] %s"
+literal|"propagate_priority: p %p moved before %p on [%p] %s"
 argument_list|,
 name|p
 argument_list|,
@@ -1963,7 +1900,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: 0x%p recurse"
+literal|"mtx_enter: %p recurse"
 argument_list|,
 name|m
 argument_list|)
@@ -1984,7 +1921,7 @@ name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: 0x%p contested (lock=%p) [0x%p]"
+literal|"mtx_enter: %p contested (lock=%p) [%p]"
 argument_list|,
 name|m
 argument_list|,
@@ -2412,7 +2349,7 @@ name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: p 0x%p blocked on [0x%p] %s"
+literal|"mtx_enter: p %p blocked on [%p] %s"
 argument_list|,
 name|p
 argument_list|,
@@ -2440,7 +2377,7 @@ name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: p 0x%p free from blocked on [0x%p] %s"
+literal|"mtx_enter: p %p free from blocked on [%p] %s"
 argument_list|,
 name|p
 argument_list|,
@@ -2579,7 +2516,7 @@ endif|#
 directive|endif
 name|panic
 argument_list|(
-literal|"spin lock %s held by 0x%p for> 5 seconds"
+literal|"spin lock %s held by %p for> 5 seconds"
 argument_list|,
 name|m
 operator|->
@@ -2634,7 +2571,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: 0x%p spin done"
+literal|"mtx_enter: %p spin done"
 argument_list|,
 name|m
 argument_list|)
@@ -2734,7 +2671,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%p unrecurse"
+literal|"mtx_exit: %p unrecurse"
 argument_list|,
 name|m
 argument_list|)
@@ -2763,7 +2700,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%p contested"
+literal|"mtx_exit: %p contested"
 argument_list|,
 name|m
 argument_list|)
@@ -2845,7 +2782,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%p not held"
+literal|"mtx_exit: %p not held"
 argument_list|,
 name|m
 argument_list|)
@@ -2938,7 +2875,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%p contested setrunqueue 0x%p"
+literal|"mtx_exit: %p contested setrunqueue %p"
 argument_list|,
 name|m
 argument_list|,
@@ -3069,7 +3006,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%p switching out lock=0x%p"
+literal|"mtx_exit: %p switching out lock=%p"
 argument_list|,
 name|m
 argument_list|,
@@ -3099,7 +3036,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%p resuming lock=0x%p"
+literal|"mtx_exit: %p resuming lock=%p"
 argument_list|,
 name|m
 argument_list|,
@@ -3802,7 +3739,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_init 0x%p (%s)"
+literal|"mtx_init %p (%s)"
 argument_list|,
 name|m
 argument_list|,
@@ -3858,9 +3795,7 @@ block|{
 comment|/* XXX - should not use DEVBUF */
 name|m
 operator|->
-name|mtx_union
-operator|.
-name|mtxu_debug
+name|mtx_debug
 operator|=
 name|malloc
 argument_list|(
@@ -3881,42 +3816,20 @@ name|MPASS
 argument_list|(
 name|m
 operator|->
-name|mtx_union
-operator|.
-name|mtxu_debug
+name|mtx_debug
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|m
-operator|->
-name|mtx_description
-operator|=
-name|t
-expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* 		 * Save a pointer to the description so that witness_fixup() 		 * can properly initialize this mutex later on. 		 */
-name|m
-operator|->
-name|mtx_union
-operator|.
-name|mtxu_description
-operator|=
-name|t
-expr_stmt|;
-block|}
-else|#
-directive|else
-name|m
-operator|->
-name|mtx_description
-operator|=
-name|t
-expr_stmt|;
 endif|#
 directive|endif
+name|m
+operator|->
+name|mtx_description
+operator|=
+name|t
+expr_stmt|;
 name|m
 operator|->
 name|mtx_flags
@@ -4037,7 +3950,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_destroy 0x%p (%s)"
+literal|"mtx_destroy %p (%s)"
 argument_list|,
 name|m
 argument_list|,
@@ -4185,18 +4098,14 @@ name|free
 argument_list|(
 name|m
 operator|->
-name|mtx_union
-operator|.
-name|mtxu_debug
+name|mtx_debug
 argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|m
 operator|->
-name|mtx_union
-operator|.
-name|mtxu_debug
+name|mtx_debug
 operator|=
 name|NULL
 expr_stmt|;
@@ -4216,6 +4125,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * The non-inlined versions of the mtx_*() functions are always built (above),  * but the witness code depends on the WITNESS kernel option being specified.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITNESS
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -4227,19 +4146,36 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|WITNESS
 name|struct
 name|mtx
 modifier|*
 name|mp
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|description
-decl_stmt|;
+comment|/* 	 * We have to release Giant before initializing its witness 	 * structure so that WITNESS doesn't get confused. 	 */
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|all_mtx
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* Iterate through all mutexes and finish up mutex initialization. */
 for|for
 control|(
@@ -4261,20 +4197,10 @@ operator|->
 name|mtx_next
 control|)
 block|{
-name|description
-operator|=
-name|mp
-operator|->
-name|mtx_union
-operator|.
-name|mtxu_description
-expr_stmt|;
 comment|/* XXX - should not use DEVBUF */
 name|mp
 operator|->
-name|mtx_union
-operator|.
-name|mtxu_debug
+name|mtx_debug
 operator|=
 name|malloc
 argument_list|(
@@ -4295,18 +4221,10 @@ name|MPASS
 argument_list|(
 name|mp
 operator|->
-name|mtx_union
-operator|.
-name|mtxu_debug
+name|mtx_debug
 operator|!=
 name|NULL
 argument_list|)
-expr_stmt|;
-name|mp
-operator|->
-name|mtx_description
-operator|=
-name|description
 expr_stmt|;
 name|witness_init
 argument_list|(
@@ -4318,6 +4236,14 @@ name|mtx_flags
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_exit
+argument_list|(
+operator|&
+name|all_mtx
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* Mark the witness code as being ready for use. */
 name|atomic_store_rel_int
 argument_list|(
@@ -4327,8 +4253,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4346,16 +4278,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_comment
-comment|/*  * The non-inlined versions of the mtx_*() functions are always built (above),  * but the witness code depends on the WITNESS kernel option being specified.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITNESS
-end_ifdef
 
 begin_define
 define|#
@@ -4425,23 +4347,11 @@ range|:
 literal|1
 decl_stmt|;
 name|u_char
-name|w_sleep
-range|:
-literal|1
-decl_stmt|;
-comment|/* MTX_DEF type mutex. */
-name|u_char
 name|w_spin
 range|:
 literal|1
 decl_stmt|;
 comment|/* MTX_SPIN type mutex. */
-name|u_char
-name|w_recurse
-range|:
-literal|1
-decl_stmt|;
-comment|/* MTX_RECURSE mutex option. */
 name|u_int
 name|w_level
 decl_stmt|;
@@ -4483,32 +4393,46 @@ begin_comment
 comment|/*  * When DDB is enabled and witness_ddb is set to 1, it will cause the system to  * drop into kdebug() when:  *	- a lock heirarchy violation occurs  *	- locks are held when going to sleep.  */
 end_comment
 
+begin_decl_stmt
+name|int
+name|witness_ddb
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|WITNESS_DDB
 end_ifdef
 
-begin_decl_stmt
-name|int
-name|witness_ddb
-init|=
+begin_expr_stmt
+name|TUNABLE_INT_DECL
+argument_list|(
+literal|"debug.witness_ddb"
+argument_list|,
 literal|1
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|witness_ddb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_decl_stmt
-name|int
-name|witness_ddb
-init|=
+begin_expr_stmt
+name|TUNABLE_INT_DECL
+argument_list|(
+literal|"debug.witness_ddb"
+argument_list|,
 literal|0
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|witness_ddb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -4545,32 +4469,46 @@ begin_comment
 comment|/* DDB */
 end_comment
 
+begin_decl_stmt
+name|int
+name|witness_skipspin
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|WITNESS_SKIPSPIN
 end_ifdef
 
-begin_decl_stmt
-name|int
-name|witness_skipspin
-init|=
+begin_expr_stmt
+name|TUNABLE_INT_DECL
+argument_list|(
+literal|"debug.witness_skipspin"
+argument_list|,
 literal|1
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|witness_skipspin
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_decl_stmt
-name|int
-name|witness_skipspin
-init|=
+begin_expr_stmt
+name|TUNABLE_INT_DECL
+argument_list|(
+literal|"debug.witness_skipspin"
+argument_list|,
 literal|0
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|witness_skipspin
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -4933,9 +4871,21 @@ name|order_list
 index|[]
 init|=
 block|{
+literal|"Giant"
+block|,
 literal|"uidinfo hash"
 block|,
 literal|"uidinfo struct"
+block|,
+name|NULL
+block|,
+literal|"Giant"
+block|,
+literal|"proctree"
+block|,
+literal|"allproc"
+block|,
+literal|"process lock"
 block|,
 name|NULL
 block|,
@@ -5345,12 +5295,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
-name|w
+name|m
 operator|->
-name|w_spin
+name|mtx_flags
+operator|&
+name|MTX_SPIN
 operator|)
+operator|==
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -5376,12 +5329,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
-name|w
+name|m
 operator|->
-name|w_recurse
+name|mtx_flags
+operator|&
+name|MTX_RECURSE
 operator|)
+operator|==
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -5519,9 +5475,15 @@ return|return;
 block|}
 if|if
 condition|(
-name|w
+operator|(
+name|m
 operator|->
-name|w_spin
+name|mtx_flags
+operator|&
+name|MTX_SPIN
+operator|)
+operator|!=
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -5546,12 +5508,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
-name|w
+name|m
 operator|->
-name|w_recurse
+name|mtx_flags
+operator|&
+name|MTX_RECURSE
 operator|)
+operator|==
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -6120,12 +6085,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
-name|w
+name|m
 operator|->
-name|w_spin
+name|mtx_flags
+operator|&
+name|MTX_SPIN
 operator|)
+operator|==
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -6151,12 +6119,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
-name|w
+name|m
 operator|->
-name|w_recurse
+name|mtx_flags
+operator|&
+name|MTX_RECURSE
 operator|)
+operator|==
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -6236,9 +6207,15 @@ return|return;
 block|}
 if|if
 condition|(
-name|w
+operator|(
+name|m
 operator|->
-name|w_spin
+name|mtx_flags
+operator|&
+name|MTX_SPIN
+operator|)
+operator|!=
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -6263,12 +6240,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
-name|w
+name|m
 operator|->
-name|w_recurse
+name|mtx_flags
+operator|&
+name|MTX_RECURSE
 operator|)
+operator|==
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -6399,12 +6379,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
-name|w
+name|m
 operator|->
-name|w_spin
+name|mtx_flags
+operator|&
+name|MTX_SPIN
 operator|)
+operator|==
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -6430,12 +6413,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
-name|w
+name|m
 operator|->
-name|w_recurse
+name|mtx_flags
+operator|&
+name|MTX_RECURSE
 operator|)
+operator|==
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -6492,9 +6478,15 @@ return|return;
 block|}
 if|if
 condition|(
-name|w
+operator|(
+name|m
 operator|->
-name|w_spin
+name|mtx_flags
+operator|&
+name|MTX_SPIN
+operator|)
+operator|!=
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -6519,12 +6511,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
-name|w
+name|m
 operator|->
-name|w_recurse
+name|mtx_flags
+operator|&
+name|MTX_RECURSE
 operator|)
+operator|==
+literal|0
 condition|)
 name|panic
 argument_list|(
@@ -7161,25 +7156,6 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-else|else
-name|w
-operator|->
-name|w_sleep
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|flag
-operator|&
-name|MTX_RECURSE
-condition|)
-name|w
-operator|->
-name|w_recurse
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|w

@@ -307,21 +307,11 @@ name|int
 name|mtx_flags
 decl_stmt|;
 comment|/* flags passed to mtx_init() */
-union|union
-block|{
-name|struct
-name|mtx_debug
-modifier|*
-name|mtxu_debug
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|mtxu_description
+name|mtx_description
 decl_stmt|;
-block|}
-name|mtx_union
-union|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -345,6 +335,11 @@ name|struct
 name|mtx
 modifier|*
 name|mtx_prev
+decl_stmt|;
+name|struct
+name|mtx_debug
+modifier|*
+name|mtx_debug
 decl_stmt|;
 block|}
 struct|;
