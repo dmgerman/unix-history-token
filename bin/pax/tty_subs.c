@@ -279,13 +279,6 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ttyoutf
@@ -293,6 +286,13 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
