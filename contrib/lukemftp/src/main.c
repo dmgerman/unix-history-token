@@ -345,6 +345,10 @@ name|reply_callback
 operator|=
 name|NULL
 expr_stmt|;
+name|family
+operator|=
+name|AF_UNSPEC
+expr_stmt|;
 comment|/* 	 * Get the default socket buffer sizes if we don't already have them. 	 * It doesn't matter which socket we do this to, because on the first 	 * call no socket buffer sizes will have been modified, so we are 	 * guaranteed to get the system defaults. 	 */
 name|s
 operator|=
@@ -795,7 +799,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aadefgino:pP:r:RtT:u:vV"
+literal|"46Aadefgino:pP:r:RtT:u:vV"
 argument_list|)
 operator|)
 operator|!=
@@ -808,6 +812,22 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'4'
+case|:
+name|family
+operator|=
+name|AF_INET
+expr_stmt|;
+break|break;
+case|case
+literal|'6'
+case|:
+name|family
+operator|=
+name|AF_INET6
+expr_stmt|;
+break|break;
 case|case
 literal|'A'
 case|:
@@ -3761,7 +3781,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-AadefginpRtvV] [-o outfile] [-P port] [-r retry]\n"
+literal|"usage: %s [-46AadefginpRtvV] [-o outfile] [-P port] [-r retry]\n"
 literal|"           [-T dir,max[,inc][[user@]host [port]]] [host:path[/]]\n"
 literal|"           [file:///file] [ftp://[user[:pass]@]host[:port]/path[/]]\n"
 literal|"           [http://[user[:pass]@]host[:port]/path] [...]\n"
