@@ -3,6 +3,12 @@ begin_comment
 comment|/* alloc.c - version 1.0.2 */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -60,24 +66,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|realloc
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|long
