@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<langinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<locale.h>
 end_include
 
@@ -327,6 +333,9 @@ name|n
 decl_stmt|,
 name|i
 decl_stmt|;
+name|int
+name|d_first
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -336,6 +345,18 @@ name|LC_TIME
 argument_list|,
 literal|""
 argument_list|)
+expr_stmt|;
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|D_MD_ORDER
+argument_list|)
+operator|==
+literal|'d'
+operator|)
 expr_stmt|;
 while|while
 condition|(
@@ -770,7 +791,11 @@ argument_list|(
 name|cbuf
 argument_list|)
 argument_list|,
-literal|"%c"
+name|d_first
+condition|?
+literal|"%e %b %R"
+else|:
+literal|"%b %e %R"
 argument_list|,
 name|localtime
 argument_list|(
@@ -818,7 +843,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-*.*s %-*s %.12s"
+literal|"%-*.*s %-*s %s"
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,
@@ -842,8 +867,6 @@ argument_list|,
 name|buf
 argument_list|,
 name|cbuf
-operator|+
-literal|4
 argument_list|)
 expr_stmt|;
 name|mp
