@@ -823,12 +823,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|notdef
-end_if
-
 begin_function
 specifier|static
 name|int
@@ -923,15 +917,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* notdef */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -942,10 +927,8 @@ modifier|*
 name|ctlp
 parameter_list|)
 block|{
-name|rp_releaseresource
-argument_list|(
-name|ctlp
-argument_list|)
+name|rp_untimeout
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -999,6 +982,12 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+name|ctlp
+operator|->
+name|io
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1008,6 +997,7 @@ name|io_rid
 operator|!=
 name|NULL
 condition|)
+block|{
 name|free
 argument_list|(
 name|ctlp
@@ -1015,6 +1005,18 @@ operator|->
 name|io_rid
 argument_list|,
 name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|ctlp
+operator|->
+name|io
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|rp_releaseresource
+argument_list|(
+name|ctlp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1364,9 +1366,6 @@ argument_list|,
 name|rp_pciattach
 argument_list|)
 block|,
-if|#
-directive|if
-name|notdef
 name|DEVMETHOD
 argument_list|(
 name|device_detach
@@ -1381,9 +1380,6 @@ argument_list|,
 name|rp_pcishutdown
 argument_list|)
 block|,
-endif|#
-directive|endif
-comment|/* notdef */
 block|{
 literal|0
 block|,

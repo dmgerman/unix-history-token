@@ -2506,12 +2506,6 @@ modifier|*
 name|rp
 decl_stmt|;
 comment|/* port */
-name|struct
-name|tty
-modifier|*
-name|tty
-decl_stmt|;
-comment|/* tty */
 comment|/* Device nodes */
 name|struct
 name|cdev
@@ -3517,6 +3511,15 @@ parameter_list|(
 name|CONTROLLER_t
 modifier|*
 name|ctlp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rp_untimeout
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
