@@ -8784,7 +8784,7 @@ condition|(
 name|force
 condition|)
 block|{
-comment|/* 			 * If called with 'force' true, we're called from 			 * timeout * procedure, so don't bother canceling 			 * timeout. 			 */
+comment|/* 			 * If 'force' is true, we have been called due to 			 * timeout, so don't bother canceling timeout. 			 */
 name|ndisks
 operator|=
 literal|0
