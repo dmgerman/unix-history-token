@@ -2146,24 +2146,20 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|vop_stdputpages
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_putpages_args
 comment|/* { 		struct vnode *a_vp; 		vm_page_t *a_m; 		int a_count; 		int a_sync; 		int *a_rtvals; 		vm_ooffset_t a_offset; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+return|return
 name|vnode_pager_generic_putpages
 argument_list|(
 name|ap
@@ -2186,9 +2182,9 @@ name|ap
 operator|->
 name|a_rtvals
 argument_list|)
-expr_stmt|;
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*   * vfs default ops  * used to fill the vfs fucntion table to get reasonable default return values.  */
