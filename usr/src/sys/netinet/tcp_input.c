@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.70	82/06/26	*/
+comment|/*	tcp_input.c	1.71	82/06/30	*/
 end_comment
 
 begin_include
@@ -3852,7 +3852,7 @@ name|m_adj
 argument_list|(
 name|dtom
 argument_list|(
-name|tp
+name|ti
 argument_list|)
 argument_list|,
 name|i
