@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.8 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,20 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|s
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* socket used for communications */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -153,13 +167,6 @@ decl_stmt|,
 name|resplen
 decl_stmt|,
 name|ns
-decl_stmt|;
-specifier|static
-name|int
-name|s
-init|=
-operator|-
-literal|1
 decl_stmt|;
 name|int
 name|gotsomewhere
@@ -466,6 +473,9 @@ name|len
 operator|=
 name|htons
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|buflen
 argument_list|)
 expr_stmt|;
@@ -635,7 +645,7 @@ name|ntohs
 argument_list|(
 operator|*
 operator|(
-name|short
+name|u_short
 operator|*
 operator|)
 name|cp
@@ -1237,6 +1247,42 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * This routine is for closing the socket if a virtual circuit is used and  * the program wants to close it.  This provides support for endhostent()  * which expects to close the socket.  *  * This routine is not expected to be user visible.  */
+end_comment
+
+begin_macro
+name|_res_close
+argument_list|()
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|s
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 block|}
 end_block
 
