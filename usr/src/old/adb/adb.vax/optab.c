@@ -11,15 +11,18 @@ name|char
 name|optab_sccsid
 index|[]
 init|=
-literal|"@(#)optab.c 4.3 %G%"
+literal|"@(#)optab.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -36,8 +39,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|ADB
 end_endif
+
+begin_comment
+comment|/* ADB */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -54,8 +60,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|SDB
 end_endif
+
+begin_comment
+comment|/* SDB */
+end_comment
 
 begin_undef
 undef|#
@@ -675,8 +684,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|SDB
 end_endif
+
+begin_comment
+comment|/* SDB */
+end_comment
 
 end_unit
 

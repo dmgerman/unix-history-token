@@ -11,15 +11,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opset.c 4.5 %G%"
+literal|"@(#)opset.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_comment
 comment|/*  *	UNIX debugger  *	Instruction printing routines.  *	MACHINE DEPENDENT  */
@@ -40,8 +43,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|ADB
 end_endif
+
+begin_comment
+comment|/* ADB */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -58,8 +64,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|SDB
 end_endif
+
+begin_comment
+comment|/* SDB */
+end_comment
 
 begin_decl_stmt
 name|L_INT
@@ -100,8 +109,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|ADB
 end_endif
+
+begin_comment
+comment|/* ADB */
+end_comment
 
 begin_undef
 undef|#
@@ -608,8 +620,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|SDB
 end_endif
+
+begin_comment
+comment|/* SDB */
+end_comment
 
 begin_expr_stmt
 specifier|static
@@ -781,7 +796,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-endif|SDB
+comment|/* SDB */
 ifdef|#
 directive|ifdef
 name|ADB
@@ -794,7 +809,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-endif|ADB
+comment|/* ADB */
 ifdef|#
 directive|ifdef
 name|SDB
@@ -807,7 +822,7 @@ name|fmt
 expr_stmt|;
 endif|#
 directive|endif
-endif|SDB
+comment|/* SDB */
 name|incp
 operator|=
 literal|1
@@ -1104,7 +1119,7 @@ name|incp
 expr_stmt|;
 endif|#
 directive|endif
-endif|SDB
+comment|/* SDB */
 ifdef|#
 directive|ifdef
 name|ADB
@@ -1114,7 +1129,7 @@ name|incp
 expr_stmt|;
 endif|#
 directive|endif
-endif|ADB
+comment|/* ADB */
 block|}
 end_block
 
@@ -1200,7 +1215,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SDB
+comment|/* SDB */
 ifdef|#
 directive|ifdef
 name|ADB
@@ -1215,7 +1230,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|ADB
+comment|/* ADB */
 name|valuep
 operator|=
 name|snarfreloc
@@ -1834,7 +1849,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|ADB
+comment|/* ADB */
 ifdef|#
 directive|ifdef
 name|SDB
@@ -1867,7 +1882,7 @@ condition|)
 block|{
 endif|#
 directive|endif
-endif|SDB
+comment|/* SDB */
 name|printf
 argument_list|(
 literal|"(%s)"
@@ -1961,7 +1976,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|SDB
+comment|/* SDB */
 return|return
 operator|(
 name|r
@@ -2034,7 +2049,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|ADB
+comment|/* ADB */
 ifdef|#
 directive|ifdef
 name|SDB
@@ -2047,7 +2062,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SDB
+comment|/* SDB */
 break|break;
 block|}
 block|}
@@ -2637,8 +2652,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|SDB
 end_endif
+
+begin_comment
+comment|/* SDB */
+end_comment
 
 end_unit
 
