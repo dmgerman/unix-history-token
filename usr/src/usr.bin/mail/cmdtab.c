@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmdtab.c	2.3 %G%"
+literal|"@(#)cmdtab.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,7 +81,7 @@ name|int
 name|edstop
 argument_list|()
 decl_stmt|,
-name|exit
+name|rexit
 argument_list|()
 decl_stmt|,
 name|pcmdlist
@@ -675,7 +675,7 @@ literal|0
 block|,
 literal|"xit"
 block|,
-name|exit
+name|rexit
 block|,
 name|M
 operator||
@@ -687,7 +687,7 @@ literal|0
 block|,
 literal|"exit"
 block|,
-name|exit
+name|rexit
 block|,
 name|M
 operator||
