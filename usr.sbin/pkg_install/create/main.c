@@ -43,7 +43,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvf:p:c:d:i:k:r:"
+literal|"hvf:p:c:d:i:k:r:t:"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +105,15 @@ begin_decl_stmt
 name|char
 modifier|*
 name|Require
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|PlayPen
 init|=
 name|NULL
 decl_stmt|;
@@ -232,6 +241,14 @@ case|case
 literal|'r'
 case|:
 name|Require
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|PlayPen
 operator|=
 name|optarg
 expr_stmt|;
@@ -469,6 +486,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"-r script  pre/post requirements script\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-t temp    use temp as template for mktemp()\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

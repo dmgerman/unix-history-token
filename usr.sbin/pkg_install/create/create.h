@@ -75,6 +75,14 @@ name|Require
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|PlayPen
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|check_list

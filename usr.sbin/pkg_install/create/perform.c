@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.2 1993/09/03 23:00:55 jkh Exp $"
+literal|"$Id: perform.c,v 1.5 1993/09/04 05:06:33 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,7 +271,9 @@ comment|/* Make a directory to stomp around in */
 name|home
 operator|=
 name|make_playpen
-argument_list|()
+argument_list|(
+name|PlayPen
+argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(

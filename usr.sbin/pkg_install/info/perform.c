@@ -258,7 +258,9 @@ decl_stmt|;
 name|home
 operator|=
 name|make_playpen
-argument_list|()
+argument_list|(
+name|PlayPen
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

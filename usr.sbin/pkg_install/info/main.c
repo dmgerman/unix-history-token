@@ -71,6 +71,15 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|PlayPen
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -232,6 +241,14 @@ case|case
 literal|'l'
 case|:
 name|InfoPrefix
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|PlayPen
 operator|=
 name|optarg
 expr_stmt|;
@@ -471,6 +488,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"-v         show all information\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-t temp    use temp as template for mktemp()\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
