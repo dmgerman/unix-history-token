@@ -105,7 +105,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.32 %G%"
+literal|"@(#)sccs.c	1.33 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -400,7 +400,7 @@ name|PROG
 block|,
 literal|0
 block|,
-literal|"ixbeskc"
+literal|"ixbeskcl"
 block|,
 name|PROGPATH
 argument_list|(
@@ -465,7 +465,7 @@ name|CMACRO
 block|,
 name|NO_SDOT
 block|,
-literal|"ixbsc"
+literal|"ixbscl"
 block|,
 literal|"get -e"
 block|,
