@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_css.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_css.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -380,20 +380,18 @@ begin_comment
 comment|/*  * Call the IMP module to allow it to set up its internal  * state, then tie the two modules together by setting up  * the back pointers to common data structures.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|cssattach
 argument_list|(
-argument|ui
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|uba_device
-modifier|*
 name|ui
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+specifier|register
+expr|struct
+name|uba_device
+operator|*
+name|ui
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -427,6 +425,14 @@ operator|=
 name|impattach
 argument_list|(
 name|ui
+operator|->
+name|ui_driver
+operator|->
+name|ud_dname
+argument_list|,
+name|ui
+operator|->
+name|ui_unit
 argument_list|,
 name|cssreset
 argument_list|)
@@ -578,6 +584,11 @@ name|if_flags
 operator|&=
 operator|~
 name|IFF_RUNNING
+expr_stmt|;
+name|cssoflush
+argument_list|(
+name|unit
+argument_list|)
 expr_stmt|;
 comment|/* must go through IMP to allow it to set state */
 call|(
@@ -1015,9 +1026,6 @@ name|cssdevice
 modifier|*
 name|addr
 decl_stmt|;
-name|int
-name|x
-decl_stmt|;
 name|addr
 operator|=
 operator|(
@@ -1035,11 +1043,6 @@ name|ui_addr
 operator|)
 expr_stmt|;
 comment|/* reset the imp interface. */
-name|x
-operator|=
-name|spl5
-argument_list|()
-expr_stmt|;
 name|addr
 operator|->
 name|css_icsr
@@ -1069,9 +1072,9 @@ name|css_ocsr
 operator|=
 literal|0
 expr_stmt|;
-name|splx
+name|cssoflush
 argument_list|(
-name|x
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -1079,6 +1082,73 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+end_block
+
+begin_macro
+name|cssoflush
+argument_list|(
+argument|unit
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|acc_softc
+modifier|*
+name|sc
+init|=
+operator|&
+name|acc_softc
+index|[
+name|unit
+index|]
+decl_stmt|;
+name|sc
+operator|->
+name|acc_imp
+operator|->
+name|imp_cb
+operator|.
+name|ic_oactive
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|acc_ifuba
+operator|.
+name|ifu_xtofree
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|sc
+operator|->
+name|acc_ifuba
+operator|.
+name|ifu_xtofree
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|acc_ifuba
+operator|.
+name|ifu_xtofree
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 end_block
 

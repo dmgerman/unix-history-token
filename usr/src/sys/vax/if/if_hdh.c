@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_hdh.c	7.3 (Berkeley) %G% */
+comment|/*	@(#)if_hdh.c	7.4 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -625,20 +625,18 @@ begin_comment
 comment|/*  * Call the IMP module to allow it to set up its internal  * state, then tie the two modules together by setting up  * the back pointers to common data structures.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|hdhattach
 argument_list|(
-argument|ui
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|uba_device
-modifier|*
 name|ui
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+specifier|register
+expr|struct
+name|uba_device
+operator|*
+name|ui
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -672,6 +670,14 @@ operator|=
 name|impattach
 argument_list|(
 name|ui
+operator|->
+name|ui_driver
+operator|->
+name|ud_dname
+argument_list|,
+name|ui
+operator|->
+name|ui_unit
 argument_list|,
 name|hdhreset
 argument_list|)
@@ -680,7 +686,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-empty_stmt|;
 name|ip
 operator|=
 operator|&
@@ -823,6 +828,16 @@ name|if_flags
 operator|&=
 operator|~
 name|IFF_RUNNING
+expr_stmt|;
+name|sc
+operator|->
+name|hdh_imp
+operator|->
+name|imp_cb
+operator|.
+name|ic_oactive
+operator|=
+literal|0
 expr_stmt|;
 name|sc
 operator|->
