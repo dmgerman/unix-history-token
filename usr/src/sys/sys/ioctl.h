@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	3.8	%G%	*/
+comment|/*	ioctl.h	3.9	%G%	*/
 end_comment
 
 begin_comment
@@ -79,18 +79,6 @@ name|char
 name|t_lnextc
 decl_stmt|;
 comment|/* literal next character */
-name|char
-name|t_lerase
-decl_stmt|;
-comment|/* local erase */
-name|char
-name|t_lkill
-decl_stmt|;
-comment|/* local kill */
-name|char
-name|t_lintr
-decl_stmt|;
-comment|/* local interrupt */
 block|}
 struct|;
 end_struct
@@ -627,6 +615,13 @@ end_define
 begin_comment
 comment|/* simulate a terminal in character */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|OTTYDISC
+value|0
+end_define
 
 begin_define
 define|#
