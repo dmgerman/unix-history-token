@@ -762,6 +762,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|nsects
 operator|=
 name|disk
@@ -980,6 +984,10 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|nsects
 operator|=
 name|disk
@@ -1343,10 +1351,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|error
-operator|=
-literal|0
-expr_stmt|;
 goto|goto
 name|bail
 goto|;
@@ -1505,10 +1509,6 @@ name|gpt_hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|bail
 label|:
 name|free
@@ -1576,6 +1576,10 @@ name|idx
 decl_stmt|,
 name|sav
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Save the entries of those chunks that have an index. They are 	 * the ones that exist on disk already. 	 */
 name|sav
 operator|=
@@ -2454,10 +2458,6 @@ goto|goto
 name|bail
 goto|;
 block|}
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|bail
 label|:
 name|free
