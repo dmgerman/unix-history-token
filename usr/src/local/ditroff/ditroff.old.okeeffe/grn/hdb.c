@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hdb.c	1.2	(Berkeley) 83/07/21  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains database routines for the hard copy programs of the  * gremlin picture editor.  */
+comment|/*	hdb.c	1.3	(Berkeley) 83/07/25  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains database routines for the hard copy programs of the  * gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -229,9 +229,9 @@ decl_stmt|;
 comment|/* flag for input exhausted */
 specifier|register
 name|int
-name|orient
+name|type
 decl_stmt|;
-comment|/* orientation flag:  set by file */
+comment|/* element type */
 specifier|register
 name|float
 name|nx
@@ -264,8 +264,6 @@ decl_stmt|;
 comment|/* x and y are read in point coords */
 name|int
 name|len
-decl_stmt|,
-name|type
 decl_stmt|,
 name|brush
 decl_stmt|,
@@ -330,11 +328,7 @@ operator|&
 name|y
 argument_list|)
 expr_stmt|;
-name|orient
-operator|=
-name|size
-expr_stmt|;
-comment|/* ignore file positioning point */
+comment|/* ignore orientation and file positioning point */
 name|done
 operator|=
 name|FALSE
@@ -354,7 +348,7 @@ argument_list|,
 literal|"%d"
 argument_list|,
 operator|&
-name|type
+name|size
 argument_list|)
 operator|==
 name|EOF
@@ -375,7 +369,11 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|type
+operator|=
+name|size
+operator|)
 operator|<
 literal|0
 condition|)
@@ -418,6 +416,83 @@ name|PTInit
 argument_list|()
 expr_stmt|;
 comment|/* pointlist terminated by -1,-1 */
+if|if
+condition|(
+name|TEXT
+argument_list|(
+name|type
+argument_list|)
+condition|)
+block|{
+comment|/* only one point for text elements */
+name|nx
+operator|=
+name|xorn
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|PTMakePoint
+argument_list|(
+name|nx
+argument_list|,
+name|y
+operator|=
+name|yorn
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+argument_list|,
+operator|&
+name|plist
+argument_list|)
+expr_stmt|;
+name|savebounds
+argument_list|(
+name|nx
+argument_list|,
+name|y
+argument_list|)
+expr_stmt|;
+do|do
+operator|(
+name|void
+operator|)
+name|fscanf
+argument_list|(
+argument|file
+argument_list|,
+literal|"%f%f"
+argument_list|,
+argument|&x
+argument_list|,
+argument|&y
+argument_list|)
+while|while
+condition|(
+operator|(
+name|x
+operator|>=
+literal|0.0
+operator|)
+operator|&&
+operator|(
+name|y
+operator|>=
+literal|0.0
+operator|)
+condition|)
+empty_stmt|;
+do|}
+else|else
+block|{
 while|while
 condition|(
 operator|(
@@ -485,6 +560,7 @@ operator|&
 name|y
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 operator|(
 name|void
