@@ -41,12 +41,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/namei.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -107,12 +101,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netncp/ncp_sock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netncp/ncp_subr.h>
 end_include
 
@@ -120,12 +108,6 @@ begin_include
 include|#
 directive|include
 file|<netncp/ncp_ncp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netncp/ncp_rq.h>
 end_include
 
 begin_include

@@ -24,31 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/exec.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysent.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
 end_include
 
 begin_include
@@ -85,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<netncp/ncp_conn.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netncp/ncp_sock.h>
 end_include
 
 begin_include

@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -61,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<netncp/ncp_subr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netncp/ncp_user.h>
 end_include
 
 begin_include

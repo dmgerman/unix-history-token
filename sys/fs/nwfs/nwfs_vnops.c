@@ -24,23 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resourcevar.h>
-end_include
-
-begin_comment
-comment|/* defines plimit structure in proc struct */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_include
@@ -82,30 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dirent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signalvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -119,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_zone.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vnode_pager.h>
 end_include
 
 begin_include

@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netncp/ncp_user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netncp/nwerror.h>
 end_include
 

@@ -99,19 +99,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/poll.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
 end_include
 
 begin_include
@@ -177,12 +165,6 @@ begin_include
 include|#
 directive|include
 file|<netncp/ncp_subr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netncp/ncp_ncp.h>
 end_include
 
 begin_include

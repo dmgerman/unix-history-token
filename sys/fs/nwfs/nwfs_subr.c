@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -43,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/namei.h>
 end_include
 
 begin_include
@@ -73,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<netncp/ncp_subr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netncp/ncp_user.h>
 end_include
 
 begin_include

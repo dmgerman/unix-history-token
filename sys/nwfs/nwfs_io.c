@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/buf.h>
 end_include
 
@@ -47,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -70,25 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -136,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_object.h>
 end_include
 
@@ -160,12 +124,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netncp/ncp.h>
 end_include
 
@@ -179,18 +137,6 @@ begin_include
 include|#
 directive|include
 file|<netncp/ncp_subr.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netncp/ncp_ncp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netncp/ncp_rq.h>
 end_include
 
 begin_include
