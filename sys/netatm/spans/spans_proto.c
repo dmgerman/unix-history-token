@@ -826,14 +826,11 @@ case|:
 comment|/* 		 * Send out SPANS_STAT_REQ message 		 */
 name|msg
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -843,6 +840,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* XXX arr: This is bogus and will go away RSN */
 comment|/* Retry later if no memory */
 name|SPANS_TIMER
 argument_list|(
@@ -893,15 +891,19 @@ argument_list|,
 name|SPANS_PROBE_ERR_WAIT
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;

@@ -210,51 +210,14 @@ comment|/*  * Global variables  */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|spans_vcpool
-init|=
-block|{
-literal|"spans vcc pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|spans_vccb
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|50
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|spans_vc_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|spans_msgpool
-init|=
-block|{
-literal|"spans message pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-name|spans_msg
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|50
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|spans_msg_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -454,6 +417,69 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|spans_vc_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"spans vc"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|spans_vccb
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|spans_vc_zone
+argument_list|,
+literal|50
+argument_list|)
+expr_stmt|;
+name|spans_msg_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"spans msg"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|spans_msg
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|spans_msg_zone
+argument_list|,
+literal|50
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Allocate protocol definition structure 	 */
 name|spans_mgr
 operator|=
@@ -557,6 +583,10 @@ condition|)
 goto|goto
 name|done
 goto|;
+comment|/* 	 * Start the arp service 	 */
+name|spansarp_start
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Start up Connectionless Service 	 */
 name|err
 operator|=
@@ -649,16 +679,14 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 		 * Free up our storage pools 		 */
-name|atm_release_pool
+name|uma_zdestroy
 argument_list|(
-operator|&
-name|spans_vcpool
+name|spans_vc_zone
 argument_list|)
 expr_stmt|;
-name|atm_release_pool
+name|uma_zdestroy
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
 argument_list|)
 expr_stmt|;
 block|}
@@ -2286,11 +2314,10 @@ name|vc_sstate
 operator|=
 name|SPANS_VC_NULL
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|spans_vc_zone
+argument_list|,
 name|vcp
 argument_list|)
 expr_stmt|;

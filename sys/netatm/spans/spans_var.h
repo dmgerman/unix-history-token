@@ -25,6 +25,16 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
+begin_comment
+comment|/* XXX arr: will remove rsn */
+end_comment
+
 begin_comment
 comment|/*  * Constants to indicate the state of the signalling interface  */
 end_comment
@@ -1251,17 +1261,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|spans_vcpool
+name|uma_zone_t
+name|spans_vc_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|spans_msgpool
+name|uma_zone_t
+name|spans_msg_zone
 decl_stmt|;
 end_decl_stmt
 

@@ -530,15 +530,11 @@ directive|endif
 comment|/* 	 * Allocate control block for VCC 	 */
 name|svp
 operator|=
-operator|(
-expr|struct
-name|spans_vccb
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_vcpool
+name|spans_vc_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -829,11 +825,10 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|spans_vc_zone
+argument_list|,
 name|svp
 argument_list|)
 expr_stmt|;

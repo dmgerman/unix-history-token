@@ -175,6 +175,12 @@ directive|include
 file|<netatm/spans/spans_cls.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -446,27 +452,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|sp_info
-name|spanscls_pool
-init|=
-block|{
-literal|"spans cls pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|spanscls
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|2
-block|,
-comment|/* si_blkcnt */
-literal|100
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|spanscls_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -763,6 +750,38 @@ block|{
 name|int
 name|err
 decl_stmt|;
+name|spanscls_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"spanscls"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|spanscls
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|spanscls_zone
+argument_list|,
+literal|100
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Fill in union fields 	 */
 name|spanscls_attr
 operator|.
@@ -891,10 +910,9 @@ name|spanscls_endpt
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free our storage pools 	 */
-name|atm_release_pool
+name|uma_zdestroy
 argument_list|(
-operator|&
-name|spanscls_pool
+name|spanscls_zone
 argument_list|)
 expr_stmt|;
 block|}
@@ -931,15 +949,11 @@ decl_stmt|;
 comment|/* 	 * Get a new cls control block 	 */
 name|clp
 operator|=
-operator|(
-expr|struct
-name|spanscls
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spanscls_pool
+name|spanscls_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1111,11 +1125,10 @@ condition|(
 name|err
 condition|)
 block|{
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|spanscls_zone
+argument_list|,
 name|clp
 argument_list|)
 expr_stmt|;
@@ -1248,11 +1261,10 @@ argument_list|,
 name|cls_next
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|spanscls_zone
+argument_list|,
 name|clp
 argument_list|)
 expr_stmt|;

@@ -797,14 +797,11 @@ expr_stmt|;
 comment|/* 	 * Get memory for a request message 	 */
 name|req
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -915,8 +912,10 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
@@ -977,14 +976,11 @@ expr_stmt|;
 comment|/* 	 * Get memory for a response message 	 */
 name|rsp
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1066,8 +1062,10 @@ argument_list|,
 name|rsp
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|rsp
 argument_list|)
 expr_stmt|;
@@ -1121,14 +1119,11 @@ expr_stmt|;
 comment|/* 	 * Get memory for a close request 	 */
 name|req
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1231,8 +1226,10 @@ if|if
 condition|(
 name|req
 condition|)
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
@@ -1460,14 +1457,11 @@ block|}
 comment|/* 	 * Respond to the status request or indication with a 	 * status response 	 */
 name|rsp_msg
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1522,8 +1516,10 @@ argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
@@ -2005,15 +2001,11 @@ block|}
 comment|/* 	 * Get a new VCCB for the connection 	 */
 name|svp
 operator|=
-operator|(
-expr|struct
-name|spans_vccb
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_vcpool
+name|spans_vc_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2857,8 +2849,10 @@ operator|->
 name|sp_vccq
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_vc_zone
+argument_list|,
 name|svp
 argument_list|)
 expr_stmt|;
@@ -2866,14 +2860,11 @@ block|}
 comment|/* 	 * Some problem was detected with the request.  Send a SPANS 	 * message rejecting the connection. 	 */
 name|rsp_msg
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2932,8 +2923,10 @@ argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
@@ -3552,14 +3545,11 @@ label|:
 comment|/* 	 * Respond to the SPANS_CLOSE_IND with a SPANS_CLOSE_RSP 	 */
 name|rsp_msg
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -3633,8 +3623,10 @@ argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
@@ -3997,14 +3989,11 @@ decl_stmt|;
 comment|/* 	 * Get memory for a SPANS_MULTI_RSP message. 	 */
 name|rsp_msg
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -4078,8 +4067,10 @@ argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
@@ -4116,14 +4107,11 @@ decl_stmt|;
 comment|/* 	 * Get memory for a SPANS_ADD_RSP message. 	 */
 name|rsp_msg
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -4207,8 +4195,10 @@ argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
@@ -4245,14 +4235,11 @@ decl_stmt|;
 comment|/* 	 * Get memory for a SPANS_JOIN_CNF message. 	 */
 name|rsp_msg
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -4311,8 +4298,10 @@ argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
@@ -4349,14 +4338,11 @@ decl_stmt|;
 comment|/* 	 * Get memory for a SPANS_LEAVE_CNF message. 	 */
 name|rsp_msg
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -4415,8 +4401,10 @@ argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
@@ -4580,14 +4568,11 @@ block|}
 comment|/* 	 * Get memory for a SPANS_QUERY_RSP message. 	 */
 name|rsp_msg
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -4733,8 +4718,10 @@ case|case
 name|SPANS_VC_ACT_DOWN
 case|:
 comment|/* 			 * VCCB is for a PVC (shouldn't happen) 			 */
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
@@ -4764,8 +4751,10 @@ argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|rsp_msg
 argument_list|)
 expr_stmt|;
@@ -4804,14 +4793,11 @@ decl_stmt|;
 comment|/* 	 * Get storage for the message 	 */
 name|msg
 operator|=
-operator|(
-name|spans_msg
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spans_msgpool
+name|spans_msg_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -4820,9 +4806,7 @@ name|msg
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 comment|/* 	 * Convert the message from network order to internal format 	 */
 name|xdrmbuf_init
 argument_list|(
@@ -5322,8 +5306,10 @@ if|if
 condition|(
 name|msg
 condition|)
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|spans_msg_zone
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;

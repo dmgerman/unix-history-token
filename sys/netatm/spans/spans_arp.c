@@ -187,6 +187,12 @@ directive|include
 file|<netatm/spans/spans_cls.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -322,27 +328,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|sp_info
-name|spansarp_pool
-init|=
-block|{
-literal|"spans arp pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|spansarp
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|100
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|spansarp_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -525,15 +512,11 @@ block|}
 comment|/* 	 * Now get the new arp entry 	 */
 name|sap
 operator|=
-operator|(
-expr|struct
-name|spansarp
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spansarp_pool
+name|spansarp_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -973,11 +956,10 @@ argument_list|(
 name|sap
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|spansarp_zone
+argument_list|,
 name|sap
 argument_list|)
 expr_stmt|;
@@ -987,6 +969,50 @@ operator|)
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Called when the spans module is loaded.  */
+end_comment
+
+begin_function
+name|void
+name|spansarp_start
+parameter_list|()
+block|{
+name|spansarp_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"spansarp"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|spansarp
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|spansarp_zone
+argument_list|,
+literal|100
 argument_list|)
 expr_stmt|;
 block|}
@@ -1054,10 +1080,9 @@ name|spansarp_rtimer
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free our storage pools 	 */
-name|atm_release_pool
+name|uma_zdestroy
 argument_list|(
-operator|&
-name|spansarp_pool
+name|spansarp_zone
 argument_list|)
 expr_stmt|;
 block|}
@@ -1215,11 +1240,10 @@ argument_list|(
 name|sap
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|spansarp_zone
+argument_list|,
 name|sap
 argument_list|)
 expr_stmt|;
@@ -2169,15 +2193,11 @@ block|{
 comment|/* 		 * Source unknown and we're the target - add new entry 		 */
 name|sap
 operator|=
-operator|(
-expr|struct
-name|spansarp
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spansarp_pool
+name|spansarp_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -2666,11 +2686,10 @@ argument_list|(
 name|sap
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|spansarp_zone
+argument_list|,
 name|sap
 argument_list|)
 expr_stmt|;
@@ -2934,15 +2953,11 @@ block|{
 comment|/* 			 * No, get a new arp entry 			 */
 name|sap
 operator|=
-operator|(
-expr|struct
-name|spansarp
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|spansarp_pool
+name|spansarp_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -3334,11 +3349,10 @@ argument_list|(
 name|sap
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|spansarp_zone
+argument_list|,
 name|sap
 argument_list|)
 expr_stmt|;
