@@ -1166,6 +1166,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|PGRPSESS_SUNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EIO
