@@ -39,6 +39,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|EXTERN
+name|int
+comment|/* 		 * shell_active ==> 		 *		1.  Don't do input. 		 *		2.  Don't do output. 		 *		3.  Don't block in select. 		 *		4.  When nothing to do, call shell_continue() 		 */
+name|shell_active
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
