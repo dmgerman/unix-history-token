@@ -762,7 +762,7 @@ name|int
 name|handle
 parameter_list|,
 name|int
-name|v
+name|eot
 parameter_list|)
 function_decl|;
 end_function_decl
