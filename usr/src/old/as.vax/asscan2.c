@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan2.c 4.10 %G%"
+literal|"@(#)asscan2.c 4.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,29 +197,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FLEXNAMES
-end_ifndef
-
-begin_decl_stmt
-name|char
-name|strtext
-index|[
-name|NCPString
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-else|FLEXNAMES
-end_else
-
 begin_if
 if|#
 directive|if
@@ -254,12 +231,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|FLEXNAMES
 end_endif
 
 begin_macro

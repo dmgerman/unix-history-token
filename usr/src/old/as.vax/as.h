@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.16 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.17 %G%  */
 end_comment
 
 begin_define
@@ -16,12 +16,6 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLEXNAMES
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -33,36 +27,6 @@ include|#
 directive|include
 file|<stab.h>
 end_include
-
-begin_else
-else|#
-directive|else
-else|not FLEXNAMES
-end_else
-
-begin_define
-define|#
-directive|define
-name|ONLIST
-end_define
-
-begin_include
-include|#
-directive|include
-file|"a.out.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stab.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|FLEXNAMES
-end_endif
 
 begin_define
 define|#
@@ -133,7 +97,7 @@ comment|/* number of location ctrs */
 end_comment
 
 begin_comment
-comment|/*  *	Sizes for character buffers.  *	what			size #define name	comments  *  *	source file reads	ASINBUFSIZ		integral of BUFSIZ  *	string assembly		NCPString		large for .stabs  *	name assembly		NCPName			depends on FLEXNAMES  *	string save		STRPOOLDALLOP	  *  *  *	-source file reads should be integral of BUFSIZ for efficient reads  *	-string saving is a simple first fit  */
+comment|/*  *	Sizes for character buffers.  *	what			size #define name	comments  *  *	source file reads	ASINBUFSIZ		integral of BUFSIZ  *	string assembly		NCPString		large for .stabs  *	name assembly		NCPName	  *	string save		STRPOOLDALLOP	  *  *  *	-source file reads should be integral of BUFSIZ for efficient reads  *	-string saving is a simple first fit  */
 end_comment
 
 begin_ifndef
@@ -203,43 +167,6 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|FLEXNAMES
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NCPS
-end_ifndef
-
-begin_undef
-undef|#
-directive|undef
-name|NCPName
-end_undef
-
-begin_define
-define|#
-directive|define
-name|NCPName
-value|8
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|not NCPS
-end_endif
-
-begin_else
-else|#
-directive|else
-else|FLEXNAMES
-end_else
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|NCPS
 end_ifndef
 
@@ -260,12 +187,6 @@ begin_endif
 endif|#
 directive|endif
 endif|not NCPS
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|FLEXNAMES
 end_endif
 
 begin_comment
@@ -832,12 +753,6 @@ begin_comment
 comment|/*  *	Redefinitions of fields in the struct nlist for symbols so that  *	one saves typing, and so that they conform   *	with the old naming conventions.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLEXNAMES
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -892,41 +807,6 @@ end_define
 begin_comment
 comment|/* string table index */
 end_comment
-
-begin_else
-else|#
-directive|else
-else|not FLEXNAMES
-end_else
-
-begin_define
-define|#
-directive|define
-name|s_name
-value|s_nm.n_name
-end_define
-
-begin_define
-define|#
-directive|define
-name|i_name
-value|s_name
-end_define
-
-begin_define
-define|#
-directive|define
-name|FETCHNAME
-parameter_list|(
-name|sp
-parameter_list|)
-value|((sp)->s_name)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1072,24 +952,10 @@ begin_struct
 struct|struct
 name|Instab
 block|{
-ifdef|#
-directive|ifdef
-name|FLEXNAMES
 name|char
 modifier|*
 name|I_name
 decl_stmt|;
-else|#
-directive|else
-else|not FLEXNAMES
-name|char
-name|I_name
-index|[
-name|NCPName
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|u_char
 name|I_popcode
 decl_stmt|;

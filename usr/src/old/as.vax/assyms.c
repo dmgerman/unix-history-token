@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)assyms.c 4.11 %G%"
+literal|"@(#)assyms.c 4.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1614,9 +1614,6 @@ argument_list|,
 argument|++
 argument_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|FLEXNAMES
 name|printf
 argument_list|(
 literal|"\tSeg: %d \"%s\" value: %d index: %d tag %s\n"
@@ -1644,43 +1641,6 @@ name|s_tag
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-else|not FLEXNAMES
-name|printf
-argument_list|(
-literal|"\tSeg: %d \"%*.*s\" value: %d index: %d tag %s\n"
-argument_list|,
-name|segno
-argument_list|,
-name|NCPName
-argument_list|,
-name|NCPName
-argument_list|,
-name|FETCHNAME
-argument_list|(
-name|sp
-argument_list|)
-argument_list|,
-name|sp
-operator|->
-name|s_value
-argument_list|,
-name|sp
-operator|->
-name|s_index
-argument_list|,
-name|tagstring
-argument_list|(
-name|sp
-operator|->
-name|s_tag
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|not FLEXNAMES
 name|printf
 argument_list|(
 literal|"\t\ttype: %d jxbump %d jxfear: %d\n"
@@ -2166,68 +2126,6 @@ operator|*
 name|hp
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|FLEXNAMES
-for|for
-control|(
-name|len
-operator|=
-literal|0
-init|;
-operator|(
-name|len
-operator|<
-name|NCPName
-operator|)
-operator|&&
-operator|*
-name|from
-condition|;
-name|len
-operator|++
-control|)
-if|if
-condition|(
-operator|*
-name|from
-operator|++
-operator|!=
-operator|*
-name|to
-operator|++
-condition|)
-goto|goto
-name|nextprobe
-goto|;
-if|if
-condition|(
-name|len
-operator|>=
-name|NCPName
-condition|)
-comment|/*both are maximal length*/
-return|return
-operator|(
-name|hp
-operator|)
-return|;
-if|if
-condition|(
-operator|*
-name|to
-operator|==
-literal|0
-condition|)
-comment|/*assert *from == 0*/
-return|return
-operator|(
-name|hp
-operator|)
-return|;
-else|#
-directive|else
-else|FLEXNAMES
 while|while
 condition|(
 operator|*
@@ -2263,9 +2161,6 @@ operator|(
 name|hp
 operator|)
 return|;
-endif|#
-directive|endif
-endif|FLEXNAMES
 name|nextprobe
 label|:
 empty_stmt|;
@@ -2353,25 +2248,6 @@ operator|->
 name|h_nused
 operator|++
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|FLEXNAMES
-name|strncpy
-argument_list|(
-name|FETCHNAME
-argument_list|(
-operator|*
-name|hp
-argument_list|)
-argument_list|,
-name|yytext
-argument_list|,
-name|NCPName
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-else|FLEXNAMES
 for|for
 control|(
 name|from
@@ -2453,9 +2329,6 @@ operator|&
 name|strdp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|FLEXNAMES
 block|}
 return|return
 operator|(
@@ -3331,22 +3204,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLEXNAMES
-end_ifdef
-
-begin_comment
-comment|/*  *	We write out the flexible length character strings for  names  *	in two stages.  *	1)	We always! maintain a fixed sized name list entry;  *	the string is indexed by a four byte quantity from the beginning  *	of the string pool area.  Index 0 is reserved, and indicates  *	that there is no associated string. The first valid index is 4.  *	2)	 We concatenate together and write all of the strings  *	in the string pool at the end of the name list. The first   *	four bytes in the string pool are indexed only by 0 (see above);  *	they contain the total number of bytes in the string pool.  */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|FLEXNAMES
-end_endif
-
 begin_comment
 comment|/*  *	Write out n symbols to file f, beginning at p  *	ignoring symbols that are obsolete, jxxx instructions, and  *	possibly, labels  */
 end_comment
@@ -3380,9 +3237,6 @@ decl_stmt|,
 modifier|*
 name|ub
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|FLEXNAMES
 name|char
 modifier|*
 name|name
@@ -3401,9 +3255,6 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 *	We use sp->s_index to hold the length of the 	 *	name; it isn't used for anything else 	 */
-endif|#
-directive|endif
-endif|FLEXNAMES
 specifier|register
 name|struct
 name|allocbox
@@ -3461,9 +3312,6 @@ continue|continue;
 name|symsout
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FLEXNAMES
 name|name
 operator|=
 name|sp
@@ -3510,26 +3358,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"symbol %d: nmx == %d\n"
-argument_list|,
-name|symsout
-argument_list|,
-name|sp
-operator|->
-name|s_nmx
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
-endif|#
-directive|endif
-endif|FLEXNAMES
 name|sp
 operator|->
 name|s_type
@@ -3606,9 +3434,6 @@ argument_list|,
 name|symfile
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FLEXNAMES
 name|sp
 operator|->
 name|s_name
@@ -3616,9 +3441,6 @@ operator|=
 name|name
 expr_stmt|;
 comment|/* restore pointer */
-endif|#
-directive|endif
-endif|FLEXNAMES
 block|}
 if|if
 condition|(
@@ -3635,9 +3457,6 @@ argument_list|,
 name|symsdesired
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FLEXNAMES
 comment|/* 	 *	Copy the string temporary file to the symbol file, 	 *	copying all the strings and symbols we ever saw, 	 *	including labels, stabs strings, ascii strings, etc. 	 *	This is slightly wasteful. 	 */
 name|i
 operator|=
@@ -3673,19 +3492,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"%d bytes of strings\n"
-argument_list|,
-name|strfilepos
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 operator|(
 operator|(
 name|int
@@ -3713,9 +3519,6 @@ name|i
 operator|++
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|FLEXNAMES
 block|}
 end_function
 

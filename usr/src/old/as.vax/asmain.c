@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c 4.12 %G%"
+literal|"@(#)asmain.c 4.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|unix_lang_name
-value|"VAX/UNIX Assembler V%G% 4.12"
+value|"VAX/UNIX Assembler V%G% 4.13"
 end_define
 
 begin_comment
@@ -2598,7 +2598,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 *	Output the symbol table 	 *	and if FLEXNAMES is set, the string pool 	 * 	 *	We must first rewind the string pool file to its beginning, 	 *	in case it was seek'ed into for fetching ascii and asciz 	 *	strings. 	 */
+comment|/* 	 *	Output the symbol table and the string pool 	 * 	 *	We must first rewind the string pool file to its beginning, 	 *	in case it was seek'ed into for fetching ascii and asciz 	 *	strings. 	 */
 name|fseek
 argument_list|(
 name|strfile
