@@ -75,7 +75,7 @@ value|ACPI_BUS
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"PCI"
 argument_list|)
@@ -521,7 +521,7 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -565,7 +565,8 @@ expr_stmt|;
 comment|/*      * Get our segment number by evaluating _SEG      * It's OK for this to not exist.      */
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|status
 operator|=
 name|acpi_EvaluateInteger
@@ -581,9 +582,7 @@ name|sc
 operator|->
 name|ap_segment
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 if|if
@@ -619,10 +618,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*      * Get our base bus number by evaluating _BBN      * If this doesn't exist, we assume we're bus number 0.      *      * XXX note that it may also not exist in the case where we are       *     meant to use a private configuration space mechanism for this bus,      *     so we should dig out our resources and check to see if we have      *     anything like that.  How do we do this?      * XXX If we have the requisite information, and if we don't think the      *     default PCI configuration space handlers can deal with this bus,      *     we should attach our own handler.      * XXX invoke _REG on this for the PCI config space address space?      */
+comment|/*      * Get our base bus number by evaluating _BBN.  If that doesn't work, try _ADR.      * If this doesn't work, we assume we're bus number 0.      *      * XXX note that it may also not exist in the case where we are       *     meant to use a private configuration space mechanism for this bus,      *     so we should dig out our resources and check to see if we have      *     anything like that.  How do we do this?      * XXX If we have the requisite information, and if we don't think the      *     default PCI configuration space handlers can deal with this bus,      *     we should attach our own handler.      * XXX invoke _REG on this for the PCI config space address space?      */
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|status
 operator|=
 name|acpi_EvaluateInteger
@@ -638,9 +638,7 @@ name|sc
 operator|->
 name|ap_bus
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 if|if
@@ -668,6 +666,56 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
+operator|=
+name|acpi_EvaluateInteger
+argument_list|(
+name|sc
+operator|->
+name|ap_handle
+argument_list|,
+literal|"_ADR"
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|ap_bus
+argument_list|)
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|status
+operator|!=
+name|AE_NOT_FOUND
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not evaluate _ADR - %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|return_VALUE
+argument_list|(
+name|ENXIO
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 comment|/* if it's not found, assume 0 */
 name|sc
 operator|->
@@ -676,7 +724,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*      * Make sure that this bus hasn't already been found.  If it has, return silently      * (should we complain here?).      */
+block|}
+comment|/*      * Make sure that this bus hasn't already been found.      */
 if|if
 condition|(
 name|devclass_get_device
@@ -693,33 +742,51 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"we have duplicate bus number %d - not probing bus\n"
+argument_list|,
+name|sc
+operator|->
+name|ap_bus
+argument_list|)
+expr_stmt|;
 name|return_VALUE
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*      * Get the PCI interrupt routing table.      */
+block|}
+comment|/*      * Get the PCI interrupt routing table for this bus.      */
+name|sc
+operator|->
+name|ap_prt
+operator|.
+name|Length
+operator|=
+name|ACPI_ALLOCATE_BUFFER
+expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|status
 operator|=
-name|acpi_GetIntoBuffer
+name|AcpiGetIrqRoutingTable
 argument_list|(
 name|sc
 operator|->
 name|ap_handle
-argument_list|,
-name|AcpiGetIrqRoutingTable
 argument_list|,
 operator|&
 name|sc
 operator|->
 name|ap_prt
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|device_printf
@@ -781,6 +848,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/*      * Now that we have established the device tree, we need to scan our children      * and hook them up with their corresponding device nodes.      *      * This is not trivial.      */
 comment|/*      * XXX cross-reference our children to attached devices on the child bus      *     via _ADR, so we can provide power management.      */
 comment|/* XXX implement */
 name|return_VALUE
@@ -1042,7 +1110,7 @@ name|acpi_pcib_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|PCI_ROUTING_TABLE
+name|ACPI_PCI_ROUTING_TABLE
 modifier|*
 name|prt
 decl_stmt|;
@@ -1092,7 +1160,7 @@ decl_stmt|;
 name|uintptr_t
 name|up
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -1236,7 +1304,7 @@ block|{
 name|prt
 operator|=
 operator|(
-name|PCI_ROUTING_TABLE
+name|ACPI_PCI_ROUTING_TABLE
 operator|*
 operator|)
 name|prtp
@@ -1514,17 +1582,21 @@ name|out
 goto|;
 block|}
 comment|/*      * Get the current and possible resources for the interrupt link device.      */
+name|crsbuf
+operator|.
+name|Length
+operator|=
+name|ACPI_ALLOCATE_BUFFER
+expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE
 argument_list|(
 name|status
 operator|=
-name|acpi_GetIntoBuffer
+name|AcpiGetCurrentResources
 argument_list|(
 name|lnkdev
-argument_list|,
-name|AcpiGetCurrentResources
 argument_list|,
 operator|&
 name|crsbuf
@@ -1551,23 +1623,26 @@ name|out
 goto|;
 comment|/* this is fatal */
 block|}
+name|prsbuf
+operator|.
+name|Length
+operator|=
+name|ACPI_ALLOCATE_BUFFER
+expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|status
 operator|=
-name|acpi_GetIntoBuffer
+name|AcpiGetCurrentResources
 argument_list|(
 name|lnkdev
-argument_list|,
-name|AcpiGetPossibleResources
 argument_list|,
 operator|&
 name|prsbuf
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|device_printf
@@ -1978,7 +2053,7 @@ name|resbuf
 operator|.
 name|Length
 operator|=
-name|SIZEOF_RESOURCE
+name|ACPI_SIZEOF_RESOURCE
 argument_list|(
 name|ACPI_RESOURCE_IRQ
 argument_list|)
