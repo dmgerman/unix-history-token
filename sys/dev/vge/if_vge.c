@@ -5084,11 +5084,6 @@ operator|->
 name|vge_parent_tag
 argument_list|)
 expr_stmt|;
-name|VGE_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
