@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mt.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mt.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"proc.h"
 end_include
 
 begin_include
@@ -256,10 +262,8 @@ name|int
 name|sc_i_mtds
 decl_stmt|;
 comment|/* mtds at slave attach time */
-name|struct
-name|tty
-modifier|*
-name|sc_ttyp
+name|caddr_t
+name|sc_ctty
 decl_stmt|;
 comment|/* record user's tty for errors */
 name|int
@@ -1065,11 +1069,30 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 operator|=
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|u
 operator|.
-name|u_ttyp
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|SCTTY
+condition|?
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_session
+operator|->
+name|s_ttyp
+else|:
+literal|0
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2647,7 +2670,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"mu%d: offline\n"
 argument_list|,
@@ -2690,7 +2713,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"mu%d: offline (port selector)\n"
 argument_list|,
@@ -2717,7 +2740,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"mu%d: no write ring\n"
 argument_list|,
@@ -2790,7 +2813,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"mu%d: rn=%d bn=%d unreadable record\n"
 argument_list|,
@@ -2825,7 +2848,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"\ mu%d: hard error (data transfer) rn=%d bn=%d mbsr=%b er=0%o ds=%b\n"
 argument_list|,
@@ -3346,7 +3369,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"mu%d: blank tape\n"
 argument_list|,
@@ -3502,7 +3525,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"mu%d: no write ring\n"
 argument_list|,
@@ -3575,7 +3598,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"mu%d: offline\n"
 argument_list|,
@@ -3622,7 +3645,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"mu%d: offline (port selector)\n"
 argument_list|,
@@ -3673,7 +3696,7 @@ name|tprintf
 argument_list|(
 name|sc
 operator|->
-name|sc_ttyp
+name|sc_ctty
 argument_list|,
 literal|"\ mu%d: hard error (non data transfer) rn=%d bn=%d er=0%o ds=%b\n"
 argument_list|,
