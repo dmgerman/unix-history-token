@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	5.3 (Berkeley) %G%"
+literal|"@(#)recvjob.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,8 +73,10 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
 name|dfname
+index|[
+literal|40
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -923,14 +925,19 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|strcpy
+argument_list|(
+name|dfname
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
 name|readfile
 argument_list|(
 name|dfname
-operator|=
-name|cp
 argument_list|,
 name|size
 argument_list|)
@@ -1518,6 +1525,9 @@ expr_stmt|;
 if|if
 condition|(
 name|dfname
+index|[
+literal|0
+index|]
 condition|)
 do|do
 block|{
@@ -1560,6 +1570,13 @@ operator|!=
 literal|'d'
 condition|)
 do|;
+name|dfname
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 block|}
 end_block
 
