@@ -502,7 +502,7 @@ literal|1
 argument_list|,
 name|SCORE_X
 argument_list|,
-literal|"|                                       |"
+literal|"|                 YOU                   |"
 argument_list|)
 expr_stmt|;
 name|mvaddstr
@@ -568,7 +568,7 @@ literal|7
 argument_list|,
 name|SCORE_X
 argument_list|,
-literal|"|                                       |"
+literal|"|                  ME                   |"
 argument_list|)
 expr_stmt|;
 name|mvaddstr
@@ -582,6 +582,44 @@ argument_list|,
 literal|"+---------------------------------------+"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pgames
+operator|||
+name|cgames
+condition|)
+block|{
+name|mvprintw
+argument_list|(
+name|SCORE_Y
+operator|+
+literal|1
+argument_list|,
+name|SCORE_X
+operator|+
+literal|28
+argument_list|,
+literal|"Games: %3d"
+argument_list|,
+name|pgames
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|SCORE_Y
+operator|+
+literal|7
+argument_list|,
+name|SCORE_X
+operator|+
+literal|28
+argument_list|,
+literal|"Games: %3d"
+argument_list|,
+name|cgames
+argument_list|)
+expr_stmt|;
+block|}
 name|Lastscore
 index|[
 literal|0
