@@ -1162,52 +1162,12 @@ operator|=
 name|splclock
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|EXT_CLOCK
-comment|/* 	 * The microtime() external clock routine returns a 	 * status code. If less than zero, we declare an error 	 * in the clock status word and return the kernel 	 * (software) time variable. While there are other 	 * places that call microtime(), this is the only place 	 * that matters from an application point of view. 	 */
-if|if
-condition|(
-name|microtime
-argument_list|(
-operator|&
-name|atv
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|time_status
-operator||=
-name|STA_CLOCKERR
-expr_stmt|;
-name|ntv
-operator|.
-name|time
-operator|=
-name|time
-expr_stmt|;
-block|}
-else|else
-block|{
-name|time_status
-operator|&=
-operator|~
-name|STA_CLOCKERR
-expr_stmt|;
-block|}
-else|#
-directive|else
-comment|/* EXT_CLOCK */
 name|microtime
 argument_list|(
 operator|&
 name|atv
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* EXT_CLOCK */
 name|ntv
 operator|.
 name|time
@@ -1908,7 +1868,7 @@ name|PPS_SYNC
 end_ifdef
 
 begin_comment
-comment|/* We need this ugly monster twice, so lets macroize it... */
+comment|/* We need this ugly monster twice, so let's macroize it. */
 end_comment
 
 begin_define
