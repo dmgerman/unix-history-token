@@ -23,7 +23,9 @@ end_include
 
 begin_function_decl
 specifier|static
-name|void
+name|struct
+name|kse_mailbox
+modifier|*
 name|resume_common
 parameter_list|(
 name|struct
@@ -73,6 +75,11 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
+name|struct
+name|kse_mailbox
+modifier|*
+name|kmbx
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -104,6 +111,8 @@ argument_list|,
 name|thread
 argument_list|)
 expr_stmt|;
+name|kmbx
+operator|=
 name|resume_common
 argument_list|(
 name|thread
@@ -121,6 +130,17 @@ argument_list|(
 name|curthread
 argument_list|,
 name|thread
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kmbx
+operator|!=
+name|NULL
+condition|)
+name|kse_wakeup
+argument_list|(
+name|kmbx
 argument_list|)
 expr_stmt|;
 block|}
@@ -151,6 +171,11 @@ name|struct
 name|pthread
 modifier|*
 name|thread
+decl_stmt|;
+name|struct
+name|kse_mailbox
+modifier|*
+name|kmbx
 decl_stmt|;
 name|kse_critical_t
 name|crit
@@ -194,6 +219,8 @@ argument_list|,
 name|thread
 argument_list|)
 expr_stmt|;
+name|kmbx
+operator|=
 name|resume_common
 argument_list|(
 name|thread
@@ -204,6 +231,17 @@ argument_list|(
 name|curthread
 argument_list|,
 name|thread
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kmbx
+operator|!=
+name|NULL
+condition|)
+name|kse_wakeup
+argument_list|(
+name|kmbx
 argument_list|)
 expr_stmt|;
 block|}
@@ -229,7 +267,9 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|struct
+name|kse_mailbox
+modifier|*
 name|resume_common
 parameter_list|(
 name|struct
@@ -255,11 +295,20 @@ name|state
 operator|==
 name|PS_SUSPENDED
 condition|)
+return|return
+operator|(
 name|_thr_setrunnable_unlocked
 argument_list|(
 name|thread
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
+else|else
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 

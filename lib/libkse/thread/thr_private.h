@@ -3410,7 +3410,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|struct
+name|kse_mailbox
+modifier|*
 name|_thr_setrunnable_unlocked
 parameter_list|(
 name|struct
@@ -3422,7 +3424,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|struct
+name|kse_mailbox
+modifier|*
 name|_thr_sig_add
 parameter_list|(
 name|struct

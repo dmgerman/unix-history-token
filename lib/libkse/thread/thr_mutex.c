@@ -146,7 +146,9 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
+name|struct
+name|kse_mailbox
+modifier|*
 name|mutex_handoff
 parameter_list|(
 name|struct
@@ -3159,6 +3161,13 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
+name|struct
+name|kse_mailbox
+modifier|*
+name|kmbx
+init|=
+name|NULL
+decl_stmt|;
 name|int
 name|ret
 init|=
@@ -3318,6 +3327,8 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Hand off the mutex to the next waiting 				 * thread: 				 */
+name|kmbx
+operator|=
 name|mutex_handoff
 argument_list|(
 name|curthread
@@ -3487,6 +3498,8 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Hand off the mutex to the next waiting 				 * thread: 				 */
+name|kmbx
+operator|=
 name|mutex_handoff
 argument_list|(
 name|curthread
@@ -3649,6 +3662,8 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Hand off the mutex to the next waiting 				 * thread: 				 */
+name|kmbx
+operator|=
 name|mutex_handoff
 argument_list|(
 name|curthread
@@ -3703,6 +3718,17 @@ name|m
 operator|)
 operator|->
 name|m_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kmbx
+operator|!=
+name|NULL
+condition|)
+name|kse_wakeup
+argument_list|(
+name|kmbx
 argument_list|)
 expr_stmt|;
 block|}
@@ -4784,7 +4810,9 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|struct
+name|kse_mailbox
+modifier|*
 name|mutex_handoff
 parameter_list|(
 name|struct
@@ -4798,6 +4826,13 @@ modifier|*
 name|mutex
 parameter_list|)
 block|{
+name|struct
+name|kse_mailbox
+modifier|*
+name|kmbx
+init|=
+name|NULL
+decl_stmt|;
 name|struct
 name|pthread
 modifier|*
@@ -5030,6 +5065,8 @@ block|}
 break|break;
 block|}
 comment|/* Make the thread runnable and unlock the scheduling queue: */
+name|kmbx
+operator|=
 name|_thr_setrunnable_unlocked
 argument_list|(
 name|pthread
@@ -5116,6 +5153,11 @@ name|m_prio
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+name|kmbx
+operator|)
+return|;
 block|}
 end_function
 
