@@ -71,16 +71,12 @@ begin_decl_stmt
 name|DBM
 modifier|*
 name|_pw_db
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|_pw_stayopen
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -125,7 +121,7 @@ operator|)
 return|;
 name|key
 operator|=
-name|dbmfetch
+name|dbm_fetch
 argument_list|(
 name|_pw_db
 argument_list|,
@@ -297,7 +293,7 @@ operator|&&
 operator|(
 name|_pw_db
 operator|=
-name|ndbmopen
+name|dbm_open
 argument_list|(
 name|PASSWD
 argument_list|,
@@ -351,7 +347,7 @@ name|flock
 argument_list|(
 name|_pw_db
 operator|->
-name|db_dirf
+name|dbm_dirf
 argument_list|,
 name|LOCK_SH
 argument_list|)
@@ -359,7 +355,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|ndbmclose
+name|dbm_close
 argument_list|(
 name|_pw_db
 argument_list|)
@@ -405,7 +401,7 @@ name|flock
 argument_list|(
 name|_pw_db
 operator|->
-name|db_dirf
+name|dbm_dirf
 argument_list|,
 name|LOCK_UN
 argument_list|)
@@ -416,7 +412,7 @@ operator|!
 name|_pw_stayopen
 condition|)
 block|{
-name|ndbmclose
+name|dbm_close
 argument_list|(
 name|_pw_db
 argument_list|)
@@ -472,7 +468,7 @@ operator|&&
 operator|(
 name|_pw_db
 operator|=
-name|ndbmopen
+name|dbm_open
 argument_list|(
 name|PASSWD
 argument_list|,
@@ -523,7 +519,7 @@ name|flock
 argument_list|(
 name|_pw_db
 operator|->
-name|db_dirf
+name|dbm_dirf
 argument_list|,
 name|LOCK_SH
 argument_list|)
@@ -531,7 +527,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|ndbmclose
+name|dbm_close
 argument_list|(
 name|_pw_db
 argument_list|)
@@ -580,7 +576,7 @@ name|flock
 argument_list|(
 name|_pw_db
 operator|->
-name|db_dirf
+name|dbm_dirf
 argument_list|,
 name|LOCK_UN
 argument_list|)
@@ -591,7 +587,7 @@ operator|!
 name|_pw_stayopen
 condition|)
 block|{
-name|ndbmclose
+name|dbm_close
 argument_list|(
 name|_pw_db
 argument_list|)
