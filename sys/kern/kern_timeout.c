@@ -657,6 +657,12 @@ operator|>
 name|maxdt
 condition|)
 block|{
+name|maxdt
+operator|=
+name|bt2
+operator|.
+name|frac
+expr_stmt|;
 name|bintime2timespec
 argument_list|(
 operator|&
@@ -668,7 +674,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Expensive timeout(9) function: %p(%p) %d.%09ld\n"
+literal|"Expensive timeout(9) function: %p(%p) %d.%09ld s\n"
 argument_list|,
 name|c_func
 argument_list|,
