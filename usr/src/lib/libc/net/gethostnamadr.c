@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.47 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,13 +822,7 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|cp
-operator|+=
-name|n
-expr_stmt|;
-continue|continue;
-block|}
+break|break;
 name|cp
 operator|+=
 name|n
