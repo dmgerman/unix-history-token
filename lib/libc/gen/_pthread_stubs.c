@@ -113,13 +113,10 @@ value|(pthread_func_t)entry, (pthread_func_t)entry
 end_define
 
 begin_decl_stmt
-name|pthread_func_t
+name|pthread_func_entry_t
 name|__thr_jtable
 index|[
 name|PJT_MAX
-index|]
-index|[
-literal|2
 index|]
 init|=
 block|{

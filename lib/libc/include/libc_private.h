@@ -173,10 +173,19 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|pthread_func_t
+name|pthread_func_entry_t
+index|[
+literal|2
+index|]
+typedef|;
+end_typedef
+
 begin_decl_stmt
 specifier|extern
-name|pthread_func_t
-modifier|*
+name|pthread_func_entry_t
 name|__thr_jtable
 index|[]
 decl_stmt|;
