@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/fpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -636,6 +642,11 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
+name|ia64_set_fpsr
+argument_list|(
+name|IA64_FPSR_DEFAULT
+argument_list|)
+expr_stmt|;
 name|td
 operator|=
 name|curthread
