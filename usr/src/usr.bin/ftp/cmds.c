@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.26 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7548,6 +7548,7 @@ condition|)
 block|{
 name|blkfree
 argument_list|(
+operator|*
 name|globbed
 argument_list|)
 expr_stmt|;
@@ -7557,6 +7558,7 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|*
 name|globbed
 argument_list|)
 expr_stmt|;
