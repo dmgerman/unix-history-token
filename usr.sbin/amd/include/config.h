@@ -2545,12 +2545,9 @@ begin_comment
 comment|/* Define name of host machine's cpu (eg. sparc) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HOST_CPU
-value|"i386"
-end_define
+begin_comment
+comment|/* #define HOST_CPU "i386" */
+end_comment
 
 begin_comment
 comment|/* Define name of host machine's architecture (eg. sun4) */
