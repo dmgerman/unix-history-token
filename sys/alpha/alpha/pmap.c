@@ -11481,7 +11481,7 @@ begin_function
 name|void
 name|pmap_unmapdev
 parameter_list|(
-name|pa
+name|va
 parameter_list|,
 name|size
 parameter_list|)
