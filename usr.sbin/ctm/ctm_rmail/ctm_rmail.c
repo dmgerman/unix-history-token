@@ -831,6 +831,12 @@ literal|1000
 index|]
 decl_stmt|;
 name|char
+name|tname
+index|[
+literal|1000
+index|]
+decl_stmt|;
+name|char
 name|junk
 index|[
 literal|2
@@ -955,6 +961,15 @@ argument_list|,
 name|npieces
 argument_list|)
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|tname
+argument_list|,
+literal|"tmp.%s"
+argument_list|,
+name|pname
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -962,7 +977,7 @@ name|ofp
 operator|=
 name|fopen
 argument_list|(
-name|pname
+name|tname
 argument_list|,
 literal|"w"
 argument_list|)
@@ -975,7 +990,7 @@ name|err
 argument_list|(
 literal|"cannot open '%s' for writing"
 argument_list|,
-name|pname
+name|tname
 argument_list|)
 expr_stmt|;
 name|status
@@ -1042,7 +1057,7 @@ name|err
 argument_list|(
 literal|"error writing %s"
 argument_list|,
-name|pname
+name|tname
 argument_list|)
 expr_stmt|;
 if|if
@@ -1082,7 +1097,38 @@ argument_list|)
 expr_stmt|;
 name|unlink
 argument_list|(
+name|tname
+argument_list|)
+expr_stmt|;
+name|status
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|rename
+argument_list|(
+name|tname
+argument_list|,
 name|pname
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|err
+argument_list|(
+literal|"error renaming %s to %s"
+argument_list|,
+name|tname
+argument_list|,
+name|pname
+argument_list|)
+expr_stmt|;
+name|unlink
+argument_list|(
+name|tname
 argument_list|)
 expr_stmt|;
 name|status
