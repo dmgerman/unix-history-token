@@ -33,7 +33,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -411,8 +411,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|WizWord
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -1695,20 +1693,10 @@ argument_list|,
 name|seed
 argument_list|)
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
-name|message
-argument_list|(
-literal|"500"
-argument_list|,
-literal|"You are no wizard!"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
 name|IsWiz
 operator|=
 name|TRUE
@@ -1718,6 +1706,16 @@ argument_list|(
 literal|"200"
 argument_list|,
 literal|"Please pass, oh mighty wizard"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+name|message
+argument_list|(
+literal|"500"
+argument_list|,
+literal|"You are no wizard!"
 argument_list|)
 expr_stmt|;
 break|break;
