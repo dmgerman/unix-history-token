@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.127 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.128 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4952,6 +4952,194 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* **  Amdahl UTS System V 2.1.5 (SVr3-based) ** **    From: Janet Jackson<janet@dialix.oz.au>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_UTS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/sysmacros.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|HASLSTAT
+end_undef
+
+begin_comment
+comment|/* has symlinks, but they cause problems */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDFSYNC
+value|1
+end_define
+
+begin_comment
+comment|/* system fsync(2) fails on non-EFS filesys */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS5SIGNALS
+value|1
+end_define
+
+begin_comment
+comment|/* System V signal semantics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS5SETPGRP
+value|1
+end_define
+
+begin_comment
+comment|/* use System V setpgrp(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUNAME
+value|1
+end_define
+
+begin_comment
+comment|/* use System V uname(2) system call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) function */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETVBUF
+value|1
+end_define
+
+begin_comment
+comment|/* has setvbuf(3) function */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSIGSETMASK
+value|0
+end_define
+
+begin_comment
+comment|/* does not have sigsetmask(2) function */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASGETUSERSHELL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* does not have getusershell(3) function */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
+end_define
+
+begin_comment
+comment|/* type of 2nd arg to getgroups(2) isn't int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_ZERO
+end_define
+
+begin_comment
+comment|/* doesn't have load average */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_4ARGS
+end_define
+
+begin_comment
+comment|/* use 4-arg statfs() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/unix"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/********************************************************************** **  End of Per-Operating System defines **********************************************************************/
 end_comment
 
@@ -5670,6 +5858,51 @@ end_define
 begin_comment
 comment|/* assume newer version of newdb */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* heuristic setting of HASSETSIGMASK; can override above */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASSIGSETMASK
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGVTALRM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASSETSIGMASK
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|HASSETSIGMASK
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.8 (Berkeley) %G%"
+literal|"@(#)clock.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -698,9 +698,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-ifdef|#
-directive|ifdef
-name|SIGVTALRM
+if|#
+directive|if
+name|HASSIGSETMASK
 comment|/* reset 4.2bsd signal mask to allow future alarms */
 operator|(
 name|void
@@ -721,7 +721,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* SIGVTALRM */
+comment|/* HASSIGSETMASK */
 endif|#
 directive|endif
 comment|/* SIG_UNBLOCK */
