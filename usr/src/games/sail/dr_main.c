@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dr_main.c	5.1 (Berkeley) %G%"
+literal|"@(#)dr_main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -343,6 +343,10 @@ operator|=
 name|cc
 operator|->
 name|winddir
+expr_stmt|;
+name|people
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
