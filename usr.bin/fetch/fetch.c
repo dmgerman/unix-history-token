@@ -2932,6 +2932,10 @@ operator|&&
 operator|!
 name|o_stdout
 operator|&&
+name|of
+operator|!=
+name|NULL
+operator|&&
 operator|(
 name|stat
 argument_list|(
