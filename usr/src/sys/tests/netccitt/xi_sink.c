@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xi_sink.c	7.5 (Berkeley) %G%"
+literal|"@(#)xi_sink.c	7.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,6 +129,31 @@ name|dbprintf
 value|if(verbose)printf
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|try
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|{x = (a b); dbprintf("%s%s returns %d\n",c,#a,x);\ 		if(x<0) {perror(#a); myexit(0);}}
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -142,6 +167,11 @@ name|c
 parameter_list|)
 value|{x = (a b); dbprintf("%s%s returns %d\n",c,"a",x);\ 		if(x<0) {perror("a"); myexit(0);}}
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -427,7 +457,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|tisink
+name|xisink
 argument_list|()
 expr_stmt|;
 block|}
@@ -457,27 +487,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+name|name
+index|[
+name|MIDLIN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|iovec
 name|iov
 index|[
 literal|1
-index|]
-init|=
-block|{
-name|readbuf
-block|,
-sizeof|sizeof
-name|readbuf
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|name
-index|[
-name|MIDLIN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -530,12 +553,9 @@ name|msghdr
 name|msghdr
 init|=
 block|{
-name|name
+literal|0
 block|,
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
+literal|0
 block|,
 name|iov
 block|,
@@ -552,21 +572,17 @@ literal|1
 index|]
 argument_list|)
 block|,
-name|control
-block|,
-sizeof|sizeof
-argument_list|(
-name|control
-argument_list|)
+literal|0
 block|,
 literal|0
-comment|/* flags */
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|tisink
+name|xisink
 argument_list|()
 end_macro
 
@@ -688,6 +704,11 @@ argument_list|,
 operator|(
 name|s
 operator|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|faddr
 operator|,
@@ -734,6 +755,11 @@ argument_list|,
 operator|(
 name|ns
 operator|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|faddr
 operator|,
@@ -820,18 +846,18 @@ control|)
 block|{
 name|msghdr
 operator|.
-name|msg_iovlen
-operator|=
-literal|1
-expr_stmt|;
-name|msghdr
-operator|.
 name|msg_controllen
 operator|=
 sizeof|sizeof
 argument_list|(
 name|control
 argument_list|)
+expr_stmt|;
+name|msghdr
+operator|.
+name|msg_control
+operator|=
+name|control
 expr_stmt|;
 name|iov
 operator|->
@@ -841,6 +867,12 @@ sizeof|sizeof
 argument_list|(
 name|readbuf
 argument_list|)
+expr_stmt|;
+name|iov
+operator|->
+name|iov_base
+operator|=
+name|readbuf
 expr_stmt|;
 name|n
 operator|=
@@ -1039,8 +1071,6 @@ name|void
 name|savedata
 parameter_list|(
 name|n
-parameter_list|,
-name|flags
 parameter_list|)
 name|int
 name|n
@@ -1092,7 +1122,26 @@ name|s
 operator|->
 name|s_flags
 operator|=
-name|flags
+name|msghdr
+operator|.
+name|msg_flags
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|readbuf
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|s
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|n
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1130,9 +1179,9 @@ literal|0
 expr_stmt|;
 name|msghdr
 operator|.
-name|msg_iovlen
+name|msg_control
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -1149,6 +1198,20 @@ operator|=
 name|s
 operator|->
 name|s_n
+expr_stmt|;
+name|iov
+operator|->
+name|iov_base
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|s
+operator|+
+literal|1
+operator|)
 expr_stmt|;
 name|n
 operator|=
