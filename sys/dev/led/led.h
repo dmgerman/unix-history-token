@@ -67,7 +67,6 @@ name|void
 name|led_destroy
 parameter_list|(
 name|dev_t
-modifier|*
 name|dev
 parameter_list|)
 function_decl|;
