@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	5.6 (Berkeley) %G%"
+literal|"@(#)eval.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1923,6 +1923,15 @@ condition|)
 block|{
 name|ilevel
 operator|++
+expr_stmt|;
+name|bbase
+index|[
+name|ilevel
+index|]
+operator|=
+name|bufbase
+operator|=
+name|bp
 expr_stmt|;
 return|return
 operator|(

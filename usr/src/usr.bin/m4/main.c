@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.7 (Berkeley) %G%"
+literal|"@(#)main.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,6 +122,33 @@ end_decl_stmt
 
 begin_comment
 comment|/* push-back buffer	       */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|bufbase
+init|=
+name|buf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the base for current ilevel */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|bbase
+index|[
+name|MAXINP
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the base for each ilevel    */
 end_comment
 
 begin_decl_stmt
@@ -779,6 +806,13 @@ name|_PATH_DIVNAME
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bbase
+index|[
+literal|0
+index|]
+operator|=
+name|bufbase
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -890,6 +924,13 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* in case m4wrap includes.. */
+name|bufbase
+operator|=
+name|bp
+operator|=
+name|buf
+expr_stmt|;
+comment|/* use the entire buffer   */
 name|putback
 argument_list|(
 name|EOF
@@ -1243,6 +1284,13 @@ operator|+
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+name|bufbase
+operator|=
+name|bbase
+index|[
+name|ilevel
+index|]
 expr_stmt|;
 continue|continue;
 block|}
