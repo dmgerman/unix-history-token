@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|3.7
+literal|3.8
 operator|%
 name|G
 operator|%
@@ -1038,6 +1038,8 @@ argument_list|,
 name|tm
 operator|->
 name|tm_mon
+operator|+
+literal|1
 argument_list|,
 name|tm
 operator|->
@@ -1140,16 +1142,6 @@ argument_list|(
 literal|'b'
 argument_list|,
 name|p
-argument_list|,
-name|CurEnv
-argument_list|)
-expr_stmt|;
-comment|/* version */
-name|define
-argument_list|(
-literal|'v'
-argument_list|,
-name|Version
 argument_list|,
 name|CurEnv
 argument_list|)

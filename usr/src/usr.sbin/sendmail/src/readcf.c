@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.54
+literal|3.55
 operator|%
 name|G
 operator|%
@@ -111,6 +111,12 @@ specifier|extern
 name|char
 modifier|*
 name|fgetfolded
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|munchstring
 parameter_list|()
 function_decl|;
 name|cf
@@ -484,11 +490,14 @@ index|]
 argument_list|,
 name|newstr
 argument_list|(
+name|munchstring
+argument_list|(
 operator|&
 name|buf
 index|[
 literal|2
 index|]
+argument_list|)
 argument_list|)
 argument_list|,
 name|CurEnv

@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.155
+literal|3.156
 operator|%
 name|G
 operator|%
@@ -657,11 +657,19 @@ name|NULL
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* initialize some macros, etc. */
+end_comment
+
 begin_expr_stmt
 name|initmacros
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* hostname */
+end_comment
 
 begin_expr_stmt
 name|av
@@ -732,6 +740,41 @@ operator|++
 argument_list|)
 expr_stmt|;
 end_while
+
+begin_comment
+comment|/* version */
+end_comment
+
+begin_expr_stmt
+name|define
+argument_list|(
+literal|'v'
+argument_list|,
+name|Version
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* current time */
+end_comment
+
+begin_expr_stmt
+name|define
+argument_list|(
+literal|'b'
+argument_list|,
+name|arpadate
+argument_list|(
+name|NULL
+argument_list|)
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 	** Crack argv. 	*/
