@@ -12,8 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"lp.cdefs.h"
 end_include
+
+begin_comment
+comment|/* A cross-platform version of<sys/cdefs.h> */
+end_comment
 
 begin_comment
 comment|/*  * Options for setup_myprinter().  */
