@@ -1276,15 +1276,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/* ALTQ */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALTQ
+end_ifdef
 
 begin_define
 define|#
