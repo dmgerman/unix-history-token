@@ -484,6 +484,20 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|device_suspend
+argument_list|,
+name|bus_generic_suspend
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|bus_generic_resume
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|device_shutdown
 argument_list|,
 name|bus_generic_shutdown
@@ -537,29 +551,6 @@ block|,
 literal|"S3200"
 block|,
 literal|"Unknown"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|maxrec
-index|[
-literal|6
-index|]
-init|=
-block|{
-literal|512
-block|,
-literal|1024
-block|,
-literal|2048
-block|,
-literal|4096
-block|,
-literal|8192
-block|,
-literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1904,9 +1895,12 @@ name|send
 operator|.
 name|len
 operator|>
+name|MAXREC
+argument_list|(
 name|fc
 operator|->
 name|maxrec
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -2133,16 +2127,13 @@ name|maxq
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s:Discard a packet (queued=%d)\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|fc
 operator|->
-name|dev
-argument_list|)
+name|bdev
+argument_list|,
+literal|"Discard a packet (queued=%d)\n"
 argument_list|,
 name|xferq
 operator|->
@@ -2652,14 +2643,6 @@ operator|->
 name|fc
 operator|=
 name|fc
-expr_stmt|;
-name|sc
-operator|->
-name|fc
-operator|->
-name|dev
-operator|=
-name|dev
 expr_stmt|;
 name|unitmask
 operator|=
@@ -6381,16 +6364,13 @@ name|self_id_count
 operator|++
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"%s: %d nodes"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|fc
 operator|->
-name|dev
-argument_list|)
+name|bdev
+argument_list|,
+literal|"%d nodes"
 argument_list|,
 name|fc
 operator|->
@@ -6754,16 +6734,13 @@ name|status
 operator|=
 name|FWBUSMGRDONE
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: BMR = %x\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|fc
 operator|->
-name|dev
-argument_list|)
+name|bdev
+argument_list|,
+literal|"BMR = %x\n"
 argument_list|,
 name|CSRARC
 argument_list|(
@@ -7598,7 +7575,7 @@ name|device_printf
 argument_list|(
 name|fc
 operator|->
-name|dev
+name|bdev
 argument_list|,
 literal|"New %s device ID:%08x%08x\n"
 argument_list|,
@@ -9417,6 +9394,11 @@ name|firewire_dev_comm
 modifier|*
 name|fdc
 decl_stmt|;
+name|u_int32_t
+name|spec
+decl_stmt|,
+name|ver
+decl_stmt|;
 for|for
 control|(
 name|fwdev
@@ -9452,8 +9434,6 @@ operator|==
 name|FWDEVINIT
 condition|)
 block|{
-name|fwdev
-operator|->
 name|spec
 operator|=
 name|getcsrdata
@@ -9465,15 +9445,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fwdev
-operator|->
 name|spec
 operator|==
 literal|0
 condition|)
 continue|continue;
-name|fwdev
-operator|->
 name|ver
 operator|=
 name|getcsrdata
@@ -9485,8 +9461,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fwdev
-operator|->
 name|ver
 operator|==
 literal|0
@@ -9513,15 +9487,13 @@ name|device_printf
 argument_list|(
 name|fc
 operator|->
-name|dev
+name|bdev
 argument_list|,
 literal|"Device "
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|fwdev
-operator|->
 name|spec
 condition|)
 block|{
@@ -9530,8 +9502,6 @@ name|CSRVAL_ANSIT10
 case|:
 switch|switch
 condition|(
-name|fwdev
-operator|->
 name|ver
 condition|)
 block|{
@@ -9553,8 +9523,6 @@ name|CSRVAL_1394TA
 case|:
 switch|switch
 condition|(
-name|fwdev
-operator|->
 name|ver
 condition|)
 block|{
@@ -10940,16 +10908,13 @@ operator|->
 name|maxq
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s:Discard a packet %x %d\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|fc
 operator|->
-name|dev
-argument_list|)
+name|bdev
+argument_list|,
+literal|"Discard a packet %x %d\n"
 argument_list|,
 name|bind
 operator|->
@@ -11457,16 +11422,13 @@ operator|&
 literal|0x3f
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: new bus manager %d "
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|fc
 operator|->
-name|dev
-argument_list|)
+name|bdev
+argument_list|,
+literal|"new bus manager %d "
 argument_list|,
 name|CSRARC
 argument_list|(

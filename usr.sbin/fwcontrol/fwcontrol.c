@@ -88,6 +88,7 @@ file|<unistd.h>
 end_include
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -97,7 +98,7 @@ block|{
 name|printf
 argument_list|(
 literal|"fwcontrol [-g gap_count] [-b pri_req] [-c node]"
-literal|" [-r] [-t] [-s] [-d node] [-l file]\n"
+literal|" [-r] [-t] [-d node] [-l file]\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -127,11 +128,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t-s: read speed map\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"\t-d: hex dump of configuration ROM\n"
 argument_list|)
 expr_stmt|;
@@ -149,6 +145,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|get_num_of_dev
 parameter_list|(
@@ -193,6 +190,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|list_dev
 parameter_list|(
@@ -284,6 +282,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int32_t
 name|read_write_quad
 parameter_list|(
@@ -516,6 +515,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|send_phy_config
 parameter_list|(
@@ -728,6 +728,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_pri_req
 parameter_list|(
@@ -923,6 +924,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|parse_bus_info_block
 parameter_list|(
@@ -967,6 +969,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_crom
 parameter_list|(
@@ -1123,14 +1126,15 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|show_crom
-argument_list|(
-argument|u_int32_t *crom_buf
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|u_int32_t
+modifier|*
+name|crom_buf
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1278,6 +1282,15 @@ operator|->
 name|crc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dir
+operator|->
+name|crc_len
+operator|<
+literal|1
+condition|)
+return|return;
 while|while
 condition|(
 name|cc
@@ -1374,7 +1387,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -1383,14 +1396,15 @@ name|DUMP_FORMAT
 value|"%08x %08x %08x %08x %08x %08x %08x %08x\n"
 end_define
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|dump_crom
-argument_list|(
-argument|u_int32_t *p
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|u_int32_t
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|int
 name|len
@@ -1470,18 +1484,21 @@ literal|8
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|load_crom
-argument_list|(
-argument|char *filename
-argument_list|,
-argument|u_int32_t *p
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -1579,7 +1596,7 @@ literal|8
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -1877,135 +1894,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|void
-name|show_speed_map
-parameter_list|(
-name|int
-name|fd
-parameter_list|)
-block|{
-name|struct
-name|fw_speed_map
-modifier|*
-name|smap
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
-name|smap
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|fw_speed_map
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|smap
-operator|==
-name|NULL
-condition|)
-return|return;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|FW_GSPMAP
-argument_list|,
-operator|&
-name|smap
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"ioctl"
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"crc_len: %d generation:%d\n"
-argument_list|,
-name|smap
-operator|->
-name|crc_len
-argument_list|,
-name|smap
-operator|->
-name|generation
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|64
-condition|;
-name|i
-operator|++
-control|)
-block|{
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-literal|64
-condition|;
-name|j
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"%d"
-argument_list|,
-name|smap
-operator|->
-name|speed
-index|[
-name|i
-index|]
-index|[
-name|j
-index|]
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-name|free
-argument_list|(
-name|smap
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|int
 name|main
 parameter_list|(
@@ -2092,7 +1980,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"g:b:rtsc:d:l:"
+literal|"g:b:rtc:d:l:"
 argument_list|)
 operator|)
 operator|!=
@@ -2181,15 +2069,6 @@ case|case
 literal|'t'
 case|:
 name|show_topology_map
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'s'
-case|:
-name|show_speed_map
 argument_list|(
 name|fd
 argument_list|)

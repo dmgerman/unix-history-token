@@ -202,6 +202,16 @@ end_struct
 begin_define
 define|#
 directive|define
+name|MAXREC
+parameter_list|(
+name|x
+parameter_list|)
+value|(2<< (x))
+end_define
+
+begin_define
+define|#
+directive|define
 name|FWPMAX_S400
 value|(2048 + 20)
 end_define
@@ -2115,13 +2125,6 @@ define|#
 directive|define
 name|FW_GTPMAP
 value|_IOR('S', 5, struct fw_topology_map)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FW_GSPMAP
-value|_IOW('S', 6, struct fw_speed_map *)
 end_define
 
 begin_define
