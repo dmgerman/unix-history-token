@@ -673,18 +673,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ed_get_Linksys
-name|__P
-argument_list|(
-operator|(
-name|device_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|ed_attach
 name|__P
 argument_list|(
