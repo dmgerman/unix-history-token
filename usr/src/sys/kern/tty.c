@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	6.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	6.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1666,13 +1666,6 @@ case|:
 case|case
 name|TIOCSWINSZ
 case|:
-define|#
-directive|define
-name|bit
-parameter_list|(
-name|a
-parameter_list|)
-value|(1<<(a-1))
 while|while
 condition|(
 name|tp
@@ -1717,7 +1710,7 @@ name|u_procp
 operator|->
 name|p_sigignore
 operator|&
-name|bit
+name|sigmask
 argument_list|(
 name|SIGTTOU
 argument_list|)
@@ -1731,7 +1724,7 @@ name|u_procp
 operator|->
 name|p_sigmask
 operator|&
-name|bit
+name|sigmask
 argument_list|(
 name|SIGTTOU
 argument_list|)
@@ -1763,9 +1756,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-undef|#
-directive|undef
-name|bit
 comment|/* 	 * Process the ioctl. 	 */
 switch|switch
 condition|(
@@ -5580,13 +5570,6 @@ name|EIO
 operator|)
 return|;
 comment|/* 	 * Hang process if it's in the background. 	 */
-define|#
-directive|define
-name|bit
-parameter_list|(
-name|a
-parameter_list|)
-value|(1<<(a-1))
 if|if
 condition|(
 name|tp
@@ -5615,7 +5598,7 @@ name|u_procp
 operator|->
 name|p_sigignore
 operator|&
-name|bit
+name|sigmask
 argument_list|(
 name|SIGTTIN
 argument_list|)
@@ -5628,7 +5611,7 @@ name|u_procp
 operator|->
 name|p_sigmask
 operator|&
-name|bit
+name|sigmask
 argument_list|(
 name|SIGTTIN
 argument_list|)
@@ -5679,9 +5662,6 @@ name|tp
 operator|->
 name|t_flags
 expr_stmt|;
-undef|#
-directive|undef
-name|bit
 comment|/* 	 * In raw mode take characters directly from the 	 * raw queue w/o processing.  Interlock against 	 * device interrupts when interrogating rawq. 	 */
 if|if
 condition|(
@@ -6200,13 +6180,6 @@ name|EIO
 operator|)
 return|;
 comment|/* 	 * Hang the process if it's in the background. 	 */
-define|#
-directive|define
-name|bit
-parameter_list|(
-name|a
-parameter_list|)
-value|(1<<(a-1))
 if|if
 condition|(
 name|u
@@ -6253,7 +6226,7 @@ name|u_procp
 operator|->
 name|p_sigignore
 operator|&
-name|bit
+name|sigmask
 argument_list|(
 name|SIGTTOU
 argument_list|)
@@ -6267,7 +6240,7 @@ name|u_procp
 operator|->
 name|p_sigmask
 operator|&
-name|bit
+name|sigmask
 argument_list|(
 name|SIGTTOU
 argument_list|)
@@ -6300,9 +6273,6 @@ goto|goto
 name|loop
 goto|;
 block|}
-undef|#
-directive|undef
-name|bit
 comment|/* 	 * Process the user's data in at most OBUFSIZ 	 * chunks.  Perform lower case simulation and 	 * similar hacks.  Keep track of high water 	 * mark, sleep on overflow awaiting device aid 	 * in acquiring new space. 	 */
 while|while
 condition|(
