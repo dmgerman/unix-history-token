@@ -151,7 +151,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * getpid - MP SAFE  */
+comment|/*  * getpid  */
+end_comment
+
+begin_comment
+comment|/*  * MPSAFE  */
 end_comment
 
 begin_comment
@@ -177,6 +181,12 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -224,6 +234,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -233,7 +249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * getppid - MP SAFE  */
+comment|/*  * getppid  */
 end_comment
 
 begin_ifndef
@@ -259,6 +275,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -281,6 +301,12 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -302,6 +328,12 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -338,6 +370,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|getpgrp
@@ -357,6 +393,12 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -369,6 +411,12 @@ operator|->
 name|p_pgrp
 operator|->
 name|pg_id
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -404,6 +452,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|getpgid
@@ -430,7 +482,15 @@ name|pt
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -469,9 +529,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
+block|{
+name|error
+operator|=
 name|ESRCH
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -491,11 +557,9 @@ argument_list|(
 name|pt
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 name|p
 operator|->
@@ -516,8 +580,18 @@ name|pt
 argument_list|)
 expr_stmt|;
 block|}
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
@@ -548,6 +622,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|getsid
@@ -574,7 +652,15 @@ name|pt
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -583,6 +669,7 @@ name|pid
 operator|==
 literal|0
 condition|)
+block|{
 name|p
 operator|->
 name|p_retval
@@ -596,6 +683,7 @@ name|p_session
 operator|->
 name|s_sid
 expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -613,9 +701,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
+block|{
+name|error
+operator|=
 name|ESRCH
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -635,11 +729,9 @@ argument_list|(
 name|pt
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 name|p
 operator|->
@@ -660,8 +752,18 @@ name|pt
 argument_list|)
 expr_stmt|;
 block|}
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
@@ -693,6 +795,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -715,6 +821,12 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -754,6 +866,12 @@ name|cr_uid
 expr_stmt|;
 endif|#
 directive|endif
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -811,6 +929,12 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -823,6 +947,12 @@ operator|->
 name|p_ucred
 operator|->
 name|cr_uid
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -859,6 +989,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -881,6 +1015,12 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -923,6 +1063,12 @@ index|]
 expr_stmt|;
 endif|#
 directive|endif
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -958,6 +1104,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -980,6 +1130,12 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -995,6 +1151,12 @@ name|cr_groups
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1030,6 +1192,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|getgroups
@@ -1054,17 +1220,27 @@ name|struct
 name|ucred
 modifier|*
 name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
 decl_stmt|;
 name|u_int
 name|ngrp
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|cred
+operator|=
+name|p
+operator|->
+name|p_ucred
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1089,11 +1265,13 @@ name|cred
 operator|->
 name|cr_ngroups
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 if|if
 condition|(
@@ -1103,11 +1281,15 @@ name|cred
 operator|->
 name|cr_ngroups
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|ngrp
 operator|=
 name|cred
@@ -1144,11 +1326,11 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 name|p
 operator|->
 name|p_retval
@@ -1158,9 +1340,17 @@ index|]
 operator|=
 name|ngrp
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -1189,6 +1379,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1212,6 +1406,15 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|int
+name|error
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -1230,11 +1433,10 @@ name|p_pid
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|error
+operator|=
 name|EPERM
-operator|)
-return|;
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1263,12 +1465,22 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -1302,6 +1514,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1357,6 +1573,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -1405,11 +1627,13 @@ argument_list|(
 name|targp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ESRCH
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 if|if
 condition|(
@@ -1430,11 +1654,9 @@ argument_list|(
 name|targp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 if|if
 condition|(
@@ -1458,11 +1680,13 @@ argument_list|(
 name|targp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EPERM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 if|if
 condition|(
@@ -1478,11 +1702,13 @@ argument_list|(
 name|targp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EACCES
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 block|}
 else|else
@@ -1511,11 +1737,13 @@ argument_list|(
 name|targp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EPERM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 if|if
 condition|(
@@ -1525,6 +1753,7 @@ name|pgid
 operator|==
 literal|0
 condition|)
+block|{
 name|uap
 operator|->
 name|pgid
@@ -1533,6 +1762,7 @@ name|targp
 operator|->
 name|p_pid
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1544,6 +1774,7 @@ name|targp
 operator|->
 name|p_pid
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1573,11 +1804,14 @@ argument_list|(
 name|targp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EPERM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 block|}
 comment|/* XXX: We should probably hold the lock across enterpgrp. */
 name|PROC_UNLOCK
@@ -1585,8 +1819,8 @@ argument_list|(
 name|targp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|enterpgrp
 argument_list|(
 name|targp
@@ -1597,6 +1831,18 @@ name|pgid
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -1635,6 +1881,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1670,6 +1920,8 @@ name|uid
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|uid
 operator|=
@@ -1682,6 +1934,12 @@ operator|=
 name|p
 operator|->
 name|p_ucred
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 comment|/* 	 * See if we have "permission" by POSIX 1003.1 rules. 	 * 	 * Note that setuid(geteuid()) is a special case of  	 * "appropriate privileges" in appendix B.4.2.2.  We need 	 * to use this clause to be compatible with traditional BSD 	 * semantics.  Basically, it means that "setuid(xx)" sets all 	 * three id's (assuming you have privs). 	 * 	 * Notes on the logic.  We do things in three steps. 	 * 1: We determine if the euid is going to change, and do EPERM 	 *    right away.  We unconditionally change the euid later if this 	 *    test is satisfied, simplifying that part of the logic. 	 * 2: We determine if the real and/or saved uid's are going to 	 *    change.  Determined by compile options. 	 * 3: Change euid last. (after tests in #2 for "appropriate privs") 	 */
 if|if
@@ -1731,11 +1989,9 @@ name|PRISON_ROOT
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|newcred
 operator|=
 name|crdup
@@ -1857,9 +2113,17 @@ argument_list|(
 name|oldcred
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -1886,6 +2150,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1923,12 +2191,20 @@ name|euid
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|euid
 operator|=
 name|uap
 operator|->
 name|euid
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|oldcred
 operator|=
@@ -1965,11 +2241,11 @@ name|PRISON_ROOT
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 comment|/* 	 * Everything's okay, do it.  Copy credentials so other references do 	 * not see our changes. 	 */
 name|newcred
 operator|=
@@ -2011,9 +2287,17 @@ argument_list|(
 name|oldcred
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -2040,6 +2324,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2077,12 +2365,20 @@ name|gid
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|gid
 operator|=
 name|uap
 operator|->
 name|gid
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|oldcred
 operator|=
@@ -2141,11 +2437,11 @@ name|PRISON_ROOT
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 name|newcred
 operator|=
 name|crdup
@@ -2273,9 +2569,17 @@ argument_list|(
 name|oldcred
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -2302,6 +2606,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2339,12 +2647,20 @@ name|egid
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|egid
 operator|=
 name|uap
 operator|->
 name|egid
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|oldcred
 operator|=
@@ -2381,11 +2697,11 @@ name|PRISON_ROOT
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 name|newcred
 operator|=
 name|crdup
@@ -2429,9 +2745,17 @@ argument_list|(
 name|oldcred
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -2462,6 +2786,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2500,6 +2828,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|ngrp
 operator|=
 name|uap
@@ -2527,22 +2861,24 @@ name|PRISON_ROOT
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 if|if
 condition|(
 name|ngrp
 operator|>
 name|NGROUPS
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 comment|/* 	 * XXX A little bit lazy here.  We could test if anything has 	 * changed before crcopy() and setting P_SUGID. 	 */
 name|newcred
 operator|=
@@ -2604,11 +2940,9 @@ argument_list|(
 name|newcred
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 name|newcred
 operator|->
@@ -2633,9 +2967,17 @@ argument_list|(
 name|oldcred
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -2665,6 +3007,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2705,6 +3051,8 @@ name|euid
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|ruid
 operator|=
@@ -2717,6 +3065,12 @@ operator|=
 name|uap
 operator|->
 name|euid
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|oldcred
 operator|=
@@ -2793,11 +3147,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 name|newcred
 operator|=
 name|crdup
@@ -2920,9 +3274,17 @@ argument_list|(
 name|oldcred
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -2952,6 +3314,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2992,6 +3358,8 @@ name|egid
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|rgid
 operator|=
@@ -3004,6 +3372,12 @@ operator|=
 name|uap
 operator|->
 name|egid
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|oldcred
 operator|=
@@ -3083,11 +3457,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 name|newcred
 operator|=
 name|crdup
@@ -3222,9 +3596,17 @@ argument_list|(
 name|oldcred
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -3261,6 +3643,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -3322,6 +3708,12 @@ name|uap
 operator|->
 name|suid
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|oldcred
 operator|=
 name|p
@@ -3431,11 +3823,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 name|newcred
 operator|=
 name|crdup
@@ -3544,9 +3936,21 @@ argument_list|(
 name|oldcred
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -3583,6 +3987,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*   * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -3643,6 +4051,12 @@ operator|=
 name|uap
 operator|->
 name|sgid
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|oldcred
 operator|=
@@ -3762,11 +4176,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 name|newcred
 operator|=
 name|crdup
@@ -3878,9 +4292,21 @@ argument_list|(
 name|oldcred
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -3916,6 +4342,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -3945,10 +4375,6 @@ name|struct
 name|ucred
 modifier|*
 name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
 decl_stmt|;
 name|int
 name|error1
@@ -3963,6 +4389,18 @@ name|error3
 init|=
 literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|cred
+operator|=
+name|p
+operator|->
+name|p_ucred
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -4060,6 +4498,12 @@ name|cred
 operator|->
 name|cr_svuid
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -4110,6 +4554,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -4137,10 +4585,6 @@ name|struct
 name|ucred
 modifier|*
 name|cred
-init|=
-name|p
-operator|->
-name|p_ucred
 decl_stmt|;
 name|int
 name|error1
@@ -4155,6 +4599,18 @@ name|error3
 init|=
 literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|cred
+operator|=
+name|p
+operator|->
+name|p_ucred
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -4258,6 +4714,12 @@ name|cred
 operator|->
 name|cr_svgid
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -4350,6 +4812,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|__setugid
@@ -4372,6 +4838,17 @@ block|{
 ifdef|#
 directive|ifdef
 name|REGRESSION
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|uap
@@ -4389,11 +4866,7 @@ operator|&=
 operator|~
 name|P_SUGID
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 case|case
 literal|1
 case|:
@@ -4403,18 +4876,25 @@ name|p_flag
 operator||=
 name|P_SUGID
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 default|default:
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|error
 operator|)
 return|;
-block|}
 else|#
 directive|else
 comment|/* !REGRESSION */
@@ -5798,6 +6278,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -5820,6 +6304,15 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|int
+name|error
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -5834,8 +6327,8 @@ name|namelen
 operator|=
 name|MAXLOGNAME
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -5860,6 +6353,16 @@ name|uap
 operator|->
 name|namelen
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -5893,6 +6396,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -5924,6 +6431,12 @@ index|[
 name|MAXLOGNAME
 index|]
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5939,11 +6452,9 @@ name|PRISON_ROOT
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 name|error
 operator|=
 name|copyinstr
@@ -5978,16 +6489,19 @@ name|error
 operator|==
 name|ENAMETOOLONG
 condition|)
+block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
 operator|!
 name|error
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -6007,6 +6521,15 @@ sizeof|sizeof
 argument_list|(
 name|logintmp
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return

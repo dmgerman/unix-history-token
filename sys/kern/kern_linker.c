@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -3073,6 +3079,10 @@ begin_comment
 comment|/*  * Syscalls.  */
 end_comment
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|kldload
@@ -3091,9 +3101,14 @@ block|{
 name|char
 modifier|*
 name|pathname
-decl_stmt|,
+init|=
+name|NULL
+decl_stmt|;
+name|char
 modifier|*
 name|realpath
+init|=
+name|NULL
 decl_stmt|;
 specifier|const
 name|char
@@ -3128,6 +3143,12 @@ comment|/* redundant, but that's OK */
 return|return
 name|EPERM
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3141,13 +3162,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-name|error
-return|;
-name|realpath
-operator|=
-name|NULL
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 name|pathname
 operator|=
 name|malloc
@@ -3291,11 +3308,23 @@ argument_list|,
 name|M_LINKER
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -3330,6 +3359,12 @@ comment|/* redundant, but that's OK */
 return|return
 name|EPERM
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3343,9 +3378,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|out
+goto|;
 name|lf
 operator|=
 name|linker_find_file_by_id
@@ -3421,17 +3456,31 @@ operator|++
 expr_stmt|;
 block|}
 else|else
+block|{
 name|error
 operator|=
 name|ENOENT
 expr_stmt|;
+block|}
 name|out
 label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -3465,6 +3514,12 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_retval
@@ -3560,11 +3615,23 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -3589,6 +3656,12 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SCARG
@@ -3634,9 +3707,9 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 name|lf
 operator|=
@@ -3692,15 +3765,31 @@ literal|0
 expr_stmt|;
 block|}
 else|else
+block|{
 name|error
 operator|=
 name|ENOENT
 expr_stmt|;
+block|}
+name|out
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -3736,6 +3825,12 @@ decl_stmt|;
 name|int
 name|namelen
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|lf
 operator|=
 name|linker_find_file_by_id
@@ -3994,11 +4089,23 @@ literal|0
 expr_stmt|;
 name|out
 label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -4023,6 +4130,12 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|lf
 operator|=
 name|linker_find_file_by_id
@@ -4080,15 +4193,29 @@ literal|0
 expr_stmt|;
 block|}
 else|else
+block|{
 name|error
 operator|=
 name|ENOENT
 expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -4129,6 +4256,12 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4437,8 +4570,16 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function

@@ -499,11 +499,11 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* ARGSUSED */
+comment|/*  * The system call that results in a reboot  *  * MPSAFE  */
 end_comment
 
 begin_comment
-comment|/*  * The system call that results in a reboot  */
+comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -524,6 +524,12 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -534,12 +540,10 @@ argument_list|(
 name|p
 argument_list|)
 operator|)
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
 name|boot
 argument_list|(
 name|uap
@@ -547,9 +551,16 @@ operator|->
 name|opt
 argument_list|)
 expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -2177,7 +2188,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Panic is called on unresolvable fatal errors.  It prints "panic: mesg",  * and then reboots.  If we are called twice, then we avoid trying to sync  * the disks as this often leads to recursive panics.  */
+comment|/*  * Panic is called on unresolvable fatal errors.  It prints "panic: mesg",  * and then reboots.  If we are called twice, then we avoid trying to sync  * the disks as this often leads to recursive panics.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -2195,6 +2206,11 @@ block|{
 name|int
 name|bootopt
 decl_stmt|;
+name|int
+name|holding_giant
+init|=
+literal|0
+decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
@@ -2205,6 +2221,13 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * We must hold Giant when entering a panic 	 */
+block|if (!mtx_owned(&Giant)) { 		mtx_lock(&Giant); 		holding_giant = 1; 	}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SMP
@@ -2218,6 +2241,7 @@ argument_list|(
 name|cpuid
 argument_list|)
 condition|)
+block|{
 while|while
 condition|(
 name|atomic_cmpset_int
@@ -2235,6 +2259,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 while|while
 condition|(
 name|panic_cpu
@@ -2243,6 +2268,8 @@ name|NOCPU
 condition|)
 empty_stmt|;
 comment|/* nothing */
+block|}
+block|}
 endif|#
 directive|endif
 name|bootopt
@@ -2379,6 +2406,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|holding_giant
+condition|)
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 endif|#

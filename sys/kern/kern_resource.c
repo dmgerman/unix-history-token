@@ -235,6 +235,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|getpriority
@@ -269,6 +273,17 @@ name|PRIO_MAX
 operator|+
 literal|1
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|uap
@@ -485,11 +500,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -498,12 +513,15 @@ operator|==
 name|PRIO_MAX
 operator|+
 literal|1
+operator|&&
+name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
+name|error
+operator|=
 name|ESRCH
-operator|)
-return|;
+expr_stmt|;
 name|curp
 operator|->
 name|p_retval
@@ -513,9 +531,15 @@ index|]
 operator|=
 name|low
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -548,6 +572,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -588,6 +616,12 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|uap
@@ -833,23 +867,32 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-return|return
-operator|(
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
 name|found
 operator|==
 literal|0
+operator|&&
+name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
+name|error
+operator|=
 name|ESRCH
-operator|)
-return|;
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1009,6 +1052,10 @@ comment|/*  * Set realtime priority  */
 end_comment
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1045,6 +1092,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -1065,6 +1118,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|p
 operator|=
 name|pfind
@@ -1074,17 +1128,22 @@ operator|->
 name|pid
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|p
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|ESRCH
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 switch|switch
 condition|(
 name|uap
@@ -1249,6 +1308,14 @@ block|}
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -1501,6 +1568,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1584,8 +1655,14 @@ name|olim
 operator|.
 name|rlim_max
 expr_stmt|;
-return|return
-operator|(
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|dosetrlimit
 argument_list|(
 name|p
@@ -1597,6 +1674,16 @@ argument_list|,
 operator|&
 name|lim
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -1630,6 +1717,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -1657,6 +1748,9 @@ name|struct
 name|orlimit
 name|olim
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|uap
@@ -1670,6 +1764,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|olim
 operator|.
 name|rlim_cur
@@ -1730,8 +1830,8 @@ name|rlim_max
 operator|=
 literal|0x7fffffff
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -1752,6 +1852,16 @@ argument_list|(
 name|olim
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -1792,6 +1902,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1857,8 +1971,14 @@ operator|(
 name|error
 operator|)
 return|;
-return|return
-operator|(
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|dosetrlimit
 argument_list|(
 name|p
@@ -1870,6 +1990,16 @@ argument_list|,
 operator|&
 name|alim
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -2431,6 +2561,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -2454,6 +2588,9 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|uap
@@ -2467,8 +2604,14 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-return|return
-operator|(
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -2497,6 +2640,16 @@ expr|struct
 name|rlimit
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -3082,6 +3235,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -3112,6 +3269,17 @@ name|rusage
 modifier|*
 name|rup
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|uap
@@ -3175,14 +3343,31 @@ name|p_cru
 expr_stmt|;
 break|break;
 default|default:
-return|return
-operator|(
+name|rup
+operator|=
+name|NULL
+expr_stmt|;
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+break|break;
 block|}
-return|return
-operator|(
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+operator|=
 name|copyout
 argument_list|(
 operator|(
@@ -3203,6 +3388,11 @@ expr|struct
 name|rusage
 argument_list|)
 argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
