@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newsyslog.c,v 1.7.2.5 1998/03/15 05:47:08 jkh Exp $"
+literal|"$Id: newsyslog.c,v 1.7.2.6 1998/05/10 19:00:46 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -412,16 +412,6 @@ name|timenow
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|pid_t
-name|syslog_pid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* read in from /etc/syslog.pid */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -726,17 +716,6 @@ operator|=
 name|parse_file
 argument_list|()
 expr_stmt|;
-name|syslog_pid
-operator|=
-name|needroot
-condition|?
-name|get_pid
-argument_list|(
-name|PIDFILE
-argument_list|)
-else|:
-literal|0
-expr_stmt|;
 while|while
 condition|(
 name|p
@@ -792,6 +771,10 @@ name|int
 name|size
 decl_stmt|,
 name|modtime
+decl_stmt|;
+name|char
+modifier|*
+name|pid_file
 decl_stmt|;
 if|if
 condition|(
@@ -993,7 +976,7 @@ name|CE_COMPACT
 condition|)
 name|printf
 argument_list|(
-literal|"%s<%dZ>: trimming"
+literal|"%s<%dZ>: trimming\n"
 argument_list|,
 name|ent
 operator|->
@@ -1007,7 +990,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%s<%d>: trimming"
+literal|"%s<%d>: trimming\n"
 argument_list|,
 name|ent
 operator|->
@@ -1019,14 +1002,43 @@ name|numlogs
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ent
+operator|->
+name|pid_file
+condition|)
+block|{
+name|pid_file
+operator|=
+name|ent
+operator|->
+name|pid_file
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Only try to notify syslog if we are root */
+if|if
+condition|(
+name|needroot
+condition|)
+name|pid_file
+operator|=
+name|PIDFILE
+expr_stmt|;
+else|else
+name|pid_file
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|dotrim
 argument_list|(
 name|ent
 operator|->
 name|log
 argument_list|,
-name|ent
-operator|->
 name|pid_file
 argument_list|,
 name|ent
@@ -1189,8 +1201,7 @@ case|:
 name|noaction
 operator|++
 expr_stmt|;
-comment|/* This implies needroot as off */
-comment|/* fall through */
+break|break;
 case|case
 literal|'r'
 case|:
@@ -2818,28 +2829,6 @@ name|get_pid
 argument_list|(
 name|pid_file
 argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|needroot
-operator|&&
-operator|!
-operator|(
-name|flags
-operator|&
-name|CE_BINARY
-operator|)
-condition|)
-block|{
-name|need_notification
-operator|=
-literal|1
-expr_stmt|;
-name|pid
-operator|=
-name|syslog_pid
 expr_stmt|;
 block|}
 if|if
