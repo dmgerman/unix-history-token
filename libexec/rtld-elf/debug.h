@@ -37,6 +37,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_function_decl
 specifier|extern
 name|void
@@ -48,8 +54,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__printflike
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 specifier|extern
