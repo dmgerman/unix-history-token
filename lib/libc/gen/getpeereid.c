@@ -92,7 +92,7 @@ name|getsockopt
 argument_list|(
 name|s
 argument_list|,
-name|SOCK_STREAM
+literal|0
 argument_list|,
 name|LOCAL_PEERCRED
 argument_list|,
