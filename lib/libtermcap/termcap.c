@@ -109,17 +109,6 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|void
-name|__set_ospeed
-parameter_list|(
-name|speed_t
-name|speed
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * termcap - routines for dealing with the terminal capability data base  *  * BUG:		Should use a "last" pointer in tbuf, so that searching  *		for capabilities alphabetically would not be a n**2/2  *		process when large numbers of capabilities are given.  * Note:	If we add a last pointer now we will screw up the  *		tc capability. We really should compile termcap.  *  * Essentially all the work here is scanning and decoding escapes  * in string capabilities.  We don't use stdio because the editor  * doesn't, and because living w/o it is not hard.  */
 end_comment
