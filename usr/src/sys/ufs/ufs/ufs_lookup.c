@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.41 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.42 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -570,6 +570,14 @@ name|slotstatus
 operator|=
 name|FOUND
 expr_stmt|;
+name|slotfreespace
+operator|=
+name|slotsize
+operator|=
+name|slotneeded
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -598,10 +606,6 @@ block|{
 name|slotstatus
 operator|=
 name|NONE
-expr_stmt|;
-name|slotfreespace
-operator|=
-literal|0
 expr_stmt|;
 name|slotneeded
 operator|=
@@ -678,6 +682,8 @@ operator|->
 name|i_size
 condition|)
 block|{
+name|entryoffsetinblock
+operator|=
 name|dp
 operator|->
 name|i_offset
@@ -744,6 +750,12 @@ name|ncs_2passes
 operator|++
 expr_stmt|;
 block|}
+name|prevoff
+operator|=
+name|dp
+operator|->
+name|i_offset
+expr_stmt|;
 name|endsearch
 operator|=
 name|roundup
