@@ -1,21 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* Copyright (c) 1979 Regents of the University of California */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)type.c	1.2 (Berkeley) %G%"
+literal|"@(#)type.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Copyright (c) 1979 Regents of the University of California */
-end_comment
-
-begin_empty
-empty|#
-end_empty
 
 begin_comment
 comment|/*  * pxp - Pascal execution profiler  *  * Bill Joy UCB  * Version 1.2 January 1979  */
@@ -345,6 +341,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|T_TYCRANG
+case|:
+name|ppspac
+argument_list|()
+expr_stmt|;
+name|tycrang
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|T_TYRANG
 case|:
 name|ppspac
@@ -396,6 +404,9 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|T_TYCARY
+case|:
 case|case
 name|T_TYARY
 case|:
@@ -613,6 +624,61 @@ expr_stmt|;
 name|ppsep
 argument_list|(
 literal|")"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Conformant array subrange.  */
+end_comment
+
+begin_expr_stmt
+name|tycrang
+argument_list|(
+name|r
+argument_list|)
+specifier|register
+name|int
+operator|*
+name|r
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+name|ppid
+argument_list|(
+name|r
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|ppsep
+argument_list|(
+literal|".."
+argument_list|)
+expr_stmt|;
+name|ppid
+argument_list|(
+name|r
+index|[
+literal|3
+index|]
+argument_list|)
+expr_stmt|;
+name|ppsep
+argument_list|(
+literal|":"
+argument_list|)
+expr_stmt|;
+name|gtype
+argument_list|(
+name|r
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 block|}
