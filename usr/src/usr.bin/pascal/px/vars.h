@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)vars.h 1.2 %G%"; */
+comment|/* static char sccsid[] = "@(#)vars.h 1.3 %G%"; */
 end_comment
 
 begin_include
@@ -580,7 +580,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1 => no post mortum dump */
+comment|/* TRUE => no post mortum dump */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|_runtst
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TRUE => runtime tests */
 end_comment
 
 begin_decl_stmt
@@ -614,6 +625,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* statement count */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|_seed
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* random number seed */
 end_comment
 
 begin_decl_stmt
