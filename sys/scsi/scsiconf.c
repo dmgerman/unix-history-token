@@ -1536,6 +1536,24 @@ name|SC_ONE_LU
 block|}
 block|,
 comment|/* 	 * Doobe-doo-be doooo 	 * -Mary 	 */
+block|{
+name|T_READONLY
+block|,
+name|T_READONLY
+block|,
+name|T_REMOV
+block|,
+literal|"NAKAMICH"
+block|,
+literal|"MJ-4*"
+block|,
+literal|"*"
+block|,
+literal|"cd"
+block|,
+name|SC_MORE_LUS
+block|}
+block|,
 endif|#
 directive|endif
 comment|/* !UKTEST */
