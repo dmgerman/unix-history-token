@@ -315,7 +315,7 @@ end_struct
 
 begin_function_decl
 name|void
-name|fp_init_pcb
+name|fp_init_proc
 parameter_list|(
 name|struct
 name|pcb
