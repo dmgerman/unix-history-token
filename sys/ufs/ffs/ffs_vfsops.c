@@ -534,6 +534,21 @@ name|MNT_RDONLY
 operator|)
 condition|)
 block|{
+comment|/* 			 * Flush any dirty data. 			 */
+name|VFS_SYNC
+argument_list|(
+name|mp
+argument_list|,
+name|MNT_WAIT
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Check for and optionally get rid of files open 			 * for writing. 			 */
 name|flags
 operator|=
 name|WRITECLOSE
