@@ -483,6 +483,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tV_SOFT %d\n"
+argument_list|,
+operator|&
+name|vm
+operator|->
+name|v_soft
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tV_PDMA %d\n"
 argument_list|,
 operator|&
