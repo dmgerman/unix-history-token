@@ -1479,7 +1479,7 @@ name|sc
 operator|->
 name|csc_route
 operator|==
-name|pci_parallel
+name|pcic_iw_pci
 condition|)
 block|{
 comment|/* Do the PCI side of things: Enable the Card Change int */
@@ -1933,7 +1933,7 @@ name|sc
 operator|->
 name|func_route
 operator|>=
-name|pci_parallel
+name|pcic_iw_pci
 condition|)
 block|{
 name|pr
@@ -2661,7 +2661,7 @@ name|sc
 operator|->
 name|csc_route
 operator|==
-name|pci_parallel
+name|pcic_iw_pci
 condition|)
 return|return;
 name|irq
@@ -3669,7 +3669,7 @@ name|sc
 operator|->
 name|csc_route
 operator|==
-name|pci_parallel
+name|pcic_iw_pci
 operator|&&
 operator|(
 name|flags
@@ -3685,7 +3685,7 @@ name|sc
 operator|->
 name|csc_route
 operator|==
-name|pci_parallel
+name|pcic_iw_pci
 operator|&&
 operator|(
 name|flags
@@ -4317,7 +4317,7 @@ name|sc
 operator|->
 name|func_route
 operator|==
-name|pci_parallel
+name|pcic_iw_pci
 operator|&&
 name|type
 operator|==
