@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mac.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -439,6 +445,11 @@ modifier|*
 name|v_vxproc
 decl_stmt|;
 comment|/* thread owning VXLOCK */
+name|struct
+name|label
+name|v_label
+decl_stmt|;
+comment|/* MAC label for vnode */
 ifdef|#
 directive|ifdef
 name|DEBUG_LOCKS
