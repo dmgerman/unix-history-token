@@ -7211,7 +7211,8 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|qosinfo
@@ -8541,6 +8542,8 @@ name|wme
 argument_list|,
 name|wh
 argument_list|)
+operator|>
+literal|0
 condition|)
 name|ieee80211_wme_updateparams
 argument_list|(
@@ -10784,6 +10787,8 @@ name|wme
 argument_list|,
 name|wh
 argument_list|)
+operator|>=
+literal|0
 condition|)
 block|{
 name|ni
