@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.73
+literal|3.74
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.73
+literal|3.74
 operator|%
 name|G
 operator|%
@@ -2834,50 +2834,9 @@ case|case
 literal|'S'
 case|:
 comment|/* sender name */
-if|if
-condition|(
-name|message
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|" ("
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-name|message
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|")"
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
-literal|"%8d %.16s %.40s"
+literal|"%8d %.16s %.45s"
 argument_list|,
 name|dfsize
 argument_list|,
@@ -2894,6 +2853,22 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|message
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|printf
+argument_list|(
+literal|"\n\t\t\t\t  (%.43s)"
+argument_list|,
+name|message
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'R'
@@ -2901,7 +2876,7 @@ case|:
 comment|/* recipient name */
 name|printf
 argument_list|(
-literal|"\n\t\t\t\t  %.40s"
+literal|"\n\t\t\t\t  %.45s"
 argument_list|,
 operator|&
 name|buf
