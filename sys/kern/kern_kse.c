@@ -4684,17 +4684,19 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 comment|/* 	 * If we are doing a syscall in a KSE environment, 	 * note where our mailbox is. There is always the 	 * possibility that we could do this lazily (in sleep()), 	 * but for now do it every time. 	 */
-if|if
-condition|(
-operator|(
 name|ke
 operator|=
 name|td
 operator|->
 name|td_kse
+expr_stmt|;
+if|if
+condition|(
+name|ke
 operator|->
 name|ke_mailbox
-operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|#
