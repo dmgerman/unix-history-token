@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.1 (Berkeley) %G%"
+literal|"@(#)udb.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,13 +192,15 @@ return|return;
 block|}
 name|dbp
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|UdbFileName
 argument_list|,
 name|O_RDONLY
 argument_list|,
 literal|0644
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
