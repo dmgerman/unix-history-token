@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.15	81/11/20	*/
+comment|/*	Locore.c	4.16	81/11/29	*/
 end_comment
 
 begin_include
@@ -392,7 +392,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|netintr
+name|ipintr
+argument_list|()
+expr_stmt|;
+name|rawintr
 argument_list|()
 expr_stmt|;
 if|if
@@ -782,7 +785,9 @@ name|struct
 name|pte
 name|Mbmap
 index|[
-name|NMBPAGES
+name|NMBCLUSTERS
+operator|/
+name|CLSIZE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -792,9 +797,15 @@ name|struct
 name|mbuf
 name|mbutl
 index|[
-name|NMBPAGES
+name|NMBCLUSTERS
 operator|*
-name|NMBPG
+name|CLBYTES
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mbuf
+argument_list|)
 index|]
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.46	81/11/20	*/
+comment|/*	machdep.c	4.47	81/11/29	*/
 end_comment
 
 begin_include
@@ -631,9 +631,9 @@ argument_list|,
 expr|struct
 name|map
 argument_list|,
-name|nmbpages
+name|nmbclusters
 operator|/
-literal|2
+literal|4
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now allocate space for core map 	 */
@@ -865,17 +865,17 @@ name|rminit
 argument_list|(
 name|mbmap
 argument_list|,
-name|nmbpages
+name|nmbclusters
 operator|-
 literal|1
 argument_list|,
 literal|1
 argument_list|,
-literal|"mbpages"
+literal|"mbclusters"
 argument_list|,
-name|nmbpages
+name|nmbclusters
 operator|/
-literal|2
+literal|4
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Configure the system. 	 */
@@ -2251,6 +2251,14 @@ comment|/* r10 == major of root dev */
 ifdef|#
 directive|ifdef
 name|lint
+name|howto
+operator|=
+literal|0
+expr_stmt|;
+name|devtype
+operator|=
+literal|0
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"howto %d, devtype %d\n"
