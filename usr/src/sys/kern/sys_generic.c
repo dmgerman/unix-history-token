@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.33	83/05/06	*/
+comment|/*	sys_generic.c	5.34	83/05/08	*/
 end_comment
 
 begin_include
