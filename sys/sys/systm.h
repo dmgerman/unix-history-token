@@ -139,17 +139,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|uarea_pages
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of user struct pages */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|nswap
 decl_stmt|;
 end_decl_stmt
