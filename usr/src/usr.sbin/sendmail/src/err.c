@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.15 (Berkeley) %G%"
+literal|"@(#)err.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -746,7 +746,9 @@ name|TRUE
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"putmsg: error on output channel"
+literal|"putmsg: error on output channel sending \"%s\""
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
 block|}
