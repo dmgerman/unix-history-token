@@ -712,25 +712,59 @@ parameter_list|)
 value|(isupper(c) || (islower(c)))
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|__inline
+name|int
 name|toupper
 parameter_list|(
+name|int
 name|c
 parameter_list|)
-value|((c) - 'a' + 'A')
-end_define
+block|{
+return|return
+name|islower
+argument_list|(
+name|c
+argument_list|)
+condition|?
+name|c
+operator|-
+literal|'a'
+operator|+
+literal|'A'
+else|:
+name|c
+return|;
+block|}
+end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|__inline
+name|int
 name|tolower
 parameter_list|(
+name|int
 name|c
 parameter_list|)
-value|((c) - 'A' + 'a')
-end_define
+block|{
+return|return
+name|isupper
+argument_list|(
+name|c
+argument_list|)
+condition|?
+name|c
+operator|-
+literal|'A'
+operator|+
+literal|'a'
+else|:
+name|c
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* sbrk emulation */
