@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.2 1994/09/27 20:42:44 phk Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.3 1994/10/06 21:06:51 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -590,7 +590,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"deget(pmp %08x, dirclust %d, diroffset %x, direntptr %x, depp %08x)\n"
+literal|"deget(pmp %p, dirclust %ld, diroffset %x, direntptr %p, depp %p)\n"
 argument_list|,
 name|pmp
 argument_list|,
@@ -1100,7 +1100,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"deupdat(): dep %08x\n"
+literal|"deupdat(): dep %p\n"
 argument_list|,
 name|dep
 argument_list|)
@@ -2113,7 +2113,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"msdosfs_reclaim(): dep %08x, file %s, refcnt %d\n"
+literal|"msdosfs_reclaim(): dep %p, file %s, refcnt %ld\n"
 argument_list|,
 name|dep
 argument_list|,
@@ -2253,7 +2253,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"msdosfs_inactive(): dep %08x, de_Name[0] %x\n"
+literal|"msdosfs_inactive(): dep %p, de_Name[0] %x\n"
 argument_list|,
 name|dep
 argument_list|,
@@ -2324,7 +2324,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"msdosfs_inactive(): dep %08x, refcnt %d, mntflag %x, MNT_RDONLY %x\n"
+literal|"msdosfs_inactive(): dep %p, refcnt %ld, mntflag %x, MNT_RDONLY %x\n"
 argument_list|,
 name|dep
 argument_list|,

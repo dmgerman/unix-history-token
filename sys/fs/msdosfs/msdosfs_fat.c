@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.1 1994/09/19 15:41:43 dfr Exp $ */
+comment|/*	$Id: msdosfs_fat.c,v 1.2 1994/09/27 20:42:46 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1040,7 +1040,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"updatefats(pmp %08x, bp %08x, fatbn %d)\n"
+literal|"updatefats(pmp %p, bp %p, fatbn %ld)\n"
 argument_list|,
 name|pmp
 argument_list|,
@@ -1740,7 +1740,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"fatchain(pmp %08x, start %d, count %d, fillwith %d)\n"
+literal|"fatchain(pmp %p, start %ld, count %ld, fillwith %ld)\n"
 argument_list|,
 name|pmp
 argument_list|,
@@ -2228,7 +2228,7 @@ directive|ifdef
 name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
-literal|"clusteralloc(): allocated cluster chain at %d (%d clusters)\n"
+literal|"clusteralloc(): allocated cluster chain at %ld (%ld clusters)\n"
 argument_list|,
 name|start
 argument_list|,
