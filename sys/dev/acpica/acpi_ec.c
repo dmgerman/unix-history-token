@@ -2605,7 +2605,7 @@ literal|"EcGpeHandler called with NULL"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Disable further GPEs while we handle this one. */
+comment|/*      * Disable further GPEs while we handle this one.  Since we are directly      * called by ACPI-CA and it may have unknown locks held, we specify the      * ACPI_ISR flag to keep it from acquiring any more mutexes (which could      * potentially sleep.)      */
 name|AcpiDisableGpe
 argument_list|(
 name|sc
@@ -2616,7 +2616,7 @@ name|sc
 operator|->
 name|ec_gpebit
 argument_list|,
-name|ACPI_NOT_ISR
+name|ACPI_ISR
 argument_list|)
 expr_stmt|;
 comment|/* Schedule the GPE query handler. */
@@ -2656,7 +2656,7 @@ name|sc
 operator|->
 name|ec_gpebit
 argument_list|,
-name|ACPI_NOT_ISR
+name|ACPI_ISR
 argument_list|)
 expr_stmt|;
 if|if
