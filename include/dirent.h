@@ -143,6 +143,11 @@ name|long
 name|dd_seek
 decl_stmt|;
 comment|/* magic cookie returned by getdirentries */
+name|void
+modifier|*
+name|dd_ddloc
+decl_stmt|;
+comment|/* Linked list of ddloc structs for telldir/seekdir */
 block|}
 name|DIR
 typedef|;
