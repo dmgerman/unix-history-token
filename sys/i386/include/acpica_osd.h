@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/acpi.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
@@ -60,7 +54,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/acpi/acpi.h>
+file|<dev/acpi/acpireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/acpi/acpivar.h>
 end_include
 
 begin_include
