@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id$"
+literal|"$Id: yplib.c,v 1.28 1997/02/22 15:05:02 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -957,6 +957,23 @@ expr|struct
 name|sockaddr_in
 argument_list|)
 decl_stmt|;
+comment|/* Not allowed; bad doggie. Bad. */
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|dom
+argument_list|,
+literal|'/'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|YPERR_BADARGS
+operator|)
+return|;
 name|gpid
 operator|=
 name|getpid
