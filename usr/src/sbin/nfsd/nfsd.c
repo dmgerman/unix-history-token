@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsd.c	8.2 (Berkeley) %G%"
+literal|"@(#)nfsd.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -609,13 +609,13 @@ name|ISO
 define|#
 directive|define
 name|FLAGS
-value|"crtu"
+value|"-crtu"
 else|#
 directive|else
 define|#
 directive|define
 name|FLAGS
-value|"rtu"
+value|"-rtu"
 endif|#
 directive|endif
 while|while
