@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.1 (Berkeley) %G%"
+literal|"@(#)print.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1395,6 +1395,22 @@ literal|24
 operator|*
 name|SECSPERHOUR
 condition|)
+block|{
+specifier|static
+name|char
+modifier|*
+name|fmt
+init|=
+literal|"%l:@M%p"
+decl_stmt|;
+name|fmt
+index|[
+literal|3
+index|]
+operator|=
+literal|'%'
+expr_stmt|;
+comment|/* I *hate* SCCS... */
 operator|(
 name|void
 operator|)
@@ -1409,11 +1425,12 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-literal|"%l:print.cp"
+name|fmt
 argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1431,6 +1448,22 @@ literal|7
 operator|*
 name|SECSPERDAY
 condition|)
+block|{
+specifier|static
+name|char
+modifier|*
+name|fmt
+init|=
+literal|"%a@I%p"
+decl_stmt|;
+name|fmt
+index|[
+literal|2
+index|]
+operator|=
+literal|'%'
+expr_stmt|;
+comment|/* I *hate* SCCS... */
 operator|(
 name|void
 operator|)
@@ -1445,11 +1478,12 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-literal|"%a5.1p"
+name|fmt
 argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 operator|(
 name|void
