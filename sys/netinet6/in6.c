@@ -7927,6 +7927,10 @@ operator|)
 return|;
 if|if
 condition|(
+name|bitlen
+operator|!=
+literal|0
+operator|&&
 name|p1
 operator|->
 name|s6_addr
