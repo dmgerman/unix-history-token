@@ -404,7 +404,7 @@ argument_list|,
 literal|"TI113X PCI Config Reg: "
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Defalut card control register setting is 		 * PCI interrupt.  The method of this code 		 * switches PCI INT and ISA IRQ by bit 7 of 		 * Bridge Control Register(Offset:0x3e,0x13e). 		 * Takeshi Shibagaki(shiba@jp.freebsd.org)  		 */
+comment|/*  		 * Default card control register setting is 		 * PCI interrupt.  The method of this code 		 * switches PCI INT and ISA IRQ by bit 7 of 		 * Bridge Control Register(Offset:0x3e,0x13e). 		 * Takeshi Shibagaki(shiba@jp.freebsd.org)  		 */
 name|cardcntl
 operator||=
 name|TI113X_CARDCNTL_PCI_IREQ
