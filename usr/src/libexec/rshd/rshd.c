@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.8 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -1005,6 +1011,28 @@ block|{
 name|error
 argument_list|(
 literal|"Permission denied.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|access
+argument_list|(
+literal|"/etc/nologin"
+argument_list|,
+name|F_OK
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Logins currently disabled.\n"
 argument_list|)
 expr_stmt|;
 name|exit
