@@ -114,7 +114,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_decl_stmt
@@ -148,6 +160,31 @@ modifier|*
 name|pidlist
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+name|pthread_mutex_t
+name|pidlist_mutex
+init|=
+name|PTHREAD_MUTEX_INITIALIZER
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|THREAD_LOCK
+parameter_list|()
+value|if (__isthreaded) _pthread_mutex_lock(&pidlist_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_UNLOCK
+parameter_list|()
+value|if (__isthreaded) _pthread_mutex_unlock(&pidlist_mutex)
+end_define
 
 begin_function
 name|FILE
@@ -344,6 +381,9 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|pid
@@ -357,6 +397,9 @@ operator|-
 literal|1
 case|:
 comment|/* Error. */
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -585,6 +628,9 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 comment|/* Parent; assume fdopen can't fail. */
 if|if
 condition|(
@@ -657,6 +703,9 @@ name|pid
 operator|=
 name|pid
 expr_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|cur
 operator|->
 name|next
@@ -666,6 +715,9 @@ expr_stmt|;
 name|pidlist
 operator|=
 name|cur
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -707,7 +759,10 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
-comment|/* Find the appropriate file pointer. */
+comment|/* 	 * Find the appropriate file pointer and remove it from the list. 	 */
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|last
@@ -745,12 +800,41 @@ name|cur
 operator|==
 name|NULL
 condition|)
+block|{
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|last
+operator|==
+name|NULL
+condition|)
+name|pidlist
+operator|=
+name|cur
+operator|->
+name|next
+expr_stmt|;
+else|else
+name|last
+operator|->
+name|next
+operator|=
+name|cur
+operator|->
+name|next
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -795,28 +879,6 @@ operator|==
 name|EINTR
 condition|)
 do|;
-comment|/* Remove the entry from the linked list. */
-if|if
-condition|(
-name|last
-operator|==
-name|NULL
-condition|)
-name|pidlist
-operator|=
-name|cur
-operator|->
-name|next
-expr_stmt|;
-else|else
-name|last
-operator|->
-name|next
-operator|=
-name|cur
-operator|->
-name|next
-expr_stmt|;
 name|free
 argument_list|(
 name|cur
