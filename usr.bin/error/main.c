@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)main.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,25 +70,25 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -87,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -156,13 +176,6 @@ modifier|*
 name|currentfilename
 init|=
 literal|"????"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|processname
 decl_stmt|;
 end_decl_stmt
 
@@ -240,25 +253,63 @@ begin_comment
 comment|/* initially, can touch any file */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|errorsort
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|Eptr
+operator|*
+operator|,
+name|Eptr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
-name|onintr
-parameter_list|()
-function_decl|;
-end_function_decl
+name|forkvi
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|try
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  *	error [-I ignorename] [-n] [-q] [-t suffixlist] [-s] [-v] [infile]  *  *	-T:	terse output  *  *	-I:	the following name, `ignorename' contains a list of  *		function names that are not to be treated as hard errors.  *		Default: ~/.errorsrc  *  *	-n:	don't touch ANY files!  *  *	-q:	The user is to be queried before touching each  *		file; if not specified, all files with hard, non  *		ignorable errors are touched (assuming they can be).  *  *	-t:	touch only files ending with the list of suffices, each  *		suffix preceded by a dot.  *		eg, -t .c.y.l  *		will touch only files ending with .c, .y or .l  *  *	-s:	print a summary of the error's categories.  *  *	-v:	after touching all files, overlay vi(1), ex(1) or ed(1)  *		on top of error, entered in the first file with  *		an error in it, with the appropriate editor  *		set up to use the "next" command to get the other  *		files containing errors.  *  *	-p:	(obsolete: for older versions of pi without bug  *		fix regarding printing out the name of the main file  *		with an error in it)  *		Take the following argument and use it as the name of  *		the pascal source file, suffix .p  *  *	-E:	show the errors in sorted order; intended for  *		debugging.  *  *	-S:	show the errors in unsorted order  *		(as they come from the error file)  *  *	infile:	The error messages come from this file.  *		Default: stdin  */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -313,13 +364,6 @@ name|edit_files
 init|=
 name|FALSE
 decl_stmt|;
-name|processname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|errorfile
 operator|=
 name|stdin
@@ -382,13 +426,9 @@ name|cp
 condition|)
 block|{
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: -%c: Unknown flag\n"
-argument_list|,
-name|processname
+literal|"-%c: unknown flag"
 argument_list|,
 operator|*
 name|cp
@@ -527,22 +567,13 @@ name|argc
 operator|>
 literal|3
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Only takes 0 or 1 arguments\n"
-argument_list|,
-name|processname
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|3
+argument_list|,
+literal|"only takes 0 or 1 argument"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -561,14 +592,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|4
 argument_list|,
-literal|"%s: %s: No such file or directory for reading errors.\n"
-argument_list|,
-name|processname
+literal|"%s: no such file or directory for reading errors"
 argument_list|,
 name|argv
 index|[
@@ -576,12 +604,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|4
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -603,24 +625,15 @@ if|if
 condition|(
 name|query
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|9
 argument_list|,
-literal|"%s: Can't open \"%s\" to query the user.\n"
-argument_list|,
-name|processname
+literal|"can't open \"%s\" to query the user"
 argument_list|,
 name|im_on
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|9
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -864,33 +877,30 @@ argument_list|,
 name|ed_argv
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|forkvi
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -960,41 +970,30 @@ literal|"Can't find any editors.\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|try
-argument_list|(
-argument|name
-argument_list|,
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|argv
 index|[
@@ -1070,7 +1069,7 @@ name|argv
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
