@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttgeneric.c	3.11 83/08/18"
+literal|"@(#)ttgeneric.c	3.12 83/08/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,6 +303,18 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|gen_LI
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|gen_UG
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|gen_SG
 decl_stmt|;
 end_decl_stmt
 
@@ -1487,6 +1499,20 @@ argument_list|(
 literal|"li"
 argument_list|)
 expr_stmt|;
+name|gen_UG
+operator|=
+name|tgetnum
+argument_list|(
+literal|"ug"
+argument_list|)
+expr_stmt|;
+name|gen_SG
+operator|=
+name|tgetnum
+argument_list|(
+literal|"sg"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|gen_CL
@@ -1635,6 +1661,26 @@ operator|.
 name|tt_clear
 operator|=
 name|gen_clear
+expr_stmt|;
+if|if
+condition|(
+name|gen_SG
+operator|>
+literal|0
+condition|)
+name|gen_SO
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|gen_UG
+operator|>
+literal|0
+condition|)
+name|gen_US
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
