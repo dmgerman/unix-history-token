@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_else
-unit|static char sccsid[] = "@(#)lprint.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)lprint.c	8.3 (Berkeley) 4/28/95";
 else|#
 directive|else
 end_else
@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: lprint.c,v 1.5.2.1 1997/07/03 07:12:38 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,6 +85,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -92,12 +98,6 @@ begin_include
 include|#
 directive|include
 file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_include
@@ -264,6 +264,10 @@ name|sflag
 decl_stmt|,
 name|r
 decl_stmt|;
+name|PERSON
+modifier|*
+name|tmp
+decl_stmt|;
 name|DBT
 name|data
 decl_stmt|,
@@ -322,17 +326,22 @@ operator|==
 literal|1
 condition|)
 break|break;
-name|pn
-operator|=
-operator|*
-operator|(
-name|PERSON
-operator|*
-operator|*
-operator|)
+name|memmove
+argument_list|(
+operator|&
+name|tmp
+argument_list|,
 name|data
 operator|.
 name|data
+argument_list|,
+sizeof|sizeof
+name|tmp
+argument_list|)
+expr_stmt|;
+name|pn
+operator|=
+name|tmp
 expr_stmt|;
 if|if
 condition|(
@@ -1660,6 +1669,13 @@ condition|;
 operator|++
 name|p
 control|)
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\r'
+condition|)
 name|vputc
 argument_list|(
 name|lastc
@@ -1752,6 +1768,12 @@ argument_list|)
 operator|)
 operator|!=
 name|EOF
+condition|)
+if|if
+condition|(
+name|ch
+operator|!=
+literal|'\r'
 condition|)
 name|vputc
 argument_list|(

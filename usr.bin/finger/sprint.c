@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_else
-unit|static char sccsid[] = "@(#)sprint.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)sprint.c	8.3 (Berkeley) 4/28/95";
 else|#
 directive|else
 end_else
@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: sprint.c,v 1.7.2.1 1997/07/03 07:12:39 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,13 +73,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<pwd.h>
 end_include
 
 begin_include
@@ -169,6 +169,10 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+name|PERSON
+modifier|*
+name|tmp
+decl_stmt|;
 name|DBT
 name|data
 decl_stmt|,
@@ -182,7 +186,7 @@ value|20
 define|#
 directive|define
 name|MAXHOSTNAME
-value|20
+value|17
 comment|/* in reality, hosts are never longer than 16 */
 operator|(
 name|void
@@ -203,7 +207,7 @@ literal|" TTY  Idle  Login Time"
 argument_list|,
 name|oflag
 condition|?
-literal|" Office     Office Phone"
+literal|" Office  Phone"
 else|:
 literal|" Where"
 argument_list|)
@@ -261,17 +265,22 @@ operator|==
 literal|1
 condition|)
 break|break;
-name|pn
-operator|=
-operator|*
-operator|(
-name|PERSON
-operator|*
-operator|*
-operator|)
+name|memmove
+argument_list|(
+operator|&
+name|tmp
+argument_list|,
 name|data
 operator|.
 name|data
+argument_list|,
+sizeof|sizeof
+name|tmp
+argument_list|)
+expr_stmt|;
+name|pn
+operator|=
+name|tmp
 expr_stmt|;
 for|for
 control|(
@@ -602,7 +611,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %-10.10s"
+literal|" %-7.7s"
 argument_list|,
 name|pn
 operator|->
@@ -621,7 +630,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %-10.10s"
+literal|" %-7.7s"
 argument_list|,
 literal|" "
 argument_list|)
@@ -637,7 +646,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %-.15s"
+literal|" %-.9s"
 argument_list|,
 name|prphone
 argument_list|(

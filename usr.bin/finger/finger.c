@@ -45,7 +45,7 @@ literal|0
 end_if
 
 begin_else
-unit|static char sccsid[] = "@(#)finger.c	8.2 (Berkeley) 9/30/93";
+unit|static char sccsid[] = "@(#)finger.c	8.5 (Berkeley) 5/4/95";
 else|#
 directive|else
 end_else
@@ -57,7 +57,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: finger.c,v 1.9.2.1 1997/07/03 07:12:38 charnier Exp $"
+literal|"$Id: finger.c,v 1.9.2.2 1997/08/29 05:29:11 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,25 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
+file|<db.h>
 end_include
 
 begin_include
@@ -119,6 +101,18 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -137,6 +131,24 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
 end_include
 
 begin_include
@@ -582,11 +594,11 @@ else|else
 name|sflag_print
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -775,6 +787,10 @@ operator|=
 name|R_NEXT
 control|)
 block|{
+name|PERSON
+modifier|*
+name|tmp
+decl_stmt|;
 name|r
 operator|=
 call|(
@@ -816,17 +832,22 @@ operator|==
 literal|1
 condition|)
 break|break;
-name|enter_lastlog
+name|memmove
 argument_list|(
-operator|*
-operator|(
-name|PERSON
-operator|*
-operator|*
-operator|)
+operator|&
+name|tmp
+argument_list|,
 name|data
 operator|.
 name|data
+argument_list|,
+sizeof|sizeof
+name|tmp
+argument_list|)
+expr_stmt|;
+name|enter_lastlog
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1031,6 +1052,7 @@ control|)
 if|if
 condition|(
 operator|(
+operator|(
 name|pw
 operator|=
 name|getpwnam
@@ -1038,6 +1060,9 @@ argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 operator|)
 operator|&&
 operator|!
@@ -1064,10 +1089,14 @@ else|else
 block|{
 while|while
 condition|(
+operator|(
 name|pw
 operator|=
 name|getpwent
 argument_list|()
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 for|for
@@ -1291,6 +1320,10 @@ operator|=
 name|R_NEXT
 control|)
 block|{
+name|PERSON
+modifier|*
+name|tmp
+decl_stmt|;
 name|r
 operator|=
 call|(
@@ -1332,17 +1365,22 @@ operator|==
 literal|1
 condition|)
 break|break;
-name|enter_lastlog
+name|memmove
 argument_list|(
-operator|*
-operator|(
-name|PERSON
-operator|*
-operator|*
-operator|)
+operator|&
+name|tmp
+argument_list|,
 name|data
 operator|.
 name|data
+argument_list|,
+sizeof|sizeof
+name|tmp
+argument_list|)
+expr_stmt|;
+name|enter_lastlog
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 block|}

@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_else
-unit|static char sccsid[] = "@(#)util.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)util.c	8.3 (Berkeley) 4/28/95";
 else|#
 directive|else
 end_else
@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: util.c,v 1.3.6.1 1997/07/03 07:12:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -80,12 +86,6 @@ begin_include
 include|#
 directive|include
 file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_include
@@ -128,6 +128,12 @@ begin_include
 include|#
 directive|include
 file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -284,11 +290,15 @@ name|t
 operator|=
 name|name
 init|;
+operator|(
 operator|*
 name|t
 operator|=
 operator|*
 name|p
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 operator|++
 name|p
@@ -331,6 +341,7 @@ name|t
 operator|=
 name|name
 init|;
+operator|(
 name|p
 operator|=
 name|strtok
@@ -339,6 +350,9 @@ name|t
 argument_list|,
 literal|"\t "
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|;
 name|t
 operator|=
@@ -890,17 +904,22 @@ block|{
 case|case
 literal|0
 case|:
-return|return
-operator|(
-operator|*
-operator|(
-name|PERSON
-operator|*
-operator|*
-operator|)
+name|memmove
+argument_list|(
+operator|&
+name|pn
+argument_list|,
 name|data
 operator|.
 name|data
+argument_list|,
+sizeof|sizeof
+name|pn
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|pn
 operator|)
 return|;
 default|default:
@@ -981,7 +1000,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"db put"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1018,6 +1037,10 @@ name|DBT
 name|data
 decl_stmt|,
 name|key
+decl_stmt|;
+name|PERSON
+modifier|*
+name|p
 decl_stmt|;
 name|char
 name|buf
@@ -1105,37 +1128,47 @@ name|size
 operator|=
 name|cnt
 expr_stmt|;
-return|return
-operator|(
-operator|(
-operator|*
+if|if
+condition|(
+call|(
+modifier|*
 name|db
 operator|->
 name|get
-operator|)
-operator|(
+call|)
+argument_list|(
 name|db
-operator|,
+argument_list|,
 operator|&
 name|key
-operator|,
+argument_list|,
 operator|&
 name|data
-operator|,
+argument_list|,
 literal|0
-operator|)
-condition|?
-name|NULL
-else|:
-operator|*
+argument_list|)
+condition|)
+return|return
 operator|(
-name|PERSON
-operator|*
-operator|*
+name|NULL
 operator|)
+return|;
+name|memmove
+argument_list|(
+operator|&
+name|p
+argument_list|,
 name|data
 operator|.
 name|data
+argument_list|,
+sizeof|sizeof
+name|p
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|p
 operator|)
 return|;
 block|}
@@ -1583,8 +1616,6 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s"
-argument_list|,
 name|tbuf
 argument_list|)
 expr_stmt|;
@@ -1781,11 +1812,15 @@ name|t
 operator|=
 name|name
 init|;
+operator|(
 operator|*
 name|t
 operator|=
 operator|*
 name|p
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 operator|++
 name|p
