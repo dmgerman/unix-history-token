@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operators.c	1.6 (Berkeley) %G%"
+literal|"@(#)operators.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -789,7 +789,7 @@ block|,
 literal|"call"
 block|,
 comment|/* O_CATCH */
-literal|0
+literal|1
 block|,
 name|null
 block|,
@@ -859,7 +859,7 @@ block|,
 literal|"help"
 block|,
 comment|/* O_IGNORE */
-literal|0
+literal|1
 block|,
 name|null
 block|,

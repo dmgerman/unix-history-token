@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	1.12 (Berkeley) %G%"
+literal|"@(#)eval.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2170,10 +2170,6 @@ operator|.
 name|name
 argument_list|,
 name|n2
-operator|->
-name|value
-operator|.
-name|name
 argument_list|)
 expr_stmt|;
 block|}
