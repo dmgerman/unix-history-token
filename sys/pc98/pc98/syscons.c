@@ -16644,7 +16644,9 @@ ifndef|#
 directive|ifndef
 name|SC_DISABLE_REBOOT
 name|shutdown_nice
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
