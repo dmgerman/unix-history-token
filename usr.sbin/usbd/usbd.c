@@ -2882,9 +2882,6 @@ operator|)
 condition|)
 block|{
 comment|/* found match !*/
-break|break;
-block|}
-block|}
 if|if
 condition|(
 name|verbose
@@ -2912,6 +2909,11 @@ return|return
 operator|(
 name|action
 operator|)
+return|;
+block|}
+block|}
+return|return
+name|NULL
 return|;
 block|}
 end_function
@@ -3343,6 +3345,11 @@ elseif|else
 if|if
 condition|(
 name|WIFEXITED
+argument_list|(
+name|status
+argument_list|)
+operator|&&
+name|WEXITSTATUS
 argument_list|(
 name|status
 argument_list|)
