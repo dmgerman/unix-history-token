@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.81 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.82 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1667,16 +1667,6 @@ name|flags
 decl_stmt|,
 name|ronly
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_unmount\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|flags
 operator|=
 literal|0
@@ -1799,13 +1789,6 @@ comment|/* 		 * Here we fall through to vflush again to ensure 		 * that we have
 block|}
 endif|#
 directive|endif
-name|vrele
-argument_list|(
-name|fs
-operator|->
-name|lfs_ivnode
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1865,6 +1848,13 @@ condition|)
 name|panic
 argument_list|(
 literal|"lfs_unmount: still dirty blocks on ifile vnode\n"
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|fs
+operator|->
+name|lfs_ivnode
 argument_list|)
 expr_stmt|;
 name|vgone
@@ -2145,37 +2135,11 @@ decl_stmt|;
 block|{
 specifier|extern
 name|int
-name|crashandburn
-decl_stmt|,
 name|syncprt
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_sync\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-name|crashandburn
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
 comment|/* All syncs must be checkpoints until roll-forward is implemented. */
 name|error
 operator|=
@@ -2268,16 +2232,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_vget\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ump
 operator|=
 name|VFSTOUFS
