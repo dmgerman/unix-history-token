@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)swapgeneric.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)swapgeneric.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -195,15 +195,63 @@ name|swaponroot
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|root_swap
+decl_stmt|;
+comment|/* 	 * If we are running on the in memory, mini-root; then we just need 	 * to set the swap device. 	 */
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_MINIROOT
+condition|)
+name|root_swap
+operator|=
+literal|"swap"
+expr_stmt|;
+else|else
+block|{
 if|if
 condition|(
 name|rootdev
 operator|!=
 name|NODEV
 condition|)
-goto|goto
-name|doswap
-goto|;
+block|{
+name|swdevt
+index|[
+literal|0
+index|]
+operator|.
+name|sw_dev
+operator|=
+name|argdev
+operator|=
+name|dumpdev
+operator|=
+name|makedev
+argument_list|(
+name|major
+argument_list|(
+name|rootdev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|rootdev
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|root_swap
+operator|=
+literal|"root"
+expr_stmt|;
+block|}
 name|unit
 operator|=
 literal|0
@@ -225,7 +273,9 @@ name|retry
 label|:
 name|printf
 argument_list|(
-literal|"root device? "
+literal|"%s device? "
+argument_list|,
+name|root_swap
 argument_list|)
 expr_stmt|;
 name|gets
@@ -461,7 +511,9 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"no suitable root\n"
+literal|"no suitable %s\n"
+argument_list|,
+name|root_swap
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -469,9 +521,44 @@ name|retry
 goto|;
 name|found
 label|:
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_MINIROOT
+condition|)
+block|{
+name|swdevt
+index|[
+literal|0
+index|]
+operator|.
+name|sw_dev
+operator|=
+name|argdev
+operator|=
+name|dumpdev
+operator|=
+name|makedev
+argument_list|(
+name|major
+argument_list|(
 name|gc
 operator|->
 name|gc_root
+argument_list|)
+argument_list|,
+name|unit
+operator|*
+literal|8
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|rootdev
 operator|=
 name|makedev
 argument_list|(
@@ -487,14 +574,6 @@ operator|*
 literal|8
 argument_list|)
 expr_stmt|;
-name|rootdev
-operator|=
-name|gc
-operator|->
-name|gc_root
-expr_stmt|;
-name|doswap
-label|:
 name|swdevt
 index|[
 literal|0
@@ -530,6 +609,7 @@ name|rootdev
 operator|=
 name|dumpdev
 expr_stmt|;
+block|}
 block|}
 end_block
 
