@@ -122,12 +122,6 @@ directive|ifdef
 name|TEST_LABELLING
 end_ifdef
 
-begin_error
-error|#
-directive|error
-literal|"labeling temporarily disabled (slice numbers have changed)"
-end_error
-
 begin_include
 include|#
 directive|include
