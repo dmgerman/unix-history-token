@@ -158,6 +158,12 @@ name|kcb_kse
 operator|=
 name|kse
 expr_stmt|;
+name|kcb
+operator|->
+name|kcb_self
+operator|=
+name|kcb
+expr_stmt|;
 block|}
 return|return
 operator|(
