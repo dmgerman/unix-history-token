@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c 4.6 %G%"
+literal|"@(#)print.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1525,7 +1525,7 @@ name|get
 argument_list|(
 name|frame
 operator|+
-literal|76
+literal|84
 argument_list|,
 name|DSP
 argument_list|)

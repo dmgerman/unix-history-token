@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runtime.c 1.8 %G%"
+literal|"@(#)runtime.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,7 +320,7 @@ name|frp
 operator|->
 name|save_fp
 expr_stmt|;
-comment|/*  *  The check for interrupt generated frames is taken from adb with only  *  partial understanding.  If you're in "sub" and on a sigxxx "sigsub"  *  gets control, then the stack does NOT look like<main, sub, sigsub>.  *  *  As best I can make out it looks like:  *  *<main, (machine check exception block + sub), sysframe, sigsub>.  *  *  When the signal occurs an exception block and a frame for the routine  *  in which it occured are pushed on the user stack.  Then another frame  *  is pushed corresponding to a call from the kernel to sigsub.  *  *  The addr in sub at which the exception occured is not in sub.save_pc  *  but in the machine check exception block.  It is at the magic address  *  fp + 76.  *  *  The current approach ignores the sys_frame (what adb reports as sigtramp)  *  and takes the pc for sub from the exception block.  This allows the  *  "where" command to report<main, sub, sigsub>, which seems reasonable.  */
+comment|/*  *  The check for interrupt generated frames is taken from adb with only  *  partial understanding.  If you're in "sub" and on a sigxxx "sigsub"  *  gets control, then the stack does NOT look like<main, sub, sigsub>.  *  *  As best I can make out it looks like:  *  *<main, (machine check exception block + sub), sysframe, sigsub>.  *  *  When the signal occurs an exception block and a frame for the routine  *  in which it occured are pushed on the user stack.  Then another frame  *  is pushed corresponding to a call from the kernel to sigsub.  *  *  The addr in sub at which the exception occured is not in sub.save_pc  *  but in the machine check exception block.  It is at the magic address  *  fp + 84.  *  *  The current approach ignores the sys_frame (what adb reports as sigtramp)  *  and takes the pc for sub from the exception block.  This allows the  *  "where" command to report<main, sub, sigsub>, which seems reasonable.  */
 name|nextf
 label|:
 name|dread
@@ -351,7 +351,7 @@ name|callpc
 argument_list|,
 name|prev_frame
 operator|+
-literal|76
+literal|84
 argument_list|,
 sizeof|sizeof
 argument_list|(
