@@ -6975,7 +6975,7 @@ name|bp
 parameter_list|)
 block|{
 comment|/* Got PROTO_LCP from link */
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,

@@ -422,7 +422,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 name|plen
 operator|+
@@ -623,7 +623,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 name|plen
 operator|+
@@ -976,7 +976,7 @@ argument_list|,
 literal|"pap_Input: Not a physical link - dropped\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -1009,7 +1009,7 @@ argument_list|,
 literal|"Unexpected pap input - dropped !\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -1096,7 +1096,7 @@ operator|.
 name|code
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -1168,7 +1168,7 @@ operator|->
 name|id
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -1177,7 +1177,7 @@ return|return
 name|NULL
 return|;
 block|}
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -1230,7 +1230,7 @@ block|{
 comment|/*        * Don't restrict the length of our acknowledgement freetext to        * nlen (a one-byte length).  Show the rest of the ack packet        * instead.  This isn't really part of the protocol.....        */
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
@@ -1244,7 +1244,7 @@ argument_list|)
 expr_stmt|;
 name|txtlen
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -1361,7 +1361,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -1562,7 +1562,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)

@@ -217,7 +217,7 @@ condition|)
 block|{
 name|bp
 operator|=
-name|mbuf_Prepend
+name|m_prepend
 argument_list|(
 name|bp
 argument_list|,
@@ -228,7 +228,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -380,7 +380,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -429,7 +429,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -438,7 +438,7 @@ return|return
 name|NULL
 return|;
 block|}
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -476,7 +476,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,

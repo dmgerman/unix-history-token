@@ -197,7 +197,7 @@ literal|0
 condition|)
 name|bp
 operator|=
-name|mbuf_Prepend
+name|m_prepend
 argument_list|(
 name|bp
 argument_list|,
@@ -213,7 +213,7 @@ expr_stmt|;
 else|else
 name|bp
 operator|=
-name|mbuf_Prepend
+name|m_prepend
 argument_list|(
 name|bp
 argument_list|,
@@ -297,7 +297,7 @@ name|proto
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -374,7 +374,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -409,7 +409,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -467,7 +467,7 @@ operator|*
 name|proto
 argument_list|)
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,

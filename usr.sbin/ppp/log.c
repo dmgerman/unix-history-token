@@ -1506,7 +1506,7 @@ name|f
 operator|=
 name|bp
 operator|->
-name|cnt
+name|m_len
 expr_stmt|;
 name|ptr
 operator|=
@@ -1608,7 +1608,7 @@ name|bp
 operator|=
 name|bp
 operator|->
-name|next
+name|m_next
 operator|)
 operator|!=
 name|NULL

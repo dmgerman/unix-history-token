@@ -262,7 +262,7 @@ literal|16
 decl_stmt|;
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
@@ -371,7 +371,7 @@ argument_list|,
 literal|"vj_LayerPush: PROTO_IP -> PROTO_VJUNCOMP\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -394,7 +394,7 @@ argument_list|,
 literal|"vj_LayerPush: PROTO_IP -> PROTO_VJUNCOMP\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -412,7 +412,7 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -476,7 +476,7 @@ decl_stmt|;
 comment|/* enough to hold TCP/IP header */
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
@@ -485,7 +485,7 @@ name|olen
 operator|=
 name|len
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -548,7 +548,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -559,7 +559,7 @@ name|NULL
 expr_stmt|;
 block|}
 else|else
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -645,7 +645,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -664,7 +664,7 @@ name|rlen
 expr_stmt|;
 name|nbp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 name|len
 argument_list|,
@@ -683,7 +683,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -692,7 +692,7 @@ argument_list|)
 expr_stmt|;
 name|nbp
 operator|->
-name|next
+name|m_next
 operator|=
 name|bp
 expr_stmt|;

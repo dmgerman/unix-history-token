@@ -156,7 +156,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -238,7 +238,7 @@ name|lqm
 operator|.
 name|SaveInOctets
 operator|+=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -254,7 +254,7 @@ operator|.
 name|SaveInPackets
 operator|++
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,

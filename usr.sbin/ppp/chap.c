@@ -422,7 +422,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 name|plen
 argument_list|,
@@ -3211,7 +3211,7 @@ argument_list|,
 literal|"chap_Input: Not a physical link - dropped\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3244,7 +3244,7 @@ argument_list|,
 literal|"Unexpected chap input - dropped !\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3253,7 +3253,7 @@ return|return
 name|NULL
 return|;
 block|}
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -3348,7 +3348,7 @@ else|else
 block|{
 name|len
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -3432,7 +3432,7 @@ operator|.
 name|id
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3515,7 +3515,7 @@ argument_list|,
 literal|"Chap Input: Truncated challenge !\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3660,7 +3660,7 @@ argument_list|,
 literal|"Chap Input: Truncated response !\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3692,7 +3692,7 @@ argument_list|,
 literal|"Chap Input: Out of memory !\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3795,7 +3795,7 @@ argument_list|,
 literal|"Chap Input: Out of memory !\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4530,7 +4530,7 @@ name|ans
 argument_list|)
 expr_stmt|;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)

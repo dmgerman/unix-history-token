@@ -8138,7 +8138,7 @@ name|bp
 parameter_list|)
 block|{
 comment|/* Got PROTO_IPCP from link */
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -8195,7 +8195,7 @@ name|bundle
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)

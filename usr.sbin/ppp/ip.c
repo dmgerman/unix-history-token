@@ -1509,9 +1509,9 @@ condition|)
 block|{
 name|bp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
-name|cnt
+name|m_len
 argument_list|,
 name|MB_IPIN
 argument_list|)
@@ -1525,7 +1525,7 @@ argument_list|)
 argument_list|,
 name|ptr
 argument_list|,
-name|cnt
+name|m_len
 argument_list|)
 expr_stmt|;
 name|vj_SendFrame
@@ -1535,7 +1535,7 @@ argument_list|)
 expr_stmt|;
 name|ipcp_AddOutOctets
 argument_list|(
-name|cnt
+name|m_len
 argument_list|)
 expr_stmt|;
 block|}
@@ -2821,7 +2821,7 @@ argument_list|,
 literal|"ip_Input: IPCP not open - packet dropped\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -2830,7 +2830,7 @@ return|return
 name|NULL
 return|;
 block|}
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -2846,7 +2846,7 @@ argument_list|)
 expr_stmt|;
 name|nb
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -2884,7 +2884,7 @@ name|data
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3102,10 +3102,10 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/*      * We allocate an extra 6 bytes, four at the front and two at the end.      * This is an optimisation so that we need to do less work in      * mbuf_Prepend() in acf_LayerPush() and proto_LayerPush() and      * appending in hdlc_LayerPush().      */
+comment|/*      * We allocate an extra 6 bytes, four at the front and two at the end.      * This is an optimisation so that we need to do less work in      * m_prepend() in acf_LayerPush() and proto_LayerPush() and      * appending in hdlc_LayerPush().      */
 name|bp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 name|count
 operator|+
@@ -3116,13 +3116,13 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|offset
+name|m_offset
 operator|+=
 literal|4
 expr_stmt|;
 name|bp
 operator|->
-name|cnt
+name|m_len
 operator|-=
 literal|6
 expr_stmt|;
@@ -3138,7 +3138,7 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-name|mbuf_Enqueue
+name|m_enqueue
 argument_list|(
 name|ipcp
 operator|->
@@ -3196,9 +3196,9 @@ name|queue
 operator|->
 name|top
 condition|)
-name|mbuf_Free
+name|m_freem
 argument_list|(
-name|mbuf_Dequeue
+name|m_dequeue
 argument_list|(
 name|queue
 argument_list|)
@@ -3208,7 +3208,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|size_t
 name|ip_QueueLen
 parameter_list|(
 name|struct
@@ -3222,11 +3222,13 @@ name|mqueue
 modifier|*
 name|queue
 decl_stmt|;
-name|int
+name|size_t
 name|result
-init|=
-literal|0
 decl_stmt|;
+name|result
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|queue
@@ -3253,7 +3255,7 @@ name|result
 operator|+=
 name|queue
 operator|->
-name|qlen
+name|len
 expr_stmt|;
 return|return
 name|result
@@ -3304,7 +3306,7 @@ modifier|*
 name|pip
 decl_stmt|;
 name|int
-name|cnt
+name|m_len
 decl_stmt|;
 if|if
 condition|(
@@ -3343,17 +3345,17 @@ condition|)
 block|{
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
-name|mbuf_Dequeue
+name|m_dequeue
 argument_list|(
 name|queue
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cnt
+name|m_len
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -3407,7 +3409,7 @@ name|ipcp_AddOutOctets
 argument_list|(
 name|ipcp
 argument_list|,
-name|cnt
+name|m_len
 argument_list|)
 expr_stmt|;
 return|return

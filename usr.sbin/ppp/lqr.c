@@ -344,7 +344,7 @@ name|lqr
 decl_stmt|;
 if|if
 condition|(
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -554,7 +554,7 @@ name|LogWARN
 argument_list|,
 literal|"lqr_RecvEcho: Got packet size %d, expecting %ld !\n"
 argument_list|,
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -693,7 +693,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -708,13 +708,13 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|cnt
+name|m_len
 operator|-=
 name|extra
 expr_stmt|;
 name|bp
 operator|->
-name|offset
+name|m_offset
 operator|+=
 name|extra
 expr_stmt|;
@@ -1141,7 +1141,7 @@ argument_list|,
 literal|"lqr_Input: Not a physical link - dropped\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -1163,7 +1163,7 @@ operator|++
 expr_stmt|;
 name|len
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -1227,7 +1227,7 @@ condition|)
 block|{
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|proto_Prepend
 argument_list|(
@@ -1252,7 +1252,7 @@ argument_list|)
 argument_list|,
 name|bp
 operator|->
-name|cnt
+name|m_len
 argument_list|)
 expr_stmt|;
 block|}
@@ -1268,7 +1268,7 @@ name|lastLQR
 decl_stmt|;
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
@@ -1478,7 +1478,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -2229,7 +2229,7 @@ name|p
 condition|)
 block|{
 comment|/* Oops - can't happen :-] */
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -2241,14 +2241,14 @@ block|}
 comment|/*    * From rfc1989:    *    *  All octets which are included in the FCS calculation MUST be counted,    *  including the packet header, the information field, and any padding.    *  The FCS octets MUST also be counted, and one flag octet per frame    *  MUST be counted.  All other octets (such as additional flag    *  sequences, and escape bits or octets) MUST NOT be counted.    *    * As we're stacked before the HDLC layer (otherwise HDLC wouldn't be    * able to calculate the FCS), we must not forget about these additional    * bytes when we're asynchronous.    *    * We're also expecting to be stacked *before* the proto and acf layers.    * If we were after these, it makes alignment more of a pain, and we    * don't do LQR without these layers.    */
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -2623,7 +2623,7 @@ name|proto
 operator|==
 name|PROTO_LQR
 condition|)
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,

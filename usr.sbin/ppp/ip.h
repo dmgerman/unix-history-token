@@ -119,7 +119,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|size_t
 name|ip_QueueLen
 parameter_list|(
 name|struct

@@ -428,7 +428,7 @@ condition|(
 operator|!
 name|p
 operator|||
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -436,7 +436,7 @@ operator|>
 name|HDLCSIZE
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -489,7 +489,7 @@ name|cnt
 operator|=
 name|wp
 operator|->
-name|cnt
+name|m_len
 init|;
 name|cnt
 operator|>
@@ -524,7 +524,7 @@ operator|>=
 name|ep
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -538,7 +538,7 @@ name|wp
 operator|=
 name|wp
 operator|->
-name|next
+name|m_next
 expr_stmt|;
 block|}
 operator|*
@@ -557,14 +557,14 @@ name|async
 operator|.
 name|xbuff
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 name|cnt
 argument_list|,
@@ -665,7 +665,7 @@ block|{
 comment|/* packet is ready. */
 name|bp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 name|async
 operator|->
@@ -901,7 +901,7 @@ name|cnt
 operator|=
 name|bp
 operator|->
-name|cnt
+name|m_len
 init|;
 name|cnt
 condition|;
@@ -939,12 +939,12 @@ operator|*
 name|last
 operator|)
 operator|->
-name|pnext
+name|m_nextpkt
 expr_stmt|;
 block|}
 name|bp
 operator|=
-name|mbuf_FreeSeg
+name|m_free
 argument_list|(
 name|bp
 argument_list|)

@@ -7,32 +7,32 @@ begin_struct
 struct|struct
 name|mbuf
 block|{
-name|short
-name|size
+name|size_t
+name|m_size
 decl_stmt|;
 comment|/* size allocated (excluding header) */
 name|short
-name|offset
+name|m_offset
 decl_stmt|;
 comment|/* offset from header end to start position */
-name|short
-name|cnt
+name|size_t
+name|m_len
 decl_stmt|;
 comment|/* available byte count in buffer */
 name|short
-name|type
+name|m_type
 decl_stmt|;
 comment|/* MB_* below */
 name|struct
 name|mbuf
 modifier|*
-name|next
+name|m_next
 decl_stmt|;
 comment|/* link to next mbuf */
 name|struct
 name|mbuf
 modifier|*
-name|pnext
+name|m_nextpkt
 decl_stmt|;
 comment|/* link to next packet */
 comment|/* buffer space is malloc()d directly after the header */
@@ -54,8 +54,8 @@ name|mbuf
 modifier|*
 name|last
 decl_stmt|;
-name|int
-name|qlen
+name|size_t
+name|len
 decl_stmt|;
 block|}
 struct|;
@@ -69,7 +69,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|((bp) ? (u_char *)((bp)+1) + (bp)->offset : NULL)
+value|((bp) ? (u_char *)((bp)+1) + (bp)->m_offset : NULL)
 end_define
 
 begin_define
@@ -80,7 +80,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|((bp) ? (const u_char *)((bp)+1) + (bp)->offset : NULL)
+value|((bp) ? (const u_char *)((bp)+1) + (bp)->m_offset : NULL)
 end_define
 
 begin_define
@@ -372,7 +372,7 @@ end_struct_decl
 begin_function_decl
 specifier|extern
 name|int
-name|mbuf_Length
+name|m_length
 parameter_list|(
 name|struct
 name|mbuf
@@ -386,9 +386,9 @@ specifier|extern
 name|struct
 name|mbuf
 modifier|*
-name|mbuf_Alloc
+name|m_get
 parameter_list|(
-name|int
+name|size_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -400,7 +400,7 @@ specifier|extern
 name|struct
 name|mbuf
 modifier|*
-name|mbuf_FreeSeg
+name|m_free
 parameter_list|(
 name|struct
 name|mbuf
@@ -412,7 +412,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mbuf_Free
+name|m_freem
 parameter_list|(
 name|struct
 name|mbuf
@@ -480,7 +480,7 @@ specifier|extern
 name|struct
 name|mbuf
 modifier|*
-name|mbuf_Prepend
+name|m_prepend
 parameter_list|(
 name|struct
 name|mbuf
@@ -502,13 +502,41 @@ specifier|extern
 name|struct
 name|mbuf
 modifier|*
-name|mbuf_Truncate
+name|m_adj
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|size_t
+name|ssize_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|mbuf
+modifier|*
+name|m_pullup
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|m_settype
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -529,7 +557,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mbuf_Enqueue
+name|m_enqueue
 parameter_list|(
 name|struct
 name|mqueue
@@ -547,39 +575,11 @@ specifier|extern
 name|struct
 name|mbuf
 modifier|*
-name|mbuf_Dequeue
+name|m_dequeue
 parameter_list|(
 name|struct
 name|mqueue
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|mbuf
-modifier|*
-name|mbuf_Contiguous
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mbuf_SetType
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1718,7 +1718,7 @@ name|len
 decl_stmt|;
 name|len
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -1849,7 +1849,7 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -1907,7 +1907,7 @@ block|{
 name|int
 name|mlen
 init|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -1975,7 +1975,7 @@ name|name
 operator|=
 literal|'\0'
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)

@@ -2170,7 +2170,7 @@ name|p
 operator|->
 name|out
 operator|->
-name|cnt
+name|m_len
 argument_list|)
 expr_stmt|;
 name|log_Printf
@@ -2191,7 +2191,7 @@ name|p
 operator|->
 name|out
 operator|->
-name|cnt
+name|m_len
 argument_list|,
 name|p
 operator|->
@@ -2209,7 +2209,7 @@ name|p
 operator|->
 name|out
 operator|->
-name|cnt
+name|m_len
 operator|-=
 name|nw
 expr_stmt|;
@@ -2217,7 +2217,7 @@ name|p
 operator|->
 name|out
 operator|->
-name|offset
+name|m_offset
 operator|+=
 name|nw
 expr_stmt|;
@@ -2227,7 +2227,7 @@ name|p
 operator|->
 name|out
 operator|->
-name|cnt
+name|m_len
 operator|==
 literal|0
 condition|)
@@ -2235,7 +2235,7 @@ name|p
 operator|->
 name|out
 operator|=
-name|mbuf_FreeSeg
+name|m_free
 argument_list|(
 name|p
 operator|->
@@ -2560,8 +2560,11 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Queued Packets:  %d\n"
+literal|" Queued Packets:  %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|link_QueueLen
 argument_list|(
 operator|&
@@ -5940,7 +5943,7 @@ operator|->
 name|out
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|p
 operator|->
