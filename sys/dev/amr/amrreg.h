@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|AMR_MAX_CHANNELS
-value|4
+value|8
 end_define
 
 begin_define

@@ -34,6 +34,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|LSI_DESC_PCI
+value|"LSILogic MegaRAID 1.51"
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
