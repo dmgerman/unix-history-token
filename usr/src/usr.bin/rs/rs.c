@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rs.c	4.2	(Berkeley)	%G%"
+literal|"@(#)rs.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -374,6 +374,11 @@ expr_stmt|;
 comment|/*fprintf(stderr, "#irows %d icols %d orows %d ocols %d\n",irows,icols,orows,ocols);*/
 name|putfile
 argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function

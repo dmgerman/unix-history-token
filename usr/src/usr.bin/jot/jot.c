@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)jot.c	4.2	(Berkeley)	%G%"
+literal|"@(#)jot.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -439,6 +439,11 @@ condition|)
 name|putchar
 argument_list|(
 literal|'\n'
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1415,16 +1420,6 @@ name|long
 name|d
 init|=
 name|x
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|r
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|e
 decl_stmt|;
 specifier|register
 name|long
