@@ -821,9 +821,6 @@ parameter_list|)
 block|{
 name|int
 name|fd
-init|=
-operator|-
-literal|1
 decl_stmt|;
 name|int
 name|u
