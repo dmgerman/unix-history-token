@@ -1534,17 +1534,8 @@ init|=
 block|{
 literal|"Pro Audio Spectrum"
 block|,
-ifdef|#
-directive|ifdef
-name|PC98
-name|NEEDS_RESTART
-block|,
-else|#
-directive|else
 name|DMA_AUTOMODE
 block|,
-endif|#
-directive|endif
 name|AFMT_U8
 operator||
 name|AFMT_S16_LE
