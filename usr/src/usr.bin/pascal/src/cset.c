@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cset.c 1.6 %G%"
+literal|"@(#)cset.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"pcops.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"align.h"
 end_include
 
 begin_endif
@@ -1971,6 +1977,11 @@ return|return;
 ifdef|#
 directive|ifdef
 name|PC
+name|label
+operator|=
+name|getlab
+argument_list|()
+expr_stmt|;
 name|putprintf
 argument_list|(
 literal|"	.data"
@@ -1978,17 +1989,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|putprintf
+name|aligndot
 argument_list|(
-literal|"	.align 2"
-argument_list|,
-literal|0
+name|A_SET
 argument_list|)
-expr_stmt|;
-name|label
-operator|=
-name|getlab
-argument_list|()
 expr_stmt|;
 name|putlab
 argument_list|(
@@ -2045,11 +2049,9 @@ name|temp
 operator|=
 literal|2
 init|;
-operator|(
 name|temp
 operator|<=
 literal|8
-operator|)
 operator|&&
 name|lp
 operator|<
