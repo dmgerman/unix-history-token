@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	4.13.1.3	82/11/27	*/
+comment|/*	va.c	4.17	82/11/27	*/
 end_comment
 
 begin_include
@@ -578,9 +578,6 @@ name|vacsh
 operator|=
 name|VAPLOT
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|VARIANGOBIT
 name|vaaddr
 operator|->
 name|vacsl
@@ -607,15 +604,6 @@ name|vacsl
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|vadevice
-argument_list|)
-operator|)
-return|;
 name|vaaddr
 operator|->
 name|vawc
@@ -634,6 +622,15 @@ literal|0170
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vadevice
+argument_list|)
+operator|)
+return|;
 block|}
 end_block
 
@@ -1805,6 +1802,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 
