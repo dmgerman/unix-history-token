@@ -601,17 +601,9 @@ name|D_KQFILTER
 block|,
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-operator|(
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|<
-literal|5
-operator|)
+literal|500014
 comment|/* bmaj */
 operator|-
 literal|1

@@ -560,11 +560,9 @@ literal|0
 block|,
 if|#
 directive|if
-operator|(
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|<
-literal|5
-operator|)
+literal|500014
 operator|-
 literal|1
 endif|#
