@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)what.c	5.1 (Berkeley) %G%"
+literal|"@(#)what.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -56,14 +62,9 @@ begin_comment
 comment|/*  * what  */
 end_comment
 
-begin_decl_stmt
-name|char
-modifier|*
-name|infile
-init|=
-literal|"Standard input"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 name|main
@@ -77,48 +78,41 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
-name|argc
-operator|--
-operator|,
-name|argv
+if|if
+condition|(
+operator|!
+operator|*
 operator|++
+name|argv
+condition|)
+name|search
+argument_list|()
 expr_stmt|;
+else|else
 do|do
 block|{
 if|if
 condition|(
-name|argc
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|!
 name|freopen
 argument_list|(
+operator|*
 name|argv
-index|[
-literal|0
-index|]
 argument_list|,
 literal|"r"
 argument_list|,
 name|stdin
 argument_list|)
-operator|==
-name|NULL
 condition|)
 block|{
 name|perror
 argument_list|(
+operator|*
 name|argv
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 name|exit
@@ -127,48 +121,23 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|infile
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|infile
-argument_list|)
-expr_stmt|;
-name|argc
-operator|--
-operator|,
+operator|*
 name|argv
-operator|++
-expr_stmt|;
-block|}
-name|fseek
-argument_list|(
-name|stdin
-argument_list|,
-operator|(
-name|long
-operator|)
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|find
+name|search
 argument_list|()
 expr_stmt|;
 block|}
 do|while
 condition|(
-name|argc
-operator|>
-literal|0
+operator|*
+operator|++
+name|argv
 condition|)
 do|;
 name|exit
@@ -179,38 +148,15 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
-name|find
-argument_list|()
-end_macro
-
-begin_block
-block|{
+begin_expr_stmt
 specifier|static
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
+name|search
+argument_list|()
+block|{
 specifier|register
 name|int
 name|c
-decl_stmt|,
-name|cc
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|pat
-decl_stmt|;
-name|contin
-label|:
+block|;
 while|while
 condition|(
 operator|(
@@ -222,25 +168,14 @@ operator|)
 operator|!=
 name|EOF
 condition|)
+block|{
 if|if
 condition|(
 name|c
-operator|==
+operator|!=
 literal|'@'
 condition|)
-block|{
-for|for
-control|(
-name|pat
-operator|=
-literal|"(#)"
-init|;
-operator|*
-name|pat
-condition|;
-name|pat
-operator|++
-control|)
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -250,12 +185,33 @@ name|getchar
 argument_list|()
 operator|)
 operator|!=
-operator|*
-name|pat
+literal|'('
 condition|)
-goto|goto
-name|contin
-goto|;
+continue|continue;
+if|if
+condition|(
+operator|(
+name|c
+operator|=
+name|getchar
+argument_list|()
+operator|)
+operator|!=
+literal|'#'
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|(
+name|c
+operator|=
+name|getchar
+argument_list|()
+operator|)
+operator|!=
+literal|')'
+condition|)
+continue|continue;
 name|putchar
 argument_list|(
 literal|'\t'
@@ -297,8 +253,8 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_block
+end_expr_stmt
 
+unit|}
 end_unit
 
