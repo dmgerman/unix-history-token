@@ -1055,9 +1055,9 @@ modifier|*
 name|bootCodeSize
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|__alpha__
+ifdef|#
+directive|ifdef
+name|__i386__
 comment|/* only meaningful on x86 */
 specifier|static
 name|u_char
