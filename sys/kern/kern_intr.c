@@ -195,20 +195,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|void
-modifier|*
-name|vm_ih
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-modifier|*
-name|softclock_ih
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ithd
 modifier|*
@@ -224,6 +210,20 @@ name|tty_ithd
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+modifier|*
+name|softclock_ih
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|vm_ih
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -236,40 +236,6 @@ literal|"Interrupt Threads"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_function_decl
-specifier|static
-name|void
-name|ithread_update
-parameter_list|(
-name|struct
-name|ithd
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ithread_loop
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|start_softintr
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -307,10 +273,44 @@ name|intr_storm_threshold
 argument_list|,
 literal|0
 argument_list|,
-literal|"Number of consecutive interrupts before storm protection is enabled."
+literal|"Number of consecutive interrupts before storm protection is enabled"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|ithread_loop
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ithread_update
+parameter_list|(
+name|struct
+name|ithd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|start_softintr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|u_char
@@ -2635,7 +2635,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Interrupt storm detected on \"%s\", throttling interrupt source\n"
+literal|"Interrupt storm detected on \"%s\"; throttling interrupt source\n"
 argument_list|,
 name|p
 operator|->
@@ -2656,7 +2656,7 @@ name|td
 operator|->
 name|td_priority
 argument_list|,
-literal|"throttle"
+literal|"istorm"
 argument_list|,
 name|hz
 operator|/
