@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.8	%G%"
+literal|"@(#)conf.c	3.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,13 +384,13 @@ literal|"-m"
 block|,
 literal|"$h"
 block|,
-literal|"-t"
-block|,
-literal|"$u"
-block|,
 literal|"-h"
 block|,
 literal|"$c"
+block|,
+literal|"-t"
+block|,
+literal|"$u"
 block|,
 name|NULL
 block|}
@@ -413,8 +413,6 @@ operator||
 name|M_ARPAFMT
 operator||
 name|M_STRIPQ
-operator||
-name|M_MUSER
 block|,
 name|EX_UNAVAILABLE
 block|,
@@ -494,15 +492,11 @@ init|=
 block|{
 literal|"...uucp%mail"
 block|,
-ifndef|#
-directive|ifndef
-name|DUMBMAIL
-literal|"-d"
+literal|"-"
 block|,
-endif|#
-directive|endif
-endif|DUMBMAIL
-literal|"$h!$u"
+literal|"$h!rmail"
+block|,
+literal|"($u)"
 block|,
 name|NULL
 block|}
@@ -518,7 +512,7 @@ init|=
 block|{
 literal|"uucp"
 block|,
-literal|"/bin/mail"
+literal|"/usr/bin/uux"
 block|,
 name|M_ROPT
 operator||

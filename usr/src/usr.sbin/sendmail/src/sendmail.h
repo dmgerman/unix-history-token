@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	@(#)sendmail.h	3.7	%G% */
+comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	@(#)sendmail.h	3.8	%G% */
 end_comment
 
 begin_include
@@ -50,7 +50,7 @@ begin_define
 define|#
 directive|define
 name|MAXPV
-value|15
+value|40
 end_define
 
 begin_comment
