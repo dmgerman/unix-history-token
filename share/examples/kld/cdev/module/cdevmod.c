@@ -82,6 +82,12 @@ name|cdevsw
 name|my_devsw
 init|=
 block|{
+comment|/* version */
+operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
 comment|/* open */
 operator|.
 name|d_open
@@ -133,7 +139,9 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|sdev
 decl_stmt|;
 end_decl_stmt

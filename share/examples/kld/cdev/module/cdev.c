@@ -78,7 +78,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|len
 decl_stmt|;
 end_decl_stmt
@@ -87,7 +87,9 @@ begin_function
 name|int
 name|mydev_open
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -153,7 +155,9 @@ begin_function
 name|int
 name|mydev_close
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|int
@@ -205,7 +209,9 @@ begin_function
 name|int
 name|mydev_ioctl
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|u_long
@@ -297,7 +303,9 @@ begin_function
 name|int
 name|mydev_write
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
@@ -376,7 +384,9 @@ begin_function
 name|int
 name|mydev_read
 parameter_list|(
-name|dev_t
+name|struct
+name|cdev
+modifier|*
 name|dev
 parameter_list|,
 name|struct
