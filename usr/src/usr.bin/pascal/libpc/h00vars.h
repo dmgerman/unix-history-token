@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccsid[] = "@(#)h00vars.h 1.8 %G%"; */
+comment|/* sccsid[] = "@(#)h00vars.h 1.9 %G%"; */
 end_comment
 
 begin_include
@@ -706,6 +706,21 @@ name|iorechd
 name|_err
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * seek pointer struct for TELL, SEEK extensions  */
+end_comment
+
+begin_struct
+struct|struct
+name|seekptr
+block|{
+name|long
+name|cnt
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 end_unit
 
