@@ -738,6 +738,26 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|swap_pager_putpages
+parameter_list|(
+name|vm_object_t
+parameter_list|,
+name|vm_page_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|boolean_t
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|boolean_t
 name|swap_pager_haspage
 parameter_list|(
@@ -855,8 +875,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|dmmax
-decl_stmt|,
-name|dmmax_mask
 decl_stmt|;
 end_decl_stmt
 
@@ -1265,15 +1283,6 @@ operator|=
 name|SWB_NPAGES
 operator|*
 literal|2
-expr_stmt|;
-name|dmmax_mask
-operator|=
-operator|~
-operator|(
-name|dmmax
-operator|-
-literal|1
-operator|)
 expr_stmt|;
 block|}
 end_function
@@ -2863,9 +2872,6 @@ decl_stmt|;
 name|daddr_t
 name|blk
 decl_stmt|;
-name|vm_pindex_t
-name|lastpindex
-decl_stmt|;
 name|mreq
 operator|=
 name|m
@@ -2892,7 +2898,7 @@ name|object
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Calculate range to retrieve.  The pages have already been assigned 	 * their swapblks.  We require a *contiguous* range that falls entirely 	 * within a single device stripe.   If we do not supply it, bad things 	 * happen.  Note that blk, iblk& jblk can be SWAPBLK_NONE, but the  	 * loops are set up such that the case(s) are handled implicitly. 	 * 	 * The swp_*() calls must be made at splvm().  vm_page_free() does 	 * not need to be, but it will go a little faster if it is. 	 */
+comment|/* 	 * Calculate range to retrieve.  The pages have already been assigned 	 * their swapblks.  We require a *contiguous* range but we know it to 	 * not span devices.   If we do not supply it, bad things 	 * happen.  Note that blk, iblk& jblk can be SWAPBLK_NONE, but the  	 * loops are set up such that the case(s) are handled implicitly. 	 * 	 * The swp_*() calls must be made at splvm().  vm_page_free() does 	 * not need to be, but it will go a little faster if it is. 	 */
 name|s
 operator|=
 name|splvm
@@ -2966,17 +2972,6 @@ name|i
 operator|)
 condition|)
 break|break;
-if|if
-condition|(
-operator|(
-name|blk
-operator|^
-name|iblk
-operator|)
-operator|&
-name|dmmax_mask
-condition|)
-break|break;
 block|}
 operator|++
 name|i
@@ -3032,17 +3027,6 @@ name|j
 operator|-
 name|reqpage
 operator|)
-condition|)
-break|break;
-if|if
-condition|(
-operator|(
-name|blk
-operator|^
-name|jblk
-operator|)
-operator|&
-name|dmmax_mask
 condition|)
 break|break;
 block|}
@@ -3343,17 +3327,6 @@ name|mreq
 operator|->
 name|object
 argument_list|)
-expr_stmt|;
-name|lastpindex
-operator|=
-name|m
-index|[
-name|j
-operator|-
-literal|1
-index|]
-operator|->
-name|pindex
 expr_stmt|;
 comment|/* 	 * perform the I/O.  NOTE!!!  bp cannot be considered valid after 	 * this point because we automatically release it on completion. 	 * Instead, we look at the one page we are interested in which we 	 * still hold a lock on even through the I/O completion. 	 * 	 * The other pages in our m[] array are also released on completion, 	 * so we cannot assume they are valid anymore either. 	 * 	 * NOTE: b_blkno is destroyed by the call to swapdev_strategy 	 */
 name|BUF_KERNPROC
@@ -3807,52 +3780,6 @@ name|s
 argument_list|)
 expr_stmt|;
 continue|continue;
-block|}
-comment|/* 		 * The I/O we are constructing cannot cross a physical 		 * disk boundry in the swap stripe.  Note: we are still 		 * at splvm(). 		 */
-if|if
-condition|(
-operator|(
-name|blk
-operator|^
-operator|(
-name|blk
-operator|+
-name|n
-operator|)
-operator|)
-operator|&
-name|dmmax_mask
-condition|)
-block|{
-name|j
-operator|=
-operator|(
-operator|(
-name|blk
-operator|+
-name|dmmax
-operator|)
-operator|&
-name|dmmax_mask
-operator|)
-operator|-
-name|blk
-expr_stmt|;
-name|swp_pager_freeswapspace
-argument_list|(
-name|blk
-operator|+
-name|j
-argument_list|,
-name|n
-operator|-
-name|j
-argument_list|)
-expr_stmt|;
-name|n
-operator|=
-name|j
-expr_stmt|;
 block|}
 comment|/* 		 * All I/O parameters have been satisfied, build the I/O 		 * request and assign the swap space. 		 */
 if|if
@@ -6575,10 +6502,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Swfree(index) frees the index'th portion of the swap map.  * Each of the NSWAPDEV devices provides 1/NSWAPDEV'th of the swap  * space, which is laid out with blocks of dmmax pages circularly  * among the devices.  *  * The new swap code uses page-sized blocks.  The old swap code used  * DEV_BSIZE'd chunks.  */
-end_comment
 
 begin_function
 name|int
