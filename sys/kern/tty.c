@@ -12578,11 +12578,10 @@ name|t_dev
 condition|)
 name|t
 operator|.
-name|t_dev
+name|ttyu
+operator|.
+name|t_udev
 operator|=
-operator|(
-name|dev_t
-operator|)
 name|dev2udev
 argument_list|(
 name|t

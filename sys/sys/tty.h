@@ -110,10 +110,24 @@ name|int
 name|t_line
 decl_stmt|;
 comment|/* Interface to device drivers. */
+union|union
+block|{
 name|dev_t
-name|t_dev
+name|t_kdev
 decl_stmt|;
 comment|/* Device. */
+name|udev_t
+name|t_udev
+decl_stmt|;
+comment|/* Userland (sysctl) instance */
+name|void
+modifier|*
+name|t_devp
+decl_stmt|;
+comment|/* Keep user/kernel size in sync */
+block|}
+name|ttyu
+union|;
 name|int
 name|t_state
 decl_stmt|;
@@ -269,6 +283,13 @@ comment|/* Global chain of ttys for pstat(8) */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|t_dev
+value|ttyu.t_kdev
+end_define
 
 begin_define
 define|#
