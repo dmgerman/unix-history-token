@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.213 1999/06/16 03:19:04 tegge Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.214 1999/06/16 23:27:31 mckusick Exp $  */
 end_comment
 
 begin_comment
@@ -4576,7 +4576,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	getnewbuf:  *  *	Find and initialize a new buffer header, freeing up existing buffers   *	in the bufqueues as necessary.  The new buffer is returned with  *	flags set to B_BUSY.  *  *	Important:  B_INVAL is not set.  If the caller wishes to throw the  *	buffer away, the caller must set B_INVAL prior to calling brelse().  *  *	We block if:  *		We have insufficient buffer headers  *		We have insufficient buffer space  *		buffer_map is too fragmented ( space reservation fails )  *  *	We do *not* attempt to flush dirty buffers more then one level deep.  *	I.e., if P_FLSINPROG is set we do not flush dirty buffers at all.  *  *	If P_FLSINPROG is set, we are allowed to dip into our emergency   *	reserve.  */
+comment|/*  *	getnewbuf:  *  *	Find and initialize a new buffer header, freeing up existing buffers   *	in the bufqueues as necessary.  The new buffer is returned locked.  *  *	Important:  B_INVAL is not set.  If the caller wishes to throw the  *	buffer away, the caller must set B_INVAL prior to calling brelse().  *  *	We block if:  *		We have insufficient buffer headers  *		We have insufficient buffer space  *		buffer_map is too fragmented ( space reservation fails )  *  *	We do *not* attempt to flush dirty buffers more then one level deep.  *	I.e., if P_FLSINPROG is set we do not flush dirty buffers at all.  *  *	If P_FLSINPROG is set, we are allowed to dip into our emergency   *	reserve.  */
 end_comment
 
 begin_function
@@ -4632,6 +4632,17 @@ name|int
 name|defrag
 init|=
 literal|0
+decl_stmt|;
+specifier|static
+name|int
+name|newbufcnt
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|lastnewbuf
+init|=
+name|newbufcnt
 decl_stmt|;
 name|restart
 label|:
@@ -5699,10 +5710,59 @@ operator|->
 name|b_kvabase
 expr_stmt|;
 block|}
-comment|/* 	 * The bp, if valid, is set to B_BUSY. 	 */
+comment|/* 	 * If we have slept at some point in this process and another 	 * process has managed to allocate a new buffer while we slept, 	 * we have to return NULL so that our caller can recheck to 	 * ensure that the other process did not create an identically 	 * identified buffer to the one we were requesting. We make this 	 * check by incrementing the static int newbufcnt each time we 	 * successfully allocate a new buffer. By saving the value of 	 * newbufcnt in our local lastnewbuf, we can compare newbufcnt 	 * with lastnewbuf to see if any other process managed to 	 * allocate a buffer while we were doing so ourselves. 	 * 	 * Note that bp, if valid, is locked. 	 */
+if|if
+condition|(
+name|lastnewbuf
+operator|==
+name|newbufcnt
+condition|)
+block|{
+comment|/* 		 * No buffers allocated, so we can return one if we were 		 * successful, or continue trying if we were not successful. 		 */
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|newbufcnt
+operator|+=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|bp
+operator|)
+return|;
+block|}
+goto|goto
+name|restart
+goto|;
+block|}
+comment|/* 	 * Another process allocated a buffer since we were called, so 	 * we have to free the one we allocated and return NULL to let 	 * our caller recheck to see if a new buffer is still needed. 	 */
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_INVAL
+expr_stmt|;
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|NULL
 operator|)
 return|;
 block|}
