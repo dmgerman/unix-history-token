@@ -309,8 +309,11 @@ end_typedef
 begin_endif
 endif|#
 directive|endif
-endif|!defined(ASSEMBLER)
 end_endif
+
+begin_comment
+comment|/* !defined(ASSEMBLER) */
+end_comment
 
 begin_comment
 comment|/*  *  *	Encoding of regular instructions  (Appendix C op cit)  *  */
