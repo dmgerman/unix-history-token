@@ -1076,6 +1076,20 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
+name|PCI_PRODUCT_BROADCOM_5801
+operator|||
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCI_PRODUCT_BROADCOM_5802
+operator|||
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
 name|PCI_PRODUCT_BROADCOM_5805
 operator|||
 name|pci_get_device
@@ -1157,6 +1171,18 @@ name|sc_dev
 argument_list|)
 condition|)
 block|{
+case|case
+name|PCI_PRODUCT_BROADCOM_5801
+case|:
+return|return
+literal|"Broadcom 5801"
+return|;
+case|case
+name|PCI_PRODUCT_BROADCOM_5802
+case|:
+return|return
+literal|"Broadcom 5802"
+return|;
 case|case
 name|PCI_PRODUCT_BROADCOM_5805
 case|:
@@ -2921,11 +2947,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|ubsecstats
-operator|.
-name|hst_opackets
-operator|++
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -2938,11 +2959,6 @@ name|sc
 argument_list|,
 name|q
 argument_list|)
-expr_stmt|;
-name|ubsecstats
-operator|.
-name|hst_opackets
-operator|++
 expr_stmt|;
 block|}
 comment|/* 		 * Don't send any more packet to chip if there has been 		 * a DMAERR. 		 */
@@ -8361,6 +8377,21 @@ name|q
 operator|->
 name|q_dma
 decl_stmt|;
+name|ubsecstats
+operator|.
+name|hst_opackets
+operator|++
+expr_stmt|;
+name|ubsecstats
+operator|.
+name|hst_obytes
+operator|+=
+name|dmap
+operator|->
+name|d_alloc
+operator|.
+name|dma_size
+expr_stmt|;
 name|ubsec_dma_sync
 argument_list|(
 operator|&
