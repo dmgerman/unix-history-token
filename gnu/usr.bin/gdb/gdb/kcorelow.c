@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Core dump and executable file functions below target vector, for GDB.    Copyright 1986, 1987, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: kcorelow.c,v 1.2 1994/05/18 12:42:15 pk Exp $ */
+comment|/* Core dump and executable file functions below target vector, for GDB.    Copyright 1986, 1987, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  	$Id: kcorelow.c,v 1.1 1994/12/30 23:32:56 jkh Exp $ */
 end_comment
 
 begin_include
@@ -611,6 +611,19 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+comment|/*        * gdb doesn't really do anything if the exec-file couldn't        * be opened (in that case exec_bfd is NULL). Usually that's        * no big deal, but kvm_open needs the exec-file's name,        * which results in dereferencing a NULL pointer, a real NO-NO !        * So, check here if the open of the exec-file succeeded.        */
+if|if
+condition|(
+name|exec_bfd
+operator|==
+name|NULL
+condition|)
+comment|/* the open failed */
+name|error
+argument_list|(
+literal|"kgdb could not open the exec-file, please check the name you used !"
+argument_list|)
+expr_stmt|;
 name|core_kd
 operator|=
 name|kvm_open
@@ -629,7 +642,7 @@ name|O_RDWR
 else|:
 name|O_RDONLY
 argument_list|,
-literal|0
+literal|"kgdb: "
 argument_list|)
 expr_stmt|;
 if|if
