@@ -2169,6 +2169,11 @@ name|mtx
 modifier|*
 name|m
 parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
 name|int
 name|opts
 parameter_list|,
@@ -2185,13 +2190,6 @@ name|struct
 name|turnstile
 modifier|*
 name|ts
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
 decl_stmt|;
 if|#
 directive|if
@@ -2741,6 +2739,11 @@ name|mtx
 modifier|*
 name|m
 parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
 name|int
 name|opts
 parameter_list|,
@@ -2791,7 +2794,7 @@ name|_obtain_lock
 argument_list|(
 name|m
 argument_list|,
-name|curthread
+name|td
 argument_list|)
 condition|)
 break|break;
