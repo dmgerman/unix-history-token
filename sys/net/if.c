@@ -8333,6 +8333,12 @@ name|dupsa
 expr_stmt|;
 name|ifma
 operator|->
+name|ifma_lladdr
+operator|=
+name|NULL
+expr_stmt|;
+name|ifma
+operator|->
 name|ifma_ifp
 operator|=
 name|ifp
@@ -8342,6 +8348,12 @@ operator|->
 name|ifma_refcount
 operator|=
 literal|1
+expr_stmt|;
+name|ifma
+operator|->
+name|ifma_protospec
+operator|=
+literal|0
 expr_stmt|;
 name|s
 operator|=
