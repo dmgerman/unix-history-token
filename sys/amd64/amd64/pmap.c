@@ -2492,7 +2492,9 @@ name|pmap
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|pdirindex
 operator|=
 name|va
