@@ -1854,9 +1854,9 @@ name|SNDCARD_AWE32
 block|,
 literal|"AWE32 Synth"
 block|,
-name|attach_awe_obsolete
+name|attach_awe
 block|,
-name|probe_awe_obsolete
+name|probe_awe
 block|}
 block|,
 endif|#

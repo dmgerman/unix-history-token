@@ -1687,6 +1687,10 @@ define|#
 directive|define
 name|SAMPLE_TYPE_GUS
 value|0x10
+define|#
+directive|define
+name|SAMPLE_TYPE_AWE32
+value|0x20
 name|int
 name|perc_mode
 decl_stmt|;

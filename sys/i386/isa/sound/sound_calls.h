@@ -1245,7 +1245,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|attach_awe_obsolete
+name|attach_awe
 parameter_list|(
 name|struct
 name|address_info
@@ -1257,7 +1257,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|probe_awe_obsolete
+name|probe_awe
 parameter_list|(
 name|struct
 name|address_info

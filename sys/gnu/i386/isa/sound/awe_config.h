@@ -20,7 +20,7 @@ comment|/*----------------------------------------------------------------  * sy
 end_comment
 
 begin_comment
-comment|/* if you're using obsolete VoxWare 3.0.x on Linux 1.2.x (or FreeBSD),  * define the following line.  */
+comment|/* if you're using obsolete VoxWare 3.0.x on Linux 1.2.x (or pre-Voxware 3.5  * versions of FreeBSD), define the following line.  */
 end_comment
 
 begin_undef
@@ -28,23 +28,6 @@ undef|#
 directive|undef
 name|AWE_OBSOLETE_VOXWARE
 end_undef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|AWE_OBSOLETE_VOXWARE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* if you're using OSS-Lite on Linux 2.1.6 or later, define the  * following line.  */
@@ -311,11 +294,58 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/sound/sound_config.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIGURE_SOUNDCARD
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CONFIG_AWE32
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|CONFIG_AWE32_SYNTH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|"../sound_config.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

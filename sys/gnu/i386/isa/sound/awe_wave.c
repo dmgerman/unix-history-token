@@ -12,7 +12,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/awe_config.h>
+file|<gnu/i386/isa/sound/awe_config.h>
 end_include
 
 begin_else
@@ -50,19 +50,19 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/awe_hw.h>
+file|<gnu/i386/isa/sound/awe_hw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/awe_version.h>
+file|<gnu/i386/isa/sound/awe_version.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/awe_voice.h>
+file|<gnu/i386/isa/sound/awe_voice.h>
 end_include
 
 begin_else
@@ -106,13 +106,13 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AWE_OBSOLETE_VOXWARE
+name|__FreeBSD__
 end_ifdef
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|AWE_OBSOLETE_VOXWARE
 end_ifdef
 
 begin_define
@@ -120,6 +120,11 @@ define|#
 directive|define
 name|SEQUENCER_C
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -132,16 +137,17 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AWE_OBSOLETE_VOXWARE
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"tuning.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -153,6 +159,11 @@ include|#
 directive|include
 file|"../tuning.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1314,11 +1325,20 @@ begin_comment
 comment|/*----------------------------------------------------------------  * function prototypes  *----------------------------------------------------------------*/
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|AWE_OBSOLETE_VOXWARE
-end_ifndef
+argument_list|)
+end_if
 
 begin_function_decl
 specifier|static
@@ -2976,7 +2996,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/awe_compat.h>
+file|<gnu/i386/isa/sound/awe_compat.h>
 end_include
 
 begin_else
@@ -3133,14 +3153,56 @@ endif|#
 directive|endif
 end_endif
 
-begin_function
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|AWE_OBSOLETE_VOXWARE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTACH_RET
+end_define
+
+begin_decl_stmt
+name|void
+name|attach_awe
+argument_list|(
+expr|struct
+name|address_info
+operator|*
+name|hw_config
+argument_list|)
+else|#
+directive|else
+define|#
+directive|define
+name|ATTACH_RET
+value|ret
 name|ATTACH_DECL
 name|int
 name|attach_awe
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
+argument_list|)
+endif|#
+directive|endif
 block|{
+name|int
+name|ret
+init|=
+literal|0
+decl_stmt|;
 comment|/* check presence of AWE32 card */
 if|if
 condition|(
@@ -3155,7 +3217,7 @@ literal|"AWE32: not detected\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ATTACH_RET
 return|;
 block|}
 comment|/* check AWE32 ports are available */
@@ -3171,7 +3233,7 @@ literal|"AWE32: I/O area already used.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ATTACH_RET
 return|;
 block|}
 comment|/* set buffers to NULL */
@@ -3255,7 +3317,7 @@ literal|"AWE32: can't allocate sample tables\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ATTACH_RET
 return|;
 block|}
 comment|/* allocate sample tables */
@@ -3427,11 +3489,15 @@ name|awe_present
 operator|=
 name|TRUE
 expr_stmt|;
-return|return
+name|ret
+operator|=
 literal|1
+expr_stmt|;
+return|return
+name|ATTACH_RET
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -3510,6 +3576,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|linux
+end_ifdef
+
 begin_function
 name|ATTACH_DECL
 name|void
@@ -3549,6 +3621,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*----------------------------------------------------------------  * old type interface  *----------------------------------------------------------------*/
@@ -3632,10 +3709,49 @@ comment|/*return awe_detect();*/
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_function
+name|int
+name|probe_awe
+parameter_list|(
+name|struct
+name|address_info
+modifier|*
+name|hw_config
+parameter_list|)
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AWE_OBSOLETE_VOXWARE */
+end_comment
 
 begin_comment
 comment|/*================================================================  * clear sample tables   *================================================================*/
@@ -4082,11 +4198,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|AWE_OBSOLETE_VOXWARE
-end_ifndef
+argument_list|)
+end_if
 
 begin_comment
 comment|/*================================================================  * port check / request  *  0x620-622, 0xA20-A22, 0xE20-E22  *================================================================*/
