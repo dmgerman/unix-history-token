@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * login.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar 24 14:51:08 1995 ylo  *   * This file performs some of the things login(1) normally does.  We cannot  * easily use something like login -p -h host -f user, because there are  * several different logins around, and it is hard to determined what kind of  * login the current system has.  Also, we want to be able to execute commands  * on a tty.  *   * $FreeBSD$  */
+comment|/*  *  * login.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Fri Mar 24 14:51:08 1995 ylo  *  * This file performs some of the things login(1) normally does.  We cannot  * easily use something like login -p -h host -f user, because there are  * several different logins around, and it is hard to determined what kind of  * login the current system has.  Also, we want to be able to execute commands  * on a tty.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: login.c,v 1.11 2000/01/04 00:07:59 markus Exp $"
+literal|"$Id: login.c,v 1.13 2000/04/19 07:05:49 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -250,7 +250,7 @@ begin_function
 name|void
 name|record_login
 parameter_list|(
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 specifier|const
@@ -555,7 +555,7 @@ begin_function
 name|void
 name|record_logout
 parameter_list|(
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 specifier|const

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * packet.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sat Mar 18 02:02:14 1995 ylo  *   * Interface for the packet protocol functions.  *   * $FreeBSD$  */
+comment|/*  *  * packet.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Sat Mar 18 02:02:14 1995 ylo  *  * Interface for the packet protocol functions.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: packet.h,v 1.10 2000/03/16 20:56:14 markus Exp $"); */
+comment|/* RCSID("$Id: packet.h,v 1.15 2000/04/14 10:30:32 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -249,6 +249,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|packet_put_bignum2
+parameter_list|(
+name|BIGNUM
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Appends a string to packet data. */
 end_comment
@@ -256,6 +267,34 @@ end_comment
 begin_function_decl
 name|void
 name|packet_put_string
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|unsigned
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|packet_put_cstring
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|packet_put_raw
 parameter_list|(
 specifier|const
 name|char
@@ -390,6 +429,33 @@ name|BIGNUM
 modifier|*
 name|value
 parameter_list|,
+name|int
+modifier|*
+name|length_ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|packet_get_bignum2
+parameter_list|(
+name|BIGNUM
+modifier|*
+name|value
+parameter_list|,
+name|int
+modifier|*
+name|length_ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|packet_get_raw
+parameter_list|(
 name|int
 modifier|*
 name|length_ptr
@@ -604,6 +670,15 @@ define|\
 value|do { \   int _p = (payload_len), _e = (expected_len); \   if (_p != _e) { \     log("Packet integrity error (%d != %d) at %s:%d", \ 	_p, _e, __FILE__, __LINE__); \     packet_disconnect("Packet integrity error. (%d)", (type)); \   } \ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|packet_done
+parameter_list|()
+define|\
+value|do { \ 	int _len = packet_remaining(); \ 	if (_len> 0) { \ 		log("Packet integrity error (%d bytes remaining) at %s:%d", \ 		    _len ,__FILE__, __LINE__); \ 		packet_disconnect("Packet integrity error."); \ 	} \ } while (0)
+end_define
+
 begin_comment
 comment|/* remote host is connected via a socket/ipv4 */
 end_comment
@@ -620,6 +695,32 @@ end_function_decl
 begin_function_decl
 name|int
 name|packet_connection_is_ipv4
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* enable SSH2 packet format */
+end_comment
+
+begin_function_decl
+name|void
+name|packet_set_ssh2_format
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* returns remaining payload bytes */
+end_comment
+
+begin_function_decl
+name|int
+name|packet_remaining
 parameter_list|(
 name|void
 parameter_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Sat Mar 18 22:15:47 1995 ylo  * Code to connect to a remote host, and to perform the client side of the  * login (authentication) dialog.  *  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Sat Mar 18 22:15:47 1995 ylo  * Code to connect to a remote host, and to perform the client side of the  * login (authentication) dialog.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1391,7 +1391,7 @@ end_ifdef
 
 begin_function
 name|int
-name|try_kerberos_authentication
+name|try_krb4_authentication
 parameter_list|()
 block|{
 name|KTEXT_ST
@@ -1608,7 +1608,7 @@ expr_stmt|;
 comment|/* Send authentication info to server. */
 name|packet_start
 argument_list|(
-name|SSH_CMSG_AUTH_KERBEROS
+name|SSH_CMSG_AUTH_KRB4
 argument_list|)
 expr_stmt|;
 name|packet_put_string
@@ -1771,7 +1771,7 @@ block|{
 case|case
 name|SSH_SMSG_FAILURE
 case|:
-comment|/* Should really be SSH_SMSG_AUTH_KERBEROS_FAILURE */
+comment|/* Should really be SSH_SMSG_AUTH_KRB4_FAILURE */
 name|debug
 argument_list|(
 literal|"Kerberos V4 authentication failed."
@@ -1782,9 +1782,9 @@ literal|0
 return|;
 break|break;
 case|case
-name|SSH_SMSG_AUTH_KERBEROS_RESPONSE
+name|SSH_SMSG_AUTH_KRB4_RESPONSE
 case|:
-comment|/* SSH_SMSG_AUTH_KERBEROS_SUCCESS */
+comment|/* SSH_SMSG_AUTH_KRB4_SUCCESS */
 name|debug
 argument_list|(
 literal|"Kerberos V4 authentication accepted."
@@ -1982,7 +1982,7 @@ end_ifdef
 
 begin_function
 name|int
-name|send_kerberos_tgt
+name|send_krb4_tgt
 parameter_list|()
 block|{
 name|CREDENTIALS
@@ -2170,7 +2170,7 @@ argument_list|)
 expr_stmt|;
 name|packet_start
 argument_list|(
-name|SSH_CMSG_HAVE_KERBEROS_TGT
+name|SSH_CMSG_HAVE_KRB4_TGT
 argument_list|)
 expr_stmt|;
 name|packet_put_string
@@ -4096,13 +4096,13 @@ operator|&
 operator|(
 literal|1
 operator|<<
-name|SSH_PASS_KERBEROS_TGT
+name|SSH_PASS_KRB4_TGT
 operator|)
 operator|)
 operator|&&
 name|options
 operator|.
-name|kerberos_tgt_passing
+name|krb4_tgt_passing
 condition|)
 block|{
 if|if
@@ -4121,7 +4121,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|send_kerberos_tgt
+name|send_krb4_tgt
 argument_list|()
 expr_stmt|;
 block|}
@@ -4177,13 +4177,13 @@ operator|&
 operator|(
 literal|1
 operator|<<
-name|SSH_AUTH_KERBEROS
+name|SSH_AUTH_KRB4
 operator|)
 operator|)
 operator|&&
 name|options
 operator|.
-name|kerberos_authentication
+name|krb4_authentication
 condition|)
 block|{
 name|debug
@@ -4193,7 +4193,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|try_kerberos_authentication
+name|try_krb4_authentication
 argument_list|()
 condition|)
 block|{
@@ -4231,6 +4231,138 @@ block|}
 endif|#
 directive|endif
 comment|/* KRB4 */
+ifdef|#
+directive|ifdef
+name|KRB5
+if|if
+condition|(
+operator|(
+name|supported_authentications
+operator|&
+operator|(
+literal|1
+operator|<<
+name|SSH_AUTH_KRB5
+operator|)
+operator|)
+operator|&&
+name|options
+operator|.
+name|krb5_authentication
+condition|)
+block|{
+name|krb5_context
+name|ssh_context
+init|=
+name|NULL
+decl_stmt|;
+name|krb5_auth_context
+name|auth_context
+init|=
+name|NULL
+decl_stmt|;
+name|debug
+argument_list|(
+literal|"Trying Kerberos V5 authentication."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|try_krb5_authentication
+argument_list|(
+operator|&
+name|ssh_context
+argument_list|,
+operator|&
+name|auth_context
+argument_list|)
+condition|)
+block|{
+name|type
+operator|=
+name|packet_read
+argument_list|(
+operator|&
+name|payload_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|SSH_SMSG_SUCCESS
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|supported_authentications
+operator|&
+operator|(
+literal|1
+operator|<<
+name|SSH_PASS_KRB5_TGT
+operator|)
+operator|)
+operator|&&
+name|options
+operator|.
+name|krb5_tgt_passing
+condition|)
+block|{
+if|if
+condition|(
+name|options
+operator|.
+name|cipher
+operator|==
+name|SSH_CIPHER_NONE
+condition|)
+name|log
+argument_list|(
+literal|"WARNING: Encryption is disabled! Ticket will be transmitted in the clear!"
+argument_list|)
+expr_stmt|;
+name|send_krb5_tgt
+argument_list|(
+name|ssh_context
+argument_list|,
+name|auth_context
+argument_list|)
+expr_stmt|;
+block|}
+name|krb5_auth_con_free
+argument_list|(
+name|ssh_context
+argument_list|,
+name|auth_context
+argument_list|)
+expr_stmt|;
+name|krb5_free_context
+argument_list|(
+name|ssh_context
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|type
+operator|!=
+name|SSH_SMSG_FAILURE
+condition|)
+name|packet_disconnect
+argument_list|(
+literal|"Protocol error: got %d in response to Kerberos5 auth"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* KRB5 */
 comment|/* 	 * Use rhosts authentication if running in privileged socket and we 	 * do not wish to remain anonymous. 	 */
 if|if
 condition|(

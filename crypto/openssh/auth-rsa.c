@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * auth-rsa.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Mon Mar 27 01:46:52 1995 ylo  *   * RSA-based authentication.  This code determines whether to admit a login  * based on RSA authentication.  This file also contains functions to check  * validity of the host key.  *   * $FreeBSD$  */
+comment|/*  *  * auth-rsa.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Mon Mar 27 01:46:52 1995 ylo  *  * RSA-based authentication.  This code determines whether to admit a login  * based on RSA authentication.  This file also contains functions to check  * validity of the host key.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth-rsa.c,v 1.19 2000/03/23 22:15:33 markus Exp $"
+literal|"$Id: auth-rsa.c,v 1.23 2000/04/29 18:11:51 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -773,6 +773,11 @@ condition|(
 name|fail
 condition|)
 block|{
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 name|log
 argument_list|(
 name|buf

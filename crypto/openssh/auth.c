@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Copyright (c) 2000 Markus Friedl. All rights reserved.  */
+comment|/*  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Copyright (c) 2000 Markus Friedl. All rights reserved.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -495,6 +495,52 @@ literal|0
 return|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+comment|/* FreeBSD handle it later */
+comment|/* Fail if the account's expiration time has passed. */
+if|if
+condition|(
+name|pw
+operator|->
+name|pw_expire
+operator|!=
+literal|0
+condition|)
+block|{
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|gettimeofday
+argument_list|(
+operator|&
+name|tv
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tv
+operator|.
+name|tv_sec
+operator|>=
+name|pw
+operator|->
+name|pw_expire
+condition|)
+return|return
+literal|0
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* !__FreeBSD__ */
 comment|/* We found no reason not to let this user try to log on... */
 return|return
 literal|1
