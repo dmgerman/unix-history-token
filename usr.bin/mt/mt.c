@@ -211,6 +211,15 @@ literal|0
 block|}
 block|,
 block|{
+literal|"erase"
+block|,
+name|MTERASE
+block|,
+literal|0
+block|}
+block|,
+comment|/* Andreas Klemm<andreas@knobel.gun.de */
+block|{
 name|NULL
 block|}
 block|}
