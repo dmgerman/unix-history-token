@@ -406,6 +406,35 @@ operator|+=
 literal|3
 control|)
 block|{
+comment|/* Pad with nulls if not a multiple of 3. */
+if|if
+condition|(
+name|n
+operator|<
+literal|3
+condition|)
+block|{
+name|p
+index|[
+literal|2
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|2
+condition|)
+name|p
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 name|ch
 operator|=
 operator|*
@@ -433,6 +462,7 @@ break|break;
 name|ch
 operator|=
 operator|(
+operator|(
 operator|*
 name|p
 operator|<<
@@ -440,7 +470,9 @@ literal|4
 operator|)
 operator|&
 literal|060
+operator|)
 operator||
+operator|(
 operator|(
 name|p
 index|[
@@ -451,6 +483,7 @@ literal|4
 operator|)
 operator|&
 literal|017
+operator|)
 expr_stmt|;
 name|ch
 operator|=
@@ -472,6 +505,7 @@ break|break;
 name|ch
 operator|=
 operator|(
+operator|(
 name|p
 index|[
 literal|1
@@ -481,7 +515,9 @@ literal|2
 operator|)
 operator|&
 literal|074
+operator|)
 operator||
+operator|(
 operator|(
 name|p
 index|[
@@ -492,6 +528,7 @@ literal|6
 operator|)
 operator|&
 literal|03
+operator|)
 expr_stmt|;
 name|ch
 operator|=
