@@ -325,16 +325,19 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
-modifier|*
-function_decl|(
-modifier|*
+operator|*
+operator|(
+operator|*
 name|pthread_startroutine_t
-function_decl|)
-parameter_list|(
+operator|)
+name|__P
+argument_list|(
+operator|(
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 end_typedef
 
 begin_comment
