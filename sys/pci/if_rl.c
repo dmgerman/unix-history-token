@@ -5234,7 +5234,7 @@ name|POLL_DEREGISTER
 condition|)
 block|{
 comment|/* final call, enable interrupts */
-name|CSR_WRITE_4
+name|CSR_WRITE_2
 argument_list|(
 name|sc
 argument_list|,
@@ -6224,7 +6224,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
-comment|/* 	 * Only enable interrupts if we are polling, keep them off otherwise. 	 */
+comment|/* 	 * Disable interrupts if we are polling. 	 */
 if|if
 condition|(
 name|ifp
