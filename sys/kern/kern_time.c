@@ -839,6 +839,7 @@ name|tv_sec
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * Round up the result of the division cheaply by adding 1. 		 * Rounding up is especially important if rounding down 		 * would give 0.  Perfect rounding is unimportant. 		 */
 name|ts
 operator|.
 name|tv_nsec
@@ -847,6 +848,8 @@ literal|1000000000
 operator|/
 name|tc_getfrequency
 argument_list|()
+operator|+
+literal|1
 expr_stmt|;
 name|error
 operator|=
