@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.85 1998/06/05 22:39:53 julian Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.86 1998/06/05 23:33:26 julian Exp $  */
 end_comment
 
 begin_comment
@@ -664,12 +664,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPFW_DIVERT_OLDRESTART
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -692,7 +686,8 @@ operator|*
 name|oif
 operator|,
 name|int
-name|ignport
+operator|*
+name|cookie
 operator|,
 expr|struct
 name|mbuf
@@ -703,54 +698,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ip_fw_chk
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|*
-name|pip
-operator|,
-name|int
-name|hlen
-operator|,
-expr|struct
-name|ifnet
-operator|*
-name|oif
-operator|,
-name|int
-name|pastrule
-operator|,
-expr|struct
-name|mbuf
-operator|*
-operator|*
-name|m
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPFW_DIVERT_OLDRESTART */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2148,15 +2095,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parameters:  *  *	ip	Pointer to packet header (struct ip *)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  * #ifdef IPFW_DIVERT_OLDRESTART  *	ignport	Ignore all divert/tee rules to this port (if non-zero)  * #else  *	pastrule Skip up to the first rule past this rule number;  * #endif  *	*m	The packet; we set to NULL when/if we nuke it.  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port.  */
+comment|/*  * Parameters:  *  *	ip	Pointer to packet header (struct ip *)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  * #ifdef IPFW_DIVERT_OLDRESTART  *	*ignport	Ignore all divert/tee rules to this port (if non-zero)  * #else  *	*cookie Skip up to the first rule past this rule number;  * #endif  *	*m	The packet; we set to NULL when/if we nuke it.  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-ifdef|#
-directive|ifdef
-name|IPFW_DIVERT_OLDRESTART
 name|ip_fw_chk
 parameter_list|(
 name|struct
@@ -2174,7 +2118,8 @@ modifier|*
 name|oif
 parameter_list|,
 name|int
-name|ignport
+modifier|*
+name|cookie
 parameter_list|,
 name|struct
 name|mbuf
@@ -2182,36 +2127,6 @@ modifier|*
 modifier|*
 name|m
 parameter_list|)
-else|#
-directive|else
-function|ip_fw_chk
-parameter_list|(
-name|struct
-name|ip
-modifier|*
-modifier|*
-name|pip
-parameter_list|,
-name|int
-name|hlen
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|oif
-parameter_list|,
-name|int
-name|pastrule
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|m
-parameter_list|)
-endif|#
-directive|endif
-comment|/* IPFW_DIVERT_OLDRESTART */
 block|{
 name|struct
 name|ip_fw_chain
@@ -2264,6 +2179,31 @@ name|src_port
 decl_stmt|,
 name|dst_port
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IPFW_DIVERT_OLDRESTART
+name|int
+name|ignport
+init|=
+operator|*
+name|cookie
+decl_stmt|;
+else|#
+directive|else
+name|int
+name|skipto
+init|=
+operator|*
+name|cookie
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* IPFW_DIVERT_OLDRESTART */
+operator|*
+name|cookie
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Go down the chain, looking for enlightment 	 * #ifndef IPFW_DIVERT_OLDRESTART 	 * If we've been asked to start at a given rule immediatly, do so. 	 * #endif 	 */
 ifdef|#
 directive|ifdef
@@ -2302,12 +2242,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pastrule
+name|skipto
 condition|)
 block|{
 if|if
 condition|(
-name|pastrule
+name|skipto
 operator|>=
 literal|65535
 condition|)
@@ -2325,7 +2265,7 @@ name|rule
 operator|->
 name|fw_number
 operator|<=
-name|pastrule
+name|skipto
 operator|)
 condition|)
 block|{
@@ -3128,10 +3068,20 @@ continue|continue;
 case|case
 name|IP_FW_F_DIVERT
 case|:
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|IPFW_DIVERT_OLDRESTART
-name|ip_divert_in_cookie
+operator|*
+name|cookie
+operator|=
+name|f
+operator|->
+name|fw_divert_port
+expr_stmt|;
+else|#
+directive|else
+operator|*
+name|cookie
 operator|=
 name|f
 operator|->
@@ -3536,6 +3486,11 @@ block|}
 name|dropit
 label|:
 comment|/* 	 * Finally, drop the packet. 	 */
+operator|*
+name|cookie
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|*
