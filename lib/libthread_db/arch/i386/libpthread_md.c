@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pthread_db.h"
+file|"libpthread_db.h"
 end_include
 
 begin_decl_stmt

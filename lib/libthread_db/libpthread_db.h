@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PTHREAD_DB_H
+name|_LIBPTHREAD_DB_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PTHREAD_DB_H
+name|_LIBPTHREAD_DB_H_
 end_define
 
 begin_include
@@ -35,17 +35,38 @@ end_include
 
 begin_struct
 struct|struct
-name|pt_thragent
+name|pt_map
 block|{
-name|struct
+enum|enum
+block|{
+name|PT_NONE
+block|,
+name|PT_USER
+block|,
+name|PT_LWP
+block|}
+name|type
+enum|;
+union|union
+block|{
+name|lwpid_t
+name|lwp
+decl_stmt|;
+name|psaddr_t
+name|thr
+decl_stmt|;
+block|}
+union|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|td_thragent
-name|base
-decl_stmt|;
-name|struct
-name|ps_prochandle
-modifier|*
-name|ph
-decl_stmt|;
+block|{
+name|TD_THRAGENT_FIELDS
+expr_stmt|;
 name|psaddr_t
 name|libkse_debug_addr
 decl_stmt|;
@@ -78,14 +99,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|pt_thragent
-name|pt_thragent_t
-typedef|;
-end_typedef
 
 begin_function_decl
 name|void
@@ -175,6 +188,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _LIBPTHREAD_DB_H_ */
+end_comment
 
 end_unit
 
