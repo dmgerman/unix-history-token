@@ -2545,6 +2545,15 @@ name|CPP_OPTION
 argument_list|(
 name|pfile
 argument_list|,
+name|warn_system_headers
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
 name|pending
 argument_list|)
 operator|=
