@@ -315,9 +315,13 @@ argument_list|,
 name|ml_owner
 argument_list|)
 expr_stmt|;
-name|sleep
+name|fprintf
 argument_list|(
-literal|120
+name|mailfp
+argument_list|,
+literal|"Sender:	%s\n"
+argument_list|,
+name|ml_owner
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Consume header 	** 	**	Errors-To:	discard 	**	Precedence:	retain; mark that it has been seen 	**	Received:	discard 	**	Resent-*:	discard 	**	Return-Path:	discard 	**	Via:		discard 	**	X-Mailer:	discard 	**	others		retain 	*/
@@ -417,6 +421,9 @@ argument_list|,
 literal|12
 argument_list|)
 operator|||
+ifdef|#
+directive|ifdef
+name|notyet
 name|sameword
 argument_list|(
 name|p
@@ -426,6 +433,8 @@ argument_list|,
 literal|9
 argument_list|)
 operator|||
+endif|#
+directive|endif
 name|sameword
 argument_list|(
 name|p
@@ -435,6 +444,26 @@ argument_list|,
 literal|7
 argument_list|)
 condition|)
+name|mode
+operator|=
+name|DISCARD
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+case|case
+literal|'S'
+case|:
+if|if sameword
+condition|(
+name|p
+operator|,
+literal|"sender"
+operator|,
+literal|7
+condition|)
+block|)
 name|mode
 operator|=
 name|DISCARD
@@ -521,7 +550,13 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/* if no precedence was given, make it bulk mail */
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -534,7 +569,13 @@ argument_list|,
 literal|"Precedence: bulk\n"
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_comment
 comment|/* copy the body of the message */
+end_comment
+
+begin_expr_stmt
 name|copybody
 argument_list|(
 name|stdin
@@ -542,7 +583,13 @@ argument_list|,
 name|mailfp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* clean up the connection */
+end_comment
+
+begin_expr_stmt
 name|exit
 argument_list|(
 name|pclose
@@ -551,38 +598,41 @@ name|mailfp
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|/* **  OPENMAILER -- open a connection to the mailer */
 end_comment
 
-begin_function
-name|FILE
-modifier|*
+begin_expr_stmt
+unit|FILE
+operator|*
 name|openmailer
-parameter_list|(
-name|from
-parameter_list|,
-name|opt
-parameter_list|,
-name|argv
-parameter_list|)
+argument_list|(
+argument|from
+argument_list|,
+argument|opt
+argument_list|,
+argument|argv
+argument_list|)
 name|char
-modifier|*
+operator|*
 name|from
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|opt
 decl_stmt|,
-decl|*
+modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_function
+end_decl_stmt
 
 begin_block
 block|{
@@ -618,7 +668,7 @@ name|sprintf
 argument_list|(
 name|bp
 argument_list|,
-literal|"%s -f %s"
+literal|"%s -f %s -oi"
 argument_list|,
 name|_PATH_SENDMAIL
 argument_list|,
