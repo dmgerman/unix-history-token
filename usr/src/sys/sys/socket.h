@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.12	82/01/13	*/
+comment|/*	socket.h	4.13	82/01/24	*/
 end_comment
 
 begin_comment
@@ -126,7 +126,7 @@ name|short
 name|sp_family
 decl_stmt|;
 comment|/* protocol family */
-name|u_short
+name|short
 name|sp_protocol
 decl_stmt|;
 comment|/* protocol within family */
