@@ -353,6 +353,13 @@ name|Force
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|EXTERN
+name|int
+name|CheckIt
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|char
 modifier|*

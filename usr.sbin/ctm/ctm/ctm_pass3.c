@@ -578,6 +578,7 @@ default|default:
 name|WRONG
 block|}
 block|}
+comment|/* XXX This should go away.  Disallow trailing '/' */
 name|j
 operator|=
 name|strlen
@@ -666,7 +667,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|WRONG
 block|}
 if|if
 condition|(
@@ -687,7 +688,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|WRONG
 block|}
 name|close
 argument_list|(
@@ -720,7 +721,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|WRONG
 block|}
 continue|continue;
 block|}
@@ -741,7 +742,7 @@ name|ed
 operator|=
 name|popen
 argument_list|(
-literal|"ed"
+literal|"ed -s"
 argument_list|,
 literal|"w"
 argument_list|)
@@ -754,15 +755,6 @@ condition|)
 block|{
 name|WRONG
 block|}
-name|fprintf
-argument_list|(
-name|ed
-argument_list|,
-literal|"e %s\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cnt
@@ -789,7 +781,7 @@ argument_list|(
 name|ed
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|WRONG
 block|}
 name|fprintf
 argument_list|(
@@ -813,7 +805,7 @@ argument_list|(
 literal|"ed"
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|WRONG
 block|}
 if|if
 condition|(
@@ -841,7 +833,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|WRONG
 block|}
 continue|continue;
 block|}
@@ -889,7 +881,24 @@ if|if
 condition|(
 name|i
 condition|)
-block|{ 	    }
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" %s %s Edit failed with code %d.\n"
+argument_list|,
+name|sp
+operator|->
+name|Key
+argument_list|,
+name|name
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|WRONG
+block|}
 name|rename
 argument_list|(
 name|buf
@@ -897,6 +906,35 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|md5
+argument_list|,
+name|MD5File
+argument_list|(
+name|name
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" %s %s Edit failed MD5 check.\n"
+argument_list|,
+name|sp
+operator|->
+name|Key
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|WRONG
+block|}
+continue|continue;
 block|}
 if|if
 condition|(
@@ -972,11 +1010,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+name|WRONG
 block|}
 continue|continue;
 block|}

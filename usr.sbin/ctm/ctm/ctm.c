@@ -109,6 +109,14 @@ name|c
 condition|)
 block|{
 case|case
+literal|'c'
+case|:
+name|CheckIt
+operator|++
+expr_stmt|;
+break|break;
+comment|/* Only check it */
+case|case
 literal|'p'
 case|:
 name|Paranoid
@@ -634,6 +642,22 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|CheckIt
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"All ok\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|i
 operator|=
@@ -671,6 +695,13 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"All ok\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

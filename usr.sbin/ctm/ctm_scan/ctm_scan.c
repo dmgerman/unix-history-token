@@ -365,27 +365,6 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-operator|(
-name|st
-operator|.
-name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|==
-name|S_IFDIR
-condition|)
-block|{
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|"/"
-argument_list|)
-expr_stmt|;
-block|}
 name|pde
 index|[
 name|nde
@@ -510,7 +489,7 @@ name|i
 operator|=
 name|printf
 argument_list|(
-literal|"d %s %o %d %d - - -\n"
+literal|"d %s %d %d %d - - -\n"
 argument_list|,
 name|buf
 argument_list|,
