@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ugen.c,v 1.11 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: ugen.c,v 1.4 1999/01/07 23:31:32 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -192,7 +192,7 @@ begin_decl_stmt
 name|int
 name|ugendebug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -499,6 +499,13 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|UGEN_CDEV_MAJOR
+value|114
+end_define
 
 begin_decl_stmt
 name|int
