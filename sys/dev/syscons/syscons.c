@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1994 Søren Schmidt  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:@(#)syscons.c	1.3 940129  *	$Id: syscons.c,v 1.46 1994/05/25 08:59:56 rgrimes Exp $  *  */
+comment|/*-  * Copyright (c) 1992-1994 Søren Schmidt  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:@(#)syscons.c	1.3 940129  *	$Id: syscons.c,v 1.47 1994/08/01 10:38:19 davidg Exp $  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"sc.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NSC
+operator|>
+literal|0
+end_if
 
 begin_if
 if|#
@@ -27,7 +41,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -39,142 +53,128 @@ end_include
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|<sys/tty.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|<sys/uio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"callout.h"
+file|<sys/callout.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/isa.h"
+file|<i386/isa/isa.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/isa_device.h"
+file|<i386/isa/isa_device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/timerreg.h"
+file|<i386/isa/timerreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/i386/cons.h"
+file|<i386/i386/cons.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/console.h"
+file|<machine/console.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/psl.h"
+file|<machine/psl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/frame.h"
+file|<machine/frame.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/pc/display.h"
+file|<machine/pc/display.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso8859.font"
+file|<i386/isa/iso8859.font>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kbdtables.h"
+file|<i386/isa/kbdtables.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|"sc.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NSC
-operator|>
-literal|0
-end_if
 
 begin_if
 if|#

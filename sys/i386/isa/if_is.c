@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_is.c,v 1.24 1994/08/02 07:39:37 davidg Exp $  */
+comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_is.c,v 1.25 1994/08/08 13:33:16 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -30,61 +30,61 @@ end_include
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if_dl.h"
+file|<net/if_dl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if_types.h"
+file|<net/if_types.h>
 end_include
 
 begin_ifdef
@@ -96,31 +96,31 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"netinet/in.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in_systm.h"
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in_var.h"
+file|<netinet/in_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/ip.h"
+file|<netinet/ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/if_ether.h"
+file|<netinet/if_ether.h>
 end_include
 
 begin_endif
@@ -137,13 +137,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"netns/ns.h"
+file|<netns/ns.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netns/ns_if.h"
+file|<netns/ns_if.h>
 end_include
 
 begin_endif
@@ -162,13 +162,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"net/bpf.h"
+file|<net/bpf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/bpfdesc.h"
+file|<net/bpfdesc.h>
 end_include
 
 begin_endif
@@ -179,25 +179,25 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"i386/isa/isa_device.h"
+file|<i386/isa/isa_device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/if_isreg.h"
+file|<i386/isa/if_isreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/icu.h"
+file|<i386/isa/icu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm.h"
+file|<vm/vm.h>
 end_include
 
 begin_define
