@@ -4,7 +4,11 @@ comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ee.columbia.edu>
 end_comment
 
 begin_comment
-comment|/*  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * Kawasaki LSI KL5KUSB101B USB to ethernet adapter driver.  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+end_comment
+
+begin_comment
+comment|/*  * The KLSI USB to ethernet adapter chip contains an USB serial interface,  * ethernet MAC and embedded microcontroller (called the QT Engine).  * The chip must have firmware loaded into it before it will operate.  * Packets are passed between the chip and host via bulk transfers.  * There is an interrupt endpoint mentioned in the software spec, however  * it's currently unused. This device is 10Mbps half-duplex only, hence  * there is no media selection logic. The MAC supports a 128 entry  * multicast filter, though the exact size of the filter can depend  * on the firmware. Curiously, while the software spec describes various  * ethernet statistics counters, my sample adapter and firmware combination  * claims not to support any statistics counters at all.  *  * Note that once we load the firmware in the device, we have to be  * careful not to load it again: if you restart your computer but  * leave the adapter attached to the USB controller, it may remain  * powered on and retain its firmware. In this case, we don't need  * to load the firmware a second time.  */
 end_comment
 
 begin_include
@@ -179,6 +183,12 @@ begin_include
 include|#
 directive|include
 file|<dev/usb/usbdevs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_quirks.h>
 end_include
 
 begin_include
@@ -1065,6 +1075,63 @@ block|{
 name|usbd_status
 name|err
 decl_stmt|;
+name|u_int8_t
+name|eaddr
+index|[]
+init|=
+block|{
+literal|0xFF
+block|,
+literal|0xFF
+block|,
+literal|0xFF
+block|,
+literal|0xFF
+block|,
+literal|0xFF
+block|,
+literal|0xFF
+block|}
+decl_stmt|;
+comment|/* 	 * First, check if we even need to load the firmware. 	 * If the device was still attached when the system was 	 * rebooted, it may already have firmware loaded in it. 	 * If this is the case, we don't need to do it again. 	 * And in fact, if we try to load it again, we'll hang, 	 * so we have to avoid this condition if we don't want 	 * to look stupid. 	 * 	 * We can test this quickly by trying to read the MAC 	 * address; if this fails to return any data, the firmware 	 * needs to be reloaded, otherwise the device is already 	 * operational and we can just return. 	 */
+name|err
+operator|=
+name|kue_ctl
+argument_list|(
+name|sc
+argument_list|,
+name|KUE_CTL_READ
+argument_list|,
+name|KUE_CMD_GET_MAC
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|eaddr
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|eaddr
+argument_list|,
+name|etherbroadcastaddr
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+condition|)
+return|return
+operator|(
+name|USBD_NORMAL_COMPLETION
+operator|)
+return|;
 comment|/* Load code segment */
 name|err
 operator|=
@@ -1185,7 +1252,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"kue%d: failed to load fixup segment: %s\n"
+literal|"kue%d: failed to load trigger segment: %s\n"
 argument_list|,
 name|sc
 operator|->
@@ -1491,6 +1558,10 @@ name|kue_type
 modifier|*
 name|t
 decl_stmt|;
+name|usb_device_descriptor_t
+modifier|*
+name|dd
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1503,6 +1574,15 @@ operator|(
 name|UMATCH_NONE
 operator|)
 return|;
+name|dd
+operator|=
+operator|&
+name|uaa
+operator|->
+name|device
+operator|->
+name|ddesc
+expr_stmt|;
 name|t
 operator|=
 name|kue_devs
@@ -1535,6 +1615,27 @@ operator|->
 name|kue_did
 condition|)
 block|{
+comment|/* 			 * Force the revision code and then rescan the 			 * quirks so that we get the right quirk bits set. 			 * Why? The chip without the firmware loaded returns 			 * one revision code. The chip with the firmware 			 * loaded and running returns a *different* revision 			 * code. This confuses the quirk mechanism, which is 			 * dependent on the revision data. 			 */
+name|USETW
+argument_list|(
+name|dd
+operator|->
+name|bcdDevice
+argument_list|,
+literal|0x002
+argument_list|)
+expr_stmt|;
+name|uaa
+operator|->
+name|device
+operator|->
+name|quirks
+operator|=
+name|usbd_find_quirk
+argument_list|(
+name|dd
+argument_list|)
+expr_stmt|;
 name|device_set_desc
 argument_list|(
 name|self
