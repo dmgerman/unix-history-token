@@ -599,7 +599,7 @@ modifier|*
 name|fs_maxcluster
 decl_stmt|;
 comment|/* max cluster in each cyl group */
-name|u_int32_t
+name|u_int
 modifier|*
 name|fs_active
 decl_stmt|;
@@ -896,7 +896,7 @@ name|ACTIVECGOFF
 parameter_list|(
 name|cg
 parameter_list|)
-value|(1<< ((cg) / (NBBY * sizeof(int))))
+value|(1<< ((cg) % (NBBY * sizeof(int))))
 end_define
 
 begin_comment

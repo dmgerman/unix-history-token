@@ -1468,14 +1468,7 @@ name|fs
 operator|->
 name|fs_ncg
 argument_list|,
-operator|(
 name|NBBY
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -1783,7 +1776,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|brelse
+name|bawrite
 argument_list|(
 name|nbp
 argument_list|)
