@@ -911,8 +911,6 @@ argument_list|,
 name|filename
 argument_list|,
 name|LINES
-operator|-
-literal|1
 argument_list|,
 name|COLS
 argument_list|)
