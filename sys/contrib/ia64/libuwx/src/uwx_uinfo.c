@@ -724,12 +724,14 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
 name|TRACE_I_DECODE_RHDR_1
 argument_list|(
 literal|"(R1) body"
 argument_list|,
 argument|b0
 argument_list|)
+block|}
 name|rhdr
 operator|->
 name|rlen
@@ -893,6 +895,7 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
 name|TRACE_I_DECODE_RHDR_1L
 argument_list|(
 literal|"(R3) body"
@@ -901,6 +904,7 @@ argument|b0
 argument_list|,
 argument|val
 argument_list|)
+block|}
 name|rhdr
 operator|->
 name|rlen
