@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.4	82/05/31	*/
+comment|/*	defs.h	4.5	82/05/31	*/
 end_comment
 
 begin_comment
@@ -278,14 +278,18 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|struct
 name|rt_entry
 modifier|*
 name|rtlookup
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+modifier|*
+name|rtfind
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Per address family routines.  */
