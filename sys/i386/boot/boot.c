@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.10 1994/04/20 22:06:24 phk Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.11 1994/05/01 03:53:29 martin Exp $  */
 end_comment
 
 begin_comment
@@ -68,12 +68,6 @@ block|,
 literal|"/o386bsd"
 block|,
 literal|"/386bsd.old"
-block|,
-literal|"/vmunix"
-block|,
-literal|"/ovmunix"
-block|,
-literal|"/vmunix.old"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -144,7 +138,7 @@ argument_list|(
 literal|1
 argument_list|)
 argument_list|,
-literal|"$Revision: 1.10 $"
+literal|"$Revision: 1.11 $"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -427,12 +421,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"kernel too big, won't fit in 640K with bss\n"
+literal|"kernel won't fit in 640K with bss\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Only hope is to link the kernel for> 1MB\n"
+literal|"only hope is to link it for> 1MB\n"
 argument_list|)
 expr_stmt|;
 return|return;
