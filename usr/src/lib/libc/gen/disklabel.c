@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.1 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,6 +242,24 @@ operator|->
 name|d_rpm
 operator|=
 literal|3600
+expr_stmt|;
+name|dp
+operator|->
+name|d_badsectforw
+operator|=
+name|dgetflag
+argument_list|(
+literal|"sf"
+argument_list|)
+expr_stmt|;
+name|dp
+operator|->
+name|d_sectoffset
+operator|=
+name|dgetflag
+argument_list|(
+literal|"so"
+argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
