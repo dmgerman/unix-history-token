@@ -863,7 +863,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__dead
 name|void
 name|usage
 parameter_list|(
@@ -5707,7 +5706,6 @@ block|}
 end_function
 
 begin_function
-name|__dead
 name|void
 name|usage
 parameter_list|(
