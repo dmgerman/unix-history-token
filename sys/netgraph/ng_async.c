@@ -560,7 +560,7 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -636,7 +636,7 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -670,7 +670,7 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
