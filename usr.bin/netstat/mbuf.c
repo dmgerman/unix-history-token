@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mbuf.c,v 1.7 1997/07/29 06:51:40 charnier Exp $"
+literal|"$Id: mbuf.c,v 1.8 1997/08/17 09:12:43 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -611,11 +611,14 @@ name|totmem
 operator|/
 literal|1024
 argument_list|,
-operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|totmem
 operator|-
 name|totfree
-operator|)
+argument_list|)
 operator|*
 literal|100
 operator|/
