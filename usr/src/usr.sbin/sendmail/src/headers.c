@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.21 (Berkeley) %G%"
+literal|"@(#)headers.c	6.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -396,7 +396,14 @@ operator|!
 name|def
 operator|&&
 operator|!
-name|QueueRun
+name|bitset
+argument_list|(
+name|EF_QUEUERUN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 operator|&&
 name|strcmp
 argument_list|(
@@ -1114,15 +1121,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  EATHEADER -- run through the stored header and extract info. ** **	Parameters: **		e -- the envelope to process. **		queuejob -- set if running a queued job. ** **	Returns: **		none. ** **	Side Effects: **		Sets a bunch of global variables from information **			in the collected header. **		Aborts the message if the hop count is exceeded. */
+comment|/* **  EATHEADER -- run through the stored header and extract info. ** **	Parameters: **		e -- the envelope to process. ** **	Returns: **		none. ** **	Side Effects: **		Sets a bunch of global variables from information **			in the collected header. **		Aborts the message if the hop count is exceeded. */
 end_comment
 
 begin_expr_stmt
 name|eatheader
 argument_list|(
 name|e
-argument_list|,
-name|queuejob
 argument_list|)
 specifier|register
 name|ENVELOPE
@@ -1130,12 +1135,6 @@ operator|*
 name|e
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|bool
-name|queuejob
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -1416,7 +1415,14 @@ comment|/* save the message-id for logging */
 if|if
 condition|(
 operator|!
-name|queuejob
+name|bitset
+argument_list|(
+name|EF_QUEUERUN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 operator|&&
 name|h
 operator|->
@@ -1564,7 +1570,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|queuejob
+name|bitset
+argument_list|(
+name|EF_QUEUERUN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 name|e
 operator|->
@@ -1658,7 +1671,14 @@ name|LOG
 if|if
 condition|(
 operator|!
-name|queuejob
+name|bitset
+argument_list|(
+name|EF_QUEUERUN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 operator|&&
 name|LogLevel
 operator|>

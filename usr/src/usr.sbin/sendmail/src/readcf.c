@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.18 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4558,7 +4558,41 @@ case|case
 literal|'T'
 case|:
 comment|/* queue timeout */
-name|TimeOut
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|val
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|TimeOuts
+operator|.
+name|to_q_warning
+operator|=
+name|convtime
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+name|TimeOuts
+operator|.
+name|to_q_return
 operator|=
 name|convtime
 argument_list|(

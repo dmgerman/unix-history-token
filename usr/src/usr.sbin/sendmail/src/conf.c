@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.39 (Berkeley) %G%"
+literal|"@(#)conf.c	6.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -335,6 +335,13 @@ begin_comment
 comment|/* **  SETDEFAULTS -- set default values ** **	Because of the way freezing is done, these must be initialized **	using direct code. ** **	Parameters: **		e -- the default envelope. ** **	Returns: **		none. ** **	Side Effects: **		Initializes a bunch of global variables to their **		default values. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DAYS
+value|* 24 * 60 * 60
+end_define
+
 begin_expr_stmt
 name|setdefaults
 argument_list|(
@@ -461,15 +468,19 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* option r */
-name|TimeOut
+name|TimeOuts
+operator|.
+name|to_q_return
 operator|=
 literal|5
-operator|*
-literal|24
-operator|*
-literal|60
-operator|*
-literal|60
+name|DAYS
+expr_stmt|;
+comment|/* option T */
+name|TimeOuts
+operator|.
+name|to_q_warning
+operator|=
+literal|0
 expr_stmt|;
 comment|/* option T */
 name|setdefuser

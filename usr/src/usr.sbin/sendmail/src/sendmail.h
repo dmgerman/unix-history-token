@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.31 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.30		%G%"
+literal|"@(#)sendmail.h	6.31		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1432,6 +1432,28 @@ end_define
 
 begin_comment
 comment|/* verify only (don't expand aliases) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_WARNING
+value|002000
+end_define
+
+begin_comment
+comment|/* warning message has been sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_QUEUERUN
+value|004000
+end_define
+
+begin_comment
+comment|/* this envelope is from queue */
 end_comment
 
 begin_decl_stmt
@@ -2945,17 +2967,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|QueueRun
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* currently running message from the queue */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|HoldErrs
 decl_stmt|;
 end_decl_stmt
@@ -3050,17 +3061,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* minutes to wait until @:@ in alias file */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|time_t
-name|TimeOut
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* time until timeout */
 end_comment
 
 begin_decl_stmt
@@ -3770,6 +3770,15 @@ name|time_t
 name|to_miscshort
 decl_stmt|;
 comment|/* misc short commands (NOOP, VERB, etc) */
+comment|/* following are per message */
+name|time_t
+name|to_q_return
+decl_stmt|;
+comment|/* queue return timeout */
+name|time_t
+name|to_q_warning
+decl_stmt|;
+comment|/* queue warning timeout */
 block|}
 name|TimeOuts
 struct|;

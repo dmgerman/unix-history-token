@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.25 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -954,7 +954,15 @@ name|OpMode
 operator|==
 name|MD_DAEMON
 operator|&&
-name|QueueRun
+operator|!
+name|bitset
+argument_list|(
+name|EF_QUEUERUN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 operator|&&
 name|e
 operator|->
@@ -1590,7 +1598,14 @@ expr_stmt|;
 comment|/* 	**  Figure out the real user executing us. 	**	Username can return errno != 0 on non-errors. 	*/
 if|if
 condition|(
-name|QueueRun
+name|bitset
+argument_list|(
+name|EF_QUEUERUN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 operator|||
 name|OpMode
 operator|==

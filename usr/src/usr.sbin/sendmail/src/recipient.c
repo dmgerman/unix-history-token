@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.29 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -807,7 +807,9 @@ name|a
 operator|->
 name|q_timeout
 operator|=
-name|TimeOut
+name|TimeOuts
+operator|.
+name|to_q_return
 expr_stmt|;
 comment|/* get unquoted user for file, program or user.name check */
 operator|(
@@ -869,6 +871,16 @@ operator|&&
 name|m
 operator|==
 name|ProgMailer
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_QUEUERUN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 block|{
 name|a
@@ -1086,6 +1098,16 @@ operator|->
 name|q_alias
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_QUEUERUN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 block|{
 name|a
@@ -1184,7 +1206,14 @@ operator|==
 name|NULL
 operator|&&
 operator|!
-name|QueueRun
+name|bitset
+argument_list|(
+name|EF_QUEUERUN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 block|{
 name|a
