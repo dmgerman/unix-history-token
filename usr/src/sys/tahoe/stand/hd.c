@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Stand alone driver for the HDC controller  *  *	@(#)hd.c	7.3 (Berkeley) %G%  */
+comment|/*  * Stand alone driver for the HDC controller  *  *	@(#)hd.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
