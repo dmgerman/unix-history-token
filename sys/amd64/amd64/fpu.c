@@ -1540,17 +1540,14 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-name|device_print_prettyname
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|flags
 condition|)
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"flags 0x%x "
 argument_list|,
 name|flags
@@ -1561,8 +1558,10 @@ condition|(
 name|npx_irq13
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"using IRQ 13 interface\n"
 argument_list|)
 expr_stmt|;
@@ -1594,15 +1593,19 @@ operator|&
 name|NPX_PREFER_EMULATOR
 operator|)
 condition|)
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"INT 16 interface\n"
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"FPU exists, but flags request "
 literal|"emulator\n"
 argument_list|)
@@ -1621,8 +1624,10 @@ condition|(
 name|npx_exists
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"error reporting broken; using 387 emulator\n"
 argument_list|)
 expr_stmt|;
@@ -1634,8 +1639,10 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"387 emulator\n"
 argument_list|)
 expr_stmt|;
@@ -1646,8 +1653,10 @@ condition|(
 name|npx_ex16
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"INT 16 interface\n"
 argument_list|)
 expr_stmt|;
@@ -1658,8 +1667,10 @@ operator|&
 name|NPX_PREFER_EMULATOR
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"emulator requested, but none compiled "
 literal|"into kernel, using FPU\n"
 argument_list|)
@@ -1667,8 +1678,10 @@ expr_stmt|;
 block|}
 block|}
 else|else
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"no 387 emulator in kernel and no FPU!\n"
 argument_list|)
 expr_stmt|;
