@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.110 (Berkeley) %G%"
+literal|"@(#)main.c	8.111 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1335,7 +1335,7 @@ index|[]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Version %s"
+literal|"Version %s\nCompiled with:\t"
 argument_list|,
 name|Version
 argument_list|)
@@ -1346,7 +1346,7 @@ name|CompileOptions
 expr_stmt|;
 name|ll
 operator|=
-literal|100
+literal|7
 expr_stmt|;
 while|while
 condition|(
@@ -1385,12 +1385,18 @@ name|ll
 operator|==
 literal|0
 condition|)
+block|{
 name|putchar
 argument_list|(
 literal|'\t'
 argument_list|)
 expr_stmt|;
-else|else
+name|putchar
+argument_list|(
+literal|'\t'
+argument_list|)
+expr_stmt|;
+block|}
 name|putchar
 argument_list|(
 literal|' '
