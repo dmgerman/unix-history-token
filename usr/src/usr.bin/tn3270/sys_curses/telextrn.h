@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*-  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telextrn.h	4.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
 comment|/*  * Definitions of external routines and variables for tn3270  */
 end_comment
 
