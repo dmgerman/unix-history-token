@@ -1131,6 +1131,10 @@ argument_list|,
 name|IO_NPX
 argument_list|,
 name|IO_NPX
+operator|+
+name|IO_NPXSIZE
+operator|-
+literal|1
 argument_list|,
 name|IO_NPXSIZE
 argument_list|,
