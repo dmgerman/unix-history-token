@@ -322,9 +322,6 @@ decl_stmt|;
 name|u_char
 name|sc_lsr
 decl_stmt|;
-name|u_char
-name|sc_dying
-decl_stmt|;
 name|u_int
 name|last_lcr
 decl_stmt|;
@@ -1126,7 +1123,7 @@ literal|0
 end_if
 
 begin_endif
-unit|int uftdi_activate(device_ptr_t self, enum devact act) { 	struct uftdi_softc *sc = (struct uftdi_softc *)self; 	int rv = 0;  	switch (act) { 	case DVACT_ACTIVATE: 		return (EOPNOTSUPP); 		break;  	case DVACT_DEACTIVATE: 		if (sc->sc_subdev != NULL) 			rv = config_deactivate(sc->sc_subdev); 		sc->sc_dying = 1; 		break; 	} 	return (rv); }
+unit|int uftdi_activate(device_ptr_t self, enum devact act) { 	struct uftdi_softc *sc = (struct uftdi_softc *)self; 	int rv = 0;  	switch (act) { 	case DVACT_ACTIVATE: 		return (EOPNOTSUPP); 		break;  	case DVACT_DEACTIVATE: 		if (sc->sc_subdev != NULL) 			rv = config_deactivate(sc->sc_subdev); 		sc->sc_ucom.sc_dying = 1; 		break; 	} 	return (rv); }
 endif|#
 directive|endif
 end_endif
@@ -1169,6 +1166,8 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|sc_ucom
+operator|.
 name|sc_dying
 operator|=
 literal|1
@@ -1219,12 +1218,10 @@ name|ucom_softc
 modifier|*
 name|ucom
 init|=
-operator|(
-expr|struct
-name|ucom_softc
-operator|*
-operator|)
-name|vsc
+operator|&
+name|sc
+operator|->
+name|sc_ucom
 decl_stmt|;
 name|usb_device_request_t
 name|req
@@ -1247,7 +1244,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
+name|ucom
 operator|->
 name|sc_dying
 condition|)
@@ -1923,7 +1920,10 @@ name|ucom_softc
 modifier|*
 name|ucom
 init|=
-name|vsc
+operator|&
+name|sc
+operator|->
+name|sc_ucom
 decl_stmt|;
 name|usb_device_request_t
 name|req
@@ -1951,7 +1951,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
+name|ucom
 operator|->
 name|sc_dying
 condition|)
