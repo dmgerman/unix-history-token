@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.29 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4427,6 +4427,13 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"#include \"sys/types.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"sys/time.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
