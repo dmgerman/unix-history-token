@@ -719,10 +719,18 @@ return|;
 comment|/* packet consumed */
 block|}
 else|else
+block|{
+name|args
+operator|.
+name|rule
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|again
 goto|;
 comment|/* continue with packet */
+block|}
 case|case
 name|IP_FW_NGTEE
 case|:
@@ -1294,10 +1302,18 @@ return|;
 comment|/* packet consumed */
 block|}
 else|else
+block|{
+name|args
+operator|.
+name|rule
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|again
 goto|;
 comment|/* continue with packet */
+block|}
 case|case
 name|IP_FW_NGTEE
 case|:
