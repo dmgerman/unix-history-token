@@ -2508,6 +2508,7 @@ name|M_ZERO
 argument_list|)
 operator|)
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"cannot allocate ATAPI/CAM buffer\n"
@@ -2516,6 +2517,7 @@ expr_stmt|;
 goto|goto
 name|action_oom
 goto|;
+block|}
 block|}
 name|request
 operator|->
