@@ -609,7 +609,7 @@ index|[]
 init|=
 block|{
 comment|/* 0000 */
-literal|"Ericsson Mobile Comunications"
+literal|"Ericsson Mobile Communications"
 block|,
 comment|/* 0001 */
 literal|"Nokia Mobile Phones"
@@ -1241,7 +1241,7 @@ comment|/* 0x0d */
 literal|"Host rejected due to limited resources"
 block|,
 comment|/* 0x0e */
-literal|"Host rejected due to securiity reasons"
+literal|"Host rejected due to security reasons"
 block|,
 comment|/* 0x0f */
 literal|"Host rejected due to remote unit is a personal unit"
@@ -1322,7 +1322,7 @@ comment|/* 0x28 */
 literal|"Instant passed"
 block|,
 comment|/* 0x29 */
-literal|"Paring with unit key not supported"
+literal|"Pairing with unit key not supported"
 block|}
 decl_stmt|;
 return|return

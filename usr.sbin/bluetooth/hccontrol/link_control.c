@@ -4440,7 +4440,7 @@ literal|"remote Bluetooth unit identified by the connection handle parameter. Th
 expr|\
 literal|"connection handle must be a connection handle for an ACL connection.\n\n"
 expr|\
-literal|"\t<conneciton_handle> - dddd; connection handle"
+literal|"\t<connection_handle> - dddd; connection handle"
 block|,
 operator|&
 name|hci_read_remote_version_information
@@ -4449,9 +4449,9 @@ block|,
 block|{
 literal|"read_clock_offset<connection_handle>"
 block|,
-literal|"\nThis command allows the Host to read clock offset to remote unit.\n"
+literal|"\nThis command allows the Host to read the clock offset from the remote unit.\n"
 expr|\
-literal|"\t<conneciton_handle> - dddd; connection handle"
+literal|"\t<connection_handle> - dddd; connection handle"
 block|,
 operator|&
 name|hci_read_clock_offset

@@ -231,7 +231,7 @@ block|,
 block|{
 name|SDP_SERVICE_CLASS_DIALUP_NETWORKING
 block|,
-literal|"DailUp Networking"
+literal|"Dial-Up Networking"
 block|, }
 block|,
 block|{

@@ -1129,7 +1129,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"role_discovery<conection_handle>"
+literal|"role_discovery<connection_handle>"
 block|,
 literal|"\nThe Role_Discovery command is used for a Bluetooth device to determine\n"
 expr|\
