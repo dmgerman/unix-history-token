@@ -328,7 +328,7 @@ index|]
 decl_stmt|;
 name|u_char
 modifier|*
-name|mbr
+name|mbrblk
 decl_stmt|;
 name|struct
 name|pc98_partition
@@ -455,7 +455,7 @@ sizeof|sizeof
 name|s
 argument_list|)
 expr_stmt|;
-name|mbr
+name|mbrblk
 operator|=
 name|read_block
 argument_list|(
@@ -476,7 +476,7 @@ name|pc98_partition
 operator|*
 operator|)
 operator|(
-name|mbr
+name|mbrblk
 operator|+
 name|DOSPARTOFF
 operator|)
@@ -497,7 +497,7 @@ name|work
 expr_stmt|;
 name|free
 argument_list|(
-name|mbr
+name|mbrblk
 argument_list|)
 expr_stmt|;
 for|for
@@ -991,7 +991,7 @@ operator|->
 name|sector_size
 argument_list|)
 expr_stmt|;
-name|mbr
+name|mbrblk
 operator|=
 name|read_block
 argument_list|(
@@ -1006,7 +1006,7 @@ argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|mbr
+name|mbrblk
 operator|+
 name|DOSPARTOFF
 argument_list|,
@@ -1082,7 +1082,7 @@ name|fd
 argument_list|,
 literal|1
 argument_list|,
-name|mbr
+name|mbrblk
 argument_list|,
 name|d1
 operator|->
