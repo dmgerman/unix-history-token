@@ -254,7 +254,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|MPC750
+name|OEA
 argument_list|)
 end_if
 
