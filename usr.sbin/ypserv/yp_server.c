@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.26 1998/02/11 19:15:32 wpaul Exp $"
+literal|"$Id: yp_server.c,v 1.27 1999/02/10 16:16:14 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,14 +103,6 @@ end_include
 
 begin_decl_stmt
 name|int
-name|forked
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|children
 init|=
 literal|0
@@ -144,6 +136,48 @@ directive|define
 name|ORDER_SZ
 value|sizeof(ORDER_STRING) - 1
 end_define
+
+begin_function
+specifier|static
+name|pid_t
+name|yp_fork
+parameter_list|()
+block|{
+if|if
+condition|(
+name|yp_pid
+operator|!=
+name|getpid
+argument_list|()
+condition|)
+block|{
+name|yp_error
+argument_list|(
+literal|"child %d trying to fork!"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EEXIST
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|fork
+argument_list|()
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * NIS v2 support. This is where most of the action happens.  */
@@ -1612,7 +1646,7 @@ argument_list|)
 block|}
 switch|switch
 condition|(
-name|fork
+name|yp_fork
 argument_list|()
 condition|)
 block|{
@@ -1813,9 +1847,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|forked
-operator|++
-expr_stmt|;
 name|yp_error
 argument_list|(
 literal|"ypxfr execl(%s): %s"
@@ -1862,10 +1893,6 @@ name|YPXFR_SUCC
 expr_stmt|;
 name|children
 operator|++
-expr_stmt|;
-name|forked
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 block|}
@@ -2257,16 +2284,13 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|fork
+name|yp_fork
 argument_list|()
 condition|)
 block|{
 case|case
 literal|0
 case|:
-name|forked
-operator|++
-expr_stmt|;
 break|break;
 case|case
 operator|-
@@ -2302,10 +2326,6 @@ break|break;
 default|default:
 name|children
 operator|++
-expr_stmt|;
-name|forked
-operator|=
-literal|0
 expr_stmt|;
 return|return
 operator|(
