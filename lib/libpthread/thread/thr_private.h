@@ -1440,6 +1440,23 @@ block|}
 enum|;
 end_enum
 
+begin_struct
+struct|struct
+name|sigwait_data
+block|{
+name|sigset_t
+modifier|*
+name|waitset
+decl_stmt|;
+name|siginfo_t
+modifier|*
+name|siginfo
+decl_stmt|;
+comment|/* used to save siginfo for sigwaitinfo() */
+block|}
+struct|;
+end_struct
+
 begin_union
 union|union
 name|pthread_wait_data
@@ -1455,11 +1472,11 @@ name|lock
 modifier|*
 name|lock
 decl_stmt|;
-name|siginfo_t
+name|struct
+name|sigwait_data
 modifier|*
-name|sigwaitinfo
+name|sigwait
 decl_stmt|;
-comment|/* used to save siginfo for sigwaitinfo() */
 block|}
 union|;
 end_union
@@ -1730,9 +1747,6 @@ name|thread_continuation_t
 name|continuation
 decl_stmt|;
 comment|/* 	 * The thread's base and pending signal masks.  The active 	 * signal mask is stored in the thread's context (in mailbox). 	 */
-name|sigset_t
-name|oldsigmask
-decl_stmt|;
 name|sigset_t
 name|sigmask
 decl_stmt|;
