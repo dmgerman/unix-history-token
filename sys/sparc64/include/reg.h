@@ -111,23 +111,6 @@ comment|/*  * XXX these interfaces are MI, so they should be declared in a MI pl
 end_comment
 
 begin_function_decl
-name|void
-name|setregs
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|u_long
-parameter_list|,
-name|u_long
-parameter_list|,
-name|u_long
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|fill_regs
 parameter_list|(

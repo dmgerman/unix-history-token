@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/imgact.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -2705,7 +2711,7 @@ end_comment
 
 begin_function
 name|void
-name|setregs
+name|exec_setregs
 parameter_list|(
 name|struct
 name|thread

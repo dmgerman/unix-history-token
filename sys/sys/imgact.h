@@ -24,6 +24,12 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|vm_object
 struct_decl|;
 end_struct_decl
@@ -187,6 +193,23 @@ parameter_list|,
 name|vm_offset_t
 parameter_list|,
 name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|exec_setregs
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -2111,7 +2111,7 @@ name|ps_strings
 argument_list|)
 expr_stmt|;
 else|else
-name|setregs
+name|exec_setregs
 argument_list|(
 name|td
 argument_list|,
