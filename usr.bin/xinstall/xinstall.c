@@ -3339,7 +3339,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ usage: install [-CcDps] [-f flags] [-g group] [-m mode] [-o owner] file1 file2\n\        install [-CcDps] [-f flags] [-g group] [-m mode] [-o owner] file1 ...\n\              fileN directory\n\        install -d [-g group] [-m mode] [-o owner] directory ...\n"
+literal|"\ usage: install [-CcDpsv] [-f flags] [-g group] [-m mode] [-o owner] file1 file2\n\        install [-CcDpsv] [-f flags] [-g group] [-m mode] [-o owner] file1 ...\n\              fileN directory\n\        install -d [-v] [-g group] [-m mode] [-o owner] directory ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
