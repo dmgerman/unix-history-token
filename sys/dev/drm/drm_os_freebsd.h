@@ -1125,7 +1125,7 @@ parameter_list|,
 name|uaddr
 parameter_list|)
 define|\
-value|((val) = fuword(uaddr), 0)
+value|((val) = fuword32(uaddr), 0)
 end_define
 
 begin_define
@@ -1138,7 +1138,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|suword(uaddr, val)
+value|suword32(uaddr, val)
 end_define
 
 begin_comment
