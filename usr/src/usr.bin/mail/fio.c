@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	2.12 %G%"
+literal|"@(#)fio.c	2.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2025,6 +2025,19 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+specifier|static
+name|int
+name|sigdepth
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* depth of holdsigs() */
+end_comment
+
 begin_comment
 comment|/*  * Hold signals SIGHUP - SIGQUIT.  */
 end_comment
@@ -2040,6 +2053,13 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|sigdepth
+operator|++
+operator|==
+literal|0
+condition|)
 for|for
 control|(
 name|i
@@ -2053,12 +2073,9 @@ condition|;
 name|i
 operator|++
 control|)
-comment|/* 		 * This cannot be changed to ``sighold(i)'' because 		 * of a bug in the jobs library.  Sighold does not 		 * record that one is using the new signal mechanisms 		 * so an eventual sigrelse() will fail. 		 */
-name|sigset
+name|sighold
 argument_list|(
 name|i
-argument_list|,
-name|SIG_HOLD
 argument_list|)
 expr_stmt|;
 block|}
@@ -2079,6 +2096,13 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|--
+name|sigdepth
+operator|==
+literal|0
+condition|)
 for|for
 control|(
 name|i
