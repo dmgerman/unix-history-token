@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.c,v 1.73 2000/05/31 16:14:42 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.76 2000/06/06 11:36:21 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -330,7 +330,7 @@ block|}
 end_function
 
 begin_function_decl
-name|Static
+specifier|static
 name|__inline
 name|int
 name|usbd_xfer_isread
@@ -342,16 +342,14 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|Static
+specifier|static
 name|__inline
 name|int
 name|usbd_xfer_isread
 parameter_list|(
-name|xfer
-parameter_list|)
 name|usbd_xfer_handle
 name|xfer
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -410,11 +408,9 @@ begin_function
 name|void
 name|usbd_dump_queue
 parameter_list|(
-name|pipe
-parameter_list|)
 name|usbd_pipe_handle
 name|pipe
-decl_stmt|;
+parameter_list|)
 block|{
 name|usbd_xfer_handle
 name|xfer
@@ -3207,7 +3203,7 @@ operator|(
 name|err
 operator|)
 return|;
-comment|/* new setting work, we can free old endpoints */
+comment|/* new setting works, we can free old endpoints */
 if|if
 condition|(
 name|endpoints
