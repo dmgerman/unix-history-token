@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nlist.c	5.11 (Berkeley) %G%"
+literal|"@(#)nlist.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,6 +553,30 @@ condition|;
 name|p
 operator|++
 control|)
+block|{
+name|char
+modifier|*
+name|cp
+init|=
+name|p
+operator|->
+name|n_un
+operator|.
+name|n_name
+decl_stmt|;
+comment|/* 				 * MIPS doesn't use '_' in front of symbols. 				 * Strip the '_' to be compatible with other 				 * systems. 				 */
+if|if
+condition|(
+name|cp
+index|[
+literal|0
+index|]
+operator|==
+literal|'_'
+condition|)
+name|cp
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -564,11 +588,7 @@ index|[
 name|soff
 index|]
 argument_list|,
-name|p
-operator|->
-name|n_un
-operator|.
-name|n_name
+name|cp
 argument_list|)
 condition|)
 block|{
@@ -612,6 +632,7 @@ operator|<=
 literal|0
 condition|)
 break|break;
+block|}
 block|}
 block|}
 block|}
