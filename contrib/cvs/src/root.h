@@ -37,15 +37,18 @@ end_typedef
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
-modifier|*
 name|method_names
 index|[]
+index|[
+literal|16
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* change this in root.c if you change 				   the enum above */
+comment|/* change this in root.c if you change 					   the enum above */
 end_comment
 
 begin_typedef
@@ -57,43 +60,52 @@ name|char
 modifier|*
 name|original
 decl_stmt|;
-comment|/* the complete source CVSroot string */
+comment|/* The complete source CVSroot string. */
 name|CVSmethod
 name|method
 decl_stmt|;
-comment|/* one of the enum values above */
-name|char
-modifier|*
-name|username
-decl_stmt|;
-comment|/* the username or NULL if method == local */
-name|char
-modifier|*
-name|password
-decl_stmt|;
-comment|/* the username or NULL if method == local */
-name|char
-modifier|*
-name|hostname
-decl_stmt|;
-comment|/* the hostname or NULL if method == local */
-name|int
-name|port
-decl_stmt|;
-comment|/* the port or zero if method == local */
+comment|/* One of the enum values above. */
 name|char
 modifier|*
 name|directory
 decl_stmt|;
-comment|/* the directory name */
+comment|/* The directory name. */
 ifdef|#
 directive|ifdef
 name|CLIENT_SUPPORT
+name|char
+modifier|*
+name|username
+decl_stmt|;
+comment|/* The username or NULL if method == local. */
+name|char
+modifier|*
+name|password
+decl_stmt|;
+comment|/* The password or NULL if method == local. */
+name|char
+modifier|*
+name|hostname
+decl_stmt|;
+comment|/* The hostname or NULL if method == local. */
+name|int
+name|port
+decl_stmt|;
+comment|/* The port or zero if method == local. */
+name|char
+modifier|*
+name|proxy_hostname
+decl_stmt|;
+comment|/* The hostname of the proxy server, or NULL 				 * when method == local or no proxy will be 				 * used. 				 */
+name|int
+name|proxy_port
+decl_stmt|;
+comment|/* The port of the proxy or zero, as above. */
 name|unsigned
 name|char
 name|isremote
 decl_stmt|;
-comment|/* nonzero if we are doing remote access */
+comment|/* Nonzero if we are doing remote access. */
 endif|#
 directive|endif
 comment|/* CLIENT_SUPPORT */

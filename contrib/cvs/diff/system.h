@@ -287,20 +287,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_ISSOCK
+end_ifndef
+
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|S_ISSOCK
-argument_list|)
-operator|&&
 name|defined
 argument_list|(
 name|S_IFSOCK
 argument_list|)
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|S_IFMT
+end_ifdef
 
 begin_define
 define|#
@@ -312,10 +318,67 @@ parameter_list|)
 value|(((mode)& S_IFMT) == S_IFSOCK)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|S_ISSOCK
+parameter_list|(
+name|mode
+parameter_list|)
+value|((mode)& S_IFSOCK)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* S_IFMT */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|S_ISNAM
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* SCO OpenServer 5.0.6a */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_ISSOCK
+value|S_ISNAM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !S_IFSOCK&& S_ISNAM */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !S_ISSOCK */
+end_comment
 
 begin_if
 if|#

@@ -34,10 +34,12 @@ name|dir
 parameter_list|,
 name|update_dir
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|dir
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|update_dir
@@ -47,6 +49,7 @@ name|FILE
 modifier|*
 name|fpin
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|xupdate_dir
@@ -492,9 +495,6 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|newrepos
@@ -534,12 +534,14 @@ comment|/*  * Return a pointer to the repository name relative to CVSROOT from a
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|Short_Repository
 parameter_list|(
 name|repository
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|repository
@@ -552,9 +554,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 comment|/* If repository matches CVSroot at the beginning, strip off CVSroot */
 comment|/* And skip leading '/' in rep, in case CVSroot ended with '/'. */
@@ -579,6 +579,7 @@ operator|==
 literal|0
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|rep
@@ -609,15 +610,13 @@ return|;
 block|}
 else|else
 return|return
-operator|(
 name|repository
-operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Sanitize the repository name (in place) by removing trailing  * slashes and a trailing "." if present.  It should be safe for  * callers to use strcat and friends to create repository names.  * Without this check, names like "/path/to/repos/./foo" and  * "/path/to/repos//foo" would be created.  For example, one  * significant case is the CVSROOT-detection code in commit.c.  It  * decides whether or not it needs to rebuild the administrative file  * database by doing a string compare.  If we've done a `cvs co .' to  * get the CVSROOT files, "/path/to/repos/./CVSROOT" and  * "/path/to/repos/CVSROOT" are the arguments that are compared!  *  * This function ends up being called from the same places as  * strip_path, though what it does is much more conservative.  Many  * comments about this operation (which was scattered around in  * several places in the source code) ran thus:  *  *    ``repository ends with "/."; omit it.  This sort of thing used  *    to be taken care of by strip_path.  Now we try to be more  *    selective.  I suspect that it would be even better to push it  *    back further someday, so that the trailing "/." doesn't get into  *    repository in the first place, but we haven't taken things that  *    far yet.''        --Jim Kingdon (recurse.c, 07-Sep-97)  *  * Ahh, all too true.  The major consideration is RELATIVE_REPOS.  If  * the "/." doesn't end up in the repository while RELATIVE_REPOS is  * defined, there will be nothing in the CVS/Repository file.  I  * haven't verified that the remote protocol will handle that  * correctly yet, so I've not made that change. */
+comment|/* Sanitize the repository name (in place) by removing trailing  * slashes and a trailing "." if present.  It should be safe for  * callers to use strcat and friends to create repository names.  * Without this check, names like "/path/to/repos/./foo" and  * "/path/to/repos//foo" would be created.  For example, one  * significant case is the CVSROOT-detection code in commit.c.  It  * decides whether or not it needs to rebuild the administrative file  * database by doing a string compare.  If we've done a `cvs co .' to  * get the CVSROOT files, "/path/to/repos/./CVSROOT" and  * "/path/to/repos/CVSROOT" are the arguments that are compared!  *  * This function ends up being called from the same places as  * strip_path, though what it does is much more conservative.  Many  * comments about this operation (which was scattered around in  * several places in the source code) ran thus:  *  *    ``repository ends with "/."; omit it.  This sort of thing used  *    to be taken care of by strip_path.  Now we try to be more  *    selective.  I suspect that it would be even better to push it  *    back further someday, so that the trailing "/." doesn't get into  *    repository in the first place, but we haven't taken things that  *    far yet.''        --Jim Kingdon (recurse.c, 07-Sep-97)  */
 end_comment
 
 begin_function

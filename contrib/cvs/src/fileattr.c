@@ -151,6 +151,7 @@ name|fileattr_startdir
 parameter_list|(
 name|repos
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|repos

@@ -1460,6 +1460,7 @@ modifier|*
 name|argv
 index|[]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|out
