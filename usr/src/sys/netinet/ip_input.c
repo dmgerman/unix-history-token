@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_input.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -736,6 +736,9 @@ operator|==
 literal|0
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 operator|(
@@ -753,6 +756,8 @@ argument_list|(
 literal|"ipintr no HDR"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If no IP addresses have been set yet but the interfaces 	 * are receiving, can't do anything with incoming packets yet. 	 */
 if|if
 condition|(
