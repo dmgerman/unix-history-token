@@ -2292,6 +2292,13 @@ begin_define
 define|#
 directive|define
 name|CCR_CACHEINVALIDSIZE
+value|0x07190009
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCR_CACHEINVALIDSIZE_MASK
 value|0xfe000000
 end_define
 
@@ -2331,6 +2338,13 @@ end_define
 begin_comment
 comment|/* 1 = A cache service will fetch word sized samples	*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CCR_READADDRESS
+value|0x06100009
+end_define
 
 begin_define
 define|#
