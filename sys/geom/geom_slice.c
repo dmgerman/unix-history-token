@@ -362,6 +362,21 @@ name|gp
 operator|->
 name|softc
 expr_stmt|;
+if|if
+condition|(
+name|dr
+operator|>
+literal|0
+operator|||
+name|dw
+operator|>
+literal|0
+operator|||
+name|de
+operator|>
+literal|0
+condition|)
+block|{
 name|gsl
 operator|=
 operator|&
@@ -501,6 +516,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
+block|}
 block|}
 comment|/* On first open, grab an extra "exclusive" bit */
 if|if
