@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)psl.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)psl.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -170,12 +170,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PSL_M
+value|0x1000
+end_define
+
+begin_comment
+comment|/* master (kernel) sp vs intr sp */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PSL_S
 value|0x2000
 end_define
 
 begin_comment
 comment|/* supervisor enable bit */
+end_comment
+
+begin_comment
+comment|/*	PSL_T0		0x4000		   ??? T0 on 68020, 8000 is T1 */
 end_comment
 
 begin_define
@@ -242,10 +257,6 @@ name|PSL_USERCLR
 value|(PSL_S | PSL_IPL7 | PSL_MBZ)
 end_define
 
-begin_comment
-comment|/*  * Macros to decode processor status word.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -254,16 +265,6 @@ parameter_list|(
 name|ps
 parameter_list|)
 value|(((ps)& PSL_S) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BASEPRI
-parameter_list|(
-name|ps
-parameter_list|)
-value|(((ps)& PSL_IPL7) == 0)
 end_define
 
 begin_endif
