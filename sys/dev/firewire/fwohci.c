@@ -10867,7 +10867,7 @@ end_function
 
 begin_function
 name|int
-name|fwohci_shutdown
+name|fwohci_stop
 parameter_list|(
 name|struct
 name|fwohci_softc

@@ -1127,7 +1127,7 @@ operator|=
 name|splfw
 argument_list|()
 expr_stmt|;
-name|fwohci_shutdown
+name|fwohci_stop
 argument_list|(
 name|sc
 argument_list|,
@@ -1377,7 +1377,7 @@ condition|)
 return|return
 name|err
 return|;
-comment|/* fwohci_shutdown(dev); */
+comment|/* fwohci_stop(dev); */
 return|return
 literal|0
 return|;
@@ -1450,7 +1450,12 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|fwohci_shutdown
+name|bus_generic_shutdown
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|fwohci_stop
 argument_list|(
 name|sc
 argument_list|,
