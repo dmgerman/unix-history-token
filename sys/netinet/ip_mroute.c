@@ -5925,13 +5925,6 @@ condition|(
 name|s
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* XXX until sockets are locked */
 if|if
 condition|(
 name|sbappendaddr
@@ -5961,22 +5954,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 block|}
 name|m_freem
 argument_list|(
