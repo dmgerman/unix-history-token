@@ -40,6 +40,12 @@ name|ccb_scb_ptr
 value|spriv_ptr0
 end_define
 
+begin_decl_stmt
+name|devclass_t
+name|ahc_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
