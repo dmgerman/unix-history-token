@@ -209,7 +209,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|generation
 decl_stmt|;
 end_decl_stmt
@@ -237,7 +237,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|select_generation
 decl_stmt|;
 end_decl_stmt

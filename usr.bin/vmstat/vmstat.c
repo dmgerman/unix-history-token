@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.25 1998/09/15 08:16:43 gibbs Exp $"
+literal|"$Id: vmstat.c,v 1.26 1998/09/16 18:20:23 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -498,7 +498,11 @@ name|int
 name|num_devices
 decl_stmt|,
 name|maxshowdevs
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
 name|generation
 decl_stmt|;
 end_decl_stmt
@@ -538,7 +542,11 @@ name|int
 name|num_devices_specified
 decl_stmt|,
 name|num_selections
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
 name|select_generation
 decl_stmt|;
 end_decl_stmt
