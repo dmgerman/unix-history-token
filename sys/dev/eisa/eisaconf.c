@@ -2356,9 +2356,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|eisa_add_intr
+name|eisa_add_intr_m
 parameter_list|(
+name|device_t
+name|eisa
+parameter_list|,
 name|device_t
 name|dev
 parameter_list|,
@@ -2643,9 +2647,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|eisa_add_mspace
+name|eisa_add_mspace_m
 parameter_list|(
+name|device_t
+name|eisa
+parameter_list|,
 name|device_t
 name|dev
 parameter_list|,
@@ -2694,9 +2702,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|eisa_add_iospace
+name|eisa_add_iospace_m
 parameter_list|(
+name|device_t
+name|eisa
+parameter_list|,
 name|device_t
 name|dev
 parameter_list|,
@@ -2863,6 +2875,28 @@ argument_list|(
 name|bus_teardown_intr
 argument_list|,
 name|bus_generic_teardown_intr
+argument_list|)
+block|,
+comment|/* EISA interface */
+name|DEVMETHOD
+argument_list|(
+name|eisa_add_intr
+argument_list|,
+name|eisa_add_intr_m
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|eisa_add_iospace
+argument_list|,
+name|eisa_add_iospace_m
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|eisa_add_mspace
+argument_list|,
+name|eisa_add_mspace_m
 argument_list|)
 block|,
 block|{
