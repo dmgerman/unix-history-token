@@ -135,7 +135,7 @@ name|errcode
 argument_list|,
 name|preg
 argument_list|,
-literal|""
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
