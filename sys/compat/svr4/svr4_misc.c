@@ -160,79 +160,79 @@ end_include
 begin_include
 include|#
 directive|include
-file|<svr4/svr4.h>
+file|<compat/svr4/svr4.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_types.h>
+file|<compat/svr4/svr4_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_signal.h>
+file|<compat/svr4/svr4_signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_proto.h>
+file|<compat/svr4/svr4_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_util.h>
+file|<compat/svr4/svr4_util.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_sysconfig.h>
+file|<compat/svr4/svr4_sysconfig.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_dirent.h>
+file|<compat/svr4/svr4_dirent.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_acl.h>
+file|<compat/svr4/svr4_acl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_ulimit.h>
+file|<compat/svr4/svr4_ulimit.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_statvfs.h>
+file|<compat/svr4/svr4_statvfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_hrt.h>
+file|<compat/svr4/svr4_hrt.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_mman.h>
+file|<compat/svr4/svr4_mman.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_wait.h>
+file|<compat/svr4/svr4_wait.h>
 end_include
 
 begin_include

@@ -28,13 +28,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_signal.h>
+file|<compat/svr4/svr4_signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_ucontext.h>
+file|<compat/svr4/svr4_ucontext.h>
 end_include
 
 begin_comment

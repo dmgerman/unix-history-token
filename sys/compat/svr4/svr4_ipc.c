@@ -38,37 +38,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<svr4/svr4.h>
+file|<compat/svr4/svr4.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_types.h>
+file|<compat/svr4/svr4_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_signal.h>
+file|<compat/svr4/svr4_signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_proto.h>
+file|<compat/svr4/svr4_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_util.h>
+file|<compat/svr4/svr4_util.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_ipc.h>
+file|<compat/svr4/svr4_ipc.h>
 end_include
 
 begin_if

@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<svr4/svr4.h>
+file|<compat/svr4/svr4.h>
 end_include
 
 begin_decl_stmt

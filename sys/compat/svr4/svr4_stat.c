@@ -78,67 +78,67 @@ end_include
 begin_include
 include|#
 directive|include
-file|<svr4/svr4.h>
+file|<compat/svr4/svr4.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_types.h>
+file|<compat/svr4/svr4_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_signal.h>
+file|<compat/svr4/svr4_signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_proto.h>
+file|<compat/svr4/svr4_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_util.h>
+file|<compat/svr4/svr4_util.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_stat.h>
+file|<compat/svr4/svr4_stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_ustat.h>
+file|<compat/svr4/svr4_ustat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_utsname.h>
+file|<compat/svr4/svr4_utsname.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_systeminfo.h>
+file|<compat/svr4/svr4_systeminfo.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_socket.h>
+file|<compat/svr4/svr4_socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_time.h>
+file|<compat/svr4/svr4_time.h>
 end_include
 
 begin_if

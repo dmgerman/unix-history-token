@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_types.h>
+file|<compat/svr4/svr4_types.h>
 end_include
 
 begin_include

@@ -48,25 +48,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<svr4/svr4.h>
+file|<compat/svr4/svr4.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_util.h>
+file|<compat/svr4/svr4_util.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_ioctl.h>
+file|<compat/svr4/svr4_ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_termios.h>
+file|<compat/svr4/svr4_termios.h>
 end_include
 
 begin_ifndef

@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<svr4/svr4_siginfo.h>
+file|<compat/svr4/svr4_siginfo.h>
 end_include
 
 begin_define
