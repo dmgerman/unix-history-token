@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)extern.h	1.1 83/03/17";  */
+comment|/*  * sccsid = "@(#)extern.h	1.2 83/05/19";  */
 end_comment
 
 begin_include
@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|NUMOFSCENES
-value|32
+value|31
 end_define
 
 begin_define
