@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.   * For copying and distribution information, please see the file  *<Copyright.MIT>.   *  *	from: krb_dbm.c,v 4.9 89/04/18 16:15:13 wesommer Exp $  *	$Id: krb_dbm.c,v 1.2 1994/07/19 19:23:36 g89r4222 Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.   * For copying and distribution information, please see the file  *<Copyright.MIT>.   *  *	from: krb_dbm.c,v 4.9 89/04/18 16:15:13 wesommer Exp $  *	$Id: krb_dbm.c,v 1.1.1.1 1994/09/30 14:49:55 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: krb_dbm.c,v 1.2 1994/07/19 19:23:36 g89r4222 Exp $"
+literal|"$Id: krb_dbm.c,v 1.1.1.1 1994/09/30 14:49:55 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1240,6 +1240,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|char
 modifier|*
 name|fromdir
@@ -1284,6 +1287,32 @@ argument_list|,
 literal|".pag"
 argument_list|)
 decl_stmt|;
+else|#
+directive|else
+name|char
+modifier|*
+name|fromdb
+init|=
+name|gen_dbsuffix
+argument_list|(
+name|from
+argument_list|,
+literal|".db"
+argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|todb
+init|=
+name|gen_dbsuffix
+argument_list|(
+name|to
+argument_list|,
+literal|".db"
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|fromok
@@ -1306,6 +1335,9 @@ decl_stmt|;
 name|int
 name|ok
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 if|if
 condition|(
 operator|(
@@ -1331,6 +1363,22 @@ literal|0
 operator|)
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|rename
+argument_list|(
+name|fromdb
+argument_list|,
+name|todb
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -1349,6 +1397,9 @@ argument_list|(
 name|fromok
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|free
 argument_list|(
 name|fromdir
@@ -1369,6 +1420,20 @@ argument_list|(
 name|topag
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|free
+argument_list|(
+name|fromdb
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|todb
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ok
@@ -1387,13 +1452,7 @@ operator|-
 literal|1
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/*  * look up a principal in the data base returns number of principals  * found , and whether there were more than requested.   */
-end_comment
-
-begin_macro
 name|kerb_db_get_principal
 argument_list|(
 argument|name
@@ -1406,60 +1465,30 @@ argument|max
 argument_list|,
 argument|more
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* could have wild card */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|inst
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* could have wild card */
-end_comment
-
-begin_decl_stmt
 name|Principal
 modifier|*
 name|principal
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|int
 name|max
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* max number of name structs to return */
-end_comment
-
-begin_decl_stmt
 name|int
 modifier|*
 name|more
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* where there more than 'max' tuples? */
-end_comment
-
-begin_block
 block|{
 name|int
 name|found
@@ -1909,40 +1938,22 @@ name|found
 operator|)
 return|;
 block|}
-end_block
-
-begin_comment
 comment|/*  * Update a name in the data base.  Returns number of names  * successfully updated.  */
-end_comment
-
-begin_macro
 name|kerb_db_put_principal
 argument_list|(
 argument|principal
 argument_list|,
 argument|max
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|Principal
 modifier|*
 name|principal
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|int
 name|max
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* number of principal structs to 				 * update */
-end_comment
-
-begin_block
 block|{
 name|int
 name|found
@@ -2133,9 +2144,6 @@ name|found
 operator|)
 return|;
 block|}
-end_block
-
-begin_function
 specifier|static
 name|void
 name|encode_princ_key
@@ -2157,9 +2165,6 @@ decl_stmt|,
 decl|*
 name|instance
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 specifier|static
 name|char
@@ -2216,9 +2221,6 @@ operator|+
 name|INST_SZ
 expr_stmt|;
 block|}
-end_block
-
-begin_function
 specifier|static
 name|void
 name|decode_princ_key
@@ -2240,9 +2242,6 @@ decl_stmt|,
 decl|*
 name|instance
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|strncpy
 argument_list|(
@@ -2287,9 +2286,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
-
-begin_function
 specifier|static
 name|void
 name|encode_princ_contents
@@ -2328,9 +2324,6 @@ operator|)
 name|principal
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|decode_princ_contents
@@ -2368,23 +2361,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_macro
 name|kerb_db_get_stat
 argument_list|(
 argument|s
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|DB_stat
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|gettimeofday
 argument_list|(
@@ -2458,27 +2442,15 @@ literal|0
 expr_stmt|;
 comment|/* update local copy too */
 block|}
-end_block
-
-begin_macro
 name|kerb_db_put_stat
 argument_list|(
 argument|s
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|DB_stat
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{ }
-end_block
-
-begin_macro
 name|delta_stat
 argument_list|(
 argument|a
@@ -2487,9 +2459,6 @@ argument|b
 argument_list|,
 argument|c
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|DB_stat
 modifier|*
 name|a
@@ -2500,9 +2469,6 @@ decl_stmt|,
 modifier|*
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* c = a - b then b = a for the next time */
 name|c
@@ -2639,13 +2605,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_block
-
-begin_comment
 comment|/*  * look up a dba in the data base returns number of dbas found , and  * whether there were more than requested.   */
-end_comment
-
-begin_macro
 name|kerb_db_get_dba
 argument_list|(
 argument|dba_name
@@ -2658,60 +2618,30 @@ argument|max
 argument_list|,
 argument|more
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|dba_name
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* could have wild card */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|dba_inst
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* could have wild card */
-end_comment
-
-begin_decl_stmt
 name|Dba
 modifier|*
 name|dba
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|int
 name|max
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* max number of name structs to return */
-end_comment
-
-begin_decl_stmt
 name|int
 modifier|*
 name|more
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* where there more than 'max' tuples? */
-end_comment
-
-begin_block
 block|{
 operator|*
 name|more
@@ -2724,18 +2654,12 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
-
-begin_macro
 name|kerb_db_iterate
 argument_list|(
 argument|func
 argument_list|,
 argument|arg
 argument_list|)
-end_macro
-
-begin_function_decl
 name|int
 function_decl|(
 modifier|*
@@ -2743,20 +2667,11 @@ name|func
 function_decl|)
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_decl_stmt
 name|char
 modifier|*
 name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* void *, really */
-end_comment
-
-begin_block
 block|{
 name|datum
 name|key
@@ -2884,9 +2799,6 @@ return|return
 literal|0
 return|;
 block|}
-end_block
-
-begin_decl_stmt
 specifier|static
 name|int
 name|dblfd
@@ -2894,27 +2806,18 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|mylock
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|inited
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 specifier|static
 name|kerb_dbl_init
 argument_list|()
@@ -2982,21 +2885,19 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|inited
 operator|++
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
-begin_expr_stmt
-unit|}     return
+begin_return
+return|return
 operator|(
 literal|0
 operator|)
-expr_stmt|;
-end_expr_stmt
+return|;
+end_return
 
 begin_function
 unit|}  static
