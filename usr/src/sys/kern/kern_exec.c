@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.43 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.44 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2777,6 +2777,23 @@ name|MAXSSIZ
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|i386
+name|addr
+operator|=
+name|trunc_page
+argument_list|(
+name|USRSTACK
+operator|-
+name|size
+argument_list|)
+operator|-
+name|NBPG
+expr_stmt|;
+comment|/* XXX */
+else|#
+directive|else
 name|addr
 operator|=
 name|trunc_page
@@ -2786,6 +2803,8 @@ operator|-
 name|size
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vm_allocate
