@@ -3215,7 +3215,9 @@ name|notified
 condition|)
 name|warnx
 argument_list|(
-literal|"log not compressed because daemon not notified"
+literal|"log %s not compressed because daemon not notified"
+argument_list|,
+name|log
 argument_list|)
 expr_stmt|;
 elseif|else
