@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	2.3	4/12/82	*/
+comment|/*	fs.h	4.1	82/04/19	*/
 end_comment
 
 begin_comment
