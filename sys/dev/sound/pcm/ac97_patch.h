@@ -29,5 +29,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ad198x_patch
+parameter_list|(
+name|struct
+name|ac97_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
