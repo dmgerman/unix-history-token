@@ -40,49 +40,11 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_comment
-comment|/*  * The following array gives the number of tens of milliseconds per  * character for each speed as returned by gtty.  Thus since 300  * baud returns a 7, there are 33.3 milliseconds per char at 300 baud.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|short
-name|tmspc10
-index|[]
-init|=
-block|{
-literal|0
-block|,
-literal|2000
-block|,
-literal|1333
-block|,
-literal|909
-block|,
-literal|743
-block|,
-literal|666
-block|,
-literal|500
-block|,
-literal|333
-block|,
-literal|166
-block|,
-literal|83
-block|,
-literal|55
-block|,
-literal|41
-block|,
-literal|20
-block|,
-literal|10
-block|,
-literal|5
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_decl_stmt
 name|short
@@ -90,11 +52,19 @@ name|ospeed
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* not needed, only for compatibility */
+end_comment
+
 begin_decl_stmt
 name|char
 name|PC
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* not needed, only for compatibility */
+end_comment
 
 begin_comment
 comment|/*  * Put the character string cp out, with padding.  * The number of affected lines is affcnt, and the routine  * used to output one character is outc.  */
@@ -258,7 +228,7 @@ name|cp
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If no delay needed, or output speed is 	 * not comprehensible, then don't try to delay. 	 */
+comment|/* 	 * If no delay needed, then don't try to delay. 	 */
 if|if
 condition|(
 name|i
@@ -266,61 +236,17 @@ operator|==
 literal|0
 condition|)
 return|return;
-if|if
-condition|(
-name|ospeed
-operator|<=
-literal|0
-operator|||
-name|ospeed
-operator|>=
-operator|(
-sizeof|sizeof
-name|tmspc10
-operator|/
-sizeof|sizeof
-name|tmspc10
-index|[
-literal|0
-index|]
-operator|)
-condition|)
-return|return;
-comment|/* 	 * Round up by a half a character frame, 	 * and then do the delay. 	 * Too bad there are no user program accessible programmed delays. 	 * Transmitting pad characters slows many 	 * terminals down and also loads the system. 	 */
-name|mspc10
-operator|=
-name|tmspc10
-index|[
-name|ospeed
-index|]
-expr_stmt|;
-name|i
-operator|+=
-name|mspc10
-operator|/
-literal|2
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|/=
-name|mspc10
-init|;
-name|i
-operator|>
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-call|(
-modifier|*
-name|outc
-call|)
+name|usleep
 argument_list|(
-name|PC
+operator|(
+name|u_int
+operator|)
+name|i
+operator|*
+literal|100
 argument_list|)
 expr_stmt|;
+comment|/* already * 10 */
 block|}
 end_block
 
