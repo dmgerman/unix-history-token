@@ -4104,7 +4104,7 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* 	 * make sure that we have swap space -- if we are low on memory and 	 * swap -- then kill the biggest process. 	 */
+comment|/* 	 * make sure that we have swap space -- if we are low on memory and 	 * swap -- then kill the biggest process. 	 * 	 * We keep the process bigproc locked once we find it to keep anyone 	 * from messing with it; however, there is a possibility of 	 * deadlock if process B is bigproc and one of it's child processes 	 * attempts to propagate a signal to B while we are waiting for A's 	 * lock while walking this list.  To avoid this, we don't block on 	 * the process lock but just skip a process if it is already locked. 	 */
 if|if
 condition|(
 operator|(
@@ -4142,12 +4142,18 @@ argument_list|,
 argument|p_list
 argument_list|)
 block|{
-comment|/* 			 * if this is a system process, skip it 			 */
-name|PROC_LOCK
+comment|/* 			 * If this process is already locked, skip it. 			 */
+if|if
+condition|(
+name|PROC_TRYLOCK
 argument_list|(
 name|p
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+continue|continue;
+comment|/* 			 * if this is a system process, skip it 			 */
 if|if
 condition|(
 operator|(
@@ -4198,11 +4204,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 comment|/* 			 * if the process is in a non-running type state, 			 * don't touch it. 			 */
 name|mtx_lock_spin
 argument_list|(
@@ -4231,6 +4232,11 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|mtx_unlock_spin
@@ -4257,6 +4263,17 @@ operator|>
 name|bigsize
 condition|)
 block|{
+if|if
+condition|(
+name|bigproc
+operator|!=
+name|NULL
+condition|)
+name|PROC_UNLOCK
+argument_list|(
+name|bigproc
+argument_list|)
+expr_stmt|;
 name|bigproc
 operator|=
 name|p
@@ -4266,6 +4283,12 @@ operator|=
 name|size
 expr_stmt|;
 block|}
+else|else
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 name|sx_sunlock
 argument_list|(
@@ -4314,6 +4337,11 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|bigproc
 argument_list|)
 expr_stmt|;
 name|wakeup
