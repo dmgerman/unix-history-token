@@ -1551,6 +1551,19 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Init server data structures */
+if|if
+condition|(
+name|debug_mpsafenet
+condition|)
+name|callout_init
+argument_list|(
+operator|&
+name|nfsrv_callout
+argument_list|,
+name|CALLOUT_MPSAFE
+argument_list|)
+expr_stmt|;
+else|else
 name|callout_init
 argument_list|(
 operator|&
