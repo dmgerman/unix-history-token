@@ -7,16 +7,31 @@ begin_comment
 comment|/* This file defines machine-independent things specific to a host    running FreeBSD.  This file should not be specified as $xm_file itself;    instead $xm_file should be CPU/xm-freebsd.h, which should include both    CPU/xm-CPU.h and this file xm-freebsd.h.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_PUTENV
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ATEXIT
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HAVE_STRERROR
+name|HAVE_ATEXIT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Tell gcc and collect2 that FreeBSD targets support putenv(3).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PUTENV
 end_define
 
 begin_comment
@@ -26,14 +41,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DONT_DECLARE_SYS_SIGLIST
-end_define
-
-begin_define
-define|#
-directive|define
-name|HOST_PTR_PRINTF
-value|"%p"
+name|SYS_SIGLIST_DECLARED
 end_define
 
 end_unit
