@@ -523,6 +523,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|usbd_clear_endpoint_toggle
+name|__P
+argument_list|(
+operator|(
+name|usbd_pipe_handle
+name|pipe
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|usbd_status
 name|usbd_endpoint_count
 name|__P
