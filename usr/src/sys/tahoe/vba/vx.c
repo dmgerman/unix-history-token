@@ -2131,16 +2131,20 @@ name|cp
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|unit
+init|=
+name|minor
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
 name|tp
 operator|=
 operator|&
 name|vx_tty
 index|[
-name|minor
-argument_list|(
-name|dev
-argument_list|)
+name|unit
 index|]
 expr_stmt|;
 name|vs
@@ -2166,13 +2170,13 @@ operator|=
 name|spl8
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Construct ``load parameters'' command block 	 * to setup baud rates, xon-xoff chars, parity, 	 * and stop bits for the specified port. 	 */
 name|cp
 operator|->
 name|cmd
 operator|=
 name|VXC_LPARAX
 expr_stmt|;
-comment|/* set command to "load parameters" */
 name|cp
 operator|->
 name|par
@@ -2180,10 +2184,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
+name|unit
 operator|&
 literal|017
 expr_stmt|;
@@ -2209,7 +2210,6 @@ name|tp
 operator|->
 name|t_startc
 expr_stmt|;
-comment|/* XON char */
 name|cp
 operator|->
 name|par
@@ -2231,7 +2231,6 @@ name|tp
 operator|->
 name|t_stopc
 expr_stmt|;
-comment|/* XOFF char */
 if|if
 condition|(
 name|tp
@@ -2370,7 +2369,7 @@ index|]
 operator|=
 literal|0x4
 expr_stmt|;
-comment|/* 1 stop bit */
+comment|/* 1 stop bit - XXX */
 name|cp
 operator|->
 name|par
@@ -2925,6 +2924,7 @@ name|vs
 operator|->
 name|vs_active
 operator|=
+operator|-
 literal|1
 expr_stmt|;
 name|tp0
@@ -3152,18 +3152,11 @@ modifier|*
 name|vs
 decl_stmt|;
 specifier|register
-name|char
-modifier|*
-name|outb
-decl_stmt|;
-specifier|register
 name|full
 operator|=
 literal|0
 expr_stmt|;
 name|int
-name|k
-decl_stmt|,
 name|s
 decl_stmt|,
 name|port
@@ -3404,8 +3397,10 @@ block|}
 block|}
 else|else
 block|{
-name|outb
-operator|=
+name|char
+modifier|*
+name|cp
+init|=
 operator|(
 name|char
 operator|*
@@ -3415,23 +3410,30 @@ operator|->
 name|t_outq
 operator|.
 name|c_cf
-expr_stmt|;
+decl_stmt|;
 name|tp
 operator|->
 name|t_state
 operator||=
 name|TS_BUSY
 expr_stmt|;
+name|full
+operator|=
+name|vsetq
+argument_list|(
+name|vs
+argument_list|,
+name|port
+argument_list|,
+name|cp
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+comment|/* 			 * If the port is not currently active, try to 			 * send the data.  We send it immediately if the 			 * command buffer is full, or if we've nothing 			 * currently outstanding.  If we don't send it, 			 * set a timeout to force the data to be sent soon. 			 */
 if|if
 condition|(
-name|vs
-operator|->
-name|vs_vers
-operator|==
-name|VXV_NEW
-condition|)
-name|k
-operator|=
+operator|(
 name|vs
 operator|->
 name|vs_active
@@ -3447,39 +3449,10 @@ operator|->
 name|vs_loport
 operator|)
 operator|)
-expr_stmt|;
-else|else
-name|k
-operator|=
-name|vs
-operator|->
-name|vs_active
-expr_stmt|;
-name|full
-operator|=
-name|vsetq
-argument_list|(
-name|vs
-argument_list|,
-name|port
-argument_list|,
-name|outb
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|k
-operator|&
-literal|1
 operator|)
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* not called from vxxint */
 if|if
 condition|(
 name|full
@@ -3491,13 +3464,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|outb
+name|cp
 operator|=
 operator|(
 name|char
 operator|*
 operator|)
-operator|(
 operator|&
 name|nextcmd
 argument_list|(
@@ -3505,7 +3477,6 @@ name|vs
 argument_list|)
 operator|->
 name|cmd
-operator|)
 expr_stmt|;
 name|vs
 operator|->
@@ -3518,7 +3489,7 @@ name|vs
 operator|->
 name|vs_nbr
 argument_list|,
-name|outb
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
@@ -3535,7 +3506,6 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|splx
@@ -3624,7 +3594,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * VIOCX Initialization.  Makes free lists of command buffers.  * Resets all viocx's.  Issues a LIDENT command to each  * viocx which establishes interrupt vectors and logical  * port numbers  */
+comment|/*  * VIOCX Initialization.  Makes free lists of command buffers.  * Resets all viocx's.  Issues a LIDENT command to each  * viocx to establish interrupt vectors and logical port numbers.  */
 end_comment
 
 begin_expr_stmt
@@ -3692,7 +3662,7 @@ name|vs_type
 operator|=
 literal|0
 expr_stmt|;
-comment|/* viox-x by default */
+comment|/* vioc-x by default */
 name|addr
 operator|=
 operator|(
@@ -3700,7 +3670,6 @@ expr|struct
 name|vxdevice
 operator|*
 operator|)
-operator|(
 operator|(
 operator|(
 expr|struct
@@ -3714,7 +3683,6 @@ index|]
 operator|)
 operator|->
 name|ui_addr
-operator|)
 expr_stmt|;
 name|type
 operator|=
@@ -3959,7 +3927,6 @@ name|addr
 argument_list|)
 expr_stmt|;
 default|default:
-comment|/* unknown viocx type */
 name|printf
 argument_list|(
 literal|"vx%d: unknown type %x\n"
@@ -3982,17 +3949,19 @@ name|vs
 operator|->
 name|vs_maxcmd
 operator|=
+operator|(
 name|vs
 operator|->
 name|vs_vers
 operator|==
 name|VXV_NEW
+operator|)
 condition|?
 literal|24
 else|:
 literal|4
 expr_stmt|;
-comment|/* init all cmd buffers */
+comment|/* 	 * Initialize all cmd buffers by linking them 	 * into a free list. 	 */
 for|for
 control|(
 name|j
@@ -4017,7 +3986,6 @@ index|[
 name|j
 index|]
 expr_stmt|;
-comment|/* index a buffer */
 name|cp
 operator|->
 name|c_fwd
@@ -4032,7 +4000,6 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-comment|/* point to next buf */
 block|}
 name|vs
 operator|->
@@ -4059,6 +4026,7 @@ operator|)
 literal|0
 expr_stmt|;
 comment|/* mark last buf in free list */
+comment|/* 	 * Establish the interrupt vectors and define the port numbers. 	 */
 name|cp
 operator|=
 name|vobtain
@@ -4066,14 +4034,12 @@ argument_list|(
 name|vs
 argument_list|)
 expr_stmt|;
-comment|/* grab the control block */
 name|cp
 operator|->
 name|cmd
 operator|=
 name|VXC_LIDENT
 expr_stmt|;
-comment|/* set command type */
 name|cp
 operator|->
 name|par
@@ -4153,7 +4119,6 @@ operator|->
 name|cmd
 argument_list|)
 expr_stmt|;
-comment|/* initialize the VIOC-X */
 if|if
 condition|(
 operator|!
@@ -4231,7 +4196,6 @@ operator|!=
 literal|3
 condition|)
 block|{
-comment|/* did init work? */
 name|vrelease
 argument_list|(
 name|vs
@@ -4239,6 +4203,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+comment|/* init failed */
 return|return;
 block|}
 name|vs
@@ -4276,7 +4241,7 @@ name|vs_nbr
 operator|=
 name|vx
 expr_stmt|;
-comment|/* assign VIOC-X board number */
+comment|/* assign board number */
 block|}
 comment|/*  * Obtain a command buffer  */
 name|struct
@@ -4457,7 +4422,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * vxcmd -   *  */
 name|struct
 name|vxcmd
 modifier|*
@@ -4514,12 +4478,12 @@ name|cp
 operator|)
 return|;
 block|}
-comment|/*  * assemble transmits into a multiple command.  * up to 8 transmits to 8 lines can be assembled together  */
+comment|/*  * Assemble transmits into a multiple command;  * up to 8 transmits to 8 lines can be assembled together.  */
 name|vsetq
 argument_list|(
 name|vs
 argument_list|,
-name|d
+name|line
 argument_list|,
 name|addr
 argument_list|,
@@ -4547,14 +4511,7 @@ name|vxmit
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
-specifier|register
-name|i
-expr_stmt|;
+comment|/* 	 * Grab a new command buffer or append 	 * to the current one being built. 	 */
 name|cp
 operator|=
 name|vs
@@ -4636,6 +4593,7 @@ name|cmd
 operator|++
 expr_stmt|;
 block|}
+comment|/* 	 * Select the next vxmit buffer and copy the 	 * characters into the buffer (if there's room 	 * and the device supports ``immediate mode'', 	 * or store an indirect pointer to the data. 	 */
 name|mp
 operator|=
 operator|(
@@ -4675,7 +4633,7 @@ name|mp
 operator|->
 name|line
 operator|=
-name|d
+name|line
 expr_stmt|;
 if|if
 condition|(
@@ -4687,7 +4645,12 @@ name|VXV_NEW
 operator|&&
 name|n
 operator|<=
-literal|6
+sizeof|sizeof
+argument_list|(
+name|mp
+operator|->
+name|ostream
+argument_list|)
 condition|)
 block|{
 name|cp
@@ -4696,14 +4659,21 @@ name|cmd
 operator|=
 name|VXC_XMITIMM
 expr_stmt|;
-name|p
-operator|=
+name|bcopy
+argument_list|(
 name|addr
+argument_list|,
+name|mp
+operator|->
+name|ostream
+argument_list|,
+name|n
+argument_list|)
 expr_stmt|;
-comment|/* bcopy(addr,&(char *)mp->ostream, n) ; */
 block|}
 else|else
 block|{
+comment|/* get system address of clist block */
 name|addr
 operator|=
 operator|(
@@ -4724,55 +4694,22 @@ operator|)
 name|addr
 argument_list|)
 expr_stmt|;
-comment|/* should be a sys address */
-name|p
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
+name|bcopy
+argument_list|(
 operator|&
 name|addr
-expr_stmt|;
-name|n
-operator|=
-sizeof|sizeof
-name|addr
-expr_stmt|;
-comment|/* mp->ostream = addr ; */
-block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n
-condition|;
-name|i
-operator|++
-control|)
+argument_list|,
 name|mp
 operator|->
 name|ostream
-index|[
-name|i
-index|]
-operator|=
-operator|*
-name|p
-operator|++
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vs
-operator|->
-name|vs_vers
-operator|==
-name|VXV_NEW
-condition|)
+block|}
 return|return
 operator|(
 name|vs
@@ -4839,6 +4776,7 @@ index|[
 name|vx
 index|]
 expr_stmt|;
+comment|/* 	 * When the vioc is resetting, don't process 	 * anything other than VXC_LIDENT commands. 	 */
 if|if
 condition|(
 name|vs
@@ -4852,12 +4790,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * When the vioc is resetting, don't process 		 * anything other than LIDENT commands. 		 */
-specifier|register
 name|struct
 name|vxcmd
 modifier|*
-name|cmdp
+name|vcp
 init|=
 operator|(
 expr|struct
@@ -4865,15 +4801,11 @@ name|vxcmd
 operator|*
 operator|)
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|cmdad
 operator|-
 sizeof|sizeof
 argument_list|(
-name|cmdp
+name|vcp
 operator|->
 name|c_fwd
 argument_list|)
@@ -4881,7 +4813,7 @@ operator|)
 decl_stmt|;
 if|if
 condition|(
-name|cmdp
+name|vcp
 operator|->
 name|cmd
 operator|!=
@@ -4892,7 +4824,7 @@ name|vrelease
 argument_list|(
 name|vs
 argument_list|,
-name|cmdp
+name|vcp
 argument_list|)
 expr_stmt|;
 return|return
@@ -5187,7 +5119,6 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-comment|/* resp = (char *)vp + (vp->v_rspoff& 0x7FFF); */
 name|resp
 operator|=
 operator|(
@@ -5264,18 +5195,16 @@ name|VXERR4
 condition|)
 block|{
 comment|/* causes VIOC INTR ERR 4 */
-specifier|register
 name|struct
 name|vxcmd
 modifier|*
 name|cp1
-decl_stmt|;
-specifier|register
-name|struct
-name|vxcmd
+decl_stmt|,
 modifier|*
 name|cp0
-init|=
+decl_stmt|;
+name|cp0
+operator|=
 operator|(
 expr|struct
 name|vxcmd
@@ -5283,7 +5212,7 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|long
+name|caddr_t
 operator|)
 name|cp
 operator|->
@@ -5294,9 +5223,14 @@ operator|->
 name|v_empty
 index|]
 operator|-
-literal|4
+sizeof|sizeof
+argument_list|(
+name|cp0
+operator|->
+name|c_fwd
+argument_list|)
 operator|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|cp0
@@ -5881,7 +5815,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Enqueue an interrupt  */
+comment|/*  * Enqueue an interrupt.  */
 end_comment
 
 begin_expr_stmt
@@ -5926,6 +5860,7 @@ name|vs_cmds
 expr_stmt|;
 name|empty
 operator|=
+operator|(
 name|cp
 operator|->
 name|v_itrfill
@@ -5933,6 +5868,7 @@ operator|==
 name|cp
 operator|->
 name|v_itrempt
+operator|)
 expr_stmt|;
 name|cp
 operator|->
@@ -6426,7 +6362,6 @@ index|[
 name|j
 index|]
 expr_stmt|;
-comment|/* index a buffer */
 name|cp
 operator|->
 name|c_fwd
@@ -6441,7 +6376,6 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-comment|/* point to next buf */
 block|}
 name|vs
 operator|->
@@ -6455,7 +6389,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* set idx to 1st free buf */
 name|cp
 operator|->
 name|c_fwd
@@ -6467,7 +6400,6 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|/* mark last buf in free list */
 name|printf
 argument_list|(
 literal|"vx%d: reset..."
@@ -6493,7 +6425,7 @@ name|v_hdwre
 operator|=
 name|V_RESET
 expr_stmt|;
-comment|/* reset interrupt */
+comment|/* generate reset interrupt */
 name|timeout
 argument_list|(
 name|vxinreset
@@ -6610,11 +6542,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Restore modem control, parameters and restart output.  * Since the vioc can handle no more then 24 commands at a time  * and we could generate as many as 48 commands, we must do this in  * phases, issuing no more then 16 commands at a time.  */
-end_comment
-
-begin_comment
-comment|/* finish the reset on the vioc after an error (hopefully) */
+comment|/*  * Finish the reset on the vioc after an error (hopefully).  *  * Restore modem control, parameters and restart output.  * Since the vioc can handle no more then 24 commands at a time  * and we could generate as many as 48 commands, we must do this in  * phases, issuing no more then 16 commands at a time.  */
 end_comment
 
 begin_expr_stmt
