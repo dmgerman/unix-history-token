@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	5.8 (Berkeley) %G%"
+literal|"@(#)if.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,6 +149,15 @@ name|ns_phost
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Print a description of the network interfaces.  */
@@ -337,16 +346,6 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
-name|struct
-name|in_addr
-name|inet_makeaddr
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|ifaddraddr
@@ -612,6 +611,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
+specifier|extern
+name|struct
+name|in_addr
+name|inet_makeaddr
+parameter_list|()
+function_decl|;
 comment|/* can't use inet_makeaddr because kernel 				 * keeps nets unshifted. 				 */
 name|in
 operator|=
