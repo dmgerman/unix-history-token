@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.28 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2475,7 +2475,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Prints an error message if a ':' or a newline is found in the string.  * A message is also printed if the input string is too long.  * The password file uses :'s as seperators, and are not allowed in the "gcos"  * field.  Newlines serve as delimiters between users in the password file,  * and so, those too, are checked for.  (I don't think that it is possible to  * type them in, but better safe than sorry)  *  * Returns '1' if a colon or newline is found or the input line is too long.  */
+comment|/*  * Prints an error message if a ':', ',' or a newline is found in the string.  * A message is also printed if the input string is too long.  The password  * file uses :'s as separators, and are not allowed in the "gcos" field;  * commas are used as separators in the gcos field, so are disallowed.  * Newlines serve as delimiters between users in the password file, and so,  * those too, are checked for.  (I don't think that it is possible to  * type them in, but better safe than sorry)  *  * Returns '1' if a colon, comma or newline is found or the input line is  * too long.  */
 end_comment
 
 begin_macro
@@ -2513,17 +2513,17 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|index
+name|strpbrk
 argument_list|(
 name|input_str
 argument_list|,
-literal|':'
+literal|",:"
 argument_list|)
 condition|)
 block|{
 name|puts
 argument_list|(
-literal|"':' is not allowed."
+literal|"':' and ',' are not allowed."
 argument_list|)
 expr_stmt|;
 name|error_flag
