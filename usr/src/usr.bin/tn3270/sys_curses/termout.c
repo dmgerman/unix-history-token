@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termout.c	3.5 (Berkeley) %G%"
+literal|"@(#)termout.c	3.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,10 +316,10 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|KS
+name|myKS
 decl_stmt|,
 modifier|*
-name|KE
+name|myKE
 decl_stmt|;
 end_decl_stmt
 
@@ -2254,7 +2254,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|KS
+name|myKS
 operator|=
 name|tgetstr
 argument_list|(
@@ -2268,23 +2268,23 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|KS
+name|myKS
 operator|=
 name|strsave
 argument_list|(
-name|KS
+name|myKS
 argument_list|)
 expr_stmt|;
 name|StringToTerminal
 argument_list|(
-name|KS
+name|myKS
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
 operator|(
-name|KE
+name|myKE
 operator|=
 name|tgetstr
 argument_list|(
@@ -2298,11 +2298,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|KE
+name|myKE
 operator|=
 name|strsave
 argument_list|(
-name|KE
+name|myKE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2445,12 +2445,12 @@ name|unix
 argument_list|)
 if|if
 condition|(
-name|KE
+name|myKE
 condition|)
 block|{
 name|StringToTerminal
 argument_list|(
-name|KE
+name|myKE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2527,12 +2527,12 @@ name|unix
 argument_list|)
 if|if
 condition|(
-name|KS
+name|myKS
 condition|)
 block|{
 name|StringToTerminal
 argument_list|(
-name|KS
+name|myKS
 argument_list|)
 expr_stmt|;
 block|}
