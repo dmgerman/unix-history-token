@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	2.1.1.1	%G%"
+literal|"@(#)main.c	2.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,13 +394,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
-name|initlog
+name|openlog
 argument_list|(
 literal|"delivermail"
 argument_list|,
 literal|0
-argument_list|,
-name|LOG_INDEP
 argument_list|)
 expr_stmt|;
 endif|#

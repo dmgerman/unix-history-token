@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	2.3	%G%"
+literal|"@(#)deliver.c	2.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -781,14 +781,8 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
-name|initlog
-argument_list|(
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-name|LOG_CLOSE
-argument_list|)
+name|closelog
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
