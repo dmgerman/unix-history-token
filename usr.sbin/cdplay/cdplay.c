@@ -451,7 +451,8 @@ if|if
 condition|(
 name|rc
 operator|>
-literal|0
+operator|-
+literal|1
 condition|)
 name|printf
 argument_list|(
@@ -488,15 +489,22 @@ if|if
 condition|(
 name|rc
 operator|>
-literal|0
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|standalone
 condition|)
 name|printf
 argument_list|(
+literal|"start end length\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"%d %d %d\n"
-argument_list|,
-name|h
-operator|.
-name|len
 argument_list|,
 name|h
 operator|.
@@ -505,8 +513,13 @@ argument_list|,
 name|h
 operator|.
 name|ending_track
+argument_list|,
+name|h
+operator|.
+name|len
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -605,7 +618,8 @@ if|if
 condition|(
 name|rc
 operator|>
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 name|n
@@ -822,7 +836,7 @@ name|standalone
 condition|)
 name|perror
 argument_list|(
-literal|"cdplayer"
+literal|"cdplay"
 argument_list|)
 expr_stmt|;
 block|}
