@@ -64,6 +64,12 @@ directive|include
 file|<setjmp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_comment
 comment|/* There are 5 types of terminal interface supported,  * TERMIO, TERMIOS, VMS, MSDOS and SGTTY  */
 end_comment
@@ -1195,6 +1201,11 @@ name|ps
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|is_a_tty
+init|=
+literal|1
+decl_stmt|;
 name|FILE
 modifier|*
 name|tty
@@ -1280,12 +1291,30 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|ENOTTY
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOTTY
+condition|)
+name|is_a_tty
+operator|=
+literal|0
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 name|memcpy
 argument_list|(
 operator|&
@@ -1439,6 +1468,9 @@ name|VMS
 argument_list|)
 if|if
 condition|(
+name|is_a_tty
+operator|&&
+operator|(
 name|TTY_set
 argument_list|(
 name|fileno
@@ -1452,6 +1484,7 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|)
 condition|)
 return|return
 operator|(
