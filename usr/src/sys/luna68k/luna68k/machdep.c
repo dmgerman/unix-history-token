@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * from: hp300/hp300/machdep.c	8.3 (Berkeley) 11/14/93  *  *	@(#)machdep.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * from: hp300/hp300/machdep.c	8.3 (Berkeley) 11/14/93  *  *	@(#)machdep.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3144,6 +3144,16 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
+expr_stmt|;
+comment|/* 		 * Unmount filesystems 		 */
+if|if
+condition|(
+name|panicstr
+operator|==
+literal|0
+condition|)
+name|vfs_unmountall
+argument_list|()
 expr_stmt|;
 for|for
 control|(
