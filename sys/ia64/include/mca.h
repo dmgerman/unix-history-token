@@ -246,13 +246,13 @@ decl_stmt|;
 name|uint64_t
 name|cpu_cr_lid
 decl_stmt|;
-comment|/* Nx cpu_mod (cache) */
-comment|/* Nx cpu_mod (TLB) */
-comment|/* Nx cpu_mod (bus) */
-comment|/* Nx cpu_mod (reg) */
-comment|/* Nx cpu_mod (MS) */
-comment|/* cpu_cpuid */
-comment|/* cpu_psi */
+comment|/* Nx cpu_mod (cache). */
+comment|/* Nx cpu_mod (TLB). */
+comment|/* Nx cpu_mod (bus). */
+comment|/* Nx cpu_mod (reg). */
+comment|/* Nx cpu_mod (MS). */
+comment|/* cpu_cpuid. */
+comment|/* cpu_psi. */
 block|}
 struct|;
 end_struct
@@ -461,7 +461,7 @@ name|MCA_MEM_FLAGS_BUSDATA
 value|(1ULL<< 14)
 define|#
 directive|define
-name|MCA_MEM_FLAGS_PLATFORM_ID
+name|MCA_MEM_FLAGS_OEM_ID
 value|(1ULL<< 15)
 define|#
 directive|define
@@ -514,14 +514,213 @@ name|mem_busdata
 decl_stmt|;
 name|struct
 name|mca_guid
-name|mem_platform
+name|mem_oem_id
 decl_stmt|;
 comment|/* XXX not really a GUID. */
 name|uint16_t
 name|mem_oem_length
 decl_stmt|;
 comment|/* Size of OEM data. */
-comment|/* N bytes of OEM platform data */
+comment|/* N bytes of OEM platform data. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mca_pcibus_record
+block|{
+name|uint64_t
+name|pcibus_flags
+decl_stmt|;
+define|#
+directive|define
+name|MCA_PCIBUS_FLAGS_STATUS
+value|(1ULL<< 0)
+define|#
+directive|define
+name|MCA_PCIBUS_FLAGS_ERROR
+value|(1ULL<< 1)
+define|#
+directive|define
+name|MCA_PCIBUS_FLAGS_BUS
+value|(1ULL<< 2)
+define|#
+directive|define
+name|MCA_PCIBUS_FLAGS_ADDR
+value|(1ULL<< 3)
+define|#
+directive|define
+name|MCA_PCIBUS_FLAGS_DATA
+value|(1ULL<< 4)
+define|#
+directive|define
+name|MCA_PCIBUS_FLAGS_CMD
+value|(1ULL<< 5)
+define|#
+directive|define
+name|MCA_PCIBUS_FLAGS_REQID
+value|(1ULL<< 6)
+define|#
+directive|define
+name|MCA_PCIBUS_FLAGS_RSPID
+value|(1ULL<< 7)
+define|#
+directive|define
+name|MCA_PCIBUS_FLAGS_TGTID
+value|(1ULL<< 8)
+define|#
+directive|define
+name|MCA_PCIBUS_FLAGS_OEM_ID
+value|(1ULL<< 9)
+define|#
+directive|define
+name|MCA_PCIBUS_FLAGS_OEM_DATA
+value|(1ULL<< 10)
+name|uint64_t
+name|pcibus_status
+decl_stmt|;
+name|uint16_t
+name|pcibus_error
+decl_stmt|;
+name|uint16_t
+name|pcibus_bus
+decl_stmt|;
+name|uint32_t
+name|__reserved
+decl_stmt|;
+name|uint64_t
+name|pcibus_addr
+decl_stmt|;
+name|uint64_t
+name|pcibus_data
+decl_stmt|;
+name|uint64_t
+name|pcibus_cmd
+decl_stmt|;
+name|uint64_t
+name|pcibus_reqid
+decl_stmt|;
+name|uint64_t
+name|pcibus_rspid
+decl_stmt|;
+name|uint64_t
+name|pcibus_tgtid
+decl_stmt|;
+name|struct
+name|mca_guid
+name|pcibus_oem_id
+decl_stmt|;
+comment|/* XXX not really a GUID. */
+name|uint16_t
+name|pcibus_oem_length
+decl_stmt|;
+comment|/* Size of OEM data. */
+comment|/* N bytes of OEM platform data. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mca_pcidev_record
+block|{
+name|uint64_t
+name|pcidev_flags
+decl_stmt|;
+define|#
+directive|define
+name|MCA_PCIDEV_FLAGS_STATUS
+value|(1ULL<< 0)
+define|#
+directive|define
+name|MCA_PCIDEV_FLAGS_INFO
+value|(1ULL<< 1)
+define|#
+directive|define
+name|MCA_PCIDEV_FLAGS_REG_MEM
+value|(1ULL<< 2)
+define|#
+directive|define
+name|MCA_PCIDEV_FLAGS_REG_IO
+value|(1ULL<< 3)
+define|#
+directive|define
+name|MCA_PCIDEV_FLAGS_REG_DATA
+value|(1ULL<< 4)
+define|#
+directive|define
+name|MCA_PCIDEV_FLAGS_OEM_DATA
+value|(1ULL<< 5)
+name|uint64_t
+name|pcidev_status
+decl_stmt|;
+struct|struct
+block|{
+name|uint16_t
+name|info_vendor
+decl_stmt|;
+name|uint16_t
+name|info_device
+decl_stmt|;
+name|uint32_t
+name|info_ccfn
+decl_stmt|;
+comment|/* Class code& funct. nr. */
+define|#
+directive|define
+name|MCA_PCIDEV_INFO_CLASS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xffffff)
+define|#
+directive|define
+name|MCA_PCIDEV_INFO_FUNCTION
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 24)& 0xff)
+name|uint8_t
+name|info_slot
+decl_stmt|;
+name|uint8_t
+name|info_bus
+decl_stmt|;
+name|uint8_t
+name|info_segment
+decl_stmt|;
+name|uint8_t
+name|__res0
+decl_stmt|;
+name|uint32_t
+name|__res1
+decl_stmt|;
+block|}
+name|pcidev_info
+struct|;
+name|uint32_t
+name|pcidev_reg_mem
+decl_stmt|;
+name|uint32_t
+name|pcidev_reg_io
+decl_stmt|;
+comment|/* Nx pcidev_reg. */
+comment|/* M bytes of OEM platform data. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mca_pcidev_reg
+block|{
+name|uint64_t
+name|pcidev_reg_addr
+decl_stmt|;
+name|uint64_t
+name|pcidev_reg_data
+decl_stmt|;
 block|}
 struct|;
 end_struct
