@@ -4491,6 +4491,13 @@ name|splimp
 argument_list|()
 expr_stmt|;
 block|}
+name|ifq
+operator|=
+operator|&
+name|ifp
+operator|->
+name|if_snd
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
