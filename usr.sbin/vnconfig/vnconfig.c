@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: vnconfig.c,v 1.7 1997/10/27 07:55:31 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -584,6 +590,38 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|modfind
+argument_list|(
+literal|"vn"
+argument_list|)
+operator|<
+literal|0
+condition|)
+if|if
+condition|(
+name|kldload
+argument_list|(
+literal|"vn"
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|modfind
+argument_list|(
+literal|"vn"
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"cannot find or load \"vn\" kernel module"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flags
