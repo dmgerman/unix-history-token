@@ -5359,6 +5359,17 @@ name|td
 operator|->
 name|td_kse
 expr_stmt|;
+if|if
+condition|(
+name|ke
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
