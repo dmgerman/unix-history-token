@@ -1856,9 +1856,6 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|void
-operator|)
 name|ckname
 argument_list|(
 name|Hdr
