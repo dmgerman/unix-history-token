@@ -103,12 +103,6 @@ directive|include
 file|"smbus_if.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"alpm.h"
-end_include
-
 begin_define
 define|#
 directive|define
