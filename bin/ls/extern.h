@@ -298,6 +298,22 @@ name|ansi_coloff
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|attrs_off
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|enter_bold
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

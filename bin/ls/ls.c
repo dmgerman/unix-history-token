@@ -627,6 +627,28 @@ begin_comment
 comment|/* ANSI sequence to reset colours */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|attrs_off
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ANSI sequence to turn off attributes */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|enter_bold
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ANSI sequence to set color to bold mode */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -1228,6 +1250,26 @@ operator|=
 name|tgetstr
 argument_list|(
 literal|"AB"
+argument_list|,
+operator|&
+name|bp
+argument_list|)
+expr_stmt|;
+name|attrs_off
+operator|=
+name|tgetstr
+argument_list|(
+literal|"me"
+argument_list|,
+operator|&
+name|bp
+argument_list|)
+expr_stmt|;
+name|enter_bold
+operator|=
+name|tgetstr
+argument_list|(
+literal|"md"
 argument_list|,
 operator|&
 name|bp
