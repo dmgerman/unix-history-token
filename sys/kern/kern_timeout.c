@@ -513,6 +513,11 @@ init|=
 literal|36893488147419102LL
 decl_stmt|;
 comment|/* 2 msec */
+specifier|static
+name|timeout_t
+modifier|*
+name|lastfunc
+decl_stmt|;
 endif|#
 directive|endif
 ifndef|#
@@ -843,12 +848,21 @@ operator|>
 name|maxdt
 condition|)
 block|{
-name|maxdt
-operator|=
+if|if
+condition|(
+name|lastfunc
+operator|!=
+name|c_func
+operator|||
 name|bt2
 operator|.
 name|frac
-expr_stmt|;
+operator|>
+name|maxdt
+operator|*
+literal|2
+condition|)
+block|{
 name|bintime2timespec
 argument_list|(
 operator|&
@@ -860,14 +874,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Expensive timeout(9) function: %p(%p) %ld.%09ld s\n"
+literal|"Expensive timeout(9) function: %p(%p) %jd.%09ld s\n"
 argument_list|,
 name|c_func
 argument_list|,
 name|c_arg
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|ts2
 operator|.
@@ -877,6 +891,17 @@ name|ts2
 operator|.
 name|tv_nsec
 argument_list|)
+expr_stmt|;
+block|}
+name|maxdt
+operator|=
+name|bt2
+operator|.
+name|frac
+expr_stmt|;
+name|lastfunc
+operator|=
+name|c_func
 expr_stmt|;
 block|}
 endif|#
