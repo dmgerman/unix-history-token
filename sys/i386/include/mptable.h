@@ -10437,8 +10437,9 @@ condition|(
 operator|!
 name|aps_ready
 condition|)
-comment|/* spin */
-empty_stmt|;
+name|ia32_pause
+argument_list|()
+expr_stmt|;
 comment|/* BSP may have changed PTD while we were waiting */
 name|invltlb
 argument_list|()
@@ -10611,11 +10612,15 @@ operator|==
 name|mp_ncpus
 condition|)
 block|{
-name|smp_started
-operator|=
-literal|1
-expr_stmt|;
 comment|/* enable IPI's, tlb shootdown, freezes etc */
+name|atomic_store_rel_int
+argument_list|(
+operator|&
+name|smp_started
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|smp_active
 operator|=
 literal|1
@@ -10635,8 +10640,16 @@ name|smp_started
 operator|==
 literal|0
 condition|)
-empty_stmt|;
-comment|/* nothing */
+name|ia32_pause
+argument_list|()
+expr_stmt|;
+comment|/* ok, now grab sched_lock and enter the scheduler */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|binuptime
 argument_list|(
 name|PCPU_PTR
@@ -10650,13 +10663,6 @@ argument_list|(
 name|switchticks
 argument_list|,
 name|ticks
-argument_list|)
-expr_stmt|;
-comment|/* ok, now grab sched_lock and enter the scheduler */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
 argument_list|)
 expr_stmt|;
 name|cpu_throw
@@ -11065,12 +11071,33 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|atomic_store_rel_int
 argument_list|(
 operator|&
 name|aps_ready
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|smp_started
+operator|==
+literal|0
+condition|)
+name|ia32_pause
+argument_list|()
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
