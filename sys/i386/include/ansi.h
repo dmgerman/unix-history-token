@@ -196,6 +196,22 @@ value|128
 end_define
 
 begin_comment
+comment|/*  * We define this here since both<stddef.h> and<sys/types.h> needs it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__offsetof
+parameter_list|(
+name|type
+parameter_list|,
+name|field
+parameter_list|)
+value|((size_t)(&((type *)0)->field))
+end_define
+
+begin_comment
 comment|/*  * Typedefs for especially magic types.  #define's wouldn't work in the  * __GNUC__ case, since __attribute__(()) only works in certain contexts.  * This is not in<machine/types.h>, since that has too much namespace  * pollution for inclusion in ANSI headers, yet we need __int64_t in at  * least<stdio.h>.  */
 end_comment
 

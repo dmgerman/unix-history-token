@@ -2573,15 +2573,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-define|#
-directive|define
-name|offsetof
-parameter_list|(
-name|s
-parameter_list|,
-name|e
-parameter_list|)
-value|((char *)&((s *)0)->e - (char *)((s *)0))
 name|namelen
 operator|=
 name|soun

@@ -226,6 +226,22 @@ value|100
 end_define
 
 begin_comment
+comment|/*  * We define this here since both<stddef.h> and<sys/types.h> needs it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__offsetof
+parameter_list|(
+name|type
+parameter_list|,
+name|field
+parameter_list|)
+value|((size_t)(&((type *)0)->field))
+end_define
+
+begin_comment
 comment|/*  * Internal names for basic integral types.  Omit the typedef if  * not possible for a machine/compiler combination.  */
 end_comment
 

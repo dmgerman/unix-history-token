@@ -4675,33 +4675,6 @@ name|hostnamelen
 value|strlen(hostname)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|offsetof
-end_ifndef
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|offsetof
-parameter_list|(
-name|type
-parameter_list|,
-name|member
-parameter_list|)
-value|((size_t)(&((type *)0)->member))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|struct

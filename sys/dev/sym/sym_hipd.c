@@ -27,16 +27,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stddef.h>
-end_include
-
-begin_comment
-comment|/* For offsetof */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1428,29 +1418,6 @@ end_define
 begin_comment
 comment|/*  *  These ones should have been already defined.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|offsetof
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|offsetof
-parameter_list|(
-name|t
-parameter_list|,
-name|m
-parameter_list|)
-value|((size_t) (&((t *)0)->m))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#

@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1810,16 +1804,6 @@ name|u_int16_t
 modifier|*
 name|p
 decl_stmt|;
-define|#
-directive|define
-name|offsetof
-parameter_list|(
-name|type
-parameter_list|,
-name|member
-parameter_list|)
-value|((size_t)(&((type *)0)->member))
-comment|/* XXX */
 comment|/* compute checksum */
 if|if
 condition|(
