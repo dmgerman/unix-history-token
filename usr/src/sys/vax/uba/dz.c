@@ -791,14 +791,6 @@ expr_stmt|;
 block|}
 end_if
 
-begin_return
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-end_return
-
 begin_comment
 unit|}
 comment|/*ARGSUSED*/
