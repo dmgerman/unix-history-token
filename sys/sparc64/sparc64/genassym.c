@@ -1520,14 +1520,14 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|PC_VMSPACE
+name|PC_PMAP
 argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
 name|pcpu
 argument_list|,
-name|pc_vmspace
+name|pc_pmap
 argument_list|)
 argument_list|)
 expr_stmt|;
