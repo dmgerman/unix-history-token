@@ -2597,6 +2597,11 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+name|xferq
+operator|->
+name|queued
+operator|--
+expr_stmt|;
 name|xfer
 operator|->
 name|resp

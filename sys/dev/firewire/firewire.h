@@ -160,7 +160,7 @@ begin_define
 define|#
 directive|define
 name|FWMAXQUEUE
-value|128
+value|256
 end_define
 
 begin_define

@@ -34,10 +34,17 @@ name|struct
 name|fw_pkt
 name|pkt_hdr
 decl_stmt|;
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|fw_xfer
+argument_list|)
+name|xferlist
+expr_stmt|;
 struct|struct
 name|fwe_eth_softc
 block|{
-comment|/* XXX this must be first for if_ethersub.c */
+comment|/* XXX this must be the first for if_ethersub.c */
 name|struct
 name|arpcom
 name|arpcom
