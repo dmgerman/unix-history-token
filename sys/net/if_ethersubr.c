@@ -693,16 +693,6 @@ name|int
 name|hlen
 decl_stmt|;
 comment|/* link layer header length */
-name|struct
-name|arpcom
-modifier|*
-name|ac
-init|=
-name|IFP2AC
-argument_list|(
-name|ifp
-argument_list|)
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -953,10 +943,7 @@ condition|(
 operator|!
 name|nd6_storelladdr
 argument_list|(
-operator|&
-name|ac
-operator|->
-name|ac_if
+name|ifp
 argument_list|,
 name|rt
 argument_list|,
@@ -1109,7 +1096,10 @@ condition|(
 operator|!
 name|aarpresolve
 argument_list|(
-name|ac
+name|IFP2AC
+argument_list|(
+name|ifp
+argument_list|)
 argument_list|,
 name|m
 argument_list|,
@@ -1450,7 +1440,10 @@ name|eh
 operator|->
 name|ether_shost
 argument_list|,
-name|ac
+name|IFP2AC
+argument_list|(
+name|ifp
+argument_list|)
 operator|->
 name|ac_enaddr
 argument_list|,
