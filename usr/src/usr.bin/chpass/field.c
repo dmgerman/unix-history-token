@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)field.c	5.6 (Berkeley) %G%"
+literal|"@(#)field.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,6 +123,9 @@ operator|*
 name|p
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -144,6 +147,9 @@ operator|==
 literal|'-'
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -172,6 +178,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -184,6 +193,55 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|index
+argument_list|(
+name|p
+argument_list|,
+literal|'.'
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"chpass: \'.\' is dangerous in a login name.\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+operator|*
+name|p
+condition|;
+operator|++
+name|p
+control|)
+if|if
+condition|(
+name|isupper
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"chpass: upper-case letters are dangerous in a login name.\n"
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
@@ -262,6 +320,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -331,6 +392,9 @@ operator|*
 name|p
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -354,6 +418,9 @@ name|p
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -384,6 +451,9 @@ operator|>
 name|USHRT_MAX
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -468,6 +538,9 @@ operator|*
 name|p
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -504,6 +577,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -550,6 +626,9 @@ operator|>
 name|USHRT_MAX
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -649,6 +728,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -728,6 +810,9 @@ operator|(
 literal|0
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -801,6 +886,9 @@ operator|(
 literal|0
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -884,6 +972,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -952,6 +1043,9 @@ operator|*
 name|p
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -980,6 +1074,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1098,6 +1195,9 @@ operator|!
 name|uid
 condition|)
 break|break;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1169,6 +1269,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
