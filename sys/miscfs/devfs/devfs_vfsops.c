@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.16 1997/02/12 16:19:08 mpp Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.17 1997/05/03 21:19:54 joerg Exp $  *  *  */
 end_comment
 
 begin_include
@@ -1145,11 +1145,6 @@ argument_list|,
 name|waitfor
 argument_list|,
 name|p
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"syncing device\n"
 argument_list|)
 expr_stmt|;
 if|if
