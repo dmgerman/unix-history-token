@@ -9960,6 +9960,24 @@ value|0x4441
 end_define
 
 begin_comment
+comment|/*  * Altima PCI vendor/device ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALTIMA_VENDORID
+value|0x173b
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALTIMA_DEVICE_AC1000
+value|0x03e8
+end_define
+
+begin_comment
 comment|/*  * Offset of MAC address inside EEPROM.  */
 end_comment
 

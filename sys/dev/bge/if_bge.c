@@ -323,6 +323,14 @@ literal|"SysKonnect Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|ALTIMA_VENDORID
+block|,
+name|ALTIMA_DEVICE_AC1000
+block|,
+literal|"Altima AC1000 Gigabit Ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
