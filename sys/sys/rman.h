@@ -590,6 +590,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|device
+modifier|*
+name|rman_get_device
+parameter_list|(
+name|struct
+name|resource
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|u_long
 name|rman_get_size
 parameter_list|(

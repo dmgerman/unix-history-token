@@ -3010,5 +3010,27 @@ return|;
 block|}
 end_function
 
+begin_function
+name|struct
+name|device
+modifier|*
+name|rman_get_device
+parameter_list|(
+name|struct
+name|resource
+modifier|*
+name|r
+parameter_list|)
+block|{
+return|return
+operator|(
+name|r
+operator|->
+name|r_dev
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
