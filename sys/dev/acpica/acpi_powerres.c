@@ -248,6 +248,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|ACPI_STATUS
@@ -258,6 +264,15 @@ name|consumer
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -270,6 +285,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|ACPI_STATUS
@@ -280,6 +301,15 @@ name|res
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -736,6 +766,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_comment
 comment|/*  * Deregister a power resource.  */
 end_comment
@@ -846,6 +882,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_comment
 comment|/*  * Register a power consumer.    *  * It's OK to call this if we already know about the consumer.  */
@@ -976,6 +1021,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_comment
 comment|/*  * Deregister a power consumer.  *  * This should only be done once the consumer has been powered off.  * (XXX is this correct?  Check once implemented)  */
 end_comment
@@ -1075,6 +1126,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_comment
 comment|/*  * Set a power consumer to a particular power state.  */
