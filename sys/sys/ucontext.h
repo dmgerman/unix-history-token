@@ -59,6 +59,7 @@ name|_KERNEL
 end_ifndef
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|int
 name|getcontext
 parameter_list|(
@@ -114,6 +115,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
