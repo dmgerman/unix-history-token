@@ -15773,7 +15773,6 @@ argument_list|,
 name|BKTR_E_VSCALE_HI
 argument_list|)
 operator||
-operator|~
 literal|0x40
 argument_list|)
 expr_stmt|;
@@ -15791,7 +15790,6 @@ argument_list|,
 name|BKTR_O_VSCALE_HI
 argument_list|)
 operator||
-operator|~
 literal|0x40
 argument_list|)
 expr_stmt|;
