@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_linker.c,v 1.17 1998/11/11 13:04:39 peter Exp $  */
+comment|/*-  * Copyright (c) 1997 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_linker.c,v 1.18 1999/01/05 20:24:28 msmith Exp $  */
 end_comment
 
 begin_include
@@ -1047,6 +1047,8 @@ name|linker_file_t
 name|lf
 decl_stmt|;
 name|int
+name|foundfile
+decl_stmt|,
 name|error
 init|=
 literal|0
@@ -1138,6 +1140,10 @@ name|lf
 operator|=
 name|NULL
 expr_stmt|;
+name|foundfile
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|lc
@@ -1189,6 +1195,7 @@ operator|&
 name|lf
 argument_list|)
 expr_stmt|;
+comment|/* First with .ko */
 if|if
 condition|(
 name|lf
@@ -1196,19 +1203,8 @@ operator|==
 name|NULL
 operator|&&
 name|error
-operator|&&
-name|error
-operator|!=
+operator|==
 name|ENOENT
-condition|)
-goto|goto
-name|out
-goto|;
-if|if
-condition|(
-name|lf
-operator|==
-name|NULL
 condition|)
 name|error
 operator|=
@@ -1224,21 +1220,18 @@ operator|&
 name|lf
 argument_list|)
 expr_stmt|;
+comment|/* Then try without */
+comment|/* 	 * If we got something other than ENOENT, then it exists but we cannot 	 * load it for some other reason. 	 */
 if|if
 condition|(
-name|lf
-operator|==
-name|NULL
-operator|&&
-name|error
-operator|&&
 name|error
 operator|!=
 name|ENOENT
 condition|)
-goto|goto
-name|out
-goto|;
+name|foundfile
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|lf
@@ -1263,11 +1256,22 @@ name|out
 goto|;
 block|}
 block|}
+comment|/*      * Less than ideal, but tells the user whether it failed to load or      * the module was not found.      */
+if|if
+condition|(
+name|foundfile
+condition|)
 name|error
 operator|=
 name|ENOEXEC
 expr_stmt|;
-comment|/* format not recognised */
+comment|/* Format not recognised (or unloadable) */
+else|else
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+comment|/* Nothing found */
 name|out
 label|:
 if|if
