@@ -13,36 +13,17 @@ directive|include
 file|"config.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
-
-begin_comment
-comment|/* declarations for strcat etc. */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
 
-begin_comment
-comment|/* idem on System V */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BSD
+end_ifndef
 
 begin_define
 define|#
