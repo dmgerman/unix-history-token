@@ -1332,7 +1332,7 @@ name|TD_SET_RUNNING
 parameter_list|(
 name|td
 parameter_list|)
-value|do {(td)->td_state = TDS_RUNNING; } while (0)
+value|(td)->td_state = TDS_RUNNING
 end_define
 
 begin_define
@@ -1342,7 +1342,7 @@ name|TD_SET_RUNQ
 parameter_list|(
 name|td
 parameter_list|)
-value|do {(td)->td_state = TDS_RUNQ; } while (0)
+value|(td)->td_state = TDS_RUNQ
 end_define
 
 begin_define
@@ -1352,7 +1352,7 @@ name|TD_SET_CAN_RUN
 parameter_list|(
 name|td
 parameter_list|)
-value|do {(td)->td_state = TDS_CAN_RUN; } while (0)
+value|(td)->td_state = TDS_CAN_RUN
 end_define
 
 begin_define
