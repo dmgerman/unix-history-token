@@ -994,6 +994,7 @@ condition|(
 name|caplen
 operator|>
 literal|0
+operator|&&
 operator|!
 name|qflag
 condition|)
