@@ -3224,6 +3224,8 @@ name|i
 decl_stmt|;
 name|u_char
 name|tmp
+init|=
+literal|0
 decl_stmt|,
 name|tmp1
 decl_stmt|,
@@ -5580,12 +5582,10 @@ name|mss
 parameter_list|)
 block|{
 name|int
-name|n
-decl_stmt|,
 name|t
 decl_stmt|;
-comment|/*      	* Wait until the auto calibration process has finished.      	*      	* 1) Wait until the chip becomes ready (reads don't return 0x80).      	* 2) Wait until the ACI bit of I11 gets on      	* 3) Wait until the ACI bit of I11 gets off      	*/
-name|n
+comment|/*      	 * Wait until the auto calibration process has finished.      	 *      	 * 1) Wait until the chip becomes ready (reads don't return 0x80).      	 * 2) Wait until the ACI bit of I11 gets on      	 * 3) Wait until the ACI bit of I11 gets off      	 */
+name|t
 operator|=
 name|ad_wait_init
 argument_list|(
@@ -5596,7 +5596,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
+name|t
 operator|&
 name|MSS_IDXBUSY
 condition|)
@@ -5605,7 +5605,7 @@ argument_list|(
 literal|"mss: Auto calibration timed out(1).\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * There is no guarantee that we'll ever see ACI go on, 	 * calibration may finish before we get here. 	 * 	 * XXX Are there docs that even state that it might ever be 	 * visible off before calibration starts using any chip? 	 */
+comment|/* 	 * The calibration mode for chips that support it is set so that 	 * we never see ACI go on. 	 */
 if|if
 condition|(
 name|mss
@@ -5613,9 +5613,14 @@ operator|->
 name|bd_id
 operator|==
 name|MD_GUSMAX
+operator|||
+name|mss
+operator|->
+name|bd_id
+operator|==
+name|MD_GUSPNP
 condition|)
 block|{
-comment|/* 10 ms of busy-waiting is not reasonable normal behavior */
 for|for
 control|(
 name|t
@@ -5643,26 +5648,10 @@ name|t
 operator|--
 control|)
 empty_stmt|;
-if|if
-condition|(
-name|t
-operator|>
-literal|0
-operator|&&
-name|t
-operator|!=
-literal|100
-condition|)
-name|printf
-argument_list|(
-literal|"debug: ACI turned on: t = %d\n"
-argument_list|,
-name|t
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * XXX This should only be enabled for cards that *really* 		 * need it.  Are there any? 		 */
 for|for
 control|(
 name|t
