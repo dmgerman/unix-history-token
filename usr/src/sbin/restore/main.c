@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.9	(Berkeley)	83/04/19"
+literal|"@(#)main.c	3.10	(Berkeley)	83/05/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -1286,6 +1286,39 @@ literal|"verbose mode on\n"
 argument_list|)
 expr_stmt|;
 name|vflag
+operator|++
+expr_stmt|;
+break|break;
+comment|/* 	 * Turn on debugging. 	 */
+case|case
+literal|'D'
+case|:
+if|if
+condition|(
+name|dflag
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"debugging mode off\n"
+argument_list|)
+expr_stmt|;
+name|dflag
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"debugging mode on\n"
+argument_list|)
+expr_stmt|;
+name|dflag
 operator|++
 expr_stmt|;
 break|break;
