@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbm.c	5.5 (Berkeley) %G%"
+literal|"@(#)dbm.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,8 +442,6 @@ operator|(
 name|dbm_nextkey
 argument_list|(
 name|cur_db
-argument_list|,
-name|key
 argument_list|)
 operator|)
 return|;

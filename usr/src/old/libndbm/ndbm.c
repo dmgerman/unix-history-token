@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.5 (Berkeley) %G%"
+literal|"@(#)ndbm.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,6 +108,34 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
+name|int
+name|additem
+argument_list|()
+decl_stmt|,
+name|delitem
+argument_list|()
+decl_stmt|,
+name|finddatum
+argument_list|()
+decl_stmt|,
+name|getbit
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|dbm_access
+argument_list|()
+decl_stmt|,
+name|setbit
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|errno
@@ -125,6 +153,7 @@ name|flags
 parameter_list|,
 name|mode
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
@@ -1586,28 +1615,23 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|dbm_access
-argument_list|(
+parameter_list|(
 name|db
-argument_list|,
+parameter_list|,
 name|hash
-argument_list|)
+parameter_list|)
 specifier|register
 name|DBM
-operator|*
+modifier|*
 name|db
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|long
 name|hash
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 for|for
 control|(
@@ -1754,7 +1778,7 @@ endif|#
 directive|endif
 block|}
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 specifier|static
@@ -1904,20 +1928,18 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|setbit
-argument_list|(
+parameter_list|(
 name|db
-argument_list|)
+parameter_list|)
 specifier|register
 name|DBM
-operator|*
+modifier|*
 name|db
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|long
 name|bn
@@ -2096,7 +2118,7 @@ operator||=
 name|_DBM_IOERR
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
