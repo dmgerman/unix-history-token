@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_compat.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_compat.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -104,10 +104,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX - fold these two tables into one */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -233,6 +229,60 @@ literal|38400
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|ttspeedtab
+argument_list|(
+name|speed
+argument_list|,
+name|table
+argument_list|)
+specifier|register
+expr|struct
+name|speedtab
+operator|*
+name|table
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+for|for
+control|(
+init|;
+name|table
+operator|->
+name|sp_speed
+operator|!=
+operator|-
+literal|1
+condition|;
+name|table
+operator|++
+control|)
+if|if
+condition|(
+name|table
+operator|->
+name|sp_speed
+operator|==
+name|speed
+condition|)
+return|return
+operator|(
+name|table
+operator|->
+name|sp_code
+operator|)
+return|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_block
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -522,17 +572,17 @@ name|tp
 operator|->
 name|t_flags
 operator|=
-operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
 literal|0xffff0000
-operator|)
 operator||
 name|sg
 operator|->
 name|sg_flags
+operator|&
+literal|0xffff
 expr_stmt|;
 name|ttcompatsetflags
 argument_list|(
@@ -1128,6 +1178,7 @@ name|flag
 argument_list|)
 operator|)
 return|;
+block|}
 case|case
 name|OTIOCCONS
 case|:
@@ -1154,7 +1205,6 @@ name|flag
 argument_list|)
 operator|)
 return|;
-block|}
 default|default:
 return|return
 operator|(
@@ -1582,7 +1632,10 @@ operator||=
 name|ISIG
 operator||
 name|IEXTEN
+operator||
+name|ECHOCTL
 expr_stmt|;
+comment|/* XXX was echoctl on ? */
 if|if
 condition|(
 name|flags
@@ -1705,6 +1758,12 @@ name|iflag
 operator||=
 name|ISTRIP
 expr_stmt|;
+else|else
+name|iflag
+operator|&=
+operator|~
+name|ISTRIP
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1718,6 +1777,10 @@ operator||=
 name|CS7
 operator||
 name|PARENB
+expr_stmt|;
+name|iflag
+operator||=
+name|ISTRIP
 expr_stmt|;
 block|}
 if|if
