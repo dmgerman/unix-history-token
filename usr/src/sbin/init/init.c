@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)init.c	4.13 (Berkeley) %G%"
+literal|"@(#)init.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1872,6 +1872,12 @@ argument_list|,
 literal|0622
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Give port selectors an opportunity 		 * to see DTR transition. 		 */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|open
@@ -2362,6 +2368,13 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * After a proper login force reset 		 * of error detection code in dfork. 		 */
+name|p
+operator|->
+name|gettytime
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 name|reset
