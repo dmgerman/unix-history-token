@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1551,7 +1551,7 @@ operator|->
 name|t_state
 condition|)
 block|{
-comment|/* 	 * If the state is LISTEN then ignore segment if it contains an RST. 	 * If the segment contains an ACK then it is bad and send a RST. 	 * If it does not contain a SYN then it is not interesting; drop it. 	 * Otherwise initialize tp->rcv_nxt, and tp->irs, select an initial 	 * tp->iss, and send a segment: 	 *<SEQ=ISS><ACK=RCV_NXT><CTL=SYN,ACK> 	 * Also initialize tp->snd_nxt to tp->iss+1 and tp->snd_una to tp->iss. 	 * Fill in remote peer address fields if not previously specified. 	 * Enter SYN_RECEIVED state, and process any other fields of this 	 * segment in this state. 	 */
+comment|/* 	 * If the state is LISTEN then ignore segment if it contains an RST. 	 * If the segment contains an ACK then it is bad and send a RST. 	 * If it does not contain a SYN then it is not interesting; drop it. 	 * Don't bother responding if the destination was a broadcast. 	 * Otherwise initialize tp->rcv_nxt, and tp->irs, select an initial 	 * tp->iss, and send a segment: 	 *<SEQ=ISS><ACK=RCV_NXT><CTL=SYN,ACK> 	 * Also initialize tp->snd_nxt to tp->iss+1 and tp->snd_una to tp->iss. 	 * Fill in remote peer address fields if not previously specified. 	 * Enter SYN_RECEIVED state, and process any other fields of this 	 * segment in this state. 	 */
 case|case
 name|TCPS_LISTEN
 case|:
@@ -1594,6 +1594,18 @@ name|TH_SYN
 operator|)
 operator|==
 literal|0
+condition|)
+goto|goto
+name|drop
+goto|;
+if|if
+condition|(
+name|in_broadcast
+argument_list|(
+name|ti
+operator|->
+name|ti_dst
+argument_list|)
 condition|)
 goto|goto
 name|drop
@@ -3651,12 +3663,21 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * Generate a RST, dropping incoming segment. 	 * Make ACK acceptable to originator of segment. 	 */
+comment|/* 	 * Generate a RST, dropping incoming segment. 	 * Make ACK acceptable to originator of segment. 	 * Don't bother to respond if destination was broadcast. 	 */
 if|if
 condition|(
+operator|(
 name|tiflags
 operator|&
 name|TH_RST
+operator|)
+operator|||
+name|in_broadcast
+argument_list|(
+name|ti
+operator|->
+name|ti_dst
+argument_list|)
 condition|)
 goto|goto
 name|drop
