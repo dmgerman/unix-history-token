@@ -158,6 +158,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACL_UNDEFINED_TAG
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACL_USER_OBJ
 value|0x00000001
 end_define
@@ -294,6 +301,35 @@ define|#
 directive|define
 name|ACL_POSIX1E_BITS
 value|(ACL_EXECUTE | ACL_WRITE | ACL_READ)
+end_define
+
+begin_comment
+comment|/*  * Possible entry_id values for acl_get_entry()  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACL_FIRST_ENTRY
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_NEXT_ENTRY
+value|1
+end_define
+
+begin_comment
+comment|/*  * Undefined value in ae_id field  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACL_UNDEFINED_ID
+value|((uid_t)-1)
 end_define
 
 begin_ifdef

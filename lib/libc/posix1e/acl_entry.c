@@ -39,20 +39,6 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|ACL_UNDEFINED_ID
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACL_UNDEFINED_TAG
-value|-1
-end_define
-
 begin_function
 name|int
 name|acl_create_entry
