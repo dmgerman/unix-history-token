@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *      @(#)idp_usrreq.c	6.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984,1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *      @(#)idp_usrreq.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1360,6 +1360,12 @@ operator|=
 name|ns_pexseq
 operator|++
 expr_stmt|;
+break|break;
+default|default:
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 block|}
 operator|*
 name|value
@@ -1482,10 +1488,10 @@ operator|->
 name|idp_pt
 expr_stmt|;
 block|}
+break|break;
 ifdef|#
 directive|ifdef
 name|NSIP
-break|break;
 case|case
 name|SO_NSIP_ROUTE
 case|:
@@ -1497,9 +1503,15 @@ operator|*
 name|value
 argument_list|)
 expr_stmt|;
+break|break;
 endif|#
 directive|endif
 endif|NSIP
+default|default:
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 block|}
 if|if
 condition|(
