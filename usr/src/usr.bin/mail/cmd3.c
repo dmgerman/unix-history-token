@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	1.10 %G%"
+literal|"@(#)cmd3.c	1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3060,7 +3060,7 @@ name|NOSTR
 condition|)
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"%s "
 argument_list|,
 name|cp
 argument_list|)
