@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)coredump.c	1.5 (Berkeley) %G%"
+literal|"@(#)coredump.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -618,63 +618,6 @@ argument_list|,
 name|hdr
 operator|.
 name|a_magic
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Core dump not from this object file?      */
-if|if
-condition|(
-name|hdr
-operator|.
-name|a_magic
-operator|!=
-literal|0
-name|and
-name|up
-operator|->
-name|u_exdata
-operator|.
-name|ux_mag
-operator|!=
-literal|0
-name|and
-name|hdr
-operator|.
-name|a_magic
-operator|!=
-name|up
-operator|->
-name|u_exdata
-operator|.
-name|ux_mag
-condition|)
-block|{
-name|warning
-argument_list|(
-literal|"core dump ignored"
-argument_list|)
-expr_stmt|;
-name|coredump
-operator|=
-name|false
-expr_stmt|;
-name|fclose
-argument_list|(
-name|corefile
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|objfile
-argument_list|)
-expr_stmt|;
-name|start
-argument_list|(
-name|nil
-argument_list|,
-name|nil
-argument_list|,
-name|nil
 argument_list|)
 expr_stmt|;
 block|}
