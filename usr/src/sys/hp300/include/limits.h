@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)limits.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)limits.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -39,19 +39,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCHAR_MIN
-value|0x80
-end_define
-
-begin_comment
-comment|/* max value for a signed char */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SCHAR_MAX
-value|0x7f
+value|127
 end_define
 
 begin_comment
@@ -61,8 +50,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCHAR_MIN
+value|-128
+end_define
+
+begin_comment
+comment|/* max value for a signed char */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UCHAR_MAX
-value|0xff
+value|255
 end_define
 
 begin_comment
@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|CHAR_MAX
-value|0x7f
+value|127
 end_define
 
 begin_comment
@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|CHAR_MIN
-value|0x80
+value|128
 end_define
 
 begin_comment
@@ -95,7 +95,7 @@ begin_define
 define|#
 directive|define
 name|USHRT_MAX
-value|0xffff
+value|65535
 end_define
 
 begin_comment
@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|SHRT_MAX
-value|0x7fff
+value|32767
 end_define
 
 begin_comment
@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|SHRT_MIN
-value|0x8000
+value|-32768
 end_define
 
 begin_comment
@@ -128,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|UINT_MAX
-value|0xffffffff
+value|4294967295
 end_define
 
 begin_comment
@@ -139,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|INT_MAX
-value|0x7fffffff
+value|2147483647
 end_define
 
 begin_comment
@@ -150,7 +150,7 @@ begin_define
 define|#
 directive|define
 name|INT_MIN
-value|0x80000000
+value|(-2147483647-1)
 end_define
 
 begin_comment
@@ -161,7 +161,7 @@ begin_define
 define|#
 directive|define
 name|ULONG_MAX
-value|0xffffffff
+value|4294967295
 end_define
 
 begin_comment
@@ -172,7 +172,7 @@ begin_define
 define|#
 directive|define
 name|LONG_MAX
-value|0x7fffffff
+value|2147483647
 end_define
 
 begin_comment
@@ -183,7 +183,7 @@ begin_define
 define|#
 directive|define
 name|LONG_MIN
-value|0x80000000
+value|(-2147483647-1)
 end_define
 
 begin_comment
