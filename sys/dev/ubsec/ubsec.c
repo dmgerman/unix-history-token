@@ -3035,11 +3035,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|ubsecstats
-operator|.
-name|hst_opackets
-operator|++
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3052,11 +3047,6 @@ name|sc
 argument_list|,
 name|q
 argument_list|)
-expr_stmt|;
-name|ubsecstats
-operator|.
-name|hst_opackets
-operator|++
 expr_stmt|;
 block|}
 comment|/* 		 * Don't send any more packet to chip if there has been 		 * a DMAERR. 		 */
@@ -8478,6 +8468,21 @@ name|q
 operator|->
 name|q_dma
 decl_stmt|;
+name|ubsecstats
+operator|.
+name|hst_opackets
+operator|++
+expr_stmt|;
+name|ubsecstats
+operator|.
+name|hst_obytes
+operator|+=
+name|dmap
+operator|->
+name|d_alloc
+operator|.
+name|dma_size
+expr_stmt|;
 name|ubsec_dma_sync
 argument_list|(
 operator|&
