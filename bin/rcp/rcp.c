@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rcp.c,v 1.19 1998/05/18 06:36:03 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2533,12 +2533,18 @@ argument_list|)
 argument_list|,
 literal|"T%ld 0 %ld 0\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|stb
 operator|.
 name|st_mtimespec
 operator|.
 name|tv_sec
 argument_list|,
+operator|(
+name|long
+operator|)
 name|stb
 operator|.
 name|st_atimespec
@@ -2957,12 +2963,18 @@ argument_list|)
 argument_list|,
 literal|"T%ld 0 %ld 0\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|statp
 operator|->
 name|st_mtimespec
 operator|.
 name|tv_sec
 argument_list|,
+operator|(
+name|long
+operator|)
 name|statp
 operator|->
 name|st_atimespec
