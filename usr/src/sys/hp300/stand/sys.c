@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -153,8 +153,6 @@ expr_stmt|;
 name|io
 operator|->
 name|i_ino
-operator|.
-name|i_din
 operator|=
 name|dp
 index|[
@@ -413,7 +411,7 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|inode
+name|dinode
 modifier|*
 name|ip
 decl_stmt|;
@@ -470,7 +468,7 @@ name|nb
 operator|=
 name|ip
 operator|->
-name|i_db
+name|di_db
 index|[
 name|bn
 index|]
@@ -554,7 +552,7 @@ name|nb
 operator|=
 name|ip
 operator|->
-name|i_ib
+name|di_ib
 index|[
 name|NIADDR
 operator|-
@@ -797,9 +795,15 @@ name|direct
 modifier|*
 name|dp
 decl_stmt|;
+name|struct
+name|direct
+modifier|*
+name|readdir
+parameter_list|()
+function_decl|;
 specifier|register
 name|struct
-name|inode
+name|dinode
 modifier|*
 name|ip
 decl_stmt|;
@@ -838,7 +842,7 @@ condition|(
 operator|(
 name|ip
 operator|->
-name|i_mode
+name|di_mode
 operator|&
 name|IFMT
 operator|)
@@ -868,7 +872,7 @@ if|if
 condition|(
 name|ip
 operator|->
-name|i_size
+name|di_size
 operator|==
 literal|0
 condition|)
@@ -1032,7 +1036,7 @@ name|io
 operator|->
 name|i_ino
 operator|.
-name|i_size
+name|di_size
 condition|)
 return|return
 operator|(
@@ -1122,7 +1126,7 @@ name|io
 operator|->
 name|i_cc
 operator|=
-name|blksize
+name|dblksize
 argument_list|(
 operator|&
 name|io
@@ -1481,7 +1485,7 @@ name|io
 operator|->
 name|i_ino
 operator|.
-name|i_size
+name|di_size
 operator|-
 name|io
 operator|->
@@ -1550,7 +1554,7 @@ argument_list|)
 expr_stmt|;
 name|size
 operator|=
-name|blksize
+name|dblksize
 argument_list|(
 name|fs
 argument_list|,
@@ -1648,7 +1652,7 @@ name|io
 operator|->
 name|i_ino
 operator|.
-name|i_size
+name|di_size
 condition|)
 name|io
 operator|->
@@ -1971,7 +1975,7 @@ name|file
 operator|->
 name|i_ino
 operator|.
-name|i_size
+name|di_size
 condition|)
 name|count
 operator|=
@@ -1979,7 +1983,7 @@ name|file
 operator|->
 name|i_ino
 operator|.
-name|i_size
+name|di_size
 operator|-
 name|file
 operator|->
@@ -2037,7 +2041,7 @@ argument_list|)
 expr_stmt|;
 name|size
 operator|=
-name|blksize
+name|dblksize
 argument_list|(
 name|fs
 argument_list|,
@@ -2608,8 +2612,6 @@ block|{
 comment|/* default bootstrap unit and device */
 name|file
 operator|->
-name|i_ino
-operator|.
 name|i_dev
 operator|=
 name|bootdev
@@ -2860,8 +2862,6 @@ name|opendev
 operator|=
 name|file
 operator|->
-name|i_ino
-operator|.
 name|i_dev
 operator|=
 name|makedev
@@ -3046,8 +3046,6 @@ return|;
 block|}
 name|file
 operator|->
-name|i_ino
-operator|.
 name|i_dev
 operator|=
 name|dp
@@ -4065,7 +4063,7 @@ name|io
 operator|->
 name|i_ino
 operator|.
-name|i_mode
+name|di_mode
 expr_stmt|;
 name|sb
 operator|->
@@ -4075,7 +4073,7 @@ name|io
 operator|->
 name|i_ino
 operator|.
-name|i_uid
+name|di_uid
 expr_stmt|;
 name|sb
 operator|->
@@ -4085,7 +4083,7 @@ name|io
 operator|->
 name|i_ino
 operator|.
-name|i_gid
+name|di_gid
 expr_stmt|;
 name|sb
 operator|->
@@ -4095,7 +4093,7 @@ name|io
 operator|->
 name|i_ino
 operator|.
-name|i_size
+name|di_size
 expr_stmt|;
 return|return
 operator|(
