@@ -210,7 +210,6 @@ argument_list|)
 end_macro
 
 begin_function_decl
-specifier|static
 name|struct
 name|sf_buf
 modifier|*
@@ -222,7 +221,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|void
 name|sf_buf_ref
 parameter_list|(
@@ -236,7 +234,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|void
 name|sf_buf_free
 parameter_list|(
@@ -7400,7 +7397,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a pool of sf_bufs (sendfile(2) or "super-fast" if you prefer. :-))  * XXX - The sf_buf functions are currently private to sendfile(2), so have  * been made static, but may be useful in the future for doing zero-copy in  * other parts of the networking code.   */
+comment|/*  * Allocate a pool of sf_bufs (sendfile(2) or "super-fast" if you prefer. :-))  */
 end_comment
 
 begin_function
@@ -7513,7 +7510,6 @@ comment|/*  * Get an sf_buf from the freelist. Will block if none are available.
 end_comment
 
 begin_function
-specifier|static
 name|struct
 name|sf_buf
 modifier|*
@@ -7623,7 +7619,6 @@ value|(&sf_bufs[((uintptr_t)(x) - (uintptr_t)sf_base)>> PAGE_SHIFT])
 end_define
 
 begin_function
-specifier|static
 name|void
 name|sf_buf_ref
 parameter_list|(
@@ -7672,7 +7667,6 @@ comment|/*  * Lose a reference to an sf_buf. When none left, detach mapped page 
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|sf_buf_free
 parameter_list|(
