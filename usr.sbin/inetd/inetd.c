@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.46 1999/01/05 11:56:35 danny Exp $"
+literal|"$Id: inetd.c,v 1.47 1999/03/28 10:50:30 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -629,6 +629,11 @@ modifier|*
 name|se_server
 decl_stmt|;
 comment|/* server program */
+name|char
+modifier|*
+name|se_server_name
+decl_stmt|;
+comment|/* server program without path */
 define|#
 directive|define
 name|MAXARGV
@@ -3134,17 +3139,11 @@ name|RQ_DAEMON
 argument_list|,
 name|sep
 operator|->
-name|se_argv
-index|[
-literal|0
-index|]
+name|se_server_name
 condition|?
 name|sep
 operator|->
-name|se_argv
-index|[
-literal|0
-index|]
+name|se_server_name
 else|:
 name|sep
 operator|->
@@ -7330,6 +7329,28 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sep
+operator|->
+name|se_server_name
+operator|=
+name|rindex
+argument_list|(
+name|sep
+operator|->
+name|se_server
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+condition|)
+name|sep
+operator|->
+name|se_server_name
+operator|++
+expr_stmt|;
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|sep
@@ -7437,6 +7458,7 @@ name|se_maxchild
 operator|<
 literal|0
 condition|)
+block|{
 comment|/* apply default max-children */
 if|if
 condition|(
@@ -7467,6 +7489,7 @@ literal|0
 else|:
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sep
