@@ -658,14 +658,7 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|,
-name|isblank
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|,
+comment|/*    isblank __P((int)), until 4.4 */
 name|isspace
 name|__P
 argument_list|(
