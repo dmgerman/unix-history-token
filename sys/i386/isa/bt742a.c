@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.13 1994/03/20 00:30:00 wollman Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.14 1994/03/24 02:22:58 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -5719,6 +5719,44 @@ operator|)
 condition|)
 comment|/* 					 * This page is contiguous (physically) with  					 * the the last, just extend the length  					 */
 block|{
+comment|/* check it fits on the ISA bus */
+if|if
+condition|(
+name|thisphys
+operator|>
+literal|0xFFFFFF
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bt%d: DMA beyond"
+literal|" end Of ISA\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|xs
+operator|->
+name|error
+operator|=
+name|XS_DRIVER_STUFFUP
+expr_stmt|;
+name|bt_free_ccb
+argument_list|(
+name|unit
+argument_list|,
+name|ccb
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|HAD_ERROR
+operator|)
+return|;
+block|}
+comment|/** how far to the end of the page ***/
 comment|/* how far to the end of the page */
 name|nextphys
 operator|=
