@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.58 (Berkeley) %G%"
+literal|"@(#)conf.c	8.59 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4396,18 +4396,57 @@ begin_comment
 comment|/*  * get option letter from argument vector  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_CONVEX_SOURCE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optind
+decl_stmt|,
+name|opterr
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|int
 name|opterr
 init|=
 literal|1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* if error message should be printed */
+end_comment
+
+begin_decl_stmt
+name|int
 name|optind
 init|=
 literal|1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* index into parent argv vector */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|int
 name|optopt
 decl_stmt|;
 end_decl_stmt
