@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.63 (Berkeley) %G%"
+literal|"@(#)main.c	5.64 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -787,6 +787,13 @@ name|FALSE
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|OPTIONS
+value|"b:C:cd:eF:f:h:Iimno:p:q:R:r:sTtv"
+end_define
+
 begin_while
 while|while
 condition|(
@@ -799,7 +806,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:C:d:"
+name|OPTIONS
 argument_list|)
 operator|)
 operator|!=
@@ -1507,7 +1514,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:C:c:d:e:F:f:h:I:i:m:no:p:q:R:r:s:T:tv:"
+name|OPTIONS
 argument_list|)
 operator|)
 operator|!=
@@ -1987,7 +1994,7 @@ name|setoption
 argument_list|(
 name|j
 argument_list|,
-name|optarg
+literal|"T"
 argument_list|,
 name|FALSE
 argument_list|,
@@ -2003,7 +2010,7 @@ name|setoption
 argument_list|(
 literal|'f'
 argument_list|,
-name|optarg
+literal|"T"
 argument_list|,
 name|FALSE
 argument_list|,
@@ -4993,6 +5000,47 @@ operator|*
 name|argv
 operator|=
 literal|"-q0"
+expr_stmt|;
+comment|/* if -d doesn't have an argument, use 0-99.1 */
+if|if
+condition|(
+name|ap
+index|[
+literal|1
+index|]
+operator|==
+literal|'d'
+operator|&&
+name|ap
+index|[
+literal|2
+index|]
+operator|==
+literal|'\0'
+operator|&&
+operator|(
+name|argv
+index|[
+literal|1
+index|]
+operator|==
+name|NULL
+operator|||
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|)
+condition|)
+operator|*
+name|argv
+operator|=
+literal|"-d0-99.1"
 expr_stmt|;
 block|}
 block|}
