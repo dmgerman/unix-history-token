@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Parts Copyright (c) 1995 Terrence R. Lambert  * Copyright (c) 1995 Julian R. Elischer  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY Julian R. Elischer ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kern_conf.c,v 1.24 1998/06/07 17:11:32 dfr Exp $  */
+comment|/*-  * Parts Copyright (c) 1995 Terrence R. Lambert  * Copyright (c) 1995 Julian R. Elischer  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY Julian R. Elischer ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kern_conf.c,v 1.25 1998/06/25 11:27:34 phk Exp $  */
 end_comment
 
 begin_include
@@ -114,183 +114,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|isdisk
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-name|dev
-operator|,
-name|int
-name|type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Routine to determine if a device is a disk.  *  * KLUDGE XXX add flags to cdevsw entries for disks XXX  * A minimal stub routine can always return 0.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|isdisk
-parameter_list|(
-name|dev
-parameter_list|,
-name|type
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-name|int
-name|type
-decl_stmt|;
-block|{
-switch|switch
-condition|(
-name|major
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
-case|case
-literal|15
-case|:
-comment|/* VBLK: vn, VCHR: cd */
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-case|case
-literal|0
-case|:
-comment|/* wd */
-case|case
-literal|2
-case|:
-comment|/* fd */
-case|case
-literal|4
-case|:
-comment|/* sd */
-case|case
-literal|6
-case|:
-comment|/* cd */
-case|case
-literal|7
-case|:
-comment|/* mcd */
-case|case
-literal|16
-case|:
-comment|/* scd */
-case|case
-literal|17
-case|:
-comment|/* matcd */
-case|case
-literal|18
-case|:
-comment|/* ata */
-case|case
-literal|19
-case|:
-comment|/* wcd */
-case|case
-literal|20
-case|:
-comment|/* od */
-case|case
-literal|22
-case|:
-comment|/* gd */
-if|if
-condition|(
-name|type
-operator|==
-name|VBLK
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-case|case
-literal|3
-case|:
-comment|/* wd */
-case|case
-literal|9
-case|:
-comment|/* fd */
-case|case
-literal|13
-case|:
-comment|/* sd */
-case|case
-literal|29
-case|:
-comment|/* mcd */
-case|case
-literal|43
-case|:
-comment|/* vn */
-case|case
-literal|45
-case|:
-comment|/* scd */
-case|case
-literal|46
-case|:
-comment|/* matcd */
-case|case
-literal|69
-case|:
-comment|/* wcd */
-case|case
-literal|70
-case|:
-comment|/* od */
-case|case
-literal|78
-case|:
-comment|/* gd */
-if|if
-condition|(
-name|type
-operator|==
-name|VCHR
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* fall through */
-default|default:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* NOTREACHED */
-block|}
-end_function
 
 begin_comment
 comment|/*  * Routine to convert from character to block device number.  *  * A minimal stub routine can always return NODEV.  */
@@ -598,53 +421,6 @@ block|{
 name|dev_t
 name|dev
 decl_stmt|;
-comment|/* 	 * XXX hack alert. 	 */
-if|if
-condition|(
-name|isdisk
-argument_list|(
-name|makedev
-argument_list|(
-name|bdev
-argument_list|,
-literal|0
-argument_list|)
-argument_list|,
-name|VBLK
-argument_list|)
-operator|&&
-operator|(
-name|bdevsw
-operator|->
-name|d_flags
-operator|&
-name|D_TYPEMASK
-operator|)
-operator|!=
-name|D_DISK
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bdevsw_add_generic: adding D_DISK flag for device %d\n"
-argument_list|,
-name|bdev
-argument_list|)
-expr_stmt|;
-name|bdevsw
-operator|->
-name|d_flags
-operator|&=
-operator|~
-name|D_TYPEMASK
-expr_stmt|;
-name|bdevsw
-operator|->
-name|d_flags
-operator||=
-name|D_DISK
-expr_stmt|;
-block|}
 name|cdevsw_make
 argument_list|(
 name|bdevsw
@@ -842,48 +618,6 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-comment|/* 		 * XXX hack alert. 		 */
-if|if
-condition|(
-name|isdisk
-argument_list|(
-name|data
-operator|->
-name|bdev
-argument_list|,
-name|VBLK
-argument_list|)
-operator|&&
-name|data
-operator|->
-name|bdevsw
-operator|->
-name|d_flags
-operator|!=
-name|D_DISK
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bdevsw_module_handler: adding D_DISK flag for device %d\n"
-argument_list|,
-name|major
-argument_list|(
-name|data
-operator|->
-name|bdev
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|data
-operator|->
-name|bdevsw
-operator|->
-name|d_flags
-operator|=
-name|D_DISK
-expr_stmt|;
-block|}
 name|cdevsw_make
 argument_list|(
 name|data
@@ -962,7 +696,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|cdevsw_add
+name|bdevsw_add
 argument_list|(
 operator|&
 name|data
