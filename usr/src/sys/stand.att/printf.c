@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)printf.c	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)printf.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -98,7 +98,7 @@ name|n
 decl_stmt|;
 name|unsigned
 name|long
-name|_ulong
+name|ul
 decl_stmt|;
 name|int
 name|lflag
@@ -187,7 +187,7 @@ goto|;
 case|case
 literal|'b'
 case|:
-name|_ulong
+name|ul
 operator|=
 name|va_arg
 argument_list|(
@@ -208,7 +208,7 @@ argument_list|)
 expr_stmt|;
 name|number
 argument_list|(
-name|_ulong
+name|ul
 argument_list|,
 operator|*
 name|p
@@ -218,7 +218,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|_ulong
+name|ul
 condition|)
 break|break;
 for|for
@@ -237,7 +237,7 @@ control|)
 block|{
 if|if
 condition|(
-name|_ulong
+name|ul
 operator|&
 operator|(
 literal|1
@@ -358,7 +358,7 @@ break|break;
 case|case
 literal|'d'
 case|:
-name|_ulong
+name|ul
 operator|=
 name|lflag
 condition|?
@@ -381,7 +381,7 @@ condition|(
 operator|(
 name|long
 operator|)
-name|_ulong
+name|ul
 operator|<
 literal|0
 condition|)
@@ -391,15 +391,18 @@ argument_list|(
 literal|'-'
 argument_list|)
 expr_stmt|;
-name|_ulong
+name|ul
 operator|=
 operator|-
-name|_ulong
+operator|(
+name|long
+operator|)
+name|ul
 expr_stmt|;
 block|}
 name|number
 argument_list|(
-name|_ulong
+name|ul
 argument_list|,
 literal|10
 argument_list|)
@@ -408,7 +411,7 @@ break|break;
 case|case
 literal|'o'
 case|:
-name|_ulong
+name|ul
 operator|=
 name|lflag
 condition|?
@@ -428,7 +431,7 @@ argument_list|)
 expr_stmt|;
 name|number
 argument_list|(
-name|_ulong
+name|ul
 argument_list|,
 literal|8
 argument_list|)
@@ -437,7 +440,7 @@ break|break;
 case|case
 literal|'u'
 case|:
-name|_ulong
+name|ul
 operator|=
 name|lflag
 condition|?
@@ -457,7 +460,7 @@ argument_list|)
 expr_stmt|;
 name|number
 argument_list|(
-name|_ulong
+name|ul
 argument_list|,
 literal|10
 argument_list|)
@@ -466,7 +469,7 @@ break|break;
 case|case
 literal|'x'
 case|:
-name|_ulong
+name|ul
 operator|=
 name|lflag
 condition|?
@@ -486,7 +489,7 @@ argument_list|)
 expr_stmt|;
 name|number
 argument_list|(
-name|_ulong
+name|ul
 argument_list|,
 literal|16
 argument_list|)
@@ -527,13 +530,13 @@ specifier|static
 name|void
 name|number
 parameter_list|(
-name|_ulong
+name|ul
 parameter_list|,
 name|base
 parameter_list|)
 name|unsigned
 name|long
-name|_ulong
+name|ul
 decl_stmt|;
 name|int
 name|base
@@ -561,7 +564,7 @@ operator|++
 operator|=
 literal|"0123456789abcdef"
 index|[
-name|_ulong
+name|ul
 operator|%
 name|base
 index|]
@@ -569,7 +572,7 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|_ulong
+name|ul
 operator|/=
 name|base
 condition|)
