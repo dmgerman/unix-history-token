@@ -525,7 +525,7 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
-name|u_long
+name|int
 name|cmd
 decl_stmt|;
 name|caddr_t

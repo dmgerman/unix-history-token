@@ -510,7 +510,7 @@ expr|struct
 name|socket
 operator|*
 operator|,
-name|u_long
+name|int
 operator|,
 name|caddr_t
 operator|,
