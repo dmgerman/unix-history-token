@@ -1770,6 +1770,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1791,17 +1793,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|bzero
-argument_list|(
-name|ahb
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ahb_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|SLIST_INIT
 argument_list|(
 operator|&
