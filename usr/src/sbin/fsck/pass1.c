@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	8.5 (Berkeley) %G%"
+literal|"@(#)pass1.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,14 +213,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Find all allocated blocks. 	 */
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|idesc
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -378,20 +376,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|dp
 operator|->
 name|di_db
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|zino
 operator|.
 name|di_db
@@ -404,20 +394,12 @@ name|ufs_daddr_t
 argument_list|)
 argument_list|)
 operator|||
-name|bcmp
+name|memcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|dp
 operator|->
 name|di_ib
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|zino
 operator|.
 name|di_ib
@@ -740,16 +722,13 @@ argument_list|(
 name|inumber
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|symbuf
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|dp
 operator|->
 name|di_shortlink
+argument_list|,
+name|symbuf
 argument_list|,
 operator|(
 name|long

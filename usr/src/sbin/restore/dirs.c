@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	8.5 (Berkeley) %G%"
+literal|"@(#)dirs.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2000,17 +2000,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|dp
-argument_list|,
 name|dirbuf
 operator|+
 name|dirloc
+argument_list|,
+name|dp
 argument_list|,
 operator|(
 name|long
@@ -2115,13 +2111,11 @@ modifier|*
 name|ndp
 decl_stmt|;
 block|{
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ndp
+argument_list|,
+literal|0
 argument_list|,
 call|(
 name|long
@@ -3177,9 +3171,15 @@ condition|(
 operator|(
 name|ofile
 operator|=
-name|creat
+name|open
 argument_list|(
 name|name
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_TRUNC
 argument_list|,
 literal|0666
 argument_list|)

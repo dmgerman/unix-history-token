@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotacheck.c	8.5 (Berkeley) %G%"
+literal|"@(#)quotacheck.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2633,7 +2633,7 @@ if|if
 condition|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|opt
 argument_list|,
@@ -2975,13 +2975,13 @@ if|if
 condition|(
 name|name
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
-name|name
-argument_list|,
 name|fup
 operator|->
 name|fu_name
+argument_list|,
+name|name
 argument_list|,
 name|len
 operator|+

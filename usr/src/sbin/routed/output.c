@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	8.1 (Berkeley) %G%"
+literal|"@(#)output.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,11 +413,13 @@ name|rip_vers
 operator|=
 name|RIPVERSION
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|msg
 operator|->
 name|rip_res1
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	8.1 (Berkeley) %G%"
+literal|"@(#)query.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,10 +393,12 @@ literal|1
 operator|<<
 name|s
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|shorttime
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -410,10 +412,12 @@ name|tv_usec
 operator|=
 name|STIME
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sigact
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -624,14 +628,12 @@ name|servent
 modifier|*
 name|sp
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|router
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -706,16 +708,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
-name|hp
-operator|->
-name|h_addr
-argument_list|,
 operator|&
 name|router
 operator|.
 name|sin_addr
+argument_list|,
+name|hp
+operator|->
+name|h_addr
 argument_list|,
 name|hp
 operator|->

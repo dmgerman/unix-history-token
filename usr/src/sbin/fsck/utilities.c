@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	8.3 (Berkeley) %G%"
+literal|"@(#)utilities.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1468,9 +1468,11 @@ name|errs
 operator|=
 literal|0
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|buf
+argument_list|,
+literal|0
 argument_list|,
 operator|(
 name|size_t
@@ -2126,14 +2128,12 @@ name|busy
 operator|=
 literal|1
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|idesc
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2292,11 +2292,11 @@ name|cp
 operator|-=
 name|len
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|namebuf
-argument_list|,
 name|cp
+argument_list|,
+name|namebuf
 argument_list|,
 operator|(
 name|size_t
@@ -2344,11 +2344,11 @@ name|cp
 operator|=
 literal|'?'
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|cp
-argument_list|,
 name|namebuf
+argument_list|,
+name|cp
 argument_list|,
 call|(
 name|size_t

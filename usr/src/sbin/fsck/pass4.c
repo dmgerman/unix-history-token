@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass4.c	8.3 (Berkeley) %G%"
+literal|"@(#)pass4.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,14 +97,12 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|idesc
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

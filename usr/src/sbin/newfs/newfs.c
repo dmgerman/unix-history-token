@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	8.9 (Berkeley) %G%"
+literal|"@(#)newfs.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -843,7 +843,7 @@ if|if
 condition|(
 name|progname
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 operator|*
 name|argv
@@ -1476,7 +1476,7 @@ index|]
 expr_stmt|;
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|special
 argument_list|,
@@ -1840,7 +1840,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|argv
 index|[
@@ -3053,9 +3053,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|blk
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

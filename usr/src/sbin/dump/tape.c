@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	8.2 (Berkeley) %G%"
+literal|"@(#)tape.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2804,7 +2804,7 @@ if|if
 condition|(
 name|nexttape
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|tape
 argument_list|,
@@ -2828,7 +2828,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|tape
 argument_list|,

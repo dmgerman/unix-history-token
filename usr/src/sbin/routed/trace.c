@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	8.1 (Berkeley) %G%"
+literal|"@(#)trace.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -974,13 +974,13 @@ name|len
 operator|>
 literal|0
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
-name|p
-argument_list|,
 name|t
 operator|->
 name|ift_packet
+argument_list|,
+name|p
 argument_list|,
 name|len
 argument_list|)

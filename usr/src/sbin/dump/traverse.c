@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	8.3 (Berkeley) %G%"
+literal|"@(#)traverse.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1545,16 +1545,13 @@ argument_list|(
 name|ino
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|buf
+argument_list|,
 name|dp
 operator|->
 name|di_shortlink
-argument_list|,
-name|buf
 argument_list|,
 operator|(
 name|u_long
@@ -1815,13 +1812,11 @@ name|fs_bsize
 argument_list|)
 expr_stmt|;
 else|else
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|idblk
+argument_list|,
+literal|0
 argument_list|,
 operator|(
 name|int
@@ -2730,9 +2725,11 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Zero buffer, then try to read each sector of buffer separately. 	 */
-name|bzero
+name|memset
 argument_list|(
 name|buf
+argument_list|,
+literal|0
 argument_list|,
 name|size
 argument_list|)

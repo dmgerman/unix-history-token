@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	8.1 (Berkeley) %G%"
+literal|"@(#)trace.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -372,14 +372,12 @@ condition|)
 goto|goto
 name|usage
 goto|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|router
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -501,16 +499,16 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
-name|hp
-operator|->
-name|h_addr
-argument_list|,
 operator|&
 name|router
 operator|.
 name|sin_addr
+argument_list|,
+name|hp
+operator|->
+name|h_addr
 argument_list|,
 name|hp
 operator|->

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	8.2 (Berkeley) %G%"
+literal|"@(#)lfs.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1706,9 +1706,11 @@ operator|*
 operator|)
 name|dpagep
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|dip
+argument_list|,
+literal|0
 argument_list|,
 name|lfsp
 operator|->
@@ -2293,9 +2295,11 @@ name|lfs_bsize
 expr_stmt|;
 comment|/* 	 * use ipagep for space for writing out other stuff.  It used to  	 * contain the ifile, but we're done with it. 	 */
 comment|/* Write out the root and lost and found directories */
-name|bzero
+name|memset
 argument_list|(
 name|ipagep
+argument_list|,
+literal|0
 argument_list|,
 name|lfsp
 operator|->
@@ -2354,9 +2358,11 @@ name|lfsp
 operator|->
 name|lfs_bsize
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|ipagep
+argument_list|,
+literal|0
 argument_list|,
 name|lfsp
 operator|->
@@ -2606,12 +2612,12 @@ name|sump
 operator|=
 name|ipagep
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|sump
+argument_list|,
 operator|&
 name|summary
-argument_list|,
-name|sump
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2645,12 +2651,12 @@ name|fi_ino
 operator|=
 name|LFS_IFILE_INUM
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|sump
+argument_list|,
 operator|&
 name|file_info
-argument_list|,
-name|sump
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2675,11 +2681,11 @@ argument_list|(
 name|u_long
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|block_array
-argument_list|,
 name|sump
+argument_list|,
+name|block_array
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2730,12 +2736,12 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|sump
+argument_list|,
 operator|&
 name|file_info
-argument_list|,
-name|sump
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2757,12 +2763,12 @@ name|fi_ino
 operator|=
 name|LOSTFOUNDINO
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|sump
+argument_list|,
 operator|&
 name|file_info
-argument_list|,
-name|sump
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3469,15 +3475,15 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|cp
+argument_list|,
 operator|&
 name|protodir
 index|[
 name|i
 index|]
-argument_list|,
-name|cp
 argument_list|,
 name|protodir
 index|[
@@ -3530,15 +3536,15 @@ name|d_reclen
 operator|=
 name|spcleft
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|cp
+argument_list|,
 operator|&
 name|protodir
 index|[
 name|i
 index|]
-argument_list|,
-name|cp
 argument_list|,
 name|DIRSIZ
 argument_list|(

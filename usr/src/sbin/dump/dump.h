@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dump.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dump.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -1209,31 +1209,42 @@ directive|include
 file|<sys/file.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|strchr
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|index(a,b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|strrchr
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|rindex(a,b)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|rindex
-argument_list|()
-decl_stmt|,
-modifier|*
 name|strdup
+argument_list|()
+decl_stmt|,
+modifier|*
+name|ctime
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|extern

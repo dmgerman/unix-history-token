@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.4 (Berkeley) %G%"
+literal|"@(#)main.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1081,7 +1081,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|tape
 argument_list|,
@@ -1095,7 +1095,7 @@ name|tape
 expr_stmt|;
 name|tape
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|host
 argument_list|,
@@ -2636,7 +2636,7 @@ name|char
 modifier|*
 name|dp
 init|=
-name|rindex
+name|strrchr
 argument_list|(
 name|cp
 argument_list|,
