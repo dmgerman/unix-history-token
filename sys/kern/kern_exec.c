@@ -1749,6 +1749,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* Close any file descriptors 0..2 that reference procfs */
+name|setugidsafety
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* Make sure file descriptors 0..2 are in use.  */
 name|error
 operator|=
@@ -1804,11 +1810,6 @@ argument_list|,
 name|attr
 operator|.
 name|va_gid
-argument_list|)
-expr_stmt|;
-name|setugidsafety
-argument_list|(
-name|td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Implement correct POSIX saved-id behavior. 		 */
