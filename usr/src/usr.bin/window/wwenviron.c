@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwenviron.c	3.5 83/12/01"
+literal|"@(#)wwenviron.c	3.6 83/12/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ decl_stmt|;
 specifier|register
 name|i
 expr_stmt|;
+name|int
+name|pgrp
+init|=
+name|getpid
+argument_list|()
+decl_stmt|;
 name|i
 operator|=
 name|open
@@ -175,6 +181,34 @@ operator|)
 name|close
 argument_list|(
 name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+operator|(
+name|int
+operator|)
+name|TIOCSPGRP
+argument_list|,
+operator|&
+name|pgrp
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return;
+operator|(
+name|void
+operator|)
+name|setpgrp
+argument_list|(
+name|pgrp
+argument_list|,
+name|pgrp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Do this only once if vfork(). 	 */
