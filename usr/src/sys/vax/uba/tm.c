@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.15	%G%	*/
+comment|/*	tm.c	4.16	%G%	*/
 end_comment
 
 begin_include
@@ -12,13 +12,13 @@ end_include
 begin_if
 if|#
 directive|if
-name|NTM03
+name|NTM
 operator|>
 literal|0
 end_if
 
 begin_comment
-comment|/*  * TM tape driver  *  * THIS DRIVER HAS NOT BEEN TESTED WITH MORE THAN ONE TRANSPORT.  */
+comment|/*  * TM11/TE10 tape driver  *  * THIS DRIVER HAS NOT BEEN TESTED WITH MORE THAN ONE TRANSPORT.  */
 end_comment
 
 begin_define
@@ -126,7 +126,7 @@ name|struct
 name|buf
 name|ctmbuf
 index|[
-name|NTM11
+name|NTE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -136,7 +136,7 @@ name|struct
 name|buf
 name|rtmbuf
 index|[
-name|NTM11
+name|NTE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -166,7 +166,7 @@ name|uba_minfo
 modifier|*
 name|tmminfo
 index|[
-name|NTM03
+name|NTM
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -177,7 +177,7 @@ name|uba_dinfo
 modifier|*
 name|tmdinfo
 index|[
-name|NTM11
+name|NTE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -187,7 +187,7 @@ name|struct
 name|buf
 name|tmutab
 index|[
-name|NTM11
+name|NTE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -204,7 +204,7 @@ name|uba_dinfo
 modifier|*
 name|tmip
 index|[
-name|NTM03
+name|NTM
 index|]
 index|[
 literal|4
@@ -246,13 +246,15 @@ name|tmdgo
 block|,
 name|tmstd
 block|,
-literal|"mtm"
+literal|"te"
 block|,
 name|tmdinfo
 block|,
 literal|"tm"
 block|,
 name|tmminfo
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -331,7 +333,7 @@ comment|/* copy of last bc */
 block|}
 name|tm_softc
 index|[
-name|NTM03
+name|NTM
 index|]
 struct|;
 end_struct
@@ -451,7 +453,7 @@ name|tmcs
 operator|=
 name|TM_IE
 expr_stmt|;
-comment|/* 	 * If this is a tm03, it ought to have interrupted 	 * by now, if it isn't (ie: it is a ts04) then we just 	 * hope that it didn't interrupt, so autoconf will ignore it. 	 * Just in case, we will reference one 	 * of the more distant registers, and hope for a machine 	 * check, or similar disaster if this is a ts. 	 * 	 * Note: on an 11/780, badaddr will just generate 	 * a uba error for a ts; but our caller will notice that 	 * so we won't check for it. 	 */
+comment|/* 	 * If this is a tm11, it ought to have interrupted 	 * by now, if it isn't (ie: it is a ts04) then we just 	 * hope that it didn't interrupt, so autoconf will ignore it. 	 * Just in case, we will reference one 	 * of the more distant registers, and hope for a machine 	 * check, or similar disaster if this is a ts. 	 * 	 * Note: on an 11/780, badaddr will just generate 	 * a uba error for a ts; but our caller will notice that 	 * so we won't check for it. 	 */
 if|if
 condition|(
 name|badaddr
@@ -626,7 +628,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NTM11
+name|NTE
 operator|||
 operator|(
 name|sc
@@ -1934,13 +1936,13 @@ end_comment
 begin_macro
 name|tmintr
 argument_list|(
-argument|tm03
+argument|tm11
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
-name|tm03
+name|tm11
 decl_stmt|;
 end_decl_stmt
 
@@ -1965,7 +1967,7 @@ name|um
 init|=
 name|tmminfo
 index|[
-name|tm03
+name|tm11
 index|]
 decl_stmt|;
 specifier|register
@@ -1981,7 +1983,7 @@ operator|*
 operator|)
 name|tmdinfo
 index|[
-name|tm03
+name|tm11
 index|]
 operator|->
 name|ui_addr
@@ -2883,7 +2885,7 @@ modifier|*
 name|um
 decl_stmt|;
 specifier|register
-name|tm03
+name|tm11
 operator|,
 name|unit
 expr_stmt|;
@@ -2901,15 +2903,15 @@ name|dp
 decl_stmt|;
 for|for
 control|(
-name|tm03
+name|tm11
 operator|=
 literal|0
 init|;
-name|tm03
+name|tm11
 operator|<
-name|NTM03
+name|NTM
 condition|;
-name|tm03
+name|tm11
 operator|++
 control|)
 block|{
@@ -2920,7 +2922,7 @@ name|um
 operator|=
 name|tmminfo
 index|[
-name|tm03
+name|tm11
 index|]
 operator|)
 operator|==
@@ -3037,7 +3039,7 @@ literal|0
 init|;
 name|unit
 operator|<
-name|NTM11
+name|NTE
 condition|;
 name|unit
 operator|++
