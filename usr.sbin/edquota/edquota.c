@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)edquota.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)edquota.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,6 +104,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -102,25 +128,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<grp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -210,9 +242,6 @@ index|]
 decl_stmt|;
 comment|/* actually longer */
 block|}
-modifier|*
-name|getprivs
-argument_list|()
 struct|;
 end_struct
 
@@ -223,7 +252,235 @@ name|FOUND
 value|0x01
 end_define
 
+begin_decl_stmt
+name|int
+name|alldigits
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|s
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cvtatos
+name|__P
+argument_list|(
+operator|(
+name|time_t
+operator|,
+name|char
+operator|*
+operator|,
+name|time_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|cvtstoa
+name|__P
+argument_list|(
+operator|(
+name|time_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|editit
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|freeprivs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|quotause
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|getentry
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|quotause
+modifier|*
+name|getprivs
+name|__P
+argument_list|(
+operator|(
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|hasquota
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fstab
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|putprivs
+name|__P
+argument_list|(
+operator|(
+name|long
+operator|,
+name|int
+operator|,
+expr|struct
+name|quotause
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|readprivs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|quotause
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|readtimes
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|quotause
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|writetimes
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|quotause
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|writeprivs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|quotause
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -251,15 +508,6 @@ name|protoprivs
 decl_stmt|,
 modifier|*
 name|curprivs
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 specifier|register
 name|long
@@ -317,20 +565,13 @@ condition|(
 name|getuid
 argument_list|()
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"edquota: permission denied\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"permission denied"
 argument_list|)
 expr_stmt|;
-block|}
 name|quotatype
 operator|=
 name|USRQUOTA
@@ -535,24 +776,17 @@ name|enduid
 operator|<
 name|startuid
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"edquota: ending uid (%d) must be>= starting uid (%d) when using uid ranges\n"
+literal|"ending uid (%d) must be>= starting uid (%d) when using uid ranges"
 argument_list|,
 name|enduid
 argument_list|,
 name|startuid
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 init|;
@@ -839,26 +1073,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s%s%s%s"
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"Usage: edquota [-u] [-p username] username ...\n"
+literal|"usage: edquota [-u] [-p username] username ..."
 argument_list|,
-literal|"\tedquota -g [-p groupname] groupname ...\n"
+literal|"       edquota -g [-p groupname] groupname ..."
 argument_list|,
-literal|"\tedquota [-u] -t\n"
+literal|"       edquota [-u] -t"
 argument_list|,
-literal|"\tedquota -g -t\n"
+literal|"       edquota -g -t"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -867,35 +1100,27 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This routine converts a name for a particular quota type to  * an identifier. This routine must agree with the kernel routine  * getinoquota as to the interpretation of quota types.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getentry
-argument_list|(
-argument|name
-argument_list|,
-argument|quotatype
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|quotatype
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|quotatype
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|passwd
@@ -932,12 +1157,14 @@ name|USRQUOTA
 case|:
 if|if
 condition|(
+operator|(
 name|pw
 operator|=
 name|getpwnam
 argument_list|(
 name|name
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -946,11 +1173,9 @@ operator|->
 name|pw_uid
 operator|)
 return|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: no such user\n"
+literal|"%s: no such user"
 argument_list|,
 name|name
 argument_list|)
@@ -961,12 +1186,14 @@ name|GRPQUOTA
 case|:
 if|if
 condition|(
+operator|(
 name|gr
 operator|=
 name|getgrnam
 argument_list|(
 name|name
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -975,22 +1202,18 @@ operator|->
 name|gr_gid
 operator|)
 return|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: no such group\n"
+literal|"%s: no such group"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%d: unknown quota type\n"
+literal|"%d: unknown quota type"
 argument_list|,
 name|quotatype
 argument_list|)
@@ -1009,7 +1232,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Collect the requested quota information.  */
@@ -1070,10 +1293,6 @@ name|warned
 init|=
 literal|0
 decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|setfsent
 argument_list|()
 expr_stmt|;
@@ -1097,10 +1316,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|fs
 operator|=
 name|getfsent
 argument_list|()
+operator|)
 condition|)
 block|{
 if|if
@@ -1160,20 +1381,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"edquota: out of memory\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|quotactl
@@ -1208,13 +1422,9 @@ block|{
 name|warned
 operator|++
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: %s\n"
-argument_list|,
-literal|"Quotas are not compiled into this kernel"
+literal|"warning: quotas are not compiled into this kernel"
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -1263,8 +1473,10 @@ operator|!=
 name|ENOENT
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|qfpathname
 argument_list|)
 expr_stmt|;
@@ -1275,11 +1487,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Creating quota file %s\n"
+literal|"creating quota file %s"
 argument_list|,
 name|qfpathname
 argument_list|)
@@ -1391,15 +1601,10 @@ comment|/* OK */
 break|break;
 default|default:
 comment|/* ERROR */
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"read error in %s"
 argument_list|,
-literal|"edquota: read error in "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|qfpathname
 argument_list|)
 expr_stmt|;
@@ -1484,38 +1689,27 @@ begin_comment
 comment|/*  * Store the requested quota information.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|putprivs
-argument_list|(
-argument|id
-argument_list|,
-argument|quotatype
-argument_list|,
-argument|quplist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|id
+parameter_list|,
+name|quotatype
+parameter_list|,
+name|quplist
+parameter_list|)
 name|long
 name|id
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|quotatype
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|quotause
 modifier|*
 name|quplist
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1591,8 +1785,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|qup
 operator|->
 name|qfname
@@ -1647,15 +1843,10 @@ name|dqblk
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"edquota: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|qup
 operator|->
 name|qfname
@@ -1670,27 +1861,22 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Take a list of priviledges and get it edited.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|editit
-argument_list|(
-argument|tmpfile
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tmpfile
+parameter_list|)
 name|char
 modifier|*
 name|tmpfile
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|long
 name|omask
@@ -1700,12 +1886,6 @@ name|pid
 decl_stmt|,
 name|stat
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
 name|omask
 operator|=
 name|sigblock
@@ -1740,7 +1920,6 @@ operator|<
 literal|0
 condition|)
 block|{
-extern|extern errno;
 if|if
 condition|(
 name|errno
@@ -1748,11 +1927,9 @@ operator|==
 name|EPROCLIM
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"You have too many processes\n"
+literal|"you have too many processes"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1777,7 +1954,7 @@ goto|goto
 name|top
 goto|;
 block|}
-name|perror
+name|warn
 argument_list|(
 literal|"fork"
 argument_list|)
@@ -1849,14 +2026,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-name|ed
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|ed
 argument_list|)
 expr_stmt|;
 block|}
@@ -1901,53 +2077,39 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Convert a quotause list to an ASCII file.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|writeprivs
-argument_list|(
-argument|quplist
-argument_list|,
-argument|outfd
-argument_list|,
-argument|name
-argument_list|,
-argument|quotatype
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|quplist
+parameter_list|,
+name|outfd
+parameter_list|,
+name|name
+parameter_list|,
+name|quotatype
+parameter_list|)
 name|struct
 name|quotause
 modifier|*
 name|quplist
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|outfd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|quotatype
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1993,25 +2155,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"edquota: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"%s"
+argument_list|,
 name|tmpfil
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|fprintf
 argument_list|(
 name|fd
@@ -2144,37 +2296,29 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Merge changes to an ASCII file into a quotause list.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|readprivs
-argument_list|(
-argument|quplist
-argument_list|,
-argument|inname
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|quplist
+parameter_list|,
+name|inname
+parameter_list|)
 name|struct
 name|quotause
 modifier|*
 name|quplist
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|inname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2228,11 +2372,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't re-read temp file!!\n"
+literal|"can't re-read temp file!!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2304,11 +2446,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad format\n"
+literal|"%s: bad format"
 argument_list|,
 name|line1
 argument_list|)
@@ -2339,11 +2479,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: bad format\n"
+literal|"%s: %s: bad format"
 argument_list|,
 name|fsp
 argument_list|,
@@ -2396,11 +2534,9 @@ operator|!=
 literal|3
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%s: bad format\n"
+literal|"%s:%s: bad format"
 argument_list|,
 name|fsp
 argument_list|,
@@ -2468,11 +2604,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: bad format\n"
+literal|"%s: %s: bad format"
 argument_list|,
 name|fsp
 argument_list|,
@@ -2516,11 +2650,9 @@ operator|!=
 literal|3
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: bad format\n"
+literal|"%s: %s: bad format"
 argument_list|,
 name|fsp
 argument_list|,
@@ -2722,11 +2854,9 @@ operator|.
 name|dqb_curinodes
 condition|)
 break|break;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: cannot change current allocation\n"
+literal|"%s: cannot change current allocation"
 argument_list|,
 name|fsp
 argument_list|)
@@ -2812,44 +2942,33 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Convert a quotause list to an ASCII file of grace times.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|writetimes
-argument_list|(
-argument|quplist
-argument_list|,
-argument|outfd
-argument_list|,
-argument|quotatype
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|quplist
+parameter_list|,
+name|outfd
+parameter_list|,
+name|quotatype
+parameter_list|)
 name|struct
 name|quotause
 modifier|*
 name|quplist
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|outfd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|quotatype
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2857,11 +2976,6 @@ name|quotause
 modifier|*
 name|qup
 decl_stmt|;
-name|char
-modifier|*
-name|cvtstoa
-parameter_list|()
-function_decl|;
 name|FILE
 modifier|*
 name|fd
@@ -2900,25 +3014,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"edquota: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"%s"
+argument_list|,
 name|tmpfil
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|fprintf
 argument_list|(
 name|fd
@@ -3001,37 +3105,29 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Merge changes of grace times in an ASCII file into a quotause list.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|readtimes
-argument_list|(
-argument|quplist
-argument_list|,
-argument|inname
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|quplist
+parameter_list|,
+name|inname
+parameter_list|)
 name|struct
 name|quotause
 modifier|*
 name|quplist
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|inname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3095,11 +3191,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't re-read temp file!!\n"
+literal|"can't re-read temp file!!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3172,11 +3266,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad format\n"
+literal|"%s: bad format"
 argument_list|,
 name|line1
 argument_list|)
@@ -3207,11 +3299,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: bad format\n"
+literal|"%s: %s: bad format"
 argument_list|,
 name|fsp
 argument_list|,
@@ -3259,11 +3349,9 @@ operator|!=
 literal|4
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%s: bad format\n"
+literal|"%s:%s: bad format"
 argument_list|,
 name|fsp
 argument_list|,
@@ -3428,7 +3516,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Convert seconds to ASCII times.  */
@@ -3593,38 +3681,27 @@ begin_comment
 comment|/*  * Convert ASCII input times to seconds.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|cvtatos
-argument_list|(
-argument|time
-argument_list|,
-argument|units
-argument_list|,
-argument|seconds
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|time
+parameter_list|,
+name|units
+parameter_list|,
+name|seconds
+parameter_list|)
 name|time_t
 name|time
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|units
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|time_t
 modifier|*
 name|seconds
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -3736,28 +3813,23 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Free a list of quotause structures.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|freeprivs
-argument_list|(
-argument|quplist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|quplist
+parameter_list|)
 name|struct
 name|quotause
 modifier|*
 name|quplist
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3794,25 +3866,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check whether a string is completely composed of digits.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|alldigits
-argument_list|(
+parameter_list|(
 name|s
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|c
@@ -3841,11 +3911,13 @@ return|;
 block|}
 do|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
 condition|)
 do|;
 return|return
@@ -3854,44 +3926,36 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check to see if a particular quota is to be enabled.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|hasquota
-argument_list|(
+parameter_list|(
 name|fs
-argument_list|,
+parameter_list|,
 name|type
-argument_list|,
+parameter_list|,
 name|qfnamep
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|fstab
-operator|*
+modifier|*
 name|fs
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|qfnamep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -3901,14 +3965,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strtok
-argument_list|()
 decl_stmt|;
 specifier|static
 name|char
@@ -4004,6 +4060,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|index
@@ -4012,6 +4069,7 @@ name|opt
 argument_list|,
 literal|'='
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|cp
@@ -4110,7 +4168,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
