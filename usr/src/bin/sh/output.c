@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.2 (Berkeley) %G%"
+literal|"@(#)output.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -444,6 +444,17 @@ operator|*
 name|p
 operator|++
 argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|file
+operator|==
+name|out2
+condition|)
+name|flushout
+argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
