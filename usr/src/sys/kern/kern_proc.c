@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.11	81/04/23	*/
+comment|/*	kern_proc.c	4.12	81/04/28	*/
 end_comment
 
 begin_include
@@ -902,41 +902,19 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+name|indir
+operator|&&
+operator|(
 name|na
 operator|==
 literal|1
-operator|&&
-name|indir
-condition|)
-block|{
-if|if
-condition|(
-name|sharg
-operator|==
-name|NULL
-condition|)
-name|ap
-operator|=
-operator|(
-name|int
-operator|)
-name|uap
-operator|->
-name|fname
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
+operator|||
 name|na
 operator|==
 literal|2
 operator|&&
-name|indir
-operator|&&
 name|sharg
-operator|!=
-name|NULL
+operator|)
 condition|)
 name|ap
 operator|=
