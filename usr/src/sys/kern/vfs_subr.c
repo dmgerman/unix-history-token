@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.27 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3387,6 +3387,9 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * If the vnode is in the process of being cleaned out for 	 * another use, we wait for the cleaning to finish and then 	 * return failure. Cleaning is determined by checking that 	 * the VXLOCK flag is set. 	 */
 if|if
 condition|(
@@ -3554,8 +3557,11 @@ name|flags
 operator|&
 name|LK_TYPE_MASK
 condition|)
-return|return
-operator|(
+block|{
+if|if
+condition|(
+name|error
+operator|=
 name|vn_lock
 argument_list|(
 name|vp
@@ -3566,8 +3572,18 @@ name|LK_INTERLOCK
 argument_list|,
 name|p
 argument_list|)
+condition|)
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
+block|}
 end_if
 
 begin_expr_stmt
