@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.14	%G%"
+literal|"@(#)deliver.c	3.15	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -829,10 +829,29 @@ name|Mailer
 index|[
 literal|0
 index|]
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|QGOODADDR
+argument_list|,
+name|to
+operator|->
+name|q_flags
+argument_list|)
 condition|)
 block|{
 if|if
 condition|(
+name|bitset
+argument_list|(
+name|QBADADDR
+argument_list|,
+name|to
+operator|->
+name|q_flags
+argument_list|)
+operator|||
 name|getpwnam
 argument_list|(
 name|user
@@ -931,6 +950,27 @@ break|break;
 block|}
 block|}
 end_for
+
+begin_comment
+comment|/* see if any addresses still exist */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|tobuf
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+end_if
 
 begin_comment
 comment|/* print out messages as full list */
@@ -2608,6 +2648,16 @@ endif|DEBUG
 if|if
 condition|(
 name|Verbose
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|QDONTSEND
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
 condition|)
 name|message
 argument_list|(
@@ -2655,14 +2705,11 @@ argument_list|(
 name|a
 argument_list|)
 condition|)
-name|setbit
-argument_list|(
-name|QDONTSEND
-argument_list|,
 name|a
 operator|->
 name|q_flags
-argument_list|)
+operator||=
+name|QDONTSEND
 expr_stmt|;
 return|return;
 block|}
