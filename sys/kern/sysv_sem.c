@@ -1361,6 +1361,17 @@ name|mode
 operator|=
 literal|0
 expr_stmt|;
+name|sema
+index|[
+name|i
+index|]
+operator|.
+name|sem_perm
+operator|.
+name|seq
+operator|=
+literal|0
+expr_stmt|;
 block|}
 for|for
 control|(
