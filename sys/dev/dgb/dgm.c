@@ -9279,7 +9279,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* now it sends 250 millisecond break because I don't know */
+comment|/* now it sends 400 millisecond break because I don't know */
 comment|/* how to send an infinite break */
 name|fepcmd
 argument_list|(
@@ -9287,7 +9287,7 @@ name|port
 argument_list|,
 name|SENDBREAK
 argument_list|,
-literal|250
+literal|400
 argument_list|,
 literal|0
 argument_list|,
