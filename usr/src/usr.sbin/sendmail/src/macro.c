@@ -21,7 +21,7 @@ operator|)
 name|macro
 operator|.
 name|c
-literal|3.8
+literal|3.9
 operator|%
 name|G
 operator|%
@@ -176,7 +176,7 @@ name|NULL
 expr_stmt|;
 break|break;
 case|case
-literal|':'
+literal|'|'
 case|:
 comment|/* else */
 name|skipping
