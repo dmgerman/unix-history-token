@@ -3843,6 +3843,16 @@ name|tf
 operator|->
 name|tf_edi
 expr_stmt|;
+name|args
+index|[
+literal|5
+index|]
+operator|=
+name|tf
+operator|->
+name|tf_ebp
+expr_stmt|;
+comment|/* Unconfirmed */
 operator|*
 name|params
 operator|=
