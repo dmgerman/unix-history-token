@@ -4603,12 +4603,6 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|bif_dlist
-operator|=
-literal|0
-expr_stmt|;
-name|bp
-operator|->
 name|bif_ifp
 operator|=
 name|ifp
