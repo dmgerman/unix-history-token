@@ -1311,5 +1311,72 @@ parameter_list|)
 value|(struct pccard_ivar *) device_get_ivars(d)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCCARD_S
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|PCMCIA_STR_ ## a ## _ ## b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_P
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|PCMCIA_PRODUCT_ ## a ## _ ## b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_C
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|PCMCIA_CIS_ ## a ## _ ## b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CARD
+parameter_list|(
+name|v
+parameter_list|,
+name|p
+parameter_list|,
+name|f
+parameter_list|)
+value|{ PCCARD_S(v, p), PCMCIA_VENDOR_ ## v, \ 		PCCARD_P(v, p), f, PCCARD_C(v, p) }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CARD2
+parameter_list|(
+name|v1
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|{ PCMCIA_STR_ ## p2, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  f, PCMCIA_CIS_ ## p2}
+end_define
+
 end_unit
 

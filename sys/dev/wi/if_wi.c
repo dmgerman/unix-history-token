@@ -1217,73 +1217,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|S
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|PCMCIA_STR_ ## a ## _ ## b
-end_define
-
-begin_define
-define|#
-directive|define
-name|P
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|PCMCIA_PRODUCT_ ## a ## _ ## b
-end_define
-
-begin_define
-define|#
-directive|define
-name|C
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|PCMCIA_CIS_ ## a ## _ ## b
-end_define
-
-begin_define
-define|#
-directive|define
-name|Card
-parameter_list|(
-name|v
-parameter_list|,
-name|p
-parameter_list|,
-name|f
-parameter_list|)
-value|{ S(v, p), PCMCIA_VENDOR_ ## v, P(v, p), f, C(v, p) }
-end_define
-
-begin_define
-define|#
-directive|define
-name|Card2
-parameter_list|(
-name|v1
-parameter_list|,
-name|p1
-parameter_list|,
-name|p2
-parameter_list|,
-name|f
-parameter_list|)
-define|\
-value|{ PCMCIA_STR_ ## p2, PCMCIA_VENDOR_ ## v1, P(v1, p1), f, \ 		  PCMCIA_CIS_ ## p2}
-end_define
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1293,7 +1226,7 @@ name|wi_pccard_products
 index|[]
 init|=
 block|{
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 literal|3COM
 argument_list|,
@@ -1302,7 +1235,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|BUFFALO
 argument_list|,
@@ -1311,7 +1244,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|COMPAQ
 argument_list|,
@@ -1320,7 +1253,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|CONTEC
 argument_list|,
@@ -1329,7 +1262,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|COREGA
 argument_list|,
@@ -1338,7 +1271,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|COREGA
 argument_list|,
@@ -1347,7 +1280,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|COREGA
 argument_list|,
@@ -1356,7 +1289,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|ELSA
 argument_list|,
@@ -1365,7 +1298,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|ELSA
 argument_list|,
@@ -1374,7 +1307,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|EMTAC
 argument_list|,
@@ -1383,7 +1316,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|GEMTEK
 argument_list|,
@@ -1392,7 +1325,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|INTEL
 argument_list|,
@@ -1401,7 +1334,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|INTERSIL
 argument_list|,
@@ -1410,7 +1343,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|IODATA2
 argument_list|,
@@ -1419,7 +1352,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card2
+name|PCMCIA_CARD2
 argument_list|(
 name|LUCENT
 argument_list|,
@@ -1430,7 +1363,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card2
+name|PCMCIA_CARD2
 argument_list|(
 name|LUCENT
 argument_list|,
@@ -1441,7 +1374,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card2
+name|PCMCIA_CARD2
 argument_list|(
 name|LUCENT
 argument_list|,
@@ -1452,7 +1385,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card2
+name|PCMCIA_CARD2
 argument_list|(
 name|LUCENT
 argument_list|,
@@ -1464,7 +1397,7 @@ literal|0
 argument_list|)
 block|,
 comment|/* Must be after other LUCENT ones because it is less specific */
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|LUCENT
 argument_list|,
@@ -1473,7 +1406,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|SAMSUNG
 argument_list|,
@@ -1482,7 +1415,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|Card
+name|PCMCIA_CARD
 argument_list|(
 name|TDK
 argument_list|,
