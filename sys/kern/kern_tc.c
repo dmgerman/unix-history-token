@@ -348,6 +348,34 @@ name|time_second
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_STRUCT
+argument_list|(
+name|_kern
+argument_list|,
+name|KERN_BOOTTIME
+argument_list|,
+name|boottime
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|boottime
+argument_list|,
+name|timeval
+argument_list|,
+literal|"System boottime"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Which update policy to use.  *   0 - every tick, bad hardware may fail with "calcru negative..."  *   1 - more resistent to the above hardware, but less efficient.  */
 end_comment

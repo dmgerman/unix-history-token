@@ -310,34 +310,6 @@ begin_comment
 comment|/* initialized so that it can be patched */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|timeval
-name|boottime
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_STRUCT
-argument_list|(
-name|_kern
-argument_list|,
-name|KERN_BOOTTIME
-argument_list|,
-name|boottime
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|boottime
-argument_list|,
-name|timeval
-argument_list|,
-literal|"System boottime"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * Promiscuous argument pass for start_init()  *  * This is a kludge because we use a return from mi_startup() rather than a call  * to a new routine in locore.s to kick the kernel alive from locore.s.  */
 end_comment
