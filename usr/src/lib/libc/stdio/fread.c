@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fread.c	8.1 (Berkeley) %G%"
+literal|"@(#)fread.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,7 @@ decl_stmt|;
 name|size_t
 name|total
 decl_stmt|;
+comment|/* 	 * The ANSI standard requires a return value of 0 for a count 	 * or a size of 0.  Peculiarily, it imposes no such requirements 	 * on fwrite; it only requires fread to be broken. 	 */
 if|if
 condition|(
 operator|(
@@ -106,7 +107,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|count
+literal|0
 operator|)
 return|;
 if|if
