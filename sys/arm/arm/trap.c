@@ -3634,14 +3634,9 @@ name|__ARMEB__
 if|if
 condition|(
 operator|(
-name|frame
-operator|->
-name|fixreg
-index|[
-literal|0
-index|]
-operator|==
-name|SYS___syscall
+name|insn
+operator|&
+literal|0x000fffff
 operator|)
 operator|&&
 operator|(
@@ -3652,15 +3647,15 @@ operator|)
 condition|)
 block|{
 comment|/* 			 * 64-bit return, 32-bit syscall. Fixup byte order 			 */
-name|tf
+name|frame
 operator|->
 name|tf_r0
 operator|=
 literal|0
 expr_stmt|;
-name|tf
+name|frame
 operator|->
-name|rf_r1
+name|tf_r1
 operator|=
 name|td
 operator|->
@@ -3672,7 +3667,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|tf
+name|frame
 operator|->
 name|tf_r0
 operator|=
@@ -3683,7 +3678,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|tf
+name|frame
 operator|->
 name|tf_r1
 operator|=
