@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* insecure.c: The opieinsecure() library function.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.          History:  	Modified by cmetz for OPIE 2.31. Fixed a logic bug. Call endut[x]ent(). 	Modified by cmetz for OPIE 2.3. Added result caching. Use 	     __opiegetutmpentry(). Ifdef around ut_host check. Eliminate 	     unused variable. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.              Allow IP loopback. DISPLAY and ut_host must match exactly,              not just the part before the colon. Added work-around for               Sun CDE dtterm bug. Leave the environment as it was              found. Use uname().         Created at NRL for OPIE 2.2 from opiesubr.c. Fixed pointer              assignment that should have been a comparison.  $FreeBSD$  */
+comment|/* insecure.c: The opieinsecure() library function.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1999 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.          History:  	Modified by cmetz for OPIE 2.4. Do utmp checks on utmpx systems. 	     Handle unterminated ut_host. 	Modified by cmetz for OPIE 2.31. Fixed a logic bug. Call endut[x]ent(). 	Modified by cmetz for OPIE 2.3. Added result caching. Use 	     __opiegetutmpentry(). Ifdef around ut_host check. Eliminate 	     unused variable. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.              Allow IP loopback. DISPLAY and ut_host must match exactly,              not just the part before the colon. Added work-around for               Sun CDE dtterm bug. Leave the environment as it was              found. Use uname().         Created at NRL for OPIE 2.2 from opiesubr.c. Fixed pointer              assignment that should have been a comparison.  $FreeBSD$  */
 end_comment
 
 begin_include
@@ -157,13 +157,15 @@ decl_stmt|;
 if|#
 directive|if
 name|HAVE_UT_HOST
+operator|||
+name|DOUTMPX
 name|struct
 name|utmp
 name|utmp
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_UT_HOST */
+comment|/* HAVE_UT_HOST || DOUTMPX */
 specifier|static
 name|int
 name|result
@@ -482,6 +484,8 @@ empty_stmt|;
 if|#
 directive|if
 name|HAVE_UT_HOST
+operator|||
+name|DOUTMPX
 if|if
 condition|(
 name|isatty
@@ -535,9 +539,50 @@ literal|0
 index|]
 condition|)
 block|{
+name|char
+name|host
+index|[
+sizeof|sizeof
+argument_list|(
+name|utmp
+operator|.
+name|ut_host
+argument_list|)
+operator|+
+literal|1
+index|]
+decl_stmt|;
 name|insecure
 operator|=
 literal|1
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|host
+argument_list|,
+name|utmp
+operator|.
+name|ut_host
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utmp
+operator|.
+name|ut_host
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|host
+index|[
+sizeof|sizeof
+argument_list|(
+name|utmp
+operator|.
+name|ut_host
+argument_list|)
+index|]
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -545,9 +590,7 @@ name|s
 operator|=
 name|strchr
 argument_list|(
-name|utmp
-operator|.
-name|ut_host
+name|host
 argument_list|,
 literal|':'
 argument_list|)
@@ -558,9 +601,7 @@ name|n
 init|=
 name|s
 operator|-
-name|utmp
-operator|.
-name|ut_host
+name|host
 decl_stmt|;
 if|if
 condition|(
@@ -582,9 +623,7 @@ condition|(
 operator|!
 name|strncmp
 argument_list|(
-name|utmp
-operator|.
-name|ut_host
+name|host
 argument_list|,
 name|display_name
 argument_list|,
@@ -595,9 +634,10 @@ name|insecure
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SOLARIS
+if|#
+directive|if
+literal|1
+comment|/* def SOLARIS */
 elseif|else
 if|if
 condition|(
@@ -605,9 +645,7 @@ name|s
 operator|=
 name|strchr
 argument_list|(
-name|utmp
-operator|.
-name|ut_host
+name|host
 argument_list|,
 literal|' '
 argument_list|)
@@ -641,9 +679,7 @@ condition|(
 operator|!
 name|strncmp
 argument_list|(
-name|utmp
-operator|.
-name|ut_host
+name|host
 argument_list|,
 name|display_name
 argument_list|,
@@ -667,7 +703,7 @@ block|}
 empty_stmt|;
 endif|#
 directive|endif
-comment|/* HAVE_UT_HOST */
+comment|/* HAVE_UT_HOST || DOUTMPX */
 if|if
 condition|(
 name|insecure

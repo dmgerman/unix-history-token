@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opiekey.c: Stand-alone program for computing responses to OTP challenges.   Takes a sequence number and seed (presumably from an OPIE challenge)  as command line arguments, prompts for the user's secret pass phrase,  and outputs a response.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.31. Renamed "init" and RESPONSE_INIT 	        to "init-hex" and RESPONSE_INIT_HEX. Removed active attack 		protection support. 	Modified by cmetz for OPIE 2.3. OPIE_PASS_MAX changed to 		OPIE_SECRET_MAX. Added extended responses, which created 		lots of changes. Eliminated extra variable. Added -x and 		-t to help. Added -f flag. Added SHA support. 	Modified by cmetz for OPIE 2.22. Print newline after seed too long 	        message. Check for minimum seed length. Correct a grammar 		error.         Modified at NRL for OPIE 2.2. Check opiereadpass() return.                 Change opiereadpass() calls to add echo arg. Use FUNCTION                 definition et al. Check seed length here, too. Added back 		hex output. Reworked final output function. 	Modified at NRL for OPIE 2.0. 	Written at Bellcore for the S/Key Version 1 software distribution 		(skey.c).  $FreeBSD$  */
+comment|/* opiekey.c: Stand-alone program for computing responses to OTP challenges.   Takes a sequence number and seed (presumably from an OPIE challenge)  as command line arguments, prompts for the user's secret pass phrase,  and outputs a response.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1999 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.4. Use struct opie_key for key blocks. 	Modified by cmetz for OPIE 2.31. Renamed "init" and RESPONSE_INIT 	        to "init-hex" and RESPONSE_INIT_HEX. Removed active attack 		protection support. 	Modified by cmetz for OPIE 2.3. OPIE_PASS_MAX changed to 		OPIE_SECRET_MAX. Added extended responses, which created 		lots of changes. Eliminated extra variable. Added -x and 		-t to help. Added -f flag. Added SHA support. 	Modified by cmetz for OPIE 2.22. Print newline after seed too long 	        message. Check for minimum seed length. Correct a grammar 		error.         Modified at NRL for OPIE 2.2. Check opiereadpass() return.                 Change opiereadpass() calls to add echo arg. Use FUNCTION                 definition et al. Check seed length here, too. Added back 		hex output. Reworked final output function. 	Modified at NRL for OPIE 2.0. 	Written at Bellcore for the S/Key Version 1 software distribution 		(skey.c).  $FreeBSD$  */
 end_comment
 
 begin_include
@@ -609,16 +609,11 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|char
+name|struct
+name|opie_otpkey
 name|key
-index|[
-literal|8
-index|]
 decl_stmt|,
 name|newkey
-index|[
-literal|8
-index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -1186,6 +1181,7 @@ name|opiekeycrunch
 argument_list|(
 name|algorithm
 argument_list|,
+operator|&
 name|newkey
 argument_list|,
 name|newseed
@@ -1225,6 +1221,7 @@ operator|++
 control|)
 name|opiehash
 argument_list|(
+operator|&
 name|newkey
 argument_list|,
 name|algorithm
@@ -1266,6 +1263,7 @@ name|opiekeycrunch
 argument_list|(
 name|algorithm
 argument_list|,
+operator|&
 name|key
 argument_list|,
 name|seed
@@ -1309,6 +1307,7 @@ operator|++
 control|)
 name|opiehash
 argument_list|(
+operator|&
 name|key
 argument_list|,
 name|algorithm
@@ -1379,6 +1378,7 @@ name|opiebtoh
 argument_list|(
 name|response
 argument_list|,
+operator|&
 name|key
 argument_list|)
 expr_stmt|;
@@ -1387,6 +1387,7 @@ name|opiebtoe
 argument_list|(
 name|response
 argument_list|,
+operator|&
 name|key
 argument_list|)
 expr_stmt|;
@@ -1409,6 +1410,7 @@ name|opiebtoe
 argument_list|(
 name|buf
 argument_list|,
+operator|&
 name|key
 argument_list|)
 argument_list|)
@@ -1432,6 +1434,7 @@ name|opiebtoh
 argument_list|(
 name|buf
 argument_list|,
+operator|&
 name|key
 argument_list|)
 argument_list|)
@@ -1465,6 +1468,7 @@ name|opiebtoh
 argument_list|(
 name|buf
 argument_list|,
+operator|&
 name|key
 argument_list|)
 argument_list|)
@@ -1498,6 +1502,7 @@ name|opiebtoh
 argument_list|(
 name|buf
 argument_list|,
+operator|&
 name|newkey
 argument_list|)
 argument_list|)
@@ -1520,6 +1525,7 @@ name|opiebtoe
 argument_list|(
 name|buf
 argument_list|,
+operator|&
 name|key
 argument_list|)
 argument_list|)
@@ -1553,6 +1559,7 @@ name|opiebtoe
 argument_list|(
 name|buf
 argument_list|,
+operator|&
 name|newkey
 argument_list|)
 argument_list|)
@@ -1567,6 +1574,7 @@ argument_list|)
 expr_stmt|;
 name|opiehash
 argument_list|(
+operator|&
 name|key
 argument_list|,
 name|algorithm
