@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -315,7 +315,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"8EKLX:ade:k:l:n:rt:x"
+literal|"8EKLS:X:ade:k:l:n:rt:x"
 argument_list|)
 operator|)
 operator|!=
@@ -367,6 +367,62 @@ operator||=
 literal|2
 expr_stmt|;
 comment|/* binary output only */
+break|break;
+case|case
+literal|'S'
+case|:
+block|{
+ifdef|#
+directive|ifdef
+name|HAS_GETTOS
+specifier|extern
+name|int
+name|tos
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|tos
+operator|=
+name|parsetos
+argument_list|(
+name|optarg
+argument_list|,
+literal|"tcp"
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s%s%s%s\n"
+argument_list|,
+name|prompt
+argument_list|,
+literal|": Bad TOS argument '"
+argument_list|,
+name|optarg
+argument_list|,
+literal|"; will try to use default TOS"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Warning: -S ignored, no parsetos() support.\n"
+argument_list|,
+name|prompt
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 break|break;
 case|case
 literal|'X'

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	5.3 (Berkeley) %G%"
+literal|"@(#)commands.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,6 +278,38 @@ endif|#
 directive|endif
 endif|MAXHOSTNAMELEN
 end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPPROTO_IP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|IP_TOS
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|int
+name|tos
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(IPPROTO_IP)&& defined(IP_TOS) */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -11245,12 +11277,6 @@ argument_list|(
 name|IP_TOS
 argument_list|)
 block|{
-name|int
-name|tos
-init|=
-literal|020
-decl_stmt|;
-comment|/* Low Delay bit */
 if|#
 directive|if
 name|defined
@@ -11264,6 +11290,11 @@ name|tp
 decl_stmt|;
 if|if
 condition|(
+name|tos
+operator|<
+literal|0
+operator|&&
+operator|(
 name|tp
 operator|=
 name|gettosbyname
@@ -11272,6 +11303,7 @@ literal|"telnet"
 argument_list|,
 literal|"tcp"
 argument_list|)
+operator|)
 condition|)
 name|tos
 operator|=
@@ -11281,9 +11313,22 @@ name|t_tos
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|tos
+operator|<
+literal|0
+condition|)
+name|tos
+operator|=
+literal|020
+expr_stmt|;
+comment|/* Low Delay bit */
+if|if
+condition|(
+name|tos
+operator|&&
 operator|(
-name|void
-operator|)
 name|setsockopt
 argument_list|(
 name|net
@@ -11299,6 +11344,20 @@ sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
+argument_list|)
+operator|<
+literal|0
+operator|)
+operator|&&
+operator|(
+name|errno
+operator|!=
+name|ENOPROTOOPT
+operator|)
+condition|)
+name|perror
+argument_list|(
+literal|"telnet: setsockopt (IP_TOS) (ignored)"
 argument_list|)
 expr_stmt|;
 block|}
