@@ -4582,7 +4582,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|command
+name|sc
+operator|->
+name|sis_rev
 operator|==
 name|SIS_REV_635
 condition|)
