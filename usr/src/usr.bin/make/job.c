@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.10 (Berkeley) %G%"
+literal|"@(#)job.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2495,11 +2495,11 @@ name|OP_USE
 operator||
 name|OP_EXEC
 operator||
-name|OP_DONTCARE
+name|OP_OPTIONAL
 operator|)
 condition|)
 block|{
-comment|/* 	 * .JOIN, .USE, .ZEROTIME and .DONTCARE targets are "virtual" targets 	 * and, as such, shouldn't really be created. 	 */
+comment|/* 	 * .JOIN, .USE, .ZEROTIME and .OPTIONAL targets are "virtual" targets 	 * and, as such, shouldn't really be created. 	 */
 return|return;
 block|}
 if|if
@@ -2836,7 +2836,7 @@ name|gn
 operator|->
 name|type
 operator|&
-name|OP_DONTCARE
+name|OP_OPTIONAL
 condition|)
 block|{
 name|printf

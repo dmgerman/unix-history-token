@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.10 (Berkeley) %G%"
+literal|"@(#)parse.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,11 +365,11 @@ literal|0
 block|}
 block|,
 block|{
-literal|".DONTCARE"
+literal|".OPTIONAL"
 block|,
 name|Attribute
 block|,
-name|OP_DONTCARE
+name|OP_OPTIONAL
 block|}
 block|,
 block|{

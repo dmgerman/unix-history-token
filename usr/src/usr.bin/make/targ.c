@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)targ.c	5.5 (Berkeley) %G%"
+literal|"@(#)targ.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1111,7 +1111,7 @@ condition|)
 block|{
 name|PRINTBIT
 argument_list|(
-name|DONTCARE
+name|OPTIONAL
 argument_list|)
 expr_stmt|;
 name|PRINTBIT
