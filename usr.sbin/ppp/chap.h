@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.h,v 1.9.2.6 1998/05/01 19:24:05 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.h,v 1.14 1999/02/18 19:45:06 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_struct_decl
@@ -12,12 +12,6 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|physical
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|bundle
 struct_decl|;
 end_struct_decl
 
@@ -54,27 +48,79 @@ struct|struct
 name|chap
 block|{
 name|struct
+name|descriptor
+name|desc
+decl_stmt|;
+struct|struct
+block|{
+name|pid_t
+name|pid
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+struct|struct
+block|{
+name|char
+name|ptr
+index|[
+name|AUTHLEN
+operator|*
+literal|2
+operator|+
+literal|3
+index|]
+decl_stmt|;
+comment|/* Allow for \r\n at the end (- NUL) */
+name|int
+name|len
+decl_stmt|;
+block|}
+name|buf
+struct|;
+block|}
+name|child
+struct|;
+name|struct
 name|authinfo
 name|auth
 decl_stmt|;
-name|char
-name|challenge_data
+name|u_char
+name|challenge
 index|[
-literal|80
+name|CHAPCHALLENGELEN
+operator|+
+name|AUTHLEN
 index|]
 decl_stmt|;
-name|int
-name|challenge_len
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
 name|unsigned
-name|using_MSChap
+name|NTRespSent
 range|:
 literal|1
 decl_stmt|;
-comment|/* A combination of MD4& DES */
+comment|/* Our last response */
+name|int
+name|peertries
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|descriptor2chap
+parameter_list|(
+name|d
+parameter_list|)
+define|\
+value|((d)->type == CHAP_DESCRIPTOR ? (struct chap *)(d) : NULL)
+end_define
 
 begin_define
 define|#
@@ -83,20 +129,16 @@ name|auth2chap
 parameter_list|(
 name|a
 parameter_list|)
-value|((struct chap *)(a))
+value|(struct chap *)((char *)a - (int)&((struct chap *)0)->auth)
 end_define
 
 begin_function_decl
 specifier|extern
 name|void
-name|chap_Input
+name|chap_Init
 parameter_list|(
 name|struct
-name|bundle
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
+name|chap
 modifier|*
 parameter_list|,
 name|struct
@@ -109,16 +151,26 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|chap_SendChallenge
+name|chap_ReInit
 parameter_list|(
 name|struct
-name|authinfo
+name|chap
 modifier|*
-parameter_list|,
-name|int
-parameter_list|,
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|chap_Input
+parameter_list|(
 name|struct
 name|physical
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;

@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.146.2.1 1999/01/25 10:20:59 brian Exp $  *  *	TODO:  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.151 1999/03/07 01:02:38 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -239,6 +239,23 @@ include|#
 directive|include
 file|"mp.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NORADIUS
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"radius.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1171,10 +1188,7 @@ operator|&
 name|alias
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/*    * A FreeBSD hack to dodge a bug in the tty driver that drops output    * occasionally.... I must find the real reason some time.  To display    * the dodgy behaviour, comment out this bit, make yourself a large    * routing table and then run ppp in interactive mode.  The `show route'    * command will drop chunks of data !!!    */
+comment|/*    * A FreeBSD& OpenBSD hack to dodge a bug in the tty driver that drops    * output occasionally.... I must find the real reason some time.  To    * display the dodgy behaviour, comment out this bit, make yourself a large    * routing table and then run ppp in interactive mode.  The `show route'    * command will drop chunks of data !!!    */
 if|if
 condition|(
 name|mode
@@ -1213,8 +1227,6 @@ literal|2
 return|;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* Allow output for the moment (except in direct mode) */
 if|if
 condition|(
@@ -2451,6 +2463,15 @@ block|}
 block|}
 break|break;
 block|}
+name|log_Printf
+argument_list|(
+name|LogTIMER
+argument_list|,
+literal|"Select returns %d\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|sig_Handle
 argument_list|()
 expr_stmt|;
