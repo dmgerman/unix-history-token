@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pmerge.c 1.3 %G%"
+literal|"@(#)pmerge.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -727,7 +727,7 @@ comment|/* void */
 empty_stmt|;
 if|if
 condition|(
-name|strcmpn
+name|strncmp
 argument_list|(
 literal|"include"
 argument_list|,
@@ -1425,7 +1425,7 @@ operator|==
 literal|5
 operator|&&
 operator|!
-name|strcmpn
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
@@ -1492,7 +1492,7 @@ operator|==
 literal|4
 operator|&&
 operator|!
-name|strcmpn
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
@@ -1522,7 +1522,7 @@ operator|==
 literal|5
 operator|&&
 operator|!
-name|strcmpn
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
@@ -1578,7 +1578,7 @@ operator|==
 literal|3
 operator|&&
 operator|!
-name|strcmpn
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
@@ -1658,7 +1658,7 @@ operator|==
 literal|8
 operator|&&
 operator|!
-name|strcmpn
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
@@ -1702,7 +1702,7 @@ operator|==
 literal|8
 operator|&&
 operator|!
-name|strcmpn
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
@@ -1747,7 +1747,7 @@ operator|==
 literal|7
 operator|&&
 operator|!
-name|strcmpn
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
@@ -1780,7 +1780,7 @@ operator|==
 literal|5
 operator|&&
 operator|!
-name|strcmpn
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
@@ -1836,7 +1836,7 @@ operator|==
 literal|9
 operator|&&
 operator|!
-name|strcmpn
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
@@ -1881,7 +1881,7 @@ operator|==
 literal|7
 operator|&&
 operator|!
-name|strcmpn
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
@@ -1934,7 +1934,7 @@ operator|==
 literal|4
 operator|&&
 operator|!
-name|strcmpn
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
@@ -1990,7 +1990,7 @@ operator|==
 literal|3
 operator|&&
 operator|!
-name|strcmpn
+name|strncmp
 argument_list|(
 name|word
 argument_list|,
