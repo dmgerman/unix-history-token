@@ -173,6 +173,24 @@ directive|include
 file|"pam_ssh.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PAM_RETURN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PAM_RETURN
+value|return
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|int
@@ -1044,11 +1062,6 @@ operator|!
 name|authenticated
 condition|)
 block|{
-name|PAM_VERBOSE_ERROR
-argument_list|(
-literal|"SSH authentication refused"
-argument_list|)
-expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|PAM_AUTH_ERR
