@@ -610,6 +610,10 @@ name|pathmax
 operator|=
 name|_POSIX_PATH_MAX
 expr_stmt|;
+comment|/* PATH_MAX includes space for the trailing null byte. */
+name|pathmax
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|pathmax
