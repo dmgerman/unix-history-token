@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.24 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -788,16 +788,18 @@ argument_list|,
 literal|"-d"
 argument_list|)
 condition|)
+block|{
 name|debug
 operator|=
-name|SO_DEBUG
-operator|,
+literal|1
+expr_stmt|;
 name|argv
 operator|++
-operator|,
+expr_stmt|;
 name|argc
 operator|--
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|argc
@@ -1181,9 +1183,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_DEBUG
 argument_list|,
-literal|0
+operator|&
+name|debug
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|debug
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -3650,8 +3656,11 @@ begin_block
 block|{
 name|debug
 operator|=
-operator|!
 name|debug
+condition|?
+literal|0
+else|:
+literal|1
 expr_stmt|;
 name|printf
 argument_list|(
@@ -3671,8 +3680,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
-operator|&&
 name|net
 operator|>
 literal|0
@@ -3685,9 +3692,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_DEBUG
 argument_list|,
-literal|0
+operator|&
+name|debug
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|debug
+argument_list|)
 argument_list|)
 operator|<
 literal|0
