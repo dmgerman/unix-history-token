@@ -836,6 +836,14 @@ block|,
 literal|"Loop-back (local) network interface"
 block|}
 block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"ds"
+block|,
+literal|"Software discard network interface"
+block|}
+block|,
 ifdef|#
 directive|ifdef
 name|PC98
@@ -2746,7 +2754,7 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|"md"
+literal|"m_d"
 argument_list|,
 literal|2
 argument_list|)
