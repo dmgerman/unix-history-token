@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|ISA_NPORT
-value|32
+value|50
 end_define
 
 begin_define
