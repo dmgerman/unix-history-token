@@ -4209,6 +4209,9 @@ expr_stmt|;
 comment|/* XXX: Parameter relies on NTSC type DV video */
 name|tmpsync
 operator|=
+operator|(
+name|u_int64_t
+operator|)
 literal|3072
 operator|*
 literal|8000
