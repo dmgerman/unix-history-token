@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: if_ed_p.c,v 1.10 1997/08/14 07:53:07 danny Exp $  */
+comment|/*  *  * Copyright (c) 1996 Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Stefan Esser.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: if_ed_p.c,v 1.11 1997/11/22 06:19:59 msmith Exp $  */
 end_comment
 
 begin_include
@@ -110,6 +110,12 @@ block|{
 literal|0x19808c4a
 block|,
 literal|"NE2000 PCI Ethernet (Winbond W89C940)"
+block|}
+block|,
+block|{
+literal|0x0e3410bd
+block|,
+literal|"NE2000 PCI Ethernet (Surecom NE-34)"
 block|}
 block|,
 block|{
