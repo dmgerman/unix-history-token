@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.5 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1169,13 +1169,13 @@ name|NULL
 block|,
 literal|0
 block|,
-name|pvar
+name|evar
 block|,
 name|PIDLEN
 block|,
-name|POFF
+name|EOFF
 argument_list|(
-name|p_ppid
+name|e_ppid
 argument_list|)
 block|,
 name|SHORT
