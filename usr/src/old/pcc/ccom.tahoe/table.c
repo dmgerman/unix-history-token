@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.13 (Berkeley) %G%"
+literal|"@(#)table.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -882,6 +882,61 @@ name|RESCC
 block|,
 literal|"	cmpZL2	AL,AR\nZP"
 block|,
+ifdef|#
+directive|ifdef
+name|FORT
+comment|/* some implicit conversions made explicit to help f77 out (sigh) */
+name|OPLOG
+block|,
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TFLOAT
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TDOUBLE
+block|,
+literal|0
+block|,
+name|RESCC
+block|,
+literal|"	ldfd	AL\n	cmpd	AR\nZP"
+block|,
+comment|/* ought to flip this comparison, save an instruction */
+name|OPLOG
+block|,
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TDOUBLE
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TFLOAT
+block|,
+name|NAREG
+operator||
+name|NEVEN
+operator||
+name|NASR
+block|,
+name|RESCC
+block|,
+literal|"	ldfd	AR\n	std	A1\n	cmpd2	AL,A1\nZP"
+block|,
+endif|#
+directive|endif
 name|CCODES
 block|,
 name|INAREG
