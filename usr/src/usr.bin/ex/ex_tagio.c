@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_tagio.c	7.2 (Berkeley) %G%"
+literal|"@(#)ex_tagio.c	7.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,6 +419,10 @@ operator|>
 name|bcnt
 condition|)
 block|{
+name|block
+operator|+=
+name|b_size
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -447,10 +451,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|block
-operator|+=
-name|b_size
-expr_stmt|;
 name|cp
 operator|=
 name|ibuf
