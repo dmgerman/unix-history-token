@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pr.c	4.2 (Berkeley) %G%"
+literal|"@(#)pr.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1442,6 +1442,13 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|0
+condition|)
+break|break;
 name|putcp
 argument_list|(
 literal|'\n'
