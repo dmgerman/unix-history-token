@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.22 (Berkeley) %G%"
+literal|"@(#)ls.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,6 +135,18 @@ decl_stmt|,
 name|Sflg
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|termwidth
+init|=
+literal|80
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default terminal width */
+end_comment
 
 begin_comment
 comment|/* flags */
@@ -434,24 +446,24 @@ name|win
 operator|.
 name|ws_col
 condition|)
-name|termwidth
-operator|=
-operator|(
+block|{
+if|if
+condition|(
 name|p
 operator|=
 name|getenv
 argument_list|(
 literal|"COLUMNS"
 argument_list|)
-operator|)
-condition|?
+condition|)
+name|termwidth
+operator|=
 name|atoi
 argument_list|(
 name|p
 argument_list|)
-else|:
-literal|80
 expr_stmt|;
+block|}
 else|else
 name|termwidth
 operator|=
