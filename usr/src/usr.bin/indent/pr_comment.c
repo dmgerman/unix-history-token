@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr_comment.c	5.11 (Berkeley) %G%"
+literal|"@(#)pr_comment.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,24 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"indent_globs.h"
+end_include
+
 begin_comment
 comment|/*  * NAME:  *	pr_comment  *  * FUNCTION:  *	This routine takes care of scanning and printing comments.  *  * ALGORITHM:  *	1) Decide where the comment should be aligned, and if lines should  *	   be broken.  *	2) If lines should not be broken and filled, just copy up to end of  *	   comment.  *	3) If lines should be filled, then scan thru input_buffer copying  *	   characters to com_buf.  Remember where the last blank, tab, or  *	   newline was.  When line is filled, print up to last blank and  *	   continue copying.  *  * HISTORY:  *	November 1976	D A Willcox of CAC	Initial coding  *	12/6/76		D A Willcox of CAC	Modification to handle  *						UNIX-style comments  *  */
 end_comment
@@ -38,12 +56,6 @@ end_escape
 begin_comment
 comment|/*  * this routine processes comments.  It makes an attempt to keep comments from  * going over the max line length.  If a line is too long, it moves everything  * from the last blank to the next comment line.  Blanks and tabs from the  * beginning of the input line are removed  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"indent_globs.h"
-end_include
 
 begin_macro
 name|pr_comment

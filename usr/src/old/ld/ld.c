@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.17 (Berkeley) %G%"
+literal|"@(#)ld.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,13 +65,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -95,6 +95,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -102,6 +108,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -1138,7 +1150,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|delexit
 parameter_list|()
 function_decl|;
@@ -1152,14 +1164,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 name|main
 parameter_list|(
@@ -1167,6 +1171,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -2107,12 +2114,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|delexit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|stat
@@ -2222,7 +2227,7 @@ name|delarg
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|endload

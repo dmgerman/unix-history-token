@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.14 (Berkeley) %G%"
+literal|"@(#)io.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"indent_globs.h"
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"indent_globs.h"
 end_include
 
 begin_decl_stmt
@@ -2408,6 +2426,13 @@ argument_list|,
 argument|b
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|msg
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)args.c	5.9 (Berkeley) %G%"
+literal|"@(#)args.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"indent_globs.h"
+file|<stdio.h>
 end_include
 
 begin_include
@@ -44,17 +44,23 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_decl_stmt
-name|char
-modifier|*
-name|getenv
-argument_list|()
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"indent_globs.h"
+end_include
 
 begin_comment
 comment|/* profile types */
