@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.c#132 $  *  * $FreeBSD$  */
+comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.c#133 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -5785,20 +5785,9 @@ name|MSG_EXT_WDTR
 argument_list|,
 name|FALSE
 argument_list|)
-operator|||
-name|ahc_sent_msg
-argument_list|(
-name|ahc
-argument_list|,
-name|AHCMSG_EXT
-argument_list|,
-name|MSG_EXT_SDTR
-argument_list|,
-name|FALSE
-argument_list|)
 condition|)
 block|{
-comment|/* 				 * Negotiation Rejected.  Go-async and 				 * retry command. 				 */
+comment|/* 				 * Negotiation Rejected.  Go-narrow and 				 * retry command. 				 */
 name|ahc_set_width
 argument_list|(
 name|ahc
@@ -5816,6 +5805,34 @@ comment|/*paused*/
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|ahc_qinfifo_requeue_tail
+argument_list|(
+name|ahc
+argument_list|,
+name|scb
+argument_list|)
+expr_stmt|;
+name|printerror
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ahc_sent_msg
+argument_list|(
+name|ahc
+argument_list|,
+name|AHCMSG_EXT
+argument_list|,
+name|MSG_EXT_SDTR
+argument_list|,
+name|FALSE
+argument_list|)
+condition|)
+block|{
+comment|/* 				 * Negotiation Rejected.  Go-async and 				 * retry command. 				 */
 name|ahc_set_syncrate
 argument_list|(
 name|ahc
@@ -10618,6 +10635,14 @@ name|goal
 operator|.
 name|period
 expr_stmt|;
+name|offset
+operator|=
+name|tinfo
+operator|->
+name|goal
+operator|.
+name|offset
+expr_stmt|;
 name|ppr_options
 operator|=
 name|tinfo
@@ -10674,6 +10699,14 @@ name|width
 expr_stmt|;
 name|dosync
 operator|=
+name|tinfo
+operator|->
+name|curr
+operator|.
+name|offset
+operator|!=
+name|offset
+operator|||
 name|tinfo
 operator|->
 name|curr
@@ -13771,6 +13804,20 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+comment|/* 			 * After a wide message, we are async, but 			 * some devices don't seem to honor this portion 			 * of the spec.  Force a renegotiation of the 			 * sync component of our transfer agreement even 			 * if our goal is async.  By updating our width 			 * after forcing the negotiation, we avoid 			 * renegotiating for width. 			 */
+name|ahc_update_neg_request
+argument_list|(
+name|ahc
+argument_list|,
+name|devinfo
+argument_list|,
+name|tstate
+argument_list|,
+name|tinfo
+argument_list|,
+name|AHC_NEG_ALWAYS
+argument_list|)
+expr_stmt|;
 name|ahc_set_width
 argument_list|(
 name|ahc
@@ -13787,31 +13834,6 @@ comment|/*paused*/
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|/* After a wide message, we are async */
-name|ahc_set_syncrate
-argument_list|(
-name|ahc
-argument_list|,
-name|devinfo
-argument_list|,
-comment|/*syncrate*/
-name|NULL
-argument_list|,
-comment|/*period*/
-literal|0
-argument_list|,
-comment|/*offset*/
-literal|0
-argument_list|,
-comment|/*ppr_options*/
-literal|0
-argument_list|,
-name|AHC_TRANS_ACTIVE
-argument_list|,
-comment|/*paused*/
-name|TRUE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sending_reply
@@ -13823,15 +13845,7 @@ operator|==
 name|FALSE
 condition|)
 block|{
-if|if
-condition|(
-name|tinfo
-operator|->
-name|goal
-operator|.
-name|offset
-condition|)
-block|{
+comment|/* 				 * We will always have an SDTR to send. 				 */
 name|ahc
 operator|->
 name|msgout_index
@@ -13861,7 +13875,6 @@ name|response
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 block|}
 name|done
 operator|=
