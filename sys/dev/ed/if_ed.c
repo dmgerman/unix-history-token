@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390 based ethernet  * 
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * $Log: if_ed.c,v $  * Revision 1.6  1993/07/20  01:39:24  jkh  * Fixed to allow iosiz config parameter to override what was (for me,  * incorrectly) probed.  This allows you more flexibility in getting weird  * WD 80x3 clones to work.  *  * Revision 1.5  1993/06/27  10:28:28  davidg  * fixed bugs in the probe routine uncovered by the previous fix.  *  * Revision 1.11  93/06/27  03:07:01  davidg  * fixed bugs in the 3Com part of the probe routine that were uncovered by  * the previous fix.  *   * Revision 1.10  93/06/25  19:23:19  davidg  * fixed bug that caused erroneous 'Invalid irq configuration' message when  * no board is present (during autoconfiguration).  *   * Revision 1.9  93/06/23  03:48:14  davidg  * fixed minor typo introduced when cleaning up probe routine  *   * Revision 1.8  93/06/23  03:37:19  davidg  * cleaned up/added some comments. Also improved readability of a part of  * the probe routine.  *   * Revision 1.7  93/06/22  04:45:01  davidg  * (no additional changes) Second beta release  *   * Revision 1.6  93/06/22  04:40:35  davidg  * minor definition fix to ed_reset()  *   * Revision 1.5  93/06/22  04:37:39  davidg  * fixed some comments  *   * Revision 1.4  93/06/22  04:34:34  davidg  * added support to use the LLC0 'link-level control' flag  * to disable the tranceiver for AUI operation on 3Com boards.  * The default for this flag can be set in the kernel config  * file - 'flags 0x01' sets the flag (disables the tranceiver).  *   * Revision 1.3  93/06/17  03:57:28  davidg  * fixed some printf's  *   * Revision 1.2  93/06/17  03:26:49  davidg  * fixed 3c503 code to determine 8/16bit board  * changed attach printf to work with Interim-0.1.5 and NetBSD  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
+comment|/*  * Modification history  *  * $Log:	if_ed.c,v $  * Revision 1.14  93/07/20  15:24:25  davidg  * ommision for force 16bit case fixed from last patch  *   * Revision 1.13  93/07/20  15:13:55  davidg  * Added config file override for memsize by using 'iosiz'. Also added  * config flags overrides to force 8/16bit mode and disable the use of  * double xmit buffers.  *   * Revision 1.12  93/07/07  06:27:44  davidg  * moved call to bpfattach to after this drivers attach printf -  * improves readability of startup messages.  *   * Revision 1.11  93/06/27  03:07:01  davidg  * fixed bugs in the 3Com part of the probe routine that were uncovered by  * the previous fix.  *   * Revision 1.10  93/06/25  19:23:19  davidg  * fixed bug that caused erroneous 'Invalid irq configuration' message when  * no board is present (during autoconfiguration).  *   * Revision 1.9  93/06/23  03:48:14  davidg  * fixed minor typo introduced when cleaning up probe routine  *   * Revision 1.8  93/06/23  03:37:19  davidg  * cleaned up/added some comments. Also improved readability of a part of  * the probe routine.  *   * Revision 1.7  93/06/22  04:45:01  davidg  * (no additional changes) Second beta release  *   * Revision 1.6  93/06/22  04:40:35  davidg  * minor definition fix to ed_reset()  *   * Revision 1.5  93/06/22  04:37:39  davidg  * fixed some comments  *   * Revision 1.4  93/06/22  04:34:34  davidg  * added support to use the LLC0 'link-level control' flag  * to disable the tranceiver for AUI operation on 3Com boards.  * The default for this flag can be set in the kernel config  * file - 'flags 0x01' sets the flag (disables the tranceiver).  *   * Revision 1.3  93/06/17  03:57:28  davidg  * fixed some printf's  *   * Revision 1.2  93/06/17  03:26:49  davidg  * fixed 3c503 code to determine 8/16bit board  * changed attach printf to work with Interim-0.1.5 and NetBSD  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
 end_comment
 
 begin_include
@@ -885,7 +885,7 @@ directive|if
 name|ED_DEBUG
 name|printf
 argument_list|(
-literal|"type=%s width=%d memsize=%d id_msize=%d\n"
+literal|"type=%s memwidth=%d memsize=%d id_msize=%d\n"
 argument_list|,
 name|sc
 operator|->
@@ -931,7 +931,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Allow id_msize to override */
+comment|/* 	 * Allow the user to override the autoconfiguration 	 */
 if|if
 condition|(
 name|isa_dev
@@ -943,6 +943,31 @@ operator|=
 name|isa_dev
 operator|->
 name|id_msize
+expr_stmt|;
+comment|/* 	 * (note that if the user specifies both of the following flags 	 *	that '8bit' mode intentionally has precedence) 	 */
+if|if
+condition|(
+name|isa_dev
+operator|->
+name|id_flags
+operator|&
+name|ED_FLAGS_FORCE_16BIT_MODE
+condition|)
+name|memwidth
+operator|=
+literal|16
+expr_stmt|;
+if|if
+condition|(
+name|isa_dev
+operator|->
+name|id_flags
+operator|&
+name|ED_FLAGS_FORCE_8BIT_MODE
+condition|)
+name|memwidth
+operator|=
+literal|8
 expr_stmt|;
 comment|/* 	 * Check 83C584 interrupt configuration register if this board has one 	 *	XXX - we could also check the IO address register. But why 	 *		bother...if we get past this, it *has* to be correct. 	 */
 if|if
@@ -1050,9 +1075,19 @@ expr_stmt|;
 comment|/* 	 * allocate one xmit buffer if< 16k, two buffers otherwise 	 */
 if|if
 condition|(
+operator|(
 name|memsize
 operator|<
 literal|16384
+operator|)
+operator|||
+operator|(
+name|isa_dev
+operator|->
+name|id_msize
+operator|&
+name|ED_FLAGS_NO_DOUBLE_BUFFERING
+operator|)
 condition|)
 block|{
 name|sc
@@ -2107,7 +2142,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("Starting write\n"); for (i = 0; i< 8192; ++i) 	bzerow(sc->smem_start, 8192); printf("Done.\n");
+block|printf("Starting write\n"); for (i = 0; i< 8192; ++i) 	bzero(sc->smem_start, 8192); printf("Done.\n");
 endif|#
 directive|endif
 if|#
@@ -2342,31 +2377,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
-name|bpfattach
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|bpf
-argument_list|,
-name|ifp
-argument_list|,
-name|DLT_EN10MB
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Search down the ifa address list looking for the AF_LINK type entry 	 */
 name|ifa
 operator|=
@@ -2520,6 +2530,32 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If BPF is in the kernel, call the attach for it 	 */
+if|#
+directive|if
+name|NBPFILTER
+operator|>
+literal|0
+name|bpfattach
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|bpf
+argument_list|,
+name|ifp
+argument_list|,
+name|DLT_EN10MB
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_header
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

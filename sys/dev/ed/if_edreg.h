@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * National Semiconductor DS8390 NIC register definitions   *  * $Log:	if_edreg.h,v $  * Revision 1.2  93/06/23  03:03:05  davidg  * added some additional definitions for the 83C584 bus interface  * chip (SMC/WD boards)  *   * Revision 1.1  93/06/23  03:01:07  davidg  * Initial revision  *   */
+comment|/*  * National Semiconductor DS8390 NIC register definitions   *  * $Log:	if_edreg.h,v $  * Revision 1.3  93/07/20  15:25:25  davidg  * added config flags for forcing 8/16bit mode and disabling double  * xmit buffers.  *   * Revision 1.2  93/06/23  03:03:05  davidg  * added some additional definitions for the 83C584 bus interface  * chip (SMC/WD boards)  *   * Revision 1.1  93/06/23  03:01:07  davidg  * Initial revision  *   */
 end_comment
 
 begin_comment
@@ -1453,6 +1453,35 @@ define|#
 directive|define
 name|ED_FLAGS_DISABLE_TRANCEIVER
 value|0x01
+end_define
+
+begin_comment
+comment|/*  * This forces the board to be used in 8/16bit mode even if it  *	autoconfigs differently  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_FLAGS_FORCE_8BIT_MODE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_FLAGS_FORCE_16BIT_MODE
+value|0x04
+end_define
+
+begin_comment
+comment|/*  * This disables the use of double transmit buffers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_FLAGS_NO_DOUBLE_BUFFERING
+value|0x08
 end_define
 
 begin_comment
