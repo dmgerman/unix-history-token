@@ -692,7 +692,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|CPPFunction
+name|Function
 modifier|*
 name|rl_attempted_completion_function
 decl_stmt|;
