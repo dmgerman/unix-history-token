@@ -19,7 +19,8 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: clparse.c,v 1.13.2.4 1999/03/29 21:21:37 mellon Exp $ Copyright (c) 1997 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: clparse.c,v 1.13.2.5 2000/07/20 05:06:40 mellon Exp $ Copyright (c) 1997 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$FreeBSD$\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +49,15 @@ begin_decl_stmt
 name|struct
 name|client_config
 name|top_level_config
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|client_script_name
+index|[]
+init|=
+literal|"/sbin/dhclient-script"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,7 +159,7 @@ name|top_level_config
 operator|.
 name|script_name
 operator|=
-literal|"/sbin/dhclient-script"
+name|client_script_name
 expr_stmt|;
 name|top_level_config
 operator|.
@@ -1841,13 +1851,15 @@ expr|*
 name|ip
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ip
 operator|->
 name|name
 argument_list|,
 name|name
+argument_list|,
+name|IFNAMSIZ
 argument_list|)
 expr_stmt|;
 name|ip
