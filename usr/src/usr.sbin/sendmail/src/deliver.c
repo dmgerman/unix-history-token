@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.54.1.1 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4525,6 +4525,9 @@ name|e
 init|=
 name|CurEnv
 decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
 comment|/* 	**  Fork so we can change permissions here. 	**	Note that we MUST use fork, not vfork, because of 	**	the complications of calling subroutines, etc. 	*/
 name|DOFORK
 argument_list|(
@@ -4611,6 +4614,12 @@ name|st_mode
 operator|=
 literal|0666
 expr_stmt|;
+name|mode
+operator|=
+name|stb
+operator|.
+name|st_mode
+expr_stmt|;
 comment|/* limit the errors to those actually caused in the child */
 name|errno
 operator|=
@@ -4649,6 +4658,19 @@ name|e
 operator|->
 name|e_from
 expr_stmt|;
+else|else
+block|{
+comment|/* ignore setuid and setgid bits */
+name|mode
+operator|&=
+operator|~
+operator|(
+name|S_ISGID
+operator||
+name|S_ISUID
+operator|)
+expr_stmt|;
+block|}
 comment|/* we have to open the dfile BEFORE setuid */
 if|if
 condition|(
@@ -4713,9 +4735,7 @@ name|bitset
 argument_list|(
 name|S_ISGID
 argument_list|,
-name|stb
-operator|.
-name|st_mode
+name|mode
 argument_list|)
 operator|||
 name|setgid
@@ -4799,9 +4819,7 @@ name|bitset
 argument_list|(
 name|S_ISUID
 argument_list|,
-name|stb
-operator|.
-name|st_mode
+name|mode
 argument_list|)
 operator|||
 name|setuid
