@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mapc.c	5.3 (Berkeley) %G%  *  * $Id: mapc.c,v 5.2.1.9 91/05/07 22:18:07 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mapc.c	5.4 (Berkeley) %G%  *  * $Id: mapc.c,v 5.2.1.9 91/05/07 22:18:07 jsp Alpha $  *  */
 end_comment
 
 begin_comment
@@ -1488,6 +1488,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|reg_error
@@ -1502,6 +1503,7 @@ name|regerror
 name|P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|m
@@ -1516,6 +1518,7 @@ name|regerror
 parameter_list|(
 name|m
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|m
