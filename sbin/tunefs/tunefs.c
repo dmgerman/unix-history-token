@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)tunefs.c	8.2 (Berkeley) 4/19/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)tunefs.c	8.2 (Berkeley) 4/19/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -102,13 +110,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<paths.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -1227,63 +1235,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tunefs tuneup-options special-device\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"where tuneup-options are:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"usage: tunefs [-A] [-a maxcontig] [-d rotdelay] [-e maxbpg] [-m minfree]"
 argument_list|,
-literal|"\t-a maximum contiguous blocks\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"              [-p] [-n enable | disable] [-o optimize_preference]"
 argument_list|,
-literal|"\t-d rotational delay between contiguous blocks\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-e maximum blocks per file in a cylinder group\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-m minimum percentage of free space\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-n soft updates (`enable' or `disable')\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-o optimization preference (`space' or `time')\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-p no change - just prints current tuneable settings\n"
+literal|"              [special | filesystem]"
 argument_list|)
 expr_stmt|;
 name|exit
