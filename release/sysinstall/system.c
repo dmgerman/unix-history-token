@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.26 1995/05/21 01:56:03 phk Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.28 1995/05/21 06:12:44 phk Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -930,6 +930,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1027,9 +1030,6 @@ expr_stmt|;
 name|noecho
 argument_list|()
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1068,10 +1068,10 @@ expr_stmt|;
 name|noecho
 argument_list|()
 expr_stmt|;
+block|}
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -1114,10 +1114,10 @@ literal|"LANG"
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 end_function
 

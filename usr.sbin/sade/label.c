@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.20 1995/05/21 18:24:33 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.21 1995/05/22 14:10:20 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -34,17 +34,6 @@ define|#
 directive|define
 name|MSG_NOT_APPLICABLE
 value|"That option is not applicable here"
-end_define
-
-begin_comment
-comment|/*  * I make some pretty gross assumptions about having a max of 50 chunks  * total - 8 slices and 42 partitions.  I can't easily display many more  * than that on the screen at once!  *  * For 2.1 I'll revisit this and try to make it more dynamic, but since  * this will catch 99.99% of all possible cases, I'm not too worried.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_CHUNKS
-value|50
 end_define
 
 begin_comment
@@ -1662,6 +1651,15 @@ operator|.
 name|type
 operator|==
 name|PART_FILESYSTEM
+operator|||
+name|label_chunk_info
+index|[
+name|i
+index|]
+operator|.
+name|type
+operator|==
+name|PART_FAT
 condition|)
 block|{
 if|if
@@ -1757,6 +1755,22 @@ operator|)
 operator|->
 name|mountpoint
 expr_stmt|;
+if|if
+condition|(
+name|label_chunk_info
+index|[
+name|i
+index|]
+operator|.
+name|type
+operator|==
+name|PART_FAT
+condition|)
+name|newfs
+operator|=
+literal|"DOS"
+expr_stmt|;
+else|else
 name|newfs
 operator|=
 operator|(
@@ -1803,33 +1817,11 @@ operator|=
 literal|" "
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|label_chunk_info
-index|[
-name|i
-index|]
-operator|.
-name|type
-operator|==
-name|PART_FAT
-condition|)
-block|{
-name|mountpoint
-operator|=
-literal|"DOS FAT"
-expr_stmt|;
-name|newfs
-operator|=
-literal|"*"
-expr_stmt|;
-block|}
 else|else
 block|{
 name|mountpoint
 operator|=
-literal|"<unknown>"
+literal|"<NONE>"
 expr_stmt|;
 name|newfs
 operator|=
@@ -2310,11 +2302,6 @@ name|val
 decl_stmt|,
 modifier|*
 name|cp
-decl_stmt|,
-name|tmpb
-index|[
-literal|20
-index|]
 decl_stmt|;
 name|int
 name|size
@@ -2329,24 +2316,19 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-name|snprintf
-argument_list|(
-name|tmpb
-argument_list|,
-literal|20
-argument_list|,
-literal|"%d"
-argument_list|,
-name|sz
-argument_list|)
-expr_stmt|;
 name|val
 operator|=
 name|msgGetInput
 argument_list|(
-name|tmpb
+name|NULL
 argument_list|,
-literal|"Please specify the size for new FreeBSD partition in blocks, or append\na trailing `M' for megabytes (e.g. 20M)."
+literal|"Please specify the size for new FreeBSD partition in blocks, or append\na trailing `M' for megabytes (e.g. 20M).\nSpace free: %d blocks (%dMB)"
+argument_list|,
+name|sz
+argument_list|,
+name|sz
+operator|/
+name|ONE_MEG
 argument_list|)
 expr_stmt|;
 if|if
@@ -2507,18 +2489,15 @@ name|size
 operator|<
 name|ROOT_MIN_SIZE
 condition|)
-block|{
 name|msgConfirm
 argument_list|(
-literal|"This is too small a size for a root partition.  For a variety of\nreasons, root partitions should be at least %dMB in size"
+literal|"Warning: This is smaller than the recommended size for a\nroot partition.  For a variety of reasons, root\npartitions should usually be at least %dMB in size"
 argument_list|,
 name|ROOT_MIN_SIZE
 operator|/
 name|ONE_MEG
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 block|}
 name|tmp
 operator|=
@@ -2694,7 +2673,7 @@ condition|)
 block|{
 name|msg
 operator|=
-literal|"Use the Disk Partition Editor to delete this"
+literal|"Use the Disk Partition Editor to delete DOS partitions"
 expr_stmt|;
 break|break;
 block|}

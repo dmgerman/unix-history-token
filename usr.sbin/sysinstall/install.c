@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.46 1995/05/21 15:40:48 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.47 1995/05/22 14:10:17 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -69,16 +69,6 @@ begin_function_decl
 specifier|static
 name|void
 name|cpio_extract
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|install_configuration_files
 parameter_list|(
 name|void
 parameter_list|)
@@ -301,7 +291,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* Now register the swap devices */
+comment|/* Now check for swap devices */
 for|for
 control|(
 name|i
@@ -851,7 +841,13 @@ condition|(
 name|alreadyDone
 condition|)
 return|return;
-name|install_configuration_files
+name|config_fstab
+argument_list|()
+expr_stmt|;
+name|config_sysconfig
+argument_list|()
+expr_stmt|;
+name|config_resolv
 argument_list|()
 expr_stmt|;
 name|do_final_setup
@@ -1427,7 +1423,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|msgNotify
+name|msgWeHaveOutput
 argument_list|(
 literal|"Copying the boot floppy to /stand on root filesystem"
 argument_list|)
@@ -1475,10 +1471,15 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|Boolean
+name|onCDROM
+init|=
+name|FALSE
+decl_stmt|;
 if|#
 directive|if
 literal|0
-block|if (mediaDevice&& mediaDevice->type == DEVICE_TYPE_CDROM) { 	if (mediaDevice->init) { 	    if ((*mediaDevice->init)(mediaDevice)) { 		CpioFD = open("/cdrom/floppies/cpio.flp", O_RDONLY); 		if (CpioFD != -1) 		    msgNotify("Loading CPIO floppy from CDROM"); 	    } 	}     }
+block|if (mediaDevice&& mediaDevice->type == DEVICE_TYPE_CDROM) { 	if (mediaDevice->init) { 	    if ((*mediaDevice->init)(mediaDevice)) { 		CpioFD = open("/cdrom/floppies/cpio.flp", O_RDONLY); 		if (CpioFD != -1) { 		    msgNotify("Loading CPIO floppy from CDROM"); 		    onCDROM = TRUE; 		} 	    } 	}     }
 endif|#
 directive|endif
 name|tryagain
@@ -1541,7 +1542,7 @@ argument_list|(
 literal|"/"
 argument_list|)
 expr_stmt|;
-name|msgNotify
+name|msgWeHaveOutput
 argument_list|(
 literal|"Extracting contents of CPIO floppy..."
 argument_list|)
@@ -1789,24 +1790,17 @@ condition|(
 name|i
 operator|<
 literal|0
-operator|||
-name|_WSTATUS
-argument_list|(
-name|j
-argument_list|)
 condition|)
 block|{
+comment|/* Don't check status - gunzip seems to return a bogus one! */
 name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"gunzip returned error status of %d!"
+literal|"wait for gunzip returned status of %d!"
 argument_list|,
-name|_WSTATUS
-argument_list|(
-name|j
-argument_list|)
+name|i
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1833,7 +1827,7 @@ name|i
 operator|<
 literal|0
 operator|||
-name|_WSTATUS
+name|WEXITSTATUS
 argument_list|(
 name|j
 argument_list|)
@@ -1846,7 +1840,7 @@ name|msgConfirm
 argument_list|(
 literal|"cpio returned error status of %d!"
 argument_list|,
-name|_WSTATUS
+name|WEXITSTATUS
 argument_list|(
 name|j
 argument_list|)
@@ -1879,7 +1873,7 @@ name|i
 operator|<
 literal|0
 operator|||
-name|_WSTATUS
+name|WEXITSTATUS
 argument_list|(
 name|j
 argument_list|)
@@ -1922,17 +1916,17 @@ argument_list|(
 literal|"/OK"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|onCDROM
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Please remove the CPIO floppy from the drive"
+argument_list|)
+expr_stmt|;
 block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|install_configuration_files
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
 end_function
 
 begin_function

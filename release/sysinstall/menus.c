@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.23 1995/05/21 15:40:52 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.24 1995/05/21 18:24:34 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -635,7 +635,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please specify an FTP site"
 block|,
-literal|"FreeBSD is distributed from a number of sites on the Internet. Please\n\ select the site closest to you or \"other\" if you'd like to specify another\n\ choice.  Also note that not all sites carry every possible distribution!\n\ Distributions other than the basic user set are only guaranteed to be\n\ available from the Primary site.\n\n\ If the first site selected doesn't respond, try one of the alternates.\n\ You may also wish to investigate the Ftp options menu in case of trouble."
+literal|"FreeBSD is distributed from a number of sites on the Internet. Please\n\ select the site closest to you or \"other\" if you'd like to specify another\n\ choice.  Also note that not all sites carry every possible distribution!\n\ Distributions other than the basic user set are only guaranteed to be\n\ available from the Primary site.\n\n\ If the first site selected doesn't respond, try one of the alternates.\n\ You may also wish to investigate the Ftp options menu in case of trouble.\n\ To specify a URL not in this list, chose \"other\"."
 block|,
 literal|"Select a site that's close!"
 block|,
@@ -672,6 +672,24 @@ name|void
 operator|*
 operator|)
 literal|"ftp=ftp://freefall.cdrom.com/pub/FreeBSD/2.0.5-ALPHA"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Other"
+block|,
+literal|"Specify another ftp site by URL (e.g. ftp://some.site/pub/FreeBSD/..)"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|"ftp=other"
 block|,
 literal|0
 block|,
@@ -1349,7 +1367,7 @@ block|{
 block|{
 literal|"Developer"
 block|,
-literal|"Full sources, binaries and doc but no games [48MB]"
+literal|"Full sources, binaries and doc but no games [171MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1367,7 +1385,7 @@ block|,
 block|{
 literal|"X-Developer"
 block|,
-literal|"Same as above, but includes XFree86 [73MB]"
+literal|"Same as above, but includes XFree86 [196MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1439,7 +1457,7 @@ block|,
 block|{
 literal|"Everything"
 block|,
-literal|"All sources, binaries and XFree86 binaries [80MB]"
+literal|"All sources, binaries and XFree86 binaries [203MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1502,7 +1520,7 @@ block|{
 block|{
 literal|"*bin"
 block|,
-literal|"Binary base distribution (required) [15MB]"
+literal|"Binary base distribution (required) [36MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1597,7 +1615,7 @@ block|,
 block|{
 literal|"dict"
 block|,
-literal|"Spelling checker disctionary files [1.3MB]"
+literal|"Spelling checker disctionary files [4.2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1616,7 +1634,7 @@ block|,
 block|{
 literal|"games"
 block|,
-literal|"Games and other amusements (non-commercial) [2.8MB]"
+literal|"Games and other amusements (non-commercial) [6.4MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1635,7 +1653,7 @@ block|,
 block|{
 literal|"info"
 block|,
-literal|"GNU info files [1.2MB]"
+literal|"GNU info files [4.1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1654,7 +1672,7 @@ block|,
 block|{
 literal|"*man"
 block|,
-literal|"System manual pages - strongly recommended [2.8MB]"
+literal|"System manual pages - strongly recommended [3.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1673,7 +1691,7 @@ block|,
 block|{
 literal|"proflibs"
 block|,
-literal|"Profiled versions of the libraries [.9MB]"
+literal|"Profiled versions of the libraries [3.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1692,7 +1710,7 @@ block|,
 block|{
 literal|"src"
 block|,
-literal|"Sources for everything but DES [25MB]"
+literal|"Sources for everything but DES [120MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -3142,7 +3160,7 @@ literal|"install.hlp"
 block|,
 block|{
 block|{
-literal|"BootMgr"
+literal|"*BootMgr"
 block|,
 literal|"Install the FreeBSD Boot Manager (\"Booteasy\")"
 block|,

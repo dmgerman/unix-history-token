@@ -255,8 +255,12 @@ begin_define
 define|#
 directive|define
 name|DIST_SRC_ALL
-value|0xFFFF
+value|0x3FFF
 end_define
+
+begin_comment
+comment|/* Don't include XFree86 source by default */
+end_comment
 
 begin_comment
 comment|/* Subtypes for XFree86 distribution */
