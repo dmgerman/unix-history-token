@@ -196,8 +196,9 @@ operator|)
 condition|)
 block|{
 comment|/* ...shift the remaining entries... */
-while|while
-condition|(
+for|for
+control|(
+init|;
 name|i
 operator|<
 name|acl
@@ -207,7 +208,10 @@ operator|.
 name|acl_cnt
 operator|-
 literal|1
-condition|)
+condition|;
+operator|++
+name|i
+control|)
 name|acl
 operator|->
 name|ats_acl
@@ -223,7 +227,6 @@ name|ats_acl
 operator|.
 name|acl_entry
 index|[
-operator|++
 name|i
 index|]
 expr_stmt|;
