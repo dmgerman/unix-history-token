@@ -268,6 +268,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|aflag
+init|=
+literal|0
+decl_stmt|,
 name|iflag
 decl_stmt|,
 name|nflag
@@ -351,7 +355,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"iknt:"
+literal|"aiknt:"
 argument_list|)
 operator|)
 operator|!=
@@ -363,6 +367,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+name|aflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'i'
 case|:
@@ -564,6 +576,24 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|aflag
+operator|||
+operator|(
+name|mntbuf
+index|[
+name|i
+index|]
+operator|.
+name|f_flags
+operator|&
+name|MNT_IGNORE
+operator|)
+operator|==
+literal|0
+condition|)
 name|prtstat
 argument_list|(
 operator|&
@@ -575,6 +605,7 @@ argument_list|,
 name|maxwidth
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|rv
@@ -1956,7 +1987,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: df [-ikn] [-t type] [file | filesystem ...]\n"
+literal|"usage: df [-aikn] [-t type] [file | filesystem ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

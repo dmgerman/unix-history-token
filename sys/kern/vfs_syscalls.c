@@ -1475,6 +1475,8 @@ name|MNT_NOATIME
 operator||
 name|MNT_NOSYMFOLLOW
 operator||
+name|MNT_IGNORE
+operator||
 name|MNT_NOCLUSTERR
 operator||
 name|MNT_NOCLUSTERW
@@ -1509,6 +1511,8 @@ operator||
 name|MNT_FORCE
 operator||
 name|MNT_NOSYMFOLLOW
+operator||
+name|MNT_IGNORE
 operator||
 name|MNT_NOATIME
 operator||
