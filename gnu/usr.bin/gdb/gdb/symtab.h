@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Symbol table definitions for GDB.    Copyright (C) 1986, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Symbol table definitions for GDB.    Copyright 1986, 1989, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_if
@@ -45,7 +45,59 @@ value|free
 end_define
 
 begin_comment
-comment|/* Define a structure for the information that is common to all symbol types,    including minimal symbols, partial symbols, and full symbols.  In a    multilanguage environment, some language specific information may need to    be recorded along with each symbol. */
+comment|/* Don't do this; it means that if some .o's are compiled with GNU C    and some are not (easy to do accidentally the way we configure    things; also it is a pain to have to "make clean" every time you    want to switch compilers), then GDB dies a horrible death.  */
+end_comment
+
+begin_comment
+comment|/* GNU C supports enums that are bitfields.  Some compilers don't. */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BYTE_BITFIELD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BYTE_BITFIELD
+value|:8;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|BYTE_BITFIELD
+end_define
+
+begin_comment
+comment|/*nothing*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Define a structure for the information that is common to all symbol types,    including minimal symbols, partial symbols, and full symbols.  In a    multilanguage environment, some language specific information may need to    be recorded along with each symbol.     These fields are ordered to encourage good packing, since we frequently    have tens or hundreds of thousands of these.  */
 end_comment
 
 begin_struct
@@ -60,8 +112,9 @@ decl_stmt|;
 comment|/* Value of the symbol.  Which member of this union to use, and what      it means, depends on what kind of symbol this is and its      SYMBOL_CLASS.  See comments there for more details.  All of these      are in host byte order (though what they point to might be in      target byte order, e.g. LOC_CONST_BYTES).  */
 union|union
 block|{
+comment|/* The fact that this is a long not a LONGEST mainly limits the 	 range of a LOC_CONST.  Since LOC_CONST_BYTES exists, I'm not 	 sure that is a big deal.  */
 name|long
-name|value
+name|ivalue
 decl_stmt|;
 name|struct
 name|block
@@ -84,11 +137,6 @@ decl_stmt|;
 block|}
 name|value
 union|;
-comment|/* Record the source code language that applies to this symbol.      This is used to select one of the fields from the language specific      union below. */
-name|enum
-name|language
-name|language
-decl_stmt|;
 comment|/* Since one and only one language can apply, wrap the language specific      information inside a union. */
 union|union
 block|{
@@ -117,8 +165,14 @@ struct|;
 block|}
 name|language_specific
 union|;
+comment|/* Record the source code language that applies to this symbol.      This is used to select one of the fields from the language specific      union above. */
+name|enum
+name|language
+name|language
+name|BYTE_BITFIELD
+decl_stmt|;
 comment|/* Which section is this symbol in?  This is an index into      section_offsets for this objfile.  Negative means that the symbol      does not get relocated relative to a section.      Disclaimer: currently this is just used for xcoff, so don't      expect all symbol-reading code to set it correctly (the ELF code      also tries to set it correctly).  */
-name|int
+name|short
 name|section
 decl_stmt|;
 block|}
@@ -142,7 +196,7 @@ name|SYMBOL_VALUE
 parameter_list|(
 name|symbol
 parameter_list|)
-value|(symbol)->ginfo.value.value
+value|(symbol)->ginfo.value.ivalue
 end_define
 
 begin_define
@@ -215,17 +269,6 @@ parameter_list|)
 define|\
 value|(symbol)->ginfo.language_specific.cplus_specific.demangled_name
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|demangle
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* We reference it, so go ahead and declare it. */
-end_comment
 
 begin_comment
 comment|/* Macro that initializes the language dependent portion of a symbol    depending upon the language for the symbol. */
@@ -318,24 +361,6 @@ value|(demangle&& asm_demangle&& SYMBOL_DEMANGLED_NAME (symbol) != NULL	\    ? S
 end_define
 
 begin_comment
-comment|/* From utils.c.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|demangle
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|asm_demangle
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Macro that tests a symbol for a match against a specified name string.    First test the unencoded name, then looks for and test a C++ encoded    name if it exists.  Note that whitespace is ignored while attempting to    match a C++ encoded name, so that "foo::bar(int,long)" is the same as    "foo :: bar (int, long)".    Evaluates to zero if the match fails, or nonzero if it succeeds. */
 end_comment
 
@@ -406,6 +431,10 @@ comment|/* Generally uninitialized data */
 name|mst_abs
 block|,
 comment|/* Generally absolute (nonrelocatable) */
+comment|/* GDB uses mst_solib_trampoline for the start address of a shared 	 library trampoline entry.  Breakpoints for shared library functions 	 are put there if the shared library is not yet loaded. 	 After the shared library is loaded, lookup_minimal_symbol will 	 prefer the minimal symbol from the shared library (usually 	 a mst_text symbol) over the mst_solib_trampoline symbol, and the 	 breakpoints will be moved to their true address in the shared 	 library via breakpoint_re_set.  */
+name|mst_solib_trampoline
+block|,
+comment|/* Shared library trampoline code */
 comment|/* For the mst_file* types, the names are only guaranteed to be unique 	 within a given .o file.  */
 name|mst_file_text
 block|,
@@ -417,6 +446,7 @@ name|mst_file_bss
 comment|/* Static version of mst_bss */
 block|}
 name|type
+name|BYTE_BITFIELD
 enum|;
 block|}
 struct|;
@@ -749,21 +779,23 @@ name|struct
 name|general_symbol_info
 name|ginfo
 decl_stmt|;
-comment|/* Name space code.  */
-name|enum
-name|namespace
-name|namespace
-decl_stmt|;
-comment|/* Address class */
-name|enum
-name|address_class
-name|class
-decl_stmt|;
 comment|/* Data type of value */
 name|struct
 name|type
 modifier|*
 name|type
+decl_stmt|;
+comment|/* Name space code.  */
+name|enum
+name|namespace
+name|namespace
+name|BYTE_BITFIELD
+decl_stmt|;
+comment|/* Address class */
+name|enum
+name|address_class
+name|class
+name|BYTE_BITFIELD
 decl_stmt|;
 comment|/* Line number of definition.  FIXME:  Should we really make the assumption      that nobody will try to debug files longer than 64K lines?  What about      machine generated programs? */
 name|unsigned
@@ -854,11 +886,13 @@ comment|/* Name space code.  */
 name|enum
 name|namespace
 name|namespace
+name|BYTE_BITFIELD
 decl_stmt|;
 comment|/* Address class (for info_symbols) */
 name|enum
 name|address_class
 name|class
+name|BYTE_BITFIELD
 decl_stmt|;
 block|}
 struct|;
@@ -1275,7 +1309,7 @@ value|((NAME)[0] == 'o'&& (NAME)[1] == 'p'&& (NAME)[2] == CPLUS_MARKER)
 end_define
 
 begin_comment
-comment|/* Macro that yields non-zero value iff NAME is the prefix for C++ vtbl    names.  Note that this macro is g++ specific (FIXME).  */
+comment|/* Macro that yields non-zero value iff NAME is the prefix for C++ vtbl    names.  Note that this macro is g++ specific (FIXME).    '_vt$' is the old cfront-style vtables; '_VT$' is the new    style, using thunks (where '$' is really CPLUS_MARKER). */
 end_comment
 
 begin_define
@@ -1286,7 +1320,7 @@ parameter_list|(
 name|NAME
 parameter_list|)
 define|\
-value|((NAME)[3] == CPLUS_MARKER&& !strncmp ((NAME), "_vt", 3))
+value|((NAME)[3] == CPLUS_MARKER&& (NAME)[0] == '_' \&& (((NAME)[1] == 'V'&& (NAME)[2] == 'T') \        || ((NAME)[1] == 'v'&& (NAME)[2] == 't')))
 end_define
 
 begin_comment
@@ -1345,6 +1379,24 @@ name|struct
 name|objfile
 modifier|*
 name|current_objfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* From utils.c.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|demangle
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|asm_demangle
 decl_stmt|;
 end_decl_stmt
 
@@ -1669,6 +1721,50 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Macro for name of symbol to indicate a file compiled with gcc. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GCC_COMPILED_FLAG_SYMBOL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GCC_COMPILED_FLAG_SYMBOL
+value|"gcc_compiled."
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Macro for name of symbol to indicate a file compiled with gcc2. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GCC2_COMPILED_FLAG_SYMBOL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GCC2_COMPILED_FLAG_SYMBOL
+value|"gcc2_compiled."
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Functions for dealing with the minimal symbol table, really a misc    address<->symbol mapping for things we don't have debug symbols for.  */
 end_comment
 
@@ -1687,6 +1783,10 @@ name|CORE_ADDR
 operator|,
 expr|enum
 name|minimal_symbol_type
+operator|,
+expr|struct
+name|objfile
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1714,6 +1814,10 @@ name|info
 operator|,
 name|int
 name|section
+operator|,
+expr|struct
+name|objfile
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1746,6 +1850,34 @@ name|struct
 name|minimal_symbol
 modifier|*
 name|lookup_minimal_symbol_by_pc
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|minimal_symbol
+modifier|*
+name|lookup_solib_trampoline_symbol_by_pc
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|CORE_ADDR
+name|find_solib_trampoline_target
 name|PARAMS
 argument_list|(
 operator|(
@@ -1856,6 +1988,33 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Given an address, return the nearest symbol at or below it in memory.    Optionally return the symtab it's from through 2nd arg, and the    address in inferior memory of the symbol through 3rd arg.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|symbol
+modifier|*
+name|find_addr_symbol
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|,
+expr|struct
+name|symtab
+operator|*
+operator|*
+operator|,
+name|CORE_ADDR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Given a symtab and line number, return the pc there.  */
 end_comment
 
@@ -1884,10 +2043,7 @@ name|PARAMS
 argument_list|(
 operator|(
 expr|struct
-name|symtab
-operator|*
-operator|,
-name|int
+name|symtab_and_line
 operator|,
 name|CORE_ADDR
 operator|*
@@ -2051,6 +2207,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|maintenance_check_symtabs
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -2133,17 +2304,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* source.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|frame_file_full_name
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in stack.c */
 end_comment
 
 begin_decl_stmt

@@ -166,6 +166,10 @@ block|,
 comment|/* Concatenate two operands, such as character strings or bitstrings.      If the first operand is a integer expression, then it means concatenate      the second operand with itself that many times. */
 name|BINOP_CONCAT
 block|,
+comment|/* For Chill and Pascal. */
+name|BINOP_IN
+block|,
+comment|/* Returns 1 iff ARG1 IN ARG2. */
 comment|/* This must be the highest BINOP_ value, for expprint.c.  */
 name|BINOP_END
 block|,
@@ -456,7 +460,7 @@ expr|struct
 name|expression
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -499,7 +503,7 @@ expr|struct
 name|expression
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|char

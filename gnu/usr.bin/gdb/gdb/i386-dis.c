@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Print i386 instructions for GDB, the GNU debugger.    Copyright (C) 1988, 1989, 1991 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Print i386 instructions for GDB, the GNU debugger.    Copyright (C) 1988, 1989, 1991, 1993, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -15,6 +15,12 @@ begin_include
 include|#
 directive|include
 file|"dis-asm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sysdep.h"
 end_include
 
 begin_define
@@ -32,7 +38,7 @@ end_include
 
 begin_struct
 struct|struct
-name|private
+name|dis_private
 block|{
 comment|/* Points to first byte not fetched.  */
 name|bfd_byte
@@ -69,7 +75,7 @@ parameter_list|,
 name|addr
 parameter_list|)
 define|\
-value|((addr)<= ((struct private *)(info->private_data))->max_fetched \    ? 1 : fetch_data ((info), (addr)))
+value|((addr)<= ((struct dis_private *)(info->private_data))->max_fetched \    ? 1 : fetch_data ((info), (addr)))
 end_define
 
 begin_function
@@ -95,13 +101,13 @@ name|int
 name|status
 decl_stmt|;
 name|struct
-name|private
+name|dis_private
 modifier|*
 name|priv
 init|=
 operator|(
 expr|struct
-name|private
+name|dis_private
 operator|*
 operator|)
 name|info
@@ -2331,7 +2337,7 @@ literal|"scasb"
 block|,
 name|AL
 block|,
-name|Xb
+name|Yb
 block|}
 block|,
 block|{
@@ -2339,7 +2345,7 @@ literal|"scasS"
 block|,
 name|eAX
 block|,
-name|Xv
+name|Yv
 block|}
 block|,
 comment|/* b0 */
@@ -5549,7 +5555,7 @@ name|int
 name|needcomma
 decl_stmt|;
 name|struct
-name|private
+name|dis_private
 name|priv
 decl_stmt|;
 name|bfd_byte
@@ -5850,6 +5856,7 @@ expr_stmt|;
 name|codep
 operator|++
 expr_stmt|;
+comment|/* Fetch the mod/reg/rm byte.  FIXME: We should be only fetching      this if we need it.  As it is, this code loses if there is a      one-byte instruction (without a mod/reg/rm byte) at the end of      the address space.  */
 name|FETCH_DATA
 argument_list|(
 name|info

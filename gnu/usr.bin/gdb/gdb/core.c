@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Core dump and executable file functions above target vector, for GDB.    Copyright 1986, 1987, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Core dump and executable file functions above target vector, for GDB.    Copyright 1986, 1987, 1989, 1991, 1992, 1993, 1994    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -83,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"dis-asm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"language.h"
 end_include
 
 begin_decl_stmt
@@ -427,40 +439,66 @@ name|EIO
 condition|)
 block|{
 comment|/* Actually, address between memaddr and memaddr + len 	 was out of bounds. */
-name|error
+name|error_begin
+argument_list|()
+expr_stmt|;
+name|printf_filtered
 argument_list|(
-literal|"Cannot access memory at address %s."
-argument_list|,
-name|local_hex_string
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|memaddr
+literal|"Cannot access memory at address "
 argument_list|)
+expr_stmt|;
+name|print_address_numeric
+argument_list|(
+name|memaddr
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|".\n"
+argument_list|)
+expr_stmt|;
+name|return_to_top_level
+argument_list|(
+name|RETURN_ERROR
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|error
+name|error_begin
+argument_list|()
+expr_stmt|;
+name|printf_filtered
 argument_list|(
-literal|"Error accessing memory address %s: %s."
-argument_list|,
-name|local_hex_string
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|memaddr
+literal|"Error accessing memory address "
 argument_list|)
+expr_stmt|;
+name|print_address_numeric
+argument_list|(
+name|memaddr
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|": %s.\n"
 argument_list|,
 name|safe_strerror
 argument_list|(
 name|status
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|return_to_top_level
+argument_list|(
+name|RETURN_ERROR
 argument_list|)
 expr_stmt|;
 block|}
@@ -786,6 +824,38 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_escape
+end_escape
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Enable after 4.12.  It is not tested.  */
+end_comment
+
+begin_comment
+comment|/* Search code.  Targets can just make this their search function, or    if the protocol has a less general search function, they can call this    in the cases it can't handle.  */
+end_comment
+
+begin_comment
+unit|void generic_search (len, data, mask, startaddr, increment, lorange, hirange 		addr_found, data_found)      int len;      char *data;      char *mask;      CORE_ADDR startaddr;      int increment;      CORE_ADDR lorange;      CORE_ADDR hirange;      CORE_ADDR *addr_found;      char *data_found; {   int i;   CORE_ADDR curaddr = startaddr;    while (curaddr>= lorange&& curaddr< hirange)     {       read_memory (curaddr, data_found, len);       for (i = 0; i< len; ++i) 	if ((data_found[i]& mask[i]) != data[i]) 	  goto try_again;
+comment|/* It matches.  */
+end_comment
+
+begin_endif
+unit|*addr_found = curaddr;       return;      try_again:       curaddr += increment;     }   *addr_found = (CORE_ADDR)0;   return; }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 0 */
+end_comment
 
 begin_escape
 end_escape

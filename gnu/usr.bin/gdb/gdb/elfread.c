@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read ELF (Executable and Linking Format) object files for GDB.    Copyright 1991, 1992 Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Read ELF (Executable and Linking Format) object files for GDB.    Copyright 1991, 1992, 1993, 1994 Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -18,38 +18,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<string.h>
 end_include
-
-begin_comment
-comment|/* For time_t in libbfd.h.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_comment
-comment|/* For time_t, if not in time.h.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"libbfd.h"
-end_include
-
-begin_comment
-comment|/* For bfd_elf_find_section */
-end_comment
 
 begin_include
 include|#
 directive|include
 file|"libelf.h"
 end_include
+
+begin_comment
+comment|/*#include "elf/mips.h"*/
+end_comment
 
 begin_include
 include|#
@@ -96,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"demangle.h"
 end_include
 
@@ -141,6 +115,11 @@ modifier|*
 name|stabindexsect
 decl_stmt|;
 comment|/* Section pointer for .stab.index section */
+name|asection
+modifier|*
+name|mdebugsect
+decl_stmt|;
+comment|/* Section pointer for .mdebug section */
 block|}
 struct|;
 end_struct
@@ -290,6 +269,8 @@ operator|,
 expr|struct
 name|objfile
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -517,6 +498,26 @@ operator|=
 name|sectp
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|STREQ
+argument_list|(
+name|sectp
+operator|->
+name|name
+argument_list|,
+literal|".mdebug"
+argument_list|)
+condition|)
+block|{
+name|ei
+operator|->
+name|mdebugsect
+operator|=
+name|sectp
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -592,6 +593,16 @@ name|section
 operator|=
 name|SECT_OFF_TEXT
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMASH_TEXT_ADDRESS
+name|SMASH_TEXT_ADDRESS
+argument_list|(
+name|address
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|mst_data
@@ -651,6 +662,8 @@ argument_list|,
 name|info
 argument_list|,
 name|section
+argument_list|,
+name|objfile
 argument_list|)
 expr_stmt|;
 block|}
@@ -670,6 +683,8 @@ parameter_list|,
 name|addr
 parameter_list|,
 name|objfile
+parameter_list|,
+name|dynamic
 parameter_list|)
 name|bfd
 modifier|*
@@ -683,9 +698,11 @@ name|objfile
 modifier|*
 name|objfile
 decl_stmt|;
-block|{
-name|unsigned
 name|int
+name|dynamic
+decl_stmt|;
+block|{
+name|long
 name|storage_needed
 decl_stmt|;
 name|asymbol
@@ -697,12 +714,10 @@ modifier|*
 modifier|*
 name|symbol_table
 decl_stmt|;
-name|unsigned
-name|int
+name|long
 name|number_of_symbols
 decl_stmt|;
-name|unsigned
-name|int
+name|long
 name|i
 decl_stmt|;
 name|int
@@ -753,13 +768,71 @@ name|unsigned
 name|long
 name|size
 decl_stmt|;
+name|int
+name|stripped
+init|=
+operator|(
+name|bfd_get_symcount
+argument_list|(
+name|abfd
+argument_list|)
+operator|==
+literal|0
+operator|)
+decl_stmt|;
+if|if
+condition|(
+name|dynamic
+condition|)
+block|{
 name|storage_needed
 operator|=
-name|get_symtab_upper_bound
+name|bfd_get_dynamic_symtab_upper_bound
 argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
+comment|/* Nothing to be done if there is no dynamic symtab.  */
+if|if
+condition|(
+name|storage_needed
+operator|<
+literal|0
+condition|)
+return|return;
+block|}
+else|else
+block|{
+name|storage_needed
+operator|=
+name|bfd_get_symtab_upper_bound
+argument_list|(
+name|abfd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|storage_needed
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"Can't read symbols from %s: %s"
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|abfd
+argument_list|)
+argument_list|,
+name|bfd_errmsg
+argument_list|(
+name|bfd_get_error
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|storage_needed
@@ -788,6 +861,20 @@ argument_list|,
 name|symbol_table
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dynamic
+condition|)
+name|number_of_symbols
+operator|=
+name|bfd_canonicalize_dynamic_symtab
+argument_list|(
+name|abfd
+argument_list|,
+name|symbol_table
+argument_list|)
+expr_stmt|;
+else|else
 name|number_of_symbols
 operator|=
 name|bfd_canonicalize_symtab
@@ -795,6 +882,28 @@ argument_list|(
 name|abfd
 argument_list|,
 name|symbol_table
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|number_of_symbols
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"Can't read symbols from %s: %s"
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|abfd
+argument_list|)
+argument_list|,
+name|bfd_errmsg
+argument_list|(
+name|bfd_get_error
+argument_list|()
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -837,6 +946,22 @@ block|{
 comment|/* Skip names that don't exist (shouldn't happen), or names 		 that are null strings (may happen). */
 continue|continue;
 block|}
+comment|/* If it is a nonstripped executable, do not enter dynamic 	     symbols, as the dynamic symbol table is usually a subset 	     of the main symbol table. 	     On Irix 5 however, the symbols for the procedure linkage 	     table entries have meaningful values only in the dynamic 	     symbol table, so we always examine undefined symbols.  */
+if|if
+condition|(
+name|dynamic
+operator|&&
+operator|!
+name|stripped
+operator|&&
+name|sym
+operator|->
+name|section
+operator|!=
+operator|&
+name|bfd_und_section
+condition|)
+continue|continue;
 if|if
 condition|(
 name|sym
@@ -932,13 +1057,93 @@ operator|->
 name|section
 operator|==
 operator|&
+name|bfd_und_section
+operator|&&
+operator|(
+name|sym
+operator|->
+name|flags
+operator|&
+name|BSF_GLOBAL
+operator|)
+operator|&&
+operator|(
+name|sym
+operator|->
+name|flags
+operator|&
+name|BSF_FUNCTION
+operator|)
+condition|)
+block|{
+comment|/* Symbol is a reference to a function defined in 		     a shared library. 		     If its value is non zero then it is usually the 		     absolute address of the corresponding entry in 		     the procedure linkage table. 		     If its value is zero then the dynamic linker has to 		     resolve the symbol. We are unable to find any 		     meaningful address for this symbol in the 		     executable file, so we skip it. 		     Irix 5 has a zero value for all shared library functions 		     in the main symbol table, but the dynamic symbol table 		     provides the right values.  */
+name|ms_type
+operator|=
+name|mst_solib_trampoline
+expr_stmt|;
+name|symaddr
+operator|=
+name|sym
+operator|->
+name|value
+expr_stmt|;
+if|if
+condition|(
+name|symaddr
+operator|==
+literal|0
+condition|)
+continue|continue;
+name|symaddr
+operator|+=
+name|addr
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sym
+operator|->
+name|section
+operator|==
+operator|&
 name|bfd_abs_section
 condition|)
 block|{
+comment|/* This is a hack to get the minimal symbol type 		     right for Irix 5, which has absolute adresses 		     with special section indices for dynamic symbols. */
+name|unsigned
+name|short
+name|shndx
+init|=
+operator|(
+operator|(
+name|elf_symbol_type
+operator|*
+operator|)
+name|sym
+operator|)
+operator|->
+name|internal_elf_sym
+operator|.
+name|st_shndx
+decl_stmt|;
+switch|switch
+condition|(
+name|shndx
+condition|)
+block|{
+if|#
+directive|if
+literal|0
+block|case SHN_MIPS_TEXT: 		      ms_type = mst_text; 		      break; 		    case SHN_MIPS_DATA: 		      ms_type = mst_data; 		      break; 		    case SHN_MIPS_ACOMMON: 		      ms_type = mst_bss; 		      break;
+endif|#
+directive|endif
+default|default:
 name|ms_type
 operator|=
 name|mst_abs
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -969,6 +1174,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|sym
 operator|->
 name|name
@@ -986,6 +1192,35 @@ literal|1
 index|]
 operator|==
 literal|'L'
+operator|)
+operator|||
+operator|(
+operator|(
+name|sym
+operator|->
+name|flags
+operator|&
+name|BSF_LOCAL
+operator|)
+operator|&&
+name|sym
+operator|->
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'L'
+operator|&&
+name|sym
+operator|->
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|'L'
+operator|)
 condition|)
 comment|/* Looks like a compiler-generated label.  Skip it. 		       The assembler should be skipping these (to keep 		       executables small), but apparently with gcc on the 		       delta m88k SVR4, it loses.  So to have us check too 		       should be harmless (but I encourage people to fix this 		       in the assembler instead of adding checks here).  */
 continue|continue;
@@ -1348,7 +1583,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Scan and build partial symbols for a symbol file.    We have been initialized by a call to elf_symfile_init, which     currently does nothing.     SECTION_OFFSETS is a set of offsets to apply to relocate the symbols    in each section.  We simplify it down to a single offset for all    symbols.  FIXME.     MAINLINE is true if we are reading the main symbol    table (as opposed to a shared lib or dynamically loaded file).     This function only does the minimum work necessary for letting the    user "name" things symbolically; it does not read the entire symtab.    Instead, it reads the external and static symbols and puts them in partial    symbol tables.  When more extensive information is requested of a    file, the corresponding partial symbol table is mutated into a full    fledged symbol table by going back and reading the symbols    for real.     We look for sections with specific names, to tell us what debug    format to look for:  FIXME!!!     dwarf_build_psymtabs() builds psymtabs for DWARF symbols;    elfstab_build_psymtabs() handles STABS symbols.     Note that ELF files have a "minimal" symbol table, which looks a lot    like a COFF symbol table, but has only the minimal information necessary    for linking.  We process this also, and use the information to    build gdb's minimal symbol table.  This gives us some minimal debugging    capability even for files compiled without -g.  */
+comment|/* Scan and build partial symbols for a symbol file.    We have been initialized by a call to elf_symfile_init, which     currently does nothing.     SECTION_OFFSETS is a set of offsets to apply to relocate the symbols    in each section.  We simplify it down to a single offset for all    symbols.  FIXME.     MAINLINE is true if we are reading the main symbol    table (as opposed to a shared lib or dynamically loaded file).     This function only does the minimum work necessary for letting the    user "name" things symbolically; it does not read the entire symtab.    Instead, it reads the external and static symbols and puts them in partial    symbol tables.  When more extensive information is requested of a    file, the corresponding partial symbol table is mutated into a full    fledged symbol table by going back and reading the symbols    for real.     We look for sections with specific names, to tell us what debug    format to look for:  FIXME!!!     dwarf_build_psymtabs() builds psymtabs for DWARF symbols;    elfstab_build_psymtabs() handles STABS symbols;    mdebug_build_psymtabs() handles ECOFF debugging information.     Note that ELF files have a "minimal" symbol table, which looks a lot    like a COFF symbol table, but has only the minimal information necessary    for linking.  We process this also, and use the information to    build gdb's minimal symbol table.  This gives us some minimal debugging    capability even for files compiled without -g.  */
 end_comment
 
 begin_function
@@ -1493,6 +1728,20 @@ argument_list|,
 name|offset
 argument_list|,
 name|objfile
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Add the dynamic symbols.  */
+name|elf_symtab_read
+argument_list|(
+name|abfd
+argument_list|,
+name|offset
+argument_list|,
+name|objfile
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Now process debugging information, which is contained in      special ELF sections.  We first have to find them... */
@@ -1554,25 +1803,24 @@ operator|.
 name|stabsect
 condition|)
 block|{
-comment|/* STABS sections */
-comment|/* FIXME:  Sun didn't really know how to implement this well. 	 They made .stab sections that don't point to the .stabstr 	 section with the sh_link field.  BFD doesn't make string table 	 sections visible to the caller.  So we have to search the 	 ELF section table, not the BFD section table, for the string 	 table.  */
-name|struct
-name|elf32_internal_shdr
+name|asection
 modifier|*
-name|elf_sect
+name|str_sect
 decl_stmt|;
-name|elf_sect
+comment|/* Stab sections have an associated string table that looks like 	 a separate section.  */
+name|str_sect
 operator|=
-name|bfd_elf_find_section
+name|bfd_get_section_by_name
 argument_list|(
 name|abfd
 argument_list|,
 literal|".stabstr"
 argument_list|)
 expr_stmt|;
+comment|/* FIXME should probably warn about a stab section without a stabstr.  */
 if|if
 condition|(
-name|elf_sect
+name|str_sect
 condition|)
 name|elfstab_build_psymtabs
 argument_list|(
@@ -1588,50 +1836,66 @@ name|stabsect
 operator|->
 name|filepos
 argument_list|,
-comment|/* .stab offset */
-name|bfd_get_section_size_before_reloc
+name|bfd_section_size
 argument_list|(
+name|abfd
+argument_list|,
 name|ei
 operator|.
 name|stabsect
 argument_list|)
 argument_list|,
-comment|/* .stab size */
-operator|(
-name|file_ptr
-operator|)
-name|elf_sect
+name|str_sect
 operator|->
-name|sh_offset
+name|filepos
 argument_list|,
-comment|/* .stabstr offset */
-name|elf_sect
-operator|->
-name|sh_size
+name|bfd_section_size
+argument_list|(
+name|abfd
+argument_list|,
+name|str_sect
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* .stabstr size */
 block|}
 if|if
 condition|(
-operator|!
-name|have_partial_symbols
-argument_list|()
+name|ei
+operator|.
+name|mdebugsect
 condition|)
 block|{
-name|wrap_here
+specifier|const
+name|struct
+name|ecoff_debug_swap
+modifier|*
+name|swap
+decl_stmt|;
+comment|/* .mdebug section, presumably holding ECOFF debugging 	 information.  */
+name|swap
+operator|=
+name|get_elf_backend_data
 argument_list|(
-literal|""
+name|abfd
 argument_list|)
+operator|->
+name|elf_backend_ecoff_debug_swap
 expr_stmt|;
-name|printf_filtered
+if|if
+condition|(
+name|swap
+condition|)
+name|elfmdebug_build_psymtabs
 argument_list|(
-literal|"(no debugging symbols found)..."
-argument_list|)
-expr_stmt|;
-name|wrap_here
-argument_list|(
-literal|""
+name|objfile
+argument_list|,
+name|swap
+argument_list|,
+name|ei
+operator|.
+name|mdebugsect
+argument_list|,
+name|section_offsets
 argument_list|)
 expr_stmt|;
 block|}
@@ -1857,6 +2121,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|objfile
+operator|->
+name|num_sections
+operator|=
+name|SECT_OFF_MAX
+expr_stmt|;
 name|section_offsets
 operator|=
 operator|(
@@ -2193,7 +2463,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  Register that we are able to handle ELF object file formats and DWARF     debugging formats.      Unlike other object file formats, where the debugging information format     is implied by the object file format, the ELF object file format and the     DWARF debugging information format are two distinct, and potentially     separate entities.  I.E. it is perfectly possible to have ELF objects     with debugging formats other than DWARF.  And it is conceivable that the     DWARF debugging format might be used with another object file format,     like COFF, by simply using COFF's custom section feature.      GDB, and to a lesser extent BFD, should support the notion of separate     object file formats and debugging information formats.  For now, we just     use "elf" in the same sense as "a.out" or "coff", to imply both the ELF     object file format and the DWARF debugging format. */
+comment|/* Register that we are able to handle ELF object file formats.  */
 end_comment
 
 begin_decl_stmt
@@ -2203,12 +2473,8 @@ name|sym_fns
 name|elf_sym_fns
 init|=
 block|{
-literal|"elf"
+name|bfd_target_elf_flavour
 block|,
-comment|/* sym_name: name or name prefix of BFD target type */
-literal|3
-block|,
-comment|/* sym_namelen: number of significant sym_name chars */
 name|elf_new_init
 block|,
 comment|/* sym_new_init: init anything gbl to entire symtab */

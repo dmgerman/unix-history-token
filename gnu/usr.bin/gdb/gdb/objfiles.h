@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for symbol file management in GDB.    Copyright (C) 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Definitions for symbol file management in GDB.    Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_if
@@ -20,7 +20,7 @@ name|OBJFILES_H
 end_define
 
 begin_comment
-comment|/* This structure maintains information on a per-objfile basis about the    "entry point" of the objfile, and the scope within which the entry point    exists.  It is possible that gdb will see more than one objfile that is    executable, each with it's own entry point.     For example, for dynamically linked executables in SVR4, the dynamic linker    code is contained within the shared C library, which is actually executable    and is run by the kernel first when an exec is done of a user executable    that is dynamically linked.  The dynamic linker within the shared C library    then maps in the various program segments in the user executable and jumps    to the user executable's recorded entry point, as if the call had been made    directly by the kernel.     The traditional gdb method of using this info is to use the recorded entry    point to set the variables entry_file_lowpc and entry_file_highpc from    the debugging information, where these values are the starting address    (inclusive) and ending address (exclusive) of the instruction space in the    executable which correspond to the "startup file", I.E. crt0.o in most    cases.  This file is assumed to be a startup file and frames with pc's    inside it are treated as nonexistent.  Setting these variables is necessary    so that backtraces do not fly off the bottom of the stack (or top, depending    upon your stack orientation).     Gdb also supports an alternate method to avoid running off the top/bottom    of the stack.     There are two frames that are "special", the frame for the function    containing the process entry point, since it has no predecessor frame,    and the frame for the function containing the user code entry point    (the main() function), since all the predecessor frames are for the    process startup code.  Since we have no guarantee that the linked    in startup modules have any debugging information that gdb can use,    we need to avoid following frame pointers back into frames that might    have been built in the startup code, as we might get hopelessly     confused.  However, we almost always have debugging information    available for main().     These variables are used to save the range of PC values which are valid    within the main() function and within the function containing the process    entry point.  If we always consider the frame for main() as the outermost    frame when debugging user code, and the frame for the process entry    point function as the outermost frame when debugging startup code, then    all we have to do is have FRAME_CHAIN_VALID return false whenever a    frame's current PC is within the range specified by these variables.    In essence, we set "ceilings" in the frame chain beyond which we will    not proceed when following the frame chain back up the stack.     A nice side effect is that we can still debug startup code without    running off the end of the frame chain, assuming that we have usable    debugging information in the startup modules, and if we choose to not    use the block at main, or can't find it for some reason, everything    still works as before.  And if we have no startup code debugging    information but we do have usable information for main(), backtraces    from user code don't go wandering off into the startup code.     To use this method, define your FRAME_CHAIN_VALID macro like:  	#define FRAME_CHAIN_VALID(chain, thisframe)     \ 	  (chain != 0                                   \&& !(inside_main_func ((thisframe)->pc))     \&& !(inside_entry_func ((thisframe)->pc)))     and add initializations of the four scope controlling variables inside    the object file / debugging information processing modules.  */
+comment|/* This structure maintains information on a per-objfile basis about the    "entry point" of the objfile, and the scope within which the entry point    exists.  It is possible that gdb will see more than one objfile that is    executable, each with its own entry point.     For example, for dynamically linked executables in SVR4, the dynamic linker    code is contained within the shared C library, which is actually executable    and is run by the kernel first when an exec is done of a user executable    that is dynamically linked.  The dynamic linker within the shared C library    then maps in the various program segments in the user executable and jumps    to the user executable's recorded entry point, as if the call had been made    directly by the kernel.     The traditional gdb method of using this info is to use the recorded entry    point to set the variables entry_file_lowpc and entry_file_highpc from    the debugging information, where these values are the starting address    (inclusive) and ending address (exclusive) of the instruction space in the    executable which correspond to the "startup file", I.E. crt0.o in most    cases.  This file is assumed to be a startup file and frames with pc's    inside it are treated as nonexistent.  Setting these variables is necessary    so that backtraces do not fly off the bottom of the stack.     Gdb also supports an alternate method to avoid running off the bottom    of the stack.     There are two frames that are "special", the frame for the function    containing the process entry point, since it has no predecessor frame,    and the frame for the function containing the user code entry point    (the main() function), since all the predecessor frames are for the    process startup code.  Since we have no guarantee that the linked    in startup modules have any debugging information that gdb can use,    we need to avoid following frame pointers back into frames that might    have been built in the startup code, as we might get hopelessly     confused.  However, we almost always have debugging information    available for main().     These variables are used to save the range of PC values which are valid    within the main() function and within the function containing the process    entry point.  If we always consider the frame for main() as the outermost    frame when debugging user code, and the frame for the process entry    point function as the outermost frame when debugging startup code, then    all we have to do is have FRAME_CHAIN_VALID return false whenever a    frame's current PC is within the range specified by these variables.    In essence, we set "ceilings" in the frame chain beyond which we will    not proceed when following the frame chain back up the stack.     A nice side effect is that we can still debug startup code without    running off the end of the frame chain, assuming that we have usable    debugging information in the startup modules, and if we choose to not    use the block at main, or can't find it for some reason, everything    still works as before.  And if we have no startup code debugging    information but we do have usable information for main(), backtraces    from user code don't go wandering off into the startup code.     To use this method, define your FRAME_CHAIN_VALID macro like:  	#define FRAME_CHAIN_VALID(chain, thisframe)     \ 	  (chain != 0                                   \&& !(inside_main_func ((thisframe)->pc))     \&& !(inside_entry_func ((thisframe)->pc)))     and add initializations of the four scope controlling variables inside    the object file / debugging information processing modules.  */
 end_comment
 
 begin_struct
@@ -31,6 +31,11 @@ comment|/* The value we should use for this objects entry point.      The illega
 name|CORE_ADDR
 name|entry_point
 decl_stmt|;
+define|#
+directive|define
+name|INVALID_ENTRY_POINT
+value|(~0)
+comment|/* ~0 will not be in any file, we hope.  */
 comment|/* Start (inclusive) and end (exclusive) of function containing the      entry point. */
 name|CORE_ADDR
 name|entry_func_lowpc
@@ -52,6 +57,16 @@ decl_stmt|;
 name|CORE_ADDR
 name|main_func_highpc
 decl_stmt|;
+comment|/* Use these values when any of the above ranges is invalid.  */
+comment|/* We use these values because it guarantees that there is no number that is    both>= LOWPC&&< HIGHPC.  It is also highly unlikely that 3 is a valid    module or function start address (as opposed to 0).  */
+define|#
+directive|define
+name|INVALID_ENTRY_LOWPC
+value|(3)
+define|#
+directive|define
+name|INVALID_ENTRY_HIGHPC
+value|(1)
 block|}
 struct|;
 end_struct
@@ -77,10 +92,10 @@ name|CORE_ADDR
 name|offset
 decl_stmt|;
 name|sec_ptr
-name|sec_ptr
+name|the_bfd_section
 decl_stmt|;
 comment|/* BFD section pointer */
-comment|/* Objfile this section is part of.  Not currently used, but I'm sure      that someone will want the bfd that the sec_ptr goes with or something      like that before long.  */
+comment|/* Objfile this section is part of.  */
 name|struct
 name|objfile
 modifier|*
@@ -91,7 +106,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Master structure for keeping track of each input file from which    gdb reads symbols.  One of these is allocated for each such file we    access, e.g. the exec_file, symbol_file, and any shared library object    files. */
+comment|/* Master structure for keeping track of each file from which    gdb reads symbols.  There are several ways these get allocated: 1.    The main symbol file, symfile_objfile, set by the symbol-file command,    2.  Additional symbol files added by the add-symbol-file command,    3.  Shared library objfiles, added by ADD_SOLIB,  4.  symbol files    for modules that were loaded when GDB attached to a remote system    (see remote-vx.c).  */
 end_comment
 
 begin_struct
@@ -231,6 +246,14 @@ decl_stmt|,
 modifier|*
 name|sections_end
 decl_stmt|;
+comment|/* two auxiliary fields, used to hold the fp of separate symbol files */
+name|FILE
+modifier|*
+name|auxf1
+decl_stmt|,
+modifier|*
+name|auxf2
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -240,7 +263,7 @@ comment|/* Defines for the objfile flag word. */
 end_comment
 
 begin_comment
-comment|/* Gdb can arrange to allocate storage for all objects related to a    particular objfile in a designated section of it's address space,    managed at a low level by mmap() and using a special version of    malloc that handles malloc/free/realloc on top of the mmap() interface.    This allows the "internal gdb state" for a particular objfile to be    dumped to a gdb state file and subsequently reloaded at a later time. */
+comment|/* Gdb can arrange to allocate storage for all objects related to a    particular objfile in a designated section of its address space,    managed at a low level by mmap() and using a special version of    malloc that handles malloc/free/realloc on top of the mmap() interface.    This allows the "internal gdb state" for a particular objfile to be    dumped to a gdb state file and subsequently reloaded at a later time. */
 end_comment
 
 begin_define
@@ -325,6 +348,21 @@ name|bfd
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|build_objfile_section_table
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|objfile
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

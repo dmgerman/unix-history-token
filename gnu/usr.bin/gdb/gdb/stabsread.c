@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support routines for decoding "stabs" debugging information format.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993              Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Support routines for decoding "stabs" debugging information format.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994              Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -58,6 +64,24 @@ end_include
 begin_comment
 comment|/* We always use GNU stabs, not native */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"libaout.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"aout/aout64.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb-stabs.h"
+end_include
 
 begin_include
 include|#
@@ -129,6 +153,7 @@ name|nextfield
 modifier|*
 name|next
 decl_stmt|;
+comment|/* This is the raw visibility from the stab.  It is not checked 	 for being one of the visibilities we recognize, so code which 	 examines this field better be able to deal.  */
 name|int
 name|visibility
 decl_stmt|;
@@ -714,38 +739,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* I think this can go away, all current uses have been removed.    GCC emits a few crazy types which can only be distinguished by the    name (complex, long long on some machines), but I'd say fix GCC.  */
-end_comment
-
-begin_comment
-comment|/* During some calls to read_type (and thus to read_range_type), this    contains the name of the type being defined.  Range types are only    used in C as basic types.  We use the name to distinguish the otherwise    identical basic types "int" and "long" and their unsigned versions.    FIXME, this should disappear with better type management.  */
-end_comment
-
-begin_endif
-unit|static char *long_kludge_name;
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|struct complaint dbx_class_complaint = {   "encountered DBX-style class variable debugging information.\n\ You seem to have compiled your program with \ \"g++ -g0\" instead of \"g++ -g\".\n\ Therefore GDB will not know about your class variables", 0, 0 };
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|struct
 name|complaint
@@ -966,11 +959,150 @@ parameter_list|(
 name|pp
 parameter_list|)
 define|\
-value|do {							\     if (**(pp) == '\\') *(pp) = next_symbol_text ();	\   } while (0)
+value|do {							\     if (**(pp) == '\\' || (**(pp) == '?'&& (*(pp))[1] == '\0')) \       *(pp) = next_symbol_text ();	\   } while (0)
 end_define
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/* FIXME: These probably should be our own types (like rs6000_builtin_type    has its own types) rather than builtin_type_*.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|type
+modifier|*
+modifier|*
+name|os9k_type_vector
+index|[]
+init|=
+block|{
+literal|0
+block|,
+operator|&
+name|builtin_type_int
+block|,
+operator|&
+name|builtin_type_char
+block|,
+operator|&
+name|builtin_type_long
+block|,
+operator|&
+name|builtin_type_short
+block|,
+operator|&
+name|builtin_type_unsigned_char
+block|,
+operator|&
+name|builtin_type_unsigned_short
+block|,
+operator|&
+name|builtin_type_unsigned_long
+block|,
+operator|&
+name|builtin_type_unsigned_int
+block|,
+operator|&
+name|builtin_type_float
+block|,
+operator|&
+name|builtin_type_double
+block|,
+operator|&
+name|builtin_type_void
+block|,
+operator|&
+name|builtin_type_long_double
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|os9k_init_type_vector
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|type
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|os9k_init_type_vector
+parameter_list|(
+name|tv
+parameter_list|)
+name|struct
+name|type
+modifier|*
+modifier|*
+name|tv
+decl_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|os9k_type_vector
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|type
+operator|*
+operator|*
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|tv
+index|[
+name|i
+index|]
+operator|=
+operator|(
+name|os9k_type_vector
+index|[
+name|i
+index|]
+operator|==
+literal|0
+condition|?
+literal|0
+else|:
+operator|*
+operator|(
+name|os9k_type_vector
+index|[
+name|i
+index|]
+operator|)
+operator|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* Look up a dbx type-number pair.  Return the address of the slot    where the type for that number-pair is stored.    The number-pair is in TYPENUMS.     This can be used for finding the type associated with that pair    or for associating a new type with the pair.  */
@@ -1216,6 +1348,16 @@ expr|struct
 name|type
 operator|*
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|os9k_stabs
+condition|)
+comment|/* Deal with OS9000 fundamental types.  */
+name|os9k_init_type_vector
+argument_list|(
+name|type_vector
 argument_list|)
 expr_stmt|;
 block|}
@@ -1597,6 +1739,34 @@ argument_list|,
 literal|':'
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|pp
+index|[
+literal|1
+index|]
+operator|==
+literal|':'
+condition|)
+block|{
+name|pp
+operator|+=
+literal|2
+expr_stmt|;
+name|pp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|strchr
+argument_list|(
+name|pp
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
+block|}
 name|sym
 operator|=
 name|find_symbol_in_list
@@ -1616,6 +1786,7 @@ operator|!
 name|sym
 condition|)
 block|{
+comment|/* FIXME-maybe: it would be nice if we noticed whether 		 the variable was defined *anywhere*, not just whether 		 it is defined in this compilation unit.  But neither 		 xlc or GCC seem to need such a definition, and until 		 we do psymtabs (so that the minimal symbols from all 		 compilation units are available now), I'm not sure 		 how to get the information.  */
 comment|/* On xcoff, if a global is defined and never referenced, 		 ld will remove it from the executable.  There is then 		 a N_GSYM stab for it, but no regular (C_EXT) symbol.  */
 name|sym
 operator|=
@@ -1971,6 +2142,33 @@ name|type_synonym_name
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|REG_STRUCT_HAS_ADDR
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|REG_STRUCT_HAS_ADDR
+parameter_list|(
+name|gcc_p
+parameter_list|,
+name|type
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2070,6 +2268,30 @@ condition|)
 return|return
 literal|0
 return|;
+while|while
+condition|(
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|':'
+condition|)
+block|{
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* If a nameless stab entry, all we need is the type, not the symbol.      e.g. ":t10=*2" or a nameless enum like " :T16=ered:0,green:1,blue:2,;" */
 name|nameless
 operator|=
@@ -2133,6 +2355,47 @@ name|symbol
 argument_list|)
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|type
+operator|&
+name|N_TYPE
+condition|)
+block|{
+case|case
+name|N_TEXT
+case|:
+name|SYMBOL_SECTION
+argument_list|(
+name|sym
+argument_list|)
+operator|=
+name|SECT_OFF_TEXT
+expr_stmt|;
+break|break;
+case|case
+name|N_DATA
+case|:
+name|SYMBOL_SECTION
+argument_list|(
+name|sym
+argument_list|)
+operator|=
+name|SECT_OFF_DATA
+expr_stmt|;
+break|break;
+case|case
+name|N_BSS
+case|:
+name|SYMBOL_SECTION
+argument_list|(
+name|sym
+argument_list|)
+operator|=
+name|SECT_OFF_BSS
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|processing_gcc_compilation
@@ -2474,7 +2737,8 @@ name|char
 modifier|*
 name|dbl_valu
 decl_stmt|;
-comment|/* FIXME: lookup_fundamental_type is a hack.  We should be 	       creating a type especially for the type of float constants. 	       Problem is, what type should it be?  We currently have to 	       read this in host floating point format, but what type 	       represents a host format "double"?  	       Also, what should the name of this type be?  Should we 	       be using 'S' constants (see stabs.texinfo) instead?  */
+comment|/* FIXME-if-picky-about-floating-accuracy: Should be using 	       target arithmetic to get the value.  real.c in GCC 	       probably has the necessary code.  */
+comment|/* FIXME: lookup_fundamental_type is a hack.  We should be 	       creating a type especially for the type of float constants. 	       Problem is, what type should it be?  	       Also, what should the name of this type be?  Should we 	       be using 'S' constants (see stabs.texinfo) instead?  */
 name|SYMBOL_TYPE
 argument_list|(
 name|sym
@@ -2500,34 +2764,28 @@ name|objfile
 operator|->
 name|symbol_obstack
 argument_list|,
-sizeof|sizeof
+name|TYPE_LENGTH
 argument_list|(
-name|double
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|store_floating
 argument_list|(
 name|dbl_valu
 argument_list|,
-operator|&
+name|TYPE_LENGTH
+argument_list|(
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+argument_list|,
 name|d
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|double
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Put it in target byte order, but it's still in host 	       floating point format.  */
-name|SWAP_TARGET_AND_HOST
-argument_list|(
-name|dbl_valu
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|double
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|SYMBOL_VALUE_BYTES
@@ -2985,6 +3243,9 @@ expr_stmt|;
 break|break;
 comment|/* This case is faked by a conditional above, 	 when there is no code letter in the dbx data. 	 Dbx data never actually contains 'l'.  */
 case|case
+literal|'s'
+case|:
+case|case
 literal|'l'
 case|:
 name|SYMBOL_TYPE
@@ -3221,7 +3482,7 @@ name|defined
 argument_list|(
 name|BELIEVE_PCC_PROMOTION_TYPE
 argument_list|)
-comment|/* This macro is defined on machines (e.g. sparc) where 	   we should believe the type of a PCC 'short' argument, 	   but shouldn't believe the address (the address is 	   the address of the corresponding int).  Note that 	   this is only different from the BELIEVE_PCC_PROMOTION 	   case on big-endian machines. 	    	   My guess is that this correction, as opposed to changing 	   the parameter to an 'int' (as done below, for PCC 	   on most machines), is the right thing to do 	   on all machines, but I don't want to risk breaking 	   something that already works.  On most PCC machines, 	   the sparc problem doesn't come up because the calling 	   function has to zero the top bytes (not knowing whether 	   the called function wants an int or a short), so there 	   is no practical difference between an int and a short 	   (except perhaps what happens when the GDB user types 	   "print short_arg = 0x10000;").  	    	   Hacked for SunOS 4.1 by gnu@cygnus.com.  In 4.1, the compiler 	   actually produces the correct address (we don't need to fix it 	   up).  I made this code adapt so that it will offset the symbol 	   if it was pointing at an int-aligned location and not 	   otherwise.  This way you can use the same gdb for 4.0.x and 	   4.1 systems. 	    	   If the parameter is shorter than an int, and is integral 	   (e.g. char, short, or unsigned equivalent), and is claimed to 	   be passed on an integer boundary, don't believe it!  Offset the 	   parameter's address to the tail-end of that integer.  */
+comment|/* This macro is defined on machines (e.g. sparc) where 	   we should believe the type of a PCC 'short' argument, 	   but shouldn't believe the address (the address is 	   the address of the corresponding int). 	    	   My guess is that this correction, as opposed to changing 	   the parameter to an 'int' (as done below, for PCC 	   on most machines), is the right thing to do 	   on all machines, but I don't want to risk breaking 	   something that already works.  On most PCC machines, 	   the sparc problem doesn't come up because the calling 	   function has to zero the top bytes (not knowing whether 	   the called function wants an int or a short), so there 	   is little practical difference between an int and a short 	   (except perhaps what happens when the GDB user types 	   "print short_arg = 0x10000;").  	    	   Hacked for SunOS 4.1 by gnu@cygnus.com.  In 4.1, the compiler 	   actually produces the correct address (we don't need to fix it 	   up).  I made this code adapt so that it will offset the symbol 	   if it was pointing at an int-aligned location and not 	   otherwise.  This way you can use the same gdb for 4.0.x and 	   4.1 systems. 	    	   If the parameter is shorter than an int, and is integral 	   (e.g. char, short, or unsigned equivalent), and is claimed to 	   be passed on an integer boundary, don't believe it!  Offset the 	   parameter's address to the tail-end of that integer.  */
 if|if
 condition|(
 name|TYPE_LENGTH
@@ -3519,7 +3780,7 @@ condition|(
 name|within_function
 condition|)
 block|{
-comment|/* Sun cc uses a pair of symbols, one 'p' and one 'r' with the same 	     name to represent an argument passed in a register. 	     GCC uses 'P' for the same case.  So if we find such a symbol pair 	     we combine it into one 'P' symbol. 	     Note that this code illegally combines 	       main(argc) int argc; { register int argc = 1; } 	     but this case is considered pathological and causes a warning 	     from a decent compiler.  */
+comment|/* Sun cc uses a pair of symbols, one 'p' and one 'r' with the same 	     name to represent an argument passed in a register. 	     GCC uses 'P' for the same case.  So if we find such a symbol pair 	     we combine it into one 'P' symbol.  For Sun cc we need to do this 	     regardless of REG_STRUCT_HAS_ADDR, because the compiler puts out 	     the 'p' symbol even if it never saves the argument onto the stack.  	     On most machines, we want to preserve both symbols, so that 	     we can still get information about what is going on with the 	     stack (VAX for computing args_printed, using stack slots instead 	     of saved registers in backtraces, etc.).  	     Note that this code illegally combines 	       main(argc) struct foo argc; { register struct foo argc; } 	     but this case is considered pathological and causes a warning 	     from a decent compiler.  */
 if|if
 condition|(
 name|local_symbols
@@ -3529,6 +3790,43 @@ operator|->
 name|nsyms
 operator|>
 literal|0
+ifndef|#
+directive|ifndef
+name|USE_REGISTER_NOT_ARG
+operator|&&
+name|REG_STRUCT_HAS_ADDR
+argument_list|(
+name|processing_gcc_compilation
+argument_list|,
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|&&
+operator|(
+name|TYPE_CODE
+argument_list|(
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|==
+name|TYPE_CODE_STRUCT
+operator|||
+name|TYPE_CODE
+argument_list|(
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|==
+name|TYPE_CODE_UNION
+operator|)
+endif|#
+directive|endif
 condition|)
 block|{
 name|struct
@@ -3551,12 +3849,21 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|SYMBOL_CLASS
+argument_list|(
+name|prev_sym
+argument_list|)
+operator|==
+name|LOC_REF_ARG
+operator|||
 name|SYMBOL_CLASS
 argument_list|(
 name|prev_sym
 argument_list|)
 operator|==
 name|LOC_ARG
+operator|)
 operator|&&
 name|STREQ
 argument_list|(
@@ -3578,6 +3885,17 @@ name|prev_sym
 argument_list|)
 operator|=
 name|LOC_REGPARM
+expr_stmt|;
+comment|/* Use the type from the LOC_REGISTER; that is the type 		     that is actually in that register.  */
+name|SYMBOL_TYPE
+argument_list|(
+name|prev_sym
+argument_list|)
+operator|=
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
 expr_stmt|;
 name|SYMBOL_VALUE
 argument_list|(
@@ -3665,14 +3983,6 @@ break|break;
 case|case
 literal|'t'
 case|:
-if|#
-directive|if
-literal|0
-comment|/* See comment where long_kludge_name is declared.  */
-comment|/* Here we save the name of the symbol for read_range_type, which 	 ends up reading in the basic types.  In stabs, unfortunately there 	 is no distinction between "int" and "long" types except their 	 names.  Until we work out a saner type policy (eliminating most 	 builtin types and using the names specified in the files), we 	 save away the name so that far away from here in read_range_type, 	 we can examine it to decide between "int" and "long".  FIXME.  */
-block|long_kludge_name = SYMBOL_NAME (sym);
-endif|#
-directive|endif
 name|SYMBOL_TYPE
 argument_list|(
 name|sym
@@ -3836,8 +4146,16 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* gcc-2.6 or later (when using -fvtable-thunks) 	     emits a unique named type for a vtable entry. 	     Some gdb code depends on that specific name. */
+specifier|extern
+specifier|const
+name|char
+name|vtbl_ptr_name
+index|[]
+decl_stmt|;
 if|if
 condition|(
+operator|(
 name|TYPE_CODE
 argument_list|(
 name|SYMBOL_TYPE
@@ -3847,6 +4165,17 @@ argument_list|)
 argument_list|)
 operator|==
 name|TYPE_CODE_PTR
+operator|&&
+name|strcmp
+argument_list|(
+name|SYMBOL_NAME
+argument_list|(
+name|sym
+argument_list|)
+argument_list|,
+name|vtbl_ptr_name
+argument_list|)
+operator|)
 operator|||
 name|TYPE_CODE
 argument_list|(
@@ -3903,6 +4232,45 @@ condition|)
 block|{
 name|p
 operator|++
+expr_stmt|;
+name|type_synonym_name
+operator|=
+name|obsavestring
+argument_list|(
+name|SYMBOL_NAME
+argument_list|(
+name|sym
+argument_list|)
+argument_list|,
+name|strlen
+argument_list|(
+name|SYMBOL_NAME
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+argument_list|,
+operator|&
+name|objfile
+operator|->
+name|symbol_obstack
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* The semantics of C++ state that "struct foo { ... }" also defines  	 a typedef for "foo".  Unfortunately, cfront never makes the typedef 	 when translating C++ into C.  We make the typedef here so that 	 "ptype foo" works as expected for cfront translated code.  */
+elseif|else
+if|if
+condition|(
+name|current_subfile
+operator|->
+name|language
+operator|==
+name|language_cplus
+condition|)
+block|{
+name|synonym
+operator|=
+literal|1
 expr_stmt|;
 name|type_synonym_name
 operator|=
@@ -4158,6 +4526,19 @@ argument_list|)
 operator|=
 name|VAR_NAMESPACE
 expr_stmt|;
+if|if
+condition|(
+name|os9k_stabs
+condition|)
+name|add_symbol_to_list
+argument_list|(
+name|sym
+argument_list|,
+operator|&
+name|global_symbols
+argument_list|)
+expr_stmt|;
+else|else
 name|add_symbol_to_list
 argument_list|(
 name|sym
@@ -4305,22 +4686,6 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* When passing structures to a function, some systems sometimes pass      the address in a register, not the structure itself.        If REG_STRUCT_HAS_ADDR yields non-zero we have to convert LOC_REGPARM      to LOC_REGPARM_ADDR for structures and unions.  */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|REG_STRUCT_HAS_ADDR
-argument_list|)
-define|#
-directive|define
-name|REG_STRUCT_HAS_ADDR
-parameter_list|(
-name|gcc_p
-parameter_list|)
-value|0
-endif|#
-directive|endif
 if|if
 condition|(
 name|SYMBOL_CLASS
@@ -4333,6 +4698,11 @@ operator|&&
 name|REG_STRUCT_HAS_ADDR
 argument_list|(
 name|processing_gcc_compilation
+argument_list|,
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
 argument_list|)
 operator|&&
 operator|(
@@ -4367,6 +4737,59 @@ name|sym
 argument_list|)
 operator|=
 name|LOC_REGPARM_ADDR
+expr_stmt|;
+comment|/* Likewise for converting LOC_ARG to LOC_REF_ARG (for the 7th and      subsequent arguments on the sparc, for example).  */
+if|if
+condition|(
+name|SYMBOL_CLASS
+argument_list|(
+name|sym
+argument_list|)
+operator|==
+name|LOC_ARG
+operator|&&
+name|REG_STRUCT_HAS_ADDR
+argument_list|(
+name|processing_gcc_compilation
+argument_list|,
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|TYPE_CODE
+argument_list|(
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|==
+name|TYPE_CODE_STRUCT
+operator|)
+operator|||
+operator|(
+name|TYPE_CODE
+argument_list|(
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|==
+name|TYPE_CODE_UNION
+operator|)
+operator|)
+condition|)
+name|SYMBOL_CLASS
+argument_list|(
+name|sym
+argument_list|)
+operator|=
+name|LOC_REF_ARG
 expr_stmt|;
 return|return
 name|sym
@@ -4437,6 +4860,17 @@ literal|1
 index|]
 operator|==
 literal|'\\'
+operator|||
+operator|(
+operator|*
+name|pp
+operator|)
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|'?'
 condition|)
 block|{
 operator|*
@@ -4522,6 +4956,12 @@ name|type_size
 init|=
 operator|-
 literal|1
+decl_stmt|;
+comment|/* Used to distinguish string and bitstring from char-array and set. */
+name|int
+name|is_string
+init|=
+literal|0
 decl_stmt|;
 comment|/* Read type number if present.  The type number may be omitted.      for instance in a two-dimensional array declared with type      "ar1;1;10;ar1;1;10;4".  */
 if|if
@@ -4713,6 +5153,14 @@ operator|-
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'S'
+case|:
+name|is_string
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 default|default:
 comment|/* Ignore unrecognized type attributes, so future compilers 		     can invent new ones.  */
 break|break;
@@ -4795,6 +5243,15 @@ name|from
 decl_stmt|,
 modifier|*
 name|to
+decl_stmt|,
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|q1
+decl_stmt|,
+modifier|*
+name|q2
 decl_stmt|;
 comment|/* Set the type code according to the following letter.  */
 switch|switch
@@ -4833,6 +5290,128 @@ name|TYPE_CODE_ENUM
 expr_stmt|;
 break|break;
 default|default:
+block|{
+comment|/* Complain and keep going, so compilers can invent new 		   cross-reference types.  */
+specifier|static
+name|struct
+name|complaint
+name|msg
+init|=
+block|{
+literal|"Unrecognized cross-reference type `%c'"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+name|complain
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+operator|(
+operator|*
+name|pp
+operator|)
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+name|TYPE_CODE_STRUCT
+expr_stmt|;
+break|break;
+block|}
+block|}
+name|q1
+operator|=
+name|strchr
+argument_list|(
+operator|*
+name|pp
+argument_list|,
+literal|'<'
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|strchr
+argument_list|(
+operator|*
+name|pp
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+return|return
+name|error_type
+argument_list|(
+name|pp
+argument_list|)
+return|;
+while|while
+condition|(
+name|q1
+operator|&&
+name|p
+operator|>
+name|q1
+operator|&&
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|':'
+condition|)
+block|{
+name|q2
+operator|=
+name|strchr
+argument_list|(
+name|q1
+argument_list|,
+literal|'>'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|q2
+operator|||
+name|q2
+operator|<
+name|p
+condition|)
+break|break;
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
 return|return
 name|error_type
 argument_list|(
@@ -4855,28 +5434,12 @@ name|objfile
 operator|->
 name|type_obstack
 argument_list|,
-operator|(
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|strchr
-argument_list|(
-operator|*
-name|pp
-argument_list|,
-literal|':'
-argument_list|)
+name|p
 operator|-
-operator|(
 operator|*
 name|pp
-operator|)
-operator|)
 operator|+
 literal|1
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Copy the name.  */
@@ -4889,7 +5452,10 @@ literal|1
 expr_stmt|;
 while|while
 condition|(
-operator|(
+name|from
+operator|<
+name|p
+condition|)
 operator|*
 name|to
 operator|++
@@ -4897,26 +5463,22 @@ operator|=
 operator|*
 name|from
 operator|++
-operator|)
-operator|!=
-literal|':'
-condition|)
-empty_stmt|;
+expr_stmt|;
 operator|*
-operator|--
 name|to
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Set the pointer ahead of the name which we just read.  */
+comment|/* Set the pointer ahead of the name which we just read, and 	     the colon.  */
 operator|*
 name|pp
 operator|=
 name|from
+operator|+
+literal|1
 expr_stmt|;
 block|}
-comment|/* Now check to see whether the type has already been declared.  */
-comment|/* This is necessary at least in the case where the 	   program says something like 	     struct foo bar[5]; 	   The compiler puts out a cross-reference; we better find 	   set the length of the structure correctly so we can 	   set the length of the array.  */
+comment|/* Now check to see whether the type has already been 	   declared.  This was written for arrays of cross-referenced 	   types before we had TYPE_CODE_TARGET_STUBBED, so I'm pretty 	   sure it is not necessary anymore.  But it might be a good 	   idea, to save a little memory.  */
 for|for
 control|(
 name|ppt
@@ -5102,12 +5664,23 @@ case|:
 case|case
 literal|'('
 case|:
+block|{
+name|char
+modifier|*
+name|pp_saved
+decl_stmt|;
 operator|(
 operator|*
 name|pp
 operator|)
 operator|--
 expr_stmt|;
+name|pp_saved
+operator|=
+operator|*
+name|pp
+expr_stmt|;
+comment|/* Peek ahead at the number to detect void.  */
 if|if
 condition|(
 name|read_type_number
@@ -5154,7 +5727,7 @@ name|init_type
 argument_list|(
 name|TYPE_CODE_VOID
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -5169,27 +5742,23 @@ name|struct
 name|type
 modifier|*
 name|xtype
-init|=
-operator|*
-name|dbx_lookup_type
-argument_list|(
-name|xtypenums
-argument_list|)
 decl_stmt|;
-comment|/* This can happen if we had '-' followed by a garbage character, 	     for example.  */
-if|if
-condition|(
+comment|/* Go back to the number and have read_type get it.  This means 	       that we can deal with something like t(1,2)=(3,4)=... which 	       the Lucid compiler uses.  */
+operator|*
+name|pp
+operator|=
+name|pp_saved
+expr_stmt|;
 name|xtype
-operator|==
-name|NULL
-condition|)
-return|return
-name|error_type
+operator|=
+name|read_type
 argument_list|(
 name|pp
+argument_list|,
+name|objfile
 argument_list|)
-return|;
-comment|/* The type is being defined to another type.  So we copy the type. 	     This loses if we copy a C++ class and so we lose track of how 	     the names are mangled (but g++ doesn't output stabs like this 	     now anyway).  */
+expr_stmt|;
+comment|/* The type is being defined to another type.  So we copy the type. 	       This loses if we copy a C++ class and so we lose track of how 	       the names are mangled (but g++ doesn't output stabs like this 	       now anyway).  */
 name|type
 operator|=
 name|alloc_type
@@ -5210,7 +5779,7 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* The idea behind clearing the names is that the only purpose 	     for defining a type to another type is so that the name of 	     one can be different.  So we probably don't need to worry much 	     about the case where the compiler doesn't give a name to the 	     new type.  */
+comment|/* The idea behind clearing the names is that the only purpose 	       for defining a type to another type is so that the name of 	       one can be different.  So we probably don't need to worry much 	       about the case where the compiler doesn't give a name to the 	       new type.  */
 name|TYPE_NAME
 argument_list|(
 name|type
@@ -5245,6 +5814,7 @@ operator|=
 name|type
 expr_stmt|;
 break|break;
+block|}
 comment|/* In the following types, we must be sure to overwrite any existing        type that the typenums refer to, rather than allocating a new one        and making the typenums point to the new one.  This is because there        may already be pointers to the existing type (if it had been        forward-referenced), and we must change it to a pointer, function,        reference, or whatever, *in-place*.  */
 case|case
 literal|'*'
@@ -5301,6 +5871,59 @@ case|case
 literal|'f'
 case|:
 comment|/* Function returning another type */
+if|if
+condition|(
+name|os9k_stabs
+operator|&&
+operator|*
+operator|*
+name|pp
+operator|==
+literal|'('
+condition|)
+block|{
+comment|/* Function prototype; parse it. 	     We must conditionalize this on os9k_stabs because otherwise 	     it could be confused with a Sun-style (1,3) typenumber 	     (I think).  */
+name|struct
+name|type
+modifier|*
+name|t
+decl_stmt|;
+operator|++
+operator|*
+name|pp
+expr_stmt|;
+while|while
+condition|(
+operator|*
+operator|*
+name|pp
+operator|!=
+literal|')'
+condition|)
+block|{
+name|t
+operator|=
+name|read_type
+argument_list|(
+name|pp
+argument_list|,
+name|objfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|*
+name|pp
+operator|==
+literal|','
+condition|)
+operator|++
+operator|*
+name|pp
+expr_stmt|;
+block|}
+block|}
 name|type1
 operator|=
 name|read_type
@@ -5327,6 +5950,26 @@ case|case
 literal|'k'
 case|:
 comment|/* Const qualifier on some type (Sun) */
+case|case
+literal|'c'
+case|:
+comment|/* Const qualifier on some type (OS9000) */
+comment|/* Because 'c' means other things to AIX and 'k' is perfectly good, 	 only accept 'c' in the os9k_stabs case.  */
+if|if
+condition|(
+name|type_descriptor
+operator|==
+literal|'c'
+operator|&&
+operator|!
+name|os9k_stabs
+condition|)
+return|return
+name|error_type
+argument_list|(
+name|pp
+argument_list|)
+return|;
 name|type
 operator|=
 name|read_type
@@ -5342,6 +5985,26 @@ case|case
 literal|'B'
 case|:
 comment|/* Volatile qual on some type (Sun) */
+case|case
+literal|'i'
+case|:
+comment|/* Volatile qual on some type (OS9000) */
+comment|/* Because 'i' means other things to AIX and 'B' is perfectly good, 	 only accept 'i' in the os9k_stabs case.  */
+if|if
+condition|(
+name|type_descriptor
+operator|==
+literal|'i'
+operator|&&
+operator|!
+name|os9k_stabs
+condition|)
+return|return
+name|error_type
+argument_list|(
+name|pp
+argument_list|)
+return|;
 name|type
 operator|=
 name|read_type
@@ -5633,6 +6296,22 @@ break|break;
 case|case
 literal|'b'
 case|:
+if|if
+condition|(
+name|os9k_stabs
+condition|)
+comment|/* Const and volatile qualified type.  */
+name|type
+operator|=
+name|read_type
+argument_list|(
+name|pp
+argument_list|,
+name|objfile
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 comment|/* Sun ACC builtin int type */
 name|type
 operator|=
@@ -5663,6 +6342,7 @@ argument_list|)
 operator|=
 name|type
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'R'
@@ -5860,6 +6540,73 @@ name|type
 argument_list|,
 name|objfile
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is_string
+condition|)
+name|TYPE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|=
+name|TYPE_CODE_STRING
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|type1
+operator|=
+name|read_type
+argument_list|(
+name|pp
+argument_list|,
+name|objfile
+argument_list|)
+expr_stmt|;
+name|type
+operator|=
+name|create_set_type
+argument_list|(
+operator|(
+expr|struct
+name|type
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|type1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is_string
+condition|)
+name|TYPE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|=
+name|TYPE_CODE_BITSTRING
+expr_stmt|;
+if|if
+condition|(
+name|typenums
+index|[
+literal|0
+index|]
+operator|!=
+operator|-
+literal|1
+condition|)
+operator|*
+name|dbx_lookup_type
+argument_list|(
+name|typenums
+argument_list|)
+operator|=
+name|type
 expr_stmt|;
 break|break;
 default|default:
@@ -6219,7 +6966,7 @@ name|init_type
 argument_list|(
 name|TYPE_CODE_VOID
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -6648,6 +7395,17 @@ end_define
 
 begin_comment
 comment|/* Stabs character for public field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VISIBILITY_IGNORE
+value|'9'
+end_define
+
+begin_comment
+comment|/* Optimized out or zero length */
 end_comment
 
 begin_comment
@@ -8255,40 +9013,6 @@ name|pp
 operator|)
 operator|++
 expr_stmt|;
-switch|switch
-condition|(
-name|fip
-operator|->
-name|list
-operator|->
-name|visibility
-condition|)
-block|{
-case|case
-name|VISIBILITY_PRIVATE
-case|:
-case|case
-name|VISIBILITY_PROTECTED
-case|:
-break|break;
-case|case
-name|VISIBILITY_PUBLIC
-case|:
-comment|/* Nothing to do */
-break|break;
-default|default:
-comment|/* Unknown visibility specifier. */
-name|complain
-argument_list|(
-operator|&
-name|stabs_general_complaint
-argument_list|,
-literal|"unknown visibility specifier"
-argument_list|)
-expr_stmt|;
-return|return;
-break|break;
-block|}
 block|}
 else|else
 block|{
@@ -8506,18 +9230,41 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-if|#
-directive|if
+if|if
+condition|(
+name|fip
+operator|->
+name|list
+operator|->
+name|field
+operator|.
+name|bitpos
+operator|==
 literal|0
-comment|/* FIXME-tiemann: Can't the compiler put out something which      lets us distinguish these? (or maybe just not put out anything      for the field).  What is the story here?  What does the compiler      really do?  Also, patch gdb.texinfo for this case; I document      it as a possible problem there.  Search for "DBX-style".  */
-comment|/* This is wrong because this is identical to the symbols      produced for GCC 0-size arrays.  For example:      typedef union {      int num;      char str[0];      } foo;      The code which dumped core in such circumstances should be      fixed not to dump core.  */
-comment|/* g++ -g0 can put out bitpos& bitsize zero for a static      field.  This does not give us any way of getting its      class, so we can't know its name.  But we can just      ignore the field so we don't dump core and other nasty      stuff.  */
-block|if (fip -> list -> field.bitpos == 0&& fip -> list -> field.bitsize == 0)     {       complain (&dbx_class_complaint);
+operator|&&
+name|fip
+operator|->
+name|list
+operator|->
+name|field
+operator|.
+name|bitsize
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* This can happen in two cases: (1) at least for gcc 2.4.5 or so, 	 it is a field which has been optimized out.  The correct stab for 	 this case is to use VISIBILITY_IGNORE, but that is a recent 	 invention.  (2) It is a 0-size array.  For example 	 union { int num; char str[0]; } foo.  Printing "<no value>" for 	 str in "p foo" is OK, since foo.str (and thus foo.str[3]) 	 will continue to work, and a 0-size array as a whole doesn't 	 have any contents to print.  	 I suspect this probably could also happen with gcc -gstabs (not 	 -gstabs+) for static fields, and perhaps other C++ extensions. 	 Hopefully few people use -gstabs with gdb, since it is intended 	 for dbx compatibility.  */
 comment|/* Ignore this field.  */
-block|fip -> list = fip -> list -> next;     }   else
-endif|#
-directive|endif
-comment|/* 0 */
+name|fip
+operator|->
+name|list
+operator|->
+name|visibility
+operator|=
+name|VISIBILITY_IGNORE
+expr_stmt|;
+block|}
+else|else
 block|{
 comment|/* Detect an unpacked field and mark it as such. 	 dbx gives a bit size for all fields. 	 Note that forward refs cannot be packed, 	 and treat enums as if they had the width of ints.  */
 if|if
@@ -8641,7 +9388,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read struct or class data fields.  They have the form:     	NAME : [VISIBILITY] TYPENUM , BITPOS , BITSIZE ;     At the end, we see a semicolon instead of a field.     In C++, this may wind up being NAME:?TYPENUM:PHYSNAME; for    a static field.     The optional VISIBILITY is one of:     	'/0'	(VISIBILITY_PRIVATE) 	'/1'	(VISIBILITY_PROTECTED) 	'/2'	(VISIBILITY_PUBLIC)     or nothing, for C style fields with public visibility.     Returns 1 for success, 0 for failure.  */
+comment|/* Read struct or class data fields.  They have the form:     	NAME : [VISIBILITY] TYPENUM , BITPOS , BITSIZE ;     At the end, we see a semicolon instead of a field.     In C++, this may wind up being NAME:?TYPENUM:PHYSNAME; for    a static field.     The optional VISIBILITY is one of:     	'/0'	(VISIBILITY_PRIVATE) 	'/1'	(VISIBILITY_PROTECTED) 	'/2'	(VISIBILITY_PUBLIC) 	'/9'	(VISIBILITY_IGNORE)     or nothing, for C style fields with public visibility.     Returns 1 for success, 0 for failure.  */
 end_comment
 
 begin_function
@@ -8704,6 +9451,17 @@ operator|!=
 literal|';'
 condition|)
 block|{
+if|if
+condition|(
+name|os9k_stabs
+operator|&&
+operator|*
+operator|*
+name|pp
+operator|==
+literal|','
+condition|)
+break|break;
 name|STABS_CONTINUE
 argument_list|(
 name|pp
@@ -8766,13 +9524,20 @@ operator|=
 operator|*
 name|pp
 expr_stmt|;
-comment|/* If is starts with CPLUS_MARKER it is a special abbreviation, unless 	 the CPLUS_MARKER is followed by an underscore, in which case it is 	 just the name of an anonymous type, which we should handle like any 	 other type name.  */
+comment|/* If is starts with CPLUS_MARKER it is a special abbreviation, 	 unless the CPLUS_MARKER is followed by an underscore, in 	 which case it is just the name of an anonymous type, which we 	 should handle like any other type name.  We accept either '$' 	 or '.', because a field name can never contain one of these 	 characters except as a CPLUS_MARKER (we probably should be 	 doing that in most parts of GDB).  */
 if|if
 condition|(
+operator|(
 operator|*
 name|p
 operator|==
-name|CPLUS_MARKER
+literal|'$'
+operator|||
+operator|*
+name|p
+operator|==
+literal|'.'
+operator|)
 operator|&&
 name|p
 index|[
@@ -8858,6 +9623,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|p
+index|[
+literal|0
+index|]
+operator|==
+literal|':'
+operator|&&
 name|p
 index|[
 literal|1
@@ -9135,11 +9907,8 @@ expr_stmt|;
 switch|switch
 condition|(
 operator|*
-operator|(
 operator|*
 name|pp
-operator|)
-operator|++
 condition|)
 block|{
 case|case
@@ -9159,11 +9928,39 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Bad visibility format.  */
-return|return
+comment|/* Unknown character.  Complain and treat it as non-virtual.  */
+block|{
+specifier|static
+name|struct
+name|complaint
+name|msg
+init|=
+block|{
+literal|"Unknown virtual character `%c' for baseclass"
+block|,
 literal|0
-return|;
+block|,
+literal|0
 block|}
+decl_stmt|;
+name|complain
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+operator|*
+operator|*
+name|pp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+operator|++
+operator|(
+operator|*
+name|pp
+operator|)
+expr_stmt|;
 name|new
 operator|->
 name|visibility
@@ -9193,10 +9990,38 @@ name|VISIBILITY_PUBLIC
 case|:
 break|break;
 default|default:
-comment|/* Bad visibility format.  */
-return|return
+comment|/* Bad visibility format.  Complain and treat it as 	       public.  */
+block|{
+specifier|static
+name|struct
+name|complaint
+name|msg
+init|=
+block|{
+literal|"Unknown visibility `%c' for baseclass"
+block|,
 literal|0
-return|;
+block|,
+literal|0
+block|}
+decl_stmt|;
+name|complain
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+name|new
+operator|->
+name|visibility
+argument_list|)
+expr_stmt|;
+name|new
+operator|->
+name|visibility
+operator|=
+name|VISIBILITY_PUBLIC
+expr_stmt|;
+block|}
 block|}
 block|{
 name|int
@@ -9913,6 +10738,35 @@ argument_list|,
 name|nfields
 argument_list|)
 expr_stmt|;
+name|TYPE_FIELD_IGNORE_BITS
+argument_list|(
+name|type
+argument_list|)
+operator|=
+operator|(
+name|B_TYPE
+operator|*
+operator|)
+name|TYPE_ALLOC
+argument_list|(
+name|type
+argument_list|,
+name|B_BYTES
+argument_list|(
+name|nfields
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|B_CLRALL
+argument_list|(
+name|TYPE_FIELD_IGNORE_BITS
+argument_list|(
+name|type
+argument_list|)
+argument_list|,
+name|nfields
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Copy the saved-up fields into the field vector.  Start from the head      of the list, adding to the tail of the field array, so that they end      up in the same order in the array in which they were added to the list. */
 while|while
@@ -9968,11 +10822,49 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|VISIBILITY_IGNORE
+case|:
+name|SET_TYPE_FIELD_IGNORE
+argument_list|(
+name|type
+argument_list|,
+name|nfields
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|VISIBILITY_PUBLIC
 case|:
 break|break;
 default|default:
-comment|/* Should warn about this unknown visibility? */
+comment|/* Unknown visibility.  Complain and treat it as public.  */
+block|{
+specifier|static
+name|struct
+name|complaint
+name|msg
+init|=
+block|{
+literal|"Unknown visibility `%c' for field"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+name|complain
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+name|fip
+operator|->
+name|list
+operator|->
+name|visibility
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 block|}
 name|fip
@@ -10263,7 +11155,17 @@ decl_stmt|;
 name|int
 name|nbits
 decl_stmt|;
-comment|/* Format of an array type:      "ar<index type>;lower;upper;<array_contents_type>".  Put code in      to handle this.       Fortran adjustable arrays use Adigits or Tdigits for lower or upper;      for these, produce a type like float[][].  */
+comment|/* Format of an array type:      "ar<index type>;lower;upper;<array_contents_type>".      OS9000: "arlower,upper;<array_contents_type>".       Fortran adjustable arrays use Adigits or Tdigits for lower or upper;      for these, produce a type like float[][].  */
+if|if
+condition|(
+name|os9k_stabs
+condition|)
+name|index_type
+operator|=
+name|builtin_type_int
+expr_stmt|;
+else|else
+block|{
 name|index_type
 operator|=
 name|read_type
@@ -10292,6 +11194,7 @@ operator|++
 operator|*
 name|pp
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -10308,6 +11211,12 @@ name|pp
 operator|<=
 literal|'9'
 operator|)
+operator|&&
+operator|*
+operator|*
+name|pp
+operator|!=
+literal|'-'
 condition|)
 block|{
 operator|(
@@ -10327,6 +11236,10 @@ name|read_huge_number
 argument_list|(
 name|pp
 argument_list|,
+name|os9k_stabs
+condition|?
+literal|','
+else|:
 literal|';'
 argument_list|,
 operator|&
@@ -10361,6 +11274,12 @@ name|pp
 operator|<=
 literal|'9'
 operator|)
+operator|&&
+operator|*
+operator|*
+name|pp
+operator|!=
+literal|'-'
 condition|)
 block|{
 operator|(
@@ -10452,6 +11371,7 @@ name|range_type
 argument_list|)
 expr_stmt|;
 comment|/* If we have an array whose element type is not yet known, but whose      bounds *are* known, record it to be adjusted at the end of the file.  */
+comment|/* FIXME: Why check for zero length rather than TYPE_FLAG_STUB?  I think      the two have the same effect except that the latter is cleaner and the      former would be wrong for types which really are zero-length (if we      have any).  */
 if|if
 condition|(
 name|TYPE_LENGTH
@@ -10465,6 +11385,13 @@ operator|!
 name|adjustable
 condition|)
 block|{
+name|TYPE_FLAGS
+argument_list|(
+name|type
+argument_list|)
+operator||=
+name|TYPE_FLAG_TARGET_STUB
+expr_stmt|;
 name|add_undefined_type
 argument_list|(
 name|type
@@ -10553,6 +11480,9 @@ decl_stmt|;
 name|int
 name|o_nsyms
 decl_stmt|;
+name|int
+name|nbits
+decl_stmt|;
 if|#
 directive|if
 literal|0
@@ -10580,6 +11510,35 @@ name|nsyms
 else|:
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|os9k_stabs
+condition|)
+block|{
+comment|/* Size.  Perhaps this does not have to be conditionalized on 	 os9k_stabs (assuming the name of an enum constant can't start 	 with a digit).  */
+name|read_huge_number
+argument_list|(
+name|pp
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|nbits
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nbits
+operator|!=
+literal|0
+condition|)
+return|return
+name|error_type
+argument_list|(
+name|pp
+argument_list|)
+return|;
+block|}
 comment|/* Read the value-names and their values.      The input syntax is NAME:VALUE,NAME:VALUE, and so on.      A semicolon or comma instead of a NAME means the end.  */
 while|while
 condition|(
@@ -10600,9 +11559,6 @@ operator|!=
 literal|','
 condition|)
 block|{
-name|int
-name|nbits
-decl_stmt|;
 name|STABS_CONTINUE
 argument_list|(
 name|pp
@@ -10775,10 +11731,9 @@ argument_list|(
 name|type
 argument_list|)
 operator|=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|TARGET_INT_BIT
+operator|/
+name|HOST_CHAR_BIT
 expr_stmt|;
 name|TYPE_CODE
 argument_list|(
@@ -10966,14 +11921,6 @@ name|osyms
 condition|)
 break|break;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* This screws up perfectly good C programs with enums.  FIXME.  */
-comment|/* Is this Modula-2's BOOLEAN type?  Flag it as such if so. */
-block|if(TYPE_NFIELDS(type) == 2&&      ((STREQ(TYPE_FIELD_NAME(type,0),"TRUE")&&        STREQ(TYPE_FIELD_NAME(type,1),"FALSE")) ||       (STREQ(TYPE_FIELD_NAME(type,1),"TRUE")&&        STREQ(TYPE_FIELD_NAME(type,0),"FALSE"))))      TYPE_CODE(type) = TYPE_CODE_BOOL;
-endif|#
-directive|endif
 return|return
 name|type
 return|;
@@ -11146,32 +12093,53 @@ argument_list|(
 name|pp
 argument_list|)
 return|;
-if|#
-directive|if
-literal|0
-comment|/* FIXME.  Here we should just be able to make a type of the right      number of bits and signedness.  FIXME.  */
-block|if (type_bits == TARGET_LONG_LONG_BIT)     return (lookup_fundamental_type (objfile, 		 signed_type? FT_LONG_LONG: FT_UNSIGNED_LONG_LONG));      if (type_bits == TARGET_INT_BIT)     {
-comment|/* FIXME -- the only way to distinguish `int' from `long' 	 is to look at its name!  */
-block|if (signed_type) 	{ 	  if (long_kludge_name&& long_kludge_name[0] == 'l'
-comment|/* long */
-block|) 	    return lookup_fundamental_type (objfile, FT_LONG); 	  else 	    return lookup_fundamental_type (objfile, FT_INTEGER); 	}       else 	{ 	  if (long_kludge_name&& ((long_kludge_name[0] == 'u'
-comment|/* unsigned */
-block|&& 		   long_kludge_name[9] == 'l'
-comment|/* long */
-block|) 		  || (long_kludge_name[0] == 'l'
-comment|/* long unsigned */
-block|))) 	    return lookup_fundamental_type (objfile, FT_UNSIGNED_LONG); 	  else 	    return lookup_fundamental_type (objfile, FT_UNSIGNED_INTEGER); 	}     }        if (type_bits == TARGET_SHORT_BIT)     return (lookup_fundamental_type (objfile, 		 signed_type? FT_SHORT: FT_UNSIGNED_SHORT));      if (type_bits == TARGET_CHAR_BIT)     return (lookup_fundamental_type (objfile, 		 signed_type? FT_CHAR: FT_UNSIGNED_CHAR));      if (type_bits == 0)     return lookup_fundamental_type (objfile, FT_VOID);      return error_type (pp);
-else|#
-directive|else
-return|return
-name|init_type
-argument_list|(
+comment|/* The type *should* end with a semicolon.  If it are embedded      in a larger type the semicolon may be the only way to know where      the type ends.  If this type is at the end of the stabstring we      can deal with the omitted semicolon (but we don't have to like      it).  Don't bother to complain(), Sun's compiler omits the semicolon      for "void".  */
+if|if
+condition|(
+operator|*
+operator|*
+name|pp
+operator|==
+literal|';'
+condition|)
+operator|++
+operator|(
+operator|*
+name|pp
+operator|)
+expr_stmt|;
+if|if
+condition|(
 name|type_bits
 operator|==
 literal|0
-condition|?
+condition|)
+return|return
+name|init_type
+argument_list|(
 name|TYPE_CODE_VOID
+argument_list|,
+literal|1
+argument_list|,
+name|signed_type
+condition|?
+literal|0
 else|:
+name|TYPE_FLAG_UNSIGNED
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|objfile
+argument_list|)
+return|;
+else|else
+return|return
+name|init_type
+argument_list|(
 name|TYPE_CODE_INT
 argument_list|,
 name|type_bits
@@ -11193,8 +12161,6 @@ argument_list|,
 name|objfile
 argument_list|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -11433,6 +12399,17 @@ name|p
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|os9k_stabs
+condition|)
+name|upper_limit
+operator|=
+name|ULONG_MAX
+operator|/
+name|radix
+expr_stmt|;
+else|else
 name|upper_limit
 operator|=
 name|LONG_MAX
@@ -11984,7 +12961,7 @@ name|init_type
 argument_list|(
 name|TYPE_CODE_VOID
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -12929,21 +13906,17 @@ operator|&
 name|new
 argument_list|)
 expr_stmt|;
-name|SYMBOL_NAMESPACE
+name|SYMBOL_TYPE
 argument_list|(
 name|sym
 argument_list|)
 operator|=
 operator|(
-expr|enum
-name|namespace
-operator|)
-operator|(
-operator|(
-name|long
+expr|struct
+name|type
+operator|*
 operator|)
 name|new
-operator|)
 expr_stmt|;
 comment|/* Should we be putting local_symbols back to what it was?      Does it matter?  */
 name|i
@@ -13012,7 +13985,7 @@ expr|struct
 name|pending
 operator|*
 operator|)
-name|SYMBOL_NAMESPACE
+name|SYMBOL_TYPE
 argument_list|(
 name|sym
 argument_list|)
@@ -13188,7 +14161,7 @@ case|case
 name|TYPE_CODE_ENUM
 case|:
 block|{
-comment|/* Check if it has been defined since.  */
+comment|/* Check if it has been defined since.  Need to do this here 	       as well as in check_stub_type to deal with the (legitimate in 	       C though not C++) case of several types with the same name 	       in different source files.  */
 if|if
 condition|(
 name|TYPE_FLAGS
@@ -13360,6 +14333,7 @@ case|case
 name|TYPE_CODE_ARRAY
 case|:
 block|{
+comment|/* This is a kludge which is here for historical reasons 	       because I suspect that check_stub_type does not get 	       called everywhere it needs to be called for arrays.  Even 	       with this kludge, those places are broken for the case 	       where the stub type is defined in another compilation 	       unit, but this kludge at least deals with it for the case 	       in which it is the same compilation unit.  	       Don't try to do this by calling check_stub_type; it might 	       cause symbols to be read in lookup_symbol, and the symbol 	       reader is not reentrant.  */
 name|struct
 name|type
 modifier|*
@@ -13461,6 +14435,7 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* If the target type is not a stub, we could be clearing 	       TYPE_FLAG_TARGET_STUB for *type.  */
 block|}
 break|break;
 default|default:
@@ -13696,6 +14671,16 @@ name|msymbol
 argument_list|)
 expr_stmt|;
 block|}
+name|SYMBOL_SECTION
+argument_list|(
+name|sym
+argument_list|)
+operator|=
+name|SYMBOL_SECTION
+argument_list|(
+name|msymbol
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|prev
@@ -13812,6 +14797,10 @@ comment|/* FIXME: If common_block_name is not already NULL, we should complain()
 name|common_block_name
 operator|=
 name|NULL
+expr_stmt|;
+name|os9k_stabs
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

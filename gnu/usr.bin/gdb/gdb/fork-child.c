@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Fork a Unix child process, and set up to debug it, for GDB.    Copyright 1990, 1991, 1992 Free Software Foundation, Inc.    Contributed by Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Fork a Unix child process, and set up to debug it, for GDB.    Copyright 1990, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.    Contributed by Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -52,42 +58,14 @@ end_include
 begin_include
 include|#
 directive|include
+file|"thread.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SET_STACK_LIMIT_HUGE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|original_stack_limit
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SET_STACK_LIMIT_HUGE */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -97,10 +75,6 @@ modifier|*
 name|environ
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Start an inferior Unix child process and sets inferior_pid to its pid.    EXEC_FILE is the file to run.    ALLARGS is a string containing the arguments to the program.    ENV is the environment vector to pass.  Errors reported with error().  */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -120,6 +94,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Start an inferior Unix child process and sets inferior_pid to its pid.    EXEC_FILE is the file to run.    ALLARGS is a string containing the arguments to the program.    ENV is the environment vector to pass.  SHELL_FILE is the shell file,    or NULL if we should pick one.  Errors reported with error().  */
+end_comment
+
 begin_function_decl
 name|void
 name|fork_inferior
@@ -133,6 +111,8 @@ parameter_list|,
 name|traceme_fun
 parameter_list|,
 name|init_trace_fun
+parameter_list|,
+name|shell_file
 parameter_list|)
 name|char
 modifier|*
@@ -180,6 +160,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|shell_file
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|int
@@ -188,10 +175,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|shell_command
-decl_stmt|;
-name|char
-modifier|*
-name|shell_file
 decl_stmt|;
 specifier|static
 name|char
@@ -202,12 +185,6 @@ name|SHELL_FILE
 decl_stmt|;
 name|int
 name|len
-decl_stmt|;
-name|int
-name|pending_execs
-decl_stmt|;
-name|int
-name|terminal_initted
 decl_stmt|;
 comment|/* Set debug_fork then attach to the child while it sleeps, to debug. */
 specifier|static
@@ -242,7 +219,13 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* The user might want tilde-expansion, and in general probably wants      the program to behave the same way as if run from      his/her favorite shell.  So we let the shell run it for us.      FIXME, this should probably search the local environment (as      modified by the setenv command), not the env gdb inherited.  */
+comment|/* The user might want tilde-expansion, and in general probably wants      the program to behave the same way as if run from      his/her favorite shell.  So we let the shell run it for us.      FIXME-maybe, we might want a "set shell" command so the user can change      the shell from within GDB (if so, change callers which pass in a non-NULL      shell_file too).  */
+if|if
+condition|(
+name|shell_file
+operator|==
+name|NULL
+condition|)
 name|shell_file
 operator|=
 name|getenv
@@ -526,14 +509,14 @@ name|inferior_io_terminal
 argument_list|)
 expr_stmt|;
 comment|/* It is generally good practice to flush any possible pending stdio      output prior to doing a fork, to avoid the possibility of both the      parent and child flushing the same data after the fork. */
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|)
 expr_stmt|;
 if|#
@@ -617,41 +600,6 @@ argument_list|(
 literal|"setpgrp failed in child"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SET_STACK_LIMIT_HUGE
-comment|/* Reset the stack limit back to what it was.  */
-block|{
-name|struct
-name|rlimit
-name|rlim
-decl_stmt|;
-name|getrlimit
-argument_list|(
-name|RLIMIT_STACK
-argument_list|,
-operator|&
-name|rlim
-argument_list|)
-expr_stmt|;
-name|rlim
-operator|.
-name|rlim_cur
-operator|=
-name|original_stack_limit
-expr_stmt|;
-name|setrlimit
-argument_list|(
-name|RLIMIT_STACK
-argument_list|,
-operator|&
-name|rlim
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SET_STACK_LIMIT_HUGE */
 comment|/* Ask the tty subsystem to switch to the one we specified earlier 	 (or to share the current terminal, if none was specified).  */
 name|new_tty
 argument_list|()
@@ -686,9 +634,9 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"Cannot exec %s: %s.\n"
 argument_list|,
@@ -700,9 +648,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -719,6 +667,11 @@ expr_stmt|;
 name|init_thread_list
 argument_list|()
 expr_stmt|;
+name|inferior_pid
+operator|=
+name|pid
+expr_stmt|;
+comment|/* Needed for wait_for_inferior stuff below */
 comment|/* Now that we have a child process, make it our target, and      initialize anything target-vector-specific that needs initializing.  */
 call|(
 modifier|*
@@ -728,31 +681,46 @@ argument_list|(
 name|pid
 argument_list|)
 expr_stmt|;
-comment|/* The process was started by the fork that created it,      but it will have stopped one instruction after execing the shell.      Here we must get it up to actual execution of the real program.  */
-name|inferior_pid
-operator|=
-name|pid
-expr_stmt|;
-comment|/* Needed for wait_for_inferior stuff below */
-name|clear_proceed_status
-argument_list|()
-expr_stmt|;
-comment|/* We will get a trace trap after one instruction.      Continue it automatically.  Eventually (after shell does an exec)      it will get another trace trap.  Then insert breakpoints and continue.  */
+comment|/* We are now in the child process of interest, having exec'd the      correct program, and are poised at the first instruction of the      new program.  */
 ifdef|#
 directive|ifdef
-name|START_INFERIOR_TRAPS_EXPECTED
-name|pending_execs
-operator|=
-name|START_INFERIOR_TRAPS_EXPECTED
-expr_stmt|;
-else|#
-directive|else
-name|pending_execs
-operator|=
-literal|2
+name|SOLIB_CREATE_INFERIOR_HOOK
+name|SOLIB_CREATE_INFERIOR_HOOK
+argument_list|(
+name|pid
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+end_block
+
+begin_comment
+comment|/* Accept NTRAPS traps from the inferior.  */
+end_comment
+
+begin_function
+name|void
+name|startup_inferior
+parameter_list|(
+name|ntraps
+parameter_list|)
+name|int
+name|ntraps
+decl_stmt|;
+block|{
+name|int
+name|pending_execs
+init|=
+name|ntraps
+decl_stmt|;
+name|int
+name|terminal_initted
+decl_stmt|;
+comment|/* The process was started by the fork that created it,      but it will have stopped one instruction after execing the shell.      Here we must get it up to actual execution of the real program.  */
+name|clear_proceed_status
+argument_list|()
+expr_stmt|;
 name|init_wait_for_inferior
 argument_list|()
 expr_stmt|;
@@ -760,6 +728,16 @@ name|terminal_initted
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|STARTUP_INFERIOR
+name|STARTUP_INFERIOR
+argument_list|(
+name|pending_execs
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 while|while
 condition|(
 literal|1
@@ -777,7 +755,7 @@ if|if
 condition|(
 name|stop_signal
 operator|!=
-name|SIGTRAP
+name|TARGET_SIGNAL_TRAP
 condition|)
 block|{
 comment|/* Let shell child handle its own signals in its own way */
@@ -825,29 +803,21 @@ name|resume
 argument_list|(
 literal|0
 argument_list|,
-literal|0
+name|TARGET_SIGNAL_0
 argument_list|)
 expr_stmt|;
 comment|/* Just make it go on */
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* STARTUP_INFERIOR */
 name|stop_soon_quietly
 operator|=
 literal|0
 expr_stmt|;
-comment|/* We are now in the child process of interest, having exec'd the      correct program, and are poised at the first instruction of the      new program.  */
-ifdef|#
-directive|ifdef
-name|SOLIB_CREATE_INFERIOR_HOOK
-name|SOLIB_CREATE_INFERIOR_HOOK
-argument_list|(
-name|pid
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -185,7 +185,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* If this is prototyped, need to deal with void* vs. char*.  */
+comment|/* This takes a char *, not void *.  This is probably right, because    passing in an int * or whatever is wrong with respect to    byteswapping, alignment, different sizes for host vs. target types,    etc.  */
 end_comment
 
 begin_decl_stmt
@@ -208,6 +208,51 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|generic_search
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|len
+operator|,
+name|char
+operator|*
+name|data
+operator|,
+name|char
+operator|*
+name|mask
+operator|,
+name|CORE_ADDR
+name|startaddr
+operator|,
+name|int
+name|increment
+operator|,
+name|CORE_ADDR
+name|lorange
+operator|,
+name|CORE_ADDR
+name|hirange
+operator|,
+name|CORE_ADDR
+operator|*
+name|addr_found
+operator|,
+name|char
+operator|*
+name|data_found
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* Hook for `exec_file_command' command to call.  */
@@ -449,6 +494,25 @@ name|target_ops
 name|core_ops
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL_DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|target_ops
+name|kcore_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* target vector functions called directly from elsewhere */

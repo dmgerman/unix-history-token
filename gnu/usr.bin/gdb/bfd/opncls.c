@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opncls.c -- open and close a BFD.    Copyright (C) 1990-1991 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* opncls.c -- open and close a BFD.    Copyright (C) 1990 91, 92, 93, 94 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -27,34 +27,6 @@ directive|include
 file|"obstack.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|bfd_cache_init
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|bfd_open_file
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* fdopen is a loser -- we should use stdio exclusively.  Unfortunately    if we do that we can't use fcntl.  */
 end_comment
@@ -63,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|obstack_chunk_alloc
-value|bfd_xmalloc_by_size_t
+value|malloc
 end_define
 
 begin_define
@@ -77,16 +49,11 @@ begin_comment
 comment|/* Return a new BFD.  All BFD's are allocated through this routine.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|bfd
 modifier|*
-name|new_bfd
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+name|_bfd_new_bfd
+parameter_list|()
 block|{
 name|bfd
 modifier|*
@@ -98,7 +65,7 @@ operator|(
 name|bfd
 operator|*
 operator|)
-name|zalloc
+name|bfd_zmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -111,17 +78,24 @@ condition|(
 operator|!
 name|nbfd
 condition|)
+block|{
+name|bfd_set_error
+argument_list|(
+name|bfd_error_no_memory
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|bfd_check_init
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|obstack_begin
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|nbfd
 operator|->
@@ -129,7 +103,17 @@ name|memory
 argument_list|,
 literal|128
 argument_list|)
+condition|)
+block|{
+name|bfd_set_error
+argument_list|(
+name|bfd_error_no_memory
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|nbfd
 operator|->
 name|arch_info
@@ -236,7 +220,7 @@ return|return
 name|nbfd
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* Allocate a new BFD as a member of archive OBFD.  */
@@ -245,7 +229,7 @@ end_comment
 begin_function
 name|bfd
 modifier|*
-name|new_bfd_contained_in
+name|_bfd_new_bfd_contained_in
 parameter_list|(
 name|obfd
 parameter_list|)
@@ -260,7 +244,7 @@ name|nbfd
 decl_stmt|;
 name|nbfd
 operator|=
-name|new_bfd
+name|_bfd_new_bfd
 argument_list|()
 expr_stmt|;
 name|nbfd
@@ -298,48 +282,45 @@ block|}
 end_function
 
 begin_comment
-comment|/* SECTION 	Opening and Closing BFDs  */
+comment|/* SECTION 	Opening and closing BFDs  */
 end_comment
 
 begin_comment
-comment|/* FUNCTION 	bfd_openr  SYNOPSIS         bfd *bfd_openr(CONST char *filename, CONST char*target);  DESCRIPTION 	This function opens the file supplied (using<<fopen>>) with the target 	supplied, it returns a pointer to the created BFD.  	If NULL is returned then an error has occured. Possible errors 	are<<no_memory>>,<<invalid_target>> or<<system_call>> error. */
+comment|/* FUNCTION 	bfd_openr  SYNOPSIS         bfd *bfd_openr(CONST char *filename, CONST char *target);  DESCRIPTION 	Open the file @var{filename} (using<<fopen>>) with the target 	@var{target}.  Return a pointer to the created BFD.  	Calls<<bfd_find_target>>, so @var{target} is interpreted as by 	that function.  	If<<NULL>> is returned then an error has occured.   Possible errors 	are<<bfd_error_no_memory>>,<<bfd_error_invalid_target>> or<<system_call>> error. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|bfd
 modifier|*
-name|DEFUN
-argument_list|(
 name|bfd_openr
-argument_list|,
-operator|(
+parameter_list|(
 name|filename
-operator|,
+parameter_list|,
 name|target
-operator|)
-argument_list|,
+parameter_list|)
 name|CONST
 name|char
-operator|*
+modifier|*
 name|filename
-name|AND
+decl_stmt|;
 name|CONST
 name|char
-operator|*
+modifier|*
 name|target
-argument_list|)
+decl_stmt|;
 block|{
 name|bfd
 modifier|*
 name|nbfd
 decl_stmt|;
+specifier|const
 name|bfd_target
 modifier|*
 name|target_vec
 decl_stmt|;
 name|nbfd
 operator|=
-name|new_bfd
+name|_bfd_new_bfd
 argument_list|()
 expr_stmt|;
 if|if
@@ -349,9 +330,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_error
-operator|=
-name|no_memory
+name|bfd_set_error
+argument_list|(
+name|bfd_error_no_memory
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -373,9 +355,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_error
-operator|=
-name|invalid_target
+name|bfd_set_error
+argument_list|(
+name|bfd_error_invalid_target
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -403,9 +386,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_error
-operator|=
-name|system_call_error
+name|bfd_set_error
+argument_list|(
+name|bfd_error_system_call
+argument_list|)
 expr_stmt|;
 comment|/* File didn't exist, or some such */
 name|bfd_release
@@ -423,49 +407,46 @@ return|return
 name|nbfd
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* Don't try to `optimize' this function:     o - We lock using stack space so that interrupting the locking        won't cause a storage leak.    o - We open the file stream last, since we don't want to have to        close it if anything goes wrong.  Closing the stream means closing        the file descriptor too, even though we didn't open it.  */
 end_comment
 
 begin_comment
-comment|/* FUNCTION          bfd_fdopenr  SYNOPSIS          bfd *bfd_fdopenr(CONST char *filename, CONST char *target, int fd);  DESCRIPTION          bfd_fdopenr is to bfd_fopenr much like  fdopen is to fopen. 	 It opens a BFD on a file already described by the @var{fd} 	 supplied.  	 When the file is later bfd_closed, the file descriptor will be closed.  	 If the caller desires that this file descriptor be cached by BFD 	 (opened as needed, closed as needed to free descriptors for 	 other opens), with the supplied @var{fd} used as an initial 	 file descriptor (but subject to closure at any time), set 	 bfd->cacheable nonzero in the returned BFD.  The default is to 	 assume no cacheing; the file descriptor will remain open until 	 bfd_close, and will not be affected by BFD operations on other 	 files.           Possible errors are no_memory, invalid_target and system_call 	 error. */
+comment|/* FUNCTION          bfd_fdopenr  SYNOPSIS          bfd *bfd_fdopenr(CONST char *filename, CONST char *target, int fd);  DESCRIPTION<<bfd_fdopenr>> is to<<bfd_fopenr>> much like<<fdopen>> is to<<fopen>>. 	 It opens a BFD on a file already described by the @var{fd} 	 supplied.  	 When the file is later<<bfd_close>>d, the file descriptor will be closed.  	 If the caller desires that this file descriptor be cached by BFD 	 (opened as needed, closed as needed to free descriptors for 	 other opens), with the supplied @var{fd} used as an initial 	 file descriptor (but subject to closure at any time), call 	 bfd_set_cacheable(bfd, 1) on the returned BFD.  The default is to 	 assume no cacheing; the file descriptor will remain open until<<bfd_close>>, and will not be affected by BFD operations on other 	 files.           Possible errors are<<bfd_error_no_memory>>,<<bfd_error_invalid_target>> and<<bfd_error_system_call>>. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|bfd
 modifier|*
-name|DEFUN
-argument_list|(
 name|bfd_fdopenr
-argument_list|,
-operator|(
+parameter_list|(
 name|filename
-operator|,
+parameter_list|,
 name|target
-operator|,
+parameter_list|,
 name|fd
-operator|)
-argument_list|,
+parameter_list|)
 name|CONST
 name|char
-operator|*
+modifier|*
 name|filename
-name|AND
+decl_stmt|;
 name|CONST
 name|char
-operator|*
+modifier|*
 name|target
-name|AND
+decl_stmt|;
 name|int
 name|fd
-argument_list|)
+decl_stmt|;
 block|{
 name|bfd
 modifier|*
 name|nbfd
 decl_stmt|;
+specifier|const
 name|bfd_target
 modifier|*
 name|target_vec
@@ -473,9 +454,10 @@ decl_stmt|;
 name|int
 name|fdflags
 decl_stmt|;
-name|bfd_error
-operator|=
-name|system_call_error
+name|bfd_set_error
+argument_list|(
+name|bfd_error_system_call
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -512,7 +494,7 @@ name|NULL
 return|;
 name|nbfd
 operator|=
-name|new_bfd
+name|_bfd_new_bfd
 argument_list|()
 expr_stmt|;
 if|if
@@ -522,9 +504,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_error
-operator|=
-name|no_memory
+name|bfd_set_error
+argument_list|(
+name|bfd_error_no_memory
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -546,9 +529,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_error
-operator|=
-name|invalid_target
+name|bfd_set_error
+argument_list|(
+name|bfd_error_invalid_target
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -738,16 +722,22 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
 name|bfd_cache_init
 argument_list|(
 name|nbfd
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|NULL
+return|;
 return|return
 name|nbfd
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_escape
 end_escape
@@ -757,49 +747,47 @@ comment|/** bfd_openw -- open for writing.   Returns a pointer to a freshly-allo
 end_comment
 
 begin_comment
-comment|/* FUNCTION 	bfd_openw  SYNOPSIS 	bfd *bfd_openw(CONST char *filename, CONST char *target);  DESCRIPTION 	Creates a BFD, associated with file @var{filename}, using the 	file format @var{target}, and returns a pointer to it.  	Possible errors are system_call_error, no_memory, 	invalid_target. */
+comment|/* FUNCTION 	bfd_openw  SYNOPSIS 	bfd *bfd_openw(CONST char *filename, CONST char *target);  DESCRIPTION 	Create a BFD, associated with file @var{filename}, using the 	file format @var{target}, and return a pointer to it.  	Possible errors are<<bfd_error_system_call>>,<<bfd_error_no_memory>>,<<bfd_error_invalid_target>>. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|bfd
 modifier|*
-name|DEFUN
-argument_list|(
 name|bfd_openw
-argument_list|,
-operator|(
+parameter_list|(
 name|filename
-operator|,
+parameter_list|,
 name|target
-operator|)
-argument_list|,
+parameter_list|)
 name|CONST
 name|char
-operator|*
+modifier|*
 name|filename
-name|AND
+decl_stmt|;
 name|CONST
 name|char
-operator|*
+modifier|*
 name|target
-argument_list|)
+decl_stmt|;
 block|{
 name|bfd
 modifier|*
 name|nbfd
 decl_stmt|;
+specifier|const
 name|bfd_target
 modifier|*
 name|target_vec
 decl_stmt|;
-name|bfd_error
-operator|=
-name|system_call_error
+name|bfd_set_error
+argument_list|(
+name|bfd_error_system_call
+argument_list|)
 expr_stmt|;
 comment|/* nbfd has to point to head of malloc'ed block so that bfd_close may      reclaim it correctly. */
 name|nbfd
 operator|=
-name|new_bfd
+name|_bfd_new_bfd
 argument_list|()
 expr_stmt|;
 if|if
@@ -809,9 +797,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_error
-operator|=
-name|no_memory
+name|bfd_set_error
+argument_list|(
+name|bfd_error_no_memory
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -857,9 +846,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_error
-operator|=
-name|system_call_error
+name|bfd_set_error
+argument_list|(
+name|bfd_error_system_call
+argument_list|)
 expr_stmt|;
 comment|/* File not writeable, etc */
 operator|(
@@ -886,26 +876,22 @@ return|return
 name|nbfd
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/*  FUNCTION 	bfd_close  SYNOPSIS 	boolean bfd_close(bfd *);  DESCRIPTION  	This function closes a BFD. If the BFD was open for writing, 	then pending operations are completed and the file written out 	and closed. If the created file is executable, then<<chmod>> is called to mark it as such.  	All memory attached to the BFD's obstacks is released.  	The file descriptor associated with the BFD is closed (even 	if it was passed in to BFD by bfd_fdopenr).  RETURNS<<true>> is returned if all is ok, otherwise<<false>>. */
+comment|/*  FUNCTION 	bfd_close  SYNOPSIS 	boolean bfd_close(bfd *abfd);  DESCRIPTION  	Close a BFD. If the BFD was open for writing, 	then pending operations are completed and the file written out 	and closed. If the created file is executable, then<<chmod>> is called to mark it as such.  	All memory attached to the BFD's obstacks is released.  	The file descriptor associated with the BFD is closed (even 	if it was passed in to BFD by<<bfd_fdopenr>>).  RETURNS<<true>> is returned if all is ok, otherwise<<false>>. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|boolean
-name|DEFUN
-argument_list|(
 name|bfd_close
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-argument_list|)
+decl_stmt|;
 block|{
 name|boolean
 name|ret
@@ -1075,26 +1061,22 @@ return|return
 name|ret
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_close_all_done  SYNOPSIS 	boolean bfd_close_all_done(bfd *);  DESCRIPTION 	This function closes a BFD. It differs from<<bfd_close>> 	since it does not complete any pending operations.  This 	routine would be used if the application had just used BFD for 	swapping and didn't want to use any of the writing code.  	If the created file is executable, then<<chmod>> is called 	to mark it as such.  	All memory attached to the BFD's obstacks is released.  RETURNS<<true>> is returned if all is ok, otherwise<<false>>.  */
+comment|/* FUNCTION 	bfd_close_all_done  SYNOPSIS 	boolean bfd_close_all_done(bfd *);  DESCRIPTION 	Close a BFD.  Differs from<<bfd_close>> 	since it does not complete any pending operations.  This 	routine would be used if the application had just used BFD for 	swapping and didn't want to use any of the writing code.  	If the created file is executable, then<<chmod>> is called 	to mark it as such.  	All memory attached to the BFD's obstacks is released.  RETURNS<<true>> is returned if all is ok, otherwise<<false>>.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|boolean
-name|DEFUN
-argument_list|(
 name|bfd_close_all_done
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-argument_list|)
+decl_stmt|;
 block|{
 name|boolean
 name|ret
@@ -1220,26 +1202,22 @@ return|return
 name|ret
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* FUNCTION	 	bfd_alloc_size  SYNOPSIS 	bfd_size_type bfd_alloc_size(bfd *abfd);  DESCRIPTION         Return the number of bytes in the obstacks connected to the 	supplied BFD.  */
+comment|/* FUNCTION	 	bfd_alloc_size  SYNOPSIS 	bfd_size_type bfd_alloc_size(bfd *abfd);  DESCRIPTION         Return the number of bytes in the obstacks connected to @var{abfd}.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|bfd_size_type
-name|DEFUN
-argument_list|(
 name|bfd_alloc_size
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-argument_list|)
+decl_stmt|;
 block|{
 name|struct
 name|_obstack_chunk
@@ -1289,40 +1267,36 @@ return|return
 name|size
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_create  SYNOPSIS 	bfd *bfd_create(CONST char *filename, bfd *templ);  DESCRIPTION 	This routine creates a new BFD in the manner of<<bfd_openw>>, but without opening a file. The new BFD 	takes the target from the target used by @var{template}. The 	format is always set to<<bfd_object>>.  */
+comment|/* FUNCTION 	bfd_create  SYNOPSIS 	bfd *bfd_create(CONST char *filename, bfd *templ);  DESCRIPTION 	Create a new BFD in the manner of<<bfd_openw>>, but without opening a file. The new BFD 	takes the target from the target used by @var{template}. The 	format is always set to<<bfd_object>>.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|bfd
 modifier|*
-name|DEFUN
-argument_list|(
 name|bfd_create
-argument_list|,
-operator|(
+parameter_list|(
 name|filename
-operator|,
+parameter_list|,
 name|templ
-operator|)
-argument_list|,
+parameter_list|)
 name|CONST
 name|char
-operator|*
+modifier|*
 name|filename
-name|AND
+decl_stmt|;
 name|bfd
-operator|*
+modifier|*
 name|templ
-argument_list|)
+decl_stmt|;
 block|{
 name|bfd
 modifier|*
 name|nbfd
 init|=
-name|new_bfd
+name|_bfd_new_bfd
 argument_list|()
 decl_stmt|;
 if|if
@@ -1336,9 +1310,10 @@ operator|)
 name|NULL
 condition|)
 block|{
-name|bfd_error
-operator|=
-name|no_memory
+name|bfd_set_error
+argument_list|(
+name|bfd_error_no_memory
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1385,35 +1360,29 @@ return|return
 name|nbfd
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION 	bfd_alloc_by_size_t  SYNOPSIS 	PTR bfd_alloc_by_size_t(bfd *abfd, size_t wanted);  DESCRIPTION 	This function allocates a block of memory in the obstack 	attatched to<<abfd>> and returns a pointer to it. */
+comment|/* INTERNAL_FUNCTION 	bfd_alloc_by_size_t  SYNOPSIS 	PTR bfd_alloc_by_size_t(bfd *abfd, size_t wanted);  DESCRIPTION 	Allocate a block of @var{wanted} bytes of memory in the obstack 	attatched to<<abfd>> and return a pointer to it. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|PTR
-name|DEFUN
-argument_list|(
 name|bfd_alloc_by_size_t
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|,
+parameter_list|,
 name|size
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-name|AND
+decl_stmt|;
 name|size_t
 name|size
-argument_list|)
+decl_stmt|;
 block|{
-name|PTR
-name|res
-init|=
+return|return
 name|obstack_alloc
 argument_list|(
 operator|&
@@ -1425,25 +1394,30 @@ operator|)
 argument_list|,
 name|size
 argument_list|)
-decl_stmt|;
-return|return
-name|res
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_macro
-name|DEFUN
-argument_list|(
-argument|void bfd_alloc_grow
-argument_list|,
-argument|(abfd, ptr, size)
-argument_list|,
-argument|bfd *abfd AND       PTR ptr AND       size_t size
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+name|void
+name|bfd_alloc_grow
+parameter_list|(
+name|abfd
+parameter_list|,
+name|ptr
+parameter_list|,
+name|size
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|PTR
+name|ptr
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
 block|{
 operator|(
 name|void
@@ -1463,20 +1437,18 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|DEFUN
-argument_list|(
-argument|PTR bfd_alloc_finish
-argument_list|,
-argument|(abfd)
-argument_list|,
-argument|bfd *abfd
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+name|PTR
+name|bfd_alloc_finish
+parameter_list|(
+name|abfd
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
 block|{
 return|return
 name|obstack_finish
@@ -1490,20 +1462,23 @@ operator|)
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|DEFUN
-argument_list|(
-argument|PTR bfd_alloc
-argument_list|,
-argument|(abfd, size)
-argument_list|,
-argument|bfd *abfd AND       size_t size
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+name|PTR
+name|bfd_alloc
+parameter_list|(
+name|abfd
+parameter_list|,
+name|size
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
 block|{
 return|return
 name|bfd_alloc_by_size_t
@@ -1517,20 +1492,23 @@ name|size
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|DEFUN
-argument_list|(
-argument|PTR bfd_zalloc
-argument_list|,
-argument|(abfd, size)
-argument_list|,
-argument|bfd *abfd AND       size_t size
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+name|PTR
+name|bfd_zalloc
+parameter_list|(
+name|abfd
+parameter_list|,
+name|size
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
 block|{
 name|PTR
 name|res
@@ -1544,6 +1522,10 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+condition|)
 name|memset
 argument_list|(
 name|res
@@ -1560,20 +1542,28 @@ return|return
 name|res
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|DEFUN
-argument_list|(
-argument|PTR bfd_realloc
-argument_list|,
-argument|(abfd, old, size)
-argument_list|,
-argument|bfd *abfd AND       PTR old AND       size_t size
-argument_list|)
-end_macro
-
-begin_block
+begin_function
+name|PTR
+name|bfd_realloc
+parameter_list|(
+name|abfd
+parameter_list|,
+name|old
+parameter_list|,
+name|size
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|PTR
+name|old
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
 block|{
 name|PTR
 name|res
@@ -1585,6 +1575,10 @@ argument_list|,
 name|size
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|res
+condition|)
 name|memcpy
 argument_list|(
 name|res
@@ -1601,7 +1595,7 @@ return|return
 name|res
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

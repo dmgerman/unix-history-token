@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -77,7 +83,8 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|int
+expr|struct
+name|target_waitstatus
 operator|*
 operator|)
 argument_list|)
@@ -257,7 +264,7 @@ name|CHILD_WAIT
 end_ifndef
 
 begin_comment
-comment|/* Wait for child to do something.  Return pid of child, or -1 in case    of error; store status through argument pointer STATUS.  */
+comment|/* Wait for child to do something.  Return pid of child, or -1 in case    of error; store status through argument pointer OURSTATUS.  */
 end_comment
 
 begin_function
@@ -267,18 +274,22 @@ name|child_wait
 parameter_list|(
 name|pid
 parameter_list|,
-name|status
+name|ourstatus
 parameter_list|)
 name|int
 name|pid
 decl_stmt|;
-name|int
+name|struct
+name|target_waitstatus
 modifier|*
-name|status
+name|ourstatus
 decl_stmt|;
 block|{
 name|int
 name|save_errno
+decl_stmt|;
+name|int
+name|status
 decl_stmt|;
 do|do
 block|{
@@ -290,16 +301,25 @@ name|set_sigint_trap
 argument_list|()
 expr_stmt|;
 comment|/* Causes SIGINT to be passed on to the 				   attached process. */
+name|set_sigio_trap
+argument_list|()
+expr_stmt|;
 name|pid
 operator|=
-name|wait
+name|proc_wait
 argument_list|(
+name|inferior_pid
+argument_list|,
+operator|&
 name|status
 argument_list|)
 expr_stmt|;
 name|save_errno
 operator|=
 name|errno
+expr_stmt|;
+name|clear_sigio_trap
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -323,9 +343,9 @@ operator|==
 name|EINTR
 condition|)
 continue|continue;
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"Child process unexpectedly missing: %s.\n"
 argument_list|,
@@ -335,12 +355,21 @@ name|save_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|*
-name|status
+comment|/* Claim it exited with unknown signal.  */
+name|ourstatus
+operator|->
+name|kind
 operator|=
-literal|42
+name|TARGET_WAITKIND_SIGNALLED
 expr_stmt|;
-comment|/* Claim it exited with signal 42 */
+name|ourstatus
+operator|->
+name|value
+operator|.
+name|sig
+operator|=
+name|TARGET_SIGNAL_UNKNOWN
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -355,6 +384,13 @@ name|inferior_pid
 condition|)
 do|;
 comment|/* Some other child died or stopped */
+name|store_waitstatus
+argument_list|(
+name|ourstatus
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
 return|return
 name|pid
 return|;
@@ -391,13 +427,6 @@ name|int
 name|from_tty
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|exec_file
-decl_stmt|;
-name|int
-name|pid
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -418,6 +447,14 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+block|{
+name|char
+modifier|*
+name|exec_file
+decl_stmt|;
+name|int
+name|pid
+decl_stmt|;
 name|pid
 operator|=
 name|atoi
@@ -458,7 +495,7 @@ if|if
 condition|(
 name|exec_file
 condition|)
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Attaching to program `%s', %s\n"
 argument_list|,
@@ -471,7 +508,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Attaching to %s\n"
 argument_list|,
@@ -481,9 +518,9 @@ name|pid
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -502,6 +539,7 @@ operator|&
 name|child_ops
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* ATTACH_DETACH */
@@ -529,14 +567,15 @@ name|int
 name|from_tty
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|ATTACH_DETACH
+block|{
 name|int
 name|siggnal
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ATTACH_DETACH
 if|if
 condition|(
 name|from_tty
@@ -561,7 +600,7 @@ name|exec_file
 operator|=
 literal|""
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Detaching from program: %s %s\n"
 argument_list|,
@@ -573,9 +612,9 @@ name|inferior_pid
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -605,7 +644,7 @@ operator|&
 name|child_ops
 argument_list|)
 expr_stmt|;
-comment|/* Pop out of handling an inferior */
+block|}
 else|#
 directive|else
 name|error
@@ -656,7 +695,7 @@ modifier|*
 name|ignore
 decl_stmt|;
 block|{
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"\tUsing the running image of %s %s.\n"
 argument_list|,
@@ -753,6 +792,24 @@ operator|&
 name|child_ops
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|START_INFERIOR_TRAPS_EXPECTED
+name|startup_inferior
+argument_list|(
+name|START_INFERIOR_TRAPS_EXPECTED
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* One trap to exec the shell, one to exec the program being debugged.  */
+name|startup_inferior
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -796,6 +853,8 @@ argument_list|,
 name|ptrace_me
 argument_list|,
 name|ptrace_him
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* We are at the first instruction we care about.  */
@@ -808,7 +867,7 @@ operator|)
 operator|-
 literal|1
 argument_list|,
-literal|0
+name|TARGET_SIGNAL_0
 argument_list|,
 literal|0
 argument_list|)
@@ -826,6 +885,11 @@ name|unpush_target
 argument_list|(
 operator|&
 name|child_ops
+argument_list|)
+expr_stmt|;
+name|proc_remove_foreign
+argument_list|(
+name|inferior_pid
 argument_list|)
 expr_stmt|;
 name|generic_mourn_inferior

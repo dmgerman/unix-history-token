@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD library support routines for architectures.    Copyright (C) 1990-1991 Free Software Foundation, Inc.    Hacked by John Gilmore and Steve Chamberlain of Cygnus Support.   This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* BFD library support routines for architectures.    Copyright (C) 1990, 91, 92, 93, 94 Free Software Foundation, Inc.    Hacked by John Gilmore and Steve Chamberlain of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
-comment|/*  SECTION 	Architectures  	BFD's idea of an architecture is implimented in<<archures.c>>. BFD keeps one atom in a BFD describing the 	architecture of the data attached to the BFD;  a pointer to a<<bfd_arch_info_type>>.    	Pointers to structures can be requested independently of a bfd 	so that an architecture's information can be interrogated 	without access to an open bfd.  	The arch information is provided by each architecture package. 	The set of default architectures is selected by the #define<<SELECT_ARCHITECTURES>>.  This is normally set up in the<<config/target.mt>> file of your choice.  If the name is not 	defined, then all the architectures supported are included.   	When BFD starts up, all the architectures are called with an 	initialize method.  It is up to the architecture back end to 	insert as many items into the list of architectures as it wants to; 	generally this would be one for each machine and one for the 	default case (an item with a machine field of 0).  */
+comment|/*  SECTION 	Architectures  	BFD keeps one atom in a BFD describing the 	architecture of the data attached to the BFD: a pointer to a<<bfd_arch_info_type>>.    	Pointers to structures can be requested independently of a BFD 	so that an architecture's information can be interrogated 	without access to an open BFD.  	The architecture information is provided by each architecture package. 	The set of default architectures is selected by the macro<<SELECT_ARCHITECTURES>>.  This is normally set up in the 	@file{config/@var{target}.mt} file of your choice.  If the name is not 	defined, then all the architectures supported are included.   	When BFD starts up, all the architectures are called with an 	initialize method.  It is up to the architecture back end to 	insert as many items into the list of architectures as it wants to; 	generally this would be one for each machine and one for the 	default case (an item with a machine field of 0).   	BFD's idea of an architecture is implemented in	@file{archures.c}. */
 end_comment
 
 begin_comment
-comment|/*  SUBSECTION 	bfd_architecture  DESCRIPTION 	This enum gives the object file's CPU architecture, in a 	global sense --- i.e., what processor family does it belong to? 	There is another field, which indicates what processor within 	the family is in use.  The machine gives a number which 	distingushes different versions of the architecture, 	containing for example 2 and 3 for Intel i960 KA and i960 KB, 	and 68020 and 68030 for Motorola 68020 and 68030.   .enum bfd_architecture  .{ .  bfd_arch_unknown,   {* File arch not known *} .  bfd_arch_obscure,   {* Arch known, not one of these *} .  bfd_arch_m68k,      {* Motorola 68xxx *} .  bfd_arch_vax,       {* DEC Vax *}    .  bfd_arch_i960,      {* Intel 960 *} .    {* The order of the following is important. .       lower number indicates a machine type that  .       only accepts a subset of the instructions .       available to machines with higher numbers. .       The exception is the "ca", which is .       incompatible with all other machines except  .       "core". *} . .#define bfd_mach_i960_core      1 .#define bfd_mach_i960_ka_sa     2 .#define bfd_mach_i960_kb_sb     3 .#define bfd_mach_i960_mc        4 .#define bfd_mach_i960_xa        5 .#define bfd_mach_i960_ca        6 . .  bfd_arch_a29k,      {* AMD 29000 *} .  bfd_arch_sparc,     {* SPARC *} .  bfd_arch_mips,      {* MIPS Rxxxx *} .  bfd_arch_i386,      {* Intel 386 *} .  bfd_arch_we32k,     {* AT&T WE32xxx *} .  bfd_arch_tahoe,     {* CCI/Harris Tahoe *} .  bfd_arch_i860,      {* Intel 860 *} .  bfd_arch_romp,      {* IBM ROMP PC/RT *} .  bfd_arch_alliant,   {* Alliant *} .  bfd_arch_convex,    {* Convex *} .  bfd_arch_m88k,      {* Motorola 88xxx *} .  bfd_arch_pyramid,   {* Pyramid Technology *} .  bfd_arch_h8300,     {* Hitachi H8/300 *} .#define bfd_mach_h8300   1 .#define bfd_mach_h8300h  2 .  bfd_arch_rs6000,    {* IBM RS/6000 *} .  bfd_arch_hppa,      {* HP PA RISC *} .  bfd_arch_z8k,       {* Zilog Z8000 *} .#define bfd_mach_z8001		1 .#define bfd_mach_z8002		2 .  bfd_arch_h8500,     {* Hitachi H8/500 *} .  bfd_arch_sh,        {* Hitachi SH *} .  bfd_arch_alpha,     {* Dec Alpha *} .  bfd_arch_last .  };   */
+comment|/*  SUBSECTION 	bfd_architecture  DESCRIPTION 	This enum gives the object file's CPU architecture, in a 	global sense---i.e., what processor family does it belong to? 	Another field indicates which processor within 	the family is in use.  The machine gives a number which 	distinguishes different versions of the architecture, 	containing, for example, 2 and 3 for Intel i960 KA and i960 KB, 	and 68020 and 68030 for Motorola 68020 and 68030.   .enum bfd_architecture  .{ .  bfd_arch_unknown,   {* File arch not known *} .  bfd_arch_obscure,   {* Arch known, not one of these *} .  bfd_arch_m68k,      {* Motorola 68xxx *} .  bfd_arch_vax,       {* DEC Vax *}    .  bfd_arch_i960,      {* Intel 960 *} .    {* The order of the following is important. .       lower number indicates a machine type that  .       only accepts a subset of the instructions .       available to machines with higher numbers. .       The exception is the "ca", which is .       incompatible with all other machines except  .       "core". *} . .#define bfd_mach_i960_core      1 .#define bfd_mach_i960_ka_sa     2 .#define bfd_mach_i960_kb_sb     3 .#define bfd_mach_i960_mc        4 .#define bfd_mach_i960_xa        5 .#define bfd_mach_i960_ca        6 . .  bfd_arch_a29k,      {* AMD 29000 *} .  bfd_arch_sparc,     {* SPARC *} .  bfd_arch_mips,      {* MIPS Rxxxx *} .  bfd_arch_i386,      {* Intel 386 *} .  bfd_arch_we32k,     {* AT&T WE32xxx *} .  bfd_arch_tahoe,     {* CCI/Harris Tahoe *} .  bfd_arch_i860,      {* Intel 860 *} .  bfd_arch_romp,      {* IBM ROMP PC/RT *} .  bfd_arch_alliant,   {* Alliant *} .  bfd_arch_convex,    {* Convex *} .  bfd_arch_m88k,      {* Motorola 88xxx *} .  bfd_arch_pyramid,   {* Pyramid Technology *} .  bfd_arch_h8300,     {* Hitachi H8/300 *} .#define bfd_mach_h8300   1 .#define bfd_mach_h8300h  2 .  bfd_arch_powerpc,   {* PowerPC *} .  bfd_arch_rs6000,    {* IBM RS/6000 *} .  bfd_arch_hppa,      {* HP PA RISC *} .  bfd_arch_z8k,       {* Zilog Z8000 *} .#define bfd_mach_z8001		1 .#define bfd_mach_z8002		2 .  bfd_arch_h8500,     {* Hitachi H8/500 *} .  bfd_arch_sh,        {* Hitachi SH *} .  bfd_arch_alpha,     {* Dec Alpha *} .  bfd_arch_ns32k,     {* National Semiconductors ns32000 *} .  bfd_arch_last .  };   */
 end_comment
 
 begin_include
@@ -41,25 +41,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* FUNCTION 	bfd_printable_name  SYNOPSIS 	CONST char *bfd_printable_name(bfd *abfd);  DESCRIPTION 	Return a printable string representing the architecture and machine 	from the pointer to the arch info structure   */
+comment|/* FUNCTION 	bfd_printable_name  SYNOPSIS 	CONST char *bfd_printable_name(bfd *abfd);  DESCRIPTION 	Return a printable string representing the architecture and machine 	from the pointer to the architecture info structure.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|CONST
 name|char
 modifier|*
-name|DEFUN
-argument_list|(
 name|bfd_printable_name
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-argument_list|)
+decl_stmt|;
 block|{
 return|return
 name|abfd
@@ -69,28 +65,24 @@ operator|->
 name|printable_name
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_scan_arch  SYNOPSIS 	bfd_arch_info_type *bfd_scan_arch(CONST char *);  DESCRIPTION 	This routine is provided with a string and tries to work out 	if bfd supports any cpu which could be described with the name 	provided.  The routine returns a pointer to an arch_info 	structure if a machine is found, otherwise NULL.  */
+comment|/* FUNCTION 	bfd_scan_arch  SYNOPSIS 	bfd_arch_info_type *bfd_scan_arch(CONST char *string);  DESCRIPTION 	Figure out if BFD supports any cpu which could be described with 	the name @var{string}.  Return a pointer to an<<arch_info>> 	structure if a machine is found, otherwise NULL.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|bfd_arch_info_type
 modifier|*
-name|DEFUN
-argument_list|(
 name|bfd_scan_arch
-argument_list|,
-operator|(
+parameter_list|(
 name|string
-operator|)
-argument_list|,
+parameter_list|)
 name|CONST
 name|char
-operator|*
+modifier|*
 name|string
-argument_list|)
+decl_stmt|;
 block|{
 name|struct
 name|bfd_arch_info
@@ -142,36 +134,32 @@ operator|)
 name|NULL
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_arch_get_compatible  SYNOPSIS 	CONST bfd_arch_info_type *bfd_arch_get_compatible( 		CONST bfd *abfd, 	        CONST bfd *bbfd);  DESCRIPTION 	This routine is used to determine whether two BFDs' 	architectures and achine types are compatible.  It calculates 	the lowest common denominator between the two architectures 	and machine types implied by the BFDs and returns a pointer to 	an arch_info structure describing the compatible machine. */
+comment|/* FUNCTION 	bfd_arch_get_compatible  SYNOPSIS 	CONST bfd_arch_info_type *bfd_arch_get_compatible( 		CONST bfd *abfd, 	        CONST bfd *bbfd);  DESCRIPTION 	Determine whether two BFDs' 	architectures and machine types are compatible.  Calculates 	the lowest common denominator between the two architectures 	and machine types implied by the BFDs and returns a pointer to 	an<<arch_info>> structure describing the compatible machine. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|CONST
 name|bfd_arch_info_type
 modifier|*
-name|DEFUN
-argument_list|(
 name|bfd_arch_get_compatible
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|,
+parameter_list|,
 name|bbfd
-operator|)
-argument_list|,
+parameter_list|)
 name|CONST
 name|bfd
-operator|*
+modifier|*
 name|abfd
-name|AND
+decl_stmt|;
 name|CONST
 name|bfd
-operator|*
+modifier|*
 name|bbfd
-argument_list|)
+decl_stmt|;
 block|{
 return|return
 name|abfd
@@ -190,7 +178,7 @@ name|arch_info
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* INTERNAL_DEFINITION 	bfd_default_arch_struct  DESCRIPTION 	The<<bfd_default_arch_struct>> is an item of<<bfd_arch_info_type>> which has been initialized to a fairly 	generic state.  A BFD starts life by pointing to this 	structure, until the correct back end has determined the real 	architecture of the file.  .extern bfd_arch_info_type bfd_default_arch_struct;  */
@@ -229,29 +217,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* FUNCTION 	bfd_set_arch_info  SYNOPSIS 	void bfd_set_arch_info(bfd *, bfd_arch_info_type *);  */
+comment|/* FUNCTION 	bfd_set_arch_info  SYNOPSIS 	void bfd_set_arch_info(bfd *abfd, bfd_arch_info_type *arg);  DESCRIPTION 	Set the architecture info of @var{abfd} to @var{arg}. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|bfd_set_arch_info
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|,
+parameter_list|,
 name|arg
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-name|AND
+decl_stmt|;
 name|bfd_arch_info_type
-operator|*
+modifier|*
 name|arg
-argument_list|)
+decl_stmt|;
 block|{
 name|abfd
 operator|->
@@ -260,38 +244,34 @@ operator|=
 name|arg
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION 	bfd_default_set_arch_mach  SYNOPSIS 	boolean bfd_default_set_arch_mach(bfd *abfd, 		enum bfd_architecture arch, 		unsigned long mach);  DESCRIPTION 	Set the architecture and machine type in a bfd. This finds the 	correct pointer to structure and inserts it into the arch_info 	pointer.  */
+comment|/* INTERNAL_FUNCTION 	bfd_default_set_arch_mach  SYNOPSIS 	boolean bfd_default_set_arch_mach(bfd *abfd, 		enum bfd_architecture arch, 		unsigned long mach);  DESCRIPTION 	Set the architecture and machine type in BFD @var{abfd} 	to @var{arch} and @var{mach}.  Find the correct 	pointer to a structure and insert it into the<<arch_info>> 	pointer.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|boolean
-name|DEFUN
-argument_list|(
 name|bfd_default_set_arch_mach
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|,
+parameter_list|,
 name|arch
-operator|,
+parameter_list|,
 name|mach
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-name|AND
-expr|enum
+decl_stmt|;
+name|enum
 name|bfd_architecture
 name|arch
-name|AND
+decl_stmt|;
 name|unsigned
 name|long
 name|mach
-argument_list|)
+decl_stmt|;
 block|{
 specifier|static
 name|struct
@@ -413,9 +393,10 @@ operator|=
 operator|&
 name|bfd_default_arch_struct
 expr_stmt|;
-name|bfd_error
-operator|=
-name|bad_value
+name|bfd_set_error
+argument_list|(
+name|bfd_error_bad_value
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -437,27 +418,23 @@ return|return
 name|found
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_get_arch  SYNOPSIS 	enum bfd_architecture bfd_get_arch(bfd *abfd);  DESCRIPTION 	Returns the enumerated type which describes the supplied bfd's 	architecture  */
+comment|/* FUNCTION 	bfd_get_arch  SYNOPSIS 	enum bfd_architecture bfd_get_arch(bfd *abfd);  DESCRIPTION 	Return the enumerated type which describes the BFD @var{abfd}'s 	architecture.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|enum
 name|bfd_architecture
-name|DEFUN
-argument_list|(
 name|bfd_get_arch
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-argument_list|)
+decl_stmt|;
 block|{
 return|return
 name|abfd
@@ -467,27 +444,23 @@ operator|->
 name|arch
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_get_mach  SYNOPSIS 	unsigned long bfd_get_mach(bfd *abfd);  DESCRIPTION 	Returns the long type which describes the supplied bfd's 	machine */
+comment|/* FUNCTION 	bfd_get_mach  SYNOPSIS 	unsigned long bfd_get_mach(bfd *abfd);  DESCRIPTION 	Return the long type which describes the BFD @var{abfd}'s 	machine. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|unsigned
 name|long
-name|DEFUN
-argument_list|(
 name|bfd_get_mach
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-argument_list|)
+decl_stmt|;
 block|{
 return|return
 name|abfd
@@ -497,27 +470,23 @@ operator|->
 name|mach
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_arch_bits_per_byte  SYNOPSIS 	unsigned int bfd_arch_bits_per_byte(bfd *abfd);  DESCRIPTION 	Returns the number of bits in one of the architectures bytes  */
+comment|/* FUNCTION 	bfd_arch_bits_per_byte  SYNOPSIS 	unsigned int bfd_arch_bits_per_byte(bfd *abfd);  DESCRIPTION 	Return the number of bits in one of the BFD @var{abfd}'s 	architecture's bytes.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|unsigned
 name|int
-name|DEFUN
-argument_list|(
 name|bfd_arch_bits_per_byte
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-argument_list|)
+decl_stmt|;
 block|{
 return|return
 name|abfd
@@ -527,27 +496,23 @@ operator|->
 name|bits_per_byte
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_arch_bits_per_address  SYNOPSIS 	unsigned int bfd_arch_bits_per_address(bfd *abfd);  DESCRIPTION 	Returns the number of bits in one of the architectures addresses */
+comment|/* FUNCTION 	bfd_arch_bits_per_address  SYNOPSIS 	unsigned int bfd_arch_bits_per_address(bfd *abfd);  DESCRIPTION 	Return the number of bits in one of the BFD @var{abfd}'s 	architecture's addresses. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|unsigned
 name|int
-name|DEFUN
-argument_list|(
 name|bfd_arch_bits_per_address
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-argument_list|)
+decl_stmt|;
 block|{
 return|return
 name|abfd
@@ -557,7 +522,7 @@ operator|->
 name|bits_per_address
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 specifier|extern
@@ -692,6 +657,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|bfd_powerpc_arch
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|bfd_rs6000_arch
 name|PARAMS
 argument_list|(
@@ -758,6 +736,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|bfd_z8k_arch
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|bfd_ns32k_arch
 name|PARAMS
 argument_list|(
 operator|(
@@ -808,6 +799,8 @@ name|bfd_m88k_arch
 block|,
 name|bfd_mips_arch
 block|,
+name|bfd_powerpc_arch
+block|,
 name|bfd_rs6000_arch
 block|,
 name|bfd_sh_arch
@@ -820,6 +813,8 @@ name|bfd_we32k_arch
 block|,
 name|bfd_z8k_arch
 block|,
+name|bfd_ns32k_arch
+block|,
 endif|#
 directive|endif
 literal|0
@@ -828,15 +823,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* INTERNAL_FUNCTION  	bfd_arch_init  SYNOPSIS 	void  bfd_arch_init(void);  DESCRIPTION 	This routine initializes the architecture dispatch table by 	calling all installed architecture packages and getting them 	to poke around. */
+comment|/* INTERNAL_FUNCTION  	bfd_arch_init  SYNOPSIS 	void bfd_arch_init(void);  DESCRIPTION 	Initialize the architecture dispatch table by 	calling all installed architecture packages and getting them 	to poke around. */
 end_comment
 
 begin_function
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|bfd_arch_init
-parameter_list|)
+parameter_list|()
 block|{
 name|void
 argument_list|(
@@ -873,23 +866,19 @@ block|}
 end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION 	bfd_arch_linkin  SYNOPSIS 	void bfd_arch_linkin(bfd_arch_info_type *);  DESCRIPTION 	Link the provided arch info structure into the list */
+comment|/* INTERNAL_FUNCTION 	bfd_arch_linkin  SYNOPSIS 	void bfd_arch_linkin(bfd_arch_info_type *ptr);  DESCRIPTION 	Link the architecture info structure @var{ptr} into the list. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|bfd_arch_linkin
-argument_list|,
-operator|(
+parameter_list|(
 name|ptr
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd_arch_info_type
-operator|*
+modifier|*
 name|ptr
-argument_list|)
+decl_stmt|;
 block|{
 name|ptr
 operator|->
@@ -902,36 +891,32 @@ operator|=
 name|ptr
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* INTERNAL_FUNCTION  	bfd_default_compatible  SYNOPSIS 	CONST bfd_arch_info_type *bfd_default_compatible 	(CONST bfd_arch_info_type *a, 	CONST bfd_arch_info_type *b);  DESCRIPTION 	The default function for testing for compatibility. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|CONST
 name|bfd_arch_info_type
 modifier|*
-name|DEFUN
-argument_list|(
 name|bfd_default_compatible
-argument_list|,
-operator|(
+parameter_list|(
 name|a
-operator|,
+parameter_list|,
 name|b
-operator|)
-argument_list|,
+parameter_list|)
 name|CONST
 name|bfd_arch_info_type
-operator|*
+modifier|*
 name|a
-name|AND
+decl_stmt|;
 name|CONST
 name|bfd_arch_info_type
-operator|*
+modifier|*
 name|b
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -980,35 +965,31 @@ return|return
 name|a
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION 	bfd_default_scan  SYNOPSIS 	boolean bfd_default_scan(CONST struct bfd_arch_info *, CONST char *);  DESCRIPTION 	The default function for working out whether this is an 	architecture hit and a machine hit. */
+comment|/* INTERNAL_FUNCTION 	bfd_default_scan  SYNOPSIS 	boolean bfd_default_scan(CONST struct bfd_arch_info *info, CONST char *string);  DESCRIPTION 	The default function for working out whether this is an 	architecture hit and a machine hit. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|boolean
-name|DEFUN
-argument_list|(
 name|bfd_default_scan
-argument_list|,
-operator|(
+parameter_list|(
 name|info
-operator|,
+parameter_list|,
 name|string
-operator|)
-argument_list|,
+parameter_list|)
 name|CONST
-expr|struct
+name|struct
 name|bfd_arch_info
-operator|*
+modifier|*
 name|info
-name|AND
+decl_stmt|;
 name|CONST
 name|char
-operator|*
+modifier|*
 name|string
-argument_list|)
+decl_stmt|;
 block|{
 name|CONST
 name|char
@@ -1301,27 +1282,23 @@ return|return
 name|true
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_get_arch_info   SYNOPSIS 	bfd_arch_info_type * bfd_get_arch_info(bfd *);  */
+comment|/* FUNCTION 	bfd_get_arch_info  SYNOPSIS 	bfd_arch_info_type * bfd_get_arch_info(bfd *abfd);  DESCRIPTION 	Return the architecture info struct in @var{abfd}. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|bfd_arch_info_type
 modifier|*
-name|DEFUN
-argument_list|(
 name|bfd_get_arch_info
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-argument_list|)
+decl_stmt|;
 block|{
 return|return
 name|abfd
@@ -1329,32 +1306,28 @@ operator|->
 name|arch_info
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_lookup_arch  SYNOPSIS 	bfd_arch_info_type *bfd_lookup_arch 		(enum bfd_architecture 		arch, 		long machine);  DESCRIPTION 	Look for the architecure info struct which matches the 	arguments given. A machine of 0 will match the 	machine/architecture structure which marks itself as the 	default. */
+comment|/* FUNCTION 	bfd_lookup_arch  SYNOPSIS 	bfd_arch_info_type *bfd_lookup_arch 		(enum bfd_architecture 		arch, 		long machine);  DESCRIPTION 	Look for the architecure info structure which matches the 	arguments @var{arch} and @var{machine}. A machine of 0 matches the 	machine/architecture structure which marks itself as the 	default. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|bfd_arch_info_type
 modifier|*
-name|DEFUN
-argument_list|(
 name|bfd_lookup_arch
-argument_list|,
-operator|(
+parameter_list|(
 name|arch
-operator|,
+parameter_list|,
 name|machine
-operator|)
-argument_list|,
-expr|enum
+parameter_list|)
+name|enum
 name|bfd_architecture
 name|arch
-name|AND
+decl_stmt|;
 name|long
 name|machine
-argument_list|)
+decl_stmt|;
 block|{
 name|bfd_arch_info_type
 modifier|*
@@ -1426,34 +1399,30 @@ operator|)
 name|NULL
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_printable_arch_mach  SYNOPSIS 	CONST char * bfd_printable_arch_mach 		(enum bfd_architecture arch, unsigned long machine);  DESCRIPTION 	Return a printable string representing the architecture and 	machine type.   	NB. The use of this routine is depreciated. */
+comment|/* FUNCTION 	bfd_printable_arch_mach  SYNOPSIS 	CONST char *bfd_printable_arch_mach 		(enum bfd_architecture arch, unsigned long machine);  DESCRIPTION 	Return a printable string representing the architecture and 	machine type.   	This routine is depreciated. */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|CONST
 name|char
 modifier|*
-name|DEFUN
-argument_list|(
 name|bfd_printable_arch_mach
-argument_list|,
-operator|(
+parameter_list|(
 name|arch
-operator|,
+parameter_list|,
 name|machine
-operator|)
-argument_list|,
-expr|enum
+parameter_list|)
+name|enum
 name|bfd_architecture
 name|arch
-name|AND
+decl_stmt|;
 name|unsigned
 name|long
 name|machine
-argument_list|)
+decl_stmt|;
 block|{
 name|bfd_arch_info_type
 modifier|*
@@ -1479,7 +1448,7 @@ return|return
 literal|"UNKNOWN!"
 return|;
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 

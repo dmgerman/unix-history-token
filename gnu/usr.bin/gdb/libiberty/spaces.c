@@ -7,7 +7,20 @@ begin_comment
 comment|/*  NAME  	spaces -- return a pointer to a buffer full of spaces  SYNOPSIS  	char *spaces (int count)  DESCRIPTION  	Returns a pointer to a memory region filled with the specified 	number of spaces and null terminated.  The returned pointer is 	valid until at least the next call. 	 BUGS  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"ansidecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libiberty.h"
+end_include
+
 begin_function
+specifier|const
 name|char
 modifier|*
 name|spaces
@@ -70,6 +83,19 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|t
@@ -104,6 +130,11 @@ literal|'\0'
 expr_stmt|;
 block|}
 return|return
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 operator|(
 name|buf
 operator|+

@@ -45,22 +45,11 @@ directive|include
 file|"frame.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USG
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -109,6 +98,30 @@ include|#
 directive|include
 file|"objfiles.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"annotate.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DIRNAME_SEPARATOR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DIRNAME_SEPARATOR
+value|':'
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Prototypes for local functions. */
@@ -860,14 +873,26 @@ name|void
 name|init_source_path
 parameter_list|()
 block|{
+name|char
+name|buf
+index|[
+literal|20
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"$cdir%c$cwd"
+argument_list|,
+name|DIRNAME_SEPARATOR
+argument_list|)
+expr_stmt|;
 name|source_path
 operator|=
-name|savestring
+name|strsave
 argument_list|(
-literal|"$cdir:$cwd"
-argument_list|,
-comment|/* strlen of it */
-literal|10
+name|buf
 argument_list|)
 expr_stmt|;
 name|forget_cached_source_info
@@ -1038,7 +1063,7 @@ name|strchr
 argument_list|(
 name|name
 argument_list|,
-literal|':'
+name|DIRNAME_SEPARATOR
 argument_list|)
 decl_stmt|;
 name|char
@@ -1165,7 +1190,7 @@ condition|(
 operator|*
 name|dirname
 operator|==
-literal|':'
+name|DIRNAME_SEPARATOR
 operator|||
 operator|*
 name|dirname
@@ -1375,9 +1400,9 @@ name|save_errno
 init|=
 name|errno
 decl_stmt|;
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"Warning: "
 argument_list|)
@@ -1459,7 +1484,7 @@ index|[
 name|len
 index|]
 operator|==
-literal|':'
+name|DIRNAME_SEPARATOR
 operator|)
 condition|)
 block|{
@@ -1509,7 +1534,7 @@ name|strchr
 argument_list|(
 name|p
 argument_list|,
-literal|':'
+name|DIRNAME_SEPARATOR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1531,6 +1556,26 @@ operator|==
 literal|0
 condition|)
 block|{
+name|char
+name|tinybuf
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|tinybuf
+index|[
+literal|0
+index|]
+operator|=
+name|DIRNAME_SEPARATOR
+expr_stmt|;
+name|tinybuf
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* If we have already tacked on a name(s) in this command,			   be sure they stay on the front as we tack on some more.  */
 if|if
 condition|(
@@ -1563,7 +1608,7 @@ name|concat
 argument_list|(
 name|old
 argument_list|,
-literal|":"
+name|tinybuf
 argument_list|,
 name|name
 argument_list|,
@@ -1623,7 +1668,7 @@ index|[
 literal|0
 index|]
 condition|?
-literal|":"
+name|tinybuf
 else|:
 name|old
 operator|)
@@ -1789,7 +1834,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Open a file named STRING, searching path PATH (dir names sep by colons)    using mode MODE and protection bits PROT in the calls to open.     If TRY_CWD_FIRST, try to open ./STRING before searching PATH.    (ie pretend the first element of PATH is ".").  This also indicates    that a slash in STRING disables searching of the path (this is    so that "exec-file ./foo" or "symbol-file ./foo" insures that you    get that particular version of foo or an error message).     If FILENAMED_OPENED is non-null, set it to a newly allocated string naming    the actual file opened (this string will always start with a "/".  We    have to take special pains to avoid doubling the "/" between the directory    and the file, sigh!  Emacs gets confuzzed by this when we print the    source file name!!!      If a file is found, return the descriptor.    Otherwise, return -1, with errno set for the last name we tried to open.  */
+comment|/* Open a file named STRING, searching path PATH (dir names sep by some char)    using mode MODE and protection bits PROT in the calls to open.     If TRY_CWD_FIRST, try to open ./STRING before searching PATH.    (ie pretend the first element of PATH is ".").  This also indicates    that a slash in STRING disables searching of the path (this is    so that "exec-file ./foo" or "symbol-file ./foo" insures that you    get that particular version of foo or an error message).     If FILENAMED_OPENED is non-null, set it to a newly allocated string naming    the actual file opened (this string will always start with a "/".  We    have to take special pains to avoid doubling the "/" between the directory    and the file, sigh!  Emacs gets confuzzed by this when we print the    source file name!!!      If a file is found, return the descriptor.    Otherwise, return -1, with errno set for the last name we tried to open.  */
 end_comment
 
 begin_comment
@@ -1999,7 +2044,7 @@ name|strchr
 argument_list|(
 name|p
 argument_list|,
-literal|':'
+name|DIRNAME_SEPARATOR
 argument_list|)
 expr_stmt|;
 if|if
@@ -2176,8 +2221,6 @@ argument_list|(
 name|filename
 argument_list|,
 name|mode
-argument_list|,
-name|prot
 argument_list|)
 expr_stmt|;
 if|if
@@ -2396,7 +2439,7 @@ operator|-
 literal|1
 index|]
 operator|==
-literal|':'
+name|DIRNAME_SEPARATOR
 operator|)
 operator|&&
 operator|(
@@ -2405,7 +2448,7 @@ index|[
 name|cdir_len
 index|]
 operator|==
-literal|':'
+name|DIRNAME_SEPARATOR
 operator|||
 name|p
 index|[
@@ -2658,14 +2701,6 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|LSEEK_NOT_LINEAR
-name|char
-name|c
-decl_stmt|;
-endif|#
-directive|endif
 name|line_charpos
 operator|=
 operator|(
@@ -2738,6 +2773,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|LSEEK_NOT_LINEAR
+block|{
+name|char
+name|c
+decl_stmt|;
 comment|/* Have to read it byte by byte to find out where the chars live */
 name|line_charpos
 index|[
@@ -2828,9 +2867,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 else|#
 directive|else
-comment|/* st_size might be a large type, but we only support source files whose       size fits in an int.  FIXME. */
+comment|/* lseek linear.  */
+block|{
+name|struct
+name|cleanup
+modifier|*
+name|old_cleanups
+decl_stmt|;
+comment|/* st_size might be a large type, but we only support source files whose         size fits in an int.  */
 name|size
 operator|=
 operator|(
@@ -2840,9 +2887,7 @@ name|st
 operator|.
 name|st_size
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BROKEN_LARGE_ALLOCA
+comment|/* Use malloc, not alloca, because this may be pretty large, and we may        run into various kinds of limits on stack size.  */
 name|data
 operator|=
 operator|(
@@ -2854,6 +2899,8 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+name|old_cleanups
+operator|=
 name|make_cleanup
 argument_list|(
 name|free
@@ -2861,21 +2908,6 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|data
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
-name|size
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|myread
@@ -2990,8 +3022,15 @@ name|data
 expr_stmt|;
 block|}
 block|}
+name|do_cleanups
+argument_list|(
+name|old_cleanups
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
+comment|/* lseek linear.  */
 name|s
 operator|->
 name|nlines
@@ -3246,10 +3285,8 @@ comment|/* Don't index off the end of the line_charpos array.  */
 return|return
 literal|0
 return|;
-name|printf
+name|annotate_source
 argument_list|(
-literal|"\032\032%s:%d:%d:%s:0x%lx\n"
-argument_list|,
 name|s
 operator|->
 name|fullname
@@ -3266,15 +3303,7 @@ literal|1
 index|]
 argument_list|,
 name|mid_statement
-condition|?
-literal|"middle"
-else|:
-literal|"beg"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|pc
 argument_list|)
 expr_stmt|;
@@ -4220,6 +4249,7 @@ name|symtab
 operator|==
 literal|0
 condition|)
+comment|/* FIXME-32x64--assumes sal.pc fits in long.  */
 name|error
 argument_list|(
 literal|"No source file for address %s."
@@ -4250,20 +4280,20 @@ condition|(
 name|sym
 condition|)
 block|{
-name|printf_filtered
+name|print_address_numeric
 argument_list|(
-literal|"%s is in "
-argument_list|,
-name|local_hex_string
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|sal
 operator|.
 name|pc
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|" is in "
 argument_list|)
 expr_stmt|;
 name|fputs_filtered
@@ -4273,7 +4303,7 @@ argument_list|(
 name|sym
 argument_list|)
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|printf_filtered
@@ -4293,20 +4323,21 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf_filtered
+block|{
+name|print_address_numeric
 argument_list|(
-literal|"%s is at %s:%d.\n"
-argument_list|,
-name|local_hex_string
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|sal
 operator|.
 name|pc
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|" is at %s:%d.\n"
 argument_list|,
 name|sal
 operator|.
@@ -4319,6 +4350,7 @@ operator|.
 name|line
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* If line was not specified by just a line number,      and it does not imply a symtab, it must be an undebuggable symbol      which means no source code.  */
 if|if
@@ -4658,7 +4690,7 @@ name|sal
 operator|.
 name|pc
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -4686,12 +4718,6 @@ operator|&&
 name|find_line_pc_range
 argument_list|(
 name|sal
-operator|.
-name|symtab
-argument_list|,
-name|sal
-operator|.
-name|line
 argument_list|,
 operator|&
 name|start_pc
@@ -4737,7 +4763,7 @@ name|print_address
 argument_list|(
 name|start_pc
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|wrap_here
@@ -4782,7 +4808,7 @@ name|print_address
 argument_list|(
 name|start_pc
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|wrap_here
@@ -4799,7 +4825,7 @@ name|print_address
 argument_list|(
 name|end_pc
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|printf_filtered
@@ -4826,7 +4852,7 @@ expr_stmt|;
 comment|/* If this is the only line, show the source code.  If it could 	     not find the file, don't do anything special.  */
 if|if
 condition|(
-name|frame_file_full_name
+name|annotation_level
 operator|&&
 name|sals
 operator|.

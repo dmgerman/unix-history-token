@@ -731,8 +731,19 @@ begin_comment
 comment|/* Beginning of block defining an enum type */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|stIndirect
+value|34
+end_define
+
 begin_comment
-comment|/* Psuedo-symbols - internal to debugger */
+comment|/* Indirect type specification */
+end_comment
+
+begin_comment
+comment|/* Pseudo-symbols - internal to debugger */
 end_comment
 
 begin_define

@@ -127,6 +127,18 @@ directive|include
 file|"alloca-conf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ansidecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libiberty.h"
+end_include
+
 begin_comment
 comment|/*  Routines imported from standard C runtime libraries. */
 end_comment
@@ -886,6 +898,19 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|input
+argument_list|)
+condition|)
+block|{
+name|input
+operator|++
+expr_stmt|;
+block|}
 block|}
 do|while
 condition|(
@@ -935,6 +960,9 @@ block|,
 literal|"arg 'Jack said \\\"hi\\\"' has double quotes"
 block|,
 literal|"a b c d e f g h i j k l m n o p q r s t u v w x y z 1 2 3 4 5 6 7 8 9"
+block|,
+comment|/* This should be expanded into only one argument.  */
+literal|"trailing-whitespace "
 block|,
 literal|""
 block|,

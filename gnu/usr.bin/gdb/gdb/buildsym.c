@@ -89,6 +89,16 @@ directive|undef
 name|EXTERN
 end_undef
 
+begin_comment
+comment|/* For cleanup_undefined_types and finish_global_stabs (somewhat    questionable--see comment where we call them).  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"stabsread.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1298,6 +1308,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+comment|/* FIXME-32x64: loses if CORE_ADDR doesn't fit in a 		 long.  Possible solutions include a version of 		 complain which takes a callback, a 		 sprintf_address_numeric to match 		 print_address_numeric, or a way to set up a GDB_FILE 		 * which causes sprintf rather than fprintf to be 		 called.  */
 name|complain
 argument_list|(
 operator|&
@@ -1440,9 +1451,14 @@ operator|)
 condition|?
 name|NULL
 else|:
-name|strdup
+name|savestring
 argument_list|(
 name|name
+argument_list|,
+name|strlen
+argument_list|(
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|subfile
@@ -1457,9 +1473,14 @@ operator|)
 condition|?
 name|NULL
 else|:
-name|strdup
+name|savestring
 argument_list|(
 name|dirname
+argument_list|,
+name|strlen
+argument_list|(
+name|dirname
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Initialize line-number recording for this subfile.  */
@@ -1665,9 +1686,14 @@ name|subfile
 operator|->
 name|name
 operator|=
-name|strdup
+name|savestring
 argument_list|(
 name|name
+argument_list|,
+name|strlen
+argument_list|(
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Default the source language to whatever can be deduced from 	 the filename.  If nothing can be deduced (such as for a C/C++ 	 include file with a ".h" extension), then inherit whatever 	 language the previous subfile had.  This kludgery is necessary 	 because there is no standard way in some object formats to 	 record the source language.  Also, when symtabs are allocated 	 we try to deduce a language then as well, but it is too late 	 for us to use that information while reading symbols, since 	 symtabs aren't allocated until after all the symbols have 	 been processed for a given source file. */

@@ -289,9 +289,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* If GDB dumps core, we'd like to see the complaints first.  Presumably      GDB will not be sending so many complaints that this becomes a      performance hog.  */
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|va_end

@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* When gdb creates fundamental types, it uses one of the following    type identifiers.  The identifiers are used to index a vector of    pointers to any types that are created. */
+comment|/* Codes for `fundamental types'.  This is a monstrosity based on the    bogus notion that there are certain compiler-independent    `fundamental types'.  None of these is well-defined (how big is    FT_SHORT?  Does it depend on the language?  How does the    language-specific code know which type to correlate to FT_SHORT?)  */
 end_comment
 
 begin_define
@@ -335,7 +335,7 @@ comment|/* Integer type */
 comment|/* Floating type.  This is *NOT* a complex type.  Complex types, when      we have them, will have their own type code (or TYPE_CODE_ERROR if      we can parse a complex type but not manipulate it).  There are parts      of GDB which bogusly assume that TYPE_CODE_FLT can mean complex.  */
 name|TYPE_CODE_FLT
 block|,
-comment|/* Void type (values zero length; the length field is ignored).  */
+comment|/* Void type.  The length field specifies the length (probably always      one) which is used in pointer arithmetic involving pointers to      this type, but actually dereferencing such a pointer is invalid;      a void type has no length and no actual representation in memory      or registers.  A pointer to a void type is a generic pointer.  */
 name|TYPE_CODE_VOID
 block|,
 name|TYPE_CODE_SET
@@ -344,12 +344,12 @@ comment|/* Pascal sets */
 name|TYPE_CODE_RANGE
 block|,
 comment|/* Range (integers within spec'd bounds) */
+comment|/* A string type which is like an array of character but prints      differently (at least for CHILL).  It does not contain a length      field as Pascal strings (for many Pascals, anyway) do; if we want      to deal with such strings, we should use a new type code.  */
 name|TYPE_CODE_STRING
 block|,
-comment|/* String types, distinct from array of char */
+comment|/* String of bits; like TYPE_CODE_SET but prints differently (at least      for CHILL).  */
 name|TYPE_CODE_BITSTRING
 block|,
-comment|/* String of bits, distinct from bool array */
 comment|/* Unknown type.  The length field is valid if we were able to      deduce that much about the type, or 0 if we don't even know that.  */
 name|TYPE_CODE_ERROR
 block|,
@@ -363,18 +363,17 @@ comment|/* Method type */
 name|TYPE_CODE_REF
 block|,
 comment|/* C++ Reference types */
-comment|/* Modula-2 */
 name|TYPE_CODE_CHAR
 block|,
 comment|/* *real* character type */
+comment|/* Boolean type.  0 is false, 1 is true, and other values are non-boolean      (e.g. FORTRAN "logical" used as unsigned int).  */
 name|TYPE_CODE_BOOL
-comment|/* BOOLEAN type */
 block|}
 enum|;
 end_enum
 
 begin_comment
-comment|/* For now allow source to use TYPE_CODE_CLASS for C++ classes, as an    alias for TYPE_CODE_STRUCT.  Eventually these should probably be    officially distinct types within gdb. */
+comment|/* For now allow source to use TYPE_CODE_CLASS for C++ classes, as an    alias for TYPE_CODE_STRUCT.  This is for DWARF, which has a distinct    "class" attribute.  Perhaps we should actually have a separate TYPE_CODE    so that we can print "class" or "struct" depending on what the debug    info said.  It's not clear we should bother.  */
 end_comment
 
 begin_define
@@ -389,7 +388,7 @@ comment|/* Some bits for the type's flags word. */
 end_comment
 
 begin_comment
-comment|/* Explicitly unsigned integer type */
+comment|/* Unsigned integer type.  If this is not set for a TYPE_CODE_INT, the    type is signed.  */
 end_comment
 
 begin_define
@@ -397,17 +396,6 @@ define|#
 directive|define
 name|TYPE_FLAG_UNSIGNED
 value|(1<< 0)
-end_define
-
-begin_comment
-comment|/* Explicitly signed integer type */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TYPE_FLAG_SIGNED
-value|(1<< 1)
 end_define
 
 begin_comment
@@ -419,6 +407,17 @@ define|#
 directive|define
 name|TYPE_FLAG_STUB
 value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* The target type of this type is a stub type, and this type needs to    be updated if it gets un-stubbed in check_stub_type.  Currently only    used for arrays, in which TYPE_LENGTH of the array gets set based    on the TYPE_LENGTH of the target type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_FLAG_TARGET_STUB
+value|(1<< 3)
 end_define
 
 begin_struct
@@ -586,6 +585,11 @@ name|B_TYPE
 modifier|*
 name|protected_field_bits
 decl_stmt|;
+comment|/* for classes with fields to be ignored, either this is optimized out      or this field has length 0 */
+name|B_TYPE
+modifier|*
+name|ignore_field_bits
+decl_stmt|;
 comment|/* For classes, structures, and unions, a description of each field,      which consists of an overloaded name, followed by the types of      arguments that the method expects, and then the name after it      has been renamed to make it distinct.       fn_fieldlists points to an array of nfn_fields of these. */
 struct|struct
 name|fn_fieldlist
@@ -615,7 +619,7 @@ name|type
 modifier|*
 name|type
 decl_stmt|;
-comment|/* The argument list.  Only valid if is_stub is clear.  Contains 	     the type of each argument, including `this', and ending with 	     a NULL pointer after the last argument.  */
+comment|/* The argument list.  Only valid if is_stub is clear.  Contains 	     the type of each argument, including `this', and ending with 	     a NULL pointer after the last argument.  Should not contain 	     a `this' pointer for static member functions.  */
 name|struct
 name|type
 modifier|*
@@ -878,6 +882,40 @@ parameter_list|(
 name|thistype
 parameter_list|)
 value|(thistype)->fields
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_LOW_BOUND
+parameter_list|(
+name|range_type
+parameter_list|)
+value|TYPE_FIELD_BITPOS (range_type, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_HIGH_BOUND
+parameter_list|(
+name|range_type
+parameter_list|)
+value|TYPE_FIELD_BITPOS (range_type, 1)
+end_define
+
+begin_comment
+comment|/* If TYPE_DUMMY_RANGE is true for a range type, it was allocated    by force_to_range_type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_DUMMY_RANGE
+parameter_list|(
+name|type
+parameter_list|)
+value|((type)->vptr_fieldno)
 end_define
 
 begin_comment
@@ -1154,6 +1192,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|TYPE_FIELD_IGNORE_BITS
+parameter_list|(
+name|thistype
+parameter_list|)
+define|\
+value|TYPE_CPLUS_SPECIFIC(thistype)->ignore_field_bits
+end_define
+
+begin_define
+define|#
+directive|define
 name|TYPE_FIELD_VIRTUAL_BITS
 parameter_list|(
 name|thistype
@@ -1186,6 +1235,19 @@ name|n
 parameter_list|)
 define|\
 value|B_SET (TYPE_CPLUS_SPECIFIC(thistype)->protected_field_bits, (n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_TYPE_FIELD_IGNORE
+parameter_list|(
+name|thistype
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|B_SET (TYPE_CPLUS_SPECIFIC(thistype)->ignore_field_bits, (n))
 end_define
 
 begin_define
@@ -1225,6 +1287,19 @@ name|n
 parameter_list|)
 define|\
 value|(TYPE_CPLUS_SPECIFIC(thistype)->protected_field_bits == NULL ? 0 \     : B_TST(TYPE_CPLUS_SPECIFIC(thistype)->protected_field_bits, (n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_FIELD_IGNORE
+parameter_list|(
+name|thistype
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|(TYPE_CPLUS_SPECIFIC(thistype)->ignore_field_bits == NULL ? 0 \     : B_TST(TYPE_CPLUS_SPECIFIC(thistype)->ignore_field_bits, (n)))
 end_define
 
 begin_define
@@ -1752,62 +1827,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* CC_HAS_LONG_LONG is defined if the host has "long long".  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CC_HAS_LONG_LONG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BUILTIN_TYPE_LONGEST
-value|builtin_type_long_long
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUILTIN_TYPE_UNSIGNED_LONGEST
-value|builtin_type_unsigned_long_long
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not CC_HAS_LONG_LONG.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUILTIN_TYPE_LONGEST
-value|builtin_type_long
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUILTIN_TYPE_UNSIGNED_LONGEST
-value|builtin_type_unsigned_long
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not CC_HAS_LONG_LONG.  */
-end_comment
-
-begin_comment
 comment|/* Maximum and minimum values of built-in types */
 end_comment
 
@@ -2215,6 +2234,27 @@ specifier|extern
 name|struct
 name|type
 modifier|*
+name|create_set_type
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|type
+operator|*
+operator|,
+expr|struct
+name|type
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|type
+modifier|*
 name|lookup_unsigned_typename
 name|PARAMS
 argument_list|(
@@ -2459,7 +2499,22 @@ name|int
 operator|,
 name|int
 operator|,
-name|FILE
+name|GDB_FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|can_dereference
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|type
 operator|*
 operator|)
 argument_list|)

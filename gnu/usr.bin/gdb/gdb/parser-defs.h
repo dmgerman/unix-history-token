@@ -52,6 +52,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|expression
 modifier|*
@@ -60,12 +61,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|expout_size
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|expout_ptr
 decl_stmt|;
@@ -76,6 +79,7 @@ comment|/* If this is nonzero, this block is used as the lexical context    for 
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|block
 modifier|*
@@ -88,6 +92,7 @@ comment|/* The innermost context required by the stack and register variables   
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|block
 modifier|*
@@ -96,10 +101,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The block in which the most recently discovered symbol was found. */
+comment|/* The block in which the most recently discovered symbol was found.    FIXME: Should be declared along with lookup_symbol in symtab.h; is not    related specifically to parsing.  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|block
 modifier|*
@@ -112,6 +118,7 @@ comment|/* Number of arguments seen so far in innermost function call.  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|arglist_len
 decl_stmt|;
@@ -219,6 +226,7 @@ union|;
 end_union
 
 begin_decl_stmt
+specifier|extern
 name|union
 name|type_stack_elt
 modifier|*
@@ -227,6 +235,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|type_stack_depth
 decl_stmt|,
@@ -364,6 +373,44 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|write_exp_elt_block
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|block
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|write_exp_msymbol
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|minimal_symbol
+operator|*
+operator|,
+expr|struct
+name|type
+operator|*
+operator|,
+expr|struct
+name|type
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|start_arglist
 name|PARAMS
 argument_list|(
@@ -478,6 +525,7 @@ comment|/* During parsing of a C expression, the pointer to the next character  
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|lexptr
@@ -489,6 +537,7 @@ comment|/* Tokens that refer to names do so with explicit pointer and length,   
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|namecopy
@@ -500,6 +549,7 @@ comment|/* Current depth in parentheses within the expression.  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|paren_depth
 decl_stmt|;
@@ -510,6 +560,7 @@ comment|/* Nonzero means stop parsing on first comma (if not within parentheses)
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|comma_terminates
 decl_stmt|;

@@ -61,10 +61,8 @@ end_decl_stmt
 
 begin_function
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|bfd_i386_arch
-parameter_list|)
+parameter_list|()
 block|{
 name|bfd_arch_linkin
 argument_list|(

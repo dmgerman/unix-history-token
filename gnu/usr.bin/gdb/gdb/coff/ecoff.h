@@ -162,6 +162,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_LITA
+value|".lita"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_LIT4
 value|".lit4"
 end_define
@@ -192,6 +199,20 @@ define|#
 directive|define
 name|_FINI
 value|".fini"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PDATA
+value|".pdata"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_XDATA
+value|".xdata"
 end_define
 
 begin_comment
@@ -229,6 +250,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|STYP_EXTENDESC
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* 0x02FFF000 bits => scn type, rest clr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STYP_LITA
+value|0x4000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|STYP_LIT8
 value|0x8000000
 end_define
@@ -238,6 +277,13 @@ define|#
 directive|define
 name|STYP_LIT4
 value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|STYP_ECOFF_LIB
+value|0x40000000
 end_define
 
 begin_define
@@ -255,6 +301,31 @@ value|(STYP_ECOFF_INIT | STYP_ECOFF_FINI)
 end_define
 
 begin_comment
+comment|/* extended section types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STYP_COMMENT
+value|0x2100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|STYP_XDATA
+value|0x2400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|STYP_PDATA
+value|0x2800000
+end_define
+
+begin_comment
 comment|/* The linker needs a section to hold small common variables while    linking.  There is no convenient way to create it when the linker    needs it, so we always create one for each BFD.  We then avoid    writing it out.  */
 end_comment
 
@@ -264,47 +335,6 @@ directive|define
 name|SCOMMON
 value|".scommon"
 end_define
-
-begin_comment
-comment|/* The ECOFF a.out header carries information about register masks and    the gp value.  The assembler needs to be able to write out this    information, and objcopy needs to be able to copy it from one file    to another.  To handle this in BFD, we use a dummy section to hold    the information.  We call this section .reginfo, since MIPS ELF has    a .reginfo section which serves a similar purpose.  When BFD    recognizes an ECOFF object, it copies the information into a    private data structure.  When the .reginfo section is read, the    information is retrieved from the private data structure.  When the    .reginfo section is written, the information in the private data    structure is updated.  The contents of the .reginfo section, as    seen by programs outside BFD, is a ecoff_reginfo structure.  The    contents of the structure are as seen on the host, so no swapping    issues arise.     The assembler used to update the private BFD data structures    directly.  With this approach, it instead just creates a .reginfo    section and updates that.  The real advantage of this approach is    that objcopy works automatically.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REGINFO
-value|".reginfo"
-end_define
-
-begin_struct
-struct|struct
-name|ecoff_reginfo
-block|{
-name|bfd_vma
-name|gp_value
-decl_stmt|;
-comment|/* GP register value.		*/
-name|unsigned
-name|long
-name|gprmask
-decl_stmt|;
-comment|/* General registers used.	*/
-name|unsigned
-name|long
-name|cprmask
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* Coprocessor registers used.	*/
-name|unsigned
-name|long
-name|fprmask
-decl_stmt|;
-comment|/* Floating pointer registers used.  */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/* If the extern bit in a reloc is 1, then r_symndx is an index into    the external symbol table.  If the extern bit is 0, then r_symndx    indicates a section, and is one of the following values.  */
@@ -413,6 +443,13 @@ define|#
 directive|define
 name|RELOC_SECTION_ABS
 value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUM_RELOC_SECTIONS
+value|15
 end_define
 
 begin_comment
@@ -555,35 +592,35 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS1_FBITFIELD_BIG
-value|0x80
+value|((unsigned int) 0x80)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TIR_BITS1_FBITFIELD_LITTLE
-value|0x01
+value|((unsigned int) 0x01)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TIR_BITS1_CONTINUED_BIG
-value|0x40
+value|((unsigned int) 0x40)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TIR_BITS1_CONTINUED_LITTLE
-value|0x02
+value|((unsigned int) 0x02)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TIR_BITS1_BT_BIG
-value|0x3F
+value|((unsigned int) 0x3F)
 end_define
 
 begin_define
@@ -597,7 +634,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS1_BT_LITTLE
-value|0xFC
+value|((unsigned int) 0xFC)
 end_define
 
 begin_define
@@ -611,7 +648,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS_TQ4_BIG
-value|0xF0
+value|((unsigned int) 0xF0)
 end_define
 
 begin_define
@@ -625,7 +662,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS_TQ5_BIG
-value|0x0F
+value|((unsigned int) 0x0F)
 end_define
 
 begin_define
@@ -639,7 +676,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS_TQ4_LITTLE
-value|0x0F
+value|((unsigned int) 0x0F)
 end_define
 
 begin_define
@@ -653,7 +690,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS_TQ5_LITTLE
-value|0xF0
+value|((unsigned int) 0xF0)
 end_define
 
 begin_define
@@ -667,7 +704,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS_TQ0_BIG
-value|0xF0
+value|((unsigned int) 0xF0)
 end_define
 
 begin_define
@@ -681,7 +718,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS_TQ1_BIG
-value|0x0F
+value|((unsigned int) 0x0F)
 end_define
 
 begin_define
@@ -695,7 +732,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS_TQ0_LITTLE
-value|0x0F
+value|((unsigned int) 0x0F)
 end_define
 
 begin_define
@@ -709,7 +746,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS_TQ1_LITTLE
-value|0xF0
+value|((unsigned int) 0xF0)
 end_define
 
 begin_define
@@ -723,7 +760,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS_TQ2_BIG
-value|0xF0
+value|((unsigned int) 0xF0)
 end_define
 
 begin_define
@@ -737,7 +774,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS_TQ3_BIG
-value|0x0F
+value|((unsigned int) 0x0F)
 end_define
 
 begin_define
@@ -751,7 +788,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS_TQ2_LITTLE
-value|0x0F
+value|((unsigned int) 0x0F)
 end_define
 
 begin_define
@@ -765,7 +802,7 @@ begin_define
 define|#
 directive|define
 name|TIR_BITS_TQ3_LITTLE
-value|0xF0
+value|((unsigned int) 0xF0)
 end_define
 
 begin_define
@@ -805,7 +842,7 @@ begin_define
 define|#
 directive|define
 name|RNDX_BITS1_RFD_BIG
-value|0xF0
+value|((unsigned int) 0xF0)
 end_define
 
 begin_define
@@ -826,7 +863,7 @@ begin_define
 define|#
 directive|define
 name|RNDX_BITS1_RFD_LITTLE
-value|0x0F
+value|((unsigned int) 0x0F)
 end_define
 
 begin_define
@@ -840,7 +877,7 @@ begin_define
 define|#
 directive|define
 name|RNDX_BITS1_INDEX_BIG
-value|0x0F
+value|((unsigned int) 0x0F)
 end_define
 
 begin_define
@@ -868,7 +905,7 @@ begin_define
 define|#
 directive|define
 name|RNDX_BITS1_INDEX_LITTLE
-value|0xF0
+value|((unsigned int) 0xF0)
 end_define
 
 begin_define
@@ -1149,19 +1186,318 @@ value|AUX_PUT_ANY ((bigend), (val), (ax), a_count)
 end_define
 
 begin_comment
-comment|/* Prototypes for the swapping functions.  These require that sym.h be    included before this file.  */
+comment|/********************** SYMBOLS **********************/
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_comment
+comment|/* For efficiency, gdb deals directly with the unswapped symbolic    information (that way it only takes the time to swap information    that it really needs to read).  gdb originally retrieved the    information directly from the BFD backend information, but that    strategy, besides being sort of ugly, does not work for MIPS ELF,    which also uses ECOFF debugging information.  This structure holds    pointers to the (mostly) unswapped symbolic information.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ecoff_debug_info
+block|{
+comment|/* The swapped ECOFF symbolic header.  */
+name|HDRR
+name|symbolic_header
+decl_stmt|;
+comment|/* Pointers to the unswapped symbolic information.  Note that the      pointers to external structures point to different sorts of      information on different ECOFF targets.  The ecoff_debug_swap      structure provides the sizes of the structures and the functions      needed to swap the information in and out.  These pointers are      all pointers to arrays, not single structures.  They will be NULL      if there are no instances of the relevant structure.  These      fields are also used by the assembler to output ECOFF debugging      information.  */
+name|unsigned
+name|char
+modifier|*
+name|line
+decl_stmt|;
+name|PTR
+name|external_dnr
+decl_stmt|;
+comment|/* struct dnr_ext */
+name|PTR
+name|external_pdr
+decl_stmt|;
+comment|/* struct pdr_ext */
+name|PTR
+name|external_sym
+decl_stmt|;
+comment|/* struct sym_ext */
+name|PTR
+name|external_opt
+decl_stmt|;
+comment|/* struct opt_ext */
+name|union
+name|aux_ext
+modifier|*
+name|external_aux
+decl_stmt|;
+name|char
+modifier|*
+name|ss
+decl_stmt|;
+name|char
+modifier|*
+name|ssext
+decl_stmt|;
+name|PTR
+name|external_fdr
+decl_stmt|;
+comment|/* struct fdr_ext */
+name|PTR
+name|external_rfd
+decl_stmt|;
+comment|/* struct rfd_ext */
+name|PTR
+name|external_ext
+decl_stmt|;
+comment|/* struct ext_ext */
+comment|/* These fields are used when linking.  They may disappear at some      point.  */
+name|char
+modifier|*
+name|ssext_end
+decl_stmt|;
+name|PTR
+name|external_ext_end
+decl_stmt|;
+comment|/* When linking, this field holds a mapping from the input FDR      numbers to the output numbers, and is used when writing out the      external symbols.  It is NULL if no mapping is required.  */
+name|RFDT
+modifier|*
+name|ifdmap
+decl_stmt|;
+comment|/* The swapped FDR information.  Currently this is never NULL, but      code using this structure should probably double-check in case      this changes in the future.  This is a pointer to an array, not a      single structure.  */
+name|FDR
+modifier|*
+name|fdr
+decl_stmt|;
+comment|/* When relaxing MIPS embedded PIC code, we may need to adjust      symbol values when they are output.  This is a linked list of      structures indicating how values should be adjusted.  There is no      requirement that the entries be in any order, or that they not      overlap.  This field is normally NULL, in which case no      adjustments need to be made.  */
+name|struct
+name|ecoff_value_adjust
+modifier|*
+name|adjust
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* This structure describes how to adjust symbol values when    outputting MIPS embedded PIC code.  These adjustments only apply to    the internal symbols, as the external symbol values will come from    the hash table and have already been adjusted.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ecoff_value_adjust
+block|{
+comment|/* Next entry on adjustment list.  */
+name|struct
+name|ecoff_value_adjust
+modifier|*
+name|next
+decl_stmt|;
+comment|/* Starting VMA of adjustment.  This is the VMA in the ECOFF file,      not the offset from the start of the section.  Thus it should      indicate a particular section.  */
+name|bfd_vma
+name|start
+decl_stmt|;
+comment|/* Ending VMA of adjustment.  */
+name|bfd_vma
+name|end
+decl_stmt|;
+comment|/* Adjustment.  This should be added to the value of the symbol, or      FDR.  This is zero for the last entry in the array.  */
+name|long
+name|adjust
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/********************** SWAPPING **********************/
+end_comment
+
+begin_comment
+comment|/* The generic ECOFF code needs to be able to swap debugging    information in and out in the specific format used by a particular    ECOFF implementation.  This structure provides the information    needed to do this.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ecoff_debug_swap
+block|{
+comment|/* Symbol table magic number.  */
+name|int
+name|sym_magic
+decl_stmt|;
+comment|/* Alignment of debugging information.  E.g., 4.  */
+name|bfd_size_type
+name|debug_align
+decl_stmt|;
+comment|/* Sizes of external symbolic information.  */
+name|bfd_size_type
+name|external_hdr_size
+decl_stmt|;
+name|bfd_size_type
+name|external_dnr_size
+decl_stmt|;
+name|bfd_size_type
+name|external_pdr_size
+decl_stmt|;
+name|bfd_size_type
+name|external_sym_size
+decl_stmt|;
+name|bfd_size_type
+name|external_opt_size
+decl_stmt|;
+name|bfd_size_type
+name|external_fdr_size
+decl_stmt|;
+name|bfd_size_type
+name|external_rfd_size
+decl_stmt|;
+name|bfd_size_type
+name|external_ext_size
+decl_stmt|;
+comment|/* Functions to swap in external symbolic data.  */
 name|void
-name|ecoff_swap_tir_in
+argument_list|(
+argument|*swap_hdr_in
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
+operator|,
+name|HDRR
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_dnr_in
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
+operator|,
+name|DNR
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_pdr_in
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
+operator|,
+name|PDR
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_sym_in
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
+operator|,
+name|SYMR
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_opt_in
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
+operator|,
+name|OPTR
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_fdr_in
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
+operator|,
+name|FDR
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_rfd_in
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
+operator|,
+name|RFDT
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_ext_in
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|PTR
+operator|,
+name|EXTR
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_tir_in
+argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
 name|int
-name|bigend
 operator|,
+specifier|const
 expr|struct
 name|tir_ext
 operator|*
@@ -1170,19 +1506,181 @@ name|TIR
 operator|*
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+expr_stmt|;
 name|void
-name|ecoff_swap_tir_out
+argument_list|(
+argument|*swap_rndx_in
+argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
 name|int
-name|bigend
 operator|,
+specifier|const
+expr|struct
+name|rndx_ext
+operator|*
+operator|,
+name|RNDXR
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Functions to swap out external symbolic data.  */
+name|void
+argument_list|(
+argument|*swap_hdr_out
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+specifier|const
+name|HDRR
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_dnr_out
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+specifier|const
+name|DNR
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_pdr_out
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+specifier|const
+name|PDR
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_sym_out
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+specifier|const
+name|SYMR
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_opt_out
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+specifier|const
+name|OPTR
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_fdr_out
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+specifier|const
+name|FDR
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_rfd_out
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+specifier|const
+name|RFDT
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_ext_out
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+specifier|const
+name|EXTR
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*swap_tir_out
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
 name|TIR
 operator|*
 operator|,
@@ -1191,40 +1689,17 @@ name|tir_ext
 operator|*
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+expr_stmt|;
 name|void
-name|ecoff_swap_rndx_in
-name|PARAMS
 argument_list|(
-operator|(
-name|int
-name|bigend
-operator|,
-expr|struct
-name|rndx_ext
-operator|*
-operator|,
-name|RNDXR
-operator|*
-operator|)
+argument|*swap_rndx_out
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|ecoff_swap_rndx_out
 name|PARAMS
 argument_list|(
 operator|(
 name|int
-name|bigend
 operator|,
+specifier|const
 name|RNDXR
 operator|*
 operator|,
@@ -1233,8 +1708,30 @@ name|rndx_ext
 operator|*
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+comment|/* Function to read symbol data and set up pointers in      ecoff_debug_info structure.  The section argument is used for      ELF, not straight ECOFF.  */
+name|boolean
+argument_list|(
+argument|*read_debug_info
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+expr|struct
+name|ecoff_debug_info
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#

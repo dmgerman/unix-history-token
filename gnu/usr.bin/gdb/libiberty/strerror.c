@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"ansidecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libiberty.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"config.h"
 end_include
 
@@ -124,23 +136,6 @@ begin_comment
 comment|/* !__STDC__ */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|const
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|extern
 name|char
@@ -207,19 +202,70 @@ name|int
 name|value
 decl_stmt|;
 comment|/* The numeric value from<errno.h> */
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 comment|/* The equivalent symbolic value */
+ifdef|#
+directive|ifdef
+name|NEED_sys_errlist
+specifier|const
 name|char
 modifier|*
 name|msg
 decl_stmt|;
 comment|/* Short message about this value */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_sys_errlist
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ENTRY
+parameter_list|(
+name|value
+parameter_list|,
+name|name
+parameter_list|,
+name|msg
+parameter_list|)
+value|{value, name, msg}
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ENTRY
+parameter_list|(
+name|value
+parameter_list|,
+name|name
+parameter_list|,
+name|msg
+parameter_list|)
+value|{value, name}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -236,13 +282,14 @@ name|defined
 argument_list|(
 name|EPERM
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EPERM
-block|,
+argument_list|,
 literal|"EPERM"
-block|,
+argument_list|,
 literal|"Not owner"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -252,13 +299,14 @@ name|defined
 argument_list|(
 name|ENOENT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOENT
-block|,
+argument_list|,
 literal|"ENOENT"
-block|,
+argument_list|,
 literal|"No such file or directory"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -268,13 +316,14 @@ name|defined
 argument_list|(
 name|ESRCH
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ESRCH
-block|,
+argument_list|,
 literal|"ESRCH"
-block|,
+argument_list|,
 literal|"No such process"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -284,13 +333,14 @@ name|defined
 argument_list|(
 name|EINTR
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EINTR
-block|,
+argument_list|,
 literal|"EINTR"
-block|,
+argument_list|,
 literal|"Interrupted system call"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -300,13 +350,14 @@ name|defined
 argument_list|(
 name|EIO
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EIO
-block|,
+argument_list|,
 literal|"EIO"
-block|,
+argument_list|,
 literal|"I/O error"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -316,13 +367,14 @@ name|defined
 argument_list|(
 name|ENXIO
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENXIO
-block|,
+argument_list|,
 literal|"ENXIO"
-block|,
+argument_list|,
 literal|"No such device or address"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -332,13 +384,14 @@ name|defined
 argument_list|(
 name|E2BIG
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|E2BIG
-block|,
+argument_list|,
 literal|"E2BIG"
-block|,
+argument_list|,
 literal|"Arg list too long"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -348,13 +401,14 @@ name|defined
 argument_list|(
 name|ENOEXEC
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOEXEC
-block|,
+argument_list|,
 literal|"ENOEXEC"
-block|,
+argument_list|,
 literal|"Exec format error"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -364,13 +418,14 @@ name|defined
 argument_list|(
 name|EBADF
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EBADF
-block|,
+argument_list|,
 literal|"EBADF"
-block|,
+argument_list|,
 literal|"Bad file number"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -380,13 +435,14 @@ name|defined
 argument_list|(
 name|ECHILD
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ECHILD
-block|,
+argument_list|,
 literal|"ECHILD"
-block|,
+argument_list|,
 literal|"No child processes"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -397,13 +453,14 @@ argument_list|(
 name|EWOULDBLOCK
 argument_list|)
 comment|/* Put before EAGAIN, sometimes aliased */
-block|{
+name|ENTRY
+argument_list|(
 name|EWOULDBLOCK
-block|,
+argument_list|,
 literal|"EWOULDBLOCK"
-block|,
+argument_list|,
 literal|"Operation would block"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -413,13 +470,14 @@ name|defined
 argument_list|(
 name|EAGAIN
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EAGAIN
-block|,
+argument_list|,
 literal|"EAGAIN"
-block|,
+argument_list|,
 literal|"No more processes"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -429,13 +487,14 @@ name|defined
 argument_list|(
 name|ENOMEM
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOMEM
-block|,
+argument_list|,
 literal|"ENOMEM"
-block|,
+argument_list|,
 literal|"Not enough space"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -445,13 +504,14 @@ name|defined
 argument_list|(
 name|EACCES
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EACCES
-block|,
+argument_list|,
 literal|"EACCES"
-block|,
+argument_list|,
 literal|"Permission denied"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -461,13 +521,14 @@ name|defined
 argument_list|(
 name|EFAULT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EFAULT
-block|,
+argument_list|,
 literal|"EFAULT"
-block|,
+argument_list|,
 literal|"Bad address"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -477,13 +538,14 @@ name|defined
 argument_list|(
 name|ENOTBLK
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOTBLK
-block|,
+argument_list|,
 literal|"ENOTBLK"
-block|,
+argument_list|,
 literal|"Block device required"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -493,13 +555,14 @@ name|defined
 argument_list|(
 name|EBUSY
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EBUSY
-block|,
+argument_list|,
 literal|"EBUSY"
-block|,
+argument_list|,
 literal|"Device busy"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -509,13 +572,14 @@ name|defined
 argument_list|(
 name|EEXIST
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EEXIST
-block|,
+argument_list|,
 literal|"EEXIST"
-block|,
+argument_list|,
 literal|"File exists"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -525,13 +589,14 @@ name|defined
 argument_list|(
 name|EXDEV
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EXDEV
-block|,
+argument_list|,
 literal|"EXDEV"
-block|,
+argument_list|,
 literal|"Cross-device link"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -541,13 +606,14 @@ name|defined
 argument_list|(
 name|ENODEV
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENODEV
-block|,
+argument_list|,
 literal|"ENODEV"
-block|,
+argument_list|,
 literal|"No such device"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -557,13 +623,14 @@ name|defined
 argument_list|(
 name|ENOTDIR
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOTDIR
-block|,
+argument_list|,
 literal|"ENOTDIR"
-block|,
+argument_list|,
 literal|"Not a directory"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -573,13 +640,14 @@ name|defined
 argument_list|(
 name|EISDIR
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EISDIR
-block|,
+argument_list|,
 literal|"EISDIR"
-block|,
+argument_list|,
 literal|"Is a directory"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -589,13 +657,14 @@ name|defined
 argument_list|(
 name|EINVAL
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EINVAL
-block|,
+argument_list|,
 literal|"EINVAL"
-block|,
+argument_list|,
 literal|"Invalid argument"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -605,13 +674,14 @@ name|defined
 argument_list|(
 name|ENFILE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENFILE
-block|,
+argument_list|,
 literal|"ENFILE"
-block|,
+argument_list|,
 literal|"File table overflow"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -621,13 +691,14 @@ name|defined
 argument_list|(
 name|EMFILE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EMFILE
-block|,
+argument_list|,
 literal|"EMFILE"
-block|,
+argument_list|,
 literal|"Too many open files"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -637,13 +708,14 @@ name|defined
 argument_list|(
 name|ENOTTY
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOTTY
-block|,
+argument_list|,
 literal|"ENOTTY"
-block|,
+argument_list|,
 literal|"Not a typewriter"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -653,13 +725,14 @@ name|defined
 argument_list|(
 name|ETXTBSY
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ETXTBSY
-block|,
+argument_list|,
 literal|"ETXTBSY"
-block|,
+argument_list|,
 literal|"Text file busy"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -669,13 +742,14 @@ name|defined
 argument_list|(
 name|EFBIG
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EFBIG
-block|,
+argument_list|,
 literal|"EFBIG"
-block|,
+argument_list|,
 literal|"File too large"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -685,13 +759,14 @@ name|defined
 argument_list|(
 name|ENOSPC
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOSPC
-block|,
+argument_list|,
 literal|"ENOSPC"
-block|,
+argument_list|,
 literal|"No space left on device"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -701,13 +776,14 @@ name|defined
 argument_list|(
 name|ESPIPE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ESPIPE
-block|,
+argument_list|,
 literal|"ESPIPE"
-block|,
+argument_list|,
 literal|"Illegal seek"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -717,13 +793,14 @@ name|defined
 argument_list|(
 name|EROFS
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EROFS
-block|,
+argument_list|,
 literal|"EROFS"
-block|,
+argument_list|,
 literal|"Read-only file system"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -733,13 +810,14 @@ name|defined
 argument_list|(
 name|EMLINK
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EMLINK
-block|,
+argument_list|,
 literal|"EMLINK"
-block|,
+argument_list|,
 literal|"Too many links"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -749,13 +827,14 @@ name|defined
 argument_list|(
 name|EPIPE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EPIPE
-block|,
+argument_list|,
 literal|"EPIPE"
-block|,
+argument_list|,
 literal|"Broken pipe"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -765,13 +844,14 @@ name|defined
 argument_list|(
 name|EDOM
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EDOM
-block|,
+argument_list|,
 literal|"EDOM"
-block|,
+argument_list|,
 literal|"Math argument out of domain of func"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -781,13 +861,14 @@ name|defined
 argument_list|(
 name|ERANGE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ERANGE
-block|,
+argument_list|,
 literal|"ERANGE"
-block|,
+argument_list|,
 literal|"Math result not representable"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -797,13 +878,14 @@ name|defined
 argument_list|(
 name|ENOMSG
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOMSG
-block|,
+argument_list|,
 literal|"ENOMSG"
-block|,
+argument_list|,
 literal|"No message of desired type"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -813,13 +895,14 @@ name|defined
 argument_list|(
 name|EIDRM
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EIDRM
-block|,
+argument_list|,
 literal|"EIDRM"
-block|,
+argument_list|,
 literal|"Identifier removed"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -829,13 +912,14 @@ name|defined
 argument_list|(
 name|ECHRNG
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ECHRNG
-block|,
+argument_list|,
 literal|"ECHRNG"
-block|,
+argument_list|,
 literal|"Channel number out of range"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -845,13 +929,14 @@ name|defined
 argument_list|(
 name|EL2NSYNC
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EL2NSYNC
-block|,
+argument_list|,
 literal|"EL2NSYNC"
-block|,
+argument_list|,
 literal|"Level 2 not synchronized"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -861,13 +946,14 @@ name|defined
 argument_list|(
 name|EL3HLT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EL3HLT
-block|,
+argument_list|,
 literal|"EL3HLT"
-block|,
+argument_list|,
 literal|"Level 3 halted"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -877,13 +963,14 @@ name|defined
 argument_list|(
 name|EL3RST
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EL3RST
-block|,
+argument_list|,
 literal|"EL3RST"
-block|,
+argument_list|,
 literal|"Level 3 reset"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -893,13 +980,14 @@ name|defined
 argument_list|(
 name|ELNRNG
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ELNRNG
-block|,
+argument_list|,
 literal|"ELNRNG"
-block|,
+argument_list|,
 literal|"Link number out of range"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -909,13 +997,14 @@ name|defined
 argument_list|(
 name|EUNATCH
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EUNATCH
-block|,
+argument_list|,
 literal|"EUNATCH"
-block|,
+argument_list|,
 literal|"Protocol driver not attached"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -925,13 +1014,14 @@ name|defined
 argument_list|(
 name|ENOCSI
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOCSI
-block|,
+argument_list|,
 literal|"ENOCSI"
-block|,
+argument_list|,
 literal|"No CSI structure available"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -941,13 +1031,14 @@ name|defined
 argument_list|(
 name|EL2HLT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EL2HLT
-block|,
+argument_list|,
 literal|"EL2HLT"
-block|,
+argument_list|,
 literal|"Level 2 halted"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -957,13 +1048,14 @@ name|defined
 argument_list|(
 name|EDEADLK
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EDEADLK
-block|,
+argument_list|,
 literal|"EDEADLK"
-block|,
+argument_list|,
 literal|"Deadlock condition"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -973,13 +1065,14 @@ name|defined
 argument_list|(
 name|ENOLCK
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOLCK
-block|,
+argument_list|,
 literal|"ENOLCK"
-block|,
+argument_list|,
 literal|"No record locks available"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -989,13 +1082,14 @@ name|defined
 argument_list|(
 name|EBADE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EBADE
-block|,
+argument_list|,
 literal|"EBADE"
-block|,
+argument_list|,
 literal|"Invalid exchange"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1005,13 +1099,14 @@ name|defined
 argument_list|(
 name|EBADR
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EBADR
-block|,
+argument_list|,
 literal|"EBADR"
-block|,
+argument_list|,
 literal|"Invalid request descriptor"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1021,13 +1116,14 @@ name|defined
 argument_list|(
 name|EXFULL
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EXFULL
-block|,
+argument_list|,
 literal|"EXFULL"
-block|,
+argument_list|,
 literal|"Exchange full"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1037,13 +1133,14 @@ name|defined
 argument_list|(
 name|ENOANO
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOANO
-block|,
+argument_list|,
 literal|"ENOANO"
-block|,
+argument_list|,
 literal|"No anode"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1053,13 +1150,14 @@ name|defined
 argument_list|(
 name|EBADRQC
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EBADRQC
-block|,
+argument_list|,
 literal|"EBADRQC"
-block|,
+argument_list|,
 literal|"Invalid request code"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1069,13 +1167,14 @@ name|defined
 argument_list|(
 name|EBADSLT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EBADSLT
-block|,
+argument_list|,
 literal|"EBADSLT"
-block|,
+argument_list|,
 literal|"Invalid slot"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1085,13 +1184,14 @@ name|defined
 argument_list|(
 name|EDEADLOCK
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EDEADLOCK
-block|,
+argument_list|,
 literal|"EDEADLOCK"
-block|,
+argument_list|,
 literal|"File locking deadlock error"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1101,13 +1201,14 @@ name|defined
 argument_list|(
 name|EBFONT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EBFONT
-block|,
+argument_list|,
 literal|"EBFONT"
-block|,
+argument_list|,
 literal|"Bad font file format"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1117,13 +1218,14 @@ name|defined
 argument_list|(
 name|ENOSTR
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOSTR
-block|,
+argument_list|,
 literal|"ENOSTR"
-block|,
+argument_list|,
 literal|"Device not a stream"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1133,13 +1235,14 @@ name|defined
 argument_list|(
 name|ENODATA
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENODATA
-block|,
+argument_list|,
 literal|"ENODATA"
-block|,
+argument_list|,
 literal|"No data available"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1149,13 +1252,14 @@ name|defined
 argument_list|(
 name|ETIME
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ETIME
-block|,
+argument_list|,
 literal|"ETIME"
-block|,
+argument_list|,
 literal|"Timer expired"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1165,13 +1269,14 @@ name|defined
 argument_list|(
 name|ENOSR
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOSR
-block|,
+argument_list|,
 literal|"ENOSR"
-block|,
+argument_list|,
 literal|"Out of streams resources"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1181,13 +1286,14 @@ name|defined
 argument_list|(
 name|ENONET
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENONET
-block|,
+argument_list|,
 literal|"ENONET"
-block|,
+argument_list|,
 literal|"Machine is not on the network"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1197,13 +1303,14 @@ name|defined
 argument_list|(
 name|ENOPKG
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOPKG
-block|,
+argument_list|,
 literal|"ENOPKG"
-block|,
+argument_list|,
 literal|"Package not installed"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1213,13 +1320,14 @@ name|defined
 argument_list|(
 name|EREMOTE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EREMOTE
-block|,
+argument_list|,
 literal|"EREMOTE"
-block|,
+argument_list|,
 literal|"Object is remote"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1229,13 +1337,14 @@ name|defined
 argument_list|(
 name|ENOLINK
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOLINK
-block|,
+argument_list|,
 literal|"ENOLINK"
-block|,
+argument_list|,
 literal|"Link has been severed"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1245,13 +1354,14 @@ name|defined
 argument_list|(
 name|EADV
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EADV
-block|,
+argument_list|,
 literal|"EADV"
-block|,
+argument_list|,
 literal|"Advertise error"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1261,13 +1371,14 @@ name|defined
 argument_list|(
 name|ESRMNT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ESRMNT
-block|,
+argument_list|,
 literal|"ESRMNT"
-block|,
+argument_list|,
 literal|"Srmount error"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1277,13 +1388,14 @@ name|defined
 argument_list|(
 name|ECOMM
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ECOMM
-block|,
+argument_list|,
 literal|"ECOMM"
-block|,
+argument_list|,
 literal|"Communication error on send"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1293,13 +1405,14 @@ name|defined
 argument_list|(
 name|EPROTO
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EPROTO
-block|,
+argument_list|,
 literal|"EPROTO"
-block|,
+argument_list|,
 literal|"Protocol error"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1309,13 +1422,14 @@ name|defined
 argument_list|(
 name|EMULTIHOP
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EMULTIHOP
-block|,
+argument_list|,
 literal|"EMULTIHOP"
-block|,
+argument_list|,
 literal|"Multihop attempted"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1325,13 +1439,14 @@ name|defined
 argument_list|(
 name|EDOTDOT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EDOTDOT
-block|,
+argument_list|,
 literal|"EDOTDOT"
-block|,
+argument_list|,
 literal|"RFS specific error"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1341,13 +1456,14 @@ name|defined
 argument_list|(
 name|EBADMSG
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EBADMSG
-block|,
+argument_list|,
 literal|"EBADMSG"
-block|,
+argument_list|,
 literal|"Not a data message"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1357,13 +1473,14 @@ name|defined
 argument_list|(
 name|ENAMETOOLONG
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENAMETOOLONG
-block|,
+argument_list|,
 literal|"ENAMETOOLONG"
-block|,
+argument_list|,
 literal|"File name too long"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1373,13 +1490,14 @@ name|defined
 argument_list|(
 name|EOVERFLOW
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EOVERFLOW
-block|,
+argument_list|,
 literal|"EOVERFLOW"
-block|,
+argument_list|,
 literal|"Value too large for defined data type"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1389,13 +1507,14 @@ name|defined
 argument_list|(
 name|ENOTUNIQ
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOTUNIQ
-block|,
+argument_list|,
 literal|"ENOTUNIQ"
-block|,
+argument_list|,
 literal|"Name not unique on network"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1405,13 +1524,14 @@ name|defined
 argument_list|(
 name|EBADFD
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EBADFD
-block|,
+argument_list|,
 literal|"EBADFD"
-block|,
+argument_list|,
 literal|"File descriptor in bad state"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1421,13 +1541,14 @@ name|defined
 argument_list|(
 name|EREMCHG
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EREMCHG
-block|,
+argument_list|,
 literal|"EREMCHG"
-block|,
+argument_list|,
 literal|"Remote address changed"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1437,13 +1558,14 @@ name|defined
 argument_list|(
 name|ELIBACC
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ELIBACC
-block|,
+argument_list|,
 literal|"ELIBACC"
-block|,
+argument_list|,
 literal|"Can not access a needed shared library"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1453,13 +1575,14 @@ name|defined
 argument_list|(
 name|ELIBBAD
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ELIBBAD
-block|,
+argument_list|,
 literal|"ELIBBAD"
-block|,
+argument_list|,
 literal|"Accessing a corrupted shared library"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1469,13 +1592,14 @@ name|defined
 argument_list|(
 name|ELIBSCN
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ELIBSCN
-block|,
+argument_list|,
 literal|"ELIBSCN"
-block|,
+argument_list|,
 literal|".lib section in a.out corrupted"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1485,13 +1609,14 @@ name|defined
 argument_list|(
 name|ELIBMAX
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ELIBMAX
-block|,
+argument_list|,
 literal|"ELIBMAX"
-block|,
+argument_list|,
 literal|"Attempting to link in too many shared libraries"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1501,13 +1626,14 @@ name|defined
 argument_list|(
 name|ELIBEXEC
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ELIBEXEC
-block|,
+argument_list|,
 literal|"ELIBEXEC"
-block|,
+argument_list|,
 literal|"Cannot exec a shared library directly"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1517,13 +1643,14 @@ name|defined
 argument_list|(
 name|EILSEQ
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EILSEQ
-block|,
+argument_list|,
 literal|"EILSEQ"
-block|,
+argument_list|,
 literal|"Illegal byte sequence"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1533,13 +1660,14 @@ name|defined
 argument_list|(
 name|ENOSYS
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOSYS
-block|,
+argument_list|,
 literal|"ENOSYS"
-block|,
+argument_list|,
 literal|"Operation not applicable"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1549,13 +1677,14 @@ name|defined
 argument_list|(
 name|ELOOP
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ELOOP
-block|,
+argument_list|,
 literal|"ELOOP"
-block|,
+argument_list|,
 literal|"Too many symbolic links encountered"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1565,13 +1694,14 @@ name|defined
 argument_list|(
 name|ERESTART
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ERESTART
-block|,
+argument_list|,
 literal|"ERESTART"
-block|,
+argument_list|,
 literal|"Interrupted system call should be restarted"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1581,13 +1711,14 @@ name|defined
 argument_list|(
 name|ESTRPIPE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ESTRPIPE
-block|,
+argument_list|,
 literal|"ESTRPIPE"
-block|,
+argument_list|,
 literal|"Streams pipe error"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1597,13 +1728,14 @@ name|defined
 argument_list|(
 name|ENOTEMPTY
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOTEMPTY
-block|,
+argument_list|,
 literal|"ENOTEMPTY"
-block|,
+argument_list|,
 literal|"Directory not empty"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1613,13 +1745,14 @@ name|defined
 argument_list|(
 name|EUSERS
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EUSERS
-block|,
+argument_list|,
 literal|"EUSERS"
-block|,
+argument_list|,
 literal|"Too many users"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1629,13 +1762,14 @@ name|defined
 argument_list|(
 name|ENOTSOCK
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOTSOCK
-block|,
+argument_list|,
 literal|"ENOTSOCK"
-block|,
+argument_list|,
 literal|"Socket operation on non-socket"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1645,13 +1779,14 @@ name|defined
 argument_list|(
 name|EDESTADDRREQ
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EDESTADDRREQ
-block|,
+argument_list|,
 literal|"EDESTADDRREQ"
-block|,
+argument_list|,
 literal|"Destination address required"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1661,13 +1796,14 @@ name|defined
 argument_list|(
 name|EMSGSIZE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EMSGSIZE
-block|,
+argument_list|,
 literal|"EMSGSIZE"
-block|,
+argument_list|,
 literal|"Message too long"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1677,13 +1813,14 @@ name|defined
 argument_list|(
 name|EPROTOTYPE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EPROTOTYPE
-block|,
+argument_list|,
 literal|"EPROTOTYPE"
-block|,
+argument_list|,
 literal|"Protocol wrong type for socket"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1693,13 +1830,14 @@ name|defined
 argument_list|(
 name|ENOPROTOOPT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOPROTOOPT
-block|,
+argument_list|,
 literal|"ENOPROTOOPT"
-block|,
+argument_list|,
 literal|"Protocol not available"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1709,13 +1847,14 @@ name|defined
 argument_list|(
 name|EPROTONOSUPPORT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EPROTONOSUPPORT
-block|,
+argument_list|,
 literal|"EPROTONOSUPPORT"
-block|,
+argument_list|,
 literal|"Protocol not supported"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1725,13 +1864,14 @@ name|defined
 argument_list|(
 name|ESOCKTNOSUPPORT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ESOCKTNOSUPPORT
-block|,
+argument_list|,
 literal|"ESOCKTNOSUPPORT"
-block|,
+argument_list|,
 literal|"Socket type not supported"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1741,13 +1881,14 @@ name|defined
 argument_list|(
 name|EOPNOTSUPP
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EOPNOTSUPP
-block|,
+argument_list|,
 literal|"EOPNOTSUPP"
-block|,
+argument_list|,
 literal|"Operation not supported on transport endpoint"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1757,13 +1898,14 @@ name|defined
 argument_list|(
 name|EPFNOSUPPORT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EPFNOSUPPORT
-block|,
+argument_list|,
 literal|"EPFNOSUPPORT"
-block|,
+argument_list|,
 literal|"Protocol family not supported"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1773,13 +1915,14 @@ name|defined
 argument_list|(
 name|EAFNOSUPPORT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EAFNOSUPPORT
-block|,
+argument_list|,
 literal|"EAFNOSUPPORT"
-block|,
+argument_list|,
 literal|"Address family not supported by protocol"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1789,13 +1932,14 @@ name|defined
 argument_list|(
 name|EADDRINUSE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EADDRINUSE
-block|,
+argument_list|,
 literal|"EADDRINUSE"
-block|,
+argument_list|,
 literal|"Address already in use"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1805,13 +1949,14 @@ name|defined
 argument_list|(
 name|EADDRNOTAVAIL
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EADDRNOTAVAIL
-block|,
+argument_list|,
 literal|"EADDRNOTAVAIL"
-block|,
+argument_list|,
 literal|"Cannot assign requested address"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1821,13 +1966,14 @@ name|defined
 argument_list|(
 name|ENETDOWN
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENETDOWN
-block|,
+argument_list|,
 literal|"ENETDOWN"
-block|,
+argument_list|,
 literal|"Network is down"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1837,13 +1983,14 @@ name|defined
 argument_list|(
 name|ENETUNREACH
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENETUNREACH
-block|,
+argument_list|,
 literal|"ENETUNREACH"
-block|,
+argument_list|,
 literal|"Network is unreachable"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1853,13 +2000,14 @@ name|defined
 argument_list|(
 name|ENETRESET
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENETRESET
-block|,
+argument_list|,
 literal|"ENETRESET"
-block|,
+argument_list|,
 literal|"Network dropped connection because of reset"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1869,13 +2017,14 @@ name|defined
 argument_list|(
 name|ECONNABORTED
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ECONNABORTED
-block|,
+argument_list|,
 literal|"ECONNABORTED"
-block|,
+argument_list|,
 literal|"Software caused connection abort"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1885,13 +2034,14 @@ name|defined
 argument_list|(
 name|ECONNRESET
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ECONNRESET
-block|,
+argument_list|,
 literal|"ECONNRESET"
-block|,
+argument_list|,
 literal|"Connection reset by peer"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1901,13 +2051,14 @@ name|defined
 argument_list|(
 name|ENOBUFS
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOBUFS
-block|,
+argument_list|,
 literal|"ENOBUFS"
-block|,
+argument_list|,
 literal|"No buffer space available"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1917,13 +2068,14 @@ name|defined
 argument_list|(
 name|EISCONN
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EISCONN
-block|,
+argument_list|,
 literal|"EISCONN"
-block|,
+argument_list|,
 literal|"Transport endpoint is already connected"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1933,13 +2085,14 @@ name|defined
 argument_list|(
 name|ENOTCONN
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOTCONN
-block|,
+argument_list|,
 literal|"ENOTCONN"
-block|,
+argument_list|,
 literal|"Transport endpoint is not connected"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1949,13 +2102,14 @@ name|defined
 argument_list|(
 name|ESHUTDOWN
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ESHUTDOWN
-block|,
+argument_list|,
 literal|"ESHUTDOWN"
-block|,
+argument_list|,
 literal|"Cannot send after transport endpoint shutdown"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1965,13 +2119,14 @@ name|defined
 argument_list|(
 name|ETOOMANYREFS
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ETOOMANYREFS
-block|,
+argument_list|,
 literal|"ETOOMANYREFS"
-block|,
+argument_list|,
 literal|"Too many references: cannot splice"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1981,13 +2136,14 @@ name|defined
 argument_list|(
 name|ETIMEDOUT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ETIMEDOUT
-block|,
+argument_list|,
 literal|"ETIMEDOUT"
-block|,
+argument_list|,
 literal|"Connection timed out"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -1997,13 +2153,14 @@ name|defined
 argument_list|(
 name|ECONNREFUSED
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ECONNREFUSED
-block|,
+argument_list|,
 literal|"ECONNREFUSED"
-block|,
+argument_list|,
 literal|"Connection refused"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -2013,13 +2170,14 @@ name|defined
 argument_list|(
 name|EHOSTDOWN
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EHOSTDOWN
-block|,
+argument_list|,
 literal|"EHOSTDOWN"
-block|,
+argument_list|,
 literal|"Host is down"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -2029,13 +2187,14 @@ name|defined
 argument_list|(
 name|EHOSTUNREACH
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EHOSTUNREACH
-block|,
+argument_list|,
 literal|"EHOSTUNREACH"
-block|,
+argument_list|,
 literal|"No route to host"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -2045,13 +2204,14 @@ name|defined
 argument_list|(
 name|EALREADY
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EALREADY
-block|,
+argument_list|,
 literal|"EALREADY"
-block|,
+argument_list|,
 literal|"Operation already in progress"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -2061,13 +2221,14 @@ name|defined
 argument_list|(
 name|EINPROGRESS
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EINPROGRESS
-block|,
+argument_list|,
 literal|"EINPROGRESS"
-block|,
+argument_list|,
 literal|"Operation now in progress"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -2077,13 +2238,14 @@ name|defined
 argument_list|(
 name|ESTALE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ESTALE
-block|,
+argument_list|,
 literal|"ESTALE"
-block|,
+argument_list|,
 literal|"Stale NFS file handle"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -2093,13 +2255,14 @@ name|defined
 argument_list|(
 name|EUCLEAN
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EUCLEAN
-block|,
+argument_list|,
 literal|"EUCLEAN"
-block|,
+argument_list|,
 literal|"Structure needs cleaning"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -2109,13 +2272,14 @@ name|defined
 argument_list|(
 name|ENOTNAM
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENOTNAM
-block|,
+argument_list|,
 literal|"ENOTNAM"
-block|,
+argument_list|,
 literal|"Not a XENIX named type file"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -2125,13 +2289,14 @@ name|defined
 argument_list|(
 name|ENAVAIL
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|ENAVAIL
-block|,
+argument_list|,
 literal|"ENAVAIL"
-block|,
+argument_list|,
 literal|"No XENIX semaphores available"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -2141,13 +2306,14 @@ name|defined
 argument_list|(
 name|EISNAM
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EISNAM
-block|,
+argument_list|,
 literal|"EISNAM"
-block|,
+argument_list|,
 literal|"Is a named type file"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -2157,23 +2323,25 @@ name|defined
 argument_list|(
 name|EREMOTEIO
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|EREMOTEIO
-block|,
+argument_list|,
 literal|"EREMOTEIO"
-block|,
+argument_list|,
 literal|"Remote I/O error"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
-block|{
+name|ENTRY
+argument_list|(
 literal|0
-block|,
-name|NULL
-block|,
-name|NULL
-block|}
+argument_list|,
+argument|NULL
+argument_list|,
+argument|NULL
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2184,6 +2352,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -2219,6 +2388,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -2339,6 +2509,7 @@ operator|(
 name|error_names
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
@@ -2418,6 +2589,7 @@ operator|(
 name|sys_errlist
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
@@ -2629,6 +2801,10 @@ block|{
 comment|/* In range, and a valid message.  Just return the message. */
 name|msg
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|sys_errlist
 index|[
 name|errnoval
@@ -2653,10 +2829,11 @@ comment|/* NEED_strerror */
 end_comment
 
 begin_comment
-comment|/*  NAME  	strerrno -- map an error number to a symbolic name string  SYNOPSIS  	char *strerrno (int errnoval)  DESCRIPTION  	Given an error number returned from a system call (typically 	returned in errno), returns a pointer to a string containing the 	symbolic name of that error number, as found in<errno.h>.  	If the supplied error number is within the valid range of indices 	for symbolic names, but no name is available for the particular 	error number, then returns the string "Error NUM", where NUM is 	the error number.  	If the supplied error number is not within the range of valid 	indices, then returns NULL.  BUGS  	The contents of the location pointed to are only guaranteed to be 	valid until the next call to strerrno.  */
+comment|/*  NAME  	strerrno -- map an error number to a symbolic name string  SYNOPSIS  	const char *strerrno (int errnoval)  DESCRIPTION  	Given an error number returned from a system call (typically 	returned in errno), returns a pointer to a string containing the 	symbolic name of that error number, as found in<errno.h>.  	If the supplied error number is within the valid range of indices 	for symbolic names, but no name is available for the particular 	error number, then returns the string "Error NUM", where NUM is 	the error number.  	If the supplied error number is not within the range of valid 	indices, then returns NULL.  BUGS  	The contents of the location pointed to are only guaranteed to be 	valid until the next call to strerrno.  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|strerrno
@@ -2667,6 +2844,7 @@ name|int
 name|errnoval
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2741,6 +2919,11 @@ argument_list|)
 expr_stmt|;
 name|name
 operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 block|}
@@ -2773,6 +2956,7 @@ name|strtoerrno
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2875,7 +3059,14 @@ directive|ifdef
 name|MAIN
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_function
+name|int
 name|main
 parameter_list|()
 block|{
@@ -2885,6 +3076,7 @@ decl_stmt|;
 name|int
 name|errnmax
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2893,11 +3085,6 @@ name|char
 modifier|*
 name|msg
 decl_stmt|;
-name|char
-modifier|*
-name|strerrno
-parameter_list|()
-function_decl|;
 name|char
 modifier|*
 name|strerror
@@ -2994,6 +3181,9 @@ name|msg
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 

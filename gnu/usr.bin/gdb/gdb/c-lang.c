@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* C language support routines for GDB, the GNU debugger.    Copyright 1992, 1993 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* C language support routines for GDB, the GNU debugger.    Copyright 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -64,7 +64,7 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -230,7 +230,7 @@ parameter_list|)
 name|int
 name|c
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -278,7 +278,7 @@ name|length
 parameter_list|,
 name|force_ellipses
 parameter_list|)
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -362,7 +362,7 @@ name|fputs_filtered
 argument_list|(
 literal|"\"\""
 argument_list|,
-name|stdout
+name|stream
 argument_list|)
 expr_stmt|;
 return|return;
@@ -730,7 +730,7 @@ name|TARGET_CHAR_BIT
 operator|/
 name|TARGET_CHAR_BIT
 argument_list|,
-name|TYPE_FLAG_SIGNED
+literal|0
 argument_list|,
 literal|"signed char"
 argument_list|,
@@ -793,7 +793,7 @@ name|TARGET_SHORT_BIT
 operator|/
 name|TARGET_CHAR_BIT
 argument_list|,
-name|TYPE_FLAG_SIGNED
+literal|0
 argument_list|,
 literal|"short"
 argument_list|,
@@ -857,7 +857,7 @@ name|TARGET_INT_BIT
 operator|/
 name|TARGET_CHAR_BIT
 argument_list|,
-name|TYPE_FLAG_SIGNED
+literal|0
 argument_list|,
 literal|"int"
 argument_list|,
@@ -921,7 +921,7 @@ name|TARGET_LONG_BIT
 operator|/
 name|TARGET_CHAR_BIT
 argument_list|,
-name|TYPE_FLAG_SIGNED
+literal|0
 argument_list|,
 literal|"long"
 argument_list|,
@@ -985,7 +985,7 @@ name|TARGET_LONG_LONG_BIT
 operator|/
 name|TARGET_CHAR_BIT
 argument_list|,
-name|TYPE_FLAG_SIGNED
+literal|0
 argument_list|,
 literal|"signed long long"
 argument_list|,
@@ -1526,14 +1526,9 @@ comment|/* Print a type using appropriate syntax */
 name|c_val_print
 block|,
 comment|/* Print a value using appropriate syntax */
-operator|&
-name|BUILTIN_TYPE_LONGEST
+name|c_value_print
 block|,
-comment|/* longest signed   integral type */
-operator|&
-name|BUILTIN_TYPE_UNSIGNED_LONGEST
-block|,
-comment|/* longest unsigned integral type */
+comment|/* Print a top-level value */
 operator|&
 name|builtin_type_double
 block|,
@@ -1628,14 +1623,106 @@ comment|/* Print a type using appropriate syntax */
 name|c_val_print
 block|,
 comment|/* Print a value using appropriate syntax */
-operator|&
-name|BUILTIN_TYPE_LONGEST
+name|c_value_print
 block|,
-comment|/* longest signed   integral type */
+comment|/* Print a top-level value */
 operator|&
-name|BUILTIN_TYPE_UNSIGNED_LONGEST
+name|builtin_type_double
 block|,
-comment|/* longest unsigned integral type */
+comment|/* longest floating point type */
+comment|/*FIXME*/
+block|{
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|}
+block|,
+comment|/* Binary format info */
+block|{
+literal|"0%lo"
+block|,
+literal|"0"
+block|,
+literal|"o"
+block|,
+literal|""
+block|}
+block|,
+comment|/* Octal format info */
+block|{
+literal|"%ld"
+block|,
+literal|""
+block|,
+literal|"d"
+block|,
+literal|""
+block|}
+block|,
+comment|/* Decimal format info */
+block|{
+literal|"0x%lx"
+block|,
+literal|"0x"
+block|,
+literal|"x"
+block|,
+literal|""
+block|}
+block|,
+comment|/* Hex format info */
+name|c_op_print_tab
+block|,
+comment|/* expression operators for printing */
+name|LANG_MAGIC
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|language_defn
+name|asm_language_defn
+init|=
+block|{
+literal|"asm"
+block|,
+comment|/* Language name */
+name|language_asm
+block|,
+name|c_builtin_types
+block|,
+name|range_check_off
+block|,
+name|type_check_off
+block|,
+name|c_parse
+block|,
+name|c_error
+block|,
+name|c_printchar
+block|,
+comment|/* Print a character constant */
+name|c_printstr
+block|,
+comment|/* Function to print string constant */
+name|c_create_fundamental_type
+block|,
+comment|/* Create fundamental type in this language */
+name|c_print_type
+block|,
+comment|/* Print a type using appropriate syntax */
+name|c_val_print
+block|,
+comment|/* Print a value using appropriate syntax */
+name|c_value_print
+block|,
+comment|/* Print a top-level value */
 operator|&
 name|builtin_type_double
 block|,
@@ -1708,6 +1795,12 @@ name|add_language
 argument_list|(
 operator|&
 name|cplus_language_defn
+argument_list|)
+expr_stmt|;
+name|add_language
+argument_list|(
+operator|&
+name|asm_language_defn
 argument_list|)
 expr_stmt|;
 block|}

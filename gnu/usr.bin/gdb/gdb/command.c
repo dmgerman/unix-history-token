@@ -87,7 +87,7 @@ expr|struct
 name|cmd_list_element
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -147,7 +147,7 @@ name|print_doc_line
 name|PARAMS
 argument_list|(
 operator|(
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|char
@@ -844,7 +844,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* ARGSUSED */
+comment|/* This is an empty "cfunc".  */
 end_comment
 
 begin_function
@@ -861,6 +861,56 @@ name|args
 decl_stmt|;
 name|int
 name|from_tty
+decl_stmt|;
+block|{ }
+end_function
+
+begin_comment
+comment|/* This is an empty "sfunc".  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|empty_sfunc
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|cmd_list_element
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|empty_sfunc
+parameter_list|(
+name|args
+parameter_list|,
+name|from_tty
+parameter_list|,
+name|c
+parameter_list|)
+name|char
+modifier|*
+name|args
+decl_stmt|;
+name|int
+name|from_tty
+decl_stmt|;
+name|struct
+name|cmd_list_element
+modifier|*
+name|c
 decl_stmt|;
 block|{ }
 end_function
@@ -913,7 +963,6 @@ modifier|*
 name|list
 decl_stmt|;
 block|{
-comment|/* For set/show, we have to call do_setshow_command      differently than an ordinary function (take commandlist as      well as arg), so the function field isn't helpful.  However,      function == NULL means that it's a help class, so set the function      to not_just_help_class_command.  */
 name|struct
 name|cmd_list_element
 modifier|*
@@ -925,7 +974,7 @@ name|name
 argument_list|,
 name|class
 argument_list|,
-name|not_just_help_class_command
+name|NO_FUNCTION
 argument_list|,
 name|doc
 argument_list|,
@@ -949,6 +998,15 @@ operator|->
 name|var
 operator|=
 name|var
+expr_stmt|;
+comment|/* This needs to be something besides NO_FUNCTION so that this isn't      treated as a help class.  */
+name|c
+operator|->
+name|function
+operator|.
+name|sfunc
+operator|=
+name|empty_sfunc
 expr_stmt|;
 return|return
 name|c
@@ -1086,9 +1144,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"GDB internal error: Bad docstring for set command\n"
 argument_list|)
@@ -1311,7 +1369,7 @@ name|char
 modifier|*
 name|command
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1508,7 +1566,7 @@ name|enum
 name|command_class
 name|class
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1711,7 +1769,7 @@ name|stream
 parameter_list|,
 name|str
 parameter_list|)
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1911,7 +1969,7 @@ decl_stmt|;
 name|int
 name|recurse
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -2614,55 +2672,15 @@ argument_list|,
 name|ignore_help_classes
 argument_list|)
 decl_stmt|;
-name|char
-modifier|*
-name|ptr
-init|=
-operator|(
-operator|*
-name|line
-operator|)
-operator|+
-name|strlen
-argument_list|(
-operator|*
-name|line
-argument_list|)
-operator|-
-literal|1
-decl_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* This is wrong for complete_command.  */
+block|char *ptr = (*line) + strlen (*line) - 1;
 comment|/* Clear off trailing whitespace.  */
-while|while
-condition|(
-name|ptr
-operator|>=
-operator|*
-name|line
-operator|&&
-operator|(
-operator|*
-name|ptr
-operator|==
-literal|' '
-operator|||
-operator|*
-name|ptr
-operator|==
-literal|'\t'
-operator|)
-condition|)
-name|ptr
-operator|--
-expr_stmt|;
-operator|*
-operator|(
-name|ptr
-operator|+
-literal|1
-operator|)
-operator|=
-literal|'\0'
-expr_stmt|;
+block|while (ptr>= *line&& (*ptr == ' ' || *ptr == '\t'))     ptr--;   *(ptr + 1) = '\0';
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -3744,6 +3762,7 @@ literal|'\\'
 condition|)
 block|{
 comment|/* \ at end of argument is used after spaces 		       so they won't be lost.  */
+comment|/* This is obsolete now that we no longer strip 		       trailing whitespace and actually, the backslash 		       didn't get here in my test, readline or 		       something did something funky with a backslash 		       right before a newline.  */
 if|if
 condition|(
 operator|*
@@ -3790,23 +3809,12 @@ operator|=
 name|ch
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|*
-operator|(
-name|p
-operator|-
-literal|1
-operator|)
-operator|!=
-literal|'\\'
-condition|)
-operator|*
-name|q
-operator|++
-operator|=
-literal|' '
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (*(p - 1) != '\\') 	      *q++ = ' ';
+endif|#
+directive|endif
 operator|*
 name|q
 operator|++
@@ -4182,7 +4190,7 @@ block|{
 comment|/* Print doc minus "show" at start.  */
 name|print_doc_line
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|,
 name|c
 operator|->
@@ -4195,7 +4203,7 @@ name|fputs_filtered
 argument_list|(
 literal|" is "
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|wrap_here
@@ -4223,7 +4231,7 @@ name|fputs_filtered
 argument_list|(
 literal|"\""
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 for|for
@@ -4254,7 +4262,7 @@ argument_list|(
 operator|*
 name|p
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|,
 literal|'"'
 argument_list|)
@@ -4263,7 +4271,7 @@ name|fputs_filtered
 argument_list|(
 literal|"\""
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -4278,7 +4286,7 @@ name|fputs_filtered
 argument_list|(
 literal|"\""
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|fputs_filtered
@@ -4293,14 +4301,14 @@ name|c
 operator|->
 name|var
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|fputs_filtered
 argument_list|(
 literal|"\""
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4322,7 +4330,7 @@ literal|"on"
 else|:
 literal|"off"
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4348,7 +4356,7 @@ name|fputs_filtered
 argument_list|(
 literal|"unlimited"
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4359,7 +4367,7 @@ name|var_zinteger
 case|:
 name|fprintf_filtered
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|,
 literal|"%u"
 argument_list|,
@@ -4396,14 +4404,14 @@ name|fputs_filtered
 argument_list|(
 literal|"unlimited"
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|fprintf_filtered
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|,
 literal|"%d"
 argument_list|,
@@ -4429,7 +4437,7 @@ name|fputs_filtered
 argument_list|(
 literal|".\n"
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -4540,7 +4548,7 @@ name|fputs_filtered
 argument_list|(
 name|prefix
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|fputs_filtered
@@ -4549,14 +4557,14 @@ name|list
 operator|->
 name|name
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|fputs_filtered
 argument_list|(
 literal|":  "
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|do_setshow_command
@@ -4710,16 +4718,28 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
-literal|"Exec of shell failed\n"
+literal|"Cannot execute %s: %s\n"
+argument_list|,
+name|user_shell
+argument_list|,
+name|safe_strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
+name|gdb_flush
 argument_list|(
-literal|0
+name|gdb_stderr
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|0177
 argument_list|)
 expr_stmt|;
 block|}
@@ -4856,7 +4876,7 @@ name|cmd_list_element
 modifier|*
 name|c
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -5010,7 +5030,7 @@ name|show_user_1
 argument_list|(
 name|c
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -5043,7 +5063,7 @@ name|show_user_1
 argument_list|(
 name|c
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}

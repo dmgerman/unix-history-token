@@ -274,15 +274,18 @@ comment|/* Apollo stuff */
 name|long
 name|o_inlib
 decl_stmt|;
+comment|/* inlib data */
 name|long
 name|o_sri
 decl_stmt|;
+comment|/* Static Resource Information */
 name|long
 name|vid
 index|[
 literal|2
 index|]
 decl_stmt|;
+comment|/* Version id */
 block|}
 struct|;
 end_struct
@@ -1805,10 +1808,20 @@ comment|/* info about .tv section (in auxent of symbol .tv)) */
 comment|/******************************************    * RS/6000-specific auxent - last auxent for every external symbol    ******************************************/
 struct|struct
 block|{
+union|union
+block|{
+comment|/* csect length or enclosing csect */
 name|long
-name|x_scnlen
+name|l
 decl_stmt|;
-comment|/* csect length */
+name|struct
+name|coff_ptr_struct
+modifier|*
+name|p
+decl_stmt|;
+block|}
+name|x_scnlen
+union|;
 name|long
 name|x_parmhash
 decl_stmt|;
@@ -2052,7 +2065,7 @@ name|unsigned
 name|long
 name|r_offset
 decl_stmt|;
-comment|/* Used by RS/6000 and ECOFF	*/
+comment|/* Used by Alpha ECOFF, SPARC, others */
 block|}
 struct|;
 end_struct
@@ -2479,6 +2492,17 @@ begin_comment
 comment|/* high nibble */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|R_DISP7
+value|0x25
+end_define
+
+begin_comment
+comment|/* djnz displacement */
+end_comment
+
 begin_comment
 comment|/* H8500 modes */
 end_comment
@@ -2751,6 +2775,17 @@ directive|define
 name|R_SH_PCRELIMM8BY4
 value|23
 end_define
+
+begin_define
+define|#
+directive|define
+name|R_SH_IMM16
+value|24
+end_define
+
+begin_comment
+comment|/* 16 bit immediate */
+end_comment
 
 end_unit
 

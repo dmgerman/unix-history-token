@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* More debugging hooks for `mmalloc'.    Copyright 1991, 1992 Free Software Foundation     Written April 2, 1991 by John Gilmore of Cygnus Support    Based on mcheck.c by Mike Haertel.    Modified Mar 1992 by Fred Fish.  (fnf@cygnus.com)  This file is part of the GNU C Library.  The GNU C Library is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  The GNU C Library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with the GNU C Library; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* More debugging hooks for `mmalloc'.    Copyright 1991, 1992, 1994 Free Software Foundation     Written April 2, 1991 by John Gilmore of Cygnus Support    Based on mcheck.c by Mike Haertel.    Modified Mar 1992 by Fred Fish.  (fnf@cygnus.com)  This file is part of the GNU C Library.  The GNU C Library is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  The GNU C Library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with the GNU C Library; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -176,11 +176,11 @@ name|fprintf
 argument_list|(
 name|mallstream
 argument_list|,
-literal|"- %08x\n"
+literal|"- %08lx\n"
 argument_list|,
 operator|(
 name|unsigned
-name|int
+name|long
 operator|)
 name|ptr
 argument_list|)
@@ -276,11 +276,11 @@ name|fprintf
 argument_list|(
 name|mallstream
 argument_list|,
-literal|"+ %08x %x\n"
+literal|"+ %08lx %x\n"
 argument_list|,
 operator|(
 name|unsigned
-name|int
+name|long
 operator|)
 name|hdr
 argument_list|,
@@ -410,11 +410,11 @@ name|fprintf
 argument_list|(
 name|mallstream
 argument_list|,
-literal|"! %08x %x\n"
+literal|"! %08lx %x\n"
 argument_list|,
 operator|(
 name|unsigned
-name|int
+name|long
 operator|)
 name|ptr
 argument_list|,
@@ -426,17 +426,17 @@ name|fprintf
 argument_list|(
 name|mallstream
 argument_list|,
-literal|"< %08x\n> %08x %x\n"
+literal|"< %08lx\n> %08lx %x\n"
 argument_list|,
 operator|(
 name|unsigned
-name|int
+name|long
 operator|)
 name|ptr
 argument_list|,
 operator|(
 name|unsigned
-name|int
+name|long
 operator|)
 name|hdr
 argument_list|,

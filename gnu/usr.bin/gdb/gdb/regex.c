@@ -50,49 +50,17 @@ begin_comment
 comment|/* not emacs */
 end_comment
 
-begin_comment
-comment|/* Make alloca work the best possible way.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|alloca
-value|__builtin_alloca
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sparc
-end_ifdef
+begin_include
+include|#
+directive|include
+file|"defs.h"
+end_include
 
 begin_include
 include|#
 directive|include
-file|<alloca.h>
+file|<string.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Define the syntax stuff, so we can do the \<...\> things.  */
@@ -317,20 +285,53 @@ name|BYTEWIDTH
 value|8
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_comment
+comment|/* We remove any previous definition of `SIGN_EXTEND_CHAR',    since ours (we hope) works properly with all combinations of    machines, compilers, `char' and `unsigned char' argument types.    (Per Bothner suggested the basic approach.)  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
 name|SIGN_EXTEND_CHAR
-end_ifndef
+end_undef
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
 
 begin_define
 define|#
 directive|define
 name|SIGN_EXTEND_CHAR
 parameter_list|(
-name|x
+name|c
 parameter_list|)
-value|(x)
+value|((signed char) (c))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not __STDC__ */
+end_comment
+
+begin_comment
+comment|/* As in Harbison and Steele.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGN_EXTEND_CHAR
+parameter_list|(
+name|c
+parameter_list|)
+value|((((unsigned char) (c)) ^ 128) - 128)
 end_define
 
 begin_endif
@@ -427,12 +428,29 @@ name|PATUNFETCH
 value|p--
 end_define
 
+begin_comment
+comment|/* This is not an arbitrary limit: the arguments which represent offsets    into the pattern are two bytes long.  So if 2^16 bytes turns out to    be too small, many things would have to change.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_BUF_SIZE
+value|(1<< 16)
+end_define
+
+begin_comment
+comment|/* Extend the buffer by twice its current size via realloc and    reset the pointers that pointed into the old block to point to the    correct places in the new one.  If extending the buffer results in it    being larger than MAX_BUF_SIZE, then flag memory exhausted.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EXTEND_BUFFER
 define|\
-value|{ char *old_buffer = bufp->buffer; \     if (bufp->allocated == (1<<16)) goto too_big; \     bufp->allocated *= 2; \     if (bufp->allocated> (1<<16)) bufp->allocated = (1<<16); \     if (!(bufp->buffer = (char *) realloc (bufp->buffer, bufp->allocated))) \       goto memory_exhausted; \     c = bufp->buffer - old_buffer; \     b += c; \     if (fixup_jump) \       fixup_jump += c; \     if (laststart) \       laststart += c; \     begalt += c; \     if (pending_exact) \       pending_exact += c; \   }
+value|do {                                                                  \     char *old_buffer = bufp->buffer;                           \     if (bufp->allocated == MAX_BUF_SIZE)                                \       goto too_big;                                                 \     bufp->allocated<<= 1;                                              \     if (bufp->allocated> MAX_BUF_SIZE)                                 \       bufp->allocated = MAX_BUF_SIZE;                                   \     bufp->buffer = (char *) realloc (bufp->buffer, bufp->allocated);\     if (bufp->buffer == NULL)                                           \       goto memory_exhausted;                                                \
+comment|/* If the buffer moved, move all the pointers into it.  */
+value|\     if (old_buffer != bufp->buffer)                                     \       {                                                                 \         b = (b - old_buffer) + bufp->buffer;                            \         begalt = (begalt - old_buffer) + bufp->buffer;                  \         if (fixup_jump)                                             \           fixup_jump = (fixup_jump - old_buffer) + bufp->buffer;\         if (laststart)                                                  \           laststart = (laststart - old_buffer) + bufp->buffer;          \         if (pending_exact)                                              \           pending_exact = (pending_exact - old_buffer) + bufp->buffer;  \       }                                                                 \   } while (0)
 end_define
 
 begin_decl_stmt
@@ -6255,6 +6273,7 @@ name|re_comp
 parameter_list|(
 name|s
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
@@ -7095,12 +7114,12 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|putchar
+name|putchar_unfiltered
 argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"%d allocated, %d used.\n"
 argument_list|,
@@ -7119,7 +7138,7 @@ operator|&
 name|buf
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Allowed by fastmap: "
 argument_list|)
@@ -7153,7 +7172,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|putchar
+name|putchar_unfiltered
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -7184,7 +7203,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Match value %d.\n"
 argument_list|,
@@ -7221,7 +7240,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"buf is :\n----------------\n"
 argument_list|)
@@ -7251,7 +7270,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"\n%d allocated, %d used.\n"
 argument_list|,
@@ -7264,7 +7283,7 @@ operator|->
 name|used
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Allowed by fastmap: "
 argument_list|)
@@ -7300,7 +7319,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"\nAllowed by translate: "
 argument_list|)
@@ -7342,7 +7361,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"\nfastmap is%s accurate\n"
 argument_list|,
@@ -7355,7 +7374,7 @@ else|:
 literal|"n't"
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"can %s be null\n----------"
 argument_list|,
@@ -7402,12 +7421,12 @@ operator|>=
 literal|0177
 condition|)
 block|{
-name|putchar
+name|putchar_unfiltered
 argument_list|(
 literal|'\\'
 argument_list|)
 expr_stmt|;
-name|putchar
+name|putchar_unfiltered
 argument_list|(
 operator|(
 operator|(
@@ -7422,7 +7441,7 @@ operator|+
 literal|'0'
 argument_list|)
 expr_stmt|;
-name|putchar
+name|putchar_unfiltered
 argument_list|(
 operator|(
 operator|(
@@ -7437,7 +7456,7 @@ operator|+
 literal|'0'
 argument_list|)
 expr_stmt|;
-name|putchar
+name|putchar_unfiltered
 argument_list|(
 operator|(
 name|c
@@ -7450,7 +7469,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|putchar
+name|putchar_unfiltered
 argument_list|(
 name|c
 argument_list|)
@@ -7474,7 +7493,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|puts
+name|puts_unfiltered
 argument_list|(
 name|string
 argument_list|)

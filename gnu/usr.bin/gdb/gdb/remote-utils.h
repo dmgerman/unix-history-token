@@ -67,20 +67,6 @@ name|sr_settings
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|remote_debug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|baud_rate
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* get and set debug value. */
 end_comment
@@ -101,28 +87,6 @@ parameter_list|(
 name|newval
 parameter_list|)
 value|(remote_debug = (newval))
-end_define
-
-begin_comment
-comment|/* get and set baud rate. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|sr_get_baud_rate
-parameter_list|()
-value|(baud_rate)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sr_set_baud_rate
-parameter_list|(
-name|newval
-parameter_list|)
-value|(baud_rate = (newval))
 end_define
 
 begin_comment
@@ -706,6 +670,22 @@ expr|struct
 name|gr_settings
 operator|*
 name|gr_settings
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|gr_load_image
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+name|from_tty
 operator|)
 argument_list|)
 decl_stmt|;

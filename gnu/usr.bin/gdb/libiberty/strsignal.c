@@ -6,7 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ansidecl.h>
+file|"ansidecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libiberty.h"
 end_include
 
 begin_include
@@ -108,23 +114,6 @@ end_else
 begin_comment
 comment|/* !__STDC__ */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|const
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -250,19 +239,70 @@ name|int
 name|value
 decl_stmt|;
 comment|/* The numeric value from<signal.h> */
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 comment|/* The equivalent symbolic value */
+ifdef|#
+directive|ifdef
+name|NEED_sys_siglist
+specifier|const
 name|char
 modifier|*
 name|msg
 decl_stmt|;
 comment|/* Short message about this value */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_sys_siglist
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ENTRY
+parameter_list|(
+name|value
+parameter_list|,
+name|name
+parameter_list|,
+name|msg
+parameter_list|)
+value|{value, name, msg}
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ENTRY
+parameter_list|(
+name|value
+parameter_list|,
+name|name
+parameter_list|,
+name|msg
+parameter_list|)
+value|{value, name}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -279,13 +319,14 @@ name|defined
 argument_list|(
 name|SIGHUP
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGHUP
-block|,
+argument_list|,
 literal|"SIGHUP"
-block|,
+argument_list|,
 literal|"Hangup"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -295,13 +336,14 @@ name|defined
 argument_list|(
 name|SIGINT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGINT
-block|,
+argument_list|,
 literal|"SIGINT"
-block|,
+argument_list|,
 literal|"Interrupt"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -311,13 +353,14 @@ name|defined
 argument_list|(
 name|SIGQUIT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGQUIT
-block|,
+argument_list|,
 literal|"SIGQUIT"
-block|,
+argument_list|,
 literal|"Quit"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -327,13 +370,14 @@ name|defined
 argument_list|(
 name|SIGILL
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGILL
-block|,
+argument_list|,
 literal|"SIGILL"
-block|,
+argument_list|,
 literal|"Illegal instruction"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -343,13 +387,14 @@ name|defined
 argument_list|(
 name|SIGTRAP
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGTRAP
-block|,
+argument_list|,
 literal|"SIGTRAP"
-block|,
+argument_list|,
 literal|"Trace/breakpoint trap"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -360,13 +405,14 @@ name|defined
 argument_list|(
 name|SIGIOT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGIOT
-block|,
+argument_list|,
 literal|"SIGIOT"
-block|,
+argument_list|,
 literal|"IOT trap"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -376,13 +422,14 @@ name|defined
 argument_list|(
 name|SIGABRT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGABRT
-block|,
+argument_list|,
 literal|"SIGABRT"
-block|,
+argument_list|,
 literal|"Aborted"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -392,13 +439,14 @@ name|defined
 argument_list|(
 name|SIGEMT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGEMT
-block|,
+argument_list|,
 literal|"SIGEMT"
-block|,
+argument_list|,
 literal|"Emulation trap"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -408,13 +456,14 @@ name|defined
 argument_list|(
 name|SIGFPE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGFPE
-block|,
+argument_list|,
 literal|"SIGFPE"
-block|,
+argument_list|,
 literal|"Arithmetic exception"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -424,13 +473,14 @@ name|defined
 argument_list|(
 name|SIGKILL
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGKILL
-block|,
+argument_list|,
 literal|"SIGKILL"
-block|,
+argument_list|,
 literal|"Killed"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -440,13 +490,14 @@ name|defined
 argument_list|(
 name|SIGBUS
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGBUS
-block|,
+argument_list|,
 literal|"SIGBUS"
-block|,
+argument_list|,
 literal|"Bus error"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -456,13 +507,14 @@ name|defined
 argument_list|(
 name|SIGSEGV
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGSEGV
-block|,
+argument_list|,
 literal|"SIGSEGV"
-block|,
+argument_list|,
 literal|"Segmentation fault"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -472,13 +524,14 @@ name|defined
 argument_list|(
 name|SIGSYS
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGSYS
-block|,
+argument_list|,
 literal|"SIGSYS"
-block|,
+argument_list|,
 literal|"Bad system call"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -488,13 +541,14 @@ name|defined
 argument_list|(
 name|SIGPIPE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGPIPE
-block|,
+argument_list|,
 literal|"SIGPIPE"
-block|,
+argument_list|,
 literal|"Broken pipe"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -504,13 +558,14 @@ name|defined
 argument_list|(
 name|SIGALRM
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGALRM
-block|,
+argument_list|,
 literal|"SIGALRM"
-block|,
+argument_list|,
 literal|"Alarm clock"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -520,13 +575,14 @@ name|defined
 argument_list|(
 name|SIGTERM
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGTERM
-block|,
+argument_list|,
 literal|"SIGTERM"
-block|,
+argument_list|,
 literal|"Terminated"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -536,13 +592,14 @@ name|defined
 argument_list|(
 name|SIGUSR1
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGUSR1
-block|,
+argument_list|,
 literal|"SIGUSR1"
-block|,
+argument_list|,
 literal|"User defined signal 1"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -552,13 +609,14 @@ name|defined
 argument_list|(
 name|SIGUSR2
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGUSR2
-block|,
+argument_list|,
 literal|"SIGUSR2"
-block|,
+argument_list|,
 literal|"User defined signal 2"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -569,13 +627,14 @@ name|defined
 argument_list|(
 name|SIGCLD
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGCLD
-block|,
+argument_list|,
 literal|"SIGCLD"
-block|,
+argument_list|,
 literal|"Child status changed"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -585,13 +644,14 @@ name|defined
 argument_list|(
 name|SIGCHLD
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGCHLD
-block|,
+argument_list|,
 literal|"SIGCHLD"
-block|,
+argument_list|,
 literal|"Child status changed"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -601,13 +661,14 @@ name|defined
 argument_list|(
 name|SIGPWR
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGPWR
-block|,
+argument_list|,
 literal|"SIGPWR"
-block|,
+argument_list|,
 literal|"Power fail/restart"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -617,13 +678,14 @@ name|defined
 argument_list|(
 name|SIGWINCH
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGWINCH
-block|,
+argument_list|,
 literal|"SIGWINCH"
-block|,
+argument_list|,
 literal|"Window size changed"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -633,13 +695,14 @@ name|defined
 argument_list|(
 name|SIGURG
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGURG
-block|,
+argument_list|,
 literal|"SIGURG"
-block|,
+argument_list|,
 literal|"Urgent I/O condition"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -650,13 +713,14 @@ argument_list|(
 name|SIGIO
 argument_list|)
 comment|/* "I/O pending" has also been suggested, but is misleading since the      signal only happens when the process has asked for it, not everytime      I/O is pending. */
-block|{
+name|ENTRY
+argument_list|(
 name|SIGIO
-block|,
+argument_list|,
 literal|"SIGIO"
-block|,
+argument_list|,
 literal|"I/O possible"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -666,13 +730,14 @@ name|defined
 argument_list|(
 name|SIGPOLL
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGPOLL
-block|,
+argument_list|,
 literal|"SIGPOLL"
-block|,
+argument_list|,
 literal|"Pollable event occurred"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -682,13 +747,14 @@ name|defined
 argument_list|(
 name|SIGSTOP
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGSTOP
-block|,
+argument_list|,
 literal|"SIGSTOP"
-block|,
+argument_list|,
 literal|"Stopped (signal)"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -698,13 +764,14 @@ name|defined
 argument_list|(
 name|SIGTSTP
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGTSTP
-block|,
+argument_list|,
 literal|"SIGTSTP"
-block|,
+argument_list|,
 literal|"Stopped (user)"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -714,13 +781,14 @@ name|defined
 argument_list|(
 name|SIGCONT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGCONT
-block|,
+argument_list|,
 literal|"SIGCONT"
-block|,
+argument_list|,
 literal|"Continued"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -730,13 +798,14 @@ name|defined
 argument_list|(
 name|SIGTTIN
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGTTIN
-block|,
+argument_list|,
 literal|"SIGTTIN"
-block|,
+argument_list|,
 literal|"Stopped (tty input)"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -746,13 +815,14 @@ name|defined
 argument_list|(
 name|SIGTTOU
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGTTOU
-block|,
+argument_list|,
 literal|"SIGTTOU"
-block|,
+argument_list|,
 literal|"Stopped (tty output)"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -762,13 +832,14 @@ name|defined
 argument_list|(
 name|SIGVTALRM
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGVTALRM
-block|,
+argument_list|,
 literal|"SIGVTALRM"
-block|,
+argument_list|,
 literal|"Virtual timer expired"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -778,13 +849,14 @@ name|defined
 argument_list|(
 name|SIGPROF
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGPROF
-block|,
+argument_list|,
 literal|"SIGPROF"
-block|,
+argument_list|,
 literal|"Profiling timer expired"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -794,13 +866,14 @@ name|defined
 argument_list|(
 name|SIGXCPU
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGXCPU
-block|,
+argument_list|,
 literal|"SIGXCPU"
-block|,
+argument_list|,
 literal|"CPU time limit exceeded"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -810,13 +883,14 @@ name|defined
 argument_list|(
 name|SIGXFSZ
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGXFSZ
-block|,
+argument_list|,
 literal|"SIGXFSZ"
-block|,
+argument_list|,
 literal|"File size limit exceeded"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -826,13 +900,14 @@ name|defined
 argument_list|(
 name|SIGWIND
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGWIND
-block|,
+argument_list|,
 literal|"SIGWIND"
-block|,
+argument_list|,
 literal|"SIGWIND"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -842,13 +917,14 @@ name|defined
 argument_list|(
 name|SIGPHONE
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGPHONE
-block|,
+argument_list|,
 literal|"SIGPHONE"
-block|,
+argument_list|,
 literal|"SIGPHONE"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -858,13 +934,14 @@ name|defined
 argument_list|(
 name|SIGLOST
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGLOST
-block|,
+argument_list|,
 literal|"SIGLOST"
-block|,
+argument_list|,
 literal|"Resource lost"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -874,13 +951,14 @@ name|defined
 argument_list|(
 name|SIGWAITING
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGWAITING
-block|,
+argument_list|,
 literal|"SIGWAITING"
-block|,
+argument_list|,
 literal|"Process's LWPs are blocked"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -890,13 +968,14 @@ name|defined
 argument_list|(
 name|SIGLWP
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGLWP
-block|,
+argument_list|,
 literal|"SIGLWP"
-block|,
+argument_list|,
 literal|"Signal LWP"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -906,13 +985,14 @@ name|defined
 argument_list|(
 name|SIGDANGER
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGDANGER
-block|,
+argument_list|,
 literal|"SIGDANGER"
-block|,
+argument_list|,
 literal|"Swap space dangerously low"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -922,13 +1002,14 @@ name|defined
 argument_list|(
 name|SIGGRANT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGGRANT
-block|,
+argument_list|,
 literal|"SIGGRANT"
-block|,
+argument_list|,
 literal|"Monitor mode granted"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -938,13 +1019,14 @@ name|defined
 argument_list|(
 name|SIGRETRACT
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGRETRACT
-block|,
+argument_list|,
 literal|"SIGRETRACT"
-block|,
+argument_list|,
 literal|"Need to relinguish monitor mode"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -954,13 +1036,14 @@ name|defined
 argument_list|(
 name|SIGMSG
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGMSG
-block|,
+argument_list|,
 literal|"SIGMSG"
-block|,
+argument_list|,
 literal|"Monitor mode data available"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -970,13 +1053,14 @@ name|defined
 argument_list|(
 name|SIGSOUND
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGSOUND
-block|,
+argument_list|,
 literal|"SIGSOUND"
-block|,
+argument_list|,
 literal|"Sound completed"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
@@ -986,23 +1070,25 @@ name|defined
 argument_list|(
 name|SIGSAK
 argument_list|)
-block|{
+name|ENTRY
+argument_list|(
 name|SIGSAK
-block|,
+argument_list|,
 literal|"SIGSAK"
-block|,
+argument_list|,
 literal|"Secure attention"
-block|}
+argument_list|)
 block|,
 endif|#
 directive|endif
-block|{
+name|ENTRY
+argument_list|(
 literal|0
-block|,
-name|NULL
-block|,
-name|NULL
-block|}
+argument_list|,
+argument|NULL
+argument_list|,
+argument|NULL
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1013,6 +1099,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1048,6 +1135,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1172,6 +1260,7 @@ operator|(
 name|signal_names
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
@@ -1251,6 +1340,7 @@ operator|(
 name|sys_siglist
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
@@ -1355,10 +1445,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  NAME  	strsignal -- map a signal number to a signal message string  SYNOPSIS  	char *strsignal (int signo)  DESCRIPTION  	Maps an signal number to an signal message string, the contents of 	which are implementation defined.  On systems which have the external 	variable sys_siglist, these strings will be the same as the ones used 	by psignal().  	If the supplied signal number is within the valid range of indices 	for the sys_siglist, but no message is available for the particular 	signal number, then returns the string "Signal NUM", where NUM is the 	signal number.  	If the supplied signal number is not a valid index into sys_siglist, 	returns NULL.  	The returned string is only guaranteed to be valid only until the 	next call to strsignal.  */
+comment|/*  NAME  	strsignal -- map a signal number to a signal message string  SYNOPSIS  	const char *strsignal (int signo)  DESCRIPTION  	Maps an signal number to an signal message string, the contents of 	which are implementation defined.  On systems which have the external 	variable sys_siglist, these strings will be the same as the ones used 	by psignal().  	If the supplied signal number is within the valid range of indices 	for the sys_siglist, but no message is available for the particular 	signal number, then returns the string "Signal NUM", where NUM is the 	signal number.  	If the supplied signal number is not a valid index into sys_siglist, 	returns NULL.  	The returned string is only guaranteed to be valid only until the 	next call to strsignal.  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|strsignal
@@ -1369,6 +1460,7 @@ name|int
 name|signo
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -1448,6 +1540,11 @@ argument_list|)
 expr_stmt|;
 name|msg
 operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 block|}
@@ -1457,6 +1554,7 @@ comment|/* In range, and a valid message.  Just return the message. */
 name|msg
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1475,10 +1573,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  NAME  	strsigno -- map an signal number to a symbolic name string  SYNOPSIS  	char *strsigno (int signo)  DESCRIPTION  	Given an signal number, returns a pointer to a string containing 	the symbolic name of that signal number, as found in<signal.h>.  	If the supplied signal number is within the valid range of indices 	for symbolic names, but no name is available for the particular 	signal number, then returns the string "Signal NUM", where NUM is 	the signal number.  	If the supplied signal number is not within the range of valid 	indices, then returns NULL.  BUGS  	The contents of the location pointed to are only guaranteed to be 	valid until the next call to strsigno.  */
+comment|/*  NAME  	strsigno -- map an signal number to a symbolic name string  SYNOPSIS  	const char *strsigno (int signo)  DESCRIPTION  	Given an signal number, returns a pointer to a string containing 	the symbolic name of that signal number, as found in<signal.h>.  	If the supplied signal number is within the valid range of indices 	for symbolic names, but no name is available for the particular 	signal number, then returns the string "Signal NUM", where NUM is 	the signal number.  	If the supplied signal number is not within the range of valid 	indices, then returns NULL.  BUGS  	The contents of the location pointed to are only guaranteed to be 	valid until the next call to strsigno.  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|strsigno
@@ -1489,6 +1588,7 @@ name|int
 name|signo
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1563,6 +1663,11 @@ argument_list|)
 expr_stmt|;
 name|name
 operator|=
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 block|}
@@ -1595,6 +1700,7 @@ name|strtosigno
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1788,7 +1894,14 @@ directive|ifdef
 name|MAIN
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_function
+name|int
 name|main
 parameter_list|()
 block|{
@@ -1798,24 +1911,16 @@ decl_stmt|;
 name|int
 name|maxsigno
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-name|char
-modifier|*
-name|strsigno
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
-name|strsignal
-parameter_list|()
-function_decl|;
 name|maxsigno
 operator|=
 name|signo_max
@@ -1907,6 +2012,9 @@ name|msg
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read coff symbol tables and convert to internal format, for GDB.    Contributed by David D. Johnson, Brown University (ddj@cs.brown.edu).    Copyright 1987, 1988, 1989, 1990, 1991, 1992, 1993    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Read coff symbol tables and convert to internal format, for GDB.    Contributed by David D. Johnson, Brown University (ddj@cs.brown.edu).    Copyright 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -31,36 +31,6 @@ begin_include
 include|#
 directive|include
 file|"bfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"symfile.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"objfiles.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"buildsym.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gdb-stabs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"complaints.h"
 end_include
 
 begin_include
@@ -124,6 +94,42 @@ end_include
 begin_comment
 comment|/* FIXME secret internal data from BFD */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"symfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objfiles.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"buildsym.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb-stabs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"stabsread.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"complaints.h"
+end_include
 
 begin_struct
 struct|struct
@@ -235,23 +241,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Core address of the end of the first object file.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|CORE_ADDR
-name|first_object_file_end
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* The addresses of the symbol table stream and number of symbols    of the object file we are reading (as copied into core).  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|FILE
+name|GDB_FILE
 modifier|*
 name|nlist_stream_global
 decl_stmt|;
@@ -446,14 +441,6 @@ unit|struct type *in_function_type;
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|struct
-name|pending_block
-modifier|*
-name|pending_blocks
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Complaints about various problems in the file being read  */
@@ -851,22 +838,6 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|getfilename
-name|PARAMS
-argument_list|(
-operator|(
-expr|union
-name|internal_auxent
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
 name|getsymname
 name|PARAMS
 argument_list|(
@@ -1047,6 +1018,10 @@ name|CORE_ADDR
 operator|,
 expr|enum
 name|minimal_symbol_type
+operator|,
+expr|struct
+name|objfile
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1828,6 +1803,8 @@ parameter_list|,
 name|address
 parameter_list|,
 name|type
+parameter_list|,
+name|objfile
 parameter_list|)
 name|char
 modifier|*
@@ -1839,6 +1816,11 @@ decl_stmt|;
 name|enum
 name|minimal_symbol_type
 name|type
+decl_stmt|;
+name|struct
+name|objfile
+modifier|*
+name|objfile
 decl_stmt|;
 block|{
 comment|/* We don't want TDESC entry points in the minimal symbol table */
@@ -1867,6 +1849,8 @@ argument_list|,
 name|address
 argument_list|,
 name|type
+argument_list|,
+name|objfile
 argument_list|)
 expr_stmt|;
 block|}
@@ -1902,9 +1886,6 @@ block|{
 name|asection
 modifier|*
 name|section
-decl_stmt|,
-modifier|*
-name|strsection
 decl_stmt|;
 name|bfd
 modifier|*
@@ -2290,7 +2271,7 @@ operator|=
 name|fileno
 argument_list|(
 operator|(
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 operator|(
@@ -2531,9 +2512,38 @@ name|objfile
 argument_list|)
 expr_stmt|;
 comment|/* Sort symbols alphabetically within each block.  */
-name|sort_all_symtab_syms
-argument_list|()
+block|{
+name|struct
+name|symtab
+modifier|*
+name|s
+decl_stmt|;
+for|for
+control|(
+name|s
+operator|=
+name|objfile
+operator|->
+name|symtabs
+init|;
+name|s
+operator|!=
+name|NULL
+condition|;
+name|s
+operator|=
+name|s
+operator|->
+name|next
+control|)
+block|{
+name|sort_symtab_syms
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
+block|}
+block|}
 comment|/* Install any minimal symbols that have been collected as the current      minimal symbols for this objfile. */
 name|install_minimal_symbols
 argument_list|(
@@ -2563,7 +2573,7 @@ comment|/* FIXME: dubious.  Why can't we use something normal like 	 bfd_get_sec
 name|fseek
 argument_list|(
 operator|(
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 name|abfd
@@ -2719,7 +2729,7 @@ modifier|*
 name|objfile
 decl_stmt|;
 block|{
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -2774,11 +2784,6 @@ decl_stmt|;
 comment|/* A .file is open.  */
 name|int
 name|in_source_file
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|num_object_files
 init|=
 literal|0
 decl_stmt|;
@@ -3088,7 +3093,7 @@ literal|"_globals_"
 argument_list|,
 literal|0
 argument_list|,
-name|first_object_file_end
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* done with all files, everything from here on out is globals */
@@ -3150,6 +3155,8 @@ operator|->
 name|c_value
 argument_list|,
 name|mst_text
+argument_list|,
+name|objfile
 argument_list|)
 expr_stmt|;
 name|fcn_line_ptr
@@ -3244,7 +3251,7 @@ literal|0
 condition|)
 name|filestring
 operator|=
-name|getfilename
+name|coff_getfilename
 argument_list|(
 operator|&
 name|main_aux
@@ -3303,28 +3310,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* FIXME:  don't wire in ".text" as section name 				       or symbol name! */
-if|if
-condition|(
-operator|++
-name|num_object_files
-operator|==
-literal|1
-condition|)
-block|{
-comment|/* last address of startup file */
-name|first_object_file_end
-operator|=
-name|cs
-operator|->
-name|c_value
-operator|+
-name|main_aux
-operator|.
-name|x_scn
-operator|.
-name|x_scnlen
-expr_stmt|;
-block|}
 comment|/* Check for in_source_file deals with case of 			       a file with debugging symbols 			       followed by a later file with no symbols.  */
 if|if
 condition|(
@@ -3485,19 +3470,8 @@ comment|/* fall in for static symbols that don't start with '.' */
 case|case
 name|C_EXT
 case|:
-comment|/* Record external symbols in minsyms if we don't have debug 	       info for them.  FIXME, this is probably the wrong thing 	       to do.  Why don't we record them even if we do have 	       debug symbol info?  What really belongs in the minsyms 	       anyway?  Fred!??  */
-if|if
-condition|(
-operator|!
-name|SDB_TYPE
-argument_list|(
-name|cs
-operator|->
-name|c_type
-argument_list|)
-condition|)
-block|{
-comment|/* FIXME: This is BOGUS Will Robinson!  	 	Coff should provide the SEC_CODE flag for executable sections, 	 	then if we could look up sections by section number we   	 	could see if the flags indicate SEC_CODE.  If so, then 	 	record this symbol as a function in the minimal symbol table. 		But why are absolute syms recorded as functions, anyway?  */
+comment|/* Record it in the minimal symbols regardless of SDB_TYPE. 	       This parallels what we do for other debug formats, and 	       probably is needed to make print_address_symbolic work right 	       without the "set fast-symbolic-addr off" kludge.  */
+comment|/* FIXME: This bogusly assumes the sections are in a certain 	       order, text (SEC_CODE) sections are before data sections, 	       etc.  */
 if|if
 condition|(
 name|cs
@@ -3509,7 +3483,7 @@ operator|+
 literal|1
 condition|)
 block|{
-comment|/* text or abs */
+comment|/* text or absolute.  (FIXME, should use mst_abs if 		   absolute).  */
 name|record_minimal_symbol
 argument_list|(
 name|cs
@@ -3520,10 +3494,19 @@ name|cs
 operator|->
 name|c_value
 argument_list|,
+name|cs
+operator|->
+name|c_sclass
+operator|==
+name|C_STAT
+condition|?
+name|mst_file_text
+else|:
 name|mst_text
+argument_list|,
+name|objfile
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 else|else
 block|{
@@ -3537,12 +3520,29 @@ name|cs
 operator|->
 name|c_value
 argument_list|,
+name|cs
+operator|->
+name|c_sclass
+operator|==
+name|C_STAT
+condition|?
+name|mst_file_data
+else|:
 name|mst_data
+argument_list|,
+name|objfile
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
-block|}
+if|if
+condition|(
+name|SDB_TYPE
+argument_list|(
+name|cs
+operator|->
+name|c_type
+argument_list|)
+condition|)
 name|process_coff_symbol
 argument_list|(
 name|cs
@@ -4284,6 +4284,12 @@ name|sym
 operator|->
 name|n_sclass
 argument_list|,
+literal|0
+argument_list|,
+name|cs
+operator|->
+name|c_naux
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -4443,6 +4449,16 @@ decl_stmt|;
 name|free_stringtab
 argument_list|()
 expr_stmt|;
+comment|/* If the file is stripped, the offset might be zero, indicating no      string table.  Just return with `stringtab' set to null. */
+if|if
+condition|(
+name|offset
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|lseek
@@ -4692,10 +4708,9 @@ comment|/* Extract the file name from the aux entry of a C_FILE symbol.  Return 
 end_comment
 
 begin_function
-specifier|static
 name|char
 modifier|*
-name|getfilename
+name|coff_getfilename
 parameter_list|(
 name|aux_entry
 parameter_list|)
@@ -5633,11 +5648,6 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|struct
-name|type
-modifier|*
-name|temptype
-decl_stmt|;
 name|memset
 argument_list|(
 name|sym
@@ -5997,7 +6007,13 @@ name|TARGET_BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
 operator|)
-comment|/* If PCC says a parameter is a short or a char, 	       aligned on an int boundary, realign it to the "little end" 	       of the int.  */
+block|{
+comment|/* If PCC says a parameter is a short or a char, 		 aligned on an int boundary, realign it to the "little end" 		 of the int.  */
+name|struct
+name|type
+modifier|*
+name|temptype
+decl_stmt|;
 name|temptype
 operator|=
 name|lookup_fundamental_type
@@ -6064,6 +6080,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 endif|#
 directive|endif
 break|break;
@@ -6105,7 +6122,13 @@ argument_list|(
 name|BELIEVE_PCC_PROMOTION
 argument_list|)
 comment|/* FIXME:  This should retain the current type, since it's just 	   a register value.  gnu@adobe, 26Feb93 */
-comment|/* If PCC says a parameter is a short or a char, 	       it is really an int.  */
+block|{
+comment|/* If PCC says a parameter is a short or a char, 		   it is really an int.  */
+name|struct
+name|type
+modifier|*
+name|temptype
+decl_stmt|;
 name|temptype
 operator|=
 name|lookup_fundamental_type
@@ -6146,6 +6169,7 @@ argument_list|(
 name|sym
 argument_list|)
 operator|=
+operator|(
 name|TYPE_UNSIGNED
 argument_list|(
 name|SYMBOL_TYPE
@@ -6162,7 +6186,9 @@ name|FT_UNSIGNED_INTEGER
 argument_list|)
 else|:
 name|temptype
+operator|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -6197,6 +6223,34 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|TYPE_CODE
+argument_list|(
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|==
+name|TYPE_CODE_PTR
+operator|||
+name|TYPE_CODE
+argument_list|(
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|==
+name|TYPE_CODE_FUNC
+condition|)
+block|{
+comment|/* If we are giving a name to a type such as "pointer to 		       foo" or "function returning foo", we better not set 		       the TYPE_NAME.  If the program contains "typedef char 		       *caddr_t;", we don't want all variables of type char 		       * to print as caddr_t.  This is not just a 		       consequence of GDB's type management; CC and GCC (at 		       least through version 2.4) both output variables of 		       either type char * or caddr_t with the type 		       refering to the C_TPDEF symbol for caddr_t.  If a future 		       compiler cleans this up it GDB is not ready for it 		       yet, but if it becomes ready we somehow need to 		       disable this check (without breaking the PCC/GCC2.4 		       case).  		       Sigh.  		       Fortunately, this check seems not to be necessary 		       for anything except pointers or functions.  */
+empty_stmt|;
+block|}
+else|else
 name|TYPE_NAME
 argument_list|(
 name|SYMBOL_TYPE
@@ -6215,6 +6269,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Keep track of any type which points to empty structured type, 		so it can be filled from a definition from another file.  A 		simple forward reference (TYPE_CODE_UNDEF) is not an 		empty structured type, though; the forward references 		work themselves out via the magic of coff_lookup_type.  */
 if|if
 condition|(
@@ -8310,14 +8365,6 @@ name|osyms
 condition|)
 break|break;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* This screws up perfectly good C programs with enums.  FIXME.  */
-comment|/* Is this Modula-2's BOOLEAN type?  Flag it as such if so. */
-block|if(TYPE_NFIELDS(type) == 2&&      ((STREQ(TYPE_FIELD_NAME(type,0),"TRUE")&&        STREQ(TYPE_FIELD_NAME(type,1),"FALSE")) ||       (STREQ(TYPE_FIELD_NAME(type,1),"TRUE")&&        STREQ(TYPE_FIELD_NAME(type,0),"FALSE"))))      TYPE_CODE(type) = TYPE_CODE_BOOL;
-endif|#
-directive|endif
 return|return
 name|type
 return|;
@@ -8351,6 +8398,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|objfile
+operator|->
+name|num_sections
+operator|=
+name|SECT_OFF_MAX
+expr_stmt|;
 name|section_offsets
 operator|=
 operator|(
@@ -8424,12 +8477,8 @@ name|sym_fns
 name|coff_sym_fns
 init|=
 block|{
-literal|"coff"
+name|bfd_target_coff_flavour
 block|,
-comment|/* sym_name: name or name prefix of BFD target type */
-literal|4
-block|,
-comment|/* sym_namelen: number of significant sym_name chars */
 name|coff_new_init
 block|,
 comment|/* sym_new_init: init anything gbl to entire symtab */

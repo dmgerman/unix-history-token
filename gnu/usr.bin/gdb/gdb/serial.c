@@ -149,6 +149,25 @@ name|ops
 decl_stmt|;
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"pc"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ops
+operator|=
+name|serial_interface_lookup
+argument_list|(
+literal|"pc"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|strchr
 argument_list|(
 name|name
@@ -388,12 +407,12 @@ comment|/* Controlling terminal */
 end_comment
 
 begin_comment
-unit|static void cleanup_tty(ttystate)      serial_ttystate ttystate; {   printf ("\r\n[Exiting connect mode]\r\n");   SERIAL_SET_TTY_STATE (tty_desc, ttystate);   free (ttystate);   SERIAL_CLOSE (tty_desc); }  static void connect_command (args, fromtty)      char	*args;      int	fromtty; {   int c;   char cur_esc = 0;   serial_ttystate ttystate;   serial_t port_desc;
+unit|static void cleanup_tty(ttystate)      serial_ttystate ttystate; {   printf_unfiltered ("\r\n[Exiting connect mode]\r\n");   SERIAL_SET_TTY_STATE (tty_desc, ttystate);   free (ttystate);   SERIAL_CLOSE (tty_desc); }  static void connect_command (args, fromtty)      char	*args;      int	fromtty; {   int c;   char cur_esc = 0;   serial_ttystate ttystate;   serial_t port_desc;
 comment|/* TTY port */
 end_comment
 
 begin_comment
-unit|dont_repeat();    if (args)     fprintf(stderr, "This command takes no args.  They have been ignored.\n"); 	   printf("[Entering connect mode.  Use ~. or ~^D to escape]\n");    tty_desc = SERIAL_FDOPEN (0);   port_desc = last_serial_opened;    ttystate = SERIAL_GET_TTY_STATE (tty_desc);    SERIAL_RAW (tty_desc);   SERIAL_RAW (port_desc);    make_cleanup (cleanup_tty, ttystate);    while (1)     {       int mask;        mask = SERIAL_WAIT_2 (tty_desc, port_desc, -1);        if (mask& 2) 	{
+unit|dont_repeat();    if (args)     fprintf_unfiltered(gdb_stderr, "This command takes no args.  They have been ignored.\n"); 	   printf_unfiltered("[Entering connect mode.  Use ~. or ~^D to escape]\n");    tty_desc = SERIAL_FDOPEN (0);   port_desc = last_serial_opened;    ttystate = SERIAL_GET_TTY_STATE (tty_desc);    SERIAL_RAW (tty_desc);   SERIAL_RAW (port_desc);    make_cleanup (cleanup_tty, ttystate);    while (1)     {       int mask;        mask = SERIAL_WAIT_2 (tty_desc, port_desc, -1);        if (mask& 2) 	{
 comment|/* tty input */
 end_comment
 
@@ -403,7 +422,7 @@ comment|/* Port input */
 end_comment
 
 begin_endif
-unit|char cx;  	  while (1) 	    { 	      c = SERIAL_READCHAR(port_desc, 0);  	      if (c == SERIAL_TIMEOUT) 		  break;  	      if (c< 0) 		perror_with_name("connect");  	      cx = c;  	      SERIAL_WRITE(tty_desc,&cx, 1); 	    } 	}     } }  void _initialize_serial () {   add_com ("connect", class_obscure, connect_command, 	   "Connect the terminal directly up to the command monitor.\n\ Use<CR>~. or<CR>~^D to break out."); }
+unit|char cx;  	  while (1) 	    { 	      c = SERIAL_READCHAR(port_desc, 0);  	      if (c == SERIAL_TIMEOUT) 		  break;  	      if (c< 0) 		perror_with_name("connect");  	      cx = c;  	      SERIAL_WRITE(tty_desc,&cx, 1); 	    } 	}     } }
 endif|#
 directive|endif
 end_endif
@@ -411,6 +430,21 @@ end_endif
 begin_comment
 comment|/* 0 */
 end_comment
+
+begin_function
+name|void
+name|_initialize_serial
+parameter_list|()
+block|{
+if|#
+directive|if
+literal|0
+block|add_com ("connect", class_obscure, connect_command, 	   "Connect the terminal directly up to the command monitor.\n\ Use<CR>~. or<CR>~^D to break out.");
+endif|#
+directive|endif
+comment|/* 0 */
+block|}
+end_function
 
 end_unit
 

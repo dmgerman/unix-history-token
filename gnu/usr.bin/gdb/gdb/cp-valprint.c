@@ -57,6 +57,12 @@ directive|include
 file|"demangle.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"annotate.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|vtblprint
@@ -98,7 +104,7 @@ operator|,
 name|char
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -132,7 +138,7 @@ expr|struct
 name|type
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -154,7 +160,7 @@ expr|struct
 name|type
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -185,7 +191,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -197,46 +203,6 @@ specifier|extern
 name|struct
 name|obstack
 name|dont_print_obstack
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* END-FIXME */
-end_comment
-
-begin_comment
-comment|/* BEGIN-FIXME:  Hooks into c-valprint.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|c_val_print
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|type
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|CORE_ADDR
-operator|,
-name|FILE
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-expr|enum
-name|val_prettyprint
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -263,7 +229,7 @@ name|type
 modifier|*
 name|type
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -608,7 +574,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
 name|stream
 argument_list|,
@@ -735,31 +701,10 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return truth value for assertion that TYPE is of the type    "pointer to virtual function".  */
+comment|/* This was what it was for gcc 2.4.5 and earlier.  */
 end_comment
 
-begin_function
-name|int
-name|cp_is_vtbl_ptr_type
-parameter_list|(
-name|type
-parameter_list|)
-name|struct
-name|type
-modifier|*
-name|type
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|typename
-init|=
-name|type_name_no_tag
-argument_list|(
-name|type
-argument_list|)
-decl_stmt|;
-comment|/* This was what it was for gcc 2.4.5 and earlier.  */
+begin_decl_stmt
 specifier|static
 specifier|const
 name|char
@@ -798,8 +743,13 @@ block|,
 literal|0
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* It was changed to this after 2.4.5.  */
-specifier|static
+end_comment
+
+begin_decl_stmt
 specifier|const
 name|char
 name|vtbl_ptr_name
@@ -838,6 +788,33 @@ literal|'e'
 block|,
 literal|0
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Return truth value for assertion that TYPE is of the type    "pointer to virtual function".  */
+end_comment
+
+begin_function
+name|int
+name|cp_is_vtbl_ptr_type
+parameter_list|(
+name|type
+parameter_list|)
+name|struct
+name|type
+modifier|*
+name|type
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|typename
+init|=
+name|type_name_no_tag
+argument_list|(
+name|type
+argument_list|)
 decl_stmt|;
 return|return
 operator|(
@@ -890,6 +867,7 @@ argument_list|)
 operator|==
 name|TYPE_CODE_PTR
 condition|)
+block|{
 name|type
 operator|=
 name|TYPE_TARGET_TYPE
@@ -897,10 +875,6 @@ argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
-else|else
-return|return
-literal|0
-return|;
 if|if
 condition|(
 name|TYPE_CODE
@@ -909,27 +883,44 @@ name|type
 argument_list|)
 operator|==
 name|TYPE_CODE_ARRAY
-operator|&&
-name|TYPE_CODE
-argument_list|(
+condition|)
+block|{
+name|type
+operator|=
 name|TYPE_TARGET_TYPE
 argument_list|(
 name|type
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TYPE_CODE
+argument_list|(
+name|type
 argument_list|)
 operator|==
 name|TYPE_CODE_STRUCT
-condition|)
-comment|/* Virtual functions tables are full of pointers to virtual functions.  */
-return|return
-name|cp_is_vtbl_ptr_type
-argument_list|(
-name|TYPE_TARGET_TYPE
+comment|/* if not using thunks */
+operator|||
+name|TYPE_CODE
 argument_list|(
 name|type
 argument_list|)
+operator|==
+name|TYPE_CODE_PTR
+condition|)
+comment|/* if using thunks */
+block|{
+comment|/* Virtual functions tables are full of pointers 		 to virtual functions. */
+return|return
+name|cp_is_vtbl_ptr_type
+argument_list|(
+name|type
 argument_list|)
 return|;
+block|}
+block|}
+block|}
 return|return
 literal|0
 return|;
@@ -967,7 +958,7 @@ name|char
 modifier|*
 name|valaddr
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1297,6 +1288,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|annotate_field_begin
+argument_list|(
+name|TYPE_FIELD_TYPE
+argument_list|(
+name|type
+argument_list|,
+name|i
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|fprintf_symbol_filtered
 argument_list|(
 name|stream
@@ -1315,12 +1316,18 @@ operator||
 name|DMGL_ANSI
 argument_list|)
 expr_stmt|;
+name|annotate_field_name_end
+argument_list|()
+expr_stmt|;
 name|fputs_filtered
 argument_list|(
 literal|" = "
 argument_list|,
 name|stream
 argument_list|)
+expr_stmt|;
+name|annotate_field_value
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -1333,10 +1340,30 @@ name|i
 argument_list|)
 condition|)
 block|{
-name|value
+name|value_ptr
 name|v
 decl_stmt|;
 comment|/* Bitfields require special handling, especially due to byte 		 order problems.  */
+if|if
+condition|(
+name|TYPE_FIELD_IGNORE
+argument_list|(
+name|type
+argument_list|,
+name|i
+argument_list|)
+condition|)
+block|{
+name|fputs_filtered
+argument_list|(
+literal|"<optimized out or zero length>"
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|v
 operator|=
 name|value_from_longest
@@ -1358,7 +1385,7 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|c_val_print
+name|val_print
 argument_list|(
 name|TYPE_FIELD_TYPE
 argument_list|(
@@ -1388,9 +1415,30 @@ name|pretty
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
 block|{
-name|c_val_print
+if|if
+condition|(
+name|TYPE_FIELD_IGNORE
+argument_list|(
+name|type
+argument_list|,
+name|i
+argument_list|)
+condition|)
+block|{
+name|fputs_filtered
+argument_list|(
+literal|"<optimized out or zero length>"
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|val_print
 argument_list|(
 name|TYPE_FIELD_TYPE
 argument_list|(
@@ -1426,6 +1474,10 @@ name|pretty
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+name|annotate_field_end
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1492,7 +1544,7 @@ name|char
 modifier|*
 name|valaddr
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1579,6 +1631,7 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* FIXME-32x64--assumes that a target pointer can fit in a char *. 	 Fix it by nuking baseclass_addr.  */
 name|char
 modifier|*
 name|baddr
@@ -1589,7 +1642,19 @@ decl_stmt|;
 name|char
 modifier|*
 name|basename
-init|=
+decl_stmt|;
+name|check_stub_type
+argument_list|(
+name|TYPE_BASECLASS
+argument_list|(
+name|type
+argument_list|,
+name|i
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|basename
+operator|=
 name|TYPE_NAME
 argument_list|(
 name|TYPE_BASECLASS
@@ -1599,7 +1664,7 @@ argument_list|,
 name|i
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|BASETYPE_VIA_VIRTUAL
@@ -1775,19 +1840,34 @@ name|err
 operator|!=
 literal|0
 condition|)
+block|{
 name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|"<invalid address 0x%lx>"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|baddr
+literal|"<invalid address "
 argument_list|)
 expr_stmt|;
+name|print_address_numeric
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|)
+name|baddr
+argument_list|,
+literal|1
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|">"
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|cp_print_value_fields
 argument_list|(
@@ -1878,7 +1958,7 @@ name|type
 modifier|*
 name|domain
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;

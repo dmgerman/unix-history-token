@@ -81,6 +81,12 @@ directive|include
 file|"inferior.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"annotate.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -218,7 +224,7 @@ argument_list|(
 operator|(
 name|FRAME
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -268,7 +274,7 @@ name|FRAME
 operator|,
 name|int
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -284,7 +290,7 @@ argument_list|(
 operator|(
 name|FRAME
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -305,7 +311,7 @@ operator|,
 name|int
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -325,7 +331,7 @@ operator|*
 operator|,
 name|FRAME
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -432,12 +438,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means print the full filename and linenumber    when a frame is printed, and do so in a format programs can parse.  */
+comment|/* Zero means do things normally; we are interacting directly with the    user.  One means print the full filename and linenumber when a    frame is printed, and do so in a format emacs18/emacs19.22 can    parse.  Two means print similar annotations, but in many more    cases and in a slightly different syntax.  */
 end_comment
 
 begin_decl_stmt
 name|int
-name|frame_file_full_name
+name|annotation_level
 init|=
 literal|0
 decl_stmt|;
@@ -695,7 +701,7 @@ name|fi
 argument_list|,
 name|numargs
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 return|return
@@ -703,6 +709,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* LEVEL is the level of the frame, or -1 if it is the innermost frame    but we don't want to print the level.  */
+end_comment
 
 begin_function
 name|void
@@ -754,76 +764,43 @@ name|funlang
 init|=
 name|language_unknown
 decl_stmt|;
-name|char
-name|buf
-index|[
-name|MAX_REGISTER_RAW_SIZE
-index|]
-decl_stmt|;
-name|CORE_ADDR
-name|sp
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|char buf[MAX_REGISTER_RAW_SIZE];   CORE_ADDR sp;
+comment|/* On the 68k, this spends too much time in m68k_find_saved_regs.  */
 comment|/* Get the value of SP_REGNUM relative to the frame.  */
-name|get_saved_register
-argument_list|(
-name|buf
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-name|NULL
-argument_list|,
-operator|(
-name|CORE_ADDR
-operator|*
-operator|)
-name|NULL
-argument_list|,
-name|FRAME_INFO_ID
+block|get_saved_register (buf, (int *)NULL, (CORE_ADDR *)NULL, 		      FRAME_INFO_ID (fi), SP_REGNUM, (enum lval_type *)NULL);   sp = extract_address (buf, REGISTER_RAW_SIZE (SP_REGNUM));
+comment|/* This is not a perfect test, because if a function alloca's some      memory, puts some code there, and then jumps into it, then the test      will succeed even though there is no call dummy.  Probably best is      to check for a bp_call_dummy breakpoint.  */
+block|if (PC_IN_CALL_DUMMY (fi->pc, sp, fi->frame))
+else|#
+directive|else
+if|if
+condition|(
+name|frame_in_dummy
 argument_list|(
 name|fi
 argument_list|)
-argument_list|,
-name|SP_REGNUM
-argument_list|,
-operator|(
-expr|enum
-name|lval_type
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
-name|sp
-operator|=
-name|extract_address
+condition|)
+endif|#
+directive|endif
+block|{
+name|annotate_frame_begin
 argument_list|(
-name|buf
+name|level
+operator|==
+operator|-
+literal|1
+condition|?
+literal|0
+else|:
+name|level
 argument_list|,
-name|REGISTER_RAW_SIZE
-argument_list|(
-name|SP_REGNUM
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* This is not a perfect test, because if a function alloca's some      memory, puts some code there, and then jumps into it, then the test      will succeed even though there is no call dummy.  Probably best is      to check for a bp_call_dummy breakpoint.  */
-if|if
-condition|(
-name|PC_IN_CALL_DUMMY
-argument_list|(
 name|fi
 operator|->
 name|pc
-argument_list|,
-name|sp
-argument_list|,
-name|fi
-operator|->
-name|frame
 argument_list|)
-condition|)
-block|{
+expr_stmt|;
 comment|/* Do this regardless of SOURCE because we don't have any source 	 to list for this frame.  */
 if|if
 condition|(
@@ -838,10 +815,16 @@ argument_list|,
 name|level
 argument_list|)
 expr_stmt|;
+name|annotate_function_call
+argument_list|()
+expr_stmt|;
 name|printf_filtered
 argument_list|(
 literal|"<function called from gdb>\n"
 argument_list|)
+expr_stmt|;
+name|annotate_frame_end
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -852,6 +835,22 @@ operator|->
 name|signal_handler_caller
 condition|)
 block|{
+name|annotate_frame_begin
+argument_list|(
+name|level
+operator|==
+operator|-
+literal|1
+condition|?
+literal|0
+else|:
+name|level
+argument_list|,
+name|fi
+operator|->
+name|pc
+argument_list|)
+expr_stmt|;
 comment|/* Do this regardless of SOURCE because we don't have any source 	 to list for this frame.  */
 if|if
 condition|(
@@ -866,14 +865,20 @@ argument_list|,
 name|level
 argument_list|)
 expr_stmt|;
+name|annotate_signal_handler_caller
+argument_list|()
+expr_stmt|;
 name|printf_filtered
 argument_list|(
 literal|"<signal handler called>\n"
 argument_list|)
 expr_stmt|;
+name|annotate_frame_end
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
-comment|/* If fi is not the innermost frame, that normally means that fi->pc      points to *after* the call instruction, and we want to get the line      containing the call, never the next line.  But if the next frame is      a signal_handler_caller frame, then the next frame was not entered      as the result of a call, and we want to get the line containing      fi->pc.  */
+comment|/* If fi is not the innermost frame, that normally means that fi->pc      points to *after* the call instruction, and we want to get the line      containing the call, never the next line.  But if the next frame is      a signal_handler_caller or a dummy frame, then the next frame was      not entered as the result of a call, and we want to get the line      containing fi->pc.  */
 name|sal
 operator|=
 name|find_pc_line
@@ -888,13 +893,20 @@ name|next
 operator|!=
 name|NULL
 operator|&&
+operator|!
 name|fi
 operator|->
 name|next
 operator|->
 name|signal_handler_caller
-operator|==
-literal|0
+operator|&&
+operator|!
+name|frame_in_dummy
+argument_list|(
+name|fi
+operator|->
+name|next
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|func
@@ -946,13 +958,14 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* In this case we have no way of knowing the source file 	     and line number, so don't print them.  */
-name|sal
-operator|.
-name|symtab
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
+comment|/* There is no particular reason to think the line number 	     information is wrong.  Someone might have just put in 	     a label with asm() but left the line numbers alone.  */
+comment|/* In this case we have no way of knowing the source file 	     and line number, so don't print them.  */
+block|sal.symtab = 0;
+endif|#
+directive|endif
 comment|/* We also don't know anything about the function besides 	     its address and name.  */
 name|func
 operator|=
@@ -1041,6 +1054,22 @@ operator|.
 name|symtab
 condition|)
 block|{
+name|annotate_frame_begin
+argument_list|(
+name|level
+operator|==
+operator|-
+literal|1
+condition|?
+literal|0
+else|:
+name|level
+argument_list|,
+name|fi
+operator|->
+name|pc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|level
@@ -1073,25 +1102,36 @@ name|sal
 operator|.
 name|symtab
 condition|)
-name|printf_filtered
+block|{
+name|annotate_frame_address
+argument_list|()
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-literal|"%s in "
-argument_list|,
-name|local_hex_string
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|fi
 operator|->
 name|pc
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
+expr_stmt|;
+name|annotate_frame_address_end
+argument_list|()
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|" in "
 argument_list|)
+expr_stmt|;
+block|}
+name|annotate_frame_function_name
+argument_list|()
 expr_stmt|;
 name|fprintf_symbol_filtered
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|,
 name|funname
 condition|?
@@ -1101,7 +1141,7 @@ literal|"??"
 argument_list|,
 name|funlang
 argument_list|,
-name|DMGL_NO_OPTS
+name|DMGL_ANSI
 argument_list|)
 expr_stmt|;
 name|wrap_here
@@ -1109,11 +1149,14 @@ argument_list|(
 literal|"   "
 argument_list|)
 expr_stmt|;
+name|annotate_frame_args
+argument_list|()
+expr_stmt|;
 name|fputs_filtered
 argument_list|(
 literal|" ("
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 if|if
@@ -1172,6 +1215,9 @@ operator|->
 name|filename
 condition|)
 block|{
+name|annotate_frame_source_begin
+argument_list|()
+expr_stmt|;
 name|wrap_here
 argument_list|(
 literal|"   "
@@ -1179,18 +1225,45 @@ argument_list|)
 expr_stmt|;
 name|printf_filtered
 argument_list|(
-literal|" at %s:%d"
+literal|" at "
+argument_list|)
+expr_stmt|;
+name|annotate_frame_source_file
+argument_list|()
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"%s"
 argument_list|,
 name|sal
 operator|.
 name|symtab
 operator|->
 name|filename
+argument_list|)
+expr_stmt|;
+name|annotate_frame_source_file_end
+argument_list|()
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|":"
+argument_list|)
+expr_stmt|;
+name|annotate_frame_source_line
+argument_list|()
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"%d"
 argument_list|,
 name|sal
 operator|.
 name|line
 argument_list|)
+expr_stmt|;
+name|annotate_frame_source_end
+argument_list|()
 expr_stmt|;
 block|}
 ifdef|#
@@ -1203,6 +1276,9 @@ operator|!
 name|funname
 condition|)
 block|{
+name|annotate_frame_where
+argument_list|()
+expr_stmt|;
 name|wrap_here
 argument_list|(
 literal|"  "
@@ -1264,7 +1340,7 @@ name|pc
 decl_stmt|;
 if|if
 condition|(
-name|frame_file_full_name
+name|annotation_level
 condition|)
 name|done
 operator|=
@@ -1297,22 +1373,24 @@ name|addressprint
 operator|&&
 name|mid_statement
 condition|)
-name|printf_filtered
+block|{
+name|print_address_numeric
 argument_list|(
-literal|"%s\t"
-argument_list|,
-name|local_hex_string
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|fi
 operator|->
 name|pc
-argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"\t"
+argument_list|)
+expr_stmt|;
+block|}
 name|print_source_lines
 argument_list|(
 name|sal
@@ -1372,9 +1450,12 @@ operator|.
 name|line
 argument_list|)
 expr_stmt|;
-name|fflush
+name|annotate_frame_end
+argument_list|()
+expr_stmt|;
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -1589,6 +1670,22 @@ comment|/* find_relative_frame was successful */
 return|return
 name|fid
 return|;
+comment|/* If SETUP_ARBITRARY_FRAME is defined, then frame specifications 	   take at least 2 addresses.  It is important to detect this case 	   here so that "frame 100" does not give a confusing error message 	   like "frame specification requires two addresses".  This of course 	   does not solve the "frame 100" problem for machines on which 	   a frame specification can be made with one address.  To solve 	   that, we need a new syntax for a specifying a frame by address. 	   I think the cleanest syntax is $frame(0x45) ($frame(0x23,0x45) for 	   two args, etc.), but people might think that is too much typing, 	   so I guess *0x23,0x45 would be a possible alternative (commas 	   really should be used instead of spaces to delimit; using spaces 	   normally works in an expression).  */
+ifdef|#
+directive|ifdef
+name|SETUP_ARBITRARY_FRAME
+name|error
+argument_list|(
+literal|"No frame %d"
+argument_list|,
+name|args
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* If (s)he specifies the frame with an address, he deserves what 	   (s)he gets.  Still, give the highest one that matches.  */
 for|for
 control|(
@@ -1648,7 +1745,7 @@ name|fid
 operator|=
 name|tfid
 expr_stmt|;
-comment|/* We couldn't identify the frame as an existing frame, but 	   perhaps we can create one with a single argument. 	   Fall through to default case; it's up to SETUP_ARBITRARY_FRAME 	   to complain if it doesn't like a single arg.  */
+comment|/* We couldn't identify the frame as an existing frame, but 	   perhaps we can create one with a single argument.  */
 block|}
 default|default:
 ifdef|#
@@ -1775,6 +1872,8 @@ name|int
 name|i
 decl_stmt|,
 name|count
+decl_stmt|,
+name|numregs
 decl_stmt|;
 name|char
 modifier|*
@@ -1836,13 +1935,20 @@ name|next
 operator|!=
 name|NULL
 operator|&&
+operator|!
 name|fi
 operator|->
 name|next
 operator|->
 name|signal_handler_caller
-operator|==
-literal|0
+operator|&&
+operator|!
+name|frame_in_dummy
+argument_list|(
+name|fi
+operator|->
+name|next
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|func
@@ -1938,21 +2044,26 @@ condition|)
 block|{
 name|printf_filtered
 argument_list|(
-literal|"Stack level %d, frame at %s:\n"
+literal|"Stack level %d, frame at "
 argument_list|,
 name|selected_frame_level
-argument_list|,
-name|local_hex_string
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|FRAME_FP
 argument_list|(
 name|frame
 argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|":\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1960,41 +2071,46 @@ else|else
 block|{
 name|printf_filtered
 argument_list|(
-literal|"Stack frame at %s:\n"
-argument_list|,
-name|local_hex_string
+literal|"Stack frame at "
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|FRAME_FP
 argument_list|(
 name|frame
 argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|":\n"
 argument_list|)
 expr_stmt|;
 block|}
 name|printf_filtered
 argument_list|(
-literal|" %s = %s"
+literal|" %s = "
 argument_list|,
 name|reg_names
 index|[
 name|PC_REGNUM
 index|]
-argument_list|,
-name|local_hex_string
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|fi
 operator|->
 name|pc
-argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|wrap_here
@@ -2014,7 +2130,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf_symbol_filtered
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|,
 name|funname
 argument_list|,
@@ -2064,24 +2180,29 @@ argument_list|)
 expr_stmt|;
 name|printf_filtered
 argument_list|(
-literal|"saved %s %s\n"
+literal|"saved %s "
 argument_list|,
 name|reg_names
 index|[
 name|PC_REGNUM
 index|]
-argument_list|,
-name|local_hex_string
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|FRAME_SAVED_PC
 argument_list|(
 name|frame
 argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|{
@@ -2116,23 +2237,25 @@ if|if
 condition|(
 name|calling_frame
 condition|)
+block|{
 name|printf_filtered
 argument_list|(
-literal|" called by frame at %s"
-argument_list|,
-name|local_hex_string
+literal|" called by frame at "
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|FRAME_FP
 argument_list|(
 name|calling_frame
 argument_list|)
-argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|fi
@@ -2157,24 +2280,26 @@ name|fi
 operator|->
 name|next
 condition|)
+block|{
 name|printf_filtered
 argument_list|(
-literal|" caller of frame at %s"
-argument_list|,
-name|local_hex_string
+literal|" caller of frame at "
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|fi
 operator|->
 name|next
 operator|->
 name|frame
-argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|fi
@@ -2243,16 +2368,21 @@ else|else
 block|{
 name|printf_filtered
 argument_list|(
-literal|" Arglist at %s,"
-argument_list|,
-name|local_hex_string
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|arg_list
+literal|" Arglist at "
 argument_list|)
+expr_stmt|;
+name|print_address_numeric
+argument_list|(
+name|arg_list
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|","
 argument_list|)
 expr_stmt|;
 name|FRAME_NUM_ARGS
@@ -2313,7 +2443,7 @@ name|fi
 argument_list|,
 name|numargs
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|puts_filtered
@@ -2345,20 +2475,27 @@ literal|" Locals at unknown address,"
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|printf_filtered
 argument_list|(
-literal|" Locals at %s,"
-argument_list|,
-name|local_hex_string
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|arg_list
-argument_list|)
+literal|" Locals at "
 argument_list|)
 expr_stmt|;
+name|print_address_numeric
+argument_list|(
+name|arg_list
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|","
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|#
 directive|if
@@ -2377,26 +2514,35 @@ expr_stmt|;
 comment|/* The sp is special; what's returned isn't the save address, but      actually the value of the previous frame's sp.  */
 name|printf_filtered
 argument_list|(
-literal|" Previous frame's sp is %s\n"
-argument_list|,
-name|local_hex_string
+literal|" Previous frame's sp is "
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|fsr
 operator|.
 name|regs
 index|[
 name|SP_REGNUM
 index|]
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|count
 operator|=
 literal|0
+expr_stmt|;
+name|numregs
+operator|=
+name|ARCH_NUM_REGS
 expr_stmt|;
 for|for
 control|(
@@ -2406,7 +2552,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_REGS
+name|numregs
 condition|;
 name|i
 operator|++
@@ -2449,26 +2595,26 @@ argument_list|)
 expr_stmt|;
 name|printf_filtered
 argument_list|(
-literal|" %s at %s"
+literal|" %s at "
 argument_list|,
 name|reg_names
 index|[
 name|i
 index|]
-argument_list|,
-name|local_hex_string
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|fsr
 operator|.
 name|regs
 index|[
 name|i
 index|]
-argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|count
@@ -2479,6 +2625,14 @@ if|if
 condition|(
 name|count
 condition|)
+name|puts_filtered
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* Have FRAME_FIND_SAVED_REGS.  */
 name|puts_filtered
 argument_list|(
 literal|"\n"
@@ -2501,7 +2655,7 @@ comment|/* Set a limit on the number of frames printed by default in a    backtr
 end_comment
 
 begin_endif
-unit|static int backtrace_limit;  static void set_backtrace_limit_command (count_exp, from_tty)      char *count_exp;      int from_tty; {   int count = parse_and_eval_address (count_exp);    if (count< 0)     error ("Negative argument not meaningful as backtrace limit.");    backtrace_limit = count; }  static void backtrace_limit_info (arg, from_tty)      char *arg;      int from_tty; {   if (arg)     error ("\"Info backtrace-limit\" takes no arguments.");    printf ("Backtrace limit: %d.\n", backtrace_limit); }
+unit|static int backtrace_limit;  static void set_backtrace_limit_command (count_exp, from_tty)      char *count_exp;      int from_tty; {   int count = parse_and_eval_address (count_exp);    if (count< 0)     error ("Negative argument not meaningful as backtrace limit.");    backtrace_limit = count; }  static void backtrace_limit_info (arg, from_tty)      char *arg;      int from_tty; {   if (arg)     error ("\"Info backtrace-limit\" takes no arguments.");    printf_unfiltered ("Backtrace limit: %d.\n", backtrace_limit); }
 endif|#
 directive|endif
 end_endif
@@ -2819,7 +2973,7 @@ name|FRAME
 name|frame
 decl_stmt|;
 specifier|register
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -2873,30 +3027,26 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|SYMBOL_CLASS
 argument_list|(
 name|sym
 argument_list|)
-operator|==
-name|LOC_LOCAL
-operator|||
-name|SYMBOL_CLASS
-argument_list|(
-name|sym
-argument_list|)
-operator|==
-name|LOC_REGISTER
-operator|||
-name|SYMBOL_CLASS
-argument_list|(
-name|sym
-argument_list|)
-operator|==
-name|LOC_STATIC
 condition|)
 block|{
+case|case
+name|LOC_LOCAL
+case|:
+case|case
+name|LOC_REGISTER
+case|:
+case|case
+name|LOC_STATIC
+case|:
+case|case
+name|LOC_BASEREG
+case|:
 name|values_printed
 operator|=
 literal|1
@@ -2934,6 +3084,10 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+comment|/* Ignore symbols which are not locals.  */
+break|break;
 block|}
 block|}
 return|return
@@ -2967,7 +3121,7 @@ modifier|*
 name|have_default
 decl_stmt|;
 specifier|register
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -3090,25 +3244,27 @@ if|if
 condition|(
 name|addressprint
 condition|)
+block|{
 name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|" %s"
-argument_list|,
-name|local_hex_string
+literal|" "
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|SYMBOL_VALUE_ADDRESS
 argument_list|(
 name|sym
 argument_list|)
-argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
+block|}
 name|fprintf_filtered
 argument_list|(
 name|stream
@@ -3152,7 +3308,7 @@ name|FRAME
 name|frame
 decl_stmt|;
 specifier|register
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -3269,7 +3425,7 @@ name|int
 name|this_level_only
 decl_stmt|;
 specifier|register
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -3624,7 +3780,7 @@ name|print_frame_local_vars
 argument_list|(
 name|selected_frame
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -3663,7 +3819,7 @@ name|selected_frame
 argument_list|,
 literal|0
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -3683,7 +3839,7 @@ name|FRAME
 name|frame
 decl_stmt|;
 specifier|register
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -3925,7 +4081,7 @@ name|print_frame_arg_vars
 argument_list|(
 name|selected_frame
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -4589,11 +4745,14 @@ name|count_exp
 operator|==
 literal|0
 condition|)
+block|{
+comment|/* We only do this if count_exp is not specified.  That way "down" 	 means to really go down (and let me know if that is 	 impossible), but "down 9999" can be used to mean go all the way 	 down without getting an error.  */
 name|error
 argument_list|(
 literal|"Bottom (i.e., innermost) frame selected; you cannot go down."
 argument_list|)
 expr_stmt|;
+block|}
 name|select_frame
 argument_list|(
 name|frame
@@ -4678,7 +4837,7 @@ decl_stmt|;
 name|FRAME
 name|frame
 decl_stmt|;
-name|value
+name|value_ptr
 name|return_value
 init|=
 name|NULL

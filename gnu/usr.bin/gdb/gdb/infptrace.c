@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level Unix child interface to ptrace, for GDB when running under Unix.    Copyright 1988, 1989, 1990, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Low level Unix child interface to ptrace, for GDB when running under Unix.    Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1994    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -448,7 +448,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* ptrace PT_KILL only works if process is stopped!!!  So stop it with      a real signal first, if we can.  */
+comment|/* ptrace PT_KILL only works if process is stopped!!!  So stop it with      a real signal first, if we can.  FIXME: This is bogus.  When the inferior      is not stopped, GDB should just be waiting for it.  Either the following      line is unecessary, or there is some problem elsewhere in GDB which      causes us to get here when the inferior is not stopped.  */
 name|kill
 argument_list|(
 name|inferior_pid
@@ -485,6 +485,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CHILD_RESUME
+end_ifndef
+
 begin_comment
 comment|/* Resume execution of the inferior process.    If STEP is nonzero, single-step it.    If SIGNAL is nonzero, give it that signal.  */
 end_comment
@@ -505,7 +511,8 @@ decl_stmt|;
 name|int
 name|step
 decl_stmt|;
-name|int
+name|enum
+name|target_signal
 name|signal
 decl_stmt|;
 block|{
@@ -520,6 +527,8 @@ operator|==
 operator|-
 literal|1
 condition|)
+comment|/* Resume all threads.  */
+comment|/* I think this only gets used in the non-threaded case, where "resume        all threads" and "resume inferior_pid" are the same.  */
 name|pid
 operator|=
 name|inferior_pid
@@ -540,7 +549,10 @@ name|PTRACE_ARG3_TYPE
 operator|)
 literal|1
 argument_list|,
+name|target_signal_to_host
+argument_list|(
 name|signal
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -555,7 +567,10 @@ name|PTRACE_ARG3_TYPE
 operator|)
 literal|1
 argument_list|,
+name|target_signal_to_host
+argument_list|(
 name|signal
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -570,6 +585,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CHILD_RESUME */
+end_comment
+
 begin_escape
 end_escape
 
@@ -578,6 +602,12 @@ ifdef|#
 directive|ifdef
 name|ATTACH_DETACH
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
+end_include
 
 begin_comment
 comment|/* Start debugging the process whose number is PID.  */
@@ -593,6 +623,98 @@ name|int
 name|pid
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BSD4_4
+argument_list|)
+operator|&&
+name|BSD
+operator|>=
+literal|199306
+name|char
+name|procfile
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|procfile
+argument_list|,
+literal|"/proc/%d/ctl"
+argument_list|,
+name|pid
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+name|open
+argument_list|(
+name|procfile
+argument_list|,
+name|O_RDWR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+block|{
+name|perror_with_name
+argument_list|(
+literal|"open"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* send attach message to the process */
+if|if
+condition|(
+name|write
+argument_list|(
+name|fd
+argument_list|,
+literal|"attach"
+argument_list|,
+literal|7
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|perror_with_name
+argument_list|(
+literal|"write:attach"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* wait for the process to stop */
+if|#
+directive|if
+literal|0
+block|if (write (fd, "wait", 5)< 0) {     close(fd);     perror_with_name ("write:wait");   }
+endif|#
+directive|endif
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|errno
 operator|=
 literal|0
@@ -620,6 +742,8 @@ argument_list|(
 literal|"ptrace"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|attach_flag
 operator|=
 literal|1
@@ -644,6 +768,92 @@ name|int
 name|signal
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BSD4_4
+argument_list|)
+operator|&&
+name|BSD
+operator|>=
+literal|199306
+name|char
+name|procfile
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|procfile
+argument_list|,
+literal|"/proc/%d/ctl"
+argument_list|,
+name|inferior_pid
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+name|open
+argument_list|(
+name|procfile
+argument_list|,
+name|O_RDWR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+block|{
+name|perror_with_name
+argument_list|(
+literal|"open"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* send detach message to the process */
+if|if
+condition|(
+name|write
+argument_list|(
+name|fd
+argument_list|,
+literal|"detach"
+argument_list|,
+literal|7
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|perror_with_name
+argument_list|(
+literal|"write:detach"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* TODO signals */
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|errno
 operator|=
 literal|0
@@ -671,6 +881,8 @@ argument_list|(
 literal|"ptrace"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|attach_flag
 operator|=
 literal|0
@@ -712,16 +924,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|FETCH_INFERIOR_REGISTERS
-argument_list|)
-end_if
-
 begin_comment
 comment|/* KERNEL_U_ADDR is the amount to subtract from u.u_ar0    to get the offset in the core file of the register values.  */
 end_comment
@@ -732,6 +934,12 @@ directive|if
 name|defined
 argument_list|(
 name|KERNEL_U_ADDR_BSD
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|FETCH_INFERIOR_REGISTERS
 argument_list|)
 end_if
 
@@ -745,11 +953,32 @@ name|kernel_u_addr
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL_U_ADDR_BSD.  */
+end_comment
+
 begin_function
 name|void
 name|_initialize_kernel_u_addr
 parameter_list|()
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KERNEL_U_ADDR_BSD
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|FETCH_INFERIOR_REGISTERS
+argument_list|)
 name|struct
 name|nlist
 name|names
@@ -805,17 +1034,21 @@ argument_list|(
 literal|"Unable to get kernel u area address."
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* KERNEL_U_ADDR_BSD.  */
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KERNEL_U_ADDR_BSD.  */
-end_comment
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|FETCH_INFERIOR_REGISTERS
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -915,9 +1148,8 @@ name|int
 name|regno
 decl_stmt|;
 block|{
-specifier|register
-name|unsigned
-name|int
+comment|/* This isn't really an address.  But ptrace thinks of it as one.  */
+name|CORE_ADDR
 name|regaddr
 decl_stmt|;
 name|char
@@ -1094,6 +1326,9 @@ name|int
 name|regno
 decl_stmt|;
 block|{
+name|int
+name|numregs
+decl_stmt|;
 if|if
 condition|(
 name|regno
@@ -1101,6 +1336,11 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|numregs
+operator|=
+name|ARCH_NUM_REGS
+expr_stmt|;
 for|for
 control|(
 name|regno
@@ -1109,7 +1349,7 @@ literal|0
 init|;
 name|regno
 operator|<
-name|NUM_REGS
+name|numregs
 condition|;
 name|regno
 operator|++
@@ -1119,6 +1359,7 @@ argument_list|(
 name|regno
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|fetch_register
 argument_list|(
@@ -1171,9 +1412,8 @@ name|int
 name|regno
 decl_stmt|;
 block|{
-specifier|register
-name|unsigned
-name|int
+comment|/* This isn't really an address.  But ptrace thinks of it as one.  */
+name|CORE_ADDR
 name|regaddr
 decl_stmt|;
 name|char
@@ -1185,6 +1425,8 @@ decl_stmt|;
 specifier|register
 name|int
 name|i
+decl_stmt|,
+name|numregs
 decl_stmt|;
 name|unsigned
 name|int
@@ -1296,6 +1538,10 @@ block|}
 block|}
 else|else
 block|{
+name|numregs
+operator|=
+name|ARCH_NUM_REGS
+expr_stmt|;
 for|for
 control|(
 name|regno
@@ -1304,7 +1550,7 @@ literal|0
 init|;
 name|regno
 operator|<
-name|NUM_REGS
+name|numregs
 condition|;
 name|regno
 operator|++
@@ -1428,6 +1674,16 @@ end_comment
 
 begin_escape
 end_escape
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CHILD_XFER_MEMORY
+argument_list|)
+end_if
 
 begin_comment
 comment|/* NOTE! I tried using PTRACE_READDATA, etc., to read and write memory    in the NEW_SUN_PTRACE case.    It ought to be straightforward.  But it appears that writing did    not write the data that I specified.  I cannot understand where    it got the data that it actually did write.  */
@@ -1823,6 +2079,15 @@ name|len
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined (CHILD_XFER_MEMORY).  */
+end_comment
 
 end_unit
 

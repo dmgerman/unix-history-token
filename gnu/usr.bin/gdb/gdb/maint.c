@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for GDB maintenance commands.    Copyright (C) 1992 Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Support for GDB maintenance commands.    Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -59,6 +59,22 @@ begin_include
 include|#
 directive|include
 file|"gdbcore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"expression.h"
+end_include
+
+begin_comment
+comment|/* For language.h */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"language.h"
 end_include
 
 begin_decl_stmt
@@ -130,7 +146,7 @@ name|int
 name|from_tty
 decl_stmt|;
 block|{
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"\"maintenance\" must be followed by the name of a maintenance command.\n"
 argument_list|)
@@ -144,7 +160,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -235,7 +251,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"\"maintenance demangle\" takes an argument to demangle.\n"
 argument_list|)
@@ -261,7 +277,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -276,7 +292,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Can't demangle \"%s\"\n"
 argument_list|,
@@ -313,7 +329,7 @@ name|int
 name|from_tty
 decl_stmt|;
 block|{
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"\"maintenance info\" must be followed by the name of an info command.\n"
 argument_list|)
@@ -327,7 +343,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -368,6 +384,7 @@ argument_list|,
 name|asect
 argument_list|)
 expr_stmt|;
+comment|/* FIXME-32x64: Need print_address_numeric with field width.  */
 name|printf_filtered
 argument_list|(
 literal|"    %s"
@@ -563,11 +580,11 @@ if|if
 condition|(
 name|flags
 operator|&
-name|SEC_SHARED_LIBRARY
+name|SEC_COFF_SHARED_LIBRARY
 condition|)
 name|printf_filtered
 argument_list|(
-literal|" SHARED_LIBRARY"
+literal|" COFF_SHARED_LIBRARY"
 argument_list|)
 expr_stmt|;
 if|if
@@ -728,7 +745,7 @@ name|int
 name|from_tty
 decl_stmt|;
 block|{
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"\"maintenance print\" must be followed by the name of a print command.\n"
 argument_list|)
@@ -742,14 +759,19 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  GLOBAL FUNCTION  	_initialize_maint_cmds -- initialize the process file system stuff  SYNOPSIS  	void _initialize_maint_cmds (void)  DESCRIPTION  	Do required initializations during gdb startup for using the 	/proc file system interface.  */
+comment|/* MAINTENANCE_CMDS */
 end_comment
 
 begin_function
@@ -757,6 +779,10 @@ name|void
 name|_initialize_maint_cmds
 parameter_list|()
 block|{
+if|#
+directive|if
+name|MAINTENANCE_CMDS
+comment|/* Entire file goes away if not including maint cmds */
 name|add_prefix_cmd
 argument_list|(
 literal|"maintenance"
@@ -943,17 +969,25 @@ operator|&
 name|maintenanceprintlist
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_endif
+name|add_cmd
+argument_list|(
+literal|"check-symtabs"
+argument_list|,
+name|class_maintenance
+argument_list|,
+name|maintenance_check_symtabs
+argument_list|,
+literal|"Check consistency of psymtabs and symtabs."
+argument_list|,
+operator|&
+name|maintenancelist
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* MAINTENANCE_CMDS */
-end_comment
+block|}
+end_function
 
 end_unit
 

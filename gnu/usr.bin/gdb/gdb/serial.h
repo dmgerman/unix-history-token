@@ -66,6 +66,10 @@ name|int
 name|current_timeout
 decl_stmt|;
 comment|/* (termio{s} only), last value of VTIME */
+comment|/* ser-unix.c termio{,s} only, we still need to wait for this many more      seconds.  */
+name|int
+name|timeout_remaining
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -306,6 +310,7 @@ name|serial_fdopen
 name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|int
 name|fd
 operator|)
@@ -419,7 +424,7 @@ value|(SERIAL_T)->ops->get_tty_state((SERIAL_T))
 end_define
 
 begin_comment
-comment|/* Set the state of the tty to TTYSTATE.  The change is immediate.    When changing to or from raw mode, input might be discarded.  */
+comment|/* Set the state of the tty to TTYSTATE.  The change is immediate.    When changing to or from raw mode, input might be discarded.    Returns 0 for success, negative value for error (in which case errno    contains the error).  */
 end_comment
 
 begin_define

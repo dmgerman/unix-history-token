@@ -575,32 +575,32 @@ literal|0
 index|]
 condition|)
 block|{
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"The currently understood settings are:\n\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"local or auto    Automatic setting based on source file\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"c                Use the C language\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"c++              Use the C++ language\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"chill            Use the Chill language\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"modula-2         Use the Modula-2 language\n"
 argument_list|)
@@ -780,7 +780,7 @@ name|current_language
 operator|->
 name|la_type_check
 condition|)
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Warning: the current type check setting does not match the language.\n"
 argument_list|)
@@ -935,7 +935,7 @@ name|current_language
 operator|->
 name|la_range_check
 condition|)
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Warning: the current range check setting does not match the language.\n"
 argument_list|)
@@ -1404,7 +1404,7 @@ name|expected_language
 operator|=
 name|current_language
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Current language:  %s\n"
 argument_list|,
@@ -1428,7 +1428,7 @@ operator|!
 name|quietly
 condition|)
 block|{
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Type checking:     %s\n"
 argument_list|,
@@ -1446,7 +1446,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Range checking:    %s\n"
 argument_list|,
@@ -1486,7 +1486,7 @@ comment|/* Currently unused */
 end_comment
 
 begin_comment
-unit|struct type * binop_result_type(v1,v2)    value v1,v2; {    int l1,l2,size,uns;     l1 = TYPE_LENGTH(VALUE_TYPE(v1));    l2 = TYPE_LENGTH(VALUE_TYPE(v2));     switch(current_language->la_language)    {    case language_c:    case language_cplus:       if (TYPE_CODE(VALUE_TYPE(v1))==TYPE_CODE_FLT) 	 return TYPE_CODE(VALUE_TYPE(v2)) == TYPE_CODE_FLT&& l2> l1 ? 	    VALUE_TYPE(v2) : VALUE_TYPE(v1);       else if (TYPE_CODE(VALUE_TYPE(v2))==TYPE_CODE_FLT) 	 return TYPE_CODE(VALUE_TYPE(v1)) == TYPE_CODE_FLT&& l1> l2 ? 	    VALUE_TYPE(v1) : VALUE_TYPE(v2);       else if (TYPE_UNSIGNED(VALUE_TYPE(v1))&& l1> l2) 	 return VALUE_TYPE(v1);       else if (TYPE_UNSIGNED(VALUE_TYPE(v2))&& l2> l1) 	 return VALUE_TYPE(v2);       else
+unit|struct type * binop_result_type (v1, v2)    value_ptr v1, v2; {    int l1,l2,size,uns;     l1 = TYPE_LENGTH(VALUE_TYPE(v1));    l2 = TYPE_LENGTH(VALUE_TYPE(v2));     switch(current_language->la_language)    {    case language_c:    case language_cplus:       if (TYPE_CODE(VALUE_TYPE(v1))==TYPE_CODE_FLT) 	 return TYPE_CODE(VALUE_TYPE(v2)) == TYPE_CODE_FLT&& l2> l1 ? 	    VALUE_TYPE(v2) : VALUE_TYPE(v1);       else if (TYPE_CODE(VALUE_TYPE(v2))==TYPE_CODE_FLT) 	 return TYPE_CODE(VALUE_TYPE(v1)) == TYPE_CODE_FLT&& l1> l2 ? 	    VALUE_TYPE(v1) : VALUE_TYPE(v2);       else if (TYPE_UNSIGNED(VALUE_TYPE(v1))&& l1> l2) 	 return VALUE_TYPE(v1);       else if (TYPE_UNSIGNED(VALUE_TYPE(v2))&& l2> l1) 	 return VALUE_TYPE(v2);       else
 comment|/* Both are signed.  Result is the longer type */
 end_comment
 
@@ -2321,6 +2321,18 @@ modifier|*
 name|type
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|TYPE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|TYPE_CODE_BOOL
+condition|)
+return|return
+literal|1
+return|;
 switch|switch
 condition|(
 name|current_language
@@ -2329,48 +2341,30 @@ name|la_language
 condition|)
 block|{
 case|case
-name|language_chill
-case|:
-case|case
-name|language_m2
-case|:
-return|return
-name|TYPE_CODE
-argument_list|(
-name|type
-argument_list|)
-operator|!=
-name|TYPE_CODE_BOOL
-condition|?
-literal|0
-else|:
-literal|1
-return|;
-case|case
 name|language_c
 case|:
 case|case
 name|language_cplus
 case|:
-return|return
+comment|/* Might be more cleanly handled by having a TYPE_CODE_INT_NOT_BOOL 	 for CHILL and such languages, or a TYPE_CODE_INT_OR_BOOL for C.  */
+if|if
+condition|(
 name|TYPE_CODE
 argument_list|(
 name|type
 argument_list|)
-operator|!=
+operator|==
 name|TYPE_CODE_INT
-condition|?
-literal|0
-else|:
+condition|)
+return|return
 literal|1
 return|;
 default|default:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -2559,36 +2553,11 @@ name|value_true
 parameter_list|(
 name|val
 parameter_list|)
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
 block|{
-name|int
-name|len
-decl_stmt|,
-name|i
-decl_stmt|;
-name|struct
-name|type
-modifier|*
-name|type
-decl_stmt|;
-name|LONGEST
-name|v
-decl_stmt|;
-switch|switch
-condition|(
-name|current_language
-operator|->
-name|la_language
-condition|)
-block|{
-case|case
-name|language_c
-case|:
-case|case
-name|language_cplus
-case|:
+comment|/* It is possible that we should have some sort of error if a non-boolean      value is used in this context.  Possibly dependent on some kind of      "boolean-checking" option like range checking.  But it should probably      not depend on the language except insofar as is necessary to identify      a "boolean" value (i.e. in C using a float, pointer, etc., as a boolean      should be an error, probably).  */
 return|return
 operator|!
 name|value_logical_not
@@ -2596,126 +2565,6 @@ argument_list|(
 name|val
 argument_list|)
 return|;
-case|case
-name|language_m2
-case|:
-name|type
-operator|=
-name|VALUE_TYPE
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TYPE_CODE
-argument_list|(
-name|type
-argument_list|)
-operator|!=
-name|TYPE_CODE_BOOL
-condition|)
-return|return
-literal|0
-return|;
-comment|/* Not a BOOLEAN at all */
-comment|/* Search the fields for one that matches the current value. */
-name|len
-operator|=
-name|TYPE_NFIELDS
-argument_list|(
-name|type
-argument_list|)
-expr_stmt|;
-name|v
-operator|=
-name|value_as_long
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|len
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|QUIT
-expr_stmt|;
-if|if
-condition|(
-name|v
-operator|==
-name|TYPE_FIELD_BITPOS
-argument_list|(
-name|type
-argument_list|,
-name|i
-argument_list|)
-condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|i
-operator|>=
-name|len
-condition|)
-return|return
-literal|0
-return|;
-comment|/* Not a valid BOOLEAN value */
-if|if
-condition|(
-name|STREQ
-argument_list|(
-literal|"TRUE"
-argument_list|,
-name|TYPE_FIELD_NAME
-argument_list|(
-name|VALUE_TYPE
-argument_list|(
-name|val
-argument_list|)
-argument_list|,
-name|i
-argument_list|)
-argument_list|)
-condition|)
-return|return
-literal|1
-return|;
-comment|/* BOOLEAN with value TRUE */
-else|else
-return|return
-literal|0
-return|;
-comment|/* BOOLEAN with value FALSE */
-break|break;
-case|case
-name|language_chill
-case|:
-name|error
-argument_list|(
-literal|"Missing Chill support in function value_type."
-argument_list|)
-expr_stmt|;
-comment|/*FIXME*/
-default|default:
-name|error
-argument_list|(
-literal|"Language not supported."
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -2737,12 +2586,12 @@ comment|/* Currently unused */
 end_comment
 
 begin_comment
-unit|void binop_type_check(arg1,arg2,op)    value arg1,arg2;    int op; {    struct type *t1, *t2;
+unit|void binop_type_check(arg1,arg2,op)    value_ptr arg1,arg2;    int op; {    struct type *t1, *t2;
 comment|/* If we're not checking types, always return success. */
 end_comment
 
 begin_comment
-unit|if (!STRICT_TYPE)       return;     t1=VALUE_TYPE(arg1);    if (arg2!=(value)NULL)       t2=VALUE_TYPE(arg2);    else       t2=NULL;     switch(op)    {    case BINOP_ADD:    case BINOP_SUB:       if ((numeric_type(t1)&& pointer_type(t2)) || 	 (pointer_type(t1)&& numeric_type(t2)))       { 	 warning ("combining pointer and integer.\n"); 	 break;       }    case BINOP_MUL:    case BINOP_LSH:    case BINOP_RSH:       if (!numeric_type(t1) || !numeric_type(t2)) 	 type_op_error ("Arguments to %s must be numbers.",op);       else if (!same_type(t1,t2)) 	 type_op_error ("Arguments to %s must be of the same type.",op);       break;     case BINOP_LOGICAL_AND:    case BINOP_LOGICAL_OR:       if (!boolean_type(t1) || !boolean_type(t2)) 	 type_op_error ("Arguments to %s must be of boolean type.",op);       break;     case BINOP_EQUAL:       if ((pointer_type(t1)&& !(pointer_type(t2) || integral_type(t2))) || 	 (pointer_type(t2)&& !(pointer_type(t1) || integral_type(t1)))) 	 type_op_error ("A pointer can only be compared to an integer or pointer.",op);       else if ((pointer_type(t1)&& integral_type(t2)) || 	 (integral_type(t1)&& pointer_type(t2)))       { 	 warning ("combining integer and pointer.\n"); 	 break;       }       else if (!simple_type(t1) || !simple_type(t2)) 	 type_op_error ("Arguments to %s must be of simple type.",op);       else if (!same_type(t1,t2)) 	 type_op_error ("Arguments to %s must be of the same type.",op);       break;     case BINOP_REM:    case BINOP_MOD:       if (!integral_type(t1) || !integral_type(t2)) 	 type_op_error ("Arguments to %s must be of integral type.",op);       break;     case BINOP_LESS:    case BINOP_GTR:    case BINOP_LEQ:    case BINOP_GEQ:       if (!ordered_type(t1) || !ordered_type(t2)) 	 type_op_error ("Arguments to %s must be of ordered type.",op);       else if (!same_type(t1,t2)) 	 type_op_error ("Arguments to %s must be of the same type.",op);       break;     case BINOP_ASSIGN:       if (pointer_type(t1)&& !integral_type(t2)) 	 type_op_error ("A pointer can only be assigned an integer.",op);       else if (pointer_type(t1)&& integral_type(t2))       { 	 warning ("combining integer and pointer."); 	 break;       }       else if (!simple_type(t1) || !simple_type(t2)) 	 type_op_error ("Arguments to %s must be of simple type.",op);       else if (!same_type(t1,t2)) 	 type_op_error ("Arguments to %s must be of the same type.",op);       break;      case BINOP_CONCAT:
+unit|if (!STRICT_TYPE)       return;     t1=VALUE_TYPE(arg1);    if (arg2 != NULL)       t2=VALUE_TYPE(arg2);    else       t2=NULL;     switch(op)    {    case BINOP_ADD:    case BINOP_SUB:       if ((numeric_type(t1)&& pointer_type(t2)) || 	 (pointer_type(t1)&& numeric_type(t2)))       { 	 warning ("combining pointer and integer.\n"); 	 break;       }    case BINOP_MUL:    case BINOP_LSH:    case BINOP_RSH:       if (!numeric_type(t1) || !numeric_type(t2)) 	 type_op_error ("Arguments to %s must be numbers.",op);       else if (!same_type(t1,t2)) 	 type_op_error ("Arguments to %s must be of the same type.",op);       break;     case BINOP_LOGICAL_AND:    case BINOP_LOGICAL_OR:       if (!boolean_type(t1) || !boolean_type(t2)) 	 type_op_error ("Arguments to %s must be of boolean type.",op);       break;     case BINOP_EQUAL:       if ((pointer_type(t1)&& !(pointer_type(t2) || integral_type(t2))) || 	 (pointer_type(t2)&& !(pointer_type(t1) || integral_type(t1)))) 	 type_op_error ("A pointer can only be compared to an integer or pointer.",op);       else if ((pointer_type(t1)&& integral_type(t2)) || 	 (integral_type(t1)&& pointer_type(t2)))       { 	 warning ("combining integer and pointer.\n"); 	 break;       }       else if (!simple_type(t1) || !simple_type(t2)) 	 type_op_error ("Arguments to %s must be of simple type.",op);       else if (!same_type(t1,t2)) 	 type_op_error ("Arguments to %s must be of the same type.",op);       break;     case BINOP_REM:    case BINOP_MOD:       if (!integral_type(t1) || !integral_type(t2)) 	 type_op_error ("Arguments to %s must be of integral type.",op);       break;     case BINOP_LESS:    case BINOP_GTR:    case BINOP_LEQ:    case BINOP_GEQ:       if (!ordered_type(t1) || !ordered_type(t2)) 	 type_op_error ("Arguments to %s must be of ordered type.",op);       else if (!same_type(t1,t2)) 	 type_op_error ("Arguments to %s must be of the same type.",op);       break;     case BINOP_ASSIGN:       if (pointer_type(t1)&& !integral_type(t2)) 	 type_op_error ("A pointer can only be assigned an integer.",op);       else if (pointer_type(t1)&& integral_type(t2))       { 	 warning ("combining integer and pointer."); 	 break;       }       else if (!simple_type(t1) || !simple_type(t2)) 	 type_op_error ("Arguments to %s must be of simple type.",op);       else if (!same_type(t1,t2)) 	 type_op_error ("Arguments to %s must be of the same type.",op);       break;      case BINOP_CONCAT:
 comment|/* FIXME:  Needs to handle bitstrings as well. */
 end_comment
 
@@ -2895,15 +2744,15 @@ name|type_check
 operator|==
 name|type_check_warn
 condition|)
-name|fprintf
+name|fprintf_filtered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 name|warning_pre_print
 argument_list|)
 expr_stmt|;
 else|else
-name|target_terminal_ours
+name|error_begin
 argument_list|()
 expr_stmt|;
 name|va_start
@@ -2921,18 +2770,18 @@ name|char
 operator|*
 argument_list|)
 expr_stmt|;
-name|vfprintf
+name|vfprintf_filtered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 name|string
 argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fprintf_filtered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"\n"
 argument_list|)
@@ -2977,15 +2826,15 @@ name|range_check
 operator|==
 name|range_check_warn
 condition|)
-name|fprintf
+name|fprintf_filtered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 name|warning_pre_print
 argument_list|)
 expr_stmt|;
 else|else
-name|target_terminal_ours
+name|error_begin
 argument_list|()
 expr_stmt|;
 name|va_start
@@ -3003,18 +2852,18 @@ name|char
 operator|*
 argument_list|)
 expr_stmt|;
-name|vfprintf
+name|vfprintf_filtered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 name|string
 argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fprintf_filtered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"\n"
 argument_list|)
@@ -3184,7 +3033,7 @@ name|int
 name|from_tty
 decl_stmt|;
 block|{
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"\"set check\" must be followed by the name of a check subcommand.\n"
 argument_list|)
@@ -3198,7 +3047,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -3262,9 +3111,9 @@ operator|!=
 name|LANG_MAGIC
 condition|)
 block|{
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"Magic number of %s language struct wrong\n"
 argument_list|,
@@ -3406,7 +3255,7 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -3432,7 +3281,7 @@ name|length
 parameter_list|,
 name|force_ellipses
 parameter_list|)
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -3507,7 +3356,7 @@ name|char
 modifier|*
 name|varstring
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -3558,7 +3407,7 @@ decl_stmt|;
 name|CORE_ADDR
 name|address
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -3579,6 +3428,41 @@ block|{
 name|error
 argument_list|(
 literal|"internal error - unimplemented function unk_lang_val_print called."
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|unk_lang_value_print
+parameter_list|(
+name|val
+parameter_list|,
+name|stream
+parameter_list|,
+name|format
+parameter_list|,
+name|pretty
+parameter_list|)
+name|value_ptr
+name|val
+decl_stmt|;
+name|GDB_FILE
+modifier|*
+name|stream
+decl_stmt|;
+name|int
+name|format
+decl_stmt|;
+name|enum
+name|val_prettyprint
+name|pretty
+decl_stmt|;
+block|{
+name|error
+argument_list|(
+literal|"internal error - unimplemented function unk_lang_value_print called."
 argument_list|)
 expr_stmt|;
 block|}
@@ -3664,14 +3548,9 @@ comment|/* Print a type using appropriate syntax */
 name|unk_lang_val_print
 block|,
 comment|/* Print a value using appropriate syntax */
-operator|&
-name|builtin_type_error
+name|unk_lang_value_print
 block|,
-comment|/* longest signed   integral type */
-operator|&
-name|builtin_type_error
-block|,
-comment|/* longest unsigned integral type */
+comment|/* Print a top-level value */
 operator|&
 name|builtin_type_error
 block|,
@@ -3770,14 +3649,9 @@ comment|/* Print a type using appropriate syntax */
 name|unk_lang_val_print
 block|,
 comment|/* Print a value using appropriate syntax */
-operator|&
-name|builtin_type_error
+name|unk_lang_value_print
 block|,
-comment|/* longest signed   integral type */
-operator|&
-name|builtin_type_error
-block|,
-comment|/* longest unsigned integral type */
+comment|/* Print a top-level value */
 operator|&
 name|builtin_type_error
 block|,
@@ -3872,14 +3746,9 @@ comment|/* Print a type using appropriate syntax */
 name|unk_lang_val_print
 block|,
 comment|/* Print a value using appropriate syntax */
-operator|&
-name|builtin_type_error
+name|unk_lang_value_print
 block|,
-comment|/* longest signed   integral type */
-operator|&
-name|builtin_type_error
-block|,
-comment|/* longest unsigned integral type */
+comment|/* Print a top-level value */
 operator|&
 name|builtin_type_error
 block|,

@@ -191,14 +191,14 @@ value|(0)
 end_define
 
 begin_comment
-comment|/* Say how long (ordinary) registers are.  */
+comment|/* Say how long (ordinary) registers are.  This is a piece of bogosity    used in push_word and a few other places; REGISTER_RAW_SIZE is the    real way to know how big a register is.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|REGISTER_TYPE
-value|long
+name|REGISTER_SIZE
+value|4
 end_define
 
 begin_comment
@@ -340,58 +340,6 @@ define|#
 directive|define
 name|MAX_REGISTER_VIRTUAL_SIZE
 value|4
-end_define
-
-begin_comment
-comment|/* Nonzero if register N requires conversion    from raw format to virtual format.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REGISTER_CONVERTIBLE
-parameter_list|(
-name|N
-parameter_list|)
-value|(0)
-end_define
-
-begin_comment
-comment|/* Convert data from raw format for register REGNUM    to virtual format for register REGNUM.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REGISTER_CONVERT_TO_VIRTUAL
-parameter_list|(
-name|REGNUM
-parameter_list|,
-name|FROM
-parameter_list|,
-name|TO
-parameter_list|)
-define|\
-value|{memcpy ((TO), (FROM), 4);}
-end_define
-
-begin_comment
-comment|/* Convert data from virtual format for register REGNUM    to raw format for register REGNUM.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REGISTER_CONVERT_TO_RAW
-parameter_list|(
-name|REGNUM
-parameter_list|,
-name|FROM
-parameter_list|,
-name|TO
-parameter_list|)
-define|\
-value|{memcpy ((TO), (FROM), 4);}
 end_define
 
 begin_comment
@@ -741,6 +689,13 @@ end_define
 begin_comment
 comment|/* Start execution at beginning of dummy */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CALL_DUMMY_BREAKPOINT_OFFSET
+value|5
+end_define
 
 begin_comment
 comment|/* Insert the specified number of args and function address    into a call sequence of the above form stored at DUMMYNAME.  */

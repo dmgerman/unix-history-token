@@ -75,6 +75,12 @@ begin_comment
 comment|/* for read_pc */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"annotate.h"
+end_include
+
 begin_comment
 comment|/* Is ADDR inside the startup file?  Note that if your machine    has a way to detect the bottom of the stack, there is no need    to call this function from FRAME_CHAIN_VALID; the reason for    doing so is that some machines have no way of detecting bottom    of stack.      A PC of zero is always considered to be the bottom of the stack. */
 end_comment
@@ -547,6 +553,9 @@ operator|)
 literal|0
 expr_stmt|;
 comment|/* Invalidate cache */
+name|annotate_frames_invalid
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -972,7 +981,7 @@ name|signal_handler_caller
 operator|=
 literal|0
 expr_stmt|;
-comment|/* This change should not be needed, FIXME!  We should    determine whether any targets *need* INIT_FRAME_PC to happen    after INIT_EXTRA_FRAME_INFO and come up with a simple way to    express what goes on here.        INIT_EXTRA_FRAME_INFO is called from two places: create_new_frame       		(where the PC is already set up) and here (where it isn't).       INIT_FRAME_PC is only called from here, always after       		INIT_EXTRA_FRAME_INFO.        The catch is the MIPS, where INIT_EXTRA_FRAME_INFO requires the PC    value (which hasn't been set yet).  Some other machines appear to    require INIT_EXTRA_FRAME_INFO before they can do INIT_FRAME_PC.  Phoo.     We shouldn't need INIT_FRAME_PC_FIRST to add more complication to    an already overcomplicated part of GDB.   gnu@cygnus.com, 15Sep92.     To answer the question, yes the sparc needs INIT_FRAME_PC after    INIT_EXTRA_FRAME_INFO.  Suggested scheme:     SETUP_INNERMOST_FRAME()      Default version is just create_new_frame (read_fp ()),      read_pc ()).  Machines with extra frame info would do that (or the      local equivalent) and then set the extra fields.    SETUP_ARBITRARY_FRAME(argc, argv)      Only change here is that create_new_frame would no longer init extra      frame info; SETUP_ARBITRARY_FRAME would have to do that.    INIT_PREV_FRAME(fromleaf, prev)      Replace INIT_EXTRA_FRAME_INFO and INIT_FRAME_PC.    std_frame_pc(fromleaf, prev)      This is the default setting for INIT_PREV_FRAME.  It just does what      the default INIT_FRAME_PC does.  Some machines will call it from      INIT_PREV_FRAME (either at the beginning, the end, or in the middle).      Some machines won't use it.    kingdon@cygnus.com, 13Apr93.  */
+comment|/* This change should not be needed, FIXME!  We should    determine whether any targets *need* INIT_FRAME_PC to happen    after INIT_EXTRA_FRAME_INFO and come up with a simple way to    express what goes on here.        INIT_EXTRA_FRAME_INFO is called from two places: create_new_frame       		(where the PC is already set up) and here (where it isn't).       INIT_FRAME_PC is only called from here, always after       		INIT_EXTRA_FRAME_INFO.        The catch is the MIPS, where INIT_EXTRA_FRAME_INFO requires the PC    value (which hasn't been set yet).  Some other machines appear to    require INIT_EXTRA_FRAME_INFO before they can do INIT_FRAME_PC.  Phoo.     We shouldn't need INIT_FRAME_PC_FIRST to add more complication to    an already overcomplicated part of GDB.   gnu@cygnus.com, 15Sep92.     To answer the question, yes the sparc needs INIT_FRAME_PC after    INIT_EXTRA_FRAME_INFO.  Suggested scheme:     SETUP_INNERMOST_FRAME()      Default version is just create_new_frame (read_fp ()),      read_pc ()).  Machines with extra frame info would do that (or the      local equivalent) and then set the extra fields.    SETUP_ARBITRARY_FRAME(argc, argv)      Only change here is that create_new_frame would no longer init extra      frame info; SETUP_ARBITRARY_FRAME would have to do that.    INIT_PREV_FRAME(fromleaf, prev)      Replace INIT_EXTRA_FRAME_INFO and INIT_FRAME_PC.  This should      also return a flag saying whether to keep the new frame, or      whether to discard it, because on some machines (e.g.  mips) it      is really awkward to have FRAME_CHAIN_VALID called *before*      INIT_EXTRA_FRAME_INFO (there is no good way to get information      deduced in FRAME_CHAIN_VALID into the extra fields of the new frame).    std_frame_pc(fromleaf, prev)      This is the default setting for INIT_PREV_FRAME.  It just does what      the default INIT_FRAME_PC does.  Some machines will call it from      INIT_PREV_FRAME (either at the beginning, the end, or in the middle).      Some machines won't use it.    kingdon@cygnus.com, 13Apr93, 31Jan94.  */
 ifdef|#
 directive|ifdef
 name|INIT_FRAME_PC_FIRST
@@ -997,7 +1006,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* This entry is in the frame queue now, which is good since      FRAME_SAVED_PC may use that queue to figure out it's value      (see tm-sparc.h).  We want the pc saved in the inferior frame. */
+comment|/* This entry is in the frame queue now, which is good since      FRAME_SAVED_PC may use that queue to figure out its value      (see tm-sparc.h).  We want the pc saved in the inferior frame. */
 name|INIT_FRAME_PC
 argument_list|(
 name|fromleaf
@@ -1005,6 +1014,52 @@ argument_list|,
 name|prev
 argument_list|)
 expr_stmt|;
+comment|/* If ->frame and ->pc are unchanged, we are in the process of getting      ourselves into an infinite backtrace.  Some architectures check this      in FRAME_CHAIN or thereabouts, but it seems like there is no reason      this can't be an architecture-independent check.  */
+if|if
+condition|(
+name|next_frame
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|prev
+operator|->
+name|frame
+operator|==
+name|next_frame
+operator|->
+name|frame
+operator|&&
+name|prev
+operator|->
+name|pc
+operator|==
+name|next_frame
+operator|->
+name|pc
+condition|)
+block|{
+name|next_frame
+operator|->
+name|prev
+operator|=
+name|NULL
+expr_stmt|;
+name|obstack_free
+argument_list|(
+operator|&
+name|frame_cache_obstack
+argument_list|,
+name|prev
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+block|}
 name|find_pc_partial_function
 argument_list|(
 name|prev
@@ -2087,6 +2142,12 @@ operator|->
 name|type
 operator|==
 name|mst_text
+operator|||
+name|msymbol
+operator|->
+name|type
+operator|==
+name|mst_file_text
 condition|)
 name|cache_pc_function_low
 operator|=
@@ -2286,6 +2347,74 @@ operator|->
 name|pc
 operator|<
 name|end
+condition|)
+return|return
+name|frame
+return|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Return the full FRAME which corresponds to the given FRAME_ADDR    or NULL if no FRAME on the chain corresponds to FRAME_ADDR.  */
+end_comment
+
+begin_function
+name|FRAME
+name|find_frame_addr_in_frame_chain
+parameter_list|(
+name|frame_addr
+parameter_list|)
+name|FRAME_ADDR
+name|frame_addr
+decl_stmt|;
+block|{
+name|FRAME
+name|frame
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+name|frame_addr
+operator|==
+operator|(
+name|CORE_ADDR
+operator|)
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|frame
+operator|=
+name|get_prev_frame
+argument_list|(
+name|frame
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|frame
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+if|if
+condition|(
+name|FRAME_FP
+argument_list|(
+name|frame
+argument_list|)
+operator|==
+name|frame_addr
 condition|)
 return|return
 name|frame

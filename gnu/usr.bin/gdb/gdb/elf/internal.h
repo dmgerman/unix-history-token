@@ -1,151 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF support for BFD.    Copyright (C) 1991, 1992 Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* ELF support for BFD.    Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
 comment|/* This file is part of ELF support for BFD, and contains the portions    that describe how ELF is represented internally in the BFD library.    I.E. it describes the in-memory representation of ELF.  It requires    the elf-common.h file which contains the portions that are common to    both the internal and external representations. */
 end_comment
-
-begin_comment
-comment|/* Types used by various structures, functions, etc. */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|Elf32_Addr
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Unsigned program address */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|Elf32_Off
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Unsigned file offset */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|long
-name|Elf32_Sword
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Signed large integer */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|Elf32_Word
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Unsigned large integer */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|Elf32_Half
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Unsigned medium integer */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|Elf32_Char
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Unsigned tiny integer */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HOST_64_BIT
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|HOST_64_BIT
-name|Elf64_Addr
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|HOST_64_BIT
-name|Elf64_Off
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|HOST_64_BIT
-name|Elf64_Sxword
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|HOST_64_BIT
-name|Elf64_Xword
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_typedef
-typedef|typedef
-name|long
-name|Elf64_Sword
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|Elf64_Word
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|Elf64_Half
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* NOTE that these structures are not kept in the same order as they appear    in the object file.  In some cases they've been reordered for more optimal    packing under various circumstances.  */
@@ -411,13 +271,11 @@ name|sh_addralign
 decl_stmt|;
 comment|/* Section alignment */
 comment|/* The internal rep also has some cached info associated with it. */
-name|void
-modifier|*
+name|PTR
 name|rawdata
 decl_stmt|;
 comment|/* null if unused... */
-name|void
-modifier|*
+name|PTR
 name|contents
 decl_stmt|;
 comment|/* null if unused... */
@@ -692,61 +550,57 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
+name|elf_internal_dyn
 block|{
-name|Elf32_Sword
+comment|/* This needs to support 64-bit values in elf64.  */
+name|bfd_vma
 name|d_tag
 decl_stmt|;
 comment|/* entry tag value */
 union|union
 block|{
-name|Elf32_Word
+comment|/* This needs to support 64-bit values in elf64.  */
+name|bfd_vma
 name|d_val
 decl_stmt|;
-name|Elf32_Addr
+name|bfd_vma
 name|d_ptr
 decl_stmt|;
 block|}
 name|d_un
 union|;
 block|}
+name|Elf_Internal_Dyn
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|elf32_internal_dyn
+value|elf_internal_dyn
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf64_internal_dyn
+value|elf_internal_dyn
+end_define
+
+begin_define
+define|#
+directive|define
 name|Elf32_Internal_Dyn
-typedef|;
-end_typedef
+value|Elf_Internal_Dyn
+end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HOST_64_BIT
-end_ifdef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|Elf64_Xword
-name|d_tag
-decl_stmt|;
-comment|/* entry tag value */
-union|union
-block|{
-name|Elf64_Xword
-name|d_val
-decl_stmt|;
-name|Elf64_Addr
-name|d_ptr
-decl_stmt|;
-block|}
-name|d_un
-union|;
-block|}
+begin_define
+define|#
+directive|define
 name|Elf64_Internal_Dyn
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+value|Elf_Internal_Dyn
+end_define
 
 end_unit
 

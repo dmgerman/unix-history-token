@@ -458,8 +458,7 @@ typedef|typedef
 struct|struct
 name|runtime_pdr
 block|{
-name|unsigned
-name|long
+name|bfd_vma
 name|adr
 decl_stmt|;
 comment|/* memory address of start of procedure */
@@ -573,7 +572,7 @@ name|long
 name|iss
 decl_stmt|;
 comment|/* index into String Space of name */
-name|long
+name|bfd_vma
 name|value
 decl_stmt|;
 comment|/* value of symbol */
@@ -672,6 +671,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
+name|ecoff_extr
 block|{
 name|unsigned
 name|jmptbl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for values of C expressions, for GDB.    Copyright 1986, 1987, 1989, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Definitions for values of C expressions, for GDB.    Copyright 1986, 1987, 1989, 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_if
@@ -57,6 +57,10 @@ comment|/* Type of value; either not an lval, or one of the various        diffe
 name|enum
 name|lval_type
 name|lval
+decl_stmt|;
+comment|/* Is it modifiable?  Only relevant if lval != not_lval.  */
+name|int
+name|modifiable
 decl_stmt|;
 comment|/* Location of value (if lval).  */
 union|union
@@ -137,15 +141,9 @@ decl_stmt|;
 name|double
 name|force_double_align
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CC_HAS_LONG_LONG
-name|long
-name|long
+name|LONGEST
 name|force_longlong_align
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 name|aligner
 union|;
@@ -158,7 +156,7 @@ typedef|typedef
 name|struct
 name|value
 modifier|*
-name|value
+name|value_ptr
 typedef|;
 end_typedef
 
@@ -213,7 +211,7 @@ name|value_fetch_lazy
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|val
 operator|)
 argument_list|)
@@ -412,7 +410,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|value
+name|value_ptr
 name|value
 decl_stmt|;
 block|}
@@ -506,7 +504,7 @@ argument_list|(
 operator|(
 name|CORE_ADDR
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -522,7 +520,7 @@ name|value_as_long
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|val
 operator|)
 argument_list|)
@@ -536,7 +534,7 @@ name|value_as_double
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|val
 operator|)
 argument_list|)
@@ -550,7 +548,7 @@ name|value_as_pointer
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|val
 operator|)
 argument_list|)
@@ -646,7 +644,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_from_longest
 name|PARAMS
 argument_list|(
@@ -665,7 +663,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_from_double
 name|PARAMS
 argument_list|(
@@ -684,7 +682,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_at
 name|PARAMS
 argument_list|(
@@ -703,7 +701,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_at_lazy
 name|PARAMS
 argument_list|(
@@ -726,7 +724,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_from_register
 name|PARAMS
 argument_list|(
@@ -750,7 +748,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_of_variable
 name|PARAMS
 argument_list|(
@@ -771,7 +769,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_of_register
 name|PARAMS
 argument_list|(
@@ -804,7 +802,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|read_var_value
 name|PARAMS
 argument_list|(
@@ -829,7 +827,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|locate_var_value
 name|PARAMS
 argument_list|(
@@ -850,7 +848,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|allocate_value
 name|PARAMS
 argument_list|(
@@ -866,7 +864,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|allocate_repeat_value
 name|PARAMS
 argument_list|(
@@ -885,7 +883,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_mark
 name|PARAMS
 argument_list|(
@@ -903,7 +901,7 @@ name|value_free_to_mark
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|mark
 operator|)
 argument_list|)
@@ -912,7 +910,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_string
 name|PARAMS
 argument_list|(
@@ -930,7 +928,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_array
 name|PARAMS
 argument_list|(
@@ -941,7 +939,7 @@ operator|,
 name|int
 name|highbound
 operator|,
-name|value
+name|value_ptr
 operator|*
 name|elemvec
 operator|)
@@ -951,15 +949,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_concat
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|,
-name|value
+name|value_ptr
 name|arg2
 operator|)
 argument_list|)
@@ -968,15 +966,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_binop
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|,
-name|value
+name|value_ptr
 name|arg2
 operator|,
 expr|enum
@@ -989,15 +987,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_add
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|,
-name|value
+name|value_ptr
 name|arg2
 operator|)
 argument_list|)
@@ -1006,15 +1004,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_sub
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|,
-name|value
+name|value_ptr
 name|arg2
 operator|)
 argument_list|)
@@ -1023,12 +1021,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_coerce_array
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|)
 argument_list|)
@@ -1037,12 +1035,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_coerce_function
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|)
 argument_list|)
@@ -1051,12 +1049,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_ind
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|)
 argument_list|)
@@ -1065,12 +1063,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_addr
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|)
 argument_list|)
@@ -1079,15 +1077,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_assign
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|toval
 operator|,
-name|value
+name|value_ptr
 name|fromval
 operator|)
 argument_list|)
@@ -1096,12 +1094,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_neg
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|)
 argument_list|)
@@ -1110,12 +1108,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_complement
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|)
 argument_list|)
@@ -1124,16 +1122,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_struct_elt
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 operator|*
 name|argp
 operator|,
-name|value
+name|value_ptr
 operator|*
 name|args
 operator|,
@@ -1155,7 +1153,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_struct_elt_for_reference
 name|PARAMS
 argument_list|(
@@ -1188,12 +1186,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_field
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|,
 name|int
@@ -1205,12 +1203,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_primitive_field
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|,
 name|int
@@ -1230,7 +1228,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_cast
 name|PARAMS
 argument_list|(
@@ -1240,7 +1238,7 @@ name|type
 operator|*
 name|type
 operator|,
-name|value
+name|value_ptr
 name|arg2
 operator|)
 argument_list|)
@@ -1249,7 +1247,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_zero
 name|PARAMS
 argument_list|(
@@ -1269,12 +1267,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_repeat
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|,
 name|int
@@ -1286,15 +1284,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_subscript
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|array
 operator|,
-name|value
+name|value_ptr
 name|idx
 operator|)
 argument_list|)
@@ -1303,12 +1301,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_from_vtable_info
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg
 operator|,
 expr|struct
@@ -1322,7 +1320,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_being_returned
 name|PARAMS
 argument_list|(
@@ -1347,12 +1345,52 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|value_ptr
+name|value_in
+name|PARAMS
+argument_list|(
+operator|(
+name|value_ptr
+name|element
+operator|,
+name|value_ptr
+name|set
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|value_bit_index
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|type
+operator|*
+name|type
+operator|,
+name|char
+operator|*
+name|addr
+operator|,
+name|int
+name|index
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|using_struct_return
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|function
 operator|,
 name|CORE_ADDR
@@ -1377,7 +1415,7 @@ name|set_return_value
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|val
 operator|)
 argument_list|)
@@ -1386,7 +1424,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|evaluate_expression
 name|PARAMS
 argument_list|(
@@ -1402,7 +1440,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|evaluate_type
 name|PARAMS
 argument_list|(
@@ -1418,7 +1456,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|parse_and_eval
 name|PARAMS
 argument_list|(
@@ -1433,7 +1471,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|parse_to_comma_and_eval
 name|PARAMS
 argument_list|(
@@ -1500,7 +1538,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|access_value_history
 name|PARAMS
 argument_list|(
@@ -1514,7 +1552,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_of_internalvar
 name|PARAMS
 argument_list|(
@@ -1540,7 +1578,7 @@ name|internalvar
 operator|*
 name|var
 operator|,
-name|value
+name|value_ptr
 name|val
 operator|)
 argument_list|)
@@ -1568,7 +1606,7 @@ operator|,
 name|int
 name|bitsize
 operator|,
-name|value
+name|value_ptr
 name|newvalue
 operator|)
 argument_list|)
@@ -1599,10 +1637,10 @@ name|value_equal
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|,
-name|value
+name|value_ptr
 name|arg2
 operator|)
 argument_list|)
@@ -1616,10 +1654,10 @@ name|value_less
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|,
-name|value
+name|value_ptr
 name|arg2
 operator|)
 argument_list|)
@@ -1633,7 +1671,7 @@ name|value_logical_not
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|)
 argument_list|)
@@ -1646,7 +1684,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_of_this
 name|PARAMS
 argument_list|(
@@ -1660,15 +1698,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_x_binop
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|,
-name|value
+name|value_ptr
 name|arg2
 operator|,
 expr|enum
@@ -1685,12 +1723,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_x_unop
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|arg1
 operator|,
 expr|enum
@@ -1703,12 +1741,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_fn_field
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 operator|*
 name|arg1p
 operator|,
@@ -1734,12 +1772,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_virtual_fn_field
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 operator|*
 name|arg1p
 operator|,
@@ -1774,10 +1812,10 @@ expr|enum
 name|exp_opcode
 name|op
 operator|,
-name|value
+name|value_ptr
 name|arg1
 operator|,
-name|value
+name|value_ptr
 name|arg2
 operator|)
 argument_list|)
@@ -1795,7 +1833,7 @@ expr|enum
 name|exp_opcode
 name|op
 operator|,
-name|value
+name|value_ptr
 name|arg1
 operator|)
 argument_list|)
@@ -1854,7 +1892,7 @@ name|release_value
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|val
 operator|)
 argument_list|)
@@ -1868,7 +1906,7 @@ name|record_latest_value
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|val
 operator|)
 argument_list|)
@@ -2077,7 +2115,7 @@ name|char
 operator|*
 name|varstring
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 name|stream
 operator|,
@@ -2108,7 +2146,7 @@ name|char
 operator|*
 name|valaddr
 operator|,
-name|value
+name|value_ptr
 operator|*
 name|valuep
 operator|,
@@ -2127,7 +2165,7 @@ name|print_longest
 name|PARAMS
 argument_list|(
 operator|(
-name|FILE
+name|GDB_FILE
 operator|*
 name|stream
 operator|,
@@ -2138,7 +2176,7 @@ name|int
 name|use_local
 operator|,
 name|LONGEST
-name|value
+name|val
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2160,7 +2198,7 @@ name|type
 operator|*
 name|type
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 name|stream
 operator|)
@@ -2175,10 +2213,10 @@ name|value_print
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 name|val
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 name|stream
 operator|,
@@ -2188,6 +2226,45 @@ operator|,
 expr|enum
 name|val_prettyprint
 name|pretty
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|value_print_array_elements
+name|PARAMS
+argument_list|(
+operator|(
+name|value_ptr
+name|val
+operator|,
+name|GDB_FILE
+operator|*
+name|stream
+operator|,
+name|int
+name|format
+operator|,
+expr|enum
+name|val_prettyprint
+name|pretty
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|value_ptr
+name|value_release_to_mark
+name|PARAMS
+argument_list|(
+operator|(
+name|value_ptr
+name|mark
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2212,7 +2289,7 @@ operator|,
 name|CORE_ADDR
 name|address
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 name|stream
 operator|,
@@ -2247,7 +2324,7 @@ name|unsigned
 name|int
 name|len
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 name|stream
 operator|)
@@ -2276,7 +2353,7 @@ name|frame_info
 operator|*
 name|frame
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 name|stream
 operator|)
@@ -2286,12 +2363,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_arg_coerce
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2304,7 +2381,7 @@ name|check_field
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 operator|,
 specifier|const
 name|char
@@ -2331,7 +2408,7 @@ name|symbol
 operator|*
 name|new
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 name|stream
 operator|)
@@ -2388,12 +2465,12 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|value_copy
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2412,7 +2489,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|value
+name|value_ptr
 operator|,
 name|int
 operator|)
@@ -2426,16 +2503,16 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|value
+name|value_ptr
 name|call_function_by_hand
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 operator|,
 name|int
 operator|,
-name|value
+name|value_ptr
 operator|*
 operator|)
 argument_list|)

@@ -52,14 +52,10 @@ begin_struct
 struct|struct
 name|sym_fns
 block|{
-comment|/* is the name, or name prefix, of the BFD "target type" that this      set of functions handles.  E.g. "a.out" or "sunOs" or "coff" or "elf".  */
-name|char
-modifier|*
-name|sym_name
-decl_stmt|;
-comment|/* counts how many bytes of sym_name should be checked against the      BFD target type of the file being read.  If an exact match is      desired, specify the number of characters in sym_name plus 1 for      the '\0'.  If a prefix match is desired, specify the number of      characters in sym_name.  */
-name|int
-name|sym_namelen
+comment|/* BFD flavour that we handle, or (as a special kludge, see xcoffread.c,      (enum bfd_flavour)-1 for xcoff).  */
+name|enum
+name|bfd_flavour
+name|sym_flavour
 decl_stmt|;
 comment|/* Initializes anything that is global to the entire symbol table.  It is      called during symbol_file_add, when we begin debugging an entirely new      program. */
 name|void
@@ -293,7 +289,7 @@ parameter_list|,
 name|OBJFILE
 parameter_list|)
 define|\
-value|do {		        						\     register struct partial_symbol *psym;				\     if ((LIST).next>= (LIST).list + (LIST).size)			\       extend_psymbol_list (&(LIST),(OBJFILE));				\     psym = (LIST).next++;						\     SYMBOL_NAME (psym) =						\       (char *) obstack_alloc (&objfile->psymbol_obstack,		\ 			      (NAMELENGTH) + 1);			\     memcpy (SYMBOL_NAME (psym), (NAME), (NAMELENGTH));			\     SYMBOL_NAME (psym)[(NAMELENGTH)] = '\0';				\     SYMBOL_NAMESPACE (psym) = (NAMESPACE);				\     PSYMBOL_CLASS (psym) = (CLASS);					\     VT (psym) = (VALUE); 						\     SYMBOL_LANGUAGE (psym) = (LANGUAGE);				\     SYMBOL_INIT_DEMANGLED_NAME (psym,&objfile->psymbol_obstack);	\   } while (0);
+value|do {		        						\     register struct partial_symbol *psym;				\     if ((LIST).next>= (LIST).list + (LIST).size)			\       extend_psymbol_list (&(LIST),(OBJFILE));				\     psym = (LIST).next++;						\     SYMBOL_NAME (psym) =						\       (char *) obstack_alloc (&objfile->psymbol_obstack,		\ 			      (NAMELENGTH) + 1);			\     memcpy (SYMBOL_NAME (psym), (NAME), (NAMELENGTH));			\     SYMBOL_NAME (psym)[(NAMELENGTH)] = '\0';				\     SYMBOL_NAMESPACE (psym) = (NAMESPACE);				\     PSYMBOL_CLASS (psym) = (CLASS);					\     VT (psym) = (VALUE); 						\     SYMBOL_LANGUAGE (psym) = (LANGUAGE);				\     SYMBOL_INIT_DEMANGLED_NAME (psym,&objfile->psymbol_obstack);	\   } while (0)
 end_define
 
 begin_comment
@@ -569,19 +565,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|sort_all_symtab_syms
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Make a copy of the string at PTR with SIZE characters in the symbol obstack    (and add a null character at the end in the copy).    Returns the address of the copy.  */
 end_comment
@@ -726,6 +709,87 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* From mdebugread.c */
+end_comment
+
+begin_comment
+comment|/* Hack to force structures to exist before use in parameter list.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ecoff_debug_hack
+block|{
+name|struct
+name|ecoff_debug_swap
+modifier|*
+name|a
+decl_stmt|;
+name|struct
+name|ecoff_debug_info
+modifier|*
+name|b
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|mdebug_build_psymtabs
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|objfile
+operator|*
+operator|,
+specifier|const
+expr|struct
+name|ecoff_debug_swap
+operator|*
+operator|,
+expr|struct
+name|ecoff_debug_info
+operator|*
+operator|,
+expr|struct
+name|section_offsets
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|elfmdebug_build_psymtabs
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|objfile
+operator|*
+operator|,
+specifier|const
+expr|struct
+name|ecoff_debug_swap
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+expr|struct
+name|section_offsets
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* From demangle.c */
 end_comment
 
@@ -742,6 +806,43 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Stuff shared between coffread.c and xcoffread.c.  Eventually we want    to merge coffread.c and xcoffread.c so this part of this header can    go away.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|extern char *coff_getfilename PARAMS ((union internal_auxent *));
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Don't declare the arguments; if union internal_auxent has not been    declared here, gcc1 will give warnings.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|coff_getfilename
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

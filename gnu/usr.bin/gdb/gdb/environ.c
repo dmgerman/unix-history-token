@@ -48,12 +48,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|"gdbcore.h"
 end_include
-
-begin_comment
-comment|/* For strsave().  */
-end_comment
 
 begin_escape
 end_escape
@@ -212,6 +208,13 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|environ
+operator|==
+name|NULL
+condition|)
+return|return;
 for|for
 control|(
 name|i
@@ -719,44 +722,7 @@ index|]
 operator|=
 name|s
 expr_stmt|;
-comment|/* Certain variables get exported back to the parent (e.g. our)       environment, too.  FIXME: this is a hideous hack and should not be      allowed to live.  What if we want to change the environment we pass to      the program without affecting GDB's behavior?  */
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|var
-argument_list|,
-literal|"PATH"
-argument_list|)
-condition|)
-comment|/* Object file location */
-block|{
-name|putenv
-argument_list|(
-name|strsave
-argument_list|(
-name|s
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* This is a compatibility hack, since GDB 4.10 and older didn't have      `set gnutarget'.  Eventually it should go away, so that (for example)      you can debug objdump's handling of GNUTARGET without affecting GDB's      behavior.  */
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|var
-argument_list|,
-literal|"GNUTARGET"
-argument_list|)
-condition|)
-block|{
-name|set_gnutarget
-argument_list|(
-name|value
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* This used to handle setting the PATH and GNUTARGET variables      specially.  The latter has been replaced by "set gnutarget"      (which has worked since GDB 4.11).  The former affects searching      the PATH to find SHELL, and searching the PATH to find the      argument of "symbol-file" or "exec-file".  Maybe we should have      some kind of "set exec-path" for that.  But in any event, having      "set env" affect anything besides the inferior is a bad idea.      What if we want to change the environment we pass to the program      without afecting GDB's behavior?  */
 return|return;
 block|}
 end_function

@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Core dump and executable file functions below target vector, for GDB.    Copyright 1986, 1987, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Core dump and executable file functions below target vector, for GDB.    Copyright 1986, 1987, 1989, 1991, 1992, 1993, 1994    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -71,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"gdbcore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"thread.h"
 end_include
 
 begin_decl_stmt
@@ -234,7 +246,7 @@ name|SOLIB_ADD
 end_ifdef
 
 begin_comment
-comment|/* Stub function for catch_errors around shared library hacking. */
+comment|/* Stub function for catch_errors around shared library hacking.  FROM_TTYP    is really an int * which points to from_tty.  */
 end_comment
 
 begin_function
@@ -242,21 +254,23 @@ specifier|static
 name|int
 name|solib_add_stub
 parameter_list|(
-name|from_tty
+name|from_ttyp
 parameter_list|)
 name|char
 modifier|*
-name|from_tty
+name|from_ttyp
 decl_stmt|;
 block|{
 name|SOLIB_ADD
 argument_list|(
 name|NULL
 argument_list|,
+operator|*
 operator|(
 name|int
+operator|*
 operator|)
-name|from_tty
+name|from_ttyp
 argument_list|,
 operator|&
 name|core_ops
@@ -569,7 +583,8 @@ name|filename
 argument_list|,
 name|bfd_errmsg
 argument_list|(
-name|bfd_error
+name|bfd_get_error
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -632,7 +647,8 @@ argument_list|)
 argument_list|,
 name|bfd_errmsg
 argument_list|(
-name|bfd_error
+name|bfd_get_error
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -731,10 +747,7 @@ name|catch_errors
 argument_list|(
 name|solib_add_stub
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
+operator|&
 name|from_tty
 argument_list|,
 operator|(
@@ -980,13 +993,14 @@ name|cant
 label|:
 name|fprintf_filtered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"Couldn't fetch registers from core file: %s\n"
 argument_list|,
 name|bfd_errmsg
 argument_list|(
-name|bfd_error
+name|bfd_get_error
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1065,13 +1079,14 @@ else|else
 block|{
 name|fprintf_filtered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"Couldn't fetch register set 2 from core file: %s\n"
 argument_list|,
 name|bfd_errmsg
 argument_list|(
-name|bfd_error
+name|bfd_get_error
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1129,7 +1144,11 @@ name|char
 modifier|*
 name|contents
 decl_stmt|;
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obstack.c - subroutines used implicitly by object stack macros    Copyright (C) 1988, 1993 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with this program; if not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* obstack.c - subroutines used implicitly by object stack macros    Copyright (C) 1988, 89, 90, 91, 92, 93, 94 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with this program; if not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -23,19 +23,14 @@ begin_comment
 comment|/* Comment out all this code if we are using the GNU C Library, and are not    actually compiling the library itself.  This code is part of the GNU C    Library, but also included in many other GNU distributions.  Compiling    and linking in this code is a waste when using the GNU C library    (especially if it is a shared library).  Rather than having every GNU    program understand `configure --with-gnu-libc' and omit the object files,    it is simpler to just do this in the source for each such file.  */
 end_comment
 
+begin_comment
+comment|/* CYGNUS LOCAL.  No, don't comment the code out.  We will be using    ../include/obstack.h, which was changed relatively recently in a    way that is not binary compatible.  Until we feel confident that    nobody is using the old obstack.c code, force the use of this code.    This issue will arise anytime a change is made which is not binary    compatible. #if defined (_LIBC) || !defined (__GNU_LIBRARY__) */
+end_comment
+
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|_LIBC
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|__GNU_LIBRARY__
-argument_list|)
+literal|1
 end_if
 
 begin_ifdef
@@ -187,11 +182,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Initialize an obstack H for use.  Specify chunk size SIZE (0 means default).    Objects start on multiples of ALIGNMENT (0 means use default).    CHUNKFUN is the function to use to allocate chunks,    and FREEFUN the function to free them.  */
+comment|/* Initialize an obstack H for use.  Specify chunk size SIZE (0 means default).    Objects start on multiples of ALIGNMENT (0 means use default).    CHUNKFUN is the function to use to allocate chunks,    and FREEFUN the function to free them.     Return nonzero if successful, zero if out of memory.    To recover from an out of memory error,    free up some memory, then call this again.  */
 end_comment
 
 begin_decl_stmt
-name|void
+name|int
 name|_obstack_begin
 argument_list|(
 name|h
@@ -371,6 +366,28 @@ operator|->
 name|chunk_size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|chunk
+condition|)
+block|{
+name|h
+operator|->
+name|alloc_failed
+operator|=
+literal|1
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|h
+operator|->
+name|alloc_failed
+operator|=
+literal|0
+expr_stmt|;
 name|h
 operator|->
 name|next_free
@@ -414,11 +431,14 @@ name|maybe_empty_object
 operator|=
 literal|0
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_block
 
 begin_decl_stmt
-name|void
+name|int
 name|_obstack_begin_1
 argument_list|(
 name|h
@@ -612,6 +632,28 @@ operator|->
 name|chunk_size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|chunk
+condition|)
+block|{
+name|h
+operator|->
+name|alloc_failed
+operator|=
+literal|1
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|h
+operator|->
+name|alloc_failed
+operator|=
+literal|0
+expr_stmt|;
 name|h
 operator|->
 name|next_free
@@ -655,6 +697,9 @@ name|maybe_empty_object
 operator|=
 literal|0
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_block
 
@@ -752,16 +797,38 @@ expr_stmt|;
 comment|/* Allocate and initialize the new chunk.  */
 name|new_chunk
 operator|=
-name|h
-operator|->
-name|chunk
-operator|=
 name|CALL_CHUNKFUN
 argument_list|(
 name|h
 argument_list|,
 name|new_size
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|new_chunk
+condition|)
+block|{
+name|h
+operator|->
+name|alloc_failed
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
+name|h
+operator|->
+name|alloc_failed
+operator|=
+literal|0
+expr_stmt|;
+name|h
+operator|->
+name|chunk
+operator|=
+name|new_chunk
 expr_stmt|;
 name|new_chunk
 operator|->

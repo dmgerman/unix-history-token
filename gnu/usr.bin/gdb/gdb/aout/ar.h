@@ -19,11 +19,15 @@ directive|define
 name|__GNU_AR_H__
 end_define
 
+begin_comment
+comment|/* Note that the usual '\n' in magic strings may translate to different    characters, as allowed by ANSI.  '\012' has a fixed value, and remains    compatible with existing BSDish archives. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ARMAG
-value|"!<arch>\n"
+value|"!<arch>\012"
 end_define
 
 begin_comment
@@ -34,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|ARMAGB
-value|"!<bout>\n"
+value|"!<bout>\012"
 end_define
 
 begin_comment
@@ -52,7 +56,7 @@ begin_define
 define|#
 directive|define
 name|ARFMAG
-value|"`\n"
+value|"`\012"
 end_define
 
 begin_comment

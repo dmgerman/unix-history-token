@@ -225,6 +225,28 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|cplus_demangle_opname
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+name|opname
+operator|,
+name|char
+operator|*
+name|result
+operator|,
+name|int
+name|options
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Note: This sets global state.  FIXME if you care about multi-threading. */
 end_comment

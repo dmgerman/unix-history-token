@@ -130,9 +130,6 @@ begin_undef
 undef|#
 directive|undef
 name|FRAME_SAVED_PC
-name|(
-name|FRAME
-name|)
 end_undef
 
 begin_define

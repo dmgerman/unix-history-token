@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Print values for GDB, the GNU debugger.    Copyright 1986, 1988, 1989, 1991 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Print values for GDB, the GNU debugger.    Copyright 1986, 1988, 1989, 1991, 1992, 1993, 1994              Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"annotate.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -86,7 +92,7 @@ name|print_hex_chars
 name|PARAMS
 argument_list|(
 operator|(
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|unsigned
@@ -234,27 +240,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|value_print_array_elements
-name|PARAMS
-argument_list|(
-operator|(
-name|value
-operator|,
-name|FILE
-operator|*
-operator|,
-name|int
-operator|,
-expr|enum
-name|val_prettyprint
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Maximum number of chars to print for a string pointer value or vector    contents, or UINT_MAX for no limit.  Note that "set print elements 0"    stores UINT_MAX in print_max, which displays in a show command as    "unlimited". */
 end_comment
@@ -318,6 +303,20 @@ literal|10
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* If nonzero, stops printing of char arrays at first null. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|stop_print_at_null
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Controls pretty printing of structures. */
+end_comment
+
 begin_decl_stmt
 name|int
 name|prettyprint_structs
@@ -325,7 +324,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Controls pretty printing of structures */
+comment|/* Controls pretty printing of arrays.  */
 end_comment
 
 begin_decl_stmt
@@ -333,10 +332,6 @@ name|int
 name|prettyprint_arrays
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Controls pretty printing of arrays.  */
-end_comment
 
 begin_comment
 comment|/* If nonzero, causes unions inside structures or other unions to be    printed. */
@@ -405,7 +400,7 @@ decl_stmt|;
 name|CORE_ADDR
 name|address
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -441,7 +436,7 @@ expr_stmt|;
 block|}
 name|QUIT
 expr_stmt|;
-comment|/* Ensure that the type is complete and not just a stub.  If the type is      only a stub and we can't find and substitute its complete type, then      print appropriate string and return.  Typical types that my be stubs      are structs, unions, and C++ methods. */
+comment|/* Ensure that the type is complete and not just a stub.  If the type is      only a stub and we can't find and substitute its complete type, then      print appropriate string and return.  */
 name|check_stub_type
 argument_list|(
 name|type
@@ -464,7 +459,7 @@ argument_list|,
 literal|"<incomplete type>"
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
 name|stream
 argument_list|)
@@ -516,10 +511,10 @@ name|format
 parameter_list|,
 name|pretty
 parameter_list|)
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -531,13 +526,6 @@ name|val_prettyprint
 name|pretty
 decl_stmt|;
 block|{
-specifier|register
-name|unsigned
-name|int
-name|n
-decl_stmt|,
-name|typelen
-decl_stmt|;
 if|if
 condition|(
 name|val
@@ -571,77 +559,8 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* A "repeated" value really contains several values in a row.      They are made by the @ operator.      Print such values as if they were arrays.  */
-if|if
-condition|(
-name|VALUE_REPEATED
-argument_list|(
-name|val
-argument_list|)
-condition|)
-block|{
-name|n
-operator|=
-name|VALUE_REPETITIONS
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-name|typelen
-operator|=
-name|TYPE_LENGTH
-argument_list|(
-name|VALUE_TYPE
-argument_list|(
-name|val
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf_filtered
-argument_list|(
-name|stream
-argument_list|,
-literal|"{"
-argument_list|)
-expr_stmt|;
-comment|/* Print arrays of characters using string syntax.  */
-if|if
-condition|(
-name|typelen
-operator|==
-literal|1
-operator|&&
-name|TYPE_CODE
-argument_list|(
-name|VALUE_TYPE
-argument_list|(
-name|val
-argument_list|)
-argument_list|)
-operator|==
-name|TYPE_CODE_INT
-operator|&&
-name|format
-operator|==
-literal|0
-condition|)
-name|LA_PRINT_STRING
-argument_list|(
-name|stream
-argument_list|,
-name|VALUE_CONTENTS
-argument_list|(
-name|val
-argument_list|)
-argument_list|,
-name|n
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|value_print_array_elements
+return|return
+name|LA_VALUE_PRINT
 argument_list|(
 name|val
 argument_list|,
@@ -651,157 +570,7 @@ name|format
 argument_list|,
 name|pretty
 argument_list|)
-expr_stmt|;
-block|}
-name|fprintf_filtered
-argument_list|(
-name|stream
-argument_list|,
-literal|"}"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|n
-operator|*
-name|typelen
-operator|)
 return|;
-block|}
-else|else
-block|{
-name|struct
-name|type
-modifier|*
-name|type
-init|=
-name|VALUE_TYPE
-argument_list|(
-name|val
-argument_list|)
-decl_stmt|;
-comment|/* If it is a pointer, indicate what it points to.  	 Print type also if it is a reference.           C++: if it is a member pointer, we will take care 	 of that when we print it.  */
-if|if
-condition|(
-name|TYPE_CODE
-argument_list|(
-name|type
-argument_list|)
-operator|==
-name|TYPE_CODE_PTR
-operator|||
-name|TYPE_CODE
-argument_list|(
-name|type
-argument_list|)
-operator|==
-name|TYPE_CODE_REF
-condition|)
-block|{
-comment|/* Hack:  remove (char *) for char strings.  Their 	     type is indicated by the quoted string anyway. */
-if|if
-condition|(
-name|TYPE_CODE
-argument_list|(
-name|type
-argument_list|)
-operator|==
-name|TYPE_CODE_PTR
-operator|&&
-name|TYPE_LENGTH
-argument_list|(
-name|TYPE_TARGET_TYPE
-argument_list|(
-name|type
-argument_list|)
-argument_list|)
-operator|==
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-operator|&&
-name|TYPE_CODE
-argument_list|(
-name|TYPE_TARGET_TYPE
-argument_list|(
-name|type
-argument_list|)
-argument_list|)
-operator|==
-name|TYPE_CODE_INT
-operator|&&
-operator|!
-name|TYPE_UNSIGNED
-argument_list|(
-name|TYPE_TARGET_TYPE
-argument_list|(
-name|type
-argument_list|)
-argument_list|)
-condition|)
-block|{
-comment|/* Print nothing */
-block|}
-else|else
-block|{
-name|fprintf_filtered
-argument_list|(
-name|stream
-argument_list|,
-literal|"("
-argument_list|)
-expr_stmt|;
-name|type_print
-argument_list|(
-name|type
-argument_list|,
-literal|""
-argument_list|,
-name|stream
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|fprintf_filtered
-argument_list|(
-name|stream
-argument_list|,
-literal|") "
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-return|return
-operator|(
-name|val_print
-argument_list|(
-name|type
-argument_list|,
-name|VALUE_CONTENTS
-argument_list|(
-name|val
-argument_list|)
-argument_list|,
-name|VALUE_ADDRESS
-argument_list|(
-name|val
-argument_list|)
-argument_list|,
-name|stream
-argument_list|,
-name|format
-argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-name|pretty
-argument_list|)
-operator|)
-return|;
-block|}
 block|}
 end_function
 
@@ -828,7 +597,7 @@ name|char
 modifier|*
 name|valaddr
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -981,7 +750,7 @@ name|LONGEST
 argument_list|)
 condition|)
 block|{
-comment|/* We can print it in decimal.  */
+comment|/* The most significant bytes are zero, so we can just get 		 the least significant sizeof (LONGEST) bytes and print it 		 in decimal.  */
 name|print_longest
 argument_list|(
 name|stream
@@ -990,11 +759,14 @@ literal|'u'
 argument_list|,
 literal|0
 argument_list|,
-name|unpack_long
+name|extract_unsigned_integer
 argument_list|(
-name|BUILTIN_TYPE_LONGEST
-argument_list|,
 name|first_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|LONGEST
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1091,7 +863,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print a number according to FORMAT which is one of d,u,x,o,b,h,w,g.    The raison d'etre of this function is to consolidate printing of LONG_LONG's    into this one function.  Some platforms have long longs but don't have a    printf() that supports "ll" in the format string.  We handle these by seeing    if the number is actually a long, and if not we just bail out and print the    number in hex.  The format chars b,h,w,g are from    print_scalar_formatted().  USE_LOCAL says whether or not to call the    local formatting routine to get the format.  */
+comment|/* Print a number according to FORMAT which is one of d,u,x,o,b,h,w,g.    The raison d'etre of this function is to consolidate printing of LONG_LONG's    into this one function.  Some platforms have long longs but don't have a    printf() that supports "ll" in the format string.  We handle these by seeing    if the number is actually a long, and if not we just bail out and print the    number in hex.  The format chars b,h,w,g are from    print_scalar_formatted().  If USE_LOCAL, format it according to the current    language (this should be used for most integers which GDB prints, the    exception is things like protocols where the format of the integer is    a protocol thing, not a user-visible thing).  */
 end_comment
 
 begin_function
@@ -1106,7 +878,7 @@ name|use_local
 parameter_list|,
 name|val_long
 parameter_list|)
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1186,6 +958,11 @@ operator|==
 literal|'x'
 operator|)
 operator|&&
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|val_long
 operator|>
 name|UINT_MAX
@@ -1344,8 +1121,15 @@ endif|#
 directive|endif
 comment|/* !PRINTF_HAS_LONG_LONG */
 argument|}
+comment|/* This used to be a macro, but I don't think it is called often enough    to merit such treatment.  */
+comment|/* Convert a LONGEST to an int.  This is used in contexts (e.g. number of    arguments to a function, number in a value history, register number, etc.)    where the value must not be larger than can fit in an int.  */
+argument|int longest_to_int (arg)      LONGEST arg; {
+comment|/* This check is in case a system header has botched the      definition of INT_MIN, like on BSDI.  */
+argument|if (sizeof (LONGEST)<= sizeof (int))     return arg;    if (arg> INT_MAX || arg< INT_MIN)     error (
+literal|"Value out of range."
+argument|);    return arg; }
 comment|/* Print a floating point value of type TYPE, pointed to in GDB by VALADDR,    on STREAM.  */
-argument|void print_floating (valaddr, type, stream)      char *valaddr;      struct type *type;      FILE *stream; {   double doub;   int inv;   unsigned len = TYPE_LENGTH (type);
+argument|void print_floating (valaddr, type, stream)      char *valaddr;      struct type *type;      GDB_FILE *stream; {   double doub;   int inv;   unsigned len = TYPE_LENGTH (type);
 if|#
 directive|if
 name|defined
@@ -1353,19 +1137,24 @@ argument_list|(
 name|IEEE_FLOAT
 argument_list|)
 comment|/* Check for NaN's.  Note that this code does not depend on us being      on an IEEE conforming system.  It only depends on the target      machine using IEEE representation.  This means (a)      cross-debugging works right, and (2) IEEE_FLOAT can (and should)      be defined for systems like the 68881, which uses IEEE      representation, but is not IEEE conforming.  */
-argument|{     long low
+argument|{     unsigned long low
 argument_list|,
 argument|high;
 comment|/* Is the sign bit 0?  */
 argument|int nonnegative;
 comment|/* Is it is a NaN (i.e. the exponent is all ones and        the fraction is nonzero)?  */
-argument|int is_nan;      if (len == sizeof (float))       {
-comment|/* It's single precision. */
-argument|memcpy ((char *)&low, valaddr, sizeof (low));
-comment|/* target -> host.  */
-argument|SWAP_TARGET_AND_HOST (&low, sizeof (float)); 	nonnegative = low>=
+argument|int is_nan;      if (len ==
+literal|4
+argument|)       {
+comment|/* It's single precision.  */
+comment|/* Assume that floating point byte order is the same as 	   integer byte order.  */
+argument|low = extract_unsigned_integer (valaddr,
+literal|4
+argument|); 	nonnegative = ((low&
+literal|0x80000000
+argument|) ==
 literal|0
-argument|; 	is_nan = ((((low>>
+argument|); 	is_nan = ((((low>>
 literal|23
 argument|)&
 literal|0xFF
@@ -1379,30 +1168,39 @@ argument|)); 	low&=
 literal|0x7fffff
 argument|; 	high =
 literal|0
-argument|;       }     else       {
+argument|;       }     else if (len ==
+literal|8
+argument|)       {
 comment|/* It's double precision.  Get the high and low words.  */
+comment|/* Assume that floating point byte order is the same as 	   integer byte order.  */
 if|#
 directive|if
 name|TARGET_BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-argument|memcpy (&low, valaddr+
+argument|low = extract_unsigned_integer (valaddr +
 literal|4
-argument|,  sizeof (low)); 	memcpy (&high, valaddr+
-literal|0
-argument|, sizeof (high));
+argument|,
+literal|4
+argument|); 	high = extract_unsigned_integer (valaddr,
+literal|4
+argument|);
 else|#
 directive|else
-argument|memcpy (&low, valaddr+
-literal|0
-argument|,  sizeof (low)); 	memcpy (&high, valaddr+
+argument|low = extract_unsigned_integer (valaddr,
 literal|4
-argument|, sizeof (high));
+argument|); 	high = extract_unsigned_integer (valaddr +
+literal|4
+argument|,
+literal|4
+argument|);
 endif|#
 directive|endif
-argument|SWAP_TARGET_AND_HOST (&low, sizeof (low)); 	SWAP_TARGET_AND_HOST (&high, sizeof (high)); 	nonnegative = high>=
+argument|nonnegative = ((high&
+literal|0x80000000
+argument|) ==
 literal|0
-argument|; 	is_nan = (((high>>
+argument|); 	is_nan = (((high>>
 literal|20
 argument|)&
 literal|0x7ff
@@ -1416,7 +1214,11 @@ argument|))&& (low ==
 literal|0
 argument|))); 	high&=
 literal|0xfffff
-argument|;       }      if (is_nan)       {
+argument|;       }     else
+comment|/* Extended.  We can't detect NaNs for extendeds yet.  Also note 	 that currently extendeds get nuked to double in 	 REGISTER_CONVERTIBLE.  */
+argument|is_nan =
+literal|0
+argument|;      if (is_nan)       {
 comment|/* The meaning of the sign and fraction is not defined by IEEE. 	   But the user might know what they mean.  For example, they 	   (in an implementation-defined manner) distinguish between 	   signaling and quiet NaN's.  */
 argument|if (high) 	  fprintf_filtered (stream,
 literal|"-NaN(0x%lx%.8lx)"
@@ -1434,7 +1236,7 @@ argument|:
 literal|"%.17g"
 argument|, doub); }
 comment|/* VALADDR points to an integer of LEN bytes.  Print it in hex on stream.  */
-argument|static void print_hex_chars (stream, valaddr, len)      FILE *stream;      unsigned char *valaddr;      unsigned len; {   unsigned char *p;
+argument|static void print_hex_chars (stream, valaddr, len)      GDB_FILE *stream;      unsigned char *valaddr;      unsigned len; {   unsigned char *p;
 comment|/* FIXME: We should be not printing leading zeroes in most cases.  */
 argument|fprintf_filtered (stream, local_hex_format_prefix ());
 if|#
@@ -1455,13 +1257,13 @@ argument|{       fprintf_filtered (stream,
 literal|"%02x"
 argument|, *p);     }   fprintf_filtered (stream, local_hex_format_suffix ()); }
 comment|/*  Called by various<lang>_val_print routines to print elements of an     array in the form "<elem1>,<elem2>,<elem3>, ...".      (FIXME?)  Assumes array element separator is a comma, which is correct     for all languages currently handled.     (FIXME?)  Some languages have a notation for repeated array elements,     perhaps we should try to use that notation when appropriate.     */
-argument|void val_print_array_elements (type, valaddr, address, stream, format, deref_ref, 			  recurse, pretty, i)      struct type *type;      char *valaddr;      CORE_ADDR address;      FILE *stream;      int format;      int deref_ref;      int recurse;      enum val_prettyprint pretty;      unsigned int i; {   unsigned int things_printed =
+argument|void val_print_array_elements (type, valaddr, address, stream, format, deref_ref, 			  recurse, pretty, i)      struct type *type;      char *valaddr;      CORE_ADDR address;      GDB_FILE *stream;      int format;      int deref_ref;      int recurse;      enum val_prettyprint pretty;      unsigned int i; {   unsigned int things_printed =
 literal|0
 argument|;   unsigned len;   struct type *elttype;   unsigned eltlen;
 comment|/* Position of the array element we are examining to see      whether it is repeated.  */
 argument|unsigned int rep1;
 comment|/* Number of repetitions we have detected so far.  */
-argument|unsigned int reps;          elttype = TYPE_TARGET_TYPE (type);   eltlen = TYPE_LENGTH (elttype);   len = TYPE_LENGTH (type) / eltlen; 	         for (; i< len&& things_printed< print_max; i++)     {       if (i !=
+argument|unsigned int reps;          elttype = TYPE_TARGET_TYPE (type);   eltlen = TYPE_LENGTH (elttype);   len = TYPE_LENGTH (type) / eltlen;    annotate_array_section_begin (i, elttype);    for (; i< len&& things_printed< print_max; i++)     {       if (i !=
 literal|0
 argument|) 	{ 	  if (prettyprint_arrays) 	    { 	      fprintf_filtered (stream,
 literal|",\n"
@@ -1475,25 +1277,25 @@ argument|); 	    } 	}       wrap_here (n_spaces (
 literal|2
 argument|+
 literal|2
-argument|* recurse));              rep1 = i +
+argument|* recurse));        rep1 = i +
 literal|1
 argument|;       reps =
 literal|1
-argument|;       while ((rep1< len)&&  	     !memcmp (valaddr + i * eltlen, valaddr + rep1 * eltlen, eltlen)) 	{ 	  ++reps; 	  ++rep1; 	}              if (reps> repeat_count_threshold) 	{ 	  val_print (elttype, valaddr + i * eltlen,
+argument|;       while ((rep1< len)&&  	     !memcmp (valaddr + i * eltlen, valaddr + rep1 * eltlen, eltlen)) 	{ 	  ++reps; 	  ++rep1; 	}        if (reps> repeat_count_threshold) 	{ 	  val_print (elttype, valaddr + i * eltlen,
 literal|0
 argument|, stream, format, 		     deref_ref, recurse +
 literal|1
-argument|, pretty); 	  fprintf_filtered (stream,
+argument|, pretty); 	  annotate_elt_rep (reps); 	  fprintf_filtered (stream,
 literal|"<repeats %u times>"
-argument|, reps); 	  i = rep1 -
+argument|, reps); 	  annotate_elt_rep_end ();  	  i = rep1 -
 literal|1
 argument|; 	  things_printed += repeat_count_threshold; 	}       else 	{ 	  val_print (elttype, valaddr + i * eltlen,
 literal|0
 argument|, stream, format, 		     deref_ref, recurse +
 literal|1
-argument|, pretty); 	  things_printed++; 	}     }   if (i< len)     {       fprintf_filtered (stream,
+argument|, pretty); 	  annotate_elt (); 	  things_printed++; 	}     }   annotate_array_section_end ();   if (i< len)     {       fprintf_filtered (stream,
 literal|"..."
-argument|);     } }  static void value_print_array_elements (val, stream, format, pretty)      value val;      FILE *stream;      int format;      enum val_prettyprint pretty; {   unsigned int things_printed =
+argument|);     } }  void value_print_array_elements (val, stream, format, pretty)      value_ptr val;      GDB_FILE *stream;      int format;      enum val_prettyprint pretty; {   unsigned int things_printed =
 literal|0
 argument|;   register unsigned int i
 argument_list|,
@@ -1519,7 +1321,7 @@ argument|;       while (rep1< n&& !memcmp (VALUE_CONTENTS (val) + typelen * i, 	
 literal|1
 argument|,
 literal|0
-argument|, pretty); 	  fprintf (stream,
+argument|, pretty); 	  fprintf_unfiltered (stream,
 literal|"<repeats %u times>"
 argument|, reps); 	  i = rep1 -
 literal|1
@@ -1531,7 +1333,8 @@ argument|, pretty); 	  things_printed++; 	}     }   if (i< n)     {       fprint
 literal|"..."
 argument|);     } }
 comment|/*  Print a string from the inferior, starting at ADDR and printing up to LEN     characters, to STREAM.  If LEN is zero, printing stops at the first null     byte, otherwise printing proceeds (including null bytes) until either     print_max or LEN characters have been printed, whichever is smaller. */
-argument|int val_print_string (addr, len, stream)     CORE_ADDR addr;     unsigned int len;     FILE *stream; {   int force_ellipsis =
+comment|/* FIXME: All callers supply LEN of zero.  Supplying a non-zero LEN is    pointless, this routine just then becomes a convoluted version of    target_read_memory_partial.  Removing all the LEN stuff would simplify    this routine enormously.     FIXME: Use target_read_string.  */
+argument|int val_print_string (addr, len, stream)     CORE_ADDR addr;     unsigned int len;     GDB_FILE *stream; {   int force_ellipsis =
 literal|0
 argument|;
 comment|/* Force ellipsis to be printed if nonzero. */
@@ -1559,10 +1362,12 @@ comment|/* First we need to figure out the limit on the number of characters we 
 argument|fetchlimit = (len ==
 literal|0
 argument|? print_max : min (len, print_max));
-comment|/* Now decide how large of chunks to try to read in one operation.  This      is also pretty simple.  If LEN is nonzero, then we want fetchlimit bytes,      so we might as well read them all in one operation.  If LEN is zero, we      are looking for a null terminator to end the fetching, so we might as      well read in blocks that are large enough to be efficient, but not so      large as to be slow if fetchlimit happens to be large.  So we choose the      minimum of DEFAULT_PRINT_MAX and fetchlimit. */
+comment|/* Now decide how large of chunks to try to read in one operation.  This      is also pretty simple.  If LEN is nonzero, then we want fetchlimit bytes,      so we might as well read them all in one operation.  If LEN is zero, we      are looking for a null terminator to end the fetching, so we might as      well read in blocks that are large enough to be efficient, but not so      large as to be slow if fetchlimit happens to be large.  So we choose the      minimum of 8 and fetchlimit.  We used to use 200 instead of 8 but      200 is way too big for remote debugging over a serial line.  */
 argument|chunksize = (len ==
 literal|0
-argument|? min (PRINT_MAX_DEFAULT, fetchlimit) : fetchlimit);
+argument|? min (
+literal|8
+argument|, fetchlimit) : fetchlimit);
 comment|/* Loop until we either have all the characters to print, or we encounter      some error, such as bumping into the end of the address space. */
 argument|bufsize =
 literal|0
@@ -1574,14 +1379,18 @@ argument|nfetch = target_read_memory_partial (addr, bufptr, nfetch,&errcode);   
 literal|0
 argument|)       { 	addr += nfetch; 	bufptr += nfetch;       }     else       {
 comment|/* Scan this chunk for the null byte that terminates the string 	   to print.  If found, we don't need to fetch any more.  Note 	   that bufptr is explicitly left pointing at the next character 	   after the null byte, or at the next character after the end of 	   the buffer. */
-argument|limit = bufptr + nfetch; 	do { 	  addr++; 	  bufptr++; 	} while (bufptr< limit&& *(bufptr -
+argument|limit = bufptr + nfetch; 	while (bufptr< limit) 	  { 	    ++addr; 	    ++bufptr; 	    if (bufptr[-
 literal|1
-argument|) !=
+argument|] ==
 literal|'\0'
-argument|);       }   } while (errcode ==
+argument|) 	      {
+comment|/* We don't care about any error which happened after 		   the NULL terminator.  */
+argument|errcode =
+literal|0
+argument|; 		break; 	      } 	  }       }   } while (errcode ==
 literal|0
 comment|/* no error */
-argument|&& bufptr< buffer + fetchlimit
+argument|&& bufsize< fetchlimit
 comment|/* no overrun */
 argument|&& !(len ==
 literal|0
@@ -1591,15 +1400,16 @@ argument|) ==
 literal|'\0'
 argument|));
 comment|/* no null term */
-comment|/* We now have either successfully filled the buffer to fetchlimit, or      terminated early due to an error or finding a null byte when LEN is      zero. */
+comment|/* bufptr and addr now point immediately beyond the last byte which we      consider part of the string (including a '\0' which ends the string).  */
+comment|/* We now have either successfully filled the buffer to fetchlimit, or      terminated early due to an error or finding a null byte when LEN is      zero.  */
 argument|if (len ==
 literal|0
-argument|&& *(bufptr -
+argument|&& bufptr> buffer&& *(bufptr -
 literal|1
 argument|) !=
 literal|'\0'
 argument|)     {
-comment|/* We didn't find a null terminator we were looking for.  Attempt 	 to peek at the next character.  If not successful, or it is not 	 a null byte, then force ellipsis to be printed. */
+comment|/* We didn't find a null terminator we were looking for.  Attempt 	 to peek at the next character.  If not successful, or it is not 	 a null byte, then force ellipsis to be printed.  */
 argument|if (target_read_memory (addr,&peekchar,
 literal|1
 argument|) !=
@@ -1616,15 +1426,27 @@ argument|) || (len> bufptr - buffer))     {
 comment|/* Getting an error when we have a requested length, or fetching less 	 than the number of characters actually requested, always make us 	 print ellipsis. */
 argument|force_ellipsis =
 literal|1
-argument|;     }    QUIT;      if (addressprint)     {       fputs_filtered (
-literal|" "
-argument|, stream);     }   LA_PRINT_STRING (stream, buffer, bufptr - buffer, force_ellipsis);      if (errcode !=
+argument|;     }    QUIT;
+comment|/* If we get an error before fetching anything, don't print a string.      But if we fetch something and then get an error, print the string      and then the error message.  */
+argument|if (errcode ==
 literal|0
-argument|&& force_ellipsis)     {       if (errcode == EIO) 	{ 	  fprintf_filtered (stream,
-literal|"<Address 0x%lx out of bounds>"
-argument|, 			    (unsigned long) addr); 	}       else 	{ 	  error (
-literal|"Error reading memory address 0x%lx: %s."
-argument|, 		 (unsigned long) addr, 		 safe_strerror (errcode)); 	}     }   fflush (stream);   do_cleanups (old_chain);   return (bufptr - buffer); }
+argument||| bufptr> buffer)     {       if (addressprint) 	{ 	  fputs_filtered (
+literal|" "
+argument|, stream); 	}       LA_PRINT_STRING (stream, buffer, bufptr - buffer, force_ellipsis);     }    if (errcode !=
+literal|0
+argument|)     {       if (errcode == EIO) 	{ 	  fprintf_filtered (stream,
+literal|"<Address "
+argument|); 	  print_address_numeric (addr,
+literal|1
+argument|, stream); 	  fprintf_filtered (stream,
+literal|" out of bounds>"
+argument|); 	}       else 	{ 	  fprintf_filtered (stream,
+literal|"<Error reading address "
+argument|); 	  print_address_numeric (addr,
+literal|1
+argument|, stream); 	  fprintf_filtered (stream,
+literal|": %s>"
+argument|, safe_strerror (errcode)); 	}     }   gdb_flush (stream);   do_cleanups (old_chain);   return (bufptr - buffer); }
 comment|/* Validate an input or output radix setting, and make sure the user    knows what they really did here.  Radix setting is confusing, e.g.    setting the input radix to "10" never changes it!  */
 comment|/* ARGSUSED */
 argument|static void set_input_radix (args, from_tty, c)      char *args;      int from_tty;      struct cmd_list_element *c; {   set_input_radix_1 (from_tty, *(unsigned *)c->var); }
@@ -1684,13 +1506,13 @@ argument|, 			   input_radix, input_radix, input_radix); 	  printf_filtered (
 literal|"Output radix set to decimal %u, hex %x, octal %o.\n"
 argument|, 			   output_radix, output_radix, output_radix); 	}     } }
 comment|/*ARGSUSED*/
-argument|static void set_print (arg, from_tty)      char *arg;      int from_tty; {   printf (
+argument|static void set_print (arg, from_tty)      char *arg;      int from_tty; {   printf_unfiltered (
 literal|"\"set print\" must be followed by the name of a print subcommand.\n"
 argument|);   help_list (setprintlist,
 literal|"set print "
 argument|, -
 literal|1
-argument|, stdout); }
+argument|, gdb_stdout); }
 comment|/*ARGSUSED*/
 argument|static void show_print (args, from_tty)      char *args;      int from_tty; {   cmd_show_list (showprintlist, from_tty,
 literal|""
@@ -1741,6 +1563,10 @@ argument|,&showlist);     add_show_from_set     (add_set_cmd (
 literal|"elements"
 argument|, no_class, var_uinteger, (char *)&print_max,
 literal|"Set limit on string chars or array elements to print.\n\ \"set print elements 0\" causes there to be no limit."
+argument|,&setprintlist),&showprintlist);    add_show_from_set     (add_set_cmd (
+literal|"null-stop"
+argument|, no_class, var_boolean, 		  (char *)&stop_print_at_null,
+literal|"Set printing of char arrays to stop at first null char."
 argument|,&setprintlist),&showprintlist);    add_show_from_set     (add_set_cmd (
 literal|"repeats"
 argument|, no_class, var_uinteger, 		  (char *)&repeat_count_threshold,

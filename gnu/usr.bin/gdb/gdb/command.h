@@ -97,9 +97,10 @@ name|enum
 name|command_class
 name|class
 decl_stmt|;
-comment|/* Function definition of this command.        Zero for command class names and for help topics that        are not really commands.  */
+comment|/* Function definition of this command.        NO_FUNCTION for command class names and for help topics that        are not really commands.  */
 union|union
 block|{
+comment|/* If type is not_set_cmd, call it like this:  */
 name|void
 argument_list|(
 argument|*cfunc
@@ -116,6 +117,7 @@ name|from_tty
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* If type is cmd_set or show_cmd, first set the variables, and 	   then call this.  */
 name|void
 argument_list|(
 argument|*sfunc
@@ -611,7 +613,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -635,7 +637,7 @@ operator|,
 expr|enum
 name|command_class
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -661,7 +663,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Print values for GNU debugger GDB.    Copyright 1986, 1987, 1988, 1989, 1990, 1991 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Print values for GNU debugger GDB.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1993, 1994              Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -85,6 +85,18 @@ begin_include
 include|#
 directive|include
 file|"demangle.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"valprint.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"annotate.h"
 end_include
 
 begin_decl_stmt
@@ -180,7 +192,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|value
+name|value_ptr
 name|last_examine_value
 decl_stmt|;
 end_decl_stmt
@@ -392,7 +404,7 @@ name|int
 operator|,
 name|int
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -647,7 +659,7 @@ name|print_formatted
 name|PARAMS
 argument_list|(
 operator|(
-name|value
+name|value_ptr
 operator|,
 name|int
 operator|,
@@ -834,38 +846,6 @@ expr_stmt|;
 else|else
 break|break;
 block|}
-ifndef|#
-directive|ifndef
-name|CC_HAS_LONG_LONG
-comment|/* Make sure 'g' size is not used on integer types.      Well, actually, we can handle hex.  */
-if|if
-condition|(
-name|val
-operator|.
-name|size
-operator|==
-literal|'g'
-operator|&&
-name|val
-operator|.
-name|format
-operator|!=
-literal|'f'
-operator|&&
-name|val
-operator|.
-name|format
-operator|!=
-literal|'x'
-condition|)
-name|val
-operator|.
-name|size
-operator|=
-literal|'w'
-expr_stmt|;
-endif|#
-directive|endif
 while|while
 condition|(
 operator|*
@@ -956,7 +936,30 @@ case|:
 case|case
 literal|'s'
 case|:
-comment|/* Addresses must be words.  */
+comment|/* Pick the appropriate size for an address.  */
+if|if
+condition|(
+name|TARGET_PTR_BIT
+operator|==
+literal|64
+condition|)
+name|val
+operator|.
+name|size
+operator|=
+name|osize
+condition|?
+literal|'g'
+else|:
+name|osize
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|TARGET_PTR_BIT
+operator|==
+literal|32
+condition|)
 name|val
 operator|.
 name|size
@@ -966,6 +969,28 @@ condition|?
 literal|'w'
 else|:
 name|osize
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|TARGET_PTR_BIT
+operator|==
+literal|16
+condition|)
+name|val
+operator|.
+name|size
+operator|=
+name|osize
+condition|?
+literal|'h'
+else|:
+name|osize
+expr_stmt|;
+else|else
+comment|/* Bad value for TARGET_PTR_BIT */
+name|abort
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -1035,7 +1060,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Print value VAL on stdout according to FORMAT, a letter or 0.    Do not end with a newline.    0 means print VAL according to its own type.    SIZE is the letter for the size of datum being printed.    This is used to pad hex numbers so they line up.  */
+comment|/* Print value VAL on gdb_stdout according to FORMAT, a letter or 0.    Do not end with a newline.    0 means print VAL according to its own type.    SIZE is the letter for the size of datum being printed.    This is used to pad hex numbers so they line up.  */
 end_comment
 
 begin_function
@@ -1050,7 +1075,7 @@ parameter_list|,
 name|size
 parameter_list|)
 specifier|register
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
 specifier|register
@@ -1112,7 +1137,7 @@ argument_list|(
 name|val
 argument_list|)
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|,
 name|format
 argument_list|,
@@ -1144,7 +1169,7 @@ argument_list|(
 name|val
 argument_list|)
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1204,7 +1229,7 @@ name|value_print
 argument_list|(
 name|val
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|,
 name|format
 argument_list|,
@@ -1228,7 +1253,7 @@ name|format
 argument_list|,
 name|size
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -1268,7 +1293,7 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1334,6 +1359,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|format
+operator|!=
+literal|'f'
+condition|)
 name|val_long
 operator|=
 name|unpack_long
@@ -1816,7 +1847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Optionally print address ADDR symbolically as<SYMBOL+OFFSET> on STREAM,    after LEADIN.  Print nothing if no symbolic name is found nearby.    DO_DEMANGLE controls whether to print a symbol in its native "raw" form,    or to interpret it as a possible C++ name and convert it back to source    form.  However note that DO_DEMANGLE can be overridden by the specific    settings of the demangle and asm_demangle variables. */
+comment|/* Optionally print address ADDR symbolically as<SYMBOL+OFFSET> on STREAM,    after LEADIN.  Print nothing if no symbolic name is found nearby.    Optionally also print source file and line number, if available.    DO_DEMANGLE controls whether to print a symbol in its native "raw" form,    or to interpret it as a possible C++ name and convert it back to source    form.  However note that DO_DEMANGLE can be overridden by the specific    settings of the demangle and asm_demangle variables.  */
 end_comment
 
 begin_function
@@ -1834,7 +1865,7 @@ parameter_list|)
 name|CORE_ADDR
 name|addr
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1846,20 +1877,36 @@ modifier|*
 name|leadin
 decl_stmt|;
 block|{
-name|CORE_ADDR
-name|name_location
+name|struct
+name|minimal_symbol
+modifier|*
+name|msymbol
 decl_stmt|;
-specifier|register
 name|struct
 name|symbol
 modifier|*
 name|symbol
 decl_stmt|;
+name|struct
+name|symtab
+modifier|*
+name|symtab
+init|=
+literal|0
+decl_stmt|;
+name|CORE_ADDR
+name|name_location
+init|=
+literal|0
+decl_stmt|;
 name|char
 modifier|*
 name|name
+init|=
+literal|""
 decl_stmt|;
-comment|/* First try to find the address in the symbol tables to find      static functions. If that doesn't succeed we try the minimal symbol      vector for symbols in non-text space.      FIXME: Should find a way to get at the static non-text symbols too.  */
+comment|/* First try to find the address in the symbol table, then      in the minsyms.  Take the closest one.  */
+comment|/* This is defective in the sense that it only finds text symbols.  So      really this is kind of pointless--we should make sure that the      minimal symbols have everything we need (by changing that we could      save some memory, but for many debug format--ELF/DWARF or      anything/stabs--it would be inconvenient to eliminate those minimal      symbols anyway).  */
 name|symbol
 operator|=
 name|find_pc_function
@@ -1871,7 +1918,6 @@ if|if
 condition|(
 name|symbol
 condition|)
-block|{
 name|name_location
 operator|=
 name|BLOCK_START
@@ -1882,6 +1928,11 @@ name|symbol
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|symbol
+condition|)
+block|{
 if|if
 condition|(
 name|do_demangle
@@ -1902,27 +1953,43 @@ name|symbol
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-specifier|register
-name|struct
-name|minimal_symbol
-modifier|*
 name|msymbol
-init|=
+operator|=
 name|lookup_minimal_symbol_by_pc
 argument_list|(
 name|addr
 argument_list|)
-decl_stmt|;
-comment|/* If nothing comes out, don't print anything symbolic.  */
+expr_stmt|;
 if|if
 condition|(
 name|msymbol
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|SYMBOL_VALUE_ADDRESS
+argument_list|(
+name|msymbol
+argument_list|)
+operator|>
+name|name_location
+operator|||
+name|symbol
 operator|==
 name|NULL
 condition|)
-return|return;
+block|{
+comment|/* The msymbol is closer to the address than the symbol; 	     use the msymbol instead.  */
+name|symbol
+operator|=
+literal|0
+expr_stmt|;
+name|symtab
+operator|=
+literal|0
+expr_stmt|;
 name|name_location
 operator|=
 name|SYMBOL_VALUE_ADDRESS
@@ -1950,6 +2017,18 @@ name|msymbol
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|symbol
+operator|==
+name|NULL
+operator|&&
+name|msymbol
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* If the nearest symbol is too far away, don't print anything symbolic.  */
 comment|/* For when CORE_ADDR is larger than unsigned int, we do math in      CORE_ADDR.  But when we detect unsigned wraparound in the      CORE_ADDR math, we ignore this test and print the offset,      because addr+max_symbolic_offset has wrapped through the end      of the address space back to the beginning, giving bogus comparison.  */
 if|if
@@ -2011,11 +2090,9 @@ name|name_location
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Append source filename and line number if desired.  */
+comment|/* Append source filename and line number if desired.  Give specific      line # of this addr, if we have it; else line # of the nearest symbol.  */
 if|if
 condition|(
-name|symbol
-operator|&&
 name|print_symbol_filename
 condition|)
 block|{
@@ -2055,12 +2132,98 @@ operator|.
 name|line
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|symtab
+operator|&&
+name|symbol
+operator|&&
+name|symbol
+operator|->
+name|line
+condition|)
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|" at %s:%d"
+argument_list|,
+name|symtab
+operator|->
+name|filename
+argument_list|,
+name|symbol
+operator|->
+name|line
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|symtab
+condition|)
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|" in %s"
+argument_list|,
+name|symtab
+operator|->
+name|filename
+argument_list|)
+expr_stmt|;
 block|}
 name|fputs_filtered
 argument_list|(
 literal|">"
 argument_list|,
 name|stream
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Print address ADDR on STREAM.  USE_LOCAL means the same thing as for    print_longest.  */
+end_comment
+
+begin_function
+name|void
+name|print_address_numeric
+parameter_list|(
+name|addr
+parameter_list|,
+name|use_local
+parameter_list|,
+name|stream
+parameter_list|)
+name|CORE_ADDR
+name|addr
+decl_stmt|;
+name|int
+name|use_local
+decl_stmt|;
+name|GDB_FILE
+modifier|*
+name|stream
+decl_stmt|;
+block|{
+comment|/* This assumes a CORE_ADDR can fit in a LONGEST.  Probably a safe      assumption.  We pass use_local but I'm not completely sure whether      that is correct.  When (if ever) should we *not* use_local?  */
+name|print_longest
+argument_list|(
+name|stream
+argument_list|,
+literal|'x'
+argument_list|,
+literal|1
+argument_list|,
+operator|(
+name|unsigned
+name|LONGEST
+operator|)
+name|addr
 argument_list|)
 expr_stmt|;
 block|}
@@ -2081,39 +2244,20 @@ parameter_list|)
 name|CORE_ADDR
 name|addr
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
 block|{
-if|#
-directive|if
-literal|0
-operator|&&
-name|defined
+name|print_address_numeric
 argument_list|(
-name|ADDR_BITS_REMOVE
-argument_list|)
-comment|/* This is wrong for pointer to char, in which we do want to print      the low bits.  */
-block|fprintf_filtered (stream, local_hex_format(), 		    (unsigned long) ADDR_BITS_REMOVE(addr));
-else|#
-directive|else
-name|fprintf_filtered
-argument_list|(
-name|stream
-argument_list|,
-name|local_hex_format
-argument_list|()
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|addr
+argument_list|,
+literal|1
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|print_address_symbolic
 argument_list|(
 name|addr
@@ -2145,7 +2289,7 @@ parameter_list|)
 name|CORE_ADDR
 name|addr
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -2174,18 +2318,13 @@ condition|(
 name|addressprint
 condition|)
 block|{
-name|fprintf_filtered
+name|print_address_numeric
 argument_list|(
-name|stream
-argument_list|,
-name|local_hex_format
-argument_list|()
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|addr
+argument_list|,
+literal|1
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 name|print_address_symbolic
@@ -2261,7 +2400,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Examine data at address ADDR in format FMT.    Fetch it from memory and print on stdout.  */
+comment|/* Examine data at address ADDR in format FMT.    Fetch it from memory and print on gdb_stdout.  */
 end_comment
 
 begin_function
@@ -2442,7 +2581,7 @@ name|print_address
 argument_list|(
 name|next_address
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|printf_filtered
@@ -2505,9 +2644,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -2639,7 +2778,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|register
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
 name|struct
@@ -2814,7 +2953,7 @@ name|TYPE_CODE_UNION
 operator|)
 condition|)
 block|{
-name|value
+name|value_ptr
 name|v
 decl_stmt|;
 name|v
@@ -2892,9 +3031,34 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|histindex
+operator|>=
+literal|0
+condition|)
+name|annotate_value_history_begin
+argument_list|(
+name|histindex
+argument_list|,
+name|VALUE_TYPE
+argument_list|(
+name|val
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|annotate_value_begin
+argument_list|(
+name|VALUE_TYPE
+argument_list|(
+name|val
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|inspect
 condition|)
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"\031(gdb-makebuffer \"%s\"  %d '(\""
 argument_list|,
@@ -2917,6 +3081,15 @@ argument_list|,
 name|histindex
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|histindex
+operator|>=
+literal|0
+condition|)
+name|annotate_value_history_value
+argument_list|()
+expr_stmt|;
 name|print_formatted
 argument_list|(
 name|val
@@ -2935,9 +3108,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|histindex
+operator|>=
+literal|0
+condition|)
+name|annotate_value_history_end
+argument_list|()
+expr_stmt|;
+else|else
+name|annotate_value_end
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|inspect
 condition|)
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"\") )\030"
 argument_list|)
@@ -3110,7 +3296,7 @@ init|=
 literal|0
 decl_stmt|;
 specifier|register
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
 name|struct
@@ -3180,6 +3366,14 @@ argument_list|(
 name|expr
 argument_list|)
 expr_stmt|;
+name|annotate_value_begin
+argument_list|(
+name|VALUE_TYPE
+argument_list|(
+name|val
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|print_formatted
 argument_list|(
 name|val
@@ -3190,6 +3384,9 @@ name|fmt
 operator|.
 name|size
 argument_list|)
+expr_stmt|;
+name|annotate_value_end
+argument_list|()
 expr_stmt|;
 name|do_cleanups
 argument_list|(
@@ -3348,11 +3545,27 @@ condition|(
 name|is_a_field_of_this
 condition|)
 block|{
-name|printf
+name|printf_filtered
 argument_list|(
-literal|"Symbol \"%s\" is a field of the local class variable `this'\n"
+literal|"Symbol \""
+argument_list|)
+expr_stmt|;
+name|fprintf_symbol_filtered
+argument_list|(
+name|gdb_stdout
 argument_list|,
 name|exp
+argument_list|,
+name|current_language
+operator|->
+name|la_language
+argument_list|,
+name|DMGL_ANSI
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"\" is a field of the local class variable `this'\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3377,25 +3590,48 @@ name|msymbol
 operator|!=
 name|NULL
 condition|)
-name|printf
+block|{
+name|printf_filtered
 argument_list|(
-literal|"Symbol \"%s\" is at %s in a file compiled without debugging.\n"
+literal|"Symbol \""
+argument_list|)
+expr_stmt|;
+name|fprintf_symbol_filtered
+argument_list|(
+name|gdb_stdout
 argument_list|,
 name|exp
 argument_list|,
-name|local_hex_string
+name|current_language
+operator|->
+name|la_language
+argument_list|,
+name|DMGL_ANSI
+argument_list|)
+expr_stmt|;
+name|printf_filtered
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
+literal|"\" is at "
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
+argument_list|(
 name|SYMBOL_VALUE_ADDRESS
 argument_list|(
 name|msymbol
 argument_list|)
-argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|" in a file compiled without debugging.\n"
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|error
 argument_list|(
@@ -3406,9 +3642,30 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|printf_filtered
 argument_list|(
-literal|"Symbol \"%s\" is "
+literal|"Symbol \""
+argument_list|)
+expr_stmt|;
+name|fprintf_symbol_filtered
+argument_list|(
+name|gdb_stdout
+argument_list|,
+name|SYMBOL_NAME
+argument_list|(
+name|sym
+argument_list|)
+argument_list|,
+name|current_language
+operator|->
+name|la_language
+argument_list|,
+name|DMGL_ANSI
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"\" is "
 argument_list|,
 name|SYMBOL_NAME
 argument_list|(
@@ -3444,7 +3701,7 @@ case|:
 case|case
 name|LOC_CONST_BYTES
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
 literal|"constant"
 argument_list|)
@@ -3453,28 +3710,28 @@ break|break;
 case|case
 name|LOC_LABEL
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
-literal|"a label at address %s"
-argument_list|,
-name|local_hex_string
+literal|"a label at address "
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|SYMBOL_VALUE_ADDRESS
 argument_list|(
 name|sym
 argument_list|)
-argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|LOC_REGISTER
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
 literal|"a variable in register %s"
 argument_list|,
@@ -3488,28 +3745,28 @@ break|break;
 case|case
 name|LOC_STATIC
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
-literal|"static storage at address %s"
-argument_list|,
-name|local_hex_string
+literal|"static storage at address "
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|SYMBOL_VALUE_ADDRESS
 argument_list|(
 name|sym
 argument_list|)
-argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|LOC_REGPARM
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
 literal|"an argument in register %s"
 argument_list|,
@@ -3523,7 +3780,7 @@ break|break;
 case|case
 name|LOC_REGPARM_ADDR
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
 literal|"address of an argument in register %s"
 argument_list|,
@@ -3537,7 +3794,7 @@ break|break;
 case|case
 name|LOC_ARG
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
 literal|"an argument at offset %ld"
 argument_list|,
@@ -3548,7 +3805,7 @@ break|break;
 case|case
 name|LOC_LOCAL_ARG
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
 literal|"an argument at frame offset %ld"
 argument_list|,
@@ -3559,7 +3816,7 @@ break|break;
 case|case
 name|LOC_LOCAL
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
 literal|"a local variable at frame offset %ld"
 argument_list|,
@@ -3570,7 +3827,7 @@ break|break;
 case|case
 name|LOC_REF_ARG
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
 literal|"a reference argument at offset %ld"
 argument_list|,
@@ -3581,7 +3838,7 @@ break|break;
 case|case
 name|LOC_BASEREG
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
 literal|"a variable at offset %ld from register %s"
 argument_list|,
@@ -3597,7 +3854,7 @@ break|break;
 case|case
 name|LOC_BASEREG_ARG
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
 literal|"an argument at offset %ld from register %s"
 argument_list|,
@@ -3613,7 +3870,7 @@ break|break;
 case|case
 name|LOC_TYPEDEF
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
 literal|"a typedef"
 argument_list|)
@@ -3622,16 +3879,13 @@ break|break;
 case|case
 name|LOC_BLOCK
 case|:
-name|printf
+name|printf_filtered
 argument_list|(
-literal|"a function at address %s"
-argument_list|,
-name|local_hex_string
+literal|"a function at address "
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|BLOCK_START
 argument_list|(
 name|SYMBOL_BLOCK_VALUE
@@ -3639,7 +3893,10 @@ argument_list|(
 name|sym
 argument_list|)
 argument_list|)
-argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3653,14 +3910,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|printf_filtered
 argument_list|(
 literal|"of unknown (botched) type"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|printf_filtered
 argument_list|(
 literal|".\n"
 argument_list|)
@@ -4566,13 +4823,24 @@ name|d
 operator|->
 name|number
 expr_stmt|;
+name|annotate_display_begin
+argument_list|()
+expr_stmt|;
 name|printf_filtered
 argument_list|(
-literal|"%d: "
+literal|"%d"
 argument_list|,
 name|d
 operator|->
 name|number
+argument_list|)
+expr_stmt|;
+name|annotate_display_number_end
+argument_list|()
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|": "
 argument_list|)
 expr_stmt|;
 if|if
@@ -4587,6 +4855,9 @@ block|{
 name|CORE_ADDR
 name|addr
 decl_stmt|;
+name|annotate_display_format
+argument_list|()
+expr_stmt|;
 name|printf_filtered
 argument_list|(
 literal|"x/"
@@ -4658,14 +4929,20 @@ argument_list|(
 literal|" "
 argument_list|)
 expr_stmt|;
+name|annotate_display_expression
+argument_list|()
+expr_stmt|;
 name|print_expression
 argument_list|(
 name|d
 operator|->
 name|exp
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
+expr_stmt|;
+name|annotate_display_expression_end
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4717,6 +4994,9 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+name|annotate_display_value
+argument_list|()
+expr_stmt|;
 name|do_examine
 argument_list|(
 name|d
@@ -4729,6 +5009,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|annotate_display_format
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|d
@@ -4748,19 +5031,28 @@ operator|.
 name|format
 argument_list|)
 expr_stmt|;
+name|annotate_display_expression
+argument_list|()
+expr_stmt|;
 name|print_expression
 argument_list|(
 name|d
 operator|->
 name|exp
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
+expr_stmt|;
+name|annotate_display_expression_end
+argument_list|()
 expr_stmt|;
 name|printf_filtered
 argument_list|(
 literal|" = "
 argument_list|)
+expr_stmt|;
+name|annotate_display_expression
+argument_list|()
 expr_stmt|;
 name|print_formatted
 argument_list|(
@@ -4790,9 +5082,12 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|fflush
+name|annotate_display_end
+argument_list|()
+expr_stmt|;
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|current_display_number
@@ -4891,7 +5186,7 @@ name|disabled
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"No display number %d.\n"
 argument_list|,
@@ -4918,9 +5213,9 @@ argument_list|(
 name|current_display_number
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"Disabling display %d to avoid infinite recursion.\n"
 argument_list|,
@@ -4964,7 +5259,7 @@ condition|(
 operator|!
 name|display_chain
 condition|)
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"There are no auto-display expressions now.\n"
 argument_list|)
@@ -5066,7 +5361,7 @@ name|d
 operator|->
 name|exp
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 if|if
@@ -5096,9 +5391,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -5258,7 +5553,7 @@ goto|goto
 name|win
 goto|;
 block|}
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"No display number %d.\n"
 argument_list|,
@@ -5459,12 +5754,12 @@ decl_stmt|;
 name|FRAME
 name|frame
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
 block|{
-name|value
+name|value_ptr
 name|val
 init|=
 name|read_var_value
@@ -5521,7 +5816,7 @@ decl_stmt|;
 name|int
 name|num
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -5554,7 +5849,7 @@ modifier|*
 name|sym
 decl_stmt|;
 specifier|register
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
 comment|/* Offset of next stack argument beyond the one we have seen that is      at the highest offset.      -1 if we haven't come to a stack argument yet.  */
@@ -5736,7 +6031,7 @@ comment|/* Other types of symbols we just skip over.  */
 default|default:
 continue|continue;
 block|}
-comment|/* We have to look up the symbol because arguments can have 	 two entries (one a parameter, one a local) and the one we 	 want is the local, which lookup_symbol will find for us. 	 This includes gcc1 (not gcc2) on the sparc when passing a 	 small structure and gcc2 when the argument type is float 	 and it is passed as a double and converted to float by 	 the prologue (in the latter case the type of the LOC_ARG 	 symbol is double and the type of the LOC_LOCAL symbol is 	 float).  There are also LOC_ARG/LOC_REGISTER pairs which 	 are not combined in symbol-reading.  */
+comment|/* We have to look up the symbol because arguments can have 	 two entries (one a parameter, one a local) and the one we 	 want is the local, which lookup_symbol will find for us. 	 This includes gcc1 (not gcc2) on the sparc when passing a 	 small structure and gcc2 when the argument type is float 	 and it is passed as a double and converted to float by 	 the prologue (in the latter case the type of the LOC_ARG 	 symbol is double and the type of the LOC_LOCAL symbol is 	 float).  */
 comment|/* But if the parameter name is null, don't try it. 	 Null parameter names occur on the RS/6000, for traceback tables. 	 FIXME, should we even print them?  */
 if|if
 condition|(
@@ -5746,7 +6041,13 @@ argument_list|(
 name|sym
 argument_list|)
 condition|)
-name|sym
+block|{
+name|struct
+name|symbol
+modifier|*
+name|nsym
+decl_stmt|;
+name|nsym
 operator|=
 name|lookup_symbol
 argument_list|(
@@ -5774,6 +6075,26 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SYMBOL_CLASS
+argument_list|(
+name|nsym
+argument_list|)
+operator|==
+name|LOC_REGISTER
+condition|)
+block|{
+comment|/* There is a LOC_ARG/LOC_REGISTER pair.  This means that 		 it was passed on the stack and loaded into a register, 		 or passed in a register and stored in a stack slot. 		 GDB 3.x used the LOC_ARG; GDB 4.0-4.11 used the LOC_REGISTER.  		 Reasons for using the LOC_ARG: 		 (1) because find_saved_registers may be slow for remote 		 debugging, 		 (2) because registers are often re-used and stack slots 		 rarely (never?) are.  Therefore using the stack slot is 		 much less likely to print garbage.  		 Reasons why we might want to use the LOC_REGISTER: 		 (1) So that the backtrace prints the same value as 		 "print foo".  I see no compelling reason why this needs 		 to be the case; having the backtrace print the value which 		 was passed in, and "print foo" print the value as modified 		 within the called function, makes perfect sense to me.  		 Additional note:  It might be nice if "info args" displayed 		 both values. 		 One more note:  There is a case with sparc structure passing 		 where we need to use the LOC_REGISTER, but this is dealt with 		 by creating a single LOC_REGPARM in symbol reading.  */
+comment|/* Leave sym (the LOC_ARG) alone.  */
+empty_stmt|;
+block|}
+else|else
+name|sym
+operator|=
+name|nsym
+expr_stmt|;
+block|}
 comment|/* Print the current arg.  */
 if|if
 condition|(
@@ -5791,6 +6112,9 @@ name|wrap_here
 argument_list|(
 literal|"    "
 argument_list|)
+expr_stmt|;
+name|annotate_arg_begin
+argument_list|()
 expr_stmt|;
 name|fprintf_symbol_filtered
 argument_list|(
@@ -5811,6 +6135,9 @@ operator||
 name|DMGL_ANSI
 argument_list|)
 expr_stmt|;
+name|annotate_arg_name_end
+argument_list|()
+expr_stmt|;
 name|fputs_filtered
 argument_list|(
 literal|"="
@@ -5828,6 +6155,20 @@ argument_list|,
 name|FRAME_INFO_ID
 argument_list|(
 name|fi
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|annotate_arg_value
+argument_list|(
+name|val
+operator|==
+name|NULL
+condition|?
+name|NULL
+else|:
+name|VALUE_TYPE
+argument_list|(
+name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5870,6 +6211,9 @@ literal|"???"
 argument_list|,
 name|stream
 argument_list|)
+expr_stmt|;
+name|annotate_arg_end
+argument_list|()
 expr_stmt|;
 name|first
 operator|=
@@ -5956,7 +6300,7 @@ decl_stmt|;
 name|int
 name|first
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -6141,7 +6485,7 @@ name|char
 modifier|*
 name|string
 decl_stmt|;
-name|value
+name|value_ptr
 modifier|*
 name|val_args
 decl_stmt|;
@@ -6163,9 +6507,6 @@ name|allocated_args
 init|=
 literal|20
 decl_stmt|;
-name|va_list
-name|args_to_vprintf
-decl_stmt|;
 name|struct
 name|cleanup
 modifier|*
@@ -6174,7 +6515,7 @@ decl_stmt|;
 name|val_args
 operator|=
 operator|(
-name|value
+name|value_ptr
 operator|*
 operator|)
 name|xmalloc
@@ -6183,7 +6524,7 @@ name|allocated_args
 operator|*
 sizeof|sizeof
 argument_list|(
-name|value
+name|value_ptr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6308,6 +6649,50 @@ literal|'\\'
 expr_stmt|;
 break|break;
 case|case
+literal|'a'
+case|:
+ifdef|#
+directive|ifdef
+name|__STDC__
+operator|*
+name|f
+operator|++
+operator|=
+literal|'\a'
+expr_stmt|;
+else|#
+directive|else
+operator|*
+name|f
+operator|++
+operator|=
+literal|'\007'
+expr_stmt|;
+comment|/* Bell */
+endif|#
+directive|endif
+break|break;
+case|case
+literal|'b'
+case|:
+operator|*
+name|f
+operator|++
+operator|=
+literal|'\b'
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+operator|*
+name|f
+operator|++
+operator|=
+literal|'\f'
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 operator|*
@@ -6315,6 +6700,16 @@ name|f
 operator|++
 operator|=
 literal|'\n'
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+operator|*
+name|f
+operator|++
+operator|=
+literal|'\r'
 expr_stmt|;
 break|break;
 case|case
@@ -6328,13 +6723,13 @@ literal|'\t'
 expr_stmt|;
 break|break;
 case|case
-literal|'r'
+literal|'v'
 case|:
 operator|*
 name|f
 operator|++
 operator|=
-literal|'\r'
+literal|'\v'
 expr_stmt|;
 break|break;
 case|case
@@ -6351,7 +6746,9 @@ default|default:
 comment|/* ??? TODO: handle other escape sequences */
 name|error
 argument_list|(
-literal|"Unrecognized \\ escape character in format string."
+literal|"Unrecognized escape character \\%c in format string."
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 block|}
@@ -6450,7 +6847,7 @@ operator|=
 name|substrings
 expr_stmt|;
 block|{
-comment|/* Now scan the string for %-specs and see what kinds of args they want.        argclass[I] classifies the %-specs so we can give vprintf something        of the right size.  */
+comment|/* Now scan the string for %-specs and see what kinds of args they want.        argclass[I] classifies the %-specs so we can give printf_filtered        something of the right size.  */
 enum|enum
 name|argclass
 block|{
@@ -6705,7 +7102,7 @@ condition|)
 name|val_args
 operator|=
 operator|(
-name|value
+name|value_ptr
 operator|*
 operator|)
 name|xrealloc
@@ -6724,7 +7121,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|value
+name|value_ptr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6838,16 +7235,6 @@ condition|)
 name|error
 argument_list|(
 literal|"Wrong number of arguments for specified format-string"
-argument_list|)
-expr_stmt|;
-comment|/* FIXME: We should be using vprintf_filtered, but as long as it        has an arbitrary limit that is unacceptable.  Correct fix is        for vprintf_filtered to scan down the format string so it knows        how big a buffer it needs (perhaps by putting a vasprintf (see        GNU C library) in libiberty).         But for now, just force out any pending output, so at least the output        appears in the correct order.  */
-name|wrap_here
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Now actually print them.  */
@@ -6968,8 +7355,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Don't use printf_filtered because of arbitrary limit.  */
-name|printf
+name|printf_filtered
 argument_list|(
 name|current_substring
 argument_list|,
@@ -6993,8 +7379,7 @@ name|i
 index|]
 argument_list|)
 decl_stmt|;
-comment|/* Don't use printf_filtered because of arbitrary limit.  */
-name|printf
+name|printf_filtered
 argument_list|(
 name|current_substring
 argument_list|,
@@ -7030,8 +7415,7 @@ name|i
 index|]
 argument_list|)
 decl_stmt|;
-comment|/* Don't use printf_filtered because of arbitrary limit.  */
-name|printf
+name|printf_filtered
 argument_list|(
 name|current_substring
 argument_list|,
@@ -7065,8 +7449,7 @@ name|i
 index|]
 argument_list|)
 decl_stmt|;
-comment|/* Don't use printf_filtered because of arbitrary limit.  */
-name|printf
+name|printf_filtered
 argument_list|(
 name|current_substring
 argument_list|,
@@ -7094,8 +7477,7 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* Print the portion of the format string after the last argument.  */
-comment|/* It would be OK to use printf_filtered here.  */
-name|printf
+name|printf_filtered
 argument_list|(
 name|last_arg
 argument_list|)
@@ -7305,30 +7687,35 @@ else|else
 block|{
 name|printf_filtered
 argument_list|(
-literal|"from %s "
-argument_list|,
-name|local_hex_string
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|low
+literal|"from "
 argument_list|)
+expr_stmt|;
+name|print_address_numeric
+argument_list|(
+name|low
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|printf_filtered
 argument_list|(
-literal|"to %s:\n"
-argument_list|,
-name|local_hex_string
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|high
+literal|" to "
 argument_list|)
+expr_stmt|;
+name|print_address_numeric
+argument_list|(
+name|high
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|":\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7351,12 +7738,18 @@ name|print_address
 argument_list|(
 name|pc
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|printf_filtered
 argument_list|(
 literal|":\t"
+argument_list|)
+expr_stmt|;
+comment|/* We often wrap here if there are long symbolic names.  */
+name|wrap_here
+argument_list|(
+literal|"    "
 argument_list|)
 expr_stmt|;
 name|pc
@@ -7365,7 +7758,7 @@ name|print_insn
 argument_list|(
 name|pc
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|printf_filtered
@@ -7379,9 +7772,9 @@ argument_list|(
 literal|"End of assembler dump.\n"
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}

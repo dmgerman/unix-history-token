@@ -31,6 +31,22 @@ directive|include
 file|"gdbcore.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"value.h"
+end_include
+
+begin_comment
+comment|/* For supply_register.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"inferior.h"
+end_include
+
 begin_comment
 comment|/* These are needed on various systems to expand REGISTER_U_ADDR.  */
 end_comment
@@ -121,6 +137,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CORE_REGISTER_ADDR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CORE_REGISTER_ADDR
+parameter_list|(
+name|regno
+parameter_list|,
+name|regptr
+parameter_list|)
+value|register_addr(regno, regptr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CORE_REGISTER_ADDR */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -190,7 +233,12 @@ operator|-
 name|reg_addr
 expr_stmt|;
 comment|/* Original u.u_ar0 is -reg_addr. */
-comment|/* If u.u_ar0 was an absolute address in the core file, relativize it now,      so we can use it as an offset into core_reg_sect.  When we're done,      "register 0" will be at core_reg_sect+reg_ptr, and we can use      register_addr to offset to the other registers.  If this is a modern      core file without a upage, reg_ptr will be zero and this is all a big      NOP.  */
+name|int
+name|numregs
+init|=
+name|ARCH_NUM_REGS
+decl_stmt|;
+comment|/* If u.u_ar0 was an absolute address in the core file, relativize it now,      so we can use it as an offset into core_reg_sect.  When we're done,      "register 0" will be at core_reg_sect+reg_ptr, and we can use      CORE_REGISTER_ADDR to offset to the other registers.  If this is a modern      core file without a upage, reg_ptr will be zero and this is all a big      NOP.  */
 if|if
 condition|(
 name|reg_ptr
@@ -209,7 +257,7 @@ literal|0
 init|;
 name|regno
 operator|<
-name|NUM_REGS
+name|numregs
 condition|;
 name|regno
 operator|++
@@ -217,7 +265,7 @@ control|)
 block|{
 name|addr
 operator|=
-name|register_addr
+name|CORE_REGISTER_ADDR
 argument_list|(
 name|regno
 argument_list|,
@@ -313,7 +361,7 @@ literal|0
 operator|||
 name|regno
 operator|>=
-name|NUM_REGS
+name|ARCH_NUM_REGS
 condition|)
 name|error
 argument_list|(

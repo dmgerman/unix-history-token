@@ -203,7 +203,7 @@ name|enum
 name|language
 name|la_language
 decl_stmt|;
-comment|/* Its builtin types */
+comment|/* Its builtin types.  This is a vector ended by a NULL pointer.  These      types can be specified by name in parsing types in expressions,      regardless of whether the program being debugged actually defines      such a type.  */
 name|struct
 name|type
 modifier|*
@@ -256,7 +256,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -268,7 +268,7 @@ argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|char
@@ -314,7 +314,7 @@ operator|,
 name|char
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -340,7 +340,7 @@ operator|*
 operator|,
 name|CORE_ADDR
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -354,20 +354,28 @@ name|val_prettyprint
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Longest signed integral type */
-name|struct
-name|type
-modifier|*
-modifier|*
-name|la_longest_int
-decl_stmt|;
-comment|/* Longest unsigned integral type */
-name|struct
-name|type
-modifier|*
-modifier|*
-name|la_longest_unsigned_int
-decl_stmt|;
+comment|/* Print a top-level value using syntax appropriate for this language. */
+name|int
+argument_list|(
+argument|*la_value_print
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|value
+operator|*
+operator|,
+name|GDB_FILE
+operator|*
+operator|,
+name|int
+operator|,
+expr|enum
+name|val_prettyprint
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Longest floating point type */
 name|struct
 name|type
@@ -548,22 +556,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|longest_int
-parameter_list|()
-value|(*current_language->la_longest_int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|longest_unsigned_int
-parameter_list|()
-value|(*current_language->la_longest_unsigned_int)
-end_define
-
-begin_define
-define|#
-directive|define
 name|longest_float
 parameter_list|()
 value|(*current_language->la_longest_float)
@@ -624,6 +616,23 @@ name|pretty
 parameter_list|)
 define|\
 value|(current_language->la_val_print(type,valaddr,addr,stream,fmt,deref, \ 				  recurse,pretty))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_VALUE_PRINT
+parameter_list|(
+name|val
+parameter_list|,
+name|stream
+parameter_list|,
+name|fmt
+parameter_list|,
+name|pretty
+parameter_list|)
+define|\
+value|(current_language->la_value_print(val,stream,fmt,pretty))
 end_define
 
 begin_comment

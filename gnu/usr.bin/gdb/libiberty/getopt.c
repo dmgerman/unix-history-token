@@ -1,10 +1,31 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Getopt for GNU.    NOTE: getopt is now part of the C library, so if you don't know what    "Keep this file name-space clean" means, talk to roland@gnu.ai.mit.edu    before changing it!     Copyright (C) 1987, 88, 89, 90, 91, 92, 1993    	Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU Library General Public License for more details.     You should have received a copy of the GNU Library General Public License    along with this program; if not, write to the Free Software    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Getopt for GNU.    NOTE: getopt is now part of the C library, so if you don't know what    "Keep this file name-space clean" means, talk to roland@gnu.ai.mit.edu    before changing it!     Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94    	Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU Library General Public License for more details.     You should have received a copy of the GNU Library General Public License    along with this program; if not, write to the Free Software    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/* This tells Alpha OSF/1 not to define a getopt prototype in<stdio.h>.    Ditto for AIX 3.2 and<stdlib.h>.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NO_PROTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NO_PROTO
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -12,11 +33,45 @@ directive|ifdef
 name|HAVE_CONFIG_H
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|emacs
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_BROKETS
+argument_list|)
+end_if
+
+begin_comment
+comment|/* We use<config.h> instead of "config.h" so that a compilation    using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h    (which it would do because it found this file in $srcdir).  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|"config.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -49,27 +104,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* This tells Alpha OSF/1 not to define a getopt prototype in<stdio.h>.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_NO_PROTO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_NO_PROTO
-end_define
 
 begin_endif
 endif|#
@@ -131,14 +165,6 @@ comment|/* GNU C library.  */
 end_comment
 
 begin_comment
-comment|/* If GETOPT_COMPAT is defined, `+' as well as `--' can introduce a    long-named option.  Because this is not POSIX.2 compliant, it is    being phased out.  */
-end_comment
-
-begin_comment
-comment|/* #define GETOPT_COMPAT */
-end_comment
-
-begin_comment
 comment|/* This version of `getopt' appears to the caller like standard Unix `getopt'    but it behaves differently for the user, since it allows the user    to intersperse the options with the other arguments.     As `getopt' works, it permutes the elements of ARGV so that,    when it is done, all the options precede everything else.  Thus    all application programs are extended to handle flexible argument order.     Setting the environment variable POSIXLY_CORRECT disables permutation.    Then the behavior is completely standard.     GNU application programs can use a third alternative mode in which    they can distinguish the relative order of options and other arguments.  */
 end_comment
 
@@ -157,7 +183,7 @@ name|char
 modifier|*
 name|optarg
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -324,7 +350,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* If using GCC, we can safely declare strlen this way.    If not using GCC, it is ok not to declare it.    (Supposedly there are some machines where it might get a warning,    but changing this conditional to __STDC__ is too risky.)  */
+comment|/* If using GCC, we can safely declare strlen this way.    If not using GCC, it is ok not to declare it.  */
 end_comment
 
 begin_ifdef
@@ -333,37 +359,23 @@ directive|ifdef
 name|__GNUC__
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IN_GCC
-end_ifdef
+begin_comment
+comment|/* Note that Motorola Delta 68k R3V7 comes with GCC but not stddef.h.    That was relevant to code that was here before.  */
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"gstddef.h"
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* gcc with -traditional declares the built-in strlen to return int,    and has done so at least since version 2.4.5. -- rms.  */
+end_comment
 
 begin_function_decl
 specifier|extern
-name|size_t
+name|int
 name|strlen
 parameter_list|(
 specifier|const
@@ -378,13 +390,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* not __STDC__ */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* GNU C library.  */
+comment|/* __GNUC__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not __GNU_LIBRARY__ */
 end_comment
 
 begin_escape
@@ -634,72 +659,26 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* Scan elements of ARGV (whose length is ARGC) for option characters    given in OPTSTRING.     If an element of ARGV starts with '-', and is not exactly "-" or "--",    then it is an option element.  The characters of this element    (aside from the initial '-') are option characters.  If `getopt'    is called repeatedly, it returns successively each of the option characters    from each of the option elements.     If `getopt' finds another option character, it returns that character,    updating `optind' and `nextchar' so that the next call to `getopt' can    resume the scan with the following option character or ARGV-element.     If there are no more option characters, `getopt' returns `EOF'.    Then `optind' is the index in ARGV of the first ARGV-element    that is not an option.  (The ARGV-elements have been permuted    so that those that are not options now come last.)     OPTSTRING is a string containing the legitimate option characters.    If an option character is seen that is not listed in OPTSTRING,    return '?' after printing an error message.  If you set `opterr' to    zero, the error message is suppressed but we still return '?'.     If a char in OPTSTRING is followed by a colon, that means it wants an arg,    so the following text in the same ARGV-element, or the text of the following    ARGV-element, is returned in `optarg'.  Two colons mean an option that    wants an optional arg; if there is text in the current ARGV-element,    it is returned in `optarg', otherwise `optarg' is set to zero.     If OPTSTRING starts with `-' or `+', it requests different methods of    handling the non-option ARGV-elements.    See the comments about RETURN_IN_ORDER and REQUIRE_ORDER, above.     Long-named options begin with `--' instead of `-'.    Their names may be abbreviated as long as the abbreviation is unique    or is an exact match for some defined option.  If they have an    argument, it follows the option name in the same ARGV-element, separated    from the option name by a `=', or else the in next ARGV-element.    When `getopt' finds a long-named option, it returns 0 if that option's    `flag' field is nonzero, the value of the option's `val' field    if the `flag' field is zero.     The elements of ARGV aren't really const, because we permute them.    But we pretend they're const in the prototype to be compatible    with other systems.     LONGOPTS is a vector of `struct option' terminated by an    element containing a name which is zero.     LONGIND returns the index in LONGOPT of the long-named option found.    It is only valid when a long-named option has been found by the most    recent call.     If LONG_ONLY is nonzero, '-' as well as '--' can introduce    long-named options.  */
+comment|/* Initialize the internal data when the first call is made.  */
 end_comment
 
 begin_function
-name|int
-name|_getopt_internal
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|_getopt_initialize
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|,
 name|optstring
-parameter_list|,
-name|longopts
-parameter_list|,
-name|longind
-parameter_list|,
-name|long_only
 parameter_list|)
-name|int
-name|argc
-decl_stmt|;
-name|char
-modifier|*
-specifier|const
-modifier|*
-name|argv
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|optstring
 decl_stmt|;
-specifier|const
-name|struct
-name|option
-modifier|*
-name|longopts
-decl_stmt|;
-name|int
-modifier|*
-name|longind
-decl_stmt|;
-name|int
-name|long_only
-decl_stmt|;
 block|{
-name|int
-name|option_index
-decl_stmt|;
-name|optarg
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Initialize the internal data when the first call is made.      Start processing options with ARGV-element 1 (since ARGV-element 0      is the program name); the sequence of previously skipped      non-option ARGV-elements is empty.  */
-if|if
-condition|(
-name|optind
-operator|==
-literal|0
-condition|)
-block|{
+comment|/* Start processing options with ARGV-element 1 (since ARGV-element 0      is the program name); the sequence of previously skipped      non-option ARGV-elements is empty.  */
 name|first_nonopt
 operator|=
 name|last_nonopt
@@ -769,7 +748,80 @@ name|ordering
 operator|=
 name|PERMUTE
 expr_stmt|;
+return|return
+name|optstring
+return|;
 block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Scan elements of ARGV (whose length is ARGC) for option characters    given in OPTSTRING.     If an element of ARGV starts with '-', and is not exactly "-" or "--",    then it is an option element.  The characters of this element    (aside from the initial '-') are option characters.  If `getopt'    is called repeatedly, it returns successively each of the option characters    from each of the option elements.     If `getopt' finds another option character, it returns that character,    updating `optind' and `nextchar' so that the next call to `getopt' can    resume the scan with the following option character or ARGV-element.     If there are no more option characters, `getopt' returns `EOF'.    Then `optind' is the index in ARGV of the first ARGV-element    that is not an option.  (The ARGV-elements have been permuted    so that those that are not options now come last.)     OPTSTRING is a string containing the legitimate option characters.    If an option character is seen that is not listed in OPTSTRING,    return '?' after printing an error message.  If you set `opterr' to    zero, the error message is suppressed but we still return '?'.     If a char in OPTSTRING is followed by a colon, that means it wants an arg,    so the following text in the same ARGV-element, or the text of the following    ARGV-element, is returned in `optarg'.  Two colons mean an option that    wants an optional arg; if there is text in the current ARGV-element,    it is returned in `optarg', otherwise `optarg' is set to zero.     If OPTSTRING starts with `-' or `+', it requests different methods of    handling the non-option ARGV-elements.    See the comments about RETURN_IN_ORDER and REQUIRE_ORDER, above.     Long-named options begin with `--' instead of `-'.    Their names may be abbreviated as long as the abbreviation is unique    or is an exact match for some defined option.  If they have an    argument, it follows the option name in the same ARGV-element, separated    from the option name by a `=', or else the in next ARGV-element.    When `getopt' finds a long-named option, it returns 0 if that option's    `flag' field is nonzero, the value of the option's `val' field    if the `flag' field is zero.     The elements of ARGV aren't really const, because we permute them.    But we pretend they're const in the prototype to be compatible    with other systems.     LONGOPTS is a vector of `struct option' terminated by an    element containing a name which is zero.     LONGIND returns the index in LONGOPT of the long-named option found.    It is only valid when a long-named option has been found by the most    recent call.     If LONG_ONLY is nonzero, '-' as well as '--' can introduce    long-named options.  */
+end_comment
+
+begin_function
+name|int
+name|_getopt_internal
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|,
+name|optstring
+parameter_list|,
+name|longopts
+parameter_list|,
+name|longind
+parameter_list|,
+name|long_only
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|argv
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|optstring
+decl_stmt|;
+specifier|const
+name|struct
+name|option
+modifier|*
+name|longopts
+decl_stmt|;
+name|int
+modifier|*
+name|longind
+decl_stmt|;
+name|int
+name|long_only
+decl_stmt|;
+block|{
+name|optarg
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|optind
+operator|==
+literal|0
+condition|)
+name|optstring
+operator|=
+name|_getopt_initialize
+argument_list|(
+name|optstring
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nextchar
@@ -782,6 +834,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
+comment|/* Advance to the next ARGV-element.  */
 if|if
 condition|(
 name|ordering
@@ -821,7 +874,7 @@ name|first_nonopt
 operator|=
 name|optind
 expr_stmt|;
-comment|/* Now skip any additional non-options 	     and extend the range of non-options previously skipped.  */
+comment|/* Skip any additional non-options 	     and extend the range of non-options previously skipped.  */
 while|while
 condition|(
 name|optind
@@ -849,38 +902,6 @@ index|]
 operator|==
 literal|'\0'
 operator|)
-ifdef|#
-directive|ifdef
-name|GETOPT_COMPAT
-operator|&&
-operator|(
-name|longopts
-operator|==
-name|NULL
-operator|||
-name|argv
-index|[
-name|optind
-index|]
-index|[
-literal|0
-index|]
-operator|!=
-literal|'+'
-operator|||
-name|argv
-index|[
-name|optind
-index|]
-index|[
-literal|1
-index|]
-operator|==
-literal|'\0'
-operator|)
-endif|#
-directive|endif
-comment|/* GETOPT_COMPAT */
 condition|)
 name|optind
 operator|++
@@ -890,7 +911,7 @@ operator|=
 name|optind
 expr_stmt|;
 block|}
-comment|/* Special ARGV-element `--' means premature end of options. 	 Skip it like a null option, 	 then exchange with previous non-options as if it were an option, 	 then skip everything else like a non-option.  */
+comment|/* The special ARGV-element `--' means premature end of options. 	 Skip it like a null option, 	 then exchange with previous non-options as if it were an option, 	 then skip everything else like a non-option.  */
 if|if
 condition|(
 name|optind
@@ -999,38 +1020,6 @@ index|]
 operator|==
 literal|'\0'
 operator|)
-ifdef|#
-directive|ifdef
-name|GETOPT_COMPAT
-operator|&&
-operator|(
-name|longopts
-operator|==
-name|NULL
-operator|||
-name|argv
-index|[
-name|optind
-index|]
-index|[
-literal|0
-index|]
-operator|!=
-literal|'+'
-operator|||
-name|argv
-index|[
-name|optind
-index|]
-index|[
-literal|1
-index|]
-operator|==
-literal|'\0'
-operator|)
-endif|#
-directive|endif
-comment|/* GETOPT_COMPAT */
 condition|)
 block|{
 if|if
@@ -1054,7 +1043,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* We have found another option-ARGV-element. 	 Start decoding its characters.  */
+comment|/* We have found another option-ARGV-element. 	 Skip the initial punctuation.  */
 name|nextchar
 operator|=
 operator|(
@@ -1083,23 +1072,13 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
+comment|/* Decode the current option-ARGV-element.  */
+comment|/* Check whether the ARGV-element is a long option.       If long_only and the ARGV-element has the form "-f", where f is      a valid short option, don't consider it an abbreviated form of      a long option that starts with f.  Otherwise there would be no      way to give the -f short option.       On the other hand, if there's a long option "fubar" and      the ARGV-element is "-fu", do consider that an abbreviation of      the long option, just like "--fu", and not "-f" with arg "u".       This distinction seems to be the most useful approach.  */
 if|if
 condition|(
 name|longopts
 operator|!=
 name|NULL
-operator|&&
-operator|(
-operator|(
-name|argv
-index|[
-name|optind
-index|]
-index|[
-literal|0
-index|]
-operator|==
-literal|'-'
 operator|&&
 operator|(
 name|argv
@@ -1112,39 +1091,53 @@ index|]
 operator|==
 literal|'-'
 operator|||
+operator|(
 name|long_only
-operator|)
-operator|)
-ifdef|#
-directive|ifdef
-name|GETOPT_COMPAT
-operator|||
+operator|&&
+operator|(
 name|argv
 index|[
 name|optind
 index|]
 index|[
-literal|0
+literal|2
 index|]
-operator|==
-literal|'+'
-endif|#
-directive|endif
-comment|/* GETOPT_COMPAT */
+operator|||
+operator|!
+name|my_index
+argument_list|(
+name|optstring
+argument_list|,
+name|argv
+index|[
+name|optind
+index|]
+index|[
+literal|1
+index|]
+argument_list|)
+operator|)
+operator|)
 operator|)
 condition|)
 block|{
+name|char
+modifier|*
+name|nameend
+decl_stmt|;
 specifier|const
 name|struct
 name|option
 modifier|*
 name|p
 decl_stmt|;
-name|char
+specifier|const
+name|struct
+name|option
 modifier|*
-name|s
+name|pfound
 init|=
-name|nextchar
+name|NULL
 decl_stmt|;
 name|int
 name|exact
@@ -1156,31 +1149,32 @@ name|ambig
 init|=
 literal|0
 decl_stmt|;
-specifier|const
-name|struct
-name|option
-modifier|*
-name|pfound
-init|=
-name|NULL
-decl_stmt|;
 name|int
 name|indfound
 decl_stmt|;
-while|while
-condition|(
+name|int
+name|option_index
+decl_stmt|;
+for|for
+control|(
+name|nameend
+operator|=
+name|nextchar
+init|;
 operator|*
-name|s
+name|nameend
 operator|&&
 operator|*
-name|s
+name|nameend
 operator|!=
 literal|'='
-condition|)
-name|s
+condition|;
+name|nameend
 operator|++
-expr_stmt|;
-comment|/* Test all options for either exact match or abbreviated matches.  */
+control|)
+comment|/* Do nothing.  */
+empty_stmt|;
+comment|/* Test all long options for either exact match 	 or abbreviated matches.  */
 for|for
 control|(
 name|p
@@ -1212,7 +1206,7 @@ name|name
 argument_list|,
 name|nextchar
 argument_list|,
-name|s
+name|nameend
 operator|-
 name|nextchar
 argument_list|)
@@ -1220,7 +1214,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|s
+name|nameend
 operator|-
 name|nextchar
 operator|==
@@ -1266,7 +1260,7 @@ name|option_index
 expr_stmt|;
 block|}
 else|else
-comment|/* Second nonexact match found.  */
+comment|/* Second or later nonexact match found.  */
 name|ambig
 operator|=
 literal|1
@@ -1332,7 +1326,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|s
+name|nameend
 condition|)
 block|{
 comment|/* Don't test has_arg with>, because some C compilers don't 		 allow it to be used on enums.  */
@@ -1344,7 +1338,7 @@ name|has_arg
 condition|)
 name|optarg
 operator|=
-name|s
+name|nameend
 operator|+
 literal|1
 expr_stmt|;
@@ -1558,22 +1552,6 @@ literal|1
 index|]
 operator|==
 literal|'-'
-ifdef|#
-directive|ifdef
-name|GETOPT_COMPAT
-operator|||
-name|argv
-index|[
-name|optind
-index|]
-index|[
-literal|0
-index|]
-operator|==
-literal|'+'
-endif|#
-directive|endif
-comment|/* GETOPT_COMPAT */
 operator|||
 name|my_index
 argument_list|(
@@ -1659,7 +1637,7 @@ literal|'?'
 return|;
 block|}
 block|}
-comment|/* Look at and handle the next option-character.  */
+comment|/* Look at and handle the next short option-character.  */
 block|{
 name|char
 name|c
@@ -1706,12 +1684,6 @@ condition|(
 name|opterr
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|if (c< 040 || c>= 0177) 	      fprintf (stderr, "%s: unrecognized option, character code 0%o\n", 		       argv[0], c); 	    else 	      fprintf (stderr, "%s: unrecognized option `-%c'\n", argv[0], c);
-else|#
-directive|else
 comment|/* 1003.2 specifies the format of this message.  */
 name|fprintf
 argument_list|(
@@ -1727,8 +1699,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|optopt
 operator|=
@@ -1778,7 +1748,7 @@ block|}
 else|else
 name|optarg
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|nextchar
 operator|=
@@ -1818,12 +1788,6 @@ condition|(
 name|opterr
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|fprintf (stderr, "%s: option `-%c' requires an argument\n", 			     argv[0], c);
-else|#
-directive|else
 comment|/* 1003.2 specifies the format of this message.  */
 name|fprintf
 argument_list|(
@@ -1839,8 +1803,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|optopt
 operator|=

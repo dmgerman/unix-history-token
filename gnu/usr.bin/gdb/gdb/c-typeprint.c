@@ -110,17 +110,6 @@ file|<errno.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|demangle
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* whether to print C++ syms raw or source-form */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|void
 name|c_type_print_args
@@ -131,7 +120,7 @@ expr|struct
 name|type
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -149,7 +138,7 @@ expr|struct
 name|type
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -169,7 +158,7 @@ name|cp_type_print_derivation_info
 name|PARAMS
 argument_list|(
 operator|(
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 expr|struct
@@ -190,7 +179,7 @@ expr|struct
 name|type
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -211,7 +200,7 @@ expr|struct
 name|type
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -249,7 +238,7 @@ name|symbol
 modifier|*
 name|new
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -469,7 +458,7 @@ name|char
 modifier|*
 name|varstring
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -652,7 +641,7 @@ decl_stmt|;
 name|int
 name|staticp
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -802,7 +791,7 @@ name|stream
 parameter_list|,
 name|type
 parameter_list|)
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -943,7 +932,7 @@ name|type
 modifier|*
 name|type
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1098,7 +1087,7 @@ if|if
 condition|(
 name|passed_a_ptr
 condition|)
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
 name|stream
 argument_list|,
@@ -1299,7 +1288,7 @@ name|type
 modifier|*
 name|type
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1482,7 +1471,7 @@ name|type
 modifier|*
 name|type
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1712,22 +1701,6 @@ break|break;
 case|case
 name|TYPE_CODE_FUNC
 case|:
-name|c_type_print_varspec_suffix
-argument_list|(
-name|TYPE_TARGET_TYPE
-argument_list|(
-name|type
-argument_list|)
-argument_list|,
-name|stream
-argument_list|,
-literal|0
-argument_list|,
-name|passed_a_ptr
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|passed_a_ptr
@@ -1749,6 +1722,22 @@ argument_list|(
 name|stream
 argument_list|,
 literal|"()"
+argument_list|)
+expr_stmt|;
+name|c_type_print_varspec_suffix
+argument_list|(
+name|TYPE_TARGET_TYPE
+argument_list|(
+name|type
+argument_list|)
+argument_list|,
+name|stream
+argument_list|,
+literal|0
+argument_list|,
+name|passed_a_ptr
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1801,7 +1790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print the name of the type (or the ultimate pointer target,    function value or array element), or the description of a    structure or union.     SHOW positive means print details about the type (e.g. enum values),    and print structure elements passing SHOW - 1 for show.    SHOW zero means just print the type name or struct tag if there is one.    If there is no name, print something sensible but concise like    "struct {...}".    SHOW negative means the same things as SHOW zero.  The difference is that    zero is used for printing structure elements and -1 is used for the    "whatis" command.  But I don't see any need to distinguish.     LEVEL is the number of spaces to indent by.    We increase it for some recursive calls.  */
+comment|/* Print the name of the type (or the ultimate pointer target,    function value or array element), or the description of a    structure or union.     SHOW positive means print details about the type (e.g. enum values),    and print structure elements passing SHOW - 1 for show.    SHOW negative means just print the type name or struct tag if there is one.    If there is no name, print something sensible but concise like    "struct {...}".    SHOW zero means just print the type name or struct tag if there is one.    If there is no name, print something sensible but not as concise like    "struct {int x; int y;}".     LEVEL is the number of spaces to indent by.    We increase it for some recursive calls.  */
 end_comment
 
 begin_function
@@ -1821,7 +1810,7 @@ name|type
 modifier|*
 name|type
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1915,6 +1904,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|check_stub_type
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|TYPE_CODE
@@ -2042,7 +2036,7 @@ expr_stmt|;
 if|if
 condition|(
 name|show
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -2070,13 +2064,15 @@ condition|(
 name|show
 operator|>
 literal|0
-condition|)
-block|{
-name|check_stub_type
+operator|||
+name|TYPE_TAG_NAME
 argument_list|(
 name|type
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+block|{
 name|cp_type_print_derivation_info
 argument_list|(
 name|stream
@@ -2674,7 +2670,7 @@ literal|0
 condition|)
 block|{
 comment|/* Keep GDB from crashing here.  */
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
 name|stream
 argument_list|,
@@ -2971,7 +2967,7 @@ expr_stmt|;
 if|if
 condition|(
 name|show
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -2999,6 +2995,13 @@ condition|(
 name|show
 operator|>
 literal|0
+operator|||
+name|TYPE_TAG_NAME
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|fprintf_filtered

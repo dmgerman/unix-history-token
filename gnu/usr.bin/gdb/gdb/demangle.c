@@ -142,31 +142,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* show current demangling style. */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|show_demangling_command
-parameter_list|(
-name|ignore
-parameter_list|,
-name|from_tty
-parameter_list|)
-name|char
-modifier|*
-name|ignore
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
-block|{
-comment|/* done automatically by show command. */
-block|}
-end_function
-
-begin_comment
 comment|/* set current demangling style.  called by the "set demangling" command    after it has updated the current_demangling_style_string to match    what the user has entered.     if the user has entered a string that matches a known demangling style    name in the demanglers[] array then just leave the string alone and update    the current_demangling_style enum value to match.     if the user has entered a string that doesn't match, including an empty    string, then print a list of the currently known styles and restore    the current_demangling_style_string to match the current_demangling_style    enum value.     Note:  Assumes that current_demangling_style_string always points to    a malloc'd string, even if it is a null-string. */
 end_comment
 
@@ -178,6 +153,8 @@ parameter_list|(
 name|ignore
 parameter_list|,
 name|from_tty
+parameter_list|,
+name|c
 parameter_list|)
 name|char
 modifier|*
@@ -185,6 +162,11 @@ name|ignore
 decl_stmt|;
 name|int
 name|from_tty
+decl_stmt|;
+name|struct
+name|cmd_list_element
+modifier|*
+name|c
 decl_stmt|;
 block|{
 specifier|const
@@ -249,7 +231,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"Unknown demangling style `%s'.\n"
 argument_list|,
@@ -257,7 +239,7 @@ name|current_demangling_style_string
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"The currently understood settings are:\n\n"
 argument_list|)
@@ -278,7 +260,7 @@ name|dem
 operator|++
 control|)
 block|{
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"%-10s %s\n"
 argument_list|,
@@ -307,11 +289,18 @@ argument_list|)
 expr_stmt|;
 name|current_demangling_style_string
 operator|=
-name|strdup
+name|savestring
 argument_list|(
 name|dem
 operator|->
 name|demangling_style_name
+argument_list|,
+name|strlen
+argument_list|(
+name|dem
+operator|->
+name|demangling_style_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -335,7 +324,7 @@ name|demangling_style
 expr_stmt|;
 name|current_demangling_style_string
 operator|=
-name|strdup
+name|savestring
 argument_list|(
 name|demanglers
 index|[
@@ -343,6 +332,16 @@ literal|0
 index|]
 operator|.
 name|demangling_style_name
+argument_list|,
+name|strlen
+argument_list|(
+name|demanglers
+index|[
+literal|0
+index|]
+operator|.
+name|demangling_style_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|warning
@@ -387,9 +386,14 @@ expr_stmt|;
 block|}
 name|current_demangling_style_string
 operator|=
-name|strdup
+name|savestring
 argument_list|(
 name|style
+argument_list|,
+name|strlen
+argument_list|(
+name|style
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|set_demangling_command
@@ -456,17 +460,9 @@ name|set
 operator|->
 name|function
 operator|.
-name|cfunc
+name|sfunc
 operator|=
 name|set_demangling_command
-expr_stmt|;
-name|show
-operator|->
-name|function
-operator|.
-name|cfunc
-operator|=
-name|show_demangling_command
 expr_stmt|;
 comment|/* Set the default demangling style chosen at compilation time. */
 name|set_demangling_style

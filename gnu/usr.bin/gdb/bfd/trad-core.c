@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back end for traditional Unix core files (U-area and raw sections)    Copyright 1988, 1989, 1991, 1992, 1993 Free Software Foundation, Inc.    Written by John Gilmore of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* BFD back end for traditional Unix core files (U-area and raw sections)    Copyright 1988, 1989, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.    Written by John Gilmore of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -173,6 +173,7 @@ comment|/* forward declarations */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|bfd_target
 modifier|*
 name|trad_unix_core_file_p
@@ -243,6 +244,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|const
 name|bfd_target
 modifier|*
 name|trad_unix_core_file_p
@@ -275,7 +277,7 @@ name|TRAD_CORE_USER_OFFSET
 argument_list|,
 name|SEEK_SET
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 return|return
@@ -311,9 +313,10 @@ name|u
 condition|)
 block|{
 comment|/* Too small to be a core file */
-name|bfd_error
-operator|=
-name|wrong_format
+name|bfd_set_error
+argument_list|(
+name|bfd_error_wrong_format
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -330,9 +333,10 @@ literal|0x1000000
 condition|)
 comment|/* Remember, it's in pages... */
 block|{
-name|bfd_error
-operator|=
-name|wrong_format
+name|bfd_set_error
+argument_list|(
+name|bfd_error_wrong_format
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -347,9 +351,10 @@ operator|>
 literal|0x1000000
 condition|)
 block|{
-name|bfd_error
-operator|=
-name|wrong_format
+name|bfd_set_error
+argument_list|(
+name|bfd_error_wrong_format
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -395,9 +400,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|bfd_error
-operator|=
-name|system_call_error
+name|bfd_set_error
+argument_list|(
+name|bfd_error_system_call
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -413,6 +419,15 @@ operator|+
 name|u
 operator|.
 name|u_dsize
+ifdef|#
+directive|ifdef
+name|TRAD_CORE_DSIZE_INCLUDES_TSIZE
+operator|-
+name|u
+operator|.
+name|u_tsize
+endif|#
+directive|endif
 operator|+
 name|u
 operator|.
@@ -424,14 +439,18 @@ operator|.
 name|st_size
 condition|)
 block|{
-name|bfd_error
-operator|=
-name|file_truncated
+name|bfd_set_error
+argument_list|(
+name|bfd_error_file_truncated
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|TRAD_CORE_ALLOW_ANY_EXTRA_SIZE
 if|if
 condition|(
 name|NBPG
@@ -462,14 +481,17 @@ name|st_size
 condition|)
 block|{
 comment|/* The file is too big.  Maybe it's not a core file 	   or we otherwise have bad values for u_dsize and u_ssize).  */
-name|bfd_error
-operator|=
-name|wrong_format
+name|bfd_set_error
+argument_list|(
+name|bfd_error_wrong_format
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
+endif|#
+directive|endif
 block|}
 comment|/* OK, we believe you.  You're a core file (sure, sure).  */
 comment|/* Allocate both the upage and the struct core_data at once, so      a single free() will free them both.  */
@@ -480,10 +502,8 @@ expr|struct
 name|trad_core_struct
 operator|*
 operator|)
-name|bfd_zalloc
+name|bfd_zmalloc
 argument_list|(
-name|abfd
-argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -498,9 +518,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_error
-operator|=
-name|no_memory
+name|bfd_set_error
+argument_list|(
+name|bfd_error_no_memory
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -531,7 +552,7 @@ operator|(
 name|asection
 operator|*
 operator|)
-name|zalloc
+name|bfd_zmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -551,9 +572,10 @@ condition|)
 block|{
 name|loser
 label|:
-name|bfd_error
-operator|=
-name|no_memory
+name|bfd_set_error
+argument_list|(
+name|bfd_error_no_memory
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -577,7 +599,7 @@ operator|(
 name|asection
 operator|*
 operator|)
-name|zalloc
+name|bfd_zmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -622,7 +644,7 @@ operator|(
 name|asection
 operator|*
 operator|)
-name|zalloc
+name|bfd_zmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -716,8 +738,6 @@ argument_list|)
 operator|->
 name|flags
 operator|=
-name|SEC_ALLOC
-operator|+
 name|SEC_HAS_CONTENTS
 expr_stmt|;
 name|core_datasec
@@ -732,6 +752,17 @@ operator|*
 name|u
 operator|.
 name|u_dsize
+ifdef|#
+directive|ifdef
+name|TRAD_CORE_DSIZE_INCLUDES_TSIZE
+operator|-
+name|NBPG
+operator|*
+name|u
+operator|.
+name|u_tsize
+endif|#
+directive|endif
 expr_stmt|;
 name|core_stacksec
 argument_list|(
@@ -792,24 +823,6 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* a hack, but it works for FreeBSD !! */
-include|#
-directive|include
-file|<vm/vm_param.h>
-comment|/* this should really be in<vm/vm_param.h>, but somebody forgot it */
-ifndef|#
-directive|ifndef
-name|vm_page_size
-define|#
-directive|define
-name|vm_page_size
-value|4096
-endif|#
-directive|endif
-define|#
-directive|define
-name|HOST_STACK_START_ADDR
-value|trunc_page(u.u_kproc.kp_eproc.e_vm.vm_maxsaddr \ + MAXSSIZ - ctob(u.u_ssize))
 ifdef|#
 directive|ifdef
 name|HOST_STACK_START_ADDR
@@ -871,20 +884,6 @@ name|NBPG
 operator|*
 name|UPAGES
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TRAD_CORE_STACK_FILEPOS
-name|core_stacksec
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|filepos
-operator|=
-name|TRAD_CORE_STACK_FILEPOS
-expr_stmt|;
-else|#
-directive|else
 name|core_stacksec
 argument_list|(
 name|abfd
@@ -903,9 +902,18 @@ operator|*
 name|u
 operator|.
 name|u_dsize
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TRAD_CORE_DSIZE_INCLUDES_TSIZE
+operator|-
+name|NBPG
+operator|*
+name|u
+operator|.
+name|u_tsize
 endif|#
 directive|endif
+expr_stmt|;
 name|core_regsec
 argument_list|(
 name|abfd
@@ -1107,223 +1115,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* No archive file support via this BFD */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|trad_unix_openr_next_archived_file
-value|bfd_generic_openr_next_archived_file
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_generic_stat_arch_elt
-value|bfd_generic_stat_arch_elt
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_slurp_armap
-value|bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_slurp_extended_name_table
-value|bfd_true
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_write_armap
-value|(boolean (*) PARAMS	\     ((bfd *arch, unsigned int elength, struct orl *map, \       unsigned int orl_count, int stridx))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_truncate_arname
-value|bfd_dont_truncate_arname
-end_define
-
-begin_define
-define|#
-directive|define
-name|aout_32_openr_next_archived_file
-value|bfd_generic_openr_next_archived_file
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_close_and_cleanup
-value|bfd_generic_close_and_cleanup
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_set_section_contents
-value|(boolean (*) PARAMS	\         ((bfd *abfd, asection *section, PTR data, file_ptr offset,	\         bfd_size_type count))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_get_section_contents
-value|bfd_generic_get_section_contents
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_new_section_hook
-value|(boolean (*) PARAMS	\ 	((bfd *, sec_ptr))) bfd_true
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_get_symtab_upper_bound
-value|bfd_0u
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_get_symtab
-value|(unsigned int (*) PARAMS \         ((bfd *, struct symbol_cache_entry **))) bfd_0u
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_get_reloc_upper_bound
-value|(unsigned int (*) PARAMS \ 	((bfd *, sec_ptr))) bfd_0u
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_canonicalize_reloc
-value|(unsigned int (*) PARAMS \ 	((bfd *, sec_ptr, arelent **, struct symbol_cache_entry**))) bfd_0u
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_make_empty_symbol
-value|(struct symbol_cache_entry * \ 	(*) PARAMS ((bfd *))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_print_symbol
-value|(void (*) PARAMS	\ 	((bfd *, PTR, struct symbol_cache_entry  *,			\ 	bfd_print_symbol_type))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_get_symbol_info
-value|(void (*) PARAMS	\ 	((bfd *, struct symbol_cache_entry  *,			\ 	symbol_info *))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_get_lineno
-value|(alent * (*) PARAMS	\ 	((bfd *, struct symbol_cache_entry *))) bfd_nullvoidptr
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_set_arch_mach
-value|(boolean (*) PARAMS	\ 	((bfd *, enum bfd_architecture, unsigned long))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_find_nearest_line
-value|(boolean (*) PARAMS	\         ((bfd *abfd, struct sec  *section,				\          struct symbol_cache_entry  **symbols,bfd_vma offset,		\          CONST char **file, CONST char **func, unsigned int *line))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_sizeof_headers
-value|(int (*) PARAMS	\ 	((bfd *, boolean))) bfd_0
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_bfd_debug_info_start
-value|bfd_void
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_bfd_debug_info_end
-value|bfd_void
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_bfd_debug_info_accumulate
-value|(void (*) PARAMS	\ 	((bfd *, struct sec *))) bfd_void
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_bfd_get_relocated_section_contents
-value|bfd_generic_get_relocated_section_contents
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_bfd_relax_section
-value|bfd_generic_relax_section
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_bfd_seclet_link
-define|\
-value|((boolean (*) PARAMS ((bfd *, PTR, boolean))) bfd_false)
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_bfd_reloc_type_lookup
-define|\
-value|((CONST struct reloc_howto_struct *(*) PARAMS ((bfd *, bfd_reloc_code_real_type))) bfd_nullvoidptr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|trad_unix_bfd_make_debug_symbol
-define|\
-value|((asymbol *(*) PARAMS ((bfd *, void *, unsigned long))) bfd_nullvoidptr)
-end_define
-
-begin_comment
 comment|/* If somebody calls any byte-swapping routines, shoot them.  */
 end_comment
 
@@ -1343,7 +1134,7 @@ begin_define
 define|#
 directive|define
 name|NO_GET
-value|((bfd_vma (*) PARAMS ((         bfd_byte *))) swap_abort )
+value|((bfd_vma (*) PARAMS ((   const bfd_byte *))) swap_abort )
 end_define
 
 begin_define
@@ -1357,10 +1148,12 @@ begin_define
 define|#
 directive|define
 name|NO_SIGNED_GET
-value|((bfd_signed_vma (*) PARAMS ((bfd_byte *))) swap_abort )
+define|\
+value|((bfd_signed_vma (*) PARAMS ((const bfd_byte *))) swap_abort )
 end_define
 
 begin_decl_stmt
+specifier|const
 name|bfd_target
 name|trad_core_vec
 init|=
@@ -1388,8 +1181,6 @@ operator||
 name|HAS_SYMS
 operator||
 name|HAS_LOCALS
-operator||
-name|DYNAMIC
 operator||
 name|WP_TEXT
 operator||
@@ -1498,9 +1289,49 @@ block|,
 name|bfd_false
 block|}
 block|,
-name|JUMP_TABLE
+name|BFD_JUMP_TABLE_GENERIC
+argument_list|(
+name|_bfd_generic
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_COPY
+argument_list|(
+name|_bfd_generic
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_CORE
 argument_list|(
 name|trad_unix
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_ARCHIVE
+argument_list|(
+name|_bfd_noarchive
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_SYMBOLS
+argument_list|(
+name|_bfd_nosymbols
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_RELOCS
+argument_list|(
+name|_bfd_norelocs
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_WRITE
+argument_list|(
+name|_bfd_generic
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_LINK
+argument_list|(
+name|_bfd_nolink
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_DYNAMIC
+argument_list|(
+name|_bfd_nodynamic
 argument_list|)
 block|,
 operator|(

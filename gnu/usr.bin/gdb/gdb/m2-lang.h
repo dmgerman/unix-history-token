@@ -53,7 +53,7 @@ operator|,
 name|char
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -80,7 +80,7 @@ operator|*
 operator|,
 name|CORE_ADDR
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int

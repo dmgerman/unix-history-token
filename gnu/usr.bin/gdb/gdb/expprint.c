@@ -63,7 +63,7 @@ operator|,
 name|int
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 expr|enum
@@ -90,7 +90,7 @@ operator|,
 name|int
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -110,7 +110,7 @@ name|expression
 modifier|*
 name|exp
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -163,7 +163,7 @@ name|int
 modifier|*
 name|pos
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -216,7 +216,7 @@ name|assoc
 init|=
 literal|0
 decl_stmt|;
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
 name|char
@@ -1813,7 +1813,7 @@ argument_list|,
 name|PREC_SUFFIX
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
 name|stream
 argument_list|,
@@ -1840,7 +1840,7 @@ name|tem
 operator|!=
 literal|0
 condition|)
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
 name|stream
 argument_list|,
@@ -1859,7 +1859,7 @@ name|PREC_ABOVE_COMMA
 argument_list|)
 expr_stmt|;
 block|}
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
 name|stream
 argument_list|,
@@ -1877,7 +1877,7 @@ operator|)
 operator|+=
 literal|2
 expr_stmt|;
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
 name|stream
 argument_list|,
@@ -1904,7 +1904,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
 name|stream
 argument_list|,
@@ -1922,7 +1922,7 @@ argument_list|,
 name|PREC_PREFIX
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
 name|stream
 argument_list|,
@@ -2374,12 +2374,12 @@ name|int
 modifier|*
 name|pos
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
 block|{
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
 name|stream
 argument_list|,
@@ -2399,7 +2399,7 @@ argument_list|,
 name|PREC_PREFIX
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
 name|stream
 argument_list|,
@@ -2509,7 +2509,7 @@ name|expression
 modifier|*
 name|exp
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -2536,13 +2536,21 @@ name|fprintf_filtered
 argument_list|(
 name|stream
 argument_list|,
-literal|"Dump of expression @ 0x%lx, %s:\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
+literal|"Dump of expression @ "
+argument_list|)
+expr_stmt|;
+name|gdb_print_address
+argument_list|(
 name|exp
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|", %s:\n"
 argument_list|,
 name|note
 argument_list|)

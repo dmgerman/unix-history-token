@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Data structures associated with breakpoints in GDB.    Copyright (C) 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Data structures associated with breakpoints in GDB.    Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_if
@@ -61,6 +61,9 @@ block|{
 name|bp_breakpoint
 block|,
 comment|/* Normal breakpoint */
+name|bp_hardware_breakpoint
+block|,
+comment|/* Hardware assisted breakpoint */
 name|bp_until
 block|,
 comment|/* used by until command */
@@ -70,6 +73,15 @@ comment|/* used by finish command */
 name|bp_watchpoint
 block|,
 comment|/* Watchpoint */
+name|bp_hardware_watchpoint
+block|,
+comment|/* Hardware assisted watchpoint */
+name|bp_read_watchpoint
+block|,
+comment|/* read watchpoint, (hardware assisted) */
+name|bp_access_watchpoint
+block|,
+comment|/* access watchpoint, (hardware assisted) */
 name|bp_longjmp
 block|,
 comment|/* secret breakpoint to find longjmp() */
@@ -78,6 +90,12 @@ block|,
 comment|/* secret breakpoint to escape longjmp() */
 comment|/* Used by wait_for_inferior for stepping over subroutine calls, for      stepping over signal handlers, and for skipping prologues.  */
 name|bp_step_resume
+block|,
+comment|/* Used by wait_for_inferior for stepping over signal handlers.  */
+name|bp_through_sigtramp
+block|,
+comment|/* Used to detect when a watchpoint expression has gone out of      scope.  These breakpoints are usually not visible to the user.       This breakpoint has some interesting properties:         1) There's always a 1:1 mapping between watchpoints        on local variables and watchpoint_scope breakpoints.         2) It automatically deletes itself and the watchpoint it's        associated with when hit.         3) It can never be disabled.  */
+name|bp_watchpoint_scope
 block|,
 comment|/* The breakpoint at the end of a call dummy.  */
 comment|/* FIXME: What if the function we are calling longjmp()s out of the      call, or the user gets out with the "return" command?  We currently      have no way of cleaning up the breakpoint in these (obscure) situations.      (Probably can solve this by noticing longjmp, "return", etc., it's      similar to noticing when a watchpoint on a local variable goes out      of scope (with hardware support for watchpoints)).  */
@@ -238,12 +256,30 @@ modifier|*
 name|exp_valid_block
 decl_stmt|;
 comment|/* Value of the watchpoint the last time we checked it.  */
-name|value
+name|value_ptr
 name|val
+decl_stmt|;
+comment|/* Holds the value chain for a hardware watchpoint expression.  */
+name|value_ptr
+name|val_chain
+decl_stmt|;
+comment|/* Holds the address of the related watchpoint_scope breakpoint      when using watchpoints on local variables (might the concept      of a related breakpoint be useful elsewhere, if not just call      it the watchpoint_scope breakpoint or something like that. FIXME).  */
+name|struct
+name|breakpoint
+modifier|*
+name|related_breakpoint
+decl_stmt|;
+comment|/* Holds the frame address which identifies the frame this watchpoint      should be evaluated in, or NULL if the watchpoint should be evaluated      on the outermost frame.  */
+name|FRAME_ADDR
+name|watchpoint_frame
 decl_stmt|;
 comment|/* Thread number for thread-specific breakpoint, or -1 if don't care */
 name|int
 name|thread
+decl_stmt|;
+comment|/* Count of the number of times this breakpoint was taken, dumped      with the info, but not used for anything else.  Useful for      seeing how many times you hit a break prior to the program      aborting, so you can back up to just before the abort.  */
+name|int
+name|hit_count
 decl_stmt|;
 block|}
 struct|;
@@ -359,6 +395,12 @@ block|,
 comment|/* Clear longjmp_resume breakpoint, then handle as BPSTAT_WHAT_SINGLE.  */
 name|BPSTAT_WHAT_CLEAR_LONGJMP_RESUME_SINGLE
 block|,
+comment|/* Clear step resume breakpoint, and keep checking.  */
+name|BPSTAT_WHAT_STEP_RESUME
+block|,
+comment|/* Clear through_sigtramp breakpoint, muck with trap_expected, and keep      checking.  */
+name|BPSTAT_WHAT_THROUGH_SIGTRAMP
+block|,
 comment|/* This is just used to keep track of how many enums there are.  */
 name|BPSTAT_WHAT_LAST
 block|}
@@ -372,10 +414,6 @@ block|{
 name|enum
 name|bpstat_what_main_action
 name|main_action
-decl_stmt|;
-comment|/* Did we hit the step resume breakpoint?  This is separate from the      main_action to allow for it to be combined with any of the main      actions.  */
-name|int
-name|step_resume
 decl_stmt|;
 comment|/* Did we hit a call dummy breakpoint?  This only goes with a main_action      of BPSTAT_WHAT_STOP_SILENT or BPSTAT_WHAT_STOP_NOISY (the concept of      continuing from a call dummy without popping the frame is not a      useful one).  */
 name|int
@@ -555,7 +593,7 @@ modifier|*
 name|commands
 decl_stmt|;
 comment|/* Old value associated with a watchpoint.  */
-name|value
+name|value_ptr
 name|old_val
 decl_stmt|;
 comment|/* Nonzero if this breakpoint tells us to print the frame.  */
@@ -619,6 +657,21 @@ name|PARAMS
 argument_list|(
 operator|(
 name|CORE_ADDR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|frame_in_dummy
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|frame_info
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -891,6 +944,19 @@ operator|(
 name|CORE_ADDR
 operator|,
 name|FRAME
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|clear_breakpoint_hit_counts
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

@@ -69,7 +69,7 @@ decl_stmt|;
 name|CORE_ADDR
 name|address
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -102,7 +102,7 @@ operator|*
 operator|,
 name|CORE_ADDR
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int

@@ -49,6 +49,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PAGE_SIZE
+value|4096
+end_define
+
+begin_define
+define|#
+directive|define
 name|SEGMENT_SIZE
 value|PAGE_SIZE
 end_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Interface between GDB and target environments, including files and processes    Copyright 1990, 1991, 1992 Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by John Gilmore.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Interface between GDB and target environments, including files and processes    Copyright 1990, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by John Gilmore.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_if
@@ -42,11 +42,380 @@ comment|/* Executable files, etc */
 name|core_stratum
 block|,
 comment|/* Core dump files */
+ifdef|#
+directive|ifdef
+name|KERNEL_DEBUG
+name|kcore_stratum
+block|,
+comment|/* Kernel core files */
+endif|#
+directive|endif
 name|process_stratum
 comment|/* Executing processes */
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/* Stuff for target_wait.  */
+end_comment
+
+begin_comment
+comment|/* Generally, what has the program done?  */
+end_comment
+
+begin_enum
+enum|enum
+name|target_waitkind
+block|{
+comment|/* The program has exited.  The exit status is in value.integer.  */
+name|TARGET_WAITKIND_EXITED
+block|,
+comment|/* The program has stopped with a signal.  Which signal is in value.sig.  */
+name|TARGET_WAITKIND_STOPPED
+block|,
+comment|/* The program has terminated with a signal.  Which signal is in      value.sig.  */
+name|TARGET_WAITKIND_SIGNALLED
+block|,
+comment|/* The program is letting us know that it dynamically loaded something      (e.g. it called load(2) on AIX).  */
+name|TARGET_WAITKIND_LOADED
+block|,
+comment|/* Nothing happened, but we stopped anyway.  This perhaps should be handled      within target_wait, but I'm not sure target_wait should be resuming the      inferior.  */
+name|TARGET_WAITKIND_SPURIOUS
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* The numbering of these signals is chosen to match traditional unix    signals (insofar as various unices use the same numbers, anyway).    It is also the numbering of the GDB remote protocol.  Other remote    protocols, if they use a different numbering, should make sure to    translate appropriately.  */
+end_comment
+
+begin_comment
+comment|/* This is based strongly on Unix/POSIX signals for several reasons:    (1) This set of signals represents a widely-accepted attempt to    represent events of this sort in a portable fashion, (2) we want a    signal to make it from wait to child_wait to the user intact, (3) many    remote protocols use a similar encoding.  However, it is    recognized that this set of signals has limitations (such as not    distinguishing between various kinds of SIGSEGV, or not    distinguishing hitting a breakpoint from finishing a single step).    So in the future we may get around this either by adding additional    signals for breakpoint, single-step, etc., or by adding signal    codes; the latter seems more in the spirit of what BSD, System V,    etc. are doing to address these issues.  */
+end_comment
+
+begin_comment
+comment|/* For an explanation of what each signal means, see    target_signal_to_string.  */
+end_comment
+
+begin_enum
+enum|enum
+name|target_signal
+block|{
+comment|/* Used some places (e.g. stop_signal) to record the concept that      there is no signal.  */
+name|TARGET_SIGNAL_0
+init|=
+literal|0
+block|,
+name|TARGET_SIGNAL_FIRST
+init|=
+literal|0
+block|,
+name|TARGET_SIGNAL_HUP
+init|=
+literal|1
+block|,
+name|TARGET_SIGNAL_INT
+init|=
+literal|2
+block|,
+name|TARGET_SIGNAL_QUIT
+init|=
+literal|3
+block|,
+name|TARGET_SIGNAL_ILL
+init|=
+literal|4
+block|,
+name|TARGET_SIGNAL_TRAP
+init|=
+literal|5
+block|,
+name|TARGET_SIGNAL_ABRT
+init|=
+literal|6
+block|,
+name|TARGET_SIGNAL_EMT
+init|=
+literal|7
+block|,
+name|TARGET_SIGNAL_FPE
+init|=
+literal|8
+block|,
+name|TARGET_SIGNAL_KILL
+init|=
+literal|9
+block|,
+name|TARGET_SIGNAL_BUS
+init|=
+literal|10
+block|,
+name|TARGET_SIGNAL_SEGV
+init|=
+literal|11
+block|,
+name|TARGET_SIGNAL_SYS
+init|=
+literal|12
+block|,
+name|TARGET_SIGNAL_PIPE
+init|=
+literal|13
+block|,
+name|TARGET_SIGNAL_ALRM
+init|=
+literal|14
+block|,
+name|TARGET_SIGNAL_TERM
+init|=
+literal|15
+block|,
+name|TARGET_SIGNAL_URG
+init|=
+literal|16
+block|,
+name|TARGET_SIGNAL_STOP
+init|=
+literal|17
+block|,
+name|TARGET_SIGNAL_TSTP
+init|=
+literal|18
+block|,
+name|TARGET_SIGNAL_CONT
+init|=
+literal|19
+block|,
+name|TARGET_SIGNAL_CHLD
+init|=
+literal|20
+block|,
+name|TARGET_SIGNAL_TTIN
+init|=
+literal|21
+block|,
+name|TARGET_SIGNAL_TTOU
+init|=
+literal|22
+block|,
+name|TARGET_SIGNAL_IO
+init|=
+literal|23
+block|,
+name|TARGET_SIGNAL_XCPU
+init|=
+literal|24
+block|,
+name|TARGET_SIGNAL_XFSZ
+init|=
+literal|25
+block|,
+name|TARGET_SIGNAL_VTALRM
+init|=
+literal|26
+block|,
+name|TARGET_SIGNAL_PROF
+init|=
+literal|27
+block|,
+name|TARGET_SIGNAL_WINCH
+init|=
+literal|28
+block|,
+name|TARGET_SIGNAL_LOST
+init|=
+literal|29
+block|,
+name|TARGET_SIGNAL_USR1
+init|=
+literal|30
+block|,
+name|TARGET_SIGNAL_USR2
+init|=
+literal|31
+block|,
+name|TARGET_SIGNAL_PWR
+init|=
+literal|32
+block|,
+comment|/* Similar to SIGIO.  Perhaps they should have the same number.  */
+name|TARGET_SIGNAL_POLL
+init|=
+literal|33
+block|,
+name|TARGET_SIGNAL_WIND
+init|=
+literal|34
+block|,
+name|TARGET_SIGNAL_PHONE
+init|=
+literal|35
+block|,
+name|TARGET_SIGNAL_WAITING
+init|=
+literal|36
+block|,
+name|TARGET_SIGNAL_LWP
+init|=
+literal|37
+block|,
+name|TARGET_SIGNAL_DANGER
+init|=
+literal|38
+block|,
+name|TARGET_SIGNAL_GRANT
+init|=
+literal|39
+block|,
+name|TARGET_SIGNAL_RETRACT
+init|=
+literal|40
+block|,
+name|TARGET_SIGNAL_MSG
+init|=
+literal|41
+block|,
+name|TARGET_SIGNAL_SOUND
+init|=
+literal|42
+block|,
+name|TARGET_SIGNAL_SAK
+init|=
+literal|43
+block|,
+comment|/* Some signal we don't know about.  */
+name|TARGET_SIGNAL_UNKNOWN
+block|,
+comment|/* Use whatever signal we use when one is not specifically specified      (for passing to proceed and so on).  */
+name|TARGET_SIGNAL_DEFAULT
+block|,
+comment|/* Last and unused enum value, for sizing arrays, etc.  */
+name|TARGET_SIGNAL_LAST
+block|}
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|target_waitstatus
+block|{
+name|enum
+name|target_waitkind
+name|kind
+decl_stmt|;
+comment|/* Exit status or signal number.  */
+union|union
+block|{
+name|int
+name|integer
+decl_stmt|;
+name|enum
+name|target_signal
+name|sig
+decl_stmt|;
+block|}
+name|value
+union|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Return the string for a signal.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|target_signal_to_string
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|target_signal
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Return the name (SIGHUP, etc.) for a signal.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|target_signal_to_name
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|target_signal
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Given a name (SIGHUP, etc.), return its signal.  */
+end_comment
+
+begin_decl_stmt
+name|enum
+name|target_signal
+name|target_signal_from_name
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* If certain kinds of activity happen, target_wait should perform    callbacks.  */
+end_comment
+
+begin_comment
+comment|/* Right now we just call (*TARGET_ACTIVITY_FUNCTION) if I/O is possible    on TARGET_ACTIVITY_FD.   */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|target_activity_fd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Returns zero to leave the inferior alone, one to interrupt it.  */
+end_comment
+
+begin_extern
+extern|extern int (*target_activity_function
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_escape
+end_escape
 
 begin_struct
 struct|struct
@@ -131,7 +500,8 @@ name|int
 operator|,
 name|int
 operator|,
-name|int
+expr|enum
+name|target_signal
 operator|)
 argument_list|)
 expr_stmt|;
@@ -144,7 +514,8 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|int
+expr|struct
+name|target_waitstatus
 operator|*
 operator|)
 argument_list|)
@@ -210,6 +581,39 @@ name|target
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Enable this after 4.12.  */
+comment|/* Search target memory.  Start at STARTADDR and take LEN bytes of      target memory, and them with MASK, and compare to DATA.  If they      match, set *ADDR_FOUND to the address we found it at, store the data      we found at LEN bytes starting at DATA_FOUND, and return.  If      not, add INCREMENT to the search address and keep trying until      the search address is outside of the range [LORANGE,HIRANGE).       If we don't find anything, set *ADDR_FOUND to (CORE_ADDR)0 and return.  */
+block|void (*to_search) PARAMS ((int len, char *data, char *mask, 			     CORE_ADDR startaddr, int increment, 			     CORE_ADDR lorange, CORE_ADDR hirange, 			     CORE_ADDR *addr_found, char *data_found));
+define|#
+directive|define
+name|target_search
+parameter_list|(
+name|len
+parameter_list|,
+name|data
+parameter_list|,
+name|mask
+parameter_list|,
+name|startaddr
+parameter_list|,
+name|increment
+parameter_list|,
+name|lorange
+parameter_list|,
+name|hirange
+parameter_list|,
+name|addr_found
+parameter_list|,
+name|data_found
+parameter_list|)
+define|\
+value|(*current_target->to_search) (len, data, mask, startaddr, increment, \ 				lorange, hirange, addr_found, data_found)
+endif|#
+directive|endif
+comment|/* 0 */
 name|void
 argument_list|(
 argument|*to_files_info
@@ -556,7 +960,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Resume execution of the target process PID.  STEP says whether to    single-step or to run free; SIGGNAL is the signal value (e.g. SIGINT) to be    given to the target, or zero for no signal.  */
+comment|/* Resume execution of the target process PID.  STEP says whether to    single-step or to run free; SIGGNAL is the signal to be given to    the target, or TARGET_SIGNAL_0 for no signal.  The caller may not    pass TARGET_SIGNAL_DEFAULT.  */
 end_comment
 
 begin_define
@@ -575,7 +979,7 @@ value|(*current_target->to_resume) (pid, step, siggnal)
 end_define
 
 begin_comment
-comment|/* Wait for process pid to do something.  Pid = -1 to wait for any pid to do    something.  Return pid of child, or -1 in case of error; store status    through argument pointer STATUS.  */
+comment|/* Wait for process pid to do something.  Pid = -1 to wait for any pid    to do something.  Return pid of child, or -1 in case of error;    store status through argument pointer STATUS.  Note that it is    *not* OK to return_to_top_level out of target_wait without popping    the debugging target from the stack; GDB isn't prepared to get back    to the prompt with a debugging target but without the frame cache,    stop_pc, etc., set up.  */
 end_comment
 
 begin_define
@@ -645,8 +1049,12 @@ name|CORE_ADDR
 operator|,
 name|char
 operator|*
+operator|*
 operator|,
 name|int
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1104,6 +1512,23 @@ define|\
 value|(current_target->to_has_execution)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|target_link
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|CORE_ADDR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Converts a process id to a string.  Usually, the string just contains    `process xyz', but on some systems it may contain    `process xyz thread abc'.  */
 end_comment
@@ -1237,9 +1662,8 @@ name|endaddr
 decl_stmt|;
 comment|/* 1+highest address in section */
 name|sec_ptr
-name|sec_ptr
+name|the_bfd_section
 decl_stmt|;
-comment|/* BFD section pointer */
 name|bfd
 modifier|*
 name|bfd
@@ -1380,6 +1804,92 @@ end_decl_stmt
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/* Stuff that should be shared among the various remote targets.  */
+end_comment
+
+begin_comment
+comment|/* Debugging level.  0 is off, and non-zero values mean to print some debug    information (higher values, more information).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|remote_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Speed in bits per second, or -1 which means don't mess with the speed.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|baud_rate
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Functions for helping to write a native target.  */
+end_comment
+
+begin_comment
+comment|/* This is for native targets which use a unix/POSIX-style waitstatus.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|store_waitstatus
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|target_waitstatus
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Convert between host signal numbers and enum target_signal's.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|target_signal
+name|target_signal_from_host
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|target_signal_to_host
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|target_signal
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

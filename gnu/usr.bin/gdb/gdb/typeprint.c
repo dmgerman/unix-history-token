@@ -187,7 +187,7 @@ name|char
 modifier|*
 name|varstring
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -238,7 +238,7 @@ modifier|*
 name|expr
 decl_stmt|;
 specifier|register
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
 specifier|register
@@ -301,7 +301,7 @@ argument_list|)
 argument_list|,
 literal|""
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|,
 name|show
 argument_list|)
@@ -516,7 +516,7 @@ name|type
 argument_list|,
 literal|""
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|,
 literal|1
 argument_list|)
@@ -574,7 +574,7 @@ decl_stmt|;
 name|LONGEST
 name|val
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -778,7 +778,7 @@ literal|"Invalid type code in symbol table."
 argument_list|)
 expr_stmt|;
 block|}
-name|fflush
+name|gdb_flush
 argument_list|(
 name|stream
 argument_list|)
@@ -813,7 +813,7 @@ name|from_tty
 decl_stmt|;
 block|{
 specifier|register
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
 specifier|register
@@ -951,7 +951,7 @@ name|class_vars
 argument_list|,
 name|ptype_command
 argument_list|,
-literal|"Print definition of type TYPE.\n\ Argument may be a type name defined by typedef, or \"struct STRUCTNAME\"\n\ or \"union UNIONNAME\" or \"enum ENUMNAME\".\n\ The selected stack frame's lexical context is used to look up the name."
+literal|"Print definition of type TYPE.\n\ Argument may be a type name defined by typedef, or \"struct STRUCT-TAG\"\n\ or \"class CLASS-NAME\" or \"union UNION-TAG\" or \"enum ENUM-TAG\".\n\ The selected stack frame's lexical context is used to look up the name."
 argument_list|)
 expr_stmt|;
 name|add_com

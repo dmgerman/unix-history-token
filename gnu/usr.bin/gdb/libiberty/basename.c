@@ -7,6 +7,18 @@ begin_comment
 comment|/*  NAME  	basename -- return pointer to last component of a pathname  SYNOPSIS  	char *basename (char *name)  DESCRIPTION  	Given a pointer to a string containing a typical pathname 	(/usr/src/cmd/ls/ls.c for example), returns a pointer to the 	last component of the pathname ("ls.c" in this case).  BUGS  	Presumes a UNIX style path with UNIX style separators. */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"ansidecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libiberty.h"
+end_include
+
 begin_function
 name|char
 modifier|*

@@ -16,7 +16,7 @@ name|type
 operator|,
 name|LONGEST
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)

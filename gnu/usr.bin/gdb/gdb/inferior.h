@@ -41,6 +41,16 @@ file|"frame.h"
 end_include
 
 begin_comment
+comment|/* For enum target_signal.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"target.h"
+end_include
+
+begin_comment
 comment|/*  * Structure in which to save the status of the inferior.  Save  * through "save_inferior_status", restore through  * "restore_inferior_status".  * This pair of routines should be called around any transfer of  * control to the inferior which you don't want showing up in your  * control variables.  */
 end_comment
 
@@ -48,7 +58,8 @@ begin_struct
 struct|struct
 name|inferior_status
 block|{
-name|int
+name|enum
+name|target_signal
 name|stop_signal
 decl_stmt|;
 name|CORE_ADDR
@@ -125,6 +136,28 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* This macro gives the number of registers actually in use by the    inferior.  This may be less than the total number of registers,    perhaps depending on the actual CPU in use or program being run.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ARCH_NUM_REGS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ARCH_NUM_REGS
+value|NUM_REGS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -152,6 +185,58 @@ operator|(
 expr|struct
 name|inferior_status
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_sigint_trap
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|clear_sigint_trap
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_sigio_trap
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|clear_sigio_trap
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -228,7 +313,8 @@ argument_list|(
 operator|(
 name|CORE_ADDR
 operator|,
-name|int
+expr|enum
+name|target_signal
 operator|,
 name|int
 operator|)
@@ -301,6 +387,19 @@ name|PARAMS
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|CORE_ADDR
+name|read_pc_pid
+name|PARAMS
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -436,7 +535,8 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|int
+expr|enum
+name|target_signal
 operator|)
 argument_list|)
 decl_stmt|;
@@ -596,7 +696,8 @@ name|int
 operator|,
 name|int
 operator|,
-name|int
+expr|enum
+name|target_signal
 operator|)
 argument_list|)
 decl_stmt|;
@@ -704,6 +805,22 @@ argument_list|)
 argument_list|(
 name|int
 argument_list|)
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|startup_inferior
+name|PARAMS
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -851,7 +968,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|enum
+name|target_signal
 name|stop_signal
 decl_stmt|;
 end_decl_stmt
@@ -1303,19 +1421,6 @@ operator|==
 name|AT_ENTRY_POINT
 end_if
 
-begin_decl_stmt
-specifier|extern
-name|CORE_ADDR
-name|entry_point_address
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -1328,7 +1433,7 @@ parameter_list|,
 name|frame_address
 parameter_list|)
 define|\
-value|((pc)>= entry_point_address ()				\&& (pc)<= (entry_point_address () + DECR_PC_AFTER_BREAK))
+value|((pc)>= CALL_DUMMY_ADDRESS ()				\&& (pc)<= (CALL_DUMMY_ADDRESS () + DECR_PC_AFTER_BREAK))
 end_define
 
 begin_endif

@@ -33,7 +33,7 @@ parameter_list|)
 name|CORE_ADDR
 name|memaddr
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;

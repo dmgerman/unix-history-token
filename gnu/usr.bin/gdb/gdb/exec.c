@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Work with executable files, for GDB.     Copyright 1988, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Work with executable files, for GDB.     Copyright 1988, 1989, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"gdbcmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"language.h"
 end_include
 
 begin_ifdef
@@ -541,7 +547,8 @@ name|scratch_pathname
 argument_list|,
 name|bfd_errmsg
 argument_list|(
-name|bfd_error
+name|bfd_get_error
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -555,6 +562,13 @@ argument_list|,
 name|bfd_object
 argument_list|)
 condition|)
+block|{
+comment|/* Make sure to close exec_bfd, or else "run" might try to use 	     it.  */
+name|exec_close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"\"%s\": not in executable format: %s."
@@ -563,10 +577,12 @@ name|scratch_pathname
 argument_list|,
 name|bfd_errmsg
 argument_list|(
-name|bfd_error
+name|bfd_get_error
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|build_section_table
@@ -584,6 +600,13 @@ operator|.
 name|to_sections_end
 argument_list|)
 condition|)
+block|{
+comment|/* Make sure to close exec_bfd, or else "run" might try to use 	     it.  */
+name|exec_close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"Can't find the file sections in `%s': %s"
@@ -594,10 +617,12 @@ name|filename
 argument_list|,
 name|bfd_errmsg
 argument_list|(
-name|bfd_error
+name|bfd_get_error
+argument_list|()
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|NEED_TEXT_START_END
@@ -651,7 +676,7 @@ name|bfd
 argument_list|,
 name|p
 operator|->
-name|sec_ptr
+name|the_bfd_section
 argument_list|)
 operator|&
 operator|(
@@ -721,7 +746,7 @@ if|if
 condition|(
 name|from_tty
 condition|)
-name|printf
+name|printf_unfiltered
 argument_list|(
 literal|"No exec file now.\n"
 argument_list|)
@@ -823,14 +848,13 @@ argument_list|,
 name|asect
 argument_list|)
 expr_stmt|;
-comment|/* FIXME, we need to handle BSS segment here...it alloc's but doesn't load */
 if|if
 condition|(
 operator|!
 operator|(
 name|aflag
 operator|&
-name|SEC_LOAD
+name|SEC_ALLOC
 operator|)
 condition|)
 return|return;
@@ -860,7 +884,7 @@ operator|*
 name|table_pp
 operator|)
 operator|->
-name|sec_ptr
+name|the_bfd_section
 operator|=
 name|asect
 expr_stmt|;
@@ -1169,7 +1193,7 @@ name|bfd
 argument_list|,
 name|p
 operator|->
-name|sec_ptr
+name|the_bfd_section
 argument_list|,
 name|myaddr
 argument_list|,
@@ -1186,7 +1210,7 @@ return|return
 operator|(
 name|res
 operator|!=
-name|false
+literal|0
 operator|)
 condition|?
 name|len
@@ -1228,7 +1252,7 @@ name|bfd
 argument_list|,
 name|p
 operator|->
-name|sec_ptr
+name|the_bfd_section
 argument_list|,
 name|myaddr
 argument_list|,
@@ -1245,7 +1269,7 @@ return|return
 operator|(
 name|res
 operator|!=
-name|false
+literal|0
 operator|)
 condition|?
 name|len
@@ -1420,23 +1444,36 @@ name|abfd
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|abfd
+operator|==
+name|exec_bfd
+condition|)
+block|{
 name|printf_filtered
 argument_list|(
-literal|"\tEntry point: %s\n"
-argument_list|,
-name|local_hex_string
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|bfd_get_start_address
-argument_list|(
-name|exec_bfd
-argument_list|)
-argument_list|)
+literal|"\tEntry point: "
 argument_list|)
 expr_stmt|;
+name|print_address_numeric
+argument_list|(
+name|bfd_get_start_address
+argument_list|(
+name|abfd
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|gdb_stdout
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|p
@@ -1455,6 +1492,7 @@ name|p
 operator|++
 control|)
 block|{
+comment|/* FIXME-32x64 need a print_address_numeric with field width */
 name|printf_filtered
 argument_list|(
 literal|"\t%s"
@@ -1507,7 +1545,7 @@ name|long
 operator|)
 name|p
 operator|->
-name|sec_ptr
+name|the_bfd_section
 operator|->
 name|filepos
 argument_list|,
@@ -1527,7 +1565,7 @@ name|bfd
 argument_list|,
 name|p
 operator|->
-name|sec_ptr
+name|the_bfd_section
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1701,7 +1739,7 @@ name|exec_bfd
 argument_list|,
 name|p
 operator|->
-name|sec_ptr
+name|the_bfd_section
 argument_list|)
 argument_list|,
 name|seclen
@@ -1713,7 +1751,7 @@ name|exec_bfd
 argument_list|,
 name|p
 operator|->
-name|sec_ptr
+name|the_bfd_section
 argument_list|)
 index|[
 name|seclen

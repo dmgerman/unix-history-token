@@ -4,14 +4,14 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"4.11"
+literal|"4.13"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|host_canonical
+name|host_name
 init|=
 literal|"i386-unknown-freebsd"
 decl_stmt|;
@@ -20,7 +20,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|target_canonical
+name|target_name
 init|=
 literal|"i386-unknown-freebsd"
 decl_stmt|;

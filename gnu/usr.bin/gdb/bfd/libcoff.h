@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD COFF object file private structure.    Copyright (C) 1990, 1991, 1992, 1993 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* BFD COFF object file private structure.    Copyright (C) 1990, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -233,6 +233,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|bfd_target
 modifier|*
 name|coff_object_p
@@ -266,8 +267,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|int
+name|long
 name|coff_get_symtab_upper_bound
 name|PARAMS
 argument_list|(
@@ -281,8 +281,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|int
+name|long
 name|coff_get_symtab
 name|PARAMS
 argument_list|(
@@ -333,7 +332,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|boolean
 name|coff_renumber_symbols
 name|PARAMS
 argument_list|(
@@ -361,7 +360,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|boolean
 name|coff_write_symbols
 name|PARAMS
 argument_list|(
@@ -375,7 +374,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|boolean
 name|coff_write_linenumbers
 name|PARAMS
 argument_list|(
@@ -441,8 +440,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|int
+name|long
 name|coff_get_reloc_upper_bound
 name|PARAMS
 argument_list|(
@@ -606,8 +604,11 @@ operator|,
 name|asection
 operator|*
 operator|,
-name|asymbol
+expr|struct
+name|bfd_link_info
 operator|*
+operator|,
+name|boolean
 operator|*
 operator|)
 argument_list|)
@@ -626,7 +627,11 @@ name|bfd
 operator|*
 operator|,
 expr|struct
-name|bfd_seclet
+name|bfd_link_info
+operator|*
+operator|,
+expr|struct
+name|bfd_link_order
 operator|*
 operator|,
 name|bfd_byte
@@ -634,6 +639,10 @@ operator|*
 operator|,
 name|boolean
 name|relocateable
+operator|,
+name|asymbol
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -650,8 +659,37 @@ name|arelent
 operator|*
 operator|,
 expr|struct
-name|bfd_seclet
+name|bfd_link_info
 operator|*
+operator|,
+name|asection
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|bfd_perform_slip
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+name|abfd
+operator|,
+name|unsigned
+name|int
+name|slip
+operator|,
+name|asection
+operator|*
+name|input_section
+operator|,
+name|bfd_vma
+name|val
 operator|)
 argument_list|)
 decl_stmt|;
@@ -671,13 +709,33 @@ name|unsigned
 name|int
 name|offset
 decl_stmt|;
+comment|/* Should the value of this symbol be renumbered.  Used for           XCOFF C_BSTAT symbols.  Set by coff_slurp_symbol_table.  */
+name|unsigned
+name|int
+name|fix_value
+range|:
+literal|1
+decl_stmt|;
 comment|/* Should the tag field of this symbol be renumbered.           Created by coff_pointerize_aux. */
-name|char
+name|unsigned
+name|int
 name|fix_tag
+range|:
+literal|1
 decl_stmt|;
 comment|/* Should the endidx field of this symbol be renumbered.           Created by coff_pointerize_aux. */
-name|char
+name|unsigned
+name|int
 name|fix_end
+range|:
+literal|1
+decl_stmt|;
+comment|/* Should the x_csect.x_scnlen field be renumbered.           Created by coff_slurp_symbol_table. */
+name|unsigned
+name|int
+name|fix_scnlen
+range|:
+literal|1
 decl_stmt|;
 comment|/* The container for the symbol structure as read and translated            from the file. */
 union|union
@@ -755,6 +813,12 @@ operator|,
 name|int
 name|class
 operator|,
+name|int
+name|indaux
+operator|,
+name|int
+name|numaux
+operator|,
 name|PTR
 name|in
 operator|)
@@ -819,6 +883,12 @@ name|type
 operator|,
 name|int
 name|class
+operator|,
+name|int
+name|indaux
+operator|,
+name|int
+name|numaux
 operator|,
 name|PTR
 name|ext
@@ -1184,9 +1254,14 @@ operator|*
 name|abfd
 operator|,
 expr|struct
-name|bfd_seclet
+name|bfd_link_info
 operator|*
-name|seclet
+name|link_info
+operator|,
+expr|struct
+name|bfd_link_order
+operator|*
+name|link_order
 operator|,
 name|arelent
 operator|*
@@ -1215,14 +1290,13 @@ argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
+name|bfd
+operator|*
+name|abfd
+operator|,
 name|asection
 operator|*
 name|input_section
-operator|,
-name|asymbol
-operator|*
-operator|*
-name|symbols
 operator|,
 name|arelent
 operator|*
@@ -1231,6 +1305,11 @@ operator|,
 name|unsigned
 name|int
 name|shrink
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+name|link_info
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1262,10 +1341,14 @@ name|t
 parameter_list|,
 name|c
 parameter_list|,
+name|ind
+parameter_list|,
+name|num
+parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|((coff_backend_info (a)->_bfd_coff_swap_aux_in) (a,e,t,c,i))
+value|((coff_backend_info (a)->_bfd_coff_swap_aux_in) (a,e,t,c,ind,num,i))
 end_define
 
 begin_define
@@ -1333,7 +1416,7 @@ define|#
 directive|define
 name|bfd_coff_swap_aux_out
 parameter_list|(
-name|abfd
+name|a
 parameter_list|,
 name|i
 parameter_list|,
@@ -1341,10 +1424,14 @@ name|t
 parameter_list|,
 name|c
 parameter_list|,
+name|ind
+parameter_list|,
+name|num
+parameter_list|,
 name|o
 parameter_list|)
 define|\
-value|((coff_backend_info (abfd)->_bfd_coff_swap_aux_out) (abfd, i,t,c, o))
+value|((coff_backend_info (a)->_bfd_coff_swap_aux_out) (a,i,t,c,ind,num,o))
 end_define
 
 begin_define
@@ -1635,7 +1722,9 @@ name|bfd_coff_reloc16_extra_cases
 parameter_list|(
 name|abfd
 parameter_list|,
-name|seclet
+name|link_info
+parameter_list|,
+name|link_order
 parameter_list|,
 name|reloc
 parameter_list|,
@@ -1646,7 +1735,7 @@ parameter_list|,
 name|dst_ptr
 parameter_list|)
 define|\
-value|((coff_backend_info (abfd)->_bfd_coff_reloc16_extra_cases)\          (abfd, seclet, reloc, data, src_ptr, dst_ptr))
+value|((coff_backend_info (abfd)->_bfd_coff_reloc16_extra_cases)\          (abfd, link_info, link_order, reloc, data, src_ptr, dst_ptr))
 end_define
 
 begin_define
@@ -1658,14 +1747,14 @@ name|abfd
 parameter_list|,
 name|section
 parameter_list|,
-name|symbols
-parameter_list|,
 name|reloc
 parameter_list|,
 name|shrink
+parameter_list|,
+name|link_info
 parameter_list|)
 define|\
-value|((coff_backend_info (abfd)->_bfd_coff_reloc16_estimate)\          (section, symbols, reloc, shrink))
+value|((coff_backend_info (abfd)->_bfd_coff_reloc16_estimate)\          (abfd, section, reloc, shrink, link_info))
 end_define
 
 end_unit

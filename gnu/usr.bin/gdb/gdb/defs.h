@@ -37,39 +37,25 @@ file|"ansidecl.h"
 end_include
 
 begin_comment
-comment|/* An address in the program being debugged.  Host byte order.  */
+comment|/* For BFD64 and bfd_vma.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CORE_ADDR_TYPE
-end_ifndef
+begin_include
+include|#
+directive|include
+file|"bfd.h"
+end_include
+
+begin_comment
+comment|/* An address in the program being debugged.  Host byte order.  Rather    than duplicate all the logic in BFD which figures out what type    this is (long, long long, etc.) and whether it needs to be 64    bits (the host/target interactions are subtle), we just use    bfd_vma.  */
+end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
+name|bfd_vma
 name|CORE_ADDR
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|CORE_ADDR_TYPE
-name|CORE_ADDR
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -281,7 +267,10 @@ name|language_chill
 block|,
 comment|/* Chill */
 name|language_m2
+block|,
 comment|/* Modula-2 */
+name|language_asm
+comment|/* Assembly language */
 block|}
 enum|;
 end_enum
@@ -740,6 +729,27 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Annotation stuff.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|annotation_level
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* in stack.c */
+end_comment
+
+begin_escape
+end_escape
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -780,6 +790,27 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_typedef
+typedef|typedef
+name|FILE
+name|GDB_FILE
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|gdb_stdout
+value|stdout
+end_define
+
+begin_define
+define|#
+directive|define
+name|gdb_stderr
+value|stderr
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -789,8 +820,42 @@ argument_list|(
 operator|(
 name|CORE_ADDR
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gdb_flush
+name|PARAMS
+argument_list|(
+operator|(
+name|GDB_FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|GDB_FILE
+modifier|*
+name|gdb_fopen
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+name|name
+operator|,
+name|char
+operator|*
+name|mode
 operator|)
 argument_list|)
 decl_stmt|;
@@ -807,7 +872,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -817,7 +882,78 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|fputs_unfiltered
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|GDB_FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fputc_unfiltered
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|GDB_FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|putc_unfiltered
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|putchar_unfiltered
+parameter_list|(
+name|C
+parameter_list|)
+value|putc_unfiltered(C)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|puts_filtered
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|puts_unfiltered
 name|PARAMS
 argument_list|(
 operator|(
@@ -876,6 +1012,38 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|vprintf_unfiltered
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|vfprintf_unfiltered
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|fprintf_unfiltered
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|printf_unfiltered
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -885,7 +1053,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -901,7 +1069,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -931,10 +1099,31 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Print a host address.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gdb_print_address
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|GDB_FILE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -947,7 +1136,7 @@ name|fprintf_symbol_filtered
 name|PARAMS
 argument_list|(
 operator|(
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|char
@@ -1078,6 +1267,9 @@ name|char
 operator|*
 operator|,
 name|int
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1087,19 +1279,6 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|print_prompt
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|batch_mode
 name|PARAMS
 argument_list|(
 operator|(
@@ -1148,12 +1327,30 @@ argument_list|(
 operator|(
 name|CORE_ADDR
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
 operator|,
 name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|print_address_numeric
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|,
+name|int
+operator|,
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -1169,7 +1366,7 @@ argument_list|(
 operator|(
 name|CORE_ADDR
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|)
 argument_list|)
@@ -1417,6 +1614,24 @@ include|#
 directive|include
 file|"nm.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL_DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|kernel_debugging
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* If the xm.h file did not define the mode string used to open the    files, assume that binary files are opened the same way as text    files */
@@ -1797,294 +2012,34 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Number of bits in a char or unsigned char for the target machine.    Just like CHAR_BIT in<limits.h> but describes the target machine.  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD64
+end_ifdef
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TARGET_CHAR_BIT
-argument_list|)
-end_if
+begin_comment
+comment|/* This is to make sure that LONGEST is at least as big as CORE_ADDR.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|TARGET_CHAR_BIT
-value|8
+name|LONGEST
+value|BFD_HOST_64_BIT
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
-comment|/* Number of bits in a short or unsigned short for the target machine. */
+comment|/* No BFD64 */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TARGET_SHORT_BIT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|TARGET_SHORT_BIT
-value|(2 * TARGET_CHAR_BIT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* Number of bits in an int or unsigned int for the target machine. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TARGET_INT_BIT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|TARGET_INT_BIT
-value|(4 * TARGET_CHAR_BIT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Number of bits in a long or unsigned long for the target machine. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TARGET_LONG_BIT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|TARGET_LONG_BIT
-value|(4 * TARGET_CHAR_BIT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Number of bits in a long long or unsigned long long for the target machine. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TARGET_LONG_LONG_BIT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|TARGET_LONG_LONG_BIT
-value|(2 * TARGET_LONG_BIT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Number of bits in a float for the target machine. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TARGET_FLOAT_BIT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|TARGET_FLOAT_BIT
-value|(4 * TARGET_CHAR_BIT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Number of bits in a double for the target machine. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TARGET_DOUBLE_BIT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|TARGET_DOUBLE_BIT
-value|(8 * TARGET_CHAR_BIT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Number of bits in a long double for the target machine.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TARGET_LONG_DOUBLE_BIT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|TARGET_LONG_DOUBLE_BIT
-value|(2 * TARGET_DOUBLE_BIT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Number of bits in a "complex" for the target machine. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TARGET_COMPLEX_BIT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|TARGET_COMPLEX_BIT
-value|(2 * TARGET_FLOAT_BIT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Number of bits in a "double complex" for the target machine. */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TARGET_DOUBLE_COMPLEX_BIT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|TARGET_DOUBLE_COMPLEX_BIT
-value|(2 * TARGET_DOUBLE_BIT)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Number of bits in a pointer for the target machine */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TARGET_PTR_BIT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|TARGET_PTR_BIT
-value|TARGET_INT_BIT
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Default to support for "long long" if the host compiler being used is gcc.    Config files must define CC_HAS_LONG_LONG to use other host compilers    that are capable of supporting "long long", and to cause gdb to use that    support.  Not defining CC_HAS_LONG_LONG will suppress use of "long long"    regardless of what compiler is used.     FIXME: For now, automatic selection of "long long" as the default when    gcc is used is disabled, pending further testing.  Concerns include the    impact on gdb performance and the universality of bugfree long long    support on platforms that do have gcc.  Compiling with FORCE_LONG_LONG    will select "long long" use for testing purposes.  -fnf */
+comment|/* If all compilers for this host support "long long" and we want to    use it for LONGEST (the performance hit is about 10% on a testsuite    run based on one DECstation test), then the xm.h file can define    CC_HAS_LONG_LONG.     Using GCC 1.39 on BSDI with long long causes about 700 new    testsuite failures.  Using long long for LONGEST on the DECstation    causes 3 new FAILs in the testsuite and many heuristic fencepost    warnings.  These are not investigated, but a first guess would be    that the BSDI problems are GCC bugs in long long support and the    latter are GDB bugs.  */
 end_comment
 
 begin_ifndef
@@ -2106,10 +2061,6 @@ argument_list|(
 name|FORCE_LONG_LONG
 argument_list|)
 end_if
-
-begin_comment
-comment|/* See FIXME above */
-end_comment
 
 begin_define
 define|#
@@ -2173,97 +2124,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* No BFD64 */
+end_comment
+
 begin_comment
 comment|/* Convert a LONGEST to an int.  This is used in contexts (e.g. number of    arguments to a function, number in a value history, register number, etc.)    where the value must not be larger than can fit in an int.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_decl_stmt
+specifier|extern
+name|int
 name|longest_to_int
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CC_HAS_LONG_LONG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|longest_to_int
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)> INT_MAX || (x)< INT_MIN) \ 			       ? (error ("Value out of range."),0) : (int) (x))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Assume sizeof (int) == sizeof (long).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|longest_to_int
-parameter_list|(
-name|x
-parameter_list|)
-value|((int) (x))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* If we picked up a copy of CHAR_BIT from a configuration file    (which may get it by including<limits.h>) then use it to set    the number of bits in a host char.  If not, use the same size    as the target. */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
+name|PARAMS
 argument_list|(
-name|CHAR_BIT
+operator|(
+name|LONGEST
+operator|)
 argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HOST_CHAR_BIT
-value|CHAR_BIT
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|HOST_CHAR_BIT
-value|TARGET_CHAR_BIT
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Assorted functions we can declare, now that const and volatile are     defined.  */
@@ -2527,6 +2412,30 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Message to be printed before the error message, when an error occurs.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|error_pre_print
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Message to be printed before the warning message, when a warning occurs.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|warning_pre_print
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|NORETURN
@@ -2536,6 +2445,19 @@ name|error
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|error_begin
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|extern
@@ -2913,7 +2835,7 @@ name|fclose
 name|PARAMS
 argument_list|(
 operator|(
-name|FILE
+name|GDB_FILE
 operator|*
 name|stream
 operator|)
@@ -3077,7 +2999,7 @@ operator|,
 name|int
 argument_list|(
 operator|*
-name|comp
+name|compar
 argument_list|)
 argument_list|(
 specifier|const
@@ -3331,6 +3253,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* Not GNU C */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3352,20 +3278,30 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_comment
+comment|/* We need to be careful not to declare this in a way which conflicts with    bison.  Bison never declares it as char *, but under various circumstances    (like __hpux) we need to use void *.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+end_if
 
 begin_function_decl
 specifier|extern
 name|void
 modifier|*
 name|alloca
-parameter_list|(
-name|size_t
-parameter_list|)
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -3375,7 +3311,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* __STDC__ */
+comment|/* Don't use void *.  */
 end_comment
 
 begin_function_decl
@@ -3392,15 +3328,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* Don't use void *.  */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Not GNU C */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* alloca not defined */
+end_comment
 
 begin_comment
 comment|/* TARGET_BYTE_ORDER and HOST_BYTE_ORDER must be defined to one of these.  */
@@ -3463,6 +3411,329 @@ include|#
 directive|include
 file|"tm.h"
 end_include
+
+begin_comment
+comment|/* Number of bits in a char or unsigned char for the target machine.    Just like CHAR_BIT in<limits.h> but describes the target machine.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TARGET_CHAR_BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_CHAR_BIT
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Number of bits in a short or unsigned short for the target machine. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TARGET_SHORT_BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_SHORT_BIT
+value|(2 * TARGET_CHAR_BIT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Number of bits in an int or unsigned int for the target machine. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TARGET_INT_BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_INT_BIT
+value|(4 * TARGET_CHAR_BIT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Number of bits in a long or unsigned long for the target machine. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TARGET_LONG_BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_LONG_BIT
+value|(4 * TARGET_CHAR_BIT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Number of bits in a long long or unsigned long long for the target machine. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TARGET_LONG_LONG_BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_LONG_LONG_BIT
+value|(2 * TARGET_LONG_BIT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Number of bits in a float for the target machine. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TARGET_FLOAT_BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_FLOAT_BIT
+value|(4 * TARGET_CHAR_BIT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Number of bits in a double for the target machine. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TARGET_DOUBLE_BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_DOUBLE_BIT
+value|(8 * TARGET_CHAR_BIT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Number of bits in a long double for the target machine.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TARGET_LONG_DOUBLE_BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_LONG_DOUBLE_BIT
+value|(2 * TARGET_DOUBLE_BIT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Number of bits in a "complex" for the target machine. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TARGET_COMPLEX_BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_COMPLEX_BIT
+value|(2 * TARGET_FLOAT_BIT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Number of bits in a "double complex" for the target machine. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TARGET_DOUBLE_COMPLEX_BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_DOUBLE_COMPLEX_BIT
+value|(2 * TARGET_DOUBLE_BIT)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Number of bits in a pointer for the target machine */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TARGET_PTR_BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_PTR_BIT
+value|TARGET_INT_BIT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* If we picked up a copy of CHAR_BIT from a configuration file    (which may get it by including<limits.h>) then use it to set    the number of bits in a host char.  If not, use the same size    as the target. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CHAR_BIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HOST_CHAR_BIT
+value|CHAR_BIT
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|HOST_CHAR_BIT
+value|TARGET_CHAR_BIT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The bit byte-order has to do just with numbering of bits in    debugging symbols and such.  Conceptually, it's quite separate    from byte/word byte order.  */
@@ -3533,60 +3804,6 @@ end_endif
 
 begin_comment
 comment|/* BITS_BIG_ENDIAN not defined.  */
-end_comment
-
-begin_comment
-comment|/* Swap LEN bytes at BUFFER between target and host byte-order.  This is    the wrong way to do byte-swapping because it assumes that you have a way    to have a host variable of exactly the right size.    extract_* are the right way.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|TARGET_BYTE_ORDER
-operator|==
-name|HOST_BYTE_ORDER
-end_if
-
-begin_define
-define|#
-directive|define
-name|SWAP_TARGET_AND_HOST
-parameter_list|(
-name|buffer
-parameter_list|,
-name|len
-parameter_list|)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Target and host byte order differ.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SWAP_TARGET_AND_HOST
-parameter_list|(
-name|buffer
-parameter_list|,
-name|len
-parameter_list|)
-define|\
-value|{	       	       	       	       	       	       	       	       	 \     char tmp;								 \     char *p = (char *)(buffer);						 \     char *q = ((char *)(buffer)) + len - 1;		   		 \     for (; p< q; p++, q--)				 		 \       {									 \         tmp = *q;							 \         *q = *p;							 \         *p = tmp;							 \       }									 \   }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Target and host byte order differ.  */
 end_comment
 
 begin_comment
@@ -3691,6 +3908,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|double
+name|extract_floating
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|store_floating
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+name|double
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
@@ -3749,17 +3998,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* In some modules, we don't have a definition of REGISTER_TYPE yet, so we    must avoid prototyping this function for now.  FIXME.  Should be: extern CORE_ADDR push_word PARAMS ((CORE_ADDR, REGISTER_TYPE));  */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|CORE_ADDR
 name|push_word
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|,
+name|unsigned
+name|LONGEST
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Some parts of gdb might be considered optional, in the sense that they    are not essential for being able to build a working, usable debugger    for a specific environment.  For example, the maintenance commands    are there for the benefit of gdb maintainers.  As another example,    some environments really don't need gdb's that are able to read N    different object file formats.  In order to make it possible (but    not necessarily recommended) to build "stripped down" versions of    gdb, the following defines control selective compilation of those    parts of gdb which can be safely left out when necessary.  Note that    the default is to include everything. */

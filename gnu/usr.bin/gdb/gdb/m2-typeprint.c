@@ -126,7 +126,7 @@ name|char
 modifier|*
 name|varstring
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -150,7 +150,7 @@ operator|,
 name|char
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int

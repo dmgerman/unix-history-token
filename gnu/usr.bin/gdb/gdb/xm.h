@@ -30,16 +30,6 @@ directive|define
 name|PSIGNAL_IN_SIGNAL_H
 end_define
 
-begin_comment
-comment|/* Get rid of any system-imposed stack limit if possible.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SET_STACK_LIMIT_HUGE
-end_define
-
 begin_define
 define|#
 directive|define

@@ -135,7 +135,7 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -199,7 +199,7 @@ name|length
 parameter_list|,
 name|force_ellipses
 parameter_list|)
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -260,9 +260,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|chill_printchar
+name|fputs_filtered
 argument_list|(
-literal|'\0'
+literal|"\"\""
 argument_list|,
 name|stream
 argument_list|)
@@ -373,7 +373,7 @@ condition|)
 block|{
 name|fputs_filtered
 argument_list|(
-literal|"'//"
+literal|"\"//"
 argument_list|,
 name|stream
 argument_list|)
@@ -439,7 +439,7 @@ condition|)
 block|{
 name|fputs_filtered
 argument_list|(
-literal|"'//"
+literal|"\"//"
 argument_list|,
 name|stream
 argument_list|)
@@ -451,7 +451,7 @@ expr_stmt|;
 block|}
 name|fputs_filtered
 argument_list|(
-literal|"'"
+literal|"\""
 argument_list|,
 name|stream
 argument_list|)
@@ -486,7 +486,7 @@ condition|)
 block|{
 name|fputs_filtered
 argument_list|(
-literal|"'//"
+literal|"\"//"
 argument_list|,
 name|stream
 argument_list|)
@@ -498,7 +498,7 @@ expr_stmt|;
 block|}
 name|fputs_filtered
 argument_list|(
-literal|"c'"
+literal|"c\""
 argument_list|,
 name|stream
 argument_list|)
@@ -533,7 +533,7 @@ condition|)
 block|{
 name|fputs_filtered
 argument_list|(
-literal|"'"
+literal|"\""
 argument_list|,
 name|stream
 argument_list|)
@@ -558,6 +558,71 @@ name|stream
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Return 1 if TYPE is a varying string or array. */
+end_comment
+
+begin_function
+name|int
+name|chill_is_varying_struct
+parameter_list|(
+name|type
+parameter_list|)
+name|struct
+name|type
+modifier|*
+name|type
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|TYPE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|!=
+name|TYPE_CODE_STRUCT
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|TYPE_NFIELDS
+argument_list|(
+name|type
+argument_list|)
+operator|!=
+literal|2
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|TYPE_FIELD_NAME
+argument_list|(
+name|type
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+literal|"__var_length"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -688,7 +753,7 @@ name|TYPE_CODE_INT
 argument_list|,
 literal|1
 argument_list|,
-name|TYPE_FLAG_SIGNED
+literal|0
 argument_list|,
 literal|"BYTE"
 argument_list|,
@@ -727,7 +792,7 @@ name|TYPE_CODE_INT
 argument_list|,
 literal|2
 argument_list|,
-name|TYPE_FLAG_SIGNED
+literal|0
 argument_list|,
 literal|"INT"
 argument_list|,
@@ -779,7 +844,7 @@ name|TYPE_CODE_INT
 argument_list|,
 literal|4
 argument_list|,
-name|TYPE_FLAG_SIGNED
+literal|0
 argument_list|,
 literal|"LONG"
 argument_list|,
@@ -1187,14 +1252,9 @@ comment|/* Print a type using appropriate syntax */
 name|chill_val_print
 block|,
 comment|/* Print a value using appropriate syntax */
-operator|&
-name|BUILTIN_TYPE_LONGEST
+name|chill_value_print
 block|,
-comment|/* longest signed   integral type */
-operator|&
-name|BUILTIN_TYPE_UNSIGNED_LONGEST
-block|,
-comment|/* longest unsigned integral type */
+comment|/* Print a top-levl value */
 operator|&
 name|builtin_type_chill_real
 block|,

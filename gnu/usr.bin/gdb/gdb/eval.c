@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Evaluate expressions for GDB.    Copyright 1986, 1987, 1989, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Evaluate expressions for GDB.    Copyright 1986, 1987, 1989, 1991, 1992, 1993, 1994    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -48,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"demangle.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"language.h"
 end_include
 
@@ -80,7 +92,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|value
+name|value_ptr
 name|evaluate_subexp_for_sizeof
 name|PARAMS
 argument_list|(
@@ -98,7 +110,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|value
+name|value_ptr
 name|evaluate_subexp_with_coercion
 name|PARAMS
 argument_list|(
@@ -119,7 +131,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|value
+name|value_ptr
 name|evaluate_subexp_for_address
 name|PARAMS
 argument_list|(
@@ -140,7 +152,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|value
+name|value_ptr
 name|evaluate_subexp
 name|PARAMS
 argument_list|(
@@ -305,7 +317,7 @@ block|}
 end_function
 
 begin_function
-name|value
+name|value_ptr
 name|parse_and_eval
 parameter_list|(
 name|exp
@@ -326,7 +338,7 @@ name|exp
 argument_list|)
 decl_stmt|;
 specifier|register
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
 specifier|register
@@ -366,7 +378,7 @@ comment|/* Parse up to a comma (or to a closeparen)    in the string EXPP as an 
 end_comment
 
 begin_function
-name|value
+name|value_ptr
 name|parse_to_comma_and_eval
 parameter_list|(
 name|expp
@@ -397,7 +409,7 @@ literal|1
 argument_list|)
 decl_stmt|;
 specifier|register
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
 specifier|register
@@ -439,40 +451,8 @@ begin_comment
 comment|/* Evaluate an expression in internal prefix form    such as is constructed by parse.y.     See expression.h for info on the format of an expression.  */
 end_comment
 
-begin_function_decl
-specifier|static
-name|value
-name|evaluate_subexp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|value
-name|evaluate_subexp_for_address
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|value
-name|evaluate_subexp_for_sizeof
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|value
-name|evaluate_subexp_with_coercion
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
-name|value
+name|value_ptr
 name|evaluate_expression
 parameter_list|(
 name|exp
@@ -509,7 +489,7 @@ comment|/* Evaluate an expression, avoiding all memory references    and getting
 end_comment
 
 begin_function
-name|value
+name|value_ptr
 name|evaluate_type
 parameter_list|(
 name|exp
@@ -543,7 +523,7 @@ end_function
 
 begin_function
 specifier|static
-name|value
+name|value_ptr
 name|evaluate_subexp
 parameter_list|(
 name|expect_type
@@ -597,7 +577,7 @@ decl_stmt|,
 name|oldpos
 decl_stmt|;
 specifier|register
-name|value
+name|value_ptr
 name|arg1
 init|=
 name|NULL
@@ -616,7 +596,7 @@ decl_stmt|;
 name|int
 name|nargs
 decl_stmt|;
-name|value
+name|value_ptr
 modifier|*
 name|argvec
 decl_stmt|;
@@ -1173,14 +1153,14 @@ expr_stmt|;
 name|argvec
 operator|=
 operator|(
-name|value
+name|value_ptr
 operator|*
 operator|)
 name|alloca
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|value
+name|value_ptr
 argument_list|)
 operator|*
 name|nargs
@@ -1598,7 +1578,7 @@ operator|==
 name|fnoffset
 condition|)
 block|{
-name|value
+name|value_ptr
 name|temp
 init|=
 name|value_ind
@@ -1824,14 +1804,14 @@ comment|/* Allocate arg vector, including space for the function to be 	 called 
 name|argvec
 operator|=
 operator|(
-name|value
+name|value_ptr
 operator|*
 operator|)
 name|alloca
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|value
+name|value_ptr
 argument_list|)
 operator|*
 operator|(
@@ -1888,15 +1868,58 @@ block|{
 name|int
 name|static_memfuncp
 decl_stmt|;
-name|value
+name|value_ptr
 name|temp
 init|=
 name|arg2
+decl_stmt|;
+name|char
+name|tstr
+index|[
+literal|64
+index|]
 decl_stmt|;
 name|argvec
 index|[
 literal|1
 index|]
+operator|=
+name|arg2
+expr_stmt|;
+name|argvec
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|tstr
+argument_list|,
+operator|&
+name|exp
+operator|->
+name|elts
+index|[
+name|pc2
+operator|+
+literal|2
+index|]
+operator|.
+name|string
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|argvec
+index|[
+literal|0
+index|]
+condition|)
+block|{
+name|temp
 operator|=
 name|arg2
 expr_stmt|;
@@ -1914,17 +1937,7 @@ name|argvec
 operator|+
 literal|1
 argument_list|,
-operator|&
-name|exp
-operator|->
-name|elts
-index|[
-name|pc2
-operator|+
-literal|2
-index|]
-operator|.
-name|string
+name|tstr
 argument_list|,
 operator|&
 name|static_memfuncp
@@ -1938,6 +1951,7 @@ else|:
 literal|"structure pointer"
 argument_list|)
 expr_stmt|;
+block|}
 name|arg2
 operator|=
 name|value_from_longest
@@ -2183,7 +2197,7 @@ argument_list|)
 return|;
 else|else
 block|{
-name|value
+name|value_ptr
 name|temp
 init|=
 name|arg1
@@ -2194,11 +2208,7 @@ argument_list|(
 operator|&
 name|temp
 argument_list|,
-operator|(
-name|value
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|exp
@@ -2212,11 +2222,7 @@ index|]
 operator|.
 name|string
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 literal|"structure"
 argument_list|)
@@ -2313,7 +2319,7 @@ argument_list|)
 return|;
 else|else
 block|{
-name|value
+name|value_ptr
 name|temp
 init|=
 name|arg1
@@ -2324,11 +2330,7 @@ argument_list|(
 operator|&
 name|temp
 argument_list|,
-operator|(
-name|value
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|&
 name|exp
@@ -2342,11 +2344,7 @@ index|]
 operator|.
 name|string
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 literal|"structure pointer"
 argument_list|)
@@ -3163,6 +3161,48 @@ return|;
 else|else
 return|return
 name|value_subscript
+argument_list|(
+name|arg1
+argument_list|,
+name|arg2
+argument_list|)
+return|;
+case|case
+name|BINOP_IN
+case|:
+name|arg1
+operator|=
+name|evaluate_subexp_with_coercion
+argument_list|(
+name|exp
+argument_list|,
+name|pos
+argument_list|,
+name|noside
+argument_list|)
+expr_stmt|;
+name|arg2
+operator|=
+name|evaluate_subexp_with_coercion
+argument_list|(
+name|exp
+argument_list|,
+name|pos
+argument_list|,
+name|noside
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|noside
+operator|==
+name|EVAL_SKIP
+condition|)
+goto|goto
+name|nosideret
+goto|;
+return|return
+name|value_in
 argument_list|(
 name|arg1
 argument_list|,
@@ -5238,7 +5278,7 @@ end_comment
 
 begin_function
 specifier|static
-name|value
+name|value_ptr
 name|evaluate_subexp_for_address
 parameter_list|(
 name|exp
@@ -5490,7 +5530,7 @@ operator|==
 name|EVAL_AVOID_SIDE_EFFECTS
 condition|)
 block|{
-name|value
+name|value_ptr
 name|x
 init|=
 name|evaluate_subexp
@@ -5559,7 +5599,7 @@ end_comment
 
 begin_function
 specifier|static
-name|value
+name|value_ptr
 name|evaluate_subexp_with_coercion
 parameter_list|(
 name|exp
@@ -5594,7 +5634,7 @@ name|int
 name|pc
 decl_stmt|;
 specifier|register
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
 name|struct
@@ -5726,7 +5766,7 @@ end_comment
 
 begin_function
 specifier|static
-name|value
+name|value_ptr
 name|evaluate_subexp_for_sizeof
 parameter_list|(
 name|exp
@@ -5753,7 +5793,7 @@ specifier|register
 name|int
 name|pc
 decl_stmt|;
-name|value
+name|value_ptr
 name|val
 decl_stmt|;
 name|pc

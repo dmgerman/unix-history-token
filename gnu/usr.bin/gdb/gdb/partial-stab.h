@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Shared code to pre-read a stab (dbx-style), when building a psymtab.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Shared code to pre-read a stab (dbx-style), when building a psymtab.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -688,12 +688,45 @@ block|}
 case|case
 name|N_BINCL
 case|:
+block|{
 ifdef|#
 directive|ifdef
 name|DBXREAD_ONLY
-comment|/* Add this bincl to the bincl_list for future EXCLs.  No 	     need to save the string; it'll be around until 	     read_dbx_symtab function returns */
+name|enum
+name|language
+name|tmp_language
+decl_stmt|;
+comment|/* Add this bincl to the bincl_list for future EXCLs.  No 	       need to save the string; it'll be around until 	       read_dbx_symtab function returns */
 name|SET_NAMESTRING
 argument_list|()
+expr_stmt|;
+name|tmp_language
+operator|=
+name|deduce_language_from_filename
+argument_list|(
+name|namestring
+argument_list|)
+expr_stmt|;
+comment|/* Only change the psymtab's language if we've learned 	       something useful (eg. tmp_language is not language_unknown). 	       In addition, to match what start_subfile does, never change 	       from C++ to C.  */
+if|if
+condition|(
+name|tmp_language
+operator|!=
+name|language_unknown
+operator|&&
+operator|(
+name|tmp_language
+operator|!=
+name|language_c
+operator|||
+name|psymtab_language
+operator|!=
+name|language_cplus
+operator|)
+condition|)
+name|psymtab_language
+operator|=
+name|tmp_language
 expr_stmt|;
 name|add_bincl_to_list
 argument_list|(
@@ -714,14 +747,48 @@ comment|/* DBXREAD_ONLY */
 continue|continue;
 endif|#
 directive|endif
+block|}
 case|case
 name|N_SOL
 case|:
+block|{
+name|enum
+name|language
+name|tmp_language
+decl_stmt|;
 comment|/* Mark down an include file in the current psymtab */
 name|SET_NAMESTRING
 argument_list|()
 expr_stmt|;
-comment|/* In C++, one may expect the same filename to come round many 	     times, when code is coming alternately from the main file 	     and from inline functions in other files. So I check to see 	     if this is a file we've seen before -- either the main 	     source file, or a previously included file.  	     This seems to be a lot of time to be spending on N_SOL, but 	     things like "break c-exp.y:435" need to work (I 	     suppose the psymtab_include_list could be hashed or put 	     in a binary tree, if profiling shows this is a major hog).  */
+name|tmp_language
+operator|=
+name|deduce_language_from_filename
+argument_list|(
+name|namestring
+argument_list|)
+expr_stmt|;
+comment|/* Only change the psymtab's language if we've learned 	       something useful (eg. tmp_language is not language_unknown). 	       In addition, to match what start_subfile does, never change 	       from C++ to C.  */
+if|if
+condition|(
+name|tmp_language
+operator|!=
+name|language_unknown
+operator|&&
+operator|(
+name|tmp_language
+operator|!=
+name|language_c
+operator|||
+name|psymtab_language
+operator|!=
+name|language_cplus
+operator|)
+condition|)
+name|psymtab_language
+operator|=
+name|tmp_language
+expr_stmt|;
+comment|/* In C++, one may expect the same filename to come round many 	       times, when code is coming alternately from the main file 	       and from inline functions in other files. So I check to see 	       if this is a file we've seen before -- either the main 	       source file, or a previously included file. 	        	       This seems to be a lot of time to be spending on N_SOL, but 	       things like "break c-exp.y:435" need to work (I 	       suppose the psymtab_include_list could be hashed or put 	       in a binary tree, if profiling shows this is a major hog).  */
 if|if
 condition|(
 name|pst
@@ -857,6 +924,7 @@ argument_list|)
 expr_stmt|;
 block|}
 continue|continue;
+block|}
 case|case
 name|N_LSYM
 case|:
@@ -1079,6 +1147,40 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
+comment|/* The semantics of C++ state that "struct foo { ... }" 		     also defines a typedef for "foo".  Unfortuantely, cfront 		     never makes the typedef when translating from C++ to C. 		     We make the typedef here so that "ptype foo" works as 		     expected for cfront translated code.  */
+elseif|else
+if|if
+condition|(
+name|psymtab_language
+operator|==
+name|language_cplus
+condition|)
+block|{
+comment|/* Also a typedef with the same name.  */
+name|ADD_PSYMBOL_TO_LIST
+argument_list|(
+name|namestring
+argument_list|,
+name|p
+operator|-
+name|namestring
+argument_list|,
+name|VAR_NAMESPACE
+argument_list|,
+name|LOC_TYPEDEF
+argument_list|,
+name|objfile
+operator|->
+name|static_psymbols
+argument_list|,
+name|CUR_SYMBOL_VALUE
+argument_list|,
+name|psymtab_language
+argument_list|,
+name|objfile
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 goto|goto
 name|check_enum
@@ -1203,6 +1305,20 @@ operator|*
 name|p
 operator|==
 literal|'\\'
+operator|||
+operator|(
+operator|*
+name|p
+operator|==
+literal|'?'
+operator|&&
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+operator|)
 condition|)
 name|p
 operator|=
@@ -1314,6 +1430,15 @@ continue|continue;
 case|case
 literal|'f'
 case|:
+name|CUR_SYMBOL_VALUE
+operator|+=
+name|ANOFFSET
+argument_list|(
+name|section_offsets
+argument_list|,
+name|SECT_OFF_TEXT
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DBXREAD_ONLY
@@ -1322,6 +1447,7 @@ name|last_function_name
 operator|=
 name|namestring
 expr_stmt|;
+comment|/* Do not fix textlow==0 for .o or NLM files, as 0 is a legit 		 value for the bottom of the text seg in those cases. */
 if|if
 condition|(
 name|pst
@@ -1331,6 +1457,9 @@ operator|->
 name|textlow
 operator|==
 literal|0
+operator|&&
+operator|!
+name|symfile_relocatable
 condition|)
 name|pst
 operator|->
@@ -1376,6 +1505,15 @@ comment|/* Global functions were ignored here, but now they 	         are put in
 case|case
 literal|'F'
 case|:
+name|CUR_SYMBOL_VALUE
+operator|+=
+name|ANOFFSET
+argument_list|(
+name|section_offsets
+argument_list|,
+name|SECT_OFF_TEXT
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DBXREAD_ONLY
@@ -1384,6 +1522,7 @@ name|last_function_name
 operator|=
 name|namestring
 expr_stmt|;
+comment|/* Do not fix textlow==0 for .o or NLM files, as 0 is a legit 		 value for the bottom of the text seg in those cases. */
 if|if
 condition|(
 name|pst
@@ -1393,6 +1532,9 @@ operator|->
 name|textlow
 operator|==
 literal|0
+operator|&&
+operator|!
+name|symfile_relocatable
 condition|)
 name|pst
 operator|->
@@ -1472,8 +1614,14 @@ case|case
 literal|'9'
 case|:
 continue|continue;
+case|case
+literal|':'
+case|:
+comment|/* It is a C++ nested symbol.  We don't need to record it 		 (I don't think); if we try to look up foo::bar::baz, 		 then symbols for the symtab containing foo should get 		 read in, I think.  */
+comment|/* Someone says sun cc puts out symbols like 		 /foo/baz/maclib::/usr/local/bin/maclib, 		 which would get here with a symbol type of ':'.  */
+continue|continue;
 default|default:
-comment|/* Unexpected symbol.  Ignore it; perhaps it is an extension 		 that we don't know about.  		 Someone says sun cc puts out symbols like 		 /foo/baz/maclib::/usr/local/bin/maclib, 		 which would get here with a symbol type of ':'.  */
+comment|/* Unexpected symbol descriptor.  The second and subsequent stabs 		 of a continued stab can show up here.  The question is 		 whether they ever can mimic a normal stab--it would be 		 nice if not, since we certainly don't want to spend the 		 time searching to the end of every string looking for 		 a backslash.  */
 name|complain
 argument_list|(
 operator|&
@@ -1485,6 +1633,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Ignore it; perhaps it is an extension that we don't 		 know about.  */
 continue|continue;
 block|}
 case|case
@@ -1640,16 +1789,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_INFO
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"Had to reallocate dependency list.\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fprintf_unfiltered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"New dependencies allocated: %d\n"
 argument_list|,
@@ -1772,10 +1921,6 @@ name|unknown_symtype_complaint
 argument_list|,
 name|local_hex_string
 argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|CUR_SYMBOL_TYPE
 argument_list|)
 argument_list|)

@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read NLM (NetWare Loadable Module) format executable files for GDB.    Copyright 1993 Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support (fnf@cygnus.com).  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Read NLM (NetWare Loadable Module) format executable files for GDB.    Copyright 1993, 1994 Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support (fnf@cygnus.com).  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -37,6 +43,18 @@ begin_include
 include|#
 directive|include
 file|"gdb-stabs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"buildsym.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"stabsread.h"
 end_include
 
 begin_decl_stmt
@@ -266,6 +284,8 @@ argument_list|,
 name|address
 argument_list|,
 name|ms_type
+argument_list|,
+name|objfile
 argument_list|)
 expr_stmt|;
 block|}
@@ -299,8 +319,7 @@ modifier|*
 name|objfile
 decl_stmt|;
 block|{
-name|unsigned
-name|int
+name|long
 name|storage_needed
 decl_stmt|;
 name|asymbol
@@ -312,12 +331,10 @@ modifier|*
 modifier|*
 name|symbol_table
 decl_stmt|;
-name|unsigned
-name|int
+name|long
 name|number_of_symbols
 decl_stmt|;
-name|unsigned
-name|int
+name|long
 name|i
 decl_stmt|;
 name|struct
@@ -334,9 +351,31 @@ name|ms_type
 decl_stmt|;
 name|storage_needed
 operator|=
-name|get_symtab_upper_bound
+name|bfd_get_symtab_upper_bound
 argument_list|(
 name|abfd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|storage_needed
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"Can't read symbols from %s: %s"
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|abfd
+argument_list|)
+argument_list|,
+name|bfd_errmsg
+argument_list|(
+name|bfd_get_error
+argument_list|()
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -376,6 +415,28 @@ argument_list|,
 name|symbol_table
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|number_of_symbols
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"Can't read symbols from %s: %s"
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|abfd
+argument_list|)
+argument_list|,
+name|bfd_errmsg
+argument_list|(
+name|bfd_get_error
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -399,11 +460,8 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|sym
-operator|->
-name|flags
-operator|&
-name|BSF_GLOBAL
+comment|/*sym -> flags& BSF_GLOBAL*/
+literal|1
 condition|)
 block|{
 comment|/* Bfd symbols are section relative. */
@@ -429,13 +487,11 @@ operator|!=
 operator|&
 name|bfd_abs_section
 condition|)
-block|{
 name|symaddr
 operator|+=
 name|addr
 expr_stmt|;
-block|}
-comment|/* For non-absolute symbols, use the type of the section 		 they are relative to, to intuit text/data.  Bfd provides 		 no way of figuring this out for absolute symbols. */
+comment|/* For non-absolute symbols, use the type of the section 		 they are relative to, to intuit text/data.  BFD provides 		 no way of figuring this out for absolute symbols. */
 if|if
 condition|(
 name|sym
@@ -446,12 +502,10 @@ name|flags
 operator|&
 name|SEC_CODE
 condition|)
-block|{
 name|ms_type
 operator|=
 name|mst_text
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -463,19 +517,15 @@ name|flags
 operator|&
 name|SEC_DATA
 condition|)
-block|{
 name|ms_type
 operator|=
 name|mst_data
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ms_type
 operator|=
 name|mst_unknown
 expr_stmt|;
-block|}
 name|record_minimal_symbol
 argument_list|(
 operator|(
@@ -549,6 +599,11 @@ decl_stmt|;
 name|CORE_ADDR
 name|offset
 decl_stmt|;
+name|struct
+name|symbol
+modifier|*
+name|mainsym
+decl_stmt|;
 name|init_minimal_symbol_collection
 argument_list|()
 expr_stmt|;
@@ -581,30 +636,78 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
-comment|/* FIXME:  We could locate and read the optional native debugging format      here and add the symbols to the minimal symbol table. */
+name|stabsect_build_psymtabs
+argument_list|(
+name|objfile
+argument_list|,
+name|section_offsets
+argument_list|,
+name|mainline
+argument_list|,
+literal|".stab"
+argument_list|,
+literal|".stabstr"
+argument_list|,
+literal|".text"
+argument_list|)
+expr_stmt|;
+name|mainsym
+operator|=
+name|lookup_symbol
+argument_list|(
+literal|"main"
+argument_list|,
+name|NULL
+argument_list|,
+name|VAR_NAMESPACE
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
-name|have_partial_symbols
-argument_list|()
+name|mainsym
+operator|&&
+name|SYMBOL_CLASS
+argument_list|(
+name|mainsym
+argument_list|)
+operator|==
+name|LOC_BLOCK
 condition|)
 block|{
-name|wrap_here
+name|objfile
+operator|->
+name|ei
+operator|.
+name|main_func_lowpc
+operator|=
+name|BLOCK_START
 argument_list|(
-literal|""
+name|SYMBOL_BLOCK_VALUE
+argument_list|(
+name|mainsym
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf_filtered
+name|objfile
+operator|->
+name|ei
+operator|.
+name|main_func_highpc
+operator|=
+name|BLOCK_END
 argument_list|(
-literal|"(no debugging symbols found)..."
+name|SYMBOL_BLOCK_VALUE
+argument_list|(
+name|mainsym
 argument_list|)
-expr_stmt|;
-name|wrap_here
-argument_list|(
-literal|""
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* FIXME:  We could locate and read the optional native debugging format      here and add the symbols to the minimal symbol table. */
 comment|/* Install any minimal symbols that have been collected as the current      minimal symbols for this objfile. */
 name|install_minimal_symbols
 argument_list|(
@@ -692,6 +795,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|objfile
+operator|->
+name|num_sections
+operator|=
+name|SECT_OFF_MAX
+expr_stmt|;
 name|section_offsets
 operator|=
 operator|(
@@ -762,7 +871,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  Register that we are able to handle NLM file format. */
+comment|/* Register that we are able to handle NLM file format. */
 end_comment
 
 begin_decl_stmt
@@ -772,12 +881,8 @@ name|sym_fns
 name|nlm_sym_fns
 init|=
 block|{
-literal|"nlm"
+name|bfd_target_nlm_flavour
 block|,
-comment|/* sym_name: name or name prefix of BFD target type */
-literal|3
-block|,
-comment|/* sym_namelen: number of significant sym_name chars */
 name|nlm_new_init
 block|,
 comment|/* sym_new_init: init anything gbl to entire symtab */

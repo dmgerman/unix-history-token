@@ -193,8 +193,19 @@ begin_comment
 comment|/* Code indicating demand-paged executable.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BMAGIC
+value|0415
+end_define
+
 begin_comment
-comment|/* This indicates a demand-paged executable with the header in the text.    As far as I know it is only used by 386BSD and/or BSDI.  */
+comment|/* Used by a b.out object.  */
+end_comment
+
+begin_comment
+comment|/* This indicates a demand-paged executable with the header in the text.    It is used by 386BSD (and variants) and Linux, at least.  */
 end_comment
 
 begin_define
@@ -276,7 +287,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The difference between PAGE_SIZE and N_SEGSIZE is that PAGE_SIZE is    the the finest granularity at which you can page something, thus it    controls the padding (if any) before the text segment of a ZMAGIC    file.  N_SEGSIZE is the resolution at which things can be marked as    read-only versus read/write, so it controls the padding between the    text segment and the data segment (in memory; on disk the padding    between them is PAGE_SIZE).  PAGE_SIZE and N_SEGSIZE are the same    for most machines, but different for sun3.  */
+comment|/* The difference between PAGE_SIZE and N_SEGSIZE is that PAGE_SIZE is    the finest granularity at which you can page something, thus it    controls the padding (if any) before the text segment of a ZMAGIC    file.  N_SEGSIZE is the resolution at which things can be marked as    read-only versus read/write, so it controls the padding between the    text segment and the data segment (in memory; on disk the padding    between them is PAGE_SIZE).  PAGE_SIZE and N_SEGSIZE are the same    for most machines, but different for sun3.  */
 end_comment
 
 begin_comment
@@ -361,6 +372,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Returning 0 not TEXT_START_ADDR for OMAGIC and NMAGIC is based on    the assumption that we are dealing with a .o file, not an    executable.  This is necessary for OMAGIC (but means we don't work    right on the output from ld -N); more questionable for NMAGIC.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -394,6 +409,39 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* If N_HEADER_IN_TEXT is not true for ZMAGIC, there is some padding    to make the text segment start at a certain boundary.  For most    systems, this boundary is PAGE_SIZE.  But for Linux, in the    time-honored tradition of crazy ZMAGIC hacks, it is 1024 which is    not what PAGE_SIZE needs to be for QMAGIC.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ZMAGIC_DISK_BLOCK_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ZMAGIC_DISK_BLOCK_SIZE
+value|PAGE_SIZE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|N_DISK_BLOCK_SIZE
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(N_MAGIC(x) == ZMAGIC ? ZMAGIC_DISK_BLOCK_SIZE : PAGE_SIZE)
+end_define
+
+begin_comment
 comment|/* Offset in an a.out of the start of the text section. */
 end_comment
 
@@ -415,7 +463,7 @@ value|(
 comment|/* For {O,N,Q}MAGIC, no padding.  */
 value|\      N_MAGIC(x) != ZMAGIC ? EXEC_BYTES_SIZE : \      N_SHARED_LIB(x) ? 0 : \      N_HEADER_IN_TEXT(x) ?	\ 	    EXEC_BYTES_SIZE :
 comment|/* no padding */
-value|\ 	    PAGE_SIZE
+value|\ 	    ZMAGIC_DISK_BLOCK_SIZE
 comment|/* a page of padding */
 value|\     )
 end_define
@@ -502,7 +550,7 @@ comment|/* Offsets of the various portions of the file after the text segment.  
 end_comment
 
 begin_comment
-comment|/* For {N,Q,Z}MAGIC, there is padding to make the data segment start    on a page boundary.  Most of the time the a_text field (and thus    N_TXTSIZE) already contains this padding.  But if it doesn't (I    think maybe this happens on BSDI and/or 386BSD), then add it.  */
+comment|/* For {Q,Z}MAGIC, there is padding to make the data segment start on    a page boundary.  Most of the time the a_text field (and thus    N_TXTSIZE) already contains this padding.  It is possible that for    BSDI and/or 386BSD it sometimes doesn't contain the padding, and    perhaps we should be adding it here.  But this seems kind of    questionable and probably should be BSDI/386BSD-specific if we do    do it.     For NMAGIC (at least for hp300 BSD, probably others), there is    padding in memory only, not on disk, so we must *not* ever pad here    for NMAGIC.  */
 end_comment
 
 begin_ifndef
@@ -519,7 +567,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(N_MAGIC(x) == OMAGIC ? N_TXTOFF(x) + N_TXTSIZE(x) : \   PAGE_SIZE + ((N_TXTOFF(x) + N_TXTSIZE(x) - 1)& ~(PAGE_SIZE - 1)))
+value|(N_TXTOFF(x) + N_TXTSIZE(x))
 end_define
 
 begin_endif
@@ -922,6 +970,65 @@ value|0x1e
 end_define
 
 begin_comment
+comment|/* Weak symbols.  These are a GNU extension to the a.out format.  The    semantics are those of ELF weak symbols.  Weak symbols are always    externally visible.  The N_WEAK? values are squeezed into the    available slots.  The value of a N_WEAKU symbol is 0.  The values    of the other types are the definitions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_WEAKU
+value|0x0d
+end_define
+
+begin_comment
+comment|/* Weak undefined symbol.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_WEAKA
+value|0x0e
+end_define
+
+begin_comment
+comment|/* Weak absolute symbol.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_WEAKT
+value|0x0f
+end_define
+
+begin_comment
+comment|/* Weak text symbol.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_WEAKD
+value|0x10
+end_define
+
+begin_comment
+comment|/* Weak data symbol.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_WEAKB
+value|0x11
+end_define
+
+begin_comment
+comment|/* Weak bss symbol.  */
+end_comment
+
+begin_comment
 comment|/* Relocations     There	are two types of relocation flavours for a.out systems,   standard and extended. The standard form is used on systems where the   instruction has room for all the bits of an offset to the operand, whilst   the extended form is used when an address operand has to be split over n   instructions. Eg, on the 68k, each move instruction can reference   the target with a displacement of 16 or 32 bits. On the sparc, move   instructions use an offset of 14 bits, so the offset is stored in   the reloc field, and the data in the section is ignored. */
 end_comment
 
@@ -962,21 +1069,21 @@ begin_define
 define|#
 directive|define
 name|RELOC_STD_BITS_PCREL_BIG
-value|0x80
+value|((unsigned int) 0x80)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RELOC_STD_BITS_PCREL_LITTLE
-value|0x01
+value|((unsigned int) 0x01)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RELOC_STD_BITS_LENGTH_BIG
-value|0x60
+value|((unsigned int) 0x60)
 end_define
 
 begin_define
@@ -986,15 +1093,11 @@ name|RELOC_STD_BITS_LENGTH_SH_BIG
 value|5
 end_define
 
-begin_comment
-comment|/* To shift to units place */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|RELOC_STD_BITS_LENGTH_LITTLE
-value|0x06
+value|((unsigned int) 0x06)
 end_define
 
 begin_define
@@ -1008,56 +1111,56 @@ begin_define
 define|#
 directive|define
 name|RELOC_STD_BITS_EXTERN_BIG
-value|0x10
+value|((unsigned int) 0x10)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RELOC_STD_BITS_EXTERN_LITTLE
-value|0x08
+value|((unsigned int) 0x08)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RELOC_STD_BITS_BASEREL_BIG
-value|0x08
+value|((unsigned int) 0x08)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RELOC_STD_BITS_BASEREL_LITTLE
-value|0x08
+value|((unsigned int) 0x10)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RELOC_STD_BITS_JMPTABLE_BIG
-value|0x04
+value|((unsigned int) 0x04)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RELOC_STD_BITS_JMPTABLE_LITTLE
-value|0x04
+value|((unsigned int) 0x20)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RELOC_STD_BITS_RELATIVE_BIG
-value|0x02
+value|((unsigned int) 0x02)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RELOC_STD_BITS_RELATIVE_LITTLE
-value|0x02
+value|((unsigned int) 0x40)
 end_define
 
 begin_define
@@ -1185,21 +1288,21 @@ begin_define
 define|#
 directive|define
 name|RELOC_EXT_BITS_EXTERN_BIG
-value|0x80
+value|((unsigned int) 0x80)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RELOC_EXT_BITS_EXTERN_LITTLE
-value|0x01
+value|((unsigned int) 0x01)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RELOC_EXT_BITS_TYPE_BIG
-value|0x1F
+value|((unsigned int) 0x1F)
 end_define
 
 begin_define
@@ -1213,7 +1316,7 @@ begin_define
 define|#
 directive|define
 name|RELOC_EXT_BITS_TYPE_LITTLE
-value|0xF8
+value|((unsigned int) 0xF8)
 end_define
 
 begin_define
@@ -1326,6 +1429,22 @@ name|RELOC_CONST
 block|,
 name|RELOC_CONSTH
 block|,
+comment|/* All the new ones I can think of, for sparc v9 */
+name|RELOC_64
+block|,
+comment|/* data[0:63] = addend + sv 		*/
+name|RELOC_DISP64
+block|,
+comment|/* data[0:63] = addend - pc + sv 	*/
+name|RELOC_WDISP21
+block|,
+comment|/* data[0:20] = (addend + sv - pc)>>2 	*/
+name|RELOC_DISP21
+block|,
+comment|/* data[0:20] = addend - pc + sv        */
+name|RELOC_DISP14
+block|,
+comment|/* data[0:13] = addend - pc + sv 	*/
 comment|/* Q .      What are the other ones,      Since this is a clean slate, can we throw away the ones we dont      understand ? Should we sort the values ? What about using a      microcode format like the 68k ?      */
 name|NO_RELOC
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* DWARF debugging format support for GDB.    Copyright (C) 1991, 1992 Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.  Portions based on dbxread.c,    mipsread.c, coffread.c, and dwarfread.c from a Data General SVR4 gdb port.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* DWARF debugging format support for GDB.    Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.  Portions based on dbxread.c,    mipsread.c, coffread.c, and dwarfread.c from a Data General SVR4 gdb port.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -42,36 +42,6 @@ include|#
 directive|include
 file|"objfiles.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_comment
-comment|/* For time_t in libbfd.h.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_comment
-comment|/* For time_t, if not in time.h.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"libbfd.h"
-end_include
-
-begin_comment
-comment|/* FIXME Secret Internal BFD stuff (bfd_read) */
-end_comment
 
 begin_include
 include|#
@@ -123,12 +93,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_ifndef
@@ -6139,6 +6103,26 @@ operator|.
 name|die_length
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SMASH_TEXT_ADDRESS
+comment|/* I think that these are always text, not data, addresses.  */
+name|SMASH_TEXT_ADDRESS
+argument_list|(
+name|di
+operator|.
+name|at_low_pc
+argument_list|)
+expr_stmt|;
+name|SMASH_TEXT_ADDRESS
+argument_list|(
+name|di
+operator|.
+name|at_high_pc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|di
@@ -6149,6 +6133,13 @@ block|{
 case|case
 name|TAG_compile_unit
 case|:
+comment|/* Skip Tag_compile_unit if we are already inside a compilation 		 unit, we are unable to handle nested compilation units 		 properly (FIXME).  */
+if|if
+condition|(
+name|current_subfile
+operator|==
+name|NULL
+condition|)
 name|read_file_scope
 argument_list|(
 operator|&
@@ -6160,6 +6151,15 @@ name|nextdie
 argument_list|,
 name|objfile
 argument_list|)
+expr_stmt|;
+else|else
+name|nextdie
+operator|=
+name|thisdie
+operator|+
+name|di
+operator|.
+name|die_length
 expr_stmt|;
 break|break;
 case|case
@@ -7212,7 +7212,7 @@ name|fputs_filtered
 argument_list|(
 literal|" "
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|wrap_here
@@ -7224,7 +7224,7 @@ name|fputs_filtered
 argument_list|(
 literal|"and "
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|wrap_here
@@ -7251,9 +7251,9 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 comment|/* Flush output */
@@ -7313,9 +7313,9 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -7413,9 +7413,9 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -7442,9 +7442,9 @@ argument_list|(
 literal|"done.\n"
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -7984,6 +7984,15 @@ case|:
 case|case
 name|TAG_enumeration_type
 case|:
+comment|/* Do not add opaque aggregate definitions to the psymtab.  */
+if|if
+condition|(
+operator|!
+name|dip
+operator|->
+name|has_at_byte_size
+condition|)
+break|break;
 name|ADD_PSYMBOL_TO_LIST
 argument_list|(
 name|dip
