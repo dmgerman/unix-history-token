@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.21	%G%"
+literal|"@(#)parseaddr.c	3.22	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,6 +180,17 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|m
 operator|=
 name|Mailer
@@ -2330,7 +2341,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  BUILDADDR -- build address from token vector. ** **	Parameters: **		tv -- token vector. **		a -- pointer to address descriptor to fill. **			If NULL, one will be allocated. ** **	Returns: **		'a' ** **	Side Effects: **		fills in 'a' */
+comment|/* **  BUILDADDR -- build address from token vector. ** **	Parameters: **		tv -- token vector. **		a -- pointer to address descriptor to fill. **			If NULL, one will be allocated. ** **	Returns: **		NULL if there was an error. **		'a' otherwise. ** **	Side Effects: **		fills in 'a' */
 end_comment
 
 begin_function
@@ -2417,14 +2428,100 @@ name|tv
 operator|!=
 name|CANONNET
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"buildaddr: no net"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|tv
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|tv
+argument_list|,
+literal|"error"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+operator|*
+operator|++
+name|tv
+operator|!=
+name|CANONUSER
+condition|)
+name|syserr
+argument_list|(
+literal|"buildaddr: error: no user"
+argument_list|)
+expr_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+while|while
+condition|(
+operator|*
+operator|++
+name|tv
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+operator|*
+name|tv
+argument_list|)
+expr_stmt|;
+block|}
+name|usrerr
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|mp
@@ -2471,6 +2568,7 @@ name|m
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"buildaddr: unknown net %s"
@@ -2479,6 +2577,12 @@ operator|*
 name|tv
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|a
 operator|->
 name|q_mailer
@@ -2510,11 +2614,18 @@ name|tv
 operator|!=
 name|CANONHOST
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"buildaddr: no host"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|tv
 operator|++
 expr_stmt|;
@@ -2545,11 +2656,18 @@ name|tv
 operator|!=
 name|CANONUSER
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"buildaddr: no user"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|cataddr
 argument_list|(
 operator|++
