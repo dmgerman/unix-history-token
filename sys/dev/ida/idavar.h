@@ -457,6 +457,10 @@ name|int
 name|unit
 decl_stmt|;
 name|struct
+name|callout
+name|ch
+decl_stmt|;
+name|struct
 name|cdev
 modifier|*
 name|ida_dev_t
@@ -517,6 +521,9 @@ name|num_qcbs
 decl_stmt|;
 name|int
 name|flags
+decl_stmt|;
+name|int
+name|qactive
 decl_stmt|;
 name|struct
 name|ida_hardware_qcb

@@ -232,14 +232,36 @@ modifier|*
 name|ida
 parameter_list|)
 block|{
-return|return
-operator|(
+name|bus_addr_t
+name|completed
+decl_stmt|;
+name|completed
+operator|=
 name|ida_inl
 argument_list|(
 name|ida
 argument_list|,
 name|R_DONE_FIFO
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|completed
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* fifo is empty */
+block|}
+return|return
+operator|(
+name|completed
 operator|)
 return|;
 block|}
@@ -1097,43 +1119,43 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-comment|/*parent*/
+comment|/* parent	*/
 name|NULL
 argument_list|,
-comment|/*alignment*/
+comment|/* alignment	*/
 literal|1
 argument_list|,
-comment|/*boundary*/
+comment|/* boundary	*/
 literal|0
 argument_list|,
-comment|/*lowaddr*/
+comment|/* lowaddr	*/
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
-comment|/*highaddr*/
+comment|/* highaddr	*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/*filter*/
+comment|/* filter	*/
 name|NULL
 argument_list|,
-comment|/*filterarg*/
+comment|/* filterarg	*/
 name|NULL
 argument_list|,
-comment|/*maxsize*/
+comment|/* maxsize	*/
 name|MAXBSIZE
 argument_list|,
-comment|/*nsegments*/
+comment|/* nsegments	*/
 name|IDA_NSEG
 argument_list|,
-comment|/*maxsegsize*/
+comment|/* maxsegsize	*/
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-comment|/*flags*/
+comment|/* flags	*/
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-comment|/*lockfunc*/
+comment|/* lockfunc	*/
 name|NULL
 argument_list|,
-comment|/*lockarg*/
+comment|/* lockarg	*/
 name|NULL
 argument_list|,
 operator|&
