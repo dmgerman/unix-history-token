@@ -2783,7 +2783,7 @@ name|psycho_iommu_init
 argument_list|(
 name|sc
 argument_list|,
-literal|2
+literal|3
 argument_list|)
 expr_stmt|;
 block|}

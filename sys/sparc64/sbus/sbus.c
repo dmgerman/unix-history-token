@@ -2159,7 +2159,7 @@ name|sc
 operator|->
 name|sc_is
 argument_list|,
-literal|2
+literal|3
 argument_list|,
 operator|-
 literal|1
