@@ -48,13 +48,15 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/Subsystem/Include/acgcc.h>
+file|<contrib/dev/acpica/acgcc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/Subsystem/Include/actypes.h>
+file|<contrib/dev/acpica
+comment|//
+include|actypes.h>
 end_include
 
 begin_define
