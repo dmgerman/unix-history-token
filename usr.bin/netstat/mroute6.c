@@ -709,7 +709,7 @@ block|{
 name|printf
 argument_list|(
 literal|"No IPv6 multicast routing compiled into this"
-literal|"system.\n"
+literal|" system.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -736,279 +736,121 @@ argument_list|(
 literal|"IPv6 multicast forwarding:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+define|#
+directive|define
+name|p
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (mrtstat.f || sflag<= 1) \ 	printf(m, (unsigned long long)mrtstat.f, plural(mrtstat.f))
+define|#
+directive|define
+name|p2
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (mrtstat.f || sflag<= 1) \ 	printf(m, (unsigned long long)mrtstat.f, plurales(mrtstat.f))
+name|p
 argument_list|(
-literal|" %10llu multicast forwarding cache lookup%s\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_mfc_lookups
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_mfc_lookups
-argument_list|)
+literal|"\t%llu multicast forwarding cache lookup%s\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p2
 argument_list|(
-literal|" %10llu multicast forwarding cache miss%s\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_mfc_misses
 argument_list|,
-name|plurales
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_mfc_misses
-argument_list|)
+literal|"\t%llu multicast forwarding cache miss%s\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10llu upcall%s to mrouted\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_upcalls
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_upcalls
-argument_list|)
+literal|"\t%llu upcall%s to mrouted\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10llu upcall llueue overflow%s\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_upq_ovflw
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_upq_ovflw
-argument_list|)
+literal|"\t%llu upcall llueue overflow%s\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10llu upcall%s dropped due to full socket buffer\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_upq_sockfull
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_upq_sockfull
-argument_list|)
+literal|"\t%llu upcall%s dropped due to full socket buffer\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10llu cache cleanup%s\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_cache_cleanups
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_cache_cleanups
-argument_list|)
+literal|"\t%llu cache cleanup%s\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10llu datagram%s with no route for origin\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_no_route
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_no_route
-argument_list|)
+literal|"\t%llu datagram%s with no route for origin\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10llu datagram%s arrived with bad tunneling\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_bad_tunnel
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_bad_tunnel
-argument_list|)
+literal|"\t%llu datagram%s arrived with bad tunneling\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10llu datagram%s could not be tunneled\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_cant_tunnel
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_cant_tunnel
-argument_list|)
+literal|"\t%llu datagram%s could not be tunneled\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10llu datagram%s arrived on wrong interface\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_wrong_if
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_wrong_if
-argument_list|)
+literal|"\t%llu datagram%s arrived on wrong interface\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10llu datagram%s selectively dropped\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_drop_sel
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_drop_sel
-argument_list|)
+literal|"\t%llu datagram%s selectively dropped\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10llu datagram%s dropped due to llueue overflow\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_q_overflow
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_q_overflow
-argument_list|)
+literal|"\t%llu datagram%s dropped due to llueue overflow\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|p
 argument_list|(
-literal|" %10llu datagram%s dropped for being too large\n"
-argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
-name|mrtstat
-operator|.
 name|mrt6s_pkt2large
 argument_list|,
-name|plural
-argument_list|(
-name|mrtstat
-operator|.
-name|mrt6s_pkt2large
-argument_list|)
+literal|"\t%llu datagram%s dropped for being too large\n"
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|p2
+undef|#
+directive|undef
+name|p
 block|}
 end_function
 
