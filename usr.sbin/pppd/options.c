@@ -10940,7 +10940,7 @@ name|deflate
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX copy over settings for switch compatability */
+comment|/* XXX copy over settings for switch compatibility */
 name|ccp_wantoptions
 index|[
 literal|0

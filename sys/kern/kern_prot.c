@@ -1416,7 +1416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Use the clause in B.4.2.2 that allows setuid/setgid to be 4.2/4.3BSD  * compatable.  It says that setting the uid/gid to euid/egid is a special  * case of "appropriate privilege".  Once the rules are expanded out, this  * basically means that setuid(nnn) sets all three id's, in all permitted  * cases unless _POSIX_SAVED_IDS is enabled.  In that case, setuid(getuid())  * does not set the saved id - this is dangerous for traditional BSD  * programs.  For this reason, we *really* do not want to set  * _POSIX_SAVED_IDS and do not want to clear POSIX_APPENDIX_B_4_2_2.  */
+comment|/*  * Use the clause in B.4.2.2 that allows setuid/setgid to be 4.2/4.3BSD  * compatible.  It says that setting the uid/gid to euid/egid is a special  * case of "appropriate privilege".  Once the rules are expanded out, this  * basically means that setuid(nnn) sets all three id's, in all permitted  * cases unless _POSIX_SAVED_IDS is enabled.  In that case, setuid(getuid())  * does not set the saved id - this is dangerous for traditional BSD  * programs.  For this reason, we *really* do not want to set  * _POSIX_SAVED_IDS and do not want to clear POSIX_APPENDIX_B_4_2_2.  */
 end_comment
 
 begin_define
@@ -1487,7 +1487,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * See if we have "permission" by POSIX 1003.1 rules. 	 * 	 * Note that setuid(geteuid()) is a special case of  	 * "appropriate privileges" in appendix B.4.2.2.  We need 	 * to use this clause to be compatable with traditional BSD 	 * semantics.  Basically, it means that "setuid(xx)" sets all 	 * three id's (assuming you have privs). 	 * 	 * Notes on the logic.  We do things in three steps. 	 * 1: We determine if the euid is going to change, and do EPERM 	 *    right away.  We unconditionally change the euid later if this 	 *    test is satisfied, simplifying that part of the logic. 	 * 2: We determine if the real and/or saved uid's are going to 	 *    change.  Determined by compile options. 	 * 3: Change euid last. (after tests in #2 for "appropriate privs") 	 */
+comment|/* 	 * See if we have "permission" by POSIX 1003.1 rules. 	 * 	 * Note that setuid(geteuid()) is a special case of  	 * "appropriate privileges" in appendix B.4.2.2.  We need 	 * to use this clause to be compatible with traditional BSD 	 * semantics.  Basically, it means that "setuid(xx)" sets all 	 * three id's (assuming you have privs). 	 * 	 * Notes on the logic.  We do things in three steps. 	 * 1: We determine if the euid is going to change, and do EPERM 	 *    right away.  We unconditionally change the euid later if this 	 *    test is satisfied, simplifying that part of the logic. 	 * 2: We determine if the real and/or saved uid's are going to 	 *    change.  Determined by compile options. 	 * 3: Change euid last. (after tests in #2 for "appropriate privs") 	 */
 name|uid
 operator|=
 name|uap
@@ -1859,7 +1859,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * See if we have "permission" by POSIX 1003.1 rules. 	 * 	 * Note that setgid(getegid()) is a special case of 	 * "appropriate privileges" in appendix B.4.2.2.  We need 	 * to use this clause to be compatable with traditional BSD 	 * semantics.  Basically, it means that "setgid(xx)" sets all 	 * three id's (assuming you have privs). 	 * 	 * For notes on the logic here, see setuid() above. 	 */
+comment|/* 	 * See if we have "permission" by POSIX 1003.1 rules. 	 * 	 * Note that setgid(getegid()) is a special case of 	 * "appropriate privileges" in appendix B.4.2.2.  We need 	 * to use this clause to be compatible with traditional BSD 	 * semantics.  Basically, it means that "setgid(xx)" sets all 	 * three id's (assuming you have privs). 	 * 	 * For notes on the logic here, see setuid() above. 	 */
 name|gid
 operator|=
 name|uap

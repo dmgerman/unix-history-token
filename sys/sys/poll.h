@@ -16,7 +16,7 @@ name|_SYS_POLL_H_
 end_define
 
 begin_comment
-comment|/*  * This file is intended to be compatable with the traditional poll.h.  */
+comment|/*  * This file is intended to be compatible with the traditional poll.h.  */
 end_comment
 
 begin_comment

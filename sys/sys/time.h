@@ -323,7 +323,7 @@ name|_KERNEL
 end_ifndef
 
 begin_comment
-comment|/* NetBSD/OpenBSD compatable interfaces */
+comment|/* NetBSD/OpenBSD compatible interfaces */
 end_comment
 
 begin_define

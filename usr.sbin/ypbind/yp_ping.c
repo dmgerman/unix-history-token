@@ -150,7 +150,7 @@ comment|/* use timevaladd/timevalsub in kernel */
 end_comment
 
 begin_comment
-comment|/* NetBSD/OpenBSD compatable interfaces */
+comment|/* NetBSD/OpenBSD compatible interfaces */
 end_comment
 
 begin_define

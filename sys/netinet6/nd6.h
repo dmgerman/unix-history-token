@@ -708,7 +708,7 @@ comment|/* to skip over non-understood messages */
 name|u_char
 name|inpm_version
 decl_stmt|;
-comment|/* future binary compatability */
+comment|/* future binary compatibility */
 name|u_char
 name|inpm_type
 decl_stmt|;

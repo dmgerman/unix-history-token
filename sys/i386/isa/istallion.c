@@ -356,7 +356,7 @@ value|STL_PORTSPERBRD
 end_define
 
 begin_comment
-comment|/*  *	Define the important minor number break down bits. These have been  *	chosen to be "compatable" with the standard sio driver minor numbers.  *	Extra high bits are used to distinguish between boards and also for  *	really high port numbers (> 32).  */
+comment|/*  *	Define the important minor number break down bits. These have been  *	chosen to be "compatible" with the standard sio driver minor numbers.  *	Extra high bits are used to distinguish between boards and also for  *	really high port numbers (> 32).  */
 end_comment
 
 begin_define
@@ -5506,7 +5506,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/*  *	Deal with 4.3 compatability issues if we have too...  */
+comment|/*  *	Deal with 4.3 compatibility issues if we have too...  */
 if|#
 directive|if
 name|defined

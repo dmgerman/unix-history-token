@@ -595,7 +595,7 @@ comment|/* incompatible features */
 name|u_int32_t
 name|fd_frocompat
 decl_stmt|;
-comment|/* read-only compatabilties */
+comment|/* read-only compatibilties */
 name|u_int8_t
 name|fd_uuid
 index|[

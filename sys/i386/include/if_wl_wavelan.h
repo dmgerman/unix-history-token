@@ -710,7 +710,7 @@ value|0x1d
 end_define
 
 begin_comment
-comment|/* compatability number */
+comment|/* compatibility number */
 end_comment
 
 begin_define

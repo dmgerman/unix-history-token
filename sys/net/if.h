@@ -16,7 +16,7 @@ name|_NET_IF_H_
 end_define
 
 begin_comment
-comment|/*  *<net/if.h> does not depend on<sys/time.h> on most other systems.  This  * helps userland compatability.  (struct timeval ifi_lastchange)  */
+comment|/*  *<net/if.h> does not depend on<sys/time.h> on most other systems.  This  * helps userland compatibility.  (struct timeval ifi_lastchange)  */
 end_comment
 
 begin_ifndef
@@ -375,7 +375,7 @@ comment|/* to skip over non-understood messages */
 name|u_char
 name|ifm_version
 decl_stmt|;
-comment|/* future binary compatability */
+comment|/* future binary compatibility */
 name|u_char
 name|ifm_type
 decl_stmt|;
@@ -416,7 +416,7 @@ comment|/* to skip over non-understood messages */
 name|u_char
 name|ifam_version
 decl_stmt|;
-comment|/* future binary compatability */
+comment|/* future binary compatibility */
 name|u_char
 name|ifam_type
 decl_stmt|;
@@ -456,7 +456,7 @@ comment|/* to skip over non-understood messages */
 name|u_char
 name|ifmam_version
 decl_stmt|;
-comment|/* future binary compatability */
+comment|/* future binary compatibility */
 name|u_char
 name|ifmam_type
 decl_stmt|;

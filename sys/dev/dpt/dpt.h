@@ -4259,7 +4259,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * This is provided for compatability with UnixWare only.  * Some of the fields may be bogus.  * Others may have a totally different meaning.  */
+comment|/*  * This is provided for compatibility with UnixWare only.  * Some of the fields may be bogus.  * Others may have a totally different meaning.  */
 end_comment
 
 begin_typedef
