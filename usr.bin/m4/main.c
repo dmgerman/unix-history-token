@@ -1769,6 +1769,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|uintptr_t
+operator|)
 name|sp
 operator|==
 name|STACKMAX
@@ -2206,6 +2209,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|uintptr_t
+operator|)
 name|sp
 operator|==
 name|STACKMAX

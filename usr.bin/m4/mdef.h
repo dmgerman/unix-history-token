@@ -710,7 +710,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do {				\ 		if (++sp == STACKMAX) 	\ 			enlarge_stack();\ 		mstack[sp].sfra = (x);	\ 		sstack[sp] = 0; \ 	} while (0)
+value|do {				\ 		if ((uintptr_t)++sp == STACKMAX) 	\ 			enlarge_stack();\ 		mstack[sp].sfra = (x);	\ 		sstack[sp] = 0; \ 	} while (0)
 end_define
 
 begin_define
@@ -721,7 +721,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do {				\ 		if (++sp == STACKMAX) 	\ 			enlarge_stack();\ 		mstack[sp].sstr = (x);	\ 		sstack[sp] = 1; \ 	} while (0)
+value|do {				\ 		if ((uintptr_t)++sp == STACKMAX) 	\ 			enlarge_stack();\ 		mstack[sp].sstr = (x);	\ 		sstack[sp] = 1; \ 	} while (0)
 end_define
 
 begin_define
@@ -732,7 +732,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do {				\ 		if (++sp == STACKMAX) 	\ 			enlarge_stack();\ 		mstack[sp].sstr = (x);	\ 		sstack[sp] = 0; \ 	} while (0)
+value|do {				\ 		if ((uintptr_t)++sp == STACKMAX) 	\ 			enlarge_stack();\ 		mstack[sp].sstr = (x);	\ 		sstack[sp] = 0; \ 	} while (0)
 end_define
 
 begin_comment
