@@ -89,19 +89,6 @@ begin_struct
 struct|struct
 name|fetchconn
 block|{
-name|char
-modifier|*
-name|host
-decl_stmt|;
-comment|/* host name */
-name|int
-name|port
-decl_stmt|;
-comment|/* port */
-name|int
-name|af
-decl_stmt|;
-comment|/* address family */
 name|int
 name|sd
 decl_stmt|;
@@ -125,9 +112,14 @@ decl_stmt|;
 comment|/* last protocol reply code */
 name|SSL
 modifier|*
+name|ssl
+decl_stmt|;
+comment|/* SSL handle */
+name|SSL_CTX
+modifier|*
 name|ssl_ctx
 decl_stmt|;
-comment|/* SSL context if needed */
+comment|/* SSL context */
 name|X509
 modifier|*
 name|ssl_cert
@@ -243,11 +235,53 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|conn_t
+modifier|*
+name|_fetch_reopen
+parameter_list|(
+name|int
+name|sd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ssize_t
+name|_fetch_read
+parameter_list|(
+name|conn_t
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|_fetch_getln
 parameter_list|(
 name|conn_t
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ssize_t
+name|_fetch_write
+parameter_list|(
+name|conn_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
