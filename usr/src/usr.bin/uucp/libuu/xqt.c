@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xqt.c	5.3 (Berkeley) %G%"
+literal|"@(#)xqt.c	5.4	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -400,7 +400,7 @@ name|execl
 argument_list|(
 name|UUXQT
 argument_list|,
-literal|"UUXQT"
+literal|"uuxqt"
 argument_list|,
 operator|(
 name|char
@@ -415,7 +415,6 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_block
 
@@ -550,7 +549,6 @@ literal|15
 argument_list|)
 expr_stmt|;
 comment|/* Give uucp chance to finish */
-return|return;
 block|}
 end_block
 
