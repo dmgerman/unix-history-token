@@ -40,10 +40,6 @@ block|, }
 enum|;
 end_enum
 
-begin_comment
-comment|/*  * Simplified accessors for nexus devices  * XXX: These should be made specializations of generic bus accessor macros  * instead of having multiple implementations around.  */
-end_comment
-
 begin_define
 define|#
 directive|define
