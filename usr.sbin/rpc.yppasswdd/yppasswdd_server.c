@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yppasswdd_server.c,v 1.7 1996/08/04 22:13:05 wpaul Exp $  */
+comment|/*  * Copyright (c) 1995, 1996  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yppasswdd_server.c,v 1.6 1996/07/01 19:38:38 guido Exp $  */
 end_comment
 
 begin_include
@@ -179,7 +179,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yppasswdd_server.c,v 1.7 1996/08/04 22:13:05 wpaul Exp $"
+literal|"$Id: yppasswdd_server.c,v 1.6 1996/07/01 19:38:38 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1694,6 +1694,133 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+comment|/* 		 * XXX Supposing we have more than one user with the same 		 * UID? (Or more than one user with the same name?) We could 		 * end up modifying the wrong record if were not careful. 		 */
+if|if
+condition|(
+name|i
+operator|%
+literal|2
+condition|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|data
+operator|.
+name|data
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|strlen
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|yp_error
+argument_list|(
+literal|"warning: found entry for UID %d \ in map %s@%s with wrong name (%.*s)"
+argument_list|,
+name|pw
+operator|->
+name|pw_uid
+argument_list|,
+name|maps
+index|[
+name|i
+index|]
+argument_list|,
+name|domain
+argument_list|,
+name|ptr
+operator|-
+operator|(
+name|char
+operator|*
+operator|)
+name|data
+operator|.
+name|data
+argument_list|,
+name|data
+operator|.
+name|data
+argument_list|)
+expr_stmt|;
+name|yp_error
+argument_list|(
+literal|"there may be more than one user \ with the same UID - continuing"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+block|}
+else|else
+block|{
+comment|/* 			 * We're really being ultra-paranoid here. 			 * This is generally a 'can't happen' condition. 			 */
+name|snprintf
+argument_list|(
+name|pwbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pwbuf
+argument_list|)
+argument_list|,
+literal|":%d:%d:"
+argument_list|,
+name|pw
+operator|->
+name|pw_uid
+argument_list|,
+name|pw
+operator|->
+name|pw_gid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strstr
+argument_list|(
+name|data
+operator|.
+name|data
+argument_list|,
+name|pwbuf
+argument_list|)
+condition|)
+block|{
+name|yp_error
+argument_list|(
+literal|"warning: found entry for user %s \ in map %s@%s with wrong UID"
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|maps
+index|[
+name|i
+index|]
+argument_list|,
+name|domain
+argument_list|)
+expr_stmt|;
+name|yp_error
+argument_list|(
+literal|"there may ne more than one user with the same name - continuing"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 block|}
 if|if
 condition|(
