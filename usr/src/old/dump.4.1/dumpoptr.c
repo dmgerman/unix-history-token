@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumpoptr.c	1.3 (Berkeley) %G%"
+literal|"@(#)dumpoptr.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -545,7 +545,11 @@ name|gp
 operator|==
 literal|0
 condition|)
-return|return;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|clock
 operator|=
 name|time

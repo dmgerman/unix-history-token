@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tape.c	1.1 (Berkeley) %G%"
+literal|"@(#)tape.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,7 +342,7 @@ argument_list|)
 expr_stmt|;
 name|msg
 argument_list|(
-literal|"this dump volumne will be rewritten.\n"
+literal|"this dump volume will be rewritten.\n"
 argument_list|)
 expr_stmt|;
 comment|/* 			 *	Temporarily change the tapeno identification 			 */
@@ -970,7 +970,7 @@ begin_block
 block|{
 name|msg
 argument_list|(
-literal|"The ENTIRE dump is aborted.  NO second chances (tough luck sucker).\n"
+literal|"The ENTIRE dump is aborted.\n"
 argument_list|)
 expr_stmt|;
 name|Exit
@@ -1006,116 +1006,11 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|TDEBUG
-name|henryexit
+name|exit
 argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TDEBUG
-end_ifdef
-
-begin_macro
-name|exit
-argument_list|(
-argument|status
-argument_list|)
-end_macro
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_block
-block|{
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Somebody called exit: halt executed\n"
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|_exit
-argument_list|(
-argument|status
-argument_list|)
-end_macro
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_block
-block|{
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Somebody called _exit: halt executed\n"
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|TDEBUG
-end_endif
-
-begin_macro
-name|henryexit
-argument_list|(
-argument|status
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_block
-block|{
-name|_cleanup
-argument_list|()
-expr_stmt|;
-asm|asm("	chmk	$1");
-asm|asm("halt");
 block|}
 end_block
 
