@@ -6413,7 +6413,7 @@ block|{
 block|{
 name|NEXT
 block|,
-name|NEXT
+name|PREV
 block|,
 name|DBG
 block|,
@@ -6858,10 +6858,7 @@ argument_list|(
 literal|60
 argument_list|)
 block|,
-name|F
-argument_list|(
-literal|60
-argument_list|)
+name|PASTE
 block|,
 name|F
 argument_list|(
