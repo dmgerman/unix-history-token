@@ -6937,6 +6937,14 @@ operator|)
 return|;
 comment|/* ESS Technology Inc -- vendor 0x125d */
 case|case
+literal|0x1969125d
+case|:
+return|return
+operator|(
+literal|"ESS Technology Solo-1 Audio controller"
+operator|)
+return|;
+case|case
 literal|0x1978125d
 case|:
 return|return
