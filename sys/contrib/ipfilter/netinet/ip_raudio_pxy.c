@@ -1507,6 +1507,16 @@ operator|=
 operator|&
 name|raudiofr
 expr_stmt|;
+name|fi
+operator|.
+name|fin_dlen
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tcp2
+argument_list|)
+expr_stmt|;
 name|tcp2
 operator|->
 name|th_win

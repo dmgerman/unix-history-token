@@ -6500,6 +6500,12 @@ name|hv
 operator|%
 name|fr_statesize
 expr_stmt|;
+name|is
+operator|->
+name|is_hv
+operator|=
+name|hvm
+expr_stmt|;
 name|isp
 operator|=
 operator|&

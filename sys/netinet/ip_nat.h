@@ -918,6 +918,9 @@ name|nat_t
 modifier|*
 name|ns_instances
 decl_stmt|;
+name|u_int
+name|ns_wilds
+decl_stmt|;
 block|}
 name|natstat_t
 typedef|;
