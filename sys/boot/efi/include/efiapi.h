@@ -578,7 +578,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * EFI platform varibles  */
+comment|/*  * EFI platform variables  */
 end_comment
 
 begin_define
