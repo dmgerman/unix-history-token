@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)display.c	5.10 (Berkeley) %G%"
+literal|"@(#)display.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -1261,10 +1267,6 @@ block|{
 name|char
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
