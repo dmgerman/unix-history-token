@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and the University of Utah.  *  * %sccs.include.386.c%  *  *	@(#)machdep.c	5.2 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1982,1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	1.16.1.1 (Berkeley) 11/24/87  */
+comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)machdep.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -163,6 +159,12 @@ directive|include
 file|"../i386/psl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../i386/isa/rtc.h"
+end_include
+
 begin_comment
 comment|/*  * Declare these as initialized data so we can patch them.  */
 end_comment
@@ -267,6 +269,100 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* extern struct pte	EMCmap[]; extern char		EMCbase[]; */
+end_comment
+
+begin_decl_stmt
+name|int
+name|boothowto
+init|=
+literal|0
+decl_stmt|,
+name|Maxmem
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bootdev
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMALL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|forcemaxmem
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|int
+name|biosmem
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern cyloffset;
+end_extern
+
+begin_function
+name|caddr_t
+name|bypasshole
+parameter_list|(
+name|b
+parameter_list|,
+name|t
+parameter_list|)
+name|caddr_t
+name|b
+decl_stmt|,
+name|t
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|b
+operator|<=
+name|sbase
+operator|+
+literal|0xa0000
+operator|&&
+name|t
+operator|>
+name|sbase
+operator|+
+literal|0xa0000
+condition|)
+return|return
+operator|(
+name|sbase
+operator|+
+literal|0x100000
+operator|)
+return|;
+return|return
+operator|(
+name|b
+operator|)
+return|;
+block|}
+end_function
+
 begin_macro
 name|startup
 argument_list|(
@@ -318,20 +414,139 @@ name|map
 modifier|*
 name|useriomap
 decl_stmt|;
-name|int
-name|cmaxmem
-decl_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */
 comment|/*cninit();*/
-comment|/* 	 * Initialize error message buffer (at end of core). 	 */
-comment|/* Problem to resolve. AT's have memory that is not contigous, as I/O address space for video adapters and network cards fall into a range of 0xa0000 - 0x100000 . Note that the cmap really expects contigous memory. For the moment, use the bottom of memory for kernel and run-time configured storage (e.g. valloc), using memory above 0x100000 for the cmap, and wasting the stuff left over after valloc-end up to 0xa0000 (640K). Will have to fix this before beta, and will have to somehow move this out into per bus adapter directory (e.g. configurable). For now, punt  How about starting cmap normally following valloc space, and then write a routine than allocs only phys pages in the 0xa0000-0x100000 hole?  */
-name|kernmem
+comment|/* 	 * Bounds check memory size information against bios values 	 * use the lesser of the two 	 */
+name|biosmem
 operator|=
+name|rtcin
+argument_list|(
+name|RTC_BASELO
+argument_list|)
+operator|+
+operator|(
+name|rtcin
+argument_list|(
+name|RTC_BASEHI
+argument_list|)
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Maxmem %x howto %x bootdev %x cyloff %x firstaddr %x bios %d %d\n"
+argument_list|,
+name|Maxmem
+argument_list|,
+name|boothowto
+argument_list|,
+name|bootdev
+argument_list|,
+name|cyloffset
+argument_list|,
+name|firstaddr
+argument_list|,
+name|biosmem
+argument_list|,
+name|rtcin
+argument_list|(
+name|RTC_EXTLO
+argument_list|)
+operator|+
+operator|(
+name|rtcin
+argument_list|(
+name|RTC_EXTHI
+argument_list|)
+operator|<<
+literal|8
+operator|)
+argument_list|)
+expr_stmt|;
+name|maxmem
+operator|=
+name|Maxmem
+operator|-
+literal|1
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+if|if
+condition|(
+name|biosmem
+operator|!=
 literal|640
+condition|)
+name|panic
+argument_list|(
+literal|"does not have 640K of base memory"
+argument_list|)
+expr_stmt|;
+name|biosmem
+operator|=
+literal|1024
+expr_stmt|;
+name|biosmem
+operator|+=
+name|rtcin
+argument_list|(
+name|RTC_EXTLO
+argument_list|)
+operator|+
+operator|(
+name|rtcin
+argument_list|(
+name|RTC_EXTHI
+argument_list|)
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+name|biosmem
+operator|=
+name|biosmem
 operator|/
 literal|4
+operator|-
+literal|1
 expr_stmt|;
-name|kernmem
+if|if
+condition|(
+name|biosmem
+operator|<
+name|maxmem
+condition|)
+name|maxmem
+operator|=
+name|biosmem
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMALL
+if|if
+condition|(
+name|forcemaxmem
+operator|&&
+name|maxmem
+operator|>
+name|forcemaxmem
+condition|)
+name|maxmem
+operator|=
+name|forcemaxmem
+operator|-
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* maxmem = 0xA00;*/
+comment|/* 	 * Initialize error message buffer (at end of core). 	 */
+comment|/* Problem to resolve. AT's have memory that is not contigous, as I/O address space for video adapters and network cards fall into a range of 0xa0000 - 0x100000 . Note that the cmap really expects contigous memory. For the moment, use the bottom of memory for kernel and run-time configured storage (e.g. valloc), using memory above 0x100000 for the cmap, and wasting the stuff left over after valloc-end up to 0xa0000 (640K). Will have to fix this before beta, and will have to somehow move this out into per bus adapter directory (e.g. configurable). For now, punt  How about starting cmap normally following valloc space, and then write a routine than allocs only phys pages in the 0xa0000-0x100000 hole?  */
+name|maxmem
 operator|-=
 name|btoc
 argument_list|(
@@ -380,32 +595,47 @@ name|PG_KW
 operator||
 name|ctob
 argument_list|(
-name|kernmem
+name|maxmem
 operator|+
 name|i
 argument_list|)
 expr_stmt|;
-comment|/*XXX*/
-name|maxmem
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* XXX EMC */
+name|pte
 operator|=
+name|EMCmap
+expr_stmt|;
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|pte
+operator|=
+name|PG_V
+operator||
+name|PG_UW
+operator||
+literal|0xc0000000
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"EMC at %x\n"
+argument_list|,
+name|EMCbase
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|freemem
 operator|=
 name|physmem
 operator|=
-literal|2048
-operator|/
-literal|4
-operator|+
-name|kernmem
+name|maxmem
 expr_stmt|;
-name|cmaxmem
-operator|=
-literal|2048
-operator|/
-literal|4
-expr_stmt|;
-comment|/* unmap particular region being written into, so we can find offending ptr */
-comment|/*{ extern char b_uregion[], e_uregion[]; #define	ptidx(s)	((s - sbase)/NBPG) 	pte = Sysmap + ptidx(b_uregion) + 1 ; 	for (i = ptidx(b_uregion) + 1 ; i< ptidx (e_uregion) ; i++) 		*(int *)pte++ = 0 ; }*/
 name|load_cr3
 argument_list|(
 name|_cr3
@@ -465,7 +695,7 @@ parameter_list|,
 name|num
 parameter_list|)
 define|\
-value|(name) = (type *)v; v = (caddr_t)((name)+(num))
+value|v = bypasshole (v, v + (int) ((name)+(num))) ; \ 	    (name) = (type *)v; v = (caddr_t)((name)+(num))
 define|#
 directive|define
 name|valloclim
@@ -479,7 +709,7 @@ parameter_list|,
 name|lim
 parameter_list|)
 define|\
-value|(name) = (type *)v; v = (caddr_t)((lim) = ((name)+(num)))
+value|v = bypasshole (v, v + (int) ((name)+(num))) ; \ 	    (name) = (type *)v; v = (caddr_t)((lim) = ((name)+(num)))
 name|valloclim
 argument_list|(
 name|inode
@@ -761,7 +991,17 @@ operator|(
 name|maxmem
 operator|*
 name|NBPG
-comment|/* - ((int)(v - sbase))*/
+operator|-
+operator|(
+call|(
+name|int
+call|)
+argument_list|(
+name|v
+operator|-
+name|sbase
+argument_list|)
+operator|)
 operator|)
 operator|/
 operator|(
@@ -891,7 +1131,11 @@ call|(
 name|int
 call|)
 argument_list|(
-comment|/*(v - sbase)*/
+operator|(
+name|v
+operator|-
+name|sbase
+operator|)
 operator|+
 name|bufpages
 operator|*
@@ -925,7 +1169,6 @@ name|ecmap
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear space allocated thus far, and make r/w entries 	 * for the space in the kernel map. 	 */
-comment|/*unixsize = btoc((int)(v - sbase));*/
 name|unixsize
 operator|=
 name|btoc
@@ -984,6 +1227,34 @@ block|}
 comment|/* 	 * Now allocate buffers proper.  They are different than the above 	 * in that they usually occupy more virtual memory than physical. 	 */
 name|v
 operator|=
+name|bypasshole
+argument_list|(
+name|v
+argument_list|,
+call|(
+name|caddr_t
+call|)
+argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
+name|v
+operator|+
+name|PGOFSET
+argument_list|)
+operator|&
+operator|~
+name|PGOFSET
+operator|+
+name|MAXBSIZE
+operator|*
+name|nbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|v
+operator|=
 call|(
 name|caddr_t
 call|)
@@ -1027,6 +1298,19 @@ expr_stmt|;
 name|mapaddr
 operator|=
 name|firstaddr
+operator|=
+name|btoc
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|buffers
+operator|-
+operator|(
+name|unsigned
+operator|)
+name|sbase
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1207,21 +1491,6 @@ argument_list|(
 literal|"no memory"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|firstaddr
-operator|>=
-operator|(
-literal|640
-operator|/
-literal|4
-operator|)
-condition|)
-name|panic
-argument_list|(
-literal|"allocated AT hole!"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Initialize callouts 	 */
 name|callfree
 operator|=
@@ -1256,15 +1525,57 @@ name|i
 index|]
 expr_stmt|;
 comment|/* 	 * Initialize memory allocator and swap 	 * and user page table maps. 	 * 	 * THE USER PAGE TABLE MAP IS CALLED ``kernelmap'' 	 * WHICH IS A VERY UNDESCRIPTIVE AND INCONSISTENT NAME. 	 */
+comment|/* 	 *  cmap must not allocate the hole, so toss memory 	 */
+if|if
+condition|(
+name|firstaddr
+operator|<
+literal|640
+operator|/
+literal|4
+operator|&&
+name|maxmem
+operator|>
+literal|1024
+operator|/
+literal|4
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"[not using %dK due to hole]\n"
+argument_list|,
+literal|4
+operator|*
+operator|(
+literal|640
+operator|/
+literal|4
+operator|-
+name|firstaddr
+operator|)
+argument_list|)
+expr_stmt|;
 name|firstaddr
 operator|=
 literal|0x100
 expr_stmt|;
+block|}
+if|if
+condition|(
 name|maxmem
-operator|=
-literal|0x300
+operator|<
+literal|2048
+operator|/
+literal|4
+operator|-
+literal|10
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: NOT ENOUGH RAM MEMORY - RUNNING IN DEGRADED MODE\n"
+argument_list|)
 expr_stmt|;
-comment|/*XXX*/
 name|meminit
 argument_list|(
 name|firstaddr
@@ -1317,13 +1628,6 @@ name|nproc
 argument_list|)
 expr_stmt|;
 comment|/*  * PTEs for mapping user space into kernel for phyio operations.  * One page is enough to handle 4Mb of simultaneous raw IO operations.  */
-undef|#
-directive|undef
-name|USRIOSIZE
-define|#
-directive|define
-name|USRIOSIZE
-value|30
 name|rminit
 argument_list|(
 name|useriomap
@@ -1544,6 +1848,32 @@ decl_stmt|;
 name|int
 name|oonstack
 decl_stmt|;
+include|#
+directive|include
+file|"dbg.h"
+name|dprintf
+argument_list|(
+name|DSIGNAL
+argument_list|,
+literal|"sendsig %d code %d to pid %d frmtrp %d to locn %x\n"
+argument_list|,
+name|sig
+argument_list|,
+name|u
+operator|.
+name|u_code
+argument_list|,
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_pid
+argument_list|,
+name|frmtrp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|regs
 operator|=
 name|u
@@ -1700,7 +2030,7 @@ block|{
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
 name|printf
 argument_list|(
-literal|"sendsig: failed to grow stack %x\n"
+literal|"sendsig: failed to grow stack down to %x\n"
 argument_list|,
 name|fp
 argument_list|)
@@ -2529,6 +2859,9 @@ argument_list|(
 literal|"halting (in tight loop); hit reset\n\n"
 argument_list|)
 expr_stmt|;
+name|reset_cpu
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2574,12 +2907,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|reset_cpu
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
 condition|;
 control|)
-asm|asm("hlt");
+comment|/*asm("hlt")*/
+empty_stmt|;
 comment|/*NOTREACHED*/
 block|}
 end_block
@@ -3988,7 +4325,9 @@ end_decl_stmt
 
 begin_macro
 name|init386
-argument_list|()
+argument_list|(
+argument|first
+argument_list|)
 end_macro
 
 begin_block
@@ -4107,6 +4446,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*ldt_segs[LUDATA_SEL].ssd_limit = btoc((int)&Sysbase); */
+end_comment
+
 begin_expr_stmt
 name|ldt_segs
 index|[
@@ -4117,11 +4460,7 @@ name|ssd_limit
 operator|=
 name|btoc
 argument_list|(
-operator|(
-name|int
-operator|)
-operator|&
-name|Sysbase
+literal|0xfffff000
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5482,9 +5821,20 @@ argument_list|(
 argument|d
 argument_list|)
 block|{
+specifier|static
+name|x
+block|;
 comment|/* for some reason, get bursts of intr #7, though not enabled! */
-comment|/*pg("strayintr %x", d);*/
-block|}
+name|pg
+argument_list|(
+literal|"%d strayintr %x"
+argument_list|,
+name|x
+operator|++
+argument_list|,
+name|d
+argument_list|)
+block|; }
 name|aston
 argument_list|()
 block|{
@@ -6112,6 +6462,45 @@ name|from
 operator|--
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_macro
+name|redstack
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|u_int
+operator|)
+operator|&
+name|u
+operator|+
+sizeof|sizeof
+argument_list|(
+name|u
+argument_list|)
+operator|+
+literal|100
+operator|>=
+operator|(
+name|u_int
+operator|)
+operator|&
+name|i
+condition|)
+name|pg
+argument_list|(
+literal|"redstack"
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
