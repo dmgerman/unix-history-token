@@ -506,7 +506,7 @@ block|}
 comment|/* 	 * Basic algorithm is to scan the format string for conversion 	 * specifications -- once one is found, find out if the field 	 * width or precision is a '*'; if it is, gather up value.  Note, 	 * format strings are reused as necessary to use up the provided 	 * arguments, arguments of zero/null string are provided to use 	 * up the format string. 	 */
 name|skip1
 operator|=
-literal|"#-+ 0"
+literal|"#'-+ 0"
 expr_stmt|;
 name|skip2
 operator|=
