@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: dc21040reg.h,v 1.14 1998/02/27 13:17:25 mycroft Exp $	*/
+comment|/*	$NetBSD: dc21040reg.h,v 1.15 1998/05/22 18:50:59 matt Exp $	*/
 end_comment
 
 begin_comment
@@ -1564,7 +1564,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_21040_SIACONN_10BASET
-value|0x00008F01L
+value|0x0000EF01L
 end_define
 
 begin_define
@@ -1585,7 +1585,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_21040_SIACONN_10BASET_FD
-value|0x00008F01L
+value|0x0000EF01L
 end_define
 
 begin_define
@@ -1606,7 +1606,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_21040_SIACONN_AUIBNC
-value|0x00008F09L
+value|0x0000EF09L
 end_define
 
 begin_define
