@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ata-disk.c,v 1.2 1999/03/03 21:10:29 sos Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ata-disk.c,v 1.3 1999/03/05 09:43:30 sos Exp $  */
 end_comment
 
 begin_include
@@ -318,7 +318,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int32_t
-name|ata_get_param
+name|ad_getparam
 parameter_list|(
 name|struct
 name|ad_softc
@@ -613,7 +613,7 @@ name|adnlun
 expr_stmt|;
 if|if
 condition|(
-name|ata_get_param
+name|ad_getparam
 argument_list|(
 name|adp
 argument_list|)
@@ -1039,7 +1039,7 @@ end_function
 begin_function
 specifier|static
 name|int32_t
-name|ata_get_param
+name|ad_getparam
 parameter_list|(
 name|struct
 name|ad_softc
@@ -2013,14 +2013,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* newer called when adp->active != 0 SOS */
 if|if
 condition|(
 name|adp
 operator|->
 name|active
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ad_start: should newer be called when active\n"
+argument_list|)
+expr_stmt|;
+comment|/* SOS */
 return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -2273,28 +2280,6 @@ name|ATA_C_READ
 else|:
 name|ATA_C_WRITE
 expr_stmt|;
-comment|/* ready to issue command ? */
-while|while
-condition|(
-name|ata_wait
-argument_list|(
-name|adp
-operator|->
-name|controller
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ad_transfer: timeout waiting to give command"
-argument_list|)
-expr_stmt|;
-comment|/*ata_unwedge(adp->controller); SOS */
-block|}
 name|ata_command
 argument_list|(
 name|adp
@@ -2452,7 +2437,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int32_t
 name|ad_interrupt
 parameter_list|(
 name|struct
@@ -2805,7 +2790,9 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* MESSY!! only needed for W */
-return|return;
+return|return
+name|ATA_OP_CONTINUES
+return|;
 block|}
 block|}
 name|bufq_remove
@@ -2880,14 +2867,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|adp
-operator|->
-name|controller
-operator|->
-name|active
-operator|=
-name|ATA_IDLE
-expr_stmt|;
 name|ad_start
 argument_list|(
 name|adp
@@ -2903,13 +2882,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ata_start
-argument_list|(
-name|adp
-operator|->
-name|controller
-argument_list|)
-expr_stmt|;
+return|return
+name|ATA_OP_FINISHED
+return|;
 block|}
 end_function
 

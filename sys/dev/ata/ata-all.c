@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: ata-all.c,v 1.2 1999/03/03 21:10:29 sos Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: ata-all.c,v 1.3 1999/03/05 09:43:30 sos Exp $  */
 end_comment
 
 begin_include
@@ -1309,6 +1309,12 @@ name|altioaddr
 operator|=
 name|altioaddr
 expr_stmt|;
+name|scp
+operator|->
+name|active
+operator|=
+name|ATA_IDLE
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ATA_DEBUG
@@ -2215,11 +2221,16 @@ name|ata_queue
 argument_list|)
 operator|)
 condition|)
+if|if
+condition|(
 name|ad_interrupt
 argument_list|(
 name|ata_request
 argument_list|)
-expr_stmt|;
+operator|==
+name|ATA_OP_CONTINUES
+condition|)
+return|return;
 break|break;
 endif|#
 directive|endif
@@ -2240,11 +2251,16 @@ name|atapi_queue
 argument_list|)
 operator|)
 condition|)
+if|if
+condition|(
 name|atapi_interrupt
 argument_list|(
 name|atapi_request
 argument_list|)
-expr_stmt|;
+operator|==
+name|ATA_OP_CONTINUES
+condition|)
+return|return;
 break|break;
 case|case
 name|ATA_WAIT_INTR
@@ -2257,22 +2273,10 @@ operator|)
 name|scp
 argument_list|)
 expr_stmt|;
-name|scp
-operator|->
-name|active
-operator|=
-name|ATA_IDLE
-expr_stmt|;
 break|break;
 case|case
 name|ATA_IGNORE_INTR
 case|:
-name|scp
-operator|->
-name|active
-operator|=
-name|ATA_IDLE
-expr_stmt|;
 break|break;
 default|default:
 case|case
@@ -2292,8 +2296,19 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
+name|scp
+operator|->
+name|active
+operator|=
+name|ATA_IDLE
+expr_stmt|;
+name|ata_start
+argument_list|(
+name|scp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2471,6 +2486,11 @@ operator||
 name|ATA_SLAVE
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|inb
@@ -2603,7 +2623,7 @@ name|flags
 parameter_list|)
 block|{
 comment|/* ready to issue command ? */
-while|while
+if|if
 condition|(
 name|ata_wait
 argument_list|(
@@ -2617,7 +2637,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ad_transfer: timeout waiting to give command"
+literal|"ata_command: timeout waiting to give command"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2625,6 +2645,21 @@ operator|-
 literal|1
 return|;
 block|}
+name|outb
+argument_list|(
+name|scp
+operator|->
+name|ioaddr
+operator|+
+name|ATA_DRIVE
+argument_list|,
+name|ATA_D_IBM
+operator||
+name|device
+operator||
+name|head
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|scp
@@ -2667,21 +2702,6 @@ name|scp
 operator|->
 name|ioaddr
 operator|+
-name|ATA_DRIVE
-argument_list|,
-name|ATA_D_IBM
-operator||
-name|device
-operator||
-name|head
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|scp
-operator|->
-name|ioaddr
-operator|+
 name|ATA_SECTOR
 argument_list|,
 name|sector
@@ -2696,6 +2716,25 @@ operator|+
 name|ATA_COUNT
 argument_list|,
 name|count
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|scp
+operator|->
+name|active
+operator|&&
+name|flags
+operator|!=
+name|ATA_IMMEDIATE
+condition|)
+name|printf
+argument_list|(
+literal|"DANGER active=%d\n"
+argument_list|,
+name|scp
+operator|->
+name|active
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2723,6 +2762,8 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|tsleep
 argument_list|(
 operator|(
@@ -2734,9 +2775,26 @@ name|PRIBIO
 argument_list|,
 literal|"atacmd"
 argument_list|,
-literal|0
+literal|500
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ata_command: timeout waiting for interrupt"
 argument_list|)
 expr_stmt|;
+name|scp
+operator|->
+name|active
+operator|=
+name|ATA_IDLE
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 break|break;
 case|case
 name|ATA_IGNORE_INTR

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-tape.h,v 1.1 1999/03/01 21:19:18 sos Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-tape.h,v 1.2 1999/03/03 21:10:29 sos Exp $  */
 end_comment
 
 begin_comment
@@ -12,13 +12,6 @@ define|#
 directive|define
 name|ATAPI_TAPE_REWIND
 value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAPI_TAPE_REQUEST_SENSE
-value|0x03
 end_define
 
 begin_define
@@ -333,121 +326,6 @@ decl_stmt|;
 name|u_int8_t
 name|reserved19
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* REQUEST SENSE structure */
-end_comment
-
-begin_struct
-struct|struct
-name|ast_reqsense
-block|{
-name|u_int8_t
-name|error_code
-range|:
-literal|7
-decl_stmt|;
-comment|/* current or deferred errors */
-name|u_int8_t
-name|valid
-range|:
-literal|1
-decl_stmt|;
-comment|/* follows QIC-157C */
-name|u_int8_t
-name|reserved1
-decl_stmt|;
-comment|/* Segment number - reserved */
-name|u_int8_t
-name|sense_key
-range|:
-literal|4
-decl_stmt|;
-comment|/* sense key */
-name|u_int8_t
-name|reserved2_4
-range|:
-literal|1
-decl_stmt|;
-comment|/* reserved */
-name|u_int8_t
-name|ili
-range|:
-literal|1
-decl_stmt|;
-comment|/* incorrect length indicator */
-name|u_int8_t
-name|eom
-range|:
-literal|1
-decl_stmt|;
-comment|/* end of medium */
-name|u_int8_t
-name|filemark
-range|:
-literal|1
-decl_stmt|;
-comment|/* filemark */
-name|u_int8_t
-name|info
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
-decl_stmt|;
-comment|/* cmd specific info */
-name|u_int8_t
-name|asl
-decl_stmt|;
-comment|/* additional sense length (n-7) */
-name|u_int8_t
-name|command_specific
-decl_stmt|;
-comment|/* additional cmd specific info */
-name|u_int8_t
-name|asc
-decl_stmt|;
-comment|/* additional sense code */
-name|u_int8_t
-name|ascq
-decl_stmt|;
-comment|/* additional sense code qualifier */
-name|u_int8_t
-name|replaceable_unit_code
-decl_stmt|;
-comment|/* field replaceable unit code */
-name|u_int8_t
-name|sk_specific1
-range|:
-literal|7
-decl_stmt|;
-comment|/* sense key specific */
-name|u_int8_t
-name|sksv
-range|:
-literal|1
-decl_stmt|;
-comment|/* sense key specific info valid */
-name|u_int8_t
-name|sk_specific2
-decl_stmt|;
-comment|/* sense key specific */
-name|u_int8_t
-name|sk_specific3
-decl_stmt|;
-comment|/* sense key Specific */
-name|u_int8_t
-name|pad
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* padding */
 block|}
 struct|;
 end_struct

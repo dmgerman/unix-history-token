@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-all.c,v 1.2 1999/03/03 21:10:29 sos Exp $  */
+comment|/*-  * Copyright (c) 1998,1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-all.c,v 1.3 1999/03/05 09:43:30 sos Exp $  */
 end_comment
 
 begin_include
@@ -119,7 +119,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int32_t
-name|atapi_get_param
+name|atapi_getparam
 parameter_list|(
 name|struct
 name|atapi_softc
@@ -380,7 +380,7 @@ name|ATA_MASTER
 expr_stmt|;
 if|if
 condition|(
-name|atapi_get_param
+name|atapi_getparam
 argument_list|(
 name|atp
 argument_list|)
@@ -470,13 +470,6 @@ directive|endif
 name|notfound
 label|:
 default|default:
-name|free
-argument_list|(
-name|atp
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 name|bpack
 argument_list|(
 name|atp
@@ -538,6 +531,13 @@ else|:
 literal|"master "
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|atp
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -553,7 +553,7 @@ end_function
 begin_function
 specifier|static
 name|int32_t
-name|atapi_get_param
+name|atapi_getparam
 parameter_list|(
 name|struct
 name|atapi_softc
@@ -836,6 +836,7 @@ parameter_list|,
 name|int32_t
 name|flags
 parameter_list|,
+comment|/*timeout,*/
 name|atapi_callback_t
 name|callback
 parameter_list|,
@@ -1049,7 +1050,8 @@ name|PRIBIO
 argument_list|,
 literal|"atprq"
 argument_list|,
-literal|100
+literal|0
+comment|/*timeout*/
 argument_list|)
 condition|)
 name|error
@@ -1287,7 +1289,7 @@ argument_list|(
 literal|"atapi_transfer: bad command phase\n"
 argument_list|)
 expr_stmt|;
-comment|/* now what ?? SOS atapi-done& again */
+comment|/* now what ?? done& again ?? SOS */
 block|}
 comment|/* this seems to be needed for some (slow) devices */
 name|DELAY
@@ -1324,7 +1326,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int32_t
 name|atapi_interrupt
 parameter_list|(
 name|struct
@@ -1383,7 +1385,9 @@ literal|"atapi_interrupt: timeout waiting for status"
 argument_list|)
 expr_stmt|;
 comment|/* maybe check sense code ??  SOS */
-return|return;
+return|return
+name|ATA_OP_FINISHED
+return|;
 block|}
 name|atp
 operator|->
@@ -1544,7 +1548,9 @@ name|int16_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|ATA_OP_CONTINUES
+return|;
 case|case
 name|ATAPI_P_WRITE
 case|:
@@ -1696,7 +1702,9 @@ name|data
 operator|+=
 name|length
 expr_stmt|;
-return|return;
+return|return
+name|ATA_OP_CONTINUES
+return|;
 case|case
 name|ATAPI_P_READ
 case|:
@@ -1849,7 +1857,9 @@ name|data
 operator|+=
 name|length
 expr_stmt|;
-return|return;
+return|return
+name|ATA_OP_CONTINUES
+return|;
 case|case
 name|ATAPI_P_ABORT
 case|:
@@ -1929,7 +1939,9 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"atapi_interrupt: unknown transfer phase\n"
+literal|"atapi_interrupt: unknown transfer phase %d\n"
+argument_list|,
+name|reason
 argument_list|)
 expr_stmt|;
 block|}
@@ -1994,21 +2006,9 @@ operator|)
 name|request
 argument_list|)
 expr_stmt|;
-name|atp
-operator|->
-name|controller
-operator|->
-name|active
-operator|=
-name|ATA_IDLE
-expr_stmt|;
-name|ata_start
-argument_list|(
-name|atp
-operator|->
-name|controller
-argument_list|)
-expr_stmt|;
+return|return
+name|ATA_OP_FINISHED
+return|;
 block|}
 end_function
 
@@ -2516,6 +2516,11 @@ argument_list|,
 name|ATA_D_IBM
 operator||
 name|ATA_SLAVE
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 name|status
