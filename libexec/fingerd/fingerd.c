@@ -743,7 +743,14 @@ name|av
 operator|+
 name|ENTRIES
 condition|)
+block|{
+operator|*
+name|ap
+operator|=
+name|NULL
+expr_stmt|;
 break|break;
+block|}
 name|lp
 operator|=
 name|NULL
