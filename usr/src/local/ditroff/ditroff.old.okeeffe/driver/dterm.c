@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)dterm.c	1.4	(Berkeley)	%G%"  *  *	Converts ditroff output to text on a terminal.  It is NOT meant to  *	produce readable output, but is to show one how one's paper is (in  *	general) formatted - what will go where on which page.  *  *	options:  *  *	  -hn	set horizontal resolution to n (in characters per inch;  *		default is 10.0).  *  *	  -vn	set vertical resolution (default is 6.0).  *  *	  -ln	set maximum output line-length to n (default is 79).  *  *	-olist	output page list - as in troff.  *  *	  -c	continue at end of page.  Default is to stop at the end  *		of each page, print "dterm:" and wait for a command.  *		Type ? to get a list of available commands.  *  *	  -w	sets h = 20, v = 12, l = 131, also sets -c to allow for   *		extra-wide printouts on the printer.  *  *	-fxxx	get special character definition file "xxx".  Default is  *		/usr/lib/font/devter/specfile.  */
+comment|/* @(#)dterm.c	1.5	(Berkeley)	%G%"  *  *	Converts ditroff output to text on a terminal.  It is NOT meant to  *	produce readable output, but is to show one how one's paper is (in  *	general) formatted - what will go where on which page.  *  *	options:  *  *	  -hn	set horizontal resolution to n (in characters per inch;  *		default is 10.0).  *  *	  -vn	set vertical resolution (default is 6.0).  *  *	  -ln	set maximum output line-length to n (default is 79).  *  *	-olist	output page list - as in troff.  *  *	  -c	continue at end of page.  Default is to stop at the end  *		of each page, print "dterm:" and wait for a command.  *		Type ? to get a list of available commands.  *  *	  -w	sets h = 20, v = 12, l = 131, also sets -c to allow for   *		extra-wide printouts on the printer.  *  *	-fxxx	get special character definition file "xxx".  Default is  *		/usr/lib/font/devter/specfile.  */
 end_comment
 
 begin_include
@@ -32,14 +32,18 @@ begin_define
 define|#
 directive|define
 name|PGWIDTH
-value|133
+value|266
 end_define
+
+begin_comment
+comment|/* WAY too big - for good measure */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|PGHEIGHT
-value|110
+value|220
 end_define
 
 begin_define
@@ -167,7 +171,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)dterm.c	1.4	(Berkeley)	%G%"
+literal|"@(#)dterm.c	1.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,7 +217,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* flag:  Don't stop at the end of each page? */
+comment|/* flags:  Don't stop at the end of each page? */
+end_comment
+
+begin_decl_stmt
+name|int
+name|clearsc
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Put out form feed at each page? */
 end_comment
 
 begin_decl_stmt
@@ -225,7 +241,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* do we do output at all? */
+comment|/* Do we do output at all? */
 end_comment
 
 begin_decl_stmt
@@ -237,7 +253,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* output page list if> 0 */
+comment|/* Output page list if> 0 */
 end_comment
 
 begin_decl_stmt
@@ -434,7 +450,7 @@ begin_decl_stmt
 name|int
 name|maxdots
 init|=
-literal|32000
+literal|3200
 decl_stmt|;
 end_decl_stmt
 
@@ -554,8 +570,17 @@ break|break;
 case|case
 literal|'c'
 case|:
-comment|/* continue (^L too) at endofpage */
+comment|/* continue at endofpage */
 name|keepon
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'L'
+case|:
+comment|/* form feed after each page */
+name|clearsc
 operator|=
 literal|1
 expr_stmt|;
@@ -563,7 +588,7 @@ break|break;
 case|case
 literal|'w'
 case|:
-comment|/* "wide" format */
+comment|/* "wide" printer format */
 name|hscale
 operator|=
 literal|16.0
@@ -577,6 +602,10 @@ operator|=
 literal|131
 expr_stmt|;
 name|keepon
+operator|=
+literal|1
+expr_stmt|;
+name|clearsc
 operator|=
 literal|1
 expr_stmt|;
@@ -1559,27 +1588,27 @@ name|n
 operator|/
 name|vscale
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|DP
 operator|=
-name|n
-operator|/
-literal|10
-operator|-
-literal|6
-operator|)
-operator|<
-literal|1
-condition|)
-name|DP
-operator|=
-literal|1
+name|min
+argument_list|(
+name|hscale
+argument_list|,
+name|vscale
+argument_list|)
 expr_stmt|;
 comment|/* guess the drawing */
-break|break;
+name|DP
+operator|=
+name|max
+argument_list|(
+name|DP
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* resolution */
+break|break;
 case|case
 literal|'f'
 case|:
@@ -2164,15 +2193,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|keepon
+name|clearsc
 condition|)
-block|{
 name|putchar
 argument_list|(
 literal|'
 literal|'
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|keepon
+condition|)
+block|{
 name|t_init
 argument_list|(
 literal|1
@@ -3302,6 +3335,11 @@ argument_list|(
 name|yd
 argument_list|)
 expr_stmt|;
+name|put1
+argument_list|(
+name|drawdot
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3343,6 +3381,15 @@ argument_list|(
 name|xd
 argument_list|)
 expr_stmt|;
+name|numdots
+operator|=
+name|min
+argument_list|(
+name|numdots
+argument_list|,
+name|maxdots
+argument_list|)
+expr_stmt|;
 name|motincr
 operator|=
 name|DP
@@ -3350,6 +3397,11 @@ operator|*
 name|sgn
 argument_list|(
 name|xd
+argument_list|)
+expr_stmt|;
+name|put1
+argument_list|(
+name|drawdot
 argument_list|)
 expr_stmt|;
 for|for
@@ -3502,6 +3554,11 @@ operator|(
 name|int
 operator|)
 name|slope
+argument_list|)
+expr_stmt|;
+name|put1
+argument_list|(
+name|drawdot
 argument_list|)
 expr_stmt|;
 for|for
