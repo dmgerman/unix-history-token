@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	6.5	84/08/29	*/
+comment|/*	kern_descrip.c	6.6	84/11/27	*/
 end_comment
 
 begin_include
@@ -553,7 +553,7 @@ operator|<
 literal|0
 operator|||
 name|i
-operator|>
+operator|>=
 name|NOFILE
 condition|)
 block|{
@@ -1890,6 +1890,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|(
+name|uap
+operator|->
+name|how
+operator|&
+operator|(
+name|LOCK_SH
+operator||
+name|LOCK_EX
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+comment|/* error? */
 comment|/* avoid work... */
 if|if
 condition|(
@@ -1907,22 +1925,6 @@ operator|->
 name|how
 operator|&
 name|LOCK_EX
-operator|)
-operator|||
-operator|(
-name|fp
-operator|->
-name|f_flag
-operator|&
-name|FSHLOCK
-operator|)
-operator|&&
-operator|(
-name|uap
-operator|->
-name|how
-operator|&
-name|LOCK_SH
 operator|)
 condition|)
 return|return;
