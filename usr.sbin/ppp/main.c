@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.39 1997/03/13 14:53:55 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.40 1997/03/13 21:22:07 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -1607,7 +1607,7 @@ name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
-name|Hangup
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2544,21 +2544,35 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
-literal|"connection closed.\n"
+name|LOG_PHASE_BIT
+argument_list|,
+literal|"client connection closed.\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|VarLocalAuth
+operator|=
+name|LOCAL_NO_AUTH
+expr_stmt|;
 name|close
 argument_list|(
 name|netfd
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+literal|2
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Have to have something here or the modem will be 1 */
 name|netfd
 operator|=
 operator|-
@@ -3672,16 +3686,13 @@ name|rfds
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|logprintf
+name|LogPrintf
 argument_list|(
+name|LOG_PHASE_BIT
+argument_list|,
 literal|"connected to client.\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|wfd
 operator|=
 name|accept
@@ -3700,6 +3711,20 @@ operator|&
 name|ssize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wfd
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"accept"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|netfd
@@ -3739,11 +3764,24 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|perror
 argument_list|(
 literal|"dup2"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|netfd
+argument_list|)
+expr_stmt|;
+name|netfd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+continue|continue;
+block|}
 name|mode
 operator||=
 name|MODE_INTER
