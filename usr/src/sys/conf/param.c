@@ -190,6 +190,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|NCHSIZE
+value|(60 + 2 * MAXUSERS)
+end_define
+
+begin_decl_stmt
+name|int
+name|nchsize
+init|=
+name|NCHSIZE
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|int
 name|ntext
@@ -212,6 +227,14 @@ operator|+
 literal|16
 operator|+
 name|MAXUSERS
+operator|+
+operator|(
+literal|2
+operator|*
+name|NCHSIZE
+operator|/
+literal|3
+operator|)
 operator|)
 operator|+
 literal|32
@@ -279,18 +302,6 @@ name|int
 name|nmbclusters
 init|=
 name|NMBCLUSTERS
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nchsize
-init|=
-literal|60
-operator|+
-literal|3
-operator|*
-name|MAXUSERS
 decl_stmt|;
 end_decl_stmt
 
