@@ -3636,6 +3636,12 @@ directive|ifdef
 name|FAT_CURSOR
 name|svsp
 operator|->
+name|cursor_start
+operator|=
+literal|0
+expr_stmt|;
+name|svsp
+operator|->
 name|cursor_end
 operator|=
 literal|15
