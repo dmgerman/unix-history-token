@@ -1616,10 +1616,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|caddr_t
-modifier|*
-name|sg
-parameter_list|,
 name|struct
 name|linux_sendto_args
 modifier|*
