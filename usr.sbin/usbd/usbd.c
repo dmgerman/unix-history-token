@@ -4617,6 +4617,37 @@ name|ndevs
 operator|++
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENXIO
+condition|)
+block|{
+comment|/* there was an error, on a device that does 				 * exist (device is configured) 				 */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Could not open %s, %s\n"
+argument_list|,
+name|__progname
+argument_list|,
+name|buf
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 else|else
