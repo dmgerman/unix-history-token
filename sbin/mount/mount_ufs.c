@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mount_ufs.c,v 1.9 1997/08/24 21:02:50 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,13 +163,11 @@ name|MOPT_STDOPTS
 block|,
 name|MOPT_ASYNC
 block|,
+name|MOPT_FORCE
+block|,
 name|MOPT_SYNC
 block|,
-name|MOPT_FORCE
-block|,
 name|MOPT_UPDATE
-block|,
-name|MOPT_FORCE
 block|,
 block|{
 name|NULL
