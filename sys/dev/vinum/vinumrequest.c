@@ -3253,20 +3253,6 @@ name|bp
 expr_stmt|;
 comment|/* pointer to user buffer header */
 comment|/* Initialize the buf struct */
-name|bzero
-argument_list|(
-operator|&
-name|rqe
-operator|->
-name|b
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|buf
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -3749,41 +3735,65 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bcopy
+name|bzero
 argument_list|(
-name|bp
-argument_list|,
-operator|&
 name|sbp
-operator|->
-name|b
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|buf
+name|sdbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* start with the user's buffer */
+comment|/* start with nothing */
+comment|/*      * XXX Should we check for reviving plexes here, and      * set B_ORDERED if so?      */
 name|sbp
 operator|->
 name|b
 operator|.
 name|b_flags
-operator||=
+operator|=
+name|bp
+operator|->
+name|b_flags
+operator||
 name|B_CALL
 expr_stmt|;
-comment|/* tell us when it's done */
+comment|/* inform us when it's done */
 name|sbp
 operator|->
 name|b
 operator|.
-name|b_iodone
+name|b_bufsize
 operator|=
-name|sdio_done
+name|bp
+operator|->
+name|b_bufsize
 expr_stmt|;
-comment|/* here */
+comment|/* buffer size */
+name|sbp
+operator|->
+name|b
+operator|.
+name|b_bcount
+operator|=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
+comment|/* number of bytes to transfer */
+name|sbp
+operator|->
+name|b
+operator|.
+name|b_resid
+operator|=
+name|bp
+operator|->
+name|b_resid
+expr_stmt|;
+comment|/* and amount waiting */
 name|sbp
 operator|->
 name|b
@@ -3806,6 +3816,40 @@ name|sbp
 operator|->
 name|b
 operator|.
+name|b_data
+operator|=
+name|bp
+operator|->
+name|b_data
+expr_stmt|;
+comment|/* data buffer */
+name|sbp
+operator|->
+name|b
+operator|.
+name|b_blkno
+operator|=
+name|bp
+operator|->
+name|b_blkno
+operator|+
+name|sd
+operator|->
+name|driveoffset
+expr_stmt|;
+name|sbp
+operator|->
+name|b
+operator|.
+name|b_iodone
+operator|=
+name|sdio_done
+expr_stmt|;
+comment|/* come here on completion */
+name|sbp
+operator|->
+name|b
+operator|.
 name|b_vp
 operator|=
 name|DRIVE
@@ -3818,16 +3862,6 @@ operator|.
 name|vp
 expr_stmt|;
 comment|/* vnode */
-name|sbp
-operator|->
-name|b
-operator|.
-name|b_blkno
-operator|+=
-name|sd
-operator|->
-name|driveoffset
-expr_stmt|;
 name|sbp
 operator|->
 name|bp
