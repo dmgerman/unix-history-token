@@ -409,17 +409,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IOPAGES
-value|2
-end_define
-
-begin_comment
-comment|/* pages of i/o permission bitmap */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|KSTACK_PAGES
 value|4
 end_define
@@ -439,13 +428,22 @@ begin_comment
 comment|/* pages of user area */
 end_comment
 
-begin_comment
-comment|/* #define KSTACK_GUARD */
-end_comment
+begin_define
+define|#
+directive|define
+name|KSTACK_GUARD
+end_define
 
 begin_comment
 comment|/* compile in kstack guard page */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|KSTACK_GUARD_PAGES
+value|1
+end_define
 
 begin_comment
 comment|/*  * Constants related to network buffer management.  * MCLBYTES must be no larger than PAGE_SIZE.  */
