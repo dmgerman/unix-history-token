@@ -1362,27 +1362,32 @@ operator|->
 name|to_file
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|FREEBSD_NATIVE
 name|in_system_header
 operator|=
+operator|(
+name|warn_system_headers
+operator|&&
 name|new_map
 operator|->
 name|sysp
 operator|!=
 literal|0
+operator|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* FREEBSD_NATIVE */
+ifdef|#
+directive|ifdef
+name|FREEBSD_NATIVE
+comment|/* Correct logic should be: if warn_system_headers is set, no      header file should be considered system, so that no warnings      will be suppressed.  */
+if|if
+condition|(
+name|warn_system_headers
+condition|)
 name|in_system_header
 operator|=
 literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FREEBSD_NATIVE */
 name|input_filename
 operator|=
 name|new_map
