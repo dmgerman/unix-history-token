@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cr_put.c	5.12 (Berkeley) %G%"
+literal|"@(#)cr_put.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -483,8 +483,15 @@ argument_list|,
 name|destline
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Need this condition due to inconsistent behavior 		 * of backspace on the last column. 		 */
 if|if
 condition|(
+name|outcol
+operator|!=
+name|COLS
+operator|-
+literal|1
+operator|&&
 name|plod
 argument_list|(
 name|strlen
