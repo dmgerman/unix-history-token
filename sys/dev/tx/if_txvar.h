@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: if_txvar.h,v 1.7 1999/11/17 05:21:19 jason Exp $	*/
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 1997 Semen Ustimenko  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1997 Semen Ustimenko  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -16,19 +8,16 @@ comment|/*  * Configuration  */
 end_comment
 
 begin_comment
-comment|/*#define	EPIC_DEBUG	1*/
+comment|/*#define	EPIC_DIAG	1*/
 end_comment
 
 begin_comment
 comment|/*#define	EPIC_USEIOSPACE	1*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|EPIC_EARLY_RX
-value|1
-end_define
+begin_comment
+comment|/*#define	EPIC_EARLY_RX	1*/
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -214,22 +203,6 @@ name|struct
 name|arpcom
 name|arpcom
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-name|mii_data_t
-name|sc_mii
-decl_stmt|;
-name|struct
-name|device
-name|dev
-decl_stmt|;
-else|#
-directive|else
-comment|/* __FreeBSD__ */
 name|struct
 name|resource
 modifier|*
@@ -253,8 +226,6 @@ decl_stmt|;
 name|u_int32_t
 name|unit
 decl_stmt|;
-endif|#
-directive|endif
 name|void
 modifier|*
 name|sc_ih
@@ -337,6 +308,10 @@ decl_stmt|;
 name|int
 name|serinst
 decl_stmt|;
+name|void
+modifier|*
+name|pool
+decl_stmt|;
 block|}
 name|epic_softc_t
 typedef|;
@@ -359,121 +334,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|EPIC_DEBUG
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|dprintf
-parameter_list|(
-name|a
-parameter_list|)
-value|printf a
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|dprintf
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|EPIC_FORMAT
-value|"tx%d"
-end_define
-
-begin_define
-define|#
-directive|define
-name|EPIC_ARGS
-parameter_list|(
-name|sc
-parameter_list|)
-value|(sc->unit)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EPIC_BPFTAP_ARG
-parameter_list|(
-name|ifp
-parameter_list|)
-value|ifp
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __OpenBSD__ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EPIC_FORMAT
-value|"%s"
-end_define
-
-begin_define
-define|#
-directive|define
-name|EPIC_ARGS
-parameter_list|(
-name|sc
-parameter_list|)
-value|(sc->sc_dev.dv_xname)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EPIC_BPFTAP_ARG
-parameter_list|(
-name|ifp
-parameter_list|)
-value|(ifp)->if_bpf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -501,7 +361,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4( (sc)->sc_st, (sc)->sc_sh, (reg), (val) )
+value|bus_space_write_4((sc)->sc_st, (sc)->sc_sh, (reg), (val))
 end_define
 
 begin_define
@@ -516,7 +376,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2( (sc)->sc_st, (sc)->sc_sh, (reg), (val) )
+value|bus_space_write_2((sc)->sc_st, (sc)->sc_sh, (reg), (val))
 end_define
 
 begin_define
@@ -531,7 +391,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1( (sc)->sc_st, (sc)->sc_sh, (reg), (val) )
+value|bus_space_write_1((sc)->sc_st, (sc)->sc_sh, (reg), (val))
 end_define
 
 begin_define
@@ -544,7 +404,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4( (sc)->sc_st, (sc)->sc_sh, (reg) )
+value|bus_space_read_4((sc)->sc_st, (sc)->sc_sh, (reg))
 end_define
 
 begin_define
@@ -557,7 +417,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_2( (sc)->sc_st, (sc)->sc_sh, (reg) )
+value|bus_space_read_2((sc)->sc_st, (sc)->sc_sh, (reg))
 end_define
 
 begin_define
@@ -570,7 +430,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1( (sc)->sc_st, (sc)->sc_sh, (reg) )
+value|bus_space_read_1((sc)->sc_st, (sc)->sc_sh, (reg))
 end_define
 
 begin_define
@@ -585,7 +445,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|epic_read_phy_reg((sc),(phy),(reg))
+value|epic_read_phy_reg((sc), (phy), (reg))
 end_define
 
 begin_define
@@ -602,7 +462,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|epic_write_phy_reg((sc),(phy),(reg),(val))
+value|epic_write_phy_reg((sc), (phy), (reg), (val))
 end_define
 
 begin_comment
