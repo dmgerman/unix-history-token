@@ -11,10 +11,14 @@ begin_comment
 comment|/* This file lives in at least two places: libiberty and gcc.    Don't change one without the other.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IN_GCC
+name|HAVE_CONFIG_H
 end_ifdef
 
 begin_include
@@ -31,58 +35,71 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"system.h"
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IN_GCC
+name|HAVE_UNISTD_H
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"gansidecl.h"
+file|<unistd.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ISSPACE
+value|(x) isspace(x)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_WAIT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vfork
+end_ifdef
+
 begin_comment
-comment|/* ??? Need to find a suitable header file.  */
+comment|/* Autoconf may define this to fork for us. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PEXECUTE_FIRST
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PEXECUTE_LAST
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|PEXECUTE_ONE
-value|(PEXECUTE_FIRST + PEXECUTE_LAST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PEXECUTE_SEARCH
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|PEXECUTE_VERBOSE
-value|8
+name|VFORK_STRING
+value|"fork"
 end_define
 
 begin_else
@@ -90,16 +107,63 @@ else|#
 directive|else
 end_else
 
+begin_define
+define|#
+directive|define
+name|VFORK_STRING
+value|"vfork"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_VFORK_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|"libiberty.h"
+file|<vfork.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|vfork
+parameter_list|()
+value|(decc$$alloc_vfork_blocks()>= 0 ? \                lib$get_current_invo_context(decc$$get_vfork_jmpbuf()) : -1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VMS */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"libiberty.h"
+end_include
 
 begin_comment
 comment|/* stdin file number.  */
@@ -673,6 +737,12 @@ name|defined
 argument_list|(
 name|_WIN32
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_UWIN
+argument_list|)
 end_if
 
 begin_include
@@ -684,7 +754,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__CYGWIN32__
+name|__CYGWIN__
 end_ifdef
 
 begin_define
@@ -713,173 +783,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function
-name|int
-name|pexecute
-parameter_list|(
-name|program
-parameter_list|,
-name|argv
-parameter_list|,
-name|this_pname
-parameter_list|,
-name|temp_base
-parameter_list|,
-name|errmsg_fmt
-parameter_list|,
-name|errmsg_arg
-parameter_list|,
-name|flags
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|program
-decl_stmt|;
-name|char
-modifier|*
-specifier|const
-modifier|*
-name|argv
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|this_pname
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|temp_base
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|errmsg_fmt
-decl_stmt|,
-decl|*
-modifier|*
-name|errmsg_arg
-decl_stmt|;
-end_function
-
-begin_decl_stmt
-name|int
-name|flags
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|int
-name|pid
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|PEXECUTE_ONE
-operator|)
-operator|!=
-name|PEXECUTE_ONE
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-name|pid
-operator|=
-operator|(
-name|flags
-operator|&
-name|PEXECUTE_SEARCH
-condition|?
-name|_spawnvp
-else|:
-name|_spawnv
-operator|)
-operator|(
-name|_P_NOWAIT
-operator|,
-name|program
-operator|,
-name|fix_argv
-argument_list|(
-name|argv
-argument_list|)
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|pid
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-operator|*
-name|errmsg_fmt
-operator|=
-name|install_error_msg
-expr_stmt|;
-operator|*
-name|errmsg_arg
-operator|=
-name|program
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-return|return
-name|pid
-return|;
-block|}
-end_block
-
-begin_function
-name|int
-name|pwait
-parameter_list|(
-name|pid
-parameter_list|,
-name|status
-parameter_list|,
-name|flags
-parameter_list|)
-name|int
-name|pid
-decl_stmt|;
-name|int
-modifier|*
-name|status
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-block|{
-comment|/* ??? Here's an opportunity to canonicalize the values in STATUS.      Needed?  */
-return|return
-name|cwait
-argument_list|(
-name|status
-argument_list|,
-name|pid
-argument_list|,
-name|WAIT_CHILD
-argument_list|)
-return|;
-block|}
-end_function
-
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* ! __CYGWIN32__ */
+comment|/* ! __CYGWIN__ */
 end_comment
 
 begin_comment
@@ -1059,6 +969,15 @@ name|argvec
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __CYGWIN__ */
+end_comment
 
 begin_include
 include|#
@@ -1484,6 +1403,17 @@ name|int
 name|flags
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|__CYGWIN__
+return|return
+name|wait
+argument_list|(
+name|status
+argument_list|)
+return|;
+else|#
+directive|else
 name|int
 name|termstat
 decl_stmt|;
@@ -1531,6 +1461,9 @@ expr_stmt|;
 return|return
 name|pid
 return|;
+endif|#
+directive|endif
+comment|/* __CYGWIN__ */
 block|}
 end_function
 
@@ -1540,16 +1473,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! defined (__CYGWIN32__) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _WIN32 */
+comment|/* _WIN32&& ! _UWIN */
 end_comment
 
 begin_ifdef
@@ -2345,53 +2269,19 @@ argument_list|)
 expr|\
 operator|&&
 operator|!
+operator|(
 name|defined
 argument_list|(
 name|_WIN32
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_UWIN
+argument_list|)
+operator|)
 end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|vfork
-parameter_list|()
-value|(decc$$alloc_vfork_blocks()>= 0 ? \                lib$get_current_invo_context(decc$$get_vfork_jmpbuf()) : -1)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|vfork
-value|fork
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -2408,31 +2298,6 @@ name|execvp
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IN_GCC
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|my_strerror
-name|PROTO
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
@@ -2662,23 +2527,11 @@ operator|-
 literal|1
 case|:
 block|{
-ifdef|#
-directive|ifdef
-name|vfork
 operator|*
 name|errmsg_fmt
 operator|=
-literal|"fork"
+name|VFORK_STRING
 expr_stmt|;
-else|#
-directive|else
-operator|*
-name|errmsg_fmt
-operator|=
-literal|"vfork"
-expr_stmt|;
-endif|#
-directive|endif
 operator|*
 name|errmsg_arg
 operator|=
@@ -2782,23 +2635,6 @@ argument_list|,
 name|program
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IN_GCC
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|": %s\n"
-argument_list|,
-name|my_strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -2811,8 +2647,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|_exit
 argument_list|(
 literal|1
@@ -2914,7 +2748,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! __MSDOS__&& ! OS2&& ! MPW&& ! _WIN32 */
+comment|/* ! __MSDOS__&& ! OS2&& ! MPW&& ! (_WIN32&& ! _UWIN) */
 end_comment
 
 end_unit
