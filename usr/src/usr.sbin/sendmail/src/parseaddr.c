@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.60 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7557,6 +7557,14 @@ block|,
 literal|"QRELAYED"
 block|,
 name|QRELAYED
+block|,
+literal|"QEXPLODED"
+block|,
+name|QEXPLODED
+block|,
+literal|"QTHISPASS"
+block|,
+name|QTHISPASS
 block|,
 name|NULL
 block|}

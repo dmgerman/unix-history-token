@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.15 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.16 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.15 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.16 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1146,13 +1146,21 @@ operator|->
 name|q_paddr
 argument_list|)
 expr_stmt|;
+block|}
 name|e
 operator|->
 name|e_flags
 operator||=
 name|EF_SENDRECEIPT
 expr_stmt|;
-block|}
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QREPORT
+operator||
+name|QEXPLODED
+expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.92 (Berkeley) %G%"
+literal|"@(#)main.c	8.93 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4238,6 +4238,15 @@ argument_list|)
 condition|)
 block|{
 comment|/* print configuration table (or at least part of it) */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|90
+argument_list|)
+condition|)
 name|printrules
 argument_list|()
 expr_stmt|;
@@ -4255,30 +4264,21 @@ name|i
 operator|++
 control|)
 block|{
-specifier|register
-name|struct
-name|mailer
-modifier|*
-name|m
-init|=
+if|if
+condition|(
 name|Mailer
 index|[
 name|i
 index|]
-decl_stmt|;
-name|int
-name|j
-decl_stmt|;
-if|if
-condition|(
-name|m
-operator|==
+operator|!=
 name|NULL
 condition|)
-continue|continue;
 name|printmailer
 argument_list|(
-name|m
+name|Mailer
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 block|}

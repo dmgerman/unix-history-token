@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.73 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.74 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.73 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.74 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -537,6 +537,32 @@ argument_list|,
 name|queueall
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+block|{
+specifier|extern
+name|void
+name|printenvflags
+parameter_list|()
+function_decl|;
+name|printf
+argument_list|(
+literal|"  e_flags="
+argument_list|)
+expr_stmt|;
+name|printenvflags
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|tTd
@@ -5842,7 +5868,14 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_HAS_DF
+expr_stmt|;
 if|if
 condition|(
 name|fstat
@@ -5885,6 +5918,7 @@ name|st
 operator|.
 name|st_ino
 expr_stmt|;
+block|}
 block|}
 block|}
 return|return
@@ -7491,6 +7525,20 @@ name|pw_gid
 expr_stmt|;
 name|a
 operator|->
+name|q_flags
+operator||=
+name|QGOODUID
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|user
+operator|!=
+literal|'\0'
+condition|)
+name|a
+operator|->
 name|q_user
 operator|=
 name|newstr
@@ -7498,15 +7546,23 @@ argument_list|(
 name|user
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
 name|a
 operator|->
-name|q_flags
-operator||=
-name|QGOODUID
+name|q_user
+operator|=
+name|newstr
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|a
 operator|->
 name|q_user
@@ -7516,7 +7572,6 @@ argument_list|(
 name|DefUser
 argument_list|)
 expr_stmt|;
-block|}
 name|a
 operator|->
 name|q_flags

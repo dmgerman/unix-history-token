@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.40 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.41 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.40 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.41 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1993,6 +1993,15 @@ condition|(
 name|bitset
 argument_list|(
 name|QHASNOTIFY
+argument_list|,
+name|to
+operator|->
+name|q_flags
+argument_list|)
+operator|&&
+name|bitset
+argument_list|(
+name|QPRIMARY
 argument_list|,
 name|to
 operator|->

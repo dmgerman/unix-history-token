@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.39 (Berkeley) %G%"
+literal|"@(#)alias.c	8.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -513,6 +513,8 @@ operator|->
 name|q_flags
 operator||=
 name|QREPORT
+operator||
+name|QEXPLODED
 expr_stmt|;
 block|}
 end_function

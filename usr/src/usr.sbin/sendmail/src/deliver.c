@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.136 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.137 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6495,6 +6495,15 @@ condition|(
 name|bitset
 argument_list|(
 name|QPINGONSUCCESS
+argument_list|,
+name|to
+operator|->
+name|q_flags
+argument_list|)
+operator|&&
+name|bitset
+argument_list|(
+name|QPRIMARY
 argument_list|,
 name|to
 operator|->

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.61 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.62 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.61 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.62 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2323,6 +2323,13 @@ argument_list|(
 literal|"250 Reset state"
 argument_list|)
 expr_stmt|;
+comment|/* arrange to ignore any current send list */
+name|e
+operator|->
+name|e_sendqueue
+operator|=
+name|NULL
+expr_stmt|;
 name|e
 operator|->
 name|e_flags
@@ -2529,6 +2536,13 @@ argument_list|)
 expr_stmt|;
 name|doquit
 label|:
+comment|/* arrange to ignore any current send list */
+name|e
+operator|->
+name|e_sendqueue
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* avoid future 050 messages */
 name|disconnect
 argument_list|(

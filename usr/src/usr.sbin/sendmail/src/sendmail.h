@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.106 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.107 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.106		%G%"
+literal|"@(#)sendmail.h	8.107		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -551,7 +551,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* set from argv */
+comment|/* set from RCPT or argv */
 end_comment
 
 begin_define
@@ -690,11 +690,33 @@ begin_define
 define|#
 directive|define
 name|QRELAYED
-value|0x00020000
+value|0x00010000
 end_define
 
 begin_comment
 comment|/* relayed to non-DSN aware mailer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QEXPLODED
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* undergone mailing list explosion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QTHISPASS
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* temp: address set this pass */
 end_comment
 
 begin_define
@@ -2952,6 +2974,10 @@ name|time_t
 name|map_mtime
 decl_stmt|;
 comment|/* last database modification time */
+name|short
+name|map_specificity
+decl_stmt|;
+comment|/* specificity of alaases */
 name|MAP
 modifier|*
 name|map_stack
