@@ -369,7 +369,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|vpaccess
+name|vn_access
 name|__P
 argument_list|(
 operator|(
@@ -8976,7 +8976,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|vpaccess
+name|vn_access
 parameter_list|(
 name|vp
 parameter_list|,
@@ -9262,7 +9262,7 @@ name|ni_vp
 expr_stmt|;
 name|error
 operator|=
-name|vpaccess
+name|vn_access
 argument_list|(
 name|vp
 argument_list|,
@@ -9429,7 +9429,7 @@ name|ni_vp
 expr_stmt|;
 name|error
 operator|=
-name|vpaccess
+name|vn_access
 argument_list|(
 name|vp
 argument_list|,
