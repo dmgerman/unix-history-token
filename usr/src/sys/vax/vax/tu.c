@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	4.14	83/05/05	*/
+comment|/*	tu.c	4.15	83/05/08	*/
 end_comment
 
 begin_if
@@ -337,7 +337,7 @@ comment|/* how much to write */
 name|int
 name|tu_state
 decl_stmt|;
-comment|/* current tu_state of tansfer operation */
+comment|/* current state of tansfer operation */
 name|int
 name|tu_flag
 decl_stmt|;
@@ -1677,6 +1677,8 @@ argument_list|)
 expr_stmt|;
 comment|/* ACK */
 block|}
+name|top
+label|:
 if|if
 condition|(
 name|tu
@@ -1705,7 +1707,7 @@ comment|/* decrement count, any left? */
 return|return;
 comment|/* get some more */
 block|}
-comment|/* 	 * We got all the data we were expecting for now, 	 * switch on the tu_state of the transfer. 	 */
+comment|/* 	 * We got all the data we were expecting for now, 	 * switch on the state of the transfer. 	 */
 switch|switch
 condition|(
 name|tu
@@ -1753,21 +1755,15 @@ case|case
 name|TUS_WAIT
 case|:
 comment|/* waiting for continue */
-if|if
+switch|switch
 condition|(
 name|c
-operator|!=
-name|TUF_CONT
 condition|)
 block|{
-name|tu
-operator|.
-name|tu_state
-operator|=
-name|TUS_INIT1
-expr_stmt|;
-break|break;
-block|}
+case|case
+name|TUF_CONT
+case|:
+comment|/* got the expected continue */
 name|tu
 operator|.
 name|tu_flag
@@ -1810,8 +1806,7 @@ name|tudata
 operator|)
 argument_list|,
 operator|(
-name|u_short
-operator|*
+name|caddr_t
 operator|)
 name|tu
 operator|.
@@ -1853,6 +1848,70 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
+name|TUF_CMD
+case|:
+comment|/* sending us an END packet...error */
+name|tu
+operator|.
+name|tu_state
+operator|=
+name|TUS_GET
+expr_stmt|;
+name|tu
+operator|.
+name|tu_rbptr
+operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|&
+name|tudata
+expr_stmt|;
+name|tu
+operator|.
+name|tu_rcnt
+operator|=
+sizeof|sizeof
+argument_list|(
+name|tudata
+argument_list|)
+expr_stmt|;
+name|tu
+operator|.
+name|tu_flag
+operator|=
+literal|1
+expr_stmt|;
+name|mtpr
+argument_list|(
+name|CSTS
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+goto|goto
+name|top
+goto|;
+case|case
+name|TUF_INITF
+case|:
+name|tureset
+argument_list|()
+expr_stmt|;
+break|break;
+default|default:
+comment|/* something random...bad news */
+name|tu
+operator|.
+name|tu_state
+operator|=
+name|TUS_INIT1
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
 name|TUS_SENDW
 case|:
 if|if
@@ -1860,6 +1919,10 @@ condition|(
 name|c
 operator|!=
 name|TUF_CONT
+operator|&&
+name|c
+operator|!=
+name|TUF_INITF
 condition|)
 goto|goto
 name|bad
@@ -2491,7 +2554,7 @@ operator|--
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Last message byte was sent out. 	 * Switch on tu_state of transfer. 	 */
+comment|/* 	 * Last message byte was sent out. 	 * Switch on state of transfer. 	 */
 if|if
 condition|(
 name|tudebug
