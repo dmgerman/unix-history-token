@@ -27,7 +27,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.6
+literal|3.7
 operator|%
 name|G
 operator|%
@@ -75,7 +75,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.6
+literal|3.7
 operator|%
 name|G
 operator|%
@@ -175,7 +175,7 @@ init|=
 block|{
 name|AF_INET
 block|,
-name|IPPORT_SENDMAIL
+name|IPPORT_SMTP
 block|}
 decl_stmt|;
 end_decl_stmt
