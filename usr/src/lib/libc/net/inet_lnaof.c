@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet_lnaof.c	5.2 (Berkeley) %G%"
+literal|"@(#)inet_lnaof.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,21 +50,16 @@ begin_comment
 comment|/*  * Return the local network address portion of an  * internet address; handles class a/b/c network  * number formats.  */
 end_comment
 
-begin_macro
+begin_function
+name|u_long
 name|inet_lnaof
-argument_list|(
-argument|in
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|in
+parameter_list|)
 name|struct
 name|in_addr
 name|in
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_long
@@ -121,7 +116,7 @@ name|IN_CLASSC_HOST
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
