@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	mkheaders.c	1.8	82/07/21  * Make all the .h files for the optional entries  */
+comment|/*	mkheaders.c	1.9	82/10/24	*/
+end_comment
+
+begin_comment
+comment|/*  * Make all the .h files for the optional entries  */
 end_comment
 
 begin_include
@@ -27,24 +31,6 @@ directive|include
 file|"y.tab.h"
 end_include
 
-begin_comment
-comment|/*  * This macro reads a line of the form  *	#define STRING<number>  * and assigns STRING to wd and<number> to count  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|rdln
-parameter_list|(
-name|f
-parameter_list|,
-name|wd
-parameter_list|,
-name|count
-parameter_list|)
-value|{\ 	register char *iwd;\ 	if ((wd = get_word(f)) != NULL&& wd != EOF)\ 	    if ((wd = get_word(f)) != NULL&& wd != EOF) {\ 		iwd = ns(wd);\ 		if ((wd = get_word(f)) != NULL&& wd != EOF) {\ 		    count = atoi(wd);\ 		    wd = get_word(f);\ 		    wd = iwd;\ 		}\ 	    }\ 	}
-end_define
-
 begin_macro
 name|headers
 argument_list|()
@@ -66,7 +52,7 @@ name|ftab
 init|;
 name|fl
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|fl
 operator|=
@@ -80,7 +66,7 @@ name|fl
 operator|->
 name|f_needs
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|do_count
 argument_list|(
@@ -99,7 +85,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * do_count:  *	Count all the devices of a certain type and recurse to count  *	whatever the device is connected to  */
+comment|/*  * count all the devices of a certain type and recurse to count  * whatever the device is connected to  */
 end_comment
 
 begin_expr_stmt
@@ -154,7 +140,7 @@ name|dtab
 init|;
 name|dp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|dp
 operator|=
@@ -209,7 +195,7 @@ block|}
 name|count
 operator|++
 expr_stmt|;
-comment|/* 	     * Allow holes in unit numbering, 	     * assumption is unit numbering starts 	     * at zero. 	     */
+comment|/* 			 * Allow holes in unit numbering, 			 * assumption is unit numbering starts 			 * at zero. 			 */
 if|if
 condition|(
 name|dp
@@ -243,7 +229,7 @@ if|if
 condition|(
 name|mp
 operator|!=
-name|NULL
+literal|0
 operator|&&
 name|mp
 operator|!=
@@ -387,7 +373,7 @@ if|if
 condition|(
 name|inf
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|outf
@@ -403,7 +389,7 @@ if|if
 condition|(
 name|outf
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|perror
@@ -437,29 +423,86 @@ return|return;
 block|}
 name|fl_head
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
-name|rdln
-argument_list|(
-name|inf
-argument_list|,
-name|inw
-argument_list|,
-name|inc
-argument_list|)
-expr_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|inw
+operator|=
+name|get_word
+argument_list|(
+name|inf
+argument_list|)
+operator|)
+operator|==
+literal|0
+operator|||
 name|inw
 operator|==
 name|EOF
 condition|)
 break|break;
+if|if
+condition|(
+operator|(
+name|inw
+operator|=
+name|get_word
+argument_list|(
+name|inf
+argument_list|)
+operator|)
+operator|==
+literal|0
+operator|||
+name|inw
+operator|==
+name|EOF
+condition|)
+break|break;
+name|inw
+operator|=
+name|ns
+argument_list|(
+name|inw
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|get_word
+argument_list|(
+name|inf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+literal|0
+operator|||
+name|cp
+operator|==
+name|EOF
+condition|)
+break|break;
+name|inc
+operator|=
+name|atoi
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|eq
@@ -479,6 +522,24 @@ operator|=
 name|count
 expr_stmt|;
 block|}
+name|cp
+operator|=
+name|get_word
+argument_list|(
+name|inf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+literal|0
+operator|||
+name|cp
+operator|==
+name|EOF
+condition|)
+break|break;
 name|fl
 operator|=
 operator|(
@@ -536,7 +597,7 @@ name|fl_head
 init|;
 name|fl
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|fl
 operator|=
@@ -609,7 +670,7 @@ if|if
 condition|(
 name|outf
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|perror
@@ -631,7 +692,7 @@ name|fl_head
 init|;
 name|fl
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|fl
 operator|=
@@ -674,7 +735,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * toheader:  *	Convert a dev name to a .h file nae  */
+comment|/*  * convert a dev name to a .h file name  */
 end_comment
 
 begin_function
@@ -714,13 +775,14 @@ literal|".h"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|hbuf
-return|;
+operator|)
 block|}
 end_function
 
 begin_comment
-comment|/*  * tomacro:  *	Convert a dev name to a macro name  */
+comment|/*  * convert a dev name to a macro name  */
 end_comment
 
 begin_function
@@ -778,11 +840,12 @@ operator|*
 name|cp
 operator|++
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
 return|return
+operator|(
 name|mbuf
-return|;
+operator|)
 block|}
 end_function
 
