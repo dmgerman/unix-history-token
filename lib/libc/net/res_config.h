@@ -60,14 +60,14 @@ begin_comment
 comment|/* verify gethostbyaddr() calls - WE DONT NEED IT  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|ALLOW_UPDATES
-end_undef
+end_define
 
 begin_comment
-comment|/* compile support for update REQUESTS - harmless */
+comment|/* compile recognition for update REQUESTS - harmless */
 end_comment
 
 begin_define
@@ -79,6 +79,17 @@ end_define
 
 begin_comment
 comment|/* fold multiple PTR records into aliases */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHECK_SRVR_ADDR
+value|1
+end_define
+
+begin_comment
+comment|/* confirm that the server requested sent the reply */
 end_comment
 
 end_unit
