@@ -812,13 +812,16 @@ name|mp
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|vnodeops
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
 modifier|*
 name|vops
-decl_stmt|;
-end_decl_stmt
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
