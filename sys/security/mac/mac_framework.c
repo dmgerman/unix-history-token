@@ -375,15 +375,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Flag to indicate whether or not we should allocate label storage for  * new mbufs.  Since most dynamic policies we currently work with don't  * rely on mbuf labeling, try to avoid paying the cost of mtag allocation  * unless specifically notified of interest.  One result of this is  * that if a dynamically loaded policy requests mbuf labels, it must  * be able to deal with a NULL label being returned on any mbufs that  * were already in flight when the policy was loaded.  Since the policy  * already has to deal with uninitialized labels, this probably won't  * be a problem.  Note: currently no locking.  Will this be a problem?  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|MAC_ALWAYS_LABEL_MBUF
 end_ifndef
-
-begin_comment
-comment|/*  * Flag to indicate whether or not we should allocate label storage for  * new mbufs.  Since most dynamic policies we currently work with don't  * rely on mbuf labeling, try to avoid paying the cost of mtag allocation  * unless specifically notified of interest.  One result of this is  * that if a dynamically loaded policy requests mbuf labels, it must  * be able to deal with a NULL label being returned on any mbufs that  * were already in flight when the policy was loaded.  Since the policy  * already has to deal with uninitialized labels, this probably won't  * be a problem.  Note: currently no locking.  Will this be a problem?  */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1764,7 +1764,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * After the policy list has changed, walk the list to update any global  * flags.  */
+comment|/*  * After the policy list has changed, walk the list to update any global  * flags.  Currently, we support only one flag, and it's conditionally  * defined; as a result, the entire function is conditional.  Eventually,  * the #else case might also iterate across the policies.  */
 end_comment
 
 begin_function
@@ -1775,31 +1775,24 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|MAC_ALWAYS_LABEL_MBUF
 name|struct
 name|mac_policy_conf
 modifier|*
 name|tmpc
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|MAC_ALWAYS_LABEL_MBUF
 name|int
 name|labelmbufs
 decl_stmt|;
-endif|#
-directive|endif
 name|mac_policy_assert_exclusive
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MAC_ALWAYS_LABEL_MBUF
 name|labelmbufs
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|LIST_FOREACH
 argument_list|(
 argument|tmpc
@@ -1809,9 +1802,6 @@ argument_list|,
 argument|mpc_list
 argument_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|MAC_ALWAYS_LABEL_MBUF
 if|if
 condition|(
 name|tmpc
@@ -1823,8 +1813,6 @@ condition|)
 name|labelmbufs
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|LIST_FOREACH
 argument_list|(
@@ -1835,9 +1823,6 @@ argument_list|,
 argument|mpc_list
 argument_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|MAC_ALWAYS_LABEL_MBUF
 if|if
 condition|(
 name|tmpc
@@ -1849,12 +1834,7 @@ condition|)
 name|labelmbufs
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 block|}
-ifndef|#
-directive|ifndef
-name|MAC_ALWAYS_LABEL_MBUF
 name|mac_labelmbufs
 operator|=
 operator|(
@@ -3058,12 +3038,17 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|MAC_ALWAYS_LABEL_MBUF
-comment|/* 	 * Don't reserve space for labels on mbufs unless we have a policy 	 * that uses the labels. 	 */
+comment|/* 	 * If conditionally allocating mbuf labels, don't allocate unless 	 * they are required. 	 */
 if|if
 condition|(
+operator|!
 name|mac_labelmbufs
 condition|)
-block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 endif|#
 directive|endif
 name|tag
@@ -3124,12 +3109,6 @@ argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MAC_ALWAYS_LABEL_MBUF
-block|}
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
