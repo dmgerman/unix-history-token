@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rmjob.c,v 1.4.2.3 1997/09/25 06:32:22 charnier Exp $"
+literal|"$Id: rmjob.c,v 1.4.2.4 1997/10/15 09:55:54 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1526,6 +1526,11 @@ expr_stmt|;
 name|cp
 operator|=
 name|buf
+operator|+
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1555,6 +1560,8 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+operator|-
+literal|2
 condition|;
 name|i
 operator|++
@@ -1605,7 +1612,7 @@ argument_list|(
 name|buf
 argument_list|)
 operator|-
-literal|1
+literal|2
 condition|;
 name|i
 operator|++
