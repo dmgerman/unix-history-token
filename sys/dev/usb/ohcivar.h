@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcivar.h,v 1.18 2000/01/18 20:11:00 augustss Exp $	*/
+comment|/*	$NetBSD: ohcivar.h,v 1.30 2001/12/31 12:20:35 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -43,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|OHCI_SED_CHUNK
-value|128
+value|(PAGE_SIZE / OHCI_SED_SIZE)
 end_define
 
 begin_typedef
@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|OHCI_STD_CHUNK
-value|128
+value|(PAGE_SIZE / OHCI_STD_SIZE)
 end_define
 
 begin_typedef
@@ -130,9 +130,45 @@ modifier|*
 name|nextitd
 decl_stmt|;
 comment|/* mirrors nexttd in ITD */
+name|struct
+name|ohci_soft_itd
+modifier|*
+name|dnext
+decl_stmt|;
+comment|/* next in done list */
 name|ohci_physaddr_t
 name|physaddr
 decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|ohci_soft_itd
+argument_list|)
+name|hnext
+expr_stmt|;
+name|usbd_xfer_handle
+name|xfer
+decl_stmt|;
+name|u_int16_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|OHCI_ITD_ACTIVE
+value|0x0010
+comment|/* Hardware op in progress */
+define|#
+directive|define
+name|OHCI_ITD_INTFIN
+value|0x0020
+comment|/* Hw completion interrupt seen.*/
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|char
+name|isdone
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|ohci_soft_itd_t
 typedef|;
@@ -149,7 +185,7 @@ begin_define
 define|#
 directive|define
 name|OHCI_SITD_CHUNK
-value|64
+value|(PAGE_SIZE / OHCI_SITD_SIZE)
 end_define
 
 begin_define
@@ -181,6 +217,9 @@ name|iot
 decl_stmt|;
 name|bus_space_handle_t
 name|ioh
+decl_stmt|;
+name|bus_size_t
+name|sc_size
 decl_stmt|;
 if|#
 directive|if
@@ -251,6 +290,16 @@ index|[
 name|OHCI_HASH_SIZE
 index|]
 expr_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|ohci_soft_itd
+argument_list|)
+name|sc_hash_itds
+index|[
+name|OHCI_HASH_SIZE
+index|]
+expr_stmt|;
 name|int
 name|sc_noport
 decl_stmt|;
@@ -262,6 +311,15 @@ name|u_int8_t
 name|sc_conf
 decl_stmt|;
 comment|/* device configuration */
+ifdef|#
+directive|ifdef
+name|USB_USE_SOFTINTR
+name|char
+name|sc_softwake
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* USB_USE_SOFTINTR */
 name|ohci_soft_ed_t
 modifier|*
 name|sc_freeeds
@@ -285,6 +343,14 @@ comment|/* free xfers */
 name|usbd_xfer_handle
 name|sc_intrxfer
 decl_stmt|;
+name|ohci_soft_itd_t
+modifier|*
+name|sc_sidone
+decl_stmt|;
+name|ohci_soft_td_t
+modifier|*
+name|sc_sdone
+decl_stmt|;
 name|char
 name|sc_vendor
 index|[
@@ -300,10 +366,16 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 name|void
 modifier|*
 name|sc_powerhook
 decl_stmt|;
+comment|/* cookie from power hook */
 name|void
 modifier|*
 name|sc_shutdownhook
@@ -311,13 +383,69 @@ decl_stmt|;
 comment|/* cookie from shutdown hook */
 endif|#
 directive|endif
+name|u_int32_t
+name|sc_control
+decl_stmt|;
+comment|/* Preserved during suspend/standby */
+name|u_int32_t
+name|sc_intre
+decl_stmt|;
+name|u_int
+name|sc_overrun_cnt
+decl_stmt|;
+name|struct
+name|timeval
+name|sc_overrun_ntc
+decl_stmt|;
+name|usb_callout_t
+name|sc_tmo_rhsc
+decl_stmt|;
 name|device_ptr_t
 name|sc_child
+decl_stmt|;
+name|char
+name|sc_dying
 decl_stmt|;
 block|}
 name|ohci_softc_t
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|ohci_xfer
+block|{
+name|struct
+name|usbd_xfer
+name|xfer
+decl_stmt|;
+name|struct
+name|usb_task
+name|abort_task
+decl_stmt|;
+name|u_int32_t
+name|ohci_xfer_flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|OHCI_ISOC_DIRTY
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|OXFER
+parameter_list|(
+name|xfer
+parameter_list|)
+value|((struct ohci_xfer *)(xfer))
+end_define
 
 begin_function_decl
 name|usbd_status

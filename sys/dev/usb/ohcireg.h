@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcireg.h,v 1.11 2000/01/16 10:35:24 augustss Exp $	*/
+comment|/*	$NetBSD: ohcireg.h,v 1.17 2000/04/01 09:27:35 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -587,6 +587,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OHCI_DT
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Device Type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OHCI_OCPM
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Overcurrent Protection Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OHCI_NOCP
+value|0x1000
+end_define
+
+begin_comment
+comment|/* No Overcurrent Protection */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OHCI_GET_POTPGT
 parameter_list|(
 name|s
@@ -801,6 +834,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|OHCI_PAGE_OFFSET
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xfff)
+end_define
+
+begin_define
+define|#
+directive|define
 name|OHCI_PAGE_MASK
 parameter_list|(
 name|x
@@ -900,10 +943,6 @@ value|(0x7ff<< 16)
 name|ohci_physaddr_t
 name|ed_tailp
 decl_stmt|;
-define|#
-directive|define
-name|OHCI_TAILMASK
-value|0xfffffffc
 name|ohci_physaddr_t
 name|ed_headp
 decl_stmt|;
@@ -988,6 +1027,10 @@ name|OHCI_TD_NOINTR
 value|0x00e00000
 define|#
 directive|define
+name|OHCI_TD_INTR_MASK
+value|0x00e00000
+define|#
+directive|define
 name|OHCI_TD_TOGGLE_CARRY
 value|0x00000000
 define|#
@@ -997,6 +1040,10 @@ value|0x02000000
 define|#
 directive|define
 name|OHCI_TD_TOGGLE_1
+value|0x03000000
+define|#
+directive|define
+name|OHCI_TD_TOGGLE_MASK
 value|0x03000000
 define|#
 directive|define
@@ -1124,14 +1171,6 @@ name|ohci_physaddr_t
 name|itd_bp0
 decl_stmt|;
 comment|/* Buffer Page 0 */
-define|#
-directive|define
-name|OHCI_ITD_OFFSET_MASK
-value|0x00000fff
-define|#
-directive|define
-name|OHCI_ITD_PAGE_MASK
-value|(~OHCI_ITD_OFFSET_MASK)
 name|ohci_physaddr_t
 name|itd_nextitd
 decl_stmt|;
@@ -1156,6 +1195,13 @@ define|#
 directive|define
 name|OHCI_ITD_PAGE_SELECT
 value|0x00001000
+define|#
+directive|define
+name|OHCI_ITD_MK_OFFS
+parameter_list|(
+name|len
+parameter_list|)
+value|(0xe000 | ((len)& 0x1fff))
 define|#
 directive|define
 name|OHCI_ITD_PSW_LENGTH
@@ -1277,6 +1323,24 @@ define|#
 directive|define
 name|OHCI_CC_NOT_ACCESSED
 value|15
+end_define
+
+begin_comment
+comment|/* Some delay needed when changing certain registers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OHCI_ENABLE_POWER_DELAY
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHCI_READ_DESC_DELAY
+value|5
 end_define
 
 begin_endif

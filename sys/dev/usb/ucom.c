@@ -1,15 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ucom.c,v 1.39 2001/08/16 22:31:24 augustss Exp $	*/
-end_comment
-
-begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$NetBSD: ucom.c,v 1.40 2001/11/13 06:24:54 lukem Exp $	*/
 end_comment
 
 begin_comment
 comment|/*-  * Copyright (c) 2001-2002, Shunsuke Akiyama<akiyama@jp.FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Copyright (c) 1998, 2000 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
@@ -336,59 +346,67 @@ name|cdevsw
 name|ucom_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|ucomopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|ucomclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|ucomread
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|ucomwrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|ucomioctl
 block|,
-comment|/* poll */
+operator|.
+name|d_poll
+operator|=
 name|ttypoll
 block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"ucom"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|UCOM_CDEV_MAJOR
 block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
+operator|.
+name|d_flags
+operator|=
 name|D_TTY
-operator||
-name|D_KQFILTER
 block|,
 if|#
 directive|if
 name|__FreeBSD_version
 operator|<
 literal|500014
-comment|/* bmaj */
+operator|.
+name|d_bmaj
+operator|=
 operator|-
 literal|1
 block|,
 endif|#
 directive|endif
-comment|/* kqfilter */
+operator|.
+name|d_kqfilter
+operator|=
 name|ttykqfilter
 block|, }
 decl_stmt|;

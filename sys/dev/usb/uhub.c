@@ -1,18 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.47 2000/09/24 02:08:38 augustss Exp $	*/
-end_comment
-
-begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$NetBSD: uhub.c,v 1.64 2003/02/08 03:32:51 ichiro Exp $	*/
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*  * USB spec: http://www.usb.org/developers/docs.htm  */
+comment|/*  * USB spec: http://www.usb.org/developers/docs/usbspec.zip  */
 end_comment
 
 begin_include
@@ -92,16 +102,16 @@ directive|include
 file|"bus_if.h"
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -173,7 +183,6 @@ value|if (uhubdebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt
-specifier|static
 name|int
 name|uhubdebug
 init|=
@@ -316,6 +325,13 @@ end_if
 
 begin_decl_stmt
 name|Static
+name|bus_driver_added_t
+name|uhub_driver_added
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Static
 name|bus_child_detached_t
 name|uhub_child_detached
 decl_stmt|;
@@ -327,7 +343,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * We need two attachment points:  * hub to usb and hub to hub  * Every other driver only connects to hubs  */
+comment|/*  * We need two attachment points:  * hub to usb and hub to hub  * Every other driver only connects to hubs  */
 end_comment
 
 begin_if
@@ -356,28 +372,27 @@ begin_comment
 comment|/* Create the driver instance for the hub connected to hub case */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|cfattach
-name|uhub_uhub_ca
-init|=
-block|{
+begin_expr_stmt
+name|CFATTACH_DECL
+argument_list|(
+name|uhub_uhub
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|uhub_softc
 argument_list|)
-block|,
+argument_list|,
 name|uhub_match
-block|,
+argument_list|,
 name|uhub_attach
-block|,
+argument_list|,
 name|uhub_detach
-block|,
+argument_list|,
 name|uhub_activate
-block|}
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_elif
 elif|#
@@ -392,6 +407,13 @@ begin_expr_stmt
 name|USB_DECLARE_DRIVER_INIT
 argument_list|(
 name|uhub
+argument_list|,
+name|DEVMETHOD
+argument_list|(
+name|bus_driver_added
+argument_list|,
+name|uhub_driver_added
+argument_list|)
 argument_list|,
 name|DEVMETHOD
 argument_list|(
@@ -548,7 +570,7 @@ name|dd
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*  	 * The subclass for hubs seems to be 0 for some and 1 for others, 	 * so we just ignore the subclass. 	 */
+comment|/* 	 * The subclass for hubs seems to be 0 for some and 1 for others, 	 * so we just ignore the subclass. 	 */
 if|if
 condition|(
 name|uaa
@@ -602,10 +624,8 @@ operator|->
 name|device
 decl_stmt|;
 name|char
+modifier|*
 name|devinfo
-index|[
-literal|1024
-index|]
 decl_stmt|;
 name|usbd_status
 name|err
@@ -639,6 +659,27 @@ name|usb_endpoint_descriptor_t
 modifier|*
 name|ed
 decl_stmt|;
+name|devinfo
+operator|=
+name|malloc
+argument_list|(
+literal|1024
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|devinfo
+operator|==
+name|NULL
+condition|)
+block|{
+name|USB_ATTACH_ERROR_RETURN
+expr_stmt|;
+block|}
 name|DPRINTFN
 argument_list|(
 literal|1
@@ -714,6 +755,13 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|devinfo
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
 expr_stmt|;
 block|}
@@ -740,6 +788,13 @@ argument_list|,
 name|USB_HUB_MAX_DEPTH
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|devinfo
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
 expr_stmt|;
 block|}
@@ -756,11 +811,23 @@ name|bRequest
 operator|=
 name|UR_GET_DESCRIPTOR
 expr_stmt|;
-name|USETW
+name|USETW2
 argument_list|(
 name|req
 operator|.
 name|wValue
+argument_list|,
+operator|(
+name|dev
+operator|->
+name|address
+operator|>
+literal|1
+condition|?
+name|UDESC_HUB
+else|:
+literal|0
+operator|)
 argument_list|,
 literal|0
 argument_list|)
@@ -876,6 +943,13 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|devinfo
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
 expr_stmt|;
 block|}
@@ -975,8 +1049,17 @@ name|hub
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|devinfo
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 name|USB_ATTACH_ERROR_RETURN
 expr_stmt|;
+block|}
 name|dev
 operator|->
 name|hub
@@ -1240,7 +1323,21 @@ argument_list|,
 name|USB_POWER_DOWN_TIME
 argument_list|)
 expr_stmt|;
-comment|/* 	 * To have the best chance of success we do things in the exact same 	 * order as Windoze98.  This should not be necessary, but some 	 * devices do not follow the USB specs to the letter. 	 * 	 * These are the events on the bus when a hub is attached: 	 *  Get device and config descriptors (see attach code) 	 *  Get hub descriptor (see above) 	 *  For all ports 	 *     turn on power 	 *     wait for power to become stable 	 * (all below happens in explore code) 	 *  For all ports 	 *     clear C_PORT_CONNECTION 	 *  For all ports 	 *     get port status 	 *     if device connected 	 *        turn on reset 	 *        wait 	 *        clear C_PORT_RESET 	 *        get port status 	 *        proceed with device attachment 	 */
+name|usbd_add_drv_event
+argument_list|(
+name|USB_EVENT_DRIVER_ATTACH
+argument_list|,
+name|dev
+argument_list|,
+name|USBDEV
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * To have the best chance of success we do things in the exact same 	 * order as Windoze98.  This should not be necessary, but some 	 * devices do not follow the USB specs to the letter. 	 * 	 * These are the events on the bus when a hub is attached: 	 *  Get device and config descriptors (see attach code) 	 *  Get hub descriptor (see above) 	 *  For all ports 	 *     turn on power 	 *     wait for power to become stable 	 * (all below happens in explore code) 	 *  For all ports 	 *     clear C_PORT_CONNECTION 	 *  For all ports 	 *     get port status 	 *     if device connected 	 *        wait 100 ms 	 *        turn on reset 	 *        wait 	 *        clear C_PORT_RESET 	 *        get port status 	 *        proceed with device attachment 	 */
 comment|/* Set up data structures */
 for|for
 control|(
@@ -1410,6 +1507,13 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|devinfo
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 name|dev
 operator|->
 name|hub
@@ -1458,6 +1562,9 @@ name|up
 decl_stmt|;
 name|usbd_status
 name|err
+decl_stmt|;
+name|int
+name|speed
 decl_stmt|;
 name|int
 name|port
@@ -1599,7 +1706,14 @@ argument_list|(
 literal|3
 argument_list|,
 operator|(
-literal|"uhub_explore: port %d status 0x%04x 0x%04x\n"
+literal|"uhub_explore: %s port %d status 0x%04x 0x%04x\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
 operator|,
 name|port
 operator|,
@@ -1737,12 +1851,16 @@ condition|(
 name|up
 operator|->
 name|device
+operator|!=
+name|NULL
 operator|&&
 name|up
 operator|->
 name|device
 operator|->
 name|hub
+operator|!=
+name|NULL
 condition|)
 name|up
 operator|->
@@ -1757,6 +1875,17 @@ operator|->
 name|device
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+operator|&&
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+block|if (up->device == NULL&& 			    (status& UPS_CURRENT_CONNECT_STATUS)) 				printf("%s: connected, no device\n", 				       USBDEVNAME(sc->sc_dev));
+endif|#
+directive|endif
 continue|continue;
 block|}
 comment|/* We have a connect status change, handle it. */
@@ -1909,13 +2038,136 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"uhub_explore: port=%d reset failed\n"
+literal|"%s: port %d reset failed\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
 argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Get port status again, it might have changed during reset */
+name|err
+operator|=
+name|usbd_get_port_status
+argument_list|(
+name|dev
+argument_list|,
+name|port
+argument_list|,
+operator|&
+name|up
+operator|->
+name|status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"uhub_explore: get port status failed, "
+literal|"error=%s\n"
+operator|,
+name|usbd_errstr
+argument_list|(
+name|err
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|status
+operator|=
+name|UGETW
+argument_list|(
+name|up
+operator|->
+name|status
+operator|.
+name|wPortStatus
+argument_list|)
+expr_stmt|;
+name|change
+operator|=
+name|UGETW
+argument_list|(
+name|up
+operator|->
+name|status
+operator|.
+name|wPortChange
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|status
+operator|&
+name|UPS_CURRENT_CONNECT_STATUS
+operator|)
+condition|)
+block|{
+comment|/* Nothing connected, just ignore it. */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|printf
+argument_list|(
+literal|"%s: port %d, device disappeared after reset\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|,
+name|port
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+continue|continue;
+block|}
+comment|/* Figure out device speed */
+if|if
+condition|(
+name|status
+operator|&
+name|UPS_HIGH_SPEED
+condition|)
+name|speed
+operator|=
+name|USB_SPEED_HIGH
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|status
+operator|&
+name|UPS_LOW_SPEED
+condition|)
+name|speed
+operator|=
+name|USB_SPEED_LOW
+expr_stmt|;
+else|else
+name|speed
+operator|=
+name|USB_SPEED_FULL
+expr_stmt|;
 comment|/* Get device info and set its address. */
 name|err
 operator|=
@@ -1938,9 +2190,7 @@ name|depth
 operator|+
 literal|1
 argument_list|,
-name|status
-operator|&
-name|UPS_LOW_SPEED
+name|speed
 argument_list|,
 name|port
 argument_list|,
@@ -1971,7 +2221,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Avoid addressing problems by disabling. */
 comment|/* usbd_reset_port(dev, port,&up->status); */
-comment|/*  			 * The unit refused to accept a new address, or had 			 * some other serious problem.  Since we cannot leave 			 * at 0 we have to disable the port instead. 			 */
+comment|/* 			 * The unit refused to accept a new address, or had 			 * some other serious problem.  Since we cannot leave 			 * at 0 we have to disable the port instead. 			 */
 name|printf
 argument_list|(
 literal|"%s: device problem, disabling port %d\n"
@@ -2108,7 +2358,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-break|break;
 case|case
 name|DVACT_DEACTIVATE
 case|:
@@ -2363,6 +2612,22 @@ name|self
 argument_list|)
 expr_stmt|;
 block|}
+name|usbd_add_drv_event
+argument_list|(
+name|USB_EVENT_DRIVER_DETACH
+argument_list|,
+name|sc
+operator|->
+name|sc_hub
+argument_list|,
+name|USBDEV
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|hub
@@ -2545,6 +2810,24 @@ block|}
 block|}
 end_function
 
+begin_function
+name|Static
+name|void
+name|uhub_driver_added
+parameter_list|(
+name|device_t
+name|_dev
+parameter_list|,
+name|driver_t
+modifier|*
+name|_driver
+parameter_list|)
+block|{
+comment|/* Don't do anything, as reprobing does not work currently. We should 	 * really call through to usbd_new_device or a function along those 	 * lines that reinitialises the device if it is not owned by any 	 * driver. But this is complicated. Manual replugging by the user is 	 * easier. 	 */
+empty_stmt|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
@@ -2589,8 +2872,8 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|!=
-name|USBD_NORMAL_COMPLETION
+operator|==
+name|USBD_STALLED
 condition|)
 name|usbd_clear_endpoint_stall_async
 argument_list|(
@@ -2599,13 +2882,18 @@ operator|->
 name|sc_ipipe
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|status
+operator|==
+name|USBD_NORMAL_COMPLETION
+condition|)
 name|usb_needs_explore
 argument_list|(
 name|sc
 operator|->
 name|sc_hub
-operator|->
-name|bus
 argument_list|)
 expr_stmt|;
 block|}

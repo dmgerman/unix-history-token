@@ -1,14 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * Modifications for SUN TYPE 6 USB Keyboard by  *  Jörg Peter Schley (jps@scxnet.de)  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/*  * HID spec: http://www.usb.org/developers/data/usbhid10.pdf  */
+comment|/*  * HID spec: http://www.usb.org/developers/data/devclass/hid1_1.pdf  */
 end_comment
 
 begin_include
@@ -62,14 +72,57 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
+file|<sys/file.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/limits.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/limits.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500014
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -77,11 +130,10 @@ directive|include
 file|<sys/select.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1056,18 +1108,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|<machine/limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -1254,7 +1294,7 @@ comment|/* no translation */
 end_comment
 
 begin_comment
-comment|/*   * Translate USB keycodes to AT keyboard scancodes.  */
+comment|/*  * Translate USB keycodes to AT keyboard scancodes.  */
 end_comment
 
 begin_comment
@@ -2344,7 +2384,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * The back door to the keyboard driver!  * This function is called by the console driver, via the kbdio module,  * to tickle keyboard drivers when the low-level console is being initialized.  * Almost nothing in the kernel has been initialied yet.  Try to probe  * keyboards if possible.  * NOTE: because of the way the low-level conole is initialized, this routine  * may be called more than once!!  */
+comment|/*  * The back door to the keyboard driver!  * This function is called by the console driver, via the kbdio module,  * to tickle keyboard drivers when the low-level console is being initialized.  * Almost nothing in the kernel has been initialied yet.  Try to probe  * keyboards if possible.  * NOTE: because of the way the low-level conole is initialized, this routine  * may be called more than once!!  */
 end_comment
 
 begin_function
@@ -3047,7 +3087,7 @@ operator|->
 name|ks_timeout_handle
 argument_list|)
 expr_stmt|;
-comment|/*  		 * FIXME: set the initial value for lock keys in ks_state 		 * according to the BIOS data? 		 */
+comment|/* 		 * FIXME: set the initial value for lock keys in ks_state 		 * according to the BIOS data? 		 */
 name|KBD_PROBE_DONE
 argument_list|(
 name|kbd
@@ -3644,24 +3684,11 @@ decl_stmt|;
 name|ukbd_state_t
 modifier|*
 name|state
-init|=
-operator|(
-name|ukbd_state_t
-operator|*
-operator|)
-name|kbd
-operator|->
-name|kb_data
 decl_stmt|;
 name|struct
 name|ukbd_data
 modifier|*
 name|ud
-init|=
-operator|&
-name|state
-operator|->
-name|ks_ndata
 decl_stmt|;
 name|struct
 name|timeval
@@ -3685,14 +3712,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-define|#
-directive|define
-name|ADDKEY1
-parameter_list|(
-name|c
-parameter_list|)
-define|\
-value|if (state->ks_inputs< INPUTBUFSIZE) {				\ 		state->ks_input[state->ks_inputtail] = (c);		\ 		++state->ks_inputs;					\ 		state->ks_inputtail = (state->ks_inputtail + 1)%INPUTBUFSIZE; \ 	}
 name|DPRINTFN
 argument_list|(
 literal|5
@@ -3713,6 +3732,23 @@ condition|)
 return|return
 literal|0
 return|;
+name|state
+operator|=
+operator|(
+name|ukbd_state_t
+operator|*
+operator|)
+name|kbd
+operator|->
+name|kb_data
+expr_stmt|;
+name|ud
+operator|=
+operator|&
+name|state
+operator|->
+name|ks_ndata
+expr_stmt|;
 if|if
 condition|(
 name|status
@@ -3729,6 +3765,12 @@ name|status
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|USBD_STALLED
+condition|)
 name|usbd_clear_endpoint_stall_async
 argument_list|(
 name|state
@@ -3781,6 +3823,14 @@ name|tv_usec
 operator|/
 literal|1000
 expr_stmt|;
+define|#
+directive|define
+name|ADDKEY1
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|if (state->ks_inputs< INPUTBUFSIZE) {				\ 		state->ks_input[state->ks_inputtail] = (c);		\ 		++state->ks_inputs;					\ 		state->ks_inputtail = (state->ks_inputtail + 1)%INPUTBUFSIZE; \ 	}
 name|mod
 operator|=
 name|ud
@@ -4474,7 +4524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Enable the access to the device; until this function is called,  * the client cannot read from the keyboard.  */
+comment|/*  * Enable the access to the device; until this function is called,  * the client cannot read from the keyboard.  */
 end_comment
 
 begin_function
@@ -6024,7 +6074,7 @@ name|kbd
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|K_RAW
 case|:
@@ -6422,7 +6472,7 @@ name|ks_accents
 operator|=
 literal|0
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 default|default:
 name|splx
 argument_list|(
@@ -6774,6 +6824,9 @@ name|ukbd_state_t
 modifier|*
 name|state
 decl_stmt|;
+name|usbd_device_handle
+name|dev
+decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -6786,6 +6839,16 @@ operator|)
 name|kbd
 operator|->
 name|kb_data
+expr_stmt|;
+name|usbd_interface2device_handle
+argument_list|(
+name|state
+operator|->
+name|ks_iface
+argument_list|,
+operator|&
+name|dev
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
@@ -6807,9 +6870,7 @@ literal|0
 condition|)
 name|usbd_set_polling
 argument_list|(
-name|state
-operator|->
-name|ks_iface
+name|dev
 argument_list|,
 name|on
 argument_list|)
@@ -6837,9 +6898,7 @@ literal|0
 condition|)
 name|usbd_set_polling
 argument_list|(
-name|state
-operator|->
-name|ks_iface
+name|dev
 argument_list|,
 name|on
 argument_list|)

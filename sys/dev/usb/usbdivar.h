@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.46 2000/01/19 01:16:40 augustss Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.70 2002/07/11 21:14:36 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -10,6 +10,26 @@ end_comment
 begin_comment
 comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* From usb_mem.h */
@@ -61,6 +81,16 @@ name|struct
 name|usbd_pipe
 modifier|*
 name|pipe
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|soft_intr
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 name|void
@@ -231,6 +261,7 @@ name|usbd_device
 modifier|*
 name|device
 decl_stmt|;
+comment|/* Connected device */
 name|struct
 name|usbd_device
 modifier|*
@@ -357,25 +388,37 @@ name|USBREV_1_1
 value|3
 define|#
 directive|define
+name|USBREV_2_0
+value|4
+define|#
+directive|define
 name|USBREV_STR
-value|{ "unknown", "pre 1.0", "1.0", "1.1" }
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
+value|{ "unknown", "pre 1.0", "1.0", "1.1", "2.0" }
+ifdef|#
+directive|ifdef
+name|USB_USE_SOFTINTR
+ifdef|#
+directive|ifdef
+name|__HAVE_GENERIC_SOFT_INTERRUPTS
+name|void
+modifier|*
+name|soft
+decl_stmt|;
+comment|/* soft interrupt cookie */
+else|#
+directive|else
+name|struct
+name|callout
+name|softi
+decl_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 name|bus_dma_tag_t
 name|dmatag
 decl_stmt|;
 comment|/* DMA tag */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -409,9 +452,9 @@ name|depth
 decl_stmt|;
 comment|/* distance from root hub */
 name|u_int8_t
-name|lowspeed
+name|speed
 decl_stmt|;
-comment|/* lowspeed flag */
+comment|/* low/full/high speed */
 name|u_int8_t
 name|self_powered
 decl_stmt|;
@@ -439,6 +482,18 @@ name|powersrc
 decl_stmt|;
 comment|/* upstream hub port, or 0 */
 name|struct
+name|usbd_device
+modifier|*
+name|myhub
+decl_stmt|;
+comment|/* upstream hub */
+name|struct
+name|usbd_device
+modifier|*
+name|myhighhub
+decl_stmt|;
+comment|/* closest high speed hub */
+name|struct
 name|usbd_endpoint
 name|def_ep
 decl_stmt|;
@@ -462,6 +517,7 @@ modifier|*
 name|cdesc
 decl_stmt|;
 comment|/* full config descr */
+specifier|const
 name|struct
 name|usbd_quirks
 modifier|*
@@ -547,6 +603,9 @@ decl_stmt|;
 name|char
 name|running
 decl_stmt|;
+name|char
+name|aborting
+decl_stmt|;
 name|SIMPLEQ_HEAD
 argument_list|(
 argument_list|,
@@ -619,6 +678,26 @@ name|__volatile
 name|char
 name|done
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|u_int32_t
+name|busy_free
+decl_stmt|;
+define|#
+directive|define
+name|XFER_FREE
+value|0x46524545
+define|#
+directive|define
+name|XFER_BUSY
+value|0x42555359
+define|#
+directive|define
+name|XFER_ONQU
+value|0x4f4e5155
+endif|#
+directive|endif
 comment|/* For control pipe */
 name|usb_device_request_t
 name|request
@@ -666,21 +745,9 @@ modifier|*
 name|hcpriv
 decl_stmt|;
 comment|/* private use by the HC driver */
-name|int
-name|hcprivint
+name|usb_callout_t
+name|timeout_handle
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|struct
-name|callout_handle
-name|timo_handle
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -702,6 +769,73 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+end_ifdef
+
+begin_function_decl
+name|void
+name|usbd_dump_iface
+parameter_list|(
+name|struct
+name|usbd_interface
+modifier|*
+name|iface
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_dump_device
+parameter_list|(
+name|struct
+name|usbd_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_dump_endpoint
+parameter_list|(
+name|struct
+name|usbd_endpoint
+modifier|*
+name|endp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_dump_queue
+parameter_list|(
+name|usbd_pipe_handle
+name|pipe
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_dump_pipe
+parameter_list|(
+name|usbd_pipe_handle
+name|pipe
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Routines from usb_subr.c */
@@ -728,21 +862,6 @@ parameter_list|(
 name|usbd_bus_handle
 parameter_list|,
 name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usbd_devinfo_vp
-parameter_list|(
-name|usbd_device_handle
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -904,28 +1023,39 @@ comment|/* Routines from usb.c */
 end_comment
 
 begin_function_decl
-name|int
-name|usb_bus_count
-parameter_list|(
 name|void
+name|usb_needs_explore
+parameter_list|(
+name|usbd_device_handle
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|usb_needs_explore
+name|usb_schedsoftintr
 parameter_list|(
-name|usbd_bus_handle
+name|struct
+name|usbd_bus
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_comment
+comment|/*  * XXX This check is extremely bogus. Bad Bad Bad.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DIAGNOSTIC
-end_ifdef
+argument_list|)
+operator|&&
+literal|0
+end_if
 
 begin_define
 define|#

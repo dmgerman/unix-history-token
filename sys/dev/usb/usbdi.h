@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.39 2000/01/19 00:23:59 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.62 2002/07/11 21:14:35 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -76,43 +76,60 @@ block|,
 comment|/* must be 0 */
 name|USBD_IN_PROGRESS
 block|,
+comment|/* 1 */
 comment|/* errors */
 name|USBD_PENDING_REQUESTS
 block|,
+comment|/* 2 */
 name|USBD_NOT_STARTED
 block|,
+comment|/* 3 */
 name|USBD_INVAL
 block|,
+comment|/* 4 */
 name|USBD_NOMEM
 block|,
+comment|/* 5 */
 name|USBD_CANCELLED
 block|,
+comment|/* 6 */
 name|USBD_BAD_ADDRESS
 block|,
+comment|/* 7 */
 name|USBD_IN_USE
 block|,
+comment|/* 8 */
 name|USBD_NO_ADDR
 block|,
+comment|/* 9 */
 name|USBD_SET_ADDR_FAILED
 block|,
+comment|/* 10 */
 name|USBD_NO_POWER
 block|,
+comment|/* 11 */
 name|USBD_TOO_DEEP
 block|,
+comment|/* 12 */
 name|USBD_IOERROR
 block|,
+comment|/* 13 */
 name|USBD_NOT_CONFIGURED
 block|,
+comment|/* 14 */
 name|USBD_TIMEOUT
 block|,
+comment|/* 15 */
 name|USBD_SHORT_XFER
 block|,
+comment|/* 16 */
 name|USBD_STALLED
 block|,
+comment|/* 17 */
 name|USBD_INTERRUPTED
 block|,
+comment|/* 18 */
 name|USBD_ERROR_MAX
-block|,
 comment|/* must be last */
 block|}
 name|usbd_status
@@ -201,21 +218,6 @@ end_define
 
 begin_comment
 comment|/* force last short packet on write */
-end_comment
-
-begin_comment
-comment|/* XXX Temporary hack XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USBD_NO_TSLEEP
-value|0x80
-end_define
-
-begin_comment
-comment|/* XXX use busy wait */
 end_comment
 
 begin_define
@@ -520,7 +522,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|usbd_status
+name|void
 name|usbd_interface2device_handle
 parameter_list|(
 name|usbd_interface_handle
@@ -565,7 +567,7 @@ modifier|*
 name|usbd_alloc_buffer
 parameter_list|(
 name|usbd_xfer_handle
-name|req
+name|xfer
 parameter_list|,
 name|u_int32_t
 name|size
@@ -578,7 +580,7 @@ name|void
 name|usbd_free_buffer
 parameter_list|(
 name|usbd_xfer_handle
-name|req
+name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -694,6 +696,38 @@ name|flags
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usbd_status
+name|usbd_do_request_flags_pipe
+parameter_list|(
+name|usbd_device_handle
+name|dev
+parameter_list|,
+name|usbd_pipe_handle
+name|pipe
+parameter_list|,
+name|usb_device_request_t
+modifier|*
+name|req
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|u_int16_t
+name|flags
+parameter_list|,
+name|int
+modifier|*
+name|actlen
+parameter_list|,
+name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -773,12 +807,12 @@ name|void
 name|usbd_fill_deviceinfo
 parameter_list|(
 name|usbd_device_handle
-name|dev
 parameter_list|,
 name|struct
 name|usb_device_info
 modifier|*
-name|di
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -845,8 +879,8 @@ begin_function_decl
 name|void
 name|usbd_set_polling
 parameter_list|(
-name|usbd_interface_handle
-name|iface
+name|usbd_device_handle
+name|dev
 parameter_list|,
 name|int
 name|on
@@ -868,11 +902,24 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|usbd_add_event
+name|usbd_add_dev_event
 parameter_list|(
 name|int
 parameter_list|,
 name|usbd_device_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_add_drv_event
+parameter_list|(
+name|int
+parameter_list|,
+name|usbd_device_handle
+parameter_list|,
+name|device_ptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -892,6 +939,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|struct
 name|usbd_quirks
 modifier|*
@@ -924,6 +972,97 @@ name|usbd_device_handle
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|usbd_ratecheck
+parameter_list|(
+name|struct
+name|timeval
+modifier|*
+name|last
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * The usb_task structs form a queue of things to run in the USB event  * thread.  Normally this is just device discovery when a connect/disconnect  * has been detected.  But it may also be used by drivers that need to  * perform (short) tasks that must have a process context.  */
+end_comment
+
+begin_struct
+struct|struct
+name|usb_task
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|usb_task
+argument_list|)
+name|next
+expr_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|fun
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+name|arg
+decl_stmt|;
+name|char
+name|onqueue
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|void
+name|usb_add_task
+parameter_list|(
+name|usbd_device_handle
+name|dev
+parameter_list|,
+name|struct
+name|usb_task
+modifier|*
+name|task
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usb_rem_task
+parameter_list|(
+name|usbd_device_handle
+name|dev
+parameter_list|,
+name|struct
+name|usb_task
+modifier|*
+name|task
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|usb_init_task
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|,
+name|a
+parameter_list|)
+value|((t)->fun = (f), (t)->arg = (a), (t)->onqueue = 0)
+end_define
 
 begin_struct
 struct|struct
@@ -982,6 +1121,13 @@ define|\
 value|usb_match_device((const struct usb_devno *)(tbl), sizeof (tbl) / sizeof ((tbl)[0]), sizeof ((tbl)[0]), (vendor), (product))
 end_define
 
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ANY
+value|0xffff
+end_define
+
 begin_comment
 comment|/* NetBSD attachment information */
 end_comment
@@ -1011,6 +1157,9 @@ name|product
 decl_stmt|;
 name|int
 name|release
+decl_stmt|;
+name|int
+name|matchlvl
 decl_stmt|;
 name|usbd_device_handle
 name|device
@@ -1330,17 +1479,74 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * XXX  * splusb MUST be the lowest level interrupt so that within USB callbacks  * the level can be raised the appropriate level.  * XXX Should probably use a softsplusb.  */
+comment|/* XXX Perhaps USB should have its own levels? */
 end_comment
 
-begin_comment
-comment|/* XXX */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_USE_SOFTINTR
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__HAVE_GENERIC_SOFT_INTERRUPTS
+end_ifdef
 
 begin_define
 define|#
 directive|define
 name|splusb
+value|splsoftnet
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|splusb
+value|splsoftclock
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __HAVE_GENERIC_SOFT_INTERRUPTS */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|splusb
+value|splbio
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USB_USE_SOFTINTR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|splhardusb
 value|splbio
 end_define
 
@@ -1350,10 +1556,6 @@ directive|define
 name|IPL_USB
 value|IPL_BIO
 end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 end_unit
 

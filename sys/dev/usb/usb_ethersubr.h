@@ -15,24 +15,6 @@ directive|define
 name|_USB_ETHERSUBR_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NETISR_USB
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NETISR_USB
-value|25
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|usb_qdat

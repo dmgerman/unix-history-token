@@ -182,7 +182,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-a addr] [-d] [-f dev] [-v]\n"
+literal|"usage: %s [-a addr] [-d] [-f dev] [-v]\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -293,17 +293,43 @@ condition|(
 name|verbose
 condition|)
 block|{
-if|if
+switch|switch
 condition|(
 name|di
 operator|.
-name|udi_lowspeed
+name|udi_speed
 condition|)
+block|{
+case|case
+name|USB_SPEED_LOW
+case|:
 name|printf
 argument_list|(
 literal|"low speed, "
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|USB_SPEED_FULL
+case|:
+name|printf
+argument_list|(
+literal|"full speed, "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_SPEED_HIGH
+case|:
+name|printf
+argument_list|(
+literal|"high speed, "
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 if|if
 condition|(
 name|di

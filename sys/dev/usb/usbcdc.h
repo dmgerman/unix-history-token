@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbcdc.h,v 1.3 1999/01/03 01:09:18 augustss Exp $	*/
+comment|/*	$NetBSD: usbcdc.h,v 1.6 2000/04/27 15:26:50 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -505,6 +505,59 @@ define|#
 directive|define
 name|UCDC_NOTIFICATION_LENGTH
 value|8
+end_define
+
+begin_comment
+comment|/*  * Bits set in the SERIAL STATE notifcation (first byte of data)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UCDC_N_SERIAL_OVERRUN
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCDC_N_SERIAL_PARITY
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCDC_N_SERIAL_FRAMING
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCDC_N_SERIAL_RI
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCDC_N_SERIAL_BREAK
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCDC_N_SERIAL_DSR
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCDC_N_SERIAL_DCD
+value|0x01
 end_define
 
 begin_comment

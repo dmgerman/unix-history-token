@@ -1,11 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uscanner.c,v 1.26 2001/12/31 12:15:22 augustss Exp $	*/
+comment|/*	$NetBSD: uscanner.c,v 1.30 2002/07/11 21:14:36 augustss Exp$	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/* Also already merged from NetBSD:  *	$NetBSD: uscanner.c,v 1.33 2002/09/23 05:51:24 simonb Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Copyright (c) 2000 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology  * and Nick Hibma (n_hibma@qubesoft.com).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
@@ -111,11 +125,35 @@ directive|include
 file|<sys/file.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500014
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/select.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -487,6 +525,16 @@ block|{
 name|USB_VENDOR_CANON
 block|,
 name|USB_PRODUCT_CANON_N1220U
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_CANON
+block|,
+name|USB_PRODUCT_CANON_N1240U
 block|}
 block|,
 literal|0
@@ -1135,6 +1183,16 @@ block|{
 block|{
 name|USB_VENDOR_UMAX
 block|,
+name|USB_PRODUCT_UMAX_ASTRA2100U
+block|}
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|USB_VENDOR_UMAX
+block|,
 name|USB_PRODUCT_UMAX_ASTRA2200U
 block|}
 block|,
@@ -1384,12 +1442,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|d_ioctl_t
-name|uscannerioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|d_poll_t
 name|uscannerpoll
 decl_stmt|;
@@ -1409,48 +1461,52 @@ name|cdevsw
 name|uscanner_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|uscanneropen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|uscannerclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|uscannerread
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|uscannerwrite
 block|,
-comment|/* ioctl */
-name|uscannerioctl
-block|,
-comment|/* poll */
+operator|.
+name|d_poll
+operator|=
 name|uscannerpoll
 block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"uscanner"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|USCANNER_CDEV_MAJOR
 block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
-block|,
-comment|/* bmaj */
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500014
+operator|.
+name|d_bmaj
 operator|-
 literal|1
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1966,6 +2022,22 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|usbd_add_drv_event
+argument_list|(
+name|USB_EVENT_DRIVER_ATTACH
+argument_list|,
+name|sc
+operator|->
+name|sc_udev
+argument_list|,
+name|USBDEV
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|USB_ATTACH_SUCCESS_RETURN
 expr_stmt|;
 block|}
@@ -3134,7 +3206,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-break|break;
 case|case
 name|DVACT_DEACTIVATE
 case|:
@@ -3435,6 +3506,22 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|usbd_add_drv_event
+argument_list|(
+name|USB_EVENT_DRIVER_DETACH
+argument_list|,
+name|sc
+operator|->
+name|sc_udev
+argument_list|,
+name|USBDEV
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3490,7 +3577,7 @@ operator|(
 name|EIO
 operator|)
 return|;
-comment|/*  	 * We have no easy way of determining if a read will 	 * yield any data or a write will happen. 	 * Pretend they will. 	 */
+comment|/* 	 * We have no easy way of determining if a read will 	 * yield any data or a write will happen. 	 * Pretend they will. 	 */
 name|revents
 operator||=
 name|events
@@ -3508,34 +3595,6 @@ expr_stmt|;
 return|return
 operator|(
 name|revents
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|uscannerioctl
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|u_long
-name|cmd
-parameter_list|,
-name|caddr_t
-name|addr
-parameter_list|,
-name|int
-name|flag
-parameter_list|,
-name|usb_proc_ptr
-name|p
-parameter_list|)
-block|{
-return|return
-operator|(
-name|EINVAL
 operator|)
 return|;
 block|}

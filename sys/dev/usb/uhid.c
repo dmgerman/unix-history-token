@@ -1,11 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhid.c,v 1.38 2000/04/27 15:26:48 augustss Exp $	*/
+comment|/*	$NetBSD: uhid.c,v 1.46 2001/11/13 06:24:55 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/* Also already merged from NetBSD:  *	$NetBSD: uhid.c,v 1.54 2002/09/23 05:51:21 simonb Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
@@ -36,8 +50,33 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -69,6 +108,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_elif
@@ -127,17 +172,35 @@ directive|include
 file|<sys/tty.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500014
+end_if
+
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/selinfo.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
 file|<sys/select.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -178,6 +241,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/usb/usbdevs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usbdi.h>
 end_include
 
@@ -193,30 +262,15 @@ directive|include
 file|<dev/usb/hid.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-end_if
+begin_comment
+comment|/* Report descriptor for broken Wacom Graphire */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/intr_machdep.h>
+file|<dev/usb/ugraphire_rdesc.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -550,48 +604,57 @@ name|cdevsw
 name|uhid_cdevsw
 init|=
 block|{
-comment|/* open */
+operator|.
+name|d_open
+operator|=
 name|uhidopen
 block|,
-comment|/* close */
+operator|.
+name|d_close
+operator|=
 name|uhidclose
 block|,
-comment|/* read */
+operator|.
+name|d_read
+operator|=
 name|uhidread
 block|,
-comment|/* write */
+operator|.
+name|d_write
+operator|=
 name|uhidwrite
 block|,
-comment|/* ioctl */
+operator|.
+name|d_ioctl
+operator|=
 name|uhidioctl
 block|,
-comment|/* poll */
+operator|.
+name|d_poll
+operator|=
 name|uhidpoll
 block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|nostrategy
-block|,
-comment|/* name */
+operator|.
+name|d_name
+operator|=
 literal|"uhid"
 block|,
-comment|/* maj */
+operator|.
+name|d_maj
+operator|=
 name|UHID_CDEV_MAJOR
 block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-literal|0
-block|,
-comment|/* bmaj */
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500014
+operator|.
+name|d_bmaj
 operator|-
 literal|1
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -738,6 +801,19 @@ condition|)
 return|return
 operator|(
 name|UMATCH_NONE
+operator|)
+return|;
+if|if
+condition|(
+name|uaa
+operator|->
+name|matchlvl
+condition|)
+return|return
+operator|(
+name|uaa
+operator|->
+name|matchlvl
 operator|)
 return|;
 return|return
@@ -996,13 +1072,76 @@ name|ed
 operator|->
 name|bEndpointAddress
 expr_stmt|;
+if|if
+condition|(
+name|uaa
+operator|->
+name|vendor
+operator|==
+name|USB_VENDOR_WACOM
+operator|&&
+name|uaa
+operator|->
+name|product
+operator|==
+name|USB_PRODUCT_WACOM_GRAPHIRE
+comment|/*&& 	    uaa->revision == 0x???? */
+condition|)
+block|{
+comment|/* XXX should use revision */
+comment|/* The report descriptor for the Wacom Graphire is broken. */
+name|size
+operator|=
+sizeof|sizeof
+name|uhid_graphire_report_descr
+expr_stmt|;
 name|desc
 operator|=
-literal|0
+name|malloc
+argument_list|(
+name|size
+argument_list|,
+name|M_USBDEV
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|desc
+operator|==
+name|NULL
+condition|)
+name|err
+operator|=
+name|USBD_NOMEM
+expr_stmt|;
+else|else
+block|{
+name|err
+operator|=
+name|USBD_NORMAL_COMPLETION
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|desc
+argument_list|,
+name|uhid_graphire_report_descr
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|desc
+operator|=
+name|NULL
 expr_stmt|;
 name|err
 operator|=
-name|usbd_alloc_report_desc
+name|usbd_read_report_desc
 argument_list|(
 name|uaa
 operator|->
@@ -1017,6 +1156,7 @@ argument_list|,
 name|M_USBDEV
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|err
@@ -1213,7 +1353,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-break|break;
 case|case
 name|DVACT_DEACTIVATE
 case|:
@@ -1486,6 +1625,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_repdesc
+condition|)
 name|free
 argument_list|(
 name|sc
@@ -1631,6 +1776,12 @@ name|status
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|USBD_STALLED
+condition|)
 name|sc
 operator|->
 name|sc_state
@@ -1681,7 +1832,10 @@ argument_list|,
 operator|(
 literal|"uhid_intr: waking %p\n"
 operator|,
+operator|&
 name|sc
+operator|->
+name|sc_q
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1724,6 +1878,13 @@ name|sc_async
 operator|)
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_async
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|sc
@@ -1731,6 +1892,13 @@ operator|->
 name|sc_async
 argument_list|,
 name|SIGIO
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|sc
+operator|->
+name|sc_async
 argument_list|)
 expr_stmt|;
 block|}
@@ -1762,55 +1930,6 @@ decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-specifier|static
-name|int
-name|hid_opened
-decl_stmt|;
-if|if
-condition|(
-name|hid_opened
-operator|==
-literal|0
-condition|)
-block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-name|tty_imask
-operator||=
-name|bio_imask
-expr_stmt|;
-name|update_intr_masks
-argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|hid_opened
-operator|=
-literal|1
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|USB_GET_SC_OPEN
 argument_list|(
 name|uhid
@@ -1993,6 +2112,16 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|sc_ibuf
+operator|=
+name|sc
+operator|->
+name|sc_obuf
+operator|=
+name|NULL
+expr_stmt|;
+name|sc
+operator|->
 name|sc_state
 operator|&=
 operator|~
@@ -2128,6 +2257,16 @@ name|sc_obuf
 argument_list|,
 name|M_USBDEV
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_ibuf
+operator|=
+name|sc
+operator|->
+name|sc_obuf
+operator|=
+name|NULL
 expr_stmt|;
 name|sc
 operator|->
@@ -2307,7 +2446,10 @@ argument_list|,
 operator|(
 literal|"uhidread: sleep on %p\n"
 operator|,
+operator|&
 name|sc
+operator|->
+name|sc_q
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2930,18 +3072,37 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+name|sc
+operator|->
+name|sc_async
+operator|=
+name|p
+operator|->
+name|td_proc
+expr_stmt|;
+else|#
+directive|else
 name|sc
 operator|->
 name|sc_async
 operator|=
 name|p
 expr_stmt|;
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
 literal|"uhid_do_ioctl: FIOASYNC %p\n"
 operator|,
-name|p
+name|sc
+operator|->
+name|sc_async
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3309,6 +3470,20 @@ operator|(
 name|EIO
 operator|)
 return|;
+break|break;
+case|case
+name|USB_GET_REPORT_ID
+case|:
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|addr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX: we only support reportid 0? */
 break|break;
 default|default:
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.h,v 1.38 1999/10/20 21:02:39 augustss Exp $	*/
+comment|/*	$NetBSD: usb.h,v 1.69 2002/09/22 23:20:50 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -55,6 +55,11 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -79,80 +84,8 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_elif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_USB
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_USBDEV
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_USBHC
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usb_port.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
-begin_comment
-comment|/* these three defines are used by usbd to autoload the usb kld */
+comment|/* These two defines are used by usbd to autoload the usb kld */
 end_comment
 
 begin_define
@@ -161,6 +94,10 @@ directive|define
 name|USB_KLD
 value|"usb"
 end_define
+
+begin_comment
+comment|/* name of usb module */
+end_comment
 
 begin_define
 define|#
@@ -172,6 +109,13 @@ end_define
 begin_comment
 comment|/* root hub */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_STACK_VERSION
+value|2
+end_define
 
 begin_define
 define|#
@@ -1510,7 +1454,7 @@ begin_define
 define|#
 directive|define
 name|USB_HUB_DESCRIPTOR_SIZE
-value|8
+value|9
 end_define
 
 begin_comment
@@ -2423,7 +2367,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PORT_RESET_SETTLE
+name|USB_PORT_ROOT_RESET_DELAY
+value|50
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PORT_RESET_RECOVERY
 value|10
 end_define
 
@@ -2456,7 +2411,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_RESUME_TIME
+name|USB_RESUME_DELAY
 value|(20*5)
 end_define
 
@@ -2520,8 +2475,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_PORT_ROOT_RESET_DELAY
+value|250
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_PORT_RESET_RECOVERY
-value|50
+value|250
 end_define
 
 begin_comment
@@ -2532,7 +2498,7 @@ begin_define
 define|#
 directive|define
 name|USB_PORT_POWERUP_DELAY
-value|200
+value|300
 end_define
 
 begin_comment
@@ -2901,8 +2867,20 @@ name|u_int8_t
 name|udi_config
 decl_stmt|;
 name|u_int8_t
-name|udi_lowspeed
+name|udi_speed
 decl_stmt|;
+define|#
+directive|define
+name|USB_SPEED_LOW
+value|1
+define|#
+directive|define
+name|USB_SPEED_FULL
+value|2
+define|#
+directive|define
+name|USB_SPEED_HIGH
+value|3
 name|int
 name|udi_power
 decl_stmt|;

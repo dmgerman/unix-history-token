@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhcivar.h,v 1.21 2000/01/18 20:11:01 augustss Exp $	*/
+comment|/*	$NetBSD: uhcivar.h,v 1.33 2002/02/11 11:41:30 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * To avoid having 1024 TDs for each isochronous transfer we introduce  * a virtual frame list.  Every UHCI_VFRAMELIST_COUNT entries in the real  * frame list points to a non-active TD.  These, in turn, which form the   * starts of the virtual frame list.  This also has the advantage that it   * simplifies linking in/out TD/QH in the schedule.  * Furthermore, initially each of the inactive TDs point to an inactive  * QH that forms the start of the interrupt traffic for that slot.  * Each of these QHs point to the same QH that is the start of control  * traffic.  *  * UHCI_VFRAMELIST_COUNT should be a power of 2 and<= UHCI_FRAMELIST_COUNT.  */
+comment|/*  * To avoid having 1024 TDs for each isochronous transfer we introduce  * a virtual frame list.  Every UHCI_VFRAMELIST_COUNT entries in the real  * frame list points to a non-active TD.  These, in turn, form the  * starts of the virtual frame list.  This also has the advantage that it  * simplifies linking in/out of TDs/QHs in the schedule.  * Furthermore, initially each of the inactive TDs point to an inactive  * QH that forms the start of the interrupt traffic for that slot.  * Each of these QHs point to the same QH that is the start of control  * traffic.  This QH points at another QH which is the start of the  * bulk traffic.  *  * UHCI_VFRAMELIST_COUNT should be a power of 2 and<= UHCI_FRAMELIST_COUNT.  */
 end_comment
 
 begin_define
@@ -88,19 +88,6 @@ argument|uhci_intr_info
 argument_list|)
 name|list
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|struct
-name|callout_handle
-name|timeout_handle
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* defined(__FreeBSD__) */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -113,6 +100,38 @@ block|}
 name|uhci_intr_info_t
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|uhci_xfer
+block|{
+name|struct
+name|usbd_xfer
+name|xfer
+decl_stmt|;
+name|uhci_intr_info_t
+name|iinfo
+decl_stmt|;
+name|struct
+name|usb_task
+name|abort_task
+decl_stmt|;
+name|int
+name|curframe
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|UXFER
+parameter_list|(
+name|xfer
+parameter_list|)
+value|((struct uhci_xfer *)(xfer))
+end_define
 
 begin_comment
 comment|/*  * Extra information that we need for a TD.  */
@@ -139,7 +158,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * Make the size such that it is a multiple of UHCI_TD_ALIGN.  This way  * we can pack a number of soft TD together and have the real TD well  * aligned.  * NOTE: Minimum size is 32 bytes.  */
+comment|/*  * Make the size such that it is a multiple of UHCI_TD_ALIGN.  This way  * we can pack a number of soft TD together and have the real TD well  * aligned.  * NOTE: Minimum size is 32 bytes.  */
 end_comment
 
 begin_define
@@ -153,12 +172,8 @@ begin_define
 define|#
 directive|define
 name|UHCI_STD_CHUNK
-value|128
+value|(PAGE_SIZE / UHCI_STD_SIZE)
 end_define
-
-begin_comment
-comment|/*(PAGE_SIZE / UHCI_TD_SIZE)*/
-end_comment
 
 begin_comment
 comment|/*  * Extra information that we need for a QH.  */
@@ -190,12 +205,6 @@ name|int
 name|pos
 decl_stmt|;
 comment|/* Timeslot position */
-name|uhci_intr_info_t
-modifier|*
-name|intr_info
-decl_stmt|;
-comment|/* Who to call on completion. */
-comment|/* XXX should try to shrink with 4 bytes to fit into 32 bytes */
 block|}
 struct|;
 end_struct
@@ -215,12 +224,8 @@ begin_define
 define|#
 directive|define
 name|UHCI_SQH_CHUNK
-value|128
+value|(PAGE_SIZE / UHCI_SQH_SIZE)
 end_define
-
-begin_comment
-comment|/*(PAGE_SIZE / UHCI_QH_SIZE)*/
-end_comment
 
 begin_comment
 comment|/*  * Information about an entry in the virtual frame list.  */
@@ -274,6 +279,9 @@ decl_stmt|;
 name|bus_space_handle_t
 name|ioh
 decl_stmt|;
+name|bus_size_t
+name|sc_size
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -312,12 +320,22 @@ index|]
 decl_stmt|;
 name|uhci_soft_qh_t
 modifier|*
-name|sc_ctl_start
+name|sc_lctl_start
 decl_stmt|;
-comment|/* dummy QH for control */
+comment|/* dummy QH for low speed control */
 name|uhci_soft_qh_t
 modifier|*
-name|sc_ctl_end
+name|sc_lctl_end
+decl_stmt|;
+comment|/* last control QH */
+name|uhci_soft_qh_t
+modifier|*
+name|sc_hctl_start
+decl_stmt|;
+comment|/* dummy QH for high speed control */
+name|uhci_soft_qh_t
+modifier|*
+name|sc_hctl_end
 decl_stmt|;
 comment|/* last control QH */
 name|uhci_soft_qh_t
@@ -330,6 +348,15 @@ modifier|*
 name|sc_bulk_end
 decl_stmt|;
 comment|/* last bulk transfer */
+name|uhci_soft_qh_t
+modifier|*
+name|sc_last_qh
+decl_stmt|;
+comment|/* dummy QH at the end */
+name|u_int32_t
+name|sc_loops
+decl_stmt|;
+comment|/* number of QHs that wants looping */
 name|uhci_soft_td_t
 modifier|*
 name|sc_freetds
@@ -362,11 +389,23 @@ decl_stmt|;
 name|u_int16_t
 name|sc_saved_frnum
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_USE_SOFTINTR
+name|char
+name|sc_softwake
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* USB_USE_SOFTINTR */
 name|char
 name|sc_isreset
 decl_stmt|;
 name|char
 name|sc_suspend
+decl_stmt|;
+name|char
+name|sc_dying
 decl_stmt|;
 name|LIST_HEAD
 argument_list|(
@@ -379,23 +418,14 @@ comment|/* Info for the root hub interrupt channel. */
 name|int
 name|sc_ival
 decl_stmt|;
-comment|/* time between root hug intrs */
+comment|/* time between root hub intrs */
 name|usbd_xfer_handle
-name|sc_has_timo
+name|sc_intr_xfer
 decl_stmt|;
 comment|/* root hub interrupt transfer */
-name|char
-name|sc_vflock
+name|usb_callout_t
+name|sc_poll_handle
 decl_stmt|;
-comment|/* for lock virtual frame list */
-define|#
-directive|define
-name|UHCI_HAS_LOCK
-value|1
-define|#
-directive|define
-name|UHCI_WANT_LOCK
-value|2
 name|char
 name|sc_vendor
 index|[
@@ -428,7 +458,7 @@ directive|endif
 name|device_ptr_t
 name|sc_child
 decl_stmt|;
-comment|/* /dev/usb device */
+comment|/* /dev/usb# device */
 block|}
 name|uhci_softc_t
 typedef|;

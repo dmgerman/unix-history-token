@@ -8,7 +8,7 @@ comment|/*      $FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/* This version of uvisor is heavily based upon the version in NetBSD  * but is missing the following patches:  *  * 1.10	needed?		connect a ucom to each of the uvisor ports  * 1.11	needed		ucom has an "info" attach message - use it  * 1.12 not needed	rcsids  * 1.13 already merged	extra arg to usbd_do_request_flags  * 1.14 already merged	sony and palm support  * 1.15 already merged	sony clie  * 1.16 already merged	trailing whites  */
+comment|/* Also already merged from NetBSD:  *	$NetBSD: uvisor.c,v 1.12 2001/11/13 06:24:57 lukem Exp $  *	$NetBSD: uvisor.c,v 1.13 2002/02/11 15:11:49 augustss Exp $  *	$NetBSD: uvisor.c,v 1.14 2002/02/27 23:00:03 augustss Exp $  *	$NetBSD: uvisor.c,v 1.15 2002/06/16 15:01:31 augustss Exp $  *	$NetBSD: uvisor.c,v 1.16 2002/07/11 21:14:36 augustss Exp $  *	$NetBSD: uvisor.c,v 1.17 2002/08/13 11:38:15 augustss Exp $  *	$NetBSD: uvisor.c,v 1.18 2003/02/05 00:50:14 augustss Exp $  *	$NetBSD: uvisor.c,v 1.19 2003/02/07 18:12:37 augustss Exp $  *	$NetBSD: uvisor.c,v 1.20 2003/04/11 01:30:10 simonb Exp $  */
 end_comment
 
 begin_comment
@@ -1424,6 +1424,22 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|usbd_add_drv_event
+argument_list|(
+name|USB_EVENT_DRIVER_ATTACH
+argument_list|,
+name|ucom
+operator|->
+name|sc_udev
+argument_list|,
+name|USBDEV
+argument_list|(
+name|ucom
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -1527,6 +1543,26 @@ operator|&
 name|sc
 operator|->
 name|sc_ucom
+argument_list|)
+expr_stmt|;
+name|usbd_add_drv_event
+argument_list|(
+name|USB_EVENT_DRIVER_DETACH
+argument_list|,
+name|sc
+operator|->
+name|sc_ucom
+operator|.
+name|sc_udev
+argument_list|,
+name|USBDEV
+argument_list|(
+name|sc
+operator|->
+name|sc_ucom
+operator|.
+name|sc_dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1635,6 +1671,8 @@ name|USBD_SHORT_XFER_OK
 argument_list|,
 operator|&
 name|actlen
+argument_list|,
+name|USBD_DEFAULT_TIMEOUT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2117,6 +2155,8 @@ name|USBD_SHORT_XFER_OK
 argument_list|,
 operator|&
 name|actlen
+argument_list|,
+name|USBD_DEFAULT_TIMEOUT
 argument_list|)
 expr_stmt|;
 block|}
