@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Simple FTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ftp_pxy.c,v 2.7.2.42 2002/11/25 21:42:35 darrenr Exp $  */
+comment|/*  * Simple FTP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ftp_pxy.c,v 2.7.2.47 2004/06/21 11:48:07 darrenr Exp $  */
 end_comment
 
 begin_if
@@ -854,6 +854,11 @@ decl_stmt|;
 if|#
 directive|if
 name|SOLARIS
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
 name|mb_t
 modifier|*
 name|m1
@@ -1242,6 +1247,49 @@ operator|->
 name|ftps_rptr
 expr_stmt|;
 comment|/* DO NOT change this to snprintf! */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OpenBSD
+argument_list|)
+operator|&&
+operator|(
+literal|200311
+operator|>=
+literal|200311
+operator|)
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|newbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|newbuf
+argument_list|)
+argument_list|,
+literal|"%s %u,%u,%u,%u,%u,%u\r\n"
+argument_list|,
+literal|"PORT"
+argument_list|,
+name|a1
+argument_list|,
+name|a2
+argument_list|,
+name|a3
+argument_list|,
+name|a4
+argument_list|,
+name|a5
+argument_list|,
+name|a6
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 name|void
 operator|)
@@ -1266,6 +1314,8 @@ argument_list|,
 name|a6
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|nlen
 operator|=
 name|strlen
@@ -1330,16 +1380,9 @@ argument_list|)
 name|m
 operator|=
 operator|*
-operator|(
-operator|(
-name|mb_t
-operator|*
-operator|*
-operator|)
 name|fin
 operator|->
 name|fin_mp
-operator|)
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -1532,16 +1575,9 @@ directive|else
 name|m
 operator|=
 operator|*
-operator|(
-operator|(
-name|mb_t
-operator|*
-operator|*
-operator|)
 name|fin
 operator|->
 name|fin_mp
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1606,6 +1642,7 @@ block|{
 if|#
 directive|if
 operator|(
+operator|(
 name|SOLARIS
 operator|||
 name|defined
@@ -1614,6 +1651,13 @@ name|__sgi
 argument_list|)
 operator|)
 operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|)
+operator|||
+operator|!
 name|defined
 argument_list|(
 name|_KERNEL
@@ -3106,7 +3150,7 @@ name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
-block|m = *((mb_t **)fin->fin_mp); 	m_copyback(m, off, nlen, newbuf);
+block|m = *fin->fin_mp; 	m_copyback(m, off, nlen, newbuf);
 else|#
 directive|else
 if|#
@@ -3119,7 +3163,7 @@ comment|/*copyin_mblk(m, off, nlen, newbuf);*/
 else|#
 directive|else
 comment|/* SOLARIS */
-block|m = *((mb_t **)fin->fin_mp); 	if (inc< 0) 		m_adj(m, inc);
+block|m = *fin->fin_mp; 	if (inc< 0) 		m_adj(m, inc);
 comment|/* the mbuf chain will be extended if necessary by m_copyback() */
 comment|/*m_copyback(m, off, nlen, newbuf);*/
 endif|#
@@ -3132,6 +3176,7 @@ block|if (inc != 0) {
 if|#
 directive|if
 operator|(
+operator|(
 name|SOLARIS
 operator|||
 name|defined
@@ -3140,6 +3185,13 @@ name|__sgi
 argument_list|)
 operator|)
 operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|)
+operator|||
+operator|!
 name|defined
 argument_list|(
 name|_KERNEL
@@ -3893,8 +3945,11 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"ippr_ftp_client_valid:i(%d)< 5\n"
+literal|"ippr_ftp_client_valid:i(%lu)< 5\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|i
 argument_list|)
 expr_stmt|;
@@ -4093,10 +4148,16 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"ippr_ftp_client_valid:bad cmd:len %d i %d c 0x%x\n"
+literal|"ippr_ftp_client_valid:bad cmd:len %lu i %lu c 0x%x\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|i
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|len
 argument_list|,
 name|c
@@ -4387,10 +4448,16 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"ippr_ftp_server_valid:bad cmd:len %d i %d c 0x%x\n"
+literal|"ippr_ftp_server_valid:bad cmd:len %lu i %lu c 0x%x\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|i
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|len
 argument_list|,
 name|c
@@ -4677,16 +4744,9 @@ directive|else
 name|m
 operator|=
 operator|*
-operator|(
-operator|(
-name|mb_t
-operator|*
-operator|*
-operator|)
 name|fin
 operator|->
 name|fin_mp
-operator|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -5668,6 +5728,9 @@ name|printf
 argument_list|(
 literal|"ackmin %x ackoff %d\n"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|aps
 operator|->
 name|aps_ackmin
@@ -5687,6 +5750,9 @@ name|printf
 argument_list|(
 literal|"seqmin %x seqoff %d\n"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|aps
 operator|->
 name|aps_seqmin

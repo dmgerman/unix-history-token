@@ -724,7 +724,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.11.2.24 2002/12/06 11:40:21 darrenr Exp $"
+literal|"@(#)$Id: ip_auth.c,v 2.11.2.26 2003/09/22 12:37:04 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1773,6 +1773,21 @@ argument_list|)
 operator|&&
 operator|!
 name|SOLARIS
+operator|&&
+expr|\
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|501000
+operator|)
+operator|)
 name|struct
 name|ifqueue
 modifier|*
@@ -2323,6 +2338,13 @@ operator|>=
 literal|605
 operator|)
 operator|)
+operator|||
+expr|\
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|470102
+operator|)
 name|error
 operator|=
 name|ip_output
@@ -2426,6 +2448,20 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* SOLARIS */
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|501104
+name|netisr_dispatch
+argument_list|(
+name|NETISR_IP
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ifq
 operator|=
 operator|&
@@ -2476,6 +2512,8 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* SOLARIS */

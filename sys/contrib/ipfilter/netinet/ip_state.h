@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.13.2.13 2002/06/27 14:40:29 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.13.2.14 2003/11/15 11:47:46 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -252,6 +252,9 @@ name|is_pkts
 decl_stmt|;
 name|U_QUAD_T
 name|is_bytes
+decl_stmt|;
+name|U_QUAD_T
+name|is_icmppkts
 decl_stmt|;
 name|union
 name|i6addr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_log.c,v 2.5.2.21 2002/10/26 06:21:30 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_log.c,v 2.5.2.26 2004/06/20 01:59:01 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -1282,7 +1282,7 @@ operator|.
 name|fl_unit
 operator|=
 operator|(
-name|u_char
+name|u_int
 operator|)
 name|ifp
 operator|->
@@ -1371,6 +1371,20 @@ operator|>=
 literal|199603
 operator|)
 operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|501113
+operator|)
+operator|)
 name|strncpy
 argument_list|(
 name|ipfl
@@ -1391,7 +1405,7 @@ operator|.
 name|fl_unit
 operator|=
 operator|(
-name|u_char
+name|u_int
 operator|)
 name|ifp
 operator|->
@@ -1737,9 +1751,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|fin
 operator|!=
 name|NULL
+operator|)
+operator|&&
+operator|(
+name|fin
+operator|->
+name|fin_off
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 if|if
@@ -2306,17 +2330,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-operator|!
-name|iplused
-index|[
-name|unit
-index|]
-operator|||
-operator|!
 name|iplt
 index|[
 name|unit
 index|]
+operator|==
+name|NULL
 condition|)
 block|{
 if|#

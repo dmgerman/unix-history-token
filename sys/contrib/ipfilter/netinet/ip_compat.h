@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.47 2002/10/26 06:24:42 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.52 2004/06/09 00:01:14 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -947,6 +947,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|M_BLEN
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->b_wptr - (m)->b_rptr)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -980,6 +990,11 @@ name|queue_t
 modifier|*
 name|qf_out
 decl_stmt|;
+name|void
+modifier|*
+name|qf_data
+decl_stmt|;
+comment|/* layer 3 header pointer */
 name|struct
 name|qinit
 modifier|*
@@ -1551,6 +1566,13 @@ name|__FreeBSD_version
 operator|>=
 literal|400000
 operator|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|NOINET6
+argument_list|)
 operator|)
 operator|||
 expr|\
@@ -3366,6 +3388,16 @@ parameter_list|,
 name|t
 parameter_list|)
 value|mtod(m,t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_BLEN
+parameter_list|(
+name|m
+parameter_list|)
+value|(m)->m_len
 end_define
 
 begin_define
@@ -6518,7 +6550,7 @@ operator|||
 expr|\
 name|defined
 argument_list|(
-name|vax
+name|__vax__
 argument_list|)
 name|__u8
 name|th_res
@@ -6606,7 +6638,7 @@ operator|||
 expr|\
 name|defined
 argument_list|(
-name|vax
+name|__vax__
 argument_list|)
 name|__u8
 name|ip_hl
@@ -7743,14 +7775,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICMP6ERR_MINPKTLEN
+name|ICMP6ERR_IPICMPHLEN
 value|(40 + 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICMP6ERR_IPICMPHLEN
+name|ICMP6ERR_MINPKTLEN
 value|(40 + 8 + 40)
 end_define
 
