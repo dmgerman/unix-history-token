@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.31 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,18 +233,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|EF_RESPONSE
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
-condition|)
-return|return;
 name|e
 operator|->
 name|e_flags
@@ -373,6 +361,47 @@ operator|=
 name|ESM_MAIL
 expr_stmt|;
 break|break;
+block|}
+comment|/* if this is already an error response, send to postmaster */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_RESPONSE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|e
+operator|->
+name|e_parent
+operator|!=
+name|NULL
+operator|&&
+name|bitset
+argument_list|(
+name|EF_RESPONSE
+argument_list|,
+name|e
+operator|->
+name|e_parent
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+comment|/* got an error sending a response -- can it */
+return|return;
+block|}
+name|state
+operator|=
+name|ESM_POSTMASTER
+expr_stmt|;
 block|}
 while|while
 condition|(
