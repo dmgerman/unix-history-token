@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.89 (Berkeley) %G%"
+literal|"@(#)main.c	8.90 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3938,6 +3938,50 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
+
+begin_comment
+comment|/* initialize standard MIME classes */
+end_comment
+
+begin_expr_stmt
+name|setclass
+argument_list|(
+literal|'n'
+argument_list|,
+literal|"message/rfc822"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|setclass
+argument_list|(
+literal|'n'
+argument_list|,
+literal|"message/partial"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|setclass
+argument_list|(
+literal|'n'
+argument_list|,
+literal|"message/external-body"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|setclass
+argument_list|(
+literal|'n'
+argument_list|,
+literal|"multipart/signed"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* operate in queue directory */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.127 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.128 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9341,6 +9341,15 @@ name|mci_flags
 argument_list|)
 condition|)
 block|{
+name|char
+modifier|*
+name|boundaries
+index|[
+name|MAXMIMENESTING
+operator|+
+literal|1
+index|]
+decl_stmt|;
 comment|/* 		**  Do 8 to 7 bit MIME conversion. 		*/
 comment|/* make sure it looks like a MIME message */
 if|if
@@ -9398,6 +9407,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* now do the hard work */
+name|boundaries
+index|[
+literal|0
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 name|mime8to7
 argument_list|(
 name|mci
@@ -9408,7 +9424,9 @@ name|e_header
 argument_list|,
 name|e
 argument_list|,
-name|NULL
+name|boundaries
+argument_list|,
+name|M87F_OUTER
 argument_list|)
 expr_stmt|;
 block|}

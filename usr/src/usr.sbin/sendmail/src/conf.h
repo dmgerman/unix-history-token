@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.139 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.140 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -221,12 +221,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAXMIMEARGS
+value|20
+end_define
+
+begin_comment
+comment|/* max args in Content-Type: */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAXMIMENESTING
 value|20
 end_define
 
 begin_comment
-comment|/* max depth of MIME nesting */
+comment|/* max MIME multipart nesting */
 end_comment
 
 begin_ifndef

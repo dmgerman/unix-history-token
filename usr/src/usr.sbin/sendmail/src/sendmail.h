@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.100 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.101 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.100		%G%"
+literal|"@(#)sendmail.h	8.101		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,7 +320,7 @@ name|_BITWORD
 parameter_list|(
 name|bit
 parameter_list|)
-value|(bit / (BYTEBITS * sizeof (int)))
+value|((bit) / (BYTEBITS * sizeof (int)))
 end_define
 
 begin_define
@@ -330,7 +330,7 @@ name|_BITBIT
 parameter_list|(
 name|bit
 parameter_list|)
-value|(1<< (bit % (BYTEBITS * sizeof (int))))
+value|(1<< ((bit) % (BYTEBITS * sizeof (int))))
 end_define
 
 begin_typedef
@@ -4465,6 +4465,32 @@ end_define
 
 begin_comment
 comment|/* open as root instead of real user */
+end_comment
+
+begin_comment
+comment|/* **  Flags passed to mime8to7. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M87F_OUTER
+value|0
+end_define
+
+begin_comment
+comment|/* outer context */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M87F_NO8BIT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* can't have 8-bit in this section */
 end_comment
 
 begin_comment
