@@ -435,6 +435,9 @@ name|int
 name|pid
 parameter_list|,
 name|int
+name|failisfatal
+parameter_list|,
+name|int
 name|eventflags
 parameter_list|,
 name|int
@@ -483,6 +486,9 @@ block|{
 comment|/* 		 * The process may have run away before we could start -- this 		 * happens with SUGID programs.  So we need to see if it still 		 * exists before we complain bitterly. 		 */
 if|if
 condition|(
+operator|!
+name|failisfatal
+operator|&&
 name|kill
 argument_list|(
 name|pid
@@ -494,8 +500,10 @@ operator|-
 literal|1
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|err
 argument_list|(
