@@ -12113,6 +12113,14 @@ name|noident
 goto|;
 if|if
 condition|(
+name|p
+operator|>=
+operator|&
+name|ibuf
+index|[
+literal|2
+index|]
+operator|&&
 operator|*
 operator|--
 name|p
