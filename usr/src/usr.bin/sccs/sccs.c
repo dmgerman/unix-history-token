@@ -105,7 +105,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.30 %G%"
+literal|"@(#)sccs.c	1.31 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -450,7 +450,7 @@ name|CMACRO
 block|,
 literal|0
 block|,
-literal|"delta/get"
+literal|"delta/get -t"
 block|,
 literal|"deledit"
 block|,
@@ -458,7 +458,7 @@ name|CMACRO
 block|,
 literal|0
 block|,
-literal|"delta/get -e"
+literal|"delta/get -e -t"
 block|,
 literal|"fix"
 block|,
