@@ -781,7 +781,8 @@ comment|/* get_timecount */
 literal|0
 block|,
 comment|/* no poll_pps */
-literal|0x1ffff
+operator|~
+literal|0u
 block|,
 comment|/* counter_mask */
 literal|0
