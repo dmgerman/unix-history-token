@@ -3652,20 +3652,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|cdev
-modifier|*
-name|vn_todev
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|vn_write_suspend_wait
 parameter_list|(

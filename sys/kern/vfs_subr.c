@@ -14301,47 +14301,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * extract the struct cdev *from a VCHR  */
-end_comment
-
-begin_function
-name|struct
-name|cdev
-modifier|*
-name|vn_todev
-parameter_list|(
-name|vp
-parameter_list|)
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VCHR
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-return|return
-operator|(
-name|vp
-operator|->
-name|v_rdev
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Check if vnode represents a disk device  */
 end_comment
 
