@@ -381,8 +381,9 @@ name|long
 name|st_birthtimensec
 decl_stmt|;
 comment|/* nsec of file creation */
-name|u_int
-label|:
+name|unsigned
+name|int
+range|:
 operator|(
 literal|8
 operator|/
@@ -401,9 +402,10 @@ expr|struct
 name|__timespec
 argument_list|)
 operator|)
-expr_stmt|;
-name|u_int
-label|:
+decl_stmt|;
+name|unsigned
+name|int
+range|:
 operator|(
 literal|8
 operator|/
@@ -422,7 +424,7 @@ expr|struct
 name|__timespec
 argument_list|)
 operator|)
-expr_stmt|;
+decl_stmt|;
 endif|#
 directive|endif
 block|}
