@@ -9676,15 +9676,16 @@ name|VFS_BIO_DEBUG
 argument_list|)
 if|if
 condition|(
+name|vn_canvmio
+argument_list|(
 name|vp
-operator|->
-name|v_type
+argument_list|)
 operator|!=
-name|VREG
+name|TRUE
 condition|)
 name|printf
 argument_list|(
-literal|"getblk: vmioing file type %d???\n"
+literal|"getblk: VMIO on vnode type %d\n"
 argument_list|,
 name|vp
 operator|->
