@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.31 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4127,6 +4127,12 @@ block|{
 literal|"SevenBitInput"
 block|,
 literal|'7'
+block|,
+name|TRUE
+block|,
+literal|"EightBitMode"
+block|,
+literal|'8'
 block|,
 name|TRUE
 block|,
