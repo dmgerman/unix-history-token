@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.20	81/03/14	*/
+comment|/*	ubareg.h	4.21	81/03/21	*/
 end_comment
 
 begin_comment
@@ -707,6 +707,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NBDP730
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAXNBDP
 value|15
 end_define
@@ -722,6 +729,13 @@ begin_define
 define|#
 directive|define
 name|NUBA750
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUBA730
 value|1
 end_define
 
@@ -758,6 +772,24 @@ end_endif
 begin_comment
 comment|/*  * Formulas for locations of the last 8k of UNIBUS memory  * for each possible uba.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|VAX730
+end_if
+
+begin_define
+define|#
+directive|define
+name|UMEM730
+value|((u_short *)(0xffe000))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

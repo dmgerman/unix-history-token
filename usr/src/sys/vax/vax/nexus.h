@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	nexus.h	4.7	81/03/13	*/
+comment|/*	nexus.h	4.8	81/03/21	*/
 end_comment
 
 begin_comment
@@ -49,6 +49,31 @@ begin_define
 define|#
 directive|define
 name|NEX750
+value|((struct nexus *)0xf20000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX730
+end_if
+
+begin_define
+define|#
+directive|define
+name|NNEX730
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEX730
 value|((struct nexus *)0xf20000)
 end_define
 
