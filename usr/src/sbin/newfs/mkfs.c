@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	8.5 (Berkeley) %G%"
+literal|"@(#)mkfs.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2747,7 +2747,7 @@ operator|(
 operator|&
 name|sblock
 operator|.
-name|fs_link
+name|fs_firstfield
 operator|)
 expr_stmt|;
 name|sblock
@@ -2770,7 +2770,7 @@ operator|(
 operator|&
 name|sblock
 operator|.
-name|fs_link
+name|fs_firstfield
 operator|)
 expr_stmt|;
 block|}
@@ -2797,7 +2797,7 @@ operator|(
 operator|&
 name|sblock
 operator|.
-name|fs_link
+name|fs_firstfield
 operator|)
 expr_stmt|;
 name|sblock
@@ -4255,7 +4255,7 @@ operator|(
 operator|&
 name|acg
 operator|.
-name|cg_link
+name|cg_firstfield
 operator|)
 expr_stmt|;
 name|acg
@@ -4462,7 +4462,7 @@ argument_list|(
 operator|&
 name|acg
 operator|.
-name|cg_link
+name|cg_firstfield
 argument_list|)
 operator|>
 name|sblock
