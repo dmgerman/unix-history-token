@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -824,6 +830,20 @@ operator|=
 name|p
 expr_stmt|;
 block|}
+while|while
+condition|(
+name|wait
+argument_list|(
+name|NULL
+argument_list|)
+operator|>
+literal|0
+operator|||
+name|errno
+operator|==
+name|EINTR
+condition|)
+empty_stmt|;
 return|return
 operator|(
 literal|0
