@@ -54,6 +54,10 @@ name|PCIC_PD6710
 value|4
 end_define
 
+begin_comment
+comment|/* Cirrus logic 6710 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -74,6 +78,28 @@ directive|define
 name|PCIC_VG469
 value|7
 end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_RF5C396
+value|8
+end_define
+
+begin_comment
+comment|/* Ricoh RF5C396 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_IBM_KING
+value|9
+end_define
+
+begin_comment
+comment|/* IBM KING PCMCIA Controller */
+end_comment
 
 begin_comment
 comment|/*  *	Address of the controllers. Each controller can manage  *	two PCMCIA slots. Up to 8 slots are supported in total.  *	The PCIC controller is accessed via an index port and a  *	data port. The index port has the 8 bit address of the  *	register accessed via the data port. How I long for  *	real memory mapped I/O!  *	The top two bits of the index address are used to  *	identify the port number, and the lower 6 bits  *	select one of the 64 possible data registers.  */
@@ -375,6 +401,17 @@ begin_comment
 comment|/* IBM PCIC clone; Both Memory and I/O */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCIC_IBM3
+value|0x8a
+end_define
+
+begin_comment
+comment|/* IBM KING PCIC clone; Both Memory and I/O */
+end_comment
+
 begin_comment
 comment|/* For Interface Status register (PCIC_STATUS) */
 end_comment
@@ -524,6 +561,17 @@ end_define
 
 begin_comment
 comment|/* 3 volts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_VCC_5V_KING
+value|0x14
+end_define
+
+begin_comment
+comment|/* 5 volts for KING PCIC */
 end_comment
 
 begin_define
