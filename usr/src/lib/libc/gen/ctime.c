@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.2 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -767,7 +767,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The argument is a 0-origin day number.  * The value is the day number of the first  * Sunday on or before the day.  */
+comment|/*  * The argument is a 0-origin day number.  * The value is the day number of the last  * Sunday on or before the day.  */
 end_comment
 
 begin_expr_stmt
