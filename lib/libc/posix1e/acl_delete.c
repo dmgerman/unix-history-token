@@ -48,7 +48,7 @@ end_function
 
 begin_function
 name|int
-name|acl_delete_default_file
+name|acl_delete_def_file
 parameter_list|(
 specifier|const
 name|char
