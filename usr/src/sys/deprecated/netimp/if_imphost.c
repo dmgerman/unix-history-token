@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.c	4.11	82/05/10	*/
+comment|/*	if_imphost.c	4.12	82/05/11	*/
 end_comment
 
 begin_include
@@ -953,8 +953,9 @@ name|hp
 operator|+
 name|HPMBUF
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+init|;
 name|hm
 operator|->
 name|hm_count
@@ -964,7 +965,10 @@ operator|&&
 name|hp
 operator|<
 name|lp
-condition|)
+condition|;
+name|hp
+operator|++
+control|)
 block|{
 if|if
 condition|(
@@ -992,9 +996,6 @@ name|hostrelease
 argument_list|(
 name|hp
 argument_list|)
-expr_stmt|;
-name|hp
-operator|++
 expr_stmt|;
 block|}
 block|}
