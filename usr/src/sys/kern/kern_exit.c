@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.56 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -146,6 +146,38 @@ directive|include
 file|<vm/vm_kern.h>
 end_include
 
+begin_decl_stmt
+name|__dead
+name|void
+name|cpu_exit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__dead
+name|void
+name|exit1
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * exit --  *	Death of process.  */
 end_comment
@@ -161,41 +193,31 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|__dead
+name|void
 name|exit
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|rexit_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|exit1
 argument_list|(
@@ -213,34 +235,30 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Exit: deallocate address space and other resources, change proc state  * to zombie, and unlink proc from allproc and parent's lists.  Save exit  * status and rusage for wait().  Check for child processes and orphan them.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|__dead
+name|void
 name|exit1
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|rv
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -943,9 +961,8 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_struct
 struct|struct
