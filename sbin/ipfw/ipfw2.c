@@ -4294,6 +4294,13 @@ name|ipfw_insn
 modifier|*
 name|cmd
 decl_stmt|;
+name|char
+modifier|*
+name|comment
+init|=
+name|NULL
+decl_stmt|;
+comment|/* ptr to comment if we have one */
 name|int
 name|proto
 init|=
@@ -6089,10 +6096,8 @@ break|break;
 case|case
 name|O_NOP
 case|:
-name|printf
-argument_list|(
-literal|" // %s"
-argument_list|,
+name|comment
+operator|=
 operator|(
 name|char
 operator|*
@@ -6102,7 +6107,6 @@ name|cmd
 operator|+
 literal|1
 operator|)
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -6275,6 +6279,17 @@ argument_list|,
 name|HAVE_IP
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|comment
+condition|)
+name|printf
+argument_list|(
+literal|" // %s"
+argument_list|,
+name|comment
 argument_list|)
 expr_stmt|;
 name|printf
