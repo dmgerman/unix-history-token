@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)banner.c	8.3 (Berkeley) 4/2/94"
+literal|"@(#)banner.c	8.4 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -19966,8 +19966,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 name|int
@@ -19997,27 +19997,6 @@ name|ch
 condition|)
 block|{
 case|case
-literal|'w'
-case|:
-name|width
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|width
-operator|<=
-literal|0
-condition|)
-name|width
-operator|=
-literal|80
-expr_stmt|;
-break|break;
-case|case
 literal|'d'
 case|:
 name|debug
@@ -20034,9 +20013,36 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'w'
+case|:
+name|width
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|width
+operator|<=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"illegal argument for -w option"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr

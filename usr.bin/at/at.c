@@ -35,6 +35,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -104,6 +110,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<utmp.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -126,6 +138,42 @@ include|#
 directive|include
 file|<locale.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|MAXLOGNAME
+operator|-
+literal|1
+operator|)
+operator|>
+name|UT_NAMESIZE
+end_if
+
+begin_define
+define|#
+directive|define
+name|LOGNAMESIZE
+value|UT_NAMESIZE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LOGNAMESIZE
+value|(MAXLOGNAME-1)
+end_define
 
 begin_endif
 endif|#
@@ -285,7 +333,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: at.c,v 1.7 1995/10/24 05:09:54 ache Exp $"
+literal|"$Id: at.c,v 1.7.2.1 1997/08/29 05:28:53 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1256,7 +1304,7 @@ argument_list|(
 name|mailname
 argument_list|)
 operator|>
-literal|8
+name|LOGNAMESIZE
 operator|)
 operator|||
 operator|(
@@ -1327,7 +1375,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#!/bin/sh\n# atrun uid=%ld gid=%ld\n# mail %8s %d\n"
+literal|"#!/bin/sh\n# atrun uid=%ld gid=%ld\n# mail %*s %d\n"
 argument_list|,
 operator|(
 name|long
@@ -1338,6 +1386,8 @@ operator|(
 name|long
 operator|)
 name|real_gid
+argument_list|,
+name|LOGNAMESIZE
 argument_list|,
 name|mailname
 argument_list|,
