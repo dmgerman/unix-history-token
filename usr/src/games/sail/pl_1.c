@@ -4610,11 +4610,12 @@ name|crew
 decl_stmt|,
 name|aheadfirst
 decl_stmt|,
-name|ta
-decl_stmt|,
 name|ma
 decl_stmt|,
 name|n
+decl_stmt|;
+name|int
+name|ta
 decl_stmt|;
 name|char
 name|message
