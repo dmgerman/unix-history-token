@@ -23,7 +23,7 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|char
 modifier|*
 name|mly_describe_code
@@ -39,116 +39,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MLY_DEFINE_TABLES
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mly_code_lookup
-name|mly_table_bustype
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mly_code_lookup
-name|mly_table_controllertype
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mly_code_lookup
-name|mly_table_oemname
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mly_code_lookup
-name|mly_table_memorytype
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mly_code_lookup
-name|mly_table_cputype
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mly_code_lookup
-name|mly_table_event
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mly_code_lookup
-name|mly_table_device_state
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mly_code_lookup
-name|mly_table_device_type
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mly_code_lookup
-name|mly_table_stripe_size
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mly_code_lookup
-name|mly_table_cacheline_size
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* MLY_DEFINE_TABLES */
-end_comment
-
 begin_comment
 comment|/********************************************************************************  * Look up a text description of a numeric code and return a pointer to same.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|mly_describe_code
@@ -220,6 +116,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mly_code_lookup
 name|mly_table_bustype
@@ -260,6 +157,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mly_code_lookup
 name|mly_table_controllertype
@@ -351,6 +249,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mly_code_lookup
 name|mly_table_oemname
@@ -409,6 +308,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mly_code_lookup
 name|mly_table_memorytype
@@ -455,6 +355,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mly_code_lookup
 name|mly_table_cputype
@@ -523,6 +424,7 @@ comment|/*  * This table is directly derived from the corresponding table in the
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mly_code_lookup
 name|mly_table_event
@@ -1153,6 +1055,7 @@ comment|/*  * Values here must be 16 characters or less, as they are packed into
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mly_code_lookup
 name|mly_table_device_state
@@ -1221,6 +1124,7 @@ comment|/*  * Values here must be 8 characters or less, as they are packed into 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mly_code_lookup
 name|mly_table_device_type
@@ -1332,6 +1236,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mly_code_lookup
 name|mly_table_stripe_size
@@ -1432,6 +1337,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mly_code_lookup
 name|mly_table_cacheline_size
@@ -1506,15 +1412,6 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MLY_DEFINE_TABLES */
-end_comment
 
 end_unit
 

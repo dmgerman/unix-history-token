@@ -14,7 +14,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MLY_MAXCOMMANDS
+name|MLY_MAX_COMMANDS
 value|256
 end_define
 
@@ -29,13 +29,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MLY_MAXSGENTRIES
+name|MLY_MAX_SGENTRIES
 value|64
 end_define
 
 begin_comment
 comment|/* max S/G entries, limit 65535 */
 end_comment
+
+begin_comment
+comment|/*  * The interval at which we poke the controller for status updates (in seconds).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MLY_PERIODIC_INTERVAL
+value|1
+end_define
 
 begin_comment
 comment|/********************************************************************************  ********************************************************************************                                                       Cross-version Compatibility  ********************************************************************************  ********************************************************************************/
@@ -90,6 +101,24 @@ parameter_list|,
 name|field
 parameter_list|)
 value|((size_t)(&((type *)0)->field))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INTR_ENTROPY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INTR_ENTROPY
+value|0
 end_define
 
 begin_endif
@@ -428,7 +457,7 @@ begin_define
 define|#
 directive|define
 name|MLY_SLOT_MAX
-value|(MLY_SLOT_START + MLY_MAXCOMMANDS)
+value|(MLY_SLOT_START + MLY_MAX_COMMANDS)
 end_define
 
 begin_comment
@@ -575,10 +604,6 @@ name|mly_state
 decl_stmt|;
 define|#
 directive|define
-name|MLY_STATE_SUSPEND
-value|(1<<0)
-define|#
-directive|define
 name|MLY_STATE_OPEN
 value|(1<<1)
 define|#
@@ -589,6 +614,10 @@ define|#
 directive|define
 name|MLY_STATE_MMBOX_ACTIVE
 value|(1<<3)
+define|#
+directive|define
+name|MLY_STATE_CAM_FROZEN
+value|(1<<4)
 name|struct
 name|mly_ioctl_getcontrollerinfo
 modifier|*
@@ -614,7 +643,7 @@ name|struct
 name|mly_command
 name|mly_command
 index|[
-name|MLY_MAXCOMMANDS
+name|MLY_MAX_COMMANDS
 index|]
 decl_stmt|;
 comment|/* commands */
@@ -644,14 +673,6 @@ argument_list|)
 name|mly_free
 expr_stmt|;
 comment|/* commands available for reuse */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|mly_command
-argument_list|)
-name|mly_ready
-expr_stmt|;
-comment|/* commands ready to be submitted */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -694,14 +715,12 @@ name|mly_periodic
 decl_stmt|;
 comment|/* periodic event handling */
 comment|/* CAM connection */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ccb_hdr
-argument_list|)
-name|mly_cam_ccbq
-expr_stmt|;
-comment|/* outstanding I/O from CAM */
+name|struct
+name|cam_devq
+modifier|*
+name|mly_cam_devq
+decl_stmt|;
+comment|/* CAM device queue */
 name|struct
 name|cam_sim
 modifier|*
@@ -710,9 +729,17 @@ index|[
 name|MLY_MAX_CHANNELS
 index|]
 decl_stmt|;
-name|int
-name|mly_cam_lowbus
+comment|/* CAM SIMs */
+name|struct
+name|cam_path
+modifier|*
+name|mly_cam_path
 decl_stmt|;
+comment|/* rescan path */
+name|int
+name|mly_cam_channels
+decl_stmt|;
+comment|/* total channel count */
 if|#
 directive|if
 name|__FreeBSD_version
@@ -874,8 +901,22 @@ value|do {										\ 	    MLY_SET_REG((sc), (sc)->mly_interrupt_mask, MLY_INTER
 end_define
 
 begin_comment
-comment|/*  * Logical device number -> bus/target translation  */
+comment|/*  * Bus/target/logical ID-related macros.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MLY_LOGDEV_ID
+parameter_list|(
+name|sc
+parameter_list|,
+name|bus
+parameter_list|,
+name|target
+parameter_list|)
+value|(((bus) - (sc)->mly_controllerinfo->physical_channels_present) * \ 					 MLY_MAX_TARGETS + (target))
+end_define
 
 begin_define
 define|#
@@ -884,9 +925,9 @@ name|MLY_LOGDEV_BUS
 parameter_list|(
 name|sc
 parameter_list|,
-name|x
+name|logdev
 parameter_list|)
-value|(((x) / MLY_MAX_TARGETS) + (sc)->mly_controllerinfo->physical_channels_present)
+value|(((logdev) / MLY_MAX_TARGETS) + \ 					 (sc)->mly_controllerinfo->physical_channels_present)
 end_define
 
 begin_define
@@ -894,183 +935,36 @@ define|#
 directive|define
 name|MLY_LOGDEV_TARGET
 parameter_list|(
-name|x
+name|sc
+parameter_list|,
+name|logdev
 parameter_list|)
-value|((x) % MLY_MAX_TARGETS)
+value|((logdev) % MLY_MAX_TARGETS)
 end_define
 
-begin_comment
-comment|/*  * Public functions/variables  */
-end_comment
-
-begin_comment
-comment|/* mly.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|mly_attach
+begin_define
+define|#
+directive|define
+name|MLY_BUS_IS_VIRTUAL
 parameter_list|(
-name|struct
-name|mly_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mly_detach
-parameter_list|(
-name|struct
-name|mly_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mly_free
-parameter_list|(
-name|struct
-name|mly_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mly_startio
-parameter_list|(
-name|struct
-name|mly_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mly_done
-parameter_list|(
-name|struct
-name|mly_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|mly_alloc_command
-parameter_list|(
-name|struct
-name|mly_softc
-modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|mly_command
-modifier|*
-modifier|*
-name|mcp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mly_release_command
-parameter_list|(
-name|struct
-name|mly_command
-modifier|*
-name|mc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* mly_cam.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|mly_cam_attach
-parameter_list|(
-name|struct
-name|mly_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mly_cam_detach
-parameter_list|(
-name|struct
-name|mly_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|mly_cam_command
-parameter_list|(
-name|struct
-name|mly_softc
-modifier|*
-name|sc
-parameter_list|,
-name|struct
-name|mly_command
-modifier|*
-modifier|*
-name|mcp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|mly_name_device
-parameter_list|(
-name|struct
-name|mly_softc
-modifier|*
-name|sc
-parameter_list|,
-name|int
 name|bus
-parameter_list|,
-name|int
-name|target
 parameter_list|)
-function_decl|;
-end_function_decl
+value|((bus)>= (sc)->mly_controllerinfo->physical_channels_present)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLY_BUS_IS_VALID
+parameter_list|(
+name|sc
+parameter_list|,
+name|bus
+parameter_list|)
+value|(((bus)< (sc)->mly_cam_channels)&& ((sc)->mly_cam_sim[(bus)] != NULL))
+end_define
 
 begin_comment
 comment|/********************************************************************************  * Queue primitives  */
@@ -1140,16 +1034,6 @@ end_expr_stmt
 begin_expr_stmt
 name|MLYQ_COMMAND_QUEUE
 argument_list|(
-name|ready
-argument_list|,
-name|MLYQ_READY
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MLYQ_COMMAND_QUEUE
-argument_list|(
 name|busy
 argument_list|,
 name|MLYQ_BUSY
@@ -1166,6 +1050,66 @@ name|MLYQ_COMPLETE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/********************************************************************************  * space-fill a character string  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|padstr
+parameter_list|(
+name|char
+modifier|*
+name|targ
+parameter_list|,
+name|char
+modifier|*
+name|src
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+while|while
+condition|(
+name|len
+operator|--
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|src
+operator|!=
+literal|0
+condition|)
+block|{
+operator|*
+name|targ
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|*
+name|targ
+operator|++
+operator|=
+literal|' '
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
 
 end_unit
 

@@ -85,36 +85,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|MLYQ_CCB
+name|MLYQ_BUSY
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|MLYQ_READY
+name|MLYQ_COMPLETE
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|MLYQ_BUSY
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|MLYQ_COMPLETE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|MLYQ_COUNT
-value|5
+value|3
 end_define
 
 begin_struct
