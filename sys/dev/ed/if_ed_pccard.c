@@ -310,13 +310,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|int
-name|linksys
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  *      ed_pccard_detach - unload the driver and clear the table.  *      XXX TODO:  *      This is usually called when the card is ejected, but  *      can be caused by a modunload of a controller driver.  *      The idea is to reset the driver's view of the device  *      and ensure that any driver entry points such as  *      read and write do not hang.  */
 end_comment
@@ -1756,22 +1749,11 @@ argument_list|)
 operator|&
 name|ED_FLAGS_LINKSYS
 condition|)
-block|{
-name|linksys
-operator|=
 name|ed_pccard_Linksys
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|linksys
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|end2
 label|:
 if|if
@@ -1944,9 +1926,11 @@ return|;
 block|}
 if|if
 condition|(
-name|linksys
-operator|==
-literal|0
+name|sc
+operator|->
+name|vendor
+operator|!=
+name|ED_VENDOR_LINKSYS
 condition|)
 block|{
 name|pccard_get_ether
