@@ -124,17 +124,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPI_LAZYPMAP
-value|(APIC_IPI_INTS + 4)
-end_define
-
-begin_comment
-comment|/* Lazy pmap release. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IPI_HARDCLOCK
 value|(APIC_IPI_INTS + 8)
 end_define

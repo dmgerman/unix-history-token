@@ -1166,28 +1166,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LAZY_SWITCH
-comment|/* Install an inter-CPU IPI for lazy pmap release */
-name|setidt
-argument_list|(
-name|IPI_LAZYPMAP
-argument_list|,
-name|IDTVEC
-argument_list|(
-name|lazypmap
-argument_list|)
-argument_list|,
-name|SDT_SYSIGT
-argument_list|,
-name|SEL_KPL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Install an inter-CPU IPI for all-CPU rendezvous */
 name|setidt
 argument_list|(
