@@ -743,20 +743,6 @@ name|d_ioctl_t
 modifier|*
 name|d_ioctl
 decl_stmt|;
-name|d_stop_t
-modifier|*
-name|d_bogostop
-decl_stmt|;
-name|d_reset_t
-modifier|*
-name|d_bogoreset
-decl_stmt|;
-comment|/* XXX not used */
-name|d_devtotty_t
-modifier|*
-name|d_bogodevtotty
-decl_stmt|;
-comment|/* XXX not used */
 name|d_poll_t
 modifier|*
 name|d_poll
