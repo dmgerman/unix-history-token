@@ -1020,6 +1020,9 @@ case|case
 name|T_TRCTRAP
 case|:
 comment|/* trace trap */
+name|enable_intr
+argument_list|()
+expr_stmt|;
 name|frame
 operator|.
 name|tf_eflags
