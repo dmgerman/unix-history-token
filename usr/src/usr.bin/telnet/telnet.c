@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.17 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * User telnet program.  */
@@ -389,10 +400,12 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+comment|/* command name */
 name|char
 modifier|*
 name|help
 decl_stmt|;
+comment|/* help string */
 name|int
 function_decl|(
 modifier|*
@@ -400,13 +413,14 @@ name|handler
 function_decl|)
 parameter_list|()
 function_decl|;
+comment|/* routine which executes command */
 block|}
 struct|;
 end_struct
 
 begin_decl_stmt
 name|char
-name|ohelp
+name|openhelp
 index|[]
 init|=
 literal|"connect to a site"
@@ -415,7 +429,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|chelp
+name|closehelp
 index|[]
 init|=
 literal|"close current connection"
@@ -424,7 +438,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|qhelp
+name|quithelp
 index|[]
 init|=
 literal|"exit telnet"
@@ -442,7 +456,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|dhelp
+name|debughelp
 index|[]
 init|=
 literal|"toggle debugging"
@@ -451,7 +465,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|ehelp
+name|escapehelp
 index|[]
 init|=
 literal|"set escape character"
@@ -460,7 +474,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|shelp
+name|statushelp
 index|[]
 init|=
 literal|"print status information"
@@ -469,7 +483,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|hhelp
+name|helphelp
 index|[]
 init|=
 literal|"print help information"
@@ -478,7 +492,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|phelp
+name|optionshelp
 index|[]
 init|=
 literal|"toggle viewing of options processing"
@@ -487,7 +501,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|rhelp
+name|crmodhelp
 index|[]
 init|=
 literal|"toggle mapping of received carriage returns"
@@ -504,7 +518,7 @@ block|{
 block|{
 literal|"open"
 block|,
-name|ohelp
+name|openhelp
 block|,
 name|tn
 block|}
@@ -512,7 +526,7 @@ block|,
 block|{
 literal|"close"
 block|,
-name|chelp
+name|closehelp
 block|,
 name|bye
 block|}
@@ -520,7 +534,7 @@ block|,
 block|{
 literal|"quit"
 block|,
-name|qhelp
+name|quithelp
 block|,
 name|quit
 block|}
@@ -536,7 +550,7 @@ block|,
 block|{
 literal|"escape"
 block|,
-name|ehelp
+name|escapehelp
 block|,
 name|setescape
 block|}
@@ -544,7 +558,7 @@ block|,
 block|{
 literal|"status"
 block|,
-name|shelp
+name|statushelp
 block|,
 name|status
 block|}
@@ -552,7 +566,7 @@ block|,
 block|{
 literal|"options"
 block|,
-name|phelp
+name|optionshelp
 block|,
 name|setoptions
 block|}
@@ -560,7 +574,7 @@ block|,
 block|{
 literal|"crmod"
 block|,
-name|rhelp
+name|crmodhelp
 block|,
 name|setcrmod
 block|}
@@ -568,7 +582,7 @@ block|,
 block|{
 literal|"debug"
 block|,
-name|dhelp
+name|debughelp
 block|,
 name|setdebug
 block|}
@@ -576,7 +590,7 @@ block|,
 block|{
 literal|"?"
 block|,
-name|hhelp
+name|helphelp
 block|,
 name|help
 block|}
@@ -1136,9 +1150,7 @@ block|}
 if|if
 condition|(
 name|debug
-condition|)
-if|if
-condition|(
+operator|&&
 name|setsockopt
 argument_list|(
 name|net
@@ -1156,7 +1168,7 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-literal|"telnet: setsockopt"
+literal|"setsockopt (SO_DEBUG)"
 argument_list|)
 expr_stmt|;
 name|sigset
@@ -1491,11 +1503,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|how
-init|=
-literal|2
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -1514,14 +1521,11 @@ condition|(
 name|connected
 condition|)
 block|{
-name|ioctl
+name|shutdown
 argument_list|(
 name|net
 argument_list|,
-name|SIOCDONE
-argument_list|,
-operator|&
-name|how
+literal|2
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1594,7 +1598,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Help command.  * Call each command handler with argc == 0 and argv[0] == name.  */
+comment|/*  * Help command.  */
 end_comment
 
 begin_macro
@@ -2424,6 +2428,18 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|c
+operator|==
+name|IAC
+condition|)
+operator|*
+name|nfrontp
+operator|++
+operator|=
+name|c
+expr_stmt|;
 operator|*
 name|nfrontp
 operator|++
@@ -3518,6 +3534,30 @@ expr_stmt|;
 name|fflush
 argument_list|(
 name|stdout
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|debug
+operator|&&
+name|setsockopt
+argument_list|(
+name|net
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"setsockopt (SO_DEBUG)"
 argument_list|)
 expr_stmt|;
 block|}
