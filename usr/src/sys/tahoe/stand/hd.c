@@ -24,24 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"time.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"inode.h"
 end_include
 
@@ -54,31 +36,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tahoevba/dsk.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tahoevba/dskio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tahoevba/hdc.h"
+file|"disklabel.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"saio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoevba/dsk.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoevba/dskio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoevba/hdc.h"
 end_include
 
 begin_define
@@ -122,6 +116,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDC_DEFBUS
+value|0
+end_define
+
+begin_comment
+comment|/* we only handle bus zero, for now */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HDREG
 parameter_list|(
 name|x
@@ -155,7 +160,7 @@ block|{
 name|int
 name|ctlr
 decl_stmt|;
-comment|/* controller number (0-15)         */
+comment|/* controller number (0-15) */
 name|hdc_regs_type
 modifier|*
 name|registers
@@ -164,11 +169,11 @@ comment|/* base address of hdc io registers */
 name|hdc_mid_type
 name|mid
 decl_stmt|;
-comment|/* the module id is read to here    */
+comment|/* the module id is read to here */
 name|master_mcb_type
 name|master_mcb
 decl_stmt|;
-comment|/* the master mcb for this hdc      */
+comment|/* the master mcb for this hdc */
 name|mcb_type
 name|mcb
 decl_stmt|;
@@ -204,43 +209,43 @@ index|[
 name|GB_MAXPART
 index|]
 decl_stmt|;
-comment|/* partition definitions            */
+comment|/* partition definitions */
 name|int
 name|ctlr
 decl_stmt|;
-comment|/* the controller number (0-15)     */
+comment|/* the controller number (0-15) */
 name|int
 name|slave
 decl_stmt|;
-comment|/* the slave number (0-4)           */
+comment|/* the slave number (0-4) */
 name|int
 name|unit
 decl_stmt|;
-comment|/* the unit number (0-31)           */
+comment|/* the unit number (0-31) */
 name|int
 name|id
 decl_stmt|;
-comment|/* identifies the disk model        */
+comment|/* identifies the disk model */
 name|int
 name|cylinders
 decl_stmt|;
-comment|/* number of logical cylinders      */
+comment|/* number of logical cylinders */
 name|int
 name|heads
 decl_stmt|;
-comment|/* number of logical heads          */
+comment|/* number of logical heads */
 name|int
 name|sectors
 decl_stmt|;
-comment|/* number of logical sectors/track  */
+comment|/* number of logical sectors/track */
 name|int
 name|phys_cylinders
 decl_stmt|;
-comment|/* number of physical cylinders     */
+comment|/* number of physical cylinders */
 name|int
 name|phys_heads
 decl_stmt|;
-comment|/* number of physical heads         */
+comment|/* number of physical heads */
 name|int
 name|phys_sectors
 decl_stmt|;
@@ -248,15 +253,15 @@ comment|/* number of physical sectors/track */
 name|int
 name|def_cyl
 decl_stmt|;
-comment|/* logical cylinder of drive def    */
+comment|/* logical cylinder of drive def */
 name|int
 name|def_cyl_count
 decl_stmt|;
-comment|/* number of logical def cylinders  */
+comment|/* number of logical def cylinders */
 name|int
 name|diag_cyl
 decl_stmt|;
-comment|/* logical cylinder of diag area    */
+comment|/* logical cylinder of diag area */
 name|int
 name|diag_cyl_count
 decl_stmt|;
@@ -264,22 +269,22 @@ comment|/* number of logical diag cylinders */
 name|int
 name|rpm
 decl_stmt|;
-comment|/* disk rpm                         */
+comment|/* disk rpm */
 name|int
 name|bytes_per_sec
 decl_stmt|;
-comment|/* bytes/sector -vendorflaw conversn*/
+comment|/* bytes/sector -vendorflaw conversn */
 name|int
 name|format
 decl_stmt|;
-comment|/* format program is active         */
+comment|/* format program is active */
 name|u_long
 name|phio_data
 index|[
 name|HDC_PHIO_SIZE
 index|]
 decl_stmt|;
-comment|/* data for physical io     */
+comment|/* data for physical io */
 block|}
 name|hdunit_type
 typedef|;
@@ -301,7 +306,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/************************************************************************* *  Procedure:	hdopen * *  Description:	The hdc open routine. Initializes the hdc and reads the *		hdc status and the geometry block. * *  Returns:	 0  open was successful *		-1  this is not an hdc controller **************************************************************************/
+comment|/*  * hdopen --  *	initialize the hdc and read the disk label  */
 end_comment
 
 begin_expr_stmt
@@ -323,80 +328,71 @@ end_comment
 
 begin_block
 block|{
-name|mcb_type
-modifier|*
-name|mcb
+name|drive_stat_type
+name|status
 decl_stmt|;
-comment|/* an mcb to send commands to hdc   */
-name|hdunit_type
-modifier|*
-name|hu
-decl_stmt|;
-comment|/* disk unit information table      */
-name|hdctlr_type
-modifier|*
-name|hc
-decl_stmt|;
-comment|/* hdc ctlr information table       */
+comment|/* the hdc status is read to here */
 name|hdc_mid_type
 modifier|*
 name|id
 decl_stmt|;
-comment|/* the hdc module id                */
-name|geometry_sector
-name|geometry
-decl_stmt|;
-comment|/* the geometry block sector        */
-name|geometry_block
-modifier|*
-name|geo
-decl_stmt|;
-comment|/* the geometry block               */
-name|drive_stat_type
-name|status
-decl_stmt|;
-comment|/* the hdc status is read to here   */
-name|long
-name|ctlr
-decl_stmt|;
-comment|/* the controller number            */
-name|long
-name|junk
-decl_stmt|;
-comment|/* badaddr will write junk here     */
-name|int
-name|par
-decl_stmt|;
-comment|/* partition number                 */
-name|int
-name|drive
-decl_stmt|;
-comment|/* the drive number                 */
-name|int
-name|bus
-decl_stmt|;
-comment|/* the bus number                   */
-name|int
-name|i
-decl_stmt|;
-comment|/* temp                             */
+comment|/* the hdc module id */
 name|hdc_regs_type
 modifier|*
 name|ctlr_addr
 decl_stmt|;
-comment|/* hdc i/o registers                */
-name|par
-operator|=
-name|io
-operator|->
-name|i_boff
-expr_stmt|;
-comment|/* io->i_part;	*/
-name|bus
-operator|=
+comment|/* hdc i/o registers */
+name|hdctlr_type
+modifier|*
+name|hc
+decl_stmt|;
+comment|/* hdc ctlr information table */
+name|hdunit_type
+modifier|*
+name|hu
+decl_stmt|;
+comment|/* disk unit information table */
+name|geometry_sector
+name|geometry
+decl_stmt|;
+comment|/* the geometry block sector */
+name|geometry_block
+modifier|*
+name|geo
+decl_stmt|;
+comment|/* the geometry block */
+name|mcb_type
+modifier|*
+name|mcb
+decl_stmt|;
+comment|/* an mcb to send commands to hdc */
+name|long
+name|junk
+init|=
 literal|0
-expr_stmt|;
-comment|/* io->i_bus;	*/
+decl_stmt|;
+comment|/* badaddr will write junk here */
+name|int
+name|par
+decl_stmt|;
+comment|/* partition number */
+name|int
+name|bus
+decl_stmt|,
+name|ctlr
+decl_stmt|,
+name|drive
+decl_stmt|,
+name|error
+decl_stmt|,
+name|i
+decl_stmt|,
+name|unit
+decl_stmt|;
+comment|/* validate the device specification */
+if|if
+condition|(
+operator|(
 name|ctlr
 operator|=
 name|HDCTLR
@@ -405,8 +401,25 @@ name|io
 operator|->
 name|i_unit
 argument_list|)
+operator|)
+operator|>=
+name|HDC_MAXCTLR
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"invalid controller number\n"
+argument_list|)
 expr_stmt|;
-comment|/* io->i_ctlr;	*/
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|(
 name|drive
 operator|=
 name|HDSLAVE
@@ -415,8 +428,90 @@ name|io
 operator|->
 name|i_unit
 argument_list|)
+operator|)
+operator|<
+literal|0
+operator|||
+name|drive
+operator|>
+name|HDC_MAXDRIVE
+operator|-
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"hdc: bad drive number.\n"
+argument_list|)
 expr_stmt|;
-comment|/* io->i_drive;	*/
+return|return
+operator|(
+name|EUNIT
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|par
+operator|=
+name|io
+operator|->
+name|i_boff
+operator|)
+operator|<
+literal|0
+operator|||
+name|par
+operator|>
+literal|7
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"hdc: bad partition number.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EUNIT
+operator|)
+return|;
+block|}
+name|bus
+operator|=
+name|HDC_DEFBUS
+expr_stmt|;
+name|ctlr_addr
+operator|=
+operator|(
+name|hdc_regs_type
+operator|*
+operator|)
+operator|(
+name|bus
+condition|?
+literal|0x80000000
+operator||
+name|ctlr
+operator|<<
+literal|24
+operator||
+name|HDC_MID
+operator|<<
+literal|16
+else|:
+literal|0xC0000000
+operator||
+name|ctlr
+operator|<<
+literal|24
+operator||
+name|HDC_MID
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
 name|hu
 operator|=
 operator|&
@@ -449,104 +544,7 @@ name|hc
 operator|->
 name|mcb
 expr_stmt|;
-comment|/* 	 * Validate the device specification 	 */
-if|if
-condition|(
-name|ctlr
-operator|>=
-name|HDC_MAXCTLR
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"invalid controller number\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|drive
-operator|<
-literal|0
-operator|||
-name|drive
-operator|>
-name|HDC_MAXDRIVE
-operator|-
-literal|1
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"hdc: bad drive number.\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EUNIT
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|par
-operator|<
-literal|0
-operator|||
-name|par
-operator|>
-literal|7
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"hdc: bad partition number.\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EUNIT
-operator|)
-return|;
-block|}
-name|ctlr_addr
-operator|=
-operator|(
-name|hdc_regs_type
-operator|*
-operator|)
-operator|(
-name|bus
-operator|==
-literal|0
-condition|?
-literal|0xC0000000
-operator||
-name|ctlr
-operator|<<
-literal|24
-operator||
-name|HDC_MID
-operator|<<
-literal|16
-else|:
-literal|0x80000000
-operator||
-name|ctlr
-operator|<<
-literal|24
-operator||
-name|HDC_MID
-operator|<<
-literal|16
-operator|)
-expr_stmt|;
-comment|/* 	 * Init drive structure. 	 */
+comment|/* init drive structure. */
 name|hu
 operator|->
 name|slave
@@ -559,11 +557,7 @@ name|registers
 operator|=
 name|ctlr_addr
 expr_stmt|;
-comment|/* 	 * Insure that this is an hdc, then reset the hdc. 	 */
-name|junk
-operator|=
-literal|0
-expr_stmt|;
+comment|/* insure that this is an hdc, then reset the hdc. */
 if|if
 condition|(
 name|wbadaddr
@@ -663,8 +657,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -718,7 +711,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 	 * Read the drive status. Save important info. 	 */
+comment|/* Read the drive status. Save important info. */
 name|mcb
 operator|->
 name|command
@@ -766,7 +759,10 @@ argument_list|(
 name|drive_stat_type
 argument_list|)
 operator|/
-literal|4
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
 expr_stmt|;
 name|mcb
 operator|->
@@ -797,6 +793,43 @@ operator|(
 name|EIO
 operator|)
 return|;
+comment|/* 	 * Report drive down if anything in the drive status is bad. 	 * If fault condition, reading will try to clear the fault. 	 */
+if|if
+condition|(
+name|status
+operator|.
+name|drs
+operator|&
+name|DRS_FAULT
+condition|)
+name|printf
+argument_list|(
+literal|"hdc: clearing drive fault.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|status
+operator|.
+name|drs
+operator|&
+name|DRS_ONLINE
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"hdc: drive is not online.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
 name|hu
 operator|->
 name|cylinders
@@ -959,57 +992,6 @@ name|heads
 operator|/
 name|HDC_SPB
 expr_stmt|;
-name|io
-operator|->
-name|i_boff
-operator|=
-name|hu
-operator|->
-name|partition
-index|[
-name|HDC_DEFPART
-index|]
-operator|.
-name|start
-expr_stmt|;
-comment|/* default */
-comment|/* 	 * Report drive down if anything in the drive status is bad. 	 * If fault condition, reading geo will try to clear the fault. 	 */
-if|if
-condition|(
-name|status
-operator|.
-name|drs
-operator|&
-name|DRS_FAULT
-condition|)
-name|printf
-argument_list|(
-literal|"hdc: clearing drive fault.\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|status
-operator|.
-name|drs
-operator|&
-name|DRS_ONLINE
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"hdc: drive is not online.\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
-block|}
 comment|/* 	 * Read the geometry block (at head=0 sector=0 of the drive 	 * definition cylinder), validate it (must have the correct 	 * version number, header, and checksum). 	 */
 name|geo
 operator|=
@@ -1034,8 +1016,8 @@ name|mcb
 operator|->
 name|cyl
 operator|=
-name|status
-operator|.
+name|hu
+operator|->
 name|def_cyl
 expr_stmt|;
 name|mcb
@@ -1064,7 +1046,10 @@ argument_list|(
 name|geometry_sector
 argument_list|)
 operator|/
-literal|4
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
 expr_stmt|;
 name|mcb
 operator|->
@@ -1081,6 +1066,20 @@ operator|)
 operator|&
 name|geometry
 expr_stmt|;
+name|io
+operator|->
+name|i_boff
+operator|=
+name|hu
+operator|->
+name|partition
+index|[
+name|HDC_DEFPART
+index|]
+operator|.
+name|start
+expr_stmt|;
+comment|/* default */
 if|if
 condition|(
 name|hdmcb
@@ -1211,9 +1210,10 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* XXX */
 name|printf
 argument_list|(
-literal|"hdc:  null partition\n"
+literal|"hdc: null partition\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1283,7 +1283,7 @@ block|}
 end_block
 
 begin_comment
-comment|/************************************************************************* *  Procedure:	hdstrategy * *  Description:	The hdc strategy routine. This routine does the disk *		reads/writes. If this is the format program, read/writes *		are forced to be within the disk definition partition. * *  Returns:	The number of bytes transfered. **************************************************************************/
+comment|/*  * hdstrategy --  *	The hdc strategy routine. This routine does the disk reads/writes. If  *	this is the format program, read/writes are forced to be within the  *	disk definition partition.  Returns the number of bytes transferred.  */
 end_comment
 
 begin_expr_stmt
@@ -1321,54 +1321,48 @@ name|mcb_type
 modifier|*
 name|mcb
 decl_stmt|;
-comment|/* mcb to send to the hdc           */
+comment|/* mcb to send to the hdc */
 name|hdunit_type
 modifier|*
 name|hu
 decl_stmt|;
-comment|/* disk unit information table      */
+comment|/* disk unit information table */
 name|hdctlr_type
 modifier|*
 name|hc
 decl_stmt|;
-comment|/* hdc ctlr information table       */
+comment|/* hdc ctlr information table */
 name|long
 name|err
 decl_stmt|;
-comment|/* error code                       */
+comment|/* error code */
 name|long
 name|sector
 decl_stmt|;
-comment|/* sector number for i/o            */
+comment|/* sector number for i/o */
 name|int
 name|partstart
 decl_stmt|;
-comment|/* block number of partition start  */
+comment|/* block number of partition start */
 name|int
 name|partlen
 decl_stmt|;
-comment|/* number of blocks in partition    */
+comment|/* number of blocks in partition */
 name|int
 name|bytes
 decl_stmt|;
-comment|/* number of bytes to transfer      */
+comment|/* number of bytes to transfer */
 name|int
 name|bus
-decl_stmt|;
-comment|/* bus number	                    */
-name|int
+decl_stmt|,
 name|ctlr
-decl_stmt|;
-comment|/* the controller number            */
-name|int
+decl_stmt|,
 name|drive
 decl_stmt|;
-comment|/* the drive number                 */
 name|bus
 operator|=
-literal|0
+name|HDC_DEFBUS
 expr_stmt|;
-comment|/* io->i_bus;	*/
 name|ctlr
 operator|=
 name|HDCTLR
@@ -1378,7 +1372,6 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
-comment|/* io->i_ctlr;	*/
 name|drive
 operator|=
 name|HDSLAVE
@@ -1388,7 +1381,6 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
-comment|/* io->i_drive;	*/
 name|hu
 operator|=
 operator|&
@@ -1640,7 +1632,10 @@ operator|+
 literal|3
 operator|)
 operator|/
-literal|4
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
 expr_stmt|;
 name|err
 operator|=
@@ -1668,10 +1663,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/************************************************************************* *  Procedure:	hdioctl * *  Description:	ioctl routine. * *  Returns:	0	no errors *		non-0	error **************************************************************************/
-end_comment
 
 begin_macro
 name|hdioctl
@@ -1703,7 +1694,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The ioctl commmand */
+comment|/* ioctl commmand */
 end_comment
 
 begin_decl_stmt
@@ -1713,7 +1704,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Data.  Format depends on ioctl */
+comment|/* data; format depends on ioctl */
 end_comment
 
 begin_block
@@ -1730,29 +1721,23 @@ name|hdunit_type
 modifier|*
 name|hu
 decl_stmt|;
-comment|/* disk unit information table	*/
+comment|/* disk unit information table */
 name|hdctlr_type
 modifier|*
 name|hc
 decl_stmt|;
-comment|/* hdc ctlr information table	*/
+comment|/* hdc ctlr information table */
 name|int
 name|bus
-decl_stmt|;
-comment|/* bus number			*/
-name|int
+decl_stmt|,
 name|ctlr
-decl_stmt|;
-comment|/* the controller number	*/
-name|int
+decl_stmt|,
 name|drive
 decl_stmt|;
-comment|/* the drive number		*/
 name|bus
 operator|=
-literal|0
+name|HDC_DEFBUS
 expr_stmt|;
-comment|/* io->i_bus;	*/
 name|ctlr
 operator|=
 name|HDCTLR
@@ -1762,7 +1747,6 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
-comment|/* io->i_ctlr;	*/
 name|drive
 operator|=
 name|HDSLAVE
@@ -1772,7 +1756,6 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
-comment|/* io->i_drive;	*/
 name|hu
 operator|=
 operator|&
@@ -2663,10 +2646,11 @@ block|}
 end_block
 
 begin_comment
-comment|/************************************************************************* *  Procedure:	hdmcb * *  Description:	Internal routine used to send mcb's to the hdc. * *  Returns:	0		normal *		non-zero	error occurred **************************************************************************/
+comment|/*  * hdmcb --  *	internal routine used to send mcb's to the hdc  */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|hdmcb
 argument_list|(
 name|mcb
@@ -2681,7 +2665,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* mcb to send to the hdc	*/
+comment|/* mcb to send to the hdc */
 end_comment
 
 begin_decl_stmt
@@ -2694,52 +2678,48 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* i/o block			*/
+comment|/* i/o block */
 end_comment
 
 begin_block
 block|{
-name|master_mcb_type
-modifier|*
-name|master_mcb
-decl_stmt|;
-comment|/* the hdc's master mcb		*/
-name|hdctlr_type
-modifier|*
-name|hc
-decl_stmt|;
-comment|/* hdc ctlr information table	*/
-name|hdc_regs_type
-modifier|*
-name|ctlr_addr
-decl_stmt|;
-comment|/* pointer to hdc i/o registers	*/
-name|int
-name|timeout
-decl_stmt|;
-comment|/* used to timeout the mcb	*/
-name|int
-name|bus
-decl_stmt|;
-comment|/* bus number			*/
-name|int
-name|ctlr
-decl_stmt|;
-comment|/* the controller number	*/
-name|int
-name|i
-decl_stmt|,
-name|end
-decl_stmt|;
+specifier|register
 name|u_int
 modifier|*
 name|ptr
 decl_stmt|;
+name|master_mcb_type
+modifier|*
+name|master_mcb
+decl_stmt|;
+comment|/* the hdc's master mcb */
+name|hdctlr_type
+modifier|*
+name|hc
+decl_stmt|;
+comment|/* hdc ctlr information table */
+name|hdc_regs_type
+modifier|*
+name|ctlr_addr
+decl_stmt|;
+comment|/* pointer to hdc i/o registers */
+name|int
+name|timeout
+decl_stmt|;
+comment|/* used to timeout the mcb */
+name|int
+name|bus
+decl_stmt|,
+name|ctlr
+decl_stmt|,
+name|i
+decl_stmt|,
+name|end
+decl_stmt|;
 name|bus
 operator|=
-literal|0
+name|HDC_DEFBUS
 expr_stmt|;
-comment|/* io->i_bus;	*/
 name|ctlr
 operator|=
 name|HDCTLR
@@ -2749,7 +2729,6 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
-comment|/* io->i_ctlr;	*/
 name|hc
 operator|=
 operator|&
@@ -2940,11 +2919,9 @@ operator|(
 literal|0
 operator|)
 return|;
-name|timeout
-operator|--
-expr_stmt|;
 if|if
 condition|(
+operator|--
 name|timeout
 operator|>
 literal|0
@@ -3070,12 +3047,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"mcb:  "
+literal|"\nmcb:  "
 argument_list|)
 expr_stmt|;
 name|ptr
