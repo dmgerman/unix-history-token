@@ -13087,7 +13087,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 	 	 ** link all SRB   		 */
+comment|/* 			 * link all SRB  			 */
 name|pSRB
 operator|->
 name|pNextSRB
@@ -13105,7 +13105,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 ** load NULL to NextSRB of the last SRB 		 */
+comment|/* 			 * load NULL to NextSRB of the last SRB 			 */
 name|pSRB
 operator|->
 name|pNextSRB
