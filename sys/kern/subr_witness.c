@@ -1158,6 +1158,18 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__ia64__
+block|{
+literal|"MCA spin lock"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|,
