@@ -589,7 +589,7 @@ begin_define
 define|#
 directive|define
 name|MAC_MAX_POLICIES
-value|8
+value|4
 end_define
 
 begin_struct
