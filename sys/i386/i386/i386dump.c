@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -106,6 +112,9 @@ name|int
 name|i
 decl_stmt|,
 name|mb
+decl_stmt|;
+name|int
+name|c
 decl_stmt|;
 name|printf
 argument_list|(
@@ -485,6 +494,38 @@ operator|+=
 name|left
 operator|*
 name|PAGE_SIZE
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|c
+operator|=
+name|cncheckc
+argument_list|()
+operator|)
+operator|==
+literal|0x03
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\nDump aborted.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|!=
+operator|-
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"[CTRL-C to abort] "
+argument_list|)
 expr_stmt|;
 block|}
 if|if
