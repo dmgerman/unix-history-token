@@ -3523,43 +3523,6 @@ name|lastpid
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * XXX macros for scheduler.  Shouldn't be here, but currently needed for  * bounding the dubious p_estcpu inheritance in wait1().  * INVERSE_ESTCPU_WEIGHT is only suitable for statclock() frequencies in  * the range 100-256 Hz (approximately).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ESTCPULIM
-parameter_list|(
-name|e
-parameter_list|)
-define|\
-value|min((e), INVERSE_ESTCPU_WEIGHT * (NICE_WEIGHT * (PRIO_MAX - PRIO_MIN) - \ 	     RQ_PPQ) + INVERSE_ESTCPU_WEIGHT - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INVERSE_ESTCPU_WEIGHT
-value|8
-end_define
-
-begin_comment
-comment|/* 1 / (priorities per estcpu level). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NICE_WEIGHT
-value|1
-end_define
-
-begin_comment
-comment|/* Priorities per nice level. */
-end_comment
-
 begin_function_decl
 name|struct
 name|proc

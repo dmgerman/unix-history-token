@@ -75,6 +75,43 @@ directive|include
 file|<sys/sx.h>
 end_include
 
+begin_comment
+comment|/*  * INVERSE_ESTCPU_WEIGHT is only suitable for statclock() frequencies in  * the range 100-256 Hz (approximately).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESTCPULIM
+parameter_list|(
+name|e
+parameter_list|)
+define|\
+value|min((e), INVERSE_ESTCPU_WEIGHT * (NICE_WEIGHT * (PRIO_MAX - PRIO_MIN) - \     RQ_PPQ) + INVERSE_ESTCPU_WEIGHT - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INVERSE_ESTCPU_WEIGHT
+value|8
+end_define
+
+begin_comment
+comment|/* 1 / (priorities per estcpu level). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NICE_WEIGHT
+value|1
+end_define
+
+begin_comment
+comment|/* Priorities per nice level. */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|ke_sched
