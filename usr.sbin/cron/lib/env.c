@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: env.c,v 2.6 1994/01/15 20:43:43 vixie Exp $"
+literal|"$Id: env.c,v 1.1.1.1 1994/08/27 13:43:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -443,7 +443,7 @@ decl_stmt|;
 name|char
 name|name
 index|[
-name|MAX_TEMPSTR
+name|MAX_ENVSTR
 index|]
 decl_stmt|,
 name|val
