@@ -455,8 +455,10 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
 name|daytime
+index|[
+literal|16
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1338,8 +1340,13 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strncpy
+argument_list|(
 name|daytime
-operator|=
+argument_list|,
 name|ctime
 argument_list|(
 operator|&
@@ -1347,6 +1354,9 @@ name|timenow
 argument_list|)
 operator|+
 literal|4
+argument_list|,
+literal|15
+argument_list|)
 expr_stmt|;
 name|daytime
 index|[
