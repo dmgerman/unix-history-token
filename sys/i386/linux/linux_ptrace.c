@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -54,25 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/npx.h>
 end_include
 
 begin_include
@@ -97,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|<i386/linux/linux_proto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/linux/linux_util.h>
 end_include
 
 begin_if
