@@ -27,7 +27,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.45
+literal|3.46
 operator|%
 name|G
 operator|%
@@ -55,7 +55,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.45
+literal|3.46
 operator|%
 name|G
 operator|%
@@ -444,6 +444,19 @@ begin_comment
 comment|/* one xaction only this run */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|RealHostName
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* verified hostname, set in daemon.c */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -761,6 +774,55 @@ case|case
 name|CMDHELO
 case|:
 comment|/* hello -- introduce yourself */
+if|if
+condition|(
+name|RealHostName
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|sameword
+argument_list|(
+name|p
+argument_list|,
+name|RealHostName
+argument_list|)
+condition|)
+block|{
+name|char
+name|buf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%s (%s)"
+argument_list|,
+name|p
+argument_list|,
+name|RealHostName
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'s'
+argument_list|,
+name|newstr
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|define
 argument_list|(
 literal|'s'
