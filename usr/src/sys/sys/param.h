@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.h	7.25 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.h	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -701,43 +701,14 @@ value|((((x)-1)&(x))==0)
 end_define
 
 begin_comment
-comment|/* Macros for fast min/max: with inline expansion, the "function" is faster. */
+comment|/* Macros for min/max. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|min((a), (b))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|max((a), (b))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_define
 define|#
