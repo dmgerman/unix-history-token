@@ -676,15 +676,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Debug functions  */
+comment|/*  * Debug functions -- uncomment for VERY verbose dignostic information.  * Set to 1 for less verbose information  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|XE_DEBUG
-value|2
-end_define
+begin_comment
+comment|/* #define XE_DEBUG 2 */
+end_comment
 
 begin_ifdef
 ifdef|#
