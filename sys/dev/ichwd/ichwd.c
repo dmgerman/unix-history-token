@@ -939,10 +939,15 @@ name|driver
 operator|->
 name|name
 argument_list|,
-operator|-
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|!=
+name|NULL
+condition|)
 name|device_set_desc_copy
 argument_list|(
 name|dev
