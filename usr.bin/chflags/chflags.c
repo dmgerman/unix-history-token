@@ -516,12 +516,12 @@ block|{
 case|case
 name|FTS_D
 case|:
+comment|/* Change it at FTS_DP if we're recursive. */
 if|if
 condition|(
+operator|!
 name|Rflag
 condition|)
-comment|/* Change it at FTS_DP. */
-continue|continue;
 name|fts_set
 argument_list|(
 name|ftsp
@@ -531,7 +531,7 @@ argument_list|,
 name|FTS_SKIP
 argument_list|)
 expr_stmt|;
-break|break;
+continue|continue;
 case|case
 name|FTS_DNR
 case|:
