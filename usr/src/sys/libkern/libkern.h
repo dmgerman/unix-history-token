@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)libkern.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)libkern.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -11,7 +11,7 @@ end_include
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|imax
 parameter_list|(
@@ -41,7 +41,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|imin
 parameter_list|(
@@ -71,7 +71,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|long
 name|lmax
 parameter_list|(
@@ -101,7 +101,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|long
 name|lmin
 parameter_list|(
@@ -131,7 +131,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_int
 name|max
 parameter_list|(
@@ -161,7 +161,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_int
 name|min
 parameter_list|(
@@ -191,7 +191,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_long
 name|ulmax
 parameter_list|(
@@ -221,7 +221,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_long
 name|ulmin
 parameter_list|(
