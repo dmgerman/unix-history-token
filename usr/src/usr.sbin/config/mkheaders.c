@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkheaders.c	1.10	82/10/24	*/
+comment|/*	mkheaders.c	1.11	82/10/24	*/
 end_comment
 
 begin_comment
@@ -108,7 +108,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|bool
+name|int
 name|search
 decl_stmt|;
 end_decl_stmt
@@ -778,6 +778,7 @@ return|return
 operator|(
 name|hbuf
 operator|)
+return|;
 block|}
 end_function
 
@@ -846,6 +847,7 @@ return|return
 operator|(
 name|mbuf
 operator|)
+return|;
 block|}
 end_function
 
