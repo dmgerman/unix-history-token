@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dev_mkdb.c	5.7 (Berkeley) %G%"
+literal|"@(#)dev_mkdb.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,15 +82,11 @@ directive|include
 file|<dirent.h>
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|nlist
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* XXX bletch */
-end_comment
+begin_include
+include|#
+directive|include
+file|<nlist.h>
+end_include
 
 begin_include
 include|#
@@ -113,6 +109,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -125,8 +127,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|error
+argument_list|()
+decl_stmt|,
+name|usage
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -163,19 +182,17 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
-name|char
-name|bkeybuf
-index|[
-sizeof|sizeof
-argument_list|(
-name|sb
-operator|.
-name|st_rdev
-argument_list|)
-operator|+
-literal|1
-index|]
+struct|struct
+block|{
+name|mode_t
+name|type
 decl_stmt|;
+name|dev_t
+name|dev
+decl_stmt|;
+block|}
+name|bkey
+struct|;
 name|DB
 modifier|*
 name|db
@@ -336,24 +353,22 @@ argument_list|(
 name|dbtmp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Character devices are stored using st_rdev as the key. 	 * Block devices are stores using st_rdev followed by exactly 	 * one NULL byte as the key. 	 */
+comment|/* 	 * Keys are a mode_t followed by a dev_t.  The former is the type of 	 * the file (mode& S_IFMT), the latter is the st_rdev field. 	 */
 name|key
 operator|.
 name|data
 operator|=
-name|bkeybuf
+operator|&
+name|bkey
 expr_stmt|;
-name|bkeybuf
-index|[
+name|key
+operator|.
+name|size
+operator|=
 sizeof|sizeof
 argument_list|(
-name|sb
-operator|.
-name|st_rdev
+name|bkey
 argument_list|)
-index|]
-operator|=
-name|NULL
 expr_stmt|;
 name|data
 operator|.
@@ -400,6 +415,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Create the key. */
 if|if
 condition|(
 name|S_ISCHR
@@ -409,16 +425,11 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|key
+name|bkey
 operator|.
-name|size
+name|type
 operator|=
-sizeof|sizeof
-argument_list|(
-name|sb
-operator|.
-name|st_rdev
-argument_list|)
+name|S_IFCHR
 expr_stmt|;
 elseif|else
 if|if
@@ -430,39 +441,23 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|key
+name|bkey
 operator|.
-name|size
+name|type
 operator|=
-sizeof|sizeof
-argument_list|(
-name|sb
-operator|.
-name|st_rdev
-argument_list|)
-operator|+
-literal|1
+name|S_IFBLK
 expr_stmt|;
 else|else
 continue|continue;
-name|bcopy
-argument_list|(
-operator|&
+name|bkey
+operator|.
+name|dev
+operator|=
 name|sb
 operator|.
 name|st_rdev
-argument_list|,
-name|bkeybuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sb
-operator|.
-name|st_rdev
-argument_list|)
-argument_list|)
 expr_stmt|;
-comment|/*  		 * Nul terminate the name so caller doesn't have to.  		 */
+comment|/* 		 * Create the data; nul terminate the name so caller doesn't 		 * have to. 		 */
 name|bcopy
 argument_list|(
 name|dp
@@ -575,21 +570,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|error
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|n
+parameter_list|)
 name|char
 modifier|*
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|(
 name|void
@@ -614,14 +604,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -639,7 +627,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
