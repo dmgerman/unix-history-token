@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc.c,v 1.7 1996/12/30 15:07:33 peter Exp $"
+literal|"$Id: svc.c,v 1.12 1997/05/28 05:05:23 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +167,8 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|__svc_fdsetsize
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -174,6 +176,8 @@ begin_decl_stmt
 name|fd_set
 modifier|*
 name|__svc_fdset
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -298,6 +302,8 @@ literal|1
 argument_list|,
 name|NFDBITS
 argument_list|)
+operator|*
+name|NFDBITS
 expr_stmt|;
 block|}
 if|if
