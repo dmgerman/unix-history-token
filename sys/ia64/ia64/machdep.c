@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_compat.h"
 end_include
 
@@ -18,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_msgbuf.h"
+file|"opt_kstack_pages.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_acpi.h"
+file|"opt_msgbuf.h"
 end_include
 
 begin_include
