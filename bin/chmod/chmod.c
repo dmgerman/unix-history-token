@@ -507,6 +507,10 @@ block|}
 else|else
 name|fts_options
 operator|=
+name|hflag
+condition|?
+name|FTS_PHYSICAL
+else|:
 name|FTS_LOGICAL
 expr_stmt|;
 if|if
