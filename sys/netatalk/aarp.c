@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_atalk.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1041,7 +1047,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|NETATALKDEBUG
+comment|/* NETATALKDEBUG */
 name|sa
 operator|.
 name|sa_len
@@ -3375,7 +3381,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|NETATALKDEBUG
+comment|/* NETATALKDEBUG */
 name|sa
 operator|.
 name|sa_len
