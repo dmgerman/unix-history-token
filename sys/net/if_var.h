@@ -532,6 +532,7 @@ name|ifprefixhead
 name|if_prefixhead
 decl_stmt|;
 comment|/* list of prefixes per if */
+specifier|const
 name|u_int8_t
 modifier|*
 name|if_broadcastaddr
