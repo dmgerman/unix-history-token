@@ -81,6 +81,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|digi_EPCX_PCI
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|DEV_MODULE
 argument_list|(
 name|digi_EPCX_PCI
