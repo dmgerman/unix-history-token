@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd3.c	3.4 83/11/22"
+literal|"@(#)cmd3.c	3.5 83/11/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +118,19 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|lastselwin
+operator|!=
+literal|0
+condition|)
+name|setselwin
+argument_list|(
+name|lastselwin
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 for|for
 control|(
 name|i
@@ -154,6 +167,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 name|didit
@@ -185,15 +199,19 @@ name|w
 operator|==
 name|selwin
 condition|)
-name|setselwin
-argument_list|(
-operator|(
-expr|struct
-name|ww
-operator|*
-operator|)
+name|selwin
+operator|=
 literal|0
-argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|==
+name|lastselwin
+condition|)
+name|lastselwin
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(

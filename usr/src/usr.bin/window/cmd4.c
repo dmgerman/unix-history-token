@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd4.c	3.4 83/11/22"
+literal|"@(#)cmd4.c	3.5 83/11/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,20 +107,10 @@ name|framewin
 argument_list|)
 expr_stmt|;
 block|}
-name|wwdelete
+name|front
 argument_list|(
 name|w
 argument_list|)
-expr_stmt|;
-name|wwadd
-argument_list|(
-name|w
-argument_list|,
-name|framewin
-argument_list|)
-expr_stmt|;
-name|reframe
-argument_list|()
 expr_stmt|;
 name|wwsetcursor
 argument_list|(

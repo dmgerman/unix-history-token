@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.15 83/11/23"
+literal|"@(#)cmd.c	3.16 83/11/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -249,8 +249,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|wwbell
-argument_list|()
+name|error
+argument_list|(
+literal|"%c: No such window."
+argument_list|,
+name|c
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -290,6 +294,45 @@ condition|)
 name|setselwin
 argument_list|(
 name|w
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTRL
+argument_list|(
+operator|^
+argument_list|)
+case|:
+if|if
+condition|(
+name|lastselwin
+operator|!=
+literal|0
+condition|)
+block|{
+name|setselwin
+argument_list|(
+name|lastselwin
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|checkproc
+argument_list|(
+name|selwin
+argument_list|)
+operator|>=
+literal|0
+condition|)
+name|incmd
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|error
+argument_list|(
+literal|"No previous window."
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1067,18 +1110,14 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-operator|(
-name|selwin
+name|lastselwin
 operator|=
-name|w
-operator|)
-operator|!=
-literal|0
-condition|)
+name|selwin
+expr_stmt|;
 name|front
 argument_list|(
+name|selwin
+operator|=
 name|w
 argument_list|)
 expr_stmt|;
@@ -1086,7 +1125,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * This is all heuristic.  * wwvisible() doesn't work for tinted windows.  * and wwmoveup() doesn't work for transparent windows  * (completely or partially).  * But anything to make it faster.  */
+comment|/*  * wwvisible() doesn't work for tinted windows.  * But anything to make it faster.  */
 end_comment
 
 begin_expr_stmt

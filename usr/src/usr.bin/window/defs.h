@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)defs.h	3.6 83/11/22	  */
+comment|/*  *	@(#)defs.h	3.7 83/11/30	  */
 end_comment
 
 begin_include
@@ -164,6 +164,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* the selected window */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ww
+modifier|*
+name|lastselwin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the last selected window */
 end_comment
 
 begin_decl_stmt
