@@ -797,6 +797,17 @@ end_endif
 begin_define
 define|#
 directive|define
+name|MODINFOMD_SHDR
+value|0x0009
+end_define
+
+begin_comment
+comment|/* section header table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MODINFOMD_NOCOPY
 value|0x8000
 end_define
