@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exp.c	5.14 (Berkeley) %G%"
+literal|"@(#)exp.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3795,7 +3795,10 @@ literal|"%s=%s\t"
 argument_list|,
 name|str
 argument_list|,
+name|vis_str
+argument_list|(
 name|cp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|blkpr

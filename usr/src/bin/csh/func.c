@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.31 (Berkeley) %G%"
+literal|"@(#)func.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1015,7 +1015,7 @@ condition|)
 block|{
 name|setname
 argument_list|(
-name|short2str
+name|vis_str
 argument_list|(
 name|p
 argument_list|)
@@ -1292,7 +1292,7 @@ argument_list|)
 expr_stmt|;
 name|setname
 argument_list|(
-name|short2str
+name|vis_str
 argument_list|(
 name|STRthen
 argument_list|)
@@ -3613,7 +3613,7 @@ name|T_GOTO
 case|:
 name|setname
 argument_list|(
-name|short2str
+name|vis_str
 argument_list|(
 name|Sgoal
 argument_list|)
@@ -4262,7 +4262,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fputc
+name|vis_fputc
 argument_list|(
 name|c
 operator||
@@ -4279,7 +4279,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|fputc
+name|vis_fputc
 argument_list|(
 name|sep
 operator||
@@ -4441,7 +4441,7 @@ name|cshout
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 operator|*
 name|ep

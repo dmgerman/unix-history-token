@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c	5.27 (Berkeley) %G%"
+literal|"@(#)proc.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -894,7 +894,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|fputc
+name|vis_fputc
 argument_list|(
 literal|'\r'
 operator||
@@ -932,7 +932,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|fputc
+name|vis_fputc
 argument_list|(
 literal|'\r'
 operator||
@@ -3692,7 +3692,7 @@ name|cshout
 argument_list|,
 literal|"%s"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|pp
 operator|->
@@ -4911,7 +4911,7 @@ condition|)
 block|{
 name|setname
 argument_list|(
-name|short2str
+name|vis_str
 argument_list|(
 operator|&
 name|v
@@ -5160,7 +5160,7 @@ name|csherr
 argument_list|,
 literal|"%s: Already suspended\n"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|cp
 argument_list|)
@@ -5215,7 +5215,7 @@ name|csherr
 argument_list|,
 literal|"%s: %s\n"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|cp
 argument_list|)

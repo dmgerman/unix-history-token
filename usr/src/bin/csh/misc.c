@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.17 (Berkeley) %G%"
+literal|"@(#)misc.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,7 +353,7 @@ name|fp
 argument_list|,
 literal|"%s"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 operator|*
 name|av
@@ -1728,7 +1728,7 @@ decl_stmt|;
 block|{
 name|setname
 argument_list|(
-name|short2str
+name|vis_str
 argument_list|(
 name|name
 argument_list|)

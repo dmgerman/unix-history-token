@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -160,6 +160,21 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vis_fputc
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|FILE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3386,6 +3401,20 @@ begin_decl_stmt
 name|char
 modifier|*
 name|short2qstr
+name|__P
+argument_list|(
+operator|(
+name|Char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|vis_str
 name|__P
 argument_list|(
 operator|(

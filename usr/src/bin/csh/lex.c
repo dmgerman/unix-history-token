@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.25 (Berkeley) %G%"
+literal|"@(#)lex.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -721,7 +721,7 @@ name|fp
 argument_list|,
 literal|"%s"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|sp
 operator|->
@@ -5835,7 +5835,7 @@ name|seterror
 argument_list|(
 name|ERR_NOEVENT
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|np
 argument_list|)
@@ -6065,7 +6065,7 @@ name|seterror
 argument_list|(
 name|ERR_NOEVENT
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|cp
 argument_list|)

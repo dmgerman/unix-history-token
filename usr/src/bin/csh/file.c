@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	5.20 (Berkeley) %G%"
+literal|"@(#)file.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1408,7 +1408,7 @@ name|cshout
 argument_list|,
 literal|"%s"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|items
 index|[
@@ -1868,7 +1868,7 @@ name|cshout
 argument_list|,
 literal|"%s"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|recognized_part
 argument_list|)
@@ -1906,7 +1906,7 @@ name|cshout
 argument_list|,
 literal|"%s"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|recognized_part
 argument_list|)

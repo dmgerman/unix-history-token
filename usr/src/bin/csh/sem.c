@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sem.c	5.21 (Berkeley) %G%"
+literal|"@(#)sem.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2223,7 +2223,7 @@ condition|)
 block|{
 name|setname
 argument_list|(
-name|short2str
+name|vis_str
 argument_list|(
 name|blk
 index|[

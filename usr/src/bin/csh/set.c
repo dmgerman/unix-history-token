@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)set.c	5.16 (Berkeley) %G%"
+literal|"@(#)set.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2907,7 +2907,7 @@ literal|0
 condition|)
 name|setname
 argument_list|(
-name|short2str
+name|vis_str
 argument_list|(
 operator|*
 name|v

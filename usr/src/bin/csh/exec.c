@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.20 (Berkeley) %G%"
+literal|"@(#)exec.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -482,7 +482,7 @@ condition|)
 block|{
 name|setname
 argument_list|(
-name|short2str
+name|vis_str
 argument_list|(
 name|blk
 index|[
@@ -623,7 +623,7 @@ argument_list|)
 expr_stmt|;
 name|setname
 argument_list|(
-name|short2str
+name|vis_str
 argument_list|(
 name|expath
 argument_list|)
@@ -973,7 +973,7 @@ condition|)
 block|{
 name|setname
 argument_list|(
-name|short2str
+name|vis_str
 argument_list|(
 name|expath
 argument_list|)
@@ -2920,7 +2920,7 @@ name|cshout
 argument_list|,
 literal|"%s: \t aliased to "
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 operator|*
 name|v
@@ -3234,7 +3234,7 @@ name|cshout
 argument_list|,
 literal|"%s: shell built-in command.\n"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|sp
 operator|->
@@ -3470,7 +3470,7 @@ name|csherr
 argument_list|,
 literal|"%s: Command not found.\n"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|sp
 operator|->

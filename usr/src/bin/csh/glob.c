@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.31 (Berkeley) %G%"
+literal|"@(#)glob.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -485,7 +485,7 @@ name|stderror
 argument_list|(
 name|ERR_UNKUSER
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|gstart
 argument_list|)
@@ -1711,7 +1711,7 @@ name|G_ERROR
 case|:
 name|setname
 argument_list|(
-name|short2str
+name|vis_str
 argument_list|(
 name|str
 argument_list|)
@@ -1946,7 +1946,11 @@ name|GLOB_ABEND
 case|:
 name|setname
 argument_list|(
-name|ptr
+name|vis_str
+argument_list|(
+operator|*
+name|vl
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|stderror
@@ -2302,7 +2306,7 @@ condition|)
 block|{
 name|setname
 argument_list|(
-name|short2str
+name|vis_str
 argument_list|(
 name|str
 argument_list|)

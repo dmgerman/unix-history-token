@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.16 (Berkeley) %G%"
+literal|"@(#)dir.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,18 +324,6 @@ argument_list|(
 name|hp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|csherr
-argument_list|,
-name|emsg
-argument_list|,
-name|tcp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|chdir
@@ -354,6 +342,21 @@ else|else
 name|cp
 operator|=
 name|hp
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|csherr
+argument_list|,
+name|emsg
+argument_list|,
+name|vis_str
+argument_list|(
+name|hp
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -810,7 +813,7 @@ name|stderror
 argument_list|(
 name|ERR_DIRUS
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 operator|*
 operator|*
@@ -1092,7 +1095,7 @@ literal|"~%s%c"
 else|:
 literal|"%s%c"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|s
 argument_list|)
@@ -1190,7 +1193,7 @@ name|cshout
 argument_list|,
 literal|"~%s"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|dir
 operator|+
@@ -1211,7 +1214,7 @@ name|cshout
 argument_list|,
 literal|"%s"
 argument_list|,
-name|short2str
+name|vis_str
 argument_list|(
 name|dir
 argument_list|)
