@@ -29,35 +29,35 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_comment
-comment|/* static char sccsid[] = "@(#)printjob.c	8.7 (Berkeley) 5/10/95"; */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_endif
+unit|static char sccsid[] = "@(#)printjob.c	8.7 (Berkeley) 5/10/95";
 endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"lp.cdefs.h"
+end_include
+
 begin_comment
-comment|/* not lint */
+comment|/* A cross-platform version of<sys/cdefs.h> */
 end_comment
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * printjob -- print jobs in the queue.  *  *	NOTE: the lock file is used to pass information to lpq and lprm.  *	it does not need to be removed because file locks are dynamic.  */
