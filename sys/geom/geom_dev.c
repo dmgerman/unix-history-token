@@ -789,9 +789,6 @@ expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|g_waitidle
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1075,9 +1072,6 @@ argument_list|)
 expr_stmt|;
 block|}
 name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-name|g_waitidle
 argument_list|()
 expr_stmt|;
 return|return
@@ -1457,9 +1451,6 @@ name|ENOIOCTL
 expr_stmt|;
 block|}
 block|}
-name|g_waitidle
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|error

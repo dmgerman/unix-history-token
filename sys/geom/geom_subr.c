@@ -952,9 +952,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|g_waitidle
-argument_list|()
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|LIST_EMPTY
