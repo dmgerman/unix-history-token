@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.19 (Berkeley) %G%"
+literal|"@(#)ps.c	4.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,7 +81,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/pte.h>
+file|<machine/pte.h>
 end_include
 
 begin_include

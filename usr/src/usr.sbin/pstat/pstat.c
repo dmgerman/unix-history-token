@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#) (Berkeley) 82/12/13"
+literal|"@(#) (Berkeley) 82/12/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/pte.h>
+file|<machine/pte.h>
 end_include
 
 begin_include

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)analyze.c	4.4 (Berkeley) %G%"
+literal|"@(#)analyze.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/pte.h>
+file|<machine/pte.h>
 end_include
 
 begin_include
