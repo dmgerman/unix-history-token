@@ -7,6 +7,10 @@ begin_comment
 comment|/* $Id: com_right.h,v 1.8 1998/02/17 21:19:43 bg Exp $ */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -18,6 +22,12 @@ define|#
 directive|define
 name|__COM_RIGHT_H__
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_struct
 struct|struct
@@ -67,54 +77,63 @@ name|_et_list
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|const
 name|char
 modifier|*
 name|com_right
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|et_list
-modifier|*
+operator|*
 name|list
-parameter_list|,
+operator|,
 name|long
 name|code
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|initialize_error_table_r
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|et_list
-modifier|*
-modifier|*
-parameter_list|,
+operator|*
+operator|*
+operator|,
 specifier|const
 name|char
-modifier|*
-modifier|*
-parameter_list|,
+operator|*
+operator|*
+operator|,
 name|int
-parameter_list|,
+operator|,
 name|long
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|free_error_table
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|et_list
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
