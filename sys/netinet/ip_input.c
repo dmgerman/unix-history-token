@@ -8264,7 +8264,6 @@ name|caddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXXMAC: Eventually, we may have an explict labeling 		 * point here. 		 */
 block|}
 ifdef|#
 directive|ifdef
