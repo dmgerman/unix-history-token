@@ -729,9 +729,6 @@ expr_stmt|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
-name|g_silence
-argument_list|()
-expr_stmt|;
 name|r
 operator|=
 name|flags
@@ -900,9 +897,6 @@ name|DROP_GIANT
 argument_list|()
 expr_stmt|;
 name|g_topology_lock
-argument_list|()
-expr_stmt|;
-name|g_silence
 argument_list|()
 expr_stmt|;
 name|r
