@@ -1,16 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOID
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -18,27 +6,9 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)zdump.c	7.28"
+literal|"@(#)zdump.c	7.31"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined NOID */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined lint */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -973,6 +943,44 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_GETTEXT - 0 */
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|argc
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"--version"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|errx
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|,
+literal|"%s"
+argument_list|,
+name|elsieid
+argument_list|)
+expr_stmt|;
+block|}
 name|vflag
 operator|=
 literal|0
@@ -1730,7 +1738,7 @@ name|stderr
 argument_list|,
 name|_
 argument_list|(
-literal|"usage: zdump [-v] [-c cutoff] zonename ...\n"
+literal|"usage: zdump [--version] [-v] [-c cutoff] zonename ...\n"
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -46,7 +46,7 @@ name|char
 name|privatehid
 index|[]
 init|=
-literal|"@(#)private.h	7.48"
+literal|"@(#)private.h	7.53"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,6 +136,50 @@ end_endif
 
 begin_comment
 comment|/* !defined HAVE_SYMLINK */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_STAT_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_STAT_H
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined HAVE_SYS_STAT_H */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_WAIT_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_WAIT_H
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined HAVE_SYS_WAIT_H */
 end_comment
 
 begin_ifndef
@@ -235,6 +279,33 @@ end_endif
 
 begin_comment
 comment|/* HAVE_GETTEXT - 0 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_SYS_WAIT_H
+operator|-
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_comment
+comment|/* for WIFEXITED and WEXITSTATUS */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_WAIT_H - 0 */
 end_comment
 
 begin_if
@@ -846,7 +917,7 @@ comment|/* !defined TZ_DOMAIN */
 end_comment
 
 begin_comment
-comment|/* ** UNIX was a registered trademark of UNIX System Laboratories in 1993. */
+comment|/* ** UNIX was a registered trademark of The Open Group in 2003. */
 end_comment
 
 begin_endif
