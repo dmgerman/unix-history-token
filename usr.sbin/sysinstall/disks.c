@@ -1810,12 +1810,6 @@ name|defined
 argument_list|(
 name|__amd64__
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
 name|rv
 operator|=
 literal|1
@@ -2863,9 +2857,6 @@ name|clear
 argument_list|()
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|__ia64__
 case|case
 literal|'|'
 case|:
@@ -2914,8 +2905,6 @@ name|clear
 argument_list|()
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'\033'
 case|:
@@ -3844,11 +3833,6 @@ directive|if
 name|defined
 argument_list|(
 name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
 argument_list|)
 operator|||
 name|defined
