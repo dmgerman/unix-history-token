@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.113 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.114 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1304,9 +1304,9 @@ operator|->
 name|i_flags
 operator|&
 operator|(
-name|SYS_IMMUTABLE
+name|SF_IMMUTABLE
 operator||
-name|SYS_APPEND
+name|SF_APPEND
 operator|)
 operator|)
 operator|&&
@@ -1337,9 +1337,9 @@ operator|->
 name|i_flags
 operator|&
 operator|(
-name|SYS_IMMUTABLE
+name|SF_IMMUTABLE
 operator||
-name|SYS_APPEND
+name|SF_APPEND
 operator|)
 condition|)
 return|return

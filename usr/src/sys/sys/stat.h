@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -652,7 +652,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NODUMP
+name|UF_NODUMP
 value|0x00000001
 end_define
 
@@ -663,7 +663,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USR_IMMUTABLE
+name|UF_IMMUTABLE
 value|0x00000002
 end_define
 
@@ -674,7 +674,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USR_APPEND
+name|UF_APPEND
 value|0x00000004
 end_define
 
@@ -689,7 +689,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ARCHIVED
+name|SF_ARCHIVED
 value|0x00010000
 end_define
 
@@ -700,7 +700,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYS_IMMUTABLE
+name|SF_IMMUTABLE
 value|0x00020000
 end_define
 
@@ -711,13 +711,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYS_APPEND
+name|SF_APPEND
 value|0x00040000
 end_define
 
 begin_comment
 comment|/* writes to file may only append */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_comment
 comment|/*  * Shorthand abbreviations of above.  */
@@ -726,16 +732,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IMMUTABLE
-value|(USR_IMMUTABLE | SYS_IMMUTABLE)
+name|APPEND
+value|(UF_APPEND | SF_APPEND)
 end_define
 
 begin_define
 define|#
 directive|define
-name|APPEND
-value|(USR_APPEND | SYS_APPEND)
+name|IMMUTABLE
+value|(UF_IMMUTABLE | SF_IMMUTABLE)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
