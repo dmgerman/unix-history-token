@@ -133,17 +133,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|pflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* show given protocol */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|rflag
 decl_stmt|;
 end_decl_stmt

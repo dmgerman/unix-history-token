@@ -889,15 +889,8 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|(
 operator|!
-name|sflag
-operator|||
-name|iflag
-operator|)
-operator|&&
-operator|!
-name|pflag
+name|pfunc
 condition|)
 block|{
 name|printf
