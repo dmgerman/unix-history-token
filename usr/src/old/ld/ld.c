@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.7 (Berkeley) %G%"
+literal|"@(#)ld.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9023,7 +9023,7 @@ name|archdr
 operator|.
 name|ar_name
 argument_list|,
-literal|"__.SYMDEF"
+name|RANLIBMAG
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ranlib.c	5.3 (Berkeley) %G%"
+literal|"@(#)ranlib.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,7 +185,7 @@ name|char
 name|tempnm
 index|[]
 init|=
-literal|"__.SYMDEF"
+name|RANLIBMAG
 decl_stmt|;
 end_decl_stmt
 
