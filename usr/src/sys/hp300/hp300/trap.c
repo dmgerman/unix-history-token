@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.28 89/09/25$  *  *	@(#)trap.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.28 89/09/25$  *  *	@(#)trap.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2060,12 +2060,6 @@ name|u
 operator|.
 name|u_procp
 decl_stmt|;
-specifier|register
-name|struct
-name|user
-modifier|*
-name|up
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -2100,12 +2094,6 @@ argument_list|()
 decl_stmt|;
 endif|#
 directive|endif
-name|up
-operator|=
-operator|&
-name|u
-expr_stmt|;
-comment|/* this should probably be deleted */
 name|cnt
 operator|.
 name|v_syscall
@@ -2113,8 +2101,8 @@ operator|++
 expr_stmt|;
 name|syst
 operator|=
-name|up
-operator|->
+name|u
+operator|.
 name|u_ru
 operator|.
 name|ru_stime
@@ -2134,16 +2122,16 @@ argument_list|(
 literal|"syscall"
 argument_list|)
 expr_stmt|;
-name|up
-operator|->
+name|u
+operator|.
 name|u_ar0
 operator|=
 name|frame
 operator|.
 name|f_regs
 expr_stmt|;
-name|up
-operator|->
+name|u
+operator|.
 name|u_error
 operator|=
 literal|0
@@ -2270,8 +2258,8 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|up
-operator|->
+name|u
+operator|.
 name|u_arg
 argument_list|,
 operator|(
@@ -2379,16 +2367,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|up
-operator|->
+name|u
+operator|.
 name|u_r
 operator|.
 name|r_val1
 operator|=
 literal|0
 expr_stmt|;
-name|up
-operator|->
+name|u
+operator|.
 name|u_r
 operator|.
 name|r_val2
@@ -2437,7 +2425,8 @@ name|sy_call
 operator|)
 operator|)
 operator|(
-name|up
+operator|&
+name|u
 operator|)
 expr_stmt|;
 name|error
@@ -2511,40 +2500,6 @@ operator||=
 name|PSL_C
 expr_stmt|;
 comment|/* carry bit */
-ifdef|#
-directive|ifdef
-name|HPUXCOMPAT
-comment|/* there are some HPUX calls where we change u_ap */
-comment|/* is this still needed? */
-if|if
-condition|(
-name|up
-operator|->
-name|u_ap
-operator|!=
-name|up
-operator|->
-name|u_arg
-condition|)
-block|{
-name|up
-operator|->
-name|u_ap
-operator|=
-name|up
-operator|->
-name|u_arg
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"syscall(%d): u_ap changed\n"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -2555,8 +2510,8 @@ index|[
 name|D0
 index|]
 operator|=
-name|up
-operator|->
+name|u
+operator|.
 name|u_r
 operator|.
 name|r_val1
@@ -2568,8 +2523,8 @@ index|[
 name|D1
 index|]
 operator|=
-name|up
-operator|->
+name|u
+operator|.
 name|u_r
 operator|.
 name|r_val2
@@ -2590,53 +2545,34 @@ label|:
 comment|/* 	 * Reinitialize proc pointer `p' as it may be different 	 * if this is a child returning from fork syscall. 	 */
 name|p
 operator|=
-name|up
-operator|->
+name|u
+operator|.
 name|u_procp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|I_DONT_UNDERSTAND
-comment|/* XXX XXX */
-comment|/* 	 * The check for sigreturn (code 103) ensures that we don't 	 * attempt to set up a call to a signal handler (sendsig) before 	 * we have cleaned up the stack from the last call (sigreturn). 	 * Allowing this seems to lock up the machine in certain scenarios. 	 * What should really be done is to clean up the signal handling 	 * so that this is not a problem. 	 */
+comment|/* 	 * XXX the check for sigreturn ensures that we don't 	 * attempt to set up a call to a signal handler (sendsig) before 	 * we have cleaned up the stack from the last call (sigreturn). 	 * Allowing this seems to lock up the machine in certain scenarios. 	 * What should really be done is to clean up the signal handling 	 * so that this is not a problem. 	 */
+include|#
+directive|include
+file|"syscall.h"
 if|if
 condition|(
 name|code
 operator|!=
-literal|103
+name|SYS_sigreturn
 operator|&&
 operator|(
-name|p
-operator|->
-name|p_cursig
-operator|||
-name|ISSIG
-argument_list|(
-name|p
-argument_list|)
-operator|)
-condition|)
-name|psig
-argument_list|()
-expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
 name|i
 operator|=
 name|CURSIG
 argument_list|(
 name|p
 argument_list|)
+operator|)
 condition|)
 name|psig
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|p
 operator|->
 name|p_pri
@@ -2662,8 +2598,8 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|up
-operator|->
+name|u
+operator|.
 name|u_ru
 operator|.
 name|ru_nivcsw
@@ -2689,8 +2625,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|up
-operator|->
+name|u
+operator|.
 name|u_prof
 operator|.
 name|pr_scale
@@ -2705,8 +2641,8 @@ modifier|*
 name|tv
 init|=
 operator|&
-name|up
-operator|->
+name|u
+operator|.
 name|u_ru
 operator|.
 name|ru_stime
@@ -2764,8 +2700,8 @@ operator|.
 name|f_pc
 argument_list|,
 operator|&
-name|up
-operator|->
+name|u
+operator|.
 name|u_prof
 argument_list|,
 name|ticks
@@ -2782,8 +2718,8 @@ operator|.
 name|f_pc
 argument_list|,
 operator|&
-name|up
-operator|->
+name|u
+operator|.
 name|u_prof
 argument_list|,
 name|ticks
