@@ -5726,6 +5726,29 @@ name|DIST_LOCAL
 block|}
 block|,
 block|{
+literal|" perl"
+block|,
+literal|"Perl"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_PERL
+block|}
+block|,
+block|{
 literal|" XFree86"
 block|,
 literal|"The XFree86 distribution"
