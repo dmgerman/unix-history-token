@@ -578,9 +578,11 @@ name|bootinfo
 operator|*
 operator|)
 operator|(
+operator|(
 name|curkva
 operator|+
 literal|8
+operator|)
 operator|&
 literal|0x7
 operator|)
@@ -621,6 +623,9 @@ argument_list|(
 operator|&
 name|bi
 argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
 name|bip
 argument_list|,
 sizeof|sizeof
@@ -1208,7 +1213,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"kernelpa=0x%x\n"
+literal|"kernelpa=0x%lx\n"
 argument_list|,
 name|curkpg
 argument_list|)
@@ -1375,7 +1380,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"tag=0x%lx pa=0x%lx va=0x%lx ctx=%d\n"
+literal|"tag=0x%lx pa=0x%lx va=0x%lx ctx=%ld\n"
 argument_list|,
 name|tag
 argument_list|,
