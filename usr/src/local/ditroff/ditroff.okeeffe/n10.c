@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n10.c	1.1	(CWI)	86/08/14"
+literal|"@(#)n10.c	1.2	(CWI)	86/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -926,6 +926,26 @@ argument_list|,
 name|t
 operator|.
 name|left
+operator|=
+name|p
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|skipstr
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|getstr
+argument_list|(
+name|p
+argument_list|,
+name|t
+operator|.
+name|eject
 operator|=
 name|p
 argument_list|)

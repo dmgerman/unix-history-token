@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n7.c	2.3 (CWI) 86/08/14"
+literal|"@(#)n7.c	2.4 (CWI) 86/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -2174,6 +2174,32 @@ name|val
 argument_list|)
 expr_stmt|;
 comment|/* supposedly in a clean state so can pause */
+ifdef|#
+directive|ifdef
+name|NROFF
+if|if
+condition|(
+name|print
+operator|&&
+operator|*
+name|t
+operator|.
+name|eject
+condition|)
+block|{
+name|oputs
+argument_list|(
+name|t
+operator|.
+name|eject
+argument_list|)
+expr_stmt|;
+name|flusho
+argument_list|()
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|stop

@@ -137,6 +137,11 @@ decl_stmt|;
 comment|/* ditto */
 name|char
 modifier|*
+name|eject
+decl_stmt|;
+comment|/* sequence to eject page */
+name|char
+modifier|*
 name|codetab
 index|[
 name|NROFFCHARS
