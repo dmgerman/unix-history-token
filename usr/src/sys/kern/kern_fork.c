@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -105,8 +105,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|args
+name|void
 modifier|*
 name|uap
 decl_stmt|;
@@ -160,8 +159,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|args
+name|void
 modifier|*
 name|uap
 decl_stmt|;
@@ -937,15 +935,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|p2
-operator|->
-name|p_regs
-operator|=
-name|p1
-operator|->
-name|p_regs
-expr_stmt|;
-comment|/* XXX move this */
 if|#
 directive|if
 name|defined
@@ -974,7 +963,7 @@ name|p_flag
 operator||=
 name|SKEEP
 expr_stmt|;
-comment|/* 	 * Set return values for child before vm_fork, 	 * so they can be copied to child stack. 	 * We return parent pid, and mark as child in retval[1]. 	 */
+comment|/* 	 * Set return values for child before vm_fork, 	 * so they can be copied to child stack. 	 * We return parent pid, and mark as child in retval[1]. 	 * NOTE: the kernel stack may be at a different location in the child 	 * process, and thus addresses of automatic variables (including retval) 	 * may be invalid after vm_fork returns in the child process. 	 */
 name|retval
 index|[
 literal|0
@@ -1068,7 +1057,7 @@ operator|&=
 operator|~
 name|SKEEP
 expr_stmt|;
-comment|/* 	 * XXX preserve synchronization semantics of vfork 	 * If waiting for child to exec or exit, set SPPWAIT 	 * on child, and sleep on our proc (in case of exit). 	 */
+comment|/* 	 * Preserve synchronization semantics of vfork. 	 * If waiting for child to exec or exit, set SPPWAIT 	 * on child, and sleep on our proc (in case of exit). 	 */
 if|if
 condition|(
 name|isvfork
