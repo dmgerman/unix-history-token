@@ -205,6 +205,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"mca.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NMCA
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/mca_machdep.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* XXX should be in suitable include files */
 end_comment
@@ -848,6 +873,21 @@ argument_list|(
 literal|0x461
 argument_list|)
 decl_stmt|;
+if|#
+directive|if
+name|NMCA
+operator|>
+literal|0
+if|if
+condition|(
+name|MCA_system
+operator|&&
+name|mca_bus_nmi
+argument_list|()
+condition|)
+return|return;
+endif|#
+directive|endif
 if|if
 condition|(
 name|isa_port
@@ -972,6 +1012,26 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* initialize 8259's */
+if|#
+directive|if
+name|NMCA
+operator|>
+literal|0
+if|if
+condition|(
+name|MCA_system
+condition|)
+name|outb
+argument_list|(
+name|IO_ICU1
+argument_list|,
+literal|0x19
+argument_list|)
+expr_stmt|;
+comment|/* reset; program device, four bytes */
+else|else
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|IO_ICU1
@@ -1103,6 +1163,26 @@ comment|/* pri order 3-7, 0-2 (com2 first) */
 endif|#
 directive|endif
 comment|/* !PC98 */
+if|#
+directive|if
+name|NMCA
+operator|>
+literal|0
+if|if
+condition|(
+name|MCA_system
+condition|)
+name|outb
+argument_list|(
+name|IO_ICU2
+argument_list|,
+literal|0x19
+argument_list|)
+expr_stmt|;
+comment|/* reset; program device, four bytes */
+else|else
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|IO_ICU2
