@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cp.c	4.11 (Berkeley) %G%"
+literal|"@(#)cp.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -533,6 +533,12 @@ operator|==
 name|S_IFDIR
 condition|)
 block|{
+name|int
+name|fixmode
+init|=
+literal|0
+decl_stmt|;
+comment|/* cleanup mode after rcopy */
 operator|(
 name|void
 operator|)
@@ -560,11 +566,15 @@ name|mkdir
 argument_list|(
 name|to
 argument_list|,
+operator|(
 name|stfrom
 operator|.
 name|st_mode
 operator|&
 literal|07777
+operator|)
+operator||
+literal|0700
 argument_list|)
 operator|<
 literal|0
@@ -581,6 +591,10 @@ literal|1
 operator|)
 return|;
 block|}
+name|fixmode
+operator|=
+literal|1
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -616,6 +630,23 @@ if|if
 condition|(
 name|pflag
 condition|)
+name|fixmode
+operator|=
+literal|1
+expr_stmt|;
+name|n
+operator|=
+name|rcopy
+argument_list|(
+name|from
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fixmode
+condition|)
 operator|(
 name|void
 operator|)
@@ -632,12 +663,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|rcopy
-argument_list|(
-name|from
-argument_list|,
-name|to
-argument_list|)
+name|n
 operator|)
 return|;
 block|}
