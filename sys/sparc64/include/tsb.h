@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|TSB_PAGES_SHIFT
-value|(1)
+value|(2)
 end_define
 
 begin_define
