@@ -450,7 +450,7 @@ block|}
 else|else
 name|ops
 operator||=
-name|pid
+name|pidset
 condition|?
 name|KTROP_CLEAR
 else|:
@@ -796,9 +796,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: ktrace [-aCcid] [-f trfile] [-g pgid] [-p pid] [-t [cnisuv]"
+literal|"usage: ktrace [-aCcdi] [-f trfile] [-g pgrp | -p pid] [-t cnisuw]"
 argument_list|,
-literal|"       ktrace [-aCcid] [-f trfile] [-t [cnisuw] command"
+literal|"       ktrace [-adi] [-f trfile] [-t cnisuw] command"
 argument_list|)
 expr_stmt|;
 name|exit
