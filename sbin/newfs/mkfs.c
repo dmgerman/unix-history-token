@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mkfs.c,v 1.24 1998/07/15 06:28:04 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7896,7 +7896,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-empty_stmt|;
 return|return
 operator|(
 name|NULL
