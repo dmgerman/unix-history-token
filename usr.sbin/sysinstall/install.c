@@ -3891,26 +3891,16 @@ condition|(
 operator|!
 name|Fake
 operator|&&
-operator|(
-operator|!
-name|MakeDevChunk
-argument_list|(
-name|swapdev
-argument_list|,
-literal|"/dev"
-argument_list|)
-operator|||
 operator|!
 name|file_readable
 argument_list|(
 name|dname
 argument_list|)
-operator|)
 condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to make device node for %s in /dev!\n"
+literal|"Unable to find device node for %s in /dev!\n"
 literal|"The creation of filesystems will be aborted."
 argument_list|,
 name|dname
@@ -3989,21 +3979,11 @@ condition|(
 operator|!
 name|Fake
 operator|&&
-operator|(
-operator|!
-name|MakeDevChunk
-argument_list|(
-name|rootdev
-argument_list|,
-literal|"/dev"
-argument_list|)
-operator|||
 operator|!
 name|file_readable
 argument_list|(
 name|dname
 argument_list|)
-operator|)
 condition|)
 block|{
 name|msgConfirm
