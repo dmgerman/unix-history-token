@@ -2977,9 +2977,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|IIDP1_EDGE8N
+value|0x01
+end_define
+
+begin_comment
+comment|/* US-III */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IIDP1_EDGE8L
 value|0x02
 end_define
+
+begin_define
+define|#
+directive|define
+name|IIDP1_EDGE8LN
+value|0x03
+end_define
+
+begin_comment
+comment|/* US-III */
+end_comment
 
 begin_define
 define|#
@@ -2991,9 +3013,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|IIDP1_EDGE16N
+value|0x05
+end_define
+
+begin_comment
+comment|/* US-III */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IIDP1_EDGE16L
 value|0x06
 end_define
+
+begin_define
+define|#
+directive|define
+name|IIDP1_EDGE16LN
+value|0x07
+end_define
+
+begin_comment
+comment|/* US-III */
+end_comment
 
 begin_define
 define|#
@@ -3005,9 +3049,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|IIDP1_EDGE32N
+value|0x09
+end_define
+
+begin_comment
+comment|/* US-III */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IIDP1_EDGE32L
 value|0x0a
 end_define
+
+begin_define
+define|#
+directive|define
+name|IIDP1_EDGE32LN
+value|0x0b
+end_define
+
+begin_comment
+comment|/* US-III */
+end_comment
 
 begin_define
 define|#
@@ -3036,6 +3102,17 @@ directive|define
 name|IIDP1_ALIGNADDRESS
 value|0x18
 end_define
+
+begin_define
+define|#
+directive|define
+name|IIDP1_BMASK
+value|0x19
+end_define
+
+begin_comment
+comment|/* US-III */
+end_comment
 
 begin_define
 define|#
@@ -3190,6 +3267,17 @@ directive|define
 name|IIDP1_FPMERGE
 value|0x4b
 end_define
+
+begin_define
+define|#
+directive|define
+name|IIDP1_BSHUFFLE
+value|0x4c
+end_define
+
+begin_comment
+comment|/* US-III */
+end_comment
 
 begin_define
 define|#
@@ -3484,6 +3572,17 @@ directive|define
 name|IIDP1_SHUTDOWN
 value|0x80
 end_define
+
+begin_define
+define|#
+directive|define
+name|IIDP1_SIAM
+value|0x81
+end_define
+
+begin_comment
+comment|/* US-III */
+end_comment
 
 begin_comment
 comment|/*  * Instruction modifiers  */
