@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.21 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -927,6 +927,13 @@ name|FALSE
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_SENDRECEIPT
 expr_stmt|;
 block|}
 comment|/* 	**  Arrange to send error messages if there are fatal errors. 	*/

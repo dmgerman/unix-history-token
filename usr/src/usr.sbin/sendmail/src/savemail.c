@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.20.1.1 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2348,6 +2348,8 @@ operator|!
 name|bitset
 argument_list|(
 name|EF_FATALERRS
+operator||
+name|EF_SENDRECEIPT
 argument_list|,
 name|e
 operator|->
