@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defines.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defines.h	5.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * defines.h  *  * Global definitions for the first pass of the f77 compiler, Unix 4.3 BSD.  *  * University of Utah CS Dept modification history:  *  * $Log:	defines.h,v $  * Revision 5.2  85/08/10  05:11:20  donn  * Added comment header; added Jerry Berkman's changes to delete INTRCNST  * and to ifdef 66 code.  *   */
 end_comment
 
 begin_define
@@ -982,13 +986,6 @@ name|INTRBOOL
 value|6
 end_define
 
-begin_define
-define|#
-directive|define
-name|INTRCNST
-value|7
-end_define
-
 begin_comment
 comment|/* I/O statement codes */
 end_comment
@@ -1297,6 +1294,12 @@ parameter_list|)
 value|mkintcon( (ftnint)(z) )
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ONLY66
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1316,6 +1319,34 @@ name|s
 parameter_list|)
 value|if(noextflag) errext(s)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NO66
+parameter_list|(
+name|s
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOEXT
+parameter_list|(
+name|s
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* round a up to a multiple of b */
