@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.17 1995/06/11 19:31:37 rgrimes Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.18 1995/06/28 07:06:48 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -3726,7 +3726,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_link_args
-comment|/* { 		struct vnode *a_vp; 		struct vnode *a_tdvp; 		struct componentname *a_cnp; 	} */
+comment|/* { 		struct vnode *a_tdvp; 		struct vnode *a_vp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
