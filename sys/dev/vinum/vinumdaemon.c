@@ -4,7 +4,7 @@ comment|/* daemon.c: kernel part of Vinum daemon */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumdaemon.c,v 1.3 1999/01/18 04:32:50 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumdaemon.c,v 1.4 1999/03/16 03:40:59 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -165,8 +165,10 @@ name|daemon_options
 operator|&
 name|daemon_verbose
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinumd: abdicating\n"
 argument_list|)
 expr_stmt|;
@@ -244,8 +246,10 @@ name|info
 operator|.
 name|rq
 decl_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"vinumd: recovering I/O request: %x\n%s dev 0x%x, offset 0x%x, length %ld\n"
 argument_list|,
 operator|(
@@ -322,23 +326,41 @@ comment|/* or the next isn't the same */
 if|if
 condition|(
 operator|(
+operator|(
 name|daemon_options
 operator|&
 name|daemon_noupdate
 operator|)
 operator|==
 literal|0
+operator|)
+comment|/* we're allowed to do it */
+operator|&&
+operator|(
+operator|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_READING_CONFIG
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
-comment|/* we can do it */
+comment|/* and we're not building the config now */
+comment|/* 			   * We obviously don't want to save a 			   * partial configuration.  Less obviously, 			   * we don't need to do anything if we're 			   * asked to write the config when we're 			   * building it up, because we save it at 			   * the end. 			 */
 if|if
 condition|(
 name|daemon_options
 operator|&
 name|daemon_verbose
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinumd: saving config\n"
 argument_list|)
 expr_stmt|;
@@ -359,8 +381,10 @@ name|daemon_options
 operator|&
 name|daemon_verbose
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinumd: stopping\n"
 argument_list|)
 expr_stmt|;
@@ -369,12 +393,45 @@ operator||=
 name|daemon_stopped
 expr_stmt|;
 comment|/* note that we've stopped */
-name|wakeup
+name|Free
 argument_list|(
-name|vinum_daemon
+name|request
 argument_list|)
 expr_stmt|;
-comment|/* in case somebody's waiting for us to stop */
+while|while
+condition|(
+name|daemonq
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* backed up requests, */
+name|request
+operator|=
+name|daemonq
+expr_stmt|;
+comment|/* get the request */
+name|daemonq
+operator|=
+name|daemonq
+operator|->
+name|next
+expr_stmt|;
+comment|/* and detach it */
+name|Free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+comment|/* then free it */
+block|}
+name|wakeup
+argument_list|(
+operator|&
+name|vinumclose
+argument_list|)
+expr_stmt|;
+comment|/* and wake any waiting vinum(8)s */
 return|return;
 case|case
 name|daemonrq_ping
@@ -386,8 +443,10 @@ name|daemon_options
 operator|&
 name|daemon_verbose
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinumd: ping reply\n"
 argument_list|)
 expr_stmt|;
@@ -410,18 +469,15 @@ case|:
 comment|/* revive a subdisk */
 comment|/* XXX */
 default|default:
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"Invalid request\n"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|Free
-argument_list|(
-name|request
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -576,33 +632,26 @@ block|{
 name|int
 name|result
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
+if|if
+condition|(
+name|daemonpid
+operator|!=
 literal|0
-init|;
-name|i
-operator|<
-literal|2
-condition|;
-name|i
-operator|++
-control|)
+condition|)
 block|{
-comment|/* try twice */
+comment|/* we think we have a daemon, */
 name|queue_daemon_request
 argument_list|(
 name|daemonrq_ping
 argument_list|,
+operator|(
+expr|union
+name|daemoninfo
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* queue a ping */
-do|do
 name|result
 operator|=
 name|tsleep
@@ -612,27 +661,25 @@ name|vinum_finddaemon
 argument_list|,
 name|PUSER
 argument_list|,
-literal|"recolte"
+literal|"reap"
 argument_list|,
-literal|20
+literal|2
 operator|*
 name|hz
 argument_list|)
 expr_stmt|;
-do|while
-condition|(
-name|result
-operator|==
-name|ERESTART
-condition|)
-do|;
-comment|/* let it finish */
-block|}
 if|if
 condition|(
 name|result
+operator|==
+literal|0
 condition|)
-comment|/* will be EWOULDBLOCK or EINTR */
+comment|/* yup, the daemon's up and running */
+return|return
+literal|0
+return|;
+block|}
+comment|/* no daemon, or we couldn't talk to it: start it */
 name|vinum_daemon
 argument_list|()
 expr_stmt|;

@@ -1,12 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.23 1999/01/15 05:03:15 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.24 1999/03/19 05:35:25 grog Exp grog $  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|STATIC
+value|static
 end_define
 
 begin_comment
@@ -58,6 +59,26 @@ name|int
 name|debug
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern total_malloced;
+end_extern
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|malloccount
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mc
+name|malloced
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -137,34 +158,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|STATIC
-name|void
-name|vinumgetdisklabel
-parameter_list|(
-name|dev_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vinum_inactive
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|free_vinum
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -194,41 +187,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Why aren't these declared anywhere? XXX */
-end_comment
-
-begin_function_decl
-name|int
-name|setjmp
-parameter_list|(
-name|jmp_buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|longjmp
-parameter_list|(
-name|jmp_buf
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|jmp_buf
-name|command_fail
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* return here if config fails */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|_vinum_conf
@@ -239,15 +197,6 @@ end_decl_stmt
 begin_comment
 comment|/* configuration information */
 end_comment
-
-begin_decl_stmt
-name|STATIC
-name|int
-name|vinum_devsw_installed
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Called by main() during pseudo-device attachment.  All we need  * to do is allocate enough space for devices to be configured later, and  * add devsw entries.  */
@@ -262,25 +211,6 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-comment|/* pointer to temporary buffer */
-name|struct
-name|_ioctl_reply
-modifier|*
-name|ioctl_reply
-decl_stmt|;
-comment|/* struct to return */
-name|struct
-name|uio
-name|uio
-decl_stmt|;
-name|struct
-name|iovec
-name|iovec
-decl_stmt|;
 comment|/* modload should prevent multiple loads, so this is worth a panic */
 if|if
 condition|(
@@ -299,8 +229,10 @@ argument_list|(
 literal|"vinum: already loaded"
 argument_list|)
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: loaded\n"
 argument_list|)
 expr_stmt|;
@@ -338,90 +270,6 @@ directive|error
 error|DEVFS not finished yet
 endif|#
 directive|endif
-name|uio
-operator|.
-name|uio_iov
-operator|=
-operator|&
-name|iovec
-expr_stmt|;
-name|uio
-operator|.
-name|uio_iovcnt
-operator|=
-literal|1
-expr_stmt|;
-comment|/* just one buffer */
-name|uio
-operator|.
-name|uio_offset
-operator|=
-literal|0
-expr_stmt|;
-comment|/* start at the beginning */
-name|uio
-operator|.
-name|uio_resid
-operator|=
-literal|512
-expr_stmt|;
-comment|/* one sector */
-name|uio
-operator|.
-name|uio_segflg
-operator|=
-name|UIO_SYSSPACE
-expr_stmt|;
-comment|/* we're in system space */
-name|uio
-operator|.
-name|uio_rw
-operator|=
-name|UIO_READ
-expr_stmt|;
-comment|/* do we need this? */
-name|uio
-operator|.
-name|uio_procp
-operator|=
-name|curproc
-expr_stmt|;
-comment|/* do it for our own process */
-name|iovec
-operator|.
-name|iov_len
-operator|=
-literal|512
-expr_stmt|;
-name|buf
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|Malloc
-argument_list|(
-name|iovec
-operator|.
-name|iov_len
-argument_list|)
-expr_stmt|;
-comment|/* get a buffer */
-name|CHECKALLOC
-argument_list|(
-name|buf
-argument_list|,
-literal|"vinum: no memory\n"
-argument_list|)
-expr_stmt|;
-comment|/* can't get 512 bytes? */
-name|iovec
-operator|.
-name|iov_base
-operator|=
-name|buf
-expr_stmt|;
-comment|/* read into buf */
 comment|/* allocate space: drives... */
 name|DRIVE
 operator|=
@@ -446,6 +294,19 @@ argument_list|(
 name|DRIVE
 argument_list|,
 literal|"vinum: no memory\n"
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|DRIVE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|drive
+argument_list|)
+operator|*
+name|INITIAL_DRIVES
 argument_list|)
 expr_stmt|;
 name|vinum_conf
@@ -488,6 +349,19 @@ argument_list|,
 literal|"vinum: no memory\n"
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|VOL
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|volume
+argument_list|)
+operator|*
+name|INITIAL_VOLUMES
+argument_list|)
+expr_stmt|;
 name|vinum_conf
 operator|.
 name|volumes_allocated
@@ -526,6 +400,19 @@ argument_list|(
 name|PLEX
 argument_list|,
 literal|"vinum: no memory\n"
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|PLEX
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|plex
+argument_list|)
+operator|*
+name|INITIAL_PLEXES
 argument_list|)
 expr_stmt|;
 name|vinum_conf
@@ -568,6 +455,19 @@ argument_list|,
 literal|"vinum: no memory\n"
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|SD
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sd
+argument_list|)
+operator|*
+name|INITIAL_SUBDISKS
+argument_list|)
+expr_stmt|;
 name|vinum_conf
 operator|.
 name|subdisks_allocated
@@ -582,23 +482,19 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* and number in use */
-name|ioctl_reply
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* no reply on longjmp */
 block|}
 end_function
 
 begin_comment
-comment|/*  * Check if we have anything open.  If so, return 0 (not inactive),  * otherwise 1 (inactive)   */
+comment|/*  * Check if we have anything open.  If confopen is != 0,  * that goes for the super device as well, otherwise  * only for volumes.  *  * Return 0 if not inactive, 1 if inactive.  */
 end_comment
 
 begin_function
 name|int
 name|vinum_inactive
 parameter_list|(
-name|void
+name|int
+name|confopen
 parameter_list|)
 block|{
 name|int
@@ -610,6 +506,23 @@ init|=
 literal|1
 decl_stmt|;
 comment|/* assume we can do it */
+if|if
+condition|(
+name|confopen
+operator|&&
+operator|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_OPEN
+operator|)
+condition|)
+comment|/* open by vinum(8)? */
+return|return
+literal|0
+return|;
+comment|/* can't do it while we're open */
 name|lock_config
 argument_list|()
 expr_stmt|;
@@ -623,7 +536,7 @@ name|i
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|;
 name|i
 operator|++
@@ -631,14 +544,27 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|VOL
 index|[
 name|i
 index|]
 operator|.
-name|opencount
-operator|!=
-literal|0
+name|state
+operator|>
+name|volume_down
+operator|)
+operator|&&
+operator|(
+name|VOL
+index|[
+name|i
+index|]
+operator|.
+name|flags
+operator|&
+name|VF_OPEN
+operator|)
 condition|)
 block|{
 comment|/* volume is open */
@@ -673,11 +599,26 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|int
+name|drives_allocated
+init|=
+name|vinum_conf
+operator|.
+name|drives_allocated
+decl_stmt|;
+if|if
+condition|(
+name|DRIVE
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|cleardrive
 condition|)
 block|{
+comment|/* remove the vinum config */
 for|for
 control|(
 name|i
@@ -686,9 +627,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|vinum_conf
-operator|.
-name|drives_used
+name|drives_allocated
 condition|;
 name|i
 operator|++
@@ -703,16 +642,6 @@ block|}
 else|else
 block|{
 comment|/* keep the config */
-name|save_config
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|DRIVE
-operator|!=
-name|NULL
-condition|)
-block|{
 for|for
 control|(
 name|i
@@ -721,9 +650,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|vinum_conf
-operator|.
-name|drives_used
+name|drives_allocated
 condition|;
 name|i
 operator|++
@@ -738,21 +665,61 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* close files and things */
+block|}
 name|Free
 argument_list|(
 name|DRIVE
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+while|while
+condition|(
+operator|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+operator|(
+name|VF_STOPPING
+operator||
+name|VF_DAEMONOPEN
+operator|)
+operator|)
+operator|==
+operator|(
+name|VF_STOPPING
+operator||
+name|VF_DAEMONOPEN
+operator|)
+condition|)
+block|{
+comment|/* at least one daemon open, we're stopping */
 name|queue_daemon_request
 argument_list|(
 name|daemonrq_return
 argument_list|,
+operator|(
+expr|union
+name|daemoninfo
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* tell daemon to stop */
+comment|/* stop the daemon */
+name|tsleep
+argument_list|(
+operator|&
+name|vinumclose
+argument_list|,
+name|PUSER
+argument_list|,
+literal|"vstop"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* and wait for it */
+block|}
 if|if
 condition|(
 name|SD
@@ -781,7 +748,7 @@ name|i
 operator|<
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|;
 name|i
 operator|++
@@ -853,223 +820,8 @@ name|vinum_conf
 argument_list|)
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|(
-name|daemon_options
-operator|&
-name|daemon_stopped
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* daemon hasn't stopped yet, */
-name|tsleep
-argument_list|(
-operator|&
-name|vinum_daemon
-argument_list|,
-name|PRIBIO
-argument_list|,
-literal|"vdaemn"
-argument_list|,
-literal|10
-operator|*
-name|hz
-argument_list|)
-expr_stmt|;
-comment|/* wait for it to stop */
-name|tsleep
-argument_list|(
-operator|&
-name|vinum_daemon
-argument_list|,
-name|PRIBIO
-argument_list|,
-literal|"diedie"
-argument_list|,
-literal|3
-operator|*
-name|hz
-argument_list|)
-expr_stmt|;
-comment|/* and wait another 3 secs XXX */
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACTUALLY_LKM_NOT_KERNEL
-end_ifdef
-
-begin_comment
-comment|/* stuff for LKMs */
-end_comment
-
-begin_expr_stmt
-name|MOD_MISC
-argument_list|(
-name|vinum
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * Function called when loading the driver.  */
-end_comment
-
-begin_function
-name|STATIC
-name|int
-name|vinum_load
-parameter_list|(
-name|struct
-name|lkm_table
-modifier|*
-name|lkmtp
-parameter_list|,
-name|int
-name|cmd
-parameter_list|)
-block|{
-name|vinumattach
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-comment|/* OK */
-block|}
-end_function
-
-begin_comment
-comment|/*  * Function called when unloading the driver.  */
-end_comment
-
-begin_function
-name|STATIC
-name|int
-name|vinum_unload
-parameter_list|(
-name|struct
-name|lkm_table
-modifier|*
-name|lkmtp
-parameter_list|,
-name|int
-name|cmd
-parameter_list|)
-block|{
-if|if
-condition|(
-name|vinum_inactive
-argument_list|()
-condition|)
-block|{
-comment|/* is anything open? */
-name|struct
-name|sync_args
-name|dummyarg
-init|=
-block|{
-literal|0
-block|}
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"vinum: unloaded\n"
-argument_list|)
-expr_stmt|;
-name|sync
-argument_list|(
-name|curproc
-argument_list|,
-operator|&
-name|dummyarg
-argument_list|)
-expr_stmt|;
-comment|/* write out buffers */
-name|free_vinum
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* no: clean up */
-name|cdevsw
-index|[
-name|CDEV_MAJOR
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* and cdevsw */
-return|return
-literal|0
-return|;
-block|}
-else|else
-return|return
-name|EBUSY
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Dispatcher function for the module (load/unload/stat).  */
-end_comment
-
-begin_function
-name|int
-name|vinum_mod
-parameter_list|(
-name|struct
-name|lkm_table
-modifier|*
-name|lkmtp
-parameter_list|,
-name|int
-name|cmd
-parameter_list|,
-name|int
-name|ver
-parameter_list|)
-block|{
-name|MOD_DISPATCH
-argument_list|(
-name|vinum
-argument_list|,
-comment|/* module name */
-name|lkmtp
-argument_list|,
-comment|/* LKM table */
-name|cmd
-argument_list|,
-comment|/* command */
-name|ver
-argument_list|,
-name|vinum_load
-argument_list|,
-comment|/* load with this function */
-name|vinum_unload
-argument_list|,
-comment|/* and unload with this */
-name|lkm_nullcmd
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not LKM */
-end_comment
 
 begin_function
 name|STATIC
@@ -1119,12 +871,22 @@ if|if
 condition|(
 operator|!
 name|vinum_inactive
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 condition|)
 comment|/* is anything open? */
 return|return
 name|EBUSY
 return|;
+comment|/* yes, we can't do it */
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_STOPPING
+expr_stmt|;
+comment|/* note that we want to stop */
 name|sync
 argument_list|(
 name|curproc
@@ -1139,7 +901,160 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* no: clean up */
+comment|/* clean up */
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
+if|if
+condition|(
+name|total_malloced
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|int
+modifier|*
+name|poke
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|malloccount
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|debug
+operator|&
+name|DEBUG_EXITFREE
+condition|)
+comment|/* want to hear about them */
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"vinum: exiting with %d bytes malloced from %s:%d\n"
+argument_list|,
+name|malloced
+index|[
+name|i
+index|]
+operator|.
+name|size
+argument_list|,
+name|malloced
+index|[
+name|i
+index|]
+operator|.
+name|file
+argument_list|,
+name|malloced
+index|[
+name|i
+index|]
+operator|.
+name|line
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|poke
+operator|=
+operator|&
+operator|(
+operator|(
+name|int
+operator|*
+operator|)
+name|malloced
+index|[
+name|i
+index|]
+operator|.
+name|address
+operator|)
+index|[
+name|malloced
+index|[
+name|i
+index|]
+operator|.
+name|size
+operator|/
+operator|(
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|)
+index|]
+expr_stmt|;
+comment|/* middle of the area */
+if|if
+condition|(
+operator|*
+name|poke
+operator|==
+literal|0xdeadc0de
+condition|)
+comment|/* already freed */
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vinum: exiting with malloc table inconsistency at %p from %s:%d\n"
+argument_list|,
+name|malloced
+index|[
+name|i
+index|]
+operator|.
+name|address
+argument_list|,
+name|malloced
+index|[
+name|i
+index|]
+operator|.
+name|file
+argument_list|,
+name|malloced
+index|[
+name|i
+index|]
+operator|.
+name|line
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|Free
+argument_list|(
+name|malloced
+index|[
+name|i
+index|]
+operator|.
+name|address
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 name|cdevsw
 index|[
 name|CDEV_MAJOR
@@ -1147,7 +1062,23 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* and cdevsw */
+comment|/* no cdevsw any more */
+name|bdevsw
+index|[
+name|BDEV_MAJOR
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* nor bdevsw */
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"vinum: unloaded\n"
+argument_list|)
+expr_stmt|;
+comment|/* tell the world */
 return|return
 literal|0
 return|;
@@ -1167,6 +1098,9 @@ init|=
 block|{
 literal|"vinum"
 block|,
+operator|(
+name|modeventhand_t
+operator|)
 name|vinum_modevent
 block|,
 literal|0
@@ -1188,21 +1122,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LKM */
-end_comment
-
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
 begin_comment
-comment|/*  * Open a vinum object  * At the moment, we only open volumes and the  * super device.  It's a nice concept to be  * able to open drives, subdisks and plexes, but  * I can't think what good it could be   */
+comment|/* Open a vinum object */
 end_comment
 
 begin_function
@@ -1224,10 +1149,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
-comment|/* spl */
 name|int
 name|error
 decl_stmt|;
@@ -1293,7 +1214,7 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 return|return
 name|ENXIO
@@ -1328,19 +1249,11 @@ name|volume_up
 case|:
 name|vol
 operator|->
-name|opencount
-operator|=
-literal|1
+name|flags
+operator||=
+name|VF_OPEN
 expr_stmt|;
-name|vol
-operator|->
-name|pid
-operator|=
-name|p
-operator|->
-name|p_pid
-expr_stmt|;
-comment|/* and say who we are (do we need this? XXX) */
+comment|/* note we're open */
 return|return
 literal|0
 return|;
@@ -1367,7 +1280,7 @@ argument_list|)
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 return|return
 name|ENXIO
@@ -1386,7 +1299,7 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|)
 return|return
 name|ENXIO
@@ -1408,60 +1321,22 @@ name|state
 condition|)
 block|{
 case|case
+name|plex_referenced
+case|:
+case|case
 name|plex_unallocated
 case|:
 return|return
 name|EINVAL
 return|;
 default|default:
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|plex
 operator|->
-name|pid
-comment|/* it's open already */
-operator|&&
-operator|(
-name|plex
-operator|->
-name|pid
-operator|!=
-name|p
-operator|->
-name|p_pid
-operator|)
-condition|)
-block|{
-comment|/* and not by us, */
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|flags
+operator||=
+name|VF_OPEN
 expr_stmt|;
-return|return
-name|EBUSY
-return|;
-comment|/* one at a time, please */
-block|}
-name|plex
-operator|->
-name|pid
-operator|=
-name|p
-operator|->
-name|p_pid
-expr_stmt|;
-comment|/* and say who we are (do we need this? XXX) */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+comment|/* note we're open */
 return|return
 literal|0
 return|;
@@ -1479,10 +1354,10 @@ argument_list|)
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 operator|)
-operator|||
 comment|/* no such volume */
+operator|||
 operator|(
 name|Plexno
 argument_list|(
@@ -1491,7 +1366,7 @@ argument_list|)
 operator|>=
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 operator|)
 condition|)
 comment|/* or no such plex */
@@ -1509,12 +1384,27 @@ expr_stmt|;
 comment|/* get the subdisk number */
 if|if
 condition|(
+operator|(
 name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
+operator|)
+comment|/* not a valid SD entry */
+operator|||
+operator|(
+name|SD
+index|[
+name|index
+index|]
+operator|.
+name|state
+operator|<
+name|sd_init
+operator|)
 condition|)
+comment|/* or SD is not real */
 return|return
 name|ENXIO
 return|;
@@ -1545,58 +1435,18 @@ return|return
 name|EINVAL
 return|;
 default|default:
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|sd
 operator|->
-name|pid
-comment|/* it's open already */
-operator|&&
-operator|(
-name|sd
-operator|->
-name|pid
-operator|!=
-name|p
-operator|->
-name|p_pid
-operator|)
-condition|)
-block|{
-comment|/* and not by us, */
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|flags
+operator||=
+name|VF_OPEN
 expr_stmt|;
-return|return
-name|EBUSY
-return|;
-comment|/* one at a time, please */
-block|}
-name|sd
-operator|->
-name|pid
-operator|=
-name|p
-operator|->
-name|p_pid
-expr_stmt|;
-comment|/* and say who we are (do we need this? XXX) */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+comment|/* note we're open */
 return|return
 literal|0
 return|;
 block|}
+comment|/* Vinum drives are disks.  We already have a disk 	 * driver, so don't handle them here */
 case|case
 name|VINUM_DRIVE_TYPE
 case|:
@@ -1629,14 +1479,43 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* yes, can do */
+if|if
+condition|(
+name|dev
+operator|==
+name|VINUM_DAEMON_DEV
+condition|)
+comment|/* daemon device */
 name|vinum_conf
 operator|.
-name|opencount
-operator|=
-literal|1
+name|flags
+operator||=
+name|VF_DAEMONOPEN
 expr_stmt|;
 comment|/* we're open */
+elseif|else
+if|if
+condition|(
+name|dev
+operator|==
+name|VINUM_SUPERDEV
+condition|)
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_OPEN
+expr_stmt|;
+comment|/* we're open */
+else|else
+name|error
+operator|=
+name|ENODEV
+expr_stmt|;
+comment|/* nothing, maybe a debug mismatch */
+block|}
 return|return
 name|error
 return|;
@@ -1677,16 +1556,6 @@ modifier|*
 name|vol
 decl_stmt|;
 name|struct
-name|plex
-modifier|*
-name|plex
-decl_stmt|;
-name|struct
-name|sd
-modifier|*
-name|sd
-decl_stmt|;
-name|struct
 name|devcode
 modifier|*
 name|device
@@ -1723,7 +1592,7 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 return|return
 name|ENXIO
@@ -1758,18 +1627,12 @@ name|volume_up
 case|:
 name|vol
 operator|->
-name|opencount
-operator|=
-literal|0
+name|flags
+operator|&=
+operator|~
+name|VF_OPEN
 expr_stmt|;
 comment|/* reset our flags */
-name|vol
-operator|->
-name|pid
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* and forget who owned us */
 return|return
 literal|0
 return|;
@@ -1796,7 +1659,7 @@ argument_list|)
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 return|return
 name|ENXIO
@@ -1815,26 +1678,23 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|)
 return|return
 name|ENXIO
 return|;
 comment|/* no such device */
-name|plex
-operator|=
-operator|&
 name|PLEX
 index|[
 name|index
 index|]
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VF_OPEN
 expr_stmt|;
-name|plex
-operator|->
-name|pid
-operator|=
-literal|0
-expr_stmt|;
+comment|/* reset our flags */
 return|return
 literal|0
 return|;
@@ -1851,7 +1711,7 @@ argument_list|)
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 operator|)
 operator|||
 comment|/* no such volume */
@@ -1863,7 +1723,7 @@ argument_list|)
 operator|>=
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 operator|)
 condition|)
 comment|/* or no such plex */
@@ -1885,26 +1745,23 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|)
 return|return
 name|ENXIO
 return|;
 comment|/* no such device */
-name|sd
-operator|=
-operator|&
 name|SD
 index|[
 name|index
 index|]
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VF_OPEN
 expr_stmt|;
-name|sd
-operator|->
-name|pid
-operator|=
-literal|0
-expr_stmt|;
+comment|/* reset our flags */
 return|return
 literal|0
 return|;
@@ -1912,17 +1769,58 @@ case|case
 name|VINUM_SUPERDEV_TYPE
 case|:
 comment|/* 	 * don't worry about whether we're root: 	 * nobody else would get this far. 	 */
+if|if
+condition|(
+name|dev
+operator|==
+name|VINUM_SUPERDEV
+condition|)
+comment|/* normal superdev */
 name|vinum_conf
 operator|.
-name|opencount
-operator|=
-literal|0
+name|flags
+operator|&=
+operator|~
+name|VF_OPEN
 expr_stmt|;
 comment|/* no longer open */
+elseif|else
+if|if
+condition|(
+name|dev
+operator|==
+name|VINUM_DAEMON_DEV
+condition|)
+block|{
+comment|/* the daemon device */
+name|vinum_conf
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VF_DAEMONOPEN
+expr_stmt|;
+comment|/* no longer open */
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_STOPPING
+condition|)
+comment|/* we're stopping, */
+name|wakeup
+argument_list|(
+operator|&
+name|vinumclose
+argument_list|)
+expr_stmt|;
+comment|/* we can continue stopping now */
+block|}
 return|return
 literal|0
 return|;
-comment|/* no worries closing super dev */
 case|case
 name|VINUM_DRIVE_TYPE
 case|:

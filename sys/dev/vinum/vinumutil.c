@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumutil.c,v 1.10 1999/01/02 00:39:04 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumutil.c,v 1.11 1999/03/19 06:50:44 grog Exp grog $  */
 end_comment
 
 begin_comment
@@ -608,7 +608,7 @@ comment|/* found it */
 return|return
 operator|(
 expr|enum
-name|volstate
+name|volumestate
 operator|)
 name|i
 return|;
@@ -639,14 +639,47 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|int
+name|sign
+init|=
+literal|1
+decl_stmt|;
+comment|/* -1 if negative */
 name|size
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|spec
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* we have a parameter */
 name|s
 operator|=
 name|spec
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'-'
+condition|)
+block|{
+comment|/* negative, */
+name|sign
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|s
+operator|++
+expr_stmt|;
+comment|/* skip */
+block|}
 if|if
 condition|(
 operator|(
@@ -706,6 +739,8 @@ literal|'\0'
 case|:
 return|return
 name|size
+operator|*
+name|sign
 return|;
 case|case
 literal|'B'
@@ -715,6 +750,8 @@ literal|'b'
 case|:
 return|return
 name|size
+operator|*
+name|sign
 operator|*
 literal|512
 return|;
@@ -727,6 +764,8 @@ case|:
 return|return
 name|size
 operator|*
+name|sign
+operator|*
 literal|1024
 return|;
 case|case
@@ -737,6 +776,8 @@ literal|'m'
 case|:
 return|return
 name|size
+operator|*
+name|sign
 operator|*
 literal|1024
 operator|*
@@ -750,6 +791,8 @@ literal|'g'
 case|:
 return|return
 name|size
+operator|*
+name|sign
 operator|*
 literal|1024
 operator|*
@@ -780,6 +823,36 @@ argument_list|,
 literal|"Invalid length specification: %s"
 argument_list|,
 name|spec
+argument_list|)
+expr_stmt|;
+name|longjmp
+argument_list|(
+name|command_fail
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+ifdef|#
+directive|ifdef
+name|REALLYKERNEL
+name|throw_rude_remark
+argument_list|(
+name|EINVAL
+argument_list|,
+literal|"Missing length specification"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Missing length specification"
 argument_list|)
 expr_stmt|;
 name|longjmp
@@ -872,6 +945,7 @@ case|:
 case|case
 name|VINUM_SUPERDEV_TYPE
 case|:
+comment|/* ordinary super device */
 case|case
 name|VINUM_RAWSD_TYPE
 case|:
@@ -995,6 +1069,7 @@ case|:
 case|case
 name|VINUM_SUPERDEV_TYPE
 case|:
+comment|/* ordinary super device */
 case|case
 name|VINUM_PLEX_TYPE
 case|:

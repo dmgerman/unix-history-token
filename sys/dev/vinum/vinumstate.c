@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumstate.c,v 2.10 1999/01/17 06:19:23 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumstate.c,v 2.11 1999/03/13 04:47:09 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -144,8 +144,10 @@ operator|!=
 literal|'\0'
 condition|)
 comment|/* we have a name, */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: drive %s is %s\n"
 argument_list|,
 name|drive
@@ -207,7 +209,7 @@ name|sdno
 operator|<
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|;
 name|sdno
 operator|++
@@ -216,6 +218,18 @@ block|{
 comment|/* find this drive's subdisks */
 if|if
 condition|(
+operator|(
+name|SD
+index|[
+name|sdno
+index|]
+operator|.
+name|state
+operator|>=
+name|sd_referenced
+operator|)
+operator|&&
+operator|(
 name|SD
 index|[
 name|sdno
@@ -224,6 +238,7 @@ operator|.
 name|driveno
 operator|==
 name|driveno
+operator|)
 condition|)
 comment|/* belongs to this drive */
 name|update_sd_state
@@ -393,6 +408,8 @@ block|{
 case|case
 name|sd_down
 case|:
+comment|/* take it down? */
+comment|/* 	     * If we're attached to a plex, and we're 	     * not reborn, we won't go down without 	     * use of force. 	     */
 if|if
 condition|(
 operator|(
@@ -401,7 +418,6 @@ name|flags
 operator|&
 name|setstate_force
 operator|)
-comment|/* but gently */
 operator|&&
 operator|(
 name|sd
@@ -410,8 +426,15 @@ name|plexno
 operator|>=
 literal|0
 operator|)
+operator|&&
+operator|(
+name|sd
+operator|->
+name|state
+operator|!=
+name|sd_reborn
+operator|)
 condition|)
-comment|/* and we're attached to a plex, */
 return|return
 literal|0
 return|;
@@ -452,6 +475,7 @@ case|case
 name|sd_down
 case|:
 comment|/* been down, no data lost */
+comment|/* 		 * If we're associated with a plex, and 		 * the plex isn't up, or we're the only 		 * subdisk in the plex, we can do it 		 */
 if|if
 condition|(
 operator|(
@@ -461,7 +485,6 @@ name|plexno
 operator|>=
 literal|0
 operator|)
-comment|/* we're associated with a plex */
 operator|&&
 operator|(
 operator|(
@@ -477,7 +500,6 @@ name|state
 operator|<
 name|plex_firstup
 operator|)
-comment|/* and it's not up */
 operator|||
 operator|(
 name|PLEX
@@ -494,7 +516,6 @@ operator|)
 operator|)
 operator|)
 condition|)
-comment|/* or it's the only one */
 break|break;
 comment|/* do it */
 comment|/* 		 * XXX Get this right: make sure that other plexes in 		 * the volume cover this address space, otherwise 		 * we make this one sd_up. 		 * 		 * Do we even want this any more? 		 */
@@ -505,8 +526,10 @@ operator|=
 name|sd_reborn
 expr_stmt|;
 comment|/* here it is again */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: subdisk %s is %s, not %s\n"
 argument_list|,
 name|sd
@@ -549,6 +572,7 @@ comment|/* FALLTHROUGH */
 case|case
 name|sd_empty
 case|:
+comment|/* 		 * If we're associated with a plex which 		 * is down, or which is the only one in the 		 * volume, and we're not a RAID-5 plex, we 		 * can come up without being inconsistent. 		 * Internally, we use the force flag to bring 		 * up a RAID-5 plex after initialization. 		 */
 if|if
 condition|(
 operator|(
@@ -558,7 +582,27 @@ name|plexno
 operator|>=
 literal|0
 operator|)
-comment|/* we're associated with a plex */
+operator|&&
+operator|(
+operator|(
+name|PLEX
+index|[
+name|sd
+operator|->
+name|plexno
+index|]
+operator|.
+name|organization
+operator|!=
+name|plex_raid5
+operator|)
+operator|||
+operator|(
+name|flags
+operator|&
+name|setstate_force
+operator|)
+operator|)
 operator|&&
 operator|(
 operator|(
@@ -574,7 +618,6 @@ name|state
 operator|<
 name|plex_firstup
 operator|)
-comment|/* and it's not up */
 operator|||
 operator|(
 name|PLEX
@@ -591,7 +634,6 @@ operator|)
 operator|)
 operator|)
 condition|)
-comment|/* or it's the only one */
 break|break;
 comment|/* Otherwise it's just out of date */
 comment|/* FALLTHROUGH */
@@ -602,7 +644,7 @@ comment|/* out of date info, need reviving */
 case|case
 name|sd_obsolete
 case|:
-comment|/* 		 * 1.  If the subdisk is not part of a plex, bring it up, don't revive. 		 * 		 * 2.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's not RAID-5, we *can't revive*.  The subdisk doesn't 		 *     change its state. 		 *  		 * 3.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's RAID-5, but more than one subdisk is down, we *still 		 *     can't revive*.  The subdisk doesn't change its state. 		 *  		 * 4.  If the subdisk is part of a multi-plex volume, we'll change to 		 *     reviving and let the revive routines find out whether it will work 		 *     or not.  If they don't, the revive stops with an error message, 		 *     but the state doesn't change (FWIW). 		 */
+comment|/* 		 * 1.  If the subdisk is not part of a plex, bring it up, don't revive. 		 * 		 * 2.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's not RAID-5, we *can't revive*.  The subdisk doesn't 		 *     change its state. 		 * 		 * 3.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's RAID-5, but more than one subdisk is down, we *still 		 *     can't revive*.  The subdisk doesn't change its state. 		 * 		 * 4.  If the subdisk is part of a multi-plex volume, we'll change to 		 *     reviving and let the revive routines find out whether it will work 		 *     or not.  If they don't, the revive stops with an error message, 		 *     but the state doesn't change (FWIW). 		 */
 if|if
 condition|(
 name|sd
@@ -648,6 +690,7 @@ name|vol
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 		 * We can't do it if: 		 * 		 * 1: we don't have a volume 		 * 2: we're the only plex in the volume 		 * 3: we're a RAID-5 plex, and more than one subdisk is down. 		 */
 if|if
 condition|(
 operator|(
@@ -656,7 +699,6 @@ name|vol
 operator|==
 name|NULL
 operator|)
-comment|/* no volume */
 operator|||
 operator|(
 name|vol
@@ -666,7 +708,6 @@ operator|==
 literal|1
 operator|)
 operator|)
-comment|/* or only one plex in volume */
 operator|&&
 operator|(
 operator|(
@@ -676,7 +717,6 @@ name|organization
 operator|!=
 name|plex_raid5
 operator|)
-comment|/* or it's a RAID-5 plex */
 operator|||
 operator|(
 name|plex
@@ -687,7 +727,6 @@ literal|1
 operator|)
 operator|)
 condition|)
-comment|/* with more than one subdisk down, */
 return|return
 literal|0
 return|;
@@ -712,7 +751,7 @@ name|EAGAIN
 expr_stmt|;
 comment|/* need to repeat */
 break|break;
-comment|/* 		 * XXX This is silly.  We need to be able to 		 * bring the subdisk up when it's finished 		 * initializing, but not from the user.  We 		 * use the same ioctl in each case, but Vinum(8) 		 * doesn't supply the -f flag, so we use that 		 * to decide whether to do it or not  		 */
+comment|/* 		 * XXX This is silly.  We need to be able to 		 * bring the subdisk up when it's finished 		 * initializing, but not from the user.  We 		 * use the same ioctl in each case, but Vinum(8) 		 * doesn't supply the -f flag, so we use that 		 * to decide whether to do it or not 		 */
 case|case
 name|sd_initializing
 case|:
@@ -745,7 +784,7 @@ return|;
 comment|/* no, try again */
 default|default:
 comment|/* can't do it */
-comment|/* 		 * There's no way to bring subdisks up directly from 		 * other states.  First they need to be initialized 		 * or revived  		 */
+comment|/* 		 * There's no way to bring subdisks up directly from 		 * other states.  First they need to be initialized 		 * or revived 		 */
 return|return
 literal|0
 return|;
@@ -784,8 +823,10 @@ name|state
 operator|=
 name|newstate
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: %s is %s\n"
 argument_list|,
 name|sd
@@ -803,8 +844,10 @@ expr_stmt|;
 block|}
 else|else
 comment|/* we don't get here with status 0 */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: %s is %s, not %s\n"
 argument_list|,
 name|sd
@@ -911,6 +954,7 @@ name|plex
 operator|->
 name|state
 expr_stmt|;
+comment|/*      * If the plex isn't allocated,      * or it's already in the the state we want,      * and it's not up, just return.  If it's up,      * we still need to do some housekeeping.      */
 if|if
 condition|(
 operator|(
@@ -920,7 +964,6 @@ name|state
 operator|==
 name|plex_unallocated
 operator|)
-comment|/* or no plex to do anything with, */
 operator|||
 operator|(
 operator|(
@@ -928,7 +971,6 @@ name|state
 operator|==
 name|oldstate
 operator|)
-comment|/* or we're already there */
 operator|&&
 operator|(
 name|state
@@ -937,7 +979,6 @@ name|plex_up
 operator|)
 operator|)
 condition|)
-comment|/* and it's not up */
 return|return
 literal|0
 return|;
@@ -954,7 +995,7 @@ condition|(
 name|state
 condition|)
 block|{
-comment|/* 	 * We can't bring the plex up, even by force, 	 * unless it's ready.  update_plex_state 	 * checks that  	 */
+comment|/* 	 * We can't bring the plex up, even by force, 	 * unless it's ready.  update_plex_state 	 * checks that 	 */
 case|case
 name|plex_up
 case|:
@@ -972,6 +1013,7 @@ case|case
 name|plex_down
 case|:
 comment|/* want to take it down */
+comment|/* 	 * If we're the only one, or the only one 	 * which is up, we need force to do it. 	 */
 if|if
 condition|(
 operator|(
@@ -980,7 +1022,6 @@ name|vps
 operator|==
 name|volplex_onlyus
 operator|)
-comment|/* we're the only one up */
 operator|||
 operator|(
 name|vps
@@ -988,7 +1029,6 @@ operator|==
 name|volplex_onlyusup
 operator|)
 operator|)
-comment|/* we're the only one up */
 operator|&&
 operator|(
 operator|!
@@ -999,7 +1039,6 @@ name|setstate_force
 operator|)
 operator|)
 condition|)
-comment|/* and we don't want to use force */
 return|return
 literal|0
 return|;
@@ -1020,7 +1059,7 @@ argument_list|)
 expr_stmt|;
 comment|/* and down all up subdisks */
 break|break;
-comment|/* 	 * This is only requested internally. 	 * Trust ourselves  	 */
+comment|/* 	 * This is only requested internally. 	 * Trust ourselves 	 */
 case|case
 name|plex_faulty
 case|:
@@ -1080,8 +1119,11 @@ operator|!=
 name|oldstate
 condition|)
 comment|/* we've changed, */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
+comment|/* tell them about it */
 literal|"vinum: %s is %s\n"
 argument_list|,
 name|plex
@@ -1096,8 +1138,7 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* tell them about it */
-comment|/*      * Now see what we have left, and whether      * we're taking the volume down       */
+comment|/*      * Now see what we have left, and whether      * we're taking the volume down      */
 if|if
 condition|(
 name|plex
@@ -1215,9 +1256,13 @@ comment|/* want to go down */
 if|if
 condition|(
 operator|(
+operator|(
 name|vol
 operator|->
-name|opencount
+name|flags
+operator|&
+name|VF_OPEN
+operator|)
 operator|==
 literal|0
 operator|)
@@ -1241,8 +1286,10 @@ name|state
 operator|=
 name|volume_down
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: volume %s is %s\n"
 argument_list|,
 name|vol
@@ -1408,8 +1455,11 @@ operator|!=
 name|oldstate
 condition|)
 comment|/* state has changed, */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
+comment|/* say so */
 literal|"vinum: %s is %s\n"
 argument_list|,
 name|sd
@@ -1424,7 +1474,6 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* say so */
 if|if
 condition|(
 name|sd
@@ -1442,6 +1491,97 @@ name|plexno
 argument_list|)
 expr_stmt|;
 comment|/* update its state */
+block|}
+end_function
+
+begin_comment
+comment|/*  * Force a plex and all its subdisks  * into an 'up' state.  This is a helper  * for update_plex_state.  */
+end_comment
+
+begin_function
+name|void
+name|forceup
+parameter_list|(
+name|int
+name|plexno
+parameter_list|)
+block|{
+name|struct
+name|plex
+modifier|*
+name|plex
+decl_stmt|;
+name|int
+name|sdno
+decl_stmt|;
+name|plex
+operator|=
+operator|&
+name|PLEX
+index|[
+name|plexno
+index|]
+expr_stmt|;
+comment|/* point to the plex */
+name|plex
+operator|->
+name|state
+operator|=
+name|plex_up
+expr_stmt|;
+comment|/* and bring it up */
+comment|/* change the subdisks to up state */
+for|for
+control|(
+name|sdno
+operator|=
+literal|0
+init|;
+name|sdno
+operator|<
+name|plex
+operator|->
+name|subdisks
+condition|;
+name|sdno
+operator|++
+control|)
+block|{
+name|SD
+index|[
+name|plex
+operator|->
+name|sdnos
+index|[
+name|sdno
+index|]
+index|]
+operator|.
+name|state
+operator|=
+name|sd_up
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+comment|/* tell them about it */
+literal|"vinum: %s is up\n"
+argument_list|,
+name|SD
+index|[
+name|plex
+operator|->
+name|sdnos
+index|[
+name|sdno
+index|]
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1468,15 +1608,15 @@ name|plexstate
 name|oldstate
 decl_stmt|;
 name|enum
-name|volplexstate
-name|vps
-decl_stmt|;
-comment|/* how do we compare with the other plexes? */
-name|enum
 name|sdstates
 name|statemap
 decl_stmt|;
 comment|/* get a map of the subdisk states */
+name|enum
+name|volplexstate
+name|vps
+decl_stmt|;
+comment|/* how do we compare with the other plexes? */
 name|plex
 operator|=
 operator|&
@@ -1492,14 +1632,6 @@ name|plex
 operator|->
 name|state
 expr_stmt|;
-name|vps
-operator|=
-name|vpstate
-argument_list|(
-name|plex
-argument_list|)
-expr_stmt|;
-comment|/* how do we compare with the other plexes? */
 name|statemap
 operator|=
 name|sdstatemap
@@ -1508,32 +1640,35 @@ name|plex
 argument_list|)
 expr_stmt|;
 comment|/* get a map of the subdisk states */
-if|if
-condition|(
-name|statemap
-operator|==
-name|sd_upstate
-condition|)
-comment|/* all subdisks ready for action */
-comment|/* 	   * All the subdisks are up.  This also means that 	   * they are consistent, so we can just bring 	   * the plex up  	 */
-name|plex
-operator|->
-name|state
+name|vps
 operator|=
-name|plex_up
+name|vpstate
+argument_list|(
+name|plex
+argument_list|)
 expr_stmt|;
-comment|/* go for it */
-elseif|else
+comment|/* how do we compare with the other plexes? */
 if|if
 condition|(
+operator|(
 name|statemap
 operator|==
 name|sd_emptystate
-condition|)
-block|{
-comment|/* nothing done yet */
-if|if
-condition|(
+operator|)
+comment|/* all subdisks empty */
+operator|&&
+operator|(
+operator|(
+name|vps
+operator|&
+name|volplex_otherup
+operator|)
+operator|==
+literal|0
+operator|)
+comment|/* and no other plex is up */
+operator|&&
+operator|(
 operator|(
 name|plex
 operator|->
@@ -1541,7 +1676,7 @@ name|organization
 operator|==
 name|plex_concat
 operator|)
-comment|/* only change this for concat and struped */
+comment|/* and we're not RAID-5 */
 operator|||
 operator|(
 name|plex
@@ -1550,59 +1685,9 @@ name|organization
 operator|==
 name|plex_striped
 operator|)
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-operator|(
-name|vps
-operator|&
-operator|(
-name|volplex_otherup
-operator||
-name|volplex_onlyus
-operator|)
-operator|)
-operator|==
-literal|0
-operator|)
-comment|/* nothing is up */
-operator|&&
-operator|(
-name|plex
-operator|->
-name|state
-operator|==
-name|plex_init
-operator|)
-comment|/* we're brand spanking new */
-operator|&&
-operator|(
-name|plex
-operator|->
-name|volno
-operator|>=
-literal|0
-operator|)
-comment|/* and we have a volume */
-operator|&&
-operator|(
-name|VOL
-index|[
-name|plex
-operator|->
-name|volno
-index|]
-operator|.
-name|flags
-operator|&
-name|VF_CONFIG_SETUPSTATE
 operator|)
 condition|)
 block|{
-comment|/* and we consider that up */
-comment|/* 		 * Conceptually, an empty plex does not contain valid data, 		 * but normally we'll see this state when we have just 		 * created a plex, and it's either consistent from earlier, 		 * or we don't care about the previous contents (we're going 		 * to create a file system or use it for swap). 		 * 		 * We need to do this in one swell foop: on the next call 		 * we will no longer be just empty. 		 * 		 * This code assumes that all the other plexes are also 		 * capable of coming up (i.e. all the sds are up), but 		 * that's OK: we'll come back to this function for the remaining 		 * plexes in the volume.  		 */
 name|struct
 name|volume
 modifier|*
@@ -1616,9 +1701,35 @@ operator|->
 name|volno
 index|]
 decl_stmt|;
-name|int
-name|plexno
-decl_stmt|;
+comment|/* possible volume to which it points */
+comment|/* 	 * If we're a striped or concat plex associated with a 	 * volume, none of whose plexes are up, and we're new and 	 * untested, and the volume has the setupstate bit set, we 	 * can pretend to be in a consistent state. 	 * 	 * We need to do this in one swell foop: on the next call 	 * we will no longer be just empty. 	 * 	 * This code assumes that all the other plexes are also 	 * capable of coming up (i.e. all the sds are up), but 	 * that's OK: we'll come back to this function for the 	 * remaining plexes in the volume. 	 */
+if|if
+condition|(
+operator|(
+name|plex
+operator|->
+name|state
+operator|==
+name|plex_init
+operator|)
+operator|&&
+operator|(
+name|plex
+operator|->
+name|volno
+operator|>=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|vol
+operator|->
+name|flags
+operator|&
+name|VF_CONFIG_SETUPSTATE
+operator|)
+condition|)
+block|{
 for|for
 control|(
 name|plexno
@@ -1634,114 +1745,44 @@ condition|;
 name|plexno
 operator|++
 control|)
-name|PLEX
+name|forceup
+argument_list|(
+name|VOL
 index|[
-name|vol
+name|plex
 operator|->
+name|volno
+index|]
+operator|.
 name|plex
 index|[
 name|plexno
 index|]
-index|]
-operator|.
-name|state
-operator|=
-name|plex_up
+argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|forceup
+argument_list|(
+name|plexno
+argument_list|)
+expr_stmt|;
+comment|/* we'll do it */
 block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|vps
-operator|&
-name|volplex_otherup
-operator|)
+name|statemap
 operator|==
-literal|0
+name|sd_upstate
 condition|)
-block|{
-comment|/* no other plexes up */
-name|int
-name|sdno
-decl_stmt|;
+comment|/* 	 * All the subdisks are up.  This also means that 	 * they are consistent, so we can just bring 	 * the plex up 	 */
 name|plex
 operator|->
 name|state
 operator|=
 name|plex_up
 expr_stmt|;
-comment|/* we can call that up */
-for|for
-control|(
-name|sdno
-operator|=
-literal|0
-init|;
-name|sdno
-operator|<
-name|plex
-operator|->
-name|subdisks
-condition|;
-name|sdno
-operator|++
-control|)
-block|{
-comment|/* change the subdisks to up state */
-name|SD
-index|[
-name|plex
-operator|->
-name|sdnos
-index|[
-name|sdno
-index|]
-index|]
-operator|.
-name|state
-operator|=
-name|sd_up
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"vinum: %s is up\n"
-argument_list|,
-name|SD
-index|[
-name|plex
-operator|->
-name|sdnos
-index|[
-name|sdno
-index|]
-index|]
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-comment|/* tell them about it */
-block|}
-block|}
-else|else
-name|plex
-operator|->
-name|state
-operator|=
-name|plex_faulty
-expr_stmt|;
-comment|/* no, it's down */
-block|}
-else|else
-comment|/* invalid or RAID-5 organization */
-name|plex
-operator|->
-name|state
-operator|=
-name|plex_faulty
-expr_stmt|;
-comment|/* it's down */
-block|}
 elseif|else
 if|if
 condition|(
@@ -1788,9 +1829,13 @@ if|if
 condition|(
 name|statemap
 operator|&
+operator|(
 name|sd_initstate
+operator||
+name|sd_emptystate
+operator|)
 condition|)
-comment|/* some subdisks initializing */
+comment|/* some subdisks empty or initializing */
 name|plex
 operator|->
 name|state
@@ -1814,8 +1859,11 @@ operator|!=
 name|oldstate
 condition|)
 comment|/* state has changed, */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
+comment|/* tell them about it */
 literal|"vinum: %s is %s\n"
 argument_list|,
 name|plex
@@ -1830,7 +1878,6 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* tell them about it */
 if|if
 condition|(
 name|plex
@@ -1968,8 +2015,10 @@ name|oldstate
 condition|)
 block|{
 comment|/* state changed */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: %s is %s\n"
 argument_list|,
 name|vol
@@ -1993,11 +2042,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called from request routines when they find  * a subdisk which is not kosher.  Decide whether  * it warrants changing the state.  Return  * REQUEST_DOWN if we can't use the subdisk,  * REQUEST_OK if we can.   */
+comment|/*  * Called from request routines when they find  * a subdisk which is not kosher.  Decide whether  * it warrants changing the state.  Return  * REQUEST_DOWN if we can't use the subdisk,  * REQUEST_OK if we can.  */
 end_comment
 
 begin_comment
-comment|/*  * A prior version of this function checked the plex  * state as well.  At the moment, consider plex states  * information for the user only.  We'll ignore them  * and use the subdisk state only.  The last version of  * this file with the old logic was 2.7. XXX   */
+comment|/*  * A prior version of this function checked the plex  * state as well.  At the moment, consider plex states  * information for the user only.  We'll ignore them  * and use the subdisk state only.  The last version of  * this file with the old logic was 2.7. XXX  */
 end_comment
 
 begin_function
@@ -2068,7 +2117,7 @@ return|;
 case|case
 name|sd_reviving
 case|:
-comment|/* 	 * Access to a reviving subdisk depends on the 	 * organization of the plex:  	 * - If it's concatenated, access the subdisk up to its current 	 *   revive point.  If we want to write to the subdisk overlapping the 	 *   current revive block, set the conflict flag in the request, asking 	 *   the caller to put the request on the wait list, which will be 	 *   attended to by revive_block when it's done. 	 * - if it's striped, we can't do it (we could do some hairy 	 *   calculations, but it's unlikely to work). 	 * - if it's RAID-5, we can do it as long as only one 	 *   subdisk is down  	 */
+comment|/* 	 * Access to a reviving subdisk depends on the 	 * organization of the plex:  	 * - If it's concatenated, access the subdisk up to its current 	 *   revive point.  If we want to write to the subdisk overlapping the 	 *   current revive block, set the conflict flag in the request, asking 	 *   the caller to put the request on the wait list, which will be 	 *   attended to by revive_block when it's done. 	 * - if it's striped, we can't do it (we could do some hairy 	 *   calculations, but it's unlikely to work). 	 * - if it's RAID-5, we can do it as long as only one 	 *   subdisk is down 	 */
 if|if
 condition|(
 name|plex
@@ -2170,7 +2219,7 @@ return|;
 comment|/* always write to a reborn disk */
 else|else
 comment|/* don't allow a read */
-comment|/* 	       * Handle the mapping.  We don't want to reject 	       * a read request to a reborn subdisk if that's 	       * all we have. XXX  	     */
+comment|/* 	       * Handle the mapping.  We don't want to reject 	       * a read request to a reborn subdisk if that's 	       * all we have. XXX 	     */
 return|return
 name|REQUEST_DOWN
 return|;
@@ -2439,6 +2488,9 @@ case|:
 case|case
 name|sd_reviving
 case|:
+case|case
+name|sd_referenced
+case|:
 name|statemap
 operator||=
 name|sd_otherstate
@@ -2546,33 +2598,6 @@ name|plex
 condition|)
 block|{
 comment|/* us */
-if|#
-directive|if
-name|RAID5
-if|if
-condition|(
-name|PLEX
-index|[
-name|vol
-operator|->
-name|plex
-index|[
-name|plexno
-index|]
-index|]
-operator|.
-name|state
-operator|>=
-name|plex_degraded
-condition|)
-comment|/* are we up? */
-name|state
-operator||=
-name|volplex_onlyus
-expr_stmt|;
-comment|/* yes */
-else|#
-directive|else
 if|if
 condition|(
 name|PLEX
@@ -2595,44 +2620,9 @@ operator||=
 name|volplex_onlyus
 expr_stmt|;
 comment|/* yes */
-endif|#
-directive|endif
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|RAID5
-if|if
-condition|(
-name|PLEX
-index|[
-name|vol
-operator|->
-name|plex
-index|[
-name|plexno
-index|]
-index|]
-operator|.
-name|state
-operator|>=
-name|plex_degraded
-condition|)
-comment|/* not us */
-name|state
-operator||=
-name|volplex_otherup
-expr_stmt|;
-comment|/* and when they were up, they were up */
-else|else
-name|state
-operator||=
-name|volplex_alldown
-expr_stmt|;
-comment|/* and when they were down, they were down */
-else|#
-directive|else
 if|if
 condition|(
 name|PLEX
@@ -2661,8 +2651,6 @@ operator||=
 name|volplex_alldown
 expr_stmt|;
 comment|/* and when they were down, they were down */
-endif|#
-directive|endif
 block|}
 block|}
 return|return
@@ -2803,6 +2791,9 @@ name|sd_crashed
 case|:
 case|case
 name|sd_down
+case|:
+case|case
+name|sd_referenced
 case|:
 break|break;
 case|case
@@ -3144,7 +3135,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * There's no point in saying anything here:      * the userland program does it better       */
+comment|/*      * There's no point in saying anything here:      * the userland program does it better      */
 name|ioctl_reply
 operator|->
 name|msg
@@ -3323,7 +3314,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * VINUM_SETSTATE ioctl: set an object state  * msg is the message passed by the user   */
+comment|/*  * VINUM_SETSTATE ioctl: set an object state  * msg is the message passed by the user  */
 end_comment
 
 begin_function
@@ -3410,15 +3401,15 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 operator|)
 operator|||
 operator|(
 name|sd
 operator|->
 name|state
-operator|==
-name|sd_unallocated
+operator|<=
+name|sd_referenced
 operator|)
 condition|)
 block|{
@@ -3511,14 +3502,14 @@ name|index
 operator|>=
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 operator|)
 operator|||
 operator|(
 name|plex
 operator|->
 name|state
-operator|==
+operator|<=
 name|plex_unallocated
 operator|)
 condition|)
@@ -3529,7 +3520,7 @@ name|ioctl_reply
 operator|->
 name|msg
 argument_list|,
-literal|"Invalid subdisk %d"
+literal|"Invalid plex %d"
 argument_list|,
 name|msg
 operator|->

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* Created by ./makestatetext on Fri Jan 29 10:38:01 CST 1999. Do not edit */
+comment|/* Created by ./makestatetext on Thu Mar 25 12:50:46 CST 1999. Do not edit */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ init|=
 block|{
 literal|"unallocated"
 block|,
-literal|"uninit"
+literal|"referenced"
 block|,
 literal|"down"
 block|,
@@ -43,6 +43,8 @@ block|{
 literal|"unallocated"
 block|,
 literal|"uninit"
+block|,
+literal|"referenced"
 block|,
 literal|"init"
 block|,
@@ -79,6 +81,8 @@ index|[]
 init|=
 block|{
 literal|"unallocated"
+block|,
+literal|"referenced"
 block|,
 literal|"init"
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumext.h,v 1.18 1999/01/15 02:41:16 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumext.h,v 1.19 1999/03/23 02:57:04 grog Exp grog $  */
 end_comment
 
 begin_comment
@@ -25,9 +25,12 @@ directive|ifdef
 name|VINUMDEBUG
 end_ifdef
 
-begin_extern
-extern|extern debug;
-end_extern
+begin_decl_stmt
+specifier|extern
+name|int
+name|debug
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* debug flags */
@@ -79,6 +82,24 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_function_decl
+name|int
+name|vinum_inactive
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|free_vinum
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -314,6 +335,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|return_drive_space
+parameter_list|(
+name|int
+name|driveno
+parameter_list|,
+name|int64_t
+name|offset
+parameter_list|,
+name|int
+name|length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|free_sd
 parameter_list|(
 name|int
@@ -528,7 +565,7 @@ begin_function_decl
 name|int
 name|start_config
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -620,7 +657,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|checkernel
+name|checkdiskconfig
 parameter_list|(
 name|char
 modifier|*
@@ -828,7 +865,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vinum_scandisk
 parameter_list|(
 name|char
@@ -949,6 +986,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Why aren't these declared anywhere? XXX */
+end_comment
+
+begin_function_decl
+name|int
+name|setjmp
+parameter_list|(
+name|jmp_buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|jmp_buf
+name|command_fail
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* return here if config fails */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -988,6 +1049,37 @@ name|data
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|LongJmp
+parameter_list|(
+name|jmp_buf
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+name|longjmp
+parameter_list|(
+name|jmp_buf
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* the kernel doesn't define this */
+end_comment
 
 begin_endif
 endif|#
@@ -1184,6 +1276,16 @@ name|update_sd_state
 parameter_list|(
 name|int
 name|sdno
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|forceup
+parameter_list|(
+name|int
+name|plexno
 parameter_list|)
 function_decl|;
 end_function_decl

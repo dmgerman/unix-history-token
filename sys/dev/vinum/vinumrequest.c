@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.22 1999/01/17 06:15:46 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.23 1999/03/20 21:58:38 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -140,18 +140,6 @@ name|struct
 name|request
 modifier|*
 name|rq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|free_rqg
-parameter_list|(
-name|struct
-name|rqgroup
-modifier|*
-name|rqg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -675,6 +663,10 @@ name|logrq
 argument_list|(
 name|loginfo_user_bp
 argument_list|,
+operator|(
+expr|union
+name|rqinfou
+operator|)
 name|bp
 argument_list|,
 name|bp
@@ -1055,36 +1047,15 @@ operator|-
 literal|1
 return|;
 block|}
-block|{
-comment|/* XXX */
-name|int
-name|result
-decl_stmt|;
-name|int
-name|s
-init|=
-name|splhigh
-argument_list|()
-decl_stmt|;
-name|result
-operator|=
+return|return
 name|launch_requests
 argument_list|(
 name|rq
 argument_list|,
 name|reviveok
 argument_list|)
-expr_stmt|;
-comment|/* now start the requests if we can */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|result
 return|;
-block|}
+comment|/* now start the requests if we can */
 block|}
 else|else
 comment|/* 	 * This is a write operation.  We write to all 	 * plexes.  If this is a RAID 5 plex, we must also 	 * update the parity stripe. 	 */
@@ -1374,8 +1345,10 @@ name|debug
 operator|&
 name|DEBUG_REVIVECONFLICT
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"Revive conflict sd %d: %x\n%s dev 0x%x, offset 0x%x, length %ld\n"
 argument_list|,
 name|rq
@@ -1444,9 +1417,11 @@ name|NULL
 condition|)
 block|{
 comment|/* no request */
-name|printf
+name|log
 argument_list|(
-literal|"vinum: null rqg"
+name|LOG_ERR
+argument_list|,
+literal|"vinum: null rqg\n"
 argument_list|)
 expr_stmt|;
 name|abortrequest
@@ -1470,8 +1445,10 @@ name|debug
 operator|&
 name|DEBUG_ADDRESSES
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"Request: %x\n%s dev 0x%x, offset 0x%x, length %ld\n"
 argument_list|,
 operator|(
@@ -1538,6 +1515,10 @@ name|logrq
 argument_list|(
 name|loginfo_user_bpl
 argument_list|,
+operator|(
+expr|union
+name|rqinfou
+operator|)
 name|rq
 operator|->
 name|bp
@@ -1549,6 +1530,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|rqg
@@ -1669,8 +1655,10 @@ name|debug
 operator|&
 name|DEBUG_ADDRESSES
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"  %s dev 0x%x, sd %d, offset 0x%x, devoffset 0x%x, length %ld\n"
 argument_list|,
 name|rqe
@@ -1735,8 +1723,10 @@ name|debug
 operator|&
 name|DEBUG_NUMOUTPUT
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"  vinumstart sd %d numoutput %ld\n"
 argument_list|,
 name|rqe
@@ -1762,6 +1752,10 @@ name|logrq
 argument_list|(
 name|loginfo_rqe
 argument_list|,
+operator|(
+expr|union
+name|rqinfou
+operator|)
 name|rqe
 argument_list|,
 name|rq
@@ -1772,11 +1766,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* fire off the request */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 operator|(
 operator|*
 name|bdevsw
@@ -1800,15 +1789,15 @@ operator|->
 name|b
 operator|)
 expr_stmt|;
+block|}
+comment|/* XXX Do we need caching?  Think about this more */
+block|}
+block|}
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* XXX Do we need caching?  Think about this more */
-block|}
-block|}
 return|return
 literal|0
 return|;
@@ -2530,6 +2519,59 @@ argument_list|(
 name|rqg
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|VINUMDEBUG
+if|if
+condition|(
+name|debug
+operator|&
+name|DEBUG_EOFINFO
+condition|)
+block|{
+comment|/* tell on the request */
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"vinum: EOF on plex %s, sd %s offset %x (user offset %x)\n"
+argument_list|,
+name|plex
+operator|->
+name|name
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|sd
+operator|->
+name|sectors
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|)
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"vinum: stripebase %x, stripeoffset %x, blockoffset %x\n"
+argument_list|,
+name|stripebase
+argument_list|,
+name|stripeoffset
+argument_list|,
+name|blockoffset
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 name|REQUEST_EOF
 return|;
@@ -2646,9 +2688,15 @@ block|}
 block|}
 break|break;
 default|default:
-name|printf
+name|log
 argument_list|(
-literal|"vinum: invalid plex type in bre"
+name|LOG_ERR
+argument_list|,
+literal|"vinum: invalid plex type %d in bre\n"
+argument_list|,
+name|plex
+operator|->
+name|organization
 argument_list|)
 expr_stmt|;
 block|}
@@ -3919,8 +3967,10 @@ name|debug
 operator|&
 name|DEBUG_ADDRESSES
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"  %s dev 0x%x, sd %d, offset 0x%x, devoffset 0x%x, length %ld\n"
 argument_list|,
 name|sbp
@@ -3988,8 +4038,10 @@ name|debug
 operator|&
 name|DEBUG_NUMOUTPUT
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"  vinumstart sd %d numoutput %ld\n"
 argument_list|,
 name|sbp
@@ -4439,11 +4491,7 @@ decl_stmt|;
 comment|/* point to the request chain */
 if|if
 condition|(
-name|rqg
-operator|->
-name|rq
-operator|->
-name|rqg
+name|rqgc
 operator|==
 name|rqg
 condition|)
@@ -4463,19 +4511,51 @@ else|else
 block|{
 while|while
 condition|(
+operator|(
+name|rqgc
+operator|->
+name|next
+operator|!=
+name|NULL
+operator|)
+comment|/* find the group */
+operator|&&
+operator|(
 name|rqgc
 operator|->
 name|next
 operator|!=
 name|rqg
+operator|)
 condition|)
-comment|/* find the group */
 name|rqgc
 operator|=
 name|rqgc
 operator|->
 name|next
 expr_stmt|;
+if|if
+condition|(
+name|rqgc
+operator|->
+name|next
+operator|==
+name|NULL
+condition|)
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vinum deallocrqg: rqg %p not found in request %p\n"
+argument_list|,
+name|rqg
+operator|->
+name|rq
+argument_list|,
+name|rqg
+argument_list|)
+expr_stmt|;
+else|else
 name|rqgc
 operator|->
 name|next
@@ -4484,10 +4564,11 @@ name|rqg
 operator|->
 name|next
 expr_stmt|;
+comment|/* make the chain jump over us */
 block|}
 name|Free
 argument_list|(
-name|rqgc
+name|rqg
 argument_list|)
 expr_stmt|;
 block|}

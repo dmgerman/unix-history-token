@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.18 1999/01/15 06:00:24 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.19 1999/03/23 02:48:20 grog Exp grog $  */
 end_comment
 
 begin_include
@@ -220,7 +220,71 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x>> VINUM_TYPE_SHIFT)& 7)
+comment|/*  * This mess is used to catch people who compile  * a debug vinum(8) and non-debug kernel module,  * or the other way round.  */
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
 name|VINUM_SUPERDEV
+init|=
+name|VINUMBDEV
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|VINUM_SUPERDEV_TYPE
+argument_list|)
+block|,
+comment|/* superdevice number */
+name|VINUM_WRONGSUPERDEV
+init|=
+name|VINUMBDEV
+argument_list|(
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|VINUM_SUPERDEV_TYPE
+argument_list|)
+block|,
+comment|/* non-debug superdevice number */
+else|#
+directive|else
+name|VINUM_SUPERDEV
+init|=
+name|VINUMBDEV
+argument_list|(
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|VINUM_SUPERDEV_TYPE
+argument_list|)
+block|,
+comment|/* superdevice number */
+name|VINUM_WRONGSUPERDEV
+init|=
+name|VINUMBDEV
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|VINUM_SUPERDEV_TYPE
+argument_list|)
+block|,
+comment|/* debug superdevice number */
+endif|#
+directive|endif
+name|VINUM_DAEMON_DEV
 init|=
 name|VINUMBDEV
 argument_list|(
@@ -233,7 +297,7 @@ argument_list|,
 name|VINUM_SUPERDEV_TYPE
 argument_list|)
 block|,
-comment|/* superdevice number */
+comment|/* daemon superdevice number */
 comment|/*  * the number of object entries to cater for initially, and also the  * value by which they are incremented.  It doesn't take long  * to extend them, so theoretically we could start with 1 of each, but  * it's untidy to allocate such small areas.  These values are  * probably too small.  */
 name|INITIAL_DRIVES
 init|=
@@ -364,12 +428,80 @@ name|VINUM_RDIR
 value|"/dev/rvinum"
 end_define
 
+begin_comment
+comment|/*  * These definitions help catch  * userland/kernel mismatches.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|VINUMDEBUG
+end_if
+
+begin_define
+define|#
+directive|define
+name|VINUM_WRONGSUPERDEV_NAME
+value|VINUM_DIR"/control"
+end_define
+
+begin_comment
+comment|/* normal super device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VINUM_SUPERDEV_NAME
+value|VINUM_DIR"/Control"
+end_define
+
+begin_comment
+comment|/* debug super device */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VINUM_WRONGSUPERDEV_NAME
+value|VINUM_DIR"/Control"
+end_define
+
+begin_comment
+comment|/* debug super device */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|VINUM_SUPERDEV_NAME
 value|VINUM_DIR"/control"
 end_define
+
+begin_comment
+comment|/* normal super device */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|VINUM_DAEMON_DEV_NAME
+value|VINUM_DIR"/controld"
+end_define
+
+begin_comment
+comment|/* super device for daemon only */
+end_comment
 
 begin_comment
 comment|/*  * Flags for all objects.  Most of them only apply to  * specific objects, but we have space for all in any  * 32 bit flags word.   */
@@ -389,6 +521,11 @@ init|=
 literal|2
 block|,
 comment|/* we want access to this object */
+name|VF_OPEN
+init|=
+literal|4
+block|,
+comment|/* object has openers */
 name|VF_WRITETHROUGH
 init|=
 literal|8
@@ -449,11 +586,11 @@ init|=
 literal|0x4000
 block|,
 comment|/* we're reading config database from disk */
-name|VF_KERNELOP
+name|VF_FORCECONFIG
 init|=
 literal|0x8000
 block|,
-comment|/* we're performing ops from kernel space */
+comment|/* configure drives even with different names */
 name|VF_NEWBORN
 init|=
 literal|0x10000
@@ -464,6 +601,21 @@ init|=
 literal|0x20000
 block|,
 comment|/* for drives: we read the config */
+name|VF_STOPPING
+init|=
+literal|0x40000
+block|,
+comment|/* for vinum_conf: stop on last close */
+name|VF_DAEMONOPEN
+init|=
+literal|0x80000
+block|,
+comment|/* the daemon has us open (only superdev) */
+name|VF_CREATED
+init|=
+literal|0x100000
+block|,
+comment|/* for volumes: freshly created, more then new */
 block|}
 enum|;
 end_enum
@@ -526,10 +678,6 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|int
-name|opencount
-decl_stmt|;
-comment|/* number of times we've been opened */
 if|#
 directive|if
 name|VINUMDEBUG
@@ -598,7 +746,7 @@ value|vinum_conf.flags
 end_define
 
 begin_comment
-comment|/*  * Slice header  *  * Vinum drives start with this structure:  *  *\                                            Sector  * |--------------------------------------|  * |   PDP-11 memorial boot block         |      0  * |--------------------------------------|  * |   Disk label, maybe                  |      1  * |--------------------------------------|  * |   Slice definition  (vinum_hdr)      |      2  * |--------------------------------------|  * |                                      |  * |   Configuration info, first copy     |      3  * |                                      |  * |--------------------------------------|  * |                                      |  * |   Configuration info, second copy    |      3 + size of config  * |                                      |  * |--------------------------------------|  */
+comment|/*  * Slice header  *  * Vinum drives start with this structure:  *  *\                                            Sector  * |--------------------------------------|  * |   PDP-11 memorial boot block         |      0  * |--------------------------------------|  * |   Disk label, maybe                  |      1  * |--------------------------------------|  * |   Slice definition  (vinum_hdr)      |      8  * |--------------------------------------|  * |                                      |  * |   Configuration info, first copy     |      9  * |                                      |  * |--------------------------------------|  * |                                      |  * |   Configuration info, second copy    |      9 + size of config  * |                                      |  * |--------------------------------------|  */
 end_comment
 
 begin_comment
@@ -923,10 +1071,6 @@ name|int
 name|plexsdno
 decl_stmt|;
 comment|/* and our number in our plex 							    * (undefined if no plex) */
-name|int
-name|pid
-decl_stmt|;
-comment|/* pid of process which opened us */
 name|u_int64_t
 name|reads
 decl_stmt|;
@@ -1050,10 +1194,6 @@ name|int
 name|volplexno
 decl_stmt|;
 comment|/* number of plex in volume */
-name|int
-name|pid
-decl_stmt|;
-comment|/* pid of process which opened us */
 comment|/* Lock information */
 name|int
 name|locks
@@ -1143,10 +1283,6 @@ name|flags
 decl_stmt|;
 comment|/* status and configuration flags */
 name|int
-name|opencount
-decl_stmt|;
-comment|/* number of opens (all the same process) */
-name|int
 name|openflags
 decl_stmt|;
 comment|/* flags supplied to last open(2) */
@@ -1154,10 +1290,6 @@ name|u_int64_t
 name|size
 decl_stmt|;
 comment|/* size of volume */
-name|int
-name|disk
-decl_stmt|;
-comment|/* disk index */
 name|int
 name|blocksize
 decl_stmt|;
@@ -1170,10 +1302,6 @@ name|int
 name|subops
 decl_stmt|;
 comment|/* and the number of suboperations */
-name|pid_t
-name|pid
-decl_stmt|;
-comment|/* pid of locker */
 comment|/* Statistics */
 name|u_int64_t
 name|bytes_read
@@ -1274,6 +1402,10 @@ begin_struct
 struct|struct
 name|mc
 block|{
+name|struct
+name|timeval
+name|time
+decl_stmt|;
 name|int
 name|seq
 decl_stmt|;
@@ -1283,19 +1415,6 @@ decl_stmt|;
 name|short
 name|line
 decl_stmt|;
-name|short
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|ALLOC_KVA
-value|1
-comment|/* allocated via kva calls */
-name|int
-modifier|*
-name|databuf
-decl_stmt|;
-comment|/* really vm_object_t */
 name|caddr_t
 name|address
 decl_stmt|;
@@ -1321,7 +1440,7 @@ name|volplex_onlyusdown
 init|=
 literal|0
 block|,
-comment|/* we're the only plex, and we're down */
+comment|/* 0: we're the only plex, and we're down */
 name|volplex_alldown
 block|,
 comment|/* 1: another plex is down, and so are we */
@@ -1330,18 +1449,18 @@ block|,
 comment|/* 2: another plex is up */
 name|volplex_otherupdown
 block|,
-comment|/* other plexes are up and down */
+comment|/* 3: other plexes are up and down */
 name|volplex_onlyus
 block|,
 comment|/* 4: we're up and alone */
 name|volplex_onlyusup
 block|,
-comment|/* only we are up, others are down */
+comment|/* 5: only we are up, others are down */
 name|volplex_allup
 block|,
-comment|/* all plexes are up */
+comment|/* 6: all plexes are up */
 name|volplex_someup
-comment|/* some plexes are up, including us */
+comment|/* 7: some plexes are up, including us */
 block|}
 enum|;
 end_enum
@@ -1467,14 +1586,56 @@ init|=
 literal|16
 block|,
 comment|/* print info about revive conflicts */
+name|DEBUG_EOFINFO
+init|=
+literal|32
+block|,
+comment|/* print info about EOF detection */
+name|DEBUG_MEMFREE
+init|=
+literal|64
+block|,
+comment|/* keep info about Frees */
+name|DEBUG_BIGDRIVE
+init|=
+literal|128
+block|,
+comment|/* pretend our drives are 100 times the size */
 name|DEBUG_REMOTEGDB
 init|=
 literal|256
 block|,
 comment|/* go into remote gdb */
+name|DEBUG_EXITFREE
+init|=
+literal|512
+block|,
+comment|/* log "freeing malloc" on exit  */
 block|}
 enum|;
 end_enum
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|longjmp
+value|LongJmp
+end_define
+
+begin_comment
+comment|/* test our longjmps */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

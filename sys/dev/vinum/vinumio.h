@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.h,v 1.14 1999/01/18 05:00:30 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.h,v 1.15 1999/03/23 03:51:27 grog Exp grog $  */
 end_comment
 
 begin_ifdef
@@ -172,11 +172,11 @@ begin_define
 define|#
 directive|define
 name|VINUM_SAVECONFIG
-value|_IOC(0, L, 72, 0)
+value|_IOW(L, 72, int)
 end_define
 
 begin_comment
-comment|/* release locks, update, write config to disk */
+comment|/* write config to disk */
 end_comment
 
 begin_define
@@ -345,7 +345,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_STARTCONFIG
-value|_IOC(0, L, 78, 0)
+value|_IOW(L, 78, int)
 end_define
 
 begin_comment
@@ -400,7 +400,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_REMOVE
-value|_IOC(IOC_IN | IOC_OUT, L, 83, MAX_IOCTL_REPLY)
+value|_IOWR(L, 83, struct vinum_ioctl_msg)
 end_define
 
 begin_comment
@@ -415,7 +415,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_RESETSTATS
-value|_IOC(IOC_IN | IOC_OUT, L, 86, MAX_IOCTL_REPLY)
+value|_IOWR(L, 86, struct vinum_ioctl_msg)
 end_define
 
 begin_comment
@@ -426,22 +426,22 @@ begin_define
 define|#
 directive|define
 name|VINUM_ATTACH
-value|_IOC(IOC_IN | IOC_OUT, L, 87, MAX_IOCTL_REPLY)
+value|_IOWR(L, 87, struct vinum_ioctl_msg)
 end_define
 
 begin_comment
-comment|/* reset object stats */
+comment|/* attach an object */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VINUM_DETACH
-value|_IOC(IOC_IN | IOC_OUT, L, 88, MAX_IOCTL_REPLY)
+value|_IOWR(L, 88, struct vinum_ioctl_msg)
 end_define
 
 begin_comment
-comment|/* reset object stats */
+comment|/* remove an object */
 end_comment
 
 begin_struct
@@ -474,22 +474,22 @@ begin_define
 define|#
 directive|define
 name|VINUM_RENAME
-value|_IOC(IOC_IN | IOC_OUT, L, 89, MAX_IOCTL_REPLY)
+value|_IOWR(L, 89, struct vinum_ioctl_msg)
 end_define
 
 begin_comment
-comment|/* reset object stats */
+comment|/* rename an object */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VINUM_REPLACE
-value|_IOC(IOC_IN | IOC_OUT, L, 90, MAX_IOCTL_REPLY)
+value|_IOWR(L, 90, struct vinum_ioctl_msg)
 end_define
 
 begin_comment
-comment|/* reset object stats */
+comment|/* replace an object */
 end_comment
 
 begin_ifdef

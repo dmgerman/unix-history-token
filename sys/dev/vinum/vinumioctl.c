@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * XXX replace all the checks on object validity with  * calls to valid<object>   */
+comment|/*  * XXX replace all the checks on object validity with  * calls to valid<object>  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumioctl.c,v 1.7 1999/01/18 03:36:17 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumioctl.c,v 1.8 1999/03/23 02:46:39 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -67,58 +67,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|jmp_buf
-name|command_fail
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* return on a failed command */
-end_comment
-
-begin_comment
-comment|/* Why aren't these declared anywhere? XXX */
-end_comment
-
-begin_function_decl
-name|int
-name|setjmp
-parameter_list|(
-name|jmp_buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|longjmp
-parameter_list|(
-name|jmp_buf
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vinum_inactive
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|free_vinum
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -255,6 +203,7 @@ block|{
 case|case
 name|VINUM_SUPERDEV_TYPE
 case|:
+comment|/* ordinary super device */
 name|ioctl_reply
 operator|=
 operator|(
@@ -402,8 +351,11 @@ name|error
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* first time, */
+name|ioctl_reply
+operator|->
+name|error
+operator|=
 name|parse_user_config
 argument_list|(
 operator|(
@@ -412,19 +364,11 @@ operator|*
 operator|)
 name|data
 argument_list|,
+comment|/* update the config */
 operator|&
 name|keyword_set
 argument_list|)
 expr_stmt|;
-comment|/* update the config */
-name|ioctl_reply
-operator|->
-name|error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* no error if we make it here */
-block|}
 elseif|else
 if|if
 condition|(
@@ -487,9 +431,16 @@ name|VINUM_STARTCONFIG
 case|:
 return|return
 name|start_config
-argument_list|()
+argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+argument_list|)
 return|;
-comment|/* just lock it */
+comment|/* just lock it.  Parameter is 'force' */
 comment|/* 	     * Move the individual parts of the config to user space. 	     * 	     * Specify the index of the object in the first word of data, 	     * and return the object there 	     */
 case|case
 name|VINUM_DRIVECONFIG
@@ -513,11 +464,11 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 condition|)
 comment|/* can't do it */
 return|return
-name|EFAULT
+name|ENXIO
 return|;
 comment|/* bang */
 name|bcopy
@@ -563,11 +514,11 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|)
 comment|/* can't do it */
 return|return
-name|EFAULT
+name|ENXIO
 return|;
 comment|/* bang */
 name|bcopy
@@ -613,11 +564,11 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|)
 comment|/* can't do it */
 return|return
-name|EFAULT
+name|ENXIO
 return|;
 comment|/* bang */
 name|bcopy
@@ -663,11 +614,11 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 comment|/* can't do it */
 return|return
-name|EFAULT
+name|ENXIO
 return|;
 comment|/* bang */
 name|bcopy
@@ -728,7 +679,7 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 operator|)
 comment|/* plex doesn't exist */
 operator|||
@@ -745,7 +696,7 @@ operator|)
 condition|)
 comment|/* or it doesn't have this many subdisks */
 return|return
-name|EFAULT
+name|ENXIO
 return|;
 comment|/* bang */
 name|bcopy
@@ -777,6 +728,7 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+comment|/* 	     * We get called in two places: one from the 	     * userland config routines, which call us 	     * to complete the config and save it.  This 	     * call supplies the value 0 as a parameter. 	     * 	     * The other place is from the user "saveconfig" 	     * routine, which can only work if we're *not* 	     * configuring.  In this case, supply parameter 1. 	     */
 case|case
 name|VINUM_SAVECONFIG
 case|:
@@ -788,25 +740,36 @@ name|VF_CONFIGURING
 condition|)
 block|{
 comment|/* must be us, the others are asleep */
+if|if
+condition|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|==
+literal|0
+condition|)
+comment|/* finish config */
 name|finish_config
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
 comment|/* finish the configuration and update it */
+else|else
+return|return
+name|EBUSY
+return|;
+comment|/* can't do it now */
+block|}
 name|save_config
 argument_list|()
 expr_stmt|;
 comment|/* save configuration to disk */
-block|}
-else|else
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-comment|/* queue up for this one, please */
 return|return
-name|error
+literal|0
 return|;
 case|case
 name|VINUM_RELEASECONFIG
@@ -868,42 +831,25 @@ case|:
 if|if
 condition|(
 name|vinum_inactive
-argument_list|()
-operator|&&
-operator|(
-name|vinum_conf
-operator|.
-name|opencount
-operator|<
-literal|2
-operator|)
+argument_list|(
+literal|0
+argument_list|)
 condition|)
 block|{
-comment|/* if we're not active */
-comment|/* 		 * Note the open count.  We may be called from v, so we'll be open. 		 * Keep the count so we don't underflow  		 */
-name|int
-name|oc
-init|=
-name|vinum_conf
-operator|.
-name|opencount
-decl_stmt|;
+comment|/* if the volumes are not active */
+comment|/* 		 * Note the open count.  We may be called from v, so we'll be open. 		 * Keep the count so we don't underflow 		 */
 name|free_vinum
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
 comment|/* clean up everything */
-name|printf
+name|log
 argument_list|(
+name|LOG_NOTICE
+argument_list|,
 literal|"vinum: CONFIGURATION OBLITERATED\n"
 argument_list|)
-expr_stmt|;
-name|vinum_conf
-operator|.
-name|opencount
-operator|=
-name|oc
 expr_stmt|;
 name|ioctl_reply
 operator|=
@@ -1066,7 +1012,7 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 operator|)
 comment|/* plex doesn't exist */
 operator|||
@@ -1265,8 +1211,10 @@ default|default:
 comment|/* FALLTHROUGH */
 block|}
 default|default:
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"vinumioctl: invalid ioctl from process %d (%s): %lx\n"
 argument_list|,
 name|curproc
@@ -1346,7 +1294,7 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 comment|/* not a valid volume */
 return|return
@@ -1395,7 +1343,7 @@ name|data
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	     * Care!  DIOCGPART returns *pointers* to 	     * the caller, so we need to store this crap as well. 	     * And yes, we need it.  	     */
+comment|/* 	     * Care!  DIOCGPART returns *pointers* to 	     * the caller, so we need to store this crap as well. 	     * And yes, we need it. 	     */
 case|case
 name|DIOCGPART
 case|:
@@ -1550,7 +1498,7 @@ name|driveno
 operator|<
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 operator|)
 operator|&&
 operator|(
@@ -1560,8 +1508,8 @@ name|driveno
 index|]
 operator|.
 name|state
-operator|!=
-name|drive_unallocated
+operator|>
+name|drive_referenced
 operator|)
 condition|)
 return|return
@@ -1614,7 +1562,7 @@ name|sdno
 operator|<
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 operator|)
 operator|&&
 operator|(
@@ -1624,8 +1572,8 @@ name|sdno
 index|]
 operator|.
 name|state
-operator|!=
-name|sd_unallocated
+operator|>
+name|sd_referenced
 operator|)
 condition|)
 return|return
@@ -1678,7 +1626,7 @@ name|plexno
 operator|<
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 operator|)
 operator|&&
 operator|(
@@ -1688,8 +1636,8 @@ name|plexno
 index|]
 operator|.
 name|state
-operator|!=
-name|plex_unallocated
+operator|>
+name|plex_referenced
 operator|)
 condition|)
 return|return
@@ -1742,7 +1690,7 @@ name|volno
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 operator|)
 operator|&&
 operator|(
@@ -1752,8 +1700,8 @@ name|volno
 index|]
 operator|.
 name|state
-operator|!=
-name|volume_unallocated
+operator|>
+name|volume_uninit
 operator|)
 condition|)
 return|return
@@ -1828,7 +1776,7 @@ name|index
 operator|<
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 condition|)
 block|{
 name|struct
@@ -1849,8 +1797,8 @@ condition|(
 name|drive
 operator|->
 name|state
-operator|!=
-name|drive_unallocated
+operator|>
+name|drive_referenced
 condition|)
 block|{
 name|drive
@@ -1908,7 +1856,7 @@ name|index
 operator|<
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|)
 block|{
 name|struct
@@ -1929,8 +1877,8 @@ condition|(
 name|sd
 operator|->
 name|state
-operator|!=
-name|sd_unallocated
+operator|>
+name|sd_referenced
 condition|)
 block|{
 name|sd
@@ -1989,7 +1937,7 @@ name|index
 operator|<
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|)
 block|{
 name|struct
@@ -2010,8 +1958,8 @@ condition|(
 name|plex
 operator|->
 name|state
-operator|!=
-name|plex_unallocated
+operator|>
+name|plex_referenced
 condition|)
 block|{
 name|plex
@@ -2083,7 +2031,7 @@ name|index
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 block|{
 name|struct
@@ -2104,8 +2052,8 @@ condition|(
 name|vol
 operator|->
 name|state
-operator|!=
-name|volume_unallocated
+operator|>
+name|volume_uninit
 condition|)
 block|{
 name|vol
@@ -3021,7 +2969,16 @@ operator|==
 name|plex_striped
 operator|)
 comment|/* we've just mutilated our plex, */
+operator|||
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_raid5
+operator|)
 condition|)
+comment|/* the data no longer matches */
 name|set_plex_state
 argument_list|(
 name|plex
@@ -3132,7 +3089,7 @@ operator|)
 condition|)
 block|{
 comment|/* and this is the last plex */
-comment|/* 		   * XXX As elsewhere, check whether we will lose 		   * mapping by removing this plex  		 */
+comment|/* 		   * XXX As elsewhere, check whether we will lose 		   * mapping by removing this plex 		 */
 name|reply
 operator|->
 name|error

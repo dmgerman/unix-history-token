@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.21 1998/12/30 06:04:31 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.24 1999/03/23 02:00:52 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -42,53 +42,6 @@ include|#
 directive|include
 file|<miscfs/specfs/specdev.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|jmp_buf
-name|command_fail
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* return on a failed command */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|_ioctl_reply
-modifier|*
-name|ioctl_reply
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* data pointer, for returning error messages */
-end_comment
-
-begin_comment
-comment|/* Why aren't these declared anywhere? XXX */
-end_comment
-
-begin_function_decl
-name|int
-name|setjmp
-parameter_list|(
-name|jmp_buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|longjmp
-parameter_list|(
-name|jmp_buf
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -166,8 +119,8 @@ name|devicename
 index|[
 literal|0
 index|]
-operator|==
-literal|'\0'
+operator|!=
+literal|'/'
 condition|)
 comment|/* no device name */
 name|sprintf
@@ -248,8 +201,10 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"vinum open_drive %s: failed with error %d\n"
 argument_list|,
 name|drive
@@ -294,8 +249,10 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"open_drive %s: use count %d, ignoring\n"
 argument_list|,
 comment|/* XXX where does this come from? */
@@ -310,15 +267,6 @@ operator|->
 name|v_usecount
 argument_list|)
 expr_stmt|;
-name|drive
-operator|->
-name|vp
-operator|->
-name|v_usecount
-operator|=
-literal|1
-expr_stmt|;
-comment|/* will this work? */
 block|}
 name|error
 operator|=
@@ -382,8 +330,10 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"vinum open_drive %s: GETAATTR returns error %d\n"
 argument_list|,
 name|drive
@@ -457,8 +407,10 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"vinum open_drive %s: Not a block device\n"
 argument_list|,
 name|drive
@@ -595,6 +547,26 @@ operator|->
 name|d_secsize
 operator|)
 expr_stmt|;
+if|#
+directive|if
+name|VINUMDEBUG
+if|if
+condition|(
+name|debug
+operator|&
+name|DEBUG_BIGDRIVE
+condition|)
+comment|/* pretend we're 100 times as big */
+name|drive
+operator|->
+name|label
+operator|.
+name|drive_size
+operator|*=
+literal|100
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* number of sectors available for subdisks */
 name|drive
 operator|->
@@ -756,7 +728,7 @@ name|drive
 operator|->
 name|state
 operator|=
-name|drive_uninit
+name|drive_referenced
 expr_stmt|;
 return|return
 literal|0
@@ -792,24 +764,23 @@ name|devicename
 index|[
 literal|0
 index|]
-operator|==
-literal|'\0'
+operator|!=
+literal|'/'
 condition|)
 block|{
-comment|/* no device name yet, default to drive name */
 name|drive
 operator|->
 name|lasterror
 operator|=
 name|EINVAL
 expr_stmt|;
-comment|/* 	 * This is a bug if it happens internally, 	 * so print a message regardless  	 */
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vinum: Can't open drive without drive name\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 name|EINVAL
 return|;
@@ -868,8 +839,10 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"vinum open_drive %s: Can't get partition information, error %d\n"
 argument_list|,
 name|drive
@@ -891,23 +864,20 @@ name|lasterror
 operator|=
 name|error
 expr_stmt|;
-name|set_drive_state
-argument_list|(
 name|drive
 operator|->
-name|driveno
-argument_list|,
+name|state
+operator|=
 name|drive_down
-argument_list|,
-name|setstate_force
-argument_list|)
 expr_stmt|;
+comment|/* don't tell the system about this one at all */
 return|return
 name|error
 return|;
 block|}
 if|if
 condition|(
+operator|(
 name|drive
 operator|->
 name|partinfo
@@ -916,10 +886,24 @@ name|part
 operator|->
 name|p_fstype
 operator|!=
-literal|0
+name|FS_UNUSED
+operator|)
+comment|/* not plain */
+operator|&&
+operator|(
+name|drive
+operator|->
+name|partinfo
+operator|.
+name|part
+operator|->
+name|p_fstype
+operator|!=
+name|FS_VINUM
+operator|)
 condition|)
 block|{
-comment|/* not plain */
+comment|/* and not Vinum */
 name|drive
 operator|->
 name|lasterror
@@ -930,8 +914,10 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"vinum open_drive %s: Wrong partition type for vinum\n"
 argument_list|,
 name|drive
@@ -945,17 +931,13 @@ argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
-name|set_drive_state
-argument_list|(
 name|drive
 operator|->
-name|driveno
-argument_list|,
+name|state
+operator|=
 name|drive_down
-argument_list|,
-name|setstate_force
-argument_list|)
 expr_stmt|;
+comment|/* don't tell the system about this one at all */
 return|return
 name|EFTYPE
 return|;
@@ -1022,10 +1004,11 @@ name|vp
 operator|->
 name|v_usecount
 condition|)
-block|{
 comment|/* XXX shouldn't happen */
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"close_drive %s: use count still %d\n"
 argument_list|,
 name|drive
@@ -1039,16 +1022,6 @@ operator|->
 name|v_usecount
 argument_list|)
 expr_stmt|;
-name|drive
-operator|->
-name|vp
-operator|->
-name|v_usecount
-operator|=
-literal|0
-expr_stmt|;
-comment|/* will this work? */
-block|}
 name|drive
 operator|->
 name|vp
@@ -1097,6 +1070,24 @@ init|=
 name|VINUM_NOMAGIC
 decl_stmt|;
 comment|/* no magic number */
+if|if
+condition|(
+name|drive
+operator|->
+name|state
+operator|>
+name|drive_referenced
+condition|)
+block|{
+comment|/* real drive */
+if|if
+condition|(
+name|drive
+operator|->
+name|state
+operator|==
+name|drive_up
+condition|)
 name|write_drive
 argument_list|(
 name|drive
@@ -1124,6 +1115,7 @@ name|save_config
 argument_list|()
 expr_stmt|;
 comment|/* and save the updated configuration */
+block|}
 block|}
 end_function
 
@@ -2340,6 +2332,7 @@ name|result
 operator|=
 name|DL_DELETED_LABEL
 expr_stmt|;
+comment|/* and return the info */
 else|else
 name|result
 operator|=
@@ -2509,7 +2502,31 @@ operator|)
 condition|)
 block|{
 comment|/* and it has the same name */
-comment|/* 	     * set an error, but don't take the drive down: 	     * that would cause unneeded error messages. 	     */
+name|struct
+name|drive
+modifier|*
+name|mydrive
+init|=
+operator|&
+name|DRIVE
+index|[
+name|i
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|mydrive
+operator|->
+name|devicename
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+condition|)
+block|{
+comment|/* we know a device name for it */
+comment|/* 		 * set an error, but don't take the drive down: 		 * that would cause unneeded error messages. 		 */
 name|drive
 operator|->
 name|lasterror
@@ -2517,6 +2534,83 @@ operator|=
 name|EEXIST
 expr_stmt|;
 break|break;
+block|}
+else|else
+block|{
+comment|/* it's just a place holder, */
+name|int
+name|sdno
+decl_stmt|;
+for|for
+control|(
+name|sdno
+operator|=
+literal|0
+init|;
+name|sdno
+operator|<
+name|vinum_conf
+operator|.
+name|subdisks_allocated
+condition|;
+name|sdno
+operator|++
+control|)
+block|{
+comment|/* look at each subdisk */
+if|if
+condition|(
+operator|(
+name|SD
+index|[
+name|sdno
+index|]
+operator|.
+name|driveno
+operator|==
+name|driveno
+operator|)
+comment|/* it's pointing to this one, */
+operator|&&
+operator|(
+name|SD
+index|[
+name|sdno
+index|]
+operator|.
+name|state
+operator|!=
+name|sd_unallocated
+operator|)
+condition|)
+block|{
+comment|/* and it's a real subdisk */
+name|SD
+index|[
+name|sdno
+index|]
+operator|.
+name|driveno
+operator|=
+name|drive
+operator|->
+name|driveno
+expr_stmt|;
+comment|/* point to the one we found */
+name|update_sd_state
+argument_list|(
+name|sdno
+argument_list|)
+expr_stmt|;
+comment|/* and update its state */
+block|}
+block|}
+name|free_drive
+argument_list|(
+name|mydrive
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 return|return
@@ -2690,7 +2784,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* Then the volume configuration */
+comment|/* First, the volume configuration */
 for|for
 control|(
 name|i
@@ -2701,7 +2795,7 @@ name|i
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|;
 name|i
 operator|++
@@ -2724,13 +2818,27 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|vol
 operator|->
 name|state
+operator|>
+name|volume_uninit
+operator|)
+operator|&&
+operator|(
+name|vol
+operator|->
+name|name
+index|[
+literal|0
+index|]
 operator|!=
-name|volume_unallocated
+literal|'\0'
+operator|)
 condition|)
 block|{
+comment|/* paranoia */
 if|if
 condition|(
 name|vol
@@ -2820,8 +2928,10 @@ literal|80
 index|]
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vinum: configuration data overflow\n"
 argument_list|)
 expr_stmt|;
@@ -2840,7 +2950,7 @@ name|i
 operator|<
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|;
 name|i
 operator|++
@@ -2863,13 +2973,27 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|plex
 operator|->
 name|state
 operator|!=
-name|plex_unallocated
+name|plex_referenced
+operator|)
+operator|&&
+operator|(
+name|plex
+operator|->
+name|name
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|)
 condition|)
 block|{
+comment|/* paranoia */
 name|sprintf
 argument_list|(
 name|s
@@ -2912,6 +3036,14 @@ operator|->
 name|organization
 operator|==
 name|plex_striped
+operator|)
+operator|||
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_raid5
 operator|)
 condition|)
 block|{
@@ -3035,8 +3167,10 @@ literal|80
 index|]
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vinum: configuration data overflow\n"
 argument_list|)
 expr_stmt|;
@@ -3055,7 +3189,7 @@ name|i
 operator|<
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|;
 name|i
 operator|++
@@ -3065,30 +3199,38 @@ name|struct
 name|sd
 modifier|*
 name|sd
-init|=
-operator|&
-name|vinum_conf
-operator|.
+decl_stmt|;
 name|sd
+operator|=
+operator|&
+name|SD
 index|[
 name|i
 index|]
-decl_stmt|;
-comment|/* XXX */
+expr_stmt|;
 if|if
 condition|(
-name|vinum_conf
-operator|.
+operator|(
 name|sd
-index|[
-name|i
-index|]
-operator|.
+operator|->
 name|state
 operator|!=
-name|sd_unallocated
+name|sd_referenced
+operator|)
+operator|&&
+operator|(
+name|sd
+operator|->
+name|name
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|)
 condition|)
 block|{
+comment|/* paranoia */
 name|sprintf
 argument_list|(
 name|s
@@ -3213,8 +3355,10 @@ literal|80
 index|]
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vinum: configuration data overflow\n"
 argument_list|)
 expr_stmt|;
@@ -3240,6 +3384,10 @@ name|queue_daemon_request
 argument_list|(
 name|daemonrq_saveconfig
 argument_list|,
+operator|(
+expr|union
+name|daemoninfo
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -3375,7 +3523,7 @@ name|driveno
 operator|<
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 condition|;
 name|driveno
 operator|++
@@ -3392,13 +3540,22 @@ name|driveno
 index|]
 expr_stmt|;
 comment|/* point to drive */
+if|if
+condition|(
+name|drive
+operator|->
+name|state
+operator|>
+name|drive_referenced
+condition|)
+block|{
 name|lockdrive
 argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
 comment|/* don't let it change */
-comment|/* 	 * First, do some drive consistency checks.  Some 	 * of these are kludges, others require a process 	 * context and couldn't be done before  	 */
+comment|/* 	     * First, do some drive consistency checks.  Some 	     * of these are kludges, others require a process 	     * context and couldn't be done before  	     */
 if|if
 condition|(
 operator|(
@@ -3433,8 +3590,10 @@ argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"Removing incomplete drive, index %d\n"
 argument_list|,
 name|driveno
@@ -3595,10 +3754,11 @@ name|drive
 operator|->
 name|state
 operator|!=
-name|drive_uninit
+name|drive_referenced
 operator|)
 condition|)
 block|{
+comment|/* and it's a real drive */
 name|wlabel_on
 operator|=
 literal|1
@@ -3736,8 +3896,10 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vinum: Can't write config to %s, error %d\n"
 argument_list|,
 name|drive
@@ -3765,6 +3927,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* we've written it on at least one drive */
+block|}
 block|}
 block|}
 block|}
@@ -4196,7 +4359,7 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 comment|/* invalid volume */
 return|return
@@ -4216,13 +4379,27 @@ condition|(
 name|vol
 operator|->
 name|state
-operator|==
-name|volume_unallocated
+operator|<=
+name|volume_uninit
 condition|)
 comment|/* nothing there */
 return|return
-name|ENOENT
+name|ENXIO
 return|;
+elseif|else
+if|if
+condition|(
+name|vol
+operator|->
+name|state
+operator|<
+name|volume_up
+condition|)
+comment|/* not accessible */
+return|return
+name|EIO
+return|;
+comment|/* I/O error */
 name|get_volume_label
 argument_list|(
 name|vol
@@ -4386,7 +4563,7 @@ comment|/* Look at all disks on the system for vinum slices */
 end_comment
 
 begin_function
-name|void
+name|int
 name|vinum_scandisk
 parameter_list|(
 name|char
@@ -4485,11 +4662,9 @@ name|vinum_conf
 operator|.
 name|flags
 operator||=
-name|VF_KERNELOP
-operator||
 name|VF_READING_CONFIG
 expr_stmt|;
-comment|/* kernel operation: reading config */
+comment|/* reading config from disk */
 name|gooddrives
 operator|=
 literal|0
@@ -4637,8 +4812,10 @@ operator|&
 name|VF_CONFIGURED
 condition|)
 comment|/* already read this config, */
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"vinum: already read config from %s\n"
 argument_list|,
 comment|/* say so */
@@ -4682,12 +4859,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"vinum: no drives found\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|ENOENT
+return|;
 block|}
 comment|/*      * We now have at least one drive      * open.  Sort them in order of config time      * and merge the config info with what we      * have already       */
 name|qsort
@@ -4784,8 +4965,10 @@ literal|0
 operator|)
 condition|)
 comment|/* we've never configured before, */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: reading configuration from %s\n"
 argument_list|,
 name|drive
@@ -4794,9 +4977,36 @@ name|devicename
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: updating configuration from %s\n"
+argument_list|,
+name|drive
+operator|->
+name|devicename
+argument_list|)
+expr_stmt|;
+comment|/* XXX Transition until we can get things changed */
+if|if
+condition|(
+name|drive
+operator|->
+name|partinfo
+operator|.
+name|part
+operator|->
+name|p_fstype
+operator|==
+name|FS_UNUSED
+condition|)
+comment|/* still set to unused */
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"vinum: %s partition type is 'unused', should be 'vinum'\n"
 argument_list|,
 name|drive
 operator|->
@@ -4826,8 +5036,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vinum: Can't read device %s, error %d\n"
 argument_list|,
 name|drive
@@ -4861,6 +5073,12 @@ block|}
 comment|/* 	 * XXX At this point, check that the two copies are the same, and do something useful if not. 	 * In particular, consider which is newer, and what this means for the integrity of the 	 * data on the drive  	 */
 else|else
 block|{
+name|vinum_conf
+operator|.
+name|drives_used
+operator|++
+expr_stmt|;
+comment|/* another drive in use */
 comment|/* Parse the configuration, and add it to the global configuration */
 for|for
 control|(
@@ -4950,8 +5168,10 @@ condition|)
 block|{
 comment|/* error in config */
 comment|/* 			   * This config should have been parsed in user 			   * space.  If we run into problems here, something 			   * serious is afoot.  Complain and let the user 			   * snarf the config to see what's wrong  			 */
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vinum: Config error on drive %s, aborting integration\n"
 argument_list|,
 name|nd
@@ -5017,12 +5237,9 @@ operator|.
 name|flags
 operator|&=
 operator|~
-operator|(
-name|VF_KERNELOP
-operator||
 name|VF_READING_CONFIG
-operator|)
 expr_stmt|;
+comment|/* no longer reading from disk */
 if|if
 condition|(
 name|status
@@ -5038,10 +5255,13 @@ argument_list|)
 expr_stmt|;
 name|updateconfig
 argument_list|(
-name|VF_KERNELOP
+name|VF_READING_CONFIG
 argument_list|)
 expr_stmt|;
-comment|/* update from kernel space */
+comment|/* update from disk config */
+return|return
+literal|0
+return|;
 block|}
 end_function
 
