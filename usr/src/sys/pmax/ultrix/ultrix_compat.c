@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.41 91/04/06$  *  *	@(#)ultrix_compat.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.41 91/04/06$  *  *	@(#)ultrix_compat.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -360,6 +360,24 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|wait3_args
+block|{
+name|int
+modifier|*
+name|status
+decl_stmt|;
+name|int
+name|options
+decl_stmt|;
+name|int
+name|rusage
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ultrixwait3
 argument_list|(
@@ -379,25 +397,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-modifier|*
-name|status
-decl_stmt|;
-name|int
-name|options
-decl_stmt|;
-name|int
-name|rusage
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|wait3_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -491,6 +497,21 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|domainname_args
+block|{
+name|char
+modifier|*
+name|domainname
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ultrixgetdomainname
 argument_list|(
@@ -510,23 +531,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|domainname
-decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
-block|}
+name|struct
+name|domainname_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -593,23 +605,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|domainname
-decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
-block|}
+name|struct
+name|domainname_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -698,6 +701,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|getpgrp_args
+block|{
+name|int
+name|pid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * This is the equivalent of BSD getpgrp but with more restrictions.  * Note we do not check the real uid or "saved" uid.  */
 end_comment
@@ -721,19 +735,14 @@ name|cp
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|pid
-decl_stmt|;
-block|}
+name|struct
+name|getpgrp_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -832,6 +841,22 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|setpgrp_args
+block|{
+name|int
+name|pid
+decl_stmt|;
+name|int
+name|pgrp
+decl_stmt|;
+block|}
+modifier|*
+name|uap
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * This is the equivalent of BSD setpgrp but with more restrictions.  * Note we do not check the real uid or "saved" uid or pgrp.  */
 end_comment
@@ -855,21 +880,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|pid
-decl_stmt|;
-name|int
-name|pgrp
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|setpgrp_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -915,29 +932,9 @@ return|;
 block|}
 end_block
 
-begin_macro
-name|ultrixsigvec
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
-specifier|register
 struct|struct
-name|args
+name|sigvec_args
 block|{
 name|int
 name|signo
@@ -957,10 +954,36 @@ name|sigcode
 decl_stmt|;
 comment|/* handler return address */
 block|}
-modifier|*
-name|uap
 struct|;
 end_struct
+
+begin_macro
+name|ultrixsigvec
+argument_list|(
+argument|p
+argument_list|,
+argument|uap
+argument_list|,
+argument|retval
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|sigvec_args
+modifier|*
+name|uap
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
