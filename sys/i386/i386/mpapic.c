@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.c,v 1.6 1997/05/31 03:29:57 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.c,v 1.5 1997/07/06 23:56:12 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -46,7 +46,7 @@ file|<machine/smptests.h>
 end_include
 
 begin_comment
-comment|/** TEST_LOPRIO, TEST_IPI */
+comment|/** TEST_LOPRIO, TEST_IPI, TEST_CPUSTOP */
 end_comment
 
 begin_include
@@ -60,6 +60,16 @@ include|#
 directive|include
 file|<machine/segments.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/intr_machdep.h>
+end_include
+
+begin_comment
+comment|/* Xspuriousint() */
+end_comment
 
 begin_comment
 comment|/* EISA Edge/Level trigger control registers */
@@ -244,6 +254,49 @@ operator|~
 name|APIC_SVR_FOCUS
 expr_stmt|;
 comment|/* enable 'focus processor' */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEST_CPUSTOP
+argument_list|)
+if|if
+condition|(
+operator|(
+name|XSPURIOUSINT_OFFSET
+operator|&
+literal|0xf
+operator|)
+operator|!=
+literal|0xf
+condition|)
+name|panic
+argument_list|(
+literal|"bad XSPURIOUSINT_OFFSET: 0x%08x"
+argument_list|,
+name|XSPURIOUSINT_OFFSET
+argument_list|)
+expr_stmt|;
+name|temp
+operator|&=
+operator|~
+literal|0xff
+expr_stmt|;
+comment|/* clear vector field */
+name|temp
+operator||=
+name|XSPURIOUSINT_OFFSET
+expr_stmt|;
+name|printf
+argument_list|(
+literal|">>> SVR: 0x%08x\n"
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* TEST_CPUSTOP */
 if|#
 directive|if
 literal|0
@@ -2305,6 +2358,20 @@ name|icr_hi
 operator|=
 name|icr_hi
 expr_stmt|;
+if|#
+directive|if
+literal|1
+name|db_printf
+argument_list|(
+literal|"icr_hi: 0x%08x\n"
+argument_list|,
+name|lapic
+operator|.
+name|icr_hi
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* send the IPI */
 if|if
 condition|(
