@@ -827,6 +827,12 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
+name|finaldst
+operator|=
+name|ip6
+operator|->
+name|ip6_dst
+expr_stmt|;
 define|#
 directive|define
 name|MAKE_EXTHDR
@@ -1810,12 +1816,6 @@ name|in6_addr
 modifier|*
 name|addrs
 decl_stmt|;
-name|finaldst
-operator|=
-name|ip6
-operator|->
-name|ip6_dst
-expr_stmt|;
 switch|switch
 condition|(
 name|rh
