@@ -2889,7 +2889,7 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-comment|/* 		 * Module ipdivert can only be unloaded if no sockets are 		 * connected.  Maybe this can be changed later to forcefully 		 * disconnect any open sockets. 		 */
+comment|/* 		 * Module ipdivert can only be unloaded if no sockets are 		 * connected.  Maybe this can be changed later to forcefully 		 * disconnect any open sockets. 		 * 		 * XXXRW: Note that there is a slight race here, as a socket 		 * could be opened between when we test and when we 		 * unregister. 		 */
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
