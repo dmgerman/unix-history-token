@@ -6226,7 +6226,7 @@ name|pwd
 argument_list|,
 name|pwd
 operator|->
-name|m_uid
+name|pw_uid
 argument_list|,
 name|LOGIN_SETRESOURCES
 operator||

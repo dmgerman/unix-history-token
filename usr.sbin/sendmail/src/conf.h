@@ -3865,7 +3865,7 @@ begin_if
 if|#
 directive|if
 name|__FreeBSD__
-operator|==
+operator|>=
 literal|2
 end_if
 
@@ -3903,6 +3903,40 @@ directive|define
 name|SPT_TYPE
 value|SPT_BUILTIN
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300000
+end_if
+
+begin_comment
+comment|/* 3.0-current right now */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<login_cap.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|HASSETUSERCONTEXT
+value|1
+end_define
+
+begin_comment
+comment|/* BSDI-style login classes */
+end_comment
 
 begin_endif
 endif|#
