@@ -16942,15 +16942,15 @@ name|wk
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|vn_isdisk
+argument_list|(
 name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
+argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"softdep_fsync_mountdev: vnode not VBLK"
+literal|"softdep_fsync_mountdev: vnode not a disk"
 argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK
@@ -17165,11 +17165,11 @@ decl_stmt|;
 comment|/* 	 * Check whether this vnode is involved in a filesystem 	 * that is doing soft dependency processing. 	 */
 if|if
 condition|(
+operator|!
+name|vn_isdisk
+argument_list|(
 name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
+argument_list|)
 condition|)
 block|{
 if|if
@@ -18072,11 +18072,10 @@ expr_stmt|;
 comment|/* 	 * If we are trying to sync a block device, some of its buffers may 	 * contain metadata that cannot be written until the contents of some 	 * partially written files have been written to disk. The only easy 	 * way to accomplish this is to sync the entire filesystem (luckily 	 * this happens rarely). 	 */
 if|if
 condition|(
+name|vn_isdisk
+argument_list|(
 name|vp
-operator|->
-name|v_type
-operator|==
-name|VBLK
+argument_list|)
 operator|&&
 name|vp
 operator|->

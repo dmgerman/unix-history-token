@@ -4965,11 +4965,11 @@ operator|->
 name|v_dirtyblkhd
 argument_list|)
 operator|&&
+operator|!
+name|vn_isdisk
+argument_list|(
 name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
+argument_list|)
 condition|)
 name|panic
 argument_list|(
@@ -5542,6 +5542,9 @@ operator|=
 name|dirdelay
 expr_stmt|;
 break|break;
+case|case
+name|VCHR
+case|:
 case|case
 name|VBLK
 case|:
@@ -10879,11 +10882,11 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|vn_isdisk
+argument_list|(
 name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
+argument_list|)
 operator|&&
 name|vn_canvmio
 argument_list|(
@@ -10977,7 +10980,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * This simply allocates the biggest object possible 			 * for a VBLK vnode.  This should be fixed, but doesn't 			 * cause any problems (yet). 			 */
+comment|/* 			 * This simply allocates the biggest object possible 			 * for a disk vnode.  This should be fixed, but doesn't 			 * cause any problems (yet). 			 */
 name|object
 operator|=
 name|vnode_pager_alloc
