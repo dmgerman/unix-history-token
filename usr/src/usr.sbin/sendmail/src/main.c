@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.33 (Berkeley) %G%"
+literal|"@(#)main.c	6.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2812,6 +2812,24 @@ name|EX_SOFTWARE
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_comment
+comment|/* if we've had errors so far, exit now */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|ExitStat
+operator|!=
+name|EX_OK
+condition|)
+name|exit
+argument_list|(
+name|ExitStat
+argument_list|)
+expr_stmt|;
 end_if
 
 begin_comment
