@@ -244,7 +244,7 @@ directive|define
 name|N_IPX
 value|6
 block|{
-literal|"_ipxpcb"
+literal|"_ipxpcb_list"
 block|}
 block|,
 define|#
