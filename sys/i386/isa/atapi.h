@@ -732,6 +732,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_REZERO_UNIT
+value|0x01
+end_define
+
+begin_comment
+comment|/* reinit device */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_REQUEST_SENSE
 value|0x03
 end_define
@@ -798,12 +809,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_READ_TOC
-value|0x43
+name|ATAPI_SYNCHRONIZE_CACHE
+value|0x35
 end_define
 
 begin_comment
-comment|/* get table of contents */
+comment|/* flush write buf, close write chan */
 end_comment
 
 begin_define
@@ -820,7 +831,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_MODE_SELECT_BIG
+name|ATAPI_READ_TOC
+value|0x43
+end_define
+
+begin_comment
+comment|/* get table of contents */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_READ_TRACK_INFO
+value|0x52
+end_define
+
+begin_comment
+comment|/* get track information structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_MODE_SELECT
 value|0x55
 end_define
 
@@ -837,6 +870,28 @@ end_define
 
 begin_comment
 comment|/* get device parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_CLOSE_TRACK
+value|0x5b
+end_define
+
+begin_comment
+comment|/* close track/session */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_LOAD_UNLOAD
+value|0xa6
+end_define
+
+begin_comment
+comment|/* changer control command */
 end_comment
 
 begin_define
@@ -864,12 +919,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_LOAD_UNLOAD
-value|0xa6
+name|ATAPI_READ_CD
+value|0xbe
 end_define
 
 begin_comment
-comment|/* changer control command */
+comment|/* read data */
 end_comment
 
 begin_comment
@@ -1389,43 +1444,43 @@ name|u_char
 name|ctrlr
 decl_stmt|;
 comment|/* physical controller number */
-name|u_int
+name|u_char
 name|debug
 range|:
 literal|1
 decl_stmt|;
 comment|/* trace enable flag */
-name|u_int
+name|u_char
 name|cmd16
 range|:
 literal|1
 decl_stmt|;
 comment|/* 16-byte command flag */
-name|u_int
+name|u_char
 name|intrcmd
 range|:
 literal|1
 decl_stmt|;
 comment|/* interrupt before cmd flag */
-name|u_int
+name|u_char
 name|slow
 range|:
 literal|1
 decl_stmt|;
 comment|/* slow reaction device */
-name|u_int
+name|u_char
 name|accel
 range|:
 literal|1
 decl_stmt|;
 comment|/* accelerated reaction device */
-name|u_int
+name|u_char
 name|use_dsc
 range|:
 literal|1
 decl_stmt|;
 comment|/* use DSC completition handeling */
-name|u_int
+name|u_char
 name|wait_for_dsc
 range|:
 literal|1

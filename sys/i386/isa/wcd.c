@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IDE CD-ROM driver for FreeBSD.  * Supports ATAPI-compatible drives.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Mon Oct  9 20:27:42 MSK 1995  * $Id: wcd.c,v 1.56 1998/06/26 18:13:57 phk Exp $  */
+comment|/*  * IDE CD-ROM driver for FreeBSD.  * Supports ATAPI-compatible drives.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Mon Oct  9 20:27:42 MSK 1995  * $Id: wcd.c,v 1.57 1998/07/04 22:30:18 julian Exp $  */
 end_comment
 
 begin_include
@@ -6381,7 +6381,7 @@ name|wcd_request_wait
 argument_list|(
 name|t
 argument_list|,
-name|ATAPI_MODE_SELECT_BIG
+name|ATAPI_MODE_SELECT
 argument_list|,
 literal|0x10
 argument_list|,
@@ -7486,7 +7486,7 @@ name|wcd_request_wait
 argument_list|(
 name|t
 argument_list|,
-name|ATAPI_MODE_SELECT_BIG
+name|ATAPI_MODE_SELECT
 argument_list|,
 literal|0x10
 argument_list|,
