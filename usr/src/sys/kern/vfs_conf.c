@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -420,6 +420,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNFS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vfsops
+name|kernfs_vfsops
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|KERNFS_VFSOPS
+value|&kernfs_vfsops
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KERNFS_VFSOPS
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|vfsops
@@ -461,6 +499,9 @@ comment|/* 9 = MOUNT_NULL */
 name|UMAP_VFSOPS
 block|,
 comment|/* 10 = MOUNT_UMAP */
+name|KERNFS_VFSOPS
+block|,
+comment|/* 11 = MOUNT_KERNFS */
 literal|0
 block|}
 decl_stmt|;
@@ -615,6 +656,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|vnodeopv_desc
+name|kernfs_vnodeop_opv_desc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|vnodeopv_desc
 modifier|*
@@ -733,6 +782,14 @@ directive|ifdef
 name|UMAPFS
 operator|&
 name|umap_vnodeop_opv_desc
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|KERNFS
+operator|&
+name|kernfs_vnodeop_opv_desc
 block|,
 endif|#
 directive|endif
