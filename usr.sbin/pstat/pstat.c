@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pstat.c,v 1.39 1999/01/22 10:36:48 dillon Exp $"
+literal|"$Id: pstat.c,v 1.40 1999/01/22 10:57:22 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,12 +201,6 @@ begin_include
 include|#
 directive|include
 file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rlist.h>
 end_include
 
 begin_include

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: swap.c,v 1.9 1999/01/22 10:57:50 dillon Exp $"
+literal|"$Id: swap.c,v 1.10 1999/02/06 06:43:56 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rlist.h>
 end_include
 
 begin_include
