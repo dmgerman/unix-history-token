@@ -66,7 +66,7 @@ file|<sys/timex.h>
 end_include
 
 begin_comment
-comment|/*  * a large step happens on boot.  This constant detects such   * a steps.  It is relatively small so that ntp_update_second gets called  * enough in the typical 'missed a couple of seconds' case, but doesn't  * loop forever when the time step is large.  */
+comment|/*  * A large step happens on boot.  This constant detects such steps.  * It is relatively small so that ntp_update_second gets called enough  * in the typical 'missed a couple of seconds' case, but doesn't loop  * forever when the time step is large.  */
 end_comment
 
 begin_define
@@ -1641,7 +1641,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Step our concept of UTC.  This is done by modifying our estimate of  * when we booted.  XXX: needs futher work.  */
+comment|/*  * Step our concept of UTC.  This is done by modifying our estimate of  * when we booted.  XXX: needs further work.  */
 end_comment
 
 begin_function
@@ -1891,7 +1891,7 @@ operator|->
 name|th_counter
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Compute the UTC time, before any leapsecond adjustments, are 	 * made. 	 */
+comment|/* 	 * Deal with NTP second processing.  The for loop normally 	 * iterates at most once, but in extreme situations it might 	 * keep NTP sane if timeouts are not run for several seconds. 	 * At boot, the time step can be large when the TOD hardware 	 * has been read, so on really large steps, we call 	 * ntp_update_second only twice.  We need to call it twice in 	 * case we missed a leap second. 	 */
 name|bt
 operator|=
 name|th
@@ -1907,7 +1907,6 @@ operator|&
 name|boottimebin
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Deal with NTP second processing.  The for loop normally only 	 * iterates once, but in extreme situations it might keep NTP sane 	 * if timeouts are not run for several seconds.  At boot, the 	 * time step can be large when the TOD hardware has been read, so 	 * on really large steps, we call ntp_update_second only twice. 	 * We need to call it twice in case we missed a leap second. 	 */
 name|i
 operator|=
 name|bt
@@ -1979,6 +1978,30 @@ operator|-
 name|t
 expr_stmt|;
 block|}
+comment|/* Update the UTC timestamps used by the get*() functions. */
+comment|/* XXX shouldn't do this here.  Should force non-`get' versions. */
+name|bintime2timeval
+argument_list|(
+operator|&
+name|bt
+argument_list|,
+operator|&
+name|th
+operator|->
+name|th_microtime
+argument_list|)
+expr_stmt|;
+name|bintime2timespec
+argument_list|(
+operator|&
+name|bt
+argument_list|,
+operator|&
+name|th
+operator|->
+name|th_nanotime
+argument_list|)
+expr_stmt|;
 comment|/* Now is a good time to change timecounters. */
 if|if
 condition|(
@@ -2039,28 +2062,6 @@ operator|=
 name|scale
 operator|*
 literal|2
-expr_stmt|;
-name|bintime2timeval
-argument_list|(
-operator|&
-name|bt
-argument_list|,
-operator|&
-name|th
-operator|->
-name|th_microtime
-argument_list|)
-expr_stmt|;
-name|bintime2timespec
-argument_list|(
-operator|&
-name|bt
-argument_list|,
-operator|&
-name|th
-operator|->
-name|th_nanotime
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that the struct timehands is again consistent, set the new 	 * generation number, making sure to not make it zero. 	 */
 if|if
