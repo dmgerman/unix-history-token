@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.2 (Berkeley) %G%"
+literal|"@(#)du.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,8 +174,6 @@ name|errno
 decl_stmt|;
 name|int
 name|ch
-decl_stmt|,
-name|reset
 decl_stmt|;
 name|char
 modifier|*
@@ -320,11 +318,7 @@ expr_stmt|;
 for|for
 control|(
 init|;
-operator|*
-name|argv
 condition|;
-operator|++
-name|argv
 control|)
 block|{
 name|du
@@ -335,19 +329,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|argv
-index|[
-literal|1
-index|]
-operator|&&
-name|index
-argument_list|(
+operator|!
 operator|*
+operator|++
 name|argv
-argument_list|,
-literal|'/'
-argument_list|)
-operator|&&
+condition|)
+break|break;
+if|if
+condition|(
 name|chdir
 argument_list|(
 name|top
