@@ -6804,15 +6804,7 @@ argument_list|(
 name|m
 argument_list|)
 condition|)
-block|{
-name|sc
-operator|->
-name|sc_last_recv
-operator|=
-name|time_second
-expr_stmt|;
 return|return;
-block|}
 name|schednetisr
 argument_list|(
 name|NETISR_IP
@@ -6823,13 +6815,6 @@ operator|=
 operator|&
 name|ipintrq
 expr_stmt|;
-name|sc
-operator|->
-name|sc_last_recv
-operator|=
-name|time_second
-expr_stmt|;
-comment|/* update time of last pkt rcvd */
 break|break;
 endif|#
 directive|endif
