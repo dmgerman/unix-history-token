@@ -846,6 +846,9 @@ operator||=
 name|TD_PV
 expr_stmt|;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|pmap_cache_enter
@@ -874,6 +877,9 @@ name|tp
 argument_list|,
 name|tte_link
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 else|else
