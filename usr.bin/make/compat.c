@@ -304,7 +304,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/*      * The null character serves as a sentinel in the string.      */
+comment|/* 	 * The null character serves as a sentinel in the string. 	 */
 name|meta
 index|[
 literal|0
@@ -417,11 +417,9 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|curTarg
 operator|!=
 name|NULL
-operator|)
 operator|&&
 operator|!
 name|Targ_Precious
@@ -476,7 +474,7 @@ name|p1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Run .INTERRUPT only if hit with interrupt signal      */
+comment|/* 	 * Run .INTERRUPT only if hit with interrupt signal 	 */
 if|if
 condition|(
 name|signo
@@ -563,7 +561,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * shellneed --  *  * Results:  *	Returns 1 if a specified line must be executed by the shell,  *	and 0 if it can be run via execve.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * shellneed --  *  * Results:  *	Returns 1 if a specified line must be executed by the shell,  *	and 0 if it can be run via execve.  *  * Side Effects:  *	Uses brk_string so destroys the contents of argv.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -719,7 +717,7 @@ name|Buffer
 modifier|*
 name|buf
 decl_stmt|;
-comment|/*      * Avoid clobbered variable warnings by forcing the compiler      * to ``unregister'' variables      */
+comment|/* 	 * Avoid clobbered variable warnings by forcing the compiler 	 * to ``unregister'' variables 	 */
 if|#
 directive|if
 name|__GNUC__
@@ -801,7 +799,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/*      * brk_string will return an argv with a NULL in av[0], thus causing      * execvp to choke and die horribly. Besides, how can we execute a null      * command? In any case, we warn the user that the command expanded to      * nothing (is this the right thing to do?).      */
+comment|/* 	 * brk_string will return an argv with a NULL in av[0], thus causing 	 * execvp to choke and die horribly. Besides, how can we execute a null 	 * command? In any case, we warn the user that the command expanded to 	 * nothing (is this the right thing to do?). 	 */
 if|if
 condition|(
 operator|*
@@ -902,26 +900,20 @@ return|;
 block|}
 while|while
 condition|(
-operator|(
 operator|*
 name|cmd
 operator|==
 literal|'@'
-operator|)
 operator|||
-operator|(
 operator|*
 name|cmd
 operator|==
 literal|'-'
-operator|)
 operator|||
-operator|(
 operator|*
 name|cmd
 operator|==
 literal|'+'
-operator|)
 condition|)
 block|{
 switch|switch
@@ -993,7 +985,7 @@ condition|)
 name|cmd
 operator|++
 expr_stmt|;
-comment|/*      * Search for meta characters in the command. If there are no meta      * characters, there's no need to execute a shell to execute the      * command.      */
+comment|/* 	 * Search for meta characters in the command. If there are no meta 	 * characters, there's no need to execute a shell to execute the 	 * command. 	 */
 for|for
 control|(
 name|cp
@@ -1014,10 +1006,8 @@ condition|;
 name|cp
 operator|++
 control|)
-block|{
 continue|continue;
-block|}
-comment|/*      * Print the command before echoing if we're not supposed to be quiet for      * this one. We also print the command if -n given, but not if '+'.      */
+comment|/* 	 * Print the command before echoing if we're not supposed to be quiet 	 * for this one. We also print the command if -n given, but not if '+'. 	 */
 if|if
 condition|(
 operator|!
@@ -1044,7 +1034,7 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If we're not supposed to execute any commands, this is as far as      * we go...      */
+comment|/* 	 * If we're not supposed to execute any commands, this is as far as 	 * we go... 	 */
 if|if
 condition|(
 operator|!
@@ -1067,7 +1057,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* 	 * If *cp isn't the null character, we hit a "meta" character and 	 * need to pass the command off to the shell. We give the shell the 	 * -e flag as well as -c if it's supposed to exit when it hits an 	 * error. 	 */
+comment|/* 		 * If *cp isn't the null character, we hit a "meta" character 		 * and need to pass the command off to the shell. We give the 		 * shell the -e flag as well as -c if it's supposed to exit 		 * when it hits an error. 		 */
 specifier|static
 name|char
 modifier|*
@@ -1124,7 +1114,7 @@ name|cmd
 argument_list|)
 condition|)
 block|{
-comment|/* 	 * This command must be passed by the shell for other reasons.. 	 * or.. possibly not at all. 	 */
+comment|/* 		 * This command must be passed by the shell for other reasons.. 		 * or.. possibly not at all. 		 */
 specifier|static
 name|char
 modifier|*
@@ -1174,7 +1164,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * No meta-characters, so no need to exec a shell. Break the command 	 * into words to form an argument vector we can execute. 	 * brk_string sticks our name in av[0], so we have to 	 * skip over it... 	 */
+comment|/* 		 * No meta-characters, so no need to exec a shell. Break the 		 * command into words to form an argument vector we can execute. 		 * brk_string sticks our name in av[0], so we have to 		 * skip over it... 		 */
 name|av
 operator|=
 name|brk_string
@@ -1191,7 +1181,7 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
-comment|/*      * Fork and execute the single command. If the fork fails, we abort.      */
+comment|/* 	 * Fork and execute the single command. If the fork fails, we abort. 	 */
 name|cpid
 operator|=
 name|vfork
@@ -1287,7 +1277,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * we need to print out the command associated with this Gnode in      * Targ_PrintCmd from Targ_PrintGraph when debugging at level g2,      * in main(), Fatal() and DieHorribly(), therefore do not free it      * when debugging.      */
+comment|/* 	 * we need to print out the command associated with this Gnode in 	 * Targ_PrintCmd from Targ_PrintGraph when debugging at level g2, 	 * in main(), Fatal() and DieHorribly(), therefore do not free it 	 * when debugging. 	 */
 if|if
 condition|(
 operator|!
@@ -1310,7 +1300,7 @@ name|cmd_save
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * The child is off and running. Now all we can do is wait...      */
+comment|/* 	 * The child is off and running. Now all we can do is wait... 	 */
 while|while
 condition|(
 literal|1
@@ -1443,11 +1433,9 @@ argument_list|(
 name|reason
 argument_list|)
 operator|||
-operator|(
 name|status
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 if|if
@@ -1466,7 +1454,7 @@ condition|(
 name|keepgoing
 condition|)
 block|{
-comment|/* 			 * Abort the current target, but let others 			 * continue. 			 */
+comment|/* 						 * Abort the current target, 						 * but let others continue. 						 */
 name|printf
 argument_list|(
 literal|" (continuing)\n"
@@ -1476,7 +1464,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		     * Continue executing commands for this target. 		     * If we return 0, this will happen... 		     */
+comment|/* 					 * Continue executing commands for this 					 * target. If we return 0, this will 					 * happen... 					 */
 name|printf
 argument_list|(
 literal|" (ignored)\n"
@@ -1571,7 +1559,7 @@ operator|==
 name|UNMADE
 condition|)
 block|{
-comment|/* 	 * First mark ourselves to be made, then apply whatever transformations 	 * the suffix module thinks are necessary. Once that's done, we can 	 * descend and make all our children. If any of them has an error 	 * but the -k flag was given, our 'make' field will be set FALSE again. 	 * This is our signal to not attempt to do anything but abort our 	 * parent as well. 	 */
+comment|/* 		 * First mark ourselves to be made, then apply whatever 		 * transformations the suffix module thinks are necessary. 		 * Once that's done, we can descend and make all our children. 		 * If any of them has an error but the -k flag was given, our 		 * 'make' field will be set FALSE again. This is our signal to 		 * not attempt to do anything but abort our parent as well. 		 */
 name|gn
 operator|->
 name|make
@@ -1669,7 +1657,7 @@ name|p1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * All the children were made ok. Now cmtime contains the modification 	 * time of the newest child, we need to find out if we exist and when 	 * we were modified last. The criteria for datedness are defined by the 	 * Make_OODate function. 	 */
+comment|/* 		 * All the children were made ok. Now cmtime contains the 		 * modification time of the newest child, we need to find out 		 * if we exist and when we were modified last. The criteria for 		 * datedness are defined by the Make_OODate function. 		 */
 name|DEBUGF
 argument_list|(
 name|MAKE
@@ -1725,7 +1713,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the user is just seeing if something is out-of-date, exit now 	 * to tell him/her "yes". 	 */
+comment|/* 		 * If the user is just seeing if something is out-of-date, 		 * exit now to tell him/her "yes". 		 */
 if|if
 condition|(
 name|queryFlag
@@ -1737,13 +1725,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We need to be re-made. We also have to make sure we've got a $? 	 * variable. To be nice, we also define the $> variable using 	 * Make_DoAllVar(). 	 */
+comment|/* 		 * We need to be re-made. We also have to make sure we've got 		 * a $? variable. To be nice, we also define the $> variable 		 * using Make_DoAllVar(). 		 */
 name|Make_DoAllVar
 argument_list|(
 name|gn
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Alter our type to tell if errors should be ignored or things 	 * should not be printed so Compat_RunCommand knows what to do. 	 */
+comment|/* 		 * Alter our type to tell if errors should be ignored or things 		 * should not be printed so Compat_RunCommand knows what to do. 		 */
 if|if
 condition|(
 name|Targ_Ignore
@@ -1784,7 +1772,7 @@ name|Fatal
 argument_list|)
 condition|)
 block|{
-comment|/* 	     * Our commands are ok, but we still have to worry about the -t 	     * flag... 	     */
+comment|/* 			 * Our commands are ok, but we still have to worry 			 * about the -t flag... 			 */
 if|if
 condition|(
 operator|!
@@ -1854,7 +1842,7 @@ operator|!=
 name|ERROR
 condition|)
 block|{
-comment|/* 	     * If the node was made successfully, mark it so, update 	     * its modification time and timestamp all its parents. Note 	     * that for .ZEROTIME targets, the timestamping isn't done. 	     * This is to keep its state from affecting that of its parent. 	     */
+comment|/* 			 * If the node was made successfully, mark it so, update 			 * its modification time and timestamp all its parents. 			 * Note that for .ZEROTIME targets, the timestamping 			 * isn't done. This is to keep its state from affecting 			 * that of its parent. 			 */
 name|gn
 operator|->
 name|made
@@ -1864,7 +1852,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|RECHECK
-comment|/* 	     * We can't re-stat the thing, but we can at least take care of 	     * rules where a target depends on a source that actually creates 	     * the target, but only if it has changed, e.g. 	     * 	     * parse.h : parse.o 	     * 	     * parse.o : parse.y 	     *  	yacc -d parse.y 	     *  	cc -c y.tab.c 	     *  	mv y.tab.o parse.o 	     *  	cmp -s y.tab.h parse.h || mv y.tab.h parse.h 	     * 	     * In this case, if the definitions produced by yacc haven't 	     * changed from before, parse.h won't have been updated and 	     * gn->mtime will reflect the current modification time for 	     * parse.h. This is something of a kludge, I admit, but it's a 	     * useful one.. 	     * 	     * XXX: People like to use a rule like 	     * 	     * FRC: 	     * 	     * To force things that depend on FRC to be made, so we have to 	     * check for gn->children being empty as well... 	     */
+comment|/* 			 * We can't re-stat the thing, but we can at least take 			 * care of rules where a target depends on a source that 			 * actually creates the target, but only if it has 			 * changed, e.g. 			 * 			 * parse.h : parse.o 			 * 			 * parse.o : parse.y 			 *  	yacc -d parse.y 			 *  	cc -c y.tab.c 			 *  	mv y.tab.o parse.o 			 *  	cmp -s y.tab.h parse.h || mv y.tab.h parse.h 			 * 			 * In this case, if the definitions produced by yacc 			 * haven't changed from before, parse.h won't have been 			 * updated and gn->mtime will reflect the current 			 * modification time for parse.h. This is something of a 			 * kludge, I admit, but it's a useful one.. 			 * 			 * XXX: People like to use a rule like 			 * 			 * FRC: 			 * 			 * To force things that depend on FRC to be made, so we 			 * have to check for gn->children being empty as well... 			 */
 if|if
 condition|(
 operator|!
@@ -1894,7 +1882,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* 	     * This is what Make does and it's actually a good thing, as it 	     * allows rules like 	     * 	     *	cmp -s y.tab.h parse.h || cp y.tab.h parse.h 	     * 	     * to function as intended. Unfortunately, thanks to the stateless 	     * nature of NFS (and the speed of this program), there are times 	     * when the modification time of a file created on a remote 	     * machine will not be modified before the stat() implied by 	     * the Dir_MTime occurs, thus leading us to believe that the file 	     * is unchanged, wreaking havoc with files that depend on this one. 	     * 	     * I have decided it is better to make too much than to make too 	     * little, so this stuff is commented out unless you're sure it's 	     * ok. 	     * -- ardeb 1/12/88 	     */
+comment|/* 			 * This is what Make does and it's actually a good 			 * thing, as it allows rules like 			 * 			 *	cmp -s y.tab.h parse.h || cp y.tab.h parse.h 			 * 			 * to function as intended. Unfortunately, thanks to 			 * the stateless nature of NFS (and the speed of this 			 * program), there are times when the modification time 			 * of a file created on a remote machine will not be 			 * modified before the stat() implied by the Dir_MTime 			 * occurs, thus leading us to believe that the file 			 * is unchanged, wreaking havoc with files that depend 			 * on this one. 			 * 			 * I have decided it is better to make too much than to 			 * make too little, so this stuff is commented out 			 * unless you're sure it's ok. 			 * -- ardeb 1/12/88 			 */
 if|if
 condition|(
 name|noExecute
@@ -2033,7 +2021,7 @@ operator|==
 name|ERROR
 condition|)
 block|{
-comment|/* 	 * Already had an error when making this beastie. Tell the parent 	 * to abort. 	 */
+comment|/* 		 * Already had an error when making this beastie. Tell the 		 * parent to abort. 		 */
 name|pgn
 operator|->
 name|make
@@ -2309,7 +2297,7 @@ argument_list|,
 name|TARG_CREATE
 argument_list|)
 expr_stmt|;
-comment|/*      * If the user has defined a .BEGIN target, execute the commands attached      * to it.      */
+comment|/* 	 * If the user has defined a .BEGIN target, execute the commands 	 * attached to it. 	*/
 if|if
 condition|(
 operator|!
@@ -2375,7 +2363,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*      * For each entry in the list of targets to create, call CompatMake on      * it to create the thing. CompatMake will leave the 'made' field of gn      * in one of several states:      *	    UPTODATE	    gn was already up-to-date      *	    MADE  	    gn was recreated successfully      *	    ERROR 	    An error occurred while gn was being created      *	    ABORTED	    gn was not remade because one of its inferiors      *	    	  	    could not be made due to errors.      */
+comment|/* 	 * For each entry in the list of targets to create, call CompatMake on 	 * it to create the thing. CompatMake will leave the 'made' field of gn 	 * in one of several states: 	 *	UPTODATE  gn was already up-to-date 	 *	MADE	  gn was recreated successfully 	 *	ERROR	  An error occurred while gn was being created 	 *	ABORTED	  gn was not remade because one of its inferiors 	 *		  could not be made due to errors. 	 */
 name|errors
 operator|=
 literal|0
@@ -2447,7 +2435,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/*      * If the user has defined a .END target, run its commands.      */
+comment|/* 	 * If the user has defined a .END target, run its commands. 	 */
 if|if
 condition|(
 name|errors
