@@ -4640,6 +4640,10 @@ name|checkTrue
 block|,
 name|dmenuExit
 block|,
+name|NULL
+block|,
+name|NULL
+block|,
 literal|'<'
 block|,
 literal|'<'
