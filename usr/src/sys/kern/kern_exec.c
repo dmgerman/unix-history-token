@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.59 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.60 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3744,6 +3744,19 @@ operator|.
 name|pr_scale
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|SPROFIL
+condition|)
+name|stopprofclock
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
