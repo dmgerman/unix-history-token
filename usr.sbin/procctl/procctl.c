@@ -3,13 +3,59 @@ begin_comment
 comment|/*  * Copryight 1997 Sean Eric Fagan  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Sean Eric Fagan  * 4. Neither the name of the author may be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/*  * procctl -- clear the event mask, and continue, any specified processes.  * This is largely an example of how to use the procfs interface; however,  * for now, it is also sometimes necessary, as a stopped process will not  * otherwise continue.  (This will be fixed in a later version of the  * procfs code, almost certainly; however, this program will still be useful  * for some annoying circumstances.)  */
 end_comment
 
-begin_comment
-comment|/*  * $Id: procctl.c,v 1.2 1997/12/13 03:13:49 sef Exp $  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
 
 begin_include
 include|#
@@ -32,25 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -66,6 +94,7 @@ file|<sys/pioctl.h>
 end_include
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
@@ -82,19 +111,6 @@ name|fd
 decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-name|unsigned
-name|int
-name|mask
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|command
-decl_stmt|;
-name|struct
-name|procfs_status
-name|pfs
 decl_stmt|;
 for|for
 control|(
@@ -152,26 +168,14 @@ operator|==
 name|ENOENT
 condition|)
 continue|continue;
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:  cannot open pid %s:  %s\n"
-argument_list|,
-name|av
-index|[
-literal|0
-index|]
+literal|"cannot open pid %s"
 argument_list|,
 name|av
 index|[
 name|i
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -191,30 +195,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:  cannot clear process %s's event mask: %s\n"
-argument_list|,
-name|av
-index|[
-literal|0
-index|]
+literal|"cannot clear process %s's event mask"
 argument_list|,
 name|av
 index|[
 name|i
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ioctl
@@ -233,30 +223,16 @@ name|errno
 operator|!=
 name|EINVAL
 condition|)
-block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:  cannot continue process %s:  %s\n"
-argument_list|,
-name|av
-index|[
-literal|0
-index|]
+literal|"cannot continue process %s"
 argument_list|,
 name|av
 index|[
 name|i
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|close
 argument_list|(
 name|fd
