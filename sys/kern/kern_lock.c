@@ -2546,7 +2546,7 @@ name|LK_HAVE_EXCL
 condition|)
 name|printf
 argument_list|(
-literal|" lock type %s: EXCL (count %d) by thread %p"
+literal|" lock type %s: EXCL (count %d) by thread %p (pid %d)"
 argument_list|,
 name|lkp
 operator|->
@@ -2559,6 +2559,14 @@ argument_list|,
 name|lkp
 operator|->
 name|lk_lockholder
+argument_list|,
+name|lkp
+operator|->
+name|lk_lockholder
+operator|->
+name|td_proc
+operator|->
+name|p_pid
 argument_list|)
 expr_stmt|;
 if|if
