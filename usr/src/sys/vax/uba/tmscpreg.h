@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)tmscpreg.h	5.1 (Berkeley) %G% */
+comment|/* @(#)tmscpreg.h	5.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*	@(#)tmscpreg.h	1.1	11/2/84	84/09/25	*/
 end_comment
 
 begin_comment
-comment|/************************************************************************  *									*  *			Copyright (c) 1985 by				*  *		Digital Equipment Corporation, Maynard, MA		*  *									*  *	Permission to use, copy, modify, and distribute this software	*  *	and its documentation is hereby granted to licensees of the	*  *	Regents of the University of California pursuant to their	*  *	license agreement for the "Fourth Berkeley Software		*  *	Distribution".							*  *									*  *	The information in this software is subject to change without	*  *	notice and should not be construed as a commitment by Digital	*  *	Equipment Corporation.  Digital makes no representations	*  *	about suitability of this software for any purpose. It is	*  *	supplied "as is" without express or implied warranty.		*  *									*  *	This software is not subject to any license of the American	*  *	Telephone and Telegraph Company.				*  *									*  ************************************************************************/
+comment|/****************************************************************  *								*  *        Licensed from Digital Equipment Corporation 		*  *                       Copyright (c) 				*  *               Digital Equipment Corporation			*  *                   Maynard, Massachusetts 			*  *                         1985, 1986 				*  *                    All rights reserved. 			*  *								*  *        The Information in this software is subject to change *  *   without notice and should not be construed as a commitment *  *   by  Digital  Equipment  Corporation.   Digital   makes  no *  *   representations about the suitability of this software for *  *   any purpose.  It is supplied "As Is" without expressed  or *  *   implied  warranty. 					*  *								*  *        If the Regents of the University of California or its *  *   licensees modify the software in a manner creating  	*  *   diriviative copyright rights, appropriate copyright  	*  *   legends may be placed on  the drivative work in addition   *  *   to that set forth above. 					*  *								*  ****************************************************************/
 end_comment
 
 begin_comment
