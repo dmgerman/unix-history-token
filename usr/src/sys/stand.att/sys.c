@@ -1,36 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/reboot.h"
+file|"reboot.h"
 end_include
 
 begin_include
@@ -217,6 +217,10 @@ modifier|*
 name|q
 decl_stmt|;
 name|char
+modifier|*
+name|dir
+decl_stmt|;
+name|char
 name|c
 decl_stmt|;
 name|int
@@ -271,6 +275,10 @@ literal|0
 operator|)
 return|;
 block|}
+name|dir
+operator|=
+name|path
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -337,6 +345,8 @@ argument_list|(
 name|path
 argument_list|,
 name|file
+argument_list|,
+name|dir
 argument_list|)
 operator|)
 operator|!=
@@ -788,6 +798,8 @@ parameter_list|(
 name|s
 parameter_list|,
 name|io
+parameter_list|,
+name|dir
 parameter_list|)
 name|char
 modifier|*
@@ -798,6 +810,10 @@ name|struct
 name|iob
 modifier|*
 name|io
+decl_stmt|;
+name|char
+modifier|*
+name|dir
 decl_stmt|;
 block|{
 specifier|register
@@ -864,7 +880,7 @@ name|printf
 argument_list|(
 literal|"%s: not a directory\n"
 argument_list|,
-name|s
+name|dir
 argument_list|)
 expr_stmt|;
 return|return
@@ -886,7 +902,7 @@ name|printf
 argument_list|(
 literal|"%s: zero length directory\n"
 argument_list|,
-name|s
+name|dir
 argument_list|)
 expr_stmt|;
 return|return
@@ -2678,6 +2694,7 @@ name|i_boff
 operator|=
 name|atol
 argument_list|(
+operator|++
 name|cp
 argument_list|)
 expr_stmt|;
@@ -2706,6 +2723,9 @@ goto|goto
 name|badspec
 goto|;
 block|}
+name|cp
+operator|++
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -2964,6 +2984,10 @@ name|i_boff
 operator|<<
 name|B_PARTITIONSHIFT
 expr_stmt|;
+name|opendev
+operator||=
+name|B_DEVMAGIC
+expr_stmt|;
 if|if
 condition|(
 name|errno
@@ -3041,7 +3065,9 @@ name|file
 operator|->
 name|i_bn
 operator|=
-name|SBLOCK
+name|SBOFF
+operator|/
+name|DEV_BSIZE
 operator|+
 name|file
 operator|->
