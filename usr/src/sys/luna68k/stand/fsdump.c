@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)fsdump.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)fsdump.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -322,6 +322,33 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|i
+operator|==
+literal|5
+operator|&&
+name|argc
+operator|>
+literal|1
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"tailor"
+argument_list|)
+condition|)
+name|pp
+operator|->
+name|p_size
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|st_rewind
 argument_list|(
