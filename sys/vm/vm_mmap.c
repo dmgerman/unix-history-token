@@ -3926,12 +3926,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|vm_map_unwire
@@ -3952,12 +3946,6 @@ operator|+
 name|size
 argument_list|,
 name|TRUE
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
