@@ -3,20 +3,8 @@ begin_comment
 comment|/*-  * Copyright (c) 1994-2000  *	Paul Richards.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Paul Richards may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY PAUL RICHARDS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL PAUL RICHARDS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DIAGNOSTIC
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
 begin_comment
-comment|/*  *  * TODO ----  *  * Check all the XXX comments -- some of them are just things I've left  * unfinished rather than "difficult" problems that were hacked around.  *  * Check log settings.  *  * Check how all the arpcom flags get set and used.  *  * Re-inline and re-static all routines after debugging.  *  * Remember to assign iobase in SHMEM probe routines.  *  * Replace all occurences of LANCE-controller-card etc in prints by the name  * strings of the appropriate type -- nifty window dressing  *  * Add DEPCA support -- mostly done.  *  */
+comment|/* #define DIAGNOSTIC #define DEBUG  *  * TODO ----  *  * Check all the XXX comments -- some of them are just things I've left  * unfinished rather than "difficult" problems that were hacked around.  *  * Check log settings.  *  * Check how all the arpcom flags get set and used.  *  * Re-inline and re-static all routines after debugging.  *  * Remember to assign iobase in SHMEM probe routines.  *  * Replace all occurences of LANCE-controller-card etc in prints by the name  * strings of the appropriate type -- nifty window dressing  *  * Add DEPCA support -- mostly done.  *  */
 end_comment
 
 begin_include

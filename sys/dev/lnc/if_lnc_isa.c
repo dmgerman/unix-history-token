@@ -929,15 +929,6 @@ operator|=
 name|BICC_RDP
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"rap = %x\n"
-argument_list|,
-name|sc
-operator|->
-name|rap
-argument_list|)
-expr_stmt|;
 comment|/* Create a DMA tag describing the ring memory we need */
 name|lnc_mem_size
 operator|=
