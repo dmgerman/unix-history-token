@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUnixTime.c --  *  *	Contains Unix specific versions of Tcl functions that  *	obtain time values from the operating system.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixTime.c 1.11 96/07/23 16:17:21  */
+comment|/*   * tclUnixTime.c --  *  *	Contains Unix specific versions of Tcl functions that  *	obtain time values from the operating system.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixTime.c 1.12 97/01/08 17:38:15  */
 end_comment
 
 begin_include
@@ -127,7 +127,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * TclpGetTimeZone --  *  *	Determines the current timezone.  The method varies wildly  *	between different platform implementations, so its hidden in  *	this function.  *  * Results:  *	Hours east of GMT.  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * TclpGetTimeZone --  *  *	Determines the current timezone.  The method varies wildly  *	between different platform implementations, so its hidden in  *	this function.  *  * Results:  *	The return value is the local time zone, measured in  *	minutes away from GMT (-ve for east, +ve for west).  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -263,6 +263,69 @@ name|timeZone
 return|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_DELTA_FOR_TZ
+argument_list|)
+define|#
+directive|define
+name|TCL_GOT_TIMEZONE
+value|1
+comment|/*      * This hack replaces using global var timezone or gettimeofday      * in situations where they are buggy such as on AIX when libbsd.a      * is linked in.      */
+name|int
+name|timeZone
+decl_stmt|;
+name|time_t
+name|tt
+decl_stmt|;
+name|struct
+name|tm
+modifier|*
+name|stm
+decl_stmt|;
+name|tt
+operator|=
+literal|849268800L
+expr_stmt|;
+comment|/*    1996-11-29 12:00:00  GMT */
+name|stm
+operator|=
+name|localtime
+argument_list|(
+operator|&
+name|tt
+argument_list|)
+expr_stmt|;
+comment|/* eg 1996-11-29  6:00:00  CST6CDT */
+comment|/* The calculation below assumes a max of +12 or -12 hours from GMT */
+name|timeZone
+operator|=
+operator|(
+literal|12
+operator|-
+name|stm
+operator|->
+name|tm_hour
+operator|)
+operator|*
+literal|60
+operator|+
+operator|(
+literal|0
+operator|-
+name|stm
+operator|->
+name|tm_min
+operator|)
+expr_stmt|;
+return|return
+name|timeZone
+return|;
+comment|/* eg +360 for CST6CDT */
+endif|#
+directive|endif
 comment|/*      * Must prefer timezone variable over gettimeofday, as gettimeofday does      * not return timezone information on many systems that have moved this      * information outside of the kernel.      */
 if|#
 directive|if
@@ -316,9 +379,10 @@ endif|#
 directive|endif
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|HAVE_GETTIMEOFDAY
+name|NO_GETTOD
 argument_list|)
 operator|&&
 operator|!
