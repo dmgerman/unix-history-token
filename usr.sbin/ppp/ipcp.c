@@ -108,13 +108,13 @@ end_ifndef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|LOCALNAT
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<alias.h>
+file|"alias.h"
 end_include
 
 begin_else
@@ -125,7 +125,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|"alias.h"
+file|<alias.h>
 end_include
 
 begin_endif
