@@ -1351,7 +1351,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usbd_do_request_flags
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -1362,10 +1362,6 @@ name|req
 argument_list|,
 operator|&
 name|val
-argument_list|,
-name|USBD_NO_TSLEEP
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|AUE_UNLOCK
@@ -1474,7 +1470,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usbd_do_request_flags
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -1485,10 +1481,6 @@ name|req
 argument_list|,
 operator|&
 name|val
-argument_list|,
-name|USBD_NO_TSLEEP
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|AUE_UNLOCK
@@ -1595,7 +1587,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usbd_do_request_flags
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -1606,10 +1598,6 @@ name|req
 argument_list|,
 operator|&
 name|val
-argument_list|,
-name|USBD_NO_TSLEEP
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|AUE_UNLOCK
@@ -1717,7 +1705,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usbd_do_request_flags
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -1728,10 +1716,6 @@ name|req
 argument_list|,
 operator|&
 name|val
-argument_list|,
-name|USBD_NO_TSLEEP
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|AUE_UNLOCK

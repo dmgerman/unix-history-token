@@ -753,8 +753,6 @@ name|wLength
 argument_list|)
 argument_list|,
 name|USBD_SHORT_XFER_OK
-operator||
-name|USBD_NO_TSLEEP
 argument_list|,
 literal|0
 argument_list|)

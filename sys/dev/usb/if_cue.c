@@ -774,7 +774,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usbd_do_request_flags
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -785,10 +785,6 @@ name|req
 argument_list|,
 operator|&
 name|val
-argument_list|,
-name|USBD_NO_TSLEEP
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|CUE_UNLOCK
@@ -895,7 +891,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usbd_do_request_flags
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -906,10 +902,6 @@ name|req
 argument_list|,
 operator|&
 name|val
-argument_list|,
-name|USBD_NO_TSLEEP
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|CUE_UNLOCK
@@ -1014,7 +1006,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usbd_do_request_flags
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -1022,11 +1014,6 @@ name|cue_udev
 argument_list|,
 operator|&
 name|req
-argument_list|,
-operator|&
-name|val
-argument_list|,
-name|USBD_NO_TSLEEP
 argument_list|,
 name|NULL
 argument_list|)
@@ -1140,7 +1127,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usbd_do_request_flags
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -1148,11 +1135,6 @@ name|cue_udev
 argument_list|,
 operator|&
 name|req
-argument_list|,
-operator|&
-name|val
-argument_list|,
-name|USBD_NO_TSLEEP
 argument_list|,
 name|NULL
 argument_list|)
@@ -1285,7 +1267,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usbd_do_request_flags
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -1294,12 +1276,7 @@ argument_list|,
 operator|&
 name|req
 argument_list|,
-operator|&
 name|buf
-argument_list|,
-name|USBD_NO_TSLEEP
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|CUE_UNLOCK
@@ -1403,7 +1380,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usbd_do_request_flags
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -1413,10 +1390,6 @@ operator|&
 name|req
 argument_list|,
 name|buf
-argument_list|,
-name|USBD_NO_TSLEEP
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|CUE_UNLOCK
@@ -1862,7 +1835,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|usbd_do_request_flags
+name|usbd_do_request
 argument_list|(
 name|sc
 operator|->
@@ -1870,10 +1843,6 @@ name|cue_udev
 argument_list|,
 operator|&
 name|req
-argument_list|,
-name|NULL
-argument_list|,
-name|USBD_NO_TSLEEP
 argument_list|,
 name|NULL
 argument_list|)
