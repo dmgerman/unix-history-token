@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -72,41 +72,6 @@ directive|define
 name|RRFIXEDSZ
 value|10
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HTONS
-parameter_list|(
-name|s
-parameter_list|)
-value|(((s>> 8)& 0xff) | ((s& 0xff)<< 8))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|HTONS
-parameter_list|(
-name|s
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Internet nameserver port number  */
