@@ -2084,7 +2084,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * Now, get an arp entry for the server connection 	 */
+comment|/* 	 * Now, get an arp entry for the server connection 	 * May be called from timeout - don't wait. 	 */
 name|uip
 operator|->
 name|uip_arpstate
@@ -2097,7 +2097,7 @@ name|uma_zalloc
 argument_list|(
 name|uniarp_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)

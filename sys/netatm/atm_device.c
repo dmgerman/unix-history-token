@@ -438,7 +438,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * Allocate a VCC control block 	 */
+comment|/* 	 * Allocate a VCC control block 	 * This can happen from a callout so don't wait here. 	 */
 name|cvp
 operator|=
 name|uma_zalloc
@@ -447,7 +447,7 @@ name|cup
 operator|->
 name|cu_vcc_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

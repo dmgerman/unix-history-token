@@ -369,7 +369,7 @@ operator|)
 condition|)
 break|break;
 block|}
-comment|/* 	 * If there aren't any entries yet, create one 	 */
+comment|/* 	 * If there aren't any entries yet, create one 	 * May be called from netisr - don't wait. 	 */
 if|if
 condition|(
 operator|(
@@ -391,7 +391,7 @@ name|uma_zalloc
 argument_list|(
 name|uniarp_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

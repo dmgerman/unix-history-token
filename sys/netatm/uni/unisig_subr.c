@@ -896,14 +896,14 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * Allocate control block for VCC 	 */
+comment|/* 	 * Allocate control block for VCC 	 * May be called from timeout - don't wait. 	 */
 name|uvp
 operator|=
 name|uma_zalloc
 argument_list|(
 name|unisig_vc_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -3494,7 +3494,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy connection parameters from an attribute block into  * UNI 3.0 message IEs  *  * Arguments:  *	usp	pointer to UNISIG protocol instance  *	msg	pointer to the SETUP message  *	ap	pointer to the attribute block  *  * Returns:  *	0	everything OK  *	else	error encountered  *  */
+comment|/*  * Copy connection parameters from an attribute block into  * UNI 3.0 message IEs  *  * Arguments:  *	usp	pointer to UNISIG protocol instance  *	msg	pointer to the SETUP message  *	ap	pointer to the attribute block  *  * Returns:  *	0	everything OK  *	else	error encountered  *  * May be called from timeout so make allocations non-waiting  */
 end_comment
 
 begin_function
@@ -3569,7 +3569,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -3887,7 +3887,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -4245,7 +4245,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -4395,7 +4395,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -4676,7 +4676,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -5138,7 +5138,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -5235,7 +5235,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -5333,7 +5333,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -5430,7 +5430,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -5528,7 +5528,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -5720,7 +5720,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -5841,7 +5841,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)

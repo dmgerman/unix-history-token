@@ -756,14 +756,14 @@ name|MAP_FAILED
 operator|)
 return|;
 block|}
-comment|/* 	 * We're a client with an open VCC to the server, get a new arp entry 	 */
+comment|/* 	 * We're a client with an open VCC to the server, get a new arp entry 	 * May be called from timeout - don't wait. 	 */
 name|uap
 operator|=
 name|uma_zalloc
 argument_list|(
 name|uniarp_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1286,14 +1286,14 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * No info in the cache - get a new arp entry 	 */
+comment|/* 	 * No info in the cache - get a new arp entry 	 * May be called from timeout - don't wait. 	 */
 name|uap
 operator|=
 name|uma_zalloc
 argument_list|(
 name|uniarp_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)

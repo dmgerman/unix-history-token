@@ -1474,14 +1474,14 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* 	 * Allocate IP VCC 	 */
+comment|/* 	 * Allocate IP VCC 	 * May be called from timeout - don't wait. 	 */
 name|ivp
 operator|=
 name|uma_zalloc
 argument_list|(
 name|ipatm_vc_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2561,14 +2561,14 @@ name|reject
 goto|;
 block|}
 block|}
-comment|/* 	 * Allocate IP VCC 	 */
+comment|/* 	 * Allocate IP VCC 	 * May be called from timeout - don't wait. 	 */
 name|ivp
 operator|=
 name|uma_zalloc
 argument_list|(
 name|ipatm_vc_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

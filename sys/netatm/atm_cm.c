@@ -600,14 +600,14 @@ name|cvp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Get a connection block 	 */
+comment|/* 	 * Get a connection block 	 * May be called from timeout - don't wait. 	 */
 name|cop
 operator|=
 name|uma_zalloc
 argument_list|(
 name|atm_connection_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1335,14 +1335,14 @@ goto|goto
 name|donex
 goto|;
 block|}
-comment|/* 	 * Get a connection VCC block 	 */
+comment|/* 	 * Get a connection VCC block 	 * May be called from timeouts - don't wait. 	 */
 name|cvp
 operator|=
 name|uma_zalloc
 argument_list|(
 name|atm_connvc_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2376,14 +2376,14 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * Get a connection block 	 */
+comment|/* 	 * Get a connection block 	 * May be called from netisr - don't wait. 	 */
 name|cop
 operator|=
 name|uma_zalloc
 argument_list|(
 name|atm_connection_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3686,14 +3686,14 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * Get a connection VCC block 	 */
+comment|/* 	 * Get a connection VCC block 	 * May be called from netisr - don't wait. 	 */
 name|cvp
 operator|=
 name|uma_zalloc
 argument_list|(
 name|atm_connvc_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4478,14 +4478,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Need a new connection block 			 */
+comment|/* 			 * Need a new connection block 			 * May be called from timeout - dont wait. 			 */
 name|cop
 operator|=
 name|uma_zalloc
 argument_list|(
 name|atm_connection_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

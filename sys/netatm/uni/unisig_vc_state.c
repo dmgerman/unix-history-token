@@ -2837,7 +2837,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * No--VCI must have been specified earlier 		 */
+comment|/* 		 * No--VCI must have been specified earlier 		 * May be called from netisr - don't wait. 		 */
 if|if
 condition|(
 operator|!
@@ -2852,7 +2852,7 @@ name|uma_zalloc
 argument_list|(
 name|unisig_ie_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3137,14 +3137,14 @@ block|}
 break|break;
 block|}
 block|}
-comment|/* 	 * Get memory for a CONNECT ACK message 	 */
+comment|/* 	 * Get memory for a CONNECT ACK message 	 * May be called from netisr. 	 */
 name|cack_msg
 operator|=
 name|uma_zalloc
 argument_list|(
 name|unisig_msg_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4039,13 +4039,14 @@ name|unisig_msg
 modifier|*
 name|conn_msg
 decl_stmt|;
+comment|/* may be called from timeout - don't wait */
 name|conn_msg
 operator|=
 name|uma_zalloc
 argument_list|(
 name|unisig_msg_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -5171,14 +5172,14 @@ operator|)
 name|uvp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get memory for a STATUS ENQUIRY message 	 */
+comment|/* 	 * Get memory for a STATUS ENQUIRY message 	 * May be called from netisr - don't wait. 	 */
 name|stat_msg
 operator|=
 name|uma_zalloc
 argument_list|(
 name|unisig_msg_zone
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
