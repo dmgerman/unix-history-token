@@ -2463,7 +2463,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ipcs [-abcmopqst] [-C corefile] [-N namelist]\n"
+literal|"usage: ipcs [-abcmopqstMQST] [-C corefile] [-N namelist]\n"
 argument_list|)
 expr_stmt|;
 name|exit
