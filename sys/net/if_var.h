@@ -1196,20 +1196,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|ether_ifdetach
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|ether_input
 name|__P
 argument_list|(

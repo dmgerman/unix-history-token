@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1123,7 +1129,16 @@ block|{
 case|case
 name|IFT_ETHER
 case|:
-name|ether_ifdetach
+if|if
+condition|(
+name|ng_ether_detach_p
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|ng_ether_detach_p
+call|)
 argument_list|(
 name|ifp
 argument_list|)
