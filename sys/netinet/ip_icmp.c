@@ -3009,6 +3009,16 @@ goto|;
 block|}
 name|match
 label|:
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_reflect_mbuf_icmp
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|t
 operator|=
 name|IA_SIN

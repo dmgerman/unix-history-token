@@ -2386,7 +2386,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * XXXMAC: This will need to call a mac function that 		 * modifies the mbuf label in place for TCP datagrams 		 * not associated with a PCB. 		 */
+comment|/* 		 * Packet is not associated with a socket, so possibly 		 * update the label in place. 		 */
+name|mac_reflect_mbuf_tcp
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
