@@ -1905,10 +1905,25 @@ name|f_fn
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Scan the build directory and clean out stuff that looks like 	 * it might have been a leftover NFOO header, etc. 	 */
+if|if
+condition|(
+operator|(
 name|dirp
 operator|=
 name|opendir
 argument_list|(
+name|p
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"opendir %s"
+argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
@@ -2035,6 +2050,8 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|unlink
 argument_list|(
 name|path
@@ -2043,6 +2060,18 @@ name|dp
 operator|->
 name|d_name
 argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|warn
+argument_list|(
+literal|"unlink %s"
+argument_list|,
+name|dp
+operator|->
+name|d_name
 argument_list|)
 expr_stmt|;
 block|}
