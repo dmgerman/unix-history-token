@@ -21746,7 +21746,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|500023
+literal|450000
 name|struct
 name|in_ifaddr
 modifier|*
@@ -21813,7 +21813,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|500023
+literal|450000
 name|LIST_REMOVE
 argument_list|(
 name|ia
