@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -112,6 +118,13 @@ end_include
 begin_comment
 comment|/*  * "sw" is a fake device implemented  * in vm_swap.c and used only internally to get to swstrategy.  * It cannot be provided to the users, because the  * swstrategy routine munches the b_dev and b_blkno entries  * before calling the appropriate driver.  This would horribly  * confuse, e.g. the hashing routines. Instead, /dev/drum is  * provided as a character (raw) device.  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|swopen
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -142,7 +155,7 @@ name|sw_cdevsw
 init|=
 block|{
 comment|/* open */
-name|nullopen
+name|swopen
 block|,
 comment|/* close */
 name|nullclose
@@ -267,6 +280,58 @@ end_decl_stmt
 begin_comment
 comment|/*  *	swstrategy:  *  *	Perform swap strategy interleave device selection  *  *	The bp is expected to be locked and *not* B_DONE on call.  */
 end_comment
+
+begin_function
+specifier|static
+name|int
+name|swopen
+parameter_list|(
+name|dev
+parameter_list|,
+name|flag
+parameter_list|,
+name|mode
+parameter_list|,
+name|p
+parameter_list|)
+name|dev_t
+name|dev
+decl_stmt|;
+name|int
+name|flag
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|mode
+operator|==
+name|S_IFBLK
+operator|||
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
