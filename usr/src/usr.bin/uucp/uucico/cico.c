@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.7 (Berkeley) %G%"
+literal|"@(#)cico.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,7 +417,7 @@ begin_decl_stmt
 name|char
 name|rflags
 index|[
-literal|30
+name|MAXFULLNAME
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1543,10 +1543,7 @@ argument_list|,
 name|Rmtname
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NOSTRANGERS
-comment|/* If we don't know them, we won't talk to them... */
+comment|/* The versys will also do an alias on the incoming name */
 if|if
 condition|(
 name|versys
@@ -1556,6 +1553,10 @@ name|Rmtname
 argument_list|)
 condition|)
 block|{
+comment|/* If we don't know them, we won't talk to them... */
+ifdef|#
+directive|ifdef
+name|NOSTRANGERS
 name|logent
 argument_list|(
 name|Rmtname
@@ -1577,10 +1578,10 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 endif|NOSTRANGERS
+block|}
 ifdef|#
 directive|ifdef
 name|BSDTCP
@@ -1779,7 +1780,7 @@ name|hp
 operator|->
 name|h_name
 argument_list|,
-name|MAXBASENAME
+name|SYSNSIZE
 argument_list|)
 operator|==
 literal|0
@@ -1822,7 +1823,7 @@ argument_list|,
 operator|*
 name|alias
 argument_list|,
-name|MAXBASENAME
+name|SYSNSIZE
 argument_list|)
 operator|!=
 literal|0
@@ -1840,7 +1841,7 @@ argument_list|,
 operator|*
 name|alias
 argument_list|,
-name|MAXBASENAME
+name|SYSNSIZE
 argument_list|)
 operator|!=
 literal|0
@@ -2911,7 +2912,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|10
+name|MAXFULLNAME
 index|]
 decl_stmt|;
 name|sprintf
