@@ -1525,7 +1525,7 @@ name|data
 operator|.
 name|data
 expr_stmt|;
-comment|/* increase buffer size for long lines if necessary */
+comment|/* Increase buffer size for long lines if necessary. */
 if|if
 condition|(
 name|data
