@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PCSTART.c 1.2 %G%"
+literal|"@(#)PCSTART.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,14 @@ name|long
 name|_stcnt
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|_seed
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 

@@ -9,14 +9,14 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SEED.c 1.3 %G%"
+literal|"@(#)SEED.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_include
 include|#
 directive|include
-file|<math.h>
+file|"h00vars.h"
 end_include
 
 begin_macro
@@ -34,23 +34,14 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|static
-name|long
-name|seed
-decl_stmt|;
 name|long
 name|tmp
 decl_stmt|;
-name|srand
-argument_list|(
-name|value
-argument_list|)
-expr_stmt|;
 name|tmp
 operator|=
-name|seed
+name|_seed
 expr_stmt|;
-name|seed
+name|_seed
 operator|=
 name|value
 expr_stmt|;

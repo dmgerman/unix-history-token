@@ -9,9 +9,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RANDOM.c 1.1 %G%"
+literal|"@(#)RANDOM.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|"h00vars.h"
+end_include
 
 begin_function
 name|double
@@ -19,12 +25,21 @@ name|RANDOM
 parameter_list|()
 block|{
 comment|/* 	 * div by maxint to get 0..1 	 */
+name|_seed
+operator|=
+name|RAND
+argument_list|(
+name|_seed
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|rand
-argument_list|()
+operator|(
+name|double
+operator|)
+name|_seed
 operator|/
-literal|2.147483647e+09
+literal|0x7fffffff
 operator|)
 return|;
 block|}
