@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initscr.c	5.8 (Berkeley) %G%"
+literal|"@(#)initscr.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +140,20 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+comment|/* Need either homing or cursor motion for refreshes */
+if|if
+condition|(
+operator|!
+name|HO
+operator|&&
+operator|!
+name|CM
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|tputs
 argument_list|(
 name|TI
