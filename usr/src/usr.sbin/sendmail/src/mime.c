@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.4 (Berkeley) %G%"
+literal|"@(#)mime.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -757,6 +757,39 @@ literal|0
 condition|)
 block|{
 comment|/* no encoding necessary */
+name|p
+operator|=
+name|hvalue
+argument_list|(
+literal|"content-transfer-encoding"
+argument_list|,
+name|header
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Content-Transfer-Encoding: %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
 name|putline
 argument_list|(
 literal|""
