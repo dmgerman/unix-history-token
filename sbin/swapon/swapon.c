@@ -824,6 +824,8 @@ name|xswdev
 name|xsw
 decl_stmt|;
 name|int
+name|hlen
+decl_stmt|,
 name|mib
 index|[
 literal|16
@@ -834,7 +836,7 @@ decl_stmt|,
 name|pagesize
 decl_stmt|;
 name|size_t
-name|hlen
+name|hsize
 decl_stmt|;
 name|long
 name|blocksize
@@ -899,11 +901,15 @@ default|default:
 name|getbsize
 argument_list|(
 operator|&
-name|hlen
+name|hsize
 argument_list|,
 operator|&
 name|blocksize
 argument_list|)
+expr_stmt|;
+name|hlen
+operator|=
+name|hsize
 expr_stmt|;
 break|break;
 block|}
