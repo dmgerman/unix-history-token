@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ndp.c,v 1.41 2000/07/04 12:54:11 jinmei Exp $	*/
+comment|/*	$KAME: ndp.c,v 1.46 2000/10/09 09:17:10 sumikawa Exp $	*/
 end_comment
 
 begin_comment
@@ -246,7 +246,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|fflag
+name|cflag
 decl_stmt|;
 end_decl_stmt
 
@@ -721,10 +721,6 @@ name|aflag
 init|=
 literal|0
 decl_stmt|,
-name|cflag
-init|=
-literal|0
-decl_stmt|,
 name|dflag
 init|=
 literal|0
@@ -801,10 +797,6 @@ break|break;
 case|case
 literal|'c'
 case|:
-name|fflag
-operator|=
-literal|1
-expr_stmt|;
 name|cflag
 operator|=
 literal|1
@@ -2847,6 +2839,9 @@ if|if
 condition|(
 operator|!
 name|tflag
+operator|&&
+operator|!
+name|cflag
 condition|)
 name|printf
 argument_list|(
@@ -3117,39 +3112,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|fflag
-operator|==
-literal|1
-condition|)
-block|{
-name|delete
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|inet_ntop
-argument_list|(
-name|AF_INET6
-argument_list|,
-operator|&
-name|sin
-operator|->
-name|sin6_addr
-argument_list|,
-name|ntop_buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ntop_buf
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
 name|IN6_IS_ADDR_LINKLOCAL
 argument_list|(
 operator|&
@@ -3184,7 +3146,10 @@ name|sdl
 operator|->
 name|sdl_index
 expr_stmt|;
-comment|/* XXX: KAME specific hack; removed the embedded id */
+ifdef|#
+directive|ifdef
+name|__KAME__
+comment|/* KAME specific hack; removed the embedded id */
 operator|*
 operator|(
 name|u_int16_t
@@ -3202,6 +3167,8 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|getnameinfo
 argument_list|(
@@ -3238,6 +3205,20 @@ literal|0
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cflag
+operator|==
+literal|1
+condition|)
+block|{
+name|delete
+argument_list|(
+name|host_buf
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|gettimeofday
 argument_list|(
 operator|&
