@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_aout.c,v 1.23 1999/01/27 19:00:49 dillon Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_aout.c,v 1.24 1999/01/27 23:45:37 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -362,7 +362,7 @@ block|}
 end_function
 
 begin_function
-name|db_sym_t
+name|c_db_sym_t
 name|X_db_lookup
 parameter_list|(
 name|stab
@@ -488,7 +488,7 @@ block|}
 end_function
 
 begin_function
-name|db_sym_t
+name|c_db_sym_t
 name|X_db_search_symbol
 parameter_list|(
 name|symtab
@@ -786,7 +786,7 @@ name|db_symtab_t
 modifier|*
 name|symtab
 decl_stmt|;
-name|db_sym_t
+name|c_db_sym_t
 name|sym
 decl_stmt|;
 specifier|const
@@ -860,7 +860,7 @@ name|db_symtab_t
 modifier|*
 name|symtab
 decl_stmt|;
-name|db_sym_t
+name|c_db_sym_t
 name|cursym
 decl_stmt|;
 name|char
