@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<langinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -422,15 +428,29 @@ name|int
 name|oddfield
 decl_stmt|;
 name|char
-modifier|*
-name|tzn
-decl_stmt|;
-name|char
 name|t
 index|[
 literal|80
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|d_first
+operator|<
+literal|0
+condition|)
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|D_MD_ORDER
+argument_list|)
+operator|==
+literal|'d'
+operator|)
+expr_stmt|;
 comment|/* 	 * long format -- 	 *	login name 	 *	real name 	 *	home directory 	 *	shell 	 *	office, office phone, home phone if available 	 *	mail status 	 */
 operator|(
 name|void
@@ -782,26 +802,22 @@ argument_list|(
 name|t
 argument_list|)
 argument_list|,
-literal|"%c"
+name|d_first
+condition|?
+literal|"%a %e %b %R (%Z)"
+else|:
+literal|"%a %b %e %R (%Z)"
 argument_list|,
 name|tp
 argument_list|)
-expr_stmt|;
-name|tzn
-operator|=
-name|tp
-operator|->
-name|tm_zone
 expr_stmt|;
 name|cpr
 operator|=
 name|printf
 argument_list|(
-literal|"On since %.16s (%s) on %s"
+literal|"On since %s on %s"
 argument_list|,
 name|t
-argument_list|,
-name|tzn
 argument_list|,
 name|w
 operator|->
@@ -963,26 +979,6 @@ operator|->
 name|loginat
 argument_list|)
 expr_stmt|;
-name|strftime
-argument_list|(
-name|t
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|t
-argument_list|)
-argument_list|,
-literal|"%c"
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-name|tzn
-operator|=
-name|tp
-operator|->
-name|tm_zone
-expr_stmt|;
 if|if
 condition|(
 name|now
@@ -997,35 +993,54 @@ literal|365
 operator|/
 literal|2
 condition|)
-name|cpr
-operator|=
-name|printf
+block|{
+name|strftime
 argument_list|(
-literal|"Last login %.16s %.4s (%s) on %s"
-argument_list|,
 name|t
 argument_list|,
+sizeof|sizeof
+argument_list|(
 name|t
-operator|+
-literal|20
+argument_list|)
 argument_list|,
-name|tzn
+name|d_first
+condition|?
+literal|"%a %e %b %R %Y (%Z)"
+else|:
+literal|"%a %b %e %R %Y (%Z)"
 argument_list|,
-name|w
-operator|->
-name|tty
+name|tp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+name|strftime
+argument_list|(
+name|t
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|t
+argument_list|)
+argument_list|,
+name|d_first
+condition|?
+literal|"%a %e %b %R (%Z)"
+else|:
+literal|"%a %b %e %R (%Z)"
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
+block|}
 name|cpr
 operator|=
 name|printf
 argument_list|(
-literal|"Last login %.16s (%s) on %s"
+literal|"Last login %s on %s"
 argument_list|,
 name|t
-argument_list|,
-name|tzn
 argument_list|,
 name|w
 operator|->
@@ -1130,28 +1145,20 @@ argument_list|(
 name|t
 argument_list|)
 argument_list|,
-literal|"%c"
+name|d_first
+condition|?
+literal|"%a %e %b %R %Y (%Z)"
+else|:
+literal|"%a %b %e %R %Y (%Z)"
 argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
-name|tzn
-operator|=
-name|tp
-operator|->
-name|tm_zone
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"New mail received %.16s %.4s (%s)\n"
+literal|"New mail received %s\n"
 argument_list|,
 name|t
-argument_list|,
-name|t
-operator|+
-literal|20
-argument_list|,
-name|tzn
 argument_list|)
 expr_stmt|;
 name|tp
@@ -1173,28 +1180,20 @@ argument_list|(
 name|t
 argument_list|)
 argument_list|,
-literal|"%c"
+name|d_first
+condition|?
+literal|"%a %e %b %R %Y (%Z)"
+else|:
+literal|"%a %b %e %R %Y (%Z)"
 argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
-name|tzn
-operator|=
-name|tp
-operator|->
-name|tm_zone
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"     Unread since %.16s %.4s (%s)\n"
+literal|"     Unread since %s\n"
 argument_list|,
 name|t
-argument_list|,
-name|t
-operator|+
-literal|20
-argument_list|,
-name|tzn
 argument_list|)
 expr_stmt|;
 block|}
@@ -1219,28 +1218,20 @@ argument_list|(
 name|t
 argument_list|)
 argument_list|,
-literal|"%c"
+name|d_first
+condition|?
+literal|"%a %e %b %R %Y (%Z)"
+else|:
+literal|"%a %b %e %R %Y (%Z)"
 argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
-name|tzn
-operator|=
-name|tp
-operator|->
-name|tm_zone
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"Mail last read %.16s %.4s (%s)\n"
+literal|"Mail last read %s\n"
 argument_list|,
 name|t
-argument_list|,
-name|t
-operator|+
-literal|20
-argument_list|,
-name|tzn
 argument_list|)
 expr_stmt|;
 block|}
