@@ -4000,7 +4000,7 @@ name|nseg
 argument_list|,
 name|nseg
 argument_list|,
-name|RL_JLEN
+name|MCLBYTES
 argument_list|,
 name|BUS_DMA_ALLOCNOW
 argument_list|,

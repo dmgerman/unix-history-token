@@ -3337,48 +3337,6 @@ name|RL_JUMBO_MTU
 value|(RL_JUMBO_FRAMELEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
 end_define
 
-begin_define
-define|#
-directive|define
-name|RL_JSLOTS
-value|128
-end_define
-
-begin_define
-define|#
-directive|define
-name|RL_JRAWLEN
-value|(RL_JUMBO_FRAMELEN + ETHER_ALIGN + sizeof(u_int64_t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RL_JLEN
-value|(RL_JRAWLEN + (sizeof(u_int64_t) - \ 	(RL_JRAWLEN % sizeof(u_int64_t))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RL_JPAGESZ
-value|PAGE_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|RL_RESID
-value|(RL_JPAGESZ - (RL_JLEN * RL_JSLOTS) % RL_JPAGESZ)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RL_JMEM
-value|((RL_JLEN * RL_JSLOTS) + RL_RESID)
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|rl_softc
