@@ -357,7 +357,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s(0x%04x), %s(0x%04x), rev %s"
+literal|"%s(0x%04x), %s(0x%04x), rev 0x%04x"
 argument_list|,
 name|di
 operator|.
@@ -377,7 +377,7 @@ name|vendorNo
 argument_list|,
 name|di
 operator|.
-name|release
+name|releaseNo
 argument_list|)
 expr_stmt|;
 block|}
