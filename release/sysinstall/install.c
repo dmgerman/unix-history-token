@@ -945,6 +945,9 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
+name|Restarting
+operator|&&
 name|chroot
 argument_list|(
 literal|"/mnt"

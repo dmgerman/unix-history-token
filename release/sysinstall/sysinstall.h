@@ -1677,6 +1677,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Boolean
+name|Restarting
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Are we restarting sysinstall?		*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
 name|SystemWasInstalled
 decl_stmt|;
 end_decl_stmt

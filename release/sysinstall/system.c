@@ -155,6 +155,8 @@ name|StartName
 argument_list|,
 name|StartName
 argument_list|,
+literal|"-restart"
+argument_list|,
 operator|(
 name|char
 operator|*
