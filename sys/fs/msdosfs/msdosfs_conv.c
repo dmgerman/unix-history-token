@@ -254,8 +254,6 @@ operator|->
 name|tv_sec
 operator|-
 operator|(
-name|tz
-operator|.
 name|tz_minuteswest
 operator|*
 literal|60
@@ -799,8 +797,6 @@ operator|+
 name|lastseconds
 operator|+
 operator|(
-name|tz
-operator|.
 name|tz_minuteswest
 operator|*
 literal|60

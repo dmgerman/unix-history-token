@@ -4662,8 +4662,6 @@ endif|#
 directive|endif
 name|sec
 operator|+=
-name|tz
-operator|.
 name|tz_minuteswest
 operator|*
 literal|60
@@ -4794,8 +4792,6 @@ comment|/* Register shift command. */
 comment|/* Calculate local time	to put in RTC */
 name|tm
 operator|-=
-name|tz
-operator|.
 name|tz_minuteswest
 operator|*
 literal|60
@@ -5011,8 +5007,6 @@ expr_stmt|;
 comment|/* Calculate local time to put in RTC */
 name|tm
 operator|-=
-name|tz
-operator|.
 name|tz_minuteswest
 operator|*
 literal|60

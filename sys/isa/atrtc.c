@@ -3216,8 +3216,6 @@ expr_stmt|;
 comment|/* sec now contains the number of seconds, since Jan 1 1970, 	   in the local time zone */
 name|sec
 operator|+=
-name|tz
-operator|.
 name|tz_minuteswest
 operator|*
 literal|60
@@ -3341,8 +3339,6 @@ expr_stmt|;
 comment|/* Calculate local time to put in RTC */
 name|tm
 operator|-=
-name|tz
-operator|.
 name|tz_minuteswest
 operator|*
 literal|60

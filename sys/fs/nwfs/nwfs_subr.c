@@ -3696,8 +3696,6 @@ name|tzoff
 operator|*
 literal|60
 operator|-
-name|tz
-operator|.
 name|tz_minuteswest
 operator|*
 literal|60
@@ -4236,8 +4234,6 @@ name|seconds
 operator|+
 name|lastseconds
 operator|+
-name|tz
-operator|.
 name|tz_minuteswest
 operator|*
 literal|60

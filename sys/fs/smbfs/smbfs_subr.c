@@ -372,7 +372,7 @@ operator|-
 name|tzoff
 operator|*
 literal|60
-comment|/*- tz.tz_minuteswest * 60 - 	    (wall_cmos_clock ? adjkerntz : 0)*/
+comment|/*- tz_minuteswest * 60 - 	    (wall_cmos_clock ? adjkerntz : 0)*/
 expr_stmt|;
 block|}
 end_function
@@ -403,7 +403,7 @@ name|tzoff
 operator|*
 literal|60
 expr_stmt|;
-comment|/*+ tz.tz_minuteswest * 60 + (wall_cmos_clock ? adjkerntz : 0)*/
+comment|/*+ tz_minuteswest * 60 + (wall_cmos_clock ? adjkerntz : 0)*/
 empty_stmt|;
 block|}
 end_function

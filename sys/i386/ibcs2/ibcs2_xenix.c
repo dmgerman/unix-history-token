@@ -460,16 +460,12 @@ name|itb
 operator|.
 name|timezone
 operator|=
-name|tz
-operator|.
 name|tz_minuteswest
 expr_stmt|;
 name|itb
 operator|.
 name|dstflag
 operator|=
-name|tz
-operator|.
 name|tz_dsttime
 operator|!=
 name|DST_NONE
