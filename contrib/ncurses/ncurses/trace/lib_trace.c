@@ -106,7 +106,7 @@ end_endif
 
 begin_function
 name|void
-name|trace
+name|_nc_trace
 parameter_list|(
 specifier|const
 name|unsigned
