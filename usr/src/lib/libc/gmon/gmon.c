@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	1.7 (Berkeley) %G%"
+literal|"@(#)gmon.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1328,8 +1328,6 @@ operator|*
 operator|)
 name|lowpc
 operator|)
-operator|>>
-literal|1
 operator|)
 expr_stmt|;
 if|if
@@ -1349,12 +1347,12 @@ operator|/
 name|o
 operator|)
 operator|*
-literal|32768
+literal|65536
 expr_stmt|;
 else|else
 name|o
 operator|=
-literal|0177777
+literal|65536
 expr_stmt|;
 name|profil
 argument_list|(
