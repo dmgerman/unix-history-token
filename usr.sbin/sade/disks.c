@@ -1680,6 +1680,7 @@ expr_stmt|;
 comment|/* Don't trash the MBR if the first (and therefore only) chunk is marked for a truly dedicated 		 * disk (i.e., the disklabel starts at sector 0), even in cases where the user has requested 		 * booteasy or a "standard" MBR -- both would be fatal in this case. 		 */
 if|if
 condition|(
+operator|!
 operator|(
 name|d
 operator|->
@@ -1691,8 +1692,6 @@ name|flags
 operator|&
 name|CHUNK_FORCE_ALL
 operator|)
-operator|!=
-name|CHUNK_FORCE_ALL
 operator|&&
 operator|(
 name|mbrContents

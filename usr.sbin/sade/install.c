@@ -2606,8 +2606,6 @@ name|str
 decl_stmt|;
 name|Boolean
 name|need_bin
-init|=
-name|FALSE
 decl_stmt|;
 if|if
 condition|(
@@ -2793,15 +2791,11 @@ return|return
 name|i
 return|;
 block|}
-if|if
-condition|(
+name|need_bin
+operator|=
 name|Dists
 operator|&
 name|DIST_BIN
-condition|)
-name|need_bin
-operator|=
-name|TRUE
 expr_stmt|;
 name|i
 operator|=
@@ -2818,10 +2812,8 @@ name|i
 argument_list|)
 operator|==
 name|DITEM_SUCCESS
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
+operator|(
 operator|!
 name|need_bin
 operator|||
@@ -2831,6 +2823,7 @@ name|Dists
 operator|&
 name|DIST_BIN
 operator|)
+operator|)
 condition|)
 name|i
 operator|=
@@ -2839,7 +2832,6 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-block|}
 name|variable_set2
 argument_list|(
 name|SYSTEM_STATE
@@ -3414,6 +3406,8 @@ expr_stmt|;
 if|if
 condition|(
 name|swapdev
+operator|&&
+name|RunningAsInit
 condition|)
 block|{
 comment|/* As the very first thing, try to get ourselves some swap space */
@@ -3503,6 +3497,8 @@ block|}
 if|if
 condition|(
 name|rootdev
+operator|&&
+name|RunningAsInit
 condition|)
 block|{
 comment|/* Next, create and/or mount the root device */
@@ -3781,6 +3777,8 @@ return|;
 block|}
 if|if
 condition|(
+name|RunningAsInit
+operator|&&
 name|root
 operator|&&
 operator|(
@@ -3810,6 +3808,22 @@ literal|"/mnt/dev"
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|RunningAsInit
+operator|&&
+operator|!
+name|Fake
+condition|)
+name|MakeDevDisk
+argument_list|(
+name|disk
+argument_list|,
+literal|"/dev"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|c1
@@ -3906,11 +3920,17 @@ name|tmp
 operator|->
 name|mountpoint
 argument_list|,
-literal|"%s /mnt/dev/r%s"
+literal|"%s %s/dev/r%s"
 argument_list|,
 name|tmp
 operator|->
 name|newfs_cmd
+argument_list|,
+name|RunningAsInit
+condition|?
+literal|"/mnt"
+else|:
+literal|""
 argument_list|,
 name|c2
 operator|->
@@ -3924,7 +3944,13 @@ name|tmp
 operator|->
 name|mountpoint
 argument_list|,
-literal|"fsck -y /mnt/dev/r%s"
+literal|"fsck -y %s/dev/r%s"
+argument_list|,
+name|RunningAsInit
+condition|?
+literal|"/mnt"
+else|:
+literal|""
 argument_list|,
 name|c2
 operator|->
@@ -3981,7 +4007,13 @@ name|sprintf
 argument_list|(
 name|fname
 argument_list|,
-literal|"/mnt/dev/%s"
+literal|"%s/dev/%s"
+argument_list|,
+name|RunningAsInit
+condition|?
+literal|"/mnt"
+else|:
+literal|""
 argument_list|,
 name|c2
 operator|->
@@ -4059,7 +4091,13 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"/mnt%s"
+literal|"%s/%s"
+argument_list|,
+name|RunningAsInit
+condition|?
+literal|"/mnt"
+else|:
+literal|""
 argument_list|,
 operator|(
 operator|(
@@ -4082,6 +4120,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|RunningAsInit
+condition|)
+block|{
 name|msgNotify
 argument_list|(
 literal|"Copying initial device files.."
@@ -4115,6 +4158,7 @@ expr_stmt|;
 return|return
 name|DITEM_FAILURE
 return|;
+block|}
 block|}
 name|command_sort
 argument_list|()
