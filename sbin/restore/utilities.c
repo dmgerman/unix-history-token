@@ -1817,7 +1817,7 @@ modifier|*
 name|question
 decl_stmt|;
 block|{
-name|char
+name|int
 name|c
 decl_stmt|;
 do|do
@@ -1861,10 +1861,9 @@ literal|'\n'
 condition|)
 if|if
 condition|(
-name|feof
-argument_list|(
-name|terminal
-argument_list|)
+name|c
+operator|==
+name|EOF
 condition|)
 return|return
 operator|(
