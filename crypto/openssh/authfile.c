@@ -2706,7 +2706,7 @@ name|KEY_UNSPEC
 argument_list|,
 name|passphrase
 argument_list|,
-name|NULL
+name|commentp
 argument_list|)
 return|;
 block|}
