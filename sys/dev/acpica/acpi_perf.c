@@ -633,6 +633,9 @@ block|{
 name|ACPI_HANDLE
 name|handle
 decl_stmt|;
+name|device_t
+name|dev
+decl_stmt|;
 comment|/* Make sure we're not being doubly invoked. */
 if|if
 condition|(
@@ -681,9 +684,12 @@ argument_list|)
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * Add a child to every CPU that has the right methods.  In future 	 * versions of the ACPI spec, CPUs can have different settings. 	 */
+comment|/* 	 * Add a child to every CPU that has the right methods.  In future 	 * versions of the ACPI spec, CPUs can have different settings. 	 * We probe this child now so that other devices that depend 	 * on it (i.e., for info about supported states) will see it. 	 */
 if|if
 condition|(
+operator|(
+name|dev
+operator|=
 name|BUS_ADD_CHILD
 argument_list|(
 name|parent
@@ -695,9 +701,16 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-operator|==
+operator|)
+operator|!=
 name|NULL
 condition|)
+name|device_probe_and_attach
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+else|else
 name|device_printf
 argument_list|(
 name|parent
