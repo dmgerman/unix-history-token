@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.30 1997/09/10 08:07:06 kato Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.31 1997/10/04 05:19:49 kato Exp $  */
 end_comment
 
 begin_comment
@@ -736,13 +736,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"crd.h"
+file|"card.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 end_if
@@ -1033,7 +1033,7 @@ end_function_decl
 begin_if
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 end_if
@@ -1069,17 +1069,17 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|card_intr
+name|edinit
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Interrupt handler */
+comment|/* init device */
 end_comment
 
 begin_function_decl
@@ -1088,7 +1088,7 @@ name|void
 name|edunload
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1100,54 +1100,34 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
-name|edsuspend
+name|int
+name|card_intr
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Suspend driver */
-end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|edinit
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* init device */
+comment|/* Interrupt handler */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|pccard_drv
+name|pccard_device
 name|ed_info
 init|=
 block|{
 literal|"ed"
 block|,
-name|card_intr
+name|edinit
 block|,
 name|edunload
 block|,
-name|edsuspend
-block|,
-name|edinit
+name|card_intr
 block|,
 literal|0
 block|,
@@ -1160,60 +1140,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  *	Called when a power down is requested. Shuts down the  *	device and configures the device as unavailable (but  *	still loaded...). A resume is done by calling  *	edinit with first=0. This is called when the user suspends  *	the system, or the APM code suspends the system.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|edsuspend
-parameter_list|(
-name|struct
-name|pccard_dev
-modifier|*
-name|dp
-parameter_list|)
-block|{
-name|struct
-name|ed_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|ed_softc
-index|[
-name|dp
-operator|->
-name|isahd
-operator|.
-name|id_unit
-index|]
-decl_stmt|;
-comment|/* 	 * Some 'ed' cards will generate a interrupt as they go away,  	 * and by the time the interrupt handler gets to the card, 	 * the interrupt can't be cleared. 	 * By setting gone here, we tell the handler to ignore the 	 * interrupt when it happens. 	 */
-name|sc
-operator|->
-name|gone
-operator|=
-literal|1
-expr_stmt|;
-comment|/* avoid spinning endlessly in interrupt handler */
-name|printf
+begin_expr_stmt
+name|DATA_SET
 argument_list|(
-literal|"ed%d: suspending\n"
+name|pccarddrv_set
 argument_list|,
-name|dp
-operator|->
-name|isahd
-operator|.
-name|id_unit
+name|ed_info
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
-comment|/*  *	Initialize the device - called from Slot manager.  *	If first is set, then check for the device's existence  *	before initializing it.  Once initialized, the device table may  *	be set up.  */
+comment|/*  *	Initialize the device - called from Slot manager.  */
 end_comment
 
 begin_function
@@ -1222,12 +1160,9 @@ name|int
 name|edinit
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
-parameter_list|,
-name|int
-name|first
+name|devi
 parameter_list|)
 block|{
 name|struct
@@ -1238,7 +1173,7 @@ init|=
 operator|&
 name|ed_softc
 index|[
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1248,12 +1183,7 @@ decl_stmt|;
 comment|/* validate unit number. */
 if|if
 condition|(
-name|first
-condition|)
-block|{
-if|if
-condition|(
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1266,7 +1196,7 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-comment|/* 		 * Probe the device. If a value is returned, the 		 * device was found at the location. 		 */
+comment|/* 	 * Probe the device. If a value is returned, the 	 * device was found at the location. 	 */
 name|sc
 operator|->
 name|gone
@@ -1278,11 +1208,11 @@ condition|(
 name|ed_probe_pccard
 argument_list|(
 operator|&
-name|dp
+name|devi
 operator|->
 name|isahd
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|misc
 argument_list|)
@@ -1299,7 +1229,7 @@ condition|(
 name|ed_attach_isa
 argument_list|(
 operator|&
-name|dp
+name|devi
 operator|->
 name|isahd
 argument_list|)
@@ -1311,18 +1241,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
-else|else
-block|{
-name|sc
-operator|->
-name|gone
-operator|=
-literal|0
-expr_stmt|;
-comment|/* reenable after a suspend */
-block|}
-comment|/* 	 * XXX TODO: 	 * If it was initialized before, the device structure 	 * should also be initialized.  We should 	 * reset (and possibly restart) the hardware, but 	 * I am not sure of the best way to do this... 	 */
 return|return
 operator|(
 literal|0
@@ -1341,9 +1259,9 @@ name|void
 name|edunload
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 parameter_list|)
 block|{
 name|struct
@@ -1354,7 +1272,7 @@ init|=
 operator|&
 name|ed_softc
 index|[
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1384,7 +1302,7 @@ name|printf
 argument_list|(
 literal|"ed%d: already unloaded\n"
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1415,7 +1333,7 @@ name|printf
 argument_list|(
 literal|"ed%d: unload\n"
 argument_list|,
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1435,9 +1353,9 @@ name|int
 name|card_intr
 parameter_list|(
 name|struct
-name|pccard_dev
+name|pccard_devinfo
 modifier|*
-name|dp
+name|devi
 parameter_list|)
 block|{
 name|edintr_sc
@@ -1445,7 +1363,7 @@ argument_list|(
 operator|&
 name|ed_softc
 index|[
-name|dp
+name|devi
 operator|->
 name|isahd
 operator|.
@@ -1467,7 +1385,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NCRD> 0 */
+comment|/* NCARD> 0 */
 end_comment
 
 begin_decl_stmt
@@ -1649,20 +1567,6 @@ define|#
 directive|define
 name|EDNPORTS
 value|nports
-endif|#
-directive|endif
-if|#
-directive|if
-name|NCRD
-operator|>
-literal|0
-comment|/* 	 * If PC-Card probe required, then register driver with 	 * slot manager. 	 */
-name|pccard_add_driver
-argument_list|(
-operator|&
-name|ed_info
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -6510,7 +6414,7 @@ end_function
 begin_if
 if|#
 directive|if
-name|NCRD
+name|NCARD
 operator|>
 literal|0
 end_if
@@ -6587,7 +6491,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NCRD> 0 */
+comment|/* NCARD> 0 */
 end_comment
 
 begin_define
