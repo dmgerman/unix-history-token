@@ -4895,7 +4895,16 @@ name|allerror
 operator|=
 name|error
 expr_stmt|;
-name|vput
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|vrele
 argument_list|(
 name|vp
 argument_list|)
