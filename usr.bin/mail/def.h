@@ -207,18 +207,18 @@ name|m_flag
 decl_stmt|;
 comment|/* flags, see below */
 name|short
-name|m_block
-decl_stmt|;
-comment|/* block number of this message */
-name|short
 name|m_offset
 decl_stmt|;
 comment|/* offset in block of message */
 name|long
+name|m_block
+decl_stmt|;
+comment|/* block number of this message */
+name|long
 name|m_size
 decl_stmt|;
 comment|/* Bytes in the message */
-name|short
+name|long
 name|m_lines
 decl_stmt|;
 comment|/* Lines in the message */
