@@ -187,9 +187,6 @@ parameter_list|(
 name|vm_map_t
 name|mapa
 parameter_list|,
-name|vm_object_t
-name|srcobj
-parameter_list|,
 name|vm_offset_t
 name|kaddr
 parameter_list|,
@@ -1073,8 +1070,6 @@ operator|->
 name|p_vmspace
 operator|->
 name|vm_map
-argument_list|,
-name|obj
 argument_list|,
 operator|(
 name|vm_offset_t
