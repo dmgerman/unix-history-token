@@ -345,7 +345,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipnat.c,v 2.16.2.3 2000/07/27 13:07:13 darrenr Exp $"
+literal|"@(#)$Id: ipnat.c,v 2.16.2.4 2000/10/27 14:06:47 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1937,6 +1937,15 @@ argument_list|,
 name|ns
 operator|.
 name|ns_rules
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"wilds\t%u\n"
+argument_list|,
+name|ns
+operator|.
+name|ns_wilds
 argument_list|)
 expr_stmt|;
 if|if
