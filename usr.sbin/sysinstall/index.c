@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.15 1995/10/22 01:32:44 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.17 1995/10/22 17:39:10 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1245,6 +1245,12 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|top
+operator|->
+name|data
+operator|=
+name|NULL
+expr_stmt|;
 name|plist
 operator|->
 name|next
@@ -1277,6 +1283,12 @@ name|plist
 operator|->
 name|name
 argument_list|)
+expr_stmt|;
+name|plist
+operator|->
+name|data
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -2055,12 +2067,6 @@ decl_stmt|;
 name|Boolean
 name|hasPackages
 decl_stmt|;
-name|curr
-operator|=
-name|max
-operator|=
-literal|0
-expr_stmt|;
 name|hasPackages
 operator|=
 name|FALSE
@@ -2172,6 +2178,12 @@ literal|1
 condition|)
 block|{
 name|n
+operator|=
+literal|0
+expr_stmt|;
+name|curr
+operator|=
+name|max
 operator|=
 literal|0
 expr_stmt|;
@@ -2446,17 +2458,6 @@ argument_list|,
 name|scroll
 argument_list|)
 expr_stmt|;
-name|items_free
-argument_list|(
-name|nitems
-argument_list|,
-operator|&
-name|curr
-argument_list|,
-operator|&
-name|max
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2530,7 +2531,7 @@ name|sp
 condition|)
 block|{
 name|PkgNodePtr
-name|n
+name|np
 init|=
 operator|(
 name|PkgNodePtr
@@ -2544,12 +2545,12 @@ argument_list|)
 argument_list|)
 decl_stmt|;
 operator|*
-name|n
+name|np
 operator|=
 operator|*
 name|kp
 expr_stmt|;
-name|n
+name|np
 operator|->
 name|next
 operator|=
@@ -2561,7 +2562,7 @@ name|plist
 operator|->
 name|kids
 operator|=
-name|n
+name|np
 expr_stmt|;
 name|standout
 argument_list|()
@@ -2760,6 +2761,17 @@ else|else
 block|{
 name|dialog_clear
 argument_list|()
+expr_stmt|;
+name|items_free
+argument_list|(
+name|nitems
+argument_list|,
+operator|&
+name|curr
+argument_list|,
+operator|&
+name|max
+argument_list|)
 expr_stmt|;
 return|return
 name|rval

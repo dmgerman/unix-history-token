@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.8 1995/10/27 03:59:31 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.9 1995/11/04 08:47:22 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  */
 end_comment
 
 begin_include
@@ -33,6 +33,8 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|RunningAsInit
+operator|&&
 operator|!
 name|strstr
 argument_list|(
