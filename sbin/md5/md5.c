@@ -100,6 +100,12 @@ value|100000
 end_define
 
 begin_decl_stmt
+name|int
+name|rflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|MDString
@@ -217,7 +223,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ps:tx"
+literal|"ps:rtx"
 argument_list|)
 operator|)
 operator|!=
@@ -237,6 +243,14 @@ name|MDFilter
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|rflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -295,6 +309,23 @@ condition|)
 name|warn
 argument_list|(
 literal|"%s"
+argument_list|,
+name|argv
+index|[
+name|optind
+index|]
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|rflag
+condition|)
+name|printf
+argument_list|(
+literal|"MD5 %s  %s\n"
+argument_list|,
+name|p
 argument_list|,
 name|argv
 index|[
@@ -364,6 +395,27 @@ index|[
 literal|33
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|rflag
+condition|)
+name|printf
+argument_list|(
+literal|"MD5 %s (\"%s\")\n"
+argument_list|,
+name|MD5Data
+argument_list|(
+name|string
+argument_list|,
+name|len
+argument_list|,
+name|buf
+argument_list|)
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"MD5 (\"%s\") = %s\n"
