@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)var.c	3.3 84/01/12"
+literal|"@(#)var.c	3.4 84/01/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -545,6 +545,8 @@ argument_list|(
 name|r
 argument_list|,
 name|func
+argument_list|,
+name|a
 argument_list|)
 specifier|register
 expr|struct
@@ -572,7 +574,11 @@ name|r
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|var_walk1
 argument_list|(
 name|r
@@ -580,16 +586,24 @@ operator|->
 name|r_left
 argument_list|,
 name|func
+argument_list|,
+name|a
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+operator|||
 call|(
 modifier|*
 name|func
 call|)
 argument_list|(
+name|a
+argument_list|,
 name|r
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+operator|||
 name|var_walk1
 argument_list|(
 name|r
@@ -597,8 +611,19 @@ operator|->
 name|r_right
 argument_list|,
 name|func
+argument_list|,
+name|a
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|0
+return|;
 block|}
 end_block
 

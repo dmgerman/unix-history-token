@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)var.h	3.3 84/01/12  */
+comment|/*  *	@(#)var.h	3.4 84/01/13  */
 end_comment
 
 begin_struct
@@ -72,8 +72,10 @@ directive|define
 name|var_walk
 parameter_list|(
 name|f
+parameter_list|,
+name|a
 parameter_list|)
-value|var_walk1(var_head, (f))
+value|var_walk1(var_head, (f), (a))
 end_define
 
 begin_define
