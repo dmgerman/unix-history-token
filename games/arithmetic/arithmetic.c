@@ -988,11 +988,6 @@ name|penalty
 modifier|*
 name|p
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 name|op
 operator|=
 name|opnum
