@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanner.c 1.9 %G%"
+literal|"@(#)scanner.c 1.8 8/5/83"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: scanner.c,v 1.3 84/03/27 10:23:50 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,6 +201,9 @@ name|private
 name|Char
 modifier|*
 name|curchar
+decl_stmt|,
+modifier|*
+name|prevchar
 decl_stmt|;
 end_decl_stmt
 
@@ -565,6 +578,10 @@ name|curchar
 operator|=
 name|p
 expr_stmt|;
+name|prevchar
+operator|=
+name|curchar
+expr_stmt|;
 name|c
 operator|=
 operator|*
@@ -926,19 +943,13 @@ name|s
 decl_stmt|;
 block|{
 specifier|register
-name|Char
+name|char
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|tokenbegin
-decl_stmt|,
-modifier|*
-name|tokenend
 decl_stmt|;
 specifier|register
-name|Integer
-name|len
+name|integer
+name|start
 decl_stmt|;
 if|if
 condition|(
@@ -953,50 +964,19 @@ block|{
 name|beginerrmsg
 argument_list|()
 expr_stmt|;
-name|tokenend
+name|p
 operator|=
-name|curchar
+name|prevchar
+expr_stmt|;
+name|start
+operator|=
+name|p
 operator|-
-literal|1
-expr_stmt|;
-name|tokenbegin
-operator|=
-name|tokenend
-expr_stmt|;
-while|while
-condition|(
-name|lexclass
-index|[
-operator|*
-name|tokenbegin
-index|]
-operator|!=
-name|WHITE
-name|and
-name|tokenbegin
-operator|>
 operator|&
 name|linebuf
 index|[
 literal|0
 index|]
-condition|)
-block|{
-operator|--
-name|tokenbegin
-expr_stmt|;
-block|}
-name|len
-operator|=
-name|tokenend
-operator|-
-name|tokenbegin
-operator|+
-literal|1
-expr_stmt|;
-name|p
-operator|=
-name|tokenbegin
 expr_stmt|;
 if|if
 condition|(
@@ -1032,6 +1012,34 @@ operator|--
 name|p
 expr_stmt|;
 block|}
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s"
+argument_list|,
+name|linebuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|start
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%*c"
+argument_list|,
+name|start
+argument_list|,
+literal|' '
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1048,11 +1056,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"unrecognized command \"%.*s\""
-argument_list|,
-name|len
-argument_list|,
-name|tokenbegin
+literal|"^ unrecognized command"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1062,28 +1066,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"syntax error"
+literal|"^ syntax error"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|len
-operator|!=
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" on \"%.*s\""
-argument_list|,
-name|len
-argument_list|,
-name|tokenbegin
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|enderrmsg
 argument_list|()
@@ -1179,7 +1164,7 @@ do|while
 condition|(
 name|index
 argument_list|(
-literal|" \t\n!&<>*[]()"
+literal|" \t\n!&<>*[]()'\""
 argument_list|,
 operator|*
 name|p

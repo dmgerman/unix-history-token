@@ -1,9 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_comment
+comment|/* Copyright (c) 1982 Regents of the University of California */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -11,18 +9,19 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	1.4 (Berkeley) %G%"
+literal|"@(#)library.c 1.3 8/7/83"
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Copyright (c) 1982 Regents of the University of California */
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: library.c,v 1.3 84/03/27 10:21:12 linton Exp $"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * General purpose routines.  */
@@ -102,13 +101,20 @@ end_define
 
 begin_typedef
 typedef|typedef
+name|int
+name|integer
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 enum|enum
 block|{
 name|FALSE
 block|,
 name|TRUE
 block|}
-name|Boolean
+name|boolean
 typedef|;
 end_typedef
 
@@ -140,47 +146,6 @@ undef|#
 directive|undef
 name|FILE
 end_undef
-
-begin_comment
-comment|/*  * Definitions of standard C library routines that aren't in the  * standard I/O library, but which are generally useful.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|long
-name|atol
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* ascii to long */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|double
-name|atof
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* ascii to floating point */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|mktemp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* make a temporary file name */
-end_comment
 
 begin_decl_stmt
 name|String
@@ -366,7 +331,7 @@ begin_define
 define|#
 directive|define
 name|MAXNARGS
-value|100
+value|1000
 end_define
 
 begin_comment
@@ -1089,7 +1054,7 @@ end_function
 
 begin_function
 name|private
-name|Boolean
+name|boolean
 name|isptraced
 parameter_list|(
 name|pid
@@ -1132,7 +1097,7 @@ expr_stmt|;
 block|}
 return|return
 call|(
-name|Boolean
+name|boolean
 call|)
 argument_list|(
 name|p
@@ -1491,126 +1456,123 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*  * Default error handling.  */
+comment|/*  * Initialize error information, setting defaults for handling errors.  */
 end_comment
 
 begin_decl_stmt
 name|private
 name|ERRINFO
+modifier|*
 name|errinfo
-index|[]
-init|=
-block|{
-comment|/* no error */
-name|ERR_IGNORE
-block|,
-comment|/* EPERM */
-name|ERR_IGNORE
-block|,
-comment|/* ENOENT */
-name|ERR_IGNORE
-block|,
-comment|/* ESRCH */
-name|ERR_IGNORE
-block|,
-comment|/* EINTR */
-name|ERR_CATCH
-block|,
-comment|/* EIO */
-name|ERR_CATCH
-block|,
-comment|/* ENXIO */
-name|ERR_CATCH
-block|,
-comment|/* E2BIG */
-name|ERR_CATCH
-block|,
-comment|/* ENOEXEC */
-name|ERR_CATCH
-block|,
-comment|/* EBADF */
-name|ERR_IGNORE
-block|,
-comment|/* ECHILD */
-name|ERR_CATCH
-block|,
-comment|/* EAGAIN */
-name|ERR_CATCH
-block|,
-comment|/* ENOMEM */
-name|ERR_CATCH
-block|,
-comment|/* EACCES */
-name|ERR_CATCH
-block|,
-comment|/* EFAULT */
-name|ERR_CATCH
-block|,
-comment|/* ENOTBLK */
-name|ERR_CATCH
-block|,
-comment|/* EBUSY */
-name|ERR_CATCH
-block|,
-comment|/* EEXIST */
-name|ERR_CATCH
-block|,
-comment|/* EXDEV */
-name|ERR_CATCH
-block|,
-comment|/* ENODEV */
-name|ERR_CATCH
-block|,
-comment|/* ENOTDIR */
-name|ERR_CATCH
-block|,
-comment|/* EISDIR */
-name|ERR_CATCH
-block|,
-comment|/* EINVAL */
-name|ERR_CATCH
-block|,
-comment|/* ENFILE */
-name|ERR_CATCH
-block|,
-comment|/* EMFILE */
-name|ERR_CATCH
-block|,
-comment|/* ENOTTY */
-name|ERR_IGNORE
-block|,
-comment|/* ETXTBSY */
-name|ERR_CATCH
-block|,
-comment|/* EFBIG */
-name|ERR_CATCH
-block|,
-comment|/* ENOSPC */
-name|ERR_CATCH
-block|,
-comment|/* ESPIPE */
-name|ERR_CATCH
-block|,
-comment|/* EROFS */
-name|ERR_CATCH
-block|,
-comment|/* EMLINK */
-name|ERR_CATCH
-block|,
-comment|/* EPIPE */
-name|ERR_CATCH
-block|,
-comment|/* EDOM */
-name|ERR_CATCH
-block|,
-comment|/* ERANGE */
-name|ERR_CATCH
-block|,
-comment|/* EQUOT */
-name|ERR_CATCH
-block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|private
+name|initErrInfo
+parameter_list|()
+block|{
+name|integer
+name|i
+decl_stmt|;
+name|errinfo
+operator|=
+name|alloc
+argument_list|(
+name|sys_nerr
+argument_list|,
+name|ERRINFO
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|sys_nerr
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|errinfo
+index|[
+name|i
+index|]
+operator|.
+name|func
+operator|=
+name|ERR_CATCH
+expr_stmt|;
+block|}
+name|errinfo
+index|[
+literal|0
+index|]
+operator|.
+name|func
+operator|=
+name|ERR_IGNORE
+expr_stmt|;
+name|errinfo
+index|[
+name|EPERM
+index|]
+operator|.
+name|func
+operator|=
+name|ERR_IGNORE
+expr_stmt|;
+name|errinfo
+index|[
+name|ENOENT
+index|]
+operator|.
+name|func
+operator|=
+name|ERR_IGNORE
+expr_stmt|;
+name|errinfo
+index|[
+name|ESRCH
+index|]
+operator|.
+name|func
+operator|=
+name|ERR_IGNORE
+expr_stmt|;
+name|errinfo
+index|[
+name|EBADF
+index|]
+operator|.
+name|func
+operator|=
+name|ERR_IGNORE
+expr_stmt|;
+name|errinfo
+index|[
+name|ENOTTY
+index|]
+operator|.
+name|func
+operator|=
+name|ERR_IGNORE
+expr_stmt|;
+name|errinfo
+index|[
+name|EOPNOTSUPP
+index|]
+operator|.
+name|func
+operator|=
+name|ERR_IGNORE
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|public
@@ -1621,13 +1583,51 @@ name|ERRINFO
 modifier|*
 name|e
 decl_stmt|;
+if|if
+condition|(
+name|errno
+operator|<
+literal|0
+name|or
+name|errno
+operator|>
+name|sys_nerr
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"errno %d"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|errinfo
+operator|==
+name|nil
+argument_list|(
+name|ERRINFO
+operator|*
+argument_list|)
+condition|)
+block|{
+name|initErrInfo
+argument_list|()
+expr_stmt|;
+block|}
 name|e
 operator|=
 operator|&
+operator|(
 name|errinfo
 index|[
 name|errno
 index|]
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1638,13 +1638,6 @@ operator|==
 name|ERR_CATCH
 condition|)
 block|{
-if|if
-condition|(
-name|errno
-operator|<
-name|sys_nerr
-condition|)
-block|{
 name|fatal
 argument_list|(
 name|sys_errlist
@@ -1653,17 +1646,6 @@ name|errno
 index|]
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|fatal
-argument_list|(
-literal|"errno %d"
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -1685,10 +1667,11 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+block|}
 end_function
 
 begin_comment
-comment|/*  * Catcherrs only purpose is to get this module loaded and make  * sure my cerror is loaded (only applicable when this is in a library).  */
+comment|/*  * Catcherrs' purpose is to initialize the errinfo table, get this module  * loaded, and make sure my cerror is loaded (only applicable when this is  * in a library).  */
 end_comment
 
 begin_function
@@ -1697,6 +1680,9 @@ name|catcherrs
 parameter_list|()
 block|{
 name|_mycerror
+argument_list|()
+expr_stmt|;
+name|initErrInfo
 argument_list|()
 expr_stmt|;
 block|}
@@ -1722,6 +1708,21 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|errinfo
+operator|==
+name|nil
+argument_list|(
+name|ERRINFO
+operator|*
+argument_list|)
+condition|)
+block|{
+name|initErrInfo
+argument_list|()
+expr_stmt|;
+block|}
 name|errinfo
 index|[
 name|n
@@ -1816,40 +1817,52 @@ end_decl_stmt
 
 begin_function
 name|public
-name|psig
+name|psignal
 parameter_list|(
 name|s
+parameter_list|,
+name|n
 parameter_list|)
 name|String
 name|s
 decl_stmt|;
-block|{
-name|String
-name|c
-decl_stmt|;
-name|int
+name|integer
 name|n
 decl_stmt|;
-name|c
-operator|=
-literal|"Unknown signal"
-expr_stmt|;
+block|{
+name|String
+name|msg
+decl_stmt|;
+name|integer
+name|len
+decl_stmt|;
 if|if
 condition|(
-name|errno
+name|n
+operator|>=
+literal|0
+name|and
+name|n
 operator|<
 name|sys_nsig
 condition|)
 block|{
-name|c
+name|msg
 operator|=
-name|sys_errlist
+name|sys_siglist
 index|[
-name|errno
+name|n
 index|]
 expr_stmt|;
 block|}
-name|n
+else|else
+block|{
+name|msg
+operator|=
+literal|"Unknown signal"
+expr_stmt|;
+block|}
+name|len
 operator|=
 name|strlen
 argument_list|(
@@ -1858,7 +1871,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
+name|len
 operator|>
 literal|0
 condition|)
@@ -1869,7 +1882,7 @@ literal|2
 argument_list|,
 name|s
 argument_list|,
-name|n
+name|len
 argument_list|)
 expr_stmt|;
 name|write
@@ -1886,11 +1899,11 @@ name|write
 argument_list|(
 literal|2
 argument_list|,
-name|c
+name|msg
 argument_list|,
 name|strlen
 argument_list|(
-name|c
+name|msg
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1971,7 +1984,7 @@ parameter_list|)
 name|String
 name|errname
 decl_stmt|;
-name|Boolean
+name|boolean
 name|shouldquit
 decl_stmt|;
 name|String

@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asm.c 1.2 %G%"
+literal|"@(#)asm.c 1.2 12/15/82"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: asm.c,v 1.3 84/03/27 10:19:36 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,6 +149,24 @@ argument_list|,
 name|L_TYPEMATCH
 argument_list|,
 name|asm_typematch
+argument_list|)
+expr_stmt|;
+name|language_setop
+argument_list|(
+name|lang
+argument_list|,
+name|L_HASMODULES
+argument_list|,
+name|asm_hasmodules
+argument_list|)
+expr_stmt|;
+name|language_setop
+argument_list|(
+name|lang
+argument_list|,
+name|L_PASSADDR
+argument_list|,
+name|asm_passaddr
 argument_list|)
 expr_stmt|;
 block|}
@@ -361,6 +389,39 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+block|}
+end_function
+
+begin_function
+name|public
+name|boolean
+name|asm_hasmodules
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_function
+name|public
+name|boolean
+name|asm_passaddr
+parameter_list|(
+name|param
+parameter_list|,
+name|exprtype
+parameter_list|)
+name|Symbol
+name|param
+decl_stmt|,
+name|exprtype
+decl_stmt|;
+block|{
+return|return
+name|false
+return|;
 block|}
 end_function
 

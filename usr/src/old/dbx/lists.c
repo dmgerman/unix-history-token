@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lists.c 1.2 %G%"
+literal|"@(#)lists.c 1.2 12/15/82"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: lists.c,v 1.3 84/03/27 10:21:21 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 

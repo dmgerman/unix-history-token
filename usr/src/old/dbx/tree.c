@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c 1.5 %G%"
+literal|"@(#)tree.c 1.5 8/10/83"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: tree.c,v 1.3 84/03/27 10:24:40 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -401,9 +411,6 @@ name|O_LCON
 case|:
 case|case
 name|O_CONT
-case|:
-case|case
-name|O_DELETE
 case|:
 case|case
 name|O_CATCH
@@ -1345,9 +1352,6 @@ name|scon
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|O_DELETE
-case|:
 case|case
 name|O_CATCH
 case|:
@@ -2798,7 +2802,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A recursive tree search routine to test if two trees * are equivalent.  */
+comment|/*  * A recursive tree search routine to test if two trees are equivalent.  */
 end_comment
 
 begin_function

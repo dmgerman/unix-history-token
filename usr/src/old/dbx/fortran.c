@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortran.c	1.4	%G%"
+literal|"@(#)fortran.c	1.3	5/20/83"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: fortran.c,v 1.3 84/03/27 10:20:53 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +128,13 @@ name|MAXDIM
 value|20
 end_define
 
+begin_decl_stmt
+name|private
+name|Language
+name|fort
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Initialize FORTRAN language information.  */
 end_comment
@@ -127,10 +144,7 @@ name|public
 name|fortran_init
 parameter_list|()
 block|{
-name|Language
-name|lang
-decl_stmt|;
-name|lang
+name|fort
 operator|=
 name|language_define
 argument_list|(
@@ -141,7 +155,7 @@ argument_list|)
 expr_stmt|;
 name|language_setop
 argument_list|(
-name|lang
+name|fort
 argument_list|,
 name|L_PRINTDECL
 argument_list|,
@@ -150,7 +164,7 @@ argument_list|)
 expr_stmt|;
 name|language_setop
 argument_list|(
-name|lang
+name|fort
 argument_list|,
 name|L_PRINTVAL
 argument_list|,
@@ -159,7 +173,7 @@ argument_list|)
 expr_stmt|;
 name|language_setop
 argument_list|(
-name|lang
+name|fort
 argument_list|,
 name|L_TYPEMATCH
 argument_list|,
@@ -168,7 +182,7 @@ argument_list|)
 expr_stmt|;
 name|language_setop
 argument_list|(
-name|lang
+name|fort
 argument_list|,
 name|L_BUILDAREF
 argument_list|,
@@ -177,11 +191,38 @@ argument_list|)
 expr_stmt|;
 name|language_setop
 argument_list|(
-name|lang
+name|fort
 argument_list|,
 name|L_EVALAREF
 argument_list|,
 name|fortran_evalaref
+argument_list|)
+expr_stmt|;
+name|language_setop
+argument_list|(
+name|fort
+argument_list|,
+name|L_MODINIT
+argument_list|,
+name|fortran_modinit
+argument_list|)
+expr_stmt|;
+name|language_setop
+argument_list|(
+name|fort
+argument_list|,
+name|L_HASMODULES
+argument_list|,
+name|fortran_hasmodules
+argument_list|)
+expr_stmt|;
+name|language_setop
+argument_list|(
+name|fort
+argument_list|,
+name|L_PASSADDR
+argument_list|,
+name|fortran_passaddr
 argument_list|)
 expr_stmt|;
 block|}
@@ -849,7 +890,6 @@ argument_list|(
 literal|" (dummy argument) "
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
 case|case
 name|VAR
 case|:
@@ -862,12 +902,20 @@ operator|->
 name|class
 operator|==
 name|ARRAY
-name|and
+operator|&&
+operator|(
+name|not
+name|istypename
 argument_list|(
-argument|not istypename(s->type->type,
+name|s
+operator|->
+name|type
+operator|->
+name|type
+argument_list|,
 literal|"char"
-argument|)
 argument_list|)
+operator|)
 condition|)
 block|{
 name|char
@@ -978,13 +1026,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|printf
 argument_list|(
 literal|" subroutine"
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|" %s "
@@ -1006,7 +1052,7 @@ name|MODULE
 case|:
 name|printf
 argument_list|(
-literal|"source file \"%s.f\""
+literal|"source file \"%s.c\""
 argument_list|,
 name|symname
 argument_list|(
@@ -2903,6 +2949,58 @@ literal|0
 condition|)
 break|break;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Initialize typetable at beginning of a module.  */
+end_comment
+
+begin_function
+name|public
+name|fortran_modinit
+parameter_list|(
+name|typetable
+parameter_list|)
+name|Symbol
+name|typetable
+index|[]
+decl_stmt|;
+block|{
+comment|/* nothing for now */
+block|}
+end_function
+
+begin_function
+name|public
+name|boolean
+name|fortran_hasmodules
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_function
+name|public
+name|boolean
+name|fortran_passaddr
+parameter_list|(
+name|param
+parameter_list|,
+name|exprtype
+parameter_list|)
+name|Symbol
+name|param
+decl_stmt|,
+name|exprtype
+decl_stmt|;
+block|{
+return|return
+name|false
+return|;
 block|}
 end_function
 

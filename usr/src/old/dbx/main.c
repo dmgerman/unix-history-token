@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.6 %G%"
+literal|"@(#)main.c 1.5 5/17/83"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: main.c,v 1.3 84/03/27 10:21:40 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"process.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"runtime.h"
 end_include
 
 begin_include
@@ -197,6 +213,17 @@ end_comment
 
 begin_decl_stmt
 name|public
+name|Boolean
+name|traceblocks
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* trace blocks while reading symbols */
+end_comment
+
+begin_decl_stmt
+name|public
 name|File
 name|corefile
 decl_stmt|;
@@ -314,12 +341,16 @@ index|[]
 decl_stmt|;
 block|{
 specifier|register
-name|Integer
+name|integer
 name|i
 decl_stmt|;
 specifier|extern
 name|String
 name|date
+decl_stmt|;
+specifier|extern
+name|integer
+name|versionNumber
 decl_stmt|;
 name|cmdname
 operator|=
@@ -347,7 +378,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"dbx version of %s.\nType 'help' for help.\n"
+literal|"dbx version %d of %s.\nType 'help' for help.\n"
+argument_list|,
+name|versionNumber
 argument_list|,
 name|date
 argument_list|)
@@ -365,9 +398,6 @@ name|argv
 argument_list|)
 expr_stmt|;
 name|language_init
-argument_list|()
-expr_stmt|;
-name|symbols_init
 argument_list|()
 expr_stmt|;
 name|process_init
@@ -433,11 +463,16 @@ name|init
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|setjmp
 argument_list|(
 name|env
 argument_list|)
-expr_stmt|;
+operator|!=
+name|FIRST_TIME
+condition|)
+block|{
 name|restoretty
 argument_list|(
 name|stdout
@@ -446,6 +481,7 @@ operator|&
 name|ttyinfo
 argument_list|)
 expr_stmt|;
+block|}
 name|signal
 argument_list|(
 name|SIGINT
@@ -558,19 +594,21 @@ condition|(
 name|coredump
 condition|)
 block|{
-name|curfunc
-operator|=
+name|setcurfunc
+argument_list|(
 name|whatblock
 argument_list|(
 name|pc
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|curfunc
-operator|=
+name|setcurfunc
+argument_list|(
 name|program
+argument_list|)
 expr_stmt|;
 block|}
 name|bpinit
@@ -976,6 +1014,10 @@ name|tracesyms
 operator|=
 name|false
 expr_stmt|;
+name|traceblocks
+operator|=
+name|false
+expr_stmt|;
 name|foundfile
 operator|=
 name|false
@@ -1016,7 +1058,7 @@ operator|<
 name|argc
 name|and
 argument_list|(
-argument|not foundfile or (corefile == nil and not runfirst)
+argument|not foundfile or corefile == nil
 argument_list|)
 condition|)
 block|{
@@ -1416,6 +1458,14 @@ name|true
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+name|traceblocks
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
 literal|'l'
 case|:
 ifdef|#
@@ -1523,6 +1573,11 @@ name|Integer
 name|r
 decl_stmt|;
 block|{
+name|pterm
+argument_list|(
+name|process
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|r

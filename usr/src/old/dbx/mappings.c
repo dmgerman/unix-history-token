@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mappings.c 1.4 %G%"
+literal|"@(#)mappings.c 1.4 8/10/83"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: mappings.c,v 1.3 84/03/27 10:21:54 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 

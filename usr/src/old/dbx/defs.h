@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	1.1	83/08/13	*/
-end_comment
-
-begin_comment
 comment|/*  * Public definitions, common to all.  */
 end_comment
 
@@ -173,6 +169,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|int
+name|integer
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|char
 name|Char
 typedef|;
@@ -187,6 +190,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|double
+name|real
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 enum|enum
 block|{
 name|false
@@ -194,6 +204,13 @@ block|,
 name|true
 block|}
 name|Boolean
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|Boolean
+name|boolean
 typedef|;
 end_typedef
 

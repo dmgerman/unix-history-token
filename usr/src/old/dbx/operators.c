@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operators.c 1.5 %G%"
+literal|"@(#)operators.c 1.4 5/18/83"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: operators.c,v 1.3 84/03/27 10:22:38 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,6 +282,18 @@ comment|/* end tracing source line, variable, or all lines */
 name|O_TYPERENAME
 block|,
 comment|/* state the type of an expression */
+name|O_RERUN
+block|,
+comment|/* re-run program with the same arguments as before */
+name|O_RETURN
+block|,
+comment|/* continue execution until procedure returns */
+name|O_UP
+block|,
+comment|/* move current function up the call stack */
+name|O_DOWN
+block|,
+comment|/* move current function down the call stack */
 name|O_LASTOP
 block|}
 name|Operator
@@ -805,7 +827,7 @@ block|,
 literal|"debug"
 block|,
 comment|/* O_DELETE */
-literal|0
+literal|1
 block|,
 name|null
 block|,
@@ -1083,6 +1105,34 @@ block|,
 name|UNARY
 block|,
 literal|"traceoff"
+block|,
+comment|/* O_RERUN */
+literal|0
+block|,
+name|null
+block|,
+literal|"rerun"
+block|,
+comment|/* O_RETURN */
+literal|1
+block|,
+name|null
+block|,
+literal|"return"
+block|,
+comment|/* O_UP */
+literal|1
+block|,
+name|UNARY
+block|,
+literal|"up"
+block|,
+comment|/* O_DOWN */
+literal|1
+block|,
+name|UNARY
+block|,
+literal|"down"
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -9,12 +9,22 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)coredump.c 1.4 %G%"
+literal|"@(#)coredump.c 1.4 1/25/83"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: coredump.c,v 1.3 84/03/27 10:20:10 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Deal with the core dump anachronism.  *  * If I understood this code, I'd try to make it readable.  */
+comment|/*  * Deal with the core dump anachronism.  */
 end_comment
 
 begin_include
@@ -798,6 +808,15 @@ operator|.
 name|begin
 condition|)
 block|{
+if|if
+condition|(
+name|hdr
+operator|.
+name|a_magic
+operator|==
+name|OMAGIC
+condition|)
+block|{
 name|error
 argument_list|(
 literal|"data address 0x%x too low (lb = 0x%x)"
@@ -809,6 +828,19 @@ operator|.
 name|begin
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|coredump_readtext
+argument_list|(
+name|buff
+argument_list|,
+name|addr
+argument_list|,
+name|nbytes
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if

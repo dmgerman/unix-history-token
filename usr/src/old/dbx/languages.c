@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)languages.c 1.3 %G%"
+literal|"@(#)languages.c 1.3 5/18/83"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: languages.c,v 1.3 84/03/27 10:21:09 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"pascal.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"modula-2.h"
 end_include
 
 begin_include
@@ -75,6 +91,14 @@ block|,
 name|L_BUILDAREF
 block|,
 name|L_EVALAREF
+block|,
+name|L_MODINIT
+block|,
+name|L_HASMODULES
+block|,
+name|L_PASSADDR
+block|,
+name|L_ENDOP
 block|}
 name|LanguageOp
 typedef|;
@@ -86,6 +110,12 @@ name|LanguageOperation
 argument_list|()
 expr_stmt|;
 end_typedef
+
+begin_decl_stmt
+name|Language
+name|primlang
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -106,7 +136,7 @@ name|LanguageOperation
 modifier|*
 name|op
 index|[
-literal|10
+literal|20
 index|]
 decl_stmt|;
 name|Language
@@ -132,6 +162,15 @@ name|public
 name|language_init
 parameter_list|()
 block|{
+name|primlang
+operator|=
+name|language_define
+argument_list|(
+literal|"$builtin symbols"
+argument_list|,
+literal|".?"
+argument_list|)
+expr_stmt|;
 name|c_init
 argument_list|()
 expr_stmt|;
@@ -139,6 +178,9 @@ name|fortran_init
 argument_list|()
 expr_stmt|;
 name|pascal_init
+argument_list|()
+expr_stmt|;
+name|modula2_init
 argument_list|()
 expr_stmt|;
 name|asm_init
@@ -328,10 +370,10 @@ name|ord
 argument_list|(
 name|op
 argument_list|)
-operator|<=
+operator|<
 name|ord
 argument_list|(
-name|L_EVALAREF
+name|L_ENDOP
 argument_list|)
 argument_list|)
 expr_stmt|;
