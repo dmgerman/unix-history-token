@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1994 Henry Spencer.  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regcomp.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994 Henry Spencer.  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * %sccs.include.redist.c%  *  *	@(#)regcomp.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regcomp.c	8.2 (Berkeley) %G%"
+literal|"@(#)regcomp.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1052,6 +1052,14 @@ directive|define
 name|THERE
 parameter_list|()
 value|(p->slen - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THERETHERE
+parameter_list|()
+value|(p->slen - 2)
 end_define
 
 begin_define
@@ -2339,6 +2347,7 @@ case|case
 literal|'*'
 case|:
 comment|/* implemented as +? */
+comment|/* this case does not require the (y|) trick, noKLUDGE */
 name|INSERT
 argument_list|(
 name|OPLUS_
@@ -2389,18 +2398,50 @@ break|break;
 case|case
 literal|'?'
 case|:
+comment|/* KLUDGE: emit y? as (y|) until subtle bug gets fixed */
 name|INSERT
 argument_list|(
-name|OQUEST_
+name|OCH_
 argument_list|,
 name|pos
 argument_list|)
 expr_stmt|;
+comment|/* offset slightly wrong */
 name|ASTERN
 argument_list|(
-name|O_QUEST
+name|OOR1
 argument_list|,
 name|pos
+argument_list|)
+expr_stmt|;
+comment|/* this one's right */
+name|AHEAD
+argument_list|(
+name|pos
+argument_list|)
+expr_stmt|;
+comment|/* fix the OCH_ */
+name|EMIT
+argument_list|(
+name|OOR2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* offset very wrong... */
+name|AHEAD
+argument_list|(
+name|THERE
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* ...so fix it */
+name|ASTERN
+argument_list|(
+name|O_CH
+argument_list|,
+name|THERETHERE
+argument_list|()
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3273,6 +3314,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* implemented as +? */
+comment|/* this case does not require the (y|) trick, noKLUDGE */
 name|INSERT
 argument_list|(
 name|OPLUS_
@@ -5324,9 +5366,10 @@ name|INF
 argument_list|)
 case|:
 comment|/* as x{1,}? */
+comment|/* KLUDGE: emit y? as (y|) until subtle bug gets fixed */
 name|INSERT
 argument_list|(
-name|OQUEST_
+name|OCH_
 argument_list|,
 name|start
 argument_list|)
@@ -5345,17 +5388,38 @@ argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
+name|ASTERN
+argument_list|(
+name|OOR1
+argument_list|,
+name|start
+argument_list|)
+expr_stmt|;
 name|AHEAD
 argument_list|(
 name|start
 argument_list|)
 expr_stmt|;
 comment|/* ... fix it */
+name|EMIT
+argument_list|(
+name|OOR2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|AHEAD
+argument_list|(
+name|THERE
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|ASTERN
 argument_list|(
-name|O_QUEST
+name|O_CH
 argument_list|,
-name|start
+name|THERETHERE
+argument_list|()
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5379,18 +5443,47 @@ name|N
 argument_list|)
 case|:
 comment|/* as x?x{1,n-1} */
+comment|/* KLUDGE: emit y? as (y|) until subtle bug gets fixed */
 name|INSERT
 argument_list|(
-name|OQUEST_
+name|OCH_
 argument_list|,
 name|start
 argument_list|)
 expr_stmt|;
 name|ASTERN
 argument_list|(
-name|O_QUEST
+name|OOR1
 argument_list|,
 name|start
+argument_list|)
+expr_stmt|;
+name|AHEAD
+argument_list|(
+name|start
+argument_list|)
+expr_stmt|;
+name|EMIT
+argument_list|(
+name|OOR2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* offset very wrong... */
+name|AHEAD
+argument_list|(
+name|THERE
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* ...so fix it */
+name|ASTERN
+argument_list|(
+name|O_CH
+argument_list|,
+name|THERETHERE
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|copy
@@ -5414,7 +5507,7 @@ name|copy
 operator|==
 name|finish
 operator|+
-literal|2
+literal|4
 argument_list|)
 expr_stmt|;
 name|repeat
