@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.1 (Berkeley) %G%"
+literal|"@(#)stty.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -807,6 +807,26 @@ block|,
 literal|0
 block|,
 name|LLITOUT
+block|,
+literal|"pass8"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|LPASS8
+block|,
+literal|0
+block|,
+literal|"-pass8"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|LPASS8
 block|,
 literal|"tostop"
 block|,
@@ -2910,6 +2930,13 @@ argument_list|(
 name|LLITOUT
 argument_list|,
 literal|"-litout "
+argument_list|)
+expr_stmt|;
+name|lpit
+argument_list|(
+name|LPASS8
+argument_list|,
+literal|"-pass8 "
 argument_list|)
 expr_stmt|;
 name|lpit
