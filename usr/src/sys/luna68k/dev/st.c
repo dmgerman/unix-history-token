@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)st.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)st.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -987,6 +987,15 @@ operator|-
 literal|1
 operator|)
 return|;
+name|sc
+operator|->
+name|sc_ctty
+operator|=
+name|tprintf_open
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* drive ready ? */
 while|while
 condition|(
@@ -1026,14 +1035,27 @@ operator|!=
 name|STS_CHECKCOND
 condition|)
 block|{
-name|printf
+name|tprintf
 argument_list|(
-literal|"st%d: stopen: %s\n"
+name|sc
+operator|->
+name|sc_ctty
+argument_list|,
+literal|"st%d:[stopen]   %s\n"
+argument_list|,
+name|unit
 argument_list|,
 name|scsi_status
 argument_list|(
 name|stat
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|tprintf_close
+argument_list|(
+name|sc
+operator|->
+name|sc_ctty
 argument_list|)
 expr_stmt|;
 return|return
@@ -1050,9 +1072,15 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|tprintf
 argument_list|(
-literal|"st%d: stopen: %s\n"
+name|sc
+operator|->
+name|sc_ctty
+argument_list|,
+literal|"st%d:[stopen]   %s\n"
+argument_list|,
+name|unit
 argument_list|,
 name|sense_key
 argument_list|(
@@ -1060,6 +1088,13 @@ name|sp
 operator|->
 name|key
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|tprintf_close
+argument_list|(
+name|sc
+operator|->
+name|sc_ctty
 argument_list|)
 expr_stmt|;
 return|return
@@ -1074,15 +1109,6 @@ literal|1000000
 argument_list|)
 expr_stmt|;
 block|}
-name|sc
-operator|->
-name|sc_ctty
-operator|=
-name|tprintf_open
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_flags
@@ -1516,7 +1542,7 @@ name|sc
 operator|->
 name|sc_ctty
 argument_list|,
-literal|"st%d: I/O not block aligned %d/%ld\n"
+literal|"st%d:[stustart] I/O not block aligned %d/%ld\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2302,29 +2328,7 @@ name|filemark
 condition|)
 block|{
 comment|/* End of File */
-name|tprintf
-argument_list|(
-name|sc
-operator|->
-name|sc_ctty
-argument_list|,
-literal|"st%d: End of File\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
-name|b_error
-operator|=
-name|EIO
-expr_stmt|;
+comment|/* 			tprintf(sc->sc_ctty, "st%d:[stintr]   End of File\n", unit); 			bp->b_flags |= B_ERROR; 			bp->b_error = EIO;  */
 break|break;
 block|}
 if|if
@@ -2340,7 +2344,7 @@ name|sc
 operator|->
 name|sc_ctty
 argument_list|,
-literal|"st%d: %s\n"
+literal|"st%d:[stintr]   %s\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2380,7 +2384,7 @@ name|sc
 operator|->
 name|sc_ctty
 argument_list|,
-literal|"st%d: End of Tape\n"
+literal|"st%d:[stintr]   End of Tape\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2405,7 +2409,7 @@ name|sc
 operator|->
 name|sc_ctty
 argument_list|,
-literal|"st%d: unknown scsi error\n"
+literal|"st%d:[stintr]   unknown scsi error\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2424,9 +2428,13 @@ name|EIO
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|tprintf
 argument_list|(
-literal|"st%d: stintr unknown stat 0x%x\n"
+name|sc
+operator|->
+name|sc_ctty
+argument_list|,
+literal|"st%d:[stintr]   stintr unknown stat 0x%x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2860,9 +2868,15 @@ return|;
 block|}
 else|else
 block|{
-name|printf
+name|tprintf
 argument_list|(
-literal|"st: rewind error\n"
+name|sc
+operator|->
+name|sc_ctty
+argument_list|,
+literal|"st%d:[st_rewind]   rewind error\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|scsi_request_sense
@@ -2878,9 +2892,15 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|printf
+name|tprintf
 argument_list|(
-literal|"st: status = 0x%x, sens key = 0x%x\n"
+name|sc
+operator|->
+name|sc_ctty
+argument_list|,
+literal|"st%d:[st_rewind]   status = 0x%x, sens key = 0x%x\n"
+argument_list|,
+name|unit
 argument_list|,
 name|stat
 argument_list|,
@@ -3083,9 +3103,15 @@ operator|(
 literal|1
 operator|)
 return|;
-name|printf
+name|tprintf
 argument_list|(
-literal|"st: write EOF error\n"
+name|sc
+operator|->
+name|sc_ctty
+argument_list|,
+literal|"st%d:[st_write_EOF]   write EOF error\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
