@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.31 1998/02/05 18:37:02 guido Exp $"
+literal|"$Id: login.c,v 1.32 1998/02/13 21:02:53 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -720,6 +720,8 @@ name|warntime
 decl_stmt|;
 name|uid_t
 name|uid
+decl_stmt|,
+name|eiud
 decl_stmt|;
 name|char
 modifier|*
@@ -933,6 +935,11 @@ expr_stmt|;
 name|uid
 operator|=
 name|getuid
+argument_list|()
+expr_stmt|;
+name|euid
+operator|=
+name|geteuid
 argument_list|()
 expr_stmt|;
 while|while
@@ -1599,11 +1606,36 @@ ifdef|#
 directive|ifdef
 name|LOGIN_CAP
 comment|/* 		 * Establish the class now, before we might goto 		 * within the next block. pwd can be NULL since it 		 * falls back to the "default" class if it is. 		 */
+if|if
+condition|(
+name|pwd
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|seteuid
+argument_list|(
+name|rootlogin
+condition|?
+literal|0
+else|:
+name|pwd
+operator|->
+name|pw_uid
+argument_list|)
+expr_stmt|;
 name|lc
 operator|=
 name|login_getpwclass
 argument_list|(
 name|pwd
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|euid
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2363,6 +2395,20 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
+name|seteuid
+argument_list|(
+name|rootlogin
+condition|?
+literal|0
+else|:
+name|pwd
+operator|->
+name|pw_uid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2446,6 +2492,14 @@ literal|"No home directory.\nLogging in with home = \"/\".\n"
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|seteuid
+argument_list|(
+name|euid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
