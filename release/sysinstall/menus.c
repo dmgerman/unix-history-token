@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.180.2.3 1999/02/05 22:20:15 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.180.2.4 1999/02/06 08:45:43 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1301,20 +1301,6 @@ literal|"passwd root"
 block|}
 block|,
 block|{
-literal|"Root Password"
-block|,
-literal|"Set the system manager's password."
-block|,
-name|NULL
-block|,
-name|dmenuSystemCommand
-block|,
-name|NULL
-block|,
-literal|"passwd root"
-block|}
-block|,
-block|{
 literal|"Router"
 block|,
 literal|"Select routing daemon (default: routed)"
@@ -1580,9 +1566,29 @@ literal|"usage"
 block|}
 block|,
 block|{
-literal|"2 Doc"
+literal|"2 Novice"
 block|,
-literal|"Installation instructions, README, etc."
+literal|"Begin a novice installation (for beginners)"
+block|,
+name|NULL
+block|,
+name|installNovice
+block|}
+block|,
+block|{
+literal|"3 Express"
+block|,
+literal|"Begin a quick installation (for the impatient)"
+block|,
+name|NULL
+block|,
+name|installExpress
+block|}
+block|,
+block|{
+literal|"4 Custom"
+block|,
+literal|"Begin a custom installation (for experts)"
 block|,
 name|NULL
 block|,
@@ -1591,32 +1597,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|MenuDocumentation
-block|}
-block|,
-block|{
-literal|"3 Keymap"
-block|,
-literal|"Select keyboard type"
-block|,
-name|NULL
-block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuSysconsKeymap
-block|}
-block|,
-block|{
-literal|"4 Options"
-block|,
-literal|"View/Set various installation options"
-block|,
-name|NULL
-block|,
-name|optionsEditor
+name|MenuInstallCustom
 block|}
 block|,
 block|{
@@ -1635,29 +1616,9 @@ name|MenuConfigure
 block|}
 block|,
 block|{
-literal|"6 Novice"
+literal|"D Doc"
 block|,
-literal|"Begin a novice installation (for beginners)"
-block|,
-name|NULL
-block|,
-name|installNovice
-block|}
-block|,
-block|{
-literal|"7 Express"
-block|,
-literal|"Begin a quick installation (for the impatient)"
-block|,
-name|NULL
-block|,
-name|installExpress
-block|}
-block|,
-block|{
-literal|"8 Custom"
-block|,
-literal|"Begin a custom installation (for experts)"
+literal|"Installation instructions, README, etc."
 block|,
 name|NULL
 block|,
@@ -1666,11 +1627,36 @@ block|,
 name|NULL
 block|,
 operator|&
-name|MenuInstallCustom
+name|MenuDocumentation
 block|}
 block|,
 block|{
-literal|"9 Fixit"
+literal|"K Keymap"
+block|,
+literal|"Select keyboard type"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsKeymap
+block|}
+block|,
+block|{
+literal|"O Options"
+block|,
+literal|"View/Set various installation options"
+block|,
+name|NULL
+block|,
+name|optionsEditor
+block|}
+block|,
+block|{
+literal|"F Fixit"
 block|,
 literal|"Enter repair mode with CDROM/floppy or start shell"
 block|,
@@ -1705,7 +1691,7 @@ name|dispatch_load_floppy
 block|}
 block|,
 block|{
-literal|"0 Index"
+literal|"I Index"
 block|,
 literal|"Glossary of functions"
 block|,
@@ -6913,6 +6899,60 @@ literal|"configure"
 block|,
 block|{
 block|{
+literal|"D Distributions"
+block|,
+literal|"Install additional distribution sets"
+block|,
+name|NULL
+block|,
+name|distExtractAll
+block|}
+block|,
+block|{
+literal|"P Packages"
+block|,
+literal|"Install pre-packaged software for FreeBSD"
+block|,
+name|NULL
+block|,
+name|configPackages
+block|}
+block|,
+block|{
+literal|"R Root Password"
+block|,
+literal|"Set the system manager's password"
+block|,
+name|NULL
+block|,
+name|dmenuSystemCommand
+block|,
+name|NULL
+block|,
+literal|"passwd root"
+block|}
+block|,
+block|{
+literal|"L Label"
+block|,
+literal|"The disk Label editor"
+block|,
+name|NULL
+block|,
+name|diskLabelEditor
+block|}
+block|,
+block|{
+literal|"F Fdisk"
+block|,
+literal|"The disk Slice (PC-style partition) Editor"
+block|,
+name|NULL
+block|,
+name|diskPartitionEditor
+block|}
+block|,
+block|{
 literal|"1 User Management"
 block|,
 literal|"Add user and group information"
@@ -7029,40 +7069,6 @@ name|optionsEditor
 block|}
 block|,
 block|{
-literal|"9 Distributions"
-block|,
-literal|"Install additional distribution sets"
-block|,
-name|NULL
-block|,
-name|distExtractAll
-block|}
-block|,
-block|{
-literal|"P Packages"
-block|,
-literal|"Install pre-packaged software for FreeBSD"
-block|,
-name|NULL
-block|,
-name|configPackages
-block|}
-block|,
-block|{
-literal|"R Root Password"
-block|,
-literal|"Set the system manager's password"
-block|,
-name|NULL
-block|,
-name|dmenuSystemCommand
-block|,
-name|NULL
-block|,
-literal|"passwd root"
-block|}
-block|,
-block|{
 literal|"D HTML Docs"
 block|,
 literal|"Go to the HTML documentation menu (post-install)"
@@ -7080,26 +7086,6 @@ block|,
 name|NULL
 block|,
 name|configXEnvironment
-block|}
-block|,
-block|{
-literal|"L Label"
-block|,
-literal|"The disk Label editor"
-block|,
-name|NULL
-block|,
-name|diskLabelEditor
-block|}
-block|,
-block|{
-literal|"F Fdisk"
-block|,
-literal|"The disk Slice (PC-style partition) Editor"
-block|,
-name|NULL
-block|,
-name|diskPartitionEditor
 block|}
 block|,
 block|{
