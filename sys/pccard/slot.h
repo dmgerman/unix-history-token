@@ -196,15 +196,6 @@ name|int
 name|maxio
 decl_stmt|;
 comment|/* Number of allowed I/O windows */
-name|int
-name|irqs
-decl_stmt|;
-comment|/* IRQ's that are allowed */
-name|u_int
-modifier|*
-name|imask
-decl_stmt|;
-comment|/* IRQ mask for the PCIC controller */
 comment|/* 	 *	The rest is maintained by the mainline PC-CARD code. 	 */
 name|struct
 name|slot_ctrl
@@ -221,126 +212,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *	Driver structure - each driver registers itself  *	with the mainline PC-CARD code. These drivers are  *	then available for linking to the devices.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|pccard_devinfo
-struct_decl|;
-end_struct_decl
-
-begin_struct
-struct|struct
-name|pccard_device
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* Driver name */
-name|int
-function_decl|(
-modifier|*
-name|enable
-function_decl|)
-parameter_list|(
-name|struct
-name|pccard_devinfo
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* init/enable driver */
-name|void
-function_decl|(
-modifier|*
-name|disable
-function_decl|)
-parameter_list|(
-name|struct
-name|pccard_devinfo
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* disable driver */
-name|int
-function_decl|(
-modifier|*
-name|handler
-function_decl|)
-parameter_list|(
-name|struct
-name|pccard_devinfo
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* interrupt handler */
-name|int
-name|attr
-decl_stmt|;
-comment|/* driver attributes */
-name|unsigned
-name|int
-modifier|*
-name|imask
-decl_stmt|;
-comment|/* Interrupt mask ptr */
-name|driver_t
-modifier|*
-name|driver
-decl_stmt|;
-comment|/* Driver */
-name|struct
-name|pccard_device
-modifier|*
-name|next
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-name|int
-name|pccard_module_handler
-name|__P
-argument_list|(
-operator|(
-name|module_t
-name|mod
-operator|,
-name|int
-name|what
-operator|,
-name|void
-operator|*
-name|arg
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|PCCARD_MODULE
-parameter_list|(
-name|name
-parameter_list|,
-name|enable
-parameter_list|,
-name|disable
-parameter_list|,
-name|handler
-parameter_list|,
-name|attr
-parameter_list|,
-name|imask
-parameter_list|)
-define|\
-value|static struct pccard_device name ## _info = {				\ 	#name,								\ 	enable,								\ 	disable,							\ 	handler,							\ 	attr,								\&imask								\ };									\ static moduledata_t name ## _mod = {					\ 	"pccard_" #name,						\ 	pccard_module_handler,						\&name ## _info							\ };									\ DECLARE_MODULE(name, name ## _mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
-end_define
-
-begin_comment
 comment|/*  *	Device structure for cards. Each card may have one  *	or more pccard drivers attached to it; each driver is assumed  *	to require at most one interrupt handler, one I/O block  *	and one memory block. This structure is used to link the different  *	devices together.  */
 end_comment
 
@@ -348,16 +219,16 @@ begin_struct
 struct|struct
 name|pccard_devinfo
 block|{
-name|struct
-name|pccard_device
-modifier|*
-name|drv
+name|u_char
+name|name
+index|[
+literal|128
+index|]
 decl_stmt|;
 name|struct
 name|isa_device
 name|isahd
 decl_stmt|;
-comment|/* Device details */
 name|int
 name|running
 decl_stmt|;
@@ -376,17 +247,9 @@ name|slt
 decl_stmt|;
 comment|/* Back pointer to slot */
 name|struct
-name|resource
-modifier|*
-name|iorv
+name|resource_list
+name|resources
 decl_stmt|;
-comment|/* Kludge: keep track of io resource */
-name|struct
-name|resource
-modifier|*
-name|irqrv
-decl_stmt|;
-comment|/* Kludge: keep track of irq */
 name|struct
 name|pccard_devinfo
 modifier|*
@@ -543,16 +406,52 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|pccard_remove_controller
-parameter_list|(
-name|struct
-name|slot_ctrl
+begin_function
+specifier|static
+name|__inline__
+specifier|const
+name|char
 modifier|*
+name|pccard_get_name
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|struct
+name|pccard_devinfo
+modifier|*
+name|devi
+init|=
+operator|(
+expr|struct
+name|pccard_devinfo
+operator|*
+operator|)
+name|device_get_ivars
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|devi
+condition|)
+return|return
+operator|(
+literal|"anonymous"
+operator|)
+return|;
+return|return
+operator|(
+name|devi
+operator|->
+name|name
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#
