@@ -56,7 +56,7 @@ name|unused
 operator|)
 argument_list|)
 init|=
-literal|"$Id: inetd.c,v 1.23 1997/04/28 13:55:07 wollman Exp $"
+literal|"$Id: inetd.c,v 1.24 1997/05/10 18:59:11 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1844,6 +1844,7 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
+block|{
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -1856,6 +1857,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 continue|continue;
 block|}
 for|for
