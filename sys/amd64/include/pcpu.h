@@ -206,6 +206,37 @@ parameter_list|)
 value|__PCPU_SET(pc_ ## member, val)
 end_define
 
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|thread
+operator|*
+name|__curthread
+argument_list|(
+argument|void
+argument_list|)
+block|{ 	struct
+name|thread
+operator|*
+name|td
+block|;
+asm|__asm __volatile("movq %%gs:0,%0" : "=r" (td));
+return|return
+operator|(
+name|td
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|Xurthread
+value|(__curthread())
+end_define
+
 begin_else
 else|#
 directive|else
