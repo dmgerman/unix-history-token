@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.32 1998/03/09 20:39:26 julian Exp $ */
+comment|/* $Id: ccd.c,v 1.33 1998/06/07 17:09:41 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -3517,6 +3517,15 @@ operator|++
 expr_stmt|;
 name|VOP_STRATEGY
 argument_list|(
+name|cbp
+index|[
+literal|0
+index|]
+operator|->
+name|cb_buf
+operator|.
+name|b_vp
+argument_list|,
 operator|&
 name|cbp
 index|[
@@ -3565,6 +3574,15 @@ operator|++
 expr_stmt|;
 name|VOP_STRATEGY
 argument_list|(
+name|cbp
+index|[
+literal|1
+index|]
+operator|->
+name|cb_buf
+operator|.
+name|b_vp
+argument_list|,
 operator|&
 name|cbp
 index|[

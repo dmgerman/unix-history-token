@@ -473,6 +473,15 @@ literal|""
 argument_list|,
 name|ap
 operator|->
+name|a_vp
+argument_list|)
+expr_stmt|;
+name|vprint
+argument_list|(
+literal|""
+argument_list|,
+name|ap
+operator|->
 name|a_bp
 operator|->
 name|b_vp
