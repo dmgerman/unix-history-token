@@ -412,7 +412,7 @@ return|;
 block|}
 return|return
 operator|(
-literal|"NVIDIA Generic AGP Controller"
+name|NULL
 operator|)
 return|;
 block|}
