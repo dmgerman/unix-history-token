@@ -2770,7 +2770,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Resource-owning placeholders.  *  * This code "owns" system resource objects that aren't  * otherwise useful to devices, and which shouldn't be  * considered "free".  */
+comment|/*  * Resource-owning placeholders.  *  * This code "owns" system resource objects that aren't  * otherwise useful to devices, and which shouldn't be  * considered "free".  *  * Note that some systems claim *all* of the physical address space  * with a PNP0C01 device, so we cannot correctly "own" system memory  * here (must be done in the SMAP handler on x86 systems, for  * example).  */
 end_comment
 
 begin_function_decl
@@ -2886,25 +2886,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-if|if
-condition|(
-name|acpi_MatchHid
-argument_list|(
-name|dev
-argument_list|,
-literal|"PNP0C01"
-argument_list|)
-condition|)
-block|{
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"system memory"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|acpi_MatchHid
