@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *    Kerberos v5 authentication and ticket-passing routines.  *  * $FreeBSD$  */
+comment|/*  *    Kerberos v5 authentication and ticket-passing routines.  *  * $xFreeBSD: src/crypto/openssh/auth-krb5.c,v 1.6 2001/02/13 16:58:04 assar Exp$  */
 end_comment
 
 begin_comment
