@@ -1396,6 +1396,9 @@ operator||
 name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|m
@@ -1414,6 +1417,9 @@ name|vm_page_wakeup
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 else|else

@@ -1818,10 +1818,16 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 comment|/* 		 * Install entries in the GATT, making sure that if 		 * AGP_PAGE_SIZE< PAGE_SIZE and mem->am_size is not 		 * aligned to PAGE_SIZE, we don't modify too many GATT  		 * entries. 		 */
 for|for
