@@ -2105,7 +2105,7 @@ operator|->
 name|f_isfd
 condition|)
 block|{
-comment|/* validate descriptor; ignore invalid descriptors */
+comment|/* validate descriptor */
 if|if
 condition|(
 operator|(
@@ -2136,7 +2136,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|EBADF
 operator|)
 return|;
 if|if
@@ -2268,9 +2268,11 @@ operator|==
 literal|0
 operator|)
 condition|)
-goto|goto
-name|done
-goto|;
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 comment|/* 	 * kn now contains the matching knote, or NULL if no match 	 */
 if|if
 condition|(
@@ -2730,6 +2732,26 @@ goto|goto
 name|done
 goto|;
 block|}
+if|if
+condition|(
+name|tsp
+operator|->
+name|tv_sec
+operator|==
+literal|0
+operator|&&
+name|tsp
+operator|->
+name|tv_nsec
+operator|==
+literal|0
+condition|)
+name|timeout
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+else|else
 name|timeout
 operator|=
 name|atv
@@ -2780,6 +2802,12 @@ name|tv_sec
 operator|=
 literal|0
 expr_stmt|;
+name|atv
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 name|timeout
 operator|=
 literal|0
@@ -2795,6 +2823,10 @@ condition|(
 name|atv
 operator|.
 name|tv_sec
+operator|||
+name|atv
+operator|.
+name|tv_usec
 condition|)
 block|{
 name|getmicrouptime
@@ -2881,6 +2913,20 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|timeout
+operator|<
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|EWOULDBLOCK
+expr_stmt|;
+block|}
+else|else
+block|{
 name|kq
 operator|->
 name|kq_state
@@ -2902,6 +2948,7 @@ argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
