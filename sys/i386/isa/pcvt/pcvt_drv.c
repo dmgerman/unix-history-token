@@ -3892,9 +3892,9 @@ expr_stmt|;
 if|if
 condition|(
 name|dvp
-operator|!=
+operator|==
 name|NULL
-operator|&&
+operator|||
 name|dvp
 operator|->
 name|id_driver
