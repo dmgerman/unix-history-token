@@ -147,11 +147,19 @@ begin_comment
 comment|/* pointer to console "window" tty */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KADB
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PANICWAIT
+argument_list|)
+end_if
 
 begin_extern
 extern|extern	cngetc(
@@ -165,6 +173,17 @@ end_empty_stmt
 begin_comment
 comment|/* standard console getc */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KADB
+end_ifdef
 
 begin_function_decl
 name|int
@@ -324,11 +343,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|volatile
+name|void
+name|boot
+parameter_list|(
+name|int
+name|bootopt
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Variable panicstr contains argument to first call to panic; used  * as flag to indicate that the kernel has already called panic.  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|panicstr
@@ -336,12 +367,46 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Message buffer  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|msgbuf
+modifier|*
+name|msgbufp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|msgbufmapped
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Panic is called on unresolvable fatal errors.  It prints "panic: mesg",  * and then reboots.  If we are called twice, then we avoid trying to sync  * the disks as this often leads to recursive panics.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
 begin_function
+specifier|volatile
 name|void
 name|panic
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|)
+else|#
+directive|else
+function|void panic
 parameter_list|(
 name|msg
 parameter_list|)
@@ -349,6 +414,8 @@ name|char
 modifier|*
 name|msg
 decl_stmt|;
+endif|#
+directive|endif
 block|{
 name|int
 name|bootopt
@@ -428,7 +495,19 @@ argument_list|()
 expr_stmt|;
 else|#
 directive|else
-comment|/* pg("press key to boot/dump");*/
+ifdef|#
+directive|ifdef
+name|PANICWAIT
+name|printf
+argument_list|(
+literal|"hit any key to boot/dump...\n>"
+argument_list|)
+expr_stmt|;
+name|cngetc
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|boot
@@ -1045,7 +1124,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 ifdef|#
 directive|ifdef
 name|__STDC__
@@ -1145,6 +1224,11 @@ block|}
 name|logwakeup
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1161,7 +1245,7 @@ comment|/* ok to handle console interrupts? */
 end_comment
 
 begin_function
-name|void
+name|int
 ifdef|#
 directive|ifdef
 name|__STDC__
@@ -1242,6 +1326,10 @@ operator|=
 name|savintr
 expr_stmt|;
 comment|/* reenable interrupts */
+return|return
+literal|0
+return|;
+comment|/* for compatibility with libc's printf() */
 block|}
 end_function
 
@@ -1283,6 +1371,9 @@ specifier|register
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|p2
 decl_stmt|;
 specifier|register
 name|int
@@ -1484,7 +1575,7 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|p
+name|p2
 operator|=
 name|ksprintn
 argument_list|(
@@ -1500,7 +1591,7 @@ init|;
 name|ch
 operator|=
 operator|*
-name|p
+name|p2
 operator|--
 condition|;
 control|)
@@ -1961,10 +2052,6 @@ modifier|*
 name|tp
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|msgbufmapped
-decl_stmt|;
 specifier|register
 name|struct
 name|msgbuf
@@ -2163,41 +2250,38 @@ directive|ifdef
 name|__STDC__
 end_ifdef
 
-begin_macro
+begin_function
+name|int
 name|sprintf
-argument_list|(
-argument|char *buf
-argument_list|,
-argument|const char *cfmt
-argument_list|,
-argument|...
-argument_list|)
-end_macro
-
-begin_else
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cfmt
+parameter_list|,
+modifier|...
+parameter_list|)
 else|#
 directive|else
-end_else
-
-begin_macro
-name|sprintf
-argument_list|(
-argument|buf
-argument_list|,
-argument|cfmt
+function|int sprintf
+parameter_list|(
+name|buf
+parameter_list|,
+name|cfmt
 comment|/*, va_alist */
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|)
 name|char
 modifier|*
 name|buf
 decl_stmt|,
-modifier|*
+decl|*
 name|cfmt
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_endif
 endif|#
