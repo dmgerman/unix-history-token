@@ -4514,6 +4514,8 @@ decl_stmt|;
 comment|/* get the proxy URL, and check if we should use HTTP instead */
 if|if
 condition|(
+name|flags
+operator|&&
 operator|!
 name|strchr
 argument_list|(
@@ -4731,6 +4733,8 @@ decl_stmt|;
 comment|/* get the proxy URL, and check if we should use HTTP instead */
 if|if
 condition|(
+name|flags
+operator|&&
 operator|!
 name|strchr
 argument_list|(
@@ -4894,6 +4898,8 @@ decl_stmt|;
 comment|/* get the proxy URL, and check if we should use HTTP instead */
 if|if
 condition|(
+name|flags
+operator|&&
 operator|!
 name|strchr
 argument_list|(
