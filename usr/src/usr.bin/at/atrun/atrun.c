@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrun.c	5.5 (Berkeley) %G%"
+literal|"@(#)atrun.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -568,6 +568,14 @@ argument_list|(
 name|spoolfile
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|spoolfile
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -639,6 +647,14 @@ argument_list|,
 name|spoolfile
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|spoolfile
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -688,6 +704,14 @@ argument_list|,
 name|spoolfile
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|spoolfile
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
@@ -714,6 +738,14 @@ literal|1
 condition|)
 block|{
 name|perror
+argument_list|(
+name|spoolfile
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
 argument_list|(
 name|spoolfile
 argument_list|)
