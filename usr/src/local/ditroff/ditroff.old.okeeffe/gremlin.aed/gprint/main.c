@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gprint.c-  *  * Copyright -C- 1982 Barry S. Roitblat  *  *	This file contains the main and file system dependent routines  * for producing hard copy from gremlin files.  It is extensively modified  * from the vplot source.  */
+comment|/*	main.c	1.4	83/03/30  *  * Copyright -C- 1982 Barry S. Roitblat  *  *	This file contains the main and file system dependent routines  * for producing hard copy from gremlin files.  It is extensively modified  * from the vplot source.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"gprint.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"grem2.h"
 end_include
 
 begin_include
@@ -242,7 +236,7 @@ begin_decl_stmt
 name|double
 name|scale
 init|=
-literal|4.0
+literal|3.0
 decl_stmt|;
 end_decl_stmt
 
@@ -252,63 +246,21 @@ end_comment
 
 begin_decl_stmt
 name|double
-name|topx
+name|orgx
+init|=
+literal|0.0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* coordinates into output device coordinates */
+comment|/* x and y origin of gremlin picture */
 end_comment
 
 begin_decl_stmt
 name|double
-name|topy
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|double
-name|botx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|double
-name|boty
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|centx
+name|orgy
 init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|centy
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|double
-name|delx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|double
-name|dely
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|double
-name|del
+literal|0.0
 decl_stmt|;
 end_decl_stmt
 
@@ -355,7 +307,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Bits per line for output array */
+comment|/* plot dimensions in pixels */
 end_comment
 
 begin_decl_stmt
@@ -368,10 +320,6 @@ literal|8
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Bytes per line for output array */
-end_comment
-
 begin_decl_stmt
 name|int
 name|BytesPerLine
@@ -382,18 +330,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Bytes per raster line (different from range 				   due to non-square paper). */
-end_comment
-
-begin_decl_stmt
-name|char
-name|device
-init|=
-literal|'V'
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default device */
 end_comment
 
 begin_decl_stmt
@@ -668,9 +604,9 @@ case|case
 literal|'W'
 case|:
 comment|/* Print to wide (versatec) device */
-name|device
+name|scale
 operator|=
-literal|'W'
+literal|4.0
 expr_stmt|;
 name|DevRange
 operator|=
@@ -698,9 +634,9 @@ case|case
 literal|'V'
 case|:
 comment|/* Print to narrow (varian) device */
-name|device
+name|scale
 operator|=
-literal|'V'
+literal|3.0
 expr_stmt|;
 name|DevRange
 operator|=
@@ -1530,53 +1466,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* init constants for scaling */
-name|topx
-operator|=
-name|topy
-operator|=
-name|DevRange
-expr_stmt|;
-name|botx
-operator|=
-name|boty
-operator|=
-literal|0
-expr_stmt|;
-name|delx
-operator|=
-name|dely
-operator|=
-name|del
-operator|=
-name|DevRange
-expr_stmt|;
-name|centx
-operator|=
-operator|(
-name|DevRange
-operator|-
-name|mapx
-argument_list|(
-name|topx
-operator|/
-name|scale
-argument_list|)
-operator|)
-operator|/
-literal|2
-expr_stmt|;
-name|centy
-operator|=
-name|mapy
-argument_list|(
-name|topy
-operator|/
-name|scale
-argument_list|)
-operator|/
-literal|2
-expr_stmt|;
 name|signal
 argument_list|(
 name|SIGTERM
@@ -1810,7 +1699,7 @@ condition|)
 block|{
 name|umask
 argument_list|(
-literal|0
+literal|022
 argument_list|)
 expr_stmt|;
 if|if
@@ -1960,43 +1849,28 @@ name|cp1
 operator|<
 name|cp2
 condition|;
-name|cp1
-operator|+=
-name|DevRange8
 control|)
 block|{
-name|fwrite
-argument_list|(
-name|cp1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-argument_list|,
+for|for
+control|(
+name|i
+operator|=
 name|DevRange8
+init|;
+name|i
+operator|--
+condition|;
+name|cp1
+operator|++
+control|)
+name|putc
+argument_list|(
+operator|*
+name|cp1
 argument_list|,
 name|pfp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fseek
-argument_list|(
-name|pfp
-argument_list|,
-operator|(
-name|long
-operator|)
-name|BytesPerLine
-operator|-
-name|DevRange8
-argument_list|,
-literal|1
-argument_list|)
-operator|<
-literal|0
-condition|)
 for|for
 control|(
 name|i
@@ -2028,39 +1902,7 @@ name|pfp
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|WriteRaster
-condition|)
-block|{
-name|lpargs
-index|[
-name|lparg
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|execv
-argument_list|(
-name|LPR
-argument_list|,
-name|lpargs
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"gprint: can't exec %s\n"
-argument_list|,
-name|LPR
-argument_list|)
-expr_stmt|;
-name|cleanup
-argument_list|()
-expr_stmt|;
-block|}
+comment|/* 	if (!WriteRaster) { 		lpargs[lparg] = 0; 		execv(LPR, lpargs); 		fprintf(stderr, "gprint: can't exec %s\n", LPR); 		cleanup(); 	} */
 name|exit
 argument_list|(
 literal|0
@@ -2076,28 +1918,23 @@ end_macro
 
 begin_block
 block|{
-while|while
-condition|(
-name|picture
-index|[
-name|run
-index|]
-operator|!=
-literal|'a'
-condition|)
-block|{
+do|do
 name|unlink
 argument_list|(
 name|picture
 argument_list|)
 expr_stmt|;
+do|while
+condition|(
 name|picture
 index|[
 name|run
 index|]
 operator|--
-expr_stmt|;
-block|}
+operator|!=
+literal|'A'
+condition|)
+do|;
 name|exit
 argument_list|(
 literal|1
@@ -2107,7 +1944,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Points should be in the range 0<= x (or y)<= DevRange.  * The origin is the top left-hand corner with increasing x towards the  * right and increasing y going down.  * The output array is DevRange x DevRange pixels.  */
+comment|/*  * Points should be in the range 0<= x< DevRange, 0<= y< DevRange.  * The origin is the top left-hand corner with increasing x towards the  * right and increasing y going down.  * The output array is DevRange x DevRange/8 pixels.  */
 end_comment
 
 begin_expr_stmt
@@ -2131,6 +1968,23 @@ specifier|register
 name|unsigned
 name|byte
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|x
+operator|<
+name|DevRange
+operator|&&
+operator|(
+name|unsigned
+operator|)
+name|y
+operator|<
+name|DevRange
+condition|)
+block|{
 name|byte
 operator|=
 name|y
@@ -2143,12 +1997,6 @@ operator|>>
 literal|3
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|byte
-operator|<
-name|bufsize
-condition|)
 name|obuf
 index|[
 name|byte
@@ -2165,6 +2013,17 @@ operator|&
 literal|07
 operator|)
 operator|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"(%d, %d) out of range\n"
+argument_list|,
+name|x
+argument_list|,
+name|y
+argument_list|)
 expr_stmt|;
 block|}
 end_block

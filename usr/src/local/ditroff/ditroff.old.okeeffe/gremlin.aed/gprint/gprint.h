@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gprint.h	1.2	83/03/02  *  * This file contains standard definitions used by the gprint program.  */
+comment|/*	gprint.h	1.3	83/03/30  *  * This file contains standard definitions used by the gprint program.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|poffset
-value|( (device == 'V') ? 10 : 117 )
+name|Xmax
+value|511
 end_define
 
 begin_define
@@ -15,13 +15,6 @@ define|#
 directive|define
 name|Ymax
 value|483
-end_define
-
-begin_define
-define|#
-directive|define
-name|Xmax
-value|511
 end_define
 
 begin_define
@@ -45,7 +38,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|Orientation ? (Ymax - ((x) - poffset)) : (y)
+value|Orientation ? (x) : (y)
 end_define
 
 begin_define
@@ -55,7 +48,7 @@ name|mapx
 parameter_list|(
 name|x
 parameter_list|)
-value|((DevRange*(((x) * scale)-botx)/del)+centx)
+value|(((x) * scale)-orgx)
 end_define
 
 begin_define
@@ -65,7 +58,7 @@ name|mapy
 parameter_list|(
 name|y
 parameter_list|)
-value|((DevRange*(del-((y) * scale)+boty)/del)-centy)
+value|(((y) * scale)-orgy)
 end_define
 
 begin_define
@@ -443,6 +436,56 @@ block|}
 name|TXFIELD
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|DBNextElt
+parameter_list|(
+name|elt
+parameter_list|)
+value|elt->nextelt
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBNextofSet
+parameter_list|(
+name|elt
+parameter_list|)
+value|elt->setnext
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBNullelt
+parameter_list|(
+name|elt
+parameter_list|)
+value|(elt == NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Nullpoint
+parameter_list|(
+name|pt
+parameter_list|)
+value|(pt->x == nullpt)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTNextPoint
+parameter_list|(
+name|pt
+parameter_list|)
+value|pt->nextpt
+end_define
 
 end_unit
 

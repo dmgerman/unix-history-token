@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* hgraph.c-  *  *  * Copyright -C- 1982 Barry S. Roitblat  *  *     This file contains the graphics routines for hard copy (gprint)   * production of gremlin files.  *  */
+comment|/*	hgraph.c	1.3	83/03/30  *  * Copyright -C- 1982 Barry S. Roitblat  *  *     This file contains the graphics routines for hard copy (gprint)   * production of gremlin files.  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"gprint.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"grem2.h"
 end_include
 
 begin_include
@@ -213,63 +207,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|double
-name|topx
+name|orgx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|double
-name|topy
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|double
-name|botx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|double
-name|boty
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|centx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|centy
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|double
-name|delx
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|double
-name|dely
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|double
-name|del
+name|orgy
 decl_stmt|;
 end_decl_stmt
 
@@ -277,13 +222,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|DevRange
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|device
 decl_stmt|;
 end_decl_stmt
 
