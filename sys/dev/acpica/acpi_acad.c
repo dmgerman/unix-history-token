@@ -538,6 +538,12 @@ argument_list|)
 operator|==
 name|ACPI_TYPE_DEVICE
 operator|&&
+operator|!
+name|acpi_disabled
+argument_list|(
+literal|"acad"
+argument_list|)
+operator|&&
 name|acpi_MatchHid
 argument_list|(
 name|dev
