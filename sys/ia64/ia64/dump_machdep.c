@@ -1318,6 +1318,10 @@ name|printf
 argument_list|(
 literal|"Dumping %llu MB (%d chunks)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|dumpsize
 operator|>>
 literal|20
