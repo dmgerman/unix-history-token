@@ -54,7 +54,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * bcd --  *  * Read one line of standard input and produce something that looks like a  * punch card.  An attempt to reimplement /usr/games/bcd.  All I looked at  * was the man page.  *  * I couldn't find a BCD table handy so I wrote a shell script to deduce what  * the patterns were that the old bcd was using for each possible 8-bit  * character.  These are the results -- the low order 12 bits represent the  * holes.  (A 1 bit is a hole.)  These may be wrong, but they match the old  * program!  *  * Steve Hayman  * sahayman@iuvax.cs.indiana.edu  * 1989 11 30  */
+comment|/*  * bcd --  *  * Read one line of standard input and produce something that looks like a  * punch card.  An attempt to reimplement /usr/games/bcd.  All I looked at  * was the man page.  *  * I couldn't find a BCD table handy so I wrote a shell script to deduce what  * the patterns were that the old bcd was using for each possible 8-bit  * character.  These are the results -- the low order 12 bits represent the  * holes.  (A 1 bit is a hole.)  These may be wrong, but they match the old  * program!  *  * Steve Hayman  * sahayman@iuvax.cs.indiana.edu  * 1989 11 30  *  *  * I found an error in the table. The same error is found in the SunOS 4.1.1  * version of bcd. It has apparently been around a long time. The error caused  * 'Q' and 'R' to have the same punch code. I only noticed the error due to  * someone pointing it out to me when the program was used to print a cover  * for an APA!  The table was wrong in 4 places. The other error was masked  * by the fact that the input is converted to upper case before lookup.  *  * Dyane Bruce  * db@diana.ocunix.on.ca  * Nov 5, 1993  */
 end_comment
 
 begin_include
@@ -247,7 +247,7 @@ literal|0x404
 block|,
 literal|0x402
 block|,
-literal|0x402
+literal|0x401
 block|,
 literal|0x280
 block|,
@@ -309,7 +309,7 @@ literal|0x404
 block|,
 literal|0x402
 block|,
-literal|0x402
+literal|0x401
 block|,
 literal|0x280
 block|,
@@ -501,7 +501,7 @@ literal|0x404
 block|,
 literal|0x402
 block|,
-literal|0x402
+literal|0x401
 block|,
 literal|0x280
 block|,
@@ -565,7 +565,7 @@ literal|0x404
 block|,
 literal|0x402
 block|,
-literal|0x402
+literal|0x401
 block|,
 literal|0x280
 block|,
@@ -615,6 +615,7 @@ value|((w)&(1<<(i)))
 end_define
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
