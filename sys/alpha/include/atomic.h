@@ -22,6 +22,54 @@ file|<machine/alpha_cpu.h>
 end_include
 
 begin_comment
+comment|/*  * Quick and dirty workaround for compiling LINT. The kernel is too  * large to jump between sections without linker stubs/trampolines.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPILING_LINT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__COLD_SECTION
+value|"br 3f\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|__HOT_SECTION
+value|"3:\n"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__COLD_SECTION
+value|".section .text3,\"ax\"\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|__HOT_SECTION
+value|".previous\n"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and SMP safe.  */
 end_comment
 
@@ -159,11 +207,11 @@ literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|".section .text3,\"ax\"\n"
+name|__COLD_SECTION
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
 comment|/* try again */
-literal|".previous\n"
+name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -227,11 +275,11 @@ literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|".section .text3,\"ax\"\n"
+name|__COLD_SECTION
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
 comment|/* try again */
-literal|".previous\n"
+name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -289,11 +337,11 @@ literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|".section .text3,\"ax\"\n"
+name|__COLD_SECTION
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
 comment|/* try again */
-literal|".previous\n"
+name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -351,11 +399,11 @@ literal|"stl_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|".section .text3,\"ax\"\n"
+name|__COLD_SECTION
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
 comment|/* try again */
-literal|".previous\n"
+name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -484,11 +532,11 @@ literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|".section .text3,\"ax\"\n"
+name|__COLD_SECTION
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
 comment|/* try again */
-literal|".previous\n"
+name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -546,11 +594,11 @@ literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|".section .text3,\"ax\"\n"
+name|__COLD_SECTION
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
 comment|/* try again */
-literal|".previous\n"
+name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -608,11 +656,11 @@ literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|".section .text3,\"ax\"\n"
+name|__COLD_SECTION
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
 comment|/* try again */
-literal|".previous\n"
+name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -670,11 +718,11 @@ literal|"stq_c %0, %1\n\t"
 comment|/* attempt to store */
 literal|"beq %0, 2f\n\t"
 comment|/* spin if failed */
-literal|".section .text3,\"ax\"\n"
+name|__COLD_SECTION
 comment|/* improve branch prediction */
 literal|"2:\tbr 1b\n"
 comment|/* try again */
-literal|".previous\n"
+name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -1119,11 +1167,11 @@ literal|"beq %0, 3f\n\t"
 comment|/* if it failed, spin */
 literal|"2:\n"
 comment|/* done */
-literal|".section .text3,\"ax\"\n"
+name|__COLD_SECTION
 comment|/* improve branch prediction */
 literal|"3:\tbr 1b\n"
 comment|/* try again */
-literal|".previous\n"
+name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
@@ -1212,11 +1260,11 @@ literal|"beq %0, 3f\n\t"
 comment|/* if it failed, spin */
 literal|"2:\n"
 comment|/* done */
-literal|".section .text3,\"ax\"\n"
+name|__COLD_SECTION
 comment|/* improve branch prediction */
 literal|"3:\tbr 1b\n"
 comment|/* try again */
-literal|".previous\n"
+name|__HOT_SECTION
 operator|:
 literal|"=&r"
 operator|(
