@@ -414,11 +414,11 @@ begin_define
 define|#
 directive|define
 name|KPDPI
-value|(NPDPEPG-1)
+value|(NPDPEPG-2)
 end_define
 
 begin_comment
-comment|/* kernbase at -1GB */
+comment|/* kernbase at -2GB */
 end_comment
 
 begin_comment
