@@ -247,21 +247,21 @@ begin_define
 define|#
 directive|define
 name|MONO_BUF
-value|0xFE0B0000
+value|(KERNBASE + 0xB0000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CGA_BUF
-value|0xFE0B8000
+value|(KERNBASE + 0xB8000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VGA_BUF
-value|0xFE0A0000
+value|(KERNBASE + 0xA0000)
 end_define
 
 begin_define
