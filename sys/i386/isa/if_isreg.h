@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Isolan AT 4141-0 Ethernet driver header file  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  *	$Id: if_isreg.h,v 1.2 1993/10/16 13:45:55 rgrimes Exp $  */
+comment|/*  * Isolan AT 4141-0 Ethernet driver header file  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  *	$Id: if_isreg.h,v 1.3 1993/10/24 04:27:00 paul Exp $  */
 end_comment
 
 begin_comment
@@ -81,15 +81,79 @@ end_define
 begin_define
 define|#
 directive|define
-name|RAP
+name|BICC_RDP
+value|0xc
+end_define
+
+begin_define
+define|#
+directive|define
+name|BICC_RAP
 value|0xe
 end_define
 
 begin_define
 define|#
 directive|define
-name|RDP
-value|0xc
+name|NE2100_RDP
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|NE2100_RAP
+value|0x12
+end_define
+
+begin_comment
+comment|/* Board types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BICC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NE2100
+value|2
+end_define
+
+begin_comment
+comment|/* Am7990 or Am79960 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LANCE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LANCE_MASK
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCnet_ISA
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCnet_ISA_MASK
+value|0x0
 end_define
 
 begin_comment
