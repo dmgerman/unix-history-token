@@ -5134,10 +5134,6 @@ name|v_rdev
 expr_stmt|;
 name|error
 operator|=
-name|bp
-operator|->
-name|b_error
-operator|=
 literal|0
 expr_stmt|;
 name|bp

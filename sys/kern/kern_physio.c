@@ -114,10 +114,6 @@ name|b_data
 expr_stmt|;
 name|error
 operator|=
-name|bp
-operator|->
-name|b_error
-operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX: sanity check */
