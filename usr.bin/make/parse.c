@@ -4233,9 +4233,9 @@ init|=
 name|FALSE
 decl_stmt|;
 comment|/* TRUE if the command needs to be freed, i.e. 				  * if any variable expansion was performed */
-name|char
+name|Buffer
 modifier|*
-name|res
+name|buf
 decl_stmt|;
 specifier|const
 name|char
@@ -4273,7 +4273,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-name|res
+name|buf
 operator|=
 name|Cmd_Exec
 argument_list|(
@@ -4287,14 +4287,21 @@ name|Var_Set
 argument_list|(
 name|line
 argument_list|,
-name|res
+name|Buf_GetAll
+argument_list|(
+name|buf
+argument_list|,
+name|NULL
+argument_list|)
 argument_list|,
 name|ctxt
 argument_list|)
 expr_stmt|;
-name|free
+name|Buf_Destroy
 argument_list|(
-name|res
+name|buf
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
