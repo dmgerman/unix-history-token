@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	6.2	83/09/25	*/
+comment|/*	kern_descrip.c	6.3	83/11/18	*/
 end_comment
 
 begin_include
@@ -1225,12 +1225,6 @@ operator|->
 name|i
 argument_list|)
 expr_stmt|;
-name|closef
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-comment|/* WHAT IF u.u_error ? */
 name|u
 operator|.
 name|u_ofile
@@ -1247,6 +1241,12 @@ name|pf
 operator|=
 literal|0
 expr_stmt|;
+name|closef
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+comment|/* WHAT IF u.u_error ? */
 block|}
 end_block
 
