@@ -496,12 +496,8 @@ name|void
 name|mii_add_media
 parameter_list|(
 name|struct
-name|mii_data
+name|mii_softc
 modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

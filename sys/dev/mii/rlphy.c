@@ -603,15 +603,7 @@ argument_list|)
 expr_stmt|;
 name|mii_add_media
 argument_list|(
-name|mii
-argument_list|,
 name|sc
-operator|->
-name|mii_capabilities
-argument_list|,
-name|sc
-operator|->
-name|mii_inst
 argument_list|)
 expr_stmt|;
 name|printf
