@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: wizard.c,v 1.2 1995/05/16 02:53:31 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: wizard.c,v 1.3 1995/05/17 14:40:00 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -2183,8 +2183,7 @@ begin_function
 name|void
 name|Scan_Disk
 parameter_list|(
-name|struct
-name|disk
+name|Disk
 modifier|*
 name|d
 parameter_list|)
@@ -2367,14 +2366,12 @@ begin_function
 name|void
 name|slice_wizard
 parameter_list|(
-name|struct
-name|disk
+name|Disk
 modifier|*
 name|d
 parameter_list|)
 block|{
-name|struct
-name|disk
+name|Disk
 modifier|*
 name|db
 decl_stmt|;
