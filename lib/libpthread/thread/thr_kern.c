@@ -5447,6 +5447,21 @@ argument_list|,
 name|gcle
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX we don't free initial thread and its kse 		 * (if thread is a bound thread), because there might 		 * have some code referencing initial thread and kse. 		 */
+if|if
+condition|(
+name|td
+operator|==
+name|_thr_initial
+condition|)
+block|{
+name|DBG_MSG
+argument_list|(
+literal|"Initial thread won't be freed\n"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 operator|(
@@ -5507,14 +5522,6 @@ name|crit
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * XXX we don't free initial thread, because there might 		 * have some code referencing initial thread. 		 */
-if|if
-condition|(
-name|td
-operator|!=
-name|_thr_initial
-condition|)
-block|{
 name|DBG_MSG
 argument_list|(
 literal|"Freeing thread %p\n"
@@ -5527,13 +5534,6 @@ argument_list|(
 name|curthread
 argument_list|,
 name|td
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|DBG_MSG
-argument_list|(
-literal|"Initial thread won't be freed\n"
 argument_list|)
 expr_stmt|;
 block|}
