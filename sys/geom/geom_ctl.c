@@ -2005,14 +2005,10 @@ expr_stmt|;
 if|if
 condition|(
 name|p
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+block|{
 name|LIST_FOREACH
 argument_list|(
 argument|mp
@@ -2059,6 +2055,7 @@ operator|(
 name|gp
 operator|)
 return|;
+block|}
 block|}
 block|}
 name|gctl_error
