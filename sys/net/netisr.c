@@ -268,7 +268,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Note all network code is currently capable of running MPSAFE; however,  * most of it is.  Since those sections that are not are generally optional  * components not shipped with default kernels, we provide a basic way to  * determine whether MPSAFE operation is permitted: based on a default of  * yes, we permit non-MPSAFE components to use a registration call to  * identify that they require Giant.  If the system is early in the boot  * process still, then we change the debug_mpsafenet setting to choose a  * non-MPSAFE execution mode (degraded).  If it's too late for that (since  * the setting cannot be changed at run time), we generate a console warning  * that the configuration may be unsafe.  */
+comment|/*  * Not all network code is currently capable of running MPSAFE; however,  * most of it is.  Since those sections that are not are generally optional  * components not shipped with default kernels, we provide a basic way to  * determine whether MPSAFE operation is permitted: based on a default of  * yes, we permit non-MPSAFE components to use a registration call to  * identify that they require Giant.  If the system is early in the boot  * process still, then we change the debug_mpsafenet setting to choose a  * non-MPSAFE execution mode (degraded).  If it's too late for that (since  * the setting cannot be changed at run time), we generate a console warning  * that the configuration may be unsafe.  */
 end_comment
 
 begin_decl_stmt
