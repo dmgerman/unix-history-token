@@ -10249,7 +10249,7 @@ operator|->
 name|ccb_h
 operator|.
 name|flags
-operator|*
+operator|&
 name|CAM_DIS_DISCONNECT
 condition|)
 name|ss
