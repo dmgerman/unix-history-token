@@ -727,7 +727,7 @@ parameter_list|(
 name|z
 parameter_list|)
 define|\
-value|mtx_init(&(z)->uz_lock, (z)->uz_name, "UMA zone", MTX_DEF)
+value|mtx_init(&(z)->uz_lock, (z)->uz_name, "UMA zone",	\ 	    MTX_DEF | MTX_DUPOK)
 end_define
 
 begin_define
