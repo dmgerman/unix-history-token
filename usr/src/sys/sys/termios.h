@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)termios.h	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)termios.h	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1273,7 +1273,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_POSIX_SOURCE */
+comment|/* !_POSIX_SOURCE */
 end_comment
 
 begin_ifndef
@@ -1281,6 +1281,55 @@ ifndef|#
 directive|ifndef
 name|KERNEL
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TCIFLUSH
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCOFLUSH
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCIOFLUSH
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCOOFF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCOON
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCIOFF
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCION
+value|4
+end_define
 
 begin_include
 include|#
@@ -1353,6 +1402,41 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|tcgetattr
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|termios
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcsetattr
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+specifier|const
+expr|struct
+name|termios
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|tcdrain
 name|__P
 argument_list|(
@@ -1393,22 +1477,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|tcgetattr
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-expr|struct
-name|termios
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|tcsendbreak
 name|__P
 argument_list|(
@@ -1420,74 +1488,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tcsetattr
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|,
-specifier|const
-expr|struct
-name|termios
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|TCIFLUSH
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCOFLUSH
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCIOFLUSH
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCOOFF
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCOON
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCIOFF
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCION
-value|4
-end_define
 
 begin_ifndef
 ifndef|#
@@ -1510,7 +1510,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|cfsetspeed
 name|__P
 argument_list|(
@@ -1531,7 +1531,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !POSIX */
+comment|/* !_POSIX_SOURCE */
 end_comment
 
 begin_macro
