@@ -1262,6 +1262,35 @@ operator|.
 name|inFrames
 operator|++
 expr_stmt|;
+comment|/* 	 * Don't make a copy if only the dup hook exists. 	 */
+if|if
+condition|(
+operator|(
+name|dup
+operator|&&
+name|dup
+operator|->
+name|hook
+operator|)
+operator|&&
+operator|(
+name|dest
+operator|->
+name|hook
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+name|dest
+operator|=
+name|dup
+expr_stmt|;
+name|dup
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* Duplicate packet and meta info if requried */
 if|if
 condition|(
