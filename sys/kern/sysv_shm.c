@@ -2797,6 +2797,28 @@ name|shm_perm
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We make sure that we have allocated a pager before we need 	 * to. 	 */
+ifdef|#
+directive|ifdef
+name|SHM_PHYS_BACKED
+name|shm_handle
+operator|->
+name|shm_object
+operator|=
+name|vm_pager_allocate
+argument_list|(
+name|OBJT_PHYS
+argument_list|,
+literal|0
+argument_list|,
+name|size
+argument_list|,
+name|VM_PROT_DEFAULT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|shm_handle
 operator|->
 name|shm_object
@@ -2814,6 +2836,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|vm_object_clear_flag
 argument_list|(
 name|shm_handle
