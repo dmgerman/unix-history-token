@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.12.4.2 1996/03/05 05:50:51 nate Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.12.4.3 1996/03/12 06:06:35 nate Exp $  */
 end_comment
 
 begin_include
@@ -207,54 +207,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* XXX */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|APM_SLOWSTART
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|apm_slowstart
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|apm_ss_cnt
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|apm_slowstart_p
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|apm_slowstart_stat
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* APM_SLOWSTART */
 end_comment
 
 begin_define
@@ -1978,7 +1930,6 @@ asm|__asm ("movw $0x5305, %ax; lcall _apm_addr");
 block|}
 block|}
 comment|/* 	 * Some APM implementation halts CPU in BIOS, whenever 	 * "CPU-idle" function are invoked, but swtch() of 	 * FreeBSD halts CPU, therefore, CPU is halted twice 	 * in the sched loop. It makes the interrupt latency 	 * terribly long and be able to cause a serious problem 	 * in interrupt processing. We prevent it by removing 	 * "hlt" operation from swtch() and managed it under 	 * APM driver. 	 */
-comment|/* 	 * UKAI Note: on NetBSD, idle() called from cpu_switch() 	 * doesn't halt CPU, so halt_cpu may not need on NetBSD/i386 	 * or only "sti" operation would be needed. 	 */
 if|if
 condition|(
 operator|!
@@ -2202,16 +2153,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|APM_SLOWSTART
-name|apm_slowstart
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* APM_SLOWSTART */
 block|}
 end_function
 
@@ -2244,16 +2185,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|APM_SLOWSTART
-name|apm_slowstart
-operator|=
-name|apm_slowstart_p
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* APM_SLOWSTART */
 block|}
 end_function
 
@@ -2697,25 +2628,6 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|APM_SLOWSTART
-if|if
-condition|(
-name|sc
-operator|->
-name|idle_cpu
-condition|)
-block|{
-name|apm_slowstart
-operator|=
-name|apm_slowstart_p
-operator|=
-literal|1
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* print bootstrap messages */
 ifdef|#
 directive|ifdef
