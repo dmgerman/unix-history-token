@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	8.2 (Berkeley) %G%"
+literal|"@(#)fts.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dirent.h>
 end_include
 
@@ -65,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -3104,26 +3104,43 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-comment|/* 	 * If descended after called from fts_children or called from 	 * fts_read and didn't find anything, get back.  If can't get 	 * back, done. 	 */
+comment|/* 	 * If descended after called from fts_children or after called from 	 * fts_read and nothing found, get back.  At the root level we use 	 * the saved fd; if one of fts_open()'s arguments is a relative path 	 * to an empty directory, we wind up here with no other way back.  If 	 * can't get back, we're done. 	 */
 if|if
 condition|(
 name|descend
 operator|&&
 operator|(
-operator|!
-name|nitems
-operator|||
 name|type
 operator|==
 name|BCHILD
+operator|||
+operator|!
+name|nitems
 operator|)
 operator|&&
+operator|(
+name|cur
+operator|->
+name|fts_level
+operator|==
+name|FTS_ROOTLEVEL
+condition|?
+name|FCHDIR
+argument_list|(
+name|sp
+argument_list|,
+name|sp
+operator|->
+name|fts_rfd
+argument_list|)
+else|:
 name|CHDIR
 argument_list|(
 name|sp
 argument_list|,
 literal|".."
 argument_list|)
+operator|)
 condition|)
 block|{
 name|cur
