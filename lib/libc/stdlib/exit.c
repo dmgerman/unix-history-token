@@ -101,6 +101,20 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+specifier|extern
+name|int
+name|_thread_autoinit_dummy_decl
+decl_stmt|;
+comment|/* Ensure that the auto-initialization routine is linked in: */
+name|_thread_autoinit_dummy_decl
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|p
