@@ -1707,6 +1707,18 @@ block|{
 comment|/* 		 * handle a plain ~ or ~/ by expanding $HOME 		 * first and then trying the password file 		 */
 if|if
 condition|(
+name|getuid
+argument_list|()
+operator|!=
+name|geteuid
+argument_list|()
+operator|||
+name|getgid
+argument_list|()
+operator|!=
+name|getegid
+argument_list|()
+operator|||
 operator|(
 name|h
 operator|=
