@@ -1,15 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego and Lance  * Visser of Convex Computer Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)dd.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego and Lance  * Visser of Convex Computer Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)dd.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/* Input/output stream state. */
 end_comment
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|io_desc
 block|{
 name|u_char
 modifier|*
@@ -78,12 +78,50 @@ name|p_stats
 decl_stmt|;
 comment|/* # of partial blocks processed */
 name|u_long
+name|s_stats
+decl_stmt|;
+comment|/* # of odd swab blocks */
+name|u_long
 name|t_stats
 decl_stmt|;
 comment|/* # of truncations */
 block|}
-struct|;
-end_struct
+name|IO
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_long
+name|in_full
+decl_stmt|;
+comment|/* # of full input blocks */
+name|u_long
+name|in_part
+decl_stmt|;
+comment|/* # of partial input blocks */
+name|u_long
+name|out_full
+decl_stmt|;
+comment|/* # of full output blocks */
+name|u_long
+name|out_part
+decl_stmt|;
+comment|/* # of partial output blocks */
+name|u_long
+name|trunc
+decl_stmt|;
+comment|/* # of truncated records */
+name|u_long
+name|swab
+decl_stmt|;
+comment|/* # of odd-length swab blocks */
+block|}
+name|STAT
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Flags (in ddflags). */
@@ -92,127 +130,141 @@ end_comment
 begin_define
 define|#
 directive|define
-name|C_BLOCK
+name|C_ASCII
 value|0x00001
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_BS
+name|C_BLOCK
 value|0x00002
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_CBS
+name|C_BS
 value|0x00004
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_COUNT
+name|C_CBS
 value|0x00008
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_FILES
+name|C_COUNT
 value|0x00010
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_IBS
+name|C_EBCDIC
 value|0x00020
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_IF
+name|C_FILES
 value|0x00040
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_LCASE
+name|C_IBS
 value|0x00080
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_NOERROR
+name|C_IF
 value|0x00100
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_NOTRUNC
+name|C_LCASE
 value|0x00200
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_OBS
+name|C_NOERROR
 value|0x00400
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_OF
+name|C_NOTRUNC
 value|0x00800
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_SEEK
+name|C_OBS
 value|0x01000
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_SKIP
+name|C_OF
 value|0x02000
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_SWAB
+name|C_SEEK
 value|0x04000
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_SYNC
+name|C_SKIP
 value|0x08000
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_UCASE
+name|C_SWAB
 value|0x10000
 end_define
 
 begin_define
 define|#
 directive|define
-name|C_UNBLOCK
+name|C_SYNC
 value|0x20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_UCASE
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_UNBLOCK
+value|0x80000
 end_define
 
 end_unit

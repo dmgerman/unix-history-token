@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego and Lance  * Visser of Convex Computer Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego and Lance  * Visser of Convex Computer Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -213,11 +213,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|io_desc
+name|IO
 name|in
 decl_stmt|,
 name|out
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|STAT
+name|st
 decl_stmt|;
 end_decl_stmt
 
@@ -265,6 +271,40 @@ specifier|extern
 name|u_char
 modifier|*
 name|ctab
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|a2e_32V
+index|[]
+decl_stmt|,
+name|a2e_POSIX
+index|[]
+decl_stmt|,
+name|a2ibm_32V
+index|[]
+decl_stmt|,
+name|a2ibm_POSIX
+index|[]
+decl_stmt|,
+name|e2a_32V
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|e2a_POSIX
+index|[]
+decl_stmt|,
+name|l2u
+index|[]
+decl_stmt|,
+name|u2l
+index|[]
 decl_stmt|;
 end_decl_stmt
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conv.c	5.2 (Berkeley) %G%"
+literal|"@(#)conv.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -487,9 +487,9 @@ expr_stmt|;
 else|else
 block|{
 operator|++
-name|in
+name|st
 operator|.
-name|t_stats
+name|trunc
 expr_stmt|;
 comment|/* Toss characters to a newline. */
 for|for
@@ -591,9 +591,9 @@ name|dbcnt
 condition|)
 block|{
 operator|++
-name|in
+name|st
 operator|.
-name|t_stats
+name|trunc
 expr_stmt|;
 name|bcopy
 argument_list|(

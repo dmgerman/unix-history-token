@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dd.c	5.7 (Berkeley) %G%"
+literal|"@(#)dd.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,8 +176,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|io_desc
+name|IO
 name|in
 decl_stmt|,
 name|out
@@ -186,6 +185,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* input/output state */
+end_comment
+
+begin_decl_stmt
+name|STAT
+name|st
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* statistics */
 end_comment
 
 begin_function_decl
@@ -971,7 +980,7 @@ if|if
 condition|(
 name|ddflags
 operator|&
-name|C_BLOCK
+name|C_ASCII
 condition|)
 if|if
 condition|(
@@ -997,7 +1006,10 @@ if|if
 condition|(
 name|isupper
 argument_list|(
+name|ctab
+index|[
 name|cnt
+index|]
 argument_list|)
 condition|)
 name|ctab
@@ -1005,13 +1017,13 @@ index|[
 name|cnt
 index|]
 operator|=
-name|ctab
-index|[
 name|tolower
 argument_list|(
+name|ctab
+index|[
 name|cnt
-argument_list|)
 index|]
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1033,7 +1045,10 @@ if|if
 condition|(
 name|islower
 argument_list|(
+name|ctab
+index|[
 name|cnt
+index|]
 argument_list|)
 condition|)
 name|ctab
@@ -1041,13 +1056,13 @@ index|[
 name|cnt
 index|]
 operator|=
-name|ctab
-index|[
 name|toupper
 argument_list|(
+name|ctab
+index|[
 name|cnt
-argument_list|)
 index|]
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -1055,7 +1070,7 @@ if|if
 condition|(
 name|ddflags
 operator|&
-name|C_UNBLOCK
+name|C_EBCDIC
 condition|)
 if|if
 condition|(
@@ -1081,10 +1096,7 @@ if|if
 condition|(
 name|isupper
 argument_list|(
-name|ctab
-index|[
 name|cnt
-index|]
 argument_list|)
 condition|)
 name|ctab
@@ -1092,13 +1104,13 @@ index|[
 name|cnt
 index|]
 operator|=
-name|tolower
-argument_list|(
 name|ctab
 index|[
+name|tolower
+argument_list|(
 name|cnt
-index|]
 argument_list|)
+index|]
 expr_stmt|;
 block|}
 else|else
@@ -1120,10 +1132,7 @@ if|if
 condition|(
 name|islower
 argument_list|(
-name|ctab
-index|[
 name|cnt
-index|]
 argument_list|)
 condition|)
 name|ctab
@@ -1131,25 +1140,16 @@ index|[
 name|cnt
 index|]
 operator|=
-name|toupper
-argument_list|(
 name|ctab
 index|[
+name|toupper
+argument_list|(
 name|cnt
-index|]
 argument_list|)
+index|]
 expr_stmt|;
 block|}
 else|else
-block|{
-specifier|extern
-name|u_char
-name|l2u
-index|[]
-decl_stmt|,
-name|u2l
-index|[]
-decl_stmt|;
 name|ctab
 operator|=
 name|ddflags
@@ -1160,7 +1160,6 @@ name|u2l
 else|:
 name|l2u
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1190,13 +1189,13 @@ condition|(
 name|cpy_cnt
 operator|&&
 operator|(
-name|in
+name|st
 operator|.
-name|f_stats
+name|in_full
 operator|+
-name|in
+name|st
 operator|.
-name|p_stats
+name|in_part
 operator|)
 operator|>=
 name|cpy_cnt
@@ -1402,9 +1401,9 @@ operator|.
 name|dbsz
 expr_stmt|;
 operator|++
-name|in
+name|st
 operator|.
-name|f_stats
+name|in_full
 expr_stmt|;
 comment|/* Handle full input blocks. */
 block|}
@@ -1429,9 +1428,9 @@ operator|=
 name|n
 expr_stmt|;
 operator|++
-name|in
+name|st
 operator|.
-name|f_stats
+name|in_full
 expr_stmt|;
 comment|/* Handle partial input blocks. */
 block|}
@@ -1476,9 +1475,9 @@ operator|=
 name|n
 expr_stmt|;
 operator|++
-name|in
+name|st
 operator|.
-name|p_stats
+name|in_part
 expr_stmt|;
 block|}
 if|if
@@ -1501,14 +1500,10 @@ operator|&
 literal|1
 condition|)
 block|{
-name|warn
-argument_list|(
-literal|"%s: odd swab count"
-argument_list|,
-name|in
+operator|++
+name|st
 operator|.
-name|name
-argument_list|)
+name|swab
 expr_stmt|;
 operator|--
 name|n
@@ -1727,15 +1722,15 @@ operator|.
 name|dbsz
 condition|)
 operator|++
-name|out
+name|st
 operator|.
-name|p_stats
+name|out_part
 expr_stmt|;
 else|else
 operator|++
-name|out
+name|st
 operator|.
-name|f_stats
+name|out_full
 expr_stmt|;
 break|break;
 block|}
@@ -1760,9 +1755,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
-name|out
+name|st
 operator|.
-name|p_stats
+name|out_part
 expr_stmt|;
 if|if
 condition|(
