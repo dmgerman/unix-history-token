@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	6.2	83/09/28	*/
+comment|/*	uipc_socket.c	6.2	83/09/29	*/
 end_comment
 
 begin_include
@@ -1538,6 +1538,10 @@ name|s
 decl_stmt|,
 name|dontroute
 decl_stmt|;
+name|struct
+name|sockbuf
+name|sendtempbuf
+decl_stmt|;
 if|if
 condition|(
 name|sosendallatonce
@@ -1897,6 +1901,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Temporary kludge-- don't want to update so_snd in this loop 	 * (will be done when sent), but need to recalculate 	 * space on each iteration.  For now, copy so_snd into a tmp. 	 */
+name|sendtempbuf
+operator|=
+name|so
+operator|->
+name|so_snd
+expr_stmt|;
 while|while
 condition|(
 name|uio
@@ -2103,16 +2114,24 @@ operator|-=
 name|len
 expr_stmt|;
 else|else
+block|{
+name|sballoc
+argument_list|(
+operator|&
+name|sendtempbuf
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 name|space
 operator|=
 name|sbspace
 argument_list|(
 operator|&
-name|so
-operator|->
-name|so_snd
+name|sendtempbuf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 goto|goto
 name|again
