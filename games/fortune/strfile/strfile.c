@@ -792,6 +792,14 @@ argument_list|(
 name|inf
 argument_list|)
 expr_stmt|;
+name|Tbl
+operator|.
+name|str_numstr
+operator|=
+name|Num_pts
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|Oflag
@@ -912,9 +920,9 @@ name|str_numstr
 operator|=
 name|htonl
 argument_list|(
-name|Num_pts
-operator|-
-literal|1
+name|Tbl
+operator|.
+name|str_numstr
 argument_list|)
 expr_stmt|;
 name|Tbl
