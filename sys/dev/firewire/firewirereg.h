@@ -825,6 +825,9 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+name|int
+name|dmach
+decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,

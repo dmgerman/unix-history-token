@@ -53,6 +53,7 @@ struct|struct
 name|fw_isobufreq
 block|{
 struct|struct
+name|fw_bufspec
 block|{
 name|unsigned
 name|int
@@ -1688,7 +1689,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEV2DMACH
+name|DEV2SUB
 parameter_list|(
 name|x
 parameter_list|)
