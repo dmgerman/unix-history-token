@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.15 (Berkeley) %G%"
+literal|"@(#)collect.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,7 +139,11 @@ name|e
 operator|->
 name|e_df
 argument_list|,
-literal|"w"
+name|O_WRONLY
+operator||
+name|O_CREAT
+argument_list|,
+name|FileMode
 argument_list|)
 operator|)
 operator|==
@@ -163,18 +167,6 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|chmod
-argument_list|(
-name|e
-operator|->
-name|e_df
-argument_list|,
-name|FileMode
-argument_list|)
-expr_stmt|;
 comment|/* 	**  Tell ARPANET to go ahead. 	*/
 if|if
 condition|(

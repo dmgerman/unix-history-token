@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.39 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1109,7 +1109,13 @@ name|dfopen
 argument_list|(
 literal|"/usr/tmp/dead.letter"
 argument_list|,
-literal|"a"
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_APPEND
+argument_list|,
+name|FileMode
 argument_list|)
 expr_stmt|;
 if|if
