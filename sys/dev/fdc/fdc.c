@@ -12,16 +12,16 @@ name|char
 name|rev
 index|[]
 init|=
-literal|"$Revision: 1.1.1.1 $"
+literal|"$Revision: 1.2 $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * $Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/fd.c,v 1.1.1.1 1993/06/12 14:58:02 rgrimes Exp $  */
+comment|/*  * $Header: /freefall/a/cvs/386BSD/src/sys/i386/isa/fd.c,v 1.2 1993/07/15 17:53:04 davidg Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * $Log: fd.c,v $  * Revision 1.1.1.1  1993/06/12  14:58:02  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.10  93/04/13  16:53:29  root  * make sure turning off a drive motor doesn't deselect another  * drive active at the time.  * Also added a pointer from the fd_data to it's fd_type.  *   * Revision 1.9  93/04/13  15:31:02  root  * make all seeks go through DOSEEK state so are sure of being done right.  *   * Revision 1.8  93/04/12  21:20:13  root  * only check if old fd is the one we are working on if there IS  * an old fd pointer. (in fdstate())  *   * Revision 1.7  93/04/11  17:05:35  root  * cleanup timeouts etc.  * also fix bug to select teh correct drive when running> 1 drive  * at a time.  *   * Revision 1.6  93/04/05  00:48:45  root  * change a timeout and add version to banner message  *   * Revision 1.5  93/04/04  16:39:08  root  * first working version.. some floppy controllers don't seem to  * like 2 int. status inquiries in a row.  *   */
+comment|/*  * $Log: fd.c,v $  * Revision 1.2  1993/07/15  17:53:04  davidg  * Modified attach printf's so that the output is compatible with the "new"  * way of doing things. There still remain several drivers that need to  * be updated.  Also added a compile-time option to pccons to switch the  * control and caps-lock keys (REVERSE_CAPS_CTRL) - added for my personal  * sanity.  *  * Revision 1.1.1.1  1993/06/12  14:58:02  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.10  93/04/13  16:53:29  root  * make sure turning off a drive motor doesn't deselect another  * drive active at the time.  * Also added a pointer from the fd_data to it's fd_type.  *   * Revision 1.9  93/04/13  15:31:02  root  * make all seeks go through DOSEEK state so are sure of being done right.  *   * Revision 1.8  93/04/12  21:20:13  root  * only check if old fd is the one we are working on if there IS  * an old fd pointer. (in fdstate())  *   * Revision 1.7  93/04/11  17:05:35  root  * cleanup timeouts etc.  * also fix bug to select teh correct drive when running> 1 drive  * at a time.  *   * Revision 1.6  93/04/05  00:48:45  root  * change a timeout and add version to banner message  *   * Revision 1.5  93/04/04  16:39:08  root  * first working version.. some floppy controllers don't seem to  * like 2 int. status inquiries in a row.  *   */
 end_comment
 
 begin_include
@@ -2028,9 +2028,12 @@ name|baseport
 decl_stmt|;
 name|int
 name|i
-init|=
-literal|100000
 decl_stmt|;
+comment|/* Check that the direction bit is set */
+name|i
+operator|=
+literal|100000
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2050,6 +2053,24 @@ operator|>
 literal|0
 condition|)
 empty_stmt|;
+if|if
+condition|(
+name|i
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* Floppy timed out */
+comment|/* Check that the floppy controller is ready for a command */
+name|i
+operator|=
+literal|100000
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2083,6 +2104,8 @@ operator|-
 literal|1
 operator|)
 return|;
+comment|/* Floppy timed out */
+comment|/* Send the command and return */
 name|outb
 argument_list|(
 name|baseport
