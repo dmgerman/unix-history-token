@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993, Garrett A. Wollman.  * Copyright (c) 1993, University of Vermont and State Agricultural College.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ddb.h,v 1.10 1995/12/10 13:32:43 phk Exp $  */
+comment|/*-  * Copyright (c) 1993, Garrett A. Wollman.  * Copyright (c) 1993, University of Vermont and State Agricultural College.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ddb.h,v 1.11 1996/05/08 04:28:36 gpalmer Exp $  */
 end_comment
 
 begin_comment
@@ -50,9 +50,46 @@ name|modif
 typedef|));
 end_typedef
 
-begin_comment
-comment|/*  * Global variables...  */
-end_comment
+begin_define
+define|#
+directive|define
+name|DB_COMMAND
+parameter_list|(
+name|cmd_name
+parameter_list|,
+name|func_name
+parameter_list|)
+define|\
+value|DB_SET(cmd_name, func_name, db_cmd_set)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DB_SHOW_COMMAND
+parameter_list|(
+name|cmd_name
+parameter_list|,
+name|func_name
+parameter_list|)
+define|\
+value|DB_SET(cmd_name, func_name, db_show_cmd_set)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DB_SET
+parameter_list|(
+name|cmd_name
+parameter_list|,
+name|func_name
+parameter_list|,
+name|set
+parameter_list|)
+define|\
+value|static db_cmdfcn_t	func_name;				\ 								\ static const struct command __CONCAT(func_name,_cmd) = {	\ 	__STRING(cmd_name),					\ 	func_name,						\ 	0,							\ 	0,							\ };								\ TEXT_SET(set, __CONCAT(func_name,_cmd));			\ 								\ static void							\ func_name(addr, have_addr, count, modif)			\ 	db_expr_t addr;						\ 	boolean_t have_addr;					\ 	db_expr_t count;					\ 	char *modif;
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -67,6 +104,13 @@ specifier|extern
 name|unsigned
 name|int
 name|db_maxoff
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|db_indent
 decl_stmt|;
 end_decl_stmt
 
@@ -117,14 +161,6 @@ struct_decl|struct
 name|vm_map
 struct_decl|;
 end_struct_decl
-
-begin_comment
-comment|/* forward declaration */
-end_comment
-
-begin_comment
-comment|/*  * Functions...  */
-end_comment
 
 begin_decl_stmt
 name|void
@@ -219,6 +255,22 @@ operator|(
 name|db_expr_t
 operator|*
 name|valuep
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|db_iprintf
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -605,6 +657,53 @@ unit|db_cmdfcn_t	db_help_cmd; db_cmdfcn_t	db_show_all_threads; db_cmdfcn_t	db_sh
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Command table.  */
+end_comment
+
+begin_struct
+struct|struct
+name|command
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* command name */
+name|db_cmdfcn_t
+modifier|*
+name|fcn
+decl_stmt|;
+comment|/* function to call */
+name|int
+name|flag
+decl_stmt|;
+comment|/* extra info: */
+define|#
+directive|define
+name|CS_OWN
+value|0x1
+comment|/* non-standard syntax */
+define|#
+directive|define
+name|CS_MORE
+value|0x2
+comment|/* standard syntax, but may have other words 				 * at end */
+define|#
+directive|define
+name|CS_SET_DOT
+value|0x100
+comment|/* set dot after command */
+name|struct
+name|command
+modifier|*
+name|more
+decl_stmt|;
+comment|/* another level of command */
+block|}
+struct|;
+end_struct
 
 begin_endif
 endif|#
