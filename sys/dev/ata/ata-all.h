@@ -825,7 +825,7 @@ begin_define
 define|#
 directive|define
 name|ATA_ALTSTAT
-value|0x00
+value|0x08
 end_define
 
 begin_comment
@@ -933,6 +933,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_PC98_IOSIZE
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_ALTIOSIZE
 value|0x01
 end_define
@@ -983,7 +990,7 @@ begin_define
 define|#
 directive|define
 name|ATA_BMADDR_RID
-value|2
+value|0x20
 end_define
 
 begin_define
@@ -1039,7 +1046,7 @@ begin_define
 define|#
 directive|define
 name|ATA_BMCMD_PORT
-value|0x00
+value|0x09
 end_define
 
 begin_define
@@ -1060,14 +1067,14 @@ begin_define
 define|#
 directive|define
 name|ATA_BMDEVSPEC_0
-value|0x01
+value|0x0a
 end_define
 
 begin_define
 define|#
 directive|define
 name|ATA_BMSTAT_PORT
-value|0x02
+value|0x0b
 end_define
 
 begin_define
@@ -1123,14 +1130,21 @@ begin_define
 define|#
 directive|define
 name|ATA_BMDEVSPEC_1
-value|0x03
+value|0x0c
 end_define
 
 begin_define
 define|#
 directive|define
 name|ATA_BMDTP_PORT
-value|0x04
+value|0x0d
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_MAX_RES
+value|0x10
 end_define
 
 begin_comment
@@ -1147,54 +1161,6 @@ decl_stmt|;
 name|u_int32_t
 name|count
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ata_dmastate
-block|{
-name|bus_dma_tag_t
-name|ddmatag
-decl_stmt|;
-comment|/* data DMA tag */
-name|bus_dmamap_t
-name|ddmamap
-decl_stmt|;
-comment|/* data DMA map */
-name|bus_dma_tag_t
-name|cdmatag
-decl_stmt|;
-comment|/* control DMA tag */
-name|bus_dmamap_t
-name|cdmamap
-decl_stmt|;
-comment|/* control DMA map */
-name|struct
-name|ata_dmaentry
-modifier|*
-name|dmatab
-decl_stmt|;
-comment|/* DMA transfer table */
-name|bus_addr_t
-name|mdmatab
-decl_stmt|;
-comment|/* bus address of dmatab */
-name|int
-name|flags
-decl_stmt|;
-comment|/* debugging */
-define|#
-directive|define
-name|ATA_DS_ACTIVE
-value|0x01
-comment|/* debugging */
-define|#
-directive|define
-name|ATA_DS_READ
-value|0x02
-comment|/* transaction is a read */
 block|}
 struct|;
 end_struct
@@ -1285,45 +1251,65 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|struct
-name|ata_dmastate
-name|dmastate
-decl_stmt|;
-comment|/* dma state */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* structure holding DMA function pointers */
+comment|/* structure holding DMA related information */
 end_comment
 
 begin_struct
 struct|struct
-name|ata_dma_funcs
+name|ata_dma_data
 block|{
-name|void
-function_decl|(
-modifier|*
-name|create
-function_decl|)
-parameter_list|(
+name|bus_dma_tag_t
+name|dmatag
+decl_stmt|;
+comment|/* parent DMA tag */
+name|bus_dma_tag_t
+name|cdmatag
+decl_stmt|;
+comment|/* control DMA tag */
+name|bus_dmamap_t
+name|cdmamap
+decl_stmt|;
+comment|/* control DMA map */
+name|bus_dma_tag_t
+name|ddmatag
+decl_stmt|;
+comment|/* data DMA tag */
+name|bus_dmamap_t
+name|ddmamap
+decl_stmt|;
+comment|/* data DMA map */
 name|struct
-name|ata_channel
+name|ata_dmaentry
 modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|destroy
-function_decl|)
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-parameter_list|)
-function_decl|;
+name|dmatab
+decl_stmt|;
+comment|/* DMA transfer table */
+name|bus_addr_t
+name|mdmatab
+decl_stmt|;
+comment|/* bus address of dmatab */
+name|u_int32_t
+name|alignment
+decl_stmt|;
+comment|/* DMA engine alignment */
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|ATA_DMA_ACTIVE
+value|0x01
+comment|/* DMA transfer in progress */
+define|#
+directive|define
+name|ATA_DMA_READ
+value|0x02
+comment|/* transaction is a read */
 name|int
 function_decl|(
 modifier|*
@@ -1331,7 +1317,7 @@ name|alloc
 function_decl|)
 parameter_list|(
 name|struct
-name|ata_device
+name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1342,7 +1328,7 @@ name|free
 function_decl|)
 parameter_list|(
 name|struct
-name|ata_device
+name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1368,7 +1354,7 @@ name|start
 function_decl|)
 parameter_list|(
 name|struct
-name|ata_device
+name|ata_channel
 modifier|*
 parameter_list|,
 name|caddr_t
@@ -1385,7 +1371,7 @@ name|stop
 function_decl|)
 parameter_list|(
 name|struct
-name|ata_device
+name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1400,10 +1386,26 @@ name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
-name|u_int32_t
-name|alignment
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* structure holding resources for an ATA channel */
+end_comment
+
+begin_struct
+struct|struct
+name|ata_resource
+block|{
+name|struct
+name|resource
+modifier|*
+name|res
 decl_stmt|;
-comment|/* dma engine alignment */
+name|int
+name|offset
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1427,27 +1429,13 @@ name|unit
 decl_stmt|;
 comment|/* channel number */
 name|struct
-name|resource
-modifier|*
+name|ata_resource
 name|r_io
+index|[
+name|ATA_MAX_RES
+index|]
 decl_stmt|;
-comment|/* io addr resource handle */
-name|struct
-name|resource
-modifier|*
-name|r_altio
-decl_stmt|;
-comment|/* altio addr resource handle */
-name|struct
-name|resource
-modifier|*
-name|r_bmio
-decl_stmt|;
-comment|/* bmio addr resource handle */
-name|bus_dma_tag_t
-name|dmatag
-decl_stmt|;
-comment|/* parent dma tag */
+comment|/* I/O resources */
 name|struct
 name|resource
 modifier|*
@@ -1460,11 +1448,11 @@ name|ih
 decl_stmt|;
 comment|/* interrupt handle */
 name|struct
-name|ata_dma_funcs
+name|ata_dma_data
 modifier|*
 name|dma
 decl_stmt|;
-comment|/* DMA functions */
+comment|/* DMA data / functions */
 name|u_int32_t
 name|chiptype
 decl_stmt|;
@@ -1495,12 +1483,8 @@ name|ATA_QUEUED
 value|0x10
 define|#
 directive|define
-name|ATA_DMA_ACTIVE
-value|0x20
-define|#
-directive|define
 name|ATA_48BIT_ACTIVE
-value|0x40
+value|0x20
 name|struct
 name|ata_device
 name|device
@@ -2268,6 +2252,226 @@ name|count
 parameter_list|)
 define|\
 value|bus_space_write_multi_stream_4(rman_get_bustag((res)), \ 				       rman_get_bushandle((res)), \ 				       (offset), (addr), (count))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_INB
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|)
+define|\
+value|ATA_INB(ch->r_io[idx].res, ch->r_io[idx].offset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_INW
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|)
+define|\
+value|ATA_INW(ch->r_io[idx].res, ch->r_io[idx].offset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_INL
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|)
+define|\
+value|ATA_INL(ch->r_io[idx].res, ch->r_io[idx].offset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_INSW
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|ATA_INSW(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_INSW_STRM
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|ATA_INSW_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_INSL
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|ATA_INSL(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_INSL_STRM
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|ATA_INSL_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_OUTB
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|ATA_OUTB(ch->r_io[idx].res, ch->r_io[idx].offset, value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_OUTW
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|ATA_OUTW(ch->r_io[idx].res, ch->r_io[idx].offset, value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_OUTL
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|ATA_OUTL(ch->r_io[idx].res, ch->r_io[idx].offset, value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_OUTSW
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|ATA_OUTSW(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_OUTSW_STRM
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|ATA_OUTSW_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_OUTSL
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|ATA_OUTSL(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_IDX_OUTSL_STRM
+parameter_list|(
+name|ch
+parameter_list|,
+name|idx
+parameter_list|,
+name|addr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|ATA_OUTSL_STRM(ch->r_io[idx].res, ch->r_io[idx].offset, addr, count)
 end_define
 
 end_unit

@@ -12,7 +12,7 @@ struct|struct
 name|ata_chip_id
 block|{
 name|u_int32_t
-name|chiptype
+name|chipid
 decl_stmt|;
 name|u_int8_t
 name|chiprev
@@ -47,8 +47,10 @@ name|resource
 modifier|*
 name|r_bmio
 decl_stmt|;
-name|int
-name|bmaddr
+name|struct
+name|resource
+modifier|*
+name|r_mem
 decl_stmt|;
 name|struct
 name|resource
@@ -71,6 +73,19 @@ name|chipinit
 function_decl|)
 parameter_list|(
 name|device_t
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|allocate
+function_decl|)
+parameter_list|(
+name|device_t
+parameter_list|,
+name|struct
+name|ata_channel
+modifier|*
 parameter_list|)
 function_decl|;
 name|int
@@ -113,6 +128,9 @@ function_decl|;
 name|int
 name|locked_ch
 decl_stmt|;
+name|int
+name|channels
+decl_stmt|;
 struct|struct
 block|{
 name|void
@@ -132,9 +150,10 @@ decl_stmt|;
 block|}
 name|interrupt
 index|[
-literal|2
+literal|4
 index|]
 struct|;
+comment|/* XXX SOS max ch# for now */
 block|}
 struct|;
 end_struct
@@ -1112,7 +1131,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PRCH
+name|PRMEM
 value|3
 end_define
 
@@ -1304,7 +1323,7 @@ name|int
 name|ata_dmastart
 parameter_list|(
 name|struct
-name|ata_device
+name|ata_channel
 modifier|*
 parameter_list|,
 name|caddr_t
@@ -1321,7 +1340,7 @@ name|int
 name|ata_dmastop
 parameter_list|(
 name|struct
-name|ata_device
+name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
