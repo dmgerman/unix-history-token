@@ -84,24 +84,6 @@ begin_comment
 comment|/* vnode references a volume */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VT_NWFS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VT_NWFS
-value|VT_TFS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|nwnode

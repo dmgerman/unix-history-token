@@ -131,6 +131,8 @@ block|,
 name|VT_NTFS
 block|,
 name|VT_HPFS
+block|,
+name|VT_NWFS
 block|}
 enum|;
 end_enum
