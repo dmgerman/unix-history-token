@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_inode.c	4.23	82/08/10	*/
+comment|/*	lfs_inode.c	4.24	82/09/06	*/
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
+end_include
 
 begin_define
 define|#
@@ -1220,9 +1226,13 @@ name|ip
 argument_list|,
 operator|&
 name|time
+operator|.
+name|tv_sec
 argument_list|,
 operator|&
 name|time
+operator|.
+name|tv_sec
 argument_list|,
 literal|0
 argument_list|)
@@ -1468,6 +1478,8 @@ operator|->
 name|i_ctime
 operator|=
 name|time
+operator|.
+name|tv_sec
 expr_stmt|;
 name|ip
 operator|->
@@ -1692,9 +1704,13 @@ name|itmp
 argument_list|,
 operator|&
 name|time
+operator|.
+name|tv_sec
 argument_list|,
 operator|&
 name|time
+operator|.
+name|tv_sec
 argument_list|,
 literal|1
 argument_list|)
