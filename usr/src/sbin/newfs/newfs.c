@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	8.2 (Berkeley) %G%"
+literal|"@(#)newfs.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1459,7 +1459,6 @@ operator|!=
 literal|2
 operator|&&
 operator|(
-operator|!
 name|mfs
 operator|||
 name|argc
