@@ -650,9 +650,9 @@ name|crypto
 argument_list|,
 name|crypto_mod
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_DRIVERS
 argument_list|,
-name|SI_ORDER_SECOND
+name|SI_ORDER_FIRST
 argument_list|)
 expr_stmt|;
 end_expr_stmt
