@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.11 1995/10/19 15:55:36 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.44.2.12 1995/10/20 07:02:50 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -229,6 +229,24 @@ comment|/* If we haven't crashed I guess dialog is running ! */
 name|DialogActive
 operator|=
 name|TRUE
+expr_stmt|;
+comment|/* Make sure HOME is set for those utilities that need it */
+if|if
+condition|(
+operator|!
+name|getenv
+argument_list|(
+literal|"HOME"
+argument_list|)
+condition|)
+name|setenv
+argument_list|(
+literal|"HOME"
+argument_list|,
+literal|"/"
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
