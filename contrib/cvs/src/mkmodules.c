@@ -714,6 +714,14 @@ literal|"# Set this to \"no\" if pserver shouldn't check system users/passwords\
 block|,
 literal|"#SystemAuth=no\n"
 block|,
+literal|"\n"
+block|,
+literal|"# Set `PreservePermissions' to `yes' to save file status information\n"
+block|,
+literal|"# in the repository.\n"
+block|,
+literal|"#PreservePermissions=no\n"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -1691,13 +1699,6 @@ name|error
 argument_list|(
 literal|0
 argument_list|,
-name|retcode
-operator|==
-operator|-
-literal|1
-condition|?
-name|errno
-else|:
 literal|0
 argument_list|,
 literal|"failed to check out %s file"
