@@ -483,7 +483,7 @@ condition|(
 operator|(
 name|id
 operator|>>
-literal|8
+literal|4
 operator|)
 operator|==
 name|ISA_ID_3C509_XXX
@@ -758,7 +758,7 @@ name|isa_id
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
+continue|continue;
 block|}
 comment|/* Retreive IRQ */
 name|data
@@ -869,7 +869,9 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"if_ep: Adapter at 0x%03x in PnP mode!\n"
+literal|"if_ep:<%s> at 0x%03x in PnP mode!\n"
+argument_list|,
+name|desc
 argument_list|,
 name|ioport
 argument_list|)
@@ -936,7 +938,9 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"if_ep: Adapter at 0x%03x in TEST mode!  Erase pencil mark.\n"
+literal|"if_ep:<%s> at port 0x%03x in TEST mode!  Erase pencil mark.\n"
+argument_list|,
+name|desc
 argument_list|,
 name|ioport
 argument_list|)
