@@ -3567,9 +3567,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|nfssvc_sock
 modifier|*
@@ -3578,11 +3575,6 @@ decl_stmt|;
 name|u_quad_t
 name|cur_usec
 decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
@@ -3631,11 +3623,6 @@ expr_stmt|;
 block|}
 name|NFSD_UNLOCK
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|callout_reset
 argument_list|(
