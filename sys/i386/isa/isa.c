@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.13 1994/01/17 05:49:20 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.14 1994/01/22 21:52:04 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -781,7 +781,7 @@ argument_list|(
 name|dvp
 argument_list|,
 operator|&
-name|ttymask
+name|tty_imask
 argument_list|)
 expr_stmt|;
 block|}
@@ -812,7 +812,7 @@ argument_list|(
 name|dvp
 argument_list|,
 operator|&
-name|biomask
+name|bio_imask
 argument_list|)
 expr_stmt|;
 block|}
@@ -843,7 +843,7 @@ argument_list|(
 name|dvp
 argument_list|,
 operator|&
-name|netmask
+name|net_imask
 argument_list|)
 expr_stmt|;
 block|}
@@ -881,7 +881,19 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * XXX We should really add the tty device to netmask when the line is  * switched to SLIPDISC, and then remove it when it is switched away from  * SLIPDISC.  No need to block out ALL ttys during a splnet when only one  * of them is running slip.  */
+name|bio_imask
+operator||=
+name|SWI_CLOCK_MASK
+expr_stmt|;
+name|net_imask
+operator||=
+name|SWI_NET_MASK
+expr_stmt|;
+name|tty_imask
+operator||=
+name|SWI_TTY_MASK
+expr_stmt|;
+comment|/*  * XXX we should really add the tty device to net_imask when the line is  * switched to SLIPDISC, and then remove it when it is switched away from  * SLIPDISC.  No need to block out ALL ttys during a splimp when only one  * of them is running slip.  *  * XXX actually, blocking all ttys during a splimp doesn't matter so much   * with sio because the serial interrupt layer doesn't use tty_imask.  Only  * non-serial ttys suffer.  It's more stupid that ALL 'net's are blocked  * during spltty.  */
 include|#
 directive|include
 file|"sl.h"
@@ -890,39 +902,33 @@ directive|if
 name|NSL
 operator|>
 literal|0
-name|netmask
+name|net_imask
 operator||=
-name|ttymask
+name|tty_imask
 expr_stmt|;
-name|ttymask
-operator||=
-name|netmask
+name|tty_imask
+operator|=
+name|net_imask
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* if netmask == 0, then the loopback code can do some really 	 * bad things. 	 */
-if|if
-condition|(
-name|netmask
-operator|==
-literal|0
-condition|)
-name|netmask
-operator|=
-literal|0x10000
-expr_stmt|;
-comment|/* biomask |= ttymask ;  can some tty devices use buffers? */
+comment|/* bio_imask |= tty_imask ;  can some tty devices use buffers? */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|printf
 argument_list|(
-literal|"biomask %x ttymask %x netmask %x\n"
+literal|"bio_imask %x tty_imask %x net_imask %x\n"
 argument_list|,
-name|biomask
+name|bio_imask
 argument_list|,
-name|ttymask
+name|tty_imask
 argument_list|,
-name|netmask
+name|net_imask
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|splnone
 argument_list|()
 expr_stmt|;
@@ -1445,7 +1451,7 @@ specifier|static
 name|inthand_func_t
 name|defvec
 index|[
-literal|16
+name|ICU_LEN
 index|]
 init|=
 block|{
@@ -1549,20 +1555,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* out of range default interrupt vector gate entry */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|inthand_t
-name|IDTVEC
-parameter_list|(
-name|intrdefault
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Fill in default interrupt table (in case of spuruious interrupt  * during configuration of kernel, setup interrupt control unit  */
 end_comment
 
@@ -1579,12 +1571,10 @@ for|for
 control|(
 name|i
 operator|=
-name|NRSVIDT
+literal|0
 init|;
 name|i
 operator|<
-name|NRSVIDT
-operator|+
 name|ICU_LEN
 condition|;
 name|i
@@ -1592,41 +1582,14 @@ operator|++
 control|)
 name|setidt
 argument_list|(
+name|ICU_OFFSET
+operator|+
 name|i
 argument_list|,
 name|defvec
 index|[
 name|i
 index|]
-argument_list|,
-name|SDT_SYS386IGT
-argument_list|,
-name|SEL_KPL
-argument_list|)
-expr_stmt|;
-comment|/* out of range vectors */
-for|for
-control|(
-name|i
-operator|=
-name|NRSVIDT
-init|;
-name|i
-operator|<
-name|NIDT
-condition|;
-name|i
-operator|++
-control|)
-name|setidt
-argument_list|(
-name|i
-argument_list|,
-operator|&
-name|IDTVEC
-argument_list|(
-name|intrdefault
-argument_list|)
 argument_list|,
 name|SDT_SYS386IGT
 argument_list|,

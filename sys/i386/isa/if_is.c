@@ -1974,7 +1974,7 @@ condition|)
 return|return;
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 comment|/*  	 * Lance must be stopped 	 * to access registers. 	 */
@@ -4343,7 +4343,7 @@ literal|0
 decl_stmt|;
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 switch|switch

@@ -23,55 +23,55 @@ end_include
 
 begin_decl_stmt
 name|u_int
-name|snd1mask
+name|snd1_imask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|snd2mask
+name|snd2_imask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|snd3mask
+name|snd3_imask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|snd4mask
+name|snd4_imask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|snd5mask
+name|snd5_imask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|snd6mask
+name|snd6_imask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|snd7mask
+name|snd7_imask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|snd8mask
+name|snd8_imask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int
-name|snd9mask
+name|snd9_imask
 decl_stmt|;
 end_decl_stmt
 

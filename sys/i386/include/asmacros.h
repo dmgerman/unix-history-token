@@ -54,6 +54,34 @@ comment|/**/
 value|name)
 end_define
 
+begin_comment
+comment|/* These three are place holders for future changes to the profiling code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCOUNT_LABEL
+parameter_list|(
+name|name
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEXITCOUNT
+end_define
+
+begin_define
+define|#
+directive|define
+name|FAKE_MCOUNT
+parameter_list|(
+name|caller
+parameter_list|)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -130,6 +158,12 @@ parameter_list|)
 value|GEN_ENTRY(_
 comment|/**/
 value|name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCOUNT
 end_define
 
 begin_endif
