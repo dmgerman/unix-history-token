@@ -50,7 +50,7 @@ file|<stdlib.h>
 end_include
 
 begin_comment
-comment|/*  * Convert a string to a quad integer.  *  * Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
+comment|/*  * Convert a string to a quad integer.  */
 end_comment
 
 begin_function
