@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -167,6 +167,17 @@ end_define
 
 begin_comment
 comment|/* leave received OOB data in line */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_REUSEPORT
+value|0x0200
+end_define
+
+begin_comment
+comment|/* allow local address& port reuse */
 end_comment
 
 begin_comment
