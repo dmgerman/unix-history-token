@@ -462,15 +462,13 @@ comment|/*  * Raw interface to IP protocol.  */
 end_comment
 
 begin_comment
-comment|/*  * Initialize raw connection block queue.  */
+comment|/*  * Initialize raw connection block q.  */
 end_comment
 
 begin_function
 name|void
 name|rip_init
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|INP_INFO_LOCK_INIT
 argument_list|(
@@ -565,10 +563,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * XXX ripsrc is modified in rip_input, so we must be fix this  * when we want to make this code smp-friendly.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -594,15 +588,20 @@ begin_function
 name|void
 name|rip_input
 parameter_list|(
+name|m
+parameter_list|,
+name|off
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
+decl_stmt|;
 name|int
 name|off
-parameter_list|)
+decl_stmt|;
 block|{
+specifier|register
 name|struct
 name|ip
 modifier|*
@@ -617,6 +616,7 @@ name|ip
 operator|*
 argument_list|)
 decl_stmt|;
+specifier|register
 name|struct
 name|inpcb
 modifier|*
@@ -698,8 +698,6 @@ operator|->
 name|inp_laddr
 operator|.
 name|s_addr
-operator|!=
-name|INADDR_ANY
 operator|&&
 name|inp
 operator|->
@@ -721,8 +719,6 @@ operator|->
 name|inp_faddr
 operator|.
 name|s_addr
-operator|!=
-name|INADDR_ANY
 operator|&&
 name|inp
 operator|->
@@ -747,11 +743,16 @@ name|mbuf
 modifier|*
 name|n
 init|=
-name|m_copypacket
+name|m_copy
 argument_list|(
 name|m
 argument_list|,
-name|M_DONTWAIT
+literal|0
+argument_list|,
+operator|(
+name|int
+operator|)
+name|M_COPYALL
 argument_list|)
 decl_stmt|;
 name|int
@@ -1162,25 +1163,33 @@ begin_function
 name|int
 name|rip_output
 parameter_list|(
+name|m
+parameter_list|,
+name|so
+parameter_list|,
+name|dst
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
+decl_stmt|;
 name|struct
 name|socket
 modifier|*
 name|so
-parameter_list|,
+decl_stmt|;
 name|u_long
 name|dst
-parameter_list|)
+decl_stmt|;
 block|{
+specifier|register
 name|struct
 name|ip
 modifier|*
 name|ip
 decl_stmt|;
+specifier|register
 name|struct
 name|inpcb
 modifier|*
@@ -1514,16 +1523,20 @@ begin_function
 name|int
 name|rip_ctloutput
 parameter_list|(
+name|so
+parameter_list|,
+name|sopt
+parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
-parameter_list|,
+decl_stmt|;
 name|struct
 name|sockopt
 modifier|*
 name|sopt
-parameter_list|)
+decl_stmt|;
 block|{
 name|struct
 name|inpcb
@@ -1913,18 +1926,24 @@ begin_function
 name|void
 name|rip_ctlinput
 parameter_list|(
-name|int
 name|cmd
 parameter_list|,
+name|sa
+parameter_list|,
+name|vip
+parameter_list|)
+name|int
+name|cmd
+decl_stmt|;
 name|struct
 name|sockaddr
 modifier|*
 name|sa
-parameter_list|,
+decl_stmt|;
 name|void
 modifier|*
 name|vip
-parameter_list|)
+decl_stmt|;
 block|{
 name|struct
 name|in_ifaddr
@@ -2282,9 +2301,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Old IPDIVERT program needs to be recompiled, "
-literal|"or new IP proto 254 user needs "
-literal|"sysctl net.inet.raw.olddiverterror=0\n"
+literal|"Old IPDIVERT program needs to be recompiled, or new IP proto 254 user needs sysctl net.inet.raw.olddiverterror=0\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2597,8 +2614,6 @@ operator|->
 name|sin_addr
 operator|.
 name|s_addr
-operator|!=
-name|INADDR_ANY
 operator|&&
 name|ifa_ifwithaddr
 argument_list|(
@@ -2805,6 +2820,7 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
+specifier|register
 name|u_long
 name|dst
 decl_stmt|;
