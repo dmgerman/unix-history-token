@@ -173,7 +173,7 @@ name|getc
 parameter_list|(
 name|p
 parameter_list|)
-value|(--(p)->_cnt>= 0 ? *(unsigned char *)(p)->_ptr++ : _filbuf(p))
+value|(--(p)->_cnt>=0? *(p)->_ptr++&0377:_filbuf(p))
 end_define
 
 begin_define
@@ -193,7 +193,7 @@ name|x
 parameter_list|,
 name|p
 parameter_list|)
-value|(--(p)->_cnt>= 0 ? (*(p)->_ptr++ = (x)) :\ 	((p)->_flag&_IOLBF&& -(p)->_cnt<= (p)->_bufsiz&& (x)!='\n' ?\ 		*(p)->_ptr++ = (x) : _flsbuf(x, p)))
+value|(--(p)->_cnt>= 0 || ((p)->_flag& _IOLBF)&&\ 		-(p)->_cnt<= (p)->_bufsiz&& (x) != '\n' ?\ 		(int)(*(p)->_ptr++ = (unsigned)(x)) : _flsbuf((unsigned)(x), p))
 end_define
 
 begin_define
