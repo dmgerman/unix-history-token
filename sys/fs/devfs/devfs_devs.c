@@ -685,7 +685,6 @@ name|nb
 operator|=
 sizeof|sizeof
 argument_list|(
-expr|struct
 name|dev_t
 operator|*
 argument_list|)
