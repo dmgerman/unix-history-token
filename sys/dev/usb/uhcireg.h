@@ -393,6 +393,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|URWMASK
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((x)& (UHCI_PORTSC_SUSP | UHCI_PORTSC_PR | UHCI_PORTSC_RD | UHCI_PORTSC_PE))
+end_define
+
+begin_define
+define|#
+directive|define
 name|UHCI_FRAMELIST_COUNT
 value|1024
 end_define
