@@ -505,17 +505,21 @@ begin_comment
 comment|/* The number of children currently running */
 end_comment
 
-begin_decl_stmt
-name|STATIC
-name|Lst
-modifier|*
-name|jobs
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* The structures that describe them */
 end_comment
+
+begin_decl_stmt
+name|STATIC
+name|Lst
+name|jobs
+init|=
+name|Lst_Initializer
+argument_list|(
+name|jobs
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|STATIC
@@ -615,20 +619,20 @@ value|fprintf(fp, targFmt, gn->name);
 end_define
 
 begin_comment
-comment|/*  * When JobStart attempts to run a job but isn't allowed to  * or when Job_CatchChildren detects a job that has  * been stopped somehow, the job is placed on the stoppedJobs queue to be run  * when the next job finishes.  */
+comment|/*  * When JobStart attempts to run a job but isn't allowed to  * or when Job_CatchChildren detects a job that has  * been stopped somehow, the job is placed on the stoppedJobs queue to be run  * when the next job finishes.  *  * Lst of Job structures describing jobs that were stopped due to  * concurrency limits or externally  */
 end_comment
 
 begin_decl_stmt
 name|STATIC
 name|Lst
-modifier|*
 name|stoppedJobs
+init|=
+name|Lst_Initializer
+argument_list|(
+name|stoppedJobs
+argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Lst of Job structures describing 				 * jobs that were stopped due to concurrency 				 * limits or externally */
-end_comment
 
 begin_decl_stmt
 name|STATIC
@@ -1135,6 +1139,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|jobs
 argument_list|,
 name|JobCondPassSig
@@ -1277,6 +1282,7 @@ name|SIGCONT
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|jobs
 argument_list|,
 name|JobCondPassSig
@@ -1488,6 +1494,7 @@ name|Lst_Succ
 argument_list|(
 name|Lst_Member
 argument_list|(
+operator|&
 name|job
 operator|->
 name|node
@@ -1529,6 +1536,7 @@ name|cmdNode
 operator|=
 name|Lst_Member
 argument_list|(
+operator|&
 name|job
 operator|->
 name|node
@@ -1989,6 +1997,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|postCommands
 operator|->
 name|commands
@@ -2545,6 +2554,7 @@ name|JOB_RESUME
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|stoppedJobs
 argument_list|,
 name|job
@@ -2664,6 +2674,7 @@ name|JOB_CONTINUING
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|jobs
 argument_list|,
 name|job
@@ -2883,6 +2894,7 @@ condition|)
 block|{
 name|Lst_ForEachFrom
 argument_list|(
+operator|&
 name|job
 operator|->
 name|node
@@ -3264,6 +3276,7 @@ argument_list|)
 operator|&&
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -3292,6 +3305,7 @@ operator|&&
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|DEFAULT
 operator|->
 name|commands
@@ -4039,6 +4053,7 @@ literal|1
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|jobs
 argument_list|,
 name|job
@@ -4365,6 +4380,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtFront
 argument_list|(
+operator|&
 name|stoppedJobs
 argument_list|,
 operator|(
@@ -4587,6 +4603,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtFront
 argument_list|(
+operator|&
 name|stoppedJobs
 argument_list|,
 operator|(
@@ -4943,6 +4960,7 @@ name|compat_command
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -5015,6 +5033,7 @@ literal|0
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -5079,6 +5098,7 @@ condition|)
 block|{
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -5184,6 +5204,7 @@ condition|)
 block|{
 name|Lst_ForEachFrom
 argument_list|(
+operator|&
 name|job
 operator|->
 name|node
@@ -5462,6 +5483,7 @@ name|JOB_RESTART
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|stoppedJobs
 argument_list|,
 name|job
@@ -6411,6 +6433,7 @@ name|jnode
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|jobs
 argument_list|,
 operator|&
@@ -6447,6 +6470,7 @@ name|jnode
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|stoppedJobs
 argument_list|,
 operator|&
@@ -6480,6 +6504,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Remove
 argument_list|(
+operator|&
 name|stoppedJobs
 argument_list|,
 name|jnode
@@ -6509,6 +6534,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Remove
 argument_list|(
+operator|&
 name|jobs
 argument_list|,
 name|jnode
@@ -6895,6 +6921,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|jobs
 argument_list|)
 init|;
@@ -7417,16 +7444,6 @@ name|fifoFd
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-name|jobs
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
-name|stoppedJobs
-operator|=
-name|Lst_Init
-argument_list|()
 expr_stmt|;
 name|env
 operator|=
@@ -8060,6 +8077,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|stoppedJobs
 argument_list|)
 operator|&&
@@ -9096,6 +9114,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|jobs
 argument_list|)
 init|;
@@ -9297,6 +9316,7 @@ operator|&&
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|postCommands
 operator|->
 name|commands
@@ -9461,6 +9481,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|jobs
 argument_list|)
 init|;
@@ -9547,6 +9568,7 @@ operator|&&
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|stoppedJobs
 argument_list|)
 condition|)
@@ -9564,6 +9586,7 @@ name|JobRestart
 argument_list|(
 name|Lst_DeQueue
 argument_list|(
+operator|&
 name|stoppedJobs
 argument_list|)
 argument_list|)

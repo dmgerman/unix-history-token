@@ -94,7 +94,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
-modifier|*
 name|forLst
 decl_stmt|;
 end_decl_stmt
@@ -122,7 +121,6 @@ name|var
 decl_stmt|;
 comment|/* Index name		*/
 name|Lst
-modifier|*
 name|lst
 decl_stmt|;
 comment|/* List of variables	*/
@@ -462,10 +460,11 @@ name|ptr
 operator|++
 expr_stmt|;
 comment|/* 	 * Make a list with the remaining words 	 */
-name|forLst
-operator|=
 name|Lst_Init
-argument_list|()
+argument_list|(
+operator|&
+name|forLst
+argument_list|)
 expr_stmt|;
 name|buf
 operator|=
@@ -492,7 +491,7 @@ directive|define
 name|ADDWORD
 parameter_list|()
 define|\
-value|Buf_AddBytes(buf, ptr - wrd, (Byte *)wrd), \ 	Buf_AddByte(buf, (Byte)'\0'), \ 	Lst_AtFront(forLst, Buf_GetAll(buf,&varlen)), \ 	Buf_Destroy(buf, FALSE)
+value|Buf_AddBytes(buf, ptr - wrd, (Byte *)wrd), \ 	Buf_AddByte(buf, (Byte)'\0'), \ 	Lst_AtFront(&forLst, Buf_GetAll(buf,&varlen)), \ 	Buf_Destroy(buf, FALSE)
 for|for
 control|(
 name|ptr
@@ -951,10 +950,6 @@ operator|||
 name|forBuf
 operator|==
 name|NULL
-operator|||
-name|forLst
-operator|==
-name|NULL
 condition|)
 return|return;
 name|arg
@@ -969,11 +964,27 @@ name|buf
 operator|=
 name|forBuf
 expr_stmt|;
+comment|/* move the forLst to the arg to get it free for nested for's */
+name|Lst_Init
+argument_list|(
+operator|&
 name|arg
 operator|.
 name|lst
-operator|=
+argument_list|)
+expr_stmt|;
+name|Lst_Concat
+argument_list|(
+operator|&
+name|arg
+operator|.
+name|lst
+argument_list|,
+operator|&
 name|forLst
+argument_list|,
+name|LST_CONCLINK
+argument_list|)
 expr_stmt|;
 name|arg
 operator|.
@@ -989,12 +1000,9 @@ name|forBuf
 operator|=
 name|NULL
 expr_stmt|;
-name|forLst
-operator|=
-name|NULL
-expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|arg
 operator|.
 name|lst
@@ -1014,6 +1022,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|arg
 operator|.
 name|lst

@@ -148,42 +148,34 @@ name|cmtime
 decl_stmt|;
 comment|/* The modification time of its youngest 				 * child */
 name|Lst
-modifier|*
 name|iParents
 decl_stmt|;
 comment|/* Links to parents for which this is an 				 * implied source, if any */
 name|Lst
-modifier|*
 name|cohorts
 decl_stmt|;
 comment|/* Other nodes for the :: operator */
 name|Lst
-modifier|*
 name|parents
 decl_stmt|;
 comment|/* Nodes that depend on this one */
 name|Lst
-modifier|*
 name|children
 decl_stmt|;
 comment|/* Nodes on which this one depends */
 name|Lst
-modifier|*
 name|successors
 decl_stmt|;
 comment|/* Nodes that must be made after this one */
 name|Lst
-modifier|*
 name|preds
 decl_stmt|;
 comment|/* Nodes that must be made before this one */
 name|Lst
-modifier|*
 name|context
 decl_stmt|;
 comment|/* The local variables */
 name|Lst
-modifier|*
 name|commands
 decl_stmt|;
 comment|/* Creation commands */
@@ -786,29 +778,27 @@ begin_comment
 comment|/*  * Global Variables  */
 end_comment
 
+begin_comment
+comment|/* The list of target names specified on the  command line.  * Used to resolve #if make(...) statements */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|Lst
-modifier|*
 name|create
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The list of target names specified on the 				 * command line. used to resolve #if 				 * make(...) statements */
+comment|/* The list of directories to search when looking for targets */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|Lst
-modifier|*
 name|dirSearchPath
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* The list of directories to search when 				 * looking for targets */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -821,17 +811,16 @@ begin_comment
 comment|/* current makefile */
 end_comment
 
+begin_comment
+comment|/* The list of directories to search when looking for includes */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|Lst
-modifier|*
 name|parseIncPath
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* The list of directories to search when 				 * looking for includes */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -965,17 +954,16 @@ begin_comment
 comment|/* TRUE if environment should be searched for 				 * all variables before the global context */
 end_comment
 
+begin_comment
+comment|/* List of specific variables for which the environment should be  * searched before the global context */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|Lst
-modifier|*
 name|envFirstVars
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* List of specific variables for which the 				 * environment should be searched before the 				 * global context */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1047,17 +1035,16 @@ begin_comment
 comment|/* Do old-style variable substitution */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|Lst
-modifier|*
-name|sysIncPath
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* The system include path. */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Lst
+name|sysIncPath
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * debug control:  *	There is one bit per module.  It is up to the module what debug  *	information to print.  */

@@ -248,25 +248,37 @@ begin_comment
 comment|/* Create a new list */
 end_comment
 
-begin_function_decl
-name|Lst
-modifier|*
+begin_define
+define|#
+directive|define
 name|Lst_Init
 parameter_list|(
-name|void
+name|LST
 parameter_list|)
-function_decl|;
-end_function_decl
+value|do {						\ 				(LST)->firstPtr = NULL;			\ 				(LST)->lastPtr = NULL;			\ 			} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Lst_Initializer
+parameter_list|(
+name|NAME
+parameter_list|)
+value|{ NULL, NULL }
+end_define
 
 begin_comment
 comment|/* Duplicate an existing list */
 end_comment
 
 begin_function_decl
-name|Lst
-modifier|*
+name|void
 name|Lst_Duplicate
 parameter_list|(
+name|Lst
+modifier|*
+parameter_list|,
 name|Lst
 modifier|*
 parameter_list|,

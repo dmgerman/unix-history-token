@@ -450,11 +450,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Lst
-modifier|*
+name|void
 name|Parse_MainName
 parameter_list|(
-name|void
+name|Lst
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -761,10 +761,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|Lst
-modifier|*
+name|void
 name|Targ_FindList
 parameter_list|(
+name|Lst
+modifier|*
+parameter_list|,
 name|Lst
 modifier|*
 parameter_list|,

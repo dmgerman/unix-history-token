@@ -145,6 +145,11 @@ name|list2
 operator|->
 name|lastPtr
 expr_stmt|;
+name|Lst_Init
+argument_list|(
+name|list2
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{

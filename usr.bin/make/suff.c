@@ -45,14 +45,6 @@ directive|include
 file|"dir.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|Lst
-modifier|*
-name|sufflist
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Lst of suffixes */
 end_comment
@@ -60,8 +52,12 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
-modifier|*
-name|suffClean
+name|sufflist
+init|=
+name|Lst_Initializer
+argument_list|(
+name|sufflist
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -72,8 +68,12 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
-modifier|*
-name|srclist
+name|suffClean
+init|=
+name|Lst_Initializer
+argument_list|(
+name|suffClean
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -84,14 +84,30 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Lst
-modifier|*
-name|transforms
+name|srclist
+init|=
+name|Lst_Initializer
+argument_list|(
+name|srclist
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Lst of transformation rules */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|Lst
+name|transforms
+init|=
+name|Lst_Initializer
+argument_list|(
+name|transforms
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -144,7 +160,6 @@ name|SUFF_NULL
 value|0x04
 comment|/* The empty suffix */
 name|Lst
-modifier|*
 name|searchPath
 decl_stmt|;
 comment|/* The path along which files of this suffix 				 * may be found */
@@ -157,17 +172,14 @@ name|refCount
 decl_stmt|;
 comment|/* Reference count of list membership */
 name|Lst
-modifier|*
 name|parents
 decl_stmt|;
 comment|/* Suffixes we have a transformation to */
 name|Lst
-modifier|*
 name|children
 decl_stmt|;
 comment|/* Suffixes we have a transformation from */
 name|Lst
-modifier|*
 name|ref
 decl_stmt|;
 comment|/* List of lists this suffix is referenced */
@@ -219,7 +231,6 @@ ifdef|#
 directive|ifdef
 name|DEBUG_SRC
 name|Lst
-modifier|*
 name|cp
 decl_stmt|;
 comment|/* Debug; children list */
@@ -967,6 +978,7 @@ name|NULL
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|s
 operator|->
 name|ref
@@ -976,6 +988,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|s
 operator|->
 name|children
@@ -985,6 +998,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|s
 operator|->
 name|parents
@@ -994,6 +1008,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|s
 operator|->
 name|searchPath
@@ -1204,6 +1219,7 @@ operator|++
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|s
 operator|->
 name|ref
@@ -1257,6 +1273,7 @@ operator|++
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|s
 operator|->
 name|ref
@@ -1293,22 +1310,14 @@ parameter_list|)
 block|{
 name|Lst_Concat
 argument_list|(
+operator|&
 name|suffClean
 argument_list|,
+operator|&
 name|sufflist
 argument_list|,
 name|LST_CONCLINK
 argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|sufflist
-argument_list|)
-expr_stmt|;
-name|sufflist
-operator|=
-name|Lst_Init
-argument_list|()
 expr_stmt|;
 name|sNum
 operator|=
@@ -1321,19 +1330,13 @@ expr_stmt|;
 comment|/*      * Clear suffNull's children list (the other suffixes are built new, but      * suffNull is used as is).      * NOFREE is used because all suffixes are are on the suffClean list.      * suffNull should not have parents.      */
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|suffNull
 operator|->
 name|children
 argument_list|,
 name|NOFREE
 argument_list|)
-expr_stmt|;
-name|suffNull
-operator|->
-name|children
-operator|=
-name|Lst_Init
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1420,6 +1423,7 @@ name|srcLn
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|str
@@ -1434,6 +1438,7 @@ name|srcLn
 operator|=
 name|Lst_FindFrom
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|Lst_Succ
@@ -1523,6 +1528,7 @@ name|targLn
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|str2
@@ -1635,6 +1641,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|transforms
 argument_list|,
 name|line
@@ -1659,6 +1666,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|transforms
 argument_list|,
 name|gn
@@ -1677,6 +1685,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -1686,26 +1695,13 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
 argument_list|,
 name|NOFREE
 argument_list|)
-expr_stmt|;
-name|gn
-operator|->
-name|commands
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
-name|gn
-operator|->
-name|children
-operator|=
-name|Lst_Init
-argument_list|()
 expr_stmt|;
 block|}
 name|gn
@@ -1745,6 +1741,7 @@ argument_list|)
 expr_stmt|;
 name|SuffInsert
 argument_list|(
+operator|&
 name|t
 operator|->
 name|children
@@ -1754,6 +1751,7 @@ argument_list|)
 expr_stmt|;
 name|SuffInsert
 argument_list|(
+operator|&
 name|s
 operator|->
 name|parents
@@ -1809,6 +1807,7 @@ operator|)
 operator|&&
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -1816,6 +1815,7 @@ argument_list|)
 operator|&&
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -1871,6 +1871,7 @@ expr_stmt|;
 comment|/* 	 * Remove the source from the target's children list. We check for a 	 * NULL return to handle a beanhead saying something like 	 *  .c.o .c.o: 	 * 	 * We'll be called twice when the next target is seen, but .c and .o 	 * are only linked once... 	 */
 name|SuffRemove
 argument_list|(
+operator|&
 name|t
 operator|->
 name|children
@@ -1881,6 +1882,7 @@ expr_stmt|;
 comment|/* 	 * Remove the target from the source's parents list 	 */
 name|SuffRemove
 argument_list|(
+operator|&
 name|s
 operator|->
 name|parents
@@ -2010,6 +2012,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|cp
@@ -2041,6 +2044,7 @@ block|{
 comment|/* 	     * Found target. Link in and return, since it can't be anything 	     * else. 	     */
 name|SuffInsert
 argument_list|(
+operator|&
 name|s2
 operator|->
 name|children
@@ -2050,6 +2054,7 @@ argument_list|)
 expr_stmt|;
 name|SuffInsert
 argument_list|(
+operator|&
 name|s
 operator|->
 name|parents
@@ -2102,6 +2107,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|transform
@@ -2141,6 +2147,7 @@ argument_list|)
 expr_stmt|;
 name|SuffInsert
 argument_list|(
+operator|&
 name|s
 operator|->
 name|children
@@ -2150,6 +2157,7 @@ argument_list|)
 expr_stmt|;
 name|SuffInsert
 argument_list|(
+operator|&
 name|s2
 operator|->
 name|parents
@@ -2193,6 +2201,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|str
@@ -2237,33 +2246,37 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|Lst_Init
+argument_list|(
+operator|&
 name|s
 operator|->
 name|searchPath
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|Lst_Init
+argument_list|(
+operator|&
 name|s
 operator|->
 name|children
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|Lst_Init
+argument_list|(
+operator|&
 name|s
 operator|->
 name|parents
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|Lst_Init
+argument_list|(
+operator|&
 name|s
 operator|->
 name|ref
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|s
 operator|->
@@ -2286,6 +2299,7 @@ literal|0
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|s
@@ -2294,6 +2308,7 @@ expr_stmt|;
 comment|/* 	 * Look for any existing transformations from or to this suffix. 	 * XXX: Only do this after a Suff_ClearSuffixes? 	 */
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|transforms
 argument_list|,
 name|SuffRebuildGraph
@@ -2331,6 +2346,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|sname
@@ -2362,6 +2378,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|&
 name|s
 operator|->
 name|searchPath
@@ -2395,24 +2412,24 @@ modifier|*
 name|ptr
 decl_stmt|;
 name|Lst
-modifier|*
 name|inIncludes
 decl_stmt|;
 comment|/* Cumulative .INCLUDES path */
 name|Lst
-modifier|*
 name|inLibs
 decl_stmt|;
 comment|/* Cumulative .LIBS path */
+name|Lst_Init
+argument_list|(
+operator|&
 name|inIncludes
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
-name|inLibs
-operator|=
 name|Lst_Init
-argument_list|()
+argument_list|(
+operator|&
+name|inLibs
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2420,6 +2437,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|sufflist
 argument_list|)
 init|;
@@ -2447,6 +2465,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|s
 operator|->
 name|searchPath
@@ -2467,8 +2486,10 @@ condition|)
 block|{
 name|Dir_Concat
 argument_list|(
+operator|&
 name|inIncludes
 argument_list|,
+operator|&
 name|s
 operator|->
 name|searchPath
@@ -2492,8 +2513,10 @@ condition|)
 block|{
 name|Dir_Concat
 argument_list|(
+operator|&
 name|inLibs
 argument_list|,
+operator|&
 name|s
 operator|->
 name|searchPath
@@ -2505,10 +2528,12 @@ directive|endif
 comment|/* LIBRARIES */
 name|Dir_Concat
 argument_list|(
+operator|&
 name|s
 operator|->
 name|searchPath
 argument_list|,
+operator|&
 name|dirSearchPath
 argument_list|)
 expr_stmt|;
@@ -2517,6 +2542,7 @@ else|else
 block|{
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|s
 operator|->
 name|searchPath
@@ -2524,12 +2550,14 @@ argument_list|,
 name|Dir_Destroy
 argument_list|)
 expr_stmt|;
+name|Lst_Duplicate
+argument_list|(
+operator|&
 name|s
 operator|->
 name|searchPath
-operator|=
-name|Lst_Duplicate
-argument_list|(
+argument_list|,
+operator|&
 name|dirSearchPath
 argument_list|,
 name|Dir_CopyDir
@@ -2547,6 +2575,7 @@ name|Dir_MakeFlags
 argument_list|(
 literal|"-I"
 argument_list|,
+operator|&
 name|inIncludes
 argument_list|)
 argument_list|,
@@ -2568,6 +2597,7 @@ name|Dir_MakeFlags
 argument_list|(
 literal|"-L"
 argument_list|,
+operator|&
 name|inLibs
 argument_list|)
 argument_list|,
@@ -2581,6 +2611,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|inIncludes
 argument_list|,
 name|Dir_Destroy
@@ -2588,6 +2619,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|inLibs
 argument_list|,
 name|Dir_Destroy
@@ -2621,6 +2653,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|sname
@@ -2677,6 +2710,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|sname
@@ -2855,15 +2889,17 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_SRC
+name|Lst_Init
+argument_list|(
+operator|&
 name|s2
 operator|->
 name|cp
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|targ
 operator|->
 name|cp
@@ -2873,7 +2909,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"1 add %x %x to %x:"
+literal|"1 add %p %p to %p:"
 argument_list|,
 name|targ
 argument_list|,
@@ -2989,15 +3025,17 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_SRC
+name|Lst_Init
+argument_list|(
+operator|&
 name|s2
 operator|->
 name|cp
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|targ
 operator|->
 name|cp
@@ -3007,7 +3045,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"2 add %x %x to %x:"
+literal|"2 add %p %p to %p:"
 argument_list|,
 name|targ
 argument_list|,
@@ -3083,6 +3121,7 @@ name|l
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|targ
 operator|->
 name|suff
@@ -3239,6 +3278,7 @@ name|ln
 init|=
 name|Lst_Member
 argument_list|(
+operator|&
 name|s
 operator|->
 name|parent
@@ -3256,6 +3296,7 @@ name|NULL
 condition|)
 name|Lst_Remove
 argument_list|(
+operator|&
 name|s
 operator|->
 name|parent
@@ -3280,7 +3321,7 @@ directive|ifdef
 name|DEBUG_SRC
 name|printf
 argument_list|(
-literal|"free: [l=%x] p=%x %d\n"
+literal|"free: [l=%p] p=%p %d\n"
 argument_list|,
 name|l
 argument_list|,
@@ -3293,6 +3334,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|s
 operator|->
 name|cp
@@ -3331,7 +3373,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"keep: [l=%x] p=%x %d: "
+literal|"keep: [l=%p] p=%p %d: "
 argument_list|,
 name|l
 argument_list|,
@@ -3344,6 +3386,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|s
 operator|->
 name|cp
@@ -3460,7 +3503,7 @@ directive|ifdef
 name|DEBUG_SRC
 name|printf
 argument_list|(
-literal|"remove %x from %x\n"
+literal|"remove %p from %p\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3486,6 +3529,7 @@ name|s
 operator|->
 name|file
 argument_list|,
+operator|&
 name|s
 operator|->
 name|suff
@@ -3506,7 +3550,7 @@ directive|ifdef
 name|DEBUG_SRC
 name|printf
 argument_list|(
-literal|"remove %x from %x\n"
+literal|"remove %p from %p\n"
 argument_list|,
 name|s
 argument_list|,
@@ -3641,6 +3685,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|t
 operator|->
 name|children
@@ -3717,6 +3762,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 operator|&
@@ -3747,6 +3793,7 @@ if|if
 condition|(
 name|Lst_Member
 argument_list|(
+operator|&
 name|suff
 operator|->
 name|parents
@@ -3827,17 +3874,19 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_SRC
+name|Lst_Init
+argument_list|(
+operator|&
 name|ret
 operator|->
 name|cp
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"3 add %x %x\n"
+literal|"3 add %p %p\n"
 argument_list|,
+operator|&
 name|targ
 argument_list|,
 name|ret
@@ -3845,6 +3894,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|targ
 operator|->
 name|cp
@@ -3946,6 +3996,7 @@ name|prevLN
 operator|=
 name|Lst_Member
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|children
@@ -4004,11 +4055,12 @@ name|NULL
 condition|)
 block|{
 name|Lst
-modifier|*
 name|members
 init|=
-name|Lst_Init
-argument_list|()
+name|Lst_Initializer
+argument_list|(
+name|members
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -4031,6 +4083,7 @@ argument_list|(
 operator|&
 name|sacrifice
 argument_list|,
+operator|&
 name|members
 argument_list|,
 name|pgn
@@ -4117,6 +4170,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|members
 argument_list|,
 name|gn
@@ -4248,6 +4302,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|members
 argument_list|,
 name|gn
@@ -4266,6 +4321,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|members
 argument_list|)
 condition|)
@@ -4274,6 +4330,7 @@ name|gn
 operator|=
 name|Lst_DeQueue
 argument_list|(
+operator|&
 name|members
 argument_list|)
 expr_stmt|;
@@ -4294,6 +4351,7 @@ if|if
 condition|(
 name|Lst_Member
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|children
@@ -4306,6 +4364,7 @@ condition|)
 block|{
 name|Lst_Append
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|children
@@ -4324,6 +4383,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|parents
@@ -4338,13 +4398,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|Lst_Destroy
-argument_list|(
-name|members
-argument_list|,
-name|NOFREE
-argument_list|)
-expr_stmt|;
 comment|/* 	     * Free the result 	     */
 name|free
 argument_list|(
@@ -4357,6 +4410,7 @@ name|ln
 operator|=
 name|Lst_Member
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|children
@@ -4371,6 +4425,7 @@ operator|--
 expr_stmt|;
 name|Lst_Remove
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|children
@@ -4400,7 +4455,6 @@ argument_list|)
 condition|)
 block|{
 name|Lst
-modifier|*
 name|exp
 decl_stmt|;
 comment|/* List of expansions */
@@ -4427,6 +4481,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|cp
@@ -4478,6 +4533,7 @@ argument_list|)
 expr_stmt|;
 name|path
 operator|=
+operator|&
 name|s
 operator|->
 name|searchPath
@@ -4488,14 +4544,16 @@ block|{
 comment|/* 	     * Use default search path 	     */
 name|path
 operator|=
+operator|&
 name|dirSearchPath
 expr_stmt|;
 block|}
 comment|/* 	 * Expand the word along the chosen path 	 */
-name|exp
-operator|=
 name|Lst_Init
-argument_list|()
+argument_list|(
+operator|&
+name|exp
+argument_list|)
 expr_stmt|;
 name|Dir_Expand
 argument_list|(
@@ -4505,6 +4563,7 @@ name|name
 argument_list|,
 name|path
 argument_list|,
+operator|&
 name|exp
 argument_list|)
 expr_stmt|;
@@ -4513,6 +4572,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|exp
 argument_list|)
 condition|)
@@ -4522,6 +4582,7 @@ name|cp
 operator|=
 name|Lst_DeQueue
 argument_list|(
+operator|&
 name|exp
 argument_list|)
 expr_stmt|;
@@ -4550,6 +4611,7 @@ if|if
 condition|(
 name|Lst_Member
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|children
@@ -4562,6 +4624,7 @@ condition|)
 block|{
 name|Lst_Append
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|children
@@ -4580,6 +4643,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|parents
@@ -4594,19 +4658,12 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Nuke what's left of the list 	 */
-name|Lst_Destroy
-argument_list|(
-name|exp
-argument_list|,
-name|NOFREE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Now the source is expanded, remove it from the list of children to 	 * keep it from being processed. 	 */
 name|ln
 operator|=
 name|Lst_Member
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|children
@@ -4621,6 +4678,7 @@ operator|--
 expr_stmt|;
 name|Lst_Remove
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|children
@@ -4691,6 +4749,7 @@ if|if
 condition|(
 name|Lst_Member
 argument_list|(
+operator|&
 name|tGn
 operator|->
 name|children
@@ -4704,6 +4763,7 @@ block|{
 comment|/* 	 * Not already linked, so form the proper links between the 	 * target and source. 	 */
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|tGn
 operator|->
 name|children
@@ -4713,6 +4773,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|sGn
 operator|->
 name|parents
@@ -4747,6 +4808,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|sGn
 operator|->
 name|cohorts
@@ -4775,6 +4837,7 @@ if|if
 condition|(
 name|Lst_Member
 argument_list|(
+operator|&
 name|tGn
 operator|->
 name|children
@@ -4788,6 +4851,7 @@ block|{
 comment|/* 		 * Not already linked, so form the proper links between the 		 * target and source. 		 */
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|tGn
 operator|->
 name|children
@@ -4797,6 +4861,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|parents
@@ -4833,6 +4898,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|transforms
 argument_list|,
 name|tname
@@ -4892,6 +4958,7 @@ name|ln
 operator|=
 name|Lst_Last
 argument_list|(
+operator|&
 name|tGn
 operator|->
 name|children
@@ -4922,6 +4989,7 @@ condition|)
 block|{
 name|Lst_ForEachFrom
 argument_list|(
+operator|&
 name|tGn
 operator|->
 name|children
@@ -4937,6 +5005,7 @@ block|}
 comment|/*      * Keep track of another parent to which this beast is transformed so      * the .IMPSRC variable can be set correctly for the parent.      */
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|sGn
 operator|->
 name|iParents
@@ -5076,6 +5145,7 @@ if|if
 condition|(
 name|Lst_Member
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -5088,6 +5158,7 @@ condition|)
 block|{
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -5097,6 +5168,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|mem
 operator|->
 name|parents
@@ -5240,6 +5312,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|ms
 operator|->
 name|parents
@@ -5377,12 +5450,10 @@ name|ln
 decl_stmt|;
 comment|/* Next suffix node to check */
 name|Lst
-modifier|*
 name|srcs
 decl_stmt|;
 comment|/* List of sources at which to look */
 name|Lst
-modifier|*
 name|targs
 decl_stmt|;
 comment|/* List of targets to which things can be 			     * transformed. They all have the same file, 			     * but different suff and pref fields */
@@ -5430,18 +5501,21 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|sufflist
 argument_list|)
 expr_stmt|;
+name|Lst_Init
+argument_list|(
+operator|&
 name|srcs
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
-name|targs
-operator|=
 name|Lst_Init
-argument_list|()
+argument_list|(
+operator|&
+name|targs
+argument_list|)
 expr_stmt|;
 comment|/*      * We're caught in a catch-22 here. On the one hand, we want to use any      * transformation implied by the target's sources, but we can't examine      * the sources until we've expanded any variables/wildcards they may hold,      * and we can't do that until we've set up the target's local variables      * and we can't do that until we know what the proper suffix for the      * target is (in case there are two suffixes one of which is a suffix of      * the other) and we can't know that until we've found its implied      * source, which we may not want to use if there's an existing source      * that implies a different transformation.      *      * In an attempt to get around this, which may not work all the time,      * but should work most of the time, we look for implied sources first,      * checking transformations to all possible suffixes of the target,      * use what we find to set the target's local variables, expand the      * children, then look for any overriding transformations they imply.      * Should we find one, we discard the one we found before.      */
 while|while
@@ -5456,6 +5530,7 @@ name|ln
 operator|=
 name|Lst_FindFrom
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|ln
@@ -5539,12 +5614,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_SRC
+name|Lst_Init
+argument_list|(
+operator|&
 name|target
 operator|->
 name|cp
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -5597,6 +5673,7 @@ expr_stmt|;
 comment|/* 	     * Add nodes from which the target can be made 	     */
 name|SuffAddLevel
 argument_list|(
+operator|&
 name|srcs
 argument_list|,
 name|target
@@ -5605,6 +5682,7 @@ expr_stmt|;
 comment|/* 	     * Record the target so we can nuke it 	     */
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|targs
 argument_list|,
 name|target
@@ -5625,6 +5703,7 @@ if|if
 condition|(
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|targs
 argument_list|)
 operator|&&
@@ -5710,12 +5789,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_SRC
+name|Lst_Init
+argument_list|(
+operator|&
 name|targ
 operator|->
 name|cp
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -5724,6 +5804,7 @@ if|if
 condition|(
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -5731,6 +5812,7 @@ argument_list|)
 operator|&&
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -5738,6 +5820,7 @@ argument_list|)
 condition|)
 name|SuffAddLevel
 argument_list|(
+operator|&
 name|srcs
 argument_list|,
 name|targ
@@ -5766,6 +5849,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|targs
 argument_list|,
 name|targ
@@ -5777,6 +5861,7 @@ name|bottom
 operator|=
 name|SuffFindThem
 argument_list|(
+operator|&
 name|srcs
 argument_list|,
 name|slst
@@ -5795,6 +5880,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|targs
 argument_list|)
 condition|)
@@ -5805,6 +5891,7 @@ name|Lst_Datum
 argument_list|(
 name|Lst_First
 argument_list|(
+operator|&
 name|targs
 argument_list|)
 argument_list|)
@@ -5881,6 +5968,7 @@ expr_stmt|;
 comment|/*      * Now we've got the important local variables set, expand any sources      * that still contain variables or wildcards in their names.      */
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -5929,6 +6017,7 @@ operator|||
 operator|(
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -5936,6 +6025,7 @@ argument_list|)
 operator|&&
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -5958,8 +6048,10 @@ name|targ
 operator|==
 name|NULL
 condition|?
+operator|&
 name|dirSearchPath
 else|:
+operator|&
 name|targ
 operator|->
 name|suff
@@ -6265,6 +6357,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -6595,11 +6688,13 @@ while|while
 condition|(
 name|SuffRemoveSrc
 argument_list|(
+operator|&
 name|srcs
 argument_list|)
 operator|||
 name|SuffRemoveSrc
 argument_list|(
+operator|&
 name|targs
 argument_list|)
 condition|)
@@ -6608,6 +6703,7 @@ name|Lst_Concat
 argument_list|(
 name|slst
 argument_list|,
+operator|&
 name|srcs
 argument_list|,
 name|LST_CONCLINK
@@ -6617,19 +6713,10 @@ name|Lst_Concat
 argument_list|(
 name|slst
 argument_list|,
+operator|&
 name|targs
 argument_list|,
 name|LST_CONCLINK
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|srcs
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|targs
 argument_list|)
 expr_stmt|;
 block|}
@@ -6652,6 +6739,7 @@ name|SuffFindDeps
 argument_list|(
 name|gn
 argument_list|,
+operator|&
 name|srclist
 argument_list|)
 expr_stmt|;
@@ -6659,6 +6747,7 @@ while|while
 condition|(
 name|SuffRemoveSrc
 argument_list|(
+operator|&
 name|srclist
 argument_list|)
 condition|)
@@ -6754,6 +6843,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|LIBSUFF
@@ -6803,6 +6893,7 @@ name|Arch_FindLib
 argument_list|(
 name|gn
 argument_list|,
+operator|&
 name|s
 operator|->
 name|searchPath
@@ -6878,6 +6969,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|name
@@ -6952,26 +7044,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|sufflist
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
-name|suffClean
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
-name|srclist
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
-name|transforms
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
 name|sNum
 operator|=
 literal|0
@@ -7004,42 +7076,48 @@ name|nameLen
 operator|=
 literal|0
 expr_stmt|;
+name|Lst_Init
+argument_list|(
+operator|&
 name|suffNull
 operator|->
 name|searchPath
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|Dir_Concat
 argument_list|(
+operator|&
 name|suffNull
 operator|->
 name|searchPath
 argument_list|,
+operator|&
 name|dirSearchPath
 argument_list|)
 expr_stmt|;
+name|Lst_Init
+argument_list|(
+operator|&
 name|suffNull
 operator|->
 name|children
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|Lst_Init
+argument_list|(
+operator|&
 name|suffNull
 operator|->
 name|parents
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|Lst_Init
+argument_list|(
+operator|&
 name|suffNull
 operator|->
 name|ref
-operator|=
-name|Lst_Init
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|suffNull
 operator|->
@@ -7076,6 +7154,7 @@ parameter_list|)
 block|{
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|SuffFree
@@ -7083,6 +7162,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|suffClean
 argument_list|,
 name|SuffFree
@@ -7099,6 +7179,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|srclist
 argument_list|,
 name|NOFREE
@@ -7106,6 +7187,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|transforms
 argument_list|,
 name|NOFREE
@@ -7299,6 +7381,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|s
 operator|->
 name|parents
@@ -7326,6 +7409,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|s
 operator|->
 name|children
@@ -7353,6 +7437,7 @@ argument_list|)
 expr_stmt|;
 name|Dir_PrintPath
 argument_list|(
+operator|&
 name|s
 operator|->
 name|searchPath
@@ -7419,6 +7504,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|t
 operator|->
 name|commands
@@ -7461,6 +7547,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|sufflist
 argument_list|,
 name|SuffPrintSuff
@@ -7479,6 +7566,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|transforms
 argument_list|,
 name|SuffPrintTrans

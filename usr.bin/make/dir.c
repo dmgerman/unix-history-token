@@ -73,28 +73,36 @@ begin_comment
 comment|/*  *	A search path consists of a Lst of Path structures. A Path structure  *	has in it the name of the directory and a hash table of all the files  *	in the directory. This is used to cut down on the number of system  *	calls necessary to find implicit dependents and their like. Since  *	these searches are made before any actions are taken, we need not  *	worry about the directory changing due to creation commands. If this  *	hampers the style of some makefiles, they must be changed.  *  *	A list of all previously-read directories is kept in the  *	openDirectories Lst. This list is checked first before a directory  *	is opened.  *  *	The need for the caching of whole directories is brought about by  *	the multi-level transformation code in suff.c, which tends to search  *	for far more files than regular make does. In the initial  *	implementation, the amount of time spent performing "stat" calls was  *	truly astronomical. The problem with hashing at the start is,  *	of course, that pmake doesn't then detect changes to these directories  *	during the course of the make. Three possibilities suggest themselves:  *  *	    1) just use stat to test for a file's existence. As mentioned  *	       above, this is very inefficient due to the number of checks  *	       engendered by the multi-level transformation code.  *	    2) use readdir() and company to search the directories, keeping  *	       them open between checks. I have tried this and while it  *	       didn't slow down the process too much, it could severely  *	       affect the amount of parallelism available as each directory  *	       open would take another file descriptor out of play for  *	       handling I/O for another job. Given that it is only recently  *	       that UNIX OS's have taken to allowing more than 20 or 32  *	       file descriptors for a process, this doesn't seem acceptable  *	       to me.  *	    3) record the mtime of the directory in the Path structure and  *	       verify the directory hasn't changed since the contents were  *	       hashed. This will catch the creation or deletion of files,  *	       but not the updating of files. However, since it is the  *	       creation and deletion that is the problem, this could be  *	       a good thing to do. Unfortunately, if the directory (say ".")  *	       were fairly large and changed fairly frequently, the constant  *	       rehashing could seriously degrade performance. It might be  *	       good in such cases to keep track of the number of rehashes  *	       and if the number goes over a (small) limit, resort to using  *	       stat in its place.  *  *	An additional thing to consider is that pmake is used primarily  *	to create C programs and until recently pcc-based compilers refused  *	to allow you to specify where the resulting object file should be  *	placed. This forced all objects to be created in the current  *	directory. This isn't meant as a full excuse, just an explanation of  *	some of the reasons for the caching used here.  *  *	One more note: the location of a target's file is only performed  *	on the downward traversal of the graph and then only for terminal  *	nodes in the graph. This could be construed as wrong in some cases,  *	but prevents inadvertent modification of files when the "installed"  *	directory for a file is provided in the search path.  *  *	Another data structure maintained by this module is an mtime  *	cache used when the searching of cached directories fails to find  *	a file. In the past, Dir_FindFile would simply perform an access()  *	call in such a case to determine if the file could be found using  *	just the name given. When this hit, however, all that was gained  *	was the knowledge that the file existed. Given that an access() is  *	essentially a stat() without the copyout() call, and that the same  *	filesystem overhead would have to be incurred in Dir_MTime, it made  *	sense to replace the access() with a stat() and record the mtime  *	in a cache for when Dir_MTime was actually called.  */
 end_comment
 
-begin_decl_stmt
-name|Lst
-modifier|*
-name|dirSearchPath
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* main search path */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|Lst
-modifier|*
-name|openDirectories
+name|dirSearchPath
+init|=
+name|Lst_Initializer
+argument_list|(
+name|dirSearchPath
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* the list of all open directories */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|Lst
+name|openDirectories
+init|=
+name|Lst_Initializer
+argument_list|(
+name|openDirectories
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Variables for gathering statistics on the efficiency of the hashing  * mechanism.  */
@@ -206,16 +214,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|dirSearchPath
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
-name|openDirectories
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
 name|Hash_InitTable
 argument_list|(
 operator|&
@@ -244,6 +242,7 @@ name|ln
 decl_stmt|;
 name|Dir_AddDir
 argument_list|(
+operator|&
 name|openDirectories
 argument_list|,
 literal|"."
@@ -256,6 +255,7 @@ name|ln
 operator|=
 name|Lst_Last
 argument_list|(
+operator|&
 name|openDirectories
 argument_list|)
 operator|)
@@ -310,11 +310,13 @@ argument_list|)
 expr_stmt|;
 name|Dir_ClearPath
 argument_list|(
+operator|&
 name|dirSearchPath
 argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|dirSearchPath
 argument_list|,
 name|NOFREE
@@ -322,11 +324,13 @@ argument_list|)
 expr_stmt|;
 name|Dir_ClearPath
 argument_list|(
+operator|&
 name|openDirectories
 argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|openDirectories
 argument_list|,
 name|NOFREE
@@ -1377,6 +1381,14 @@ operator|-
 literal|1
 index|]
 decl_stmt|;
+name|Lst
+name|tp
+init|=
+name|Lst_Initializer
+argument_list|(
+name|tp
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -1389,14 +1401,10 @@ name|dp
 operator|=
 literal|'\0'
 expr_stmt|;
-name|path
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
 name|Dir_AddDir
 argument_list|(
-name|path
+operator|&
+name|tp
 argument_list|,
 name|dirpath
 argument_list|)
@@ -1407,14 +1415,16 @@ name|cp
 operator|+
 literal|1
 argument_list|,
-name|path
+operator|&
+name|tp
 argument_list|,
 name|expansions
 argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
-name|path
+operator|&
+name|tp
 argument_list|,
 name|NOFREE
 argument_list|)
@@ -2543,6 +2553,7 @@ name|gn
 operator|->
 name|name
 argument_list|,
+operator|&
 name|dirSearchPath
 argument_list|)
 expr_stmt|;
@@ -2764,6 +2775,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|openDirectories
 argument_list|,
 name|name
@@ -2964,6 +2976,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|openDirectories
 argument_list|,
 name|p
@@ -2973,6 +2986,7 @@ if|if
 condition|(
 name|path
 operator|!=
+operator|&
 name|openDirectories
 condition|)
 name|Lst_AtEnd
@@ -3181,6 +3195,7 @@ name|ln
 operator|=
 name|Lst_Member
 argument_list|(
+operator|&
 name|openDirectories
 argument_list|,
 name|p
@@ -3191,6 +3206,7 @@ name|NULL
 condition|)
 name|Lst_Remove
 argument_list|(
+operator|&
 name|openDirectories
 argument_list|,
 name|ln
@@ -3399,6 +3415,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|openDirectories
 argument_list|)
 init|;

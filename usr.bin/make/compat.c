@@ -441,6 +441,7 @@ condition|)
 block|{
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -703,6 +704,7 @@ name|cmdNode
 operator|=
 name|Lst_Member
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -783,6 +785,7 @@ condition|)
 block|{
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|ENDNode
 operator|->
 name|commands
@@ -1536,6 +1539,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -1575,6 +1579,7 @@ if|if
 condition|(
 name|Lst_Member
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|iParents
@@ -1740,6 +1745,7 @@ name|gn
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -1807,6 +1813,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -1982,6 +1989,7 @@ if|if
 condition|(
 name|Lst_Member
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|iParents
@@ -2264,6 +2272,7 @@ condition|)
 block|{
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|commands
@@ -2377,6 +2386,7 @@ condition|)
 block|{
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|ENDNode
 operator|->
 name|commands

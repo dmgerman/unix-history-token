@@ -982,6 +982,7 @@ if|if
 condition|(
 name|Lst_Find
 argument_list|(
+operator|&
 name|create
 argument_list|,
 name|arg
@@ -1064,6 +1065,7 @@ name|Dir_FindFile
 argument_list|(
 name|arg
 argument_list|,
+operator|&
 name|dirSearchPath
 argument_list|)
 expr_stmt|;

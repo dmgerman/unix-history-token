@@ -45,17 +45,21 @@ directive|include
 file|"job.h"
 end_include
 
+begin_comment
+comment|/* The current fringe of the graph. These are nodes which await examination  * by MakeOODate. It is added to by Make_Update and subtracted from by  * MakeStartJobs */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|Lst
-modifier|*
 name|toBeMade
+init|=
+name|Lst_Initializer
+argument_list|(
+name|toBeMade
+argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* The current fringe of the graph. These 				 * are nodes which await examination by 				 * MakeOODate. It is added to by 				 * Make_Update and subtracted from by 				 * MakeStartJobs */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -586,6 +590,7 @@ condition|)
 block|{
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|parents
@@ -719,6 +724,7 @@ operator|)
 operator|||
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|commands
@@ -728,10 +734,12 @@ block|{
 comment|/* 	     * .USE or transformation and target has no commands -- append 	     * the child's commands to the parent. 	     */
 name|Lst_Concat
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|commands
 argument_list|,
+operator|&
 name|cgn
 operator|->
 name|commands
@@ -746,6 +754,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|cgn
 operator|->
 name|children
@@ -774,6 +783,7 @@ if|if
 condition|(
 name|Lst_Member
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|children
@@ -786,6 +796,7 @@ condition|)
 block|{
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|pgn
 operator|->
 name|children
@@ -795,6 +806,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|parents
@@ -955,6 +967,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|cgn
 operator|->
 name|commands
@@ -962,6 +975,7 @@ argument_list|)
 operator|||
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|cgn
 operator|->
 name|children
@@ -1031,6 +1045,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|cgn
 operator|->
 name|parents
@@ -1143,6 +1158,7 @@ block|{
 comment|/* 		 * Queue the node up -- any unmade predecessors will 		 * be dealt with in MakeStartJobs. 		 */
 name|Lst_EnQueue
 argument_list|(
+operator|&
 name|toBeMade
 argument_list|,
 name|pgn
@@ -1178,6 +1194,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|cgn
 operator|->
 name|successors
@@ -1224,6 +1241,7 @@ name|UNMADE
 operator|&&
 name|Lst_Member
 argument_list|(
+operator|&
 name|toBeMade
 argument_list|,
 name|succ
@@ -1234,6 +1252,7 @@ condition|)
 block|{
 name|Lst_EnQueue
 argument_list|(
+operator|&
 name|toBeMade
 argument_list|,
 name|succ
@@ -1260,6 +1279,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|cgn
 operator|->
 name|iParents
@@ -1531,6 +1551,7 @@ parameter_list|)
 block|{
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -1642,6 +1663,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|toBeMade
 argument_list|)
 operator|&&
@@ -1654,6 +1676,7 @@ name|gn
 operator|=
 name|Lst_DeQueue
 argument_list|(
+operator|&
 name|toBeMade
 argument_list|)
 expr_stmt|;
@@ -1676,6 +1699,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|preds
@@ -1692,6 +1716,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|preds
@@ -1948,6 +1973,7 @@ name|ENDCYCLE
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -1983,6 +2009,7 @@ name|CYCLE
 expr_stmt|;
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -2035,7 +2062,6 @@ name|gn
 decl_stmt|;
 comment|/* a temporary pointer */
 name|Lst
-modifier|*
 name|examine
 decl_stmt|;
 comment|/* List of targets to examine */
@@ -2043,15 +2069,17 @@ name|int
 name|errors
 decl_stmt|;
 comment|/* Number of errors the Job module reports */
-name|toBeMade
-operator|=
 name|Lst_Init
-argument_list|()
-expr_stmt|;
+argument_list|(
+operator|&
 name|examine
-operator|=
+argument_list|)
+expr_stmt|;
 name|Lst_Duplicate
 argument_list|(
+operator|&
+name|examine
+argument_list|,
 name|targs
 argument_list|,
 name|NOCOPY
@@ -2067,6 +2095,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|examine
 argument_list|)
 condition|)
@@ -2075,6 +2104,7 @@ name|gn
 operator|=
 name|Lst_DeQueue
 argument_list|(
+operator|&
 name|examine
 argument_list|)
 expr_stmt|;
@@ -2098,6 +2128,7 @@ expr_stmt|;
 comment|/* 	     * Apply any .USE rules before looking for implicit dependencies 	     * to make sure everything has commands that should... 	     */
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -2123,12 +2154,14 @@ condition|)
 block|{
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
 argument_list|,
 name|MakeAddChild
 argument_list|,
+operator|&
 name|examine
 argument_list|)
 expr_stmt|;
@@ -2137,6 +2170,7 @@ else|else
 block|{
 name|Lst_EnQueue
 argument_list|(
+operator|&
 name|toBeMade
 argument_list|,
 name|gn
@@ -2145,13 +2179,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|Lst_Destroy
-argument_list|(
-name|examine
-argument_list|,
-name|NOFREE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|queryFlag
@@ -2185,6 +2212,7 @@ argument_list|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|toBeMade
 argument_list|)
 argument_list|)

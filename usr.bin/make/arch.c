@@ -99,17 +99,21 @@ directive|include
 file|"config.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|Lst
-modifier|*
-name|archives
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Lst of archives we've already examined */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|Lst
+name|archives
+init|=
+name|Lst_Initializer
+argument_list|(
+name|archives
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -890,11 +894,12 @@ argument_list|)
 condition|)
 block|{
 name|Lst
-modifier|*
 name|members
 init|=
-name|Lst_Init
-argument_list|()
+name|Lst_Initializer
+argument_list|(
+name|members
+argument_list|)
 decl_stmt|;
 name|char
 modifier|*
@@ -919,8 +924,10 @@ name|Dir_Expand
 argument_list|(
 name|memName
 argument_list|,
+operator|&
 name|dirSearchPath
 argument_list|,
+operator|&
 name|members
 argument_list|)
 expr_stmt|;
@@ -929,6 +936,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|members
 argument_list|)
 condition|)
@@ -937,6 +945,7 @@ name|member
 operator|=
 name|Lst_DeQueue
 argument_list|(
+operator|&
 name|members
 argument_list|)
 expr_stmt|;
@@ -1016,6 +1025,7 @@ argument_list|(
 name|nameBuf
 argument_list|)
 expr_stmt|;
+comment|/* XXXHB Lst_Destroy(&members) */
 return|return
 operator|(
 name|FAILURE
@@ -1044,13 +1054,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|Lst_Destroy
-argument_list|(
-name|members
-argument_list|,
-name|NOFREE
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|nameBuf
@@ -1363,6 +1366,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|archives
 argument_list|,
 name|archive
@@ -2055,6 +2059,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|archives
 argument_list|,
 name|ar
@@ -3480,6 +3485,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|parents
@@ -3743,6 +3749,7 @@ argument_list|)
 operator|&&
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|gn
 operator|->
 name|children
@@ -3922,7 +3929,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Arch_Init --  *	Initialize things for this module.  *  * Results:  *	None.  *  * Side Effects:  *	The 'archives' list is initialized.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Arch_Init --  *	Initialize things for this module.  *  * Results:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -3931,13 +3938,7 @@ name|Arch_Init
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-name|archives
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment
@@ -3953,6 +3954,7 @@ parameter_list|)
 block|{
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|archives
 argument_list|,
 name|ArchFree

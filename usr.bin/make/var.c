@@ -574,6 +574,7 @@ if|if
 condition|(
 name|Lst_Find
 argument_list|(
+operator|&
 name|envFirstVars
 argument_list|,
 name|name
@@ -605,6 +606,7 @@ name|var
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|ctxt
 operator|->
 name|context
@@ -639,6 +641,7 @@ name|var
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|VAR_CMD
 operator|->
 name|context
@@ -680,6 +683,7 @@ name|var
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|VAR_GLOBAL
 operator|->
 name|context
@@ -814,6 +818,7 @@ name|var
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|VAR_GLOBAL
 operator|->
 name|context
@@ -978,6 +983,7 @@ literal|0
 expr_stmt|;
 name|Lst_AtFront
 argument_list|(
+operator|&
 name|ctxt
 operator|->
 name|context
@@ -1089,6 +1095,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|ctxt
 operator|->
 name|context
@@ -1115,6 +1122,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Remove
 argument_list|(
+operator|&
 name|ctxt
 operator|->
 name|context
@@ -1418,6 +1426,7 @@ name|VAR_FROM_ENV
 expr_stmt|;
 name|Lst_AtFront
 argument_list|(
+operator|&
 name|ctxt
 operator|->
 name|context
@@ -7208,6 +7217,7 @@ parameter_list|)
 block|{
 name|Lst_ForEach
 argument_list|(
+operator|&
 name|ctxt
 operator|->
 name|context

@@ -219,16 +219,20 @@ name|MAKEFLAGS
 value|".MAKEFLAGS"
 end_define
 
-begin_decl_stmt
-name|Lst
-modifier|*
-name|create
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Targets to be made */
 end_comment
+
+begin_decl_stmt
+name|Lst
+name|create
+init|=
+name|Lst_Initializer
+argument_list|(
+name|create
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|time_t
@@ -272,17 +276,21 @@ begin_comment
 comment|/* -r flag */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|Lst
-modifier|*
-name|makefiles
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* ordered list of makefiles to read */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|Lst
+name|makefiles
+init|=
+name|Lst_Initializer
+argument_list|(
+name|makefiles
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -295,17 +303,21 @@ begin_comment
 comment|/* fully expand printed variables */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|Lst
-modifier|*
-name|variables
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* list of variables to print */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|Lst
+name|variables
+init|=
+name|Lst_Initializer
+argument_list|(
+name|variables
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -448,16 +460,20 @@ begin_comment
 comment|/* -e flag */
 end_comment
 
-begin_decl_stmt
-name|Lst
-modifier|*
-name|envFirstVars
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* (-E) vars to override from env */
 end_comment
+
+begin_decl_stmt
+name|Lst
+name|envFirstVars
+init|=
+name|Lst_Initializer
+argument_list|(
+name|envFirstVars
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|Boolean
@@ -738,11 +754,9 @@ break|break;
 case|case
 literal|'V'
 case|:
-operator|(
-name|void
-operator|)
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|variables
 argument_list|,
 operator|(
@@ -1019,6 +1033,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|envFirstVars
 argument_list|,
 name|p
@@ -1052,6 +1067,7 @@ literal|'f'
 case|:
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|makefiles
 argument_list|,
 name|optarg
@@ -1149,6 +1165,7 @@ literal|'m'
 case|:
 name|Dir_AddDir
 argument_list|(
+operator|&
 name|sysIncPath
 argument_list|,
 name|optarg
@@ -1378,6 +1395,7 @@ goto|;
 block|}
 name|Lst_AtEnd
 argument_list|(
+operator|&
 name|create
 argument_list|,
 name|estrdup
@@ -1690,11 +1708,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|Lst
-modifier|*
-name|targs
-decl_stmt|;
-comment|/* target nodes to create -- passed to Make_Init */
 name|Boolean
 name|outOfDate
 init|=
@@ -1763,11 +1776,6 @@ argument_list|(
 literal|"MACHINE_CPU"
 argument_list|)
 decl_stmt|;
-name|Lst
-modifier|*
-name|sysMkPath
-decl_stmt|;
-comment|/* Path of sys.mk */
 name|char
 modifier|*
 name|cp
@@ -2051,29 +2059,9 @@ operator|=
 literal|"unknown"
 expr_stmt|;
 block|}
-name|create
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
-name|makefiles
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
-name|envFirstVars
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
 name|expandVars
 operator|=
 name|TRUE
-expr_stmt|;
-name|variables
-operator|=
-name|Lst_Init
-argument_list|()
 expr_stmt|;
 name|beSilent
 operator|=
@@ -2468,6 +2456,7 @@ name|curdir
 condition|)
 name|Dir_AddDir
 argument_list|(
+operator|&
 name|dirSearchPath
 argument_list|,
 name|curdir
@@ -2543,6 +2532,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|create
 argument_list|)
 condition|)
@@ -2557,6 +2547,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|create
 argument_list|)
 init|;
@@ -2607,6 +2598,7 @@ if|if
 condition|(
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|sysIncPath
 argument_list|)
 condition|)
@@ -2657,6 +2649,7 @@ condition|)
 block|{
 name|Dir_AddDir
 argument_list|(
+operator|&
 name|sysIncPath
 argument_list|,
 name|start
@@ -2673,6 +2666,7 @@ literal|'\0'
 expr_stmt|;
 name|Dir_AddDir
 argument_list|(
+operator|&
 name|sysIncPath
 argument_list|,
 name|start
@@ -2688,21 +2682,27 @@ operator|!
 name|noBuiltins
 condition|)
 block|{
+comment|/* Path of sys.mk */
+name|Lst
+name|sysMkPath
+init|=
+name|Lst_Initializer
+argument_list|(
+name|sysMkPath
+argument_list|)
+decl_stmt|;
 name|LstNode
 modifier|*
 name|ln
 decl_stmt|;
-name|sysMkPath
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
 name|Dir_Expand
 argument_list|(
 name|_PATH_DEFSYSMK
 argument_list|,
+operator|&
 name|sysIncPath
 argument_list|,
+operator|&
 name|sysMkPath
 argument_list|)
 expr_stmt|;
@@ -2710,6 +2710,7 @@ if|if
 condition|(
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|sysMkPath
 argument_list|)
 condition|)
@@ -2724,6 +2725,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|sysMkPath
 argument_list|,
 name|NULL
@@ -2751,12 +2753,21 @@ name|ln
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|Lst_Destroy
+argument_list|(
+operator|&
+name|sysMkPath
+argument_list|,
+name|free
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|makefiles
 argument_list|)
 condition|)
@@ -2769,6 +2780,7 @@ name|ln
 operator|=
 name|Lst_Find
 argument_list|(
+operator|&
 name|makefiles
 argument_list|,
 name|NULL
@@ -2949,6 +2961,7 @@ expr_stmt|;
 comment|/* Add directory to search path */
 name|Dir_AddDir
 argument_list|(
+operator|&
 name|dirSearchPath
 argument_list|,
 name|path
@@ -3002,6 +3015,7 @@ condition|(
 operator|!
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|variables
 argument_list|)
 condition|)
@@ -3016,6 +3030,7 @@ name|ln
 operator|=
 name|Lst_First
 argument_list|(
+operator|&
 name|variables
 argument_list|)
 init|;
@@ -3131,23 +3146,35 @@ block|}
 else|else
 block|{
 comment|/* 		 * Have now read the entire graph and need to make a list of targets 		 * to create. If none was given on the command line, we consult the 		 * parsing module to find the main target(s) to create. 		 */
+name|Lst
+name|targs
+init|=
+name|Lst_Initializer
+argument_list|(
+name|targs
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|Lst_IsEmpty
 argument_list|(
+operator|&
 name|create
 argument_list|)
 condition|)
-name|targs
-operator|=
 name|Parse_MainName
-argument_list|()
+argument_list|(
+operator|&
+name|targs
+argument_list|)
 expr_stmt|;
 else|else
-name|targs
-operator|=
 name|Targ_FindList
 argument_list|(
+operator|&
+name|targs
+argument_list|,
+operator|&
 name|create
 argument_list|,
 name|TARG_CREATE
@@ -3181,6 +3208,7 @@ name|outOfDate
 operator|=
 name|Make_Run
 argument_list|(
+operator|&
 name|targs
 argument_list|)
 expr_stmt|;
@@ -3190,6 +3218,7 @@ block|{
 comment|/* 			 * Compat_Init will take care of creating all the targets as 			 * well as initializing the module. 			 */
 name|Compat_Run
 argument_list|(
+operator|&
 name|targs
 argument_list|)
 expr_stmt|;
@@ -3200,6 +3229,7 @@ expr_stmt|;
 block|}
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|targs
 argument_list|,
 name|NOFREE
@@ -3208,6 +3238,7 @@ expr_stmt|;
 block|}
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|variables
 argument_list|,
 name|NOFREE
@@ -3215,6 +3246,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|makefiles
 argument_list|,
 name|NOFREE
@@ -3222,6 +3254,7 @@ argument_list|)
 expr_stmt|;
 name|Lst_Destroy
 argument_list|(
+operator|&
 name|create
 argument_list|,
 name|free
@@ -3547,6 +3580,7 @@ name|Dir_FindFile
 argument_list|(
 name|fname
 argument_list|,
+operator|&
 name|parseIncPath
 argument_list|)
 expr_stmt|;
@@ -3561,6 +3595,7 @@ name|Dir_FindFile
 argument_list|(
 name|fname
 argument_list|,
+operator|&
 name|sysIncPath
 argument_list|)
 expr_stmt|;
