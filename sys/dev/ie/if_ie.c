@@ -458,9 +458,6 @@ name|iereset
 parameter_list|(
 name|int
 name|unit
-parameter_list|,
-name|int
-name|dummy
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3181,8 +3178,6 @@ expr_stmt|;
 name|iereset
 argument_list|(
 name|unit
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -4397,8 +4392,6 @@ expr_stmt|;
 name|iereset
 argument_list|(
 name|unit
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5516,13 +5509,9 @@ name|void
 name|iereset
 parameter_list|(
 name|unit
-parameter_list|,
-name|dummy
 parameter_list|)
 name|int
 name|unit
-decl_stmt|,
-name|dummy
 decl_stmt|;
 block|{
 name|int

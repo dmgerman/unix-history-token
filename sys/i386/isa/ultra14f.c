@@ -148,6 +148,24 @@ begin_comment
 comment|/*KERNEL */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NetBSD
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|timeout_func_t
+name|timeout_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2315,6 +2333,9 @@ comment|/* whatever it was, it'll timeout */
 block|}
 name|untimeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|uha_timeout
 argument_list|,
 operator|(
@@ -5017,6 +5038,9 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|uha_timeout
 argument_list|,
 operator|(
@@ -5349,6 +5373,9 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|uha_timeout
 argument_list|,
 operator|(

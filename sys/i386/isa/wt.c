@@ -4399,6 +4399,9 @@ expr_stmt|;
 comment|/* Some controllers seem to lose dma interrupts too often. 		 * To make the tape stream we need 1 tick timeout. */
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|wtimer
 argument_list|,
 operator|(

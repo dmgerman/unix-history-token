@@ -147,6 +147,24 @@ begin_comment
 comment|/*KERNEL */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NetBSD
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|timeout_func_t
+name|timeout_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -3119,6 +3137,9 @@ condition|)
 block|{
 name|untimeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|bt_timeout
 argument_list|,
 operator|(
@@ -6048,6 +6069,9 @@ condition|)
 block|{
 name|timeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|bt_timeout
 argument_list|,
 operator|(
@@ -6203,13 +6227,14 @@ operator|(
 name|caddr_t
 operator|)
 name|ccb
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * because we are polling, take out the timeout entry 		 * bt_timeout made 		 */
 name|untimeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|bt_timeout
 argument_list|,
 operator|(
@@ -6283,8 +6308,6 @@ operator|(
 name|caddr_t
 operator|)
 name|ccb
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6514,6 +6537,9 @@ expr_stmt|;
 comment|/* 2 secs for the abort */
 name|timeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|bt_timeout
 argument_list|,
 operator|(

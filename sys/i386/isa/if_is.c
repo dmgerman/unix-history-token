@@ -1044,9 +1044,6 @@ name|is_reset
 parameter_list|(
 name|int
 name|unit
-parameter_list|,
-name|int
-name|uban
 parameter_list|)
 block|{
 name|int
@@ -1470,8 +1467,6 @@ expr_stmt|;
 name|is_reset
 argument_list|(
 name|unit
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2914,8 +2909,6 @@ expr_stmt|;
 name|is_reset
 argument_list|(
 name|unit
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2949,8 +2942,6 @@ expr_stmt|;
 name|is_reset
 argument_list|(
 name|unit
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3458,8 +3449,6 @@ block|{
 name|is_reset
 argument_list|(
 name|unit
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return;
