@@ -99,7 +99,24 @@ name|cpu_critical_fork_exit
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+name|curthread
+operator|->
+name|td_md
+operator|.
+name|md_savecrit
+operator|=
+name|__set_cpsr_c
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|&
+operator|~
+name|I32_bit
+expr_stmt|;
+block|}
 end_function
 
 end_unit
