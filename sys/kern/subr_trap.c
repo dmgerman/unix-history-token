@@ -581,38 +581,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-comment|/* 		 * As a diagnostic tool we make sure that td->td_ucred 		 * is NULL while we are in user space. This is 		 * because theoreticaly this field is only defined 		 * while the thread is in the kernel. Making it NULL 		 * will immediatly trap invalid usage of this field. 		 * In practice however we keep the reference to the ucred 		 * because it's almost always going to be the same cred we will 		 * need at the next syscall, and it can be expensive 		 * to keep dropping and reacquiring the reference. 		 * We thus stash it away elsewhere until we return 		 * to the kernel, where we bring it back. If  		 * DIAGNOSTIC is not defined we don't bother with 		 * making it NULL, and just leave it in place. 		 * (don't remove this comment without removing the pointers 		 * to it in sys/proc.h, trap.c, kern/kern_fork.c and here.) 		 */
-if|if
-condition|(
-name|td
-operator|->
-name|td_ucred
-condition|)
-name|panic
-argument_list|(
-literal|"ast:thread got a cred before reaching AST"
-argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_ucred
-operator|=
-name|td
-operator|->
-name|td_ucred_cache
-expr_stmt|;
-name|td
-operator|->
-name|td_ucred_cache
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DIAGNOSTIC */
 if|if
 condition|(
 name|td
@@ -778,35 +746,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
-comment|/* see comment above */
-if|if
-condition|(
-name|td
-operator|->
-name|td_ucred_cache
-condition|)
-name|panic
+name|cred_free_thread
 argument_list|(
-literal|"ast:thread already has cached ucred"
+name|td
 argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_ucred_cache
-operator|=
-name|td
-operator|->
-name|td_ucred
-expr_stmt|;
-name|td
-operator|->
-name|td_ucred
-operator|=
-name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
 name|s
 operator|=
 name|cpu_critical_enter
