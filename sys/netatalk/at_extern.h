@@ -228,10 +228,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*extern int	ddp_output	__P(( struct ddpcb *ddp, struct mbuf *m));*/
-end_comment
-
 begin_endif
 endif|#
 directive|endif

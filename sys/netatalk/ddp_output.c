@@ -127,7 +127,6 @@ end_decl_stmt
 
 begin_function
 name|int
-comment|/*ddp_output( struct ddpcb *ddp, struct mbuf *m)*/
 name|ddp_output
 parameter_list|(
 name|struct
