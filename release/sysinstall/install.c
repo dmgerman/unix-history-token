@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.26 1995/10/12 07:35:33 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.27 1995/10/12 08:00:16 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -102,6 +102,16 @@ name|Chunk
 modifier|*
 modifier|*
 name|rdev
+parameter_list|,
+name|Chunk
+modifier|*
+modifier|*
+name|sdev
+parameter_list|,
+name|Chunk
+modifier|*
+modifier|*
+name|udev
 parameter_list|)
 block|{
 name|Device
@@ -134,6 +144,12 @@ name|i
 decl_stmt|;
 operator|*
 name|rdev
+operator|=
+operator|*
+name|sdev
+operator|=
+operator|*
+name|udev
 operator|=
 name|rootdev
 operator|=
@@ -297,7 +313,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"WARNING:  You have more than one root device set?!\nUsing the first one found."
+literal|"WARNING:  You have more than one root device set?!\n"
+literal|"Using the first one found."
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -305,6 +322,20 @@ block|}
 name|rootdev
 operator|=
 name|c2
+expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Found rootdev at %s!\n"
+argument_list|,
+name|rootdev
+operator|->
+name|name
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -336,7 +367,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"WARNING:  You have more than one /usr filesystem.\nUsing the first one found."
+literal|"WARNING:  You have more than one /usr filesystem.\n"
+literal|"Using the first one found."
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -344,6 +376,20 @@ block|}
 name|usrdev
 operator|=
 name|c2
+expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Found usrdev at %s!\n"
+argument_list|,
+name|usrdev
+operator|->
+name|name
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -469,26 +515,25 @@ name|swapdev
 operator|=
 name|c2
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Found swapdev at %s!\n"
+argument_list|,
+name|swapdev
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
 block|}
 block|}
-block|}
-if|if
-condition|(
-operator|!
-name|rootdev
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"No root device found - you must label a partition as /\n in the label editor."
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
 block|}
 operator|*
 name|rdev
@@ -498,18 +543,45 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|swapdev
+name|rootdev
 condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"No swap devices found - you must create at least one\nswap partition."
+literal|"No root device found - you must label a partition as /\n"
+literal|"in the label editor."
 argument_list|)
 expr_stmt|;
 return|return
 name|FALSE
 return|;
 block|}
+operator|*
+name|sdev
+operator|=
+name|swapdev
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|swapdev
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"No swap devices found - you must create at least one\n"
+literal|"swap partition."
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+operator|*
+name|udev
+operator|=
+name|usrdev
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -517,7 +589,10 @@ name|usrdev
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"WARNING:  No /usr filesystem found.  This is not technically\nan error if your root filesystem is big enough (or you later\nintend to get your /usr filesystem over NFS), but it may otherwise\ncause you trouble and is not recommended procedure if you don't know what you are doing!"
+literal|"WARNING:  No /usr filesystem found.  This is not technically\n"
+literal|"an error if your root filesystem is big enough (or you later\n"
+literal|"intend to mount your /usr filesystem over NFS), but it may otherwise\n"
+literal|"cause you trouble if you're not exactly sure what you are doing!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -589,27 +664,40 @@ condition|(
 name|msgYesNo
 argument_list|(
 literal|"Last Chance!  Are you SURE you want continue the installation?\n\n"
-literal|"If you're running this on an existing system, we STRONGLY\n"
-literal|"encourage you to make proper backups before proceeding.\n"
-literal|"We take no responsibility for lost disk contents!"
+literal|"If you're running this on a disk with data you wish to save\n"
+literal|"then WE STRONGLY ENCOURAGE YOU TO MAKE PROPER BACKUPS before\n"
+literal|"proceeding!\n\n"
+literal|"We can take no responsibility for lost disk contents!"
 argument_list|)
 condition|)
 return|return
 name|FALSE
 return|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|diskPartitionWrite
 argument_list|(
 name|NULL
 argument_list|)
+operator|!=
+name|RET_SUCCESS
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"installInitial:  Unable to write disk partition information."
+argument_list|)
 expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 if|if
 condition|(
-operator|!
 name|installFilesystems
 argument_list|()
+operator|!=
+name|RET_SUCCESS
 condition|)
 block|{
 name|msgConfirm
@@ -1002,6 +1090,10 @@ argument_list|(
 name|int
 argument_list|)
 decl_stmt|;
+name|struct
+name|termios
+name|foo
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -1075,6 +1167,63 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|signal
+argument_list|(
+name|SIGTTOU
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tcgetattr
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|foo
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|foo
+operator|.
+name|c_cc
+index|[
+name|VERASE
+index|]
+operator|=
+literal|'\010'
+expr_stmt|;
+if|if
+condition|(
+name|tcsetattr
+argument_list|(
+name|fd
+argument_list|,
+name|TCSANOW
+argument_list|,
+operator|&
+name|foo
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: Unable to set erase character.\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"WARNING: Unable to get terminal attributes!\n"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"When you're finished with this shell, please type exit.\n"
@@ -1274,10 +1423,10 @@ name|msgYesNo
 argument_list|(
 literal|"Since you're running the express installation, a few\n"
 literal|"post-configuration questions will be asked at this point.\n\n"
-literal|"Our packages collection contains many useful things, from\n"
+literal|"Our packages collection contains many useful utilities, from\n"
 literal|"text editors to WEB servers, and is definitely worth browsing\n"
-literal|"through, even if you don't install any of it for now.\n\n"
-literal|"Would you like to browse a selection of additional packaged\n"
+literal|"through even if you don't install any of it for now.\n\n"
+literal|"Would you like to browse the selection of packaged\n"
 literal|"software at this time?"
 argument_list|)
 condition|)
@@ -1334,6 +1483,9 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1343,6 +1495,10 @@ condition|)
 return|return
 name|RET_FAIL
 return|;
+name|i
+operator|=
+name|RET_SUCCESS
+expr_stmt|;
 if|if
 condition|(
 name|RunningAsInit
@@ -1355,9 +1511,11 @@ argument_list|()
 operator|==
 name|RET_FAIL
 condition|)
-return|return
+name|i
+operator|=
 name|RET_FAIL
-return|;
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|configFstab
@@ -1365,14 +1523,13 @@ argument_list|()
 operator|==
 name|RET_FAIL
 condition|)
-return|return
+name|i
+operator|=
 name|RET_FAIL
-return|;
-block|}
+expr_stmt|;
+elseif|else
 if|if
 condition|(
-name|RunningAsInit
-operator|&&
 operator|!
 name|root_extract
 argument_list|()
@@ -1380,15 +1537,22 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Failed to load the ROOT distribution.  Please correct\nthis problem and try again."
+literal|"Failed to load the ROOT distribution.  Please correct\n"
+literal|"this problem and try again."
 argument_list|)
 expr_stmt|;
-return|return
+name|i
+operator|=
 name|RET_FAIL
-return|;
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
+name|i
+operator|!=
+name|RET_FAIL
+operator|&&
 name|distExtractAll
 argument_list|(
 name|NULL
@@ -1396,18 +1560,25 @@ argument_list|)
 operator|==
 name|RET_FAIL
 condition|)
-return|return
+name|i
+operator|=
 name|RET_FAIL
-return|;
+expr_stmt|;
 if|if
 condition|(
-operator|!
+name|i
+operator|!=
+name|RET_FAIL
+operator|&&
 name|installFixup
 argument_list|()
+operator|!=
+name|RET_SUCCESS
 condition|)
-return|return
+name|i
+operator|=
 name|RET_FAIL
-return|;
+expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -1420,10 +1591,17 @@ block|{
 if|if
 condition|(
 name|Dists
+operator|||
+name|i
+operator|==
+name|RET_FAIL
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"Installation completed with some errors.  You may wish\nto scroll through the debugging messages on ALT-F2 with the scroll-lock\nfeature.  Press [ENTER] to return to the installation menu."
+literal|"Installation completed with some errors.  You may wish to\n"
+literal|"scroll through the debugging messages on ALT-F2 with the\n"
+literal|"scroll-lock feature.  Press [ENTER] to return to the\n"
+literal|"installation menu."
 argument_list|)
 expr_stmt|;
 else|else
@@ -1434,13 +1612,13 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|RET_SUCCESS
+name|i
 return|;
 block|}
 end_function
 
 begin_function
-name|Boolean
+name|int
 name|installFixup
 parameter_list|(
 name|void
@@ -1714,7 +1892,7 @@ comment|/* Go newfs and/or mount all the filesystems we've been asked to */
 end_comment
 
 begin_function
-name|Boolean
+name|int
 name|installFilesystems
 parameter_list|(
 name|void
@@ -1736,6 +1914,12 @@ name|c2
 decl_stmt|,
 modifier|*
 name|rootdev
+decl_stmt|,
+modifier|*
+name|swapdev
+decl_stmt|,
+modifier|*
+name|usrdev
 decl_stmt|;
 name|Device
 modifier|*
@@ -1746,14 +1930,24 @@ name|PartInfo
 modifier|*
 name|p
 decl_stmt|;
-name|Boolean
-name|RootReadOnly
-decl_stmt|;
 name|char
 name|dname
 index|[
 literal|40
 index|]
+decl_stmt|;
+specifier|extern
+name|int
+name|MakeDevChunk
+argument_list|(
+name|Chunk
+operator|*
+name|c
+argument_list|,
+name|char
+operator|*
+name|n
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -1762,10 +1956,16 @@ name|checkLabels
 argument_list|(
 operator|&
 name|rootdev
+argument_list|,
+operator|&
+name|swapdev
+argument_list|,
+operator|&
+name|usrdev
 argument_list|)
 condition|)
 return|return
-name|FALSE
+name|RET_FAIL
 return|;
 name|p
 operator|=
@@ -1781,13 +1981,48 @@ name|command_clear
 argument_list|()
 expr_stmt|;
 comment|/* First, create and mount the root device */
-name|MakeDevChunk
+name|sprintf
+argument_list|(
+name|dname
+argument_list|,
+literal|"/dev/%s"
+argument_list|,
+name|rootdev
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|MakeDev
 argument_list|(
 name|rootdev
 argument_list|,
 literal|"/dev"
 argument_list|)
+operator|||
+operator|!
+name|file_readable
+argument_list|(
+name|dname
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to make device node for %s in /dev!\n"
+literal|"The installation will be aborted."
+argument_list|,
+name|rootdev
+operator|->
+name|name
+argument_list|)
 expr_stmt|;
+return|return
+name|RET_FAIL
+return|;
+block|}
 if|if
 condition|(
 name|strcmp
@@ -1835,7 +2070,7 @@ name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"%s /dev/%s"
+literal|"%s /dev/r%s"
 argument_list|,
 name|p
 operator|->
@@ -1853,7 +2088,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to make new root filesystem on /dev/%s!\n"
+literal|"Unable to make new root filesystem on /dev/r%s!\n"
 literal|"Command returned status %d"
 argument_list|,
 name|rootdev
@@ -1864,28 +2099,22 @@ name|i
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+name|RET_FAIL
 return|;
 block|}
-name|RootReadOnly
-operator|=
-name|FALSE
-expr_stmt|;
 block|}
 else|else
 block|{
-name|RootReadOnly
-operator|=
-name|TRUE
-expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Warning:  You have selected a Read-Only root device\nand may be unable to find the appropriate device entries on it\nif it is from an older pre-slice version of FreeBSD."
+literal|"Warning:  You have selected a Read-Only root device and\n"
+literal|"and may be unable to find the appropriate device entries\n"
+literal|"on it if it is from an older pre-slice version of FreeBSD."
 argument_list|)
 expr_stmt|;
 name|msgNotify
 argument_list|(
-literal|"Checking integrity of existing %s filesystem"
+literal|"Checking integrity of existing %s filesystem."
 argument_list|,
 name|rootdev
 operator|->
@@ -1896,7 +2125,7 @@ name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"fsck -y /dev/%s"
+literal|"fsck -y /dev/r%s"
 argument_list|,
 name|rootdev
 operator|->
@@ -1909,9 +2138,14 @@ name|i
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"Warning: fsck returned status off %d - this partition may be\nunsafe to use."
+literal|"Warning: fsck returned status of %d for /dev/r%s.\n"
+literal|"This partition may be unsafe to use."
 argument_list|,
 name|i
+argument_list|,
+name|rootdev
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -1944,7 +2178,7 @@ name|dname
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+name|RET_FAIL
 return|;
 block|}
 comment|/* Now buzz through the rest of the partitions and mount them too */
@@ -2014,22 +2248,14 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+name|RET_FAIL
 return|;
 block|}
-comment|/* Make the proper device mount points in /mnt/dev */
 if|if
 condition|(
-operator|!
-operator|(
-name|RootReadOnly
-operator|&&
-name|disk
-operator|==
-name|rootdev
+name|p
 operator|->
-name|disk
-operator|)
+name|newfs
 condition|)
 block|{
 name|Mkdir
@@ -2039,9 +2265,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|MakeDevDisk
+name|MakeDevChunk
 argument_list|(
 name|disk
+operator|->
+name|chunks
 argument_list|,
 literal|"/mnt/dev"
 argument_list|)
@@ -2271,8 +2499,9 @@ name|c1
 operator|->
 name|private
 operator|&&
-operator|!
-name|RootReadOnly
+name|p
+operator|->
+name|newfs
 condition|)
 block|{
 name|char
@@ -2313,6 +2542,10 @@ block|}
 comment|/* Copy the boot floppy's dev files */
 if|if
 condition|(
+name|p
+operator|->
+name|newfs
+operator|&&
 name|vsystem
 argument_list|(
 literal|"find -x /dev | cpio -pdmv /mnt"
@@ -2325,7 +2558,7 @@ literal|"Couldn't clone the /dev files!"
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+name|RET_FAIL
 return|;
 block|}
 name|command_sort
@@ -2335,7 +2568,7 @@ name|command_execute
 argument_list|()
 expr_stmt|;
 return|return
-name|TRUE
+name|RET_SUCCESS
 return|;
 block|}
 end_function

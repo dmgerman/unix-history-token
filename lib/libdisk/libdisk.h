@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.19 1995/06/11 19:29:35 rgrimes Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.19.2.1 1995/09/20 10:43:03 jkh Exp $  *  */
 end_comment
 
 begin_define
@@ -661,7 +661,23 @@ comment|/* This one creates a partition inside the given parent of the given 	 *
 end_comment
 
 begin_function_decl
-name|void
+name|int
+name|MakeDev
+parameter_list|(
+name|struct
+name|chunk
+modifier|*
+name|c
+parameter_list|,
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|MakeDevDisk
 parameter_list|(
 name|struct

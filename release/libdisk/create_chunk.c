@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.21 1995/06/11 19:29:33 rgrimes Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.21.2.1 1995/09/20 10:43:02 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -1458,11 +1458,13 @@ operator|*=
 literal|10
 expr_stmt|;
 name|unit
-operator|=
+operator|+=
+operator|(
 operator|*
 name|p
 operator|-
 literal|'0'
+operator|)
 expr_stmt|;
 name|p
 operator|++
@@ -1536,11 +1538,13 @@ operator|*=
 literal|10
 expr_stmt|;
 name|slice
-operator|=
+operator|+=
+operator|(
 operator|*
 name|p
 operator|-
 literal|'0'
+operator|)
 expr_stmt|;
 name|p
 operator|++
@@ -1658,6 +1662,8 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|mknod
 argument_list|(
 name|buf
@@ -1673,7 +1679,20 @@ argument_list|,
 name|min
 argument_list|)
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"mknod"
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 operator|*
@@ -1696,6 +1715,8 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|mknod
 argument_list|(
 name|buf
@@ -1711,7 +1732,20 @@ argument_list|,
 name|min
 argument_list|)
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"mknod"
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 name|sprintf
 argument_list|(
@@ -1731,6 +1765,8 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|mknod
 argument_list|(
 name|buf
@@ -1746,7 +1782,20 @@ argument_list|,
 name|min
 argument_list|)
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"mknod"
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 return|return
 literal|1
 return|;
@@ -1754,7 +1803,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|MakeDevChunk
 parameter_list|(
 name|struct
@@ -1767,19 +1816,32 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+name|int
+name|i
+init|=
+literal|1
+decl_stmt|;
+if|if
+condition|(
+operator|!
 name|MakeDev
 argument_list|(
 name|c1
 argument_list|,
 name|path
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|c1
 operator|->
 name|next
 condition|)
+name|i
+operator|=
 name|MakeDevChunk
 argument_list|(
 name|c1
@@ -1795,6 +1857,8 @@ name|c1
 operator|->
 name|part
 condition|)
+name|i
+operator||=
 name|MakeDevChunk
 argument_list|(
 name|c1
@@ -1804,11 +1868,14 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
+return|return
+name|i
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|MakeDevDisk
 parameter_list|(
 name|struct
@@ -1821,6 +1888,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+return|return
 name|MakeDevChunk
 argument_list|(
 name|d
@@ -1829,7 +1897,7 @@ name|chunks
 argument_list|,
 name|path
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
