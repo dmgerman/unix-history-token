@@ -228,11 +228,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	The driver interface for read/write uses a block  *	of memory in the ISA I/O memory space allocated via  *	an ioctl setting.  */
-end_comment
-
-begin_comment
-comment|/* XXX this should be in pcic */
+comment|/*  *	The driver interface for read/write uses a block  *	of memory in the ISA I/O memory space allocated via  *	an ioctl setting.  *  *	Now that we have different bus attachments, we should really  *	use a better algorythm to allocate memory.  */
 end_comment
 
 begin_decl_stmt
@@ -448,7 +444,6 @@ modifier|*
 name|slt
 parameter_list|)
 block|{
-comment|/* XXX Need to store pccarddev in slt. */
 name|device_t
 name|pccarddev
 decl_stmt|;
