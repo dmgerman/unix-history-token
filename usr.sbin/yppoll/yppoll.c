@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"yppoll.c,v 1.2 1993/08/02 17:57:20 mycroft Exp"
+literal|"$Id: yppoll.c,v 1.3 1997/10/27 12:30:30 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,13 +50,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -82,25 +101,17 @@ directive|include
 file|<rpcsvc/ypclnt.h>
 end_include
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\typpoll [-h host] [-d domainname] mapname\n"
+literal|"usage: yppoll [-h host] [-d domainname] mapname\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -109,7 +120,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -144,15 +155,6 @@ name|master
 decl_stmt|;
 name|int
 name|order
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 name|int
 name|c
@@ -248,12 +250,11 @@ name|r
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"No such map %s. Reason: %s\n"
+literal|"no such map %s. Reason: %s"
 argument_list|,
 name|inmap
 argument_list|,
@@ -263,12 +264,6 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"Map %s has order number %d. %s"
@@ -306,12 +301,11 @@ name|r
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"No such map %s. Reason: %s\n"
+literal|"no such map %s. Reason: %s"
 argument_list|,
 name|inmap
 argument_list|,
@@ -321,12 +315,6 @@ name|r
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"The master server is %s.\n"
