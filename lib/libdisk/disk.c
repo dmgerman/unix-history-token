@@ -251,11 +251,17 @@ name|device
 index|[
 literal|64
 index|]
+decl_stmt|,
+modifier|*
+name|buf
 decl_stmt|;
 name|struct
 name|disk
 modifier|*
 name|d
+decl_stmt|;
+name|u_long
+name|sector_size
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -316,13 +322,9 @@ condition|(
 operator|!
 name|d
 condition|)
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|return
+name|NULL
+return|;
 name|memset
 argument_list|(
 name|d
@@ -479,7 +481,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* XXX --- ds.dss_slice[WHOLE_DISK_SLCIE].ds.size of MO disk is wrong!!! */
+comment|/* XXX --- ds.dss_slice[WHOLE_DISK_SLICE].ds.size of MO disk is wrong!!! */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -522,6 +524,76 @@ name|ds_size
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* determine media sector size */
+if|if
+condition|(
+operator|(
+name|buf
+operator|=
+name|malloc
+argument_list|(
+name|MAX_SEC_SIZE
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+for|for
+control|(
+name|sector_size
+operator|=
+name|MIN_SEC_SIZE
+init|;
+name|sector_size
+operator|<=
+name|MAX_SEC_SIZE
+condition|;
+name|sector_size
+operator|*=
+literal|2
+control|)
+block|{
+if|if
+condition|(
+name|read
+argument_list|(
+name|fd
+argument_list|,
+name|buf
+argument_list|,
+name|sector_size
+argument_list|)
+operator|==
+name|sector_size
+condition|)
+block|{
+name|d
+operator|->
+name|sector_size
+operator|=
+name|sector_size
+expr_stmt|;
+break|break;
+block|}
+block|}
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sector_size
+operator|>
+name|MAX_SEC_SIZE
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* could not determine sector size */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -537,6 +609,8 @@ argument_list|(
 name|fd
 argument_list|,
 literal|1
+argument_list|,
+name|sector_size
 argument_list|)
 expr_stmt|;
 else|#
@@ -548,6 +622,8 @@ argument_list|(
 name|fd
 argument_list|,
 literal|0
+argument_list|,
+name|sector_size
 argument_list|)
 expr_stmt|;
 name|dp
@@ -2195,13 +2271,9 @@ condition|(
 operator|!
 name|d2
 condition|)
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|return
+name|NULL
+return|;
 operator|*
 name|d2
 operator|=
@@ -2699,13 +2771,9 @@ if|if
 condition|(
 name|error
 condition|)
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"sysctlbyname(\"kern.disks\") failed"
-argument_list|)
-expr_stmt|;
+return|return
+name|NULL
+return|;
 name|k
 operator|=
 literal|0
@@ -2973,12 +3041,13 @@ block|{
 ifdef|#
 directive|ifdef
 name|PC98
-comment|/* XXX - assumes sector size of 512 */
 if|if
 condition|(
 name|bootipl_size
 operator|%
-literal|512
+name|d
+operator|->
+name|sector_size
 operator|!=
 literal|0
 condition|)
@@ -3033,13 +3102,7 @@ name|d
 operator|->
 name|bootipl
 condition|)
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|return;
 name|memcpy
 argument_list|(
 name|d
@@ -3052,12 +3115,13 @@ name|bootipl_size
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX - assumes sector size of 512 */
 if|if
 condition|(
 name|bootmenu_size
 operator|%
-literal|512
+name|d
+operator|->
+name|sector_size
 operator|!=
 literal|0
 condition|)
@@ -3112,13 +3176,7 @@ name|d
 operator|->
 name|bootmenu
 condition|)
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|return;
 name|memcpy
 argument_list|(
 name|d
@@ -3133,12 +3191,13 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* XXX - assumes sector size of 512 */
 if|if
 condition|(
 name|s
 operator|%
-literal|512
+name|d
+operator|->
+name|sector_size
 operator|!=
 literal|0
 condition|)
@@ -3193,13 +3252,7 @@ name|d
 operator|->
 name|bootmgr
 condition|)
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|return;
 name|memcpy
 argument_list|(
 name|d
@@ -3218,7 +3271,7 @@ block|}
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|Set_Boot_Blocks
 parameter_list|(
 name|struct
@@ -3272,13 +3325,10 @@ name|d
 operator|->
 name|boot1
 condition|)
-name|barfout
-argument_list|(
+return|return
+operator|-
 literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|;
 name|memcpy
 argument_list|(
 name|d
@@ -3321,13 +3371,10 @@ name|d
 operator|->
 name|boot2
 condition|)
-name|barfout
-argument_list|(
+return|return
+operator|-
 literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|;
 name|memcpy
 argument_list|(
 name|d
@@ -3378,13 +3425,10 @@ name|d
 operator|->
 name|boot1
 condition|)
-name|barfout
-argument_list|(
+return|return
+operator|-
 literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|;
 name|memcpy
 argument_list|(
 name|d
@@ -3400,6 +3444,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+literal|0
+return|;
 block|}
 end_function
 

@@ -450,13 +450,9 @@ condition|(
 operator|!
 name|c2
 condition|)
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|return
+name|NULL
+return|;
 operator|*
 name|c2
 operator|=
@@ -640,13 +636,9 @@ condition|(
 operator|!
 name|ct
 condition|)
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|return
+name|__LINE__
+return|;
 name|memset
 argument_list|(
 name|ct
@@ -770,13 +762,9 @@ condition|(
 operator|!
 name|cs
 condition|)
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|return
+name|__LINE__
+return|;
 name|memset
 argument_list|(
 name|cs
@@ -876,13 +864,9 @@ condition|(
 operator|!
 name|cs
 condition|)
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|return
+name|__LINE__
+return|;
 operator|*
 name|cs
 operator|=
@@ -1248,13 +1232,9 @@ condition|(
 operator|!
 name|c1
 condition|)
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|return
+name|__LINE__
+return|;
 name|memset
 argument_list|(
 name|c1
@@ -1280,13 +1260,9 @@ condition|(
 operator|!
 name|c2
 condition|)
-name|barfout
-argument_list|(
-literal|1
-argument_list|,
-literal|"malloc failed"
-argument_list|)
-expr_stmt|;
+return|return
+name|__LINE__
+return|;
 name|memset
 argument_list|(
 name|c2

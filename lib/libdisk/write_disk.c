@@ -150,6 +150,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* XXX: A lot of hardcoded 512s probably should be foo->sector_size;         I'm not sure which, so I leave it like it worked before. --schweikh */
+end_comment
+
 begin_function
 name|int
 name|Write_FreeBSD
@@ -241,6 +245,8 @@ name|offset
 argument_list|,
 name|new
 argument_list|)
+argument_list|,
+literal|512
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -879,6 +885,8 @@ operator|+
 literal|512
 operator|*
 name|i
+argument_list|,
+literal|512
 argument_list|)
 expr_stmt|;
 block|}
@@ -1333,6 +1341,10 @@ literal|1
 argument_list|,
 name|d1
 argument_list|)
+argument_list|,
+name|d1
+operator|->
+name|sector_size
 argument_list|)
 expr_stmt|;
 else|#
@@ -1349,6 +1361,10 @@ literal|0
 argument_list|,
 name|d1
 argument_list|)
+argument_list|,
+name|d1
+operator|->
+name|sector_size
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2333,6 +2349,10 @@ argument_list|,
 name|d1
 operator|->
 name|bootipl
+argument_list|,
+name|d1
+operator|->
+name|sector_size
 argument_list|)
 expr_stmt|;
 name|mbr
@@ -2347,6 +2367,10 @@ literal|1
 argument_list|,
 name|d1
 argument_list|)
+argument_list|,
+name|d1
+operator|->
+name|sector_size
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -2433,6 +2457,10 @@ name|d1
 argument_list|)
 argument_list|,
 name|mbr
+argument_list|,
+name|d1
+operator|->
+name|sector_size
 argument_list|)
 expr_stmt|;
 if|if
@@ -2449,7 +2477,9 @@ literal|0
 init|;
 name|i
 operator|*
-literal|512
+name|d1
+operator|->
+name|sector_size
 operator|<
 name|d1
 operator|->
@@ -2478,8 +2508,14 @@ name|bootmenu
 index|[
 name|i
 operator|*
-literal|512
+name|d1
+operator|->
+name|sector_size
 index|]
+argument_list|,
+name|d1
+operator|->
+name|sector_size
 argument_list|)
 expr_stmt|;
 else|#
@@ -2496,6 +2532,10 @@ literal|0
 argument_list|,
 name|d1
 argument_list|)
+argument_list|,
+name|d1
+operator|->
+name|sector_size
 argument_list|)
 expr_stmt|;
 if|if
@@ -2569,6 +2609,10 @@ name|d1
 argument_list|)
 argument_list|,
 name|mbr
+argument_list|,
+name|d1
+operator|->
+name|sector_size
 argument_list|)
 expr_stmt|;
 if|if
@@ -2581,7 +2625,9 @@ name|d1
 operator|->
 name|bootmgr_size
 operator|>
-literal|512
+name|d1
+operator|->
+name|sector_size
 condition|)
 for|for
 control|(
@@ -2591,7 +2637,9 @@ literal|1
 init|;
 name|i
 operator|*
-literal|512
+name|d1
+operator|->
+name|sector_size
 operator|<=
 name|d1
 operator|->
@@ -2618,8 +2666,14 @@ name|bootmgr
 index|[
 name|i
 operator|*
-literal|512
+name|d1
+operator|->
+name|sector_size
 index|]
+argument_list|,
+name|d1
+operator|->
+name|sector_size
 argument_list|)
 expr_stmt|;
 endif|#
