@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.37 (Berkeley) %G%"
+literal|"@(#)mount.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1021,6 +1021,44 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * If -t flag has not been specified, and spec 		 * contains either a ':' or a '@' then assume that 		 * an NFS filesystem is being specified ala Sun. 		 */
+if|if
+condition|(
+name|vfslist
+operator|==
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+literal|0
+operator|&&
+operator|(
+name|index
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|':'
+argument_list|)
+operator|||
+name|index
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'@'
+argument_list|)
+operator|)
+condition|)
+name|mnttype
+operator|=
+name|MOUNT_NFS
+expr_stmt|;
 name|ret
 operator|=
 name|mountfs
