@@ -102,18 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -162,6 +150,19 @@ name|ng_eiface_cmdlist
 index|[]
 init|=
 block|{
+block|{
+name|NGM_EIFACE_COOKIE
+block|,
+name|NGM_EIFACE_GET_IFNAME
+block|,
+literal|"getifname"
+block|,
+name|NULL
+block|,
+operator|&
+name|ng_parse_string_type
+block|}
+block|,
 block|{
 name|NGM_EIFACE_COOKIE
 block|,
@@ -967,7 +968,7 @@ comment|/* Set flags */
 case|case
 name|SIOCSIFFLAGS
 case|:
-comment|/* 		 * If the interface is marked up and stopped, then 		 * start it. If it is marked down and running, 		 * then stop it. 		 */
+comment|/* 		 * If the interface is marked up and stopped, then start it. 		 * If it is marked down and running, then stop it. 		 */
 if|if
 condition|(
 name|ifr
@@ -1088,9 +1089,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
 name|splx
 argument_list|(
 name|s
@@ -1158,7 +1156,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * We simply relay the packet to the ether hook, if it is connected.  * We have been throughthe netgraph locking an are guaranteed to   * be the only code running in this node at this time.  */
+comment|/*  * We simply relay the packet to the "ether" hook, if it is connected.  * We have been through the netgraph locking and are guaranteed to  * be the only code running in this node at this time.  */
 end_comment
 
 begin_function
@@ -1276,7 +1274,7 @@ name|IFF_OACTIVE
 expr_stmt|;
 return|return;
 block|}
-comment|/* Berkeley packet filter 	 * Pass packet to bpf if there is a listener. 	 * XXX is this safe? locking? 	 */
+comment|/* 	 * Berkeley packet filter. 	 * Pass packet to bpf if there is a listener. 	 * XXX is this safe? locking? 	 */
 name|BPF_MTAP
 argument_list|(
 name|ifp
@@ -1550,13 +1548,11 @@ name|priv
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
-block|}
 name|bzero
 argument_list|(
 name|priv
@@ -1699,7 +1695,13 @@ operator||
 name|IFF_MULTICAST
 operator|)
 expr_stmt|;
-comment|/* 	 * Give this node name * bzero(ifname, sizeof(ifname)); 	 * sprintf(ifname, "if%s", ifp->if_xname); (void) 	 * ng_name_node(node, ifname); 	 */
+if|#
+directive|if
+literal|0
+comment|/* Give this node name */
+block|bzero(ifname, sizeof(ifname)); 	sprintf(ifname, "if%s", ifp->if_xname); 	(void)ng_name_node(node, ifname);
+endif|#
+directive|endif
 comment|/* Attach the interface */
 name|ether_ifattach
 argument_list|(
@@ -1820,6 +1822,7 @@ name|hook_p
 name|lasthook
 parameter_list|)
 block|{
+specifier|const
 name|priv_p
 name|priv
 init|=
@@ -2008,23 +2011,13 @@ block|}
 case|case
 name|NGM_EIFACE_GET_IFNAME
 case|:
-block|{
-name|struct
-name|ng_eiface_ifname
-modifier|*
-name|arg
-decl_stmt|;
 name|NG_MKRESPONSE
 argument_list|(
 name|resp
 argument_list|,
 name|msg
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|arg
-argument_list|)
+name|IFNAMSIZ
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2042,37 +2035,20 @@ name|ENOMEM
 expr_stmt|;
 break|break;
 block|}
-name|arg
-operator|=
-operator|(
-expr|struct
-name|ng_eiface_ifname
-operator|*
-operator|)
+name|strlcpy
+argument_list|(
 name|resp
 operator|->
 name|data
-expr_stmt|;
-name|strlcpy
-argument_list|(
-name|arg
-operator|->
-name|ngif_name
 argument_list|,
 name|ifp
 operator|->
 name|if_xname
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|arg
-operator|->
-name|ngif_name
-argument_list|)
+name|IFNAMSIZ
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|NGM_EIFACE_GET_IFADDRS
 case|:
@@ -2254,7 +2230,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Recive data from a hook. Pass the packet to the ether_input routine.  */
+comment|/*  * Receive data from a hook. Pass the packet to the ether_input routine.  */
 end_comment
 
 begin_function
@@ -2269,6 +2245,7 @@ name|item_p
 name|item
 parameter_list|)
 block|{
+specifier|const
 name|priv_p
 name|priv
 init|=
@@ -2302,7 +2279,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* Meta-data ends its life here... */
 name|NG_FREE_ITEM
 argument_list|(
 name|item
@@ -2377,7 +2353,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * the node.  */
+comment|/*  * Shutdown processing.  */
 end_comment
 
 begin_function
@@ -2389,6 +2365,7 @@ name|node_p
 name|node
 parameter_list|)
 block|{
+specifier|const
 name|priv_p
 name|priv
 init|=
@@ -2481,6 +2458,7 @@ name|hook_p
 name|hook
 parameter_list|)
 block|{
+specifier|const
 name|priv_p
 name|priv
 init|=
