@@ -2278,17 +2278,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
 if|if
 condition|(
 name|DITEM_STATUS
@@ -2404,17 +2396,9 @@ expr_stmt|;
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
 name|msgConfirm
 argument_list|(
 literal|"In the next menu, you will need to set up a DOS-style (\"fdisk\") partitioning\n"
@@ -2470,19 +2454,6 @@ goto|goto
 name|nodisks
 goto|;
 block|}
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
 name|msgConfirm
 argument_list|(
 literal|"Now you need to create BSD partitions inside of the fdisk partition(s)\n"
@@ -2497,7 +2468,7 @@ else|#
 directive|else
 name|msgConfirm
 argument_list|(
-literal|"Now you need to create BSD partitions on the disk which you are\n"
+literal|"First you need to create BSD partitions on the disk which you are\n"
 literal|"installing to.  If you have a reasonable amount of disk space (200MB or more)\n"
 literal|"and don't have any special requirements, simply use the (A)uto command to\n"
 literal|"allocate space automatically.  If you have more specific needs or just don't\n"
@@ -2756,6 +2727,9 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SYSCONS
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -2775,6 +2749,8 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -2793,7 +2769,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__i386__
+name|WITH_LINUX
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -2815,6 +2791,33 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|__alpha__
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to enable OSF/1 binary compatibility?"
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|configOSF1
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|WITH_MICE
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -2834,6 +2837,8 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Now would be a good time to checkpoint the configuration data */
 name|configRC_conf
 argument_list|()
