@@ -151,6 +151,17 @@ name|OFIOCFINDDEVICE
 value|_IOWR(OFIOC_BASE, 7, struct ofiocdesc)
 end_define
 
+begin_comment
+comment|/* Retrieve the size of a property. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFIOCGETPROPLEN
+value|_IOWR(OFIOC_BASE, 8, struct ofiocdesc)
+end_define
+
 begin_endif
 endif|#
 directive|endif
