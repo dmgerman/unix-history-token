@@ -379,7 +379,7 @@ operator|==
 literal|4
 condition|)
 block|{
-comment|/* sd */
+comment|/* da */
 name|disk_equips
 operator|=
 operator|*
@@ -415,8 +415,27 @@ name|i
 operator|++
 control|)
 block|{
-name|unit
-operator|+=
+name|int
+name|media
+init|=
+operator|(
+operator|(
+name|unsigned
+operator|*
+operator|)
+name|V
+argument_list|(
+literal|0xA1460
+argument_list|)
+operator|)
+index|[
+name|i
+index|]
+operator|&
+literal|0x1F
+decl_stmt|;
+if|if
+condition|(
 operator|(
 name|disk_equips
 operator|>>
@@ -424,6 +443,21 @@ name|i
 operator|)
 operator|&
 literal|1
+condition|)
+comment|/* HD */
+name|unit
+operator|++
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|media
+operator|==
+literal|7
+condition|)
+comment|/* MO */
+name|unit
+operator|++
 expr_stmt|;
 block|}
 block|}

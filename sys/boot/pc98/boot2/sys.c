@@ -1326,13 +1326,14 @@ name|PC98
 case|case
 literal|4
 case|:
-comment|/* sd */
+comment|/* da */
 name|dosdev_copy
 operator|=
 name|biosdrive
 operator||
-literal|0xa0
+literal|0xA0
 expr_stmt|;
+comment|/* SCSI HD or MO */
 else|#
 directive|else
 comment|/* IBM-PC */
@@ -1357,9 +1358,11 @@ name|PC98
 case|case
 literal|0
 case|:
+comment|/* wd */
 case|case
 literal|2
 case|:
+comment|/* 1200KB fd */
 name|dosdev_copy
 operator|=
 operator|(
@@ -1390,7 +1393,7 @@ name|PC98
 case|case
 literal|6
 case|:
-comment|/* 1.44MB FD */
+comment|/* 1440KB fd */
 name|dosdev_copy
 operator|=
 operator|(
