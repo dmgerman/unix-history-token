@@ -2368,6 +2368,15 @@ operator|.
 name|dp_typ
 operator|!=
 name|DOSPTYP_EXT
+operator|&&
+name|dp
+index|[
+literal|1
+index|]
+operator|.
+name|dp_typ
+operator|!=
+name|DOSPTYP_EXTLBA
 condition|)
 break|break;
 if|if
