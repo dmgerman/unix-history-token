@@ -6916,6 +6916,11 @@ case|case
 literal|0x42008c0e
 case|:
 comment|/* CTL0042 */
+name|s
+operator|=
+literal|"SB16 PnP"
+expr_stmt|;
+break|break;
 case|case
 literal|0x44008c0e
 case|:
@@ -6926,7 +6931,7 @@ case|:
 comment|/* CTL0045 */
 name|s
 operator|=
-literal|"SB16 PnP"
+literal|"Creative AWE64 PnP"
 expr_stmt|;
 break|break;
 case|case
