@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.25 (Berkeley) %G%"
+literal|"@(#)commands.c	1.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,6 +180,11 @@ operator|||
 name|defined
 argument_list|(
 name|tahoe
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|hp300
 argument_list|)
 end_if
 
