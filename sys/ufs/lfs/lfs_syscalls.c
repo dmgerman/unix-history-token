@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_syscalls.c	8.5 (Berkeley) 4/20/94  * $Id: lfs_syscalls.c,v 1.17 1997/02/22 09:47:24 peter Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_syscalls.c	8.10 (Berkeley) 5/14/95  * $Id: lfs_syscalls.c,v 1.18 1997/03/22 08:03:51 bde Exp $  */
 end_comment
 
 begin_include
@@ -190,6 +190,30 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|debug_cleaner
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|clean_vnlocked
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|clean_inlocked
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * lfs_markv:  *  * This will mark inodes and blocks dirty, so they are written into the log.  * It will block until all the blocks have been written.  The segment create  * time passed in the block_info and inode_info structures is used to decide  * if the data is valid for each block (in case some process dirtied a block  * or inode that is being cleaned between the determination that a block is  * live and the lfs_markv call).  *  *  0 on success  * -1/errno is return on error.  */
 end_comment
@@ -306,7 +330,7 @@ decl_stmt|;
 name|ino_t
 name|lastino
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|b_daddr
 decl_stmt|,
 name|v_daddr
@@ -529,7 +553,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
 block|}
@@ -581,7 +605,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
 name|INC_FINFO
@@ -733,6 +757,11 @@ operator|->
 name|bi_inode
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"lfs_markv VFS_VGET FAILED"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|lastino
@@ -880,7 +909,9 @@ name|bp
 operator|->
 name|b_data
 argument_list|,
-name|bsize
+name|blkp
+operator|->
+name|bi_size
 argument_list|)
 operator|)
 condition|)
@@ -947,7 +978,7 @@ argument_list|)
 operator|-
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
 block|}
@@ -1146,6 +1177,11 @@ modifier|*
 name|mntp
 decl_stmt|;
 name|struct
+name|ufsmount
+modifier|*
+name|ump
+decl_stmt|;
+name|struct
 name|vnode
 modifier|*
 name|vp
@@ -1157,7 +1193,7 @@ name|void
 modifier|*
 name|start
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|daddr
 decl_stmt|;
 name|int
@@ -1311,7 +1347,60 @@ operator|==
 name|LFS_UNUSED_LBN
 condition|)
 continue|continue;
-comment|/* Could be a deadlock ? */
+comment|/* 		 * A regular call to VFS_VGET could deadlock 		 * here.  Instead, we try an unlocked access. 		 */
+name|ump
+operator|=
+name|VFSTOUFS
+argument_list|(
+name|mntp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|vp
+operator|=
+name|ufs_ihashlookup
+argument_list|(
+name|ump
+operator|->
+name|um_dev
+argument_list|,
+name|blkp
+operator|->
+name|bi_inode
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|VOP_BMAP
+argument_list|(
+name|vp
+argument_list|,
+name|blkp
+operator|->
+name|bi_lbn
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|daddr
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|daddr
+operator|=
+name|LFS_UNUSED_DADDR
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|VFS_VGET
@@ -2086,7 +2175,7 @@ decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|daddr
 decl_stmt|;
 name|struct
@@ -2176,10 +2265,8 @@ name|v_flag
 operator|&
 name|VXLOCK
 condition|)
-name|printf
-argument_list|(
-literal|"Cleaned vnode VXLOCKED\n"
-argument_list|)
+name|clean_vnlocked
+operator|++
 expr_stmt|;
 name|ip
 operator|=
@@ -2191,16 +2278,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|lockstatus
+argument_list|(
+operator|&
 name|ip
 operator|->
-name|i_flags
-operator|&
-name|IN_LOCKED
-condition|)
-name|printf
-argument_list|(
-literal|"cleaned vnode locked\n"
+name|i_lock
 argument_list|)
+condition|)
+name|clean_inlocked
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -2213,7 +2300,6 @@ operator|&
 name|IN_MODIFIED
 operator|)
 condition|)
-block|{
 operator|++
 name|ump
 operator|->
@@ -2227,14 +2313,6 @@ name|i_flag
 operator||=
 name|IN_MODIFIED
 expr_stmt|;
-block|}
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|IN_MODIFIED
-expr_stmt|;
-comment|/* XXX why is this here? it's redundant */
 return|return
 operator|(
 literal|0
@@ -2407,27 +2485,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Inode was just read from user space or disk, make sure it's locked */
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|IN_LOCKED
-expr_stmt|;
-name|ip
-operator|->
-name|i_lockholder
-operator|=
-name|curproc
-operator|->
-name|p_pid
-expr_stmt|;
-name|ip
-operator|->
-name|i_lockcount
-operator|=
-literal|1
-expr_stmt|;
 comment|/* 	 * Initialize the vnode from the inode, check for aliases.  In all 	 * cases re-init ip, the underlying vnode/inode may have changed. 	 */
 if|if
 condition|(
