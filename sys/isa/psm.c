@@ -3162,7 +3162,7 @@ name|endprobe
 parameter_list|(
 name|v
 parameter_list|)
-value|{   if (bootverbose) 				\ 				--verbose;   				\                             kbdc_set_device_mask(sc->kbdc, mask);	\ 			    kbdc_lock(sc->kbdc, FALSE);			\  	                    free(sc, M_DEVBUF);                         \ 			    return (v);	     				\ 			}
+value|{   if (bootverbose) 				\ 				--verbose;   				\                             kbdc_set_device_mask(sc->kbdc, mask);	\ 			    kbdc_lock(sc->kbdc, FALSE);			\ 			    return (v);	     				\ 			}
 end_define
 
 begin_function
