@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass3.c,v 1.13 1996/04/29 21:02:32 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass3.c,v 1.14 1996/08/30 10:20:58 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -1369,13 +1369,6 @@ argument_list|)
 expr_stmt|;
 name|WRONG
 block|}
-name|rename
-argument_list|(
-name|buf
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -1384,7 +1377,7 @@ name|md5
 argument_list|,
 name|MD5File
 argument_list|(
-name|name
+name|buf
 argument_list|,
 name|md5_1
 argument_list|)
@@ -1406,6 +1399,19 @@ argument_list|)
 expr_stmt|;
 name|WRONG
 block|}
+if|if
+condition|(
+name|rename
+argument_list|(
+name|buf
+argument_list|,
+name|name
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|WRONG
 if|if
 condition|(
 name|settime
