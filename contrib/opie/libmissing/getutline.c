@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* getutline.c: A replacement for the getutline() function  %%% copyright-cmetz-96 This software is Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.32. Fixed check for fread() return 		value. 	Modified by cmetz for OPIE 2.31. If the OS won't tell us where 		_PATH_UTMP is, play the SVID game, then use 		Autoconf-discovered values. 	Created by cmetz for OPIE 2.3. */
+comment|/* getutline.c: A replacement for the getutline() function  %%% copyright-cmetz-96 This software is Copyright 1996-2001 by Craig Metz, All Rights Reserved. The Inner Net License Version 3 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.32. Fixed check for fread() return 		value. 	Modified by cmetz for OPIE 2.31. If the OS won't tell us where 		_PATH_UTMP is, play the SVID game, then use 		Autoconf-discovered values. 	Created by cmetz for OPIE 2.3. */
 end_comment
 
 begin_include
