@@ -433,7 +433,7 @@ name|res
 index|[
 name|i
 index|]
-operator|>
+operator|!=
 name|res
 index|[
 name|i
@@ -597,7 +597,7 @@ name|res
 index|[
 name|j
 index|]
-operator|>
+operator|!=
 name|res
 index|[
 name|j
