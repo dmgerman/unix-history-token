@@ -469,11 +469,27 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-name|panic
+name|printf
 argument_list|(
-literal|"illegal vnode op called"
+literal|"vop_panic[%s]\n"
+argument_list|,
+name|ap
+operator|->
+name|a_desc
+operator|->
+name|vdesc_name
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"Filesystem goof"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
