@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)wd.c	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)wd.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -16,12 +16,6 @@ name|NWD
 operator|>
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|WDDEBUG
-end_define
 
 begin_include
 include|#
@@ -820,10 +814,8 @@ literal|0
 operator|)
 condition|)
 block|{
-name|dprintf
+name|printf
 argument_list|(
-name|DDSK
-argument_list|,
 literal|"wdstrat: unit = %d, blkno = %d, bcount = %d\n"
 argument_list|,
 name|unit
@@ -837,11 +829,9 @@ operator|->
 name|b_bcount
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|pg
 argument_list|(
-name|DDSK
-argument_list|,
-literal|"wd:error in wdstrategy\n"
+literal|"wd:error in wdstrategy"
 argument_list|)
 expr_stmt|;
 name|bp
@@ -952,7 +942,6 @@ operator|>=
 name|MAXTRANSFER
 operator|*
 name|CLBYTES
-comment|/*|| 	    bp->b_bcount % du->dk_dd.dk_secsize*/
 condition|)
 block|{
 name|bp
@@ -960,21 +949,6 @@ operator|->
 name|b_flags
 operator||=
 name|B_ERROR
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"wdstrat: blknum %d bcount %d blkno %d "
-argument_list|,
-name|blknum
-argument_list|,
-name|bp
-operator|->
-name|b_bcount
-argument_list|,
-name|bp
-operator|->
-name|b_blkno
-argument_list|)
 expr_stmt|;
 goto|goto
 name|bad
@@ -1025,17 +999,6 @@ operator|>
 name|nblocks
 condition|)
 block|{
-name|dprintf
-argument_list|(
-name|DDSK
-argument_list|,
-literal|"blknum = %d, fssize = %d\n"
-argument_list|,
-name|blknum
-argument_list|,
-name|nblocks
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|blknum
@@ -2137,12 +2100,8 @@ block|{
 ifdef|#
 directive|ifdef
 name|WDDEBUG
-name|dprintf
+name|printf
 argument_list|(
-name|DDSK
-operator||
-name|DPAUSE
-argument_list|,
 literal|"error %x\n"
 argument_list|,
 name|wd_errstat
@@ -2407,6 +2366,8 @@ name|du
 operator|->
 name|dk_bc
 operator|-=
+literal|2
+operator|*
 name|chk
 expr_stmt|;
 while|while
@@ -2522,17 +2483,14 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* see if more to transfer */
+comment|/*if (du->dk_skip< (bp->b_bcount + 511) / 512) {*/
 if|if
 condition|(
 name|du
 operator|->
-name|dk_skip
-operator|<
-name|bp
-operator|->
-name|b_bcount
-operator|/
-literal|512
+name|dk_bc
+operator|>
+literal|0
 condition|)
 block|{
 name|wdstart
@@ -2691,15 +2649,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|dprintf
-argument_list|(
-name|DDSK
-argument_list|,
-literal|"wdopen %x\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
+comment|/*dprintf(DDSK,"wdopen %x\n",unit);*/
 if|if
 condition|(
 name|unit
@@ -3206,7 +3156,7 @@ name|cyloffset
 decl_stmt|;
 name|cyloffset
 operator|=
-literal|290
+literal|0
 expr_stmt|;
 name|du
 operator|=
@@ -4206,7 +4156,7 @@ name|val
 expr_stmt|;
 return|return
 operator|(
-literal|8704
+literal|12144
 operator|)
 return|;
 ifdef|#
@@ -4596,9 +4546,7 @@ directive|endif
 comment|/* compute disk address */
 argument|cylin = blknum / secpercyl; 		head = (blknum % secpercyl) / secpertrk; 		sector = blknum % secpertrk; 		sector++;
 comment|/* origin 1 */
-argument|cylin += cyloff +
-literal|290
-argument|;
+argument|cylin += cyloff;
 comment|/*  		 * See if the current block is in the bad block list. 		 * (If we have one.) 		 */
 argument|for (bt_ptr = dkbad[unit].bt_bad; 				bt_ptr->bt_cyl != -
 literal|1
