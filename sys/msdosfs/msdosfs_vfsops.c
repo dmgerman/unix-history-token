@@ -3905,11 +3905,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"lastr %d, id %lu, mount %p, op %p\n"
-argument_list|,
-name|vp
-operator|->
-name|v_lastr
+literal|"id %lu, mount %p, op %p\n"
 argument_list|,
 name|vp
 operator|->
