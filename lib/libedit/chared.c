@@ -2879,11 +2879,11 @@ name|ch
 condition|)
 block|{
 case|case
-literal|0010
+literal|'\010'
 case|:
 comment|/* Delete and backspace */
 case|case
-literal|0177
+literal|'\177'
 case|:
 if|if
 condition|(
@@ -2975,7 +2975,7 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-literal|0033
+literal|'\033'
 case|:
 comment|/* ESC */
 case|case

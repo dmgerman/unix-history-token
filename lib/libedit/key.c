@@ -2522,8 +2522,12 @@ name|ch
 decl_stmt|;
 block|{
 name|ch
-operator|&=
-literal|0xFF
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
+name|ch
 expr_stmt|;
 if|if
 condition|(
@@ -2571,7 +2575,7 @@ if|if
 condition|(
 name|ch
 operator|==
-literal|'\177'
+literal|0177
 condition|)
 name|buf
 index|[
@@ -2586,7 +2590,10 @@ index|[
 name|cnt
 index|]
 operator|=
+name|toascii
+argument_list|(
 name|ch
+argument_list|)
 operator||
 literal|0100
 expr_stmt|;
@@ -2899,8 +2906,11 @@ operator|*
 name|b
 operator|++
 operator|=
+name|toascii
+argument_list|(
 operator|*
 name|p
+argument_list|)
 operator||
 literal|0100
 expr_stmt|;
