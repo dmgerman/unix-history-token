@@ -907,6 +907,9 @@ name|server
 operator|.
 name|rm
 argument_list|,
+literal|0777
+operator|&
+operator|~
 name|mask
 argument_list|)
 condition|)

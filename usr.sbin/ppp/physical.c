@@ -1888,6 +1888,26 @@ operator|-
 literal|1
 condition|)
 block|{
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"%s: HUPing %d\n"
+argument_list|,
+name|p
+operator|->
+name|link
+operator|.
+name|name
+argument_list|,
+operator|(
+name|int
+operator|)
+name|p
+operator|->
+name|session_owner
+argument_list|)
+expr_stmt|;
 name|ID0kill
 argument_list|(
 name|p

@@ -252,7 +252,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|-
-literal|1
+literal|2
 return|;
 block|}
 name|dest
@@ -312,7 +312,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|-
-literal|1
+literal|2
 return|;
 block|}
 block|}
@@ -347,7 +347,8 @@ operator|<
 literal|0
 condition|)
 return|return
-name|sock
+operator|-
+literal|2
 return|;
 if|if
 condition|(
@@ -391,7 +392,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|-
-literal|1
+literal|2
 return|;
 block|}
 return|return
