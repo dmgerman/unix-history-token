@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)primes.c	8.3 (Berkeley) %G%"
+literal|"@(#)primes.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -618,11 +618,9 @@ argument_list|,
 literal|"stdin"
 argument_list|)
 expr_stmt|;
-name|errx
+name|exit
 argument_list|(
-literal|1
-argument_list|,
-literal|"stdin: unexpected end-of-file."
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
