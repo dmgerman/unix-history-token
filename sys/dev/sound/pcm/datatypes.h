@@ -623,6 +623,10 @@ name|arec
 decl_stmt|,
 name|fakechan
 decl_stmt|;
+name|int
+modifier|*
+name|ref
+decl_stmt|;
 name|unsigned
 name|playcount
 decl_stmt|,
