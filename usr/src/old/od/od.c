@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)od.c	5.8 (Berkeley) %G%"
+literal|"@(#)od.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4921,16 +4921,24 @@ argument_list|(
 name|stdin
 argument_list|)
 condition|)
+block|{
+comment|/* 		 * in case we're accessing a raw disk, 		 * we have to seek in multiples of a physical block. 		 */
 name|fseek
 argument_list|(
 name|stdin
 argument_list|,
 name|a
+operator|&
+literal|0xfffffe00L
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-else|else
+name|a
+operator|&=
+literal|0x1ffL
+expr_stmt|;
+block|}
 name|dumbseek
 argument_list|(
 name|stdin
