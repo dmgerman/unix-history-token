@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spell.c	4.2 %G%"
+literal|"@(#)spell.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1776,14 +1776,20 @@ end_decl_stmt
 
 begin_block
 block|{
+name|char
+name|c
+init|=
+operator|*
+name|ep
+decl_stmt|;
 operator|*
 name|ep
 operator|++
 operator|=
 literal|'e'
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
 name|strip
 argument_list|(
 name|ep
@@ -1794,6 +1800,23 @@ name|d
 argument_list|,
 name|lev
 argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+name|ep
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+name|c
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
