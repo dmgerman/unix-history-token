@@ -813,24 +813,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return 1 if process has special kernel digging privileges */
-end_comment
-
-begin_decl_stmt
-name|int
-name|procfs_kmemaccess
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* functions to check whether or not files should be displayed */
 end_comment
 
