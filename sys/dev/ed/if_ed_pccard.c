@@ -1107,6 +1107,19 @@ block|,
 block|{
 name|PCMCIA_CARD
 argument_list|(
+name|RACORE
+argument_list|,
+name|FASTENET
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|NE2000DVF_AX88X90
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
 name|RPTI
 argument_list|,
 name|EP400
@@ -3145,13 +3158,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|flags
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Error is %d\n"
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 if|if
