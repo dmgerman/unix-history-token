@@ -8730,11 +8730,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-specifier|static
-name|struct
-name|route
-name|ro
-decl_stmt|;
 name|int
 name|s
 init|=
@@ -8832,8 +8827,7 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-operator|&
-name|ro
+name|NULL
 argument_list|,
 name|IP_FORWARDING
 argument_list|,
