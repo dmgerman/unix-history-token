@@ -174,6 +174,17 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|int
+name|savedlineno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* saved line number */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|curFILE
@@ -5419,7 +5430,7 @@ name|str
 expr_stmt|;
 name|lineno
 operator|=
-literal|0
+name|savedlineno
 expr_stmt|;
 name|fname
 operator|=
@@ -6766,6 +6777,10 @@ name|free
 argument_list|(
 name|line
 argument_list|)
+expr_stmt|;
+name|savedlineno
+operator|=
+name|lineno
 expr_stmt|;
 do|do
 block|{
