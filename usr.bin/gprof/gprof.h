@@ -36,6 +36,23 @@ end_include
 begin_if
 if|#
 directive|if
+name|__alpha__
+end_if
+
+begin_include
+include|#
+directive|include
+file|"alpha.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|vax
 end_if
 
@@ -715,6 +732,7 @@ end_comment
 
 begin_decl_stmt
 name|unsigned
+name|long
 name|lowpc
 decl_stmt|,
 name|highpc

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gprof.c,v 1.8 1998/09/07 23:31:59 jdp Exp $"
+literal|"$Id: gprof.c,v 1.9 1999/05/23 00:37:54 jmz Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1901,14 +1901,25 @@ name|pcl
 operator|=
 name|lowpc
 operator|+
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|scale
 operator|*
 name|i
+argument_list|)
 expr_stmt|;
 name|pch
 operator|=
 name|lowpc
 operator|+
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|scale
 operator|*
 operator|(
@@ -1916,6 +1927,7 @@ name|i
 operator|+
 literal|1
 operator|)
+argument_list|)
 expr_stmt|;
 name|time
 operator|=
