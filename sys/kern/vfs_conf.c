@@ -900,22 +900,14 @@ name|__ia64__
 argument_list|)
 name|printf
 argument_list|(
-literal|"                       eg. ufs:%s%s\n"
-argument_list|,
-name|_PATH_DEV
-argument_list|,
-literal|"da0s1a"
+literal|"                       eg. ufs:da0s1a\n"
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
 name|printf
 argument_list|(
-literal|"                       eg. ufs:%s%s\n"
-argument_list|,
-name|_PATH_DEV
-argument_list|,
-literal|"da0a"
+literal|"                       eg. ufs:da0a\n"
 argument_list|)
 expr_stmt|;
 endif|#
