@@ -191,18 +191,91 @@ name|struct
 name|pccard_product
 name|mpp_product
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|mpp_ioalign
 decl_stmt|;
 comment|/* required alignment */
 name|int
 name|mpp_enet_maddr
 decl_stmt|;
+name|int
+name|mpp_flags
+decl_stmt|;
+define|#
+directive|define
+name|MBH10302
+value|0x1
+comment|/* Fujitsu MBH10302 */
 block|}
 name|fe_pccard_products
 index|[]
 init|=
 block|{
+comment|/* These need to be first */
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|FUJITSU2
+argument_list|,
+name|FMV_J181
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+name|MBH10302
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|FUJITSU2
+argument_list|,
+name|FMV_J182
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0xf2c
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|FUJITSU2
+argument_list|,
+name|FMV_J182A
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0x1cc
+block|}
+block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|FUJITSU2
+argument_list|,
+name|ITCFJ182A
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0x1cc
+block|}
+block|,
+comment|/* These need to be second */
 block|{
 name|PCMCIA_CARD
 argument_list|(
@@ -304,6 +377,8 @@ literal|0
 block|,
 operator|-
 literal|1
+block|,
+name|MBH10302
 block|}
 block|,
 comment|/* Sold by Eagle */
@@ -693,7 +768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	feunload - unload the driver and clear the table.  *	XXX TODO:  *	This is usually called when the card is ejected, but  *	can be caused by a modunload of a controller driver.  *	The idea is to reset the driver's view of the device  *	and ensure that any driver entry points such as  *	read and write do not hang.  */
+comment|/*  *	feunload - unload the driver and clear the table.  */
 end_comment
 
 begin_function
