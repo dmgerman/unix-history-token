@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)api.h	4.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)api.h	4.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -906,12 +906,60 @@ begin_comment
 comment|/*  * Now, it is somewhat of a pain, but we need to keep  * 8086 conventions about which of the "highlow"'s map  * into which of the "words".  */
 end_comment
 
-begin_struct
-struct|struct
-name|highlow
-block|{
-name|unsigned
-name|char
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_comment
+comment|/* Get ENDIAN from machine/endian.h */
+end_comment
+
+begin_comment
+comment|/* Determine endian'ess (if necessary) */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|BYTE_ORDER
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|BIG_ENDIAN
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LITTLE_ENDIAN
+value|1234
+end_define
+
+begin_comment
+comment|/* least-significant byte first (vax) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIG_ENDIAN
+value|4321
+end_define
+
+begin_comment
+comment|/* most-significant byte first (IBM, net) */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -923,25 +971,25 @@ name|defined
 argument_list|(
 name|ns32000
 argument_list|)
-name|al
-decl_stmt|,
-name|ah
-decl_stmt|,
-name|bl
-decl_stmt|,
-name|bh
-decl_stmt|,
-name|cl
-decl_stmt|,
-name|ch
-decl_stmt|,
-name|dl
-decl_stmt|,
-name|dh
-decl_stmt|;
+end_if
+
+begin_define
+define|#
+directive|define
+name|BYTE_ORDER
+value|LITTLE_ENDIAN
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* defined(vax) || defined(ns32000) */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -963,6 +1011,73 @@ name|defined
 argument_list|(
 name|pyr
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|gould
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|BYTE_ORDER
+value|BIG_ENDIAN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(sun) || defined(tahoe) || defined(ibm032) || defined(pyr) || defined(gould) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !(defined(BYTE_ORDER)&& defined(BIG_ENDIAN)) */
+end_comment
+
+begin_struct
+struct|struct
+name|highlow
+block|{
+name|unsigned
+name|char
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+name|al
+decl_stmt|,
+name|ah
+decl_stmt|,
+name|bl
+decl_stmt|,
+name|bh
+decl_stmt|,
+name|cl
+decl_stmt|,
+name|ch
+decl_stmt|,
+name|dl
+decl_stmt|,
+name|dh
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* BYTE_ORDER == LITTLE_ENDIAN */
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 name|ah
 operator|,
 name|al
@@ -981,7 +1096,7 @@ name|dl
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(sun) || defined(tahoe) || defined(ibm032) || defined(pyr) */
+comment|/* BYTE_ORDER == BIG_ENDIAN */
 block|}
 struct|;
 end_struct
