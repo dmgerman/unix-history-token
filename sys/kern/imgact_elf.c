@@ -2692,6 +2692,13 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 comment|/* 	 * Do we have a valid ELF header ? 	 */
@@ -2768,19 +2775,16 @@ name|e_phoff
 operator|)
 expr_stmt|;
 comment|/* 	 * From this point on, we may have resources that need to be freed. 	 */
-comment|/* 	 * Yeah, I'm paranoid.  There is every reason in the world to get 	 * VTEXT now since from here on out, there are places we can have 	 * a context switch.  Better safe than sorry; I really don't want 	 * the file to change while it's being loaded. 	 * 	 * XXX We can't really set this flag safely without the vnode lock. 	 */
-name|mp_fixme
+name|VOP_UNLOCK
 argument_list|(
-literal|"This needs the vnode lock to be safe."
-argument_list|)
-expr_stmt|;
 name|imgp
 operator|->
 name|vp
-operator|->
-name|v_vflag
-operator||=
-name|VV_TEXT
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3868,6 +3872,19 @@ literal|0
 expr_stmt|;
 name|fail
 label|:
+name|vn_lock
+argument_list|(
+name|imgp
+operator|->
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;

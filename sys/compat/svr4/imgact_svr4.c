@@ -183,6 +183,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -378,6 +385,17 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|VOP_UNLOCK
+argument_list|(
+name|imgp
+operator|->
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* copy in arguments and/or environment from old process */
 name|error
 operator|=
@@ -390,11 +408,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 comment|/*      * Destroy old process VM and create a new one (with a new stack)      */
 name|exec_new_vmspace
 argument_list|(
@@ -479,9 +495,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|fail
+goto|;
 name|error
 operator|=
 name|vm_mmap
@@ -527,9 +543,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|fail
+goto|;
 name|error
 operator|=
 name|copyout
@@ -583,9 +599,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|fail
+goto|;
 comment|/* 	 * remove write enable on the 'text' part 	 */
 name|error
 operator|=
@@ -615,9 +631,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 else|else
 block|{
@@ -682,11 +698,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -745,11 +759,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 comment|/* 	 * Allocate anon demand-zeroed area for uninitialized data 	 */
 if|if
 condition|(
@@ -801,11 +813,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -824,20 +834,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* Indicate that this file should not be modified */
-name|mp_fixme
-argument_list|(
-literal|"Unlocked vflag access."
-argument_list|)
-expr_stmt|;
-name|imgp
-operator|->
-name|vp
-operator|->
-name|v_vflag
-operator||=
-name|VV_TEXT
-expr_stmt|;
 block|}
 comment|/* Fill in process VM information */
 name|vmspace
@@ -914,9 +910,22 @@ operator|=
 operator|&
 name|svr4_sysvec
 expr_stmt|;
+name|fail
+label|:
+name|vn_lock
+argument_list|(
+name|imgp
+operator|->
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
