@@ -430,11 +430,6 @@ decl_stmt|;
 name|int
 name|env_argc
 decl_stmt|;
-specifier|extern
-name|FILE
-modifier|*
-name|rl_outstream
-decl_stmt|;
 comment|/* Initialize many variables. */
 name|compile_only
 operator|=
@@ -469,16 +464,10 @@ operator|=
 name|TRUE
 expr_stmt|;
 else|else
-block|{
 name|interactive
 operator|=
 name|FALSE
 expr_stmt|;
-name|rl_outstream
-operator|=
-name|stderr
-expr_stmt|;
-block|}
 name|quiet
 operator|=
 name|FALSE
@@ -695,6 +684,10 @@ name|rl_readline_name
 operator|=
 literal|"bc"
 expr_stmt|;
+if|if
+condition|(
+name|interactive
+condition|)
 name|rl_instream
 operator|=
 name|stdin
