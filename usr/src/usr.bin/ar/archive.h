@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  *	@(#)archive.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  *	@(#)archive.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -231,17 +231,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Print out any files that weren't in the archive. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ORPHANS
-value|{ \ 	if (*argv) { \ 		eval = 1; \ 		do { \ 			(void)fprintf(stderr, \ 			    "ar: %s: not found in archive.\n", *argv); \ 		} while (*++argv); \ 	} \ }
-end_define
-
-begin_comment
 comment|/* Header format strings. */
 end_comment
 
@@ -276,14 +265,99 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<sys/cdefs.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
+begin_decl_stmt
+name|__BEGIN_DECLS
+name|void
+name|close_archive
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|skipobj
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|copyfile
+name|__P
+argument_list|(
+operator|(
+name|CF
+operator|*
+operator|,
+name|off_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|get_header
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|open_archive
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|stat
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+name|int
+name|put_object
+name|__P
+argument_list|(
+operator|(
+name|CF
+operator|*
+operator|,
+expr|struct
+name|stat
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 end_unit
 
