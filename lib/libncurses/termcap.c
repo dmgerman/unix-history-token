@@ -901,7 +901,9 @@ operator|)
 return|;
 comment|/* resolve all use references */
 name|_nc_resolve_uses
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|)
 expr_stmt|;
 name|for_entry_list
 argument_list|(
