@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.10 1997/05/10 03:42:34 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.22.2.11 1997/05/11 10:25:08 brian Exp $  *  *	TODO:  *		o Add commands for traffic summary, version display, etc.  *		o Add signal handler for misc controls.  */
 end_comment
 
 begin_include
@@ -2118,7 +2118,7 @@ argument_list|(
 name|pid_filename
 argument_list|)
 argument_list|,
-literal|"%s/tun%d.pid"
+literal|"%stun%d.pid"
 argument_list|,
 name|_PATH_VARRUN
 argument_list|,
@@ -3327,7 +3327,9 @@ operator|!=
 name|TRUE
 operator|&&
 name|lostCarrier
-operator|&&
+condition|)
+if|if
+condition|(
 name|lostCarrier
 operator|<=
 name|VarReconnectTries
@@ -3352,6 +3354,22 @@ expr_stmt|;
 name|dial_up
 operator|=
 name|TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|LogPrintf
+argument_list|(
+name|LOG_PHASE_BIT
+argument_list|,
+literal|"Connection lost, maximum (%d) times\n"
+argument_list|,
+name|VarReconnectTries
+argument_list|)
+expr_stmt|;
+name|lostCarrier
+operator|=
+literal|0
 expr_stmt|;
 block|}
 comment|/*     * If Ip packet for output is enqueued and require dial up,      * Just do it!     */
