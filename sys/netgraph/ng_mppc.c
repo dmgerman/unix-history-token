@@ -627,6 +627,37 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETGRAPH_MPPC_ENCRYPTION
+end_ifdef
+
+begin_comment
+comment|/* Depend on separate rc4 module */
+end_comment
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|ng_mppc
+argument_list|,
+name|rc4
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Fixed bit pattern to weaken keysize down to 40 or 56 bits */
 end_comment
