@@ -816,7 +816,7 @@ name|strlcat
 argument_list|(
 name|buf
 argument_list|,
-literal|" path="
+literal|" handle="
 argument_list|,
 name|buflen
 argument_list|)
