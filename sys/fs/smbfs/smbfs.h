@@ -202,9 +202,18 @@ begin_struct
 struct|struct
 name|smbmount
 block|{
-name|struct
-name|smbfs_args
-name|sm_args
+comment|/* struct smbfs_args	sm_args; */
+name|uid_t
+name|sm_uid
+decl_stmt|;
+name|gid_t
+name|sm_gid
+decl_stmt|;
+name|mode_t
+name|sm_file_mode
+decl_stmt|;
+name|mode_t
+name|sm_dir_mode
 decl_stmt|;
 name|struct
 name|mount
@@ -221,7 +230,7 @@ name|ucred
 modifier|*
 name|sm_owner
 decl_stmt|;
-name|int
+name|u_int
 name|sm_flags
 decl_stmt|;
 name|long

@@ -8102,9 +8102,7 @@ name|dnp
 operator|->
 name|n_mount
 operator|->
-name|sm_args
-operator|.
-name|flags
+name|sm_flags
 operator|&
 name|SMBFS_MOUNT_NO_LONG
 operator|)

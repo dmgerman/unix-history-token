@@ -2124,9 +2124,7 @@ name|va_mode
 operator|=
 name|smp
 operator|->
-name|sm_args
-operator|.
-name|file_mode
+name|sm_file_mode
 expr_stmt|;
 comment|/* files access mode and type */
 block|}
@@ -2146,9 +2144,7 @@ name|va_mode
 operator|=
 name|smp
 operator|->
-name|sm_args
-operator|.
-name|dir_mode
+name|sm_dir_mode
 expr_stmt|;
 comment|/* files access mode and type */
 block|}
@@ -2177,9 +2173,7 @@ name|va_uid
 operator|=
 name|smp
 operator|->
-name|sm_args
-operator|.
-name|uid
+name|sm_uid
 expr_stmt|;
 comment|/* owner user id */
 name|va
@@ -2188,9 +2182,7 @@ name|va_gid
 operator|=
 name|smp
 operator|->
-name|sm_args
-operator|.
-name|gid
+name|sm_gid
 expr_stmt|;
 comment|/* owner group id */
 name|va
