@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pcb.h	4.4	81/02/26	*/
+comment|/*	pcb.h	4.5	81/05/14	*/
 end_comment
 
 begin_comment
@@ -66,9 +66,17 @@ decl_stmt|;
 name|int
 name|pcb_r12
 decl_stmt|;
+define|#
+directive|define
+name|pcb_ap
+value|pcb_r12
 name|int
 name|pcb_r13
 decl_stmt|;
+define|#
+directive|define
+name|pcb_fp
+value|pcb_r13
 name|int
 name|pcb_pc
 decl_stmt|;
