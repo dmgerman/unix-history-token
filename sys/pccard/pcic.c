@@ -1328,8 +1328,11 @@ name|long
 name|sys_addr
 init|=
 operator|(
-name|unsigned
-name|long
+name|uintptr_t
+operator|)
+operator|(
+name|void
+operator|*
 operator|)
 name|mp
 operator|->

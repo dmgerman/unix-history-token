@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	pccard.c - Interface code for PC-CARD controllers.  *  *	June 1995, Andrew McRae (andrew@mega.com.au)  *-------------------------------------------------------------------------  *  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pccard.c,v 1.61 1998/06/07 17:12:34 dfr Exp $  */
+comment|/*  *	pccard.c - Interface code for PC-CARD controllers.  *  *	June 1995, Andrew McRae (andrew@mega.com.au)  *-------------------------------------------------------------------------  *  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pccard.c,v 1.62 1998/06/18 15:32:09 bde Exp $  */
 end_comment
 
 begin_include
@@ -2687,6 +2687,13 @@ call|(
 name|caddr_t
 call|)
 argument_list|(
+name|void
+operator|*
+argument_list|)
+argument_list|(
+name|uintptr_t
+argument_list|)
+argument_list|(
 name|desc
 operator|->
 name|mem
@@ -3498,6 +3505,13 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|pccard_mem
 expr_stmt|;
 if|if
@@ -3787,6 +3801,13 @@ name|start
 operator|=
 operator|(
 name|caddr_t
+operator|)
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|pccard_mem
 expr_stmt|;
@@ -4626,12 +4647,19 @@ name|char
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|pccard_mem
 operator|+
 name|atdevbase
 operator|-
 name|IOM_BEGIN
-operator|)
+argument_list|)
 expr_stmt|;
 break|break;
 comment|/* 	 * Set power values. 	 */

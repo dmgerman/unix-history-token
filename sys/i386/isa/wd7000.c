@@ -2014,7 +2014,11 @@ operator|)
 name|PHYSTOKV
 argument_list|(
 operator|(
-name|long
+name|intptr_t
+operator|)
+operator|(
+name|void
+operator|*
 operator|)
 name|pc
 argument_list|)

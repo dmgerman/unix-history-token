@@ -2633,7 +2633,7 @@ operator|->
 name|raw_buf_phys
 operator|=
 operator|(
-name|u_long
+name|uintptr_t
 operator|)
 name|tmpbuf
 expr_stmt|;

@@ -5618,6 +5618,13 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|dmap
 operator|->
 name|raw_buf_phys
@@ -5648,6 +5655,13 @@ name|B_WRITE
 argument_list|,
 operator|(
 name|caddr_t
+operator|)
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|physaddr
 argument_list|,
