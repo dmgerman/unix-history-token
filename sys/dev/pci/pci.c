@@ -6094,9 +6094,6 @@ name|type
 operator|==
 name|SYS_RES_IRQ
 operator|)
-ifndef|#
-directive|ifndef
-name|__alpha__
 operator|&&
 operator|(
 name|cfg
@@ -6113,8 +6110,6 @@ name|intpin
 operator|!=
 literal|0
 operator|)
-endif|#
-directive|endif
 condition|)
 block|{
 name|cfg

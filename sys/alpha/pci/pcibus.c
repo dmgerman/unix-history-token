@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pcireg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pci/pcivar.h>
 end_include
 
@@ -359,11 +353,6 @@ name|int
 name|pin
 parameter_list|)
 block|{
-name|int
-name|intline
-init|=
-literal|255
-decl_stmt|;
 comment|/* 	 * Validate requested pin number. 	 */
 if|if
 condition|(
@@ -390,8 +379,8 @@ name|platform
 operator|.
 name|pci_intr_route
 condition|)
-name|intline
-operator|=
+return|return
+operator|(
 name|platform
 operator|.
 name|pci_intr_route
@@ -402,26 +391,12 @@ name|dev
 argument_list|,
 name|pin
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|intline
-operator|==
-literal|255
-condition|)
-name|intline
-operator|=
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-name|PCIR_INTLINE
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 return|return
-name|intline
+operator|(
+literal|255
+operator|)
 return|;
 block|}
 end_function
