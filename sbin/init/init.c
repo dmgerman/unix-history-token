@@ -5622,17 +5622,6 @@ decl_stmt|,
 modifier|*
 name|old_type
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|sessions
-condition|)
-return|return
-operator|(
-name|state_func_t
-operator|)
-name|multi_user
-return|;
 comment|/*  	 * mark all sessions for death, (!SE_PRESENT)  	 * as we find or create new ones they'll be marked as keepers, 	 * we'll later nuke all the ones not found in /etc/ttys 	 */
 for|for
 control|(
