@@ -783,7 +783,10 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
+name|htonl
+argument_list|(
 name|INADDR_ANY
+argument_list|)
 expr_stmt|;
 name|sock
 operator|=
