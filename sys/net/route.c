@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mrouting.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1549,31 +1543,18 @@ ifdef|#
 directive|ifdef
 name|INET
 comment|/* Multicast goop, grrr... */
-ifdef|#
-directive|ifdef
-name|MROUTING
 return|return
+name|mrt_ioctl
+condition|?
 name|mrt_ioctl
 argument_list|(
 name|req
 argument_list|,
 name|data
 argument_list|)
+else|:
+name|EOPNOTSUPP
 return|;
-else|#
-directive|else
-return|return
-name|mrt_ioctl
-argument_list|(
-name|req
-argument_list|,
-name|data
-argument_list|,
-name|p
-argument_list|)
-return|;
-endif|#
-directive|endif
 else|#
 directive|else
 comment|/* INET */
