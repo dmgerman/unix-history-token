@@ -2901,6 +2901,15 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
+name|ether_type
+operator|=
+name|ntohs
+argument_list|(
+name|eh
+operator|->
+name|ether_type
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -2931,9 +2940,22 @@ argument_list|(
 name|ifp
 argument_list|)
 operator|)
+operator|&&
+operator|!
+operator|(
+name|ether_type
+operator|==
+name|ETHERTYPE_VLAN
+operator|&&
+name|ifp
+operator|->
+name|if_nvlans
+operator|>
+literal|0
+operator|)
 condition|)
 block|{
-comment|/* 		 * Discard packet if upper layers shouldn't see it because it 		 * was unicast to a different Ethernet address. If the driver 		 * is working properly, then this situation can only happen 		 * when the interface is in promiscuous mode. 		 */
+comment|/* 		 * Discard packet if upper layers shouldn't see it because it 		 * was unicast to a different Ethernet address. If the driver 		 * is working properly, then this situation can only happen 		 * when the interface is in promiscuous mode. 		 * 		 * If VLANs are active, and this packet has a VLAN tag, do 		 * not drop it here but pass it on to the VLAN layer, to 		 * give them a chance to consider it as well (e. g. in case 		 * bridging is only active on a VLAN).  They will drop it if 		 * it's undesired. 		 */
 if|if
 condition|(
 operator|(
@@ -3175,15 +3197,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ether_type
-operator|=
-name|ntohs
-argument_list|(
-name|eh
-operator|->
-name|ether_type
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Handle protocols that expect to have the Ethernet header 	 * (and possibly FCS) intact. 	 */
 switch|switch
 condition|(
