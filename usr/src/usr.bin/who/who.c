@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)who.c	4.5 (Berkeley) %G%"
+literal|"@(#)who.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,7 +220,7 @@ name|getuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strncpy
 argument_list|(
 name|utmp
 operator|.
@@ -233,6 +233,8 @@ operator|->
 name|pw_name
 else|:
 literal|"?"
+argument_list|,
+name|NMAX
 argument_list|)
 expr_stmt|;
 name|strcpy

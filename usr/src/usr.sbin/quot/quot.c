@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)quot.c	4.7 (Berkeley) 83/08/16"
+literal|"@(#)quot.c	4.8 (Berkeley) 83/08/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -1981,7 +1981,7 @@ name|pw
 operator|->
 name|pw_name
 argument_list|,
-name|NUID
+name|NMAX
 argument_list|)
 expr_stmt|;
 name|endpwent
@@ -2061,7 +2061,7 @@ name|pw
 operator|->
 name|pw_name
 argument_list|,
-name|NUID
+name|NMAX
 argument_list|)
 expr_stmt|;
 return|return

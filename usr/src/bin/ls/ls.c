@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ls.c	4.18 (Berkeley) %G%"
+literal|"@(#)ls.c	4.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3718,6 +3718,25 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|NMAX
+value|(sizeof (utmp.ut_name))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCPYN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|strncpy(a, b, NMAX)
+end_define
+
+begin_define
+define|#
+directive|define
 name|NUID
 value|2048
 end_define
@@ -3727,13 +3746,6 @@ define|#
 directive|define
 name|NGID
 value|300
-end_define
-
-begin_define
-define|#
-directive|define
-name|NMAX
-value|(sizeof (utmp.ut_name))
 end_define
 
 begin_decl_stmt
@@ -3916,15 +3928,13 @@ name|pw
 operator|->
 name|pw_uid
 expr_stmt|;
-name|strncpy
+name|SCPYN
 argument_list|(
 name|outrangename
 argument_list|,
 name|pw
 operator|->
 name|pw_name
-argument_list|,
-name|NUID
 argument_list|)
 expr_stmt|;
 name|endpwent
@@ -3996,15 +4006,13 @@ name|pw
 operator|->
 name|pw_uid
 expr_stmt|;
-name|strncpy
+name|SCPYN
 argument_list|(
 name|outrangename
 argument_list|,
 name|pw
 operator|->
 name|pw_name
-argument_list|,
-name|NUID
 argument_list|)
 expr_stmt|;
 return|return
@@ -4028,7 +4036,7 @@ literal|0
 index|]
 condition|)
 continue|continue;
-name|strncpy
+name|SCPYN
 argument_list|(
 name|names
 index|[
@@ -4040,8 +4048,6 @@ argument_list|,
 name|pw
 operator|->
 name|pw_name
-argument_list|,
-name|NMAX
 argument_list|)
 expr_stmt|;
 if|if
@@ -4194,15 +4200,13 @@ name|gr
 operator|->
 name|gr_gid
 expr_stmt|;
-name|strncpy
+name|SCPYN
 argument_list|(
 name|outrangegroup
 argument_list|,
 name|gr
 operator|->
 name|gr_name
-argument_list|,
-name|NGID
 argument_list|)
 expr_stmt|;
 name|endgrent
@@ -4274,15 +4278,13 @@ name|gr
 operator|->
 name|gr_gid
 expr_stmt|;
-name|strncpy
+name|SCPYN
 argument_list|(
 name|outrangegroup
 argument_list|,
 name|gr
 operator|->
 name|gr_name
-argument_list|,
-name|NGID
 argument_list|)
 expr_stmt|;
 return|return
@@ -4306,7 +4308,7 @@ literal|0
 index|]
 condition|)
 continue|continue;
-name|strncpy
+name|SCPYN
 argument_list|(
 name|groups
 index|[
@@ -4318,8 +4320,6 @@ argument_list|,
 name|gr
 operator|->
 name|gr_name
-argument_list|,
-name|NMAX
 argument_list|)
 expr_stmt|;
 if|if
