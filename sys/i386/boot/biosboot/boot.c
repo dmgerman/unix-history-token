@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.14 1994/06/16 03:53:27 adam Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.15 1994/08/21 17:47:25 paul Exp $  */
 end_comment
 
 begin_comment
@@ -31,6 +31,12 @@ directive|include
 file|<sys/reboot.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/bootinfo.h>
+end_include
+
 begin_decl_stmt
 name|struct
 name|exec
@@ -39,13 +45,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|argv
-index|[
-literal|10
-index|]
-decl_stmt|,
-name|esym
+name|struct
+name|bootinfo_t
+name|bootinfo
 decl_stmt|;
 end_decl_stmt
 
@@ -114,21 +116,11 @@ literal|"\n>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\n"
 argument_list|,
 name|ouraddr
 argument_list|,
-name|argv
-index|[
-literal|7
-index|]
-operator|=
 name|memsize
 argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-name|argv
-index|[
-literal|8
-index|]
-operator|=
 name|memsize
 argument_list|(
 literal|1
@@ -248,21 +240,15 @@ decl_stmt|;
 comment|/* physical address.. not directly useable */
 name|long
 name|int
-name|addr0
+name|bootdev
+decl_stmt|;
+name|long
+name|int
+name|total
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-specifier|static
-name|int
-function_decl|(
-modifier|*
-name|x_entry
-function_decl|)
-parameter_list|()
-init|=
-literal|0
-function_decl|;
 name|unsigned
 name|char
 name|tmpbuf
@@ -271,20 +257,6 @@ literal|4096
 index|]
 decl_stmt|;
 comment|/* we need to load the first 4k here */
-name|argv
-index|[
-literal|3
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|argv
-index|[
-literal|4
-index|]
-operator|=
-literal|0
-expr_stmt|;
 name|read
 argument_list|(
 operator|&
@@ -327,19 +299,13 @@ operator|)
 name|head
 operator|.
 name|a_entry
-expr_stmt|;
-name|addr
-operator|=
-operator|(
-name|startaddr
 operator|&
-literal|0x00ffffff
-operator|)
+literal|0x00FFFFFF
 expr_stmt|;
 comment|/* some MEG boundary */
-name|addr0
-operator|=
 name|addr
+operator|=
+name|startaddr
 expr_stmt|;
 name|printf
 argument_list|(
@@ -566,18 +532,11 @@ name|a_bss
 argument_list|)
 expr_stmt|;
 block|}
-name|argv
-index|[
-literal|3
-index|]
-operator|=
-operator|(
 name|addr
 operator|+=
 name|head
 operator|.
 name|a_bss
-operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -716,10 +675,7 @@ endif|LOADSYMS
 comment|/********************************************************/
 comment|/* and note the end address of all this			*/
 comment|/********************************************************/
-name|argv
-index|[
-literal|4
-index|]
+name|total
 operator|=
 operator|(
 operator|(
@@ -748,13 +704,10 @@ name|printf
 argument_list|(
 literal|"total=0x%x "
 argument_list|,
-name|argv
-index|[
-literal|4
-index|]
+name|total
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  We now pass the various bootstrap parameters to the loaded 	 *  image via the argument list 	 *  (THIS IS A BIT OF HISTORY FROM MACH.. LEAVE FOR NOW) 	 *  arg1 = boot flags 	 *  arg2 = boot device 	 *  arg3 = start of symbol table (0 if not loaded) 	 *  arg4 = end of symbol table (0 if not loaded) 	 *  arg5 = transfer address from image 	 *  arg6 = transfer address for next image pointer 	 */
+comment|/* 	 * If we are booting from floppy prompt for a filesystem floppy 	 * before we call the kernel 	 */
 switch|switch
 condition|(
 name|maj
@@ -834,17 +787,7 @@ literal|4
 case|:
 break|break;
 block|}
-name|argv
-index|[
-literal|1
-index|]
-operator|=
-name|howto
-expr_stmt|;
-name|argv
-index|[
-literal|2
-index|]
+name|bootdev
 operator|=
 operator|(
 name|MAKEBOOTDEV
@@ -861,37 +804,6 @@ name|part
 argument_list|)
 operator|)
 expr_stmt|;
-name|argv
-index|[
-literal|5
-index|]
-operator|=
-operator|(
-name|head
-operator|.
-name|a_entry
-operator|&=
-literal|0xfffffff
-operator|)
-expr_stmt|;
-name|argv
-index|[
-literal|6
-index|]
-operator|=
-operator|(
-name|int
-operator|)
-operator|&
-name|x_entry
-expr_stmt|;
-name|argv
-index|[
-literal|0
-index|]
-operator|=
-literal|8
-expr_stmt|;
 comment|/****************************************************************/
 comment|/* copy that first page and overwrite any BIOS variables	*/
 comment|/****************************************************************/
@@ -900,13 +812,9 @@ argument_list|(
 literal|"entry point=0x%x\n"
 argument_list|,
 operator|(
-operator|(
 name|int
 operator|)
 name|startaddr
-operator|)
-operator|&
-literal|0xffffff
 argument_list|)
 expr_stmt|;
 comment|/* Under no circumstances overwrite precious BIOS variables! */
@@ -914,7 +822,7 @@ name|pcpy
 argument_list|(
 name|tmpbuf
 argument_list|,
-name|addr0
+name|startaddr
 argument_list|,
 literal|0x400
 argument_list|)
@@ -925,7 +833,7 @@ name|tmpbuf
 operator|+
 literal|0x500
 argument_list|,
-name|addr0
+name|startaddr
 operator|+
 literal|0x500
 argument_list|,
@@ -934,20 +842,64 @@ operator|-
 literal|0x500
 argument_list|)
 expr_stmt|;
-name|startprog
-argument_list|(
+name|bootinfo
+operator|.
+name|version
+operator|=
+literal|1
+expr_stmt|;
+name|bootinfo
+operator|.
+name|kernelname
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
 operator|(
 operator|(
 name|int
 operator|)
-name|startaddr
-operator|&
-literal|0xffffff
+name|name
+operator|+
+operator|(
+name|BOOTSEG
+operator|<<
+literal|4
 operator|)
+operator|)
+expr_stmt|;
+name|bootinfo
+operator|.
+name|nfs_diskless
+operator|=
+literal|0
+expr_stmt|;
+name|startprog
+argument_list|(
+operator|(
+name|int
+operator|)
+name|startaddr
 argument_list|,
-name|argv
+name|howto
+argument_list|,
+name|bootdev
+argument_list|,
+operator|(
+name|int
+operator|)
+operator|&
+name|bootinfo
+operator|+
+operator|(
+name|BOOTSEG
+operator|<<
+literal|4
+operator|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_block
 
