@@ -1278,6 +1278,17 @@ argument|&gp->provider
 argument_list|,
 argument|provider
 argument_list|)
+if|if
+condition|(
+operator|!
+operator|(
+name|pp
+operator|->
+name|flags
+operator|&
+name|G_PF_ORPHAN
+operator|)
+condition|)
 name|g_orphan_provider
 argument_list|(
 name|pp
