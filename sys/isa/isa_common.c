@@ -1604,12 +1604,15 @@ name|isa_config
 modifier|*
 name|cfg
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|reason
-init|=
-literal|"Empty ISA id_configs"
 decl_stmt|;
+name|reason
+operator|=
+literal|"Empty ISA id_configs"
+expr_stmt|;
 name|cfg
 operator|=
 name|malloc
