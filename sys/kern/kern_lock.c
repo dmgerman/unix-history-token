@@ -1001,23 +1001,34 @@ comment|/* fall into downgrade */
 case|case
 name|LK_DOWNGRADE
 case|:
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|lkp
 operator|->
 name|lk_lockholder
-operator|!=
+operator|==
 name|pid
-operator|||
+operator|&&
 name|lkp
 operator|->
 name|lk_exclusivecount
-operator|==
+operator|!=
 literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"lockmgr: not holding exclusive lock"
+argument_list|,
+operator|(
+literal|"lockmgr: not holding exclusive lock "
+literal|"(owner pid (%d) != pid (%d), exlcnt (%d) != 0"
+operator|,
+name|lkp
+operator|->
+name|lk_lockholder
+operator|,
+name|pid
+operator|,
+name|lkp
+operator|->
+name|lk_exclusivecount
+operator|)
 argument_list|)
 expr_stmt|;
 name|sharelock
