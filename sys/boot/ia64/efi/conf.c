@@ -123,7 +123,9 @@ name|file_formats
 index|[]
 init|=
 block|{
-comment|/*&ia64_elf, */
+operator|&
+name|ia64_elf
+block|,
 name|NULL
 block|}
 decl_stmt|;
