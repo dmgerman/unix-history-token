@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.30	83/01/23	*/
+comment|/*	sys_generic.c	5.31	83/02/18	*/
 end_comment
 
 begin_include
@@ -916,6 +916,30 @@ name|ILOCK
 argument_list|(
 name|ip
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+name|FAPPEND
+operator|&&
+name|rw
+operator|==
+name|UIO_WRITE
+condition|)
+name|uio
+operator|->
+name|uio_offset
+operator|=
+name|fp
+operator|->
+name|f_offset
+operator|=
+name|ip
+operator|->
+name|i_size
 expr_stmt|;
 name|u
 operator|.
