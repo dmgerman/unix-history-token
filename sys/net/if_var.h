@@ -508,6 +508,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|if_hwassist
+value|if_data.ifi_hwassist
+end_define
+
+begin_define
+define|#
+directive|define
 name|if_ipackets
 value|if_data.ifi_ipackets
 end_define

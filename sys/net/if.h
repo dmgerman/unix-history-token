@@ -127,13 +127,13 @@ name|ifi_noproto
 decl_stmt|;
 comment|/* destined for unsupported protocol */
 name|u_long
-name|ifi_recvtiming
+name|ifi_hwassist
 decl_stmt|;
-comment|/* usec spent receiving when timing */
+comment|/* HW offload capabilities */
 name|u_long
-name|ifi_xmittiming
+name|ifi_unused
 decl_stmt|;
-comment|/* usec spent xmitting when timing */
+comment|/* XXX was ifi_xmittiming */
 name|struct
 name|timeval
 name|ifi_lastchange
