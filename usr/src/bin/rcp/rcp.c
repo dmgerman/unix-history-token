@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.34 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,13 +97,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -115,7 +109,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_include
@@ -127,13 +133,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -157,7 +157,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -2293,8 +2299,9 @@ name|pflag
 condition|)
 block|{
 comment|/* 			 * Make it compatible with possible future 			 * versions expecting microseconds. 			 */
-name|amt
-operator|=
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -2328,7 +2335,10 @@ name|rem
 argument_list|,
 name|buf
 argument_list|,
-name|amt
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2346,8 +2356,9 @@ define|#
 directive|define
 name|MODEMASK
 value|(S_ISUID|S_ISGID|S_ISTXT|S_IRWXU|S_IRWXG|S_IRWXO)
-name|amt
-operator|=
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -2381,7 +2392,10 @@ name|rem
 argument_list|,
 name|buf
 argument_list|,
-name|amt
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2639,9 +2653,6 @@ name|dirent
 modifier|*
 name|dp
 decl_stmt|;
-name|int
-name|amt
-decl_stmt|;
 name|char
 modifier|*
 name|last
@@ -2712,8 +2723,9 @@ condition|(
 name|pflag
 condition|)
 block|{
-name|amt
-operator|=
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|path
@@ -2747,7 +2759,10 @@ name|rem
 argument_list|,
 name|path
 argument_list|,
-name|amt
+name|strlen
+argument_list|(
+name|path
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2766,8 +2781,9 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|amt
-operator|=
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|path
@@ -2799,7 +2815,10 @@ name|rem
 argument_list|,
 name|path
 argument_list|,
-name|amt
+name|strlen
+argument_list|(
+name|path
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4141,6 +4160,9 @@ name|wrerr
 operator|==
 name|NO
 operator|&&
+operator|(
+name|j
+operator|=
 name|write
 argument_list|(
 name|ofd
@@ -4151,13 +4173,26 @@ name|buf
 argument_list|,
 name|count
 argument_list|)
+operator|)
 operator|!=
 name|count
 condition|)
+block|{
 name|wrerr
 operator|=
 name|YES
 expr_stmt|;
+name|wrerrno
+operator|=
+name|j
+operator|>=
+literal|0
+condition|?
+name|EIO
+else|:
+name|errno
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ftruncate
@@ -4523,9 +4558,7 @@ name|rcmd
 argument_list|(
 name|host
 argument_list|,
-name|sp
-operator|->
-name|s_port
+name|port
 argument_list|,
 name|locuser
 argument_list|,
