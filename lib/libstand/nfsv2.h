@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: nfsv2.h,v 1.2 1996/02/26 23:05:23 gwr Exp $	*/
+comment|/* $FreeBSD$ /*	$NetBSD: nfsv2.h,v 1.2 1996/02/26 23:05:23 gwr Exp $	*/
 end_comment
 
 begin_comment
@@ -102,6 +102,13 @@ end_define
 begin_comment
 comment|/* Size in bytes of a block wrt fa_blocks */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_READDIRSIZE
+value|1024
+end_define
 
 begin_comment
 comment|/* Stat numbers for rpc returns */
