@@ -1570,16 +1570,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Set real uid 		 */
-if|if
-condition|(
-name|uid
-operator|!=
-name|pc
-operator|->
-name|p_ruid
-condition|)
-block|{ 		}
 comment|/* 		 * Set saved uid 		 * 		 * XXX always set saved uid even if not _POSIX_SAVED_IDS, as 		 * the security of seteuid() depends on it.  B.4.2.2 says it 		 * is important that we should do this. 		 */
 if|if
 condition|(
