@@ -66,8 +66,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netatm/atm_if.h>
+file|<netatm/kern_include.h>
 end_include
+
+begin_comment
+comment|/* XXX overkill, fixme! */
+end_comment
 
 begin_endif
 endif|#
@@ -148,14 +152,14 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|ifqueue
-name|at1intrq
+name|atintrq1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
 name|ifqueue
-name|at2intrq
+name|atintrq2
 decl_stmt|;
 end_decl_stmt
 
@@ -168,7 +172,7 @@ end_ifdef
 begin_decl_stmt
 name|struct
 name|ifqueue
-name|atmintrq
+name|atm_intrq
 decl_stmt|;
 end_decl_stmt
 
@@ -307,7 +311,7 @@ block|{
 name|AF_APPLETALK
 block|,
 operator|&
-name|at2intrq
+name|atintrq2
 block|,
 operator|&
 name|atintrq2_present
