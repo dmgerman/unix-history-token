@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993, 1994, 1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.0.1.4 1997/02/04 14:24:25 darrenr Exp $  */
+comment|/*  * (C)opyright 1993, 1994, 1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.0.2.6 1997/04/02 12:23:17 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,53 @@ define|#
 directive|define
 name|__IP_COMPAT_H__
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__P
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__P
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__P
+parameter_list|(
+name|x
+parameter_list|)
+value|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -49,6 +96,122 @@ parameter_list|)
 value|((m)->b_datap->db_type)
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysmacros.h>
+end_include
+
+begin_comment
+comment|/*  * because Solaris 2 defines these in two places :-/  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|IPOPT_EOL
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|IPOPT_NOP
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|IPOPT_LSRR
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|IPOPT_RR
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|IPOPT_SSRR
+end_undef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_KERNEL
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|RES_INIT
+end_undef
+
+begin_include
+include|#
+directive|include
+file|<inet/common.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inet/ip_ire.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|_KERNEL
+end_undef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<inet/common.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inet/ip_ire.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -77,6 +240,44 @@ define|#
 directive|define
 name|IP_OFFMASK
 value|0x1fff
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>
+literal|199306
+end_if
+
+begin_define
+define|#
+directive|define
+name|USE_QUAD_T
+end_define
+
+begin_define
+define|#
+directive|define
+name|U_QUAD_T
+value|u_quad_t
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|U_QUAD_T
+value|u_long
 end_define
 
 begin_endif
@@ -394,15 +595,66 @@ begin_comment
 comment|/* FINN */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/spl.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPFILTER_LKM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ACTUALLY_LKM_NOT_KERNEL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ACTUALLY_LKM_NOT_KERNEL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Build some macros and #defines to enable the same code to compile anywhere  * Well, that's the idea, anyway :-)  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -575,6 +827,21 @@ name|__SVR4
 argument_list|)
 end_if
 
+begin_decl_stmt
+specifier|extern
+name|ill_t
+modifier|*
+name|get_unit
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -736,19 +1003,35 @@ modifier|*
 name|qf_rqinfo
 decl_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|qf_inp
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*qf_inp
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|queue_t
+operator|*
+operator|,
+name|mblk_t
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|qf_outp
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*qf_outp
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|queue_t
+operator|*
+operator|,
+name|mblk_t
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 name|mblk_t
 modifier|*
 name|qf_m
@@ -854,9 +1137,13 @@ define|#
 directive|define
 name|KMALLOC
 parameter_list|(
-name|x
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
 parameter_list|)
-value|kmem_alloc((x), KM_NOSLEEP)
+value|(a) = (b)kmem_alloc((c), KM_NOSLEEP)
 end_define
 
 begin_define
@@ -879,9 +1166,13 @@ define|#
 directive|define
 name|KMALLOC
 parameter_list|(
-name|x
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
 parameter_list|)
-value|new_kmem_alloc((x), KMEM_NOSLEEP)
+value|(a) = (b)new_kmem_alloc((c), KMEM_NOSLEEP)
 end_define
 
 begin_endif
@@ -950,6 +1241,17 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
+operator|)
 end_if
 
 begin_include
@@ -992,7 +1294,7 @@ comment|/* __FreeBSD__ */
 end_comment
 
 begin_comment
-comment|/* ** #  define	KMALLOC(x)	kmem_alloc(kmem_map, (x)) ** #  define	KFREE(x)	kmem_free(kmem_map, (vm_offset_t)(x), \ 					  sizeof(*(x))) */
+comment|/* #  define	KMALLOC(a,b,c)	(a) = (b)kmem_alloc(kmem_map, (c)) #  define	KFREE(x)	kmem_free(kmem_map, (vm_offset_t)(x), \ 					  sizeof(*(x))) */
 end_comment
 
 begin_ifdef
@@ -1006,9 +1308,13 @@ define|#
 directive|define
 name|KMALLOC
 parameter_list|(
-name|x
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
 parameter_list|)
-value|malloc((x), M_PFIL, M_NOWAIT)
+value|MALLOC((a), b, (c), M_PFIL, M_NOWAIT)
 end_define
 
 begin_define
@@ -1031,9 +1337,13 @@ define|#
 directive|define
 name|KMALLOC
 parameter_list|(
-name|x
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
 parameter_list|)
-value|malloc((x), M_TEMP, M_NOWAIT)
+value|MALLOC((a), b, (c), M_TEMP, M_NOWAIT)
 end_define
 
 begin_define
@@ -1160,12 +1470,6 @@ else|#
 directive|else
 end_else
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|linux
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -1196,6 +1500,12 @@ parameter_list|)
 value|;
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|SPLX
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -1211,9 +1521,13 @@ define|#
 directive|define
 name|KMALLOC
 parameter_list|(
-name|x
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
 parameter_list|)
-value|malloc(x)
+value|(a) = (b)malloc(c)
 end_define
 
 begin_define
@@ -1233,7 +1547,7 @@ name|GETUNIT
 parameter_list|(
 name|x
 parameter_list|)
-value|(x)
+value|get_unit(x)
 end_define
 
 begin_define
@@ -1263,11 +1577,6 @@ name|c
 parameter_list|)
 value|bcopy((a), (b), (c))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -1737,9 +2046,13 @@ define|#
 directive|define
 name|KMALLOC
 parameter_list|(
-name|x
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
 parameter_list|)
-value|kmalloc((x), GFP_ATOMIC)
+value|(a) = (b)kmalloc((c), GFP_ATOMIC)
 end_define
 
 begin_define

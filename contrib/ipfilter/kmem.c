@@ -43,12 +43,11 @@ directive|include
 file|<sys/file.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|KMEM
-value|"/dev/kmem"
-end_define
+begin_include
+include|#
+directive|include
+file|"kmem.h"
+end_include
 
 begin_if
 if|#
@@ -81,7 +80,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kmem.c,v 2.0.1.1 1997/01/09 15:14:44 darrenr Exp $"
+literal|"$Id: kmem.c,v 2.0.2.3 1997/03/10 08:10:37 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -120,13 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ip_compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tcpip.h"
+file|"ipsend.h"
 end_include
 
 begin_if

@@ -156,13 +156,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcpip.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ip_compat.h"
+file|"ipsend.h"
 end_include
 
 begin_if

@@ -4,7 +4,7 @@ comment|/*  * (C)opyright 1993,1994,1995 by Darren Reed.  *  * Redistribution an
 end_comment
 
 begin_comment
-comment|/*  * written to comply with the RFC (1761) from Sun.  * $Id: snoop.h,v 2.0.1.1 1997/01/09 15:14:45 darrenr Exp $  */
+comment|/*  * written to comply with the RFC (1761) from Sun.  * $Id: snoop.h,v 2.0.2.2 1997/02/23 10:38:19 darrenr Exp $  */
 end_comment
 
 begin_struct

@@ -135,12 +135,6 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/tcpip.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -149,25 +143,8 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"ip_compat.h"
+file|"ipsend.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|linux
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"tcpip.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -181,17 +158,6 @@ modifier|*
 name|ethbuf
 init|=
 name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|arp
-argument_list|()
-decl_stmt|,
-name|sendip
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -422,6 +388,10 @@ operator|)
 operator|&
 name|gwip
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|eh
 operator|->
@@ -643,6 +613,10 @@ operator|)
 operator|&
 name|gwip
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|eh
 operator|->
@@ -818,6 +792,10 @@ name|ip_sum
 operator|=
 name|chksum
 argument_list|(
+operator|(
+name|u_short
+operator|*
+operator|)
 name|ip
 argument_list|,
 name|ip
@@ -1267,6 +1245,10 @@ name|ip_sum
 operator|=
 name|chksum
 argument_list|(
+operator|(
+name|u_short
+operator|*
+operator|)
 name|ip
 argument_list|,
 name|hlen
@@ -1788,6 +1770,10 @@ name|ti_sum
 operator|=
 name|chksum
 argument_list|(
+operator|(
+name|u_short
+operator|*
+operator|)
 name|ti
 argument_list|,
 name|thlen
@@ -2008,6 +1994,10 @@ name|ti_sum
 operator|=
 name|chksum
 argument_list|(
+operator|(
+name|u_short
+operator|*
+operator|)
 name|ti
 argument_list|,
 name|thlen
@@ -2137,7 +2127,7 @@ operator|=
 name|chksum
 argument_list|(
 operator|(
-name|char
+name|u_short
 operator|*
 operator|)
 name|ic
