@@ -1,15 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)auth.h	2.3 88/08/07 4.0 RPCSRC; from 1.17 88/02/08 SMI */
-end_comment
-
-begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)auth.h 1.17 88/02/08 SMI  *	from: @(#)auth.h	2.3 88/08/07 4.0 RPCSRC  *	$Id: auth.h,v 1.1 1993/10/27 05:40:09 paul Exp $  */
 end_comment
 
 begin_comment
 comment|/*  * auth.h, Authentication interface.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * The data structures are completely opaque to the client.  The client  * is required to pass a AUTH * to routines that create rpc  * "sessions".  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_RPC_AUTH_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_RPC_AUTH_H
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_define
 define|#
@@ -95,11 +109,7 @@ name|i386
 operator|||
 name|tahoe
 operator|||
-name|luna68k
-operator|||
 name|hp300
-operator|||
-name|mips
 operator|)
 end_if
 
@@ -152,13 +162,27 @@ name|des_block
 typedef|;
 end_typedef
 
-begin_function_decl
+begin_decl_stmt
+name|__BEGIN_DECLS
 specifier|extern
 name|bool_t
 name|xdr_des_block
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|des_block
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_comment
 comment|/*  * Authentication info.  Opaque to client.  */
@@ -396,40 +420,58 @@ begin_comment
 comment|/*  * Unix style authentication  * AUTH *authunix_create(machname, uid, gid, len, aup_gids)  *	char *machname;  *	int uid;  *	int gid;  *	int len;  *	int *aup_gids;  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+name|__BEGIN_DECLS
 specifier|extern
 name|AUTH
 modifier|*
 name|authunix_create
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|AUTH
 modifier|*
 name|authunix_create_default
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/* takes no parameters */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|AUTH
 modifier|*
 name|authnone_create
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* takes no parameters */
-end_comment
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|extern
@@ -439,6 +481,10 @@ name|authdes_create
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_define
 define|#
@@ -493,6 +539,15 @@ end_define
 
 begin_comment
 comment|/* des style (encrypted timestamps) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_RPC_AUTH_H */
 end_comment
 
 end_unit

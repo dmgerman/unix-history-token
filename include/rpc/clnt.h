@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)clnt.h	2.1 88/07/29 4.0 RPCSRC; from 1.31 88/02/08 SMI*/
-end_comment
-
-begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)clnt.h 1.31 88/02/08 SMI  *	from: @(#)clnt.h	2.1 88/07/29 4.0 RPCSRC  *	$Id: clnt.h,v 1.1 1993/10/27 05:40:18 paul Exp $  */
 end_comment
 
 begin_comment
@@ -14,14 +10,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CLNT_
+name|_RPC_CLNT_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CLNT_
+name|_RPC_CLNT_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_comment
 comment|/*  * Rpc calls return an enum clnt_stat.  This should be looked at more,  * since each implementation is required to live with this (implementation  * independent) list of errors.  */
@@ -586,147 +588,266 @@ begin_comment
 comment|/*  * Memory based rpc (for speed check and testing)  * CLIENT *  * clntraw_create(prog, vers)  *	u_long prog;  *	u_long vers;  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
 modifier|*
 name|clntraw_create
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|u_long
+operator|,
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/*  * Generic client creation routine. Supported protocols are "udp" and "tcp"  */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
+name|__END_DECLS
+comment|/*  * Generic client creation routine. Supported protocols are "udp" and "tcp"  * CLIENT *  * clnt_create(host, prog, vers, prot);  *	char *host; 	-- hostname  *	u_long prog;	-- program number  *	u_long vers;	-- version number  *	char *prot;	-- protocol  */
+name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
 modifier|*
 name|clnt_create
-parameter_list|(
-comment|/*host, prog, vers, prot*/
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/* 	char *host; 	-- hostname 	u_long prog;	-- program number 	u_long vers;	-- version number 	char *prot;	-- protocol */
-end_comment
-
-begin_comment
+begin_decl_stmt
+name|__END_DECLS
 comment|/*  * TCP based rpc  * CLIENT *  * clnttcp_create(raddr, prog, vers, sockp, sendsz, recvsz)  *	struct sockaddr_in *raddr;  *	u_long prog;  *	u_long version;  *	register int *sockp;  *	u_int sendsz;  *	u_int recvsz;  */
-end_comment
-
-begin_function_decl
+name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
 modifier|*
 name|clnttcp_create
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
+operator|,
+name|int
+operator|*
+operator|,
+name|u_int
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
+begin_decl_stmt
+name|__END_DECLS
 comment|/*  * UDP based rpc.  * CLIENT *  * clntudp_create(raddr, program, version, wait, sockp)  *	struct sockaddr_in *raddr;  *	u_long program;  *	u_long version;  *	struct timeval wait;  *	int *sockp;  *  * Same as above, but you specify max packet sizes.  * CLIENT *  * clntudp_bufcreate(raddr, program, version, wait, sockp, sendsz, recvsz)  *	struct sockaddr_in *raddr;  *	u_long program;  *	u_long version;  *	struct timeval wait;  *	int *sockp;  *	u_int sendsz;  *	u_int recvsz;  */
-end_comment
-
-begin_function_decl
+name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
 modifier|*
 name|clntudp_create
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
+operator|,
+expr|struct
+name|timeval
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|CLIENT
 modifier|*
 name|clntudp_bufcreate
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
+operator|,
+expr|struct
+name|timeval
+operator|,
+name|int
+operator|*
+operator|,
+name|u_int
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
+begin_decl_stmt
+name|__END_DECLS
 comment|/*  * Print why creation failed  */
-end_comment
-
-begin_function_decl
+name|__BEGIN_DECLS
+specifier|extern
 name|void
 name|clnt_pcreateerror
-parameter_list|(
-comment|/* char *msg */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* stderr */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|clnt_spcreateerror
-parameter_list|(
-comment|/* char *msg */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* string */
 end_comment
 
-begin_comment
+begin_decl_stmt
+name|__END_DECLS
 comment|/*  * Like clnt_perror(), but is more verbose in its output  */
-end_comment
-
-begin_function_decl
+name|__BEGIN_DECLS
+specifier|extern
 name|void
 name|clnt_perrno
-parameter_list|(
-comment|/* enum clnt_stat num */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|enum
+name|clnt_stat
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* stderr */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|clnt_sperrno
+name|__P
+argument_list|(
+operator|(
+expr|enum
+name|clnt_stat
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Print an English error message, given the client error code  */
+comment|/* string */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+name|__END_DECLS
+comment|/*  * Print an English error message, given the client error code  */
+name|__BEGIN_DECLS
+specifier|extern
 name|void
 name|clnt_perror
-parameter_list|(
-comment|/* CLIENT *clnt, char *msg */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|CLIENT
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* stderr */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|clnt_sperror
-parameter_list|(
-comment|/* CLIENT *clnt, char *msg */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|CLIENT
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* string */
 end_comment
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_comment
 comment|/*   * If a creation fails, the following allows the user to figure out why.  */
@@ -757,24 +878,6 @@ name|rpc_createerr
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Copy error message to buffer.  */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|clnt_sperrno
-parameter_list|(
-comment|/* enum clnt_stat num */
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* string */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -803,7 +906,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*!_CLNT_*/
+comment|/* !_RPC_CLNT_H */
 end_comment
 
 end_unit
