@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.18 (Berkeley) %G%"
+literal|"@(#)err.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +107,7 @@ directive|ifdef
 name|__STDC__
 name|syserr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -121,6 +122,7 @@ name|fmt
 parameter_list|,
 name|va_alist
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -324,6 +326,7 @@ directive|ifdef
 name|__STDC__
 name|usrerr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -338,6 +341,7 @@ name|fmt
 parameter_list|,
 name|va_alist
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -460,6 +464,7 @@ directive|ifdef
 name|__STDC__
 name|message
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -474,6 +479,7 @@ name|msg
 parameter_list|,
 name|va_alist
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -539,6 +545,7 @@ directive|ifdef
 name|__STDC__
 name|nmessage
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -553,6 +560,7 @@ name|msg
 parameter_list|,
 name|va_alist
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|msg

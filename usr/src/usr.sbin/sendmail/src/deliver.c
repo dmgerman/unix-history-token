@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.76 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.77 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6278,6 +6278,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|statmsg

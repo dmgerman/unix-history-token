@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.63 (Berkeley) %G%"
+literal|"@(#)main.c	6.64 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6264,6 +6264,7 @@ name|ENVELOPE
 modifier|*
 name|e
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -6285,6 +6286,7 @@ name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|msg
