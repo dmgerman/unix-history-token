@@ -926,6 +926,12 @@ return|return
 literal|"SiS 5591 ATA33 controller"
 return|;
 case|case
+literal|0x06801095
+case|:
+return|return
+literal|"Sil 0680 ATA133 controller"
+return|;
+case|case
 literal|0x06491095
 case|:
 return|return
@@ -1022,6 +1028,9 @@ case|:
 return|return
 literal|"Promise ATA33 controller"
 return|;
+case|case
+literal|0x0d38105a
+case|:
 case|case
 literal|0x4d38105a
 case|:
@@ -2191,6 +2200,76 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x06801095
+case|:
+comment|/* Sil 0680 set ATA reference clock speed */
+if|if
+condition|(
+operator|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x8a
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+literal|0x30
+operator|)
+operator|!=
+literal|0x10
+condition|)
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x8a
+argument_list|,
+operator|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x8a
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+literal|0x0F
+operator|)
+operator||
+literal|0x10
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x8a
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+literal|0x30
+operator|)
+operator|!=
+literal|0x10
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Sil 0680 could not set clock\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|0x06461095
 case|:
 comment|/* CMD 646 enable interrupts, set DMA read mode */
@@ -2460,17 +2539,21 @@ literal|0x4d33105a
 case|:
 comment|/* Promise Ultra/Fasttrak 33 */
 case|case
+literal|0x0d38105a
+case|:
+comment|/* Promise Fasttrak 66 */
+case|case
 literal|0x4d38105a
 case|:
 comment|/* Promise Ultra/Fasttrak 66 */
 case|case
-literal|0x4d30105a
-case|:
-comment|/* Promise Ultra/Fasttrak 100 */
-case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA100 */
+case|case
+literal|0x4d30105a
+case|:
+comment|/* Promise Ultra/Fasttrak 100 */
 if|if
 condition|(
 operator|!
