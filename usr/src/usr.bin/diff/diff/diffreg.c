@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.18 %G%"
+literal|"@(#)diffreg.c 4.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5492,7 +5492,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"#endif %s\n"
+literal|"#endif /* %s */\n"
 argument_list|,
 name|endifname
 argument_list|)
@@ -5713,7 +5713,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"#else %s%s\n"
+literal|"#else /* %s%s */\n"
 argument_list|,
 name|oneflag
 operator|&&
@@ -5917,7 +5917,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"#endif %s\n"
+literal|"#endif /* %s */\n"
 argument_list|,
 name|endifname
 argument_list|)
