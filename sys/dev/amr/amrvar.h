@@ -334,10 +334,10 @@ argument_list|(
 argument_list|,
 argument|amr_command
 argument_list|)
-name|amr_donecmds
+name|amr_work
 expr_stmt|;
 name|int
-name|amr_donecmdcount
+name|amr_workcount
 decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(

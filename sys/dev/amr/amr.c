@@ -1395,7 +1395,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|amr_donecmds
+name|amr_work
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
@@ -2493,10 +2493,18 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
 name|debug
 argument_list|(
 literal|"called"
 argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
 expr_stmt|;
 name|bufq_insert_tail
 argument_list|(
@@ -2506,6 +2514,11 @@ operator|->
 name|amr_bufq
 argument_list|,
 name|bp
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3477,7 +3490,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Pull as much work off the softc's work queue as possible and give it to the  * controller.  Leave a couple of slots free for emergencies.  *  * Must be called at splbio or in an equivalent fashion that prevents   * reentry or activity on the bufq.  */
+comment|/********************************************************************************  * Pull as much work off the softc's work queue as possible and give it to the  * controller.  Leave a couple of slots free for emergencies.  *  * We avoid running at splbio() whenever possible.  */
 end_comment
 
 begin_function
@@ -3515,7 +3528,15 @@ decl_stmt|;
 name|int
 name|cmd
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 comment|/* spin until something prevents us from doing any work */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3588,6 +3609,11 @@ name|sc
 operator|->
 name|amr_waitbufs
 operator|--
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 comment|/* connect the buf to the command */
 name|ac
@@ -3813,7 +3839,17 @@ name|ac
 argument_list|)
 expr_stmt|;
 block|}
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4178,7 +4214,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|amr_donecmds
+name|amr_work
 argument_list|,
 name|ac
 argument_list|,
@@ -4187,7 +4223,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|amr_donecmdcount
+name|amr_workcount
 operator|--
 expr_stmt|;
 name|error
@@ -4918,6 +4954,23 @@ name|done
 operator|=
 literal|1
 expr_stmt|;
+name|sc
+operator|->
+name|amr_workcount
+operator|++
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|amr_work
+argument_list|,
+name|ac
+argument_list|,
+name|ac_link
+argument_list|)
+expr_stmt|;
 comment|/* not free, try to clean up while we wait */
 block|}
 else|else
@@ -5016,7 +5069,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Extract one or more completed commands from the controller (sc)  *  * Returns nonzero if work was moved to the done queue.  */
+comment|/********************************************************************************  * Extract one or more completed commands from the controller (sc)  *  * Returns nonzero if any commands on the work queue were marked as completed.  */
 end_comment
 
 begin_function
@@ -5043,8 +5096,6 @@ name|int
 name|i
 decl_stmt|,
 name|idx
-decl_stmt|,
-name|s
 decl_stmt|,
 name|result
 decl_stmt|;
@@ -5132,6 +5183,12 @@ operator|->
 name|amr_busycmdcount
 operator|--
 expr_stmt|;
+comment|/* unmap data buffer */
+name|amr_unmapcmd
+argument_list|(
+name|ac
+argument_list|)
+expr_stmt|;
 comment|/* aborted command? */
 if|if
 condition|(
@@ -5160,38 +5217,10 @@ name|ac
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* normally completed command, move it to the done queue */
+comment|/* completed normally, save status */
 block|}
 else|else
 block|{
-name|sc
-operator|->
-name|amr_donecmdcount
-operator|++
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|amr_donecmds
-argument_list|,
-name|ac
-argument_list|,
-name|ac_link
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-comment|/* save completion status */
 name|ac
 operator|->
 name|ac_status
@@ -5207,12 +5236,6 @@ argument_list|,
 name|mbox
 operator|.
 name|mb_status
-argument_list|)
-expr_stmt|;
-comment|/* unmap data buffer */
-name|amr_unmapcmd
-argument_list|(
-name|ac
 argument_list|)
 expr_stmt|;
 block|}
@@ -5280,7 +5303,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|amr_donecmds
+name|amr_work
 argument_list|)
 expr_stmt|;
 while|while
@@ -5299,7 +5322,17 @@ argument_list|,
 name|ac_link
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Is there a completion handler?  	 */
+comment|/* Skip if command is still active */
+if|if
+condition|(
+name|ac
+operator|->
+name|ac_status
+operator|!=
+name|AMR_STATUS_BUSY
+condition|)
+block|{
+comment|/*  	     * Is there a completion handler?  	     */
 if|if
 condition|(
 name|ac
@@ -5315,7 +5348,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|amr_donecmds
+name|amr_work
 argument_list|,
 name|ac
 argument_list|,
@@ -5324,7 +5357,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|amr_donecmdcount
+name|amr_workcount
 operator|--
 expr_stmt|;
 name|ac
@@ -5334,7 +5367,7 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-comment|/*  	     * Is someone sleeping on this one? 	     */
+comment|/*  		 * Is someone sleeping on this one? 		 */
 block|}
 elseif|else
 if|if
@@ -5352,7 +5385,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|amr_donecmds
+name|amr_work
 argument_list|,
 name|ac
 argument_list|,
@@ -5361,7 +5394,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|amr_donecmdcount
+name|amr_workcount
 operator|--
 expr_stmt|;
 name|wakeup_one
@@ -5371,10 +5404,11 @@ operator|->
 name|ac_private
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Leave it for a polling caller. 	     */
+comment|/* 		 * Leave it for a polling caller. 		 */
 block|}
 else|else
-block|{ 	}
+block|{ 	    }
+block|}
 name|ac
 operator|=
 name|nc

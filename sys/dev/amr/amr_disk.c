@@ -764,9 +764,6 @@ operator|->
 name|b_dev
 argument_list|)
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|debug
 argument_list|(
 literal|"called"
@@ -816,11 +813,6 @@ name|b_driver1
 operator|=
 name|sc
 expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|devstat_start_transaction
 argument_list|(
 operator|&
@@ -836,11 +828,6 @@ operator|->
 name|amrd_controller
 argument_list|,
 name|bp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
