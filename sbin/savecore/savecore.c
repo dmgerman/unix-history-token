@@ -1382,7 +1382,7 @@ index|]
 operator|.
 name|n_value
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1446,7 +1446,7 @@ index|]
 operator|.
 name|n_value
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1574,10 +1574,6 @@ argument_list|(
 name|core_vers
 argument_list|)
 argument_list|,
-call|(
-name|off_t
-call|)
-argument_list|(
 name|dumplo
 operator|+
 name|ok
@@ -1589,9 +1585,8 @@ index|]
 operator|.
 name|n_value
 argument_list|)
-argument_list|)
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|core_vers
@@ -1665,10 +1660,6 @@ argument_list|(
 name|panicstr
 argument_list|)
 argument_list|,
-call|(
-name|off_t
-call|)
-argument_list|(
 name|dumplo
 operator|+
 name|ok
@@ -1680,9 +1671,8 @@ index|]
 operator|.
 name|n_value
 argument_list|)
-argument_list|)
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 if|if
@@ -1701,19 +1691,14 @@ argument_list|(
 name|panic_mesg
 argument_list|)
 argument_list|,
-call|(
-name|off_t
-call|)
-argument_list|(
 name|dumplo
 operator|+
 name|ok
 argument_list|(
 name|panicstr
 argument_list|)
-argument_list|)
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 block|}
@@ -1748,10 +1733,6 @@ argument_list|(
 name|newdumpmag
 argument_list|)
 argument_list|,
-call|(
-name|off_t
-call|)
-argument_list|(
 name|dumplo
 operator|+
 name|ok
@@ -1763,9 +1744,8 @@ index|]
 operator|.
 name|n_value
 argument_list|)
-argument_list|)
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|close
@@ -1800,10 +1780,6 @@ argument_list|(
 name|newdumpmag
 argument_list|)
 argument_list|,
-call|(
-name|off_t
-call|)
-argument_list|(
 name|dumplo
 operator|+
 name|ok
@@ -1815,9 +1791,8 @@ index|]
 operator|.
 name|n_value
 argument_list|)
-argument_list|)
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 if|if
@@ -2168,12 +2143,9 @@ name|Lseek
 argument_list|(
 name|dumpfd
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|dumplo
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 comment|/* Copy the core file. */
@@ -2989,10 +2961,6 @@ argument_list|(
 name|dumptime
 argument_list|)
 argument_list|,
-call|(
-name|off_t
-call|)
-argument_list|(
 name|dumplo
 operator|+
 name|ok
@@ -3004,9 +2972,8 @@ index|]
 operator|.
 name|n_value
 argument_list|)
-argument_list|)
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 if|if
@@ -3113,10 +3080,6 @@ argument_list|(
 name|kdumpsize
 argument_list|)
 argument_list|,
-call|(
-name|off_t
-call|)
-argument_list|(
 name|dumplo
 operator|+
 name|ok
@@ -3128,9 +3091,8 @@ index|]
 operator|.
 name|n_value
 argument_list|)
-argument_list|)
 argument_list|,
-name|L_SET
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 name|dumpsize
@@ -3482,9 +3444,6 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|fd
 operator|=
 name|open
@@ -3495,7 +3454,10 @@ name|rw
 argument_list|,
 literal|0
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
 operator|<
 literal|0
 condition|)
@@ -3707,14 +3669,14 @@ if|if
 condition|(
 name|flag
 operator|!=
-name|L_SET
+name|SEEK_SET
 condition|)
 block|{
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lseek: not LSET"
+literal|"lseek: not SEEK_SET"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3904,14 +3866,14 @@ if|if
 condition|(
 name|flag
 operator|!=
-name|L_SET
+name|SEEK_SET
 condition|)
 block|{
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"lseek: not LSET"
+literal|"lseek: not SEEK_SET"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4046,9 +4008,6 @@ block|{
 name|int
 name|n
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|n
 operator|=
 name|write
@@ -4059,7 +4018,10 @@ name|bp
 argument_list|,
 name|size
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|n
 operator|<
 name|size
 condition|)
