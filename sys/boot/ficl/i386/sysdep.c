@@ -3,6 +3,10 @@ begin_comment
 comment|/******************************************************************* ** s y s d e p . c ** Forth Inspired Command Language ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 16 Oct 1997 ** Implementations of FICL external interface functions...  ** *******************************************************************/
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -64,18 +68,26 @@ begin_comment
 comment|/* *******************  FreeBSD  P O R T   B E G I N S   H E R E ******************** Michael Smith */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|PORTABLE_LONGMULDIV
+operator|==
+literal|0
+end_if
+
 begin_function
-name|UNS64
+name|DPUNS
 name|ficlLongMul
 parameter_list|(
-name|UNS32
+name|FICL_UNS
 name|x
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|y
 parameter_list|)
 block|{
-name|UNS64
+name|DPUNS
 name|q
 decl_stmt|;
 name|u_int64_t
@@ -129,10 +141,10 @@ begin_function
 name|UNSQR
 name|ficlLongDiv
 parameter_list|(
-name|UNS64
+name|DPUNS
 name|q
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|y
 parameter_list|)
 block|{
@@ -183,6 +195,11 @@ name|result
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -326,7 +343,7 @@ name|port
 decl_stmt|;
 name|port
 operator|=
-name|stackPopUNS32
+name|stackPopUNS
 argument_list|(
 name|pVM
 operator|->
@@ -338,7 +355,7 @@ operator|=
 operator|(
 name|u_char
 operator|)
-name|stackPopINT32
+name|stackPopINT
 argument_list|(
 name|pVM
 operator|->
@@ -376,7 +393,7 @@ name|port
 decl_stmt|;
 name|port
 operator|=
-name|stackPopUNS32
+name|stackPopUNS
 argument_list|(
 name|pVM
 operator|->
@@ -390,7 +407,7 @@ argument_list|(
 name|port
 argument_list|)
 expr_stmt|;
-name|stackPushINT32
+name|stackPushINT
 argument_list|(
 name|pVM
 operator|->

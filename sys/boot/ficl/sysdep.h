@@ -7,6 +7,10 @@ begin_comment
 comment|/* ** N O T I C E -- DISCLAIMER OF WARRANTY **  ** Ficl is freeware. Use it in any way that you like, with ** the understanding that the code is not supported. **  ** Any third party may reproduce, distribute, or modify the ficl ** software code or any derivative  works thereof without any  ** compensation or license, provided that the author information ** and this disclaimer text are retained in the source code files. ** The ficl software code is provided on an "as is"  basis without ** warranty of any kind, including, without limitation, the implied ** warranties of merchantability and fitness for a particular purpose ** and their equivalents under the laws of any jurisdiction.   **  ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release (yay!), please ** send me email at the address above.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -122,6 +126,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ** System dependent data type declarations... */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -134,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|INT32
-value|int32_t
+value|long
 end_define
 
 begin_endif
@@ -154,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|UNS32
-value|u_int32_t
+value|unsigned long
 end_define
 
 begin_endif
@@ -174,7 +182,7 @@ begin_define
 define|#
 directive|define
 name|UNS16
-value|u_int16_t
+value|unsigned short
 end_define
 
 begin_endif
@@ -194,7 +202,7 @@ begin_define
 define|#
 directive|define
 name|UNS8
-value|u_int8_t
+value|unsigned char
 end_define
 
 begin_endif
@@ -222,18 +230,114 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ** FICL_UNS and FICL_INT must have the same size as a void* on ** the target system. A CELL is a union of void*, FICL_UNS, and ** FICL_INT.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|FICL_INT
+end_if
+
+begin_define
+define|#
+directive|define
+name|FICL_INT
+value|INT32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|FICL_UNS
+end_if
+
+begin_define
+define|#
+directive|define
+name|FICL_UNS
+value|UNS32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ** Ficl presently supports values of 32 and 64 for BITS_PER_CELL */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|BITS_PER_CELL
+end_if
+
+begin_define
+define|#
+directive|define
+name|BITS_PER_CELL
+value|32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+name|BITS_PER_CELL
+operator|!=
+literal|32
+operator|)
+operator|&&
+operator|(
+name|BITS_PER_CELL
+operator|!=
+literal|64
+operator|)
+operator|)
+end_if
+
+begin_expr_stmt
+name|Error
+operator|!
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|UNS32
+name|FICL_UNS
 name|hi
 decl_stmt|;
-name|UNS32
+name|FICL_UNS
 name|lo
 decl_stmt|;
 block|}
-name|UNS64
+name|DPUNS
 typedef|;
 end_typedef
 
@@ -241,10 +345,10 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|UNS32
+name|FICL_UNS
 name|quot
 decl_stmt|;
-name|UNS32
+name|FICL_UNS
 name|rem
 decl_stmt|;
 block|}
@@ -256,14 +360,14 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|INT32
+name|FICL_INT
 name|hi
 decl_stmt|;
-name|INT32
+name|FICL_INT
 name|lo
 decl_stmt|;
 block|}
-name|INT64
+name|DPINT
 typedef|;
 end_typedef
 
@@ -271,10 +375,10 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|INT32
+name|FICL_INT
 name|quot
 decl_stmt|;
-name|INT32
+name|FICL_INT
 name|rem
 decl_stmt|;
 block|}
@@ -300,6 +404,80 @@ directive|define
 name|FICL_MULTITHREAD
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ** PORTABLE_LONGMULDIV causes ficlLongMul and ficlLongDiv to be ** defined in C in sysdep.c. Use this if you cannot easily  ** generate an inline asm definition */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PORTABLE_LONGMULDIV
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PORTABLE_LONGMULDIV
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ** INLINE_INNER_LOOP causes the inner interpreter to be inline code ** instead of a function call. This is mainly because MS VC++ 5 ** chokes with an internal compiler error on the function version. ** in release mode. Sheesh. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|INLINE_INNER_LOOP
+end_if
+
+begin_if
+if|#
+directive|if
+name|defined
+name|_DEBUG
+end_if
+
+begin_define
+define|#
+directive|define
+name|INLINE_INNER_LOOP
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INLINE_INNER_LOOP
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -515,7 +693,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ** FICL_ALIGN is the power of two to which the dictionary ** pointer address must be aligned. This value is usually ** either 1 or 2, depending on the memory architecture ** of the target system; 2 is safe on any 16 or 32 bit ** machine. */
+comment|/* ** FICL_ALIGN is the power of two to which the dictionary ** pointer address must be aligned. This value is usually ** either 1 or 2, depending on the memory architecture ** of the target system; 2 is safe on any 16 or 32 bit ** machine. 3 would be appropriate for a 64 bit machine. */
 end_comment
 
 begin_if
@@ -587,6 +765,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ficlFree
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 modifier|*
 name|ficlRealloc
 parameter_list|(
@@ -596,17 +785,6 @@ name|p
 parameter_list|,
 name|size_t
 name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ficlFree
-parameter_list|(
-name|void
-modifier|*
-name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -656,17 +834,17 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ** 64 bit integer math support routines: multiply two UNS32s ** to get a 64 bit prodict,& divide the product by an UNS32 ** to get an UNS32 quotient and remainder. Much easier in asm ** on a 32 bit CPU than in C, which usually doesn't support  ** the double length result (but it should). */
+comment|/* ** 64 bit integer math support routines: multiply two UNS32s ** to get a 64 bit product,& divide the product by an UNS32 ** to get an UNS32 quotient and remainder. Much easier in asm ** on a 32 bit CPU than in C, which usually doesn't support  ** the double length result (but it should). */
 end_comment
 
 begin_function_decl
-name|UNS64
+name|DPUNS
 name|ficlLongMul
 parameter_list|(
-name|UNS32
+name|FICL_UNS
 name|x
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|y
 parameter_list|)
 function_decl|;
@@ -676,10 +854,10 @@ begin_function_decl
 name|UNSQR
 name|ficlLongDiv
 parameter_list|(
-name|UNS64
+name|DPUNS
 name|q
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|y
 parameter_list|)
 function_decl|;

@@ -44,7 +44,7 @@ name|RETURN
 parameter_list|(
 name|x
 parameter_list|)
-value|stackPushINT32(bf_vm->pStack,!x); return(x)
+value|stackPushINT(bf_vm->pStack,!x); return(x)
 end_define
 
 begin_decl_stmt

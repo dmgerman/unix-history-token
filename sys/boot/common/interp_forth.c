@@ -247,7 +247,7 @@ expr_stmt|;
 comment|/* Check whether we have been compiled or are being interpreted */
 if|if
 condition|(
-name|stackPopINT32
+name|stackPopINT
 argument_list|(
 name|vm
 operator|->
@@ -258,7 +258,7 @@ block|{
 comment|/* 	 * Get parameters from stack, in the format: 	 * an un ... a2 u2 a1 u1 n -- 	 * Where n is the number of strings, a/u are pairs of 	 * address/size for strings, and they will be concatenated 	 * in LIFO order. 	 */
 name|nstrings
 operator|=
-name|stackPopINT32
+name|stackPopINT
 argument_list|(
 name|vm
 operator|->
@@ -340,7 +340,7 @@ control|)
 block|{
 name|len
 operator|=
-name|stackPopINT32
+name|stackPopINT
 argument_list|(
 name|vm
 operator|->
@@ -537,7 +537,7 @@ name|line
 argument_list|)
 expr_stmt|;
 comment|/* This is going to be thrown!!! */
-name|stackPushINT32
+name|stackPushINT
 argument_list|(
 name|vm
 operator|->
@@ -620,7 +620,7 @@ name|fd
 decl_stmt|;
 name|ficlInitSystem
 argument_list|(
-literal|8000
+literal|10000
 argument_list|)
 expr_stmt|;
 comment|/* Default dictionary ~4000 cells */
@@ -635,9 +635,6 @@ argument_list|(
 name|bf_vm
 argument_list|,
 name|BUILTIN_CONSTRUCTOR
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* make all commands appear as Forth words */
@@ -681,9 +678,6 @@ argument_list|(
 name|bf_vm
 argument_list|,
 name|create_buf
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -799,14 +793,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|vmPushIP
-argument_list|(
-name|bf_vm
-argument_list|,
-operator|&
-name|pInterp
-argument_list|)
-expr_stmt|;
 name|result
 operator|=
 name|ficlExec
@@ -814,14 +800,6 @@ argument_list|(
 name|bf_vm
 argument_list|,
 name|line
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|vmPopIP
-argument_list|(
-name|bf_vm
 argument_list|)
 expr_stmt|;
 name|bf_vm

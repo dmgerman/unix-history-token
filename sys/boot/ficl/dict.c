@@ -7,6 +7,10 @@ begin_comment
 comment|/* ** This file implements the dictionary -- FICL's model of  ** memory management. All FICL words are stored in the ** dictionary. A word is a named chunk of data with its ** associated code. FICL treats all words the same, even ** precompiled ones, so your words become first-class ** extensions of the language. You can even define new  ** control structures. ** ** 29 jun 1998 (sadler) added variable sized hash table support */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -630,15 +634,6 @@ argument_list|)
 decl_stmt|;
 name|char
 modifier|*
-name|name
-init|=
-name|SI_PTR
-argument_list|(
-name|si
-argument_list|)
-decl_stmt|;
-name|char
-modifier|*
 name|pName
 decl_stmt|;
 name|FICL_WORD
@@ -759,7 +754,7 @@ end_comment
 
 begin_function
 name|void
-name|dictAppendUNS32
+name|dictAppendUNS
 parameter_list|(
 name|FICL_DICT
 modifier|*

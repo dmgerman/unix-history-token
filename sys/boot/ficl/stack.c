@@ -3,6 +3,10 @@ begin_comment
 comment|/******************************************************************* ** s t a c k . c ** Forth Inspired Command Language ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 16 Oct 1997 **  *******************************************************************/
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -543,8 +547,8 @@ block|}
 end_function
 
 begin_function
-name|UNS32
-name|stackPopUNS32
+name|FICL_UNS
+name|stackPopUNS
 parameter_list|(
 name|FICL_STACK
 modifier|*
@@ -566,8 +570,8 @@ block|}
 end_function
 
 begin_function
-name|INT32
-name|stackPopINT32
+name|FICL_INT
+name|stackPopINT
 parameter_list|(
 name|FICL_STACK
 modifier|*
@@ -644,13 +648,13 @@ end_function
 
 begin_function
 name|void
-name|stackPushUNS32
+name|stackPushUNS
 parameter_list|(
 name|FICL_STACK
 modifier|*
 name|pStack
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|u
 parameter_list|)
 block|{
@@ -670,13 +674,13 @@ end_function
 
 begin_function
 name|void
-name|stackPushINT32
+name|stackPushINT
 parameter_list|(
 name|FICL_STACK
 modifier|*
 name|pStack
 parameter_list|,
-name|INT32
+name|FICL_INT
 name|i
 parameter_list|)
 block|{
