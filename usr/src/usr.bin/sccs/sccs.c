@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.52.1.1 %G%"
+literal|"@(#)sccs.c	1.53 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5009,6 +5009,12 @@ operator|)
 return|;
 else|#
 directive|else
+specifier|extern
+name|char
+modifier|*
+name|getlogin
+parameter_list|()
+function_decl|;
 return|return
 operator|(
 name|getlogin
