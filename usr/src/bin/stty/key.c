@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)key.c	5.3 (Berkeley) %G%"
+literal|"@(#)key.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,7 +375,7 @@ literal|"ispeed"
 block|,
 name|f_ispeed
 block|,
-literal|0
+name|F_NEEDARG
 block|,
 literal|"new"
 block|,
