@@ -427,7 +427,7 @@ init|=
 literal|100
 decl_stmt|;
 comment|/* XXX */
-name|long
+name|u_long
 name|ticks
 decl_stmt|;
 name|ticks
@@ -465,6 +465,17 @@ name|tv_usec
 operator|)
 operator|/
 literal|1000000
+expr_stmt|;
+comment|/* 		 * If our round-off on the tick calculation still puts us at 0, 		 * then always assume at least one tick. 		 */
+if|if
+condition|(
+name|ticks
+operator|==
+literal|0
+condition|)
+name|ticks
+operator|=
+literal|1
 expr_stmt|;
 name|fprintf
 argument_list|(
