@@ -440,7 +440,7 @@ begin_define
 define|#
 directive|define
 name|TIMER_FREQ
-value|2457600;
+value|2457600
 end_define
 
 begin_else
@@ -456,7 +456,7 @@ begin_define
 define|#
 directive|define
 name|TIMER_FREQ
-value|1193182;
+value|1193182
 end_define
 
 begin_endif
@@ -3382,6 +3382,7 @@ comment|/*  * i8254_restore is called from apm_default_resume() to reload  * the
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|i8254_restore
 parameter_list|(
@@ -3429,6 +3430,73 @@ operator|&
 name|clock_lock
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
+begin_function
+specifier|static
+name|void
+name|rtc_restore
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Reenable RTC updates and interrupts. */
+comment|/* XXX locking is needed for RTC access? */
+name|writertc
+argument_list|(
+name|RTC_STATUSB
+argument_list|,
+name|RTCSB_HALT
+operator||
+name|RTCSB_24HR
+argument_list|)
+expr_stmt|;
+name|writertc
+argument_list|(
+name|RTC_STATUSB
+argument_list|,
+name|rtc_statusb
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Restore all the timers atomically.  */
+end_comment
+
+begin_function
+name|void
+name|timer_restore
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|i8254_restore
+argument_list|()
+expr_stmt|;
+comment|/* restore timer_freq and hz */
+ifndef|#
+directive|ifndef
+name|PC98
+name|rtc_restore
+argument_list|()
+expr_stmt|;
+comment|/* reenable RTC interrupts */
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5224,6 +5292,14 @@ name|void
 name|cpu_initclocks
 parameter_list|()
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
+name|int
+name|diag
+decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|APIC_IO
@@ -5240,9 +5316,6 @@ comment|/* APIC_IO */
 ifndef|#
 directive|ifndef
 name|PC98
-name|int
-name|diag
-decl_stmt|;
 if|if
 condition|(
 name|statclock_disable
@@ -6568,6 +6641,35 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|attimer
+argument_list|,
+name|acpi
+argument_list|,
+name|attimer_driver
+argument_list|,
+name|attimer_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
