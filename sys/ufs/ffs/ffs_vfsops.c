@@ -2502,9 +2502,7 @@ name|devvp
 argument_list|,
 name|p
 argument_list|,
-name|p
-operator|->
-name|p_ucred
+name|cred
 argument_list|)
 expr_stmt|;
 name|simple_lock
