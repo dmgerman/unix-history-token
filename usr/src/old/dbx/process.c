@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c 1.8 %G%"
+literal|"@(#)process.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -480,7 +480,22 @@ operator|->
 name|signo
 argument_list|)
 expr_stmt|;
+name|pc
+operator|=
+name|process
+operator|->
+name|reg
+index|[
+name|PROGCTR
+index|]
+expr_stmt|;
+name|getsrcpos
+argument_list|()
+expr_stmt|;
 block|}
+name|arginit
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
