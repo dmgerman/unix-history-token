@@ -395,12 +395,25 @@ name|i
 index|]
 expr_stmt|;
 comment|/* 			 * XXX the bootstrap punts a 1200K floppy geometry 			 * when the get-disk-geometry interrupt fails.  Skip 			 * drives that have this geometry. 			 */
+ifdef|#
+directive|ifdef
+name|PC98
+if|if
+condition|(
+name|bios_geom
+operator|==
+literal|0x4f020f
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|bios_geom
 operator|==
 literal|0x4f010f
 condition|)
+endif|#
+directive|endif
 continue|continue;
 name|printf
 argument_list|(
