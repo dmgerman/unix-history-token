@@ -820,19 +820,17 @@ begin_comment
 comment|/* __GNUC__ */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__GNUC__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__ELF__
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -850,6 +848,37 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|__IDSTRING
+parameter_list|(
+name|name
+parameter_list|,
+name|string
+parameter_list|)
+value|__asm__(".data\n\t.asciz\t\"" string "\"\n\t.previous")
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * This doesn't work in header files. But it may be better than nothing.  * The alternative is: #define __IDSTRING(name,string) /* nothing */
+end_comment
+
+begin_expr_stmt
+operator|*
+operator|/
+end_expr_stmt
 
 begin_define
 define|#
@@ -881,7 +910,7 @@ name|__RCSID
 parameter_list|(
 name|s
 parameter_list|)
-value|__IDSTRING(rcsid,s)
+value|__IDSTRING(__CONCAT(__rcsid_,__LINE__),s)
 end_define
 
 begin_endif
@@ -902,7 +931,7 @@ name|__RCSID_SOURCE
 parameter_list|(
 name|s
 parameter_list|)
-value|__IDSTRING(rcsid_source,s)
+value|__IDSTRING(__CONCAT(__rcsid_source_,__LINE__),s)
 end_define
 
 begin_endif
@@ -923,7 +952,7 @@ name|__COPYRIGHT
 parameter_list|(
 name|s
 parameter_list|)
-value|__IDSTRING(copyright,s)
+value|__IDSTRING(__CONCAT(__copyright_,__LINE__),s)
 end_define
 
 begin_endif
