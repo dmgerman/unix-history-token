@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: fbbm_253.c,v 4.300 91/06/09 06:33:12 root Rel41 $ SONY;  *  *	@(#)fbbm_253.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: fbbm_253.c,v 4.300 91/06/09 06:33:12 root Rel41 $ SONY;  *  *	@(#)fbbm_253.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -107,6 +107,18 @@ directive|define
 name|VRAM_WIDTH
 value|(2048/32)
 end_define
+
+begin_function
+name|void
+name|nwb253attach
+parameter_list|(
+name|i
+parameter_list|)
+block|{
+comment|/* temporary hack for pseudo-device initialization */
+empty_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static

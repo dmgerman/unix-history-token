@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: fbbm_lcdm.c,v 4.300 91/06/09 06:33:38 root Rel41 $ SONY  *  *	@(#)fbbm_lcdm.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: fbbm_lcdm.c,v 4.300 91/06/09 06:33:38 root Rel41 $ SONY  *  *	@(#)fbbm_lcdm.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -164,6 +164,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+name|void
+name|lfbmattach
+parameter_list|(
+name|i
+parameter_list|)
+block|{
+comment|/* temporary hack for pseudo-device initialization */
+empty_stmt|;
+block|}
+end_function
 
 begin_ifdef
 ifdef|#
