@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/bin/ls/util.c,v 1.3 1993/03/23 00:26:11 cgd Exp $"
+literal|"$Header: /a/cvs/386BSD/src/bin/ls/util.c,v 1.2 1993/06/29 02:59:34 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,7 +85,8 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
+name|unsigned
+name|char
 name|ch
 decl_stmt|;
 while|while
@@ -100,14 +101,21 @@ operator|*
 name|src
 operator|++
 expr_stmt|;
+comment|/* XXX: 		 * because *BSD don't have setlocale() (yet) 		 * here simple hack that allows ISO8859-x 		 * and koi8-r charsets in terminal mode. 		 * Note: range 0x80-0x9F skipped to avoid 		 * some kinda security hole on poor DEC VTs 		 */
 operator|*
 name|dest
 operator|++
 operator|=
+operator|(
+name|ch
+operator|>=
+literal|0xA0
+operator|||
 name|isprint
 argument_list|(
 name|ch
 argument_list|)
+operator|)
 condition|?
 name|ch
 else|:
