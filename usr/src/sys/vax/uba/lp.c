@@ -960,7 +960,7 @@ name|logcol
 operator|=
 operator|(
 name|logcol
-operator|-
+operator|+
 literal|8
 operator|)
 operator|&
