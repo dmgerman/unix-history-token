@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vadj.c	7.2	%G%"
+literal|"@(#)ex_vadj.c	7.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1094,8 +1094,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|outline
-operator|+
-literal|1
 argument_list|)
 argument_list|,
 name|WECHO
