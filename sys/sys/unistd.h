@@ -543,17 +543,6 @@ name|_SC_TZNAME_MAX
 value|27
 end_define
 
-begin_comment
-comment|/* configurable system strings */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_CS_PATH
-value|1
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -898,6 +898,17 @@ name|optopt
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|_CS_PATH
+value|1
+end_define
+
+begin_comment
+comment|/* default value of PATH */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
