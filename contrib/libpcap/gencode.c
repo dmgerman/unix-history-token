@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: gencode.c,v 1.88 96/07/23 01:30:41 leres Exp $ (LBL)"
+literal|"@(#) $Header: gencode.c,v 1.91 96/12/11 19:10:23 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2119,6 +2120,9 @@ name|bpf_int32
 name|w
 init|=
 operator|(
+operator|(
+name|bpf_int32
+operator|)
 name|p
 index|[
 literal|0
@@ -2128,6 +2132,9 @@ literal|24
 operator|)
 operator||
 operator|(
+operator|(
+name|bpf_int32
+operator|)
 name|p
 index|[
 literal|1
@@ -2137,6 +2144,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|bpf_int32
+operator|)
 name|p
 index|[
 literal|2
@@ -2212,6 +2222,9 @@ name|bpf_int32
 name|w
 init|=
 operator|(
+operator|(
+name|bpf_int32
+operator|)
 name|p
 index|[
 literal|0
@@ -2461,6 +2474,19 @@ operator|=
 literal|8
 expr_stmt|;
 return|return;
+case|case
+name|DLT_RAW
+case|:
+name|off_linktype
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|off_nl
+operator|=
+literal|0
+expr_stmt|;
+return|return;
 block|}
 name|bpf_error
 argument_list|(
@@ -2585,16 +2611,14 @@ name|int
 name|proto
 decl_stmt|;
 block|{
-switch|switch
-condition|(
-name|linktype
-condition|)
-block|{
-case|case
-name|DLT_SLIP
-case|:
+comment|/* If we're not using encapsulation and checking for IP, we're done */
 if|if
 condition|(
+name|off_linktype
+operator|==
+operator|-
+literal|1
+operator|&&
 name|proto
 operator|==
 name|ETHERTYPE_IP
@@ -2603,7 +2627,14 @@ return|return
 name|gen_true
 argument_list|()
 return|;
-else|else
+switch|switch
+condition|(
+name|linktype
+condition|)
+block|{
+case|case
+name|DLT_SLIP
+case|:
 return|return
 name|gen_false
 argument_list|()
@@ -5396,6 +5427,9 @@ name|q
 operator|.
 name|dir
 decl_stmt|;
+name|int
+name|tproto
+decl_stmt|;
 name|u_char
 modifier|*
 name|eaddr
@@ -5640,6 +5674,25 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|tproto
+operator|=
+name|proto
+expr_stmt|;
+if|if
+condition|(
+name|off_linktype
+operator|==
+operator|-
+literal|1
+operator|&&
+name|tproto
+operator|==
+name|Q_DEFAULT
+condition|)
+name|tproto
+operator|=
+name|Q_IP
+expr_stmt|;
 name|b
 operator|=
 name|gen_host
@@ -5651,7 +5704,7 @@ operator|++
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|proto
+name|tproto
 argument_list|,
 name|dir
 argument_list|)
@@ -5673,7 +5726,7 @@ operator|++
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|proto
+name|tproto
 argument_list|,
 name|dir
 argument_list|)
