@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.8	83/02/02	*/
+comment|/*	hp.c	4.9	83/02/10	*/
 end_comment
 
 begin_comment
@@ -749,6 +749,20 @@ name|int
 name|sectsiz
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * When awaiting command completion, don't  * hang on to the status register since  * this ties up the controller.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HPWAIT
+parameter_list|(
+name|addr
+parameter_list|)
+value|while ((((addr)->hpds)&HPDS_DRY)==0) DELAY(500);
+end_define
 
 begin_expr_stmt
 name|hpopen
@@ -1524,19 +1538,11 @@ name|nsect
 operator|+
 name|ssect
 expr_stmt|;
-while|while
-condition|(
-operator|(
+name|HPWAIT
+argument_list|(
 name|hpaddr
-operator|->
-name|hpds
-operator|&
-name|HPDS_DRY
-operator|)
-operator|==
-literal|0
-condition|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 name|mba
 operator|->
 name|mba_sr
@@ -1593,19 +1599,11 @@ operator|-
 literal|1
 operator|)
 return|;
-while|while
-condition|(
-operator|(
+name|HPWAIT
+argument_list|(
 name|hpaddr
-operator|->
-name|hpds
-operator|&
-name|HPDS_DRY
-operator|)
-operator|==
-literal|0
-condition|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2195,19 +2193,11 @@ name|HP_DCLR
 operator||
 name|HP_GO
 expr_stmt|;
-while|while
-condition|(
-operator|(
+name|HPWAIT
+argument_list|(
 name|hpaddr
-operator|->
-name|hpds
-operator|&
-name|HPDS_DRY
-operator|)
-operator|==
-literal|0
-condition|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2828,18 +2818,11 @@ name|HP_DCLR
 operator||
 name|HP_GO
 expr_stmt|;
-while|while
-condition|(
+name|HPWAIT
+argument_list|(
 name|rp
-operator|->
-name|hpds
-operator|&
-name|HPDS_DRY
-operator|==
-literal|0
-condition|)
-empty_stmt|;
-comment|/* avoid RMR error */
+argument_list|)
+expr_stmt|;
 name|rp
 operator|->
 name|hpof
@@ -3078,35 +3061,18 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* error has been corrected */
-while|while
-condition|(
+name|HPWAIT
+argument_list|(
 name|rp
-operator|->
-name|hpds
-operator|&
-name|HPDS_DRY
-operator|==
-literal|0
-condition|)
-empty_stmt|;
-comment|/* wait for the read to complete */
-if|if
-condition|(
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 name|rp
 operator|->
 name|hpds
 operator|&
 name|HPDS_ERR
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-else|else
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
@@ -3227,7 +3193,6 @@ literal|0
 operator|)
 return|;
 block|}
-else|else
 return|return
 operator|(
 name|ECMD
@@ -3291,7 +3256,6 @@ literal|0
 operator|)
 return|;
 block|}
-else|else
 return|return
 operator|(
 name|ECMD
@@ -3346,7 +3310,7 @@ return|;
 case|case
 name|SAIOSSDEV
 case|:
-comment|/* return null if device has skip sector 					 * handling, otherwise return ECMD 					 */
+comment|/* drive have skip sector? */
 if|if
 condition|(
 name|RM80
@@ -3356,7 +3320,6 @@ operator|(
 literal|0
 operator|)
 return|;
-else|else
 return|return
 operator|(
 name|ECMD
