@@ -2450,6 +2450,36 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|satosin
+parameter_list|(
+name|sa
+parameter_list|)
+value|((struct sockaddr_in *)(sa))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sintosa
+parameter_list|(
+name|sin
+parameter_list|)
+value|((struct sockaddr *)(sin))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ifatoia
+parameter_list|(
+name|ifa
+parameter_list|)
+value|((struct in_ifaddr *)(ifa))
+end_define
+
 begin_endif
 endif|#
 directive|endif
