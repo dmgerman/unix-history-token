@@ -4,7 +4,7 @@ comment|/*  * This file provided by Arthur David Olson of the National Cancer  *
 end_comment
 
 begin_comment
-comment|/* $Id: zic.c,v 1.3 1994/01/26 11:03:19 paul Exp $ */
+comment|/* $Id: zic.c,v 1.4 1994/02/04 00:23:31 wollman Exp $ */
 end_comment
 
 begin_ifndef
@@ -2899,7 +2899,7 @@ name|NULL
 condition|)
 name|yitcommand
 operator|=
-literal|"./yearistype"
+literal|"sh ./yearistype"
 expr_stmt|;
 name|setboundaries
 argument_list|()
