@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -440,6 +440,11 @@ begin_comment
 comment|/* use System V uname system call */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -456,6 +461,27 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* **  Due to a "feature" in Ultrix, if you receive an ICMP_UNREACH_HOST **  on _any_ connection, all connections to that host are closed.  Some **  firewalls return this error if you try to connect to the IDENT port **  (113), so you can't receive email from these hosts on Ultrix.  The **  firewall really should use ICMP_UNREACH_PROTOCOL or _PORT or **  _NET_PROHIB instead. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ultrix
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|1
+end_define
+
+begin_comment
+comment|/* use IDENT proto (RFC 1413) */
+end_comment
 
 begin_endif
 endif|#
