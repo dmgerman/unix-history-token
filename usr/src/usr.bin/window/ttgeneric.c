@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttgeneric.c	3.14 83/08/24"
+literal|"@(#)ttgeneric.c	3.15 83/08/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,6 +309,12 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|gen_BS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|gen_DB
 decl_stmt|;
 end_decl_stmt
 
@@ -1611,6 +1617,13 @@ argument_list|(
 literal|"bs"
 argument_list|)
 expr_stmt|;
+name|gen_DB
+operator|=
+name|tgetflag
+argument_list|(
+literal|"db"
+argument_list|)
+expr_stmt|;
 name|gen_CO
 operator|=
 name|tgetnum
@@ -1833,6 +1846,12 @@ operator|.
 name|tt_wrap
 operator|=
 name|gen_AM
+expr_stmt|;
+name|tt
+operator|.
+name|tt_retain
+operator|=
+name|gen_DB
 expr_stmt|;
 name|tt
 operator|.

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwscroll.c	3.6 83/08/22"
+literal|"@(#)wwscroll.c	3.7 83/08/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -455,6 +455,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|tt
+operator|.
+name|tt_retain
+operator|||
 name|erow1
 operator|+
 name|w

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)tt.h	3.6 83/08/17  */
+comment|/*  *	@(#)tt.h	3.7 83/08/24  */
 end_comment
 
 begin_struct
@@ -118,6 +118,10 @@ name|char
 name|tt_wrap
 decl_stmt|;
 comment|/* has auto wrap around */
+name|char
+name|tt_retain
+decl_stmt|;
+comment|/* can retain below (db flag) */
 name|char
 modifier|*
 name|tt_frame
