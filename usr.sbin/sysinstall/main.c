@@ -237,6 +237,27 @@ literal|"I'll be just faking it from here on out, OK?"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-restart"
+argument_list|)
+condition|)
+name|Restarting
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* Try to preserve our scroll-back buffer */
 if|if
 condition|(
@@ -368,6 +389,8 @@ elseif|else
 if|if
 condition|(
 name|Fake
+operator|||
+name|Restarting
 condition|)
 name|start_arg
 operator|=
