@@ -203,7 +203,7 @@ specifier|static
 name|u_int
 name|g_mirror_timeout
 init|=
-literal|8
+literal|4
 decl_stmt|;
 end_decl_stmt
 
