@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.14 (Berkeley) %G%"
+literal|"@(#)alias.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1318,13 +1318,9 @@ name|nolock
 init|=
 name|FALSE
 decl_stmt|;
-name|void
-function_decl|(
-modifier|*
+name|sigfunc_t
 name|oldsigint
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
