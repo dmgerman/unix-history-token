@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lastcomm.c	4.8 (Berkeley) %G%"
+literal|"@(#)lastcomm.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1192,6 +1192,11 @@ argument_list|,
 literal|"No mem for dev table\n"
 argument_list|)
 expr_stmt|;
+name|closedir
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 while|while
@@ -1348,6 +1353,7 @@ name|char
 modifier|*
 name|lastname
 decl_stmt|;
+specifier|static
 name|int
 name|init
 init|=
