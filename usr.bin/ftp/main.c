@@ -1665,7 +1665,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|line
+name|buf
 index|[
 operator|--
 name|num
