@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.9.2.7 1997/05/24 10:29:26 brian Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
+comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.9.2.8 1997/05/24 17:34:49 brian Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<alias.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"loadalias.h"
 end_include
 
 begin_include
@@ -1760,7 +1766,7 @@ name|fptr
 decl_stmt|;
 name|iresult
 operator|=
-name|PacketAliasIn
+name|VarPacketAliasIn
 argument_list|(
 name|tunbuff
 argument_list|,
@@ -1897,7 +1903,7 @@ condition|(
 operator|(
 name|fptr
 operator|=
-name|GetNextFragmentPtr
+name|VarGetNextFragmentPtr
 argument_list|(
 name|tunbuff
 argument_list|)
@@ -1906,7 +1912,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|FragmentAliasIn
+name|VarFragmentAliasIn
 argument_list|(
 name|tunbuff
 argument_list|,
@@ -2022,7 +2028,7 @@ argument_list|,
 name|nb
 argument_list|)
 expr_stmt|;
-name|SaveFragmentPtr
+name|VarSaveFragmentPtr
 argument_list|(
 name|fptr
 argument_list|)

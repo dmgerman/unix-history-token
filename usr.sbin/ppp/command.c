@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.24.2.12 1997/05/24 10:29:26 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.24.2.13 1997/05/24 17:34:47 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"loadalias.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vars.h"
 end_include
 
@@ -151,12 +157,6 @@ begin_include
 include|#
 directive|include
 file|"os.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"chat.h"
 end_include
 
 begin_decl_stmt
@@ -392,9 +392,6 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|char
-name|c
-decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -509,21 +506,9 @@ name|VarLocalAuth
 operator|)
 condition|)
 block|{
-name|c
-operator|=
-operator|(
-name|n
-operator|&
-literal|1
-operator|)
-condition|?
-literal|'\n'
-else|:
-literal|'\t'
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %-8s: %-20s%c"
+literal|"  %-8s: %-20s\n"
 argument_list|,
 name|cmd
 operator|->
@@ -532,8 +517,6 @@ argument_list|,
 name|cmd
 operator|->
 name|helpmes
-argument_list|,
-name|c
 argument_list|)
 expr_stmt|;
 name|n
@@ -6586,9 +6569,34 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|mode
+operator|&
+name|MODE_ALIAS
+operator|)
+condition|)
+if|if
+condition|(
+name|loadAliasHandlers
+argument_list|(
+operator|&
+name|VarAliasHandlers
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|mode
 operator||=
 name|MODE_ALIAS
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Cannot load alias library\n"
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -6611,11 +6619,22 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_ALIAS
+condition|)
+block|{
+name|unloadAliasHandlers
+argument_list|()
+expr_stmt|;
 name|mode
 operator|&=
 operator|~
 name|MODE_ALIAS
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -6691,7 +6710,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|SetPacketAliasMode
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_ALIAS
+condition|)
+name|VarSetPacketAliasMode
 argument_list|(
 operator|(
 name|unsigned
@@ -6702,6 +6727,12 @@ operator|(
 name|unsigned
 operator|)
 name|param
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"alias not enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6725,7 +6756,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|SetPacketAliasMode
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_ALIAS
+condition|)
+name|VarSetPacketAliasMode
 argument_list|(
 literal|0
 argument_list|,
@@ -6733,6 +6770,12 @@ operator|(
 name|unsigned
 operator|)
 name|param
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"alias not enabled\n"
 argument_list|)
 expr_stmt|;
 block|}

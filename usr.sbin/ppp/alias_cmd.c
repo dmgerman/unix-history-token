@@ -56,13 +56,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"alias.h"
+file|"defs.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"loadalias.h"
 end_include
 
 begin_include
@@ -152,6 +158,21 @@ modifier|*
 name|param
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|mode
+operator|&
+name|MODE_ALIAS
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"alias not enabled\n"
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|argc
@@ -349,7 +370,7 @@ literal|0
 expr_stmt|;
 name|link
 operator|=
-name|PacketAliasRedirectPort
+name|VarPacketAliasRedirectPort
 argument_list|(
 name|local_addr
 argument_list|,
@@ -380,10 +401,8 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
 block|}
+else|else
 name|printf
 argument_list|(
 literal|"Usage: alias %s %s\n"
@@ -425,6 +444,21 @@ modifier|*
 name|param
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|mode
+operator|&
+name|MODE_ALIAS
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"alias not enabled\n"
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|argc
@@ -517,7 +551,7 @@ return|;
 block|}
 name|link
 operator|=
-name|PacketAliasRedirectAddr
+name|VarPacketAliasRedirectAddr
 argument_list|(
 name|local_addr
 argument_list|,
@@ -550,10 +584,8 @@ name|syntax
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-literal|1
-return|;
 block|}
+else|else
 name|printf
 argument_list|(
 literal|"Usage: alias %s %s\n"
