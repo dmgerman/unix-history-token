@@ -44,7 +44,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	8.2 (Berkeley) 9/30/93"
+literal|"@(#)finger.c	8.5 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,31 +70,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -113,6 +113,24 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
 end_include
 
 begin_include
@@ -533,11 +551,11 @@ else|else
 name|sflag_print
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -593,14 +611,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|_PATH_UTMP
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|name
@@ -729,6 +744,10 @@ operator|=
 name|R_NEXT
 control|)
 block|{
+name|PERSON
+modifier|*
+name|tmp
+decl_stmt|;
 name|r
 operator|=
 call|(
@@ -758,12 +777,9 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"db seq: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"db seq"
 argument_list|)
 expr_stmt|;
 if|if
@@ -773,17 +789,22 @@ operator|==
 literal|1
 condition|)
 break|break;
-name|enter_lastlog
+name|memmove
 argument_list|(
-operator|*
-operator|(
-name|PERSON
-operator|*
-operator|*
-operator|)
+operator|&
+name|tmp
+argument_list|,
 name|data
 operator|.
 name|data
+argument_list|,
+sizeof|sizeof
+name|tmp
+argument_list|)
+expr_stmt|;
+name|enter_lastlog
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 block|}
@@ -898,12 +919,9 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Pull out all network requests. */
@@ -991,6 +1009,7 @@ control|)
 if|if
 condition|(
 operator|(
+operator|(
 name|pw
 operator|=
 name|getpwnam
@@ -998,6 +1017,9 @@ argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 operator|)
 operator|&&
 operator|!
@@ -1029,10 +1051,14 @@ else|else
 block|{
 while|while
 condition|(
+operator|(
 name|pw
 operator|=
 name|getpwent
 argument_list|()
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 for|for
@@ -1178,14 +1204,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|_PATH_UTMP
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -1264,6 +1287,10 @@ operator|=
 name|R_NEXT
 control|)
 block|{
+name|PERSON
+modifier|*
+name|tmp
+decl_stmt|;
 name|r
 operator|=
 call|(
@@ -1293,12 +1320,9 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"db seq: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"db seq"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1308,17 +1332,22 @@ operator|==
 literal|1
 condition|)
 break|break;
-name|enter_lastlog
+name|memmove
 argument_list|(
-operator|*
-operator|(
-name|PERSON
-operator|*
-operator|*
-operator|)
+operator|&
+name|tmp
+argument_list|,
 name|data
 operator|.
 name|data
+argument_list|,
+sizeof|sizeof
+name|tmp
+argument_list|)
+expr_stmt|;
+name|enter_lastlog
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 block|}
