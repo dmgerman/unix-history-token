@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	5.11 (Berkeley) %G%"
+literal|"@(#)rexecd.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,6 +273,25 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|path
+index|[
+sizeof|sizeof
+argument_list|(
+name|_PATH_DEFPATH
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+literal|"PATH="
+argument_list|)
+index|]
+init|=
+literal|"PATH="
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 modifier|*
 name|envinit
 index|[]
@@ -282,7 +301,7 @@ name|homedir
 block|,
 name|shell
 block|,
-name|_PATH_DEFPATH
+name|path
 block|,
 name|username
 block|,
@@ -1208,6 +1227,16 @@ operator|)
 name|pwd
 operator|->
 name|pw_uid
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|path
+argument_list|,
+name|_PATH_DEFPATH
 argument_list|)
 expr_stmt|;
 name|environ
