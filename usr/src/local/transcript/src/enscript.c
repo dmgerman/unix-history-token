@@ -4302,7 +4302,7 @@ begin_define
 define|#
 directive|define
 name|ARGS
-value|"12gGBlL:oqrRkKmf:F:b:p:t:d:n:w:h"
+value|"12gGBlL:oqQrRkKmf:F:b:p:t:d:n:w:h"
 end_define
 
 begin_else
@@ -4314,7 +4314,7 @@ begin_define
 define|#
 directive|define
 name|ARGS
-value|"12gGBlL:oqrRkKf:F:b:p:J:C:P:#:mh"
+value|"12gGBlL:oqQrRkKf:F:b:p:J:C:P:#:mh"
 end_define
 
 begin_endif
@@ -4474,6 +4474,14 @@ expr_stmt|;
 break|break;
 case|case
 literal|'q'
+case|:
+name|BeQuiet
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'Q'
 case|:
 name|BeQuiet
 operator|=
@@ -6112,11 +6120,13 @@ block|{
 if|if
 condition|(
 name|OutOnly
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|BeQuiet
 condition|)
-block|{
 name|fprintf
 argument_list|(
 name|stderr
