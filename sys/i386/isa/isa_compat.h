@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"vt.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ar.h"
 end_include
 
@@ -288,14 +282,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|vtdriver
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -682,20 +668,6 @@ endif|#
 directive|endif
 comment|/* Sensitive CAM */
 comment|/* TTY */
-if|#
-directive|if
-name|NVT
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_TTY
-block|,
-operator|&
-name|vtdriver
-block|}
-block|,
-endif|#
-directive|endif
 if|#
 directive|if
 name|NGP
