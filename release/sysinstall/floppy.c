@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: floppy.c,v 1.6.2.1 1995/05/31 10:17:34 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: floppy.c,v 1.6.2.2 1995/06/01 21:37:16 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -296,6 +296,18 @@ argument_list|,
 name|O_RDONLY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"getRootFloppy: fd is %d\n"
+argument_list|,
+name|fd
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|fd
@@ -316,12 +328,6 @@ name|struct
 name|msdosfs_args
 name|dosargs
 decl_stmt|;
-name|char
-name|mountpoint
-index|[
-name|FILENAME_MAX
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|floppyMounted
@@ -329,17 +335,6 @@ condition|)
 return|return
 name|TRUE
 return|;
-name|memset
-argument_list|(
-operator|&
-name|dosargs
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-name|dosargs
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|Mkdir
@@ -354,7 +349,9 @@ name|msgConfirm
 argument_list|(
 literal|"Unable to make directory mountpoint for %s!"
 argument_list|,
-name|mountpoint
+name|dev
+operator|->
+name|devname
 argument_list|)
 expr_stmt|;
 return|return
@@ -370,13 +367,15 @@ operator|->
 name|description
 argument_list|)
 expr_stmt|;
-name|msgDebug
+name|memset
 argument_list|(
-literal|"initFloppy:  mount floppy %s on /mnt\n"
+operator|&
+name|dosargs
 argument_list|,
-name|dev
-operator|->
-name|devname
+literal|0
+argument_list|,
+sizeof|sizeof
+name|dosargs
 argument_list|)
 expr_stmt|;
 name|dosargs
@@ -386,6 +385,16 @@ operator|=
 name|dev
 operator|->
 name|devname
+expr_stmt|;
+name|args
+operator|.
+name|uid
+operator|=
+name|args
+operator|.
+name|gid
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -410,7 +419,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Error mounting floppy %s (%s) on /mnt : %s\n"
+literal|"Error mounting floppy %s (%s) on /mnt : %s"
 argument_list|,
 name|dev
 operator|->
@@ -419,8 +428,6 @@ argument_list|,
 name|dev
 operator|->
 name|devname
-argument_list|,
-name|mountpoint
 argument_list|,
 name|strerror
 argument_list|(
@@ -432,6 +439,20 @@ return|return
 name|FALSE
 return|;
 block|}
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"initFloppy: mounted floppy %s successfully on /mnt\n"
+argument_list|,
+name|dev
+operator|->
+name|devname
+argument_list|)
+expr_stmt|;
 name|floppyMounted
 operator|=
 name|TRUE
