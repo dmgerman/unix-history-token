@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logent.c	5.8	(Berkeley) %G%"
+literal|"@(#)logent.c	5.9	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,29 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sys_nerr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|FILE
 modifier|*
@@ -99,21 +122,39 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-specifier|static
-name|Ltried
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_SYSLOG
+end_ifndef
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|Stried
-operator|=
+name|FILE
+modifier|*
+name|Ep
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !USE_SYSLOG */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pid
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*LINTLIBRARY*/
@@ -123,27 +164,31 @@ begin_comment
 comment|/*  *	make log entry  */
 end_comment
 
-begin_macro
-name|logent
-argument_list|(
-argument|text
-argument_list|,
-argument|status
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
+name|FILE
+modifier|*
+name|get_logfd
+parameter_list|(
+name|pname
+parameter_list|,
+name|logfilename
+parameter_list|)
 name|char
 modifier|*
-name|text
-decl_stmt|,
-modifier|*
-name|status
+name|pname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|char
+modifier|*
+name|logfilename
+decl_stmt|;
 block|{
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|int
+name|savemask
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|LOGBYSITE
@@ -153,93 +198,9 @@ index|[
 name|MAXFULLNAME
 index|]
 decl_stmt|;
-specifier|static
-name|char
-name|LogRmtname
-index|[
-literal|64
-index|]
-decl_stmt|;
 endif|#
 directive|endif
 endif|LOGBYSITE
-if|if
-condition|(
-name|Rmtname
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
-condition|)
-name|strcpy
-argument_list|(
-name|Rmtname
-argument_list|,
-name|Myname
-argument_list|)
-expr_stmt|;
-comment|/* Open the log file if necessary */
-ifdef|#
-directive|ifdef
-name|LOGBYSITE
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|Rmtname
-argument_list|,
-name|LogRmtname
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|Lp
-operator|!=
-name|NULL
-condition|)
-name|fclose
-argument_list|(
-name|Lp
-argument_list|)
-expr_stmt|;
-name|Lp
-operator|=
-name|NULL
-expr_stmt|;
-name|Ltried
-operator|=
-literal|0
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|LOGBYSITE
-if|if
-condition|(
-name|Lp
-operator|==
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|Ltried
-condition|)
-block|{
-name|int
-name|savemask
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|F_SETFL
-name|int
-name|flags
-decl_stmt|;
-endif|#
-directive|endif
 name|savemask
 operator|=
 name|umask
@@ -250,6 +211,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOGBYSITE
+if|if
+condition|(
+name|pname
+operator|!=
+name|NULL
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -261,57 +229,51 @@ literal|"%s/%s/%s"
 argument_list|,
 name|LOGBYSITE
 argument_list|,
-name|Progname
+name|pname
 argument_list|,
 name|Rmtname
 argument_list|)
 expr_stmt|;
-name|strcpy
-argument_list|(
-name|LogRmtname
-argument_list|,
-name|Rmtname
-argument_list|)
-expr_stmt|;
-name|Lp
+name|logfilename
 operator|=
-name|fopen
-argument_list|(
 name|lfile
-argument_list|,
-literal|"a"
-argument_list|)
 expr_stmt|;
-else|#
-directive|else
-else|!LOGBYSITE
-name|Lp
-operator|=
-name|fopen
-argument_list|(
-name|LOGFILE
-argument_list|,
-literal|"a"
-argument_list|)
-expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|LOGBYSITE
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|logfilename
+argument_list|,
+literal|"a"
+argument_list|)
+expr_stmt|;
 name|umask
 argument_list|(
 name|savemask
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fp
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|F_SETFL
+name|int
+name|flags
+decl_stmt|;
 name|flags
 operator|=
 name|fcntl
 argument_list|(
 name|fileno
 argument_list|(
-name|Lp
+name|fp
 argument_list|)
 argument_list|,
 name|F_GETFL
@@ -335,48 +297,28 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
-name|Ltried
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|Lp
-operator|==
-name|NULL
-condition|)
-return|return;
+comment|/* F_SETFL */
 name|fioclex
 argument_list|(
 name|fileno
 argument_list|(
-name|Lp
+name|fp
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  make entry in existing temp log file  */
-name|mlogent
+else|else
+comment|/* we really want to log this, but it's the logging that failed*/
+name|perror
 argument_list|(
-name|Lp
-argument_list|,
-name|status
-argument_list|,
-name|text
+name|logfilename
 argument_list|)
 expr_stmt|;
+return|return
+name|fp
+return|;
 block|}
-end_block
-
-begin_decl_stmt
-specifier|static
-name|int
-name|pid
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  *	make a log entry  */
@@ -517,7 +459,7 @@ endif|!USG
 argument|User, Rmtname, tp->tm_mon +
 literal|1
 argument|, tp->tm_mday, 		tp->tm_hour, tp->tm_min, pid); 	fprintf(fp,
-literal|"%s (%s)\n"
+literal|"%s %s\n"
 argument|, status, text);
 comment|/* Since it's buffered */
 ifndef|#
@@ -554,120 +496,18 @@ endif|#
 directive|endif
 endif|!USG
 argument|fprintf(stderr,
-literal|"%s (%s)\n"
+literal|"%s %s\n"
 argument|, status, text); 	} }
 comment|/*  *	close log file  */
-argument|logcls() { 	if (Lp != NULL) 		fclose(Lp); 	Lp = NULL; 	Ltried =
-literal|0
-argument|;  	if (Sp != NULL) 		fclose (Sp); 	Sp = NULL; 	Stried =
-literal|0
-argument|; }
-comment|/*  *	make system log entry  */
-argument|log_xferstats(text) char *text; { 	register struct tm *tp; 	extern struct tm *localtime();
-ifdef|#
-directive|ifdef
-name|LOGBYSITE
-argument|char lfile[MAXFULLNAME]; 	static char SLogRmtname[
-literal|64
-argument|];  	if (strcmp(Rmtname, SLogRmtname)) { 		if (Sp != NULL) 			fclose(Sp); 		Sp = NULL; 		Stried =
-literal|0
-argument|; 	}
-endif|#
-directive|endif
-endif|LOGBYSITE
-argument|if (!pid) 		pid = getpid(); 	if (Sp == NULL) { 		if (!Stried) { 			int savemask;
-ifdef|#
-directive|ifdef
-name|F_SETFL
-argument|int flags;
-endif|#
-directive|endif
-endif|F_SETFL
-argument|savemask = umask(LOGMASK);
-ifdef|#
-directive|ifdef
-name|LOGBYSITE
-argument|(void) sprintf(lfile,
-literal|"%s/xferstats/%s"
-argument|, LOGBYSITE, Rmtname); 			strcpy(SLogRmtname, Rmtname); 			Sp = fopen (lfile,
-literal|"a"
-argument|);
-else|#
-directive|else
-else|!LOGBYSITE
-argument|Sp = fopen (SYSLOG,
-literal|"a"
-argument|);
-endif|#
-directive|endif
-endif|LOGBYSITE
-argument|umask(savemask);
-ifdef|#
-directive|ifdef
-name|F_SETFL
-argument|flags = fcntl(fileno(Sp), F_GETFL,
-literal|0
-argument|); 			fcntl(fileno(Sp), F_SETFL, flags|O_APPEND);
-endif|#
-directive|endif
-endif|F_SETFL
-argument|} 		Stried =
-literal|1
-argument|; 		if (Sp == NULL) 			return; 		fioclex(fileno(Sp)); 	}
-ifdef|#
-directive|ifdef
-name|USG
-argument|time(&Now.time); 	Now.millitm =
-literal|0
-argument|;
-else|#
-directive|else
-else|!USG
-argument|ftime(&Now);
-endif|#
-directive|endif
-endif|!USG
-argument|tp = localtime(&Now.time);  	fprintf(Sp,
-literal|"%s %s "
-argument|, User, Rmtname);
-ifdef|#
-directive|ifdef
-name|USG
-argument|fprintf(Sp,
-literal|"(%d/%d-%2.2d:%2.2d-%d) "
-argument|, tp->tm_mon +
-literal|1
-argument|, 		tp->tm_mday, tp->tm_hour, tp->tm_min, pid); 	fprintf(Sp,
-literal|"(%ld) %s\n"
-argument|, Now.time, text);
-else|#
-directive|else
-else|!USG
-argument|fprintf(Sp,
-literal|"(%d/%d-%02d:%02d-%d) "
-argument|, tp->tm_mon +
-literal|1
-argument|, 		tp->tm_mday, tp->tm_hour, tp->tm_min, pid); 	fprintf(Sp,
-literal|"(%ld.%02u) %s\n"
-argument|, Now.time, Now.millitm/
-literal|10
-argument|, text);
-endif|#
-directive|endif
-endif|!USG
-comment|/* Position at end and flush */
+argument|logcls() { 	if (Lp != NULL) 		fclose(Lp); 	Lp = NULL;  	if (Sp != NULL) 		fclose (Sp); 	Sp = NULL;
 ifndef|#
 directive|ifndef
-name|F_SETFL
-argument|lseek (fileno(Sp), (long)
-literal|0
-argument|,
-literal|2
-argument|);
+name|USE_SYSLOG
+argument|if (Ep != NULL) 		fclose (Ep); 	Ep = NULL;
 endif|#
 directive|endif
-endif|F_SETFL
-argument|fflush (Sp); }
+comment|/* !USE_SYSLOG */
+argument|}
 comment|/*  * Arrange to close fd on exec(II).  * Otherwise unwanted file descriptors are inherited  * by other programs.  And that may be a security hole.  */
 ifndef|#
 directive|ifndef
@@ -702,8 +542,52 @@ argument|if (ret) 		DEBUG(
 literal|2
 argument|,
 literal|"CAN'T FIOCLEX %d\n"
-argument|, fd); }
+argument|, fd); }  logent(text, status) char *text
+argument_list|,
+argument|*status; { 	if (Lp == NULL) 		Lp = get_logfd(Progname, LOGFILE);  	mlogent(Lp, status, text); }
+comment|/*  *	make system log entry  */
+argument|log_xferstats(text) char *text; { 	char tbuf[BUFSIZ]; 	if (Sp == NULL) 		Sp = get_logfd(
+literal|"xferstats"
+argument|, SYSLOG); 	sprintf(tbuf,
+literal|"(%ld.%02u)"
+argument|, Now.time, Now.millitm/
+literal|10
+argument|); 	mlogent(Sp, tbuf, text); }
+ifndef|#
+directive|ifndef
+name|USE_SYSLOG
+comment|/*  * This is for sites that don't have a decent syslog() in their library  * This routine would be a lot simpler if syslog() didn't permit %m  * (or if printf did!)  */
+argument|syslog(priority, format, p0, p1, p2, p3, p4) int priority; char *format; { 	char nformat[BUFSIZ]
+argument_list|,
+argument|sbuf[BUFSIZ]; 	register char *s
+argument_list|,
+argument|*d; 	register int c; 	long now;  	s = format; 	d = nformat; 	while ((c = *s++) !=
+literal|'\0'
+argument|&& c !=
+literal|'\n'
+argument|&& d<&nformat[BUFSIZ]) { 		if (c !=
+literal|'%'
+argument|) { 			*d++ = c; 			continue; 		} 		if ((c = *s++) !=
+literal|'m'
+argument|) { 			*d++ =
+literal|'%'
+argument|; 			*d++ = c; 			continue; 		} 		if ((unsigned)errno> sys_nerr) 			sprintf(d,
+literal|"error %d"
+argument|, errno); 		else 			strcpy(d, sys_errlist[errno]); 		d += strlen(d); 	} 	*d =
+literal|'\0'
+argument|;  	if (Ep == NULL) 		Ep = get_logfd(NULL, ERRLOG); 	sprintf(sbuf, nformat, p0, p1, p2, p3, p4); 	mlogent(Ep, sbuf,
+literal|""
+argument|); }
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !USE_SYSLOG */
+end_comment
 
 end_unit
 
