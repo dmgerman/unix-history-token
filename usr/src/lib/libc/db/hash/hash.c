@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.21 (Berkeley) %G%"
+literal|"@(#)hash.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1635,7 +1635,12 @@ name|l2
 operator|=
 name|__log2
 argument_list|(
+name|MAX
+argument_list|(
 name|nelem
+argument_list|,
+literal|2
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nbuckets
@@ -1643,15 +1648,6 @@ operator|=
 literal|1
 operator|<<
 name|l2
-expr_stmt|;
-name|nbuckets
-operator|=
-name|MAX
-argument_list|(
-name|nbuckets
-argument_list|,
-literal|2
-argument_list|)
 expr_stmt|;
 name|hashp
 operator|->
@@ -4150,6 +4146,8 @@ argument_list|(
 name|hashp
 operator|->
 name|MAX_BUCKET
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
