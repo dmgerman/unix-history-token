@@ -34,7 +34,7 @@ comment|/* Allow 31 bit UTF2 */
 end_comment
 
 begin_comment
-comment|/*  * According to ANSI (section 2.2.4.2), the values below must be usable by  * #if preprocessing directives.  Additionally, the expression must have the  * same type as would an expression that is an object of the corresponding  * type converted according to the integral promotions.  The subtraction for  * INT_MIN and LONG_MIN is so the value is not unsigned; 2147483648 is an  * unsigned int for 32-bit two's complement ANSI compilers (section 3.1.3.2).  * These numbers work for pcc as well.  The UINT_MAX and ULONG_MAX values  * are written as hex so that GCC will be quiet about large integer constants.  */
+comment|/*  * According to ANSI (section 2.2.4.2), the values below must be usable by  * #if preprocessing directives.  Additionally, the expression must have the  * same type as would an expression that is an object of the corresponding  * type converted according to the integral promotions.  The subtraction for  * INT_MIN, etc., is so the value is not unsigned; e.g., 0x80000000 is an  * unsigned int for 32-bit two's complement ANSI compilers (section 3.1.3.2).  * These numbers are for the default configuration of gcc.  They work for  * some other compilers as well, but this should not be depended on.  */
 end_comment
 
 begin_define
@@ -191,6 +191,43 @@ begin_comment
 comment|/* min for a long */
 end_comment
 
+begin_comment
+comment|/* Long longs and longs are the same size on the alpha. */
+end_comment
+
+begin_comment
+comment|/* max for an unsigned long long */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ULLONG_MAX
+value|0xffffffffffffffffULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|LLONG_MAX
+value|0x7fffffffffffffffLL
+end_define
+
+begin_comment
+comment|/* max for a long long */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLONG_MIN
+value|(-0x7fffffffffffffffLL-1)
+end_define
+
+begin_comment
+comment|/* min for a long long */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -240,7 +277,7 @@ comment|/* max value for a size_t */
 end_comment
 
 begin_comment
-comment|/* Quads and longs are the same on the alpha */
+comment|/* Quads and longs are the same on the alpha.  Ensure they stay in sync. */
 end_comment
 
 begin_define
