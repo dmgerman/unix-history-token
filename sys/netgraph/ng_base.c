@@ -2448,7 +2448,7 @@ name|q_mtx
 argument_list|,
 literal|"netgraph node mutex"
 argument_list|,
-literal|0
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|node
