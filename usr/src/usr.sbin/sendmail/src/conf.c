@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.134 (Berkeley) %G%"
+literal|"@(#)conf.c	8.89.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7261,6 +7261,22 @@ modifier|*
 name|getusershell
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|shell
+operator|==
+name|NULL
+operator|||
+name|shell
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+return|return
+name|TRUE
+return|;
 name|setusershell
 argument_list|()
 expr_stmt|;
@@ -7317,6 +7333,22 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|shell
+operator|==
+name|NULL
+operator|||
+name|shell
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+return|return
+name|TRUE
+return|;
 name|shellf
 operator|=
 name|fopen

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.51 (Berkeley) %G%"
+literal|"@(#)util.c	8.39.1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5783,6 +5783,8 @@ operator|)
 name|denlstring
 argument_list|(
 name|f
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5856,7 +5858,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DENLSTRING -- convert newlines in a string to spaces ** **	Parameters: **		s -- the input string ** **	Returns: **		A pointer to a version of the string with newlines **		mapped to spaces.  This should be copied. */
+comment|/* **  DENLSTRING -- convert newlines in a string to spaces ** **	Parameters: **		s -- the input string **		logattacks -- if set, log attempted attacks. ** **	Returns: **		A pointer to a version of the string with newlines **		mapped to spaces.  This should be copied. */
 end_comment
 
 begin_function
@@ -5865,10 +5867,15 @@ modifier|*
 name|denlstring
 parameter_list|(
 name|s
+parameter_list|,
+name|logattacks
 parameter_list|)
 name|char
 modifier|*
 name|s
+decl_stmt|;
+name|bool
+name|logattacks
 decl_stmt|;
 block|{
 specifier|register
@@ -5979,7 +5986,7 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-comment|/* #ifdef LOG 	p = macvalue('_', CurEnv); 	syslog(LOG_ALERT, "POSSIBLE ATTACK from %s: newline in string \"%s\"", 		p == NULL ? "[UNKNOWN]" : p, bp); #endif */
+comment|/* #ifdef LOG 	if (logattacks) 	{ 		syslog(LOG_NOTICE, "POSSIBLE ATTACK from %s: newline in string \"%s\"", 			RealHostName == NULL ? "[UNKNOWN]" : RealHostName, 			shortenstring(bp, 80)); 	} #endif */
 return|return
 name|bp
 return|;

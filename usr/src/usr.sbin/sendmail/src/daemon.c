@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.70 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.48.1.3 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.70 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.48.1.3 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1995,6 +1995,14 @@ decl_stmt|;
 name|int
 name|nleft
 decl_stmt|;
+name|int
+name|ibuf
+index|[
+name|MAXNAME
+operator|+
+literal|1
+index|]
+decl_stmt|;
 specifier|static
 name|char
 name|hbuf
@@ -2175,7 +2183,7 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|hbuf
+name|ibuf
 argument_list|,
 literal|"%d,%d\r\n"
 argument_list|,
@@ -2374,7 +2382,7 @@ name|printf
 argument_list|(
 literal|"getauthinfo: sent %s"
 argument_list|,
-name|hbuf
+name|ibuf
 argument_list|)
 expr_stmt|;
 comment|/* send query */
@@ -2384,11 +2392,11 @@ name|write
 argument_list|(
 name|s
 argument_list|,
-name|hbuf
+name|ibuf
 argument_list|,
 name|strlen
 argument_list|(
-name|hbuf
+name|ibuf
 argument_list|)
 argument_list|)
 operator|<
@@ -2401,7 +2409,7 @@ comment|/* get result */
 name|p
 operator|=
 operator|&
-name|hbuf
+name|ibuf
 index|[
 literal|0
 index|]
@@ -2410,7 +2418,9 @@ name|nleft
 operator|=
 sizeof|sizeof
 argument_list|(
-name|hbuf
+name|ibuf
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 while|while
@@ -2462,7 +2472,7 @@ operator|||
 name|p
 operator|==
 operator|&
-name|hbuf
+name|ibuf
 index|[
 literal|0
 index|]
@@ -2506,7 +2516,7 @@ name|printf
 argument_list|(
 literal|"getauthinfo:  got %s\n"
 argument_list|,
-name|hbuf
+name|ibuf
 argument_list|)
 expr_stmt|;
 comment|/* parse result */
@@ -2514,7 +2524,7 @@ name|p
 operator|=
 name|strchr
 argument_list|(
-name|hbuf
+name|ibuf
 argument_list|,
 literal|':'
 argument_list|)

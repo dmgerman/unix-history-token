@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.84 (Berkeley) %G%"
+literal|"@(#)main.c	8.55.1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1585,12 +1585,17 @@ block|{
 name|res_init
 argument_list|()
 expr_stmt|;
+block|{
+name|res_init
+argument_list|()
+expr_stmt|;
 name|_res
 operator|.
 name|options
 operator||=
 name|RES_DEBUG
 expr_stmt|;
+block|}
 block|}
 end_if
 
@@ -2489,6 +2494,8 @@ argument_list|(
 name|denlstring
 argument_list|(
 name|optarg
+argument_list|,
+name|TRUE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3144,6 +3151,39 @@ end_if
 begin_if
 if|if
 condition|(
+operator|!
+name|bitset
+argument_list|(
+name|RES_INIT
+argument_list|,
+name|_res
+operator|.
+name|options
+argument_list|)
+condition|)
+name|res_init
+argument_list|()
+expr_stmt|;
+end_if
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 	**  Initialize name server if it is going to be used. 	*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|NAMED_BIND
+end_if
+
+begin_if
+if|if
+condition|(
 name|UseNameServer
 operator|&&
 operator|!
@@ -3572,6 +3612,8 @@ argument_list|(
 name|denlstring
 argument_list|(
 name|FullName
+argument_list|,
+name|TRUE
 argument_list|)
 argument_list|)
 expr_stmt|;

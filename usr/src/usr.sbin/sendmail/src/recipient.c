@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.67 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.44.1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,6 +325,8 @@ argument_list|,
 name|denlstring
 argument_list|(
 name|list
+argument_list|,
+name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;

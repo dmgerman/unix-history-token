@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.63 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.41.1.2 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.63 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.41.1.2 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1013,6 +1013,8 @@ argument_list|(
 name|e
 operator|->
 name|e_message
+argument_list|,
+name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1148,6 +1150,8 @@ argument_list|,
 name|denlstring
 argument_list|(
 name|p
+argument_list|,
+name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1178,6 +1182,8 @@ argument_list|,
 name|denlstring
 argument_list|(
 name|p
+argument_list|,
+name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1208,6 +1214,8 @@ argument_list|,
 name|denlstring
 argument_list|(
 name|p
+argument_list|,
+name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1231,6 +1239,8 @@ operator|->
 name|e_from
 operator|.
 name|q_paddr
+argument_list|,
+name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1312,6 +1322,8 @@ argument_list|(
 name|q
 operator|->
 name|q_paddr
+argument_list|,
+name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1399,6 +1411,8 @@ argument_list|(
 name|q
 operator|->
 name|q_paddr
+argument_list|,
+name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2313,6 +2327,8 @@ argument_list|(
 name|a
 operator|->
 name|q_paddr
+argument_list|,
+name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
