@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hgraph.c	1.2	(Berkeley) 83/07/24  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
+comment|/*	hgraph.c	1.3	(Berkeley) 83/08/03  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
 end_comment
 
 begin_include
@@ -517,7 +517,7 @@ name|CENTRIGHT
 case|:
 name|printf
 argument_list|(
-literal|"\\v'\\n(dnu/2u'"
+literal|"\\v'(\\n(dnu+1m)/2u'"
 argument_list|)
 expr_stmt|;
 comment|/* down half */
@@ -533,7 +533,7 @@ name|TOPRIGHT
 case|:
 name|printf
 argument_list|(
-literal|"\\v'\\n(dnu'"
+literal|"\\v'\\n(dnu+1m'"
 argument_list|)
 expr_stmt|;
 comment|/* down whole */
@@ -895,6 +895,9 @@ name|mode
 index|]
 condition|)
 block|{
+name|cr
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\\D's %du'"
@@ -918,6 +921,9 @@ name|mode
 index|]
 condition|)
 block|{
+name|cr
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\\D't %du'"
@@ -1031,7 +1037,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*----------------------------------------------------------------------------*  | Routine:	tmove (point_pointer)  |  | Results:	produces horizontal and vertical moves for troff given  |		the point pointer.  |  | Bugs:	Notice that this is identical to "dx" and "dy" in value  |		output.  This is because troff does NOT understand spaces  |		in \h or \v commands (!)  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------*  | Routine:	tmove (point_pointer)  |  | Results:	produces horizontal and vertical moves for troff given the  |		pointer of a point to move to.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
@@ -1080,11 +1086,21 @@ operator|*
 name|troffscale
 argument_list|)
 decl_stmt|;
+specifier|register
+name|int
+name|dx
+decl_stmt|;
+specifier|register
+name|int
+name|dy
+decl_stmt|;
 name|cr
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|dy
+operator|=
 name|iy
 operator|-
 name|lasty
@@ -1094,9 +1110,7 @@ name|printf
 argument_list|(
 literal|".sp %du\n"
 argument_list|,
-name|iy
-operator|-
-name|lasty
+name|dy
 argument_list|)
 expr_stmt|;
 block|}
@@ -1108,6 +1122,8 @@ name|iy
 expr_stmt|;
 if|if
 condition|(
+name|dx
+operator|=
 name|ix
 operator|-
 name|lastx
@@ -1117,9 +1133,7 @@ name|printf
 argument_list|(
 literal|"\\h'%du'"
 argument_list|,
-name|ix
-operator|-
-name|lastx
+name|dx
 argument_list|)
 expr_stmt|;
 name|lastx
@@ -1131,7 +1145,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*----------------------------------------------------------------------------*  | Routine:	cr  |  | Results:	breaks the output line up to not overrun troff with lines that  |		are too long.  |  | Side Efct:	sets "lastx" to "leftpoint" for troff's return to left margin  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------*  | Routine:	cr ( )  |  | Results:	breaks the output line up to not overrun troff with lines that  |		are too long.  |  | Side Efct:	sets "lastx" to "xleft" for troff's return to left margin  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
