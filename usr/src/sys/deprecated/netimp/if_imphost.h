@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.h	4.5	82/03/09	*/
+comment|/*	if_imphost.h	4.6	82/04/25	*/
 end_comment
 
 begin_comment
@@ -22,21 +22,61 @@ name|in_addr
 name|h_addr
 decl_stmt|;
 comment|/* host's address */
-name|short
+name|u_char
 name|h_qcnt
 decl_stmt|;
 comment|/* size of holding q */
+name|u_char
+name|h_timer
+decl_stmt|;
+comment|/* used to stay off deletion */
 name|u_char
 name|h_rfnm
 decl_stmt|;
 comment|/* # outstanding rfnm's */
 name|u_char
-name|h_refcnt
+name|h_flags
 decl_stmt|;
-comment|/* reference count */
+comment|/* see below */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * A host structure is kept around (even when there are no  * references to it) for a spell to avoid constant reallocation  * and also to reflect IMP status back to sites which aren't  * directly connected to the IMP.  When structures are marked  * free, a timer is started; when the timer expires the structure  * is scavenged.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HF_INUSE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HF_DEAD
+value|(1<<IMPTYPE_HOSTDEAD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HF_UNREACH
+value|(1<<IMPTYPE_HOSTUNREACH)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTTIMER
+value|128
+end_define
+
+begin_comment
+comment|/* keep structure around awhile */
+end_comment
 
 begin_comment
 comment|/*  * Host structures, as seen inside an mbuf.  * Hashing on the host address is used to  * select an index into the first mbuf.  Collisions  * are then resolved by searching successive  * mbuf's at the same index.  Reclamation is done  * automatically at the time a structure is free'd.  */
