@@ -1841,6 +1841,14 @@ name|v_page_count
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
+comment|/* 	 * Tune settings based on the kernel map's size at this time. 	 */
+name|init_param3
+argument_list|(
+name|vm_kmem_size
+operator|/
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
 comment|/* 	 * In mbuf_init(), we set up submaps for mbufs and clusters, in which 	 * case we rounddown() (nmbufs * MSIZE) and (nmbclusters * MCLBYTES), 	 * respectively. Mathematically, this means that what we do here may 	 * amount to slightly more address space than we need for the submaps, 	 * but it never hurts to have an extra page in kmem_map. 	 */
 name|npg
 operator|=

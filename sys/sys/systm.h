@@ -822,6 +822,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|init_param3
+parameter_list|(
+name|long
+name|kmempages
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|tablefull
 parameter_list|(
 specifier|const
