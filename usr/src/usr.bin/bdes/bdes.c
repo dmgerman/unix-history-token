@@ -1,7 +1,78 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * BDES -- DES encryption package for Berkeley Software Distribution 4.4  * options:  *	-a	key is in ASCII  *	-c	use CBC (cipher block chaining) mode  *	-e	use ECB (electronic code book) mode  *	-f b	use b-bit CFB (cipher feedback) mode  *	-F b	use b-bit CFB (cipher feedback) alternative mode  *	-i	invert (decrypt) input  *	-m b	generate a MAC of length b  *	-o b	use b-bit OFB (output feedback) mode  *	-p	don't reset the parity bit  *	-v v	use v as the initialization vector (ignored for ECB)  * note: the last character of the last block is the integer indicating  * how many characters of that block are to be output  *  * Author: Matt Bishop  *	   Department of Mathematics and Computer Science  *	   Dartmouth College  *	   Hanover, NH  03755  * Email:  Matt.Bishop@dartmouth.edu  *	   ...!decvax!dartvax!Matt.Bishop  *  * This is derived from a program written as part of work done for grant  * NAG 2-680 from the National Aeronautics and Space Administration to  * Dartmouth College.  It is freely distributable provided:  * (1) the name and address of the author and the credit to NASA and  *     Dartmouth are not altered or removed; and  * (2) any changes made are noted in the leading comments, and the date  *     and changer are also noted; and  * (3) all bugs are promptly reported to the author at the above address.  * Also, as stated in the manual page, "there is no warranty of merchant-  * ability nor any warranty of fitness for a particular puurpose not any  * other warranty, either express or implied, as to the accuracy of the  * enclosed materials or as to their suitability for any particular pur-  * pose.  Accordingly, the user assumes full responsibility for their   * use.  Further, the author assumes no obligation to furnish any assis-  * tance of any kind whatsoever, or to furnish any additional information  * or documentation."  *  * See Technical Report PCS-TR91-158, Department of Mathematics and Computer  * Science, Dartmouth College, for a detailed description of the implemen-  * tation and differences between it and Sun's.  The DES is described in  * FIPS PUB 46, and the modes in FIPS PUB 81 (see either the manual page  * or the technical report for a complete reference).  *  * 4/1/91 -- bug fix by Matt Bishop  *	There was an error in the MAC computation if you asked for a  *	MAC of length not a multiple of 8; you got the first bit from  *	the first char, the second from the second char, and so on.  *	Found by inspection of code; fixed.  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Matt Bishop of Dartmouth College.  *  * The United States Government has rights in this work pursuant  * to contract no. NAG 2-680 between the National Aeronautics and  * Space Administration and Dartmouth College.  *  * %sccs.include.redist.c%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1991 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)bdes.c	5.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  * BDES -- DES encryption package for Berkeley Software Distribution 4.4  * options:  *	-a	key is in ASCII  *	-e	use ECB (electronic code book) mode  *	-f b	use b-bit CFB (cipher feedback) mode  *	-F b	use b-bit CFB (cipher feedback) alternative mode  *	-i	invert (decrypt) input  *	-m b	generate a MAC of length b  *	-o b	use b-bit OFB (output feedback) mode  *	-p	don't reset the parity bit  *	-v v	use v as the initialization vector (ignored for ECB)  * note: the last character of the last block is the integer indicating  * how many characters of that block are to be output  *  * Author: Matt Bishop  *	   Department of Mathematics and Computer Science  *	   Dartmouth College  *	   Hanover, NH  03755  * Email:  Matt.Bishop@dartmouth.edu  *	   ...!decvax!dartvax!Matt.Bishop  *  * See Technical Report PCS-TR91-158, Department of Mathematics and Computer  * Science, Dartmouth College, for a detailed description of the implemen-  * tation and differences between it and Sun's.  The DES is described in  * FIPS PUB 46, and the modes in FIPS PUB 81 (see either the manual page  * or the technical report for a complete reference).  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_include
 include|#
@@ -12,15 +83,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stdlib.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|C_NULL
-value|((char *) NULL)
-end_define
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_comment
 comment|/*  * BSD and System V systems offer special library calls that do  * block moves and fills, so if possible we take advantage of them  */
@@ -106,7 +176,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|if (fwrite(buf, sizeof(char), n, stdout) != n)	\ 			err(1, bn, C_NULL);
+value|if (fwrite(buf, sizeof(char), n, stdout) != n)	\ 			err(bn, NULL);
 end_define
 
 begin_comment
@@ -205,146 +275,39 @@ begin_comment
 comment|/* how to interpret the key */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
 name|MODE_ENCRYPT
-value|0x01
-end_define
-
-begin_comment
-comment|/* encrypt */
-end_comment
-
-begin_define
-define|#
-directive|define
+block|,
 name|MODE_DECRYPT
-value|0x02
-end_define
-
-begin_comment
-comment|/* decrypt */
-end_comment
-
-begin_define
-define|#
-directive|define
+block|,
 name|MODE_AUTHENTICATE
-value|0x04
-end_define
-
-begin_comment
-comment|/* authenticate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GET_DIRECTION
-value|((mode)&0xf)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISSET_MODE_DIRECTION
-value|(GET_DIRECTION != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MODE_ECB
-value|0x10
-end_define
-
-begin_comment
-comment|/* ECB mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_CBC
-value|0x20
-end_define
-
-begin_comment
-comment|/* CBC mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_CFB
-value|0x30
-end_define
-
-begin_comment
-comment|/* cipher feedback mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_OFB
-value|0x40
-end_define
-
-begin_comment
-comment|/* output feedback mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_CFBA
-value|0x50
-end_define
-
-begin_comment
-comment|/* alternative cipher feedback mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GET_ALGORITHM
-value|((mode)&0xf0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISSET_MODE_ALGORITHM
-value|(GET_ALGORITHM != 0)
-end_define
-
-begin_decl_stmt
-name|int
+block|}
 name|mode
 init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+name|MODE_ENCRYPT
+enum|;
+end_enum
 
-begin_comment
-comment|/* how to run */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|keyrep
+begin_enum
+enum|enum
+block|{
+name|ALG_ECB
+block|,
+name|ALG_CBC
+block|,
+name|ALG_CFB
+block|,
+name|ALG_OFB
+block|,
+name|ALG_CFBA
+block|}
+name|alg
 init|=
-literal|"*********"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* replaces command-line key */
-end_comment
+name|ALG_CBC
+enum|;
+end_enum
 
 begin_decl_stmt
 name|Desbuf
@@ -362,11 +325,11 @@ name|bits
 index|[]
 init|=
 block|{
+comment|/* used to extract bits from a char */
 literal|'\200'
 block|,
 literal|'\100'
 block|,
-comment|/* used to extract bits from a char */
 literal|'\040'
 block|,
 literal|'\020'
@@ -385,26 +348,11 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|inverse
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0 ti encrypt, 1 to decrypt */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|progname
-init|=
-literal|"des program"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* program name */
+comment|/* 0 to encrypt, 1 to decrypt */
 end_comment
 
 begin_decl_stmt
@@ -436,8 +384,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|pflag
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -445,110 +391,33 @@ begin_comment
 comment|/* 1 to preserve parity bits */
 end_comment
 
-begin_decl_stmt
+begin_function
+name|main
+parameter_list|(
+name|ac
+parameter_list|,
+name|av
+parameter_list|)
+name|int
+name|ac
+decl_stmt|;
 name|char
 modifier|*
-name|dummyargs
-index|[]
-init|=
-block|{
-literal|"*****"
-block|,
-name|NULL
-block|}
+modifier|*
+name|av
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* argument list to be printed */
-end_comment
-
-begin_comment
-comment|/*  * library hooks  */
-end_comment
-
-begin_comment
-comment|/* see getopt(3) */
-end_comment
-
-begin_decl_stmt
+block|{
 specifier|extern
 name|int
 name|optind
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* option (argument) number */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|optarg
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* argument to option if any */
-end_comment
-
-begin_comment
-comment|/*  * library functions  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_function_decl
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* in core formatted print */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-name|char
-modifier|*
-name|getpass
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* get a password from a terminal */
-end_comment
-
-begin_function
-name|main
-parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
-name|int
-name|argc
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
-block|{
 specifier|register
 name|int
 name|i
@@ -560,42 +429,46 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* used to obtain the key */
-name|int
-name|n
-decl_stmt|;
-comment|/* number of command-line errors */
 name|Desbuf
 name|msgbuf
 decl_stmt|;
 comment|/* I/O buffer */
 name|int
-name|nargs
+name|argc
+decl_stmt|,
+name|kflag
 decl_stmt|;
-comment|/* internal number of arguments */
 name|char
 modifier|*
 modifier|*
-name|arglist
+name|argv
 decl_stmt|;
-comment|/* internal argument list */
-comment|/* 	 * hide the arguments 	 */
-name|nargs
+comment|/* hide the arguments from ps(1) */
+name|argc
 operator|=
-name|argc
+name|ac
 expr_stmt|;
-name|argc
+name|ac
 operator|=
 literal|1
 expr_stmt|;
-name|arglist
-operator|=
-name|argv
-expr_stmt|;
 name|argv
 operator|=
-name|dummyargs
+name|malloc
+argument_list|(
+operator|(
+name|argc
+operator|+
+literal|1
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* 	 * initialize the initialization vctor 	 */
 for|for
 control|(
 name|i
@@ -604,29 +477,59 @@ literal|0
 init|;
 name|i
 operator|<
-literal|8
+name|argc
 condition|;
-name|i
 operator|++
+name|i
 control|)
-name|UCHAR
+block|{
+name|argv
+index|[
+name|i
+index|]
+operator|=
+name|strdup
+argument_list|(
+name|av
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|MEMZERO
+argument_list|(
+name|av
+index|[
+name|i
+index|]
+argument_list|,
+name|strlen
+argument_list|(
+name|av
+index|[
+name|i
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|argv
+index|[
+name|argc
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* initialize the initialization vctor */
+name|MEMZERO
 argument_list|(
 name|ivec
 argument_list|,
-name|i
+literal|8
 argument_list|)
-operator|=
-literal|0x00
 expr_stmt|;
-comment|/* 	 * process the argument list 	 */
-name|progname
-operator|=
-name|arglist
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|n
+comment|/* process the argument list */
+name|kflag
 operator|=
 literal|0
 expr_stmt|;
@@ -637,11 +540,11 @@ name|i
 operator|=
 name|getopt
 argument_list|(
-name|nargs
+name|argc
 argument_list|,
-name|arglist
+name|argv
 argument_list|,
-literal|"aceF:f:im:o:pv:"
+literal|"abdF:f:k:m:o:pv:"
 argument_list|)
 operator|)
 operator|!=
@@ -662,72 +565,30 @@ name|KEY_ASCII
 expr_stmt|;
 break|break;
 case|case
-literal|'c'
+literal|'b'
 case|:
-comment|/* use CBC mode */
-if|if
-condition|(
-name|ISSET_MODE_ALGORITHM
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"two modes of operation specified"
-argument_list|)
-expr_stmt|;
-name|mode
-operator||=
-name|MODE_CBC
+comment|/* use ECB mode */
+name|alg
+operator|=
+name|ALG_ECB
 expr_stmt|;
 break|break;
 case|case
-literal|'e'
+literal|'d'
 case|:
-comment|/* use ECB mode */
-if|if
-condition|(
-name|ISSET_MODE_ALGORITHM
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"two modes of operation specified"
-argument_list|)
-expr_stmt|;
+comment|/* decrypt */
 name|mode
-operator||=
-name|MODE_ECB
+operator|=
+name|MODE_DECRYPT
 expr_stmt|;
 break|break;
 case|case
 literal|'F'
 case|:
 comment|/* use alternative CFB mode */
-if|if
-condition|(
-name|ISSET_MODE_ALGORITHM
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"two modes of operation specified"
-argument_list|)
-expr_stmt|;
-name|mode
-operator||=
-name|MODE_CFBA
+name|alg
+operator|=
+name|ALG_CFBA
 expr_stmt|;
 if|if
 condition|(
@@ -750,8 +611,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 operator|-
 literal|1
 argument_list|,
@@ -768,8 +627,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 operator|-
 literal|1
 argument_list|,
@@ -781,23 +638,9 @@ case|case
 literal|'f'
 case|:
 comment|/* use CFB mode */
-if|if
-condition|(
-name|ISSET_MODE_ALGORITHM
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"two modes of operation specified"
-argument_list|)
-expr_stmt|;
-name|mode
-operator||=
-name|MODE_CFB
+name|alg
+operator|=
+name|ALG_CFB
 expr_stmt|;
 if|if
 condition|(
@@ -820,8 +663,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 operator|-
 literal|1
 argument_list|,
@@ -838,8 +679,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 operator|-
 literal|1
 argument_list|,
@@ -848,48 +687,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'i'
+literal|'k'
 case|:
-comment|/* decrypt */
-if|if
-condition|(
-name|ISSET_MODE_DIRECTION
-condition|)
-name|err
-argument_list|(
+comment|/* encryption key */
+name|kflag
+operator|=
 literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"only one of -i and -m allowed"
-argument_list|)
 expr_stmt|;
-name|mode
-operator||=
-name|MODE_DECRYPT
+name|cvtkey
+argument_list|(
+name|BUFFER
+argument_list|(
+name|msgbuf
+argument_list|)
+argument_list|,
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'m'
 case|:
 comment|/* number of bits for MACing */
-if|if
-condition|(
-name|ISSET_MODE_DIRECTION
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"only one of -i and -m allowed"
-argument_list|)
-expr_stmt|;
 name|mode
-operator||=
+operator|=
 name|MODE_AUTHENTICATE
 expr_stmt|;
 if|if
@@ -909,8 +730,6 @@ literal|64
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 operator|-
 literal|1
 argument_list|,
@@ -922,23 +741,9 @@ case|case
 literal|'o'
 case|:
 comment|/* use OFB mode */
-if|if
-condition|(
-name|ISSET_MODE_ALGORITHM
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"two modes of operation specified"
-argument_list|)
-expr_stmt|;
-name|mode
-operator||=
-name|MODE_OFB
+name|alg
+operator|=
+name|ALG_OFB
 expr_stmt|;
 if|if
 condition|(
@@ -961,8 +766,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 operator|-
 literal|1
 argument_list|,
@@ -979,8 +782,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 operator|-
 literal|1
 argument_list|,
@@ -988,13 +789,13 @@ literal|"-o: number must be a multiple of 8"
 argument_list|)
 expr_stmt|;
 break|break;
-break|break;
 case|case
 literal|'p'
 case|:
 comment|/* preserve parity bits */
 name|pflag
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1014,48 +815,14 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* error */
-name|n
-operator|++
+name|usage
+argument_list|()
 expr_stmt|;
-break|break;
 block|}
-comment|/* 	 * on error, quit 	 */
-if|if
-condition|(
-name|n
-operator|>
-literal|0
-condition|)
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* 	 * if no direction set, default to encryption 	 */
 if|if
 condition|(
 operator|!
-name|ISSET_MODE_DIRECTION
-condition|)
-name|mode
-operator||=
-name|MODE_ENCRYPT
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ISSET_MODE_ALGORITHM
-condition|)
-name|mode
-operator||=
-name|MODE_CBC
-expr_stmt|;
-comment|/* 	 * pick up the key 	 * -- if there are no more arguments, prompt for it 	 * -- if there is 1 more argument, use it as the key 	 * -- if there are 2 or more arguments, error 	 */
-if|if
-condition|(
-name|optind
-operator|==
-name|nargs
+name|kflag
 condition|)
 block|{
 comment|/* 		 * if the key's not ASCII, assume it is 		 */
@@ -1064,27 +831,11 @@ operator|=
 name|KEY_ASCII
 expr_stmt|;
 comment|/* 		 * get the key 		 */
-if|if
-condition|(
-operator|(
 name|p
 operator|=
 name|getpass
 argument_list|(
 literal|"Enter key: "
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"no key given"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * copy it, nul-padded, into the key area 		 */
@@ -1101,106 +852,153 @@ literal|8
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|optind
-operator|+
-literal|1
-operator|==
-name|nargs
-condition|)
-block|{
-comment|/* 		 * obtain the bit form of the key 		 * and hide it from a "ps" 		 */
-name|cvtkey
-argument_list|(
-name|BUFFER
+name|makekey
 argument_list|(
 name|msgbuf
 argument_list|)
-argument_list|,
-name|arglist
-index|[
-name|optind
-index|]
-argument_list|)
 expr_stmt|;
-name|arglist
-index|[
-name|optind
-index|]
+name|inverse
 operator|=
-name|keyrep
+operator|(
+name|alg
+operator|==
+name|ALG_CBC
+operator|||
+name|alg
+operator|==
+name|ALG_ECB
+operator|)
+operator|&&
+name|mode
+operator|==
+name|MODE_DECRYPT
 expr_stmt|;
-block|}
-else|else
+switch|switch
+condition|(
+name|alg
+condition|)
 block|{
-comment|/* 		 * extra arguments -- bomb 		 */
-name|err
-argument_list|(
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"extraneous arguments"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * main loop 	 */
+case|case
+name|ALG_CBC
+case|:
 switch|switch
 condition|(
 name|mode
 condition|)
 block|{
 case|case
-name|MODE_ECB
-operator||
-name|MODE_ENCRYPT
-case|:
-comment|/* encrypt using ECB mode */
-name|inverse
-operator|=
-literal|0
-expr_stmt|;
-name|makekey
-argument_list|(
-name|msgbuf
-argument_list|)
-expr_stmt|;
-name|ecbenc
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|MODE_ECB
-operator||
-name|MODE_DECRYPT
-case|:
-comment|/* decrypt using ECB mode */
-name|inverse
-operator|=
-literal|1
-expr_stmt|;
-name|makekey
-argument_list|(
-name|msgbuf
-argument_list|)
-expr_stmt|;
-name|ecbdec
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|MODE_ECB
-operator||
 name|MODE_AUTHENTICATE
 case|:
-comment|/* authenticate using ECB */
+comment|/* authenticate using CBC mode */
+name|cbcauth
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|MODE_DECRYPT
+case|:
+comment|/* decrypt using CBC mode */
+name|cbcdec
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|MODE_ENCRYPT
+case|:
+comment|/* encrypt using CBC mode */
+name|cbcenc
+argument_list|()
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|ALG_CFB
+case|:
+switch|switch
+condition|(
+name|mode
+condition|)
+block|{
+case|case
+name|MODE_AUTHENTICATE
+case|:
+comment|/* authenticate using CFB mode */
+name|cfbauth
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|MODE_DECRYPT
+case|:
+comment|/* decrypt using CFB mode */
+name|cfbdec
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|MODE_ENCRYPT
+case|:
+comment|/* encrypt using CFB mode */
+name|cfbenc
+argument_list|()
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|ALG_CFBA
+case|:
+switch|switch
+condition|(
+name|mode
+condition|)
+block|{
+case|case
+name|MODE_AUTHENTICATE
+case|:
+comment|/* authenticate using CFBA mode */
 name|err
 argument_list|(
+operator|-
 literal|1
 argument_list|,
+literal|"can't authenticate with CFBA mode"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|MODE_DECRYPT
+case|:
+comment|/* decrypt using CFBA mode */
+name|cfbadec
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|MODE_ENCRYPT
+case|:
+comment|/* encrypt using CFBA mode */
+name|cfbaenc
+argument_list|()
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|ALG_ECB
+case|:
+switch|switch
+condition|(
+name|mode
+condition|)
+block|{
+case|case
+name|MODE_AUTHENTICATE
+case|:
+comment|/* authenticate using ECB mode */
+name|err
+argument_list|(
 operator|-
 literal|1
 argument_list|,
@@ -1209,207 +1007,61 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MODE_CBC
-operator||
-name|MODE_ENCRYPT
+name|MODE_DECRYPT
 case|:
-comment|/* encrypt using CBC mode */
-name|inverse
-operator|=
-literal|0
-expr_stmt|;
-name|makekey
-argument_list|(
-name|msgbuf
-argument_list|)
-expr_stmt|;
-name|cbcenc
+comment|/* decrypt using ECB mode */
+name|ecbdec
 argument_list|()
 expr_stmt|;
 break|break;
 case|case
-name|MODE_CBC
-operator||
-name|MODE_DECRYPT
+name|MODE_ENCRYPT
 case|:
-comment|/* decrypt using CBC mode */
-name|inverse
-operator|=
+comment|/* encrypt using ECB mode */
+name|ecbenc
+argument_list|()
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|ALG_OFB
+case|:
+switch|switch
+condition|(
+name|mode
+condition|)
+block|{
+case|case
+name|MODE_AUTHENTICATE
+case|:
+comment|/* authenticate using OFB mode */
+name|err
+argument_list|(
+operator|-
 literal|1
-expr_stmt|;
-name|makekey
-argument_list|(
-name|msgbuf
+argument_list|,
+literal|"can't authenticate with OFB mode"
 argument_list|)
-expr_stmt|;
-name|cbcdec
-argument_list|()
 expr_stmt|;
 break|break;
 case|case
-name|MODE_CBC
-operator||
-name|MODE_AUTHENTICATE
-case|:
-comment|/* authenticate using CBC */
-name|inverse
-operator|=
-literal|0
-expr_stmt|;
-name|makekey
-argument_list|(
-name|msgbuf
-argument_list|)
-expr_stmt|;
-name|cbcauth
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|MODE_CFB
-operator||
-name|MODE_ENCRYPT
-case|:
-comment|/* encrypt using CFB mode */
-name|inverse
-operator|=
-literal|0
-expr_stmt|;
-name|makekey
-argument_list|(
-name|msgbuf
-argument_list|)
-expr_stmt|;
-name|cfbenc
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|MODE_CFB
-operator||
-name|MODE_DECRYPT
-case|:
-comment|/* decrypt using CFB mode */
-name|inverse
-operator|=
-literal|0
-expr_stmt|;
-name|makekey
-argument_list|(
-name|msgbuf
-argument_list|)
-expr_stmt|;
-name|cfbdec
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|MODE_CFB
-operator||
-name|MODE_AUTHENTICATE
-case|:
-comment|/* authenticate using CFB */
-name|inverse
-operator|=
-literal|0
-expr_stmt|;
-name|makekey
-argument_list|(
-name|msgbuf
-argument_list|)
-expr_stmt|;
-name|cfbauth
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|MODE_CFBA
-operator||
-name|MODE_ENCRYPT
-case|:
-comment|/* alternative CFB mode */
-name|inverse
-operator|=
-literal|0
-expr_stmt|;
-name|makekey
-argument_list|(
-name|msgbuf
-argument_list|)
-expr_stmt|;
-name|cfbaenc
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|MODE_CFBA
-operator||
-name|MODE_DECRYPT
-case|:
-comment|/* alternative CFB mode */
-name|inverse
-operator|=
-literal|0
-expr_stmt|;
-name|makekey
-argument_list|(
-name|msgbuf
-argument_list|)
-expr_stmt|;
-name|cfbadec
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|MODE_OFB
-operator||
-name|MODE_ENCRYPT
-case|:
-comment|/* encrypt using OFB mode */
-name|inverse
-operator|=
-literal|0
-expr_stmt|;
-name|makekey
-argument_list|(
-name|msgbuf
-argument_list|)
-expr_stmt|;
-name|ofbenc
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|MODE_OFB
-operator||
 name|MODE_DECRYPT
 case|:
 comment|/* decrypt using OFB mode */
-name|inverse
-operator|=
-literal|0
-expr_stmt|;
-name|makekey
-argument_list|(
-name|msgbuf
-argument_list|)
-expr_stmt|;
 name|ofbdec
 argument_list|()
 expr_stmt|;
 break|break;
-default|default:
-comment|/* unimplemented */
-name|err
-argument_list|(
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"can't handle that yet"
-argument_list|)
+case|case
+name|MODE_ENCRYPT
+case|:
+comment|/* encrypt using OFB mode */
+name|ofbenc
+argument_list|()
 expr_stmt|;
+break|break;
+block|}
 break|break;
 block|}
 name|exit
@@ -1427,23 +1079,11 @@ end_comment
 begin_macro
 name|err
 argument_list|(
-argument|f
-argument_list|,
 argument|n
 argument_list|,
 argument|s
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|f
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*>0 if fatal (status code), 0 if not */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -1468,12 +1108,6 @@ end_comment
 
 begin_block
 block|{
-name|char
-name|tbuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|n
@@ -1483,62 +1117,48 @@ condition|)
 operator|(
 name|void
 operator|)
-name|sprintf
-argument_list|(
-name|tbuf
-argument_list|,
-literal|"%s (block %d)"
-argument_list|,
-name|progname
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-else|else
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|tbuf
-argument_list|,
-literal|"%s"
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|==
-name|C_NULL
-condition|)
-name|perror
-argument_list|(
-name|tbuf
-argument_list|)
-expr_stmt|;
-else|else
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: %s\n"
+literal|"bdes (block %d): "
 argument_list|,
-name|tbuf
-argument_list|,
-name|s
+name|n
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|f
-operator|>
-literal|0
-condition|)
+else|else
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"bdes: "
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n"
+argument_list|,
+name|s
+condition|?
+name|s
+else|:
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
-name|f
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1548,20 +1168,28 @@ begin_comment
 comment|/*  * map a hex character to an integer  */
 end_comment
 
-begin_function
-name|int
+begin_macro
 name|tobinhex
-parameter_list|(
-name|c
-parameter_list|,
-name|radix
-parameter_list|)
+argument_list|(
+argument|c
+argument_list|,
+argument|radix
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 name|c
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|radix
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 switch|switch
 condition|(
@@ -1821,7 +1449,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * convert the key to a bit pattern  */
@@ -1840,11 +1468,7 @@ begin_decl_stmt
 name|char
 modifier|*
 name|obuf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
+decl_stmt|,
 modifier|*
 name|ibuf
 decl_stmt|;
@@ -1971,8 +1595,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 operator|-
 literal|1
 argument_list|,
@@ -2124,8 +1746,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 operator|-
 literal|1
 argument_list|,
@@ -2307,8 +1927,6 @@ else|else
 block|{
 name|err
 argument_list|(
-literal|1
-argument_list|,
 operator|-
 literal|1
 argument_list|,
@@ -2715,8 +2333,6 @@ literal|7
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 name|bn
 argument_list|,
 literal|"decryption failed (block corrupted)"
@@ -2753,8 +2369,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 name|bn
 argument_list|,
 literal|"decryption failed (incomplete block)"
@@ -3112,8 +2726,6 @@ literal|7
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 name|bn
 argument_list|,
 literal|"decryption failed (block corrupted)"
@@ -3150,8 +2762,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 name|bn
 argument_list|,
 literal|"decryption failed (incomplete block)"
@@ -3348,6 +2958,9 @@ name|macbits
 operator|-=
 literal|8
 control|)
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 name|CHAR
@@ -3408,6 +3021,9 @@ name|j
 index|]
 operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 name|CHAR
@@ -3898,8 +3514,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 name|bn
 argument_list|,
 literal|"decryption failed (block corrupted)"
@@ -3933,8 +3547,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 name|bn
 argument_list|,
 literal|"decryption failed (incomplete block)"
@@ -4469,8 +4081,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 name|bn
 argument_list|,
 literal|"decryption failed (block corrupted)"
@@ -4504,8 +4114,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 name|bn
 argument_list|,
 literal|"decryption failed (incomplete block)"
@@ -5010,8 +4618,6 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 name|bn
 argument_list|,
 literal|"decryption failed (block corrupted)"
@@ -5046,8 +4652,6 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
-argument_list|,
 name|bn
 argument_list|,
 literal|"decryption failed (incomplete block)"
@@ -5296,6 +4900,9 @@ name|macbits
 operator|-=
 literal|8
 control|)
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 name|CHAR
@@ -5356,6 +4963,9 @@ name|j
 index|]
 operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 name|CHAR
@@ -5583,6 +5193,31 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: bdes [-aceip] [-F bit] [-f bit] [-m bit] [-o bit] [-v vector] [key]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
