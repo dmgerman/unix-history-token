@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: if_lance.c,v 4.300 91/06/09 06:25:58 root Rel41 $ SONY  *  *	@(#)if_lance.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: if_lance.c,v 4.300 91/06/09 06:25:58 root Rel41 $ SONY  *  *	@(#)if_lance.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -426,7 +426,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* NEN> 1 */
 if|#
 directive|if
 name|NEN
@@ -452,7 +451,6 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* NEN> 2 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1132,15 +1130,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|news700
-name|lance_led
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* news700 */
 if|if
 condition|(
 name|RECV_ERR
@@ -1403,15 +1392,6 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|news700
-name|lance_led
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* news700 */
 block|}
 end_block
 
@@ -2579,40 +2559,6 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|lance_led
-argument_list|()
-end_macro
-
-begin_block
-block|{
-ifdef|#
-directive|ifdef
-name|news700
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
-name|ETHER_LED
-operator|=
-literal|1
-expr_stmt|;
-operator|*
-operator|(
-name|u_char
-operator|*
-operator|)
-name|ETHER_LED
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* news700 */
 block|}
 end_block
 
