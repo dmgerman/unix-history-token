@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.h	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -72,6 +72,10 @@ name|u_long
 name|rmx_rttvar
 decl_stmt|;
 comment|/* estimated rtt variance */
+name|u_long
+name|rmx_pksent
+decl_stmt|;
+comment|/* packets sent using this route */
 block|}
 struct|;
 end_struct
@@ -457,14 +461,18 @@ name|u_short
 name|rtm_index
 decl_stmt|;
 comment|/* index for associated ifp */
-name|pid_t
-name|rtm_pid
+name|int
+name|rtm_flags
 decl_stmt|;
-comment|/* identify sender */
+comment|/* flags, incl. kern& message, e.g. DONE */
 name|int
 name|rtm_addrs
 decl_stmt|;
 comment|/* bitmask identifying sockaddrs in msg */
+name|pid_t
+name|rtm_pid
+decl_stmt|;
+comment|/* identify sender */
 name|int
 name|rtm_seq
 decl_stmt|;
@@ -473,10 +481,6 @@ name|int
 name|rtm_errno
 decl_stmt|;
 comment|/* why failed */
-name|int
-name|rtm_flags
-decl_stmt|;
-comment|/* flags, incl. kern& message, e.g. DONE */
 name|int
 name|rtm_use
 decl_stmt|;
@@ -494,31 +498,11 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|route_cb
-block|{
-name|int
-name|ip_count
-decl_stmt|;
-name|int
-name|ns_count
-decl_stmt|;
-name|int
-name|iso_count
-decl_stmt|;
-name|int
-name|any_count
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
 name|RTM_VERSION
-value|2
+value|3
 end_define
 
 begin_comment
@@ -649,6 +633,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RTM_NEWADDR
+value|0xc
+end_define
+
+begin_comment
+comment|/* address being added to iface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_DELADDR
+value|0xd
+end_define
+
+begin_comment
+comment|/* address being removed from iface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_IFINFO
+value|0xe
+end_define
+
+begin_comment
+comment|/* iface going up/down etc. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RTV_MTU
 value|0x1
 end_define
@@ -734,6 +751,10 @@ begin_comment
 comment|/* init or lock _rttvar */
 end_comment
 
+begin_comment
+comment|/*  * Bitmask values for rtm_addr.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -811,23 +832,158 @@ begin_comment
 comment|/* sockaddr for author of redirect */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
+begin_define
+define|#
+directive|define
+name|RTA_BRD
+value|0x80
+end_define
 
-begin_decl_stmt
-name|struct
-name|route_cb
-name|route_cb
+begin_comment
+comment|/* for NEWADDR, broadcast or p-p dest addr */
+end_comment
+
+begin_comment
+comment|/*  * Index offsets for sockaddr array for alternate internal encoding.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTAX_DST
+value|0
+end_define
+
+begin_comment
+comment|/* destination sockaddr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTAX_GATEWAY
+value|1
+end_define
+
+begin_comment
+comment|/* gateway sockaddr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTAX_NETMASK
+value|2
+end_define
+
+begin_comment
+comment|/* netmask sockaddr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTAX_GENMASK
+value|3
+end_define
+
+begin_comment
+comment|/* cloning mask sockaddr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTAX_IFP
+value|4
+end_define
+
+begin_comment
+comment|/* interface name sockaddr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTAX_IFA
+value|5
+end_define
+
+begin_comment
+comment|/* interface addr sockaddr present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTAX_AUTHOR
+value|6
+end_define
+
+begin_comment
+comment|/* sockaddr for author of redirect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTAX_BRD
+value|7
+end_define
+
+begin_comment
+comment|/* for NEWADDR, broadcast or p-p dest addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTAX_MAX
+value|8
+end_define
+
+begin_comment
+comment|/* size of array to allocate */
+end_comment
+
+begin_struct
+struct|struct
+name|rt_addrinfo
+block|{
+name|int
+name|rti_addrs
 decl_stmt|;
-end_decl_stmt
+name|struct
+name|sockaddr
+modifier|*
+name|rti_info
+index|[
+name|RTAX_MAX
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_struct
+struct|struct
+name|route_cb
+block|{
+name|int
+name|ip_count
+decl_stmt|;
+name|int
+name|ns_count
+decl_stmt|;
+name|int
+name|iso_count
+decl_stmt|;
+name|int
+name|any_count
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
@@ -846,101 +1002,10 @@ define|\
 value|if ((rt)->rt_refcnt<= 1) \ 		rtfree(rt); \ 	else \ 		(rt)->rt_refcnt--;
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GATEWAY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RTHASHSIZ
-value|64
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RTHASHSIZ
-value|8
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|RTHASHSIZ
-operator|&
-operator|(
-name|RTHASHSIZ
-operator|-
-literal|1
-operator|)
-operator|)
-operator|==
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|RTHASHMOD
-parameter_list|(
-name|h
-parameter_list|)
-value|((h)& (RTHASHSIZ - 1))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RTHASHMOD
-parameter_list|(
-name|h
-parameter_list|)
-value|((h) % RTHASHSIZ)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|struct
-name|mbuf
-modifier|*
-name|rthost
-index|[
-name|RTHASHSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|rtnet
-index|[
-name|RTHASHSIZ
-index|]
+name|route_cb
+name|route_cb
 decl_stmt|;
 end_decl_stmt
 
