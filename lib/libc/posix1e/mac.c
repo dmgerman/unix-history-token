@@ -74,15 +74,13 @@ begin_comment
 comment|/*  * Maintain a list of default label preparations for various object  * types.  Each name will appear only once in the list.  *  * XXXMAC: Not thread-safe.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
 argument|label_default
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|label_default_head
 expr_stmt|;
 end_expr_stmt
