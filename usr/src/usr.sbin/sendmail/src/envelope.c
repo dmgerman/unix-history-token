@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.34 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -268,10 +268,11 @@ comment|/* **  DROPENVELOPE -- deallocate an envelope. ** **	Parameters: **		e -
 end_comment
 
 begin_expr_stmt
-unit|dropenvelope
-operator|(
+unit|void
+name|dropenvelope
+argument_list|(
 name|e
-operator|)
+argument_list|)
 specifier|register
 name|ENVELOPE
 operator|*
@@ -669,27 +670,22 @@ begin_comment
 comment|/* **  CLEARENVELOPE -- clear an envelope without unlocking ** **	This is normally used by a child process to get a clean **	envelope without disturbing the parent. ** **	Parameters: **		e -- the envelope to clear. **		fullclear - if set, the current envelope is total **			garbage and should be ignored; otherwise, **			release any resources it may indicate. ** **	Returns: **		none. ** **	Side Effects: **		Closes files associated with the envelope. **		Marks the envelope as unallocated. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|clearenvelope
-argument_list|(
+parameter_list|(
 name|e
-argument_list|,
+parameter_list|,
 name|fullclear
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|bool
 name|fullclear
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|HDR
@@ -863,7 +859,7 @@ name|h_link
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -872,19 +868,17 @@ begin_comment
 comment|/* **  INITSYS -- initialize instantiation of system ** **	In Daemon mode, this is done in the child. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Initializes the system macros, some global variables, **		etc.  In particular, the current time in various **		forms is set. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|initsys
-argument_list|(
+parameter_list|(
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|static
 name|char
@@ -928,9 +922,8 @@ name|ttyname
 parameter_list|()
 function_decl|;
 specifier|extern
-name|char
-modifier|*
-name|macvalue
+name|void
+name|settime
 parameter_list|()
 function_decl|;
 specifier|extern
@@ -1111,7 +1104,7 @@ endif|#
 directive|endif
 comment|/* TTYNAME */
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1120,19 +1113,17 @@ begin_comment
 comment|/* **  SETTIME -- set the current time. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Sets the various time macros -- $a, $b, $d, $t. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|settime
-argument_list|(
+parameter_list|(
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -1176,12 +1167,6 @@ name|struct
 name|tm
 modifier|*
 name|gmtime
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|macvalue
 parameter_list|()
 function_decl|;
 name|now
@@ -1323,7 +1308,7 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1350,19 +1335,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
+begin_function
+name|void
 name|openxscript
-argument_list|(
+parameter_list|(
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -1431,7 +1414,7 @@ literal|"w"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1440,19 +1423,17 @@ begin_comment
 comment|/* **  CLOSEXSCRIPT -- close the transcript file. ** **	Parameters: **		e -- the envelope containing the transcript to close. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|closexscript
-argument_list|(
+parameter_list|(
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1486,7 +1467,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1495,49 +1476,35 @@ begin_comment
 comment|/* **  SETSENDER -- set the person who this message is from ** **	Under certain circumstances allow the user to say who **	s/he is (using -f or -r).  These are: **	1.  The user's uid is zero (root). **	2.  The user's login name is in an approved list (typically **	    from a network server). **	3.  The address the user is trying to claim has a **	    "!" character in it (since #2 doesn't do it for **	    us if we are dialing out for UUCP). **	A better check to replace #3 would be if the **	effective uid is "UUCP" -- this would require me **	to rewrite getpwent to "grab" uucp as it went by, **	make getname more nasty, do another passwd file **	scan, or compile the UID of "UUCP" into the code, **	all of which are reprehensible. ** **	Assuming all of these fail, we figure out something **	ourselves. ** **	Parameters: **		from -- the person we would like to believe this message **			is from, as specified on the command line. **		e -- the envelope in which we would like the sender set. **		delimptr -- if non-NULL, set to the location of the **			trailing delimiter. **		internal -- set if this address is coming from an internal **			source such as an owner alias. ** **	Returns: **		none. ** **	Side Effects: **		sets sendmail's notion of who the from person is. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setsender
-argument_list|(
-argument|from
-argument_list|,
-argument|e
-argument_list|,
-argument|delimptr
-argument_list|,
-argument|internal
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|from
+parameter_list|,
+name|e
+parameter_list|,
+name|delimptr
+parameter_list|,
+name|internal
+parameter_list|)
 name|char
 modifier|*
 name|from
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|delimptr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|internal
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1577,19 +1544,6 @@ name|struct
 name|passwd
 modifier|*
 name|getpwnam
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|macvalue
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|prescan
 parameter_list|()
 function_decl|;
 specifier|extern
@@ -1652,19 +1606,11 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-block|{
-specifier|extern
-name|char
-modifier|*
-name|username
-parameter_list|()
-function_decl|;
 name|realname
 operator|=
 name|username
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ConfigLevel
@@ -2424,7 +2370,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

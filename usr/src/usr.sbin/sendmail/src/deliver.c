@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.78 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.79 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,11 +149,6 @@ operator|==
 name|SM_DEFAULT
 condition|)
 block|{
-specifier|extern
-name|bool
-name|shouldqueue
-parameter_list|()
-function_decl|;
 name|mode
 operator|=
 name|e
@@ -297,12 +292,6 @@ name|q_flags
 argument_list|)
 condition|)
 block|{
-specifier|extern
-name|ADDRESS
-modifier|*
-name|recipient
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|tTd
@@ -2160,24 +2149,6 @@ name|checkcompat
 parameter_list|()
 function_decl|;
 specifier|extern
-name|ADDRESS
-modifier|*
-name|getctladdr
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|remotename
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|hostsignature
-parameter_list|()
-function_decl|;
-specifier|extern
 name|FILE
 modifier|*
 name|fdopen
@@ -3495,18 +3466,6 @@ specifier|register
 name|u_short
 name|port
 decl_stmt|;
-specifier|extern
-name|MCI
-modifier|*
-name|mci_get
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|hostsignature
-parameter_list|()
-function_decl|;
 name|CurHostName
 operator|=
 name|pv
@@ -5683,12 +5642,6 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|pintvl
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|rcode
@@ -6784,18 +6737,6 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|pintvl
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|macvalue
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)
@@ -6868,12 +6809,6 @@ specifier|extern
 name|SOCKADDR
 name|CurHostAddr
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|anynet_ntoa
-parameter_list|()
-function_decl|;
 endif|#
 directive|endif
 operator|(
@@ -8434,12 +8369,6 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
-specifier|extern
-name|MCI
-modifier|*
-name|mci_get
-parameter_list|()
-function_decl|;
 comment|/* update the connection info for this host */
 name|mci
 operator|=

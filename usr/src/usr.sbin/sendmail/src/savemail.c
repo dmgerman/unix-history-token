@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.43 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1363,15 +1363,6 @@ init|=
 name|CurEnv
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|ENVELOPE
-modifier|*
-name|newenvelope
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|ENVELOPE

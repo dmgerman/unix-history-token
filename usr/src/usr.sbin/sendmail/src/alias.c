@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.48 (Berkeley) %G%"
+literal|"@(#)alias.c	6.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1565,12 +1565,6 @@ operator|>
 literal|7
 condition|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|username
-parameter_list|()
-function_decl|;
 name|syslog
 argument_list|(
 name|LOG_NOTICE

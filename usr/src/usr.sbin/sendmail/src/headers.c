@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.34 (Berkeley) %G%"
+literal|"@(#)headers.c	6.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1681,12 +1681,6 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|macvalue
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|bitset
@@ -1735,12 +1729,6 @@ name|RealHostName
 expr_stmt|;
 else|else
 block|{
-specifier|extern
-name|char
-modifier|*
-name|anynet_ntoa
-parameter_list|()
-function_decl|;
 name|name
 operator|=
 name|hbuf
@@ -3318,12 +3306,6 @@ specifier|auto
 name|int
 name|stat
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|remotename
-parameter_list|()
-function_decl|;
 comment|/* 		**  Find the end of the name.  New style names 		**  end with a comma, old style names end with 		**  a space character.  However, spaces do not 		**  necessarily delimit an old-style name -- at 		**  signs mean keep going. 		*/
 comment|/* find end of name */
 while|while
@@ -3371,13 +3353,6 @@ index|[
 name|PSBUFSIZE
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|prescan
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)

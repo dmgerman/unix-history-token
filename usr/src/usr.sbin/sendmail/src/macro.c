@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	6.7 (Berkeley) %G%"
+literal|"@(#)macro.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,48 +44,37 @@ begin_comment
 comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the last usable position in buf. **		e -- envelope in which to work. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|expand
-argument_list|(
+parameter_list|(
 name|s
-argument_list|,
+parameter_list|,
 name|buf
-argument_list|,
+parameter_list|,
 name|buflim
-argument_list|,
+parameter_list|,
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|buflim
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -120,12 +109,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|macvalue
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|tTd
@@ -471,7 +454,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -480,39 +463,28 @@ begin_comment
 comment|/* **  DEFINE -- define a macro. ** **	this would be better done using a #define macro. ** **	Parameters: **		n -- the macro name. **		v -- the macro value. **		e -- the envelope to store the definition in. ** **	Returns: **		none. ** **	Side Effects: **		e->e_macro[n] is defined. ** **	Notes: **		There is one macro for each ASCII character, **		although they are not all used.  The currently **		defined macros are: ** **		$a   date in ARPANET format (preferring the Date: line **		     of the message) **		$b   the current date (as opposed to the date as found **		     the message) in ARPANET format **		$c   hop count **		$d   (current) date in UNIX (ctime) format **		$e   the SMTP entry message+ **		$f   raw from address **		$g   translated from address **		$h   to host **		$i   queue id **		$j   official SMTP hostname, used in messages+ **		$k   UUCP node name **		$l   UNIX-style from line+ **		$m   The domain part of our full name. **		$n   name of sendmail ("MAILER-DAEMON" on local **		     net typically)+ **		$o   delimiters ("operators") for address tokens+ **		$p   my process id in decimal **		$q   the string that becomes an address -- this is **		     normally used to combine $g& $x. **		$r   protocol used to talk to sender **		$s   sender's host name **		$t   the current time in seconds since 1/1/1970 **		$u   to user **		$v   version number of sendmail **		$w   our host name (if it can be determined) **		$x   signature (full name) of from person **		$y   the tty id of our terminal **		$z   home directory of to person **		$_   RFC1413 authenticated sender address ** **		Macros marked with + must be defined in the **		configuration file and are used internally, but **		are not set. ** **		There are also some macros that can be used **		arbitrarily to make the configuration file **		cleaner.  In general all upper-case letters **		are available. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|define
-argument_list|(
-argument|n
-argument_list|,
-argument|v
-argument_list|,
-argument|e
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|n
+parameter_list|,
+name|v
+parameter_list|,
+name|e
+parameter_list|)
 name|char
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|v
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -554,7 +526,7 @@ operator|=
 name|v
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

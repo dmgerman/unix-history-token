@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.51 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.52 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.51 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.52 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,15 +128,6 @@ end_endif
 begin_comment
 comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests() **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	clrdaemon() **		Close any open files associated with getting **		the connection; this is used when running the queue, **		etc., to avoid having extra file descriptors during **		the queue run and to avoid confusing the network **		code (if it cares). **	makeconnection(host, port, outfile, infile, usesecureport) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. **	host_map_lookup(map, hbuf, avp, pstat) **		Convert the entry in hbuf into a canonical form. */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|anynet_ntoa
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -2601,12 +2592,6 @@ specifier|extern
 name|int
 name|h_errno
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|map_rewrite
-parameter_list|()
-function_decl|;
 comment|/* 	**  See if we have already looked up this name.  If so, just 	**  return it. 	*/
 name|s
 operator|=

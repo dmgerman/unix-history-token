@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	6.18 (Berkeley) %G%"
+literal|"@(#)util.c	6.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1494,11 +1494,6 @@ block|{
 name|int
 name|locktype
 decl_stmt|;
-specifier|extern
-name|bool
-name|lockfile
-parameter_list|()
-function_decl|;
 comment|/* lock the file to avoid accidental conflicts */
 if|if
 condition|(

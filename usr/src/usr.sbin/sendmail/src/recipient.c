@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.40 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -445,12 +445,6 @@ modifier|*
 name|recipient
 parameter_list|()
 function_decl|;
-specifier|extern
-name|ADDRESS
-modifier|*
-name|recipient
-parameter_list|()
-function_decl|;
 name|al
 operator|=
 name|a
@@ -651,15 +645,6 @@ end_escape
 begin_comment
 comment|/* **  RECIPIENT -- Designate a message recipient ** **	Saves the named person for future mailing. ** **	Parameters: **		a -- the (preparsed) address header for the recipient. **		sendq -- a pointer to the head of a queue to put the **			recipient in.  Duplicate supression is done **			in this queue. **		e -- the current envelope. ** **	Returns: **		pointer to address actually inserted in send list. ** **	Side Effects: **		none. */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|ADDRESS
-modifier|*
-name|getctladdr
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|ADDRESS

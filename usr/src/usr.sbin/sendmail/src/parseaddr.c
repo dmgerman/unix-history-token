@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.56 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2582,12 +2582,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* temporary space for rebuild */
-specifier|extern
-name|char
-modifier|*
-name|macvalue
-parameter_list|()
-function_decl|;
 name|char
 name|tokbuf
 index|[

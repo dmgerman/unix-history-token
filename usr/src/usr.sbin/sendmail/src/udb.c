@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.20 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.21 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.20 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.21 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2439,6 +2439,10 @@ literal|"REMOTE: addr %s, timeo %d\n"
 argument_list|,
 name|anynet_ntoa
 argument_list|(
+operator|(
+name|SOCKADDR
+operator|*
+operator|)
 operator|&
 name|up
 operator|->

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.57 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.58 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.57 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.58 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,12 +224,6 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|macvalue
-parameter_list|()
-function_decl|;
 comment|/* 	**  Create control file. 	*/
 name|newid
 operator|=
@@ -297,11 +291,6 @@ literal|0
 condition|;
 control|)
 block|{
-specifier|extern
-name|bool
-name|lockfile
-parameter_list|()
-function_decl|;
 name|fd
 operator|=
 name|open
@@ -1599,12 +1588,6 @@ specifier|static
 name|uid_t
 name|lastuid
 decl_stmt|;
-specifier|extern
-name|ADDRESS
-modifier|*
-name|getctladdr
-parameter_list|()
-function_decl|;
 comment|/* initialization */
 if|if
 condition|(
@@ -1793,11 +1776,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|bool
-name|shouldqueue
-parameter_list|()
-function_decl|;
 specifier|register
 name|ENVELOPE
 modifier|*
@@ -1807,12 +1785,6 @@ specifier|extern
 name|ENVELOPE
 name|BlankEnvelope
 decl_stmt|;
-specifier|extern
-name|ENVELOPE
-modifier|*
-name|newenvelope
-parameter_list|()
-function_decl|;
 comment|/* 	**  If no work will ever be selected, don't even bother reading 	**  the queue. 	*/
 name|CurrentLA
 operator|=
@@ -2068,11 +2040,6 @@ name|w
 init|=
 name|WorkQ
 decl_stmt|;
-specifier|extern
-name|bool
-name|shouldqueue
-parameter_list|()
-function_decl|;
 name|WorkQ
 operator|=
 name|WorkQ
@@ -2490,11 +2457,6 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-specifier|extern
-name|bool
-name|shouldqueue
-parameter_list|()
-function_decl|;
 specifier|extern
 name|bool
 name|strcontainedin
@@ -3580,12 +3542,6 @@ name|MAXLINE
 index|]
 decl_stmt|;
 specifier|extern
-name|char
-modifier|*
-name|fgetfolded
-parameter_list|()
-function_decl|;
-specifier|extern
 name|long
 name|atol
 parameter_list|()
@@ -3594,11 +3550,6 @@ specifier|extern
 name|ADDRESS
 modifier|*
 name|setctluser
-parameter_list|()
-function_decl|;
-specifier|extern
-name|bool
-name|lockfile
 parameter_list|()
 function_decl|;
 specifier|extern
@@ -4691,16 +4642,6 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-specifier|extern
-name|bool
-name|shouldqueue
-parameter_list|()
-function_decl|;
-specifier|extern
-name|bool
-name|lockfile
-parameter_list|()
-function_decl|;
 name|f
 operator|=
 name|fopen
@@ -5281,11 +5222,6 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-specifier|extern
-name|bool
-name|lockfile
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|e

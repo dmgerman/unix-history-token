@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.16 (Berkeley) %G%"
+literal|"@(#)collect.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1160,12 +1160,6 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sfgets
-parameter_list|()
-function_decl|;
 while|while
 condition|(
 name|strchr

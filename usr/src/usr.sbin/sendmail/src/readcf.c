@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.39 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,13 +138,6 @@ specifier|extern
 name|char
 modifier|*
 modifier|*
-name|prescan
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-modifier|*
 name|copyplist
 parameter_list|()
 function_decl|;
@@ -164,12 +157,6 @@ index|[
 name|PSBUFSIZE
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|fgetfolded
-parameter_list|()
-function_decl|;
 specifier|extern
 name|char
 modifier|*
@@ -3492,12 +3479,6 @@ decl_stmt|;
 specifier|extern
 name|bool
 name|trusteduser
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|username
 parameter_list|()
 function_decl|;
 if|if

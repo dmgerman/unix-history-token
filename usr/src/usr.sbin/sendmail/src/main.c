@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.66 (Berkeley) %G%"
+literal|"@(#)main.c	6.67 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -475,15 +475,6 @@ end_expr_stmt
 
 begin_function_decl
 specifier|extern
-name|ENVELOPE
-modifier|*
-name|newenvelope
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|void
 name|intsig
 parameter_list|()
@@ -514,15 +505,6 @@ specifier|extern
 name|char
 modifier|*
 name|getauthinfo
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|macvalue
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -3613,13 +3595,6 @@ condition|)
 continue|continue;
 do|do
 block|{
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|prescan
-parameter_list|()
-function_decl|;
 name|char
 name|pvpbuf
 index|[
@@ -3865,12 +3840,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|pintvl
-parameter_list|()
-function_decl|;
 name|strcat
 argument_list|(
 name|dtype
@@ -5217,12 +5186,6 @@ name|char
 modifier|*
 modifier|*
 name|myhostname
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|macvalue
 parameter_list|()
 function_decl|;
 specifier|extern
