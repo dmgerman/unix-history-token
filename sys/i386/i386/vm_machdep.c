@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * Copyright (c) 1994 John Dyson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	$Id: vm_machdep.c,v 1.23 1994/05/25 08:06:59 swallace Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * Copyright (c) 1994 John Dyson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  *	$Id: vm_machdep.c,v 1.24 1994/05/25 11:23:20 davidg Exp $  */
 end_comment
 
 begin_include
@@ -572,20 +572,17 @@ begin_function
 name|vm_offset_t
 name|vm_bounce_kva
 parameter_list|(
-name|count
+name|size
 parameter_list|,
 name|waitok
 parameter_list|)
 name|int
-name|count
+name|size
 decl_stmt|;
 name|int
 name|waitok
 decl_stmt|;
 block|{
-name|int
-name|tofree
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -603,15 +600,6 @@ init|=
 name|splbio
 argument_list|()
 decl_stmt|;
-name|int
-name|size
-init|=
-name|count
-decl_stmt|;
-name|startfree
-operator|=
-literal|0
-expr_stmt|;
 name|more
 label|:
 if|if
@@ -619,11 +607,7 @@ condition|(
 operator|!
 name|bmfreeing
 operator|&&
-operator|(
-name|tofree
-operator|=
 name|kvasfreecnt
-operator|)
 condition|)
 block|{
 name|bmfreeing
@@ -634,7 +618,7 @@ for|for
 control|(
 name|i
 operator|=
-name|startfree
+literal|0
 init|;
 name|i
 operator|<
@@ -720,25 +704,6 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-name|kvasfreecnt
-operator|!=
-name|tofree
-condition|)
-block|{
-name|startfree
-operator|=
-name|i
-expr_stmt|;
-name|bmfreeing
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|more
-goto|;
 block|}
 name|kvasfreecnt
 operator|=
@@ -832,7 +797,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * same as vm_bounce_kva -- but really allocate  */
+comment|/*  * same as vm_bounce_kva -- but really allocate (but takes pages as arg)  */
 end_comment
 
 begin_function
@@ -886,6 +851,8 @@ operator|=
 name|vm_bounce_kva
 argument_list|(
 name|count
+operator|*
+name|NBPG
 argument_list|,
 literal|1
 argument_list|)
@@ -1014,6 +981,10 @@ argument_list|(
 name|kva
 argument_list|,
 name|count
+operator|*
+name|NBPG
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1081,6 +1052,22 @@ if|if
 condition|(
 name|bp
 operator|->
+name|b_flags
+operator|&
+name|B_BOUNCE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vm_bounce_alloc: called recursively???\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|bp
+operator|->
 name|b_bufsize
 operator|<
 name|bp
@@ -1090,7 +1077,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vm_bounce_alloc: b_bufsize(%d)< b_bcount(%d) !!!!\n"
+literal|"vm_bounce_alloc: b_bufsize(0x%x)< b_bcount(0x%x) !!!!\n"
 argument_list|,
 name|bp
 operator|->
@@ -1101,6 +1088,11 @@ operator|->
 name|b_bcount
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"vm_bounce_alloc"
+argument_list|)
+expr_stmt|;
 name|bp
 operator|->
 name|b_bufsize
@@ -1108,6 +1100,31 @@ operator|=
 name|bp
 operator|->
 name|b_bcount
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bp
+operator|->
+name|b_bufsize
+operator|!=
+name|bp
+operator|->
+name|b_bcount
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"size: %d, count: %d\n"
+argument_list|,
+name|bp
+operator|->
+name|b_bufsize
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+argument_list|)
 expr_stmt|;
 block|}
 name|vastart
@@ -1707,6 +1724,15 @@ return|return;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NOBOUNCE */
+end_comment
+
 begin_comment
 comment|/*  * init the bounce buffer system  */
 end_comment
@@ -1744,6 +1770,9 @@ name|kvasfreecnt
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NOBOUNCE
 if|if
 condition|(
 name|bouncepages
@@ -1797,7 +1826,7 @@ name|bounceallocarraysize
 operator|*
 sizeof|sizeof
 argument_list|(
-name|long
+name|unsigned
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1823,17 +1852,10 @@ name|bouncefree
 operator|=
 name|bouncepages
 expr_stmt|;
-block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* NOBOUNCE */
-end_comment
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -2202,7 +2224,11 @@ name|bp
 operator|->
 name|b_flags
 operator|&
+operator|(
 name|B_READ
+operator||
+name|B_SYNC
+operator|)
 condition|)
 goto|goto
 name|nocluster
@@ -2362,6 +2388,38 @@ name|maxio
 operator|)
 condition|)
 block|{
+comment|/* 			 * something is majorly broken in the upper level 			 * fs code...  blocks can overlap!!!  this detects 			 * the overlap and does the right thing. 			 */
+if|if
+condition|(
+name|ap
+operator|->
+name|av_forw
+operator|&&
+name|bp
+operator|->
+name|b_pblkno
+operator|+
+operator|(
+operator|(
+name|bp
+operator|->
+name|b_bcount
+operator|/
+name|DEV_BSIZE
+operator|)
+operator|>
+name|ap
+operator|->
+name|av_forw
+operator|->
+name|b_pblkno
+operator|)
+condition|)
+block|{
+goto|goto
+name|nocluster
+goto|;
+block|}
 name|orig1begin
 operator|=
 operator|(
@@ -2401,9 +2459,6 @@ operator|/
 name|PAGE_SIZE
 expr_stmt|;
 comment|/* 			 * see if we can allocate a kva, if we cannot, the don't 			 * cluster. 			 */
-ifndef|#
-directive|ifndef
-name|NOBOUNCE
 name|kvanew
 operator|=
 name|vm_bounce_kva
@@ -2419,14 +2474,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|kvanew
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -2467,9 +2514,6 @@ operator|!
 name|newbp
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|NOBOUNCE
 name|vm_bounce_kva_free
 argument_list|(
 name|kvanew
@@ -2485,8 +2529,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|nocluster
 goto|;
@@ -2666,9 +2708,6 @@ name|orig2pages
 argument_list|)
 expr_stmt|;
 comment|/* 				 * free the old kva 				 */
-ifndef|#
-directive|ifndef
-name|NOBOUNCE
 name|vm_bounce_kva_free
 argument_list|(
 name|orig1begin
@@ -2680,8 +2719,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|--
 name|clstats
 index|[
@@ -2867,6 +2904,32 @@ name|maxio
 operator|)
 condition|)
 block|{
+comment|/* 			 * something is majorly broken in the upper level 			 * fs code...  blocks can overlap!!!  this detects 			 * the overlap and does the right thing. 			 */
+if|if
+condition|(
+operator|(
+name|ap
+operator|->
+name|b_pblkno
+operator|+
+operator|(
+name|ap
+operator|->
+name|b_bcount
+operator|/
+name|DEV_BSIZE
+operator|)
+operator|)
+operator|>
+name|bp
+operator|->
+name|b_pblkno
+condition|)
+block|{
+goto|goto
+name|nocluster
+goto|;
+block|}
 name|orig1begin
 operator|=
 operator|(
@@ -2910,9 +2973,6 @@ operator|/
 name|PAGE_SIZE
 expr_stmt|;
 comment|/* 			 * see if we can allocate a kva, if we cannot, the don't 			 * cluster. 			 */
-ifndef|#
-directive|ifndef
-name|NOBOUNCE
 name|kvanew
 operator|=
 name|vm_bounce_kva
@@ -2928,14 +2988,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|kvanew
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -2979,9 +3031,6 @@ operator|!
 name|newbp
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|NOBOUNCE
 name|vm_bounce_kva_free
 argument_list|(
 name|kvanew
@@ -2997,8 +3046,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|nocluster
 goto|;
@@ -3202,9 +3249,6 @@ name|ap
 operator|->
 name|av_forw
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NOBOUNCE
 name|vm_bounce_kva_free
 argument_list|(
 name|orig2begin
@@ -3216,8 +3260,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ap
 operator|->
 name|b_un
