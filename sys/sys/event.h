@@ -87,8 +87,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EVFILT_NETDEV
+value|(-8)
+end_define
+
+begin_comment
+comment|/* network devices */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EVFILT_SYSCOUNT
-value|7
+value|8
 end_define
 
 begin_define
@@ -455,6 +466,43 @@ end_define
 
 begin_comment
 comment|/* am a child process */
+end_comment
+
+begin_comment
+comment|/*  * data/hint flags for EVFILT_NETDEV, shared with userspace  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_LINKUP
+value|0x0001
+end_define
+
+begin_comment
+comment|/* link is up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_LINKDOWN
+value|0x0002
+end_define
+
+begin_comment
+comment|/* link is down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_LINKINV
+value|0x0004
+end_define
+
+begin_comment
+comment|/* link state is invalid */
 end_comment
 
 begin_comment
