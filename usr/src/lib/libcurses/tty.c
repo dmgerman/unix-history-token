@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.16 (Berkeley) %G%"
+literal|"@(#)tty.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,12 +62,15 @@ directive|ifdef
 name|TCSASOFT
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|TCACTION
-value|(TCSASOFT | TCSADRAIN)
-end_define
+begin_decl_stmt
+name|int
+name|__tcaction
+init|=
+name|TCSASOFT
+operator||
+name|TCSADRAIN
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ignore hardware settings */
@@ -78,22 +81,29 @@ else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|TCACTION
-value|TCSADRAIN
-end_define
+begin_decl_stmt
+name|int
+name|__tcaction
+init|=
+name|TCSADRAIN
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* was, pfast = rand() % HARDTABS; */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|termios
 name|__orig_termios
+decl_stmt|,
+name|__baset
 decl_stmt|;
 end_decl_stmt
 
@@ -101,8 +111,6 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|termios
-name|baset
-decl_stmt|,
 name|cbreakt
 decl_stmt|,
 name|rawt
@@ -192,22 +200,26 @@ operator|(
 name|ERR
 operator|)
 return|;
-name|GT
+name|__baset
 operator|=
-operator|(
 name|__orig_termios
+expr_stmt|;
+name|__baset
 operator|.
 name|c_oflag
-operator|&
+operator|&=
+operator|~
 name|OXTABS
-operator|)
-operator|==
+expr_stmt|;
+name|GT
+operator|=
 literal|0
 expr_stmt|;
+comment|/* historical. was used before we wired OXTABS off */
 name|NONL
 operator|=
 operator|(
-name|__orig_termios
+name|__baset
 operator|.
 name|c_oflag
 operator|&
@@ -216,21 +228,10 @@ operator|)
 operator|==
 literal|0
 expr_stmt|;
-name|baset
-operator|=
-name|__orig_termios
-expr_stmt|;
-name|baset
-operator|.
-name|c_oflag
-operator|&=
-operator|~
-name|OXTABS
-expr_stmt|;
 comment|/* 	 * XXX 	 * System V and SMI systems overload VMIN and VTIME, such that 	 * VMIN is the same as the VEOF element, and VTIME is the same 	 * as the VEOL element.  This means that, if VEOF was ^D, the 	 * default VMIN is 4.  Majorly stupid. 	 */
 name|cbreakt
 operator|=
-name|baset
+name|__baset
 expr_stmt|;
 name|cbreakt
 operator|.
@@ -316,7 +317,7 @@ directive|endif
 name|curt
 operator|=
 operator|&
-name|baset
+name|__baset
 expr_stmt|;
 return|return
 operator|(
@@ -324,10 +325,10 @@ name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
-name|TCACTION
+name|__tcaction
 argument_list|,
 operator|&
-name|baset
+name|__baset
 argument_list|)
 condition|?
 name|ERR
@@ -362,7 +363,7 @@ name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
-name|TCACTION
+name|__tcaction
 argument_list|,
 operator|&
 name|rawt
@@ -388,7 +389,7 @@ expr_stmt|;
 name|curt
 operator|=
 operator|&
-name|baset
+name|__baset
 expr_stmt|;
 return|return
 operator|(
@@ -396,10 +397,10 @@ name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
-name|TCACTION
+name|__tcaction
 argument_list|,
 operator|&
-name|baset
+name|__baset
 argument_list|)
 operator|)
 return|;
@@ -431,7 +432,7 @@ name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
-name|TCACTION
+name|__tcaction
 argument_list|,
 name|curt
 argument_list|)
@@ -457,7 +458,7 @@ operator|&
 name|rawt
 else|:
 operator|&
-name|baset
+name|__baset
 expr_stmt|;
 return|return
 operator|(
@@ -465,7 +466,7 @@ name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
-name|TCACTION
+name|__tcaction
 argument_list|,
 name|curt
 argument_list|)
@@ -491,7 +492,7 @@ name|c_lflag
 operator||=
 name|ECHO
 expr_stmt|;
-name|baset
+name|__baset
 operator|.
 name|c_lflag
 operator||=
@@ -507,7 +508,7 @@ name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
-name|TCACTION
+name|__tcaction
 argument_list|,
 name|curt
 argument_list|)
@@ -535,7 +536,7 @@ operator|&=
 operator|~
 name|ECHO
 expr_stmt|;
-name|baset
+name|__baset
 operator|.
 name|c_lflag
 operator|&=
@@ -552,7 +553,7 @@ name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
-name|TCACTION
+name|__tcaction
 argument_list|,
 name|curt
 argument_list|)
@@ -590,13 +591,13 @@ name|c_oflag
 operator||=
 name|ONLCR
 expr_stmt|;
-name|baset
+name|__baset
 operator|.
 name|c_iflag
 operator||=
 name|ICRNL
 expr_stmt|;
-name|baset
+name|__baset
 operator|.
 name|c_oflag
 operator||=
@@ -612,7 +613,7 @@ name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
-name|TCACTION
+name|__tcaction
 argument_list|,
 name|curt
 argument_list|)
@@ -654,14 +655,14 @@ operator|&=
 operator|~
 name|ONLCR
 expr_stmt|;
-name|baset
+name|__baset
 operator|.
 name|c_iflag
 operator|&=
 operator|~
 name|ICRNL
 expr_stmt|;
-name|baset
+name|__baset
 operator|.
 name|c_oflag
 operator|&=
@@ -678,7 +679,7 @@ name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
-name|TCACTION
+name|__tcaction
 argument_list|,
 name|curt
 argument_list|)
@@ -847,7 +848,7 @@ name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
-name|TCACTION
+name|__tcaction
 argument_list|,
 operator|&
 name|__orig_termios
@@ -899,7 +900,7 @@ name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
-name|TCACTION
+name|__tcaction
 argument_list|,
 operator|&
 name|savedtty

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initscr.c	5.15 (Berkeley) %G%"
+literal|"@(#)initscr.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,15 +227,8 @@ name|NULL
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGTSTP
-argument_list|,
-name|__stop_signal_handler
-argument_list|)
+name|__set_stophandler
+argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tstp.c	5.8 (Berkeley) %G%"
+literal|"@(#)tstp.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,7 +81,7 @@ name|oset
 decl_stmt|,
 name|set
 decl_stmt|;
-comment|/* Get the current terminal state. */
+comment|/* Get the current terminal state (which the user may have changed). */
 if|if
 condition|(
 name|tcgetattr
@@ -156,15 +156,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Stop ourselves. */
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGTSTP
-argument_list|,
-name|SIG_DFL
-argument_list|)
+name|__restore_stophandler
+argument_list|()
 expr_stmt|;
 operator|(
 name|void
@@ -178,17 +171,22 @@ argument_list|)
 expr_stmt|;
 comment|/* Time passes ... */
 comment|/* Reset the curses SIGTSTP signal handler. */
+name|__set_stophandler
+argument_list|()
+expr_stmt|;
+comment|/* save the new "default" terminal state */
 operator|(
 name|void
 operator|)
-name|signal
+name|tcgetattr
 argument_list|(
-name|SIGTSTP
+name|STDIN_FILENO
 argument_list|,
-name|__stop_signal_handler
+operator|&
+name|__orig_termios
 argument_list|)
 expr_stmt|;
-comment|/* Reset the terminal state its mode when we stopped. */
+comment|/* Reset the terminal state to the mode just before we stopped. */
 operator|(
 name|void
 operator|)
@@ -196,7 +194,7 @@ name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
 argument_list|,
-name|TCSADRAIN
+name|__tcaction
 argument_list|,
 operator|&
 name|save
@@ -224,6 +222,62 @@ operator|&
 name|oset
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
+specifier|static
+name|void
+function_decl|(
+modifier|*
+name|otstpfn
+function_decl|)
+parameter_list|()
+init|=
+name|SIG_DFL
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Set the TSTP handler.  */
+end_comment
+
+begin_function
+name|void
+name|__set_stophandler
+parameter_list|()
+block|{
+name|otstpfn
+operator|=
+name|signal
+argument_list|(
+name|SIGTSTP
+argument_list|,
+name|__stop_signal_handler
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Restore the TSTP handler.  */
+end_comment
+
+begin_function
+name|void
+name|__restore_stophandler
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGTSTP
+argument_list|,
+name|otstpfn
 argument_list|)
 expr_stmt|;
 block|}

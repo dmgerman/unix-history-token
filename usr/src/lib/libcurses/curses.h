@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.38 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -110,7 +110,7 @@ define|#
 directive|define
 name|baudrate
 parameter_list|()
-value|(cfgetospeed(&__orig_termios))
+value|(cfgetospeed(&__baset))
 end_define
 
 begin_define
@@ -126,7 +126,7 @@ define|#
 directive|define
 name|erasechar
 parameter_list|()
-value|(__orig_termios.c_cc[VERASE])
+value|(__baset.c_cc[VERASE])
 end_define
 
 begin_define
@@ -134,7 +134,7 @@ define|#
 directive|define
 name|killchar
 parameter_list|()
-value|(__orig_termios.c_cc[VKILL])
+value|(__baset.c_cc[VKILL])
 end_define
 
 begin_define
@@ -149,7 +149,7 @@ begin_define
 define|#
 directive|define
 name|ospeed
-value|(cfgetospeed(&__orig_termios))
+value|(cfgetospeed(&__baset))
 end_define
 
 begin_endif
@@ -757,7 +757,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Original terminal modes. */
+comment|/* Terminal state before curses */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|termios
+name|__baset
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Our base terminal state */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|__tcaction
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Controls whether tcsetattr will 					   ignore hardware settings */
 end_comment
 
 begin_decl_stmt
@@ -2392,6 +2415,30 @@ operator|,
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__restore_stophandler
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__set_stophandler
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

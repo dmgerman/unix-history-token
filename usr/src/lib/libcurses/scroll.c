@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scroll.c	5.12 (Berkeley) %G%"
+literal|"@(#)scroll.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,7 +136,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|__orig_termios
+name|__baset
 operator|.
 name|c_oflag
 operator|&
