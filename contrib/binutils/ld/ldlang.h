@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ldlang.h - linker command language support    Copyright 1991, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.        This file is part of GLD, the Gnu Linker.        GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.        GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ldlang.h - linker command language support    Copyright 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.        This file is part of GLD, the Gnu Linker.        GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.        GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -308,6 +308,11 @@ name|memory_region_struct
 modifier|*
 name|region
 decl_stmt|;
+name|struct
+name|memory_region_struct
+modifier|*
+name|lma_region
+decl_stmt|;
 name|size_t
 name|block_value
 decl_stmt|;
@@ -612,10 +617,24 @@ name|char
 modifier|*
 name|section_name
 decl_stmt|;
+name|boolean
+name|sections_sorted
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|filename
+decl_stmt|;
+name|boolean
+name|filenames_sorted
+decl_stmt|;
+name|boolean
+name|keep_sections
+decl_stmt|;
+name|struct
+name|name_list
+modifier|*
+name|exclude_filename_list
 decl_stmt|;
 name|lang_statement_list_type
 name|children
@@ -978,6 +997,8 @@ operator|,
 specifier|const
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1126,12 +1147,19 @@ operator|(
 specifier|const
 name|char
 operator|*
-specifier|const
+operator|,
+name|boolean
 operator|,
 specifier|const
 name|char
 operator|*
-specifier|const
+operator|,
+name|boolean
+operator|,
+name|boolean
+operator|,
+name|name_list
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1167,7 +1195,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|lang_assignment_statement_type
+modifier|*
 name|lang_add_assignment
 name|PARAMS
 argument_list|(
@@ -1238,6 +1267,10 @@ operator|*
 operator|,
 expr|struct
 name|lang_output_section_phdr_list
+operator|*
+operator|,
+specifier|const
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -1842,6 +1875,10 @@ operator|,
 expr|struct
 name|lang_output_section_phdr_list
 operator|*
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1867,6 +1904,10 @@ argument_list|(
 operator|(
 expr|struct
 name|bfd_elf_version_expr
+operator|*
+operator|,
+specifier|const
+name|char
 operator|*
 operator|,
 specifier|const

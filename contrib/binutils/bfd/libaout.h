@@ -723,6 +723,11 @@ init|=
 literal|141
 block|,
 comment|/* NetBSD/alpha binary */
+name|M_ARM6_NETBSD
+init|=
+literal|143
+block|,
+comment|/* NetBSD/arm32 binary */
 name|M_SPARCLET_1
 init|=
 literal|147
@@ -786,10 +791,10 @@ init|=
 literal|227
 block|,
 comment|/* 0xe3, reserved */
-name|M_SPARCLET_7
+comment|/*  M_SPARCLET_7 = 243	/ * 0xf3, reserved */
+name|M_SPARCLITE_LE
 init|=
 literal|243
-comment|/* 0xf3, reserved */
 block|}
 enum|;
 end_enum

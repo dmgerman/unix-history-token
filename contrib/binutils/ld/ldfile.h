@@ -219,5 +219,35 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|ldfile_open_file_search
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|arch
+operator|,
+expr|struct
+name|lang_input_statement_struct
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+name|lib
+operator|,
+specifier|const
+name|char
+operator|*
+name|suffix
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

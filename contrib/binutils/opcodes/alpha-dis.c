@@ -1,24 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* alpha-dis.c -- Disassemble Alpha AXP instructions    Copyright 1996 Free Software Foundation, Inc.    Contributed by Richard Henderson<rth@tamu.edu>,    patterned after the PPC opcode handling written by Ian Lance Taylor.  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* alpha-dis.c -- Disassemble Alpha AXP instructions    Copyright 1996, 1999 Free Software Foundation, Inc.    Contributed by Richard Henderson<rth@tamu.edu>,    patterned after the PPC opcode handling written by Ian Lance Taylor.  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ansidecl.h"
 end_include
 
 begin_include
@@ -392,6 +380,8 @@ name|unsigned
 name|insn
 decl_stmt|,
 name|op
+decl_stmt|,
+name|isa_mask
 decl_stmt|;
 name|int
 name|need_comma
@@ -481,6 +471,42 @@ name|regnames
 operator|=
 name|osf_regnames
 expr_stmt|;
+name|isa_mask
+operator|=
+name|AXP_OPCODE_NOPAL
+expr_stmt|;
+switch|switch
+condition|(
+name|info
+operator|->
+name|mach
+condition|)
+block|{
+case|case
+name|bfd_mach_alpha_ev4
+case|:
+name|isa_mask
+operator||=
+name|AXP_OPCODE_EV4
+expr_stmt|;
+break|break;
+case|case
+name|bfd_mach_alpha_ev5
+case|:
+name|isa_mask
+operator||=
+name|AXP_OPCODE_EV5
+expr_stmt|;
+break|break;
+case|case
+name|bfd_mach_alpha_ev6
+case|:
+name|isa_mask
+operator||=
+name|AXP_OPCODE_EV6
+expr_stmt|;
+break|break;
+block|}
 comment|/* Read the insn into a host word */
 block|{
 name|bfd_byte
@@ -600,7 +626,7 @@ name|opcode
 operator|->
 name|flags
 operator|&
-name|AXP_OPCODE_NOPAL
+name|isa_mask
 operator|)
 condition|)
 continue|continue;

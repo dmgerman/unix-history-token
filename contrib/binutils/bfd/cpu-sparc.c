@@ -233,6 +233,39 @@ index|]
 block|,   }
 block|,
 block|{
+literal|32
+block|,
+comment|/* bits in a word */
+literal|32
+block|,
+comment|/* bits in an address */
+literal|8
+block|,
+comment|/* bits in a byte */
+name|bfd_arch_sparc
+block|,
+name|bfd_mach_sparc_sparclite_le
+block|,
+literal|"sparc"
+block|,
+literal|"sparc:sparclite_le"
+block|,
+literal|3
+block|,
+name|false
+block|,
+name|sparc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|arch_info_struct
+index|[
+literal|5
+index|]
+block|,   }
+block|,
+block|{
 literal|64
 block|,
 comment|/* bits in a word */
@@ -261,7 +294,7 @@ block|,
 operator|&
 name|arch_info_struct
 index|[
-literal|5
+literal|6
 index|]
 block|,   }
 block|,

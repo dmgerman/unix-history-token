@@ -585,7 +585,10 @@ condition|)
 block|{
 name|as_warn
 argument_list|(
+name|_
+argument_list|(
 literal|"Can't open `%s' for writing"
+argument_list|)
 argument_list|,
 name|dep_file
 argument_list|)
@@ -648,7 +651,10 @@ argument_list|)
 condition|)
 name|as_warn
 argument_list|(
-literal|"Can't close %s"
+name|_
+argument_list|(
+literal|"Can't close `%s'"
+argument_list|)
 argument_list|,
 name|dep_file
 argument_list|)

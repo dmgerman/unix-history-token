@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for ALPHA Extended-Coff files.    Copyright 1993, 94, 95, 96, 1997 Free Software Foundation, Inc.    Modified from coff-mips.c by Steve Chamberlain<sac@cygnus.com> and    Ian Lance Taylor<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for ALPHA Extended-Coff files.    Copyright 1993, 94, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.    Modified from coff-mips.c by Steve Chamberlain<sac@cygnus.com> and    Ian Lance Taylor<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -3357,7 +3357,10 @@ operator|(
 name|char
 operator|*
 operator|)
+name|_
+argument_list|(
 literal|"GP relative relocation used when GP not defined"
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -3454,7 +3457,10 @@ operator|(
 name|char
 operator|*
 operator|)
+name|_
+argument_list|(
 literal|"GP relative relocation used when GP not defined"
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -4284,6 +4290,8 @@ argument_list|,
 name|rel
 operator|->
 name|address
+argument_list|,
+name|true
 argument_list|)
 operator|)
 condition|)
@@ -5606,7 +5614,10 @@ call|)
 argument_list|(
 name|info
 argument_list|,
+name|_
+argument_list|(
 literal|"using multiple gp values"
+argument_list|)
 argument_list|,
 operator|(
 name|char
@@ -6488,6 +6499,8 @@ operator|(
 name|bfd_vma
 operator|)
 literal|0
+argument_list|,
+name|true
 argument_list|)
 operator|)
 condition|)
@@ -7187,6 +7200,8 @@ operator|-
 name|input_section
 operator|->
 name|vma
+argument_list|,
+name|true
 argument_list|)
 operator|)
 condition|)
@@ -7429,7 +7444,10 @@ call|)
 argument_list|(
 name|info
 argument_list|,
+name|_
+argument_list|(
 literal|"GP relative relocation when GP not defined"
+argument_list|)
 argument_list|,
 name|input_bfd
 argument_list|,
@@ -8666,6 +8684,8 @@ literal|0
 block|,
 literal|0
 block|,
+name|FILNMLEN
+block|,
 name|true
 block|,
 name|false
@@ -8691,6 +8711,10 @@ block|,
 name|_bfd_ecoff_set_alignment_hook
 block|,
 name|_bfd_ecoff_slurp_symbol_table
+block|,
+name|NULL
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -8912,6 +8936,13 @@ name|_bfd_ecoff_bfd_relax_section
 value|bfd_generic_relax_section
 end_define
 
+begin_define
+define|#
+directive|define
+name|_bfd_ecoff_bfd_gc_sections
+value|bfd_generic_gc_sections
+end_define
+
 begin_decl_stmt
 specifier|const
 name|bfd_target
@@ -9088,6 +9119,8 @@ name|BFD_JUMP_TABLE_DYNAMIC
 argument_list|(
 name|_bfd_nodynamic
 argument_list|)
+block|,
+name|NULL
 block|,
 operator|(
 name|PTR

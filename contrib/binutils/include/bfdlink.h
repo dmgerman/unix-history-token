@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* bfdlink.h -- header file for BFD link routines    Copyright 1993, 94, 95, 96, 1997 Free Software Foundation, Inc.    Written by Steve Chamberlain and Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* bfdlink.h -- header file for BFD link routines    Copyright 1993, 94, 95, 96, 97, 1999 Free Software Foundation, Inc.    Written by Steve Chamberlain and Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -404,6 +404,14 @@ comment|/* true if the output file should be in a traditional format.  This     
 name|boolean
 name|traditional_format
 decl_stmt|;
+comment|/* true if we want to produced optimized output files.  This might      need much more time and therefore must be explicitly selected.  */
+name|boolean
+name|optimize
+decl_stmt|;
+comment|/* true if BFD should generate errors for undefined symbols      even if generating a shared object.  */
+name|boolean
+name|no_undefined
+decl_stmt|;
 comment|/* Which symbols to strip.  */
 name|enum
 name|bfd_link_strip
@@ -459,6 +467,22 @@ decl_stmt|;
 comment|/* If a base output file is wanted, then this points to it */
 name|PTR
 name|base_file
+decl_stmt|;
+comment|/* If non-zero, specifies that branches which are problematic for the   MPC860 C0 (or earlier) should be checked for and modified.  It gives the   number of bytes that should be checked at the end of each text page. */
+name|int
+name|mpc860c0
+decl_stmt|;
+comment|/* The function to call when the executable or shared object is      loaded.  */
+specifier|const
+name|char
+modifier|*
+name|init_function
+decl_stmt|;
+comment|/* The function to call when the executable or shared object is      unloaded.  */
+specifier|const
+name|char
+modifier|*
+name|fini_function
 decl_stmt|;
 block|}
 struct|;
@@ -678,7 +702,7 @@ name|address
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* A function which is called when a relocation is attempted against      an undefined symbol.  NAME is the symbol which is undefined.      ABFD, SECTION and ADDRESS identify the location from which the      reference is made.  In some cases SECTION may be NULL.  */
+comment|/* A function which is called when a relocation is attempted against      an undefined symbol.  NAME is the symbol which is undefined.      ABFD, SECTION and ADDRESS identify the location from which the      reference is made. FATAL indicates whether an undefined symbol is      a fatal error or not. In some cases SECTION may be NULL.  */
 name|boolean
 argument_list|(
 argument|*undefined_symbol
@@ -705,6 +729,9 @@ name|section
 operator|,
 name|bfd_vma
 name|address
+operator|,
+name|boolean
+name|fatal
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1035,8 +1062,26 @@ comment|/* Regular expression.  */
 specifier|const
 name|char
 modifier|*
-name|match
+name|pattern
 decl_stmt|;
+comment|/* Matching function.  */
+name|int
+argument_list|(
+argument|*match
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_elf_version_expr
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct

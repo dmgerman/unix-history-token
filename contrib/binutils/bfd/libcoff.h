@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD COFF object file private structure.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.    Written by Cygnus Support.  ** NOTE: libcoff.h is a GENERATED file.  Don't change it; instead, ** change libcoff-in.h or coffcode.h.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD COFF object file private structure.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Written by Cygnus Support.  ** NOTE: libcoff.h is a GENERATED file.  Don't change it; instead, ** change libcoff-in.h or coffcode.h.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -205,7 +205,7 @@ modifier|*
 name|raw_syments
 decl_stmt|;
 name|unsigned
-name|int
+name|long
 name|raw_syment_count
 decl_stmt|;
 comment|/* These are only valid once writing has begun */
@@ -276,6 +276,10 @@ decl_stmt|;
 comment|/* Used by coff_find_nearest_line.  */
 name|PTR
 name|line_info
+decl_stmt|;
+comment|/* The timestamp from the COFF file header.  */
+name|long
+name|timestamp
 decl_stmt|;
 comment|/* Copy of some of the f_flags bits in the COFF filehdr structure,      used by ARM code.  */
 name|flagword
@@ -557,7 +561,7 @@ value|((struct xcoff_section_tdata *) coff_section_data ((abfd), (sec))->tdata)
 end_define
 
 begin_comment
-comment|/* Tdata for sections in PEI image files.  */
+comment|/* Tdata for sections in PE files.  */
 end_comment
 
 begin_struct
@@ -567,6 +571,10 @@ block|{
 comment|/* The virtual size of the section.  */
 name|bfd_size_type
 name|virt_size
+decl_stmt|;
+comment|/* The PE section flags.  */
+name|long
+name|pe_flags
 decl_stmt|;
 block|}
 struct|;
@@ -630,6 +638,16 @@ name|internal_auxent
 modifier|*
 name|aux
 decl_stmt|;
+comment|/* Flag word; legal values follow.  */
+name|unsigned
+name|short
+name|coff_link_hash_flags
+decl_stmt|;
+comment|/* Symbol is a PE section symbol.  */
+define|#
+directive|define
+name|COFF_LINK_HASH_PE_SECTION_SYMBOL
+value|(01)
 block|}
 struct|;
 end_struct
@@ -1546,6 +1564,63 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Most COFF variants have no way to record the alignment of a    section.  This struct is used to set a specific alignment based on    the name of the section.  */
+end_comment
+
+begin_struct
+struct|struct
+name|coff_section_alignment_entry
+block|{
+comment|/* The section name.  */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* This is either (unsigned int) -1, indicating that the section      name must match exactly, or it is the number of letters which      must match at the start of the name.  */
+name|unsigned
+name|int
+name|comparison_length
+decl_stmt|;
+comment|/* These macros may be used to fill in the first two fields in a      structure initialization.  */
+define|#
+directive|define
+name|COFF_SECTION_NAME_EXACT_MATCH
+parameter_list|(
+name|name
+parameter_list|)
+value|(name), ((unsigned int) -1)
+define|#
+directive|define
+name|COFF_SECTION_NAME_PARTIAL_MATCH
+parameter_list|(
+name|name
+parameter_list|)
+value|(name), (sizeof (name) - 1)
+comment|/* Only use this entry if the default section alignment for this      target is at least that much (as a power of two).  If this field      is COFF_ALIGNMENT_FIELD_EMPTY, it should be ignored.  */
+name|unsigned
+name|int
+name|default_alignment_min
+decl_stmt|;
+comment|/* Only use this entry if the default section alignment for this      target is no greater than this (as a power of two).  If this      field is COFF_ALIGNMENT_FIELD_EMPTY, it should be ignored.  */
+name|unsigned
+name|int
+name|default_alignment_max
+decl_stmt|;
+define|#
+directive|define
+name|COFF_ALIGNMENT_FIELD_EMPTY
+value|((unsigned int) -1)
+comment|/* The desired alignment for this section (as a power of two).  */
+name|unsigned
+name|int
+name|alignment_power
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -2165,6 +2240,32 @@ name|coff_symbol_type
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* COFF symbol classifications.  */
+end_comment
+
+begin_enum
+enum|enum
+name|coff_symbol_classification
+block|{
+comment|/* Global symbol.  */
+name|COFF_SYMBOL_GLOBAL
+block|,
+comment|/* Common symbol.  */
+name|COFF_SYMBOL_COMMON
+block|,
+comment|/* Undefined symbol.  */
+name|COFF_SYMBOL_UNDEFINED
+block|,
+comment|/* Local symbol.  */
+name|COFF_SYMBOL_LOCAL
+block|,
+comment|/* PE section symbol.  */
+name|COFF_SYMBOL_PE_SECTION
+block|}
+enum|;
+end_enum
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2425,6 +2526,10 @@ name|unsigned
 name|int
 name|_bfd_linesz
 decl_stmt|;
+name|unsigned
+name|int
+name|_bfd_filnmlen
+decl_stmt|;
 name|boolean
 name|_bfd_coff_long_filenames
 decl_stmt|;
@@ -2580,6 +2685,10 @@ specifier|const
 name|char
 operator|*
 name|name
+operator|,
+name|asection
+operator|*
+name|section
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2767,9 +2876,11 @@ name|link_info
 operator|)
 argument_list|)
 expr_stmt|;
-name|boolean
+name|enum
+name|coff_symbol_classification
 argument_list|(
-argument|*_bfd_coff_sym_is_global
+operator|*
+name|_bfd_coff_classify_symbol
 argument_list|)
 name|PARAMS
 argument_list|(
@@ -2783,7 +2894,7 @@ name|internal_syment
 operator|*
 operator|)
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|boolean
 argument_list|(
 argument|*_bfd_coff_compute_section_file_positions
@@ -2993,6 +3104,11 @@ operator|(
 name|bfd
 operator|*
 name|abfd
+operator|,
+expr|struct
+name|coff_final_link_info
+operator|*
+name|pfinfo
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3268,6 +3384,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|bfd_coff_filnmlen
+parameter_list|(
+name|abfd
+parameter_list|)
+value|(coff_backend_info (abfd)->_bfd_filnmlen)
+end_define
+
+begin_define
+define|#
+directive|define
 name|bfd_coff_long_filenames
 parameter_list|(
 name|abfd
@@ -3408,9 +3534,11 @@ parameter_list|,
 name|scnhdr
 parameter_list|,
 name|name
+parameter_list|,
+name|section
 parameter_list|)
 define|\
-value|((coff_backend_info (abfd)->_bfd_styp_to_sec_flags_hook) (abfd, scnhdr, name))
+value|((coff_backend_info (abfd)->_bfd_styp_to_sec_flags_hook)\          (abfd, scnhdr, name, section))
 end_define
 
 begin_define
@@ -3518,14 +3646,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|bfd_coff_sym_is_global
+name|bfd_coff_classify_symbol
 parameter_list|(
 name|abfd
 parameter_list|,
 name|sym
 parameter_list|)
 define|\
-value|((coff_backend_info (abfd)->_bfd_coff_sym_is_global)\          (abfd, sym))
+value|((coff_backend_info (abfd)->_bfd_coff_classify_symbol)\          (abfd, sym))
 end_define
 
 begin_define
@@ -3654,9 +3782,11 @@ directive|define
 name|bfd_coff_link_output_has_begun
 parameter_list|(
 name|a
+parameter_list|,
+name|p
 parameter_list|)
 define|\
-value|((coff_backend_info (a)->_bfd_coff_link_output_has_begun) (a))
+value|((coff_backend_info (a)->_bfd_coff_link_output_has_begun) (a,p))
 end_define
 
 begin_define

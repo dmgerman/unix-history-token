@@ -222,6 +222,11 @@ name|short
 name|f_flags
 decl_stmt|;
 comment|/* flags			*/
+name|unsigned
+name|short
+name|f_target_id
+decl_stmt|;
+comment|/* (TIc80 specific)		*/
 block|}
 struct|;
 end_struct
@@ -328,7 +333,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* default image base for NT */
+comment|/* Default image base for NT.  */
 end_comment
 
 begin_define
@@ -342,6 +347,24 @@ begin_define
 define|#
 directive|define
 name|NT_DLL_IMAGE_BASE
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Default image base for BeOS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BEOS_EXE_IMAGE_BASE
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BEOS_DLL_IMAGE_BASE
 value|0x10000000
 end_define
 
@@ -938,6 +961,65 @@ begin_comment
 comment|/* ext symbol in dmert public lib */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|C_WEAKEXT
+value|127
+end_define
+
+begin_comment
+comment|/* weak symbol -- GNU extension */
+end_comment
+
+begin_comment
+comment|/* New storage classes for TIc80 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_UEXT
+value|19
+end_define
+
+begin_comment
+comment|/* Tentative external definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_STATLAB
+value|20
+end_define
+
+begin_comment
+comment|/* Static load time label */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_EXTLAB
+value|21
+end_define
+
+begin_comment
+comment|/* External load time label */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_SYSTEM
+value|23
+end_define
+
+begin_comment
+comment|/* System Wide variable */
+end_comment
+
 begin_comment
 comment|/* New storage classes for WINDOWS_NT   */
 end_comment
@@ -1243,12 +1325,20 @@ name|C_THUMBEXT
 value|(128 + C_EXT)
 end_define
 
+begin_comment
+comment|/* 130 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|C_THUMBSTAT
 value|(128 + C_STAT)
 end_define
+
+begin_comment
+comment|/* 131 */
+end_comment
 
 begin_define
 define|#
@@ -1257,6 +1347,10 @@ name|C_THUMBLABEL
 value|(128 + C_LABEL)
 end_define
 
+begin_comment
+comment|/* 134 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1264,12 +1358,20 @@ name|C_THUMBEXTFUNC
 value|(C_THUMBEXT  + 20)
 end_define
 
+begin_comment
+comment|/* 150 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|C_THUMBSTATFUNC
 value|(C_THUMBSTAT + 20)
 end_define
+
+begin_comment
+comment|/* 151 */
+end_comment
 
 begin_comment
 comment|/********************** SECTION HEADER **********************/
@@ -1998,6 +2100,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|DTYPE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& N_TMASK)>> N_BTSHFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISPTR
 parameter_list|(
 name|x
@@ -2496,79 +2608,111 @@ end_struct
 begin_define
 define|#
 directive|define
-name|R_RELBYTE
-value|017
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_RELWORD
-value|020
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_PCRBYTE
-value|022
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_PCRWORD
-value|023
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_PCRLONG
-value|024
-end_define
-
-begin_define
-define|#
-directive|define
 name|R_DIR16
-value|01
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|R_DIR32
-value|06
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_PCLONG
-value|020
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_RELBYTE
-value|017
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_RELWORD
-value|020
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|R_IMAGEBASE
-value|07
+value|7
 end_define
+
+begin_define
+define|#
+directive|define
+name|R_RELBYTE
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_RELWORD
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_RELLONG
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PCRBYTE
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PCRWORD
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_PCRLONG
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_IPRSHORT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_IPRLONG
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_GETSEG
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_GETPA
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_TAGWORD
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_JUMPTARG
+value|32
+end_define
+
+begin_comment
+comment|/* strange 29k 00xx00xx reloc */
+end_comment
 
 begin_define
 define|#
@@ -2611,63 +2755,6 @@ directive|define
 name|R_VRT32
 value|133
 end_define
-
-begin_define
-define|#
-directive|define
-name|R_RELLONG
-value|(0x11)
-end_define
-
-begin_comment
-comment|/* Direct 32-bit relocation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|R_IPRSHORT
-value|(0x18)
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_IPRLONG
-value|(0x1a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_GETSEG
-value|(0x1d)
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_GETPA
-value|(0x1e)
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_TAGWORD
-value|(0x1f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|R_JUMPTARG
-value|0x20
-end_define
-
-begin_comment
-comment|/* strange 29k 00xx00xx reloc */
-end_comment
 
 begin_comment
 comment|/* This reloc identifies mov.b instructions with a 16bit absolute    address.  The linker tries to turn insns with this reloc into    an absolute 8-bit address.  */
@@ -2802,7 +2889,7 @@ value|0x4c
 end_define
 
 begin_comment
-comment|/* This reloc identifies mov.[wl] insns which formerlly had    a 32/24bit absolute address and how have a 16bit absolute address.  */
+comment|/* This reloc identifies mov.[wl] insns which formerlly had    a 32/24bit absolute address and now have a 16bit absolute address.  */
 end_comment
 
 begin_define

@@ -23,7 +23,7 @@ parameter_list|,
 name|c
 parameter_list|)
 specifier|register
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|s

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic BFD library interface and support routines.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic BFD library interface and support routines.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* SECTION<<typedef bfd>>  	A BFD has type<<bfd>>; objects of this type are the 	cornerstone of any application using BFD. Using BFD 	consists of making references though the BFD and to data in the BFD.  	Here is the structure that defines the type<<bfd>>.  It 	contains the major data about the file and pointers 	to the rest of the data.  CODE_FRAGMENT . .struct _bfd  .{ .    {* The filename the application opened the BFD with.  *} .    CONST char *filename;                 . .    {* A pointer to the target jump table.             *} .    const struct bfd_target *xvec; . .    {* To avoid dragging too many header files into every file that .       includes `<<bfd.h>>', IOSTREAM has been declared as a "char .       *", and MTIME as a "long".  Their correct types, to which they .       are cast when used, are "FILE *" and "time_t".    The iostream .       is the result of an fopen on the filename.  However, if the .       BFD_IN_MEMORY flag is set, then iostream is actually a pointer .       to a bfd_in_memory struct.  *} .    PTR iostream; . .    {* Is the file descriptor being cached?  That is, can it be closed as .       needed, and re-opened when accessed later?  *} . .    boolean cacheable; . .    {* Marks whether there was a default target specified when the .       BFD was opened. This is used to select which matching algorithm .       to use to choose the back end. *} . .    boolean target_defaulted; . .    {* The caching routines use these to maintain a .       least-recently-used list of BFDs *} . .    struct _bfd *lru_prev, *lru_next; . .    {* When a file is closed by the caching routines, BFD retains .       state information on the file here: *} . .    file_ptr where;               . .    {* and here: (``once'' means at least once) *} . .    boolean opened_once; . .    {* Set if we have a locally maintained mtime value, rather than .       getting it from the file each time: *} . .    boolean mtime_set; . .    {* File modified time, if mtime_set is true: *} . .    long mtime;           . .    {* Reserved for an unimplemented file locking extension.*} . .    int ifd; . .    {* The format which belongs to the BFD. (object, core, etc.) *} . .    bfd_format format; . .    {* The direction the BFD was opened with*} . .    enum bfd_direction {no_direction = 0, .                        read_direction = 1, .                        write_direction = 2, .                        both_direction = 3} direction; . .    {* Format_specific flags*} . .    flagword flags;               . .    {* Currently my_archive is tested before adding origin to .       anything. I believe that this can become always an add of .       origin, with origin set to 0 for non archive files.   *} . .    file_ptr origin;              . .    {* Remember when output has begun, to stop strange things .       from happening. *} .    boolean output_has_begun; . .    {* Pointer to linked list of sections*} .    struct sec  *sections; . .    {* The number of sections *} .    unsigned int section_count; . .    {* Stuff only useful for object files:  .       The start address. *} .    bfd_vma start_address; . .    {* Used for input and output*} .    unsigned int symcount; . .    {* Symbol table for output BFD (with symcount entries) *} .    struct symbol_cache_entry  **outsymbols;              . .    {* Pointer to structure which contains architecture information*} .    const struct bfd_arch_info *arch_info; . .    {* Stuff only useful for archives:*} .    PTR arelt_data;               .    struct _bfd *my_archive;     {* The containing archive BFD.  *} .    struct _bfd *next;           {* The next BFD in the archive.  *} .    struct _bfd *archive_head;   {* The first BFD in the archive.  *} .    boolean has_armap;            . .    {* A chain of BFD structures involved in a link.  *} .    struct _bfd *link_next; . .    {* A field used by _bfd_generic_link_add_archive_symbols.  This will .       be used only for archive elements.  *} .    int archive_pass; . .    {* Used by the back end to hold private data. *} . .    union  .      { .      struct aout_data_struct *aout_data; .      struct artdata *aout_ar_data; .      struct _oasys_data *oasys_obj_data; .      struct _oasys_ar_data *oasys_ar_data; .      struct coff_tdata *coff_obj_data; .      struct pe_tdata *pe_obj_data; .      struct xcoff_tdata *xcoff_obj_data; .      struct ecoff_tdata *ecoff_obj_data; .      struct ieee_data_struct *ieee_data; .      struct ieee_ar_data_struct *ieee_ar_data; .      struct srec_data_struct *srec_data; .      struct ihex_data_struct *ihex_data; .      struct tekhex_data_struct *tekhex_data; .      struct elf_obj_tdata *elf_obj_data; .      struct nlm_obj_tdata *nlm_obj_data; .      struct bout_data_struct *bout_data; .      struct sun_core_struct *sun_core_data; .      struct trad_core_struct *trad_core_data; .      struct som_data_struct *som_data; .      struct hpux_core_struct *hpux_core_data; .      struct hppabsd_core_struct *hppabsd_core_data; .      struct sgi_core_struct *sgi_core_data; .      struct lynx_core_struct *lynx_core_data; .      struct osf_core_struct *osf_core_data; .      struct cisco_core_struct *cisco_core_data; .      struct versados_data_struct *versados_data; .      struct netbsd_core_struct *netbsd_core_data; .      PTR any; .      } tdata; .   .    {* Used by the application to hold private data*} .    PTR usrdata; . .  {* Where all the allocated stuff under this BFD goes.  This is a .     struct objalloc *, but we use PTR to avoid requiring the inclusion of .     objalloc.h.  *} .    PTR memory; .}; . */
+comment|/* SECTION<<typedef bfd>>  	A BFD has type<<bfd>>; objects of this type are the 	cornerstone of any application using BFD. Using BFD 	consists of making references though the BFD and to data in the BFD.  	Here is the structure that defines the type<<bfd>>.  It 	contains the major data about the file and pointers 	to the rest of the data.  CODE_FRAGMENT . .struct _bfd  .{ .    {* The filename the application opened the BFD with.  *} .    CONST char *filename;                 . .    {* A pointer to the target jump table.             *} .    const struct bfd_target *xvec; . .    {* To avoid dragging too many header files into every file that .       includes `<<bfd.h>>', IOSTREAM has been declared as a "char .       *", and MTIME as a "long".  Their correct types, to which they .       are cast when used, are "FILE *" and "time_t".    The iostream .       is the result of an fopen on the filename.  However, if the .       BFD_IN_MEMORY flag is set, then iostream is actually a pointer .       to a bfd_in_memory struct.  *} .    PTR iostream; . .    {* Is the file descriptor being cached?  That is, can it be closed as .       needed, and re-opened when accessed later?  *} . .    boolean cacheable; . .    {* Marks whether there was a default target specified when the .       BFD was opened. This is used to select which matching algorithm .       to use to choose the back end. *} . .    boolean target_defaulted; . .    {* The caching routines use these to maintain a .       least-recently-used list of BFDs *} . .    struct _bfd *lru_prev, *lru_next; . .    {* When a file is closed by the caching routines, BFD retains .       state information on the file here: *} . .    file_ptr where;               . .    {* and here: (``once'' means at least once) *} . .    boolean opened_once; . .    {* Set if we have a locally maintained mtime value, rather than .       getting it from the file each time: *} . .    boolean mtime_set; . .    {* File modified time, if mtime_set is true: *} . .    long mtime;           . .    {* Reserved for an unimplemented file locking extension.*} . .    int ifd; . .    {* The format which belongs to the BFD. (object, core, etc.) *} . .    bfd_format format; . .    {* The direction the BFD was opened with*} . .    enum bfd_direction {no_direction = 0, .                        read_direction = 1, .                        write_direction = 2, .                        both_direction = 3} direction; . .    {* Format_specific flags*} . .    flagword flags;               . .    {* Currently my_archive is tested before adding origin to .       anything. I believe that this can become always an add of .       origin, with origin set to 0 for non archive files.   *} . .    file_ptr origin;              . .    {* Remember when output has begun, to stop strange things .       from happening. *} .    boolean output_has_begun; . .    {* Pointer to linked list of sections*} .    struct sec  *sections; . .    {* The number of sections *} .    unsigned int section_count; . .    {* Stuff only useful for object files:  .       The start address. *} .    bfd_vma start_address; . .    {* Used for input and output*} .    unsigned int symcount; . .    {* Symbol table for output BFD (with symcount entries) *} .    struct symbol_cache_entry  **outsymbols;              . .    {* Pointer to structure which contains architecture information*} .    const struct bfd_arch_info *arch_info; . .    {* Stuff only useful for archives:*} .    PTR arelt_data;               .    struct _bfd *my_archive;     {* The containing archive BFD.  *} .    struct _bfd *next;           {* The next BFD in the archive.  *} .    struct _bfd *archive_head;   {* The first BFD in the archive.  *} .    boolean has_armap;            . .    {* A chain of BFD structures involved in a link.  *} .    struct _bfd *link_next; . .    {* A field used by _bfd_generic_link_add_archive_symbols.  This will .       be used only for archive elements.  *} .    int archive_pass; . .    {* Used by the back end to hold private data. *} . .    union  .      { .      struct aout_data_struct *aout_data; .      struct artdata *aout_ar_data; .      struct _oasys_data *oasys_obj_data; .      struct _oasys_ar_data *oasys_ar_data; .      struct coff_tdata *coff_obj_data; .      struct pe_tdata *pe_obj_data; .      struct xcoff_tdata *xcoff_obj_data; .      struct ecoff_tdata *ecoff_obj_data; .      struct ieee_data_struct *ieee_data; .      struct ieee_ar_data_struct *ieee_ar_data; .      struct srec_data_struct *srec_data; .      struct ihex_data_struct *ihex_data; .      struct tekhex_data_struct *tekhex_data; .      struct elf_obj_tdata *elf_obj_data; .      struct nlm_obj_tdata *nlm_obj_data; .      struct bout_data_struct *bout_data; .      struct sun_core_struct *sun_core_data; .      struct sco5_core_struct *sco5_core_data; .      struct trad_core_struct *trad_core_data; .      struct som_data_struct *som_data; .      struct hpux_core_struct *hpux_core_data; .      struct hppabsd_core_struct *hppabsd_core_data; .      struct sgi_core_struct *sgi_core_data; .      struct lynx_core_struct *lynx_core_data; .      struct osf_core_struct *osf_core_data; .      struct cisco_core_struct *cisco_core_data; .      struct versados_data_struct *versados_data; .      struct netbsd_core_struct *netbsd_core_data; .      PTR any; .      } tdata; .   .    {* Used by the application to hold private data*} .    PTR usrdata; . .  {* Where all the allocated stuff under this BFD goes.  This is a .     struct objalloc *, but we use PTR to avoid requiring the inclusion of .     objalloc.h.  *} .    PTR memory; .}; . */
 end_comment
 
 begin_include
@@ -139,43 +139,100 @@ name|bfd_errmsgs
 index|[]
 init|=
 block|{
+name|N_
+argument_list|(
 literal|"No error"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"System call error"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Invalid bfd target"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"File in wrong format"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Invalid operation"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Memory exhausted"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"No symbols"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Archive has no index; run ranlib to add one"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"No more archived files"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Malformed archive"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"File format not recognized"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"File format is ambiguous"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Section has no contents"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Nonrepresentable section on output"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Symbol needs debug section which does not exist"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"Bad value"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"File truncated"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"File too big"
+argument_list|)
 block|,
+name|N_
+argument_list|(
 literal|"#<Invalid error code>"
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -287,6 +344,8 @@ name|bfd_error_invalid_error_code
 expr_stmt|;
 comment|/* sanity check */
 return|return
+name|_
+argument_list|(
 name|bfd_errmsgs
 index|[
 operator|(
@@ -294,6 +353,7 @@ name|int
 operator|)
 name|error_tag
 index|]
+argument_list|)
 return|;
 block|}
 end_function
@@ -839,6 +899,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|ignore_abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|sec_ptr
 name|asect
@@ -981,11 +1042,118 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
+name|_
+argument_list|(
 literal|"bfd assertion fail %s:%d"
+argument_list|)
 argument_list|,
 name|file
 argument_list|,
 name|line
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* A more or less friendly abort message.  In libbfd.h abort is    defined to call this function.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXIT_FAILURE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EXIT_FAILURE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|void
+name|_bfd_abort
+parameter_list|(
+name|file
+parameter_list|,
+name|line
+parameter_list|,
+name|fn
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|file
+decl_stmt|;
+name|int
+name|line
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|fn
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|fn
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
+argument_list|(
+name|_
+argument_list|(
+literal|"BFD internal error, aborting at %s line %d in %s\n"
+argument_list|)
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|,
+name|fn
+argument_list|)
+expr_stmt|;
+else|else
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
+argument_list|(
+name|_
+argument_list|(
+literal|"BFD internal error, aborting at %s line %d\n"
+argument_list|)
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
+argument_list|(
+name|_
+argument_list|(
+literal|"Please report this bug.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|xexit
+argument_list|(
+name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1704,7 +1872,7 @@ comment|/* FUNCTION 	bfd_set_private_flags  SYNOPSIS 	boolean bfd_set_private_fl
 end_comment
 
 begin_comment
-comment|/* FUNCTION 	stuff  DESCRIPTION 	Stuff which should be documented:  .#define bfd_sizeof_headers(abfd, reloc) \ .     BFD_SEND (abfd, _bfd_sizeof_headers, (abfd, reloc)) . .#define bfd_find_nearest_line(abfd, sec, syms, off, file, func, line) \ .     BFD_SEND (abfd, _bfd_find_nearest_line,  (abfd, sec, syms, off, file, func, line)) . .       {* Do these three do anything useful at all, for any back end?  *} .#define bfd_debug_info_start(abfd) \ .        BFD_SEND (abfd, _bfd_debug_info_start, (abfd)) . .#define bfd_debug_info_end(abfd) \ .        BFD_SEND (abfd, _bfd_debug_info_end, (abfd)) . .#define bfd_debug_info_accumulate(abfd, section) \ .        BFD_SEND (abfd, _bfd_debug_info_accumulate, (abfd, section)) . . .#define bfd_stat_arch_elt(abfd, stat) \ .        BFD_SEND (abfd, _bfd_stat_arch_elt,(abfd, stat)) . .#define bfd_update_armap_timestamp(abfd) \ .        BFD_SEND (abfd, _bfd_update_armap_timestamp, (abfd)) . .#define bfd_set_arch_mach(abfd, arch, mach)\ .        BFD_SEND ( abfd, _bfd_set_arch_mach, (abfd, arch, mach)) . .#define bfd_relax_section(abfd, section, link_info, again) \ .       BFD_SEND (abfd, _bfd_relax_section, (abfd, section, link_info, again)) . .#define bfd_link_hash_table_create(abfd) \ .	BFD_SEND (abfd, _bfd_link_hash_table_create, (abfd)) . .#define bfd_link_add_symbols(abfd, info) \ .	BFD_SEND (abfd, _bfd_link_add_symbols, (abfd, info)) . .#define bfd_final_link(abfd, info) \ .	BFD_SEND (abfd, _bfd_final_link, (abfd, info)) . .#define bfd_free_cached_info(abfd) \ .       BFD_SEND (abfd, _bfd_free_cached_info, (abfd)) . .#define bfd_get_dynamic_symtab_upper_bound(abfd) \ .	BFD_SEND (abfd, _bfd_get_dynamic_symtab_upper_bound, (abfd)) . .#define bfd_print_private_bfd_data(abfd, file)\ .	BFD_SEND (abfd, _bfd_print_private_bfd_data, (abfd, file)) . .#define bfd_canonicalize_dynamic_symtab(abfd, asymbols) \ .	BFD_SEND (abfd, _bfd_canonicalize_dynamic_symtab, (abfd, asymbols)) . .#define bfd_get_dynamic_reloc_upper_bound(abfd) \ .	BFD_SEND (abfd, _bfd_get_dynamic_reloc_upper_bound, (abfd)) . .#define bfd_canonicalize_dynamic_reloc(abfd, arels, asyms) \ .	BFD_SEND (abfd, _bfd_canonicalize_dynamic_reloc, (abfd, arels, asyms)) . .extern bfd_byte *bfd_get_relocated_section_contents .	PARAMS ((bfd *, struct bfd_link_info *, .		  struct bfd_link_order *, bfd_byte *, .		  boolean, asymbol **)); .  */
+comment|/* FUNCTION 	stuff  DESCRIPTION 	Stuff which should be documented:  .#define bfd_sizeof_headers(abfd, reloc) \ .     BFD_SEND (abfd, _bfd_sizeof_headers, (abfd, reloc)) . .#define bfd_find_nearest_line(abfd, sec, syms, off, file, func, line) \ .     BFD_SEND (abfd, _bfd_find_nearest_line,  (abfd, sec, syms, off, file, func, line)) . .       {* Do these three do anything useful at all, for any back end?  *} .#define bfd_debug_info_start(abfd) \ .        BFD_SEND (abfd, _bfd_debug_info_start, (abfd)) . .#define bfd_debug_info_end(abfd) \ .        BFD_SEND (abfd, _bfd_debug_info_end, (abfd)) . .#define bfd_debug_info_accumulate(abfd, section) \ .        BFD_SEND (abfd, _bfd_debug_info_accumulate, (abfd, section)) . . .#define bfd_stat_arch_elt(abfd, stat) \ .        BFD_SEND (abfd, _bfd_stat_arch_elt,(abfd, stat)) . .#define bfd_update_armap_timestamp(abfd) \ .        BFD_SEND (abfd, _bfd_update_armap_timestamp, (abfd)) . .#define bfd_set_arch_mach(abfd, arch, mach)\ .        BFD_SEND ( abfd, _bfd_set_arch_mach, (abfd, arch, mach)) . .#define bfd_relax_section(abfd, section, link_info, again) \ .       BFD_SEND (abfd, _bfd_relax_section, (abfd, section, link_info, again)) . .#define bfd_gc_sections(abfd, link_info) \ .	BFD_SEND (abfd, _bfd_gc_sections, (abfd, link_info)) . .#define bfd_link_hash_table_create(abfd) \ .	BFD_SEND (abfd, _bfd_link_hash_table_create, (abfd)) . .#define bfd_link_add_symbols(abfd, info) \ .	BFD_SEND (abfd, _bfd_link_add_symbols, (abfd, info)) . .#define bfd_final_link(abfd, info) \ .	BFD_SEND (abfd, _bfd_final_link, (abfd, info)) . .#define bfd_free_cached_info(abfd) \ .       BFD_SEND (abfd, _bfd_free_cached_info, (abfd)) . .#define bfd_get_dynamic_symtab_upper_bound(abfd) \ .	BFD_SEND (abfd, _bfd_get_dynamic_symtab_upper_bound, (abfd)) . .#define bfd_print_private_bfd_data(abfd, file)\ .	BFD_SEND (abfd, _bfd_print_private_bfd_data, (abfd, file)) . .#define bfd_canonicalize_dynamic_symtab(abfd, asymbols) \ .	BFD_SEND (abfd, _bfd_canonicalize_dynamic_symtab, (abfd, asymbols)) . .#define bfd_get_dynamic_reloc_upper_bound(abfd) \ .	BFD_SEND (abfd, _bfd_get_dynamic_reloc_upper_bound, (abfd)) . .#define bfd_canonicalize_dynamic_reloc(abfd, arels, asyms) \ .	BFD_SEND (abfd, _bfd_canonicalize_dynamic_reloc, (abfd, arels, asyms)) . .extern bfd_byte *bfd_get_relocated_section_contents .	PARAMS ((bfd *, struct bfd_link_info *, .		  struct bfd_link_order *, bfd_byte *, .		  boolean, asymbol **)); .  */
 end_comment
 
 begin_function

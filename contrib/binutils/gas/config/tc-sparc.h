@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-sparc.h - Macros and type defines for the sparc.    Copyright (C) 1989, 90-96, 97, 1998 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-sparc.h - Macros and type defines for the sparc.    Copyright (C) 1989, 90-96, 97, 98, 1999 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -80,6 +80,25 @@ name|TARGET_FORMAT
 value|sparc_target_format ()
 end_define
 
+begin_define
+define|#
+directive|define
+name|RELOC_EXPANSION_POSSIBLE
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_RELOC_EXPANSION
+value|2
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -101,6 +120,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Make it unconditional and check if -EL is valid after option parsing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPARC_BIENDIAN
+end_define
+
 begin_define
 define|#
 directive|define
@@ -118,43 +152,7 @@ name|s
 parameter_list|,
 name|f
 parameter_list|)
-value|{as_fatal ("sparc convert_frag\n");}
-end_define
-
-begin_define
-define|#
-directive|define
-name|md_create_long_jump
-parameter_list|(
-name|p
-parameter_list|,
-name|f
-parameter_list|,
-name|t
-parameter_list|,
-name|fr
-parameter_list|,
-name|s
-parameter_list|)
-value|as_fatal("sparc_create_long_jump")
-end_define
-
-begin_define
-define|#
-directive|define
-name|md_create_short_jump
-parameter_list|(
-name|p
-parameter_list|,
-name|f
-parameter_list|,
-name|t
-parameter_list|,
-name|fr
-parameter_list|,
-name|s
-parameter_list|)
-value|as_fatal("sparc_create_short_jump")
+value|{as_fatal (_("sparc convert_frag\n"));}
 end_define
 
 begin_define
@@ -167,7 +165,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|(as_fatal("estimate_size_before_relax called"),1)
+value|(as_fatal(_("estimate_size_before_relax called")),1)
 end_define
 
 begin_define
@@ -200,7 +198,7 @@ parameter_list|,
 name|around
 parameter_list|)
 define|\
-value|if ((n)&& (n)<= 10&& !need_pass_2&& !(fill)				\&& now_seg != data_section&& now_seg != bss_section)		\   {									\     char *p;								\     p = frag_var (rs_align_code, 1024, 1, (relax_substateT) 1024,	\                   (symbolS *) 0, (offsetT) (n), (char *) 0);		\     *p = 0x00;								\     goto around;							\   }
+value|if ((n)&& (n)<= 10&& !need_pass_2&& !(fill)				\&& subseg_text_p (now_seg))						\   {									\     char *p;								\     p = frag_var (rs_align_code, 1<< n, 1, (relax_substateT) 1024,	\                   (symbolS *) 0, (offsetT) (n), (char *) 0);		\     *p = 0x00;								\     goto around;							\   }
 end_define
 
 begin_comment
@@ -351,6 +349,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TC_FORCE_RELOCATION
+parameter_list|(
+name|fixp
+parameter_list|)
+value|elf32_sparc_force_relocation(fixp)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|elf32_sparc_force_relocation
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|fix
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -370,7 +404,7 @@ name|OBJ_ELF
 end_ifdef
 
 begin_comment
-comment|/* Keep relocations against global symbols.  Don't turn them into    relocations against sections.  This is required for the dynamic    linker to operate properly.  When generating PIC, we need to keep    any non PC relative reloc.  */
+comment|/* Keep relocations against global symbols.  Don't turn them into    relocations against sections.  This is required for the dynamic    linker to operate properly.  When generating PIC, we need to keep    any non PC relative reloc.  The PIC part of this test must be    parallel to the code in tc_gen_reloc which converts relocations to    GOT relocations.  */
 end_comment
 
 begin_define
@@ -381,8 +415,33 @@ parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|(! S_IS_EXTERNAL ((FIX)->fx_addsy)					\&& ! S_IS_WEAK ((FIX)->fx_addsy)					\&& (! sparc_pic_code							\        || (FIX)->fx_pcrel						\        || ((FIX)->fx_subsy != NULL					\&& (S_GET_SEGMENT ((FIX)->fx_subsy)				\ 	       == S_GET_SEGMENT ((FIX)->fx_addsy)))			\        || strchr (S_GET_NAME ((FIX)->fx_addsy), '\001') != NULL		\        || strchr (S_GET_NAME ((FIX)->fx_addsy), '\002') != NULL))
+value|(! S_IS_EXTERNAL ((FIX)->fx_addsy)					\&& ! S_IS_WEAK ((FIX)->fx_addsy)					\&& (FIX)->fx_r_type != BFD_RELOC_VTABLE_INHERIT			\&& (FIX)->fx_r_type != BFD_RELOC_VTABLE_ENTRY			\&& (! sparc_pic_code							\        || ((FIX)->fx_r_type != BFD_RELOC_HI22				\&& (FIX)->fx_r_type != BFD_RELOC_LO10			\&& (FIX)->fx_r_type != BFD_RELOC_SPARC13			\&& ((FIX)->fx_r_type != BFD_RELOC_32_PCREL_S2		\ 	       || (S_IS_DEFINED ((FIX)->fx_addsy)			\&& ! S_IS_COMMON ((FIX)->fx_addsy)			\&& ! S_IS_EXTERNAL ((FIX)->fx_addsy)			\&& ! S_IS_WEAK ((FIX)->fx_addsy)))			\&& ((FIX)->fx_pcrel						\ 	       || ((FIX)->fx_subsy != NULL				\&& (S_GET_SEGMENT ((FIX)->fx_subsy)			\ 		       == S_GET_SEGMENT ((FIX)->fx_addsy)))		\ 	       || S_IS_LOCAL ((FIX)->fx_addsy)))))
 end_define
+
+begin_comment
+comment|/* Finish up the entire symtab.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tc_adjust_symtab
+parameter_list|()
+value|sparc_adjust_symtab ()
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|sparc_adjust_symtab
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -396,7 +455,7 @@ name|OBJ_AOUT
 end_ifdef
 
 begin_comment
-comment|/* When generating PIC code, we must not adjust any reloc which will    turn into a reloc against the global offset table.  */
+comment|/* When generating PIC code, we must not adjust any reloc which will    turn into a reloc against the global offset table, nor any reloc    which we will need if a symbol is overridden.  */
 end_comment
 
 begin_define
@@ -407,7 +466,7 @@ parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|(! sparc_pic_code \    || (FIX)->fx_pcrel \    || (FIX)->fx_r_type == BFD_RELOC_16 \    || (FIX)->fx_r_type == BFD_RELOC_32)
+value|(! sparc_pic_code							\    || ((FIX)->fx_pcrel							\&& ((FIX)->fx_addsy == NULL					\ 	   || (! S_IS_EXTERNAL ((FIX)->fx_addsy)			\&& ! S_IS_WEAK ((FIX)->fx_addsy))))			\    || (FIX)->fx_r_type == BFD_RELOC_16					\    || (FIX)->fx_r_type == BFD_RELOC_32)
 end_define
 
 begin_endif
@@ -469,6 +528,68 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|TC_CONS_FIX_NEW
+value|cons_fix_new_sparc
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|cons_fix_new_sparc
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|frag
+operator|*
+operator|,
+name|int
+operator|,
+name|unsigned
+name|int
+operator|,
+expr|struct
+name|expressionS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TC_FIX_TYPE
+value|valueT
+end_define
+
+begin_define
+define|#
+directive|define
+name|TC_INIT_FIX_DATA
+parameter_list|(
+name|X
+parameter_list|)
+define|\
+value|do						\      {						\        (X)->tc_fix_data = 0;			\      }						\   while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TC_FIX_DATA_PRINT
+parameter_list|(
+name|FILE
+parameter_list|,
+name|FIXP
+parameter_list|)
+define|\
+value|do									\     {									\       fprintf((FILE), "addend2=%ld\n",   				\ 	      (unsigned long) (FIXP)->tc_fix_data);			\     }									\   while(0)
+end_define
 
 begin_comment
 comment|/* end of tc-sparc.h */

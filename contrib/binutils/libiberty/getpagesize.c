@@ -16,14 +16,20 @@ end_ifndef
 begin_include
 include|#
 directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_SYS_PARAM_H
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PARAM_H
+end_ifdef
 
 begin_include
 include|#
@@ -36,17 +42,37 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_undef
+undef|#
+directive|undef
+name|GNU_OUR_PAGESIZE
+end_undef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_SYSCONF
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_UNISTD_H
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SC_PAGESIZE
+end_ifdef
 
 begin_define
 define|#
@@ -55,10 +81,21 @@ name|GNU_OUR_PAGESIZE
 value|sysconf(_SC_PAGESIZE)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GNU_OUR_PAGESIZE
+end_ifndef
 
 begin_ifdef
 ifdef|#
@@ -223,7 +260,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_SYSCONF */
+comment|/* GNU_OUR_PAGESIZE */
 end_comment
 
 begin_function

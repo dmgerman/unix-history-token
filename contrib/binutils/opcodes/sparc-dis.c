@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Print SPARC instructions.    Copyright (C) 1989, 91-94, 1995, 1996, 1997 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Print SPARC instructions.    Copyright (C) 1989, 91-97, 1998 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ansidecl.h"
 end_include
 
 begin_include
@@ -37,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"libiberty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opintl.h"
 end_include
 
 begin_comment
@@ -879,6 +879,20 @@ name|current_mach
 init|=
 literal|0
 decl_stmt|;
+name|bfd_vma
+argument_list|(
+argument|*getword
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1045,6 +1059,7 @@ literal|1
 return|;
 block|}
 block|}
+comment|/* On SPARClite variants such as DANlite (sparc86x), instructions      are always big-endian even when the machine is in little-endian mode. */
 if|if
 condition|(
 name|info
@@ -1052,18 +1067,25 @@ operator|->
 name|endian
 operator|==
 name|BFD_ENDIAN_BIG
+operator|||
+name|info
+operator|->
+name|mach
+operator|==
+name|bfd_mach_sparc_sparclite
 condition|)
-name|insn
+name|getword
 operator|=
 name|bfd_getb32
-argument_list|(
-name|buffer
-argument_list|)
 expr_stmt|;
 else|else
-name|insn
+name|getword
 operator|=
 name|bfd_getl32
+expr_stmt|;
+name|insn
+operator|=
+name|getword
 argument_list|(
 name|buffer
 argument_list|)
@@ -1171,6 +1193,11 @@ name|imm_added_to_rs1
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|imm_ored_to_rs1
+init|=
+literal|0
+decl_stmt|;
 comment|/* Nonzero means that we have found a plus sign in the args 	     field of the opcode table.  */
 name|int
 name|found_plus
@@ -1191,14 +1218,21 @@ operator|->
 name|match
 operator|==
 literal|0x80102000
-operator|||
+condition|)
+comment|/* or */
+name|imm_ored_to_rs1
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|opcode
 operator|->
 name|match
 operator|==
 literal|0x80002000
 condition|)
-comment|/*			  (or)				 (add)  */
+comment|/* add */
 name|imm_added_to_rs1
 operator|=
 literal|1
@@ -2910,6 +2944,8 @@ block|}
 comment|/* If we are adding or or'ing something to rs1, then 	     check to see whether the previous instruction was 	     a sethi to the same register as in the sethi. 	     If so, attempt to print the result of the add or 	     or (in this context add and or do the same thing) 	     and its symbolic value.  */
 if|if
 condition|(
+name|imm_ored_to_rs1
+operator|||
 name|imm_added_to_rs1
 condition|)
 block|{
@@ -2943,25 +2979,9 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|info
-operator|->
-name|endian
-operator|==
-name|BFD_ENDIAN_BIG
-condition|)
 name|prev_insn
 operator|=
-name|bfd_getb32
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-else|else
-name|prev_insn
-operator|=
-name|bfd_getl32
+name|getword
 argument_list|(
 name|buffer
 argument_list|)
@@ -3005,25 +3025,9 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|info
-operator|->
-name|endian
-operator|==
-name|BFD_ENDIAN_BIG
-condition|)
 name|prev_insn
 operator|=
-name|bfd_getb32
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-else|else
-name|prev_insn
-operator|=
-name|bfd_getl32
+name|getword
 argument_list|(
 name|buffer
 argument_list|)
@@ -3089,7 +3093,27 @@ argument_list|)
 operator|<<
 literal|10
 operator|)
-operator||
+expr_stmt|;
+if|if
+condition|(
+name|imm_added_to_rs1
+condition|)
+name|info
+operator|->
+name|target
+operator|+=
+name|X_SIMM
+argument_list|(
+name|insn
+argument_list|,
+literal|13
+argument_list|)
+expr_stmt|;
+else|else
+name|info
+operator|->
+name|target
+operator||=
 name|X_SIMM
 argument_list|(
 name|insn
@@ -3224,7 +3248,10 @@ call|)
 argument_list|(
 name|stream
 argument_list|,
+name|_
+argument_list|(
 literal|"unknown"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3280,6 +3307,9 @@ argument_list|)
 return|;
 case|case
 name|bfd_mach_sparc_sparclite
+case|:
+case|case
+name|bfd_mach_sparc_sparclite_le
 case|:
 comment|/* sparclites insns are recognized by default (because that's how 	 they've always been treated, for better or worse).  Kludge this by 	 indicating generic v8 is also selected.  */
 return|return
@@ -3483,7 +3513,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+comment|/* xgettext:c-format */
+name|_
+argument_list|(
 literal|"Internal error:  bad sparc-opcode.h: \"%s\", %#.8lx, %#.8lx\n"
+argument_list|)
 argument_list|,
 name|op0
 operator|->
@@ -3521,7 +3555,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+comment|/* xgettext:c-format */
+name|_
+argument_list|(
 literal|"Internal error: bad sparc-opcode.h: \"%s\", %#.8lx, %#.8lx\n"
+argument_list|)
 argument_list|,
 name|op1
 operator|->
@@ -3732,7 +3770,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+comment|/* xgettext:c-format */
+name|_
+argument_list|(
 literal|"Internal error: bad sparc-opcode.h: \"%s\" == \"%s\"\n"
+argument_list|)
 argument_list|,
 name|op0
 operator|->

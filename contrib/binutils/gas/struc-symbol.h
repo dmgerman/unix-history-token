@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* struct_symbol.h - Internal symbol structure    Copyright (C) 1987, 1992, 1993, 1994 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* struct_symbol.h - Internal symbol structure    Copyright (C) 1987, 92, 93, 94, 95, 98, 1999 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -15,44 +15,24 @@ directive|define
 name|__struc_symbol_h__
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
 begin_comment
-comment|/* The BFD code wants to walk the list in both directions.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SYMBOLS_NEED_BACKPOINTERS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SYMBOLS_NEED_BACKPOINTERS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* our version of an nlist node */
+comment|/* The information we keep for a symbol.  Note that the symbol table    holds pointers both to this and to local_symbol structures.  See    below.  */
 end_comment
 
 begin_struct
 struct|struct
 name|symbol
 block|{
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|BFD_ASSEMBLER
+comment|/* BFD symbol */
+name|asymbol
+modifier|*
+name|bsym
+decl_stmt|;
+else|#
+directive|else
 comment|/* The (4-origin) position of sy_name in the symbol table of the object      file.  This will be 0 for (nameless) .stabd symbols.       Not used until write_object_file() time. */
 name|unsigned
 name|long
@@ -65,13 +45,6 @@ decl_stmt|;
 comment|/* The 24 bit symbol number.  Symbol numbers start at 0 and are unsigned. */
 name|long
 name|sy_number
-decl_stmt|;
-else|#
-directive|else
-comment|/* BFD symbol */
-name|asymbol
-modifier|*
-name|bsym
 decl_stmt|;
 endif|#
 directive|endif
@@ -159,233 +132,143 @@ name|sy_tc
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|TARGET_SYMBOL_FIELDS
-name|TARGET_SYMBOL_FIELDS
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|symbol
-name|symbolS
-typedef|;
-end_typedef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WORKING_DOT_WORD
-end_ifndef
-
-begin_struct
-struct|struct
-name|broken_word
-block|{
-comment|/* Linked list -- one of these structures per ".word x-y+C"        expression.  */
-name|struct
-name|broken_word
-modifier|*
-name|next_broken_word
-decl_stmt|;
-comment|/* Which frag is this broken word in?  */
-name|fragS
-modifier|*
-name|frag
-decl_stmt|;
-comment|/* Where in the frag is it?  */
-name|char
-modifier|*
-name|word_goes_here
-decl_stmt|;
-comment|/* Where to add the break.  */
-name|fragS
-modifier|*
-name|dispfrag
-decl_stmt|;
-comment|/* where to add the break */
-comment|/* Operands of expression.  */
-name|symbolS
-modifier|*
-name|add
-decl_stmt|;
-name|symbolS
-modifier|*
-name|sub
-decl_stmt|;
-name|offsetT
-name|addnum
-decl_stmt|;
-name|int
-name|added
-decl_stmt|;
-comment|/* nasty thing happend yet? */
-comment|/* 1: added and has a long-jump */
-comment|/* 2: added but uses someone elses long-jump */
-comment|/* Pointer to broken_word with a similar long-jump.  */
-name|struct
-name|broken_word
-modifier|*
-name|use_jump
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|broken_word
-modifier|*
-name|broken_words
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ndef WORKING_DOT_WORD */
-end_comment
-
-begin_comment
-comment|/*  * Current means for getting from symbols to segments and vice verse.  * This will change for infinite-segments support (e.g. COFF).  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|segT
-name|N_TYPE_seg
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* subseg.c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGMENT_TO_SYMBOL_TYPE
-parameter_list|(
-name|seg
-parameter_list|)
-value|( seg_N_TYPE [(int) (seg)] )
-end_define
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|short
-name|seg_N_TYPE
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* subseg.c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|N_REGISTER
-value|30
-end_define
-
-begin_comment
-comment|/* Fake N_TYPE value for SEG_REGISTER */
-end_comment
-
-begin_decl_stmt
-name|void
-name|symbol_clear_list_pointers
-name|PARAMS
-argument_list|(
-operator|(
-name|symbolS
-operator|*
-name|symbolP
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYMBOLS_NEED_BACKPOINTERS
+name|BFD_ASSEMBLER
 end_ifdef
 
-begin_decl_stmt
-name|void
-name|symbol_insert
-name|PARAMS
-argument_list|(
-operator|(
-name|symbolS
-operator|*
-name|addme
-operator|,
-name|symbolS
-operator|*
-name|target
-operator|,
-name|symbolS
-operator|*
-operator|*
-name|rootP
-operator|,
-name|symbolS
-operator|*
-operator|*
-name|lastP
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* A pointer in the symbol may point to either a complete symbol    (struct symbol above) or to a local symbol (struct local_symbol    defined here).  The symbol code can detect the case by examining    the first field.  It is always NULL for a local symbol.     We do this because we ordinarily only need a small amount of    information for a local symbol.  The symbol table takes up a lot of    space, and storing less information for a local symbol can make a    big difference in assembler memory usage when assembling a large    file.  */
+end_comment
 
-begin_decl_stmt
-name|void
-name|symbol_remove
-name|PARAMS
-argument_list|(
-operator|(
-name|symbolS
-operator|*
-name|symbolP
-operator|,
-name|symbolS
-operator|*
-operator|*
-name|rootP
-operator|,
-name|symbolS
-operator|*
-operator|*
-name|lastP
-operator|)
-argument_list|)
+begin_struct
+struct|struct
+name|local_symbol
+block|{
+comment|/* This pointer is always NULL to indicate that this is a local      symbol.  */
+name|asymbol
+modifier|*
+name|lsy_marker
 decl_stmt|;
-end_decl_stmt
+comment|/* The symbol section.  This also serves as a flag.  If this is      reg_section, then this symbol has been converted into a regular      symbol, and sy_sym points to it.  */
+name|segT
+name|lsy_section
+decl_stmt|;
+comment|/* The symbol name.  */
+specifier|const
+name|char
+modifier|*
+name|lsy_name
+decl_stmt|;
+comment|/* The symbol frag or the real symbol, depending upon the value in      sy_section.  If the symbol has been fully resolved, lsy_frag is      set to NULL.  */
+union|union
+block|{
+name|fragS
+modifier|*
+name|lsy_frag
+decl_stmt|;
+name|symbolS
+modifier|*
+name|lsy_sym
+decl_stmt|;
+block|}
+name|u
+union|;
+comment|/* The offset within the frag.  */
+name|valueT
+name|lsy_offset
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
 directive|define
-name|symbol_previous
+name|local_symbol_converted_p
 parameter_list|(
+name|l
+parameter_list|)
+value|((l)->lsy_section == reg_section)
+end_define
+
+begin_define
+define|#
+directive|define
+name|local_symbol_mark_converted
+parameter_list|(
+name|l
+parameter_list|)
+value|((l)->lsy_section = reg_section)
+end_define
+
+begin_define
+define|#
+directive|define
+name|local_symbol_resolved_p
+parameter_list|(
+name|l
+parameter_list|)
+value|((l)->u.lsy_frag == NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|local_symbol_mark_resolved
+parameter_list|(
+name|l
+parameter_list|)
+value|((l)->u.lsy_frag = NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|local_symbol_get_frag
+parameter_list|(
+name|l
+parameter_list|)
+value|((l)->u.lsy_frag)
+end_define
+
+begin_define
+define|#
+directive|define
+name|local_symbol_set_frag
+parameter_list|(
+name|l
+parameter_list|,
+name|f
+parameter_list|)
+value|((l)->u.lsy_frag = (f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|local_symbol_get_real_symbol
+parameter_list|(
+name|l
+parameter_list|)
+value|((l)->u.lsy_sym)
+end_define
+
+begin_define
+define|#
+directive|define
+name|local_symbol_set_real_symbol
+parameter_list|(
+name|l
+parameter_list|,
 name|s
 parameter_list|)
-value|((s)->sy_previous)
+value|((l)->u.lsy_sym = (s))
 end_define
 
 begin_endif
@@ -394,78 +277,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SYMBOLS_NEED_BACKPOINTERS */
+comment|/* BFD_ASSEMBLER */
 end_comment
-
-begin_decl_stmt
-name|void
-name|verify_symbol_chain
-name|PARAMS
-argument_list|(
-operator|(
-name|symbolS
-operator|*
-name|rootP
-operator|,
-name|symbolS
-operator|*
-name|lastP
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|verify_symbol_chain_2
-name|PARAMS
-argument_list|(
-operator|(
-name|symbolS
-operator|*
-name|symP
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|symbol_append
-name|PARAMS
-argument_list|(
-operator|(
-name|symbolS
-operator|*
-name|addme
-operator|,
-name|symbolS
-operator|*
-name|target
-operator|,
-name|symbolS
-operator|*
-operator|*
-name|rootP
-operator|,
-name|symbolS
-operator|*
-operator|*
-name|lastP
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|symbol_next
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)->sy_next)
-end_define
 
 begin_endif
 endif|#

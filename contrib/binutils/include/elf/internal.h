@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF support for BFD.    Copyright (C) 1991, 92, 93, 94, 95, 1997 Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF support for BFD.    Copyright (C) 1991, 92, 93, 94, 95, 97, 1998 Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -426,12 +426,19 @@ name|type
 decl_stmt|;
 comment|/* Interpretation of the descriptor */
 name|char
-name|name
-index|[
-literal|1
-index|]
+modifier|*
+name|namedata
 decl_stmt|;
 comment|/* Start of the name+desc data */
+name|char
+modifier|*
+name|descdata
+decl_stmt|;
+comment|/* Start of the desc data */
+name|bfd_vma
+name|descpos
+decl_stmt|;
+comment|/* File offset of the descdata */
 block|}
 name|Elf_Internal_Note
 typedef|;
@@ -859,6 +866,29 @@ name|Elf_Internal_Versym
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Structure for syminfo section.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|unsigned
+name|short
+name|int
+name|si_boundto
+decl_stmt|;
+name|unsigned
+name|short
+name|int
+name|si_flags
+decl_stmt|;
+block|}
+name|Elf_Internal_Syminfo
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -997,6 +1027,20 @@ define|#
 directive|define
 name|Elf64_Internal_Versym
 value|Elf_Internal_Versym
+end_define
+
+begin_define
+define|#
+directive|define
+name|Elf32_Internal_Syminfo
+value|Elf_Internal_Syminfo
+end_define
+
+begin_define
+define|#
+directive|define
+name|Elf64_Internal_Syminfo
+value|Elf_Internal_Syminfo
 end_define
 
 begin_comment

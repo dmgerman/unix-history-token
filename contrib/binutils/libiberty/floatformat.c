@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* IEEE floating point support routines, for GDB, the GNU Debugger.    Copyright (C) 1991, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* IEEE floating point support routines, for GDB, the GNU Debugger.    Copyright (C) 1991, 1994, 1999 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -610,6 +610,10 @@ expr_stmt|;
 comment|/* Move towards the most significant part of the field.  */
 while|while
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|cur_bitshift
 operator|<
 name|len
@@ -820,6 +824,10 @@ name|exponent
 operator|==
 literal|0
 operator|||
+operator|(
+name|unsigned
+name|long
+operator|)
 name|exponent
 operator|==
 name|fmt
@@ -845,6 +853,7 @@ condition|(
 operator|!
 name|special_exponent
 condition|)
+block|{
 if|if
 condition|(
 name|fmt
@@ -866,6 +875,7 @@ else|else
 name|exponent
 operator|++
 expr_stmt|;
+block|}
 while|while
 condition|(
 name|mant_bits_left
@@ -1172,6 +1182,10 @@ expr_stmt|;
 comment|/* Move towards the most significant part of the field.  */
 while|while
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|cur_bitshift
 operator|<
 name|len
@@ -1284,7 +1298,7 @@ name|from
 parameter_list|,
 name|to
 parameter_list|)
-name|CONST
+specifier|const
 name|struct
 name|floatformat
 modifier|*
@@ -1547,6 +1561,10 @@ expr_stmt|;
 comment|/* If the integer bit is implicit, then we need to discard it. 	 If we are discarding a zero, we should be (but are not) creating 	 a denormalized	number which means adjusting the exponent 	 (I think).  */
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|mant_bits_left
 operator|==
 name|fmt

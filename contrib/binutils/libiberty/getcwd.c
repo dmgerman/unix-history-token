@@ -4,14 +4,20 @@ comment|/* Emulate getcwd using getwd.    This function is in the public domain.
 end_comment
 
 begin_comment
-comment|/* NAME 	getcwd -- get absolute pathname for current working directory  SYNOPSIS 	char *getcwd (char pathname[len], len)  DESCRIPTION 	Copy the absolute pathname for the current working directory into 	the supplied buffer and return a pointer to the buffer.  If the  	current directory's path doesn't fit in LEN characters, the result 	is NULL and errno is set.  BUGS 	Emulated via the getwd() call, which is reasonable for most 	systems that do not have getcwd().  */
+comment|/* NAME 	getcwd -- get absolute pathname for current working directory  SYNOPSIS 	char *getcwd (char pathname[len], len)  DESCRIPTION 	Copy the absolute pathname for the current working directory into 	the supplied buffer and return a pointer to the buffer.  If the  	current directory's path doesn't fit in LEN characters, the result 	is NULL and errno is set.  	If pathname is a null pointer, getcwd() will obtain size bytes of 	space using malloc.  BUGS 	Emulated via the getwd() call, which is reasonable for most 	systems that do not have getcwd().  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_SYS_PARAM_H
-end_ifndef
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PARAM_H
+end_ifdef
 
 begin_include
 include|#
@@ -120,6 +126,38 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
+if|if
+condition|(
+operator|!
+name|buf
+condition|)
+block|{
+name|buf
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|buf
+condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 block|}
 name|strcpy
 argument_list|(

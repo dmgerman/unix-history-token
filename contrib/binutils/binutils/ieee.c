@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ieee.c -- Read and write IEEE-695 debugging information.    Copyright (C) 1996 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ieee.c -- Read and write IEEE-695 debugging information.    Copyright (C) 1996, 1998, 1999 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1321,7 +1321,10 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"unexpected end of debugging information"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1685,7 +1688,10 @@ name|pp
 operator|-
 literal|1
 argument_list|,
+name|_
+argument_list|(
 literal|"invalid number"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1935,7 +1941,10 @@ name|pp
 operator|-
 literal|1
 argument_list|,
+name|_
+argument_list|(
 literal|"invalid string length"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2129,7 +2138,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"expression stack overflow"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2183,7 +2195,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"unsupported IEEE expression operator"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2259,7 +2274,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"unknown section"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2281,7 +2299,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"expression stack overflow"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2330,7 +2351,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"expression stack underflow"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2376,7 +2400,10 @@ name|info
 argument_list|,
 name|expr_start
 argument_list|,
+name|_
+argument_list|(
 literal|"expression stack mismatch"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2537,7 +2564,10 @@ name|info
 argument_list|,
 name|p
 argument_list|,
+name|_
+argument_list|(
 literal|"unknown builtin type"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3049,11 +3079,14 @@ name|info
 argument_list|,
 name|p
 argument_list|,
+name|_
+argument_list|(
 literal|"BCD float type not supported"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|DEBUG_TYPE_NULL
 return|;
 block|}
 if|if
@@ -3625,6 +3658,12 @@ name|NULL
 expr_stmt|;
 name|info
 operator|.
+name|global_vars
+operator|=
+name|NULL
+expr_stmt|;
+name|info
+operator|.
 name|types
 operator|.
 name|alloc
@@ -3636,6 +3675,12 @@ operator|.
 name|types
 operator|.
 name|types
+operator|=
+name|NULL
+expr_stmt|;
+name|info
+operator|.
+name|global_types
 operator|=
 name|NULL
 expr_stmt|;
@@ -3748,7 +3793,10 @@ name|info
 argument_list|,
 name|record_start
 argument_list|,
+name|_
+argument_list|(
 literal|"unexpected number"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3768,7 +3816,10 @@ name|info
 argument_list|,
 name|record_start
 argument_list|,
+name|_
+argument_list|(
 literal|"unexpected record type"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3898,7 +3949,10 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"blocks left on stack at end"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5026,7 +5080,10 @@ name|info
 argument_list|,
 name|block_start
 argument_list|,
+name|_
+argument_list|(
 literal|"unknown BB type"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5062,7 +5119,10 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
+name|_
+argument_list|(
 literal|"stack overflow"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5178,7 +5238,10 @@ argument_list|,
 operator|*
 name|pp
 argument_list|,
+name|_
+argument_list|(
 literal|"stack underflow"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5710,7 +5773,10 @@ name|info
 argument_list|,
 name|nn_start
 argument_list|,
+name|_
+argument_list|(
 literal|"illegal variable index"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5968,7 +6034,10 @@ name|info
 argument_list|,
 name|ty_start
 argument_list|,
+name|_
+argument_list|(
 literal|"illegal type index"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6010,7 +6079,10 @@ argument_list|,
 operator|*
 name|pp
 argument_list|,
+name|_
+argument_list|(
 literal|"unknown TY code"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6055,7 +6127,10 @@ name|info
 argument_list|,
 name|ty_var_start
 argument_list|,
+name|_
+argument_list|(
 literal|"illegal variable index"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6096,7 +6171,10 @@ name|info
 argument_list|,
 name|ty_var_start
 argument_list|,
+name|_
+argument_list|(
 literal|"undefined variable in TY"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6158,7 +6236,10 @@ name|info
 argument_list|,
 name|ty_code_start
 argument_list|,
+name|_
+argument_list|(
 literal|"unknown TY code"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -7885,7 +7966,10 @@ name|info
 argument_list|,
 name|ty_code_start
 argument_list|,
+name|_
+argument_list|(
 literal|"Pascal file name not supported"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -8066,7 +8150,10 @@ name|info
 argument_list|,
 name|ty_start
 argument_list|,
+name|_
+argument_list|(
 literal|"unsupported qualifer"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -9073,13 +9160,34 @@ operator|<
 literal|32
 condition|)
 block|{
+comment|/* The MRI compiler reportedly sometimes emits variable lifetime          information for a register.  We just ignore it.  */
+if|if
+condition|(
+name|atn_code
+operator|==
+literal|9
+condition|)
+return|return
+name|ieee_read_number
+argument_list|(
+name|info
+argument_list|,
+name|pp
+argument_list|,
+operator|&
+name|v
+argument_list|)
+return|;
 name|ieee_error
 argument_list|(
 name|info
 argument_list|,
 name|atn_start
 argument_list|,
+name|_
+argument_list|(
 literal|"illegal variable index"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -9278,7 +9386,10 @@ name|info
 argument_list|,
 name|atn_start
 argument_list|,
+name|_
+argument_list|(
 literal|"undefined variable in ATN"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -9428,7 +9539,10 @@ name|info
 argument_list|,
 name|atn_code_start
 argument_list|,
+name|_
+argument_list|(
 literal|"unknown ATN type"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -10029,7 +10143,10 @@ name|info
 argument_list|,
 name|atn_code_start
 argument_list|,
+name|_
+argument_list|(
 literal|"unsupported ATN11"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Return true to keep going.  */
@@ -10150,7 +10267,10 @@ name|info
 argument_list|,
 name|atn_code_start
 argument_list|,
+name|_
+argument_list|(
 literal|"unsupported ATN12"
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Return true to keep going.  */
@@ -10436,7 +10556,10 @@ name|info
 argument_list|,
 name|atn_code_start
 argument_list|,
+name|_
+argument_list|(
 literal|"unexpected string in C++ misc"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -10484,7 +10607,10 @@ argument_list|,
 operator|*
 name|pp
 argument_list|,
+name|_
+argument_list|(
 literal|"bad misc record"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -10619,7 +10745,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"unrecognized C++ misc record"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -11089,7 +11218,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"undefined C++ object"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -11208,7 +11340,10 @@ name|info
 argument_list|,
 name|spec_start
 argument_list|,
+name|_
+argument_list|(
 literal|"unrecognized C++ object spec"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -11351,7 +11486,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"unsupported C++ object type"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -11396,7 +11534,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"C++ base class not defined"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -11433,7 +11574,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"C++ object has no fields"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -11525,7 +11669,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"C++ base class not found in container"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -11891,7 +12038,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"C++ object has no fields"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -11990,7 +12140,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"C++ data member not found in container"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -12161,7 +12314,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"unknown C++ visibility"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -12278,7 +12434,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"bad C++ field bit pos or size"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -12663,7 +12822,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"bad type for C++ method function"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -12712,7 +12874,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"no type information for C++ method function"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -12764,7 +12929,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"unknown C++ visibility"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -12856,7 +13024,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"C++ static virtual method"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -13288,7 +13459,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"unrecognized C++ object overhead spec"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -13436,7 +13610,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"undefined C++ vtable"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -13712,7 +13889,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"C++ default values not in a function"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -13868,7 +14048,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"unrecognized C++ default type"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -13989,7 +14172,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"reference parameter is not a pointer"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -14311,7 +14497,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"unrecognized C++ reference type"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -14618,7 +14807,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"C++ reference not found"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -14647,7 +14839,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"C++ reference is not pointer"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -14763,7 +14958,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"missing required ASN"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -14808,7 +15006,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"missing required ASN"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -14931,7 +15132,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"missing required ATN65"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -14976,7 +15180,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"missing required ATN65"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -15043,7 +15250,10 @@ name|info
 argument_list|,
 name|start
 argument_list|,
+name|_
+argument_list|(
 literal|"bad ATN65 record"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -17311,6 +17521,7 @@ name|struct
 name|ieee_handle
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|ieee_buflist
@@ -17470,6 +17681,7 @@ name|struct
 name|ieee_handle
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|ieee_buflist
@@ -17847,7 +18059,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"IEEE numeric overflow: 0x"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf_vma
@@ -18049,7 +18264,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"IEEE string length overflow: %u\n"
+argument_list|)
 argument_list|,
 name|len
 argument_list|)
@@ -22286,6 +22504,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
@@ -22862,11 +23081,13 @@ name|filename
 parameter_list|)
 name|PTR
 name|p
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|filename
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
@@ -23065,7 +23286,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"IEEE unsupported integer type size %u\n"
+argument_list|)
 argument_list|,
 name|size
 argument_list|)
@@ -23190,7 +23414,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"IEEE unsupported float type size %u\n"
+argument_list|)
 argument_list|,
 name|size
 argument_list|)
@@ -23337,7 +23564,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"IEEE unsupported complex type size %u\n"
+argument_list|)
 argument_list|,
 name|size
 argument_list|)
@@ -24917,6 +25147,7 @@ name|high
 decl_stmt|;
 name|boolean
 name|stringp
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct
@@ -25248,6 +25479,7 @@ name|p
 decl_stmt|;
 name|boolean
 name|bitstringp
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct
@@ -30797,6 +31029,7 @@ specifier|const
 name|char
 modifier|*
 name|name
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct
@@ -30843,14 +31076,17 @@ name|val
 parameter_list|)
 name|PTR
 name|p
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|name
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd_vma
 name|val
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 comment|/* FIXME.  */
@@ -30877,14 +31113,17 @@ name|val
 parameter_list|)
 name|PTR
 name|p
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|name
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|double
 name|val
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 comment|/* FIXME.  */
@@ -30916,9 +31155,11 @@ specifier|const
 name|char
 modifier|*
 name|name
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd_vma
 name|val
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|struct

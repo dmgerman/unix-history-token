@@ -263,7 +263,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Assembler messages:\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -663,7 +666,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Warning: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fputs
@@ -1112,7 +1118,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Error: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fputs
@@ -1486,7 +1495,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Fatal error: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vfprintf
@@ -1563,7 +1575,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Fatal error: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|vfprintf
@@ -1650,14 +1665,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Internal error!\n"
 argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Assertion failure"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1668,16 +1679,27 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" in %s"
+name|_
+argument_list|(
+literal|"Assertion failure in %s at %s line %d.\n"
+argument_list|)
 argument_list|,
 name|fn
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
+else|else
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" at %s line %d.\n"
+name|_
+argument_list|(
+literal|"Assertion failure at %s line %d.\n"
+argument_list|)
 argument_list|,
 name|file
 argument_list|,
@@ -1688,7 +1710,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Please report this bug.\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|xexit
@@ -1734,17 +1759,6 @@ block|{
 name|as_show_where
 argument_list|()
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Internal error, aborting at %s line %d"
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fn
@@ -1753,16 +1767,41 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" in %s"
+name|_
+argument_list|(
+literal|"Internal error, aborting at %s line %d in %s\n"
+argument_list|)
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|,
 name|fn
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"Internal error, aborting at %s line %d\n"
+argument_list|)
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\nPlease report this bug.\n"
+name|_
+argument_list|(
+literal|"Please report this bug.\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|xexit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This module handles expression trees. Copyright (C) 1991, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc. Written by Steve Chamberlain of Cygnus Support (sac@cygnus.com).  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* This module handles expression trees.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support (sac@cygnus.com).  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -634,7 +634,7 @@ name|new
 decl_stmt|;
 name|new
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|true
 expr_stmt|;
@@ -690,7 +690,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%P: %s uses undefined section %s\n"
+argument_list|)
 argument_list|,
 name|op
 argument_list|,
@@ -706,7 +709,10 @@ name|processed
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%P: %s forward reference of section %s\n"
+argument_list|)
 argument_list|,
 name|op
 argument_list|,
@@ -874,7 +880,7 @@ name|new
 decl_stmt|;
 name|new
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|true
 expr_stmt|;
@@ -918,7 +924,7 @@ name|new
 decl_stmt|;
 name|new
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|true
 expr_stmt|;
@@ -1010,7 +1016,7 @@ if|if
 condition|(
 name|result
 operator|.
-name|valid
+name|valid_p
 condition|)
 block|{
 name|etree_value_type
@@ -1039,7 +1045,7 @@ if|if
 condition|(
 name|other
 operator|.
-name|valid
+name|valid_p
 condition|)
 block|{
 comment|/* If the values are from different sections, or this is an 	     absolute expression, make both the source arguments 	     absolute.  However, adding or subtracting an absolute 	     value from a relative value is meaningful, and is an 	     exception.  */
@@ -1170,7 +1176,10 @@ literal|0
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%S %% by zero\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|result
@@ -1207,7 +1216,10 @@ literal|0
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%S / by zero\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|result
@@ -1353,7 +1365,7 @@ operator|||
 argument_list|)
 expr_stmt|;
 case|case
-name|MAX
+name|MAX_K
 case|:
 if|if
 condition|(
@@ -1371,7 +1383,7 @@ name|other
 expr_stmt|;
 break|break;
 case|case
-name|MIN
+name|MIN_K
 case|:
 if|if
 condition|(
@@ -1398,7 +1410,7 @@ else|else
 block|{
 name|result
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|false
 expr_stmt|;
@@ -1420,7 +1432,7 @@ name|new
 decl_stmt|;
 name|new
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|false
 expr_stmt|;
@@ -1502,7 +1514,7 @@ else|else
 block|{
 name|result
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|false
 expr_stmt|;
@@ -1519,7 +1531,7 @@ name|lang_first_phase_enum
 condition|)
 name|result
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|false
 expr_stmt|;
@@ -1595,7 +1607,7 @@ literal|0
 expr_stmt|;
 name|result
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|true
 expr_stmt|;
@@ -1606,7 +1618,7 @@ name|NAME
 case|:
 name|result
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|false
 expr_stmt|;
@@ -1775,7 +1787,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%X%S: unresolvable symbol `%s' referenced in expression\n"
+argument_list|)
 argument_list|,
 name|tree
 operator|->
@@ -1844,7 +1859,10 @@ name|lang_final_phase_enum
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%S: undefined symbol `%s' referenced in expression\n"
+argument_list|)
 argument_list|,
 name|tree
 operator|->
@@ -1997,6 +2015,14 @@ operator|!=
 name|lang_first_phase_enum
 condition|)
 block|{
+name|int
+name|opb
+init|=
+name|bfd_octets_per_byte
+argument_list|(
+name|output_bfd
+argument_list|)
+decl_stmt|;
 name|lang_output_section_statement_type
 modifier|*
 name|os
@@ -2034,6 +2060,8 @@ operator|->
 name|bfd_section
 operator|->
 name|_raw_size
+operator|/
+name|opb
 argument_list|)
 expr_stmt|;
 block|}
@@ -2101,7 +2129,7 @@ condition|)
 block|{
 name|result
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|false
 expr_stmt|;
@@ -2146,7 +2174,7 @@ name|lang_final_phase_enum
 condition|)
 name|result
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|false
 expr_stmt|;
@@ -2186,6 +2214,58 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|etree_assert
+case|:
+name|result
+operator|=
+name|exp_fold_tree
+argument_list|(
+name|tree
+operator|->
+name|assert_s
+operator|.
+name|child
+argument_list|,
+name|current_section
+argument_list|,
+name|allocation_done
+argument_list|,
+name|dot
+argument_list|,
+name|dotp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|.
+name|valid_p
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|result
+operator|.
+name|value
+condition|)
+name|einfo
+argument_list|(
+literal|"%F%P: %s\n"
+argument_list|,
+name|tree
+operator|->
+name|assert_s
+operator|.
+name|message
+argument_list|)
+expr_stmt|;
+return|return
+name|result
+return|;
+block|}
+break|break;
+case|case
 name|etree_unary
 case|:
 name|result
@@ -2211,7 +2291,7 @@ if|if
 condition|(
 name|result
 operator|.
-name|valid
+name|valid_p
 condition|)
 block|{
 switch|switch
@@ -2251,7 +2331,7 @@ expr_stmt|;
 else|else
 name|result
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|false
 expr_stmt|;
@@ -2267,7 +2347,7 @@ name|lang_first_phase_enum
 operator|&&
 name|result
 operator|.
-name|valid
+name|valid_p
 condition|)
 block|{
 name|result
@@ -2292,7 +2372,7 @@ block|}
 else|else
 name|result
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|false
 expr_stmt|;
@@ -2388,7 +2468,7 @@ block|}
 else|else
 name|result
 operator|.
-name|valid
+name|valid_p
 operator|=
 name|false
 expr_stmt|;
@@ -2427,7 +2507,7 @@ if|if
 condition|(
 name|result
 operator|.
-name|valid
+name|valid_p
 condition|)
 name|result
 operator|=
@@ -2524,7 +2604,10 @@ name|etree_provide
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%S can not PROVIDE assignment to location counter\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2568,11 +2651,14 @@ condition|(
 operator|!
 name|result
 operator|.
-name|valid
+name|valid_p
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%S invalid assignment to location counter\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -2585,7 +2671,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%S assignment to location counter invalid outside of SECTION\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -2620,7 +2709,10 @@ condition|)
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%S cannot move location counter backwards (from %V to %V)\n"
+argument_list|)
 argument_list|,
 name|dot
 argument_list|,
@@ -2663,7 +2755,7 @@ if|if
 condition|(
 name|result
 operator|.
-name|valid
+name|valid_p
 condition|)
 block|{
 name|boolean
@@ -2738,7 +2830,10 @@ name|etree_assign
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F:%s: hash creation failed\n"
+argument_list|)
 argument_list|,
 name|tree
 operator|->
@@ -2969,7 +3064,7 @@ if|if
 condition|(
 name|r
 operator|.
-name|valid
+name|valid_p
 condition|)
 block|{
 return|return
@@ -3124,7 +3219,7 @@ if|if
 condition|(
 name|r
 operator|.
-name|valid
+name|valid_p
 condition|)
 block|{
 return|return
@@ -3251,7 +3346,7 @@ if|if
 condition|(
 name|r
 operator|.
-name|valid
+name|valid_p
 condition|)
 block|{
 return|return
@@ -3383,7 +3478,7 @@ if|if
 condition|(
 name|r
 operator|.
-name|valid
+name|valid_p
 condition|)
 block|{
 return|return
@@ -3635,6 +3730,91 @@ operator|.
 name|dst
 operator|=
 name|dst
+expr_stmt|;
+return|return
+name|n
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Handle ASSERT.  */
+end_comment
+
+begin_function
+name|etree_type
+modifier|*
+name|exp_assert
+parameter_list|(
+name|exp
+parameter_list|,
+name|message
+parameter_list|)
+name|etree_type
+modifier|*
+name|exp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|message
+decl_stmt|;
+block|{
+name|etree_type
+modifier|*
+name|n
+decl_stmt|;
+name|n
+operator|=
+operator|(
+name|etree_type
+operator|*
+operator|)
+name|stat_alloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|n
+operator|->
+name|assert_s
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|n
+operator|->
+name|assert_s
+operator|.
+name|type
+operator|.
+name|node_code
+operator|=
+literal|'!'
+expr_stmt|;
+name|n
+operator|->
+name|assert_s
+operator|.
+name|type
+operator|.
+name|node_class
+operator|=
+name|etree_assert
+expr_stmt|;
+name|n
+operator|->
+name|assert_s
+operator|.
+name|child
+operator|=
+name|exp
+expr_stmt|;
+name|n
+operator|->
+name|assert_s
+operator|.
+name|message
+operator|=
+name|message
 expr_stmt|;
 return|return
 name|n
@@ -3956,6 +4136,43 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+name|etree_assert
+case|:
+name|fprintf
+argument_list|(
+name|config
+operator|.
+name|map_file
+argument_list|,
+literal|"ASSERT ("
+argument_list|)
+expr_stmt|;
+name|exp_print_tree
+argument_list|(
+name|tree
+operator|->
+name|assert_s
+operator|.
+name|child
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|config
+operator|.
+name|map_file
+argument_list|,
+literal|", %s)"
+argument_list|,
+name|tree
+operator|->
+name|assert_s
+operator|.
+name|message
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|etree_undef
 case|:
 name|fprintf
@@ -4096,7 +4313,7 @@ condition|(
 operator|!
 name|r
 operator|.
-name|valid
+name|valid_p
 operator|&&
 name|name
 operator|!=
@@ -4104,7 +4321,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%S nonconstant expression for %s\n"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -4188,6 +4408,7 @@ name|tree
 decl_stmt|;
 name|int
 name|def
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|char
 modifier|*
@@ -4215,7 +4436,7 @@ if|if
 condition|(
 name|res
 operator|.
-name|valid
+name|valid_p
 condition|)
 block|{
 name|res
@@ -4235,7 +4456,10 @@ else|else
 block|{
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%S non constant expression for %s\n"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)

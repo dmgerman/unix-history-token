@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Stabs in sections linking support.    Copyright 1996, 1997, 1998 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Stabs in sections linking support.    Copyright 1996, 1997, 1998, 1999 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -674,6 +674,23 @@ condition|)
 goto|goto
 name|error_return
 goto|;
+comment|/* Make sure the first byte is zero.  */
+operator|(
+name|void
+operator|)
+name|_bfd_stringtab_add
+argument_list|(
+name|sinfo
+operator|->
+name|strings
+argument_list|,
+literal|""
+argument_list|,
+name|true
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2140,6 +2157,23 @@ condition|)
 return|return
 name|true
 return|;
+if|if
+condition|(
+name|bfd_is_abs_section
+argument_list|(
+name|sinfo
+operator|->
+name|stabstr
+operator|->
+name|output_section
+argument_list|)
+condition|)
+block|{
+comment|/* The section was discarded from the link.  */
+return|return
+name|true
+return|;
+block|}
 name|BFD_ASSERT
 argument_list|(
 operator|(
@@ -2256,10 +2290,12 @@ parameter_list|)
 name|bfd
 modifier|*
 name|output_bfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|PTR
 modifier|*
 name|psinfo
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*

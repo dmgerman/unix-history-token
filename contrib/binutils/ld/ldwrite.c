@@ -202,7 +202,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: bfd_new_link_order failed\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|link_order
@@ -750,7 +753,10 @@ name|NULL
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%P%F: bfd_new_link_order failed\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|link_order
@@ -1565,7 +1571,10 @@ else|else
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"%8x something else\n"
+argument_list|)
 argument_list|,
 name|l
 operator|->
@@ -2279,7 +2288,10 @@ name|bfd_error_no_error
 condition|)
 name|einfo
 argument_list|(
+name|_
+argument_list|(
 literal|"%F%P: final link failed: %E\n"
+argument_list|)
 argument_list|,
 name|output_bfd
 argument_list|)

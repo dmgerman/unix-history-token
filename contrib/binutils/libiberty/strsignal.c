@@ -244,9 +244,9 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* The equivalent symbolic value */
-ifdef|#
-directive|ifdef
-name|NEED_sys_siglist
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_SIGLIST
 specifier|const
 name|char
 modifier|*
@@ -259,11 +259,11 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_sys_siglist
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_SIGLIST
+end_ifndef
 
 begin_define
 define|#
@@ -1119,11 +1119,11 @@ begin_comment
 comment|/* Translation table allocated and initialized at runtime, if it does not    already exist in the host environment.  Indexed by the signal value to find    the descriptive string.     We don't export it for use in other modules because even though it has the    same name, it differs from other implementations in that it is dynamically    initialized rather than statically initialized. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_sys_siglist
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_SIGLIST
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -1348,9 +1348,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|NEED_sys_siglist
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_SIGLIST
 comment|/* Now attempt to allocate the sys_siglist table, zero it out, and then      initialize it from the statically initialized signal_table. */
 if|if
 condition|(
@@ -1483,11 +1483,11 @@ begin_comment
 comment|/*  NAME  	strsignal -- map a signal number to a signal message string  SYNOPSIS  	const char *strsignal (int signo)  DESCRIPTION  	Maps an signal number to an signal message string, the contents of 	which are implementation defined.  On systems which have the external 	variable sys_siglist, these strings will be the same as the ones used 	by psignal().  	If the supplied signal number is within the valid range of indices 	for the sys_siglist, but no message is available for the particular 	signal number, then returns the string "Signal NUM", where NUM is the 	signal number.  	If the supplied signal number is not a valid index into sys_siglist, 	returns NULL.  	The returned string is only guaranteed to be valid only until the 	next call to strsignal.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_strsignal
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRSIGNAL
+end_ifndef
 
 begin_function
 specifier|const
@@ -1513,9 +1513,9 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NEED_sys_siglist
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_SIGLIST
 if|if
 condition|(
 name|signal_names
@@ -1619,7 +1619,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NEED_strsignal */
+comment|/* ! HAVE_STRSIGNAL */
 end_comment
 
 begin_comment
@@ -1847,11 +1847,11 @@ begin_comment
 comment|/*  NAME  	psignal -- print message about signal to stderr  SYNOPSIS  	void psignal (unsigned signo, char *message);  DESCRIPTION  	Print to the standard error the message, followed by a colon, 	followed by the description of the signal specified by signo, 	followed by a newline. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_psignal
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_PSIGNAL
+end_ifndef
 
 begin_function
 name|void
@@ -1931,7 +1931,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NEED_psignal */
+comment|/* ! HAVE_PSIGNAL */
 end_comment
 
 begin_comment

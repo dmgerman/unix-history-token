@@ -21,11 +21,11 @@ directive|include
 file|"config.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NEED_sys_errlist
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_ERRLIST
+end_ifdef
 
 begin_comment
 comment|/* Note that errno.h (not sure what OS) or stdio.h (BSD 4.4, at least)    might declare sys_errlist in a way that the compiler might consider    incompatible with our later declaration, perhaps by using const    attributes.  So we hide the declaration in errno.h (if any) using a    macro. */
@@ -55,11 +55,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NEED_sys_errlist
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_ERRLIST
+end_ifdef
 
 begin_undef
 undef|#
@@ -221,9 +221,9 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* The equivalent symbolic value */
-ifdef|#
-directive|ifdef
-name|NEED_sys_errlist
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_ERRLIST
 specifier|const
 name|char
 modifier|*
@@ -236,11 +236,11 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_sys_errlist
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_ERRLIST
+end_ifndef
 
 begin_define
 define|#
@@ -2429,11 +2429,11 @@ begin_comment
 comment|/* Translation table allocated and initialized at runtime, if it does not    already exist in the host environment.  Indexed by the errno value to find    the descriptive string.     We don't export it for use in other modules because even though it has the    same name, it differs from other implementations in that it is dynamically    initialized rather than statically initialized. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_sys_errlist
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_ERRLIST
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -2618,9 +2618,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|NEED_sys_errlist
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_ERRLIST
 comment|/* Now attempt to allocate the sys_errlist table, zero it out, and then      initialize it from the statically initialized error_table. */
 if|if
 condition|(
@@ -2749,11 +2749,11 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_strerror
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRERROR
+end_ifndef
 
 begin_comment
 comment|/*  NAME  	strerror -- map an error number to an error message string  SYNOPSIS  	char *strerror (int errnoval)  DESCRIPTION  	Maps an errno number to an error message string, the contents of 	which are implementation defined.  On systems which have the external 	variables sys_nerr and sys_errlist, these strings will be the same 	as the ones used by perror().  	If the supplied error number is within the valid range of indices 	for the sys_errlist, but no message is available for the particular 	error number, then returns the string "Error NUM", where NUM is the 	error number.  	If the supplied error number is not a valid index into sys_errlist, 	returns NULL.  	The returned string is only guaranteed to be valid only until the 	next call to strerror.  */
@@ -2781,9 +2781,9 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NEED_sys_errlist
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_ERRLIST
 if|if
 condition|(
 name|error_names
@@ -2901,7 +2901,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NEED_strerror */
+comment|/* ! HAVE_STRERROR */
 end_comment
 
 begin_comment

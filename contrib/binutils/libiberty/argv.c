@@ -62,117 +62,17 @@ directive|include
 file|<stddef.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|memcpy
-parameter_list|(
-name|void
-modifier|*
-name|s1
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|s2
-parameter_list|,
-name|size_t
-name|n
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
-begin_comment
-comment|/* 4.11.2.1 */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|size_t
-name|strlen
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* 4.11.6.3 */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|malloc
-parameter_list|(
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* 4.10.3.3 */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-modifier|*
-name|realloc
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* 4.10.3.4 */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|free
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* 4.10.3.2 */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strdup
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Non-ANSI */
-end_comment
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_else
 else|#
@@ -338,7 +238,7 @@ comment|/* Number of args + NULL in initial argv */
 end_comment
 
 begin_comment
-comment|/*  NAME  	dupargv -- duplicate an argument vector  SYNOPSIS  	char **dupargv (vector) 	char **vector;  DESCRIPTION  	Duplicate an argument vector.  Simply scans through the 	vector, duplicating each argument argument until the 	terminating NULL is found.  RETURNS  	Returns a pointer to the argument vector if 	successful. Returns NULL if there is insufficient memory to 	complete building the argument vector.  */
+comment|/*  NAME  	dupargv -- duplicate an argument vector  SYNOPSIS  	char **dupargv (vector) 	char **vector;  DESCRIPTION  	Duplicate an argument vector.  Simply scans through the 	vector, duplicating each argument until the 	terminating NULL is found.  RETURNS  	Returns a pointer to the argument vector if 	successful. Returns NULL if there is insufficient memory to 	complete building the argument vector.  */
 end_comment
 
 begin_function
@@ -647,6 +547,10 @@ condition|)
 block|{
 name|copybuf
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|alloca
 argument_list|(
 name|strlen

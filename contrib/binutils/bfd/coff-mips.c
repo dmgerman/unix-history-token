@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for MIPS Extended-Coff files.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for MIPS Extended-Coff files.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1065,21 +1065,25 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-block|{
+name|EMPTY_HOWTO
+argument_list|(
 literal|8
-block|}
+argument_list|)
 block|,
-block|{
+name|EMPTY_HOWTO
+argument_list|(
 literal|9
-block|}
+argument_list|)
 block|,
-block|{
+name|EMPTY_HOWTO
+argument_list|(
 literal|10
-block|}
+argument_list|)
 block|,
-block|{
+name|EMPTY_HOWTO
+argument_list|(
 literal|11
-block|}
+argument_list|)
 block|,
 comment|/* This reloc is a Cygnus extension used when generating position      independent code for embedded systems.  It represents a 16 bit PC      relative reloc rightshifted twice as used in the MIPS branch      instructions.  */
 name|HOWTO
@@ -1210,33 +1214,40 @@ name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-block|{
+name|EMPTY_HOWTO
+argument_list|(
 literal|15
-block|}
+argument_list|)
 block|,
-block|{
+name|EMPTY_HOWTO
+argument_list|(
 literal|16
-block|}
+argument_list|)
 block|,
-block|{
+name|EMPTY_HOWTO
+argument_list|(
 literal|17
-block|}
+argument_list|)
 block|,
-block|{
+name|EMPTY_HOWTO
+argument_list|(
 literal|18
-block|}
+argument_list|)
 block|,
-block|{
+name|EMPTY_HOWTO
+argument_list|(
 literal|19
-block|}
+argument_list|)
 block|,
-block|{
+name|EMPTY_HOWTO
+argument_list|(
 literal|20
-block|}
+argument_list|)
 block|,
-block|{
+name|EMPTY_HOWTO
+argument_list|(
 literal|21
-block|}
+argument_list|)
 block|,
 comment|/* This reloc is a Cygnus extension used when generating position      independent code for embedded systems.  It represents an entry in      a switch table, which is the difference between two symbols in      the .text section.  The symndx is actually the offset from the      reloc address to the subtrahend.  See include/coff/mips.h for      more details.  */
 name|HOWTO
@@ -2173,6 +2184,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|arelent
@@ -2252,6 +2264,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|arelent
 modifier|*
@@ -2263,6 +2276,7 @@ name|symbol
 decl_stmt|;
 name|PTR
 name|data
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
@@ -2276,6 +2290,7 @@ name|char
 modifier|*
 modifier|*
 name|error_message
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -2382,6 +2397,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|arelent
 modifier|*
@@ -2406,6 +2422,7 @@ name|char
 modifier|*
 modifier|*
 name|error_message
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|bfd_reloc_status_type
@@ -3220,7 +3237,10 @@ operator|(
 name|char
 operator|*
 operator|)
+name|_
+argument_list|(
 literal|"GP relative relocation when _gp not defined"
+argument_list|)
 expr_stmt|;
 return|return
 name|bfd_reloc_dangerous
@@ -3451,6 +3471,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|arelent
 modifier|*
@@ -3475,6 +3496,7 @@ name|char
 modifier|*
 modifier|*
 name|error_message
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|bfd_reloc_status_type
@@ -4084,30 +4106,37 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|arelent
 modifier|*
 name|reloc_entry
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asymbol
 modifier|*
 name|symbol
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|PTR
 name|data
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
 name|input_section
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd
 modifier|*
 name|output_bfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|error_message
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
@@ -4133,6 +4162,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd_reloc_code_real_type
 name|code
@@ -4328,6 +4358,13 @@ name|unsigned
 name|long
 name|vallo
 decl_stmt|;
+if|if
+condition|(
+name|refhi
+operator|==
+name|NULL
+condition|)
+return|return;
 name|insn
 operator|=
 name|bfd_get_32
@@ -4347,6 +4384,17 @@ operator|->
 name|vma
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|reflo
+operator|==
+name|NULL
+condition|)
+name|vallo
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|vallo
 operator|=
 operator|(
@@ -5310,7 +5358,10 @@ call|)
 argument_list|(
 name|info
 argument_list|,
+name|_
+argument_list|(
 literal|"GP relative relocation when GP not defined"
+argument_list|)
 argument_list|,
 name|input_bfd
 argument_list|,
@@ -6612,6 +6663,8 @@ operator|-
 name|input_section
 operator|->
 name|vma
+argument_list|,
+name|true
 argument_list|)
 operator|)
 condition|)
@@ -8598,6 +8651,7 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd
 modifier|*
@@ -8606,6 +8660,7 @@ decl_stmt|;
 name|asection
 modifier|*
 name|input_section
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|ecoff_link_hash_entry
@@ -9003,7 +9058,10 @@ block|{
 operator|*
 name|errmsg
 operator|=
+name|_
+argument_list|(
 literal|"unsupported reloc type"
+argument_list|)
 expr_stmt|;
 name|bfd_set_error
 argument_list|(
@@ -9134,7 +9192,10 @@ comment|/* No other sections should appear in -membedded-pic                  co
 operator|*
 name|errmsg
 operator|=
+name|_
+argument_list|(
 literal|"reloc against unsupported section"
+argument_list|)
 expr_stmt|;
 name|bfd_set_error
 argument_list|(
@@ -9162,7 +9223,10 @@ block|{
 operator|*
 name|errmsg
 operator|=
+name|_
+argument_list|(
 literal|"reloc not properly aligned"
+argument_list|)
 expr_stmt|;
 name|bfd_set_error
 argument_list|(
@@ -9402,6 +9466,8 @@ literal|0
 block|,
 literal|0
 block|,
+name|FILNMLEN
+block|,
 name|true
 block|,
 name|false
@@ -9427,6 +9493,10 @@ block|,
 name|_bfd_ecoff_set_alignment_hook
 block|,
 name|_bfd_ecoff_slurp_symbol_table
+block|,
+name|NULL
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -9648,6 +9718,25 @@ name|_bfd_ecoff_bfd_relax_section
 value|mips_relax_section
 end_define
 
+begin_comment
+comment|/* GC of sections is not done.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_bfd_ecoff_bfd_gc_sections
+value|bfd_generic_gc_sections
+end_define
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|ecoff_big_vec
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|const
 name|bfd_target
@@ -9822,6 +9911,9 @@ name|BFD_JUMP_TABLE_DYNAMIC
 argument_list|(
 name|_bfd_nodynamic
 argument_list|)
+block|,
+operator|&
+name|ecoff_big_vec
 block|,
 operator|(
 name|PTR
@@ -10004,6 +10096,9 @@ name|BFD_JUMP_TABLE_DYNAMIC
 argument_list|(
 name|_bfd_nodynamic
 argument_list|)
+block|,
+operator|&
+name|ecoff_little_vec
 block|,
 operator|(
 name|PTR
@@ -10188,6 +10283,8 @@ name|BFD_JUMP_TABLE_DYNAMIC
 argument_list|(
 name|_bfd_nodynamic
 argument_list|)
+block|,
+name|NULL
 block|,
 operator|(
 name|PTR

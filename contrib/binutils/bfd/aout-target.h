@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Define a target vector and some small routines for a variant of a.out.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 1997    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Define a target vector and some small routines for a variant of a.out.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1012,6 +1012,7 @@ decl_stmt|;
 name|asection
 modifier|*
 name|isec
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd
 modifier|*
@@ -1020,6 +1021,7 @@ decl_stmt|;
 name|asection
 modifier|*
 name|osec
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -1098,16 +1100,6 @@ argument_list|(
 name|abfd
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
-name|CHOOSE_RELOC_SIZE
-name|CHOOSE_RELOC_SIZE
-argument_list|(
-name|abfd
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|obj_reloc_entry_size
 argument_list|(
 name|abfd
@@ -1115,8 +1107,6 @@ argument_list|)
 operator|=
 name|RELOC_STD_SIZE
 expr_stmt|;
-endif|#
-directive|endif
 name|WRITE_HEADERS
 argument_list|(
 name|abfd
@@ -2366,6 +2356,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MY_bfd_gc_sections
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MY_bfd_gc_sections
+value|bfd_generic_gc_sections
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MY_bfd_reloc_type_lookup
 end_ifndef
 
@@ -2987,11 +2995,13 @@ argument_list|(
 name|MY
 argument_list|)
 operator|,
+comment|/* Alternative_target */
+name|NULL
+operator|,
 operator|(
 name|PTR
 operator|)
 name|MY_backend_data
-operator|,
 end_expr_stmt
 
 begin_endif

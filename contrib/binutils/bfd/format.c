@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic BFD support for file formats.    Copyright (C) 1990, 91, 92, 93, 94 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic BFD support for file formats.    Copyright (C) 1990, 91, 92, 93, 94, 95, 1999 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -98,6 +98,11 @@ modifier|*
 name|matching
 decl_stmt|;
 block|{
+specifier|extern
+specifier|const
+name|bfd_target
+name|binary_vec
+decl_stmt|;
 specifier|const
 name|bfd_target
 modifier|*
@@ -330,6 +335,49 @@ name|true
 return|;
 comment|/* File position has moved, BTW */
 block|}
+comment|/* For a long time the code has dropped through to check all        targets if the specified target was wrong.  I don't know why,        and I'm reluctant to change it.  However, in the case of an        archive, it can cause problems.  If the specified target does        not permit archives (e.g., the binary target), then we should        not allow some other target to recognize it as an archive, but        should instead allow the specified target to recognize it as an        object.  When I first made this change, it broke the PE target,        because the specified pei-i386 target did not recognize the        actual pe-i386 archive.  Since there may be other problems of        this sort, I changed this test to check only for the binary        target.  */
+if|if
+condition|(
+name|format
+operator|==
+name|bfd_archive
+operator|&&
+name|save_targ
+operator|==
+operator|&
+name|binary_vec
+condition|)
+block|{
+name|abfd
+operator|->
+name|xvec
+operator|=
+name|save_targ
+expr_stmt|;
+name|abfd
+operator|->
+name|format
+operator|=
+name|bfd_unknown
+expr_stmt|;
+if|if
+condition|(
+name|matching
+condition|)
+name|free
+argument_list|(
+name|matching_vector
+argument_list|)
+expr_stmt|;
+name|bfd_set_error
+argument_list|(
+name|bfd_error_file_not_recognized
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 block|}
 for|for
 control|(
@@ -346,11 +394,6 @@ name|target
 operator|++
 control|)
 block|{
-specifier|extern
-specifier|const
-name|bfd_target
-name|binary_vec
-decl_stmt|;
 specifier|const
 name|bfd_target
 modifier|*
