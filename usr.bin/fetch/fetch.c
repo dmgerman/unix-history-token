@@ -607,9 +607,8 @@ condition|(
 name|xs
 operator|->
 name|size
-operator|==
-operator|-
-literal|1
+operator|<=
+literal|0
 condition|)
 name|fprintf
 argument_list|(
