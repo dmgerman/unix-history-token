@@ -3842,6 +3842,9 @@ condition|)
 goto|goto
 name|relookup
 goto|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|advise
@@ -3900,8 +3903,16 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
+name|advise
+operator|==
+name|MADV_FREE
+operator|&&
 name|tobject
 operator|->
 name|type
@@ -3917,7 +3928,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|mtx_unlock
 argument_list|(
