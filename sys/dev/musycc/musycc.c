@@ -4247,7 +4247,7 @@ name|sc
 operator|->
 name|chan
 index|[
-name|i
+name|ch
 index|]
 operator|->
 name|short_error
