@@ -693,14 +693,14 @@ name|log_Printf
 argument_list|(
 name|LogID0
 argument_list|,
-literal|"%d = uu_lock_txfr(\"%s\", %d)\n"
+literal|"%d = uu_lock_txfr(\"%s\", %ld)\n"
 argument_list|,
 name|ret
 argument_list|,
 name|basettyname
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|newpid
 argument_list|)
@@ -1131,12 +1131,12 @@ name|log_Printf
 argument_list|(
 name|LogID0
 argument_list|,
-literal|"%d = kill(%d, %d)\n"
+literal|"%d = kill(%ld, %d)\n"
 argument_list|,
 name|result
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|pid
 argument_list|,

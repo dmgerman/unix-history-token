@@ -8968,10 +8968,10 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Received confirmation from pid %d\n"
+literal|"Received confirmation from pid %ld\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|newpid
 argument_list|)
@@ -9721,15 +9721,15 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"%d -> %d: %s session control\n"
+literal|"%ld -> %ld: %s session control\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|orig
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|getpid
 argument_list|()

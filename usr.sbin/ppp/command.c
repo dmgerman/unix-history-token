@@ -2887,7 +2887,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-name|substint
+name|substlong
 parameter_list|(
 name|char
 modifier|*
@@ -2898,14 +2898,14 @@ name|char
 modifier|*
 name|oldstr
 parameter_list|,
-name|int
-name|i
+name|long
+name|l
 parameter_list|)
 block|{
 name|char
 name|buf
 index|[
-literal|12
+literal|23
 index|]
 decl_stmt|;
 name|snprintf
@@ -2915,9 +2915,9 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
-name|i
+name|l
 argument_list|)
 expr_stmt|;
 return|return
@@ -3901,7 +3901,7 @@ index|[
 name|arg
 index|]
 operator|=
-name|substint
+name|substlong
 argument_list|(
 name|nargv
 index|[
@@ -3926,7 +3926,7 @@ index|[
 name|arg
 index|]
 operator|=
-name|substint
+name|substlong
 argument_list|(
 name|nargv
 index|[
@@ -4464,10 +4464,10 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"%d: daemon: %s\n"
+literal|"%ld: daemon: %s\n"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|p
 argument_list|,

@@ -2022,7 +2022,7 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"%s: HUPing %d\n"
+literal|"%s: HUPing %ld\n"
 argument_list|,
 name|p
 operator|->
@@ -2031,7 +2031,7 @@ operator|.
 name|name
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|p
 operator|->
@@ -2640,10 +2640,10 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" (session owner: %d)"
+literal|" (session owner: %ld)"
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|p
 operator|->
