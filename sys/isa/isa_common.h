@@ -54,19 +54,19 @@ name|struct
 name|resource_list
 name|id_resources
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|id_vendorid
 decl_stmt|;
 comment|/* pnp vendor id */
-name|u_int32_t
+name|uint32_t
 name|id_serial
 decl_stmt|;
 comment|/* pnp serial */
-name|u_int32_t
+name|uint32_t
 name|id_logicalid
 decl_stmt|;
 comment|/* pnp logical device id */
-name|u_int32_t
+name|uint32_t
 name|id_compatid
 decl_stmt|;
 comment|/* pnp compat device id */
