@@ -118,6 +118,16 @@ argument_list|,
 name|sb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 literal|0
