@@ -218,15 +218,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __GNUC__ */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -266,6 +257,34 @@ name|x
 parameter_list|)
 value|__bswap16(x)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__GNUC__ */
+end_comment
+
+begin_comment
+comment|/*  * No optimizations are available for this compiler.  Fall back to  * non-optimized functions by defining the constant usually used to prevent  * redefinition.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BYTEORDER_FUNC_DEFINED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
 
 begin_endif
 endif|#
