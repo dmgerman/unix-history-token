@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_systm.h	4.10	82/04/20	*/
+comment|/*	in_systm.h	4.11	82/05/31	*/
 end_comment
 
 begin_comment
@@ -63,11 +63,19 @@ begin_comment
 comment|/* splnet is defined in ../sys/asm.sed */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ECHACK
-end_ifdef
+begin_include
+include|#
+directive|include
+file|"ec.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NEC
+operator|>
+literal|0
+end_if
 
 begin_define
 define|#
