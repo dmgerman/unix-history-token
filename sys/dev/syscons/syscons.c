@@ -11603,6 +11603,19 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|cur_scp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* prevent switch if previously requested */
 if|if
 condition|(
