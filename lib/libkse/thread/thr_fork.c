@@ -465,6 +465,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Treat the current thread as the initial thread: */
+name|_thread_initial
+operator|=
+name|_thread_run
+expr_stmt|;
 comment|/* Re-init the dead thread list: */
 name|TAILQ_INIT
 argument_list|(

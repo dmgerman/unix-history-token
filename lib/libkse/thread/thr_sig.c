@@ -64,6 +64,24 @@ file|"pthread_private.h"
 end_include
 
 begin_comment
+comment|/* Prototypes: */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|_thread_signal
+parameter_list|(
+name|pthread_t
+name|pthread
+parameter_list|,
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Static variables: */
 end_comment
 
@@ -159,6 +177,13 @@ operator|.
 name|access_lock
 operator|=
 literal|0
+expr_stmt|;
+comment|/* Clear the process pending signals: */
+name|sigemptyset
+argument_list|(
+operator|&
+name|_process_sigpending
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -443,6 +468,11 @@ name|pthread
 decl_stmt|,
 name|pthread_next
 decl_stmt|;
+name|pthread_t
+name|suspended_thread
+decl_stmt|,
+name|signaled_thread
+decl_stmt|;
 comment|/* Check if the signal requires a dump of thread information: */
 if|if
 condition|(
@@ -559,7 +589,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * Enter a loop to process each thread in the waiting 		 * list that is sigwait-ing on a signal.  Since POSIX 		 * doesn't specify which thread will get the signal 		 * if there are multiple waiters, we'll give it to the 		 * first one we find. 		 */
+comment|/* 		 * Enter a loop to look for threads that have the 		 * signal unmasked.  POSIX specifies that a thread 		 * in a sigwait will get the signal over any other 		 * threads.  Second preference will be threads in 		 * in a sigsuspend.  If none of the above, then the 		 * signal is delivered to the first thread we find. 		 */
+name|suspended_thread
+operator|=
+name|NULL
+expr_stmt|;
+name|signaled_thread
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|pthread
@@ -626,8 +664,55 @@ name|signo
 operator|=
 name|sig
 expr_stmt|;
-comment|/* 				 * Do not attempt to deliver this signal 				 * to other threads. 				 */
+comment|/* 				 * POSIX doesn't doesn't specify which thread 				 * will get the signal if there are multiple 				 * waiters, so we give it to the first thread 				 * we find. 				 * 				 * Do not attempt to deliver this signal 				 * to other threads. 				 */
 return|return;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|sigismember
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|sigmask
+argument_list|,
+name|sig
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|pthread
+operator|->
+name|state
+operator|==
+name|PS_SIGSUSPEND
+condition|)
+block|{
+if|if
+condition|(
+name|suspended_thread
+operator|==
+name|NULL
+condition|)
+name|suspended_thread
+operator|=
+name|pthread
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|signaled_thread
+operator|==
+name|NULL
+condition|)
+name|signaled_thread
+operator|=
+name|pthread
+expr_stmt|;
 block|}
 block|}
 comment|/* Check if the signal is not being ignored: */
@@ -644,21 +729,49 @@ name|sa_handler
 operator|!=
 name|SIG_IGN
 condition|)
-comment|/* 			 * Enter a loop to process each thread in the linked 			 * list:  			 */
-name|TAILQ_FOREACH
+block|{
+if|if
+condition|(
+name|suspended_thread
+operator|==
+name|NULL
+operator|&&
+name|signaled_thread
+operator|==
+name|NULL
+condition|)
+comment|/* 				 * Add it to the set of signals pending 				 * on the process: 				 */
+name|sigaddset
 argument_list|(
-argument|pthread
+operator|&
+name|_process_sigpending
 argument_list|,
-argument|&_thread_list
-argument_list|,
-argument|tle
+name|sig
 argument_list|)
+expr_stmt|;
+else|else
 block|{
 name|pthread_t
 name|pthread_saved
 init|=
 name|_thread_run
 decl_stmt|;
+comment|/* 				 * We only deliver the signal to one thread; 				 * give preference to the suspended thread: 				 */
+if|if
+condition|(
+name|suspended_thread
+operator|!=
+name|NULL
+condition|)
+name|pthread
+operator|=
+name|suspended_thread
+expr_stmt|;
+else|else
+name|pthread
+operator|=
+name|signaled_thread
+expr_stmt|;
 comment|/* Current thread inside critical region? */
 if|if
 condition|(
@@ -708,6 +821,7 @@ operator|--
 expr_stmt|;
 block|}
 block|}
+block|}
 comment|/* Returns nothing. */
 return|return;
 block|}
@@ -718,6 +832,7 @@ comment|/* Perform thread specific actions in response to a signal: */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|_thread_signal
 parameter_list|(
@@ -755,6 +870,9 @@ case|case
 name|PS_DEAD
 case|:
 case|case
+name|PS_DEADLOCK
+case|:
+case|case
 name|PS_FDLR_WAIT
 case|:
 case|case
@@ -780,6 +898,9 @@ name|PS_SIGTHREAD
 case|:
 case|case
 name|PS_SIGWAIT
+case|:
+case|case
+name|PS_SPINBLOCK
 case|:
 case|case
 name|PS_SUSPENDED
@@ -838,6 +959,22 @@ name|PS_SELECT_WAIT
 case|:
 if|if
 condition|(
+operator|(
+name|_thread_sigact
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|.
+name|sa_flags
+operator|&
+name|SA_RESTART
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
 name|sig
 operator|!=
 name|SIGCHLD
@@ -852,6 +989,7 @@ operator|.
 name|sa_handler
 operator|!=
 name|SIG_DFL
+operator|)
 condition|)
 block|{
 comment|/* Flag the operation as interrupted: */
@@ -894,20 +1032,9 @@ break|break;
 case|case
 name|PS_SIGSUSPEND
 case|:
-comment|/* 		 * Only wake up the thread if the signal is unblocked 		 * and there is a handler installed for the signal. 		 */
+comment|/* 		 * Only wake up the thread if there is a handler installed 		 * for the signal. 		 */
 if|if
 condition|(
-operator|!
-name|sigismember
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|sigmask
-argument_list|,
-name|sig
-argument_list|)
-operator|&&
 name|_thread_sigact
 index|[
 name|sig
@@ -956,12 +1083,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Check if there are pending signals for the running 	 * thread that aren't blocked: 	 */
+comment|/* 	 * Check if there are pending signals for the running 	 * thread or process that aren't blocked: 	 */
 name|sigset
 operator|=
 name|_thread_run
 operator|->
 name|sigpend
+expr_stmt|;
+name|SIGSETOR
+argument_list|(
+name|sigset
+argument_list|,
+name|_process_sigpending
+argument_list|)
 expr_stmt|;
 name|SIGSETNAND
 argument_list|(
@@ -1021,32 +1155,41 @@ operator|&&
 name|sigismember
 argument_list|(
 operator|&
+name|sigset
+argument_list|,
+name|i
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|sigismember
+argument_list|(
+operator|&
 name|_thread_run
 operator|->
 name|sigpend
 argument_list|,
 name|i
 argument_list|)
-operator|&&
-operator|!
-name|sigismember
-argument_list|(
-operator|&
-name|_thread_run
-operator|->
-name|sigmask
-argument_list|,
-name|i
-argument_list|)
 condition|)
-block|{
-comment|/* Clear the pending signal: */
+comment|/* Clear the thread pending signal: */
 name|sigdelset
 argument_list|(
 operator|&
 name|_thread_run
 operator|->
 name|sigpend
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* Clear the process pending signal: */
+name|sigdelset
+argument_list|(
+operator|&
+name|_process_sigpending
 argument_list|,
 name|i
 argument_list|)
