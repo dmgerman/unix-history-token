@@ -588,6 +588,19 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* geom_dev.c */
+end_comment
+
+begin_function_decl
+name|int
+name|g_dev_print
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* geom_dump.c */
 end_comment
 
