@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dmavar.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dmavar.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -14,12 +14,20 @@ name|DMAGO_BYTE
 value|0x00
 end_define
 
+begin_comment
+comment|/* do byte (8 bit) transfers */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DMAGO_WORD
 value|0x01
 end_define
+
+begin_comment
+comment|/* do word (16 bit) transfers */
+end_comment
 
 begin_define
 define|#
@@ -28,12 +36,20 @@ name|DMAGO_LWORD
 value|0x02
 end_define
 
+begin_comment
+comment|/* do longword (32 bit) transfers */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DMAGO_PRI
 value|0x04
 end_define
+
+begin_comment
+comment|/* do "priority" DMA */
+end_comment
 
 begin_define
 define|#
@@ -42,12 +58,20 @@ name|DMAGO_READ
 value|0x08
 end_define
 
+begin_comment
+comment|/* transfer is a read */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DMAGO_NOINT
 value|0x80
 end_define
+
+begin_comment
+comment|/* don't interrupt on completion */
+end_comment
 
 begin_comment
 comment|/* dma "controllers" (channels) */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dmareg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dmareg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -314,11 +314,9 @@ directive|define
 name|DMA_ARM
 parameter_list|(
 name|dc
-parameter_list|,
-name|ix
 parameter_list|)
 define|\
-value|if (dc->sc_type == DMA_B) { \ 		register struct dmaBdevice *dma = dc->sc_Bhwaddr; \ 		dma->dmaB_addr = dc->sc_addr[ix]; \ 		dma->dmaB_count = dc->sc_count[ix] - 1; \ 		dma->dmaB_cmd = dc->sc_cmd; \ 	} else { \ 		register struct dmadevice *dma = dc->sc_hwaddr; \ 		dma->dma_addr = dc->sc_addr[ix]; \ 		dma->dma_count = dc->sc_count[ix] - 1; \ 		dma->dma_cmd = dc->sc_cmd; \ 	}
+value|if (dc->sc_type == DMA_B) { \ 		register struct dmaBdevice *dma = dc->sc_Bhwaddr; \ 		dma->dmaB_addr = dc->sc_cur->dc_addr; \ 		dma->dmaB_count = dc->sc_cur->dc_count - 1; \ 		dma->dmaB_cmd = dc->sc_cmd; \ 	} else { \ 		register struct dmadevice *dma = dc->sc_hwaddr; \ 		dma->dma_addr = dc->sc_cur->dc_addr; \ 		dma->dma_count = dc->sc_cur->dc_count - 1; \ 		dma->dma_cmd = dc->sc_cmd; \ 	}
 end_define
 
 begin_else
@@ -332,11 +330,9 @@ directive|define
 name|DMA_ARM
 parameter_list|(
 name|dc
-parameter_list|,
-name|ix
 parameter_list|)
 define|\
-value|{ \ 		register struct dmadevice *dma = dc->sc_hwaddr; \ 		dma->dma_addr = dc->sc_addr[ix]; \ 		dma->dma_count = dc->sc_count[ix] - 1; \ 		dma->dma_cmd = dc->sc_cmd; \ 	}
+value|{ \ 		register struct dmadevice *dma = dc->sc_hwaddr; \ 		dma->dma_addr = dc->sc_cur->dc_addr; \ 		dma->dma_count = dc->sc_cur->dc_count - 1; \ 		dma->dma_cmd = dc->sc_cmd; \ 	}
 end_define
 
 begin_endif

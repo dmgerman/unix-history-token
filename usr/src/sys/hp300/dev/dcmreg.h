@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: dcmreg.h 1.3 89/08/23$  *  *	@(#)dcmreg.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: dcmreg.h 1.1 90/07/09$  *  *	@(#)dcmreg.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -192,30 +192,36 @@ literal|4
 index|]
 struct|;
 comment|/* Configuration registers	8e20 */
+struct|struct
+name|modemreg
+block|{
 name|u_char
-name|dcm_pad7
+name|pad0
 decl_stmt|;
 specifier|volatile
 name|u_char
-name|dcm_mdmin
+name|mdmin
 decl_stmt|;
-comment|/* Modem in			8e31 */
+comment|/* Modem in		8e31 */
 name|u_char
-name|dcm_pad8
+name|pad1
 decl_stmt|;
 specifier|volatile
 name|u_char
-name|dcm_mdmout
+name|mdmout
 decl_stmt|;
-comment|/* Modem out			8e33 */
+comment|/* Modem out		8e33 */
 name|u_char
-name|dcm_pad9
+name|pad2
 decl_stmt|;
 specifier|volatile
 name|u_char
-name|dcm_mdmmsk
+name|mdmmsk
 decl_stmt|;
-comment|/* Modem mask			8e35 */
+comment|/* Modem mask		8e35 */
+block|}
+name|dcm_modem0
+struct|;
 struct|struct
 block|{
 name|u_char
@@ -256,13 +262,44 @@ name|u_char
 name|dcm_stcon
 decl_stmt|;
 comment|/* Self test condition		8e47 */
+name|struct
+name|modemreg
+name|dcm_modem1
+decl_stmt|;
+comment|/* 638 Modem port1		8e48 */
+name|struct
+name|modemreg
+name|dcm_modem2
+decl_stmt|;
+comment|/* 638 Modem port2		8e4e */
+name|struct
+name|modemreg
+name|dcm_modem3
+decl_stmt|;
+comment|/* 638 Modem port3		8e54 */
 name|u_char
 name|dcm_pad11
+decl_stmt|;
+specifier|volatile
+name|u_char
+name|dcm_modemchng
+decl_stmt|;
+comment|/* 638 Modem change mask	8e5b */
+name|u_char
+name|dcm_pad12
+decl_stmt|;
+specifier|volatile
+name|u_char
+name|dcm_modemintr
+decl_stmt|;
+comment|/* 638 Modem interrupt mask	8e5d */
+name|u_char
+name|dcm_pad13
 index|[
-literal|0x98
+literal|0x82
 index|]
 decl_stmt|;
-comment|/* Undef SR regs	8e48-8edf */
+comment|/* Undef Shared Ram	8e5e-8edf */
 struct|struct
 name|dcmtfifo
 block|{
