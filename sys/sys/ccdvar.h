@@ -78,7 +78,7 @@ modifier|*
 name|ccio_disks
 decl_stmt|;
 comment|/* pointer to component paths */
-name|int
+name|u_int
 name|ccio_ndisks
 decl_stmt|;
 comment|/* number of disks to concatenate */
@@ -281,10 +281,14 @@ name|int
 name|sc_ileave
 decl_stmt|;
 comment|/* interleave */
-name|int
+name|u_int
 name|sc_nccdisks
 decl_stmt|;
 comment|/* number of components */
+define|#
+directive|define
+name|CCD_MAXNDISKS
+value|65536
 name|struct
 name|ccdcinfo
 modifier|*

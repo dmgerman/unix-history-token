@@ -1005,7 +1005,7 @@ name|ucred
 name|nsd_cr
 decl_stmt|;
 comment|/* Cred. uid maps to */
-name|int
+name|u_int
 name|nsd_authlen
 decl_stmt|;
 comment|/* Length of auth string (ret) */
@@ -1014,7 +1014,7 @@ modifier|*
 name|nsd_authstr
 decl_stmt|;
 comment|/* Auth string (ret) */
-name|int
+name|u_int
 name|nsd_verflen
 decl_stmt|;
 comment|/* and the verfier */
@@ -1056,7 +1056,7 @@ name|int
 name|ncd_authtype
 decl_stmt|;
 comment|/* Type of authenticator */
-name|int
+name|u_int
 name|ncd_authlen
 decl_stmt|;
 comment|/* Length of authenticator string */
@@ -1065,7 +1065,7 @@ modifier|*
 name|ncd_authstr
 decl_stmt|;
 comment|/* Authenticator string */
-name|int
+name|u_int
 name|ncd_verflen
 decl_stmt|;
 comment|/* and the verifier */

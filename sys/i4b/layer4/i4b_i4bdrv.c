@@ -3768,6 +3768,24 @@ operator|.
 name|in_param_len
 condition|)
 block|{
+comment|/* XXX arbitrary limit */
+if|if
+condition|(
+name|req
+operator|.
+name|in_param_len
+operator|>
+name|I4B_ACTIVE_DIAGNOSTIC_MAXPARAMLEN
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|diag_done
+goto|;
+block|}
 name|req
 operator|.
 name|in_param
