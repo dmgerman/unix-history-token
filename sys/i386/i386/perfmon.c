@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1996 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: perfmon.c,v 1.1 1996/03/26 19:57:53 wollman Exp $  */
+comment|/*  * Copyright 1996 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: perfmon.c,v 1.2 1996/03/27 22:02:18 wollman Exp $  */
 end_comment
 
 begin_include
@@ -487,6 +487,12 @@ return|;
 if|if
 condition|(
 name|perfmon_inuse
+operator|&
+operator|(
+literal|1
+operator|<<
+name|pmc
+operator|)
 condition|)
 block|{
 name|disable_intr
@@ -855,6 +861,9 @@ name|newval
 init|=
 literal|0
 decl_stmt|;
+name|quad_t
+name|oldtsc
+decl_stmt|;
 if|if
 condition|(
 name|ctl_shadow
@@ -958,7 +967,7 @@ if|if
 condition|(
 name|ctl_shadow
 index|[
-literal|1
+literal|0
 index|]
 operator|&
 operator|(
@@ -975,7 +984,7 @@ if|if
 condition|(
 name|ctl_shadow
 index|[
-literal|1
+literal|0
 index|]
 operator|&
 operator|(
@@ -992,7 +1001,7 @@ if|if
 condition|(
 name|ctl_shadow
 index|[
-literal|1
+literal|0
 index|]
 operator|&
 operator|(
@@ -1009,41 +1018,27 @@ name|newval
 operator||=
 name|ctl_shadow
 index|[
-literal|1
+literal|0
 index|]
 operator|&
 literal|0x3f
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"about to wrmsr(%x, %x)\n"
-argument_list|,
-name|msr_ctl
-index|[
-literal|0
-index|]
-argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|newval
-argument_list|)
+comment|/* 	 * ``...But this is the blackest of sins!'' 	 * 	 * According to the Harvard code, it is necessary to zero the 	 * cycle counter before writing to the control MSR.  This must 	 * be an Intel processor...  Hope we don't lose too many ticks. 	 */
+name|disable_intr
+argument_list|()
 expr_stmt|;
-name|printf
+name|oldtsc
+operator|=
+name|rdtsc
+argument_list|()
+expr_stmt|;
+name|wrmsr
 argument_list|(
-literal|"old value is %x\n"
+literal|0x10
+comment|/* TSC */
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|rdmsr
-argument_list|(
-name|msr_ctl
-index|[
 literal|0
-index|]
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|wrmsr
@@ -1055,6 +1050,16 @@ index|]
 argument_list|,
 name|newval
 argument_list|)
+expr_stmt|;
+name|wrmsr
+argument_list|(
+literal|0x10
+argument_list|,
+name|oldtsc
+argument_list|)
+expr_stmt|;
+name|enable_intr
+argument_list|()
 expr_stmt|;
 return|return
 literal|0
