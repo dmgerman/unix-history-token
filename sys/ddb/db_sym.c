@@ -45,6 +45,12 @@ directive|include
 file|<ddb/db_sym.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<opt_ddb.h>
+end_include
+
 begin_comment
 comment|/*  * Multiple symbol tables  */
 end_comment
@@ -1110,6 +1116,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|DDB_NUMSYM
+name|db_printf
+argument_list|(
+literal|"%#lr = %s"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|off
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|db_printf
 argument_list|(
 literal|"%s"
@@ -1117,6 +1141,8 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|d
