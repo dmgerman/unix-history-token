@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  */
 end_comment
 
 begin_include
@@ -1447,8 +1447,6 @@ expr_stmt|;
 comment|/* run the editor */
 name|run_setup
 argument_list|(
-literal|"%s"
-argument_list|,
 name|editinfo_editor
 condition|?
 name|editinfo_editor
@@ -1786,7 +1784,54 @@ expr_stmt|;
 if|if
 condition|(
 name|line_length
-operator|<=
+operator|<
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot read from stdin"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unlink_file
+argument_list|(
+name|fname
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"warning: cannot remove temp file %s"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"aborting"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|line_length
+operator|==
 literal|0
 operator|||
 operator|*
@@ -2033,7 +2078,6 @@ name|fp
 operator|==
 name|NULL
 condition|)
-block|{
 name|error
 argument_list|(
 literal|1
@@ -2045,8 +2089,6 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 else|else
 block|{
 name|fprintf
@@ -2148,8 +2190,6 @@ condition|)
 block|{
 name|run_setup
 argument_list|(
-literal|"%s"
-argument_list|,
 name|verifymsg_script
 argument_list|)
 expr_stmt|;
@@ -2179,6 +2219,13 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+comment|/* Since following error() exits, delete the temp file 		   now.  */
+name|unlink_file
+argument_list|(
+name|fname
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|1
@@ -2416,7 +2463,7 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-comment|/* Close and delete the temp file  */
+comment|/* Delete the temp file  */
 name|unlink_file
 argument_list|(
 name|fname
@@ -2429,17 +2476,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * callback proc for Parse_Info for rcsinfo templates this routine basically  * copies the matching template onto the end of the tempfile we are setting  * up  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|rcsinfo_proc
@@ -2626,37 +2664,22 @@ operator|)
 return|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Uses setup_tmpfile() to pass the updated message on directly to any  * logfile programs that have a regular expression match for the checked in  * directory in the source repository.  The log information is fed into the  * specified program as standard input.  */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|FILE
 modifier|*
 name|logfp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|message
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|List
 modifier|*
 name|changes
 decl_stmt|;
-end_decl_stmt
-
-begin_function
 name|void
 name|Update_Logfile
 parameter_list|(
@@ -2732,13 +2755,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * callback proc to actually do the logfile write from Update_Logfile  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|update_logfile_proc
@@ -2773,13 +2790,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * concatenate each filename/version onto str_list  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|title_proc
@@ -3113,13 +3124,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Writes some stuff to the logfile "filter" and returns the status of the  * filter program.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|logfile_write
@@ -3843,17 +3848,8 @@ else|:
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * We choose to use the *last* match within the editinfo file for this  * repository.  This allows us to have a global editinfo program for the  * root of some hierarchy, for example, and different ones within different  * sub-directories of the root (like a special checker for changes made to  * the "src" directory versus changes made to the "doc" or "test"  * directories.  */
-end_comment
-
-begin_comment
 comment|/* ARGSUSED */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|editinfo_proc
@@ -3912,13 +3908,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  This routine is calld by Parse_Info.  it asigns the name of the  *  message verification script to the global variable verify_script  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|verifymsg_proc
