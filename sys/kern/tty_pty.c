@@ -4111,18 +4111,6 @@ modifier|*
 name|unused
 decl_stmt|;
 block|{
-name|cdevsw_add
-argument_list|(
-operator|&
-name|pts_cdevsw
-argument_list|)
-expr_stmt|;
-name|cdevsw_add
-argument_list|(
-operator|&
-name|ptc_cdevsw
-argument_list|)
-expr_stmt|;
 comment|/* XXX: Gross hack for DEVFS */
 name|ptyinit
 argument_list|(
