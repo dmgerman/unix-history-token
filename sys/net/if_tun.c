@@ -260,7 +260,8 @@ name|tunattach
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -462,7 +463,8 @@ name|tunattach
 parameter_list|(
 name|udata
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|udata
 decl_stmt|;
 block|{

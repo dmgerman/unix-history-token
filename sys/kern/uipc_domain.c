@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_domain.c	8.2 (Berkeley) 10/18/93  * $Id: uipc_domain.c,v 1.7 1995/08/16 16:13:21 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_domain.c	8.2 (Berkeley) 10/18/93  * $Id: uipc_domain.c,v 1.8 1995/08/28 09:18:51 julian Exp $  */
 end_comment
 
 begin_include
@@ -70,7 +70,7 @@ file|<sys/sysctl.h>
 end_include
 
 begin_comment
-comment|/*  * System initialization  *  * Note: domain initialization wants to take place on a per domain basis  * as a result of traversing a linker set.  Most likely, each domain  * want to call a registration function rather than being handled here  * in domaininit().  Probably this will look like:  *  * SYSINIT(unique, SI_SUB_PROTO_DOMAI, SI_ORDER_ANY, domain_add, (caddr_t)xxx)  *  * Where 'xxx' is replaced by the address of a parameter struct to be  * passed to the doamin_add() function.  */
+comment|/*  * System initialization  *  * Note: domain initialization wants to take place on a per domain basis  * as a result of traversing a linker set.  Most likely, each domain  * want to call a registration function rather than being handled here  * in domaininit().  Probably this will look like:  *  * SYSINIT(unique, SI_SUB_PROTO_DOMAI, SI_ORDER_ANY, domain_add, xxx)  *  * Where 'xxx' is replaced by the address of a parameter struct to be  * passed to the doamin_add() function.  */
 end_comment
 
 begin_decl_stmt
@@ -91,7 +91,8 @@ name|kludge_splimp
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -104,7 +105,8 @@ name|kludge_splx
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -117,7 +119,8 @@ name|domaininit
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -134,7 +137,7 @@ argument|SI_ORDER_FIRST
 argument_list|,
 argument|kludge_splimp
 argument_list|,
-argument|(caddr_t)&x_save_spl
+argument|&x_save_spl
 argument_list|)
 end_macro
 
@@ -164,7 +167,7 @@ argument|SI_ORDER_FIRST
 argument_list|,
 argument|kludge_splx
 argument_list|,
-argument|(caddr_t)&x_save_spl
+argument|&x_save_spl
 argument_list|)
 end_macro
 
@@ -231,7 +234,8 @@ name|domaininit
 parameter_list|(
 name|udata
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|udata
 decl_stmt|;
 comment|/* not used*/
@@ -420,7 +424,8 @@ name|kludge_splimp
 parameter_list|(
 name|udata
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|udata
 decl_stmt|;
 block|{
@@ -450,7 +455,8 @@ name|kludge_splx
 parameter_list|(
 name|udata
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|udata
 decl_stmt|;
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1994, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: tty_subr.c,v 1.11 1995/07/11 19:39:54 bde Exp $  */
+comment|/*  * Copyright (C) 1994, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: tty_subr.c,v 1.12 1995/08/28 09:18:50 julian Exp $  */
 end_comment
 
 begin_comment
@@ -60,7 +60,8 @@ name|clist_init
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -227,7 +228,8 @@ name|clist_init
 parameter_list|(
 name|udata
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|udata
 decl_stmt|;
 comment|/* not used*/

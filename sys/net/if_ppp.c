@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.19 1995/07/31 21:54:46 bde Exp $ */
+comment|/* $Id: if_ppp.c,v 1.20 1995/08/30 00:33:19 bde Exp $ */
 end_comment
 
 begin_comment
@@ -264,7 +264,8 @@ name|pppattach
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -759,7 +760,8 @@ name|pppattach
 parameter_list|(
 name|udata
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|udata
 decl_stmt|;
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.7 1995/08/28 09:18:47 julian Exp $ */
+comment|/*	$Id: sysv_sem.c,v 1.8 1995/08/30 00:33:01 bde Exp $ */
 end_comment
 
 begin_comment
@@ -50,7 +50,8 @@ name|seminit
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -192,7 +193,8 @@ name|seminit
 parameter_list|(
 name|udata
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|udata
 decl_stmt|;
 block|{
