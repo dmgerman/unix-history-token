@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Include file for HCX Disk Controller (HDC).  *  *	@(#)hdreg.h	7.1 (Berkeley) %G%  */
+comment|/*  *  Include file for HCX Disk Controller (HDC).  *  *	@(#)hdreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -39,7 +39,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* max# buses                       */
+comment|/* max# buses */
 end_comment
 
 begin_define
@@ -50,7 +50,7 @@ value|21
 end_define
 
 begin_comment
-comment|/* max# hdc controllers per bus     */
+comment|/* max# hdc controllers per bus */
 end_comment
 
 begin_define
@@ -61,7 +61,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* max# drives per hdc controller   */
+comment|/* max# drives per hdc controller */
 end_comment
 
 begin_define
@@ -75,7 +75,7 @@ value|(minor(x)>> 3)
 end_define
 
 begin_comment
-comment|/* the hdc unit number (0-31)       */
+comment|/* the hdc unit number (0-31) */
 end_comment
 
 begin_define
@@ -89,7 +89,7 @@ value|(minor(x)&0x07)
 end_define
 
 begin_comment
-comment|/* the hdc partition number (0-7)   */
+comment|/* the hdc partition number (0-7) */
 end_comment
 
 begin_define
@@ -100,7 +100,7 @@ value|GB_MAXPART-1
 end_define
 
 begin_comment
-comment|/* partition# of def and diag cyls  */
+comment|/* partition# of def and diag cyls */
 end_comment
 
 begin_define
@@ -111,7 +111,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* sectors per block for hdc's      */
+comment|/* sectors per block for hdc's */
 end_comment
 
 begin_define
@@ -122,7 +122,7 @@ value|HID_HDC
 end_define
 
 begin_comment
-comment|/* module id code for hdc's         */
+comment|/* module id code for hdc's */
 end_comment
 
 begin_define
@@ -133,7 +133,7 @@ value|80
 end_define
 
 begin_comment
-comment|/* lowest model# for removable disks*/
+comment|/* lowest model# for removable disks */
 end_comment
 
 begin_define
@@ -155,7 +155,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* vendor data size (long words)    */
+comment|/* vendor data size (long words) */
 end_comment
 
 begin_define
@@ -177,7 +177,7 @@ value|33
 end_define
 
 begin_comment
-comment|/* maximum number of data chains    */
+comment|/* maximum number of data chains */
 end_comment
 
 begin_define
@@ -188,7 +188,7 @@ value|64*1024
 end_define
 
 begin_comment
-comment|/* maximum byte count per data chain*/
+comment|/* maximum byte count per data chain */
 end_comment
 
 begin_define
@@ -199,7 +199,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* max# mcb's the hdc can handle    */
+comment|/* max# mcb's the hdc can handle */
 end_comment
 
 begin_define
@@ -224,7 +224,7 @@ value|(hc->registers->x)
 end_define
 
 begin_comment
-comment|/* io to an hdc register         */
+comment|/* io to an hdc register */
 end_comment
 
 begin_define
@@ -289,22 +289,22 @@ name|unsigned
 name|long
 name|master_mcb_reg
 decl_stmt|;
-comment|/* set the master mcb address       */
+comment|/* set the master mcb address */
 name|unsigned
 name|long
 name|module_id_reg
 decl_stmt|;
-comment|/* returns hdc's module id (hdc_mid)*/
+comment|/* returns hdc's module id (hdc_mid) */
 name|unsigned
 name|long
 name|soft_reset_reg
 decl_stmt|;
-comment|/* a write here shuts down the hdc  */
+comment|/* a write here shuts down the hdc */
 name|unsigned
 name|long
 name|hard_reset_reg
 decl_stmt|;
-comment|/* send a system reset to the hdc   */
+comment|/* send a system reset to the hdc */
 block|}
 name|hdc_regs_type
 typedef|;
@@ -322,22 +322,21 @@ name|unsigned
 name|char
 name|module_id
 decl_stmt|;
-comment|/* module id; hdc's return HDC_MID  */
+comment|/* module id; hdc's return HDC_MID */
 name|unsigned
 name|char
 name|reserved
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|char
 name|code_rev
 decl_stmt|;
-comment|/* micro-code rev#; FF= not loaded  */
+comment|/* micro-code rev#; FF= not loaded */
 name|unsigned
 name|char
 name|fit
 decl_stmt|;
-comment|/* FIT test result; FF= no error    */
+comment|/* FIT test result; FF= no error */
 block|}
 name|hdc_mid_type
 typedef|;
@@ -354,11 +353,11 @@ block|{
 name|long
 name|lwc
 decl_stmt|;
-comment|/* long word count& data chain bit*/
+comment|/* long word count& data chain bit */
 name|long
 name|ta
 decl_stmt|;
-comment|/* transfer address                */
+comment|/* transfer address */
 block|}
 name|data_chain_type
 typedef|;
@@ -372,7 +371,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* mask for data chain bit in lwc  */
+comment|/* mask for data chain bit in lwc */
 end_comment
 
 begin_struct_decl
@@ -393,12 +392,12 @@ begin_struct
 struct|struct
 name|mcb_struct
 block|{
-comment|/* this part used only by software  */
+comment|/* this part used only by software */
 name|mcb_type
 modifier|*
 name|forw_mcb
 decl_stmt|;
-comment|/* pointer to next mcb in chain     */
+comment|/* pointer to next mcb in chain */
 name|mcb_type
 modifier|*
 name|back_mcb
@@ -409,59 +408,59 @@ name|buf
 modifier|*
 name|buf_ptr
 decl_stmt|;
-comment|/* ptr to buf structure for this mcb*/
+comment|/* ptr to buf structure for this mcb */
 name|long
 name|mcb_phaddr
 decl_stmt|;
-comment|/* phaddr of hw's part of this mcb  */
-comment|/* this part is sent to the hdc hw  */
+comment|/* phaddr of hw's part of this mcb */
+comment|/* this part is sent to the hdc hw */
 name|unsigned
 name|long
 name|forw_phaddr
 decl_stmt|;
-comment|/* phys address of next mcb         */
+comment|/* phys address of next mcb */
 name|unsigned
 name|priority
 range|:
 literal|8
 decl_stmt|;
-comment|/* device control word #1           */
+comment|/* device control word #1 */
 name|unsigned
 name|interrupt
 range|:
 literal|1
 decl_stmt|;
-comment|/*        "                         */
+comment|/*        "               */
 name|unsigned
 name|drive
 range|:
 literal|7
 decl_stmt|;
-comment|/*        "                         */
+comment|/*        "               */
 name|unsigned
 name|command
 range|:
 literal|16
 decl_stmt|;
-comment|/*        "             (see HCMD_) */
+comment|/*        "   (see HCMD_) */
 name|unsigned
 name|cyl
 range|:
 literal|13
 decl_stmt|;
-comment|/* device control word #2           */
+comment|/* device control word #2 */
 name|unsigned
 name|head
 range|:
 literal|9
 decl_stmt|;
-comment|/*        "                         */
+comment|/*        "               */
 name|unsigned
 name|sector
 range|:
 literal|10
 decl_stmt|;
-comment|/*        "                         */
+comment|/*        "               */
 name|unsigned
 name|long
 name|reserved
@@ -469,25 +468,25 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/*                                  */
+comment|/*                        */
 name|unsigned
 name|long
 name|context
 decl_stmt|;
-comment|/* software context word            */
+comment|/* software context word */
 name|data_chain_type
 name|chain
 index|[
 name|HDC_MAXCHAIN
 index|]
 decl_stmt|;
-comment|/* data chain and lword count   */
+comment|/* data chain and lword count */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* defines for the "command"s       */
+comment|/* defines for the "command"s */
 end_comment
 
 begin_define
@@ -498,7 +497,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* command: read drive status       */
+comment|/* command: read drive status */
 end_comment
 
 begin_define
@@ -509,7 +508,7 @@ value|0x60
 end_define
 
 begin_comment
-comment|/* command: read data               */
+comment|/* command: read data */
 end_comment
 
 begin_define
@@ -520,7 +519,7 @@ value|0x6A
 end_define
 
 begin_comment
-comment|/* command: read vendor data        */
+comment|/* command: read vendor data */
 end_comment
 
 begin_define
@@ -531,7 +530,7 @@ value|0x6D
 end_define
 
 begin_comment
-comment|/* command: verify a track          */
+comment|/* command: verify a track */
 end_comment
 
 begin_define
@@ -542,7 +541,7 @@ value|0x70
 end_define
 
 begin_comment
-comment|/* command: write data              */
+comment|/* command: write data */
 end_comment
 
 begin_define
@@ -553,7 +552,7 @@ value|0x7E
 end_define
 
 begin_comment
-comment|/* command: format a track          */
+comment|/* command: format a track */
 end_comment
 
 begin_define
@@ -564,7 +563,7 @@ value|0x7F
 end_define
 
 begin_comment
-comment|/* command: certify a track         */
+comment|/* command: certify a track */
 end_comment
 
 begin_define
@@ -575,7 +574,7 @@ value|0xD0
 end_define
 
 begin_comment
-comment|/* command: write control store     */
+comment|/* command: write control store */
 end_comment
 
 begin_comment
@@ -590,12 +589,12 @@ name|unsigned
 name|long
 name|mcl
 decl_stmt|;
-comment|/* W  module control lword (MCL_)   */
+comment|/* W  module control lword (MCL_) */
 name|unsigned
 name|long
 name|interrupt
 decl_stmt|;
-comment|/* W  interrupt acknowledge word    */
+comment|/* W  interrupt acknowledge word */
 name|unsigned
 name|long
 name|forw_phaddr
@@ -605,12 +604,10 @@ name|unsigned
 name|long
 name|reserve1
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|long
 name|reserve2
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|long
 name|mcs
@@ -620,12 +617,12 @@ name|unsigned
 name|long
 name|cmcb_phaddr
 decl_stmt|;
-comment|/* W  physical addr of completed mcb*/
+comment|/* W  physical addr of completed mcb */
 name|unsigned
 name|long
 name|context
 decl_stmt|;
-comment|/* R  software context word         */
+comment|/* R  software context word */
 name|unsigned
 name|long
 name|xstatus
@@ -633,14 +630,14 @@ index|[
 name|HDC_XSTAT_SIZE
 index|]
 decl_stmt|;
-comment|/* R  xstatus of last mcb   */
+comment|/* R  xstatus of last mcb */
 block|}
 name|master_mcb_type
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* definition of master mcb "mcl"   */
+comment|/* definition of master mcb "mcl" */
 end_comment
 
 begin_define
@@ -651,7 +648,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* start queued execution of mcb's  */
+comment|/* start queued execution of mcb's */
 end_comment
 
 begin_define
@@ -662,11 +659,11 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* start immediate xqt of an mcb    */
+comment|/* start immediate xqt of an mcb */
 end_comment
 
 begin_comment
-comment|/* definition of master mcb "mcs"   */
+comment|/* definition of master mcb "mcs" */
 end_comment
 
 begin_define
@@ -677,7 +674,7 @@ value|0x00000080
 end_define
 
 begin_comment
-comment|/* an mcb is done; status is valid  */
+comment|/* an mcb is done; status is valid */
 end_comment
 
 begin_define
@@ -688,7 +685,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* a fatal error occurred	    */
+comment|/* a fatal error occurred */
 end_comment
 
 begin_define
@@ -699,7 +696,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* a recoverable error occurred     */
+comment|/* a recoverable error occurred */
 end_comment
 
 begin_comment
@@ -714,134 +711,123 @@ name|unsigned
 name|long
 name|drs
 decl_stmt|;
-comment|/* drive status (see DRS_ below)    */
+comment|/* drive status (see DRS_ below) */
 name|unsigned
 name|long
 name|r1
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|long
 name|r2
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|long
 name|r3
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|short
 name|max_cyl
 decl_stmt|;
-comment|/* max logical cylinder address     */
+comment|/* max logical cylinder address */
 name|unsigned
 name|short
 name|max_head
 decl_stmt|;
-comment|/* max logical head address         */
+comment|/* max logical head address */
 name|unsigned
 name|short
 name|r4
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|short
 name|max_sector
 decl_stmt|;
-comment|/* max logical sector address       */
+comment|/* max logical sector address */
 name|unsigned
 name|short
 name|def_cyl
 decl_stmt|;
-comment|/* definition track cylinder address*/
+comment|/* definition track cylinder address */
 name|unsigned
 name|short
 name|def_cyl_count
 decl_stmt|;
-comment|/* definition track cylinder count  */
+comment|/* definition track cylinder count */
 name|unsigned
 name|short
 name|diag_cyl
 decl_stmt|;
-comment|/* diagnostic track cylinder address*/
+comment|/* diagnostic track cylinder address */
 name|unsigned
 name|short
 name|diag_cyl_count
 decl_stmt|;
-comment|/* diagnostic track cylinder count  */
+comment|/* diagnostic track cylinder count */
 name|unsigned
 name|short
 name|max_phys_cyl
 decl_stmt|;
-comment|/* max physical cylinder address    */
+comment|/* max physical cylinder address */
 name|unsigned
 name|short
 name|max_phys_head
 decl_stmt|;
-comment|/* max physical head address        */
+comment|/* max physical head address */
 name|unsigned
 name|short
 name|r5
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|short
 name|max_phys_sector
 decl_stmt|;
-comment|/* max physical sector address      */
+comment|/* max physical sector address */
 name|unsigned
 name|short
 name|r6
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|short
 name|id
 decl_stmt|;
-comment|/* drive id (drive model)           */
+comment|/* drive id (drive model) */
 name|unsigned
 name|short
 name|r7
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|short
 name|bytes_per_sec
 decl_stmt|;
-comment|/* bytes/sector -vendorflaw conversn*/
+comment|/* bytes/sector -vendorflaw conversn */
 name|unsigned
 name|short
 name|r8
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|short
 name|rpm
 decl_stmt|;
-comment|/* disk revolutions per minute      */
+comment|/* disk revolutions per minute */
 name|unsigned
 name|long
 name|r9
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|long
 name|r10
 decl_stmt|;
-comment|/*                                  */
 name|unsigned
 name|long
 name|r11
 decl_stmt|;
-comment|/*                                  */
 block|}
 name|drive_stat_type
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* defines for drive_stat drs word  */
+comment|/* defines for drive_stat drs word */
 end_comment
 
 begin_define
@@ -852,7 +838,7 @@ value|0x00000080
 end_define
 
 begin_comment
-comment|/* drive is reporting a fault       */
+comment|/* drive is reporting a fault */
 end_comment
 
 begin_define
@@ -863,7 +849,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* drive is reserved by other port  */
+comment|/* drive is reserved by other port */
 end_comment
 
 begin_define
@@ -874,7 +860,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* drive is write protected         */
+comment|/* drive is write protected */
 end_comment
 
 begin_define
@@ -885,7 +871,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* drive heads are not moving now   */
+comment|/* drive heads are not moving now */
 end_comment
 
 begin_define
@@ -910,7 +896,7 @@ block|{
 name|int
 name|ctlr
 decl_stmt|;
-comment|/* controller number (0-15)         */
+comment|/* controller number (0-15) */
 name|hdc_regs_type
 modifier|*
 name|registers
@@ -920,51 +906,51 @@ name|mcb_type
 modifier|*
 name|forw_active
 decl_stmt|;
-comment|/* doubly linked list of            */
+comment|/* doubly linked list of */
 name|mcb_type
 modifier|*
 name|back_active
 decl_stmt|;
-comment|/* .. active mcb's                  */
+comment|/* .. active mcb's */
 name|mcb_type
 modifier|*
 name|forw_free
 decl_stmt|;
-comment|/* doubly linked list of            */
+comment|/* doubly linked list of */
 name|mcb_type
 modifier|*
 name|back_free
 decl_stmt|;
-comment|/* .. free mcb's                    */
+comment|/* .. free mcb's */
 name|mcb_type
 modifier|*
 name|forw_wait
 decl_stmt|;
-comment|/* doubly linked list of            */
+comment|/* doubly linked list of */
 name|mcb_type
 modifier|*
 name|back_wait
 decl_stmt|;
-comment|/* .. waiting mcb's                 */
+comment|/* .. waiting mcb's */
 name|hdc_mid_type
 name|mid
 decl_stmt|;
-comment|/* the module id is read to here    */
+comment|/* the module id is read to here */
 name|long
 name|master_phaddr
 decl_stmt|;
-comment|/* physical address of master mcb   */
+comment|/* physical address of master mcb */
 name|master_mcb_type
 name|master_mcb
 decl_stmt|;
-comment|/* the master mcb for this hdc      */
+comment|/* the master mcb for this hdc */
 name|mcb_type
 name|mcbs
 index|[
 name|HDC_MAXMCBS
 index|]
 decl_stmt|;
-comment|/* pool of mcb's for this hdc     */
+comment|/* pool of mcb's for this hdc */
 block|}
 name|hdc_ctlr_type
 typedef|;
@@ -984,47 +970,47 @@ index|[
 name|GB_MAXPART
 index|]
 decl_stmt|;
-comment|/* partition definitions     */
+comment|/* partition definitions */
 name|int
 name|ctlr
 decl_stmt|;
-comment|/* the controller number (0-15)     */
+comment|/* the controller number (0-15) */
 name|int
 name|slave
 decl_stmt|;
-comment|/* the slave number (0-4)           */
+comment|/* the slave number (0-4) */
 name|int
 name|unit
 decl_stmt|;
-comment|/* the unit number (0-31)           */
+comment|/* the unit number (0-31) */
 name|int
 name|id
 decl_stmt|;
-comment|/* identifies the disk model        */
+comment|/* identifies the disk model */
 name|int
 name|spc
 decl_stmt|;
-comment|/* sectors per cylinder             */
+comment|/* sectors per cylinder */
 name|int
 name|cylinders
 decl_stmt|;
-comment|/* number of logical cylinders      */
+comment|/* number of logical cylinders */
 name|int
 name|heads
 decl_stmt|;
-comment|/* number of logical heads          */
+comment|/* number of logical heads */
 name|int
 name|sectors
 decl_stmt|;
-comment|/* number of logical sectors/track  */
+comment|/* number of logical sectors/track */
 name|int
 name|phys_cylinders
 decl_stmt|;
-comment|/* number of physical cylinders     */
+comment|/* number of physical cylinders */
 name|int
 name|phys_heads
 decl_stmt|;
-comment|/* number of physical heads         */
+comment|/* number of physical heads */
 name|int
 name|phys_sectors
 decl_stmt|;
@@ -1032,15 +1018,15 @@ comment|/* number of physical sectors/track */
 name|int
 name|def_cyl
 decl_stmt|;
-comment|/* logical cylinder of drive def    */
+comment|/* logical cylinder of drive def */
 name|int
 name|def_cyl_count
 decl_stmt|;
-comment|/* number of logical def cylinders  */
+comment|/* number of logical def cylinders */
 name|int
 name|diag_cyl
 decl_stmt|;
-comment|/* logical cylinder of diag area    */
+comment|/* logical cylinder of diag area */
 name|int
 name|diag_cyl_count
 decl_stmt|;
@@ -1048,24 +1034,24 @@ comment|/* number of logical diag cylinders */
 name|int
 name|rpm
 decl_stmt|;
-comment|/* disk rpm                         */
+comment|/* disk rpm */
 name|int
 name|bytes_per_sec
 decl_stmt|;
-comment|/* bytes/sector -vendorflaw conversn*/
+comment|/* bytes/sector -vendorflaw conversn */
 name|int
 name|format
 decl_stmt|;
-comment|/* TRUE= format program is using dsk*/
+comment|/* TRUE= format program is using dsk */
 name|mcb_type
 name|phio_mcb
 decl_stmt|;
-comment|/* mcb for handler physical io      */
+comment|/* mcb for handler physical io */
 name|struct
 name|buf
 name|phio_buf
 decl_stmt|;
-comment|/* buf for handler physical io      */
+comment|/* buf for handler physical io */
 name|unsigned
 name|long
 name|phio_data
@@ -1073,12 +1059,12 @@ index|[
 name|HDC_PHIO_SIZE
 index|]
 decl_stmt|;
-comment|/* data for physical io   */
+comment|/* data for physical io */
 name|struct
 name|buf
 name|raw_buf
 decl_stmt|;
-comment|/* buf structure for raw i/o        */
+comment|/* buf structure for raw i/o */
 block|}
 name|hdc_unit_type
 typedef|;
