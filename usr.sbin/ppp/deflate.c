@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: deflate.c,v 1.4 1997/12/21 12:11:04 brian Exp $  */
 end_comment
 
 begin_include
@@ -122,6 +122,9 @@ block|{
 name|u_short
 name|seqno
 decl_stmt|;
+name|int
+name|dodgy_seqno
+decl_stmt|;
 name|z_stream
 name|cx
 decl_stmt|;
@@ -209,6 +212,12 @@ block|{
 name|OutputState
 operator|.
 name|seqno
+operator|=
+literal|0
+expr_stmt|;
+name|OutputState
+operator|.
+name|dodgy_seqno
 operator|=
 literal|0
 expr_stmt|;
@@ -893,6 +902,12 @@ name|seqno
 operator|=
 literal|0
 expr_stmt|;
+name|InputState
+operator|.
+name|dodgy_seqno
+operator|=
+literal|0
+expr_stmt|;
 name|inflateReset
 argument_list|(
 operator|&
@@ -1024,6 +1039,26 @@ operator|.
 name|seqno
 condition|)
 block|{
+if|if
+condition|(
+name|InputState
+operator|.
+name|dodgy_seqno
+operator|&&
+name|seq
+operator|<
+name|InputState
+operator|.
+name|seqno
+condition|)
+name|InputState
+operator|.
+name|seqno
+operator|=
+name|seq
+expr_stmt|;
+else|else
+block|{
 name|LogPrintf
 argument_list|(
 name|LogERROR
@@ -1052,10 +1087,17 @@ return|return
 name|NULL
 return|;
 block|}
+block|}
 name|InputState
 operator|.
 name|seqno
 operator|++
+expr_stmt|;
+name|InputState
+operator|.
+name|dodgy_seqno
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Allocate an output mbuf */
 name|mo_head
@@ -2641,6 +2683,13 @@ literal|0
 return|;
 name|DeflateResetInput
 argument_list|()
+expr_stmt|;
+comment|/*    * When we begin, we may start adding to our dictionary before the    * peer does.  If `dodgy_seqno' is set, we'll allow the peer to send    * us a seqno that's too small and just adjust seqno accordingly -    * deflate is a sliding window compressor !    */
+name|InputState
+operator|.
+name|dodgy_seqno
+operator|=
+literal|1
 expr_stmt|;
 return|return
 literal|1
