@@ -268,7 +268,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipfs.c,v 2.6.2.7 2001/06/26 10:43:18 darrenr Exp $"
+literal|"@(#)$Id: ipfs.c,v 2.6.2.8 2001/09/14 18:52:21 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1445,7 +1445,7 @@ if|if
 condition|(
 operator|(
 name|ns
-operator|>
+operator|>=
 literal|0
 operator|)
 operator|||
@@ -1479,7 +1479,7 @@ if|if
 condition|(
 operator|(
 name|ns
-operator|>
+operator|>=
 literal|0
 operator|)
 operator|||
@@ -1523,7 +1523,7 @@ if|if
 condition|(
 operator|(
 name|ns
-operator|>
+operator|>=
 literal|0
 operator|)
 operator|||
@@ -1586,12 +1586,6 @@ literal|'w'
 case|:
 if|if
 condition|(
-operator|(
-name|ns
-operator|>
-literal|0
-operator|)
-operator|||
 name|dirname
 operator|||
 operator|(

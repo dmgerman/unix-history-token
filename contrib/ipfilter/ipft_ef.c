@@ -7,6 +7,23 @@ begin_comment
 comment|/*                                             icmp type  lnth proto         source     destination   src port   dst port  etherfind -n     60  tcp   128.250.20.20  128.250.133.13       2419     telnet  etherfind -n -t   0.32    91   04    131.170.1.10  128.250.133.13  0.33   566  udp  128.250.37.155   128.250.133.3        901        901 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -217,7 +234,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_ef.c,v 2.2.2.1 2001/06/26 10:43:18 darrenr Exp $"
+literal|"@(#)$Id: ipft_ef.c,v 2.2.2.2 2002/02/22 15:32:53 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

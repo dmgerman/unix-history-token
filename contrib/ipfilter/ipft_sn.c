@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * Written to comply with the recent RFC 1761 from Sun.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -188,7 +205,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_sn.c,v 2.2.2.2 2001/06/26 10:43:18 darrenr Exp $"
+literal|"@(#)$Id: ipft_sn.c,v 2.2.2.3 2002/02/22 15:32:54 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

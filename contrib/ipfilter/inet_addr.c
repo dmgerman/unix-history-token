@@ -96,7 +96,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: inet_addr.c,v 2.1.4.1 2001/07/15 22:06:14 darrenr Exp $"
+literal|"@(#)$Id: inet_addr.c,v 2.1.4.2 2002/02/22 15:32:46 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -597,6 +597,7 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|SOLARIS2
@@ -606,6 +607,21 @@ operator|(
 name|SOLARIS2
 operator|>
 literal|5
+operator|)
+operator|)
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|IRIX
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>=
+literal|605
+operator|)
 operator|)
 end_if
 
