@@ -8,7 +8,7 @@ comment|/* Prototypes I needed to fix that kern_exit warning     ---- this reall
 end_comment
 
 begin_decl_stmt
-specifier|volatile
+name|__volatile
 name|void
 name|kexit
 name|__P
