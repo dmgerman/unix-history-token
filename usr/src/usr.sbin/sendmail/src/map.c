@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.7 (Berkeley) %G%"
+literal|"@(#)map.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1204,10 +1204,48 @@ name|map_file
 argument_list|)
 expr_stmt|;
 block|}
+while|while
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+operator|&&
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
+expr_stmt|;
 operator|*
 name|pp
 operator|=
 name|p
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+name|map
+operator|->
+name|map_rebuild
+operator|=
+name|newstr
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 block|}
 end_block
