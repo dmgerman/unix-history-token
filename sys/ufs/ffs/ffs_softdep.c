@@ -5012,10 +5012,6 @@ name|softdep_process_worklist_hook
 operator|=
 name|softdep_process_worklist
 expr_stmt|;
-name|softdep_fsync_hook
-operator|=
-name|softdep_fsync
-expr_stmt|;
 comment|/* initialise bioops hack */
 name|bioops
 operator|.
@@ -5060,10 +5056,6 @@ name|softdep_uninitialize
 parameter_list|()
 block|{
 name|softdep_process_worklist_hook
-operator|=
-name|NULL
-expr_stmt|;
-name|softdep_fsync_hook
 operator|=
 name|NULL
 expr_stmt|;
