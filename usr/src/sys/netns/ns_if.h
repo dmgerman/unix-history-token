@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_if.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_if.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,11 +24,6 @@ define|#
 directive|define
 name|ia_flags
 value|ia_ifa.ifa_flags
-comment|/*	union	ns_net	ia_net;		/* network number of interface */
-define|#
-directive|define
-name|ia_net
-value|ia_addr.sns_addr.x_net
 name|struct
 name|ns_ifaddr
 modifier|*

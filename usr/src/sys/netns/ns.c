@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1707,7 +1707,11 @@ name|x_net
 operator|=
 name|ia
 operator|->
-name|ia_net
+name|ia_addr
+operator|.
+name|sns_addr
+operator|.
+name|x_net
 expr_stmt|;
 name|rtinit
 argument_list|(
@@ -1860,7 +1864,11 @@ name|net
 argument_list|,
 name|ia
 operator|->
-name|ia_net
+name|ia_addr
+operator|.
+name|sns_addr
+operator|.
+name|x_net
 argument_list|)
 condition|)
 name|ia_maybe
@@ -1878,7 +1886,11 @@ name|net
 argument_list|,
 name|ia
 operator|->
-name|ia_net
+name|ia_addr
+operator|.
+name|sns_addr
+operator|.
+name|x_net
 argument_list|)
 condition|)
 return|return
