@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $FreeBSD$  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  * Modified by Ahmed Helmy, SGI, June 1996  * Modified by George Edmond Eddy (Rusty), ISI, February 1998  * Modified by Pavlin Radoslavov, USC/ISI, May 1998, August 1999, October 2000  * Modified by Hitoshi Asaeda, WIDE, August 2000  * Modified by Pavlin Radoslavov, ICSI, October 2002  *  * MROUTING Revision: 3.5  * and PIM-SMv2 and PIM-DM support, advanced API support,  * bandwidth metering and signaling  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -6842,37 +6842,23 @@ name|rt
 operator|->
 name|mfc_wrong_if
 expr_stmt|;
-comment|/* 	 * If we are doing PIM assert processing, and we are forwarding 	 * packets on this interface, and it is a broadcast medium 	 * interface (and not a tunnel), send a message to the routing daemon. 	 */
+comment|/* 	 * If we are doing PIM assert processing, send a message 	 * to the routing daemon. 	 * 	 * XXX: A PIM-SM router needs the WRONGVIF detection so it 	 * can complete the SPT switch, regardless of the type 	 * of the iif (broadcast media, GRE tunnel, etc). 	 */
 if|if
 condition|(
 name|pim_assert
 operator|&&
-name|rt
-operator|->
-name|mfc_ttls
-index|[
-name|vifi
-index|]
-operator|&&
 operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_BROADCAST
+name|vifi
+operator|<
+name|numvifs
 operator|)
 operator|&&
-operator|!
-operator|(
 name|viftable
 index|[
 name|vifi
 index|]
 operator|.
-name|v_flags
-operator|&
-name|VIFF_TUNNEL
-operator|)
+name|v_ifp
 condition|)
 block|{
 name|struct
@@ -6882,6 +6868,23 @@ decl_stmt|;
 name|u_long
 name|delta
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PIM
+if|if
+condition|(
+name|ifp
+operator|==
+operator|&
+name|multicast_register_if
+condition|)
+name|pimstat
+operator|.
+name|pims_rcv_registers_wrongiif
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Get vifi for the incoming packet */
 for|for
 control|(
@@ -6916,6 +6919,21 @@ return|return
 literal|0
 return|;
 comment|/* The iif is not found: ignore the packet. */
+if|if
+condition|(
+name|rt
+operator|->
+name|mfc_flags
+index|[
+name|vifi
+index|]
+operator|&
+name|MRT_MFC_FLAGS_DISABLE_WRONGVIF
+condition|)
+return|return
+literal|0
+return|;
+comment|/* WRONGVIF disabled: ignore the packet */
 name|GET_TIME
 argument_list|(
 name|now
