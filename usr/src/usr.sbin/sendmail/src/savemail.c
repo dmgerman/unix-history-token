@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.41 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1658,7 +1658,7 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-name|QDONTSEND
+name|QBADADDR
 argument_list|,
 name|q
 operator|->
@@ -1666,6 +1666,18 @@ name|q_flags
 argument_list|)
 condition|)
 continue|continue;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QDONTSEND
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
 name|ee
 operator|->
 name|e_nrcpts
