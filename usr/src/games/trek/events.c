@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)events.c	4.2	(Berkeley)	%G%"
+literal|"@(#)events.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1614,6 +1614,7 @@ name|i
 operator|=
 name|bmove
 argument_list|(
+operator|&
 name|Now
 argument_list|,
 name|i
