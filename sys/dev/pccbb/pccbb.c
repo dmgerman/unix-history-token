@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2000,2001 Jonathan Chen.  * All rights reserved.  * 
 end_comment
 
 begin_comment
-comment|/*  * Driver for PCI to Cardbus Bridge chips  *  * References:  *  TI Datasheets:  *   http://www-s.ti.com/cgi-bin/sc/generic2.cgi?family=PCI+CARDBUS+CONTROLLERS  * Much of the 16-bit PC Card compatibility code stolen from dev/pcic/i82365.c  *  * Written by Jonathan Chen<jon@freebsd.org>  * The author would like to acknowledge:  *  * HAYAKAWA Koichi: Author of the NetBSD code for the same thing  *  * Warner Losh: Newbus/newcard guru and author of the pccard side of things  *  * YAMAMOTO Shigeru: Author of another FreeBSD cardbus driver  *  * David Cross: Author of the initial ugly hack for a specific cardbus card  */
+comment|/*  * Driver for PCI to Cardbus Bridge chips  *  * References:  *  TI Datasheets:  *   http://www-s.ti.com/cgi-bin/sc/generic2.cgi?family=PCI+CARDBUS+CONTROLLERS  * Much of the 16-bit PC Card compatibility code stolen from dev/pcic/i82365.c  * XXX and should be cleaned up to share as much as possible.  *  * Written by Jonathan Chen<jon@freebsd.org>  * The author would like to acknowledge:  *  * HAYAKAWA Koichi: Author of the NetBSD code for the same thing  *  * Warner Losh: Newbus/newcard guru and author of the pccard side of things  *  * YAMAMOTO Shigeru: Author of another FreeBSD cardbus driver  *  * David Cross: Author of the initial ugly hack for a specific cardbus card  */
 end_comment
 
 begin_define
@@ -7771,13 +7771,17 @@ name|pccbb_reslist
 modifier|*
 name|rle
 decl_stmt|;
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|SYS_RES_MEMORY
+case|:
 comment|/* Nearly default */
 if|if
 condition|(
-name|type
-operator|==
-name|SYS_RES_MEMORY
-operator|&&
 name|start
 operator|==
 literal|0
@@ -7796,28 +7800,12 @@ name|start
 operator|=
 literal|0xd0000
 expr_stmt|;
-comment|/* XXX */
+comment|/* XXX -- should be tweakable*/
 name|end
 operator|=
 literal|0xdffff
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|type
-operator|==
-name|SYS_RES_IRQ
-condition|)
-name|flags
-operator||=
-name|RF_SHAREABLE
-expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|SYS_RES_MEMORY
-condition|)
 name|flags
 operator|=
 operator|(
@@ -7832,6 +7820,52 @@ argument_list|(
 name|PCCBB_MEMALIGN
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|SYS_RES_IOPORT
+case|:
+if|if
+condition|(
+name|start
+operator|<
+literal|0x100
+condition|)
+name|start
+operator|=
+literal|0x100
+expr_stmt|;
+comment|/* XXX tweakable? */
+if|if
+condition|(
+name|end
+operator|<
+name|start
+condition|)
+name|end
+operator|=
+name|start
+expr_stmt|;
+break|break;
+case|case
+name|SYS_RES_IRQ
+case|:
+name|flags
+operator||=
+name|RF_SHAREABLE
+expr_stmt|;
+name|start
+operator|=
+name|end
+operator|=
+name|rman_get_start
+argument_list|(
+name|sc
+operator|->
+name|sc_irq_res
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|r
 operator|=
 name|bus_generic_alloc_resource
@@ -8137,23 +8171,6 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"%p %p %d %d %#x\n"
-operator|,
-name|self
-operator|,
-name|child
-operator|,
-name|type
-operator|,
-name|rid
-operator|,
-name|flags
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|type
