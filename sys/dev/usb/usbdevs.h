@@ -5084,7 +5084,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_HP_1200C
+name|USB_PRODUCT_HP_1220C
 value|0x0212
 end_define
 

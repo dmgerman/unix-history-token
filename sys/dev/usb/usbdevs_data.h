@@ -1978,7 +1978,7 @@ block|,
 block|{
 name|USB_VENDOR_HP
 block|,
-name|USB_PRODUCT_HP_1200C
+name|USB_PRODUCT_HP_1220C
 block|,
 literal|0
 block|,
