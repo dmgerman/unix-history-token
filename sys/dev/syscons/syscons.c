@@ -12175,7 +12175,7 @@ operator|||
 operator|(
 name|scp
 operator|->
-name|mouse_pos
+name|mouse_oldpos
 operator|-
 name|scp
 operator|->
@@ -12189,7 +12189,7 @@ operator|||
 operator|(
 name|scp
 operator|->
-name|mouse_pos
+name|mouse_oldpos
 operator|+
 name|scp
 operator|->
