@@ -292,6 +292,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DC_TYPE_CONEXANT
+value|0xC
+end_define
+
+begin_comment
+comment|/* Conexant LANfinity RS7112 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DC_IS_MACRONIX
 parameter_list|(
 name|x
@@ -379,6 +390,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(x->dc_type == DC_TYPE_PNIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_IS_CONEXANT
+parameter_list|(
+name|x
+parameter_list|)
+value|(x->dc_type == DC_TYPE_CONEXANT)
 end_define
 
 begin_comment
@@ -3467,6 +3488,28 @@ begin_comment
 comment|/* End of PNIC specific registers */
 end_comment
 
+begin_comment
+comment|/*  * CONEXANT specific registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_CONEXANT_PHYADDR
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_CONEXANT_EE_NODEADDR
+value|0x19A
+end_define
+
+begin_comment
+comment|/* End of CONEXANT specific registers */
+end_comment
+
 begin_struct
 struct|struct
 name|dc_softc
@@ -4066,6 +4109,28 @@ define|#
 directive|define
 name|DC_DEVICEID_EN2242
 value|0x1216
+end_define
+
+begin_comment
+comment|/*  * Conexant vendor ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_VENDORID_CONEXANT
+value|0x14f1
+end_define
+
+begin_comment
+comment|/*  * Conexant device IDs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_RS7112
+value|0x1803
 end_define
 
 begin_comment
