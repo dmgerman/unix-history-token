@@ -36,19 +36,112 @@ end_struct_decl
 begin_define
 define|#
 directive|define
+name|CPUSAVE_LEN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|int		pc_inside_intr;					\ 	u_int32_t	pc_next_asn;
-comment|/* next ASN to alloc */
-value|\ 	u_int32_t	pc_current_asngen;
-comment|/* ASN rollover check */
-value|\ 	struct pmap	*pc_curpmap;
+value|int		pc_inside_intr;					\ 	struct pmap	*pc_curpmap;
 comment|/* current pmap */
-value|\ 	struct thread	*pc_fputhread
+value|\         struct thread   *pc_fputhread;
+comment|/* current fpu user */
+value|\ 	register_t	pc_tempsave[CPUSAVE_LEN];			\ 	register_t	pc_disisave[CPUSAVE_LEN];			\ 	register_t	pc_ddbsave[CPUSAVE_LEN];
 end_define
 
 begin_comment
-comment|/* current user of the fpu */
+comment|/* Definitions for register offsets within the exception tmp save areas */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUSAVE_R28
+value|0
+end_define
+
+begin_comment
+comment|/* where r28 gets saved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUSAVE_R29
+value|1
+end_define
+
+begin_comment
+comment|/* where r29 gets saved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUSAVE_R30
+value|2
+end_define
+
+begin_comment
+comment|/* where r30 gets saved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUSAVE_R31
+value|3
+end_define
+
+begin_comment
+comment|/* where r31 gets saved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUSAVE_DAR
+value|4
+end_define
+
+begin_comment
+comment|/* where SPR_DAR gets saved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUSAVE_DSISR
+value|5
+end_define
+
+begin_comment
+comment|/* where SPR_DSISR gets saved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUSAVE_SRR0
+value|6
+end_define
+
+begin_comment
+comment|/* where SRR0 gets saved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPUSAVE_SRR1
+value|7
+end_define
+
+begin_comment
+comment|/* where SRR1 gets saved */
 end_comment
 
 begin_define
