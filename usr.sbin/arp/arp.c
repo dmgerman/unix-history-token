@@ -448,6 +448,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|rifname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|sockaddr_in
 name|so_mask
@@ -605,7 +613,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"andfsS"
+literal|"andfsSi:"
 argument_list|)
 operator|)
 operator|!=
@@ -670,6 +678,14 @@ name|SETFUNC
 argument_list|(
 name|F_FILESET
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|rifname
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -774,6 +790,61 @@ name|func
 operator|=
 name|F_GET
 expr_stmt|;
+if|if
+condition|(
+name|rifname
+condition|)
+block|{
+if|if
+condition|(
+name|func
+operator|!=
+name|F_GET
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-i not applicable to this operation"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|if_nametoindex
+argument_list|(
+name|rifname
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENXIO
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"interface %s does not exist"
+argument_list|,
+name|rifname
+argument_list|)
+expr_stmt|;
+else|else
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"if_nametoindex(%s)"
+argument_list|,
+name|rifname
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 switch|switch
 condition|(
 name|func
@@ -2060,7 +2131,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s (%s) -- no entry\n"
+literal|"%s (%s) -- no entry"
 argument_list|,
 name|host
 argument_list|,
@@ -2070,6 +2141,22 @@ name|addr
 operator|->
 name|sin_addr
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rifname
+condition|)
+name|printf
+argument_list|(
+literal|" on %s"
+argument_list|,
+name|rifname
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2544,6 +2631,12 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
+name|char
+name|ifname
+index|[
+name|IF_NAMESIZE
+index|]
+decl_stmt|;
 name|mib
 index|[
 literal|0
@@ -2724,6 +2817,27 @@ operator|->
 name|sin_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rifname
+operator|&&
+name|if_indextoname
+argument_list|(
+name|sdl
+operator|->
+name|sdl_index
+argument_list|,
+name|ifname
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|ifname
+argument_list|,
+name|rifname
+argument_list|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|addr
@@ -3277,9 +3391,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: arp [-n] hostname"
+literal|"usage: arp [-n] [-i interface] hostname"
 argument_list|,
-literal|"       arp [-n] -a"
+literal|"       arp [-n] [-i interface] -a"
 argument_list|,
 literal|"       arp -d hostname [pub]"
 argument_list|,
