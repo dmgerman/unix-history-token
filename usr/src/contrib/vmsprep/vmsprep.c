@@ -718,6 +718,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|dot
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i

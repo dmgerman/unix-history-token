@@ -62,8 +62,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rewind
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|lseek
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -197,6 +205,9 @@ name|tm
 decl_stmt|;
 name|long
 name|timetemp
+decl_stmt|,
+name|time
+argument_list|()
 decl_stmt|;
 name|int
 name|year
@@ -285,7 +296,11 @@ name|timetemp
 operator|=
 name|time
 argument_list|(
-literal|0
+operator|(
+name|long
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|tm
@@ -896,7 +911,7 @@ argument_list|(
 name|device
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1562,12 +1577,6 @@ modifier|*
 name|obufstart
 decl_stmt|;
 name|char
-name|sizebuf
-index|[
-literal|5
-index|]
-decl_stmt|;
-name|char
 modifier|*
 name|endibuf
 decl_stmt|;
@@ -1609,6 +1618,10 @@ name|ibuf
 operator|=
 name|malloc
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|blocksize
 operator|<
 literal|4096
@@ -1623,6 +1636,7 @@ operator|+
 literal|10
 operator|)
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|obufstart
 operator|=
@@ -1630,9 +1644,14 @@ name|obuf
 operator|=
 name|malloc
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|blocksize
 operator|+
 literal|10
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|endobuf
@@ -1874,8 +1893,6 @@ literal|'\n'
 condition|)
 block|{
 comment|/* end of line */
-comment|/*sprintf(sizebuf,"%4.4d",i+4); /* make length string */
-comment|/*strncpy(obuf,sizebuf,4); /* put in length field */
 name|obuf
 index|[
 literal|0
@@ -2385,6 +2402,7 @@ end_block
 
 begin_function
 name|void
+specifier|static
 name|rewind
 parameter_list|(
 name|tape
@@ -3181,9 +3199,6 @@ modifier|*
 name|fixpoint
 decl_stmt|;
 name|int
-name|i
-decl_stmt|;
-name|int
 name|size
 decl_stmt|;
 name|int
@@ -3212,9 +3227,6 @@ name|blocksize
 decl_stmt|;
 name|int
 name|recordsize
-decl_stmt|;
-name|int
-name|writeblock
 decl_stmt|;
 if|if
 condition|(
@@ -3292,9 +3304,14 @@ name|ibuf
 operator|=
 name|malloc
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|blocksize
 operator|+
 literal|10
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|endibuf
