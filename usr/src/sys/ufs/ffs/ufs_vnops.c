@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_vnops.c	4.32	82/08/10	*/
+comment|/*	ufs_vnops.c	4.33	82/08/14	*/
 end_comment
 
 begin_include
@@ -2473,35 +2473,25 @@ name|u_ap
 expr_stmt|;
 name|u
 operator|.
-name|u_offset
+name|u_error
 operator|=
-literal|0
-expr_stmt|;
-name|u
-operator|.
-name|u_base
-operator|=
+name|readip1
+argument_list|(
+name|ip
+argument_list|,
 name|uap
 operator|->
 name|buf
-expr_stmt|;
-name|u
-operator|.
-name|u_count
-operator|=
+argument_list|,
 name|uap
 operator|->
 name|count
-expr_stmt|;
-name|u
-operator|.
-name|u_segflg
-operator|=
+argument_list|,
 literal|0
-expr_stmt|;
-name|readi
-argument_list|(
-name|ip
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|out
