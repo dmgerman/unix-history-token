@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.27	81/03/13	*/
+comment|/*	autoconf.c	4.28	81/03/16	*/
 end_comment
 
 begin_comment
@@ -403,9 +403,6 @@ name|nexcsr
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|ubawatch
-argument_list|()
 decl_stmt|;
 name|nexnum
 operator|=
@@ -591,6 +588,15 @@ goto|goto
 name|unsupp
 goto|;
 block|}
+if|#
+directive|if
+name|VAX780
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_780
+condition|)
 name|setscbnex
 argument_list|(
 name|ubaintv
@@ -599,6 +605,8 @@ name|numuba
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|i
 operator|=
 name|nexcsr
@@ -636,6 +644,9 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|VAX780
 if|if
 condition|(
 name|cpu
@@ -661,6 +672,8 @@ name|UBACR_USEFIE
 operator||
 name|UBACR_SUEFIE
 expr_stmt|;
+endif|#
+directive|endif
 name|numuba
 operator|++
 expr_stmt|;
@@ -778,6 +791,14 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+if|#
+directive|if
+name|VAX780
+block|{
+name|int
+name|ubawatch
+parameter_list|()
+function_decl|;
 name|timeout
 argument_list|(
 name|ubawatch
@@ -790,6 +811,9 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1791,6 +1815,7 @@ name|uh_physuba
 operator|=
 name|pubp
 expr_stmt|;
+comment|/* HAVE TO DO SOMETHING SPECIAL FOR SECOND UNIBUS ON COMETS HERE */
 if|if
 condition|(
 name|numuba

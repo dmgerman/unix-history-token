@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.31	81/03/11	*/
+comment|/*	hp.c	4.32	81/03/16	*/
 end_comment
 
 begin_include
@@ -228,11 +228,11 @@ block|,
 literal|27
 block|,
 comment|/* B=cyl 27 thru 81 */
-literal|500992
+literal|500384
 block|,
 literal|0
 block|,
-comment|/* C=cyl 0 thru 823 */
+comment|/* C=cyl 0 thru 822 */
 literal|15884
 block|,
 literal|562
@@ -243,16 +243,16 @@ block|,
 literal|589
 block|,
 comment|/* E=cyl 589 thru 680 */
-literal|86944
+literal|86636
 block|,
 literal|681
 block|,
-comment|/* F=cyl 681 thru 823 */
-literal|159296
+comment|/* F=cyl 681 thru 822 */
+literal|158688
 block|,
 literal|562
 block|,
-comment|/* G=cyl 562 thru 823 */
+comment|/* G=cyl 562 thru 822 */
 literal|291346
 block|,
 literal|82
@@ -1457,13 +1457,33 @@ argument_list|,
 literal|"hp"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mbsr
+operator|&
+operator|(
+name|MBSR_EBITS
+operator|&
+operator|~
+operator|(
+name|MBSR_DTABT
+operator||
+name|MBSR_MBEXC
+operator|)
+operator|)
+condition|)
 name|printf
 argument_list|(
-literal|"mbsr=%b er1=%b er2=%b\n"
+literal|"mbsr=%b "
 argument_list|,
 name|mbsr
 argument_list|,
 name|mbsr_bits
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"er1=%b er2=%b\n"
 argument_list|,
 name|hpaddr
 operator|->
