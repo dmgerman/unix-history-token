@@ -1922,17 +1922,6 @@ name|head
 operator|->
 name|m_data
 expr_stmt|;
-name|eh
-operator|->
-name|ether_type
-operator|=
-name|ntohs
-argument_list|(
-name|eh
-operator|->
-name|ether_type
-argument_list|)
-expr_stmt|;
 name|head
 operator|->
 name|m_data

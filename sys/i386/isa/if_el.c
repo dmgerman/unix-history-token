@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *   * $Id: if_el.c,v 1.7 1994/10/21 01:19:06 wollman Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *   * $Id: if_el.c,v 1.8 1994/10/23 21:27:17 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -2886,7 +2886,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Pass a packet up to the higher levels.  Deal with trailer protocol. */
+comment|/* Pass a packet up to the higher levels. */
 end_comment
 
 begin_function
@@ -2918,12 +2918,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|int
-name|off
-decl_stmt|,
-name|resid
-decl_stmt|;
-comment|/* Deal with trailer protocol: if type is trailer type 	 * get true type from first 16-bit word past data. 	 * Remember that type was trailer by setting off. 	 */
 name|eh
 operator|=
 operator|(
@@ -2933,141 +2927,12 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
-name|eh
-operator|->
-name|ether_type
-operator|=
-name|ntohs
-argument_list|(
-operator|(
-name|u_short
-operator|)
-name|eh
-operator|->
-name|ether_type
-argument_list|)
-expr_stmt|;
-define|#
-directive|define
-name|eldataaddr
-parameter_list|(
-name|eh
-parameter_list|,
-name|off
-parameter_list|,
-name|type
-parameter_list|)
-value|((type)(((caddr_t)((eh)+1)+(off))))
-if|if
-condition|(
-name|eh
-operator|->
-name|ether_type
-operator|>=
-name|ETHERTYPE_TRAIL
-operator|&&
-name|eh
-operator|->
-name|ether_type
-operator|<
-name|ETHERTYPE_TRAIL
-operator|+
-name|ETHERTYPE_NTRAILER
-condition|)
-block|{
-name|off
-operator|=
-operator|(
-name|eh
-operator|->
-name|ether_type
-operator|-
-name|ETHERTYPE_TRAIL
-operator|)
-operator|*
-literal|512
-expr_stmt|;
-if|if
-condition|(
-name|off
-operator|>=
-name|ETHERMTU
-condition|)
-return|return;
-name|eh
-operator|->
-name|ether_type
-operator|=
-name|ntohs
-argument_list|(
-operator|*
-name|eldataaddr
-argument_list|(
-name|eh
-argument_list|,
-name|off
-argument_list|,
-name|u_short
-operator|*
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|resid
-operator|=
-name|ntohs
-argument_list|(
-operator|*
-operator|(
-name|eldataaddr
-argument_list|(
-name|eh
-argument_list|,
-name|off
-operator|+
-literal|2
-argument_list|,
-name|u_short
-operator|*
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|off
-operator|+
-name|resid
-operator|)
-operator|>
-name|len
-condition|)
-return|return;
-name|len
-operator|=
-name|off
-operator|+
-name|resid
-expr_stmt|;
-block|}
-else|else
-name|off
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|<=
-literal|0
-condition|)
-return|return;
 if|#
 directive|if
 name|NBPFILTER
 operator|>
 literal|0
-comment|/* 	 * Check if there's a bpf filter listening on this interface. 	 * If so, hand off the raw packet to bpf, which must deal with 	 * trailers in its own way. 	 */
+comment|/* 	 * Check if there's a bpf filter listening on this interface. 	 * If so, hand off the raw packet to bpf. 	 */
 if|if
 condition|(
 name|sc
@@ -3075,20 +2940,6 @@ operator|->
 name|bpf
 condition|)
 block|{
-name|eh
-operator|->
-name|ether_type
-operator|=
-name|htons
-argument_list|(
-operator|(
-name|u_short
-operator|)
-name|eh
-operator|->
-name|ether_type
-argument_list|)
-expr_stmt|;
 name|bpf_tap
 argument_list|(
 name|sc
@@ -3104,20 +2955,6 @@ argument_list|(
 expr|struct
 name|ether_header
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|eh
-operator|->
-name|ether_type
-operator|=
-name|ntohs
-argument_list|(
-operator|(
-name|u_short
-operator|)
-name|eh
-operator|->
-name|ether_type
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Note that the interface cannot be in promiscuous mode if 		 * there are no bpf listeners.  And if el are in promiscuous 		 * mode, el have to check if this packet is really ours. 		 * 		 * This test does not support multicasts. 		 */
@@ -3179,7 +3016,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Pull packet off interface.  Off is nonzero if packet 	 * has trailing header; neget will then force this header 	 * information to be at the front, but we still have to drop 	 * the type and length which are at the front of any trailer data. 	 */
+comment|/* 	 * Pull packet off interface. 	 */
 name|m
 operator|=
 name|elget
@@ -3188,7 +3025,7 @@ name|buf
 argument_list|,
 name|len
 argument_list|,
-name|off
+literal|0
 argument_list|,
 operator|&
 name|sc
@@ -3223,7 +3060,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pull read data off a interface.  * Len is length of data, with local net header stripped.  * Off is non-zero if a trailer protocol was used, and  * gives the offset of the trailer information.  * We copy the trailer information and then all the normal  * data into mbufs.  When full cluster sized units are present  * we copy into clusters.  */
+comment|/*  * Pull read data off a interface.  * Len is length of data, with local net header stripped.  */
 end_comment
 
 begin_function
