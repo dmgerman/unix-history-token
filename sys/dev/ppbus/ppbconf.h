@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppbconf.h,v 1.5 1997/09/01 18:39:37 bde Exp $  *  */
+comment|/*-  * Copyright (c) 1997, 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppbconf.h,v 1.6 1998/06/07 19:44:21 phk Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -33,18 +33,18 @@ value|PZERO+8
 end_define
 
 begin_comment
-comment|/*  * Parallel Port Chipset modes.  */
+comment|/*  * Parallel Port Chipset mode masks.  * NIBBLE mode is supposed to be available under each other modes.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PPB_AUTODETECT
+name|PPB_COMPATIBLE
 value|0x0
 end_define
 
 begin_comment
-comment|/* autodetect */
+comment|/* Centronics compatible mode */
 end_comment
 
 begin_define
@@ -55,7 +55,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* standard 4 bit mode */
+comment|/* reverse 4 bit mode */
 end_comment
 
 begin_define
@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|PPB_EPP
-value|0x3
+value|0x4
 end_define
 
 begin_comment
@@ -83,30 +83,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PPB_ECP_EPP
-value|0x4
-end_define
-
-begin_comment
-comment|/* ECP in EPP mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPB_ECP_PS2
-value|0x5
-end_define
-
-begin_comment
-comment|/* ECP in PS/2 mode */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PPB_ECP
-value|0x6
+value|0x8
 end_define
 
 begin_comment
@@ -116,13 +94,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PPB_UNKNOWN
-value|0x7
+name|PPB_SPP
+value|PPB_NIBBLE|PPB_PS2
 end_define
-
-begin_comment
-comment|/* the last one */
-end_comment
 
 begin_define
 define|#
@@ -131,7 +105,7 @@ name|PPB_IS_EPP
 parameter_list|(
 name|mode
 parameter_list|)
-value|(mode == PPB_EPP || mode == PPB_ECP_EPP)
+value|(mode& PPB_EPP)
 end_define
 
 begin_define
@@ -142,6 +116,16 @@ parameter_list|(
 name|dev
 parameter_list|)
 value|(PPB_IS_EPP (ppb_get_mode (dev)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|n
+parameter_list|(
+name|flags
+parameter_list|)
+value|(~(flags)& (flags))
 end_define
 
 begin_comment
@@ -188,6 +172,41 @@ define|#
 directive|define
 name|PCD
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|nSTROBE
+value|n(STROBE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nAUTOFEED
+value|n(AUTOFEED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INIT
+value|n(nINIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nSELECTIN
+value|n(SELECTIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nPCD
+value|n(PCD)
 end_define
 
 begin_comment
@@ -289,7 +308,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * How tsleep () is called in ppb_request_bus ().  */
+comment|/*  * How tsleep() is called in ppb_request_bus().  */
 end_comment
 
 begin_define
@@ -320,6 +339,116 @@ name|PPB_INTR
 value|0x2
 end_define
 
+begin_comment
+comment|/*  * Microsequence stuff.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPB_MS_MAXLEN
+value|64
+end_define
+
+begin_comment
+comment|/* XXX according to MS_INS_MASK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPB_MS_MAXARGS
+value|3
+end_define
+
+begin_comment
+comment|/* according to MS_ARG_MASK */
+end_comment
+
+begin_comment
+comment|/* maximum number of mode dependent  * submicrosequences for in/out operations  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPB_MAX_XFER
+value|6
+end_define
+
+begin_union
+union|union
+name|ppb_insarg
+block|{
+name|int
+name|i
+decl_stmt|;
+name|char
+name|c
+decl_stmt|;
+name|void
+modifier|*
+name|p
+decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|f
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+union|;
+end_union
+
+begin_struct
+struct|struct
+name|ppb_microseq
+block|{
+name|int
+name|opcode
+decl_stmt|;
+comment|/* microins. opcode */
+name|union
+name|ppb_insarg
+name|arg
+index|[
+name|PPB_MS_MAXARGS
+index|]
+decl_stmt|;
+comment|/* arguments */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* microseqences used for GET/PUT operations */
+end_comment
+
+begin_struct
+struct|struct
+name|ppb_xfer
+block|{
+name|struct
+name|ppb_microseq
+modifier|*
+name|loop
+decl_stmt|;
+comment|/* the loop microsequence */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Parallel Port Bus Device structure.  */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|ppb_data
@@ -330,9 +459,33 @@ begin_comment
 comment|/* see below */
 end_comment
 
-begin_comment
-comment|/*  * Parallel Port Bus Device structure.  */
-end_comment
+begin_struct
+struct|struct
+name|ppb_context
+block|{
+name|int
+name|valid
+decl_stmt|;
+comment|/* 1 if the struct is valid */
+name|int
+name|mode
+decl_stmt|;
+comment|/* XXX chipset operating mode */
+name|struct
+name|microseq
+modifier|*
+name|curpc
+decl_stmt|;
+comment|/* pc in curmsq */
+name|struct
+name|microseq
+modifier|*
+name|curmsq
+decl_stmt|;
+comment|/* currently executed microseqence */
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -342,6 +495,40 @@ name|int
 name|id_unit
 decl_stmt|;
 comment|/* unit of the device */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* name of the device */
+name|ushort
+name|mode
+decl_stmt|;
+comment|/* current mode of the device */
+name|ushort
+name|avm
+decl_stmt|;
+comment|/* available modes of the device */
+name|struct
+name|ppb_context
+name|ctx
+decl_stmt|;
+comment|/* context of the device */
+comment|/* mode dependent get msq. If NULL, 					 * IEEE1284 code is used */
+name|struct
+name|ppb_xfer
+name|get_xfer
+index|[
+name|PPB_MAX_XFER
+index|]
+decl_stmt|;
+comment|/* mode dependent put msq. If NULL, 					 * IEEE1284 code is used */
+name|struct
+name|ppb_xfer
+name|put_xfer
+index|[
+name|PPB_MAX_XFER
+index|]
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*
@@ -401,6 +588,33 @@ modifier|*
 name|ecp_sync
 function_decl|)
 parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|exec_microseq
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|ppb_microseq
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|setmode
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -632,10 +846,6 @@ name|int
 name|id_irq
 decl_stmt|;
 comment|/* != 0 if irq enabled */
-name|int
-name|mode
-decl_stmt|;
-comment|/* NIBBLE, PS2, EPP, ECP */
 define|#
 directive|define
 name|EPP_1_9
@@ -673,7 +883,7 @@ begin_define
 define|#
 directive|define
 name|PPB_PnP_STRING_SIZE
-value|160
+value|128
 end_define
 
 begin_comment
@@ -736,6 +946,14 @@ name|int
 name|class_id
 decl_stmt|;
 comment|/* not a PnP device if class_id< 0 */
+name|ushort
+name|mode
+decl_stmt|;
+comment|/* IEEE 1284-1994 mode 						 * NIBBLE, PS2, EPP or ECP */
+name|ushort
+name|avm
+decl_stmt|;
+comment|/* IEEE 1284-1994 available 						 * modes */
 name|struct
 name|ppb_link
 modifier|*
@@ -849,6 +1067,18 @@ name|struct
 name|ppb_data
 modifier|*
 name|ppb_lookup_bus
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|ppb_data
+modifier|*
+name|ppb_lookup_link
 parameter_list|(
 name|int
 parameter_list|)
@@ -992,35 +1222,13 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|ppb_get_mode
+name|ppb_set_mode
 parameter_list|(
 name|struct
 name|ppb_device
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
+parameter_list|,
 name|int
-name|ppb_get_epp_protocol
-parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|ppb_get_irq
-parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1028,6 +1236,46 @@ end_function_decl
 begin_comment
 comment|/*  * These are defined as macros for speedup.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ppb_get_base_addr
+parameter_list|(
+name|dev
+parameter_list|)
+value|((dev)->ppb->ppb_link->base)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppb_get_epp_protocol
+parameter_list|(
+name|dev
+parameter_list|)
+value|((dev)->ppb->ppb_link->epp_protocol)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppb_get_irq
+parameter_list|(
+name|dev
+parameter_list|)
+value|((dev)->ppb->ppb_link->id_irq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppb_get_mode
+parameter_list|(
+name|dev
+parameter_list|)
+value|((dev)->mode)
+end_define
 
 begin_define
 define|#
@@ -1041,7 +1289,7 @@ parameter_list|,
 name|cnt
 parameter_list|)
 define|\
-value|(*(dev)->ppb->ppb_link->adapter->outsb_epp) \ 			((dev)->ppb->ppb_link->adapter_unit, buf, cnt)
+value|(*(dev)->ppb->ppb_link->adapter->outsb_epp)	    \ 			((dev)->ppb->ppb_link->adapter_unit, buf, cnt)
 end_define
 
 begin_define
@@ -1056,7 +1304,7 @@ parameter_list|,
 name|cnt
 parameter_list|)
 define|\
-value|(*(dev)->ppb->ppb_link->adapter->outsw_epp) \ 			((dev)->ppb->ppb_link->adapter_unit, buf, cnt)
+value|(*(dev)->ppb->ppb_link->adapter->outsw_epp)	    \ 			((dev)->ppb->ppb_link->adapter_unit, buf, cnt)
 end_define
 
 begin_define
@@ -1071,7 +1319,7 @@ parameter_list|,
 name|cnt
 parameter_list|)
 define|\
-value|(*(dev)->ppb->ppb_link->adapter->outsl_epp) \ 			((dev)->ppb->ppb_link->adapter_unit, buf, cnt)
+value|(*(dev)->ppb->ppb_link->adapter->outsl_epp)	    \ 			((dev)->ppb->ppb_link->adapter_unit, buf, cnt)
 end_define
 
 begin_define
@@ -1086,7 +1334,7 @@ parameter_list|,
 name|cnt
 parameter_list|)
 define|\
-value|(*(dev)->ppb->ppb_link->adapter->insb_epp) \ 			((dev)->ppb->ppb_link->adapter_unit, buf, cnt)
+value|(*(dev)->ppb->ppb_link->adapter->insb_epp)	    \ 			((dev)->ppb->ppb_link->adapter_unit, buf, cnt)
 end_define
 
 begin_define
@@ -1101,7 +1349,7 @@ parameter_list|,
 name|cnt
 parameter_list|)
 define|\
-value|(*(dev)->ppb->ppb_link->adapter->insw_epp) \ 			((dev)->ppb->ppb_link->adapter_unit, buf, cnt)
+value|(*(dev)->ppb->ppb_link->adapter->insw_epp)	    \ 			((dev)->ppb->ppb_link->adapter_unit, buf, cnt)
 end_define
 
 begin_define
@@ -1116,37 +1364,7 @@ parameter_list|,
 name|cnt
 parameter_list|)
 define|\
-value|(*(dev)->ppb->ppb_link->adapter->insl_epp) \ 			((dev)->ppb->ppb_link->adapter_unit, buf, cnt)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ppb_rdtr
-parameter_list|(
-name|dev
-parameter_list|)
-value|(*(dev)->ppb->ppb_link->adapter->r_dtr) \ 				((dev)->ppb->ppb_link->adapter_unit)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ppb_rstr
-parameter_list|(
-name|dev
-parameter_list|)
-value|(*(dev)->ppb->ppb_link->adapter->r_str) \ 				((dev)->ppb->ppb_link->adapter_unit)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ppb_rctr
-parameter_list|(
-name|dev
-parameter_list|)
-value|(*(dev)->ppb->ppb_link->adapter->r_ctr) \ 				((dev)->ppb->ppb_link->adapter_unit)
+value|(*(dev)->ppb->ppb_link->adapter->insl_epp)	    \ 			((dev)->ppb->ppb_link->adapter_unit, buf, cnt)
 end_define
 
 begin_define
@@ -1156,7 +1374,7 @@ name|ppb_repp
 parameter_list|(
 name|dev
 parameter_list|)
-value|(*(dev)->ppb->ppb_link->adapter->r_epp) \ 				((dev)->ppb->ppb_link->adapter_unit)
+value|(*(dev)->ppb->ppb_link->adapter->r_epp)		    \ 				((dev)->ppb->ppb_link->adapter_unit)
 end_define
 
 begin_define
@@ -1166,7 +1384,7 @@ name|ppb_recr
 parameter_list|(
 name|dev
 parameter_list|)
-value|(*(dev)->ppb->ppb_link->adapter->r_ecr) \ 				((dev)->ppb->ppb_link->adapter_unit)
+value|(*(dev)->ppb->ppb_link->adapter->r_ecr)		    \ 				((dev)->ppb->ppb_link->adapter_unit)
 end_define
 
 begin_define
@@ -1176,43 +1394,7 @@ name|ppb_rfifo
 parameter_list|(
 name|dev
 parameter_list|)
-value|(*(dev)->ppb->ppb_link->adapter->r_fifo) \ 				((dev)->ppb->ppb_link->adapter_unit)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ppb_wdtr
-parameter_list|(
-name|dev
-parameter_list|,
-name|byte
-parameter_list|)
-value|(*(dev)->ppb->ppb_link->adapter->w_dtr) \ 				((dev)->ppb->ppb_link->adapter_unit, byte)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ppb_wstr
-parameter_list|(
-name|dev
-parameter_list|,
-name|byte
-parameter_list|)
-value|(*(dev)->ppb->ppb_link->adapter->w_str) \ 				((dev)->ppb->ppb_link->adapter_unit, byte)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ppb_wctr
-parameter_list|(
-name|dev
-parameter_list|,
-name|byte
-parameter_list|)
-value|(*(dev)->ppb->ppb_link->adapter->w_ctr) \ 				((dev)->ppb->ppb_link->adapter_unit, byte)
+value|(*(dev)->ppb->ppb_link->adapter->r_fifo)		    \ 				((dev)->ppb->ppb_link->adapter_unit)
 end_define
 
 begin_define
@@ -1224,7 +1406,7 @@ name|dev
 parameter_list|,
 name|byte
 parameter_list|)
-value|(*(dev)->ppb->ppb_link->adapter->w_epp) \ 				((dev)->ppb->ppb_link->adapter_unit, byte)
+value|(*(dev)->ppb->ppb_link->adapter->w_epp)	    \ 				((dev)->ppb->ppb_link->adapter_unit, byte)
 end_define
 
 begin_define
@@ -1236,7 +1418,7 @@ name|dev
 parameter_list|,
 name|byte
 parameter_list|)
-value|(*(dev)->ppb->ppb_link->adapter->w_ecr) \ 				((dev)->ppb->ppb_link->adapter_unit, byte)
+value|(*(dev)->ppb->ppb_link->adapter->w_ecr)	    \ 				((dev)->ppb->ppb_link->adapter_unit, byte)
 end_define
 
 begin_define
@@ -1248,7 +1430,73 @@ name|dev
 parameter_list|,
 name|byte
 parameter_list|)
-value|(*(dev)->ppb->ppb_link->adapter->w_fifo) \ 				((dev)->ppb->ppb_link->adapter_unit, byte)
+value|(*(dev)->ppb->ppb_link->adapter->w_fifo)	    \ 				((dev)->ppb->ppb_link->adapter_unit, byte)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppb_rdtr
+parameter_list|(
+name|dev
+parameter_list|)
+value|(*(dev)->ppb->ppb_link->adapter->r_dtr)		    \ 				((dev)->ppb->ppb_link->adapter_unit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppb_rstr
+parameter_list|(
+name|dev
+parameter_list|)
+value|(*(dev)->ppb->ppb_link->adapter->r_str)		    \ 				((dev)->ppb->ppb_link->adapter_unit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppb_rctr
+parameter_list|(
+name|dev
+parameter_list|)
+value|(*(dev)->ppb->ppb_link->adapter->r_ctr)		    \ 				((dev)->ppb->ppb_link->adapter_unit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppb_wdtr
+parameter_list|(
+name|dev
+parameter_list|,
+name|byte
+parameter_list|)
+value|(*(dev)->ppb->ppb_link->adapter->w_dtr)	    \ 				((dev)->ppb->ppb_link->adapter_unit, byte)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppb_wstr
+parameter_list|(
+name|dev
+parameter_list|,
+name|byte
+parameter_list|)
+value|(*(dev)->ppb->ppb_link->adapter->w_str)	    \ 				((dev)->ppb->ppb_link->adapter_unit, byte)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppb_wctr
+parameter_list|(
+name|dev
+parameter_list|,
+name|byte
+parameter_list|)
+value|(*(dev)->ppb->ppb_link->adapter->w_ctr)	    \ 				((dev)->ppb->ppb_link->adapter_unit, byte)
 end_define
 
 begin_endif

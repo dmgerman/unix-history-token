@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppbconf.c,v 1.4 1997/09/01 00:51:46 bde Exp $  *  */
+comment|/*-  * Copyright (c) 1997, 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppbconf.c,v 1.4 1997/09/01 00:51:46 bde Exp $  *  */
 end_comment
 
 begin_include
@@ -51,13 +51,15 @@ directive|include
 file|<dev/ppbus/ppb_1284.h>
 end_include
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|LIST_HEAD
 argument_list|(
 argument_list|,
 argument|ppb_data
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|ppbdata
 expr_stmt|;
 end_expr_stmt
@@ -97,7 +99,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * ppb_alloc_bus()  *  * Allocate area to store the ppbus description.  * This function is called by ppcattach().  */
+comment|/*  * ppb_alloc_bus()  *  * Allocate area to store the ppbus description.  */
 end_comment
 
 begin_function
@@ -473,6 +475,12 @@ name|len
 decl_stmt|,
 name|error
 decl_stmt|;
+name|int
+name|class_id
+init|=
+operator|-
+literal|1
+decl_stmt|;
 name|char
 name|str
 index|[
@@ -504,12 +512,13 @@ name|ppb
 operator|=
 name|ppb
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PnP_DEBUG
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
-literal|"ppb:<PnP> probing PnP devices on ppbus%d...\n"
+literal|"ppb:<PnP> probing devices on ppbus %d...\n"
 argument_list|,
 name|ppb
 operator|->
@@ -518,8 +527,33 @@ operator|->
 name|adapter_unit
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+if|if
+condition|(
+name|ppb_request_bus
+argument_list|(
+operator|&
+name|pnpdev
+argument_list|,
+name|PPB_DONTWAIT
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"ppb:<PnP> cannot allocate ppbus!\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|ppb_wctr
 argument_list|(
 operator|&
@@ -546,9 +580,10 @@ argument_list|)
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PnP_DEBUG
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ppb:<PnP> nibble_1284_mode()=%d\n"
@@ -556,14 +591,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+goto|goto
+name|end_detect
+goto|;
 block|}
 name|len
 operator|=
@@ -605,9 +635,10 @@ argument_list|)
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PnP_DEBUG
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ppb:<PnP> nibble_1284_inbyte()=%d\n"
@@ -615,14 +646,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+goto|goto
+name|end_detect
+goto|;
 block|}
 if|if
 condition|(
@@ -637,12 +663,9 @@ argument_list|(
 literal|"ppb:<PnP> not space left!\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+goto|goto
+name|end_detect
+goto|;
 block|}
 block|}
 operator|*
@@ -656,9 +679,11 @@ operator|&
 name|pnpdev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PnP_DEBUG
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"ppb:<PnP> %d characters: "
@@ -694,8 +719,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 comment|/* replace ';' characters by '\0' */
 for|for
 control|(
@@ -1008,17 +1032,30 @@ operator|!=
 name|NULL
 condition|)
 block|{
-return|return
-operator|(
+name|class_id
+operator|=
 name|i
-operator|)
-return|;
-break|break;
+expr_stmt|;
+goto|goto
+name|end_detect
+goto|;
 block|}
 block|}
+name|class_id
+operator|=
+name|PPB_PnP_UNKNOWN
+expr_stmt|;
+name|end_detect
+label|:
+name|ppb_release_bus
+argument_list|(
+operator|&
+name|pnpdev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|PPB_PnP_UNKNOWN
+name|class_id
 operator|)
 return|;
 block|}
@@ -1254,6 +1291,62 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * ppb_lookup_link()  *  * Get ppb_data structure pointer according to the unit value  * of the corresponding link structure  */
+end_comment
+
+begin_function
+name|struct
+name|ppb_data
+modifier|*
+name|ppb_lookup_link
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
+block|{
+name|struct
+name|ppb_data
+modifier|*
+name|ppb
+decl_stmt|;
+for|for
+control|(
+name|ppb
+operator|=
+name|ppbdata
+operator|.
+name|lh_first
+init|;
+name|ppb
+condition|;
+name|ppb
+operator|=
+name|ppb
+operator|->
+name|ppb_chain
+operator|.
+name|le_next
+control|)
+if|if
+condition|(
+name|ppb
+operator|->
+name|ppb_link
+operator|->
+name|adapter_unit
+operator|==
+name|unit
+condition|)
+break|break;
+return|return
+operator|(
+name|ppb
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * ppb_attach_device()  *  * Called by loadable kernel modules to add a device  */
 end_comment
 
@@ -1445,6 +1538,26 @@ name|ppb_owner
 operator|=
 name|dev
 expr_stmt|;
+comment|/* restore the context of the device 			 * The first time, ctx.valid is certainly false 			 * then do not change anything. This is usefull for 			 * drivers that do not set there operating mode  			 * during attachement 			 */
+if|if
+condition|(
+name|dev
+operator|->
+name|ctx
+operator|.
+name|valid
+condition|)
+name|ppb_set_mode
+argument_list|(
+name|dev
+argument_list|,
+name|dev
+operator|->
+name|ctx
+operator|.
+name|mode
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -1526,6 +1639,27 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+comment|/* save the context of the device */
+name|dev
+operator|->
+name|ctx
+operator|.
+name|mode
+operator|=
+name|ppb_get_mode
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* ok, now the context of the device is valid */
+name|dev
+operator|->
+name|ctx
+operator|.
+name|valid
+operator|=
+literal|1
 expr_stmt|;
 comment|/* wakeup waiting processes */
 name|wakeup

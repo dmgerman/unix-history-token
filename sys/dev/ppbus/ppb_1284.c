@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppb_1284.c,v 1.2 1997/09/01 00:51:44 bde Exp $  *  */
+comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppb_1284.c,v 1.3 1998/01/31 07:23:06 eivind Exp $  *  */
 end_comment
 
 begin_include
@@ -40,12 +40,12 @@ file|<dev/ppbus/ppb_1284.h>
 end_include
 
 begin_comment
-comment|/*  * nibble_1284_wait()  *  * Wait for the peripherial up to 40ms  */
+comment|/*  * do_1284_wait()  *  * Wait for the peripherial up to 40ms  */
 end_comment
 
 begin_function
 name|int
-name|nibble_1284_wait
+name|do_1284_wait
 parameter_list|(
 name|struct
 name|ppb_device
@@ -62,6 +62,52 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|char
+name|r
+decl_stmt|;
+comment|/* try up to 5ms */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|20
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|r
+operator|=
+name|ppb_rstr
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|25
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|r
+operator|&
+name|mask
+operator|)
+operator|==
+name|status
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|ppb_poll_device
@@ -92,7 +138,135 @@ value|(((s& ~nACK)>> 3) | (~s& nBUSY)>> 4)
 end_define
 
 begin_comment
-comment|/*  * nibble_1284_inbyte()  *  * Read data in NIBBLE mode  */
+comment|/*  * byte_1284_inbyte()  *  * Read 1 byte in BYTE mode  */
+end_comment
+
+begin_function
+name|int
+name|byte_1284_inbyte
+parameter_list|(
+name|struct
+name|ppb_device
+modifier|*
+name|dev
+parameter_list|,
+name|char
+modifier|*
+name|buffer
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+comment|/* notify the peripherial to put data on the lines */
+name|ppb_wctr
+argument_list|(
+name|dev
+argument_list|,
+name|PCD
+operator||
+name|AUTOFEED
+operator||
+name|nSTROBE
+operator||
+name|nINIT
+operator||
+name|nSELECTIN
+argument_list|)
+expr_stmt|;
+comment|/* wait for valid byte signal */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|do_1284_wait
+argument_list|(
+name|dev
+argument_list|,
+name|nACK
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* fetch data */
+operator|*
+name|buffer
+operator|=
+name|ppb_rdtr
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* indicate that data has been received, not ready for another */
+name|ppb_wctr
+argument_list|(
+name|dev
+argument_list|,
+name|PCD
+operator||
+name|nAUTOFEED
+operator||
+name|nSTROBE
+operator||
+name|nINIT
+operator||
+name|nSELECTIN
+argument_list|)
+expr_stmt|;
+comment|/* wait peripherial's acknowledgement */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|do_1284_wait
+argument_list|(
+name|dev
+argument_list|,
+name|nACK
+argument_list|,
+name|nACK
+argument_list|)
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+comment|/* acknowledge the peripherial */
+name|ppb_wctr
+argument_list|(
+name|dev
+argument_list|,
+name|PCD
+operator||
+name|nAUTOFEED
+operator||
+name|STROBE
+operator||
+name|nINIT
+operator||
+name|nSELECTIN
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * nibble_1284_inbyte()  *  * Read 1 byte in NIBBLE mode  */
 end_comment
 
 begin_function
@@ -114,21 +288,12 @@ name|nibble
 index|[
 literal|2
 index|]
-decl_stmt|,
-name|r
 decl_stmt|;
 name|int
 name|i
 decl_stmt|,
 name|error
 decl_stmt|;
-name|r
-operator|=
-name|ppb_rctr
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -148,9 +313,13 @@ name|ppb_wctr
 argument_list|(
 name|dev
 argument_list|,
-name|r
-operator||
 name|AUTOFEED
+operator||
+name|nSTROBE
+operator||
+name|nINIT
+operator||
+name|nSELECTIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -158,7 +327,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|nibble_1284_wait
+name|do_1284_wait
 argument_list|(
 name|dev
 argument_list|,
@@ -168,20 +337,11 @@ literal|0
 argument_list|)
 operator|)
 condition|)
-block|{
-name|ppb_wctr
-argument_list|(
-name|dev
-argument_list|,
-name|r
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 comment|/* read nibble */
 name|nibble
 index|[
@@ -215,10 +375,13 @@ name|ppb_wctr
 argument_list|(
 name|dev
 argument_list|,
-name|r
-operator|&
-operator|~
-name|AUTOFEED
+name|nAUTOFEED
+operator||
+name|nSTROBE
+operator||
+name|nINIT
+operator||
+name|nSELECTIN
 argument_list|)
 expr_stmt|;
 comment|/* wait ack from peripherial */
@@ -227,7 +390,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|nibble_1284_wait
+name|do_1284_wait
 argument_list|(
 name|dev
 argument_list|,
@@ -237,20 +400,11 @@ name|nACK
 argument_list|)
 operator|)
 condition|)
-block|{
-name|ppb_wctr
-argument_list|(
-name|dev
-argument_list|,
-name|r
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 block|}
 operator|*
 name|buffer
@@ -344,7 +498,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nibble_1284_wait
+name|do_1284_wait
 argument_list|(
 name|dev
 argument_list|,
@@ -363,7 +517,7 @@ operator||
 name|AUTOFEED
 argument_list|)
 expr_stmt|;
-name|nibble_1284_wait
+name|do_1284_wait
 argument_list|(
 name|dev
 argument_list|,
@@ -451,7 +605,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|nibble_1284_wait
+name|do_1284_wait
 argument_list|(
 name|dev
 argument_list|,

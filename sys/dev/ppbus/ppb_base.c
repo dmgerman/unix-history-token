@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppb_base.c,v 1.2 1997/08/28 10:15:12 msmith Exp $  *  */
+comment|/*-  * Copyright (c) 1997, 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppb_base.c,v 1.3 1997/09/01 00:51:45 bde Exp $  *  */
 end_comment
 
 begin_include
@@ -252,7 +252,86 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ppb_reset_epp_timeout()  *  * Reset the EPP timeout bit in the status register.  */
+comment|/*  * ppb_set_mode()  *  * Set the operating mode of the chipset  */
+end_comment
+
+begin_function
+name|int
+name|ppb_set_mode
+parameter_list|(
+name|struct
+name|ppb_device
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+block|{
+name|struct
+name|ppb_data
+modifier|*
+name|ppb
+init|=
+name|dev
+operator|->
+name|ppb
+decl_stmt|;
+name|int
+name|old_mode
+init|=
+name|ppb_get_mode
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+call|(
+modifier|*
+name|ppb
+operator|->
+name|ppb_link
+operator|->
+name|adapter
+operator|->
+name|setmode
+call|)
+argument_list|(
+name|dev
+operator|->
+name|id_unit
+argument_list|,
+name|mode
+argument_list|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+comment|/* XXX yet device mode = ppbus mode = chipset mode */
+name|dev
+operator|->
+name|mode
+operator|=
+name|ppb
+operator|->
+name|mode
+operator|=
+name|mode
+expr_stmt|;
+return|return
+operator|(
+name|old_mode
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * ppb_reset_epp_timeout()  *  * Reset the EPP timeout bit in the status register  */
 end_comment
 
 begin_function
@@ -312,7 +391,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ppb_ecp_sync()  *  * Wait for the ECP FIFO to be empty.  */
+comment|/*  * ppb_ecp_sync()  *  * Wait for the ECP FIFO to be empty  */
 end_comment
 
 begin_function
@@ -372,91 +451,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ppb_get_mode()  *  * Read the mode (SPP, EPP...) of the chipset.  */
-end_comment
-
-begin_function
-name|int
-name|ppb_get_mode
-parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|(
-name|dev
-operator|->
-name|ppb
-operator|->
-name|ppb_link
-operator|->
-name|mode
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * ppb_get_epp_protocol()  *  * Read the EPP protocol (1.9 or 1.7).  */
-end_comment
-
-begin_function
-name|int
-name|ppb_get_epp_protocol
-parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|(
-name|dev
-operator|->
-name|ppb
-operator|->
-name|ppb_link
-operator|->
-name|epp_protocol
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * ppb_get_irq()  *  * Return the irq, 0 if none.  */
-end_comment
-
-begin_function
-name|int
-name|ppb_get_irq
-parameter_list|(
-name|struct
-name|ppb_device
-modifier|*
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|(
-name|dev
-operator|->
-name|ppb
-operator|->
-name|ppb_link
-operator|->
-name|id_irq
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * ppb_get_status()  *  * Read the status register and update the status info.  */
+comment|/*  * ppb_get_status()  *  * Read the status register and update the status info  */
 end_comment
 
 begin_function

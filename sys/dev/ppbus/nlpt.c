@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	From Id: lpt.c,v 1.55.2.1 1996/11/12 09:08:38 phk Exp  *	$Id: nlpt.c,v 1.7 1998/01/24 02:54:05 eivind Exp $  */
+comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  *	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ  * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS  * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.  * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT  * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN  * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES  * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING  * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND  * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE  * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS  * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: unknown origin, 386BSD 0.1  *	From Id: lpt.c,v 1.55.2.1 1996/11/12 09:08:38 phk Exp  *	$Id: nlpt.c,v 1.8 1998/06/07 17:09:48 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -483,7 +483,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INIT
+name|LPTINIT
 value|(1<<6)
 end_define
 
@@ -679,14 +679,15 @@ name|int
 name|how
 parameter_list|)
 block|{
-name|sc
-operator|->
-name|sc_state
-operator||=
-name|HAVEBUS
-expr_stmt|;
-return|return
+name|int
+name|error
+decl_stmt|;
+comment|/* we have the bus only if the request succeded */
+if|if
+condition|(
 operator|(
+name|error
+operator|=
 name|ppb_request_bus
 argument_list|(
 operator|&
@@ -696,6 +697,19 @@ name|lpt_dev
 argument_list|,
 name|how
 argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|sc
+operator|->
+name|sc_state
+operator||=
+name|HAVEBUS
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -712,6 +726,26 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
+comment|/* we do not have the bus only if the request succeded */
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|ppb_release_bus
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|lpt_dev
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
 name|sc
 operator|->
 name|sc_state
@@ -721,13 +755,7 @@ name|HAVEBUS
 expr_stmt|;
 return|return
 operator|(
-name|ppb_release_bus
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|lpt_dev
-argument_list|)
+name|error
 operator|)
 return|;
 block|}
@@ -1177,6 +1205,16 @@ name|sc
 operator|->
 name|lpt_dev
 operator|.
+name|name
+operator|=
+name|nlptdriver
+operator|.
+name|name
+expr_stmt|;
+name|sc
+operator|->
+name|lpt_dev
+operator|.
 name|ppb
 operator|=
 name|ppb
@@ -1580,70 +1618,6 @@ operator|->
 name|sc_xfercnt
 condition|)
 block|{
-comment|/* if we cannot allocate the bus NOW, retry later */
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|sc_state
-operator|&
-name|HAVEBUS
-operator|)
-operator|==
-literal|0
-operator|&&
-name|lpt_request_ppbus
-argument_list|(
-name|sc
-argument_list|,
-name|PPB_DONTWAIT
-argument_list|)
-condition|)
-block|{
-name|sc
-operator|->
-name|sc_backoff
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_backoff
-operator|>
-name|hz
-operator|/
-name|LPTOUTMAX
-condition|)
-name|sc
-operator|->
-name|sc_backoff
-operator|=
-name|sc
-operator|->
-name|sc_backoff
-operator|>
-name|hz
-operator|/
-name|LPTOUTMAX
-expr_stmt|;
-name|timeout
-argument_list|(
-name|nlptout
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|sc
-argument_list|,
-name|sc
-operator|->
-name|sc_backoff
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|pl
 operator|=
 name|spltty
@@ -1777,7 +1751,7 @@ name|sc
 operator|->
 name|sc_state
 operator||=
-name|INIT
+name|LPTINIT
 expr_stmt|;
 name|sc
 operator|->
@@ -1813,8 +1787,19 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* request the ppbus only if we don't have it already */
 if|if
 condition|(
+operator|(
+name|sc
+operator|->
+name|sc_state
+operator|&
+name|HAVEBUS
+operator|)
+operator|==
+literal|0
+operator|&&
 name|lpt_request_ppbus
 argument_list|(
 name|sc
@@ -2139,7 +2124,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* release the bus, nlptout() will try to allocate it later */
+comment|/* release the ppbus */
 name|lpt_release_ppbus
 argument_list|(
 name|sc
@@ -2390,13 +2375,14 @@ operator|->
 name|sc_inbuf
 argument_list|)
 expr_stmt|;
+name|end_close
+label|:
+comment|/* release the bus anyway */
 name|lpt_release_ppbus
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|end_close
-label|:
 name|sc
 operator|->
 name|sc_state
@@ -2687,8 +2673,19 @@ name|EPERM
 operator|)
 return|;
 block|}
+comment|/* request the ppbus only if we don't have it already */
 if|if
 condition|(
+operator|(
+name|sc
+operator|->
+name|sc_state
+operator|&
+name|HAVEBUS
+operator|)
+operator|==
+literal|0
+operator|&&
 name|lpt_request_ppbus
 argument_list|(
 name|sc
@@ -2905,11 +2902,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|lpt_release_ppbus
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|err
@@ -2921,6 +2913,12 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* we have not been interrupted, release the ppbus */
+name|lpt_release_ppbus
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2958,6 +2956,20 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* we must own the bus to use it */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|sc_state
+operator|&
+name|HAVEBUS
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* 	 * Is printer online and ready for output? 	 * 	 * Avoid falling back to nlptout() too quickly.  First spin-loop 	 * to see if the printer will become ready ``really soon now''. 	 */
 for|for
 control|(
@@ -3096,11 +3108,6 @@ name|sc_state
 operator|&=
 operator|~
 name|OBUSY
-expr_stmt|;
-name|lpt_release_ppbus
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
