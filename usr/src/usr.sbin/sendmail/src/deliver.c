@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.62
+literal|3.63
 operator|%
 name|G
 operator|%
@@ -2494,12 +2494,6 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|extern
-name|int
-name|DefUid
-decl_stmt|,
-name|DefGid
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -3870,12 +3864,6 @@ comment|/* child -- actually write to file */
 name|struct
 name|stat
 name|stb
-decl_stmt|;
-specifier|extern
-name|int
-name|DefUid
-decl_stmt|,
-name|DefGid
 decl_stmt|;
 operator|(
 name|void

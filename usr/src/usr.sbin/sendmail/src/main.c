@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.60
+literal|3.61
 operator|%
 name|G
 operator|%
@@ -995,6 +995,24 @@ endif|#
 directive|endif
 endif|QUEUE
 break|break;
+case|case
+literal|'p'
+case|:
+comment|/* fork politely after initial verification */
+name|ForkOff
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+comment|/* take old-style headers (no commas) */
+name|OldStyle
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
 default|default:
 comment|/* at Eric Schmidt's suggestion, this will not be an error.... 			syserr("Unknown flag %s", p); 			... seems that upward compatibility will be easier. */
 break|break;
@@ -1322,6 +1340,28 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	**  If we don't want to wait around for actual delivery, this 	**  is a good time to fork off. 	**	We have examined what we can without doing actual 	**		delivery, so we will inform our caller of 	**		whatever we can now. 	**	Since the parent process will go away immediately, 	**		the child will be caught by init. 	**	If the fork fails, we will just continue in the 	**		parent; this is perfectly safe, albeit 	**		slower than it must be. 	*/
+if|if
+condition|(
+name|ForkOff
+condition|)
+block|{
+if|if
+condition|(
+name|fork
+argument_list|()
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* parent -- quit */
+name|exit
+argument_list|(
+name|ExitStat
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|initsys
 argument_list|()
 expr_stmt|;
@@ -1665,6 +1705,28 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|V6
+if|if
+condition|(
+name|From
+operator|.
+name|q_uid
+operator|!=
+literal|0
+condition|)
+block|{
+name|DefUid
+operator|=
+name|From
+operator|.
+name|q_uid
+expr_stmt|;
+name|DefGid
+operator|=
+name|From
+operator|.
+name|q_gid
+expr_stmt|;
+block|}
 comment|/* 	**  Set up the $r and $s macros to show who it came from. 	*/
 if|if
 condition|(

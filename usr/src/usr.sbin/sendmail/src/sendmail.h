@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.57		%G%"
+literal|"@(#)sendmail.h	3.58		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1504,6 +1504,28 @@ comment|/* set if running arpanet protocol */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
+name|bool
+name|ForkOff
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* fork after initial verification */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|OldStyle
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* spaces (not commas) delimit addresses */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|time_t
 name|TimeOut
@@ -1582,6 +1604,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* when Daemon, real gid of caller */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|DefUid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default uid to run as */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|DefGid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default gid to run as */
 end_comment
 
 begin_decl_stmt
