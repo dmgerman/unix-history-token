@@ -1880,7 +1880,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ #define BUILD_VECTORS \\\n\ 	BUILD_VECTOR(clk, 0,0,0, _highmask, _hardclock,1,1,       al);\\\n"
+literal|"\ #define BUILD_VECTORS \\\n\ 	BUILD_VECTOR(clk, 0,0,0, _high_imask, _hardclock,1,1,       al);\\\n"
 argument_list|)
 expr_stmt|;
 name|count
@@ -2128,7 +2128,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|", _%s%dmask,"
+literal|", _%s%d_imask,"
 argument_list|,
 name|dp
 operator|->
@@ -2144,7 +2144,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|", _%smask, "
+literal|", _%s_imask, "
 argument_list|,
 name|dp
 operator|->
