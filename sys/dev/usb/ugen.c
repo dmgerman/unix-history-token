@@ -5481,6 +5481,20 @@ operator|(
 name|err
 operator|)
 return|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+comment|/* destroy the existing devices, we remake the new ones in a moment */
+name|ugen_destroy_devnodes
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* XXX should only do this after setting new altno has succeeded */
 for|for
 control|(
@@ -5559,6 +5573,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+comment|/* make the new devices */
+name|ugen_make_devnodes
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* change setting */
 name|err
 operator|=
