@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.19 1997/10/06 18:52:16 dima Exp $"
+literal|"$Id: vmstat.c,v 1.20 1997/10/10 14:08:07 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3951,7 +3951,7 @@ name|kp
 decl_stmt|;
 specifier|register
 name|struct
-name|kmemstats
+name|malloc_type
 modifier|*
 name|ks
 decl_stmt|;
@@ -3988,7 +3988,7 @@ modifier|*
 name|name
 decl_stmt|;
 name|struct
-name|kmemstats
+name|malloc_type
 name|kmemstats
 index|[
 literal|200
