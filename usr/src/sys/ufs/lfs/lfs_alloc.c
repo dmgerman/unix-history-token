@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.53 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.54 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -146,6 +146,8 @@ decl_stmt|,
 name|max
 decl_stmt|;
 name|int
+name|bb
+decl_stmt|,
 name|error
 decl_stmt|;
 comment|/* Get the head of the freelist. */
@@ -226,6 +228,34 @@ operator|==
 name|LFS_UNUSED_INUM
 condition|)
 block|{
+name|bb
+operator|=
+name|fsbtodb
+argument_list|(
+name|fs
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ISSPACE
+argument_list|(
+name|fs
+argument_list|,
+name|bb
+argument_list|,
+name|ap
+operator|->
+name|a_cred
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENOSPC
+operator|)
+return|;
 name|vp
 operator|=
 name|fs
