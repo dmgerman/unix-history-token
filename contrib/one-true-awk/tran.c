@@ -1243,6 +1243,11 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+name|tp
+operator|->
+name|nelem
+operator|--
+expr_stmt|;
 block|}
 name|tp
 operator|->
@@ -1254,6 +1259,23 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|tp
+operator|->
+name|nelem
+operator|!=
+literal|0
+condition|)
+name|WARNING
+argument_list|(
+literal|"can't happen: inconsistent element count freeing %s"
+argument_list|,
+name|ap
+operator|->
+name|nval
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|tp
@@ -2846,7 +2868,7 @@ name|malloc
 argument_list|(
 name|strlen
 argument_list|(
-name|s
+name|is
 argument_list|)
 operator|+
 literal|3
