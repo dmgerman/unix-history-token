@@ -841,20 +841,6 @@ end_define
 
 begin_function_decl
 specifier|static
-name|int
-name|JobCondPassSig
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|JobPassSig
 parameter_list|(
@@ -1062,39 +1048,40 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobCondPassSig --  *	Pass a signal to a job if USE_PGRP is defined.  *  * Results:  *	=== 0  *  * Side Effects:  *	None, except the job may bite it.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * JobCondPassSig --  *	Pass a signal to all jobs  *  * Side Effects:  *	None, except the job may bite it.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|JobCondPassSig
 parameter_list|(
-name|void
-modifier|*
-name|jobp
-parameter_list|,
-name|void
-modifier|*
-name|signop
+name|int
+name|signo
 parameter_list|)
 block|{
+name|LstNode
+modifier|*
+name|ln
+decl_stmt|;
 name|Job
 modifier|*
 name|job
-init|=
-name|jobp
 decl_stmt|;
-name|int
-name|signo
-init|=
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|signop
-decl_stmt|;
+name|LST_FOREACH
+argument_list|(
+argument|ln
+argument_list|,
+argument|&jobs
+argument_list|)
+block|{
+name|job
+operator|=
+name|Lst_Datum
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 name|DEBUGF
 argument_list|(
 name|JOB
@@ -1119,11 +1106,7 @@ argument_list|,
 name|signo
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+block|}
 block|}
 end_function
 
@@ -1185,14 +1168,8 @@ name|signo
 operator|)
 argument_list|)
 expr_stmt|;
-name|Lst_ForEach
-argument_list|(
-operator|&
-name|jobs
-argument_list|,
 name|JobCondPassSig
-argument_list|,
-operator|&
+argument_list|(
 name|signo
 argument_list|)
 expr_stmt|;
@@ -1328,14 +1305,8 @@ name|signo
 operator|=
 name|SIGCONT
 expr_stmt|;
-name|Lst_ForEach
-argument_list|(
-operator|&
-name|jobs
-argument_list|,
 name|JobCondPassSig
-argument_list|,
-operator|&
+argument_list|(
 name|signo
 argument_list|)
 expr_stmt|;
@@ -1424,7 +1395,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobPrintCommand  --  *	Put out another command for the given job. If the command starts  *	with an @ or a - we process it specially. In the former case,  *	so long as the -s and -n flags weren't given to make, we stick  *	a shell-specific echoOff command in the script. In the latter,  *	we ignore errors for the entire job, unless the shell has error  *	control.  *	If the command is just "..." we take all future commands for this  *	job to be commands to be executed once the entire graph has been  *	made and return non-zero to signal that the end of the commands  *	was reached. These commands are later attached to the postCommands  *	node and executed by Job_Finish when all things are done.  *	This function is called from JobStart via Lst_ForEach.  *  * Results:  *	Always 0, unless the command was "..."  *  * Side Effects:  *	If the command begins with a '-' and the shell has no error control,  *	the JOB_IGNERR flag is set in the job descriptor.  *	If the command is "..." and we're not ignoring such things,  *	tailCmds is set to the successor node of the cmd.  *	numCommands is incremented if the command is actually printed.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * JobPrintCommand  --  *	Put out another command for the given job. If the command starts  *	with an @ or a - we process it specially. In the former case,  *	so long as the -s and -n flags weren't given to make, we stick  *	a shell-specific echoOff command in the script. In the latter,  *	we ignore errors for the entire job, unless the shell has error  *	control.  *	If the command is just "..." we take all future commands for this  *	job to be commands to be executed once the entire graph has been  *	made and return non-zero to signal that the end of the commands  *	was reached. These commands are later attached to the postCommands  *	node and executed by Job_Finish when all things are done.  *	This function is called from JobStart via LST_FOREACH.  *  * Results:  *	Always 0, unless the command was "..."  *  * Side Effects:  *	If the command begins with a '-' and the shell has no error control,  *	the JOB_IGNERR flag is set in the job descriptor.  *	If the command is "..." and we're not ignoring such things,  *	tailCmds is set to the successor node of the cmd.  *	numCommands is incremented if the command is actually printed.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -4776,6 +4747,10 @@ name|int
 name|tfd
 decl_stmt|;
 comment|/* File descriptor for temp file */
+name|LstNode
+modifier|*
+name|ln
+decl_stmt|;
 if|if
 condition|(
 name|interrupted
@@ -5130,18 +5105,27 @@ name|numCommands
 operator|=
 literal|0
 expr_stmt|;
-name|Lst_ForEach
+name|LST_FOREACH
 argument_list|(
-operator|&
-name|gn
-operator|->
-name|commands
+argument|ln
 argument_list|,
+argument|&gn->commands
+argument_list|)
+block|{
+if|if
+condition|(
 name|JobPrintCommand
+argument_list|(
+name|Lst_Datum
+argument_list|(
+name|ln
+argument_list|)
 argument_list|,
 name|job
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
+block|}
 comment|/* 	     * If we didn't print out any commands to the shell script, 	     * there's not much point in executing the shell, is there? 	     */
 if|if
 condition|(
@@ -5195,18 +5179,27 @@ condition|(
 name|cmdsOK
 condition|)
 block|{
-name|Lst_ForEach
+name|LST_FOREACH
 argument_list|(
-operator|&
-name|gn
-operator|->
-name|commands
+argument|ln
 argument_list|,
+argument|&gn->commands
+argument_list|)
+block|{
+if|if
+condition|(
 name|JobPrintCommand
+argument_list|(
+name|Lst_Datum
+argument_list|(
+name|ln
+argument_list|)
 argument_list|,
 name|job
 argument_list|)
-expr_stmt|;
+condition|)
+break|break;
+block|}
 block|}
 comment|/* 	 * Don't execute the shell, thank you. 	 */
 name|noExec
