@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init_disp.c	8.1 (Berkeley) %G%"
+literal|"@(#)init_disp.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"talk.h"
 end_include
 
@@ -75,8 +81,19 @@ name|struct
 name|sigvec
 name|sigv
 decl_stmt|;
+if|if
+condition|(
 name|initscr
 argument_list|()
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Terminal type unset or lacking necessary features."
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
