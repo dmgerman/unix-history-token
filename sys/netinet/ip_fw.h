@@ -221,6 +221,9 @@ comment|/* u32 = altq classif. qid	*/
 name|O_DIVERTED
 block|,
 comment|/* arg1=bitmap (1:loop, 2:out)	*/
+name|O_TCPDATALEN
+block|,
+comment|/* arg1 = tcp data len		*/
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
