@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *  Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.32 2001/05/23 23:04:38 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *  Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.35 2003/04/28 02:54:43 grog Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -545,7 +545,7 @@ case|case
 name|VINUM_SD_TYPE
 case|:
 case|case
-name|VINUM_RAWSD_TYPE
+name|VINUM_SD2_TYPE
 case|:
 name|sdio
 argument_list|(
@@ -553,10 +553,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* 	 * In fact, vinum doesn't handle drives: they're 	 * handled directly by the disk drivers 	 */
-case|case
-name|VINUM_DRIVE_TYPE
-case|:
 default|default:
 name|bp
 operator|->
@@ -656,9 +652,6 @@ comment|/* FALLTHROUGH */
 comment|/* 	 * Plex I/O is pretty much the same as volume I/O 	 * for a single plex.  Indicate this by passing a NULL 	 * pointer (set above) for the volume 	 */
 case|case
 name|VINUM_PLEX_TYPE
-case|:
-case|case
-name|VINUM_RAWPLEX_TYPE
 case|:
 name|bp
 operator|->
@@ -1166,7 +1159,7 @@ name|Malloc
 argument_list|(
 name|bp
 operator|->
-name|b_bufsize
+name|b_bcount
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1181,7 +1174,7 @@ name|b_data
 argument_list|,
 name|bp
 operator|->
-name|b_bufsize
+name|b_bcount
 argument_list|)
 expr_stmt|;
 comment|/* make a copy */
@@ -1371,7 +1364,7 @@ name|int
 name|rcount
 decl_stmt|;
 comment|/* request count */
-comment|/*      * First find out whether we're reviving, and the      * request contains a conflict.  If so, we hang      * the request off plex->waitlist of the first      * plex we find which is reviving      */
+comment|/*      * First find out whether we're reviving, and      * the request contains a conflict.  If so, we      * hang the request off plex->waitlist of the      * first plex we find which is reviving.      */
 if|if
 condition|(
 operator|(
@@ -1509,10 +1502,6 @@ operator|->
 name|b_dev
 argument_list|)
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|rq
 operator|->
 name|bp
@@ -1540,6 +1529,41 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* nothing yet */
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
+comment|/* XXX This is probably due to a bug */
+if|if
+condition|(
+name|rq
+operator|->
+name|rqg
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* no request */
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"vinum: null rqg\n"
+argument_list|)
+expr_stmt|;
+name|abortrequest
+argument_list|(
+name|rq
+argument_list|,
+name|EINVAL
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|VINUMDEBUG
@@ -1587,10 +1611,6 @@ operator|->
 name|b_dev
 argument_list|)
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|rq
 operator|->
 name|bp
@@ -1730,7 +1750,7 @@ operator|++
 expr_stmt|;
 comment|/* one more active request group */
 block|}
-comment|/*      * Now fire off the requests.  In this loop the      * bottom half could be completing requests      * before we finish, so we need splbio() protection.      */
+comment|/*      * Now fire off the requests.  In this loop the      * bottom half could be completing requests      * before we finish.  We avoid splbio()      * protection by ensuring we don't tread in the      * same places that the bottom half does.      */
 for|for
 control|(
 name|rqg
@@ -1808,7 +1828,7 @@ index|[
 name|rqno
 index|]
 expr_stmt|;
-comment|/* 	     * Point to next rqg before the bottom end 	     * changes the structures. 	     */
+comment|/* 	     * Point to next rqg before the bottom half 	     * changes the structures. 	     */
 if|if
 condition|(
 operator|++
@@ -1962,10 +1982,6 @@ operator|.
 name|driveoffset
 argument_list|)
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|rqe
 operator|->
 name|b
@@ -1985,6 +2001,16 @@ name|debug
 operator|&
 name|DEBUG_LASTREQS
 condition|)
+block|{
+name|microtime
+argument_list|(
+operator|&
+name|rqe
+operator|->
+name|launchtime
+argument_list|)
+expr_stmt|;
+comment|/* time we launched this request */
 name|logrq
 argument_list|(
 name|loginfo_rqe
@@ -2000,6 +2026,7 @@ operator|->
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* fire off the request */
@@ -2844,7 +2871,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"vinum: EOF on plex %s, sd %s offset %x (user offset %llx)\n"
+literal|"vinum: EOF on plex %s, sd %s offset %x (user offset 0x%llx)\n"
 argument_list|,
 name|plex
 operator|->
@@ -2861,10 +2888,6 @@ name|sd
 operator|->
 name|sectors
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|bp
 operator|->
 name|b_blkno
@@ -2876,25 +2899,10 @@ name|LOG_DEBUG
 argument_list|,
 literal|"vinum: stripebase %#llx, stripeoffset %#llxx, blockoffset %#llx\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|stripebase
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|stripeoffset
 argument_list|,
-operator|(
-name|unsigned
-name|long
-name|long
-operator|)
 name|blockoffset
 argument_list|)
 expr_stmt|;
@@ -3748,14 +3756,14 @@ name|b_rcred
 operator|=
 name|FSCRED
 expr_stmt|;
-comment|/* we have the filesystem credentials */
+comment|/* we have the file system credentials */
 name|bp
 operator|->
 name|b_wcred
 operator|=
 name|FSCRED
 expr_stmt|;
-comment|/* we have the filesystem credentials */
+comment|/* we have the file system credentials */
 if|if
 condition|(
 name|rqe
@@ -4239,7 +4247,7 @@ name|b_bufsize
 operator|=
 name|bp
 operator|->
-name|b_bufsize
+name|b_bcount
 expr_stmt|;
 comment|/* buffer size */
 name|sbp
@@ -4473,7 +4481,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"  %s dev %d.%d, sd %d, offset 0x%x, devoffset 0x%x, length %ld\n"
+literal|"  %s dev %d.%d, sd %d, offset 0x%llx, devoffset 0x%llx, length %ld\n"
 argument_list|,
 name|sbp
 operator|->
@@ -4509,10 +4517,6 @@ name|sbp
 operator|->
 name|sdno
 argument_list|,
-call|(
-name|u_int
-call|)
-argument_list|(
 name|sbp
 operator|->
 name|b
@@ -4527,11 +4531,7 @@ name|sdno
 index|]
 operator|.
 name|driveoffset
-argument_list|)
 argument_list|,
-operator|(
-name|int
-operator|)
 name|sbp
 operator|->
 name|b
