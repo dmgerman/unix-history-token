@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rsh.c,v 1.13 1997/09/28 08:57:24 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -362,6 +362,8 @@ name|rem
 decl_stmt|;
 name|pid_t
 name|pid
+init|=
+literal|0
 decl_stmt|;
 name|uid_t
 name|uid
