@@ -769,6 +769,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_CARDRESET
+value|0x40
+end_define
+
+begin_comment
+comment|/* Card reset 0 = Reset, 1 = Normal */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_CARDTYPE
 value|0x20
 end_define
@@ -790,17 +801,6 @@ directive|define
 name|PCIC_MEMCARD
 value|0x00
 end_define
-
-begin_define
-define|#
-directive|define
-name|PCIC_CARDRESET
-value|0x40
-end_define
-
-begin_comment
-comment|/* Card reset 0 = Reset, 1 = Normal */
-end_comment
 
 begin_define
 define|#
