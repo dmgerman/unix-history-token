@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.6	%G%"
+literal|"@(#)recipient.c	3.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,6 +694,14 @@ name|pw
 operator|->
 name|pw_dir
 argument_list|)
+expr_stmt|;
+name|a
+operator|->
+name|q_uid
+operator|=
+name|pw
+operator|->
+name|pw_uid
 expr_stmt|;
 if|if
 condition|(

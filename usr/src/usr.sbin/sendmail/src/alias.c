@@ -8,6 +8,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sendmail.h"
 end_include
 
@@ -23,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.17	%G%	(with DBM)"
+literal|"@(#)alias.c	3.18	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.17	%G%	(without DBM)"
+literal|"@(#)alias.c	3.18	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1101,6 +1113,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|stat
+name|stbuf
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1169,14 +1185,33 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|access
+name|stat
 argument_list|(
 name|buf
 argument_list|,
-literal|4
+operator|&
+name|stbuf
 argument_list|)
 operator|<
 literal|0
+operator|||
+name|stbuf
+operator|.
+name|st_uid
+operator|!=
+name|user
+operator|->
+name|q_uid
+operator|||
+operator|!
+name|bitset
+argument_list|(
+name|S_IREAD
+argument_list|,
+name|stbuf
+operator|.
+name|st_mode
+argument_list|)
 condition|)
 return|return;
 comment|/* we do have an address to forward to -- do it */
