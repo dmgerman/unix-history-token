@@ -1112,22 +1112,11 @@ name|DMA_PROG_ALLOC
 value|(8 * PAGE_SIZE)
 end_define
 
-begin_comment
-comment|/* #define NDB 1024 */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|NDB
 value|FWMAXQUEUE
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDVDB
-value|(DVBUF * NDB)
 end_define
 
 begin_define
