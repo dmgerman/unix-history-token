@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hsearch.c	5.6 (Berkeley) %G%"
+literal|"@(#)hsearch.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,12 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|__DBINTERFACE_PRIVATE
+end_define
 
 begin_include
 include|#
