@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_dp.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_dp.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -117,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"net/if_types.h"
 end_include
 
 begin_include
@@ -475,7 +481,7 @@ begin_decl_stmt
 name|short
 name|dp_log
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -763,6 +769,30 @@ operator|.
 name|if_output
 operator|=
 name|x25_ifoutput
+expr_stmt|;
+name|dp
+operator|->
+name|dp_if
+operator|.
+name|if_type
+operator|=
+name|IFT_X25
+expr_stmt|;
+name|dp
+operator|->
+name|dp_if
+operator|.
+name|if_hdrlen
+operator|=
+literal|5
+expr_stmt|;
+name|dp
+operator|->
+name|dp_if
+operator|.
+name|if_addrlen
+operator|=
+literal|8
 expr_stmt|;
 name|dp
 operator|->
