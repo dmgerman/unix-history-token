@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: collect.c,v 8.136.4.8 2000/10/09 00:50:04 gshapiro Exp $"
+literal|"@(#)$Id: collect.c,v 8.136.4.15 2001/02/21 01:05:59 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -336,10 +336,6 @@ name|dfd
 decl_stmt|;
 specifier|volatile
 name|int
-name|afd
-decl_stmt|;
-specifier|volatile
-name|int
 name|rstat
 init|=
 name|EX_OK
@@ -396,6 +392,11 @@ name|struct
 name|stat
 name|stbuf
 decl_stmt|;
+name|long
+name|sff
+init|=
+name|SFF_OPENASROOT
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -447,7 +448,7 @@ name|QueueFileMode
 argument_list|,
 name|DataFileBufferSize
 argument_list|,
-name|SFF_OPENASROOT
+name|sff
 argument_list|)
 expr_stmt|;
 if|if
@@ -481,7 +482,7 @@ name|FileMode
 argument_list|,
 name|DataFileBufferSize
 argument_list|,
-name|SFF_OPENASROOT
+name|sff
 argument_list|)
 expr_stmt|;
 endif|#
@@ -494,6 +495,20 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|HoldErrs
+operator|=
+name|FALSE
+expr_stmt|;
+if|if
+condition|(
+name|smtpmode
+condition|)
+name|syserr
+argument_list|(
+literal|"421 4.3.5 Unable to create data file"
+argument_list|)
+expr_stmt|;
+else|else
 name|syserr
 argument_list|(
 literal|"Cannot create %s"
@@ -1351,13 +1366,15 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
+name|hdrslen
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|MaxHeadersLength
 operator|>
 literal|0
 operator|&&
-operator|++
 name|hdrslen
 operator|>
 name|MaxHeadersLength
@@ -1961,51 +1978,6 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|afd
-operator|=
-name|fileno
-argument_list|(
-name|df
-argument_list|)
-operator|)
-operator|>=
-literal|0
-operator|&&
-name|fsync
-argument_list|(
-name|afd
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|dferror
-argument_list|(
-name|df
-argument_list|,
-literal|"fsync"
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-name|flush_errors
-argument_list|(
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|finis
-argument_list|(
-name|TRUE
-argument_list|,
-name|ExitStat
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-elseif|else
-if|if
-condition|(
 name|bfcommit
 argument_list|(
 name|df
@@ -2130,6 +2102,40 @@ argument_list|,
 name|ExitStat
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|bffsync
+argument_list|(
+name|df
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|dferror
+argument_list|(
+name|df
+argument_list|,
+literal|"bffsync"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|flush_errors
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|finis
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 elseif|else
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: usersmtp.c,v 8.245.4.18 2000/12/20 16:36:11 ca Exp $ (with SMTP)"
+literal|"@(#)$Id: usersmtp.c,v 8.245.4.24 2001/02/21 00:59:09 gshapiro Exp $ (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: usersmtp.c,v 8.245.4.18 2000/12/20 16:36:11 ca Exp $ (without SMTP)"
+literal|"@(#)$Id: usersmtp.c,v 8.245.4.24 2001/02/21 00:59:09 gshapiro Exp $ (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3524,6 +3524,10 @@ block|}
 endif|#
 directive|endif
 comment|/* SASL<= 10515 */
+name|p
+operator|=
+name|file
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3531,7 +3535,7 @@ name|r
 operator|=
 name|safefile
 argument_list|(
-name|file
+name|p
 argument_list|,
 name|RunAsUid
 argument_list|,
@@ -3576,7 +3580,7 @@ name|NOQID
 argument_list|,
 literal|"error: safesasl(%s) failed: %s"
 argument_list|,
-name|file
+name|p
 argument_list|,
 name|errstring
 argument_list|(
@@ -8229,6 +8233,29 @@ name|r
 index|]
 argument_list|)
 expr_stmt|;
+name|SmtpPhase
+operator|=
+name|mci
+operator|->
+name|mci_phase
+operator|=
+literal|"idle"
+expr_stmt|;
+name|sm_setproctitle
+argument_list|(
+name|TRUE
+argument_list|,
+name|e
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|CurHostName
+argument_list|,
+name|mci
+operator|->
+name|mci_phase
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rstat
@@ -8841,7 +8868,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPRSET -- send a RSET (reset) command */
+comment|/* **  SMTPRSET -- send a RSET (reset) command ** **	Parameters: **		m -- a pointer to the mailer. **		mci -- the mailer connection information. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		closes the connection if there is no reply to RSET. */
 end_comment
 
 begin_function
@@ -8968,7 +8995,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPPROBE -- check the connection state */
+comment|/* **  SMTPPROBE -- check the connection state ** **	Parameters: **		mci -- the mailer connection information. ** **	Returns: **		none. ** **	Side Effects: **		closes the connection if there is no reply to RSET. */
 end_comment
 
 begin_function

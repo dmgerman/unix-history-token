@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
+comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: bf_portable.c,v 8.25.4.3 2000/06/29 21:21:58 gshapiro Exp $"
+literal|"@(#)$Id: bf_portable.c,v 8.25.4.5 2001/02/14 04:07:27 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -734,6 +734,106 @@ directive|endif
 comment|/* NOFTRUNCATE */
 return|return
 name|ret
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  BFFSYNC -- fsync the fd associated with the FILE * ** **	Parameters: **		fp -- FILE * to fsync ** **	Returns: **		0 on success, -1 on error ** **	Sets errno: **		EINVAL if FILE * not bfcommitted yet. **		any value of errno specified by fsync() */
+end_comment
+
+begin_function
+name|int
+name|bffsync
+parameter_list|(
+name|fp
+parameter_list|)
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|struct
+name|bf
+modifier|*
+name|bfp
+decl_stmt|;
+comment|/* Get associated bf structure */
+name|bfp
+operator|=
+name|bflookup
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+comment|/* If called on a normal FILE *, noop */
+if|if
+condition|(
+name|bfp
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|bfp
+operator|->
+name|bf_committed
+condition|)
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+else|else
+name|fd
+operator|=
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|58
+argument_list|,
+literal|10
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"bffsync: fd = %d\n"
+argument_list|,
+name|fd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+return|return
+name|fsync
+argument_list|(
+name|fd
+argument_list|)
 return|;
 block|}
 end_function

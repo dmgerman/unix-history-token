@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: milter.c,v 8.50.4.41 2000/12/27 21:35:32 gshapiro Exp $"
+literal|"@(#)$Id: milter.c,v 8.50.4.44 2001/01/23 19:43:57 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -540,7 +540,7 @@ name|len
 operator|==
 literal|0
 operator|||
-name|len
+name|curl
 operator|>=
 name|sz
 condition|)
@@ -6946,6 +6946,23 @@ case|case
 name|SMFIR_ACCEPT
 case|:
 comment|/* this filter is done with message/connection */
+if|if
+condition|(
+name|command
+operator|==
+name|SMFIC_HELO
+operator|||
+name|command
+operator|==
+name|SMFIC_CONNECT
+condition|)
+name|m
+operator|->
+name|mf_state
+operator|=
+name|SMFS_CLOSABLE
+expr_stmt|;
+else|else
 name|m
 operator|->
 name|mf_state
@@ -8154,7 +8171,7 @@ name|m
 operator|->
 name|mf_state
 operator|==
-name|SMFS_DONE
+name|SMFS_CLOSABLE
 condition|)
 name|milter_quit_filter
 argument_list|(
@@ -11142,6 +11159,9 @@ modifier|*
 name|state
 decl_stmt|;
 block|{
+name|int
+name|i
+decl_stmt|;
 name|char
 modifier|*
 name|response
@@ -11162,6 +11182,66 @@ argument_list|,
 name|helo
 argument_list|)
 expr_stmt|;
+comment|/* HELO/EHLO can come after encryption is negotiated */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|InputFilters
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|struct
+name|milter
+modifier|*
+name|m
+init|=
+name|InputFilters
+index|[
+name|i
+index|]
+decl_stmt|;
+switch|switch
+condition|(
+name|m
+operator|->
+name|mf_state
+condition|)
+block|{
+case|case
+name|SMFS_INMSG
+case|:
+comment|/* abort in message filters */
+name|milter_abort_filter
+argument_list|(
+name|m
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|SMFS_DONE
+case|:
+comment|/* reset done filters */
+name|m
+operator|->
+name|mf_state
+operator|=
+name|SMFS_OPEN
+expr_stmt|;
+break|break;
+block|}
+block|}
 name|response
 operator|=
 name|milter_command
