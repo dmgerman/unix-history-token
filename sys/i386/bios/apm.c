@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.93 1999/07/28 20:20:29 msmith Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.94 1999/07/29 01:49:12 msmith Exp $  */
 end_comment
 
 begin_include
@@ -4577,7 +4577,19 @@ name|printf
 argument_list|(
 literal|"apm: *Warning* enable function failed! [%x]\n"
 argument_list|,
-name|apm_errno
+operator|(
+name|sc
+operator|->
+name|bios
+operator|.
+name|r
+operator|.
+name|eax
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4618,7 +4630,19 @@ name|printf
 argument_list|(
 literal|"apm: *Warning* engage function failed err=[%x]"
 argument_list|,
-name|apm_errno
+operator|(
+name|sc
+operator|->
+name|bios
+operator|.
+name|r
+operator|.
+name|eax
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 name|printf
