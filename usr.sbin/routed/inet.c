@@ -521,19 +521,15 @@ condition|)
 block|{
 name|mask
 operator|=
-name|i
-operator|&
 name|IN_CLASSB_NET
 expr_stmt|;
 block|}
 else|else
 name|mask
 operator|=
-name|i
-operator|&
 name|IN_CLASSC_NET
 expr_stmt|;
-comment|/* 	 * Check whether network is a subnet; 	 * if so, use the modified interpretation of `host'. 	 */
+comment|/* 	 * Check whether network is subnetted; 	 * if so, use the subnet's netmask. 	 */
 for|for
 control|(
 name|ifp
