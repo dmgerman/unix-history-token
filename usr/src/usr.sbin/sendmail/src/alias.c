@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.34 (Berkeley) %G%"
+literal|"@(#)alias.c	8.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1437,12 +1437,23 @@ name|geteuid
 argument_list|()
 condition|)
 block|{
+name|bool
+name|oldSuprErrs
+decl_stmt|;
 name|message
 argument_list|(
 literal|"auto-rebuilding alias database %s"
 argument_list|,
 name|buf
 argument_list|)
+expr_stmt|;
+name|oldSuprErrs
+operator|=
+name|SuprErrs
+expr_stmt|;
+name|SuprErrs
+operator|=
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -1476,6 +1487,10 @@ name|map
 argument_list|,
 name|O_RDONLY
 argument_list|)
+expr_stmt|;
+name|SuprErrs
+operator|=
+name|oldSuprErrs
 expr_stmt|;
 block|}
 else|else
