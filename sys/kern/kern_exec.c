@@ -602,6 +602,8 @@ name|struct
 name|pargs
 modifier|*
 name|oldargs
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|newargs
@@ -1653,9 +1655,15 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|oldcred
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
-name|exec_fail_dealloc
+name|done1
 goto|;
+block|}
 comment|/* 		 * Set the new credentials. 		 */
 name|crcopy
 argument_list|(
@@ -1961,6 +1969,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|done1
+label|:
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -1987,17 +1997,6 @@ else|else
 name|crfree
 argument_list|(
 name|newcred
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|newargs
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"leaking p_args"
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Handle deferred decrement of ref counts. 	 */
@@ -2028,9 +2027,26 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|oldargs
+operator|!=
+name|NULL
+condition|)
 name|pargs_drop
 argument_list|(
 name|oldargs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|newargs
+operator|!=
+name|NULL
+condition|)
+name|pargs_drop
+argument_list|(
+name|newargs
 argument_list|)
 expr_stmt|;
 name|exec_fail_dealloc
