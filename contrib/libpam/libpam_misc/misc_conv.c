@@ -552,6 +552,10 @@ decl_stmt|,
 name|term_tmp
 decl_stmt|;
 name|char
+modifier|*
+name|input
+decl_stmt|;
+name|char
 name|line
 index|[
 name|INPUTSIZE
@@ -859,10 +863,6 @@ literal|0
 condition|)
 block|{
 comment|/* we got some user input */
-name|char
-modifier|*
-name|input
-decl_stmt|;
 if|if
 condition|(
 name|nc
@@ -911,9 +911,9 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
-return|return
-name|input
-return|;
+goto|goto
+name|cleanexit
+goto|;
 comment|/* return malloc()ed string */
 block|}
 elseif|else
@@ -925,10 +925,6 @@ literal|0
 condition|)
 block|{
 comment|/* Ctrl-D */
-name|char
-modifier|*
-name|input
-decl_stmt|;
 name|D
 argument_list|(
 operator|(
@@ -943,14 +939,30 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-return|return
-name|input
-return|;
+goto|goto
+name|cleanexit
+goto|;
 comment|/* return malloc()ed string */
 block|}
 block|}
 block|}
 comment|/* getting here implies that the timer expired */
+name|memset
+argument_list|(
+name|line
+argument_list|,
+literal|0
+argument_list|,
+name|INPUTSIZE
+argument_list|)
+expr_stmt|;
+comment|/* clean up */
+name|input
+operator|=
+name|NULL
+expr_stmt|;
+name|cleanexit
+label|:
 if|if
 condition|(
 name|have_term
@@ -983,18 +995,8 @@ name|term_before
 argument_list|)
 expr_stmt|;
 block|}
-name|memset
-argument_list|(
-name|line
-argument_list|,
-literal|0
-argument_list|,
-name|INPUTSIZE
-argument_list|)
-expr_stmt|;
-comment|/* clean up */
 return|return
-name|NULL
+name|input
 return|;
 block|}
 end_function
