@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.82	83/06/19	*/
+comment|/*	machdep.c	4.83	83/06/19	*/
 end_comment
 
 begin_include
@@ -2286,9 +2286,6 @@ name|mcr
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
 name|printf
 argument_list|(
 literal|"mcr%d: soft ecc addr %x syn %x\n"
@@ -2306,8 +2303,6 @@ name|mcr
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|M750_INH
 argument_list|(
 name|mcr
