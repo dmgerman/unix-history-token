@@ -365,12 +365,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|astpending
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|imask
 index|[
 name|NIPL
