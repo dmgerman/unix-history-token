@@ -2285,7 +2285,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Intel 82901AB (ICH)"
+literal|"Intel 82801AB (ICH)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2299,6 +2299,19 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Intel 82801BA (ICH2)"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
+literal|0x24858086
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel 82801CA (ICH3)"
 argument_list|)
 expr_stmt|;
 return|return
