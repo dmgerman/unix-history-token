@@ -3031,6 +3031,9 @@ operator|*
 name|rmd
 operator|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|cdm
 operator|->
 name|mcnt
