@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: chkprintcap.c,v 1.1 1997/12/02 20:45:11 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1163,6 +1163,8 @@ expr_stmt|;
 name|warn
 argument_list|(
 literal|"%s: cannot change mode to %lo"
+argument_list|,
+name|sd
 argument_list|,
 operator|(
 name|long
