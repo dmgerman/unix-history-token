@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: $  */
+comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA<yokota@zodiac.mech.utsunomiya-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: scvidctl.c,v 1.9 1999/06/22 14:13:29 yokota Exp $  */
 end_comment
 
 begin_include
@@ -338,6 +338,9 @@ modifier|*
 name|font
 decl_stmt|;
 name|int
+name|prev_ysize
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|int
@@ -627,6 +630,12 @@ name|ENODEV
 return|;
 block|}
 comment|/* set up scp */
+name|prev_ysize
+operator|=
+name|scp
+operator|->
+name|ysize
+expr_stmt|;
 comment|/*      * This is a kludge to fend off scrn_update() while we      * muck around with scp. XXX      */
 name|scp
 operator|->
@@ -738,6 +747,8 @@ name|scp
 argument_list|,
 literal|0
 argument_list|,
+name|prev_ysize
+argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
@@ -785,6 +796,35 @@ condition|)
 return|return
 literal|0
 return|;
+name|DPRINTF
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"ws_*size (%d,%d), size (%d,%d)\n"
+operator|,
+name|tp
+operator|->
+name|t_winsize
+operator|.
+name|ws_col
+operator|,
+name|tp
+operator|->
+name|t_winsize
+operator|.
+name|ws_row
+operator|,
+name|scp
+operator|->
+name|xsize
+operator|,
+name|scp
+operator|->
+name|ysize
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -877,6 +917,9 @@ decl_stmt|;
 name|sc_rndr_sw_t
 modifier|*
 name|rndr
+decl_stmt|;
+name|int
+name|prev_ysize
 decl_stmt|;
 name|int
 name|error
@@ -974,6 +1017,12 @@ name|ENODEV
 return|;
 block|}
 comment|/* set up scp */
+name|prev_ysize
+operator|=
+name|scp
+operator|->
+name|ysize
+expr_stmt|;
 name|scp
 operator|->
 name|status
@@ -1078,6 +1127,18 @@ operator|->
 name|ypixel
 operator|/
 literal|2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|SC_NO_HISTORY
+name|sc_free_history_buffer
+argument_list|(
+name|scp
+argument_list|,
+name|prev_ysize
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1230,6 +1291,9 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|font
+decl_stmt|;
+name|int
+name|prev_ysize
 decl_stmt|;
 name|int
 name|error
@@ -1692,6 +1756,12 @@ name|ENODEV
 return|;
 block|}
 comment|/* set up scp */
+name|prev_ysize
+operator|=
+name|scp
+operator|->
+name|ysize
+expr_stmt|;
 name|scp
 operator|->
 name|status
@@ -1795,6 +1865,8 @@ argument_list|(
 name|scp
 argument_list|,
 literal|0
+argument_list|,
+name|prev_ysize
 argument_list|,
 name|FALSE
 argument_list|)
