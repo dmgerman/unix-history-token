@@ -398,11 +398,19 @@ parameter_list|)
 value|_sx_downgrade((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INVARIANTS
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INVARIANT_SUPPORT
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -424,6 +432,21 @@ directive|define
 name|SX_XLOCKED
 value|LA_XLOCKED
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INVARIANTS || INVARIANT_SUPPORT */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
 
 begin_define
 define|#

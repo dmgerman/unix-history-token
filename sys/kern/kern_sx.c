@@ -68,6 +68,32 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INVARIANTS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_sx_assert
+parameter_list|(
+name|sx
+parameter_list|,
+name|what
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|sx_init
@@ -1388,6 +1414,23 @@ ifdef|#
 directive|ifdef
 name|INVARIANT_SUPPORT
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INVARIANTS
+end_ifndef
+
+begin_undef
+undef|#
+directive|undef
+name|_sx_assert
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * In the non-WITNESS case, sx_assert() can only detect that at least  * *some* thread owns an slock, but it cannot guarantee that *this*  * thread owns an slock.  */
