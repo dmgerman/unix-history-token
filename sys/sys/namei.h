@@ -455,6 +455,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PDIRUNLOCK
+value|0x200000
+end_define
+
+begin_comment
+comment|/* file system lookup() unlocked parent dir */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PARAMASK
 value|0x1fff00
 end_define
