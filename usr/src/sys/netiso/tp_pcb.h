@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_pcb.h,v 5.2 88/11/18 17:09:32 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.h,v $  *	@(#)tp_pcb.h	7.7 (Berkeley) %G% *  *  *   * This file defines the transport protocol control block (tpcb).  * and a bunch of #define values that are used in the tpcb.  */
+comment|/*   * ARGO TP  *  * $Header: tp_pcb.h,v 5.2 88/11/18 17:09:32 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.h,v $  *	@(#)tp_pcb.h	7.8 (Berkeley) %G% *  *  *   * This file defines the transport protocol control block (tpcb).  * and a bunch of #define values that are used in the tpcb.  */
 end_comment
 
 begin_ifndef
@@ -900,8 +900,8 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|tp_ref
+modifier|*
 name|tp_ref
-index|[]
 decl_stmt|;
 end_decl_stmt
 
