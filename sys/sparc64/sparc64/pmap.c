@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      from:   @(#)pmap.c      7.7 (Berkeley)  5/12/91  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -248,7 +248,7 @@ begin_decl_stmt
 name|vm_offset_t
 name|phys_avail
 index|[
-literal|10
+literal|128
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2314,6 +2314,100 @@ end_function
 
 begin_function
 name|void
+name|pmap_dispose_proc
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|vm_object_t
+name|upobj
+decl_stmt|;
+name|vm_page_t
+name|m
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|upobj
+operator|=
+name|p
+operator|->
+name|p_upages_obj
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|UPAGES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|m
+operator|=
+name|vm_page_lookup
+argument_list|(
+name|upobj
+argument_list|,
+name|i
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"pmap_dispose_proc: upage already missing???"
+argument_list|)
+expr_stmt|;
+name|vm_page_busy
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|pmap_kremove
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|p
+operator|->
+name|p_addr
+operator|+
+name|i
+operator|*
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|vm_page_unwire
+argument_list|(
+name|m
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|vm_page_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
 name|pmap_page_protect
 parameter_list|(
 name|vm_page_t
@@ -2418,11 +2512,9 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|TODO
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|va
 operator|)
 return|;
 block|}
@@ -2479,8 +2571,7 @@ name|vm_offset_t
 name|src_addr
 parameter_list|)
 block|{
-name|TODO
-expr_stmt|;
+comment|/* XXX */
 block|}
 end_function
 
@@ -2853,8 +2944,7 @@ name|pmap_t
 name|pmap
 parameter_list|)
 block|{
-name|TODO
-expr_stmt|;
+comment|/* XXX */
 block|}
 end_function
 
