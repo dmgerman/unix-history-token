@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* if_en.c 4.11 81/11/20 */
+comment|/* if_en.c 4.12 81/11/23 */
 end_comment
 
 begin_include
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|"../net/inet_pcb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/if.h"
 end_include
 
 begin_include
@@ -473,7 +479,55 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{  }
+block|{
+specifier|extern
+name|struct
+name|ifnet
+name|ifen
+decl_stmt|;
+name|ifen
+operator|.
+name|if_mtu
+operator|=
+literal|1024
+expr_stmt|;
+name|ifen
+operator|.
+name|if_net
+operator|=
+literal|10
+expr_stmt|;
+name|ifen
+operator|.
+name|if_addr
+operator|.
+name|s_host
+operator|=
+name|LOCALHST
+expr_stmt|;
+name|ifen
+operator|.
+name|if_addr
+operator|.
+name|s_net
+operator|=
+name|LOCALNET
+expr_stmt|;
+name|ifen
+operator|.
+name|if_addr
+operator|.
+name|s_imp
+operator|=
+name|LOCALIMP
+expr_stmt|;
+name|n_lhost
+operator|=
+name|ifen
+operator|.
+name|if_addr
+expr_stmt|;
+block|}
 end_block
 
 begin_macro
