@@ -598,6 +598,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|fileops
+name|socketops
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|maxfiles
 decl_stmt|;
@@ -781,14 +789,6 @@ end_decl_stmt
 begin_decl_stmt
 name|fo_close_t
 name|soo_close
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|fileops
-name|socketops
 decl_stmt|;
 end_decl_stmt
 
@@ -1015,12 +1015,6 @@ name|fo_close_t
 name|fo_close
 decl_stmt|;
 end_decl_stmt
-
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
 
 begin_function
 specifier|static
