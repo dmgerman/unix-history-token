@@ -1,68 +1,553 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)wtreg.h	7.1 (Berkeley) 5/9/91  */
+comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive QIC-02 and Wangtek QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * Version 1.1, Fri Sep 24 02:14:42 MSD 1993  *  * Placed in the public domain with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  */
 end_comment
 
 begin_comment
-comment|/*  *  * Copyright (c) 1989 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Robert Baron  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*  * Copyright (c) 1989 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Robert Baron  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
-comment|/*   * HISTORY  * $Log:	wtreg.h,v $  * Revision 2.2.1.1  90/01/08  13:29:25  rvb  * 	Add Intel copyright.  * 	[90/01/08            rvb]  *   * Revision 2.2  89/09/25  12:33:09  rvb  * 	Driver was provided by Intel 9/18/89.  * 	[89/09/23            rvb]  *   */
+comment|/* ioctl for direct QIC commands */
 end_comment
-
-begin_comment
-comment|/*  *  *  Copyright 1988, 1989 by Intel Corporation  *  */
-end_comment
-
-begin_comment
-comment|/*  *  wtioctl.h  *   defines ioctl parameters for direct QIC commands  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|WTIOC
-value|('W'<<8)
-end_define
 
 begin_define
 define|#
 directive|define
 name|WTQICMD
-value|(WTIOC|0)
+value|_IO('W', 0)
 end_define
 
 begin_comment
-comment|/* QIC commands allowed */
+comment|/* QIC-02 commands allowed for WTQICMD */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SELECT
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|REWIND
-value|0x21
-end_define
-
-begin_define
-define|#
-directive|define
-name|ERASE
+name|QIC_ERASE
 value|0x22
 end_define
 
 begin_define
 define|#
 directive|define
-name|RETENS
+name|QIC_RETENS
 value|0x24
+end_define
+
+begin_comment
+comment|/* internal QIC-02 commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIC_RDDATA
+value|0x80
+end_define
+
+begin_comment
+comment|/* read data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIC_READFM
+value|0xa0
+end_define
+
+begin_comment
+comment|/* read file mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIC_WRTDATA
+value|0x40
+end_define
+
+begin_comment
+comment|/* write data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIC_WRITEFM
+value|0x60
+end_define
+
+begin_comment
+comment|/* write file mark */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIC_RDSTAT
+value|0xc0
+end_define
+
+begin_comment
+comment|/* read status command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIC_REWIND
+value|0x21
+end_define
+
+begin_comment
+comment|/* rewind command (position+bot) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIC_FMT11
+value|0x26
+end_define
+
+begin_comment
+comment|/* set format QIC-11 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIC_FMT24
+value|0x27
+end_define
+
+begin_comment
+comment|/* set format QIC-24 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIC_FMT120
+value|0x28
+end_define
+
+begin_comment
+comment|/* set format QIC-120 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIC_FMT150
+value|0x29
+end_define
+
+begin_comment
+comment|/* set format QIC-150 */
+end_comment
+
+begin_comment
+comment|/* tape driver flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPINUSE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* tape is already open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPREAD
+value|0x0002
+end_define
+
+begin_comment
+comment|/* tape is only open for reading */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPWRITE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* tape is only open for writing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPSTART
+value|0x0008
+end_define
+
+begin_comment
+comment|/* tape must be rewound and reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPRMARK
+value|0x0010
+end_define
+
+begin_comment
+comment|/* read file mark command outstanding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPWMARK
+value|0x0020
+end_define
+
+begin_comment
+comment|/* write file mark command outstanding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPREW
+value|0x0040
+end_define
+
+begin_comment
+comment|/* rewind command outstanding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPEXCEP
+value|0x0080
+end_define
+
+begin_comment
+comment|/* i/o exception flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPVOL
+value|0x0100
+end_define
+
+begin_comment
+comment|/* read file mark or hit end of tape */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPWO
+value|0x0200
+end_define
+
+begin_comment
+comment|/* write command outstanding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPRO
+value|0x0400
+end_define
+
+begin_comment
+comment|/* read command outstanding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPWANY
+value|0x0800
+end_define
+
+begin_comment
+comment|/* write command requested */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPRANY
+value|0x1000
+end_define
+
+begin_comment
+comment|/* read command requested */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPWP
+value|0x2000
+end_define
+
+begin_comment
+comment|/* write protect error seen */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPTIMER
+value|0x4000
+end_define
+
+begin_comment
+comment|/* timer() is active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TPACTIVE
+value|0x8000
+end_define
+
+begin_comment
+comment|/* dma i/o active */
+end_comment
+
+begin_comment
+comment|/* controller error register bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_FIL
+value|0x0001
+end_define
+
+begin_comment
+comment|/* File mark detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_BNL
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Block not located */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_UDA
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Unrecoverable data error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_EOM
+value|0x0008
+end_define
+
+begin_comment
+comment|/* End of media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_WRP
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Write protected cartridge */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_USL
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Unselected drive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_CNI
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Cartridge not in place */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_ST0
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Status byte 0 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_ST0MASK
+value|0x00ff
+end_define
+
+begin_comment
+comment|/* Status byte 0 mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_POR
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Power on/reset occurred */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_RES1
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Reserved for end of media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_RES2
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Reserved for bus parity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_BOM
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Beginning of media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_MBD
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Marginal block detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_NDT
+value|0x2000
+end_define
+
+begin_comment
+comment|/* No data detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_ILL
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Illegal command - should not happen! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_ST1
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Status byte 1 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TP_ST1MASK
+value|0xff00
+end_define
+
+begin_comment
+comment|/* Status byte 1 mask */
+end_comment
+
+begin_comment
+comment|/* formats for printing flags and error values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WTDS_BITS
+value|"\20\1inuse\2read\3write\4start\5rmark\6wmark\7rew\10excep\11vol\12wo\13ro\14wany\15rany\16wp\17timer\20active"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WTER_BITS
+value|"\20\1eof\2bnl\3uda\4eom\5wrp\6usl\7cni\11por\12res1\13res2\14bom\15mbd\16ndt\17ill"
 end_define
 
 end_unit
