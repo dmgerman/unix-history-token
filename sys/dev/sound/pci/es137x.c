@@ -110,6 +110,13 @@ name|ES1371_PCI_ID
 value|0x13711274
 end_define
 
+begin_define
+define|#
+directive|define
+name|ES1371_PCI_ID2
+value|0x13713274
+end_define
+
 begin_comment
 comment|/* device private data */
 end_comment
@@ -4524,6 +4531,13 @@ name|dev
 argument_list|)
 operator|==
 name|ES1371_PCI_ID
+operator|||
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|ES1371_PCI_ID2
 condition|)
 block|{
 name|device_set_desc
@@ -4877,6 +4891,13 @@ name|dev
 argument_list|)
 operator|==
 name|ES1371_PCI_ID
+operator|||
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|ES1371_PCI_ID2
 condition|)
 block|{
 if|if
