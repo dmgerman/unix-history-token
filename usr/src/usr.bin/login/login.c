@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.72 (Berkeley) %G%"
+literal|"@(#)login.c	5.73 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -830,7 +830,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: login [-fp] [username]\n"
+literal|"usage: login [-fp] [-h hostname] [username]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1446,9 +1446,7 @@ comment|/* if user not super-user, check for disabled logins */
 if|if
 condition|(
 operator|!
-operator|(
 name|rootlogin
-operator|)
 condition|)
 name|checknologin
 argument_list|()
@@ -1470,7 +1468,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"No directory %s!\n"
+literal|"No home directory %s!\n"
 argument_list|,
 name|pwd
 operator|->
@@ -2433,7 +2431,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"login: no shell: %s.\n"
+literal|"%s: %s\n"
+argument_list|,
+name|pwd
+operator|->
+name|pw_shell
 argument_list|,
 name|strerror
 argument_list|(
@@ -2443,7 +2445,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
