@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.16 (Berkeley) %G%"
+literal|"@(#)conf.c	8.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2674,6 +2674,27 @@ include|#
 directive|include
 file|<sys/exec.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__bsdi__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|PS_STRINGS
+end_undef
+
+begin_comment
+comment|/* BSDI 1.0 doesn't do PS_STRINGS as we expect */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
