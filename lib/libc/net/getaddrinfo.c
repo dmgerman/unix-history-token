@@ -22,6 +22,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -131,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|<nsswitch.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_if
@@ -2929,7 +2941,7 @@ expr_stmt|;
 comment|/* 	 * filter out AFs that are not supported by the kernel 	 * XXX errno? 	 */
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|pai
 operator|->
@@ -4613,7 +4625,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET6
 argument_list|,
@@ -4641,7 +4653,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -4677,7 +4689,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|af
 argument_list|,

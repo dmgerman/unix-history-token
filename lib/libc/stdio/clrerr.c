@@ -53,7 +53,25 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_undef
@@ -61,12 +79,6 @@ undef|#
 directive|undef
 name|clearerr
 end_undef
-
-begin_include
-include|#
-directive|include
-file|"libc_private.h"
-end_include
 
 begin_function
 name|void

@@ -40,6 +40,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -61,20 +67,24 @@ directive|include
 file|<sys/resource.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
 begin_function
 name|pid_t
 name|__wait
 parameter_list|(
-name|istat
-parameter_list|)
 name|int
 modifier|*
 name|istat
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
-name|wait4
+name|_wait4
 argument_list|(
 name|WAIT_ANY
 argument_list|,
@@ -94,12 +104,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_THREAD_SAFE
-end_ifndef
-
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -110,10 +114,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__wait
+argument_list|,
+name|_wait
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

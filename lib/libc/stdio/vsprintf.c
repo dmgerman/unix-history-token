@@ -62,6 +62,12 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_function
 name|int
 name|vsprintf
@@ -137,7 +143,7 @@ name|INT_MAX
 expr_stmt|;
 name|ret
 operator|=
-name|vfprintf
+name|__vfprintf
 argument_list|(
 operator|&
 name|f

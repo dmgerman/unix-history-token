@@ -40,6 +40,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -89,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_decl_stmt
@@ -175,7 +187,7 @@ name|pid
 modifier|*
 name|p
 decl_stmt|;
-comment|/* 	 * Lite2 introduced two-way popen() pipes using socketpair(). 	 * FreeBSD's pipe() is bidirectional, so we use that. 	 */
+comment|/* 	 * Lite2 introduced two-way popen() pipes using _socketpair(). 	 * FreeBSD's pipe() is bidirectional, so we use that. 	 */
 if|if
 condition|(
 name|strchr
@@ -376,7 +388,7 @@ operator|==
 literal|'r'
 condition|)
 block|{
-comment|/* 			 * The dup2() to STDIN_FILENO is repeated to avoid 			 * writing to pdes[1], which might corrupt the 			 * parent's copy.  This isn't good enough in 			 * general, since the _exit() is no return, so 			 * the compiler is free to corrupt all the local 			 * variables. 			 */
+comment|/* 			 * The _dup2() to STDIN_FILENO is repeated to avoid 			 * writing to pdes[1], which might corrupt the 			 * parent's copy.  This isn't good enough in 			 * general, since the _exit() is no return, so 			 * the compiler is free to corrupt all the local 			 * variables. 			 */
 operator|(
 name|void
 operator|)
@@ -401,7 +413,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|dup2
+name|_dup2
 argument_list|(
 name|pdes
 index|[
@@ -429,7 +441,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|dup2
+name|_dup2
 argument_list|(
 name|STDOUT_FILENO
 argument_list|,
@@ -454,7 +466,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|dup2
+name|_dup2
 argument_list|(
 name|pdes
 index|[
@@ -480,7 +492,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|dup2
+name|_dup2
 argument_list|(
 name|pdes
 index|[
@@ -543,7 +555,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|execve
+name|_execve
 argument_list|(
 name|_PATH_BSHELL
 argument_list|,

@@ -53,6 +53,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -131,6 +137,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -336,7 +348,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|execve
+name|_execve
 argument_list|(
 name|name
 argument_list|,
@@ -559,7 +571,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|execve
+name|_execve
 argument_list|(
 name|name
 argument_list|,
@@ -804,7 +816,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|execve
+name|_execve
 argument_list|(
 name|name
 argument_list|,
@@ -1144,7 +1156,7 @@ label|:
 operator|(
 name|void
 operator|)
-name|execve
+name|_execve
 argument_list|(
 name|bp
 argument_list|,
@@ -1257,7 +1269,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|execve
+name|_execve
 argument_list|(
 name|_PATH_BSHELL
 argument_list|,

@@ -26,6 +26,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -117,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_ifndef
@@ -926,7 +938,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET6
 argument_list|,
@@ -954,7 +966,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -990,7 +1002,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|af
 argument_list|,
@@ -8615,7 +8627,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|PF_INET6
 argument_list|,
@@ -8633,7 +8645,7 @@ return|;
 operator|(
 name|void
 operator|)
-name|setsockopt
+name|_setsockopt
 argument_list|(
 name|s
 argument_list|,
@@ -8656,7 +8668,7 @@ argument_list|)
 expr_stmt|;
 name|cc
 operator|=
-name|sendmsg
+name|_sendmsg
 argument_list|(
 name|s
 argument_list|,
@@ -8702,7 +8714,7 @@ name|s_fds
 expr_stmt|;
 if|if
 condition|(
-name|select
+name|_select
 argument_list|(
 name|s
 operator|+
@@ -8740,7 +8752,7 @@ argument_list|)
 expr_stmt|;
 name|cc
 operator|=
-name|recvfrom
+name|_recvfrom
 argument_list|(
 name|s
 argument_list|,

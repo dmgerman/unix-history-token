@@ -44,6 +44,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -99,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -762,7 +774,7 @@ name|err
 goto|;
 if|if
 condition|(
-name|fstat
+name|_fstat
 argument_list|(
 name|t
 operator|->
@@ -1696,7 +1708,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -1732,7 +1744,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,

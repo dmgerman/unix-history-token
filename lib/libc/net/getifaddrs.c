@@ -14,6 +14,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -73,12 +79,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ifaddrs.h>
 end_include
 
@@ -92,6 +92,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_if
@@ -939,7 +945,7 @@ condition|(
 operator|(
 name|sock
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -959,7 +965,7 @@ operator|)
 return|;
 name|i
 operator|=
-name|ioctl
+name|_ioctl
 argument_list|(
 name|sock
 argument_list|,
@@ -973,7 +979,7 @@ operator|&
 name|ifc
 argument_list|)
 expr_stmt|;
-name|close
+name|_close
 argument_list|(
 name|sock
 argument_list|)

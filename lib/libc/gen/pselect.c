@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/select.h>
 end_include
 
@@ -25,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_comment
@@ -110,7 +122,7 @@ condition|)
 block|{
 name|rv
 operator|=
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -132,7 +144,7 @@ return|;
 block|}
 name|rv
 operator|=
-name|select
+name|_select
 argument_list|(
 name|count
 argument_list|,
@@ -156,7 +168,7 @@ name|sverrno
 operator|=
 name|errno
 expr_stmt|;
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,

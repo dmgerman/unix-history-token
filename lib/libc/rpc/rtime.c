@@ -14,6 +14,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_if
@@ -221,7 +233,7 @@ expr_stmt|;
 block|}
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -291,7 +303,7 @@ condition|)
 block|{
 name|res
 operator|=
-name|sendto
+name|_sendto
 argument_list|(
 name|s
 argument_list|,
@@ -360,7 +372,7 @@ argument_list|)
 expr_stmt|;
 name|res
 operator|=
-name|select
+name|_select
 argument_list|(
 name|_rpc_dtablesize
 argument_list|()
@@ -435,7 +447,7 @@ argument_list|)
 expr_stmt|;
 name|res
 operator|=
-name|recvfrom
+name|_recvfrom
 argument_list|(
 name|s
 argument_list|,
@@ -489,7 +501,7 @@ else|else
 block|{
 if|if
 condition|(
-name|connect
+name|_connect
 argument_list|(
 name|s
 argument_list|,

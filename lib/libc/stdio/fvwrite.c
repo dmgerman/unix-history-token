@@ -504,7 +504,7 @@ name|w
 expr_stmt|;
 if|if
 condition|(
-name|fflush
+name|__fflush
 argument_list|(
 name|fp
 argument_list|)
@@ -719,7 +719,7 @@ name|w
 expr_stmt|;
 if|if
 condition|(
-name|fflush
+name|__fflush
 argument_list|(
 name|fp
 argument_list|)
@@ -810,7 +810,7 @@ block|{
 comment|/* copied the newline: flush and forget */
 if|if
 condition|(
-name|fflush
+name|__fflush
 argument_list|(
 name|fp
 argument_list|)

@@ -48,6 +48,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -85,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_define
@@ -333,7 +345,7 @@ condition|(
 operator|(
 name|sock
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -419,7 +431,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|bind
+name|_bind
 argument_list|(
 name|sock
 argument_list|,
@@ -437,7 +449,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|getsockname
+name|_getsockname
 argument_list|(
 name|sock
 argument_list|,
@@ -813,7 +825,7 @@ argument_list|)
 expr_stmt|;
 name|rlen
 operator|=
-name|recvfrom
+name|_recvfrom
 argument_list|(
 name|xprt
 operator|->
@@ -952,7 +964,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|sendto
+name|_sendto
 argument_list|(
 name|xprt
 operator|->
@@ -1093,7 +1105,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sendto
+name|_sendto
 argument_list|(
 name|xprt
 operator|->

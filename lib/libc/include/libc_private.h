@@ -58,7 +58,7 @@ name|_FLOCKFILE
 parameter_list|(
 name|x
 parameter_list|)
-value|flockfile(x)
+value|_flockfile(x)
 end_define
 
 begin_endif
@@ -87,7 +87,7 @@ name|FUNLOCKFILE
 parameter_list|(
 name|fp
 parameter_list|)
-value|if (__isthreaded) funlockfile(fp)
+value|if (__isthreaded) _funlockfile(fp)
 end_define
 
 begin_endif

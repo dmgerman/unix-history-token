@@ -52,6 +52,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -83,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_comment
@@ -203,7 +215,7 @@ name|myaddr
 expr_stmt|;
 if|if
 condition|(
-name|getsockname
+name|_getsockname
 argument_list|(
 name|sd
 argument_list|,
@@ -374,7 +386,7 @@ argument_list|)
 decl_stmt|;
 name|error
 operator|=
-name|getsockopt
+name|_getsockopt
 argument_list|(
 name|sd
 argument_list|,
@@ -402,7 +414,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|setsockopt
+name|_setsockopt
 argument_list|(
 name|sd
 argument_list|,
@@ -433,7 +445,7 @@ return|;
 block|}
 name|error
 operator|=
-name|bind
+name|_bind
 argument_list|(
 name|sd
 argument_list|,
@@ -461,7 +473,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|setsockopt
+name|_setsockopt
 argument_list|(
 name|sd
 argument_list|,
@@ -506,7 +518,7 @@ block|{
 comment|/* Hmm, what did the kernel assign... */
 if|if
 condition|(
-name|getsockname
+name|_getsockname
 argument_list|(
 name|sd
 argument_list|,

@@ -45,6 +45,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -147,6 +153,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -1022,7 +1034,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|writev
+name|_writev
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -1176,7 +1188,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|writev
+name|_writev
 argument_list|(
 name|fd
 argument_list|,
@@ -1255,7 +1267,7 @@ condition|(
 operator|(
 name|LogFile
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_UNIX
 argument_list|,
@@ -1327,7 +1339,7 @@ argument_list|)
 expr_stmt|;
 name|connected
 operator|=
-name|connect
+name|_connect
 argument_list|(
 name|LogFile
 argument_list|,
@@ -1374,7 +1386,7 @@ argument_list|)
 expr_stmt|;
 name|connected
 operator|=
-name|connect
+name|_connect
 argument_list|(
 name|LogFile
 argument_list|,

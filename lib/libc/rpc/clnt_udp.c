@@ -48,6 +48,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -103,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<rpc/pmap_clnt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_comment
@@ -724,7 +736,7 @@ decl_stmt|;
 operator|*
 name|sockp
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -780,7 +792,7 @@ comment|/* the sockets rpc controls are non-blocking */
 operator|(
 name|void
 operator|)
-name|ioctl
+name|_ioctl
 argument_list|(
 operator|*
 name|sockp
@@ -1302,7 +1314,7 @@ name|send_again
 label|:
 if|if
 condition|(
-name|sendto
+name|_sendto
 argument_list|(
 name|cu
 operator|->
@@ -1464,7 +1476,7 @@ name|cu_wait
 expr_stmt|;
 switch|switch
 condition|(
-name|select
+name|_select
 argument_list|(
 name|cu
 operator|->
@@ -1672,7 +1684,7 @@ argument_list|)
 expr_stmt|;
 name|inlen
 operator|=
-name|recvfrom
+name|_recvfrom
 argument_list|(
 name|cu
 operator|->
@@ -2669,7 +2681,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getsockname
+name|_getsockname
 argument_list|(
 name|cu
 operator|->

@@ -53,6 +53,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -105,7 +111,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"collate.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_include
@@ -373,34 +391,79 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vfscanf  */
+comment|/*  * __vfscanf - MT-safe version  */
+end_comment
+
+begin_function
+name|int
+name|__vfscanf
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|,
+name|char
+specifier|const
+modifier|*
+name|fmt0
+parameter_list|,
+name|va_list
+name|ap
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|FLOCKFILE
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|__svfscanf
+argument_list|(
+name|fp
+argument_list|,
+name|fmt0
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|FUNLOCKFILE
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * __svfscanf - non-MT-safe version of __vfscanf  */
 end_comment
 
 begin_function
 name|int
 name|__svfscanf
 parameter_list|(
-name|fp
-parameter_list|,
-name|fmt0
-parameter_list|,
-name|ap
-parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|,
 name|char
 specifier|const
 modifier|*
 name|fmt0
-decl_stmt|;
+parameter_list|,
 name|va_list
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|u_char
 modifier|*
 name|fmt
@@ -411,33 +474,27 @@ operator|*
 operator|)
 name|fmt0
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
 comment|/* character from format, or conversion */
-specifier|register
 name|size_t
 name|width
 decl_stmt|;
 comment|/* field width, or 0 */
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
 comment|/* points into all kinds of strings */
-specifier|register
 name|int
 name|n
 decl_stmt|;
 comment|/* handy integer */
-specifier|register
 name|int
 name|flags
 decl_stmt|;
 comment|/* flags as defined above */
-specifier|register
 name|char
 modifier|*
 name|p0
@@ -2132,7 +2189,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|ungetc
+name|__ungetc
 argument_list|(
 operator|*
 operator|(
@@ -2180,7 +2237,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|ungetc
+name|__ungetc
 argument_list|(
 name|c
 argument_list|,
@@ -2619,7 +2676,7 @@ name|p
 operator|>
 name|buf
 condition|)
-name|ungetc
+name|__ungetc
 argument_list|(
 operator|*
 operator|(
@@ -2661,7 +2718,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|ungetc
+name|__ungetc
 argument_list|(
 name|c
 argument_list|,
@@ -2683,7 +2740,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|ungetc
+name|__ungetc
 argument_list|(
 name|c
 argument_list|,

@@ -72,6 +72,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -163,6 +169,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -1984,7 +1996,7 @@ name|sa_family
 expr_stmt|;
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|af
 argument_list|,
@@ -2034,7 +2046,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|connect
+name|_connect
 argument_list|(
 name|s
 argument_list|,
@@ -2142,7 +2154,7 @@ name|buflen
 expr_stmt|;
 if|if
 condition|(
-name|writev
+name|_writev
 argument_list|(
 name|s
 argument_list|,
@@ -2622,7 +2634,7 @@ name|sa_family
 expr_stmt|;
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|af
 argument_list|,
@@ -2710,7 +2722,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|connect
+name|_connect
 argument_list|(
 name|s
 argument_list|,
@@ -2837,7 +2849,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|connect
+name|_connect
 argument_list|(
 name|s
 argument_list|,
@@ -2858,7 +2870,7 @@ directive|else
 name|int
 name|s1
 init|=
-name|socket
+name|_socket
 argument_list|(
 name|af
 argument_list|,
@@ -2879,7 +2891,7 @@ goto|;
 operator|(
 name|void
 operator|)
-name|dup2
+name|_dup2
 argument_list|(
 name|s1
 argument_list|,
@@ -2919,7 +2931,7 @@ directive|endif
 comment|/* !CANNOT_CONNECT_DGRAM */
 if|if
 condition|(
-name|sendto
+name|_sendto
 argument_list|(
 name|s
 argument_list|,
@@ -3071,7 +3083,7 @@ name|EVFILT_READ
 expr_stmt|;
 name|n
 operator|=
-name|kevent
+name|_kevent
 argument_list|(
 name|kq
 argument_list|,
@@ -3168,7 +3180,7 @@ argument_list|)
 expr_stmt|;
 name|resplen
 operator|=
-name|recvfrom
+name|_recvfrom
 argument_list|(
 name|s
 argument_list|,

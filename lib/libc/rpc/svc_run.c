@@ -48,6 +48,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_decl_stmt
@@ -171,7 +183,7 @@ name|NULL
 expr_stmt|;
 switch|switch
 condition|(
-name|select
+name|_select
 argument_list|(
 name|svc_maxfd
 operator|+
@@ -243,7 +255,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 default|default:
-comment|/* if fds == NULL, select() can't return a result */
+comment|/* if fds == NULL, _select() can't return a result */
 name|svc_getreqset2
 argument_list|(
 name|fds

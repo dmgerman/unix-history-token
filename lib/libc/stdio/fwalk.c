@@ -53,7 +53,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
 end_include
 
 begin_include
@@ -74,39 +80,34 @@ directive|include
 file|"glue.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|_fwalk
-argument_list|(
+function_decl|(
 name|function
-argument_list|)
-decl|register
+function_decl|)
 name|int
 argument_list|(
-operator|*
-name|function
+argument|*function
 argument_list|)
-argument_list|(
+parameter_list|(
 name|FILE
-operator|*
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_block
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|,
 name|ret
 decl_stmt|;
-specifier|register
 name|struct
 name|glue
 modifier|*
@@ -116,6 +117,7 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * It should be safe to walk the list without locking it; 	 * new nodes are only added to the end and none are ever 	 * removed. 	 */
 for|for
 control|(
 name|g

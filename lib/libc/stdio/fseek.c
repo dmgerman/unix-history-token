@@ -53,6 +53,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -84,6 +90,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -142,10 +154,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Seek the given file to the given offset.  * `Whence' must be one of the three SEEK_* macros.  */
-end_comment
-
 begin_function
 name|int
 name|fseeko
@@ -156,7 +164,72 @@ name|offset
 parameter_list|,
 name|whence
 parameter_list|)
-specifier|register
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|off_t
+name|offset
+decl_stmt|;
+name|int
+name|whence
+decl_stmt|;
+block|{
+name|int
+name|ret
+decl_stmt|;
+comment|/* make sure stdio is set up */
+if|if
+condition|(
+operator|!
+name|__sdidinit
+condition|)
+name|__sinit
+argument_list|()
+expr_stmt|;
+name|FLOCKFILE
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|_fseeko
+argument_list|(
+name|fp
+argument_list|,
+name|offset
+argument_list|,
+name|whence
+argument_list|)
+expr_stmt|;
+name|FUNLOCKFILE
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Seek the given file to the given offset.  * `Whence' must be one of the three SEEK_* macros.  */
+end_comment
+
+begin_function
+name|int
+name|_fseeko
+parameter_list|(
+name|fp
+parameter_list|,
+name|offset
+parameter_list|,
+name|whence
+parameter_list|)
 name|FILE
 modifier|*
 name|fp
@@ -200,20 +273,6 @@ decl_stmt|;
 name|int
 name|havepos
 decl_stmt|;
-comment|/* make sure stdio is set up */
-if|if
-condition|(
-operator|!
-name|__sdidinit
-condition|)
-name|__sinit
-argument_list|()
-expr_stmt|;
-name|FLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Have to be able to seek. 	 */
 if|if
 condition|(
@@ -233,11 +292,6 @@ operator|=
 name|ESPIPE
 expr_stmt|;
 comment|/* historic practice */
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EOF
@@ -296,18 +350,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EOF
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(
@@ -399,11 +446,6 @@ name|errno
 operator|=
 name|EINVAL
 expr_stmt|;
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EOF
@@ -470,7 +512,7 @@ name|_file
 operator|<
 literal|0
 operator|||
-name|fstat
+name|_fstat
 argument_list|(
 name|fp
 operator|->
@@ -531,7 +573,7 @@ else|else
 block|{
 if|if
 condition|(
-name|fstat
+name|_fstat
 argument_list|(
 name|fp
 operator|->
@@ -759,11 +801,6 @@ operator|&=
 operator|~
 name|__SEOF
 expr_stmt|;
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -880,11 +917,6 @@ operator|-=
 name|n
 expr_stmt|;
 block|}
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -919,18 +951,11 @@ argument_list|)
 operator|==
 name|POS_ERR
 condition|)
-block|{
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EOF
 operator|)
 return|;
-block|}
 comment|/* success: clear EOF indicator and discard ungetc() data */
 if|if
 condition|(
@@ -968,11 +993,6 @@ name|_flags
 operator|&=
 operator|~
 name|__SEOF
-expr_stmt|;
-name|FUNLOCKFILE
-argument_list|(
-name|fp
-argument_list|)
 expr_stmt|;
 return|return
 operator|(

@@ -58,7 +58,7 @@ comment|/*  * Cache the result of getdtablesize(), so we don't have to do an  * 
 end_comment
 
 begin_comment
-comment|/*  * XXX In FreeBSD 2.x, you can have the maximum number of open file  * descriptors be greater than FD_SETSIZE (which us 256 by default).  *  * Since old programs tend to use this call to determine the first arg  * for select(), having this return> FD_SETSIZE is a Bad Idea(TM)!  */
+comment|/*  * XXX In FreeBSD 2.x, you can have the maximum number of open file  * descriptors be greater than FD_SETSIZE (which us 256 by default).  *  * Since old programs tend to use this call to determine the first arg  * for _select(), having this return> FD_SETSIZE is a Bad Idea(TM)!  */
 end_comment
 
 begin_function

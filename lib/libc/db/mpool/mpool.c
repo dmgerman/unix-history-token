@@ -40,6 +40,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -83,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -196,7 +208,7 @@ decl_stmt|;
 comment|/* 	 * Get information about the file. 	 * 	 * XXX 	 * We don't currently handle pipes, although we should. 	 */
 if|if
 condition|(
-name|fstat
+name|_fstat
 argument_list|(
 name|fd
 argument_list|,

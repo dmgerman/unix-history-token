@@ -27,6 +27,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -100,6 +106,18 @@ begin_include
 include|#
 directive|include
 file|<rpcsvc/yp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_comment
@@ -1466,7 +1484,7 @@ block|{
 comment|/* Check the socket -- may have been hosed by the caller. */
 if|if
 condition|(
-name|getsockname
+name|_getsockname
 argument_list|(
 name|ysd
 operator|->
@@ -1516,7 +1534,7 @@ name|dom_socket
 expr_stmt|;
 name|save
 operator|=
-name|dup
+name|_dup
 argument_list|(
 name|ysd
 operator|->
@@ -1552,7 +1570,7 @@ name|NULL
 expr_stmt|;
 name|sock
 operator|=
-name|dup2
+name|_dup2
 argument_list|(
 name|save
 argument_list|,
@@ -1684,7 +1702,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|flock
+name|_flock
 argument_list|(
 name|fd
 argument_list|,
@@ -1763,7 +1781,7 @@ name|ybr
 expr_stmt|;
 name|r
 operator|=
-name|readv
+name|_readv
 argument_list|(
 name|fd
 argument_list|,
@@ -2504,7 +2522,7 @@ argument_list|,
 name|checklen
 argument_list|)
 expr_stmt|;
-name|bind
+name|_bind
 argument_list|(
 name|ysd
 operator|->
@@ -2530,7 +2548,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|getsockname
+name|_getsockname
 argument_list|(
 name|ysd
 operator|->
@@ -2654,7 +2672,7 @@ block|{
 comment|/* Check the socket -- may have been hosed by the caller. */
 if|if
 condition|(
-name|getsockname
+name|_getsockname
 argument_list|(
 name|ypb
 operator|->
@@ -2703,7 +2721,7 @@ name|dom_socket
 expr_stmt|;
 name|save
 operator|=
-name|dup
+name|_dup
 argument_list|(
 name|ypb
 operator|->
@@ -2719,7 +2737,7 @@ argument_list|)
 expr_stmt|;
 name|sock
 operator|=
-name|dup2
+name|_dup2
 argument_list|(
 name|save
 argument_list|,

@@ -53,6 +53,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -60,6 +66,18 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_function
@@ -174,7 +192,7 @@ name|NULL
 expr_stmt|;
 name|ret
 operator|=
-name|sigaction
+name|_sigaction
 argument_list|(
 name|signo
 argument_list|,
@@ -269,7 +287,7 @@ name|mask
 expr_stmt|;
 name|n
 operator|=
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -337,7 +355,7 @@ name|mask
 expr_stmt|;
 name|n
 operator|=
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,

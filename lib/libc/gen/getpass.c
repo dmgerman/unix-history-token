@@ -40,6 +40,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/termios.h>
 end_include
 
@@ -71,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_decl_stmt
@@ -185,7 +197,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -332,7 +344,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,

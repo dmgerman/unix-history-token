@@ -9,16 +9,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_comment
-comment|/* Don't build these stubs into libc_r: */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_THREAD_SAFE
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -26,8 +16,17 @@ file|"spinlock.h"
 end_include
 
 begin_comment
-comment|/*  * Declare weak references in case the application is not linked  * with libpthread.  */
+comment|/*  * Declare weak definitions in case the application is not linked  * with libpthread.  */
 end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_atomic_lock
+name|=
+name|_atomic_lock_stub
+end_pragma
 
 begin_pragma
 pragma|#
@@ -46,6 +45,28 @@ name|_spinlock_debug
 name|=
 name|_spinlock_debug_stub
 end_pragma
+
+begin_comment
+comment|/*  * This function is a stub for the _atomic_lock function in libpthread.  */
+end_comment
+
+begin_function
+name|long
+name|_atomic_lock_stub
+parameter_list|(
+specifier|volatile
+name|long
+modifier|*
+name|lck
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0L
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * This function is a stub for the spinlock function in libpthread.  */
@@ -83,11 +104,6 @@ name|lineno
 parameter_list|)
 block|{ }
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

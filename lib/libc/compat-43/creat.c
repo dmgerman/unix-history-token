@@ -40,14 +40,23 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_function
 name|int
-if|#
-directive|if
-name|__STDC__
 name|__creat
 parameter_list|(
 specifier|const
@@ -58,23 +67,6 @@ parameter_list|,
 name|mode_t
 name|mode
 parameter_list|)
-else|#
-directive|else
-function|__creat
-parameter_list|(
-name|path
-parameter_list|,
-name|mode
-parameter_list|)
-name|char
-modifier|*
-name|path
-decl_stmt|;
-name|mode_t
-name|mode
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 return|return
 operator|(
@@ -95,12 +87,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_THREAD_SAFE
-end_ifndef
-
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -111,10 +97,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__creat
+argument_list|,
+name|_creat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

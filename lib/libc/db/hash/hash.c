@@ -40,6 +40,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -101,6 +107,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
 
 begin_include
 include|#
@@ -724,7 +736,7 @@ operator|&
 name|O_CREAT
 operator|)
 operator|&&
-name|fstat
+name|_fstat
 argument_list|(
 name|hashp
 operator|->
@@ -2834,6 +2846,8 @@ name|hashp
 operator|->
 name|error
 operator|=
+name|EINVAL
+expr_stmt|;
 name|errno
 operator|=
 name|EINVAL

@@ -81,7 +81,7 @@ file|"local.h"
 end_include
 
 begin_comment
-comment|/*  * Return the (stdio) flags for a given mode.  Store the flags  * to be passed to an open() syscall through *optr.  * Return 0 on error.  */
+comment|/*  * Return the (stdio) flags for a given mode.  Store the flags  * to be passed to an _open() syscall through *optr.  * Return 0 on error.  */
 end_comment
 
 begin_function

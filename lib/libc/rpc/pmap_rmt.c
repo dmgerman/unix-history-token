@@ -48,6 +48,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -121,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_define
@@ -751,7 +763,7 @@ name|buf
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|sock
 argument_list|,
@@ -866,7 +878,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|sock
 argument_list|,
@@ -927,7 +939,7 @@ name|SIOCGIFBRDADDR
 comment|/* 4.3BSD */
 if|if
 condition|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|sock
 argument_list|,
@@ -1250,7 +1262,7 @@ condition|(
 operator|(
 name|sock
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -1281,7 +1293,7 @@ directive|ifdef
 name|SO_BROADCAST
 if|if
 condition|(
-name|setsockopt
+name|_setsockopt
 argument_list|(
 name|sock
 argument_list|,
@@ -1709,7 +1721,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|sendto
+name|_sendto
 argument_list|(
 name|sock
 argument_list|,
@@ -1812,10 +1824,10 @@ name|tv
 operator|=
 name|t
 expr_stmt|;
-comment|/* for select() that copies back */
+comment|/* for _select() that copies back */
 switch|switch
 condition|(
-name|select
+name|_select
 argument_list|(
 name|sock
 operator|+
@@ -1881,7 +1893,7 @@ argument_list|)
 expr_stmt|;
 name|inlen
 operator|=
-name|recvfrom
+name|_recvfrom
 argument_list|(
 name|sock
 argument_list|,

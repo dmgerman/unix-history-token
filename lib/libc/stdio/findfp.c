@@ -59,6 +59,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -66,12 +72,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -89,13 +89,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libc_private.h>
+file|<spinlock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<spinlock.h>
+file|"libc_private.h"
 end_include
 
 begin_include
@@ -167,7 +167,7 @@ name|glue
 name|uglue
 init|=
 block|{
-literal|0
+name|NULL
 block|,
 name|FOPEN_MAX
 operator|-
@@ -234,6 +234,18 @@ specifier|static
 name|struct
 name|glue
 modifier|*
+name|lastglue
+init|=
+operator|&
+name|uglue
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|glue
+modifier|*
 name|moreglue
 name|__P
 argument_list|(
@@ -269,6 +281,46 @@ parameter_list|()
 value|if (__isthreaded) _SPINUNLOCK(&thread_lock)
 end_define
 
+begin_if
+if|#
+directive|if
+name|NOT_YET
+end_if
+
+begin_define
+define|#
+directive|define
+name|SET_GLUE_PTR
+parameter_list|(
+name|ptr
+parameter_list|,
+name|val
+parameter_list|)
+value|atomic_set_ptr(&(ptr), (uintptr_t)(val))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SET_GLUE_PTR
+parameter_list|(
+name|ptr
+parameter_list|,
+name|val
+parameter_list|)
+value|ptr = val
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|struct
@@ -278,18 +330,15 @@ name|moreglue
 parameter_list|(
 name|n
 parameter_list|)
-specifier|register
 name|int
 name|n
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|glue
 modifier|*
 name|g
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|p
@@ -396,16 +445,13 @@ modifier|*
 name|__sfp
 parameter_list|()
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
 name|struct
 name|glue
 modifier|*
@@ -419,6 +465,7 @@ condition|)
 name|__sinit
 argument_list|()
 expr_stmt|;
+comment|/* 	 * The list must be locked because a FILE may be updated. 	 */
 name|THREAD_LOCK
 argument_list|()
 expr_stmt|;
@@ -429,6 +476,9 @@ operator|=
 operator|&
 name|__sglue
 init|;
+name|g
+operator|!=
+name|NULL
 condition|;
 name|g
 operator|=
@@ -470,19 +520,16 @@ condition|)
 goto|goto
 name|found
 goto|;
+block|}
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
+comment|/* don't hold lock while malloc()ing. */
 if|if
 condition|(
-name|g
-operator|->
-name|next
-operator|==
-name|NULL
-operator|&&
 operator|(
 name|g
-operator|->
-name|next
-operator|=
+operator|==
 name|moreglue
 argument_list|(
 name|NDYNAMIC
@@ -491,16 +538,36 @@ operator|)
 operator|==
 name|NULL
 condition|)
-break|break;
-block|}
-name|THREAD_UNLOCK
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
+comment|/* reacquire the lock */
+name|SET_GLUE_PTR
+argument_list|(
+name|lastglue
+operator|->
+name|next
+argument_list|,
+name|g
+argument_list|)
+expr_stmt|;
+comment|/* atomically append glue to list */
+name|lastglue
+operator|=
+name|g
+expr_stmt|;
+comment|/* not atomic; only accessed when locked */
+name|fp
+operator|=
+name|g
+operator|->
+name|iobs
+expr_stmt|;
 name|found
 label|:
 name|fp
@@ -601,6 +668,7 @@ name|_size
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fp->_lock = NULL; */
 return|return
 operator|(
 name|fp
@@ -628,7 +696,6 @@ name|void
 name|f_prealloc
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|glue
 modifier|*
@@ -647,6 +714,7 @@ operator|+
 literal|20
 expr_stmt|;
 comment|/* 20 for slop. */
+comment|/* 	 * It should be safe to walk the list without locking it; 	 * new nodes are only added to the end and none are ever 	 * removed. 	 */
 for|for
 control|(
 name|g
@@ -678,19 +746,46 @@ comment|/* void */
 empty_stmt|;
 if|if
 condition|(
+operator|(
 name|n
 operator|>
 literal|0
-condition|)
+operator|)
+operator|&&
+operator|(
+operator|(
 name|g
-operator|->
-name|next
 operator|=
 name|moreglue
 argument_list|(
 name|n
 argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|)
+condition|)
+block|{
+name|THREAD_LOCK
+argument_list|()
 expr_stmt|;
+name|SET_GLUE_PTR
+argument_list|(
+name|lastglue
+operator|->
+name|next
+argument_list|,
+name|g
+argument_list|)
+expr_stmt|;
+name|lastglue
+operator|=
+name|g
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 

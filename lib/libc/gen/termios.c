@@ -40,6 +40,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -79,6 +85,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
 begin_function
 name|int
 name|tcgetattr
@@ -98,7 +110,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -174,7 +186,7 @@ name|TCSANOW
 case|:
 return|return
 operator|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -189,7 +201,7 @@ name|TCSADRAIN
 case|:
 return|return
 operator|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -204,7 +216,7 @@ name|TCSAFLUSH
 case|:
 return|return
 operator|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -268,7 +280,7 @@ name|pgrp
 expr_stmt|;
 return|return
 operator|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -297,7 +309,7 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -629,7 +641,7 @@ literal|400000
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -650,7 +662,7 @@ return|;
 operator|(
 name|void
 operator|)
-name|select
+name|_select
 argument_list|(
 literal|0
 argument_list|,
@@ -666,7 +678,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -704,7 +716,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -717,12 +729,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_THREAD_SAFE
-end_ifndef
-
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -733,10 +739,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__tcdrain
+argument_list|,
+name|_tcdrain
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -800,7 +811,7 @@ return|;
 block|}
 return|return
 operator|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -845,7 +856,7 @@ name|TCOOFF
 case|:
 return|return
 operator|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -860,7 +871,7 @@ name|TCOON
 case|:
 return|return
 operator|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|fd
 argument_list|,

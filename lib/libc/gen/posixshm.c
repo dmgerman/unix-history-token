@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -37,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_function
@@ -98,7 +110,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|fstat
+name|_fstat
 argument_list|(
 name|fd
 argument_list|,

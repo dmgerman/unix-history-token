@@ -10,16 +10,6 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/* Don't build this in libc_r, just libc: */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_THREAD_SAFE
-end_ifndef
-
-begin_comment
 comment|/*  * Declare weak references in case the application is not linked  * with libpthread.  */
 end_comment
 
@@ -28,6 +18,15 @@ pragma|#
 directive|pragma
 name|weak
 name|flockfile
+name|=
+name|_flockfile_stub
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_flockfile
 name|=
 name|_flockfile_stub
 end_pragma
@@ -54,7 +53,25 @@ begin_pragma
 pragma|#
 directive|pragma
 name|weak
+name|_ftrylockfile
+name|=
+name|_ftrylockfile_stub
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
 name|funlockfile
+name|=
+name|_funlockfile_stub
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_funlockfile
 name|=
 name|_funlockfile_stub
 end_pragma
@@ -131,11 +148,6 @@ name|fp
 parameter_list|)
 block|{ }
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

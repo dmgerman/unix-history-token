@@ -63,7 +63,7 @@ file|"local.h"
 end_include
 
 begin_comment
-comment|/*  * Write the given character into the (probably full) buffer for  * the given file.  Flush the buffer out if it is or becomes full,  * or if c=='\n' and the file is line buffered.  */
+comment|/*  * Write the given character into the (probably full) buffer for  * the given file.  Flush the buffer out if it is or becomes full,  * or if c=='\n' and the file is line buffered.  *  * Non-MT-safe  */
 end_comment
 
 begin_function
@@ -143,7 +143,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|fflush
+name|__fflush
 argument_list|(
 name|fp
 argument_list|)
@@ -196,7 +196,7 @@ operator|)
 condition|)
 if|if
 condition|(
-name|fflush
+name|__fflush
 argument_list|(
 name|fp
 argument_list|)

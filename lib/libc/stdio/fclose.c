@@ -53,6 +53,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -71,7 +77,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"local.h"
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -80,19 +86,23 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_function
 name|int
 name|fclose
 parameter_list|(
 name|fp
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|r
 decl_stmt|;
@@ -230,6 +240,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Mess up if reaccessed. */
+if|#
+directive|if
+literal|0
+block|if (fp->_lock != NULL) { 		_pthread_mutex_destroy((pthread_mutex_t *)&fp->_lock); 		fp->_lock = NULL; 	}
+endif|#
+directive|endif
 name|fp
 operator|->
 name|_flags

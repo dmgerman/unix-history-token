@@ -40,6 +40,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -83,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -161,7 +173,7 @@ name|struct
 name|stat
 name|statb
 decl_stmt|;
-comment|/* 	 * stat() before open() because opening of special files may be 	 * harmful.  fstat() after open because the file may have changed. 	 */
+comment|/* 	 * stat() before _open() because opening of special files may be 	 * harmful.  _fstat() after open because the file may have changed. 	 */
 if|if
 condition|(
 name|stat
@@ -229,7 +241,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|fstat
+name|_fstat
 argument_list|(
 name|fd
 argument_list|,
@@ -331,7 +343,7 @@ name|td_loccnt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Use the system page size if that is a multiple of DIRBLKSIZ. 	 * Hopefully this can be a big win someday by allowing page 	 * trades to user space to be done by getdirentries(). 	 */
+comment|/* 	 * Use the system page size if that is a multiple of DIRBLKSIZ. 	 * Hopefully this can be a big win someday by allowing page 	 * trades to user space to be done by _getdirentries(). 	 */
 name|incr
 operator|=
 name|getpagesize
@@ -365,7 +377,7 @@ name|sfb
 decl_stmt|;
 if|if
 condition|(
-name|fstatfs
+name|_fstatfs
 argument_list|(
 name|fd
 argument_list|,
@@ -441,7 +453,7 @@ decl_stmt|;
 comment|/* 		 * The strategy here is to read all the directory 		 * entries into a buffer, sort the buffer, and 		 * remove duplicate entries by setting the inode 		 * number to zero. 		 */
 do|do
 block|{
-comment|/* 			 * Always make at least DIRBLKSIZ bytes 			 * available to getdirentries 			 */
+comment|/* 			 * Always make at least DIRBLKSIZ bytes 			 * available to _getdirentries 			 */
 if|if
 condition|(
 name|space
@@ -488,7 +500,7 @@ expr_stmt|;
 block|}
 name|n
 operator|=
-name|getdirentries
+name|_getdirentries
 argument_list|(
 name|fd
 argument_list|,
@@ -932,6 +944,12 @@ operator|->
 name|dd_flags
 operator|=
 name|flags
+expr_stmt|;
+name|dirp
+operator|->
+name|dd_lock
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* 	 * Set up seek point for rewinddir. 	 */
 name|dirp

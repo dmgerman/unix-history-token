@@ -40,6 +40,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -61,11 +67,14 @@ directive|include
 file|<sys/resource.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
 begin_function
 name|pid_t
-if|#
-directive|if
-name|__STDC__
 name|__waitpid
 parameter_list|(
 name|pid_t
@@ -78,32 +87,10 @@ parameter_list|,
 name|int
 name|options
 parameter_list|)
-else|#
-directive|else
-function|__waitpid
-parameter_list|(
-name|pid
-parameter_list|,
-name|istat
-parameter_list|,
-name|options
-parameter_list|)
-name|pid_t
-name|pid
-decl_stmt|;
-name|int
-modifier|*
-name|istat
-decl_stmt|;
-name|int
-name|options
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 return|return
 operator|(
-name|wait4
+name|_wait4
 argument_list|(
 name|pid
 argument_list|,
@@ -123,12 +110,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_THREAD_SAFE
-end_ifndef
-
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -139,10 +120,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__waitpid
+argument_list|,
+name|_waitpid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

@@ -48,6 +48,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -109,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|<rpc/pmap_clnt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_define
@@ -449,7 +461,7 @@ block|{
 operator|*
 name|sockp
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_UNIX
 argument_list|,
@@ -499,7 +511,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|connect
+name|_connect
 argument_list|(
 operator|*
 name|sockp
@@ -2015,7 +2027,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getsockname
+name|_getsockname
 argument_list|(
 name|ct
 operator|->
@@ -2159,7 +2171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * read() and write() are replaced with recvmsg()/sendmsg() so that  * we can pass ancillary control data. In this case, the data constists  * of credential information which the kernel will fill in for us.  * XXX: This code is specific to FreeBSD and will not work on other  * platforms without the requisite kernel modifications.  */
+comment|/*  * _read() and _write() are replaced with _recvmsg()/_sendmsg() so that  * we can pass ancillary control data. In this case, the data constists  * of credential information which the kernel will fill in for us.  * XXX: This code is specific to FreeBSD and will not work on other  * platforms without the requisite kernel modifications.  */
 end_comment
 
 begin_struct
@@ -2300,7 +2312,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|recvmsg
+name|_recvmsg
 argument_list|(
 name|sock
 argument_list|,
@@ -2464,7 +2476,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|sendmsg
+name|_sendmsg
 argument_list|(
 name|sock
 argument_list|,
@@ -2655,7 +2667,7 @@ expr_stmt|;
 comment|/* in case select writes back */
 name|r
 operator|=
-name|select
+name|_select
 argument_list|(
 name|ct
 operator|->

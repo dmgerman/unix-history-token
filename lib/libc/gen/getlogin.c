@@ -82,33 +82,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libc_private.h>
+file|"namespace.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_THREAD_SAFE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|THREAD_LOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|THREAD_UNLOCK
-parameter_list|()
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -119,35 +94,21 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pthread_private.h"
+file|"un-namespace.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|pthread_mutex
-name|logname_lock
-init|=
-name|PTHREAD_MUTEX_STATIC_INITIALIZER
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|pthread_mutex_t
-name|logname_mutex
-init|=
-operator|&
-name|logname_lock
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<libc_private.h>
+end_include
 
 begin_define
 define|#
 directive|define
 name|THREAD_LOCK
 parameter_list|()
-value|if (__isthreaded) pthread_mutex_lock(&logname_mutex)
+value|if (__isthreaded) _pthread_mutex_lock(&logname_mutex)
 end_define
 
 begin_define
@@ -155,17 +116,21 @@ define|#
 directive|define
 name|THREAD_UNLOCK
 parameter_list|()
-value|if (__isthreaded) pthread_mutex_unlock(&logname_mutex)
+value|if (__isthreaded) _pthread_mutex_unlock(&logname_mutex)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _THREAD_SAFE */
-end_comment
+begin_function_decl
+specifier|extern
+name|int
+name|_getlogin
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -176,6 +141,15 @@ end_decl_stmt
 begin_comment
 comment|/* known to setlogin() */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|pthread_mutex_t
+name|logname_mutex
+init|=
+name|PTHREAD_MUTEX_INITIALIZER
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -207,7 +181,7 @@ directive|ifdef
 name|__NETBSD_SYSCALLS
 if|if
 condition|(
-name|__getlogin
+name|_getlogin
 argument_list|(
 name|logname
 argument_list|,

@@ -40,6 +40,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -83,6 +89,18 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_function
@@ -154,7 +172,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigaction
+name|_sigaction
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -168,7 +186,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigaction
+name|_sigaction
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -202,7 +220,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -235,7 +253,7 @@ comment|/* 		 * Restore original signal dispositions and exec the command. 		 */
 operator|(
 name|void
 operator|)
-name|sigaction
+name|_sigaction
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -248,7 +266,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigaction
+name|_sigaction
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -261,7 +279,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -334,7 +352,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|sigaction
+name|_sigaction
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -347,7 +365,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigaction
+name|_sigaction
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -360,7 +378,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -386,12 +404,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_THREAD_SAFE
-end_ifndef
-
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -402,10 +414,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__system
+argument_list|,
+name|_system
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

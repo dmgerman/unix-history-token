@@ -53,6 +53,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -95,7 +101,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libc_private.h>
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_include
@@ -524,7 +536,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|dup2
+name|_dup2
 argument_list|(
 name|f
 argument_list|,

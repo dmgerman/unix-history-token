@@ -59,6 +59,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_function
 name|int
 name|vasprintf
@@ -168,7 +174,7 @@ expr_stmt|;
 comment|/* Leave room for the NULL */
 name|ret
 operator|=
-name|vfprintf
+name|__vfprintf
 argument_list|(
 operator|&
 name|f

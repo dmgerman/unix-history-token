@@ -48,6 +48,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/types.h>
 end_include
 
@@ -105,6 +111,12 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
 begin_comment
 comment|/*  * don't use gethostbyname, which would invoke yellow pages  *  * Avoid loopback interfaces.  We return information from a loopback  * interface only if there are no other possible interfaces.  */
 end_comment
@@ -158,7 +170,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -195,7 +207,7 @@ name|buf
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|s
 argument_list|,
@@ -271,7 +283,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|s
 argument_list|,

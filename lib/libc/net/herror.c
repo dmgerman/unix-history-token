@@ -54,6 +54,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -79,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_decl_stmt
@@ -246,7 +258,7 @@ name|iov_len
 operator|=
 literal|1
 expr_stmt|;
-name|writev
+name|_writev
 argument_list|(
 name|STDERR_FILENO
 argument_list|,

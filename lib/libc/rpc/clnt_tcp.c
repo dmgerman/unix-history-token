@@ -48,6 +48,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -97,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|<rpc/pmap_clnt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_define
@@ -514,7 +526,7 @@ block|{
 operator|*
 name|sockp
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -549,7 +561,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|connect
+name|_connect
 argument_list|(
 operator|*
 name|sockp
@@ -2069,7 +2081,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getsockname
+name|_getsockname
 argument_list|(
 name|ct
 operator|->
@@ -2389,7 +2401,7 @@ expr_stmt|;
 comment|/* in case select writes back */
 name|r
 operator|=
-name|select
+name|_select
 argument_list|(
 name|ct
 operator|->

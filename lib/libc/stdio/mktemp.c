@@ -50,6 +50,10 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_comment
+comment|/* #include "namespace.h" */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -103,6 +107,10 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_comment
+comment|/* #include "un-namespace.h" */
+end_comment
 
 begin_decl_stmt
 name|char

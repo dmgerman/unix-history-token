@@ -43,6 +43,12 @@ begin_comment
 comment|/*  * The basic parameters you can tweak.  *  * malloc_pageshift	pagesize = 1<< malloc_pageshift  *			It's probably best if this is the native  *			page size, but it doesn't have to be.  *  * malloc_minsize	minimum size of an allocation in bytes.  *			If this is too small it's too much work  *			to manage them.  This is also the smallest  *			unit of alignment used for the storage  *			returned by malloc/realloc.  *  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"namespace.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -356,6 +362,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_comment

@@ -13,6 +13,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -98,6 +104,12 @@ begin_include
 include|#
 directive|include
 file|<rpcsvc/nis.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_comment
@@ -1641,7 +1653,7 @@ goto|;
 block|}
 name|s
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -1697,7 +1709,7 @@ name|res
 decl_stmt|;
 if|if
 condition|(
-name|sendto
+name|_sendto
 argument_list|(
 name|s
 argument_list|,
@@ -1756,7 +1768,7 @@ argument_list|)
 expr_stmt|;
 name|res
 operator|=
-name|select
+name|_select
 argument_list|(
 name|_rpc_dtablesize
 argument_list|()
@@ -1810,7 +1822,7 @@ argument_list|)
 expr_stmt|;
 name|res
 operator|=
-name|recvfrom
+name|_recvfrom
 argument_list|(
 name|s
 argument_list|,
@@ -1896,7 +1908,7 @@ expr_stmt|;
 comment|/* only wait 20 seconds */
 name|res
 operator|=
-name|connect
+name|_connect
 argument_list|(
 name|s
 argument_list|,

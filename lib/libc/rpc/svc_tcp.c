@@ -48,6 +48,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -91,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_comment
@@ -362,7 +374,7 @@ condition|(
 operator|(
 name|sock
 operator|=
-name|socket
+name|_socket
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -401,7 +413,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|sock
 argument_list|,
@@ -490,7 +502,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|bind
+name|_bind
 argument_list|(
 name|sock
 argument_list|,
@@ -509,7 +521,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|getsockname
+name|_getsockname
 argument_list|(
 name|sock
 argument_list|,
@@ -529,7 +541,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|listen
+name|_listen
 argument_list|(
 name|sock
 argument_list|,
@@ -1042,7 +1054,7 @@ condition|(
 operator|(
 name|sock
 operator|=
-name|accept
+name|_accept
 argument_list|(
 name|xprt
 operator|->
@@ -1110,7 +1122,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|_ioctl
 argument_list|(
 name|sock
 argument_list|,
@@ -1309,7 +1321,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * reads data from the tcp conection.  * any error is fatal and the connection is closed.  * (And a read of zero bytes is a half closed stream => error.)  *  * Note: we have to be careful here not to allow ourselves to become  * blocked too long in this routine. While we're waiting for data from one  * client, another client may be trying to connect. To avoid this situation,  * some code from svc_run() is transplanted here: the select() loop checks  * all RPC descriptors including the one we want and calls svc_getreqset2()  * to handle new requests if any are detected.  */
+comment|/*  * reads data from the tcp conection.  * any error is fatal and the connection is closed.  * (And a read of zero bytes is a half closed stream => error.)  *  * Note: we have to be careful here not to allow ourselves to become  * blocked too long in this routine. While we're waiting for data from one  * client, another client may be trying to connect. To avoid this situation,  * some code from svc_run() is transplanted here: the _select() loop checks  * all RPC descriptors including the one we want and calls svc_getreqset2()  * to handle new requests if any are detected.  */
 end_comment
 
 begin_function
@@ -1456,10 +1468,10 @@ name|tv
 operator|=
 name|delta
 expr_stmt|;
-comment|/* in case select() implements writeback */
+comment|/* in case _select() implements writeback */
 switch|switch
 condition|(
-name|select
+name|_select
 argument_list|(
 name|svc_maxfd
 operator|+

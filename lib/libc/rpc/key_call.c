@@ -18,6 +18,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -97,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_define
@@ -1385,7 +1397,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getpeername
+name|_getpeername
 argument_list|(
 name|fd
 argument_list|,
