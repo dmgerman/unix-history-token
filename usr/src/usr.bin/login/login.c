@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.19 (Berkeley) %G%"
+literal|"@(#)login.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -743,6 +743,20 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|argv
+index|[
+literal|2
+index|]
+operator|==
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|rflag
 operator|=
 literal|1
@@ -1260,12 +1274,37 @@ name|lusername
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|getloginname
 argument_list|(
 operator|&
 name|utmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|utmp
+operator|.
+name|ut_name
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+block|{
+name|puts
+argument_list|(
+literal|"login names may not start with '-'."
+argument_list|)
+expr_stmt|;
+name|invalid
+operator|=
+name|TRUE
+expr_stmt|;
+continue|continue;
+block|}
+block|}
 name|invalid
 operator|=
 name|FALSE
