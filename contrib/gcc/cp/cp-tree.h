@@ -16,7 +16,7 @@ name|_CP_TREE_H
 end_define
 
 begin_comment
-comment|/* Usage of TREE_LANG_FLAG_?:    0: BINFO_MARKED (BINFO nodes).       COMPOUND_STMT_NO_SCOPE (in COMPOUND_STMT).       NEW_EXPR_USE_GLOBAL (in NEW_EXPR).       DELETE_EXPR_USE_GLOBAL (in DELETE_EXPR).       LOOKUP_EXPR_GLOBAL (in LOOKUP_EXPR).       TREE_NEGATED_INT (in INTEGER_CST).       TREE_INDIRECT_USING (in NAMESPACE_DECL).       IDENTIFIER_MARKED (used by search routines).       LOCAL_BINDING_P (in CPLUS_BINDING)    1: IDENTIFIER_VIRTUAL_P.       TI_PENDING_TEMPLATE_FLAG.       TEMPLATE_PARMS_FOR_INLINE.       DELETE_EXPR_USE_VEC (in DELETE_EXPR).       (TREE_CALLS_NEW) (in _EXPR or _REF) (commented-out).       TYPE_USES_COMPLEX_INHERITANCE (in _TYPE).       C_DECLARED_LABEL_FLAG.       INHERITED_VALUE_BINDING_P (in CPLUS_BINDING)       BASELINK_P (in TREE_LIST)    2: IDENTIFIER_OPNAME_P.       BINFO_VBASE_MARKED.       BINFO_FIELDS_MARKED.       TYPE_VIRTUAL_P.    3: TYPE_USES_VIRTUAL_BASECLASSES (in a class TYPE).       BINFO_VTABLE_PATH_MARKED.       BINFO_PUSHDECLS_MARKED.       (TREE_REFERENCE_EXPR) (in NON_LVALUE_EXPR) (commented-out).    4: BINFO_NEW_VTABLE_MARKED.       TREE_HAS_CONSTRUCTOR (in INDIRECT_REF, SAVE_EXPR, CONSTRUCTOR,           or FIELD_DECL).    5: Not used.    6: Not used.     Usage of TYPE_LANG_FLAG_?:    0: C_TYPE_FIELDS_READONLY (in RECORD_TYPE or UNION_TYPE).    1: TYPE_HAS_CONSTRUCTOR.    2: TYPE_HAS_DESTRUCTOR.    3: TYPE_FOR_JAVA.    4: TYPE_NEEDS_DESTRUCTOR.    5: IS_AGGR_TYPE.    6: TYPE_BUILT_IN.     Usage of DECL_LANG_FLAG_?:    0: DECL_ERROR_REPORTED (in VAR_DECL).       DECL_TEMPLATE_PARM_P (in CONST_DECL, TYPE_DECL, or TEMPLATE_DECL)    1: C_TYPEDEF_EXPLICITLY_SIGNED (in TYPE_DECL).       DECL_TEMPLATE_INSTANTIATED (in a VAR_DECL or a FUNCTION_DECL)    2: DECL_THIS_EXTERN (in VAR_DECL or FUNCTION_DECL).    3: DECL_IN_AGGR_P.    4: DECL_MAYBE_TEMPLATE.    5: DECL_INTERFACE_KNOWN.    6: DECL_THIS_STATIC (in VAR_DECL or FUNCTION_DECL).    7: DECL_DEAD_FOR_LOCAL (in VAR_DECL).     Usage of language-independent fields in a language-dependent manner:        TYPE_ALIAS_SET      This field is used by TYPENAME_TYPEs, TEMPLATE_TYPE_PARMs, and so      forth as a substitute for the mark bits provided in `lang_type'.      At present, only the six low-order bits are used.     TYPE_BINFO      For an ENUMERAL_TYPE, this is ENUM_TEMPLATE_INFO.      For a TYPENAME_TYPE, this is TYPENAME_TYPE_FULLNAME.      For a TEMPLATE_TEMPLATE_PARM, this is      TEMPLATE_TEMPLATE_PARM_TEMPLATE_INFO.     DECL_SAVED_INSNS/DECL_FIELD_SIZE      For a static VAR_DECL, this is DECL_INIT_PRIORITY. */
+comment|/* Usage of TREE_LANG_FLAG_?:    0: BINFO_MARKED (BINFO nodes).       COMPOUND_STMT_NO_SCOPE (in COMPOUND_STMT).       NEW_EXPR_USE_GLOBAL (in NEW_EXPR).       DELETE_EXPR_USE_GLOBAL (in DELETE_EXPR).       LOOKUP_EXPR_GLOBAL (in LOOKUP_EXPR).       TREE_NEGATED_INT (in INTEGER_CST).       TREE_INDIRECT_USING (in NAMESPACE_DECL).       IDENTIFIER_MARKED (used by search routines).       LOCAL_BINDING_P (in CPLUS_BINDING)    1: IDENTIFIER_VIRTUAL_P.       TI_PENDING_TEMPLATE_FLAG.       TEMPLATE_PARMS_FOR_INLINE.       DELETE_EXPR_USE_VEC (in DELETE_EXPR).       (TREE_CALLS_NEW) (in _EXPR or _REF) (commented-out).       TYPE_USES_COMPLEX_INHERITANCE (in _TYPE).       C_DECLARED_LABEL_FLAG.       INHERITED_VALUE_BINDING_P (in CPLUS_BINDING)       BASELINK_P (in TREE_LIST)    2: IDENTIFIER_OPNAME_P.       BINFO_VBASE_MARKED.       BINFO_FIELDS_MARKED.       TYPE_VIRTUAL_P.    3: TYPE_USES_VIRTUAL_BASECLASSES (in a class TYPE).       BINFO_VTABLE_PATH_MARKED.       BINFO_PUSHDECLS_MARKED.       (TREE_REFERENCE_EXPR) (in NON_LVALUE_EXPR) (commented-out).    4: BINFO_NEW_VTABLE_MARKED.       TREE_HAS_CONSTRUCTOR (in INDIRECT_REF, SAVE_EXPR, CONSTRUCTOR,           or FIELD_DECL).    5: TYPE_USES_PVBASES (in a class TYPE).    6: Not used.     Usage of TYPE_LANG_FLAG_?:    0: C_TYPE_FIELDS_READONLY (in RECORD_TYPE or UNION_TYPE).    1: TYPE_HAS_CONSTRUCTOR.    2: TYPE_HAS_DESTRUCTOR.    3: TYPE_FOR_JAVA.    4: TYPE_NEEDS_DESTRUCTOR.    5: IS_AGGR_TYPE.    6: TYPE_BUILT_IN.     Usage of DECL_LANG_FLAG_?:    0: DECL_ERROR_REPORTED (in VAR_DECL).       DECL_TEMPLATE_PARM_P (in CONST_DECL, TYPE_DECL, or TEMPLATE_DECL)    1: C_TYPEDEF_EXPLICITLY_SIGNED (in TYPE_DECL).       DECL_TEMPLATE_INSTANTIATED (in a VAR_DECL or a FUNCTION_DECL)    2: DECL_THIS_EXTERN (in VAR_DECL or FUNCTION_DECL).    3: DECL_IN_AGGR_P.    4: DECL_MAYBE_TEMPLATE.    5: DECL_INTERFACE_KNOWN.    6: DECL_THIS_STATIC (in VAR_DECL or FUNCTION_DECL).    7: DECL_DEAD_FOR_LOCAL (in VAR_DECL).     Usage of language-independent fields in a language-dependent manner:        TYPE_ALIAS_SET      This field is used by TYPENAME_TYPEs, TEMPLATE_TYPE_PARMs, and so      forth as a substitute for the mark bits provided in `lang_type'.      At present, only the six low-order bits are used.     TYPE_BINFO      For an ENUMERAL_TYPE, this is ENUM_TEMPLATE_INFO.      For a TYPENAME_TYPE, this is TYPENAME_TYPE_FULLNAME.      For a TEMPLATE_TEMPLATE_PARM, this is      TEMPLATE_TEMPLATE_PARM_TEMPLATE_INFO.     DECL_SAVED_INSNS/DECL_FIELD_SIZE      For a static VAR_DECL, this is DECL_INIT_PRIORITY. */
 end_comment
 
 begin_comment
@@ -1455,13 +1455,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* True for more efficient but incompatible (not fully tested)    vtable implementation (using thunks).    0 is old behavior; 1 is new behavior.  */
+comment|/* True for more efficient but incompatible (not fully tested)    vtable implementation (using thunks).    0 is old behavior; 1 is new behavior; 3 adds vlist arguments;    2 is 3 plus backwards-compatibility to 1.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|flag_vtable_thunks
+decl_stmt|,
+name|flag_vtable_thunks_compat
 decl_stmt|;
 end_decl_stmt
 
@@ -2798,6 +2800,20 @@ value|(TREE_LANG_FLAG_3(NODE))
 end_define
 
 begin_comment
+comment|/* Nonzero means that this _CLASSTYPE uses polymorphic virtual bases.    This flag is set only when we use vtable thunks.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TYPE_USES_PVBASES
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(TREE_LANG_FLAG_5(NODE))
+end_define
+
+begin_comment
 comment|/* Vector member functions defined in this class.  Each element is    either a FUNCTION_DECL, a TEMPLATE_DECL, or an OVERLOAD.  All    functions with the same name end up in the same slot.  The first    two elements are for constructors, and destructors, respectively.    These are followed by ordinary member functions.  There may be    empty entries at the end of the vector.  */
 end_comment
 
@@ -3126,7 +3142,7 @@ value|(TYPE_LANG_SPECIFIC(NODE)->vsize)
 end_define
 
 begin_comment
-comment|/* The virtual base classes that this type uses.  */
+comment|/* The list of binfos of virtual base classes that this type uses.  */
 end_comment
 
 begin_define
@@ -3935,11 +3951,6 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|constructor_for_vbase_attr
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
 name|mutable_flag
 range|:
 literal|1
@@ -3990,9 +4001,14 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
+name|constructor_for_vbase_attr
+range|:
+literal|2
+decl_stmt|;
+name|unsigned
 name|dummy
 range|:
-literal|4
+literal|3
 decl_stmt|;
 name|tree
 name|access
@@ -4122,8 +4138,43 @@ define|\
 value|(IDENTIFIER_TYPENAME_P (DECL_NAME (NODE))&& TREE_TYPE (DECL_NAME (NODE)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|CONSTRUCTOR_FOR_VBASE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONSTRUCTOR_FOR_PVBASE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DESTRUCTOR_FOR_PVBASE
+value|3
+end_define
+
 begin_comment
-comment|/* For FUNCTION_DECLs: nonzero means that this function is a constructor    for an object with virtual baseclasses.  */
+comment|/* For FUNCTION_DECLs: nonzero means that this function is a con/destructor    for an object with virtual baseclasses.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_CONSTRUCTOR_FOR_VBASE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_LANG_SPECIFIC(NODE)->decl_flags.constructor_for_vbase_attr)
+end_define
+
+begin_comment
+comment|/* Nonzero means that this function is a constructor for an object    with virtual baseclasses.  */
 end_comment
 
 begin_define
@@ -4133,7 +4184,65 @@ name|DECL_CONSTRUCTOR_FOR_VBASE_P
 parameter_list|(
 name|NODE
 parameter_list|)
-value|(DECL_LANG_SPECIFIC(NODE)->decl_flags.constructor_for_vbase_attr)
+define|\
+value|(DECL_CONSTRUCTOR_FOR_VBASE (NODE) == CONSTRUCTOR_FOR_VBASE)
+end_define
+
+begin_comment
+comment|/* Nonzero means that this function is a constructor for an object    with virtual baseclasses which have virtual functions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_CONSTRUCTOR_FOR_PVBASE_P
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_LANG_SPECIFIC(NODE)->decl_flags.constructor_for_vbase_attr == CONSTRUCTOR_FOR_PVBASE)
+end_define
+
+begin_comment
+comment|/* Nonzero means that this function is a destructor for an object    with virtual baseclasses which have virtual functions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_DESTRUCTOR_FOR_PVBASE_P
+parameter_list|(
+name|NODE
+parameter_list|)
+value|(DECL_LANG_SPECIFIC(NODE)->decl_flags.constructor_for_vbase_attr == DESTRUCTOR_FOR_PVBASE)
+end_define
+
+begin_comment
+comment|/* Nonzero means that this function is a wrapper around a PVBASE ctor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_VLIST_CTOR_WRAPPER_P
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|(DECL_CONSTRUCTOR_FOR_VBASE_P (NODE)&& DECL_VLIST_CTOR_WRAPPED (NODE)\&& TREE_CODE (DECL_VLIST_CTOR_WRAPPED (NODE)) == FUNCTION_DECL \&& DECL_CONSTRUCTOR_FOR_PVBASE_P (DECL_VLIST_CTOR_WRAPPED (NODE)))
+end_define
+
+begin_comment
+comment|/* Refers to original function that NODE wraps.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_VLIST_CTOR_WRAPPED
+parameter_list|(
+name|NODE
+parameter_list|)
+value|DECL_MEMFUNC_POINTER_TO (NODE)
 end_define
 
 begin_comment
@@ -7468,6 +7577,13 @@ name|vt_off_identifier
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|tree
+name|in_charge_identifier
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* A node that is a list (length 1) of error_mark_nodes.  */
 end_comment
@@ -7512,6 +7628,17 @@ name|tree
 name|opaque_type_node
 decl_stmt|,
 name|signature_type_node
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|vlist_identifier
+decl_stmt|,
+name|vlist_type_node
+decl_stmt|,
+name|vlist_zero_node
 decl_stmt|;
 end_decl_stmt
 
@@ -7952,6 +8079,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|VCTABLE_NAME
+value|"__vc$"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLIST_NAME_FORMAT
+value|"__vl$%s"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VFIELD_BASE
 value|"$vf"
 end_define
@@ -8074,6 +8215,20 @@ define|#
 directive|define
 name|VTABLE_NAME_FORMAT
 value|(flag_vtable_thunks ? "__vt_%s" : "_vt.%s")
+end_define
+
+begin_define
+define|#
+directive|define
+name|VCTABLE_NAME
+value|"__vc."
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLIST_NAME_FORMAT
+value|"__vl.%s"
 end_define
 
 begin_define
@@ -8251,6 +8406,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|VCTABLE_NAME
+value|"__vc_"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLIST_NAME_FORMAT
+value|"__vl_%s"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VFIELD_BASE
 value|"__vfb"
 end_define
@@ -8412,6 +8581,27 @@ define|#
 directive|define
 name|IN_CHARGE_NAME
 value|"__in_chrg"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLIST_NAME
+value|"__vlist"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLIST1_NAME
+value|"__vlist1"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLIST_TYPE_NAME
+value|"6_Vlist"
 end_define
 
 begin_define
@@ -9090,7 +9280,7 @@ value|(a[x>>3]& (1<< (x&7)))
 end_define
 
 begin_comment
-comment|/* These are uses as bits in flags passed to build_method_call    to control its error reporting behavior.     LOOKUP_PROTECT means flag access violations.    LOOKUP_COMPLAIN mean complain if no suitable member function      matching the arguments is found.    LOOKUP_NORMAL is just a combination of these two.    LOOKUP_NONVIRTUAL means make a direct call to the member function found    LOOKUP_GLOBAL means search through the space of overloaded functions,      as well as the space of member functions.    LOOKUP_HAS_IN_CHARGE means that the "in charge" variable is already      in the parameter list.    LOOKUP_ONLYCONVERTING means that non-conversion constructors are not tried.    DIRECT_BIND means that if a temporary is created, it should be created so      that it lives as long as the current variable bindings; otherwise it      only lives until the end of the complete-expression.    LOOKUP_SPECULATIVELY means return NULL_TREE if we cannot find what we are      after.  Note, LOOKUP_COMPLAIN is checked and error messages printed      before LOOKUP_SPECULATIVELY is checked.    LOOKUP_NO_CONVERSION means that user-defined conversions are not      permitted.  Built-in conversions are permitted.    LOOKUP_DESTRUCTOR means explicit call to destructor.    LOOKUP_NO_TEMP_BIND means temporaries will not be bound to references.     These are used in global lookup to support elaborated types and    qualifiers.        LOOKUP_PREFER_TYPES means not to accept objects, and possibly namespaces.    LOOKUP_PREFER_NAMESPACES means not to accept objects, and possibly types.    LOOKUP_PREFER_BOTH means class-or-namespace-name.    LOOKUP_TEMPLATES_EXPECTED means that class templates also count      as types.  */
+comment|/* These are uses as bits in flags passed to build_method_call    to control its error reporting behavior.     LOOKUP_PROTECT means flag access violations.    LOOKUP_COMPLAIN mean complain if no suitable member function      matching the arguments is found.    LOOKUP_NORMAL is just a combination of these two.    LOOKUP_NONVIRTUAL means make a direct call to the member function found    LOOKUP_GLOBAL means search through the space of overloaded functions,      as well as the space of member functions.    LOOKUP_HAS_IN_CHARGE means that the "in charge" variable is already      in the parameter list.    LOOKUP_HAS_VLIST means that the "vlist" variable is already in       the parameter list.    LOOKUP_ONLYCONVERTING means that non-conversion constructors are not tried.    DIRECT_BIND means that if a temporary is created, it should be created so      that it lives as long as the current variable bindings; otherwise it      only lives until the end of the complete-expression.    LOOKUP_SPECULATIVELY means return NULL_TREE if we cannot find what we are      after.  Note, LOOKUP_COMPLAIN is checked and error messages printed      before LOOKUP_SPECULATIVELY is checked.    LOOKUP_NO_CONVERSION means that user-defined conversions are not      permitted.  Built-in conversions are permitted.    LOOKUP_DESTRUCTOR means explicit call to destructor.    LOOKUP_NO_TEMP_BIND means temporaries will not be bound to references.     These are used in global lookup to support elaborated types and    qualifiers.        LOOKUP_PREFER_TYPES means not to accept objects, and possibly namespaces.    LOOKUP_PREFER_NAMESPACES means not to accept objects, and possibly types.    LOOKUP_PREFER_BOTH means class-or-namespace-name.    LOOKUP_TEMPLATES_EXPECTED means that class templates also count      as types.  */
 end_comment
 
 begin_define
@@ -9207,6 +9397,13 @@ define|#
 directive|define
 name|LOOKUP_TEMPLATES_EXPECTED
 value|(8192)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOKUP_HAS_VLIST
+value|(16384)
 end_define
 
 begin_define
@@ -14468,6 +14665,36 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|tree
+name|build_base_dtor_call
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|init_vlist
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* in input.c */
 end_comment
@@ -15298,6 +15525,8 @@ name|PROTO
 argument_list|(
 operator|(
 name|tree
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -15390,6 +15619,21 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|get_vlist_vtable_id
+name|PROTO
+argument_list|(
+operator|(
+name|tree
 operator|,
 name|tree
 operator|)
@@ -16359,6 +16603,19 @@ begin_decl_stmt
 specifier|extern
 name|tree
 name|get_tinfo_fn
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|get_tinfo_fn_unused
 name|PROTO
 argument_list|(
 operator|(
