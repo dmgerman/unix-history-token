@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hunt8.c	4.1 (Berkeley) %G%"
+literal|"@(#)hunt8.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,11 +257,6 @@ name|time
 argument_list|(
 operator|&
 name|indexdate
-argument_list|)
-expr_stmt|;
-name|unopen
-argument_list|(
-name|fb
 argument_list|)
 expr_stmt|;
 block|}
