@@ -1660,6 +1660,7 @@ operator|*
 operator|,
 expr|struct
 name|fw_eui64
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

@@ -4838,6 +4838,7 @@ name|sc
 operator|->
 name|fc
 argument_list|,
+operator|&
 name|asyreq
 operator|->
 name|req

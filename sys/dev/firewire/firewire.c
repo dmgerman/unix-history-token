@@ -799,6 +799,7 @@ name|fc
 parameter_list|,
 name|struct
 name|fw_eui64
+modifier|*
 name|eui
 parameter_list|)
 block|{
@@ -831,6 +832,7 @@ name|fwdev
 operator|->
 name|eui
 argument_list|,
+operator|*
 name|eui
 argument_list|)
 condition|)

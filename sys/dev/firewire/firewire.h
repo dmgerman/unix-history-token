@@ -1654,6 +1654,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|FW_SDEUI64
+value|_IOW('S', 20, struct fw_eui64)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_GDEUI64
+value|_IOR('S', 21, struct fw_eui64)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FWOHCI_RDREG
 value|_IOWR('S', 80, struct fw_reg_req_t)
 end_define
