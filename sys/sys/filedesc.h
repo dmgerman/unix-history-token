@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/priority.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -120,6 +126,14 @@ name|mtx
 name|fd_mtx
 decl_stmt|;
 comment|/* protects members of this struct */
+name|int
+name|fd_locked
+decl_stmt|;
+comment|/* long lock flag */
+name|int
+name|fd_wanted
+decl_stmt|;
+comment|/* "" */
 name|struct
 name|kqlist
 name|fd_kqlist
@@ -210,7 +224,8 @@ name|FILEDESC_LOCK
 parameter_list|(
 name|fd
 parameter_list|)
-value|mtx_lock(&(fd)->fd_mtx)
+define|\
+value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		(fd)->fd_wanted++;							\ 		while ((fd)->fd_locked)							\ 			msleep(&(fd)->fd_locked,&(fd)->fd_mtx, PLOCK, "fdesc", 0);	\ 		(fd)->fd_locked = 2;							\ 		(fd)->fd_wanted--;							\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0);
 end_define
 
 begin_define
@@ -220,36 +235,8 @@ name|FILEDESC_UNLOCK
 parameter_list|(
 name|fd
 parameter_list|)
-value|mtx_unlock(&(fd)->fd_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILEDESC_LOCKED
-parameter_list|(
-name|fd
-parameter_list|)
-value|mtx_owned(&(fd)->fd_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILEDESC_LOCK_ASSERT
-parameter_list|(
-name|fd
-parameter_list|,
-name|type
-parameter_list|)
-value|mtx_assert(&(fd)->fd_mtx, (type))
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILEDESC_LOCK_DESC
-value|"filedesc structure"
+define|\
+value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		KASSERT((fd)->fd_locked == 2,						\ 		    ("fdesc locking mistake %d should be %d", (fd)->fd_locked, 2));	\ 		(fd)->fd_locked = 0;							\ 		if ((fd)->fd_wanted)							\ 			wakeup(&(fd)->fd_locked);					\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0);
 end_define
 
 begin_define
@@ -259,7 +246,8 @@ name|FILEDESC_LOCK_FAST
 parameter_list|(
 name|fd
 parameter_list|)
-value|FILEDESC_LOCK(fd);
+define|\
+value|do {										\ 		mtx_lock(&(fd)->fd_mtx);						\ 		(fd)->fd_wanted++;							\ 		while ((fd)->fd_locked)							\ 			msleep(&(fd)->fd_locked,&(fd)->fd_mtx, PLOCK, "fdesc", 0);	\ 		(fd)->fd_locked = 1;							\ 		(fd)->fd_wanted--;							\ 	} while (0);
 end_define
 
 begin_define
@@ -269,7 +257,55 @@ name|FILEDESC_UNLOCK_FAST
 parameter_list|(
 name|fd
 parameter_list|)
-value|FILEDESC_UNLOCK(fd);
+define|\
+value|do {										\ 		KASSERT((fd)->fd_locked == 1,						\ 		    ("fdesc locking mistake %d should be %d", (fd)->fd_locked, 1));	\ 		(fd)->fd_locked = 0;							\ 		if ((fd)->fd_wanted)							\ 			wakeup(&(fd)->fd_locked);					\ 		mtx_unlock(&(fd)->fd_mtx);						\ 	} while (0);
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANT_SUPPORT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCK_ASSERT
+parameter_list|(
+name|fd
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|do {										\ 		if ((arg) == MA_OWNED)							\ 			KASSERT((fd)->fd_locked != 0, ("fdesc locking mistake"));	\ 		else									\ 			KASSERT((fd)->fd_locked == 0, ("fdesc locking mistake"));	\ 	} while (0);
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCK_ASSERT
+parameter_list|(
+name|fd
+parameter_list|,
+name|arg
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCK_DESC
+value|"filedesc structure"
 end_define
 
 begin_struct_decl
