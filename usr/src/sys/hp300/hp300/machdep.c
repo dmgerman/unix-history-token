@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.74 92/12/20$  *  *	@(#)machdep.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.74 92/12/20$  *  *	@(#)machdep.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -6936,6 +6936,8 @@ end_expr_stmt
 begin_decl_stmt
 name|int
 name|sz
+decl_stmt|,
+name|ustack
 decl_stmt|;
 end_decl_stmt
 
@@ -7089,6 +7091,9 @@ parameter_list|)
 specifier|register
 name|int
 name|val
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 block|{
 specifier|static
