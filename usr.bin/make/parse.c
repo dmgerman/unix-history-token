@@ -7339,6 +7339,14 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
+name|isspace
+argument_list|(
+name|line
+index|[
+literal|7
+index|]
+argument_list|)
+operator|&&
 name|strchr
 argument_list|(
 name|line
