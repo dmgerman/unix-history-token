@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msgcat.c,v 1.11 1997/05/10 04:40:40 ache Exp $ */
+comment|/*	$Id: msgcat.c,v 1.12 1998/01/15 09:58:08 jb Exp $ */
 end_comment
 
 begin_comment
@@ -185,7 +185,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|nl_catd
+name|int
 name|loadSet
 parameter_list|()
 function_decl|;
@@ -286,7 +286,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|NLERR
 operator|)
 return|;
 block|}
@@ -353,10 +353,6 @@ name|base
 operator|=
 name|cptr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|len
@@ -571,7 +567,7 @@ name|catpath
 condition|)
 return|return
 operator|(
-literal|0
+name|NLERR
 operator|)
 return|;
 block|}
@@ -811,6 +807,9 @@ name|set
 operator|->
 name|invalid
 condition|)
+operator|(
+name|void
+operator|)
 name|loadSet
 argument_list|(
 name|cat
@@ -1075,6 +1074,7 @@ decl_stmt|;
 name|int
 name|msgId
 decl_stmt|;
+name|__const
 name|char
 modifier|*
 name|dflt
@@ -1094,6 +1094,7 @@ operator|*
 operator|)
 name|catd
 decl_stmt|;
+name|__const
 name|char
 modifier|*
 name|cptr
@@ -1131,6 +1132,10 @@ name|dflt
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|cptr
 operator|)
 return|;
@@ -1278,7 +1283,7 @@ define|#
 directive|define
 name|CORRUPT
 parameter_list|()
-value|{fprintf(stderr, "%s: corrupt file.\n", ERRNAME); free(cat); return(0);}
+value|{fprintf(stderr, "%s: corrupt file.\n", ERRNAME); free(cat); return(NLERR);}
 end_define
 
 begin_define
@@ -1381,7 +1386,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NLERR
 operator|)
 return|;
 block|}
@@ -1475,7 +1480,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NLERR
 operator|)
 return|;
 block|}
@@ -1510,7 +1515,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NLERR
 operator|)
 return|;
 block|}
@@ -1774,7 +1779,7 @@ operator|==
 name|MCLoadAll
 condition|)
 block|{
-name|nl_catd
+name|int
 name|res
 decl_stmt|;
 if|if
@@ -1853,9 +1858,8 @@ expr_stmt|;
 if|if
 condition|(
 name|res
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 name|NOSPACE
 argument_list|()
@@ -1916,7 +1920,7 @@ end_function
 
 begin_function
 specifier|static
-name|nl_catd
+name|int
 name|loadSet
 parameter_list|(
 name|cat
@@ -1974,10 +1978,6 @@ name|data
 operator|.
 name|str
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|set

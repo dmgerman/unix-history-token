@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: catgets.c,v 1.3 1997/02/22 15:00:47 peter Exp $ */
 end_comment
 
 begin_comment
@@ -54,6 +54,7 @@ name|int
 operator|,
 name|int
 operator|,
+name|__const
 name|char
 operator|*
 operator|)
@@ -83,6 +84,7 @@ decl_stmt|;
 name|int
 name|msg_id
 decl_stmt|;
+name|__const
 name|char
 modifier|*
 name|s
