@@ -566,6 +566,8 @@ operator|(
 name|CSIZE
 operator||
 name|PARENB
+operator||
+name|PARODD
 operator|)
 expr_stmt|;
 name|t
@@ -573,6 +575,8 @@ operator|->
 name|c_cflag
 operator||=
 name|CS8
+operator||
+name|CREAD
 expr_stmt|;
 name|t
 operator|->
