@@ -79,6 +79,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NDBM
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DBM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DBM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -97,7 +125,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.34 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.35 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +146,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.34 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.35 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +161,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.34 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.35 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
