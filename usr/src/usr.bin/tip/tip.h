@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.h	4.3	81/06/16	*/
+comment|/*	tip.h	4.4	81/07/11	*/
 end_comment
 
 begin_comment
@@ -1309,6 +1309,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* initial tty line discipline */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|disc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current tty discpline */
 end_comment
 
 begin_endif

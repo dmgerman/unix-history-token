@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn11.c	4.5	81/06/21	*/
+comment|/*	dn11.c	4.6	81/07/11	*/
 end_comment
 
 begin_if
@@ -146,7 +146,7 @@ if|if
 condition|(
 name|errno
 operator|==
-name|ENXIO
+name|EBUSY
 condition|)
 name|printf
 argument_list|(
@@ -273,31 +273,18 @@ name|num
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|exit
+argument_list|(
 name|nw
 operator|!=
 name|lt
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dn11 write failed..."
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|exit
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * open line - will return on carrier 	 */
+if|if
+condition|(
+operator|(
 name|FD
 operator|=
 name|open
@@ -306,10 +293,7 @@ name|DV
 argument_list|,
 literal|2
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|FD
+operator|)
 operator|<
 literal|0
 condition|)

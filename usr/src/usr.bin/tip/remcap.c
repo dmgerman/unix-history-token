@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	remcap.c	4.3	81/05/21	*/
+comment|/*	remcap.c	4.4	81/07/11	*/
 end_comment
 
 begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BUFSIZ
+end_ifndef
 
 begin_define
 define|#
@@ -13,6 +19,11 @@ directive|define
 name|BUFSIZ
 value|1024
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

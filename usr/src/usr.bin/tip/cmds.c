@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cmds.c	4.4	81/06/09	*/
+comment|/*	cmds.c	4.5	81/07/11	*/
 end_comment
 
 begin_include
@@ -2598,25 +2598,6 @@ argument_list|(
 name|uucplock
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMUNIX
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TIOCSETD
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|odisc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|unraw
 argument_list|()
 expr_stmt|;
