@@ -164,6 +164,23 @@ name|ASM_FINAL_SPEC
 end_undef
 
 begin_comment
+comment|/* Like the default, except no -lg, and no -p.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LIB_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LIB_SPEC
+value|"%{!shared:%{!pg:%{!pthread:%{!kthread:-lc}%{kthread:-lpthread -lc}}%{pthread:-lc_r}}%{pg:%{!pthread:%{!kthread:-lc_p}%{kthread:-lpthread_p -lc_p}}%{pthread:-lc_r_p}}}"
+end_define
+
+begin_comment
 comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  Under FreeBSD/Alpha, the assembler does    nothing special with -pg. */
 end_comment
 
