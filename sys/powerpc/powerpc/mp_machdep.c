@@ -118,6 +118,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|all_cpus
+operator|=
+literal|1
+expr_stmt|;
+comment|/* needed for MB init code */
 return|return
 literal|0
 return|;

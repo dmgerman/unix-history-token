@@ -940,6 +940,9 @@ decl_stmt|;
 name|u_long
 name|mb_clpgs
 decl_stmt|;
+name|short
+name|mb_active
+decl_stmt|;
 block|}
 struct|;
 end_struct

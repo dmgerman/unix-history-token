@@ -100,7 +100,7 @@ file|<vm/vm_extern.h>
 end_include
 
 begin_comment
-comment|/*  * Maximum number of PCPU containers. If you know what you're doing you could  * explicitly define MBALLOC_NCPU to be exactly the number of CPUs on your  * system during compilation, and thus prevent kernel structure bloats.  */
+comment|/*  * Maximum number of PCPU containers. If you know what you're doing you could  * explicitly define MBALLOC_NCPU to be exactly the number of CPUs on your  * system during compilation, and thus prevent kernel structure bloat.  *  * SMP and non-SMP kernels clearly have a different number of possible cpus,  * but because we cannot assume a dense array of CPUs, we always allocate  * and traverse PCPU containers up to NCPU amount and merely check for  * CPU availability.  */
 end_comment
 
 begin_ifdef
@@ -134,7 +134,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * SMP and non-SMP kernels clearly have a different number of possible cpus.  */
+comment|/*  * Macros allowing us to determine whether or not a given CPU's container  * should be configured during mb_init().  * XXX: Eventually we may want to provide hooks for CPU spinon/spinoff that  *      will allow us to configure the containers on spinon/spinoff. As it  *      stands, booting with CPU x disactivated and activating CPU x only  *      after bootup will lead to disaster and CPU x's container will be  *      uninitialized.  */
 end_comment
 
 begin_ifdef
@@ -146,8 +146,11 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|NCPU_PRESENT
-value|mp_ncpus
+name|CPU_ABSENT
+parameter_list|(
+name|x
+parameter_list|)
+value|((all_cpus& (1<< x)) == 0)
 end_define
 
 begin_else
@@ -158,8 +161,11 @@ end_else
 begin_define
 define|#
 directive|define
-name|NCPU_PRESENT
-value|1
+name|CPU_ABSENT
+parameter_list|(
+name|x
+parameter_list|)
+value|0
 end_define
 
 begin_endif
@@ -1585,12 +1591,20 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCPU_PRESENT
+name|NCPU
 condition|;
 name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|CPU_ABSENT
+argument_list|(
+name|i
+argument_list|)
+condition|)
+continue|continue;
 name|mb_list_mbuf
 operator|.
 name|ml_cntlst
@@ -1698,6 +1712,15 @@ name|mbuf_pcpu
 index|[
 name|i
 index|]
+expr_stmt|;
+name|mb_statpcpu
+index|[
+name|i
+index|]
+operator|.
+name|mb_active
+operator|=
+literal|1
 expr_stmt|;
 name|mb_list_mbuf
 operator|.
@@ -2677,12 +2700,20 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCPU_PRESENT
+name|NCPU
 condition|;
 name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|CPU_ABSENT
+argument_list|(
+name|i
+argument_list|)
+condition|)
+continue|continue;
 name|cnt_lst
 operator|=
 name|MB_GET_PCPU_LIST_NUM

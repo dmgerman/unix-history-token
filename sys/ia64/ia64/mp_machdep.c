@@ -245,6 +245,11 @@ name|int
 name|cpu_mp_probe
 parameter_list|()
 block|{
+name|all_cpus
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Needed for MB init code */
 return|return
 operator|(
 literal|0

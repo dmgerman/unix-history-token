@@ -1702,6 +1702,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * Record BSP in CPU map 	 * This is done here so that MBUF init code works correctly. 	 */
+name|all_cpus
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|mp_capable
@@ -8331,11 +8336,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* record BSP in CPU map */
-name|all_cpus
-operator|=
-literal|1
-expr_stmt|;
 comment|/* set up temporary P==V mapping for AP boot */
 comment|/* XXX this is a hack, we should boot the AP on its own stack/PTD */
 name|kptbase
