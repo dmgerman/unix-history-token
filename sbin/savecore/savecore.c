@@ -1348,7 +1348,7 @@ name|kdumplo
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|dumplo
+name|kdumplo
 argument_list|)
 argument_list|)
 expr_stmt|;
