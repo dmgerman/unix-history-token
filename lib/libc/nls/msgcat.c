@@ -1228,7 +1228,7 @@ define|#
 directive|define
 name|NOSPACE
 parameter_list|()
-value|{                                              \ 	saverr = errno;                                          \ 	(void)fclose(cat->fp);                                   \ 	(void)fprintf(stderr, "%s: no more memory.", _errowner); \ 	free(cat);                                               \ 	errno = saverr;                                          \ 	return (NLERR);                                          \ }
+value|{                                              \ 	(void)fclose(cat->fp);                                   \ 	(void)fprintf(stderr, "%s: no more memory.", _errowner); \ 	free(cat);                                               \ 	errno = ENOMEM;                                          \ 	return (NLERR);                                          \ }
 end_define
 
 begin_function
@@ -1368,11 +1368,17 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
 return|return
 operator|(
 name|NLERR
 operator|)
 return|;
+block|}
 name|cat
 operator|->
 name|loadType
@@ -1719,7 +1725,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (cat->loadType == MCLoadAll) { 			int     res;  			if ((res = loadSet(cat, set))<= 0) { 				saverr = errno; 				__nls_free_resources(cat, i); 				errno = saverr; 				if (res< 0) 					NOSPACE(); 				CORRUPT(); 			} 		} else
+block|if (cat->loadType == MCLoadAll) { 			int     res;  			if ((res = loadSet(cat, set))<= 0) { 				__nls_free_resources(cat, i); 				if (res< 0) 					NOSPACE(); 				CORRUPT(); 			} 		} else
 endif|#
 directive|endif
 name|set
@@ -1825,12 +1831,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|fread
@@ -1952,10 +1964,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|saverr
-operator|=
-name|errno
-expr_stmt|;
 name|free
 argument_list|(
 name|set
@@ -1967,7 +1975,7 @@ argument_list|)
 expr_stmt|;
 name|errno
 operator|=
-name|saverr
+name|ENOMEM
 expr_stmt|;
 return|return
 operator|(
