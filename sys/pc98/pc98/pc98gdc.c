@@ -5413,26 +5413,13 @@ name|base
 operator|-
 literal|1
 expr_stmt|;
-comment|/*      * muPD7220 GDC has anomaly that if end == celsize - 1 then start      * must be 0, otherwise the cursor won't be correctly shown       * in the first row in the screen.  We shall set end to celsize - 2;      * if end == celsize -1&& start> 0. XXX      */
-if|if
-condition|(
-operator|(
-name|end
-operator|==
-name|celsize
-operator|-
-literal|1
-operator|)
-operator|&&
-operator|(
-name|start
-operator|>
+if|#
+directive|if
 literal|0
-operator|)
-condition|)
-operator|--
-name|end
-expr_stmt|;
+comment|/*      * muPD7220 GDC has anomaly that if end == celsize - 1 then start      * must be 0, otherwise the cursor won't be correctly shown       * in the first row in the screen.  We shall set end to celsize - 2;      * if end == celsize -1&& start> 0. XXX      */
+block|if ((end == celsize - 1)&& (start> 0)&& (start< end)) 	--end;
+endif|#
+directive|endif
 name|s
 operator|=
 name|spltty
@@ -5494,9 +5481,9 @@ operator||
 operator|(
 name|blink
 condition|?
-literal|0x20
-else|:
 literal|0
+else|:
+literal|0x20
 operator|)
 comment|/* blink on/off */
 operator||
