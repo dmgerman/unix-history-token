@@ -2673,11 +2673,22 @@ operator|->
 name|o_opt
 expr_stmt|;
 block|}
+comment|/* 	 * Inform when file system is mounted by an unprivileged user 	 * or privileged non-root user. 	 */
 if|if
 condition|(
+operator|(
+name|flags
+operator|&
+name|MNT_USER
+operator|)
+operator|!=
+literal|0
+operator|||
 name|sfp
 operator|->
-name|f_owner
+name|owner
+operator|!=
+literal|0
 condition|)
 block|{
 operator|(
