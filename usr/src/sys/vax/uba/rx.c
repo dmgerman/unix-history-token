@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rx.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rx.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -661,6 +661,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|rxslave
 argument_list|(
@@ -686,12 +690,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|ui
-operator|->
-name|ui_dk
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 name|ui
@@ -3620,18 +3618,39 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+name|printf
+argument_list|(
+literal|" fx%d"
+argument_list|,
+name|ctlr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|um
 operator|->
 name|um_ubinfo
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"<%d>"
+argument_list|,
+name|UBAI_BDP
+argument_list|(
+name|um
+operator|->
+name|um_ubinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|um
 operator|->
 name|um_ubinfo
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|rx_ctlr
 index|[
 name|ctlr
@@ -4148,8 +4167,6 @@ name|unit
 index|]
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 init|=
 literal|0
