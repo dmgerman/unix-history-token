@@ -160,7 +160,7 @@ define|#
 directive|define
 name|rss
 parameter_list|()
-value|({u_short ss; __asm __volatile("movl %%ss,%0" : "=r" (ss)); ss;})
+value|({u_short ss; __asm __volatile("mov %%ss,%0" : "=r" (ss)); ss;})
 end_define
 
 begin_endif
