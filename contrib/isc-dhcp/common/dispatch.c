@@ -4,7 +4,7 @@ comment|/* dispatch.c     Network input dispatcher... */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon<mellon@fugue.com> in cooperation with Vixie  * Enterprises.  To learn more about the Internet Software Consortium,  * see ``http://www.vix.com/isc''.  To learn more about Vixie  * Enterprises, see ``http://www.vix.com''.  */
+comment|/*  * Copyright (c) 1995, 1996, 1997, 1998, 1999  * The Internet Software Consortium.   All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon<mellon@fugue.com> in cooperation with Vixie  * Enterprises.  To learn more about the Internet Software Consortium,  * see ``http://www.vix.com/isc''.  To learn more about Vixie  * Enterprises, see ``http://www.vix.com''.  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: dispatch.c,v 1.47.2.9 1999/02/05 20:23:50 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: dispatch.c,v 1.47.2.12 1999/02/23 17:37:00 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,6 +200,11 @@ decl_stmt|;
 name|int
 name|ir
 decl_stmt|;
+name|struct
+name|ifreq
+modifier|*
+name|tif
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ALIAS_NAMES_PERMUTED
@@ -361,6 +366,12 @@ operator|->
 name|ifr_addr
 operator|.
 name|sa_len
+operator|>
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr
+argument_list|)
 condition|)
 name|i
 operator|+=
@@ -481,7 +492,7 @@ operator|)
 operator|||
 ifdef|#
 directive|ifdef
-name|IFF_POINTOPOINT
+name|HAVE_IFF_POINTOPOINT
 operator|(
 name|ifr
 operator|.
@@ -610,7 +621,7 @@ block|}
 comment|/* If we have the capability, extract link information 		   and record it in a linked list. */
 ifdef|#
 directive|ifdef
-name|AF_LINK
+name|HAVE_AF_LINK
 if|if
 condition|(
 name|ifp
@@ -739,11 +750,6 @@ operator|->
 name|ifp
 condition|)
 block|{
-name|struct
-name|ifreq
-modifier|*
-name|tif
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_SA_LEN
@@ -1024,11 +1030,6 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|struct
-name|ifreq
-modifier|*
-name|tif
-decl_stmt|;
 name|int
 name|skip
 init|=
@@ -1145,79 +1146,12 @@ name|name
 argument_list|)
 condition|)
 break|break;
-comment|/* If we found one, and it already has an ifreq 			   structure, nothing more to do.. */
+comment|/* If we found one, nothing more to do.. */
 if|if
 condition|(
 name|tmp
-operator|&&
-name|tmp
-operator|->
-name|ifp
 condition|)
 continue|continue;
-comment|/* Make up an ifreq structure. */
-name|tif
-operator|=
-operator|(
-expr|struct
-name|ifreq
-operator|*
-operator|)
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ifreq
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|tif
-condition|)
-name|error
-argument_list|(
-literal|"no space to remember ifp."
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|tif
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ifreq
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|tif
-operator|->
-name|ifr_name
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-comment|/* Now, if we just needed the ifreq structure, hook 			   it in and move on. */
-if|if
-condition|(
-name|tmp
-condition|)
-block|{
-name|tmp
-operator|->
-name|ifp
-operator|=
-name|tif
-expr_stmt|;
-continue|continue;
-block|}
 comment|/* Otherwise, allocate one. */
 name|tmp
 operator|=
@@ -1273,12 +1207,6 @@ argument_list|)
 expr_stmt|;
 name|tmp
 operator|->
-name|ifp
-operator|=
-name|tif
-expr_stmt|;
-name|tmp
-operator|->
 name|flags
 operator|=
 name|ir
@@ -1307,13 +1235,13 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SIOCGIFHWADDR
+name|HAVE_SIOCGIFHWADDR
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|AF_LINK
+name|HAVE_AF_LINK
 argument_list|)
 for|for
 control|(
@@ -1343,6 +1271,72 @@ name|b
 decl_stmt|,
 name|sk
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|tmp
+operator|->
+name|ifp
+condition|)
+block|{
+comment|/* Make up an ifreq structure. */
+name|tif
+operator|=
+operator|(
+expr|struct
+name|ifreq
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ifreq
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tif
+condition|)
+name|error
+argument_list|(
+literal|"no space to remember ifp."
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|tif
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ifreq
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|tif
+operator|->
+name|ifr_name
+argument_list|,
+name|tmp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|tmp
+operator|->
+name|ifp
+operator|=
+name|tif
+expr_stmt|;
+block|}
 comment|/* Read the hardware address from this interface. */
 name|ifr
 operator|=
@@ -1388,7 +1382,16 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|ARPHRD_LOOPBACK
+name|HAVE_ARPHRD_TUNNEL
+case|case
+name|ARPHRD_TUNNEL
+case|:
+comment|/* ignore tunnel interfaces. */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_ARPHRD_LOOPBACK
 case|case
 name|ARPHRD_LOOPBACK
 case|:
@@ -1522,7 +1525,7 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
-name|ARPHRD_METRICOM
+name|HAVE_ARPHRD_METRICOM
 case|case
 name|ARPHRD_METRICOM
 case|:
@@ -1578,7 +1581,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* defined (SIOCGIFHWADDR)&& !defined (AF_LINK) */
+comment|/* defined (HAVE_SIOCGIFHWADDR)&& !defined (HAVE_AF_LINK) */
 comment|/* If we're just trying to get a list of interfaces that we might 	   be able to configure, we can quit now. */
 if|if
 condition|(
@@ -1750,7 +1753,8 @@ operator|==
 name|DISCOVER_SERVER
 operator|)
 condition|)
-name|error
+block|{
+name|warn
 argument_list|(
 literal|"No subnet declaration for %s (%s)."
 argument_list|,
@@ -1766,6 +1770,23 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|warn
+argument_list|(
+literal|"Please write a subnet declaration for the %s"
+argument_list|,
+literal|"network segment to"
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"which interface %s is attached."
+argument_list|,
+name|tmp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Find subnets that don't have valid interface 		   addresses... */
 for|for
 control|(
