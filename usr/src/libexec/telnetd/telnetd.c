@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.12 82/11/17"
+literal|"@(#)telnetd.c	4.13 82/12/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -416,7 +416,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|sin
 operator|.
 name|sin_port
@@ -431,6 +430,7 @@ operator|.
 name|sin_port
 argument_list|)
 expr_stmt|;
+block|}
 ifndef|#
 directive|ifndef
 name|DEBUG
