@@ -46,10 +46,12 @@ name|__restrict
 name|last
 parameter_list|)
 block|{
+specifier|const
 name|wchar_t
 modifier|*
 name|spanp
-decl_stmt|,
+decl_stmt|;
+name|wchar_t
 modifier|*
 name|tok
 decl_stmt|;
@@ -91,10 +93,6 @@ for|for
 control|(
 name|spanp
 operator|=
-operator|(
-name|wchar_t
-operator|*
-operator|)
 name|delim
 init|;
 operator|(
@@ -161,10 +159,6 @@ operator|++
 expr_stmt|;
 name|spanp
 operator|=
-operator|(
-name|wchar_t
-operator|*
-operator|)
 name|delim
 expr_stmt|;
 do|do
