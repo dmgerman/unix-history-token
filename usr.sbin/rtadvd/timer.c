@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$KAME: timer.c,v 1.3 2000/05/22 22:23:07 itojun Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -33,11 +37,19 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__NetBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -69,6 +81,18 @@ define|#
 directive|define
 name|MILLION
 value|1000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIMEVAL_EQUAL
+parameter_list|(
+name|t1
+parameter_list|,
+name|t2
+parameter_list|)
+value|((t1)->tv_sec == (t2)->tv_sec&&\  (t1)->tv_usec == (t2)->tv_usec)
 end_define
 
 begin_decl_stmt
@@ -310,6 +334,37 @@ end_decl_stmt
 
 begin_function
 name|void
+name|rtadvd_remove_timer
+parameter_list|(
+name|struct
+name|rtadvd_timer
+modifier|*
+modifier|*
+name|timer
+parameter_list|)
+block|{
+name|remque
+argument_list|(
+operator|*
+name|timer
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+operator|*
+name|timer
+argument_list|)
+expr_stmt|;
+operator|*
+name|timer
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|rtadvd_set_timer
 parameter_list|(
 name|struct
@@ -512,6 +567,28 @@ operator|->
 name|next
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|TIMEVAL_EQUAL
+argument_list|(
+operator|&
+name|tm_max
+argument_list|,
+operator|&
+name|timer_head
+operator|.
+name|tm
+argument_list|)
+condition|)
+block|{
+comment|/* no need to timeout */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+elseif|else
 if|if
 condition|(
 name|TIMEVAL_LT

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$KAME: rtadvd.h,v 1.8 2000/05/16 13:34:14 itojun Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -15,13 +19,6 @@ define|#
 directive|define
 name|ALLROUTERS
 value|"ff02::2"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ALLSITEROUTERS
-value|"ff05::2"
 end_define
 
 begin_define
@@ -91,6 +88,28 @@ name|DEF_ADVPREFERREDLIFETIME
 value|604800
 end_define
 
+begin_comment
+comment|/*XXX int-to-double comparison for INTERVAL items */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIP6
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|mobileip6
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -102,7 +121,7 @@ begin_define
 define|#
 directive|define
 name|MIN_MAXINTERVAL
-value|4
+value|(mobileip6 ? 1.5 : 4.0)
 end_define
 
 begin_define
@@ -116,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|MIN_MININTERVAL
-value|3
+value|(mobileip6 ? 0.5 : 3)
 end_define
 
 begin_define
@@ -125,6 +144,23 @@ directive|define
 name|MAXREACHABLETIME
 value|3600000
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIP6
+end_ifndef
+
+begin_undef
+undef|#
+directive|undef
+name|miobileip6
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -165,6 +201,27 @@ begin_comment
 comment|/* usec */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PREFIX_FROM_KERNEL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PREFIX_FROM_CONFIG
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PREFIX_FROM_DYNAMIC
+value|3
+end_define
+
 begin_struct
 struct|struct
 name|prefix
@@ -197,12 +254,42 @@ name|u_int
 name|autoconfflg
 decl_stmt|;
 comment|/* bool: AdvAutonomousFlag */
+ifdef|#
+directive|ifdef
+name|MIP6
+name|u_int
+name|routeraddr
+decl_stmt|;
+comment|/* bool: RouterAddress */
+endif|#
+directive|endif
 name|int
 name|prefixlen
 decl_stmt|;
+name|int
+name|origin
+decl_stmt|;
+comment|/* from kernel or cofig */
 name|struct
 name|in6_addr
 name|prefix
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|soliciter
+block|{
+name|struct
+name|soliciter
+modifier|*
+name|next
+decl_stmt|;
+name|struct
+name|sockaddr_in6
+name|addr
 decl_stmt|;
 block|}
 struct|;
@@ -232,7 +319,7 @@ name|struct
 name|timeval
 name|lastsent
 decl_stmt|;
-comment|/* timestamp when the lates RA was sent */
+comment|/* timestamp when the latest RA was sent */
 name|int
 name|waiting
 decl_stmt|;
@@ -281,6 +368,15 @@ name|int
 name|otherflg
 decl_stmt|;
 comment|/* AdvOtherConfigFlag */
+ifdef|#
+directive|ifdef
+name|MIP6
+name|int
+name|haflg
+decl_stmt|;
+comment|/* HAFlag */
+endif|#
+directive|endif
 name|u_int32_t
 name|linkmtu
 decl_stmt|;
@@ -306,6 +402,19 @@ name|int
 name|pfxs
 decl_stmt|;
 comment|/* number of prefixes */
+ifdef|#
+directive|ifdef
+name|MIP6
+name|u_short
+name|hapref
+decl_stmt|;
+comment|/* Home Agent Preference */
+name|u_short
+name|hatime
+decl_stmt|;
+comment|/* Home Agent Lifetime */
+endif|#
+directive|endif
 comment|/* actual RA packet data and its length */
 name|size_t
 name|ra_datalen
@@ -314,6 +423,30 @@ name|u_char
 modifier|*
 name|ra_data
 decl_stmt|;
+comment|/* statistics */
+name|u_quad_t
+name|raoutput
+decl_stmt|;
+comment|/* number of RAs sent */
+name|u_quad_t
+name|rainput
+decl_stmt|;
+comment|/* number of RAs received */
+name|u_quad_t
+name|rainconsistent
+decl_stmt|;
+comment|/* number of RAs inconsistent with ours */
+name|u_quad_t
+name|rsinput
+decl_stmt|;
+comment|/* number of RSs received */
+comment|/* info about soliciter */
+name|struct
+name|soliciter
+modifier|*
+name|soliciter
+decl_stmt|;
+comment|/* recent solication source */
 block|}
 struct|;
 end_struct
@@ -347,6 +480,24 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MIP6
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mobileip6
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
