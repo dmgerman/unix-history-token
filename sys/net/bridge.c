@@ -3455,11 +3455,6 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|do_bridge
 operator|=
 literal|0
