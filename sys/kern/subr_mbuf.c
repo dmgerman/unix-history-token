@@ -1665,7 +1665,7 @@ operator|*
 operator|)
 name|kmem_malloc
 argument_list|(
-name|mb_list_clust
+name|mb_list_mbuf
 operator|.
 name|ml_map
 argument_list|,
