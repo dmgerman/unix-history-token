@@ -240,7 +240,7 @@ block|,
 block|{
 name|DEVICE_TYPE_TAPE
 block|,
-literal|"rsa%d"
+literal|"sa%d"
 block|,
 literal|"SCSI tape drive"
 block|,
