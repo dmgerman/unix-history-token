@@ -63,6 +63,12 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
 begin_macro
 name|TAILQ_HEAD
 argument_list|(
@@ -149,6 +155,8 @@ endif|#
 directive|endif
 name|memcpy
 argument_list|(
+name|vector_page
+operator|+
 name|fiqvector
 argument_list|,
 name|func
