@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_ip.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_ip.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -137,6 +137,29 @@ include|#
 directive|include
 file|"../netns/idp.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BBNNET
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../bbnnet/in_pcb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../bbnnet/nopcb.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -582,6 +605,9 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BBNNET
 if|if
 condition|(
 name|ip
@@ -656,6 +682,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Make mbuf data length reflect IDP length. 	 * If not enough data to reflect IDP length, drop. 	 */
 name|m
 operator|->
@@ -1091,6 +1119,28 @@ name|ifn
 operator|->
 name|ifen_dst
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BBNNET
+name|ip
+operator|->
+name|ip_tos
+operator|=
+literal|0
+expr_stmt|;
+name|NOPCB_IPSEND
+argument_list|(
+name|m
+argument_list|,
+name|len
+argument_list|,
+literal|0
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ip
 operator|->
 name|ip_len
@@ -1133,6 +1183,8 @@ name|SO_BROADCAST
 argument_list|)
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
