@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.95 1999/01/28 00:57:52 dillon Exp $ */
+comment|/*	$Id: if_de.c,v 1.96 1999/01/28 17:32:02 dillon Exp $ */
 end_comment
 
 begin_comment
@@ -12159,9 +12159,6 @@ return|;
 comment|/*      * Save the hardware address.      */
 name|bcopy
 argument_list|(
-operator|(
-name|c_caddr_t
-operator|)
 name|shp
 operator|->
 name|sh_ieee802_address
@@ -15733,16 +15730,10 @@ if|if
 condition|(
 name|bcmp
 argument_list|(
-operator|(
-name|c_caddr_t
-operator|)
 name|sc
 operator|->
 name|tulip_enaddr
 argument_list|,
-operator|(
-name|c_caddr_t
-operator|)
 name|tulip_vendors
 index|[
 name|idx
