@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -17,7 +17,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* could be 33, as masks hold 1-32 */
+comment|/* counting 0; could be 33 (mask is 1-32) */
 end_comment
 
 begin_ifndef
@@ -543,6 +543,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|unsigned
 name|int
 name|sigset_t
 typedef|;
@@ -555,7 +556,7 @@ name|sigemptyset
 parameter_list|(
 name|set
 parameter_list|)
-value|{ *(set) = 0; }
+value|( *(set) = 0 )
 end_define
 
 begin_define
@@ -565,7 +566,7 @@ name|sigfillset
 parameter_list|(
 name|set
 parameter_list|)
-value|{ *(set) = 0xffff; }
+value|( *(set) = ~(sigset_t)0 )
 end_define
 
 begin_define
@@ -903,6 +904,29 @@ define|#
 directive|define
 name|SIG_HOLD
 value|(void (*)())3
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigcantmask
+value|(sigmask(SIGKILL)|sigmask(SIGSTOP))
+end_define
+
+begin_comment
+comment|/*  * get signal action for process and signal; currently only for current process  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGACTION
+parameter_list|(
+name|p
+parameter_list|,
+name|sig
+parameter_list|)
+value|(u.u_signal[(sig)])
 end_define
 
 begin_endif
