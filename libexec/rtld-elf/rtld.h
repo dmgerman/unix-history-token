@@ -287,6 +287,12 @@ name|size_t
 name|phsize
 decl_stmt|;
 comment|/* Size of program header in bytes */
+specifier|const
+name|char
+modifier|*
+name|interp
+decl_stmt|;
+comment|/* Pathname of the interpreter, if any */
 comment|/* Items from the dynamic section. */
 name|Elf_Addr
 modifier|*
