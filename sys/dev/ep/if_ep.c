@@ -859,6 +859,17 @@ name|result
 expr_stmt|;
 name|bad
 label|:
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|ep_free
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
