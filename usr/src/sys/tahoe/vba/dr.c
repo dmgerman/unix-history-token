@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dr.c	1.2	86/11/23	*/
+comment|/*	dr.c	1.3	86/11/23	*/
 end_comment
 
 begin_include
@@ -374,7 +374,7 @@ directive|ifdef
 name|notdef
 name|dr
 operator|->
-name|dr_intvec
+name|dr_intvect
 operator|=
 operator|--
 name|vi
@@ -387,7 +387,7 @@ else|#
 directive|else
 name|dr
 operator|->
-name|dr_intvec
+name|dr_intvect
 operator|=
 name|DRINTV
 operator|+
@@ -448,7 +448,7 @@ name|cvec
 operator|=
 name|dr
 operator|->
-name|dr_intvec
+name|dr_intvect
 expr_stmt|;
 comment|/* XXX */
 return|return
@@ -2081,8 +2081,22 @@ break|break;
 case|case
 name|DR11STAT
 case|:
-comment|/* Copy back dr11 status to user */
+block|{
+specifier|register
+name|struct
+name|dr11io
+modifier|*
+name|dr
+init|=
+operator|(
+expr|struct
+name|dr11io
+operator|*
+operator|)
 name|data
+decl_stmt|;
+comment|/* Copy back dr11 status to user */
+name|dr
 operator|->
 name|arg
 index|[
@@ -2093,7 +2107,7 @@ name|dra
 operator|->
 name|dr_flags
 expr_stmt|;
-name|data
+name|dr
 operator|->
 name|arg
 index|[
@@ -2104,7 +2118,7 @@ name|rsaddr
 operator|->
 name|dr_cstat
 expr_stmt|;
-name|data
+name|dr
 operator|->
 name|arg
 index|[
@@ -2116,7 +2130,7 @@ operator|->
 name|dr_istat
 expr_stmt|;
 comment|/* Status reg. at last interrupt */
-name|data
+name|dr
 operator|->
 name|arg
 index|[
@@ -2145,7 +2159,7 @@ operator|&
 literal|0xff00
 argument_list|)
 expr_stmt|;
-name|data
+name|dr
 operator|->
 name|arg
 index|[
@@ -2165,7 +2179,7 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-name|data
+name|dr
 operator|->
 name|arg
 index|[
@@ -2176,7 +2190,7 @@ name|rsaddr
 operator|->
 name|dr_range
 expr_stmt|;
-name|data
+name|dr
 operator|->
 name|arg
 index|[
@@ -2187,7 +2201,7 @@ name|rsaddr
 operator|->
 name|dr_rahi
 expr_stmt|;
-name|data
+name|dr
 operator|->
 name|arg
 index|[
@@ -2199,6 +2213,7 @@ operator|->
 name|dr_ralo
 expr_stmt|;
 break|break;
+block|}
 case|case
 name|DR11LOOP
 case|:
