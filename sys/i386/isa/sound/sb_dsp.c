@@ -2051,11 +2051,6 @@ expr_stmt|;
 name|sb_reset_dsp
 argument_list|()
 expr_stmt|;
-name|dsp_speed
-argument_list|(
-name|dsp_current_speed
-argument_list|)
-expr_stmt|;
 name|dsp_cleanup
 argument_list|()
 expr_stmt|;
