@@ -182,21 +182,10 @@ argument_list|,
 operator|&
 name|res
 argument_list|)
-operator|<
+operator|>=
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"TIOCMGBIDIR"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -212,6 +201,7 @@ argument_list|(
 literal|"bidir "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ioctl
