@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.14	83/02/21	*/
+comment|/*	if_vv.c	4.15	83/05/01	*/
 end_comment
 
 begin_include
@@ -1674,26 +1674,9 @@ operator||
 name|VV_LPB
 expr_stmt|;
 comment|/* let flag timers fire so ring will initialize */
-name|sleep
+name|DELAY
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|lbolt
-argument_list|,
-name|PZERO
-argument_list|)
-expr_stmt|;
-name|sleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|lbolt
-argument_list|,
-name|PZERO
+literal|2000000
 argument_list|)
 expr_stmt|;
 name|addr
