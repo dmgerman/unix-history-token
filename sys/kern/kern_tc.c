@@ -615,6 +615,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|time_t
+name|time_uptime
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|bintime
@@ -1970,6 +1978,14 @@ operator|->
 name|th_microtime
 operator|.
 name|tv_sec
+expr_stmt|;
+name|time_uptime
+operator|=
+name|th
+operator|->
+name|th_offset
+operator|.
+name|sec
 expr_stmt|;
 name|timehands
 operator|=
