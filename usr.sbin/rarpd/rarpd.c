@@ -423,11 +423,11 @@ name|int
 name|ii_fd
 decl_stmt|;
 comment|/* BPF file descriptor */
-name|u_long
+name|in_addr_t
 name|ii_ipaddr
 decl_stmt|;
 comment|/* IP address of this interface */
-name|u_long
+name|in_addr_t
 name|ii_netmask
 decl_stmt|;
 comment|/* subnet or net mask */
@@ -555,16 +555,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_long
+name|in_addr_t
 name|choose_ipaddr
 parameter_list|(
-name|u_long
+name|in_addr_t
 modifier|*
 modifier|*
 parameter_list|,
-name|u_long
+name|in_addr_t
 parameter_list|,
-name|u_long
+name|in_addr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -631,17 +631,17 @@ name|char
 modifier|*
 name|intoa
 parameter_list|(
-name|u_long
+name|in_addr_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_long
+name|in_addr_t
 name|ipaddrtonetmask
 parameter_list|(
-name|u_long
+name|in_addr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -676,7 +676,7 @@ specifier|static
 name|int
 name|rarp_bootable
 parameter_list|(
-name|u_long
+name|in_addr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -745,7 +745,7 @@ name|struct
 name|ether_header
 modifier|*
 parameter_list|,
-name|u_long
+name|in_addr_t
 parameter_list|,
 name|u_int
 parameter_list|)
@@ -760,7 +760,7 @@ parameter_list|(
 name|u_char
 modifier|*
 parameter_list|,
-name|u_long
+name|in_addr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2000,7 +2000,7 @@ name|logmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s %s 0x%08lx %s"
+literal|"%s %s 0x%08x %s"
 argument_list|,
 name|ii
 operator|->
@@ -2017,7 +2017,7 @@ argument_list|)
 argument_list|)
 argument_list|,
 operator|(
-name|u_long
+name|in_addr_t
 operator|)
 name|ntohl
 argument_list|(
@@ -3212,7 +3212,7 @@ begin_function
 name|int
 name|rarp_bootable
 parameter_list|(
-name|u_long
+name|in_addr_t
 name|addr
 parameter_list|)
 block|{
@@ -3257,10 +3257,10 @@ name|sprintf
 argument_list|(
 name|ipname
 argument_list|,
-literal|"%08lX"
+literal|"%08X"
 argument_list|,
 operator|(
-name|u_long
+name|in_addr_t
 operator|)
 name|ntohl
 argument_list|(
@@ -3386,18 +3386,18 @@ comment|/*  * Given a list of IP addresses, 'alist', return the first address th
 end_comment
 
 begin_function
-name|u_long
+name|in_addr_t
 name|choose_ipaddr
 parameter_list|(
-name|u_long
+name|in_addr_t
 modifier|*
 modifier|*
 name|alist
 parameter_list|,
-name|u_long
+name|in_addr_t
 name|net
 parameter_list|,
-name|u_long
+name|in_addr_t
 name|netmask
 parameter_list|)
 block|{
@@ -3464,7 +3464,7 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-name|u_long
+name|in_addr_t
 name|target_ipaddr
 decl_stmt|;
 name|char
@@ -3570,7 +3570,7 @@ operator|=
 name|choose_ipaddr
 argument_list|(
 operator|(
-name|u_long
+name|in_addr_t
 operator|*
 operator|*
 operator|)
@@ -3777,7 +3777,7 @@ name|u_char
 modifier|*
 name|ep
 parameter_list|,
-name|u_long
+name|in_addr_t
 name|ipaddr
 parameter_list|)
 block|{
@@ -4107,7 +4107,7 @@ name|logmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"bogus link family (%d) wrong net for %08lX?\n"
+literal|"bogus link family (%d) wrong net for %08X?\n"
 argument_list|,
 name|ll2
 operator|->
@@ -4400,7 +4400,7 @@ name|u_char
 modifier|*
 name|ep
 parameter_list|,
-name|u_long
+name|in_addr_t
 name|ipaddr
 parameter_list|)
 block|{
@@ -4525,7 +4525,7 @@ name|ether_header
 modifier|*
 name|ep
 parameter_list|,
-name|u_long
+name|in_addr_t
 name|ipaddr
 parameter_list|,
 name|u_int
@@ -4808,10 +4808,10 @@ comment|/*  * Get the netmask of an IP address.  This routine is used if  * SIOC
 end_comment
 
 begin_function
-name|u_long
+name|in_addr_t
 name|ipaddrtonetmask
 parameter_list|(
-name|u_long
+name|in_addr_t
 name|addr
 parameter_list|)
 block|{
@@ -4865,7 +4865,7 @@ name|logmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"unknown IP address class: %08lX"
+literal|"unknown IP address class: %08X"
 argument_list|,
 name|addr
 argument_list|)
@@ -4888,7 +4888,7 @@ name|char
 modifier|*
 name|intoa
 parameter_list|(
-name|u_long
+name|in_addr_t
 name|addr
 parameter_list|)
 block|{
