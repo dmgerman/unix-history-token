@@ -18463,7 +18463,7 @@ name|key
 decl_stmt|;
 name|copy
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|arg
 argument_list|)
@@ -18488,7 +18488,7 @@ index|]
 operator|.
 name|string
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|key
 argument_list|)
@@ -18633,7 +18633,7 @@ name|keyword
 decl_stmt|;
 name|copy
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|arg
 argument_list|)
