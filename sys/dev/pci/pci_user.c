@@ -999,6 +999,14 @@ operator|&&
 operator|(
 name|cio
 operator|->
+name|num_patterns
+operator|<
+name|pci_numdevs
+operator|)
+operator|&&
+operator|(
+name|cio
+operator|->
 name|pat_buf_len
 operator|>
 literal|0
