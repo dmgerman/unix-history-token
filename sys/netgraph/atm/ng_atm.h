@@ -168,9 +168,7 @@ block|{
 name|char
 name|name
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 name|uint32_t
@@ -272,9 +270,7 @@ block|{
 name|char
 name|name
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 block|}
