@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_input.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_input.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -311,6 +311,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+specifier|register
 name|struct
 name|nspcb
 modifier|*
@@ -790,6 +791,34 @@ goto|goto
 name|next
 goto|;
 block|}
+comment|/* 	 * Locate pcb for datagram. 	 */
+name|nsp
+operator|=
+name|ns_pcblookup
+argument_list|(
+operator|&
+name|idp
+operator|->
+name|idp_sna
+argument_list|,
+name|idp
+operator|->
+name|idp_dna
+operator|.
+name|x_port
+argument_list|,
+name|NS_WILDCARD
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Switch out to protocol's input routine. 	 */
+name|nsintr_swtch
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|nsp
+condition|)
+block|{
 if|if
 condition|(
 name|oddpacketp
@@ -804,7 +833,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	  * Switch out to protocol's input routine. 	  */
+if|if
+condition|(
+operator|(
+name|nsp
+operator|->
+name|nsp_flags
+operator|&
+name|NSP_ALL_PACKETS
+operator|)
+operator|==
+literal|0
+condition|)
 switch|switch
 condition|(
 name|idp
@@ -818,9 +858,13 @@ case|:
 name|spp_input
 argument_list|(
 name|m
+argument_list|,
+name|nsp
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|next
+goto|;
 case|case
 name|NSPROTO_ERROR
 case|:
@@ -829,11 +873,25 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-break|break;
-default|default:
+goto|goto
+name|next
+goto|;
+block|}
 name|idp_input
 argument_list|(
 name|m
+argument_list|,
+name|nsp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ns_error
+argument_list|(
+name|m
+argument_list|,
+name|NS_ERR_NOSOCK
 argument_list|,
 literal|0
 argument_list|)

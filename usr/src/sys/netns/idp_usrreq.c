@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *      @(#)idp_usrreq.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *      @(#)idp_usrreq.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -168,42 +168,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|nsp
-operator|=
-name|ns_pcblookup
+name|panic
 argument_list|(
-operator|&
-name|idp
-operator|->
-name|idp_sna
-argument_list|,
-name|idp
-operator|->
-name|idp_dna
-operator|.
-name|x_port
-argument_list|,
-name|NS_WILDCARD
+literal|"No nspcb"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|nsp
-operator|==
-literal|0
-condition|)
-block|{
-name|ns_error
-argument_list|(
-name|m
-argument_list|,
-name|NS_ERR_NOSOCK
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 block|}
 comment|/* 	 * Construct sockaddr format source address. 	 * Stuff source address and datagram in user buffer. 	 */
 name|idp_ns
@@ -1054,6 +1023,16 @@ name|name
 condition|)
 block|{
 case|case
+name|SO_ALL_PACKETS
+case|:
+name|mask
+operator|=
+name|NSP_ALL_PACKETS
+expr_stmt|;
+goto|goto
+name|get_flags
+goto|;
+case|case
 name|SO_HEADERS_ON_INPUT
 case|:
 name|mask
@@ -1249,6 +1228,16 @@ decl_stmt|,
 modifier|*
 name|ok
 decl_stmt|;
+case|case
+name|SO_ALL_PACKETS
+case|:
+name|mask
+operator|=
+name|NSP_ALL_PACKETS
+expr_stmt|;
+goto|goto
+name|set_head
+goto|;
 case|case
 name|SO_HEADERS_ON_INPUT
 case|:
