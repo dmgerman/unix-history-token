@@ -3361,7 +3361,7 @@ decl_stmt|;
 name|char
 name|port
 index|[
-literal|10
+name|NI_MAXSERV
 index|]
 decl_stmt|;
 name|ifc
@@ -3395,7 +3395,7 @@ argument_list|(
 name|port
 argument_list|)
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
 name|RIP6_PORT
 argument_list|)
