@@ -659,7 +659,7 @@ literal|0
 block|printf("sb_cmd2: %x, %x\n", cmd, val);
 endif|#
 directive|endif
-name|sb_lock
+name|sb_lockassert
 argument_list|(
 name|sb
 argument_list|)
@@ -713,11 +713,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|sb_unlock
-argument_list|(
-name|sb
-argument_list|)
-expr_stmt|;
 return|return
 name|r
 return|;
@@ -818,7 +813,7 @@ block|{
 name|int
 name|val
 decl_stmt|;
-name|sb_lock
+name|sb_lockassert
 argument_list|(
 name|sb
 argument_list|)
@@ -857,11 +852,6 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|10
-argument_list|)
-expr_stmt|;
-name|sb_unlock
-argument_list|(
-name|sb
 argument_list|)
 expr_stmt|;
 return|return
