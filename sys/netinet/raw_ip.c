@@ -3115,10 +3115,7 @@ operator|->
 name|inp_gencnt
 operator|<=
 name|gencnt
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|cr_canseesocket
 argument_list|(
 name|req
@@ -3131,8 +3128,10 @@ name|inp
 operator|->
 name|inp_socket
 argument_list|)
+operator|==
+literal|0
 condition|)
-continue|continue;
+block|{
 comment|/* XXX held references? */
 name|inp_list
 index|[
