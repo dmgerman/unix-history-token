@@ -1440,6 +1440,8 @@ condition|(
 name|vn_isdisk
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
