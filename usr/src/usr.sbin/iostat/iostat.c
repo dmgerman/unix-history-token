@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.4 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -395,7 +395,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|kvm_read(nl[x].n_value, (void *)&(v), sizeof(v))
+value|kvm_read((void *)nl[x].n_value, (void *)&(v), sizeof(v))
 end_define
 
 begin_function
@@ -913,6 +913,10 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|nl
 index|[
 name|X_DK_WPMS
@@ -1198,6 +1202,10 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|nl
 index|[
 name|X_DK_TIME
@@ -1222,6 +1230,10 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|nl
 index|[
 name|X_DK_XFER
@@ -1246,6 +1258,10 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|nl
 index|[
 name|X_DK_WDS
@@ -1270,6 +1286,10 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|nl
 index|[
 name|X_DK_SEEK
@@ -1294,6 +1314,10 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|nl
 index|[
 name|X_TK_NIN
@@ -1319,6 +1343,10 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|nl
 index|[
 name|X_TK_NOUT
@@ -1344,6 +1372,10 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|nl
 index|[
 name|X_CP_TIME
