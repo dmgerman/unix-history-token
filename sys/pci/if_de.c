@@ -106,11 +106,6 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__bsdi__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__NetBSD__
 argument_list|)
 end_elif
@@ -239,36 +234,6 @@ begin_include
 include|#
 directive|include
 file|<net/netisr.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-operator|&&
-name|_BSDI_VERSION
-operator|>=
-literal|199701
-end_if
-
-begin_include
-include|#
-directive|include
-file|<dev/mii/mii.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mii/miivar.h>
 end_include
 
 begin_endif
@@ -446,133 +411,6 @@ end_endif
 
 begin_comment
 comment|/* __FreeBSD__ */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/pci/ic/dc21040reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/dma.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isavar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/pci/pci.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|_BSDI_VERSION
-operator|<
-literal|199510
-end_if
-
-begin_include
-include|#
-directive|include
-file|<eisa.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NEISA
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|NEISA
-operator|>
-literal|0
-operator|&&
-name|_BSDI_VERSION
-operator|>=
-literal|199401
-end_if
-
-begin_include
-include|#
-directive|include
-file|<i386/eisa/eisa.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|TULIP_EISA
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|DEVAR_INCLUDE
-value|"i386/pci/if_devar.h"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __bsdi__ */
 end_comment
 
 begin_if
@@ -16291,55 +16129,6 @@ argument_list|(
 name|ifp
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-if|if
-condition|(
-name|sc
-operator|->
-name|tulip_mii
-operator|.
-name|mii_instance
-operator|!=
-literal|0
-condition|)
-block|{
-name|mii_pollstat
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|tulip_mii
-argument_list|)
-expr_stmt|;
-name|req
-operator|->
-name|ifm_active
-operator|=
-name|sc
-operator|->
-name|tulip_mii
-operator|.
-name|mii_media_active
-expr_stmt|;
-name|req
-operator|->
-name|ifm_status
-operator|=
-name|sc
-operator|->
-name|tulip_mii
-operator|.
-name|mii_media_status
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|sc
@@ -19930,25 +19719,6 @@ condition|)
 block|{
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-name|eh
-operator|.
-name|ether_type
-operator|=
-name|ntohs
-argument_list|(
-name|eh
-operator|.
-name|ether_type
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
 operator|!
 name|defined
 argument_list|(
@@ -21124,19 +20894,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__bsdi__
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
 name|BSD
 operator|<
 literal|199506
-operator|)
 argument|static ifnet_ret_t tulip_ifwatchdog_wrapper(     int unit) {     tulip_ifwatchdog(&TULIP_UNIT_TO_SOFTC(unit)->tulip_if); }
 define|#
 directive|define
@@ -21171,18 +20934,6 @@ literal|1
 argument|;
 if|#
 directive|if
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-operator|||
-name|_BSDI_VERSION
-operator|<
-literal|199401
-operator|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -21191,61 +20942,7 @@ argument_list|)
 argument|ifp->if_output = ether_output;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-operator|&&
-name|_BSDI_VERSION
-operator|<
-literal|199401
-argument|ifp->if_mtu = ETHERMTU;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-operator|&&
-name|_BSDI_VERSION
-operator|>=
-literal|199510
-argument|aprint_naive(
-literal|": DEC Ethernet"
-argument|);     aprint_normal(
-literal|": %s%s"
-argument|, sc->tulip_boardid,         tulip_chipdescs[sc->tulip_chipid]);     aprint_verbose(
-literal|" pass %d.%d"
-argument|, (sc->tulip_revinfo&
-literal|0xF0
-argument|)>>
-literal|4
-argument|,         sc->tulip_revinfo&
-literal|0x0F
-argument|);     printf(
-literal|"\n"
-argument|);     sc->tulip_pf = aprint_normal;     aprint_normal(TULIP_PRINTF_FMT
-literal|": address "
-argument|TULIP_EADDR_FMT
-literal|"\n"
-argument|, 		  TULIP_PRINTF_ARGS, 		  TULIP_EADDR_ARGS(sc->tulip_enaddr));
-else|#
-directive|else
-argument|printf(
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-literal|"\n"
-endif|#
-directive|endif
-argument|TULIP_PRINTF_FMT
+argument|printf( 	   TULIP_PRINTF_FMT
 literal|": %s%s pass %d.%d%s\n"
 argument|, 	   TULIP_PRINTF_ARGS, 	   sc->tulip_boardid, 	   tulip_chipdescs[sc->tulip_chipid], 	   (sc->tulip_revinfo&
 literal|0xF0
@@ -21262,8 +20959,6 @@ literal|": address "
 argument|TULIP_EADDR_FMT
 literal|"\n"
 argument|, 	   TULIP_PRINTF_ARGS, 	   TULIP_EADDR_ARGS(sc->tulip_enaddr));
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -21313,21 +21008,7 @@ argument_list|)
 argument|tulip_ifmedia_add(sc);
 endif|#
 directive|endif
-argument|tulip_reset(sc);
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-operator|&&
-name|_BSDI_VERSION
-operator|>=
-literal|199510
-argument|sc->tulip_pf = printf;     TULIP_ETHER_IFATTACH(sc);
-else|#
-directive|else
-argument|if_attach(ifp);
+argument|tulip_reset(sc);      if_attach(ifp);
 if|#
 directive|if
 name|defined
@@ -21357,9 +21038,6 @@ operator|)
 argument|TULIP_ETHER_IFATTACH(sc);
 endif|#
 directive|endif
-endif|#
-directive|endif
-comment|/* __bsdi__ */
 if|#
 directive|if
 name|NBPF
@@ -21675,207 +21353,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__bsdi__
-argument_list|)
-define|#
-directive|define
-name|TULIP_PCI_ATTACH_ARGS
-value|struct device * const parent, struct device * const self, void * const aux
-define|#
-directive|define
-name|TULIP_SHUTDOWN_ARGS
-value|void *arg
-argument|static int tulip_pci_match(     pci_devaddr_t *pa) {     int irq;     unsigned id;      id = pci_inl(pa, PCI_VENDOR_ID);     if (PCI_VENDORID(id) != DEC_VENDORID) 	return
-literal|0
-argument|;     id = PCI_CHIPID(id);     if (id != CHIPID_21040&& id != CHIPID_21041&& id != CHIPID_21140&& id != CHIPID_21142) 	return
-literal|0
-argument|;     irq = pci_inl(pa, PCI_I_LINE)&
-literal|0xFF
-argument|;     if (irq ==
-literal|0
-argument||| irq>=
-literal|16
-argument|) { 	printf(
-literal|"de?: invalid IRQ %d; skipping\n"
-argument|, irq); 	return
-literal|0
-argument|;     }     return
-literal|1
-argument|; }  static int tulip_probe(     struct device *parent,     struct cfdata *cf,     void *aux) {     struct isa_attach_args * const ia = (struct isa_attach_args *) aux;     unsigned irq
-argument_list|,
-argument|slot;     pci_devaddr_t *pa;
-if|#
-directive|if
-name|_BSDI_VERSION
-operator|>=
-literal|199401
-argument|switch (ia->ia_bustype) {     case BUS_PCI:
-endif|#
-directive|endif
-argument|pa = pci_scan(tulip_pci_match); 	if (pa == NULL) 	    return
-literal|0
-argument|;  	irq = (
-literal|1
-argument|<< (pci_inl(pa, PCI_I_LINE)&
-literal|0xFF
-argument|));
-comment|/* Get the base address; assume the BIOS set it up correctly */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_IOMAPPED
-argument_list|)
-argument|ia->ia_maddr = NULL; 	ia->ia_msize =
-literal|0
-argument|; 	ia->ia_iobase = pci_inl(pa, PCI_CBIO)& ~
-literal|7
-argument|; 	pci_outl(pa, PCI_CBIO,
-literal|0xFFFFFFFF
-argument|); 	ia->ia_iosize = ((~pci_inl(pa, PCI_CBIO)) |
-literal|7
-argument|) +
-literal|1
-argument|; 	pci_outl(pa, PCI_CBIO, (int) ia->ia_iobase);
-comment|/* Disable memory space access */
-argument|pci_outl(pa, PCI_COMMAND, pci_inl(pa, PCI_COMMAND)& ~
-literal|2
-argument|);
-else|#
-directive|else
-argument|ia->ia_maddr = (caddr_t) (pci_inl(pa, PCI_CBMA)& ~
-literal|7
-argument|); 	pci_outl(pa, PCI_CBMA,
-literal|0xFFFFFFFF
-argument|); 	ia->ia_msize = ((~pci_inl(pa, PCI_CBMA)) |
-literal|7
-argument|) +
-literal|1
-argument|; 	pci_outl(pa, PCI_CBMA, (int) ia->ia_maddr); 	ia->ia_iobase =
-literal|0
-argument|; 	ia->ia_iosize =
-literal|0
-argument|;
-comment|/* Disable I/O space access */
-argument|pci_outl(pa, PCI_COMMAND, pci_inl(pa, PCI_COMMAND)& ~
-literal|1
-argument|);
-endif|#
-directive|endif
-comment|/* TULIP_IOMAPPED */
-argument|ia->ia_aux = (void *) pa;
-if|#
-directive|if
-name|_BSDI_VERSION
-operator|>=
-literal|199401
-argument|break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_EISA
-argument_list|)
-argument|case BUS_EISA: { 	unsigned tmp;  	if ((slot = eisa_match(cf, ia)) ==
-literal|0
-argument|) 	    return
-literal|0
-argument|; 	ia->ia_iobase = slot<<
-literal|12
-argument|; 	ia->ia_iosize = EISA_NPORT; 	eisa_slotalloc(slot); 	tmp = inb(ia->ia_iobase + DE425_CFG0); 	irq = tulip_eisa_irqs[(tmp>>
-literal|1
-argument|)&
-literal|0x03
-argument|];
-comment|/* 	 * Until BSD/OS likes level interrupts, force 	 * the DE425 into edge-triggered mode. 	 */
-argument|if ((tmp&
-literal|1
-argument|) ==
-literal|0
-argument|) 	    outb(ia->ia_iobase + DE425_CFG0, tmp |
-literal|1
-argument|);
-comment|/* 	 * CBIO needs to map to the EISA slot 	 * enable I/O access and Master 	 */
-argument|outl(ia->ia_iobase + DE425_CBIO, ia->ia_iobase); 	outl(ia->ia_iobase + DE425_CFCS,
-literal|5
-argument|| inl(ia->ia_iobase + DE425_CFCS)); 	ia->ia_aux = NULL; 	break;     }
-endif|#
-directive|endif
-comment|/* TULIP_EISA */
-argument|default: 	return
-literal|0
-argument|;     }
-endif|#
-directive|endif
-comment|/* PCI bus masters don't use host DMA channels */
-argument|ia->ia_drq = DRQNONE;      if (ia->ia_irq != IRQUNK&& irq != ia->ia_irq) { 	printf(
-literal|"de%d: error: desired IRQ of %d does not match device's "
-literal|"actual IRQ of %d,\n"
-argument|, 	       cf->cf_unit, 	       ffs(ia->ia_irq) -
-literal|1
-argument|, ffs(irq) -
-literal|1
-argument|); 	return
-literal|0
-argument|;     }     if (ia->ia_irq == IRQUNK) 	ia->ia_irq = irq;
-ifdef|#
-directive|ifdef
-name|IRQSHARE
-argument|ia->ia_irq |= IRQSHARE;
-endif|#
-directive|endif
-argument|return
-literal|1
-argument|; }  static void tulip_pci_attach(TULIP_PCI_ATTACH_ARGS);
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_EISA
-argument_list|)
-argument|static char *tulip_eisa_ids[] = {
-literal|"DEC4250"
-argument_list|,
-argument|NULL };
-endif|#
-directive|endif
-argument|struct cfdriver decd = {
-literal|0
-argument_list|,
-literal|"de"
-argument_list|,
-argument|tulip_probe
-argument_list|,
-argument|tulip_pci_attach
-argument_list|,
-if|#
-directive|if
-name|_BSDI_VERSION
-operator|>=
-literal|199401
-argument|DV_IFNET
-argument_list|,
-endif|#
-directive|endif
-argument|sizeof(tulip_softc_t)
-argument_list|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_EISA
-argument_list|)
-argument|tulip_eisa_ids
-endif|#
-directive|endif
-argument|};
-endif|#
-directive|endif
-comment|/* __bsdi__ */
-if|#
-directive|if
-name|defined
-argument_list|(
 name|__NetBSD__
 argument_list|)
 define|#
@@ -21938,38 +21415,6 @@ value|((void)((sc)->tulip_pci_busno = (config_id->bus),
 comment|/* XXX */
 value|\ 					(sc)->tulip_pci_devno = (config_id->slot)))
 comment|/* XXX */
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-argument|tulip_softc_t * const sc = (tulip_softc_t *) self;     struct isa_attach_args * const ia = (struct isa_attach_args *) aux;     pci_devaddr_t *pa = (pci_devaddr_t *) ia->ia_aux;     const int unit = sc->tulip_dev.dv_unit;
-define|#
-directive|define
-name|PCI_CONF_WRITE
-parameter_list|(
-name|r
-parameter_list|,
-name|v
-parameter_list|)
-value|pci_outl(pa, (r), (v))
-define|#
-directive|define
-name|PCI_CONF_READ
-parameter_list|(
-name|r
-parameter_list|)
-value|pci_inl(pa, (r))
-define|#
-directive|define
-name|PCI_GETBUSDEVINFO
-parameter_list|(
-name|sc
-parameter_list|)
-value|((void)((sc)->tulip_pci_busno = pa->d_bus, \ 					(sc)->tulip_pci_devno = pa->d_agent))
 endif|#
 directive|endif
 if|#
@@ -22047,41 +21492,9 @@ endif|#
 directive|endif
 argument|printf(
 literal|": not configured; limit of %d reached or exceeded\n"
-argument|, 	       TULIP_MAX_DEVICES); 	return;     }
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-argument|if (pa != NULL) { 	revinfo = pci_inl(pa, PCI_CFRV)&
+argument|, 	       TULIP_MAX_DEVICES); 	return;     }      revinfo  = PCI_CONF_READ(PCI_CFRV)&
 literal|0xFF
-argument|; 	id = pci_inl(pa, PCI_CFID); 	cfdainfo = pci_inl(pa, PCI_CFDA);
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_EISA
-argument_list|)
-argument|} else { 	revinfo = inl(ia->ia_iobase + DE425_CFRV)&
-literal|0xFF
-argument|; 	csroffset = TULIP_EISA_CSROFFSET; 	csrsize = TULIP_EISA_CSRSIZE; 	chipid = TULIP_DE425; 	cfdainfo =
-literal|0
-argument|;
-endif|#
-directive|endif
-comment|/* TULIP_EISA */
-argument|}
-else|#
-directive|else
-comment|/* __bsdi__ */
-argument|revinfo  = PCI_CONF_READ(PCI_CFRV)&
-literal|0xFF
-argument|;     id       = PCI_CONF_READ(PCI_CFID);     cfdainfo = PCI_CONF_READ(PCI_CFDA);
-endif|#
-directive|endif
-comment|/* __bsdi__ */
-argument|if (PCI_VENDORID(id) == DEC_VENDORID) { 	if (PCI_CHIPID(id) == CHIPID_21040) 		chipid = TULIP_21040; 	else if (PCI_CHIPID(id) == CHIPID_21041) 		chipid = TULIP_21041; 	else if (PCI_CHIPID(id) == CHIPID_21140) 		chipid = (revinfo>=
+argument|;     id       = PCI_CONF_READ(PCI_CFID);     cfdainfo = PCI_CONF_READ(PCI_CFDA);      if (PCI_VENDORID(id) == DEC_VENDORID) { 	if (PCI_CHIPID(id) == CHIPID_21040) 		chipid = TULIP_21040; 	else if (PCI_CHIPID(id) == CHIPID_21041) 		chipid = TULIP_21041; 	else if (PCI_CHIPID(id) == CHIPID_21140) 		chipid = (revinfo>=
 literal|0x20
 argument|) ? TULIP_21140A : TULIP_21140; 	else if (PCI_CHIPID(id) == CHIPID_21142) 		chipid = (revinfo>=
 literal|0x20
@@ -22221,28 +21634,6 @@ argument|if (!retval) { 	free((caddr_t) sc, M_DEVBUF); 	return;     }     tulips
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-argument|sc->tulip_pf = printf;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_IOMAPPED
-argument_list|)
-argument|csr_base = ia->ia_iobase;
-else|#
-directive|else
-argument|csr_base = (vm_offset_t) mapphys((vm_offset_t) ia->ia_maddr, ia->ia_msize);
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* __bsdi__ */
 if|#
 directive|if
 name|defined
@@ -22388,17 +21779,6 @@ argument_list|)
 argument|at_shutdown(tulip_shutdown, sc, SHUTDOWN_POST_SYNC);
 endif|#
 directive|endif
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-argument|if ((sc->tulip_features& TULIP_HAVE_SLAVEDINTR) ==
-literal|0
-argument|) { 	    isa_establish(&sc->tulip_id,&sc->tulip_dev);  	    sc->tulip_ih.ih_fun = intr_rtn; 	    sc->tulip_ih.ih_arg = (void *) sc; 	    intr_establish(ia->ia_irq,&sc->tulip_ih, DV_NET); 	}  	sc->tulip_ats.func = tulip_shutdown; 	sc->tulip_ats.arg = (void *) sc; 	atshutdown(&sc->tulip_ats, ATSH_ADD);
 endif|#
 directive|endif
 if|#
