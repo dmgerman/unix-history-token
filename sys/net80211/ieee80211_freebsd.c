@@ -461,7 +461,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"inact"
+literal|"inact_run"
 argument_list|,
 name|CTLTYPE_INT
 operator||
