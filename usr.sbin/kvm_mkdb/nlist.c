@@ -666,27 +666,17 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|i386
-comment|/* 			 * XXX: This is a KLUGE to handle the kernel being 			 * loaded at a different address than KERNBASE.  Stupid 			 * a.out format has no way of recording the text 			 * address we gave ld.  It only works for multiples of 			 * 1MB. 			 */
 name|rel_off
 operator|=
-operator|(
-operator|(
 name|nbuf
 operator|.
 name|n_value
 operator|-
-operator|(
 name|ebuf
 operator|.
 name|a_entry
-operator|&
-operator|-
-literal|0x100000
-operator|)
-operator|)
 operator|+
 name|CLBYTES
-operator|)
 expr_stmt|;
 endif|#
 directive|endif
