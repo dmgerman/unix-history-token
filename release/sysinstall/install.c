@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.27 1995/10/12 08:00:16 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.28 1995/10/13 08:19:24 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -760,6 +760,10 @@ name|i
 decl_stmt|,
 name|fd
 decl_stmt|;
+name|struct
+name|termios
+name|foo
+decl_stmt|;
 specifier|extern
 name|int
 name|login_tty
@@ -845,6 +849,63 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|signal
+argument_list|(
+name|SIGTTOU
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tcgetattr
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|foo
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|foo
+operator|.
+name|c_cc
+index|[
+name|VERASE
+index|]
+operator|=
+literal|'\010'
+expr_stmt|;
+if|if
+condition|(
+name|tcsetattr
+argument_list|(
+name|fd
+argument_list|,
+name|TCSANOW
+argument_list|,
+operator|&
+name|foo
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"WARNING: Unable to set erase character.\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"WARNING: Unable to get terminal attributes!\n"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Warning: This shell is chroot()'d to /mnt\n"
@@ -1572,8 +1633,8 @@ name|RET_FAIL
 operator|&&
 name|installFixup
 argument_list|()
-operator|!=
-name|RET_SUCCESS
+operator|==
+name|RET_FAIL
 condition|)
 name|i
 operator|=
@@ -1607,7 +1668,10 @@ expr_stmt|;
 else|else
 name|msgConfirm
 argument_list|(
-literal|"Installation completed successfully, now  press [ENTER] to return\nto the main menu. If you have any network devices you have not yet\nconfigured, see the Interface configuration item on the\nConfiguration menu."
+literal|"Installation completed successfully, now  press [ENTER] to return\n"
+literal|"to the main menu. If you have any network devices you have not yet\n"
+literal|"configured, see the Interface configuration item on the\n"
+literal|"Configuration menu."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1928,7 +1992,7 @@ name|devs
 decl_stmt|;
 name|PartInfo
 modifier|*
-name|p
+name|root
 decl_stmt|;
 name|char
 name|dname
@@ -1967,7 +2031,7 @@ condition|)
 return|return
 name|RET_FAIL
 return|;
-name|p
+name|root
 operator|=
 operator|(
 name|PartInfo
@@ -1995,7 +2059,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|MakeDev
+name|MakeDevChunk
 argument_list|(
 name|rootdev
 argument_list|,
@@ -2027,7 +2091,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|p
+name|root
 operator|->
 name|mountpoint
 argument_list|,
@@ -2042,14 +2106,14 @@ name|rootdev
 operator|->
 name|name
 argument_list|,
-name|p
+name|root
 operator|->
 name|mountpoint
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|root
 operator|->
 name|newfs
 condition|)
@@ -2072,7 +2136,7 @@ name|vsystem
 argument_list|(
 literal|"%s /dev/r%s"
 argument_list|,
-name|p
+name|root
 operator|->
 name|newfs_cmd
 argument_list|,
@@ -2149,17 +2213,6 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-name|sprintf
-argument_list|(
-name|dname
-argument_list|,
-literal|"/dev/%s"
-argument_list|,
-name|rootdev
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|Mount
@@ -2253,7 +2306,7 @@ return|;
 block|}
 if|if
 condition|(
-name|p
+name|root
 operator|->
 name|newfs
 condition|)
@@ -2265,11 +2318,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|MakeDevChunk
+name|MakeDevDisk
 argument_list|(
 name|disk
-operator|->
-name|chunks
 argument_list|,
 literal|"/mnt/dev"
 argument_list|)
@@ -2499,7 +2550,7 @@ name|c1
 operator|->
 name|private
 operator|&&
-name|p
+name|root
 operator|->
 name|newfs
 condition|)
@@ -2542,7 +2593,7 @@ block|}
 comment|/* Copy the boot floppy's dev files */
 if|if
 condition|(
-name|p
+name|root
 operator|->
 name|newfs
 operator|&&
