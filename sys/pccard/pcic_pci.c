@@ -2487,7 +2487,7 @@ name|dev
 argument_list|,
 name|r
 argument_list|,
-name|INTR_TYPE_MISC
+name|INTR_TYPE_AV
 argument_list|,
 name|pcic_pci_intr
 argument_list|,
