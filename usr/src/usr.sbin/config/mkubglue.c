@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkubglue.c	1.6	82/10/24	*/
+comment|/*	mkubglue.c	1.7	82/10/25	*/
 end_comment
 
 begin_comment
@@ -62,7 +62,7 @@ if|if
 condition|(
 name|fp
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|perror
@@ -87,7 +87,7 @@ name|dtab
 init|;
 name|dp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|dp
 operator|=
@@ -106,10 +106,15 @@ if|if
 condition|(
 name|mp
 operator|!=
-name|NULL
+literal|0
 operator|&&
 name|mp
 operator|!=
+operator|(
+expr|struct
+name|device
+operator|*
+operator|)
 operator|-
 literal|1
 operator|&&
@@ -207,6 +212,9 @@ block|}
 block|}
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -216,7 +224,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * dump_vec  *	Print an interrupt vector  */
+comment|/*  * print an interrupt vector  */
 end_comment
 
 begin_expr_stmt
@@ -263,6 +271,9 @@ name|v
 init|=
 name|nbuf
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|v

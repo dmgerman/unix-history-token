@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkheaders.c	1.11	82/10/24	*/
+comment|/*	mkheaders.c	1.12	82/10/25	*/
 end_comment
 
 begin_comment
@@ -233,6 +233,11 @@ literal|0
 operator|&&
 name|mp
 operator|!=
+operator|(
+expr|struct
+name|device
+operator|*
+operator|)
 operator|-
 literal|1
 operator|&&
@@ -240,6 +245,11 @@ name|mp
 operator|->
 name|d_conn
 operator|!=
+operator|(
+expr|struct
+name|device
+operator|*
+operator|)
 operator|-
 literal|1
 condition|)
@@ -414,6 +424,9 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|outf
@@ -450,6 +463,10 @@ literal|0
 operator|||
 name|inw
 operator|==
+operator|(
+name|char
+operator|*
+operator|)
 name|EOF
 condition|)
 break|break;
@@ -468,6 +485,10 @@ literal|0
 operator|||
 name|inw
 operator|==
+operator|(
+name|char
+operator|*
+operator|)
 name|EOF
 condition|)
 break|break;
@@ -493,6 +514,10 @@ literal|0
 operator|||
 name|cp
 operator|==
+operator|(
+name|char
+operator|*
+operator|)
 name|EOF
 condition|)
 break|break;
@@ -537,6 +562,10 @@ literal|0
 operator|||
 name|cp
 operator|==
+operator|(
+name|char
+operator|*
+operator|)
 name|EOF
 condition|)
 break|break;
@@ -577,6 +606,9 @@ operator|=
 name|fl
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|inf
@@ -607,6 +639,10 @@ name|f_next
 control|)
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|fl
 argument_list|)
 expr_stmt|;
@@ -722,10 +758,17 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|fl
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|outf
@@ -757,6 +800,9 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|hbuf
@@ -767,6 +813,9 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|hbuf

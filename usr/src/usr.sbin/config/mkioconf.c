@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkioconf.c	2.4	82/10/24	*/
+comment|/*	mkioconf.c	2.5	82/10/25	*/
 end_comment
 
 begin_include
@@ -92,7 +92,7 @@ if|if
 condition|(
 name|fp
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|perror
@@ -193,7 +193,7 @@ name|dtab
 init|;
 name|dp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|dp
 operator|=
@@ -212,7 +212,7 @@ if|if
 condition|(
 name|mp
 operator|==
-name|NULL
+literal|0
 operator|||
 name|mp
 operator|==
@@ -263,7 +263,7 @@ name|dtab
 init|;
 name|dp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|dp
 operator|=
@@ -288,7 +288,7 @@ name|QUES
 operator|||
 name|mp
 operator|==
-name|NULL
+literal|0
 operator|||
 name|mp
 operator|==
@@ -333,7 +333,7 @@ name|dp
 operator|->
 name|d_vec
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|printf
@@ -463,7 +463,7 @@ name|dtab
 init|;
 name|dp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|dp
 operator|=
@@ -483,7 +483,7 @@ operator|->
 name|d_conn
 operator|)
 operator|==
-name|NULL
+literal|0
 operator|||
 name|mp
 operator|==
@@ -500,7 +500,7 @@ if|if
 condition|(
 name|np
 operator|==
-name|NULL
+literal|0
 operator|||
 name|np
 operator|==
@@ -564,7 +564,7 @@ name|dtab
 init|;
 name|dp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|dp
 operator|=
@@ -579,7 +579,7 @@ name|dp
 operator|->
 name|d_vec
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|struct
@@ -597,7 +597,7 @@ if|if
 condition|(
 name|mp
 operator|==
-name|NULL
+literal|0
 operator|||
 name|mp
 operator|==
@@ -785,7 +785,7 @@ name|dtab
 init|;
 name|dp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|dp
 operator|=
@@ -814,7 +814,7 @@ name|TO_NEXUS
 operator|||
 name|mp
 operator|==
-name|NULL
+literal|0
 operator|||
 operator|!
 name|eq
@@ -1002,7 +1002,7 @@ name|dtab
 init|;
 name|dp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|dp
 operator|=
@@ -1033,7 +1033,7 @@ name|DEVICE
 operator|||
 name|mp
 operator|==
-name|NULL
+literal|0
 operator|||
 name|mp
 operator|==
@@ -1065,7 +1065,7 @@ if|if
 condition|(
 name|np
 operator|!=
-name|NULL
+literal|0
 operator|&&
 name|np
 operator|!=
@@ -1083,7 +1083,7 @@ condition|)
 continue|continue;
 name|np
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1208,7 +1208,7 @@ operator|->
 name|d_conn
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|printf
@@ -1448,6 +1448,9 @@ argument_list|,
 literal|"\t0\n};\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -1482,14 +1485,9 @@ name|dp
 decl_stmt|,
 modifier|*
 name|mp
-decl_stmt|,
-modifier|*
-name|np
 decl_stmt|;
 specifier|register
 name|int
-name|uba_n
-decl_stmt|,
 name|slave
 decl_stmt|;
 name|FILE
@@ -1512,7 +1510,7 @@ if|if
 condition|(
 name|fp
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|perror
@@ -1601,7 +1599,7 @@ name|dtab
 init|;
 name|dp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|dp
 operator|=
@@ -1616,7 +1614,7 @@ name|dp
 operator|->
 name|d_pri
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|mp
@@ -1629,7 +1627,7 @@ if|if
 condition|(
 name|mp
 operator|==
-name|NULL
+literal|0
 operator|||
 name|mp
 operator|==
@@ -1682,7 +1680,7 @@ name|dtab
 init|;
 name|dp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|dp
 operator|=
@@ -1711,7 +1709,7 @@ name|TO_NEXUS
 operator|||
 name|mp
 operator|==
-name|NULL
+literal|0
 operator|||
 operator|!
 name|eq
@@ -1888,7 +1886,7 @@ name|dtab
 init|;
 name|dp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|dp
 operator|=
@@ -1919,7 +1917,7 @@ name|DEVICE
 operator|||
 name|mp
 operator|==
-name|NULL
+literal|0
 operator|||
 name|mp
 operator|==
@@ -1941,10 +1939,6 @@ literal|"mba"
 argument_list|)
 condition|)
 continue|continue;
-name|np
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|eq
@@ -2049,15 +2043,11 @@ else|else
 block|{
 if|if
 condition|(
-operator|(
-name|np
-operator|=
 name|mp
 operator|->
 name|d_conn
-operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|printf
@@ -2280,6 +2270,9 @@ argument_list|,
 literal|"\t0\n};\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -2327,7 +2320,6 @@ operator|(
 literal|"     0"
 operator|)
 return|;
-else|else
 return|return
 operator|(
 name|sprintf
@@ -2368,7 +2360,6 @@ operator|(
 literal|"'?'"
 operator|)
 return|;
-elseif|else
 if|if
 condition|(
 name|num
@@ -2380,11 +2371,8 @@ operator|(
 literal|" -1"
 operator|)
 return|;
-else|else
 return|return
 operator|(
-name|ns
-argument_list|(
 name|sprintf
 argument_list|(
 name|errbuf
@@ -2392,7 +2380,6 @@ argument_list|,
 literal|"%3d"
 argument_list|,
 name|num
-argument_list|)
 argument_list|)
 operator|)
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	main.c	1.6	82/10/24	*/
+comment|/*	main.c	1.7	82/10/25	*/
 end_comment
 
 begin_include
@@ -236,6 +236,10 @@ name|EOF
 condition|)
 return|return
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|EOF
 operator|)
 return|;
@@ -302,9 +306,16 @@ name|EOF
 condition|)
 return|return
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|EOF
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|ungetc
 argument_list|(
 name|ch
@@ -324,21 +335,17 @@ begin_comment
 comment|/*  * prepend the path to a filename  */
 end_comment
 
-begin_macro
+begin_function
+name|char
+modifier|*
 name|path
-argument_list|(
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|)
 name|char
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -348,6 +355,10 @@ decl_stmt|;
 name|cp
 operator|=
 name|malloc
+argument_list|(
+call|(
+name|unsigned
+call|)
 argument_list|(
 name|strlen
 argument_list|(
@@ -361,7 +372,11 @@ argument_list|)
 operator|+
 literal|5
 argument_list|)
+argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|cp
@@ -369,6 +384,9 @@ argument_list|,
 literal|"../"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|cp
@@ -376,6 +394,9 @@ argument_list|,
 name|PREFIX
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|cp
@@ -383,6 +404,9 @@ argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|cp
@@ -396,7 +420,7 @@ name|cp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

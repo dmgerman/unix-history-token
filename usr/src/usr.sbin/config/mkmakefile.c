@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkmakefile.c	1.20	82/10/24	*/
+comment|/*	mkmakefile.c	1.21	82/10/25	*/
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ parameter_list|,
 name|wd
 parameter_list|)
 define|\
-value|{ register char *word = get_word(fp); \ 	  if (word == EOF) \ 		return (EOF); \ 	  else \ 		wd = word; \ 	}
+value|{ register char *word = get_word(fp); \ 	  if (word == (char *)EOF) \ 		return; \ 	  else \ 		wd = word; \ 	}
 end_define
 
 begin_decl_stmt
@@ -85,7 +85,7 @@ name|ftab
 init|;
 name|fp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|fp
 operator|=
@@ -154,17 +154,19 @@ name|fp
 operator|->
 name|f_needs
 operator|=
+literal|0
+expr_stmt|;
 name|fp
 operator|->
 name|f_next
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 if|if
 condition|(
 name|fcur
 operator|==
-name|NULL
+literal|0
 condition|)
 name|fcur
 operator|=
@@ -237,6 +239,9 @@ argument_list|,
 literal|"../conf/makefile."
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|line
@@ -257,7 +262,7 @@ if|if
 condition|(
 name|ifp
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|perror
@@ -287,7 +292,7 @@ if|if
 condition|(
 name|ofp
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|perror
@@ -519,7 +524,7 @@ argument_list|,
 name|ifp
 argument_list|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
@@ -608,12 +613,17 @@ name|COPTS
 operator|=
 name|malloc
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|strlen
 argument_list|(
 name|cp
 argument_list|)
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -733,11 +743,17 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|ofp
@@ -803,8 +819,11 @@ literal|1
 decl_stmt|;
 name|ftab
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|fname
@@ -827,7 +846,7 @@ if|if
 condition|(
 name|fp
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|perror
@@ -855,9 +874,16 @@ if|if
 condition|(
 name|wd
 operator|==
+operator|(
+name|char
+operator|*
+operator|)
 name|EOF
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -868,6 +894,9 @@ condition|(
 name|first
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|fname
@@ -891,7 +920,7 @@ if|if
 condition|(
 name|wd
 operator|==
-name|NULL
+literal|0
 condition|)
 goto|goto
 name|next
@@ -914,7 +943,7 @@ if|if
 condition|(
 name|wd
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|printf
@@ -1018,7 +1047,7 @@ if|if
 condition|(
 name|wd
 operator|==
-name|NULL
+literal|0
 condition|)
 goto|goto
 name|doneopt
@@ -1070,7 +1099,7 @@ name|dtab
 init|;
 name|dp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|dp
 operator|=
@@ -1103,7 +1132,7 @@ name|fp
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 empty_stmt|;
 name|tp
@@ -1174,7 +1203,7 @@ if|if
 condition|(
 name|wd
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|devorprof
@@ -1196,7 +1225,7 @@ if|if
 condition|(
 name|wd
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|printf
@@ -1337,7 +1366,7 @@ name|ftab
 init|;
 name|tp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|tp
 operator|=
@@ -1494,7 +1523,7 @@ name|ftab
 init|;
 name|tp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|tp
 operator|=
@@ -1680,7 +1709,7 @@ name|ftab
 init|;
 name|ftp
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|ftp
 operator|=
@@ -2051,7 +2080,7 @@ name|conf_list
 init|;
 name|fl
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|fl
 operator|=
@@ -2244,7 +2273,7 @@ name|conf_list
 init|;
 name|fl
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|fl
 operator|=
@@ -2375,7 +2404,7 @@ name|conf_list
 init|;
 name|fl
 operator|!=
-name|NULL
+literal|0
 condition|;
 name|fl
 operator|=
@@ -2404,19 +2433,18 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|char
+modifier|*
 name|raise
-argument_list|(
+parameter_list|(
 name|str
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|str
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -2458,7 +2486,7 @@ name|cp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
