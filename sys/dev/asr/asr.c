@@ -2245,7 +2245,7 @@ value|154
 end_define
 
 begin_comment
-comment|/* prefered default character major */
+comment|/* preferred default character major */
 end_comment
 
 begin_decl_stmt
