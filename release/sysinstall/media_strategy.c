@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media_strategy.c,v 1.1 1995/05/17 14:39:53 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media_strategy.c,v 1.4 1995/05/20 18:38:39 gpalmer Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -251,7 +251,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|msgFatal
+name|msgConfirm
 argument_list|(
 literal|"Cannot open the information file `%s': %s (%d)"
 argument_list|,
@@ -355,8 +355,7 @@ name|NAME
 expr_stmt|;
 block|}
 else|else
-block|{
-name|msgConfirm
+name|msgFatal
 argument_list|(
 literal|"Invalid character '%c' at line %d\n"
 argument_list|,
@@ -365,10 +364,6 @@ argument_list|,
 name|lno
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 break|break;
 case|case
 name|COMMENT
@@ -498,18 +493,13 @@ name|ch
 operator|==
 name|EOF
 condition|)
-block|{
-name|msgConfirm
+name|msgFatal
 argument_list|(
 literal|"Unexpected EOF on line %d"
 argument_list|,
 name|lno
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 else|else
 block|{
 if|if
@@ -518,18 +508,13 @@ name|v
 operator|==
 name|MAX_VALUE
 condition|)
-block|{
-name|msgConfirm
+name|msgFatal
 argument_list|(
 literal|"Value length overflow at line %d"
 argument_list|,
 name|lno
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 name|hold_v
 index|[
 name|v
@@ -580,18 +565,13 @@ name|v
 operator|==
 name|MAX_VALUE
 condition|)
-block|{
-name|msgConfirm
+name|msgFatal
 argument_list|(
 literal|"Value length overflow at line %d"
 argument_list|,
 name|lno
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 else|else
 name|hold_v
 index|[
@@ -643,16 +623,13 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|msgConfirm
+name|msgFatal
 argument_list|(
 literal|"Unknown state at line %d??\n"
 argument_list|,
 name|lno
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 block|}
 return|return
@@ -1383,6 +1360,21 @@ end_function
 
 begin_function
 name|Boolean
+name|mediaInitNetwork
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|)
+block|{
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
+begin_function
+name|Boolean
 name|mediaGetTape
 parameter_list|(
 name|char
@@ -1410,8 +1402,21 @@ block|}
 end_function
 
 begin_function
+name|void
+name|mediaCloseNetwork
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|)
+block|{
+return|return;
+block|}
+end_function
+
+begin_function
 name|Boolean
-name|mediaInitNetwork
+name|mediaInitFTP
 parameter_list|(
 name|Device
 modifier|*
@@ -1426,7 +1431,7 @@ end_function
 
 begin_function
 name|Boolean
-name|mediaGetNetwork
+name|mediaGetFTP
 parameter_list|(
 name|char
 modifier|*
@@ -1441,7 +1446,7 @@ end_function
 
 begin_function
 name|void
-name|mediaCloseNetwork
+name|mediaCloseFTP
 parameter_list|(
 name|Device
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.44 1995/05/20 23:33:13 phk Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.45 1995/05/21 01:56:01 phk Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -97,71 +97,6 @@ end_function_decl
 
 begin_function
 specifier|static
-name|Boolean
-name|preInstallCheck
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|getenv
-argument_list|(
-name|DISK_PARTITIONED
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"You need to partition your disk before you can proceed with\nthe installation."
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
-if|if
-condition|(
-operator|!
-name|getenv
-argument_list|(
-name|DISK_LABELLED
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"You need to assign disk labels before you can proceed with\nthe installation."
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
-if|if
-condition|(
-operator|!
-name|Dists
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"You haven't told me what distributions to load yet!\nPlease select a distribution from the Distributions menu."
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
-return|return
-name|TRUE
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|void
 name|installInitial
 parameter_list|(
@@ -211,6 +146,39 @@ condition|(
 name|alreadyDone
 condition|)
 return|return;
+if|if
+condition|(
+operator|!
+name|getenv
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"You need to partition your disk before you can proceed with\nthe installation."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+operator|!
+name|getenv
+argument_list|(
+name|DISK_LABELLED
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"You need to assign disk labels before you can proceed with\nthe installation."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* Figure out what kind of MBR the user wants */
 name|dmenuOpenSimple
 argument_list|(
 operator|&
@@ -263,13 +231,9 @@ operator|=
 name|mbr
 expr_stmt|;
 block|}
-comment|/* If things aren't kosher, or we refuse to proceed, bail. */
+comment|/* If we refuse to proceed, bail. */
 if|if
 condition|(
-operator|!
-name|preInstallCheck
-argument_list|()
-operator|||
 name|msgYesNo
 argument_list|(
 literal|"Last Chance!  Are you SURE you want continue the installation?\n\nIf you're running this on an existing system, we STRONGLY\nencourage you to make proper backups before proceeding.\nWe take no responsibility for lost disk contents!"
@@ -527,6 +491,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * What happens when we select "GO".  This is broken into a 3 stage installation so that  * the user can do a full installation but come back here again to load more distributions,  * perhaps from a different media type.  This would allow, for example, the user to load the  * majority of the system from CDROM and then use ftp to load just the DES dist.  */
+end_comment
+
 begin_function
 name|int
 name|installCommit
@@ -536,9 +504,21 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|installInitial
-argument_list|()
+if|if
+condition|(
+operator|!
+name|Dists
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"You haven't told me what distributions to load yet!\nPlease select a distribution from the Distributions menu."
+argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -548,6 +528,9 @@ condition|)
 return|return
 literal|0
 return|;
+name|installInitial
+argument_list|()
+expr_stmt|;
 name|distExtractAll
 argument_list|()
 expr_stmt|;

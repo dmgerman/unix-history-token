@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.13 1995/05/20 19:22:19 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.14 1995/05/21 10:05:17 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -257,6 +257,10 @@ name|char
 modifier|*
 name|my_name
 decl_stmt|;
+name|char
+modifier|*
+name|my_dir
+decl_stmt|;
 name|unsigned
 name|int
 modifier|*
@@ -322,6 +326,8 @@ block|{
 block|{
 literal|"bin"
 block|,
+literal|"/"
+block|,
 operator|&
 name|Dists
 block|,
@@ -332,6 +338,8 @@ block|}
 block|,
 block|{
 literal|"games"
+block|,
+literal|"/"
 block|,
 operator|&
 name|Dists
@@ -344,6 +352,8 @@ block|,
 block|{
 literal|"manpages"
 block|,
+literal|"/"
+block|,
 operator|&
 name|Dists
 block|,
@@ -354,6 +364,8 @@ block|}
 block|,
 block|{
 literal|"proflibs"
+block|,
+literal|"/"
 block|,
 operator|&
 name|Dists
@@ -366,6 +378,8 @@ block|,
 block|{
 literal|"dict"
 block|,
+literal|"/"
+block|,
 operator|&
 name|Dists
 block|,
@@ -376,6 +390,8 @@ block|}
 block|,
 block|{
 literal|"src/"
+block|,
+literal|"/"
 block|,
 operator|&
 name|Dists
@@ -388,6 +404,8 @@ block|,
 block|{
 literal|"des"
 block|,
+literal|"/"
+block|,
 operator|&
 name|Dists
 block|,
@@ -398,6 +416,8 @@ block|}
 block|,
 block|{
 literal|"compat1x"
+block|,
+literal|"/"
 block|,
 operator|&
 name|Dists
@@ -410,6 +430,8 @@ block|,
 block|{
 literal|"compat20"
 block|,
+literal|"/"
+block|,
 operator|&
 name|Dists
 block|,
@@ -420,6 +442,8 @@ block|}
 block|,
 block|{
 literal|"xf86311/"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|Dists
@@ -450,6 +474,8 @@ block|{
 block|{
 literal|"base"
 block|,
+literal|"/"
+block|,
 operator|&
 name|SrcDists
 block|,
@@ -460,6 +486,8 @@ block|}
 block|,
 block|{
 literal|"gnu"
+block|,
+literal|"/"
 block|,
 operator|&
 name|SrcDists
@@ -472,6 +500,8 @@ block|,
 block|{
 literal|"etc"
 block|,
+literal|"/"
+block|,
 operator|&
 name|SrcDists
 block|,
@@ -482,6 +512,8 @@ block|}
 block|,
 block|{
 literal|"games"
+block|,
+literal|"/"
 block|,
 operator|&
 name|SrcDists
@@ -494,6 +526,8 @@ block|,
 block|{
 literal|"include"
 block|,
+literal|"/"
+block|,
 operator|&
 name|SrcDists
 block|,
@@ -504,6 +538,8 @@ block|}
 block|,
 block|{
 literal|"lib"
+block|,
+literal|"/"
 block|,
 operator|&
 name|SrcDists
@@ -516,6 +552,8 @@ block|,
 block|{
 literal|"libexec"
 block|,
+literal|"/"
+block|,
 operator|&
 name|SrcDists
 block|,
@@ -526,6 +564,8 @@ block|}
 block|,
 block|{
 literal|"lkm"
+block|,
+literal|"/"
 block|,
 operator|&
 name|SrcDists
@@ -538,6 +578,8 @@ block|,
 block|{
 literal|"release"
 block|,
+literal|"/"
+block|,
 operator|&
 name|SrcDists
 block|,
@@ -548,6 +590,8 @@ block|}
 block|,
 block|{
 literal|"sbin"
+block|,
+literal|"/"
 block|,
 operator|&
 name|SrcDists
@@ -560,6 +604,8 @@ block|,
 block|{
 literal|"share"
 block|,
+literal|"/"
+block|,
 operator|&
 name|SrcDists
 block|,
@@ -570,6 +616,8 @@ block|}
 block|,
 block|{
 literal|"sys"
+block|,
+literal|"/"
 block|,
 operator|&
 name|SrcDists
@@ -582,6 +630,8 @@ block|,
 block|{
 literal|"ubin"
 block|,
+literal|"/"
+block|,
 operator|&
 name|SrcDists
 block|,
@@ -593,6 +643,8 @@ block|,
 block|{
 literal|"usbin"
 block|,
+literal|"/"
+block|,
 operator|&
 name|SrcDists
 block|,
@@ -603,6 +655,8 @@ block|}
 block|,
 block|{
 literal|"xf86"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|SrcDists
@@ -633,6 +687,8 @@ block|{
 block|{
 literal|"bin"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86Dists
 block|,
@@ -643,6 +699,8 @@ block|}
 block|,
 block|{
 literal|"lib"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86Dists
@@ -655,6 +713,8 @@ block|,
 block|{
 literal|"doc"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86Dists
 block|,
@@ -665,6 +725,8 @@ block|}
 block|,
 block|{
 literal|"xf86311/"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86Dists
@@ -677,6 +739,8 @@ block|,
 block|{
 literal|"man"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86Dists
 block|,
@@ -687,6 +751,8 @@ block|}
 block|,
 block|{
 literal|"prog"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86Dists
@@ -699,6 +765,8 @@ block|,
 block|{
 literal|"link"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86Dists
 block|,
@@ -709,6 +777,8 @@ block|}
 block|,
 block|{
 literal|"pex"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86Dists
@@ -721,6 +791,8 @@ block|,
 block|{
 literal|"lbx"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86Dists
 block|,
@@ -731,6 +803,8 @@ block|}
 block|,
 block|{
 literal|"xicf"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86Dists
@@ -743,6 +817,8 @@ block|,
 block|{
 literal|"xdmcf"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86Dists
 block|,
@@ -753,6 +829,8 @@ block|}
 block|,
 block|{
 literal|"xf86311/"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86Dists
@@ -783,6 +861,8 @@ block|{
 block|{
 literal|"X3118514"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86ServerDists
 block|,
@@ -793,6 +873,8 @@ block|}
 block|,
 block|{
 literal|"X311AGX"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86ServerDists
@@ -805,6 +887,8 @@ block|,
 block|{
 literal|"X311Mch3"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86ServerDists
 block|,
@@ -815,6 +899,8 @@ block|}
 block|,
 block|{
 literal|"X311Mch8"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86ServerDists
@@ -827,6 +913,8 @@ block|,
 block|{
 literal|"X311Mono"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86ServerDists
 block|,
@@ -837,6 +925,8 @@ block|}
 block|,
 block|{
 literal|"X311P9K"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86ServerDists
@@ -849,6 +939,8 @@ block|,
 block|{
 literal|"X311S3"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86ServerDists
 block|,
@@ -859,6 +951,8 @@ block|}
 block|,
 block|{
 literal|"X311SVGA"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86ServerDists
@@ -871,6 +965,8 @@ block|,
 block|{
 literal|"X311VG16"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86ServerDists
 block|,
@@ -882,6 +978,8 @@ block|,
 block|{
 literal|"X311W32"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86ServerDists
 block|,
@@ -892,6 +990,8 @@ block|}
 block|,
 block|{
 literal|"X311nest"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86ServerDists
@@ -922,6 +1022,8 @@ block|{
 block|{
 literal|"X311fnts"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86FontDists
 block|,
@@ -932,6 +1034,8 @@ block|}
 block|,
 block|{
 literal|"X311f100"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86FontDists
@@ -944,6 +1048,8 @@ block|,
 block|{
 literal|"X311fscl"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86FontDists
 block|,
@@ -955,6 +1061,8 @@ block|,
 block|{
 literal|"X311fnon"
 block|,
+literal|"/usr"
+block|,
 operator|&
 name|XF86FontDists
 block|,
@@ -965,6 +1073,8 @@ block|}
 block|,
 block|{
 literal|"X311fsrv"
+block|,
+literal|"/usr"
 block|,
 operator|&
 name|XF86FontDists
@@ -1000,9 +1110,8 @@ name|i
 decl_stmt|,
 name|status
 decl_stmt|;
-name|FILE
-modifier|*
-name|fp
+name|int
+name|fd
 decl_stmt|;
 name|status
 operator|=
@@ -1093,7 +1202,7 @@ operator|.
 name|my_name
 argument_list|)
 expr_stmt|;
-name|fp
+name|fd
 operator|=
 name|mediaOpen
 argument_list|(
@@ -1109,7 +1218,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fp
+name|fd
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
 name|msgNotify
@@ -1134,12 +1246,19 @@ name|status
 operator|=
 name|mediaExtractDist
 argument_list|(
-name|fp
+name|me
+index|[
+name|i
+index|]
+operator|.
+name|my_dir
+argument_list|,
+name|fd
 argument_list|)
 expr_stmt|;
-name|fclose
+name|close
 argument_list|(
-name|fp
+name|fd
 argument_list|)
 expr_stmt|;
 block|}

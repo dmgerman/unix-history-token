@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.21 1995/05/20 13:36:44 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.22 1995/05/20 20:30:11 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -585,9 +585,35 @@ literal|"Choose a Floppy drive"
 block|,
 literal|"FreeBSD can be installed from floppy disk media, though\n\ not without some pain.  You should have prepared your floppy\n\ distribution media using the DOS floppy install-set construction\n\ procedure (available on the FreeBSD CDROM or the net under the\n\ tools/dos directory) or have otherwise prepared a set of diskettes\n\ for each distribution that properly contains all the components of\n\ the distribution plus the extraction and checksumming scripts."
 block|,
-literal|"Please select which floppy drive you want to use"
+literal|"Press F1 to read the installation guide"
 block|,
+literal|"install.hlp"
+block|,
+block|{
+block|{
 name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuMediaDOS
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Choose a DOS partition"
+block|,
+literal|"FreeBSD can be installed directly from a DOS partition,\n\ assuming of course that you've copied the relevant distributions\n\ into your DOS partition before starting this installation.  If\n\ such is not the case, then you should reboot DOS at this time\n\ and copy the distributions you want to install into a subdirectory\n\ on one of your DOS partitions.  Otherwise, please select the\n\ DOS partition containing the FreeBSD distribution files."
+block|,
+literal|"Press F1 to read the installation guide"
+block|,
+literal|"install.hlp"
 block|,
 block|{
 block|{
@@ -613,11 +639,11 @@ literal|"FreeBSD is distributed from a number of sites on the Internet. Please\n
 block|,
 literal|"Select a site that's close!"
 block|,
-literal|"media_ftp.hlp"
+literal|"install.hlp"
 block|,
 block|{
 block|{
-literal|"Primary"
+literal|"Primary Site"
 block|,
 literal|"ftp.freebsd.org"
 block|,
@@ -627,7 +653,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.freebsd.org/pub/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.freebsd.org/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -635,7 +661,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Secondary"
+literal|"Secondary Site"
 block|,
 literal|"freefall.cdrom.com"
 block|,
@@ -645,7 +671,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://freefall.cdrom.com/pub/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://freefall.cdrom.com/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -663,7 +689,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.physics.usyd.edu.au/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.physics.usyd.edu.au/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -681,7 +707,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://nic.funet.fi/pub/unix/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://nic.funet.fi/pub/unix/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -699,7 +725,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.ibp.fr/pub/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.ibp.fr/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -717,12 +743,10 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.uni-duisburg.de/pub/unix/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.uni-duisburg.de/pub/unix/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
-block|,
-literal|0
-block|}
+block|,		}
 block|,
 block|{
 literal|"Israel"
@@ -735,7 +759,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://orgchem.weizmann.ac.il/pub/FreeBSD-2.0.5-ALPHA"
+literal|"ftp=ftp://orgchem.weizmann.ac.il/pub/FreeBSD-2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -753,7 +777,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.sra.co.jp/pub/os/FreeBSD/distribution/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.sra.co.jp/pub/os/FreeBSD/distribution/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -761,7 +785,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Japan-2"
+literal|"Japan #2"
 block|,
 literal|"ftp.mei.co.jp"
 block|,
@@ -771,7 +795,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.mei.co.jp/free/PC-UNIX/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.mei.co.jp/free/PC-UNIX/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -779,7 +803,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Japan-3"
+literal|"Japan #3"
 block|,
 literal|"ftp.waseda.ac.jp"
 block|,
@@ -789,7 +813,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.waseda.ac.jp/pub/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.waseda.ac.jp/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -797,7 +821,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Japan-4"
+literal|"Japan #4"
 block|,
 literal|"ftp.pu-toyama.ac.jp"
 block|,
@@ -807,7 +831,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.pu-toyama.ac.jp/pub/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.pu-toyama.ac.jp/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -815,7 +839,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Japan-5"
+literal|"Japan #5"
 block|,
 literal|"ftpsv1.u-aizu.ac.jp"
 block|,
@@ -825,7 +849,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftpsv1.u-aizu.ac.jp/pub/os/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftpsv1.u-aizu.ac.jp/pub/os/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -833,7 +857,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Japan-6"
+literal|"Japan #6"
 block|,
 literal|"tutserver.tutcc.tut.ac.jp"
 block|,
@@ -843,7 +867,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://tutserver.tutcc.tut.ac.jp/FreeBSD/FreeBSD-2.0.5-ALPHA"
+literal|"ftp=ftp://tutserver.tutcc.tut.ac.jp/FreeBSD/FreeBSD-2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -851,7 +875,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Japan-7"
+literal|"Japan #7"
 block|,
 literal|"ftp.ee.uec.ac.jp"
 block|,
@@ -861,7 +885,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.ee.uec.ac.jp/pub/os/FreeBSD.other/FreeBSD-2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.ee.uec.ac.jp/pub/os/FreeBSD.other/FreeBSD-2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -879,7 +903,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.cau.ac.kr/pub/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.cau.ac.kr/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -897,7 +921,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.nl.net/pub/os/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.nl.net/pub/os/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -915,7 +939,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.kiae.su/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.kiae.su/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -933,7 +957,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.luth.se/pub/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.luth.se/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -951,7 +975,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://netbsd.csie.nctu.edu.tw/pub/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://netbsd.csie.nctu.edu.tw/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -969,7 +993,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.nectec.or.th/pub/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.nectec.or.th/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -987,7 +1011,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.demon.co.uk/pub/BSD/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.demon.co.uk/pub/BSD/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -995,7 +1019,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"UK-2"
+literal|"UK #2"
 block|,
 literal|"src.doc.ic.ac.uk"
 block|,
@@ -1005,7 +1029,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://src.doc.ic.ac.uk/packages/unix/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://src.doc.ic.ac.uk/packages/unix/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -1013,7 +1037,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"UK-3"
+literal|"UK #3"
 block|,
 literal|"unix.hensa.ac.uk"
 block|,
@@ -1023,7 +1047,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://unix.hensa.ac.uk/pub/walnut.creek/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://unix.hensa.ac.uk/pub/walnut.creek/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -1041,7 +1065,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ref.tfs.com/pub/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ref.tfs.com/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -1049,7 +1073,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"USA-2"
+literal|"USA #2"
 block|,
 literal|"ftp.dataplex.net"
 block|,
@@ -1059,7 +1083,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.dataplex.net/pub/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.dataplex.net/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -1067,7 +1091,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"USA-3"
+literal|"USA #3"
 block|,
 literal|"kryten.atinc.com"
 block|,
@@ -1077,7 +1101,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://kryten.atinc.com/pub/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://kryten.atinc.com/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -1085,7 +1109,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"USA-4"
+literal|"USA #4"
 block|,
 literal|"ftp.neosoft.com"
 block|,
@@ -1095,7 +1119,7 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|"mediaDevice=ftp://ftp.neosoft.com/systems/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.neosoft.com/systems/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -1107,6 +1131,58 @@ name|NULL
 block|}
 block|}
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuMediaTape
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Choose a tape drive type"
+block|,
+literal|"FreeBSD can be installed from tape drive, though this installation\n\ method requires a certain amount of temporary storage in addition\n\ to the space required by the distribution itself (tape drives make\n\ poor random-access devices, so we extract _everything_ on the tape\n\ in one pass).  If you have sufficient space for this, then you should\n\ select one of the following tape devices detected on your system."
+block|,
+literal|"Press F1 to read the installation guide"
+block|,
+literal|"install.hlp"
+block|,
+block|{
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuNetworkDevice
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Choose a network interface type"
+block|,
+literal|"FreeBSD can be installed directly over a network, using NFS\n\ or FTP.  If you're using an ethernet card to talk to the world\n\ then setup is pretty straight-forward.  If you are using PPP over\n\ a serial device (cuaa0 or cuaa1) then you may need to dial your service\n\ provider using a special PPP utility we provide for that purpose.\n\ You can also install over your parallel port using a special \"laplink\"\n\ cable, though this only works if you have another FreeBSD machine running\n\ a fairly recent (2.0R or later) release to talk to.\n\n\ To use PPP, select one of the serial devices, otherwise select lp0\n\ for the parallel port or one of the ethernet controllers (if you have one)\n\ for an ethernet installation."
+block|,
+literal|"Press F1 to read PPP user manual"
+block|,
+literal|"ppp.0"
+block|,
+block|{
+block|{
+name|NULL
+block|}
+block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2810,7 +2886,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose FTP Options"
 block|,
-literal|"In case of ftp failure, how would you like this installation\n\ to deal with it?  You have several choices:"
+literal|"Please indicate how you would like FTP to deal with potential error\n\ conditions, the default behavior being to Abort on transfer errors.  If you\n\ are behind an IP firewall, you will also probably wish to select passive\n\ mode transfers (it's generally OK to set this in any case as almost all\n\ servers support it, firewall or no)."
 block|,
 name|NULL
 block|,
