@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -783,12 +783,28 @@ operator|)
 return|;
 block|}
 comment|/* 	**  Finish setting up address structure. 	*/
+comment|/* set the queue timeout */
 name|a
 operator|->
 name|q_timeout
 operator|=
 name|TimeOut
 expr_stmt|;
+comment|/* map user& host to lower case if requested on non-aliases */
+if|if
+condition|(
+name|a
+operator|->
+name|q_alias
+operator|==
+name|NULL
+condition|)
+name|loweraddr
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+comment|/* get unquoted user for file, program or user.name check */
 operator|(
 name|void
 operator|)

@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -1078,6 +1078,17 @@ operator|)
 return|;
 block|}
 end_if
+
+begin_expr_stmt
+name|loweraddr
+argument_list|(
+operator|&
+name|ee
+operator|->
+name|e_from
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* push state into submessage */

@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -2319,6 +2319,14 @@ operator|.
 name|q_flags
 operator||=
 name|QDONTSEND
+expr_stmt|;
+name|loweraddr
+argument_list|(
+operator|&
+name|CurEnv
+operator|->
+name|e_from
+argument_list|)
 expr_stmt|;
 name|SuprErrs
 operator|=
