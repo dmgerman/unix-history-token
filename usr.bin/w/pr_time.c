@@ -55,12 +55,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"extern.h"
 end_include
 
@@ -128,9 +122,9 @@ if|if
 condition|(
 name|diff
 operator|>
-name|SECSPERDAY
+literal|86400
 operator|*
-name|DAYSPERWEEK
+literal|7
 condition|)
 operator|(
 name|void
@@ -149,12 +143,12 @@ condition|(
 operator|*
 name|now
 operator|/
-name|SECSPERDAY
+literal|86400
 operator|!=
 operator|*
 name|started
 operator|/
-name|SECSPERDAY
+literal|86400
 condition|)
 block|{
 operator|(
@@ -243,7 +237,7 @@ name|idle
 operator|>=
 literal|36
 operator|*
-name|SECSPERHOUR
+literal|3600
 condition|)
 operator|(
 name|void
@@ -254,7 +248,7 @@ literal|" %ddays "
 argument_list|,
 name|idle
 operator|/
-name|SECSPERDAY
+literal|86400
 argument_list|)
 expr_stmt|;
 comment|/* If idle more than an hour, print as HH:MM. */
@@ -263,7 +257,7 @@ if|if
 condition|(
 name|idle
 operator|>=
-name|SECSPERHOUR
+literal|3600
 condition|)
 operator|(
 name|void
@@ -274,15 +268,15 @@ literal|" %2d:%02d "
 argument_list|,
 name|idle
 operator|/
-name|SECSPERHOUR
+literal|3600
 argument_list|,
 operator|(
 name|idle
 operator|%
-name|SECSPERHOUR
+literal|3600
 operator|)
 operator|/
-name|SECSPERMIN
+literal|60
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -290,7 +284,7 @@ if|if
 condition|(
 name|idle
 operator|/
-name|SECSPERMIN
+literal|60
 operator|==
 literal|0
 condition|)
@@ -313,7 +307,7 @@ literal|"    %2d "
 argument_list|,
 name|idle
 operator|/
-name|SECSPERMIN
+literal|60
 argument_list|)
 expr_stmt|;
 block|}
