@@ -1960,6 +1960,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
+name|MenuKLD
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Prototype KLD menu				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
 name|MenuMedia
 decl_stmt|;
 end_decl_stmt
@@ -5222,6 +5233,18 @@ name|void
 name|moduleInitialize
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|kldBrowser
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
