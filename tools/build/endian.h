@@ -6,25 +6,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/types.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500034
-end_if
-
-begin_empty
-empty|#include_next<sys/endian.h>
-end_empty
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -331,11 +314,6 @@ end_endif
 begin_comment
 comment|/* _BYTE_ORDER == _LITTLE_ENDIAN */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
