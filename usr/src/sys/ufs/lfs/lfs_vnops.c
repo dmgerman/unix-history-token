@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.6	%G%	*/
+comment|/*	lfs_vnops.c	4.7	%G%	*/
 end_comment
 
 begin_include
@@ -1181,19 +1181,11 @@ for|for
 control|(
 name|ip
 operator|=
-operator|&
 name|inode
-index|[
-literal|0
-index|]
 init|;
 name|ip
 operator|<
-operator|&
-name|inode
-index|[
-name|NINODE
-index|]
+name|inodeNINODE
 condition|;
 name|ip
 operator|++

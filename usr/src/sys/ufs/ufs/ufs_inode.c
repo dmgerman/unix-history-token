@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.1	%G%	*/
+comment|/*	ufs_inode.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -118,6 +118,14 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|register
+name|struct
+name|inode
+modifier|*
+name|ip
+init|=
+name|inode
+decl_stmt|;
 name|ifreel
 operator|=
 literal|0
@@ -130,31 +138,26 @@ literal|0
 init|;
 name|i
 operator|<
-name|NINODE
+name|ninode
 operator|-
 literal|1
 condition|;
 name|i
 operator|++
+operator|,
+name|ip
+operator|++
 control|)
-name|inode
-index|[
-name|i
-index|]
-operator|.
+name|ip
+operator|->
 name|i_hlink
 operator|=
 name|i
 operator|+
 literal|1
 expr_stmt|;
-name|inode
-index|[
-name|NINODE
-operator|-
-literal|1
-index|]
-operator|.
+name|ip
+operator|->
 name|i_hlink
 operator|=
 operator|-
