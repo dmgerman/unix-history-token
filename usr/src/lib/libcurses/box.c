@@ -31,53 +31,43 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  *	This routine draws a box around the given window with "vert"  * as the vertical delimiting char, and "hor", as the horizontal one.  *  */
+comment|/*  * box --  *	Draw a box around the given window with "vert" as the vertical  *	delimiting char, and "hor", as the horizontal one.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|box
-argument_list|(
-argument|win
-argument_list|,
-argument|vert
-argument_list|,
-argument|hor
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
+parameter_list|(
+name|win
+parameter_list|,
+name|vert
+parameter_list|,
+name|hor
+parameter_list|)
+specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
+name|int
 name|vert
 decl_stmt|,
 name|hor
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|reg
-name|int
-name|i
-decl_stmt|;
-name|reg
+specifier|register
 name|int
 name|endy
 decl_stmt|,
 name|endx
+decl_stmt|,
+name|i
 decl_stmt|;
-name|reg
+specifier|register
 name|char
 modifier|*
 name|fp
@@ -224,8 +214,13 @@ argument_list|(
 name|win
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|OK
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 
