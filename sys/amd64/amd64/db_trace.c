@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id$  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_trace.c,v 1.18 1997/02/22 09:32:15 peter Exp $  */
 end_comment
 
 begin_include
@@ -631,7 +631,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%x"
+literal|"%n"
 argument_list|,
 name|db_get_value
 argument_list|(
@@ -718,6 +718,8 @@ name|frame_type
 decl_stmt|;
 name|int
 name|eip
+decl_stmt|,
+name|esp
 decl_stmt|,
 name|ebp
 decl_stmt|;
@@ -917,6 +919,31 @@ operator|+
 literal|8
 operator|)
 expr_stmt|;
+name|esp
+operator|=
+operator|(
+name|ISPL
+argument_list|(
+name|tf
+operator|->
+name|tf_cs
+argument_list|)
+operator|==
+name|SEL_UPL
+operator|)
+condition|?
+name|tf
+operator|->
+name|tf_esp
+else|:
+operator|(
+name|int
+operator|)
+operator|&
+name|tf
+operator|->
+name|tf_esp
+expr_stmt|;
 switch|switch
 condition|(
 name|frame_type
@@ -950,13 +977,15 @@ name|tf_ebp
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"--- trap %d, eip = 0x%x, ebp = 0x%x ---\n"
+literal|"--- trap %#n, eip = %#n, esp = %#n, ebp = %#n ---\n"
 argument_list|,
 name|tf
 operator|->
 name|tf_trapno
 argument_list|,
 name|eip
+argument_list|,
+name|esp
 argument_list|,
 name|ebp
 argument_list|)
@@ -991,13 +1020,15 @@ name|tf_ebp
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"--- syscall %d, eip = 0x%x, ebp = 0x%x ---\n"
+literal|"--- syscall %#n, eip = %#n, esp = %#n, ebp = %#n ---\n"
 argument_list|,
 name|tf
 operator|->
 name|tf_eax
 argument_list|,
 name|eip
+argument_list|,
+name|esp
 argument_list|,
 name|ebp
 argument_list|)
@@ -1049,9 +1080,11 @@ name|tf_ebp
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"--- interrupt, eip = 0x%x, ebp = 0x%x ---\n"
+literal|"--- interrupt, eip = %#n, esp = %#n, ebp = %#n ---\n"
 argument_list|,
 name|eip
+argument_list|,
+name|esp
 argument_list|,
 name|ebp
 argument_list|)
