@@ -7544,15 +7544,23 @@ modifier|*
 name|bf
 decl_stmt|;
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 init|=
 operator|&
 name|sc
 operator|->
 name|sc_ic
-operator|.
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|ic
+operator|->
 name|ic_if
 decl_stmt|;
 name|struct
@@ -7885,6 +7893,12 @@ name|IEEE80211_FC0_TYPE_MASK
 operator|)
 operator|==
 name|IEEE80211_FC0_TYPE_CTL
+operator|&&
+name|ic
+operator|->
+name|ic_opmode
+operator|!=
+name|IEEE80211_M_MONITOR
 condition|)
 block|{
 comment|/* 			 * Ignore control frame received in promisc mode. 			 */
@@ -7894,6 +7908,13 @@ operator|(
 literal|"ath_rx_proc: control frame\n"
 operator|)
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_rx_ctl
+operator|++
 expr_stmt|;
 goto|goto
 name|rx_next

@@ -144,10 +144,6 @@ name|ast_rx_orn
 decl_stmt|;
 comment|/* rx failed 'cuz of desc overrun */
 name|u_int32_t
-name|ast_rx_tooshort
-decl_stmt|;
-comment|/* rx failed 'cuz frame too short */
-name|u_int32_t
 name|ast_rx_crcerr
 decl_stmt|;
 comment|/* rx failed 'cuz of bad CRC */
@@ -170,6 +166,14 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* rx PHY error per-code counts */
+name|u_int32_t
+name|ast_rx_tooshort
+decl_stmt|;
+comment|/* rx discarded 'cuz frame too short */
+name|u_int32_t
+name|ast_rx_ctl
+decl_stmt|;
+comment|/* rx discarded 'cuz ctl frame */
 name|u_int32_t
 name|ast_be_nombuf
 decl_stmt|;
