@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	4.7 83/01/07"
+literal|"@(#)rshd.c	4.8 83/01/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,10 +125,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|options
-init|=
-name|SO_ACCEPTCONN
-operator||
-name|SO_KEEPALIVE
 decl_stmt|;
 end_decl_stmt
 
@@ -347,6 +343,24 @@ literal|"-d"
 argument_list|)
 condition|)
 block|{
+name|options
+operator||=
+name|SO_DEBUG
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|argc
+operator|>
+literal|0
+condition|)
+block|{
 name|int
 name|port
 init|=
@@ -435,6 +449,59 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|options
+operator|&
+name|SO_DEBUG
+operator|&&
+name|setsockopt
+argument_list|(
+name|f
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"rshd: setsockopt (SO_DEBUG)"
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|f
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_KEEPALIVE
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"rshd: setsockopt (SO_KEEPALIVE)"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
 name|bind
 argument_list|(
 name|f
@@ -514,7 +581,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"accept"
+literal|"rshd: accept"
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -750,8 +817,8 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|DEBUG
 block|{
 name|int
@@ -934,8 +1001,6 @@ name|s
 operator|=
 name|rresvport
 argument_list|(
-literal|0
-argument_list|,
 operator|&
 name|lport
 argument_list|)
