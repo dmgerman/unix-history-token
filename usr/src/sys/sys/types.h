@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	types.h	2.1	3/25/82	*/
-end_comment
-
-begin_comment
-comment|/*	types.h	4.4	82/04/19	*/
+comment|/*	types.h	4.5	82/09/08	*/
 end_comment
 
 begin_comment
@@ -157,11 +153,17 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
+struct|struct
 name|label_t
+block|{
+name|int
+name|val
 index|[
 literal|14
 index|]
+decl_stmt|;
+block|}
+name|label_t
 typedef|;
 end_typedef
 

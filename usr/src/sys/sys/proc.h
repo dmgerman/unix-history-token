@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.14	82/09/06	*/
+comment|/*	proc.h	4.15	82/09/08	*/
 end_comment
 
 begin_include
@@ -233,12 +233,10 @@ name|itimerval
 name|p_realtimer
 decl_stmt|;
 name|int
-name|p_XXX
-decl_stmt|;
-comment|/* XXX */
-name|struct
-name|timeval
-name|p_seltimer
+name|p_SSS
+index|[
+literal|3
+index|]
 decl_stmt|;
 block|}
 struct|;
