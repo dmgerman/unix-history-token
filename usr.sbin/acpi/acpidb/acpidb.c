@@ -2202,6 +2202,11 @@ name|AcpiDbgLevel
 operator|=
 name|ACPI_DEBUG_DEFAULT
 expr_stmt|;
+comment|/* 	 * Match kernel options for the interpreter.  Global variable names 	 * can be found in acglobal.h. 	 */
+name|AcpiGbl_EnableInterpreterSlack
+operator|=
+name|TRUE
+expr_stmt|;
 name|aml_simulation_regload
 argument_list|(
 literal|"region.ini"
