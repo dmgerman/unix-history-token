@@ -360,7 +360,7 @@ index|[
 literal|0
 index|]
 operator|==
-name|NULL
+literal|0
 operator|)
 condition|)
 name|al
@@ -450,7 +450,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|'\0'
+literal|0
 operator|)
 condition|)
 block|{
