@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_udp.c,v 1.5 1996/06/08 22:54:59 jraynard Exp $"
+literal|"$Id: svc_udp.c,v 1.6 1996/08/12 14:00:26 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,20 +86,6 @@ include|#
 directive|include
 file|<errno.h>
 end_include
-
-begin_function_decl
-name|int
-name|bindresvport
-parameter_list|(
-name|int
-name|sd
-parameter_list|,
-name|struct
-name|sockaddr_in
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -171,6 +157,47 @@ name|svcudp_destroy
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|void
+name|cache_set
+name|__P
+argument_list|(
+operator|(
+name|SVCXPRT
+operator|*
+operator|,
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cache_get
+name|__P
+argument_list|(
+operator|(
+name|SVCXPRT
+operator|*
+operator|,
+expr|struct
+name|rpc_msg
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|u_long
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -339,7 +366,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -347,6 +374,8 @@ operator|*
 operator|)
 operator|&
 name|addr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -770,11 +799,6 @@ decl_stmt|;
 name|u_long
 name|replylen
 decl_stmt|;
-specifier|static
-name|int
-name|cache_get
-parameter_list|()
-function_decl|;
 name|again
 label|:
 name|xprt
@@ -846,17 +870,17 @@ goto|;
 if|if
 condition|(
 name|rlen
+operator|==
+operator|-
+literal|1
+operator|||
+name|rlen
 operator|<
-call|(
-name|int
-call|)
-argument_list|(
 literal|4
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_long
-argument_list|)
+name|u_int32_t
 argument_list|)
 condition|)
 return|return
@@ -1026,11 +1050,6 @@ name|stat
 init|=
 name|FALSE
 decl_stmt|;
-specifier|static
-name|void
-name|cache_set
-parameter_list|()
-function_decl|;
 name|xdrs
 operator|->
 name|x_op
@@ -1396,7 +1415,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|bzero((char *) addr, sizeof(type) * (int) (size))
+value|memset((char *) addr, 0, sizeof(type) * (int) (size))
 end_define
 
 begin_comment
@@ -2134,7 +2153,7 @@ name|a1
 parameter_list|,
 name|a2
 parameter_list|)
-value|(bcmp((char*)&a1, (char*)&a2, sizeof(a1)) == 0)
+value|(memcmp(&a1,&a2, sizeof(a1)) == 0)
 name|loc
 operator|=
 name|CACHE_LOC
