@@ -126,6 +126,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIM_CMD_SERRESPEN
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_STATUS
 value|0x06
 end_define
@@ -1482,6 +1489,163 @@ directive|define
 name|PCIR_POWER_DATA
 value|0x7
 end_define
+
+begin_comment
+comment|/* PCI-X definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIXR_COMMAND
+value|0x96
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIXR_DEVADDR
+value|0x98
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIXM_DEVADDR_FNUM
+value|0x0003
+end_define
+
+begin_comment
+comment|/* Function Number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIXM_DEVADDR_DNUM
+value|0x00F8
+end_define
+
+begin_comment
+comment|/* Device Number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIXM_DEVADDR_BNUM
+value|0xFF00
+end_define
+
+begin_comment
+comment|/* Bus Number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIXR_STATUS
+value|0x9A
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIXM_STATUS_64BIT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Active 64bit connection to device. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIXM_STATUS_133CAP
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Device is 133MHz capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIXM_STATUS_SCDISC
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Split Completion Discarded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIXM_STATUS_UNEXPSC
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Unexpected Split Completion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIXM_STATUS_CMPLEXDEV
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Device Complexity (set == bridge) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIXM_STATUS_MAXMRDBC
+value|0x0060
+end_define
+
+begin_comment
+comment|/* Maximum Burst Read Count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIXM_STATUS_MAXSPLITS
+value|0x0380
+end_define
+
+begin_comment
+comment|/* Maximum Split Transactions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIXM_STATUS_MAXCRDS
+value|0x1C00
+end_define
+
+begin_comment
+comment|/* Maximum Cumulative Read Size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIXM_STATUS_RCVDSCEM
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Received a Split Comp w/Error msg */
+end_comment
 
 begin_comment
 comment|/* some PCI vendor definitions (only used to identify ancient devices !!! */
