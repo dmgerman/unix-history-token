@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_hp300.c	5.16 (Berkeley) %G%"
+literal|"@(#)kvm_hp300.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -575,7 +575,7 @@ name|iskva
 parameter_list|(
 name|v
 parameter_list|)
-value|((v)& KERNBASE)
+value|((u_long)(v)& KERNBASE)
 end_define
 
 begin_endif
@@ -5551,6 +5551,9 @@ name|klseek
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|loc
 argument_list|,
 literal|0
@@ -5591,6 +5594,9 @@ name|lseek
 argument_list|(
 name|mem
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|loc
 argument_list|,
 literal|0
