@@ -692,8 +692,15 @@ begin_comment
 comment|/* This vnode is on the freelist */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VCACHEDLABEL
+value|0x100000
+end_define
+
 begin_comment
-comment|/* open for business	0x100000 */
+comment|/* Vnode has valid cached MAC label */
 end_comment
 
 begin_define
