@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.20 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -552,7 +552,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|nlist
-name|nl
+name|namelist
 index|[]
 init|=
 block|{
@@ -925,7 +925,7 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|nl
+name|namelist
 index|[
 literal|0
 index|]
@@ -941,13 +941,13 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 argument_list|)
 condition|)
 block|{
 name|nlisterr
 argument_list|(
-name|nl
+name|namelist
 argument_list|)
 expr_stmt|;
 return|return
@@ -958,7 +958,7 @@ return|;
 block|}
 if|if
 condition|(
-name|nl
+name|namelist
 index|[
 literal|0
 index|]
@@ -1071,14 +1071,14 @@ block|{
 name|nintr
 operator|=
 operator|(
-name|nl
+name|namelist
 index|[
 name|X_EINTRCNT
 index|]
 operator|.
 name|n_value
 operator|-
-name|nl
+name|namelist
 index|[
 name|X_INTRCNT
 index|]
@@ -1093,10 +1093,6 @@ argument_list|)
 expr_stmt|;
 name|intrloc
 operator|=
-operator|(
-name|long
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|nintr
@@ -1109,11 +1105,6 @@ argument_list|)
 expr_stmt|;
 name|intrname
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|nintr
@@ -1126,20 +1117,16 @@ argument_list|)
 expr_stmt|;
 name|intrnamebuf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
-name|nl
+name|namelist
 index|[
 name|X_EINTRNAMES
 index|]
 operator|.
 name|n_value
 operator|-
-name|nl
+name|namelist
 index|[
 name|X_INTRNAMES
 index|]

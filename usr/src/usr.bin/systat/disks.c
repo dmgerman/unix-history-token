@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disks.c	5.13 (Berkeley) %G%"
+literal|"@(#)disks.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|nlist
-name|nl
+name|namelist
 index|[]
 init|=
 block|{
@@ -281,13 +281,13 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 argument_list|)
 condition|)
 block|{
 name|nlisterr
 argument_list|(
-name|nl
+name|namelist
 argument_list|)
 expr_stmt|;
 return|return
@@ -298,7 +298,7 @@ return|;
 block|}
 if|if
 condition|(
-name|nl
+name|namelist
 index|[
 name|X_DK_NDRIVE
 index|]

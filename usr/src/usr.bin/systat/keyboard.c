@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyboard.c	5.3 (Berkeley) %G%"
+literal|"@(#)keyboard.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<termios.h>
 end_include
 
 begin_include
@@ -230,9 +236,8 @@ if|if
 condition|(
 name|ch
 operator|==
-name|_tty
-operator|.
-name|sg_erase
+name|erasechar
+argument_list|()
 operator|&&
 name|col
 operator|>
@@ -334,9 +339,8 @@ if|if
 condition|(
 name|ch
 operator|==
-name|_tty
-operator|.
-name|sg_kill
+name|killchar
+argument_list|()
 operator|&&
 name|col
 operator|>

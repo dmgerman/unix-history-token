@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.12 (Berkeley) %G%"
+literal|"@(#)main.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,7 +92,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|nlist
-name|nl
+name|namelist
 index|[]
 init|=
 block|{
@@ -412,13 +412,13 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nl
+name|namelist
 argument_list|)
 condition|)
 block|{
 name|nlisterr
 argument_list|(
-name|nl
+name|namelist
 argument_list|)
 expr_stmt|;
 name|exit
@@ -429,7 +429,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|nl
+name|namelist
 index|[
 name|X_FIRST
 index|]
@@ -443,7 +443,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Couldn't namelist.\n"
+literal|"couldn't read namelist.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1128,11 +1128,11 @@ begin_function
 name|void
 name|nlisterr
 parameter_list|(
-name|nl
+name|namelist
 parameter_list|)
 name|struct
 name|nlist
-name|nl
+name|namelist
 index|[]
 decl_stmt|;
 block|{
@@ -1163,7 +1163,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|nl
+name|namelist
 index|[
 name|i
 index|]
@@ -1173,7 +1173,7 @@ operator|!=
 name|NULL
 operator|&&
 operator|*
-name|nl
+name|namelist
 index|[
 name|i
 index|]
@@ -1187,7 +1187,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|nl
+name|namelist
 index|[
 name|i
 index|]
@@ -1207,7 +1207,7 @@ literal|10
 argument_list|,
 literal|"%s"
 argument_list|,
-name|nl
+name|namelist
 index|[
 name|i
 index|]
