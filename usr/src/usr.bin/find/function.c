@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	8.7 (Berkeley) %G%"
+literal|"@(#)function.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3257,6 +3257,9 @@ operator|=
 name|S_IFSOCK
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|FTS_WHITEOUT
 case|case
 literal|'w'
 case|:
@@ -3269,6 +3272,9 @@ operator||=
 name|FTS_WHITEOUT
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* FTS_WHITEOUT */
 default|default:
 name|errx
 argument_list|(
