@@ -2077,6 +2077,14 @@ block|{
 case|case
 name|EX_NORMAL
 case|:
+if|if
+condition|(
+operator|!
+name|sw
+operator|.
+name|quiet
+condition|)
+block|{
 name|prompt_Printf
 argument_list|(
 name|prompt
@@ -2091,6 +2099,7 @@ argument_list|,
 literal|"Parent: PPP enabled\n"
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|EX_REDIAL
