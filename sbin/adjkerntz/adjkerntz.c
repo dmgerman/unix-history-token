@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993 by Andrew A. Chernov, Moscow, Russia.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1993, 1994 by Andrew A. Chernov, Moscow, Russia.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -96,6 +96,10 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
+
+begin_comment
+comment|/*#define DEBUG*/
+end_comment
 
 begin_define
 define|#
@@ -433,20 +437,10 @@ operator|&
 name|initial_sec
 argument_list|)
 expr_stmt|;
-name|utc
-operator|.
-name|tm_isdst
-operator|=
-name|local
-operator|.
-name|tm_isdst
-expr_stmt|;
-comment|/* Use current timezone for mktime(), */
-comment|/* because it assumed local time */
 comment|/* calculate local CMOS diff from GMT */
 name|utcsec
 operator|=
-name|mktime
+name|timelocal
 argument_list|(
 operator|&
 name|utc
@@ -454,7 +448,7 @@ argument_list|)
 expr_stmt|;
 name|localsec
 operator|=
-name|mktime
+name|timelocal
 argument_list|(
 operator|&
 name|local
@@ -524,6 +518,20 @@ name|utcsec
 operator|-
 name|localsec
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Initial offset: %ld secs\n"
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|mib
 index|[
 literal|0
@@ -608,6 +616,20 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Initial diff: %ld secs\n"
+argument_list|,
+name|diff
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Yet one step for final time */
 name|final_sec
 operator|=
@@ -636,19 +658,9 @@ operator|&
 name|final_sec
 argument_list|)
 expr_stmt|;
-name|utc
-operator|.
-name|tm_isdst
-operator|=
-name|local
-operator|.
-name|tm_isdst
-expr_stmt|;
-comment|/* Use current timezone for mktime(), */
-comment|/* because it assumed local time */
 name|utcsec
 operator|=
-name|mktime
+name|timelocal
 argument_list|(
 operator|&
 name|utc
@@ -656,7 +668,7 @@ argument_list|)
 expr_stmt|;
 name|localsec
 operator|=
-name|mktime
+name|timelocal
 argument_list|(
 operator|&
 name|local
@@ -726,6 +738,20 @@ name|utcsec
 operator|-
 name|localsec
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Final offset: %ld secs\n"
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* correct the kerneltime for this diffs */
 comment|/* subtract kernel offset, if present, old offset too */
 name|diff
@@ -747,6 +773,20 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Final diff: %ld secs\n"
+argument_list|,
+name|diff
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|tv
 operator|.
 name|tv_sec
