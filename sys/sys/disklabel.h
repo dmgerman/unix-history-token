@@ -705,6 +705,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DTYPE_RAID
+value|14
+end_define
+
+begin_comment
+comment|/* CMU RAIDFrame */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DTYPE_JFS2
 value|16
 end_define
@@ -756,7 +767,7 @@ literal|"Vinum"
 block|,
 literal|"DOC2K"
 block|,
-literal|"?"
+literal|"Raid"
 block|,
 literal|"?"
 block|,
@@ -951,6 +962,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FS_RAID
+value|15
+end_define
+
+begin_comment
+comment|/* RAIDFrame drive */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FS_JFS2
 value|21
 end_define
@@ -1004,9 +1026,7 @@ literal|"boot"
 block|,
 literal|"vinum"
 block|,
-literal|"?"
-block|,
-literal|"?"
+literal|"raid"
 block|,
 literal|"?"
 block|,

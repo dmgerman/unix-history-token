@@ -466,6 +466,11 @@ init|=
 literal|0xb300000
 block|,
 comment|/* Configure vinum */
+name|SI_SUB_RAID
+init|=
+literal|0xb380000
+block|,
+comment|/* Configure RAIDframe */
 name|SI_SUB_MOUNT_ROOT
 init|=
 literal|0xb400000
