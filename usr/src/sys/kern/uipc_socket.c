@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1980,6 +1980,16 @@ operator|+=
 name|max_hdr
 expr_stmt|;
 block|}
+else|else
+name|len
+operator|=
+name|min
+argument_list|(
+name|MCLBYTES
+argument_list|,
+name|resid
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|space
@@ -3168,6 +3178,16 @@ name|m
 operator|->
 name|m_type
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|MT_OOBDATA
+condition|)
+name|flags
+operator||=
+name|MSG_OOB
+expr_stmt|;
 block|}
 name|moff
 operator|=
@@ -3180,12 +3200,6 @@ expr_stmt|;
 while|while
 condition|(
 name|m
-operator|&&
-name|m
-operator|->
-name|m_type
-operator|==
-name|type
 operator|&&
 name|uio
 operator|->
@@ -3206,10 +3220,23 @@ name|m_type
 operator|==
 name|MT_OOBDATA
 condition|)
-name|flags
-operator||=
-name|MSG_OOB
-expr_stmt|;
+block|{
+if|if
+condition|(
+name|type
+operator|!=
+name|MT_OOBDATA
+condition|)
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|type
+operator|==
+name|MT_OOBDATA
+condition|)
+break|break;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
