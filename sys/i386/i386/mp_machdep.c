@@ -10245,13 +10245,6 @@ index|[
 name|MAXCPU
 index|]
 decl_stmt|;
-specifier|extern
-name|long
-name|cp_time
-index|[
-name|CPUSTATES
-index|]
-decl_stmt|;
 define|#
 directive|define
 name|PC_TO_INDEX
