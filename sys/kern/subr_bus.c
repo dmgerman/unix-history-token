@@ -11361,6 +11361,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|bootverbose
+operator|&&
 operator|!
 operator|(
 name|flags
@@ -11398,9 +11400,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bootverbose
+operator|&&
+operator|(
 name|flags
 operator|&
 name|INTR_FAST
+operator|)
 condition|)
 name|device_printf
 argument_list|(
