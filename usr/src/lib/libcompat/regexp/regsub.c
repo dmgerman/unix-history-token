@@ -6,13 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<regexp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<regexp.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -71,10 +77,12 @@ name|source
 parameter_list|,
 name|dest
 parameter_list|)
+specifier|const
 name|regexp
 modifier|*
 name|prog
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|source
@@ -155,6 +163,10 @@ return|return;
 block|}
 name|src
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|source
 expr_stmt|;
 name|dst

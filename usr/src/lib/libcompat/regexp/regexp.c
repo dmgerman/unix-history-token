@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<regexp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -18,7 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<regexp.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -564,6 +576,7 @@ name|regcomp
 parameter_list|(
 name|exp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|exp
@@ -591,12 +604,6 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|exp
@@ -632,6 +639,10 @@ expr_stmt|;
 comment|/* aid grep */
 name|regparse
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|exp
 expr_stmt|;
 name|regnpar
@@ -716,6 +727,10 @@ expr_stmt|;
 comment|/* Second pass: emit code. */
 name|regparse
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|exp
 expr_stmt|;
 name|regnpar
@@ -2888,11 +2903,13 @@ parameter_list|,
 name|string
 parameter_list|)
 specifier|register
+specifier|const
 name|regexp
 modifier|*
 name|prog
 decl_stmt|;
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|string
@@ -2968,6 +2985,10 @@ condition|)
 block|{
 name|s
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|string
 expr_stmt|;
 while|while
@@ -3030,6 +3051,10 @@ block|}
 comment|/* Mark beginning of line for ^ . */
 name|regbol
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|string
 expr_stmt|;
 comment|/* Simplest case:  anchored match need be tried only once. */
@@ -3052,6 +3077,10 @@ return|;
 comment|/* Messy cases:  unanchored match. */
 name|s
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|string
 expr_stmt|;
 if|if
