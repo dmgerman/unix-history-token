@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.   *  * %sccs.include.redist.c%  *  *	@(#)kern_subr.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_subr.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -507,7 +507,7 @@ condition|;
 operator|++
 name|src
 control|)
-empty_stmt|;
+continue|continue;
 while|while
 condition|(
 operator|*
@@ -518,7 +518,7 @@ operator|*
 name|append
 operator|++
 condition|)
-empty_stmt|;
+continue|continue;
 block|}
 end_block
 
@@ -545,10 +545,10 @@ for|for
 control|(
 init|;
 operator|*
-name|from
+name|to
 operator|=
 operator|*
-name|to
+name|from
 condition|;
 operator|++
 name|from
@@ -556,7 +556,7 @@ operator|,
 operator|++
 name|to
 control|)
-empty_stmt|;
+continue|continue;
 block|}
 end_block
 
@@ -610,7 +610,7 @@ operator|,
 operator|++
 name|to
 control|)
-empty_stmt|;
+continue|continue;
 operator|*
 name|to
 operator|=
@@ -619,11 +619,11 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
 
 begin_comment
 comment|/* unused except by ct.c, other oddities XXX */
@@ -823,7 +823,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* notdef */
+comment|/* vax */
 end_comment
 
 end_unit
