@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.1 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1983,9 +1983,8 @@ condition|(
 name|atmark
 condition|)
 break|break;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|read
 argument_list|(
 name|rem
@@ -1997,7 +1996,10 @@ argument_list|(
 name|waste
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+break|break;
 block|}
 name|recv
 argument_list|(
