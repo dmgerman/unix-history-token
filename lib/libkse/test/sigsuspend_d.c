@@ -50,7 +50,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|_LIBC_R_
 argument_list|)
 end_if
 
@@ -252,8 +252,10 @@ name|EINTR
 operator|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Unable to suspend for signals, "
 literal|"errno %d, return value %d\n"
 argument_list|,
@@ -281,8 +283,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Sigsuspend woke up by signal %d\n"
 argument_list|,
 name|sigfifo
@@ -369,8 +373,10 @@ expr_stmt|;
 name|fifo_depth
 operator|++
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"  -> Suspender thread signal handler caught signal %d\n"
 argument_list|,
 name|signo
@@ -416,16 +422,20 @@ name|set
 argument_list|)
 argument_list|)
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|">>> FAIL: sigsuspender signal handler running "
 literal|"with incorrect mask.\n"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"  -> Main thread signal handler caught signal %d\n"
 argument_list|,
 name|signo
@@ -458,8 +468,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Unable to send thread signal, errno %d.\n"
 argument_list|,
 name|errno
@@ -496,8 +508,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Unable to send process signal, errno %d.\n"
 argument_list|,
 name|errno
@@ -798,8 +812,10 @@ literal|0
 operator|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Unable to initialize thread attributes.\n"
 argument_list|)
 expr_stmt|;
@@ -828,8 +844,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Unable to create thread, errno %d.\n"
 argument_list|,
 name|errno
@@ -845,7 +863,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|_LIBC_R
 argument_list|)
 name|pthread_set_name_np
 argument_list|(
@@ -888,8 +906,10 @@ index|]
 operator|!=
 literal|0
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"FAIL: sigsuspend wakes up for ignored signal "
 literal|"SIGIO.\n"
 argument_list|)
@@ -926,8 +946,10 @@ index|]
 operator|!=
 literal|2
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"FAIL: sigsuspend doesn't wake up for SIGURG.\n"
 argument_list|)
 expr_stmt|;
@@ -963,8 +985,10 @@ index|]
 operator|!=
 literal|2
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"FAIL: sigsuspend doesn't wake up for SIGUSR2.\n"
 argument_list|)
 expr_stmt|;
@@ -1000,8 +1024,10 @@ index|]
 operator|!=
 literal|0
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"FAIL: signal hander called for SIGUSR1.\n"
 argument_list|)
 expr_stmt|;
@@ -1011,8 +1037,10 @@ argument_list|(
 name|SIGPIPE
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"FAIL: SIGPIPE did not terminate process.\n"
 argument_list|)
 expr_stmt|;

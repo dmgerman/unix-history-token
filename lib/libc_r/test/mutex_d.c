@@ -80,7 +80,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|_LIBC_R_
 argument_list|)
 end_if
 
@@ -6392,7 +6392,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|_LIBC_R_
 argument_list|)
 block|{
 name|char
