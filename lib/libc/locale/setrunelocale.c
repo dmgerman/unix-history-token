@@ -246,6 +246,10 @@ operator|=
 operator|&
 name|_DefaultRuneLocale
 expr_stmt|;
+name|__mb_cur_max
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0
