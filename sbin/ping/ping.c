@@ -1117,7 +1117,7 @@ name|struct
 name|sockaddr_in
 name|from
 decl_stmt|,
-name|sin
+name|sock_in
 decl_stmt|;
 name|struct
 name|in_addr
@@ -1273,6 +1273,8 @@ name|loop
 decl_stmt|,
 name|mttl
 decl_stmt|;
+name|payload
+operator|=
 name|source
 operator|=
 name|NULL
@@ -2321,15 +2323,15 @@ name|char
 operator|*
 operator|)
 operator|&
-name|sin
+name|sock_in
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|sock_in
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sin
+name|sock_in
 operator|.
 name|sin_family
 operator|=
@@ -2342,7 +2344,7 @@ argument_list|(
 name|source
 argument_list|,
 operator|&
-name|sin
+name|sock_in
 operator|.
 name|sin_addr
 argument_list|)
@@ -2385,22 +2387,25 @@ name|h_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sin
+name|sock_in
 operator|.
 name|sin_len
 operator|=
 sizeof|sizeof
-name|sin
+name|sock_in
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|hp
 operator|->
 name|h_length
 operator|>
 sizeof|sizeof
 argument_list|(
-name|sin
+name|sock_in
 operator|.
 name|sin_addr
 argument_list|)
@@ -2421,7 +2426,7 @@ expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
-name|sin
+name|sock_in
 operator|.
 name|sin_addr
 argument_list|,
@@ -2434,7 +2439,7 @@ index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|sock_in
 operator|.
 name|sin_addr
 argument_list|)
@@ -2488,10 +2493,10 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|sock_in
 argument_list|,
 sizeof|sizeof
-name|sin
+name|sock_in
 argument_list|)
 operator|==
 operator|-
@@ -2587,6 +2592,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|hp
 operator|->
 name|h_length
@@ -3226,7 +3234,7 @@ name|s_addr
 operator|=
 name|source
 condition|?
-name|sin
+name|sock_in
 operator|.
 name|sin_addr
 operator|.
@@ -3990,6 +3998,9 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|s
 operator|>=
 name|FD_SETSIZE
@@ -4155,7 +4166,7 @@ block|{
 name|struct
 name|timeval
 modifier|*
-name|t
+name|tv
 init|=
 name|NULL
 decl_stmt|;
@@ -4253,7 +4264,7 @@ name|CMSG_LEN
 argument_list|(
 sizeof|sizeof
 expr|*
-name|t
+name|tv
 argument_list|)
 condition|)
 block|{
@@ -4274,7 +4285,7 @@ name|now
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|t
+name|tv
 operator|=
 operator|&
 name|now
@@ -4284,7 +4295,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|t
+name|tv
 operator|==
 name|NULL
 condition|)
@@ -4300,7 +4311,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|t
+name|tv
 operator|=
 operator|&
 name|now
@@ -4319,22 +4330,26 @@ argument_list|,
 operator|&
 name|from
 argument_list|,
-name|t
+name|tv
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|options
 operator|&
 name|F_ONCE
 operator|&&
 name|nreceived
+operator|)
 operator|||
+operator|(
 name|npackets
 operator|&&
 name|nreceived
 operator|>=
 name|npackets
+operator|)
 condition|)
 break|break;
 block|}
@@ -8323,26 +8338,44 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n"
-argument_list|,
-literal|"usage: ping [-AaDdfnoQqRrv] [-c count] [-i wait] [-l preload]"
-argument_list|,
-literal|"            [-M mask | time] [-m ttl] [-p pattern] "
 ifdef|#
 directive|ifdef
 name|IPSEC
 ifdef|#
 directive|ifdef
 name|IPSEC_POLICY_IPSEC
-literal|"[-P policy] "
+literal|"%s\n%s\n%s%s\n%s\n"
+argument_list|,
+else|#
+directive|else
+literal|"%s\n%s\n%s\n%s\n"
+argument_list|,
 endif|#
 directive|endif
+else|#
+directive|else
+literal|"%s\n%s\n%s\n%s\n"
+argument_list|,
 endif|#
 directive|endif
-literal|"[-S src_addr]"
+literal|"usage: ping [-AaDdfnoQqRrv] [-c count] [-i wait] [-l preload]"
+argument_list|,
+literal|"            [-M mask | time] [-m ttl] [-p pattern] [-S src_addr]"
 argument_list|,
 literal|"            [-s packetsize] [-t timeout] [-z tos]"
 argument_list|,
+ifdef|#
+directive|ifdef
+name|IPSEC
+ifdef|#
+directive|ifdef
+name|IPSEC_POLICY_IPSEC
+literal|" [-P policy]"
+argument_list|,
+endif|#
+directive|endif
+endif|#
+directive|endif
 literal|"            [host | [-L] [-I iface] [-T ttl] mcast-group]"
 argument_list|)
 expr_stmt|;
