@@ -757,6 +757,13 @@ block|,
 name|USB_PRODUCT_ELECOM_UCSGT
 block|}
 block|,
+comment|/* Sony Ericsson USB Cable */
+block|{
+name|USB_VENDOR_SONYERICSSON
+block|,
+name|USB_PRODUCT_SONYERICSSON_DCU10
+block|}
+block|,
 comment|/* SOURCENEXT KeikaiDenwa 8 */
 block|{
 name|USB_VENDOR_SOURCENEXT
