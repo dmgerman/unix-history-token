@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.2 (Berkeley) %G%"
+literal|"@(#)w.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -69,6 +63,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -121,6 +132,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|filename_read
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|temp
@@ -161,7 +174,7 @@ name|strcpy
 argument_list|(
 name|help_msg
 argument_list|,
-literal|"bad address"
+literal|"buffer empty"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -216,12 +229,6 @@ name|inputt
 argument_list|,
 name|errnum
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
 expr_stmt|;
 if|if
 condition|(
@@ -327,6 +334,9 @@ operator|=
 name|filename_read
 expr_stmt|;
 block|}
+name|sigspecial
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|l_sl
@@ -381,9 +391,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|sigspecial
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
 condition|)
 goto|goto
 name|point
@@ -423,12 +441,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
-if|if
-condition|(
 name|filename_read
 operator|!=
 name|filename_current
@@ -452,7 +464,7 @@ condition|(
 name|l_q_flag
 condition|)
 block|{
-comment|/* For "wq". */
+comment|/* For "wq" and "Wq". */
 name|ungetc
 argument_list|(
 literal|'\n'
@@ -530,6 +542,19 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+break|break;
+name|sigspecial
+operator|++
+expr_stmt|;
 comment|/* Fwrite is about 20+% faster than fprintf -- no surprise. */
 name|fwrite
 argument_list|(
@@ -580,15 +605,19 @@ name|begi
 operator|->
 name|below
 expr_stmt|;
+name|sigspecial
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|sigint_flag
-condition|)
-return|return
+operator|&&
 operator|(
-name|l_ttl
+operator|!
+name|sigspecial
 operator|)
-return|;
+condition|)
+break|break;
 block|}
 return|return
 operator|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)f.c	5.2 (Berkeley) %G%"
+literal|"@(#)f.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -69,6 +63,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -118,18 +129,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
-if|if
-condition|(
 operator|*
 name|errnum
 operator|==
 literal|1
 condition|)
 block|{
+name|sigspecial
+operator|++
+expr_stmt|;
 name|free
 argument_list|(
 name|filename_current
@@ -138,6 +146,20 @@ expr_stmt|;
 name|filename_current
 operator|=
 name|l_temp
+expr_stmt|;
+name|sigspecial
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+name|SIGINT_ACTION
 expr_stmt|;
 block|}
 elseif|else
@@ -182,10 +204,8 @@ condition|)
 return|return;
 if|if
 condition|(
-name|sigint_flag
+name|filename_current
 condition|)
-name|SIGINT_ACTION
-expr_stmt|;
 name|fwrite
 argument_list|(
 name|filename_current

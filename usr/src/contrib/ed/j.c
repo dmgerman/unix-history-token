@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)j.c	5.2 (Berkeley) %G%"
+literal|"@(#)j.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -69,6 +63,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -135,6 +146,29 @@ name|errnum
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|start
+operator|==
+name|NULL
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|help_msg
+argument_list|,
+literal|"buffer empty"
+argument_list|)
+expr_stmt|;
+operator|*
+name|errnum
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return;
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -226,7 +260,7 @@ name|strcpy
 argument_list|(
 name|help_msg
 argument_list|,
-literal|"bad address"
+literal|"buffer empty"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -235,13 +269,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|ungetc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|inputt
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|start_default
@@ -249,12 +276,6 @@ operator|=
 name|End_default
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
 expr_stmt|;
 if|if
 condition|(
@@ -319,6 +340,9 @@ name|nn_max
 condition|)
 block|{
 comment|/* 		 * The new line is bigger than any so far, so make more 		 * space. 		 */
+name|sigspecial
+operator|++
+expr_stmt|;
 name|free
 argument_list|(
 name|text
@@ -341,6 +365,9 @@ argument_list|(
 name|char
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|sigspecial
+operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -365,12 +392,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-if|if
-condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
 name|l_temp1
 operator|=
 name|calloc
@@ -387,7 +408,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|text
+name|l_temp1
 operator|==
 name|NULL
 condition|)
@@ -418,6 +439,9 @@ name|l_ptr
 operator|=
 name|start
 expr_stmt|;
+name|sigspecial
+operator|++
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -425,13 +449,6 @@ condition|;
 control|)
 block|{
 comment|/* Get each line and catenate. */
-if|if
-condition|(
-name|sigint_flag
-condition|)
-goto|goto
-name|point
-goto|;
 name|get_line
 argument_list|(
 name|l_ptr
@@ -443,6 +460,18 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+goto|goto
+name|point
+goto|;
 name|strcat
 argument_list|(
 name|l_temp1
@@ -478,7 +507,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|text
+name|l_temp_line
 operator|==
 name|NULL
 condition|)
@@ -601,6 +630,21 @@ operator|)
 operator|=
 name|l_temp_line
 expr_stmt|;
+name|sigspecial
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+goto|goto
+name|mk
+goto|;
 name|ungetc
 argument_list|(
 name|ss
@@ -609,12 +653,20 @@ name|inputt
 argument_list|)
 expr_stmt|;
 comment|/* Delete the lines used to make the joined line. */
+name|join_flag
+operator|=
+literal|1
+expr_stmt|;
 name|d
 argument_list|(
 name|inputt
 argument_list|,
 name|errnum
 argument_list|)
+expr_stmt|;
+name|join_flag
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -629,6 +681,8 @@ name|errnum
 operator|=
 literal|0
 expr_stmt|;
+name|mk
+label|:
 name|current
 operator|=
 name|l_temp_line

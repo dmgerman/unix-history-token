@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)k.c	5.2 (Berkeley) %G%"
+literal|"@(#)k.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -63,6 +57,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -233,8 +244,14 @@ name|LINE
 modifier|*
 name|get_mark
 parameter_list|(
+name|inputt
+parameter_list|,
 name|errnum
 parameter_list|)
+name|FILE
+modifier|*
+name|inputt
+decl_stmt|;
 name|int
 modifier|*
 name|errnum
@@ -245,8 +262,10 @@ name|l_mark
 decl_stmt|;
 name|l_mark
 operator|=
-name|getchar
-argument_list|()
+name|getc
+argument_list|(
+name|inputt
+argument_list|)
 expr_stmt|;
 comment|/* Ditto above comment. */
 if|if

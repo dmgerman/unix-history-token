@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rodney Ruddock of the University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)ed.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rodney Ruddock of the University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)ed.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FILENAME_LEN
-value|1023
+value|PATH_MAX
 end_define
 
 begin_define
@@ -35,7 +35,14 @@ begin_define
 define|#
 directive|define
 name|SIGINT_ACTION
-value|longjmp(ctrl_position, INTERUPT); fflush(stdin)
+value|longjmp(ctrl_position, INTERUPT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGINT_ILACTION
+value|longjmp(ctrl_position2, INTERUPT)
 end_define
 
 begin_define
@@ -52,6 +59,24 @@ name|NN_MAX_START
 value|510
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STDOUT_FILENO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STDOUT_FILENO
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -65,9 +90,31 @@ decl_stmt|,
 modifier|*
 name|below
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|STDIO
+name|long
+name|handle
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DBI
 name|recno_t
 name|handle
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MEMORY
+name|char
+modifier|*
+name|handle
+decl_stmt|;
+endif|#
+directive|endif
 name|size_t
 name|len
 decl_stmt|;
@@ -258,6 +305,8 @@ name|int
 name|filename_flag
 decl_stmt|,
 name|add_flag
+decl_stmt|,
+name|join_flag
 decl_stmt|;
 end_decl_stmt
 
@@ -283,6 +332,46 @@ name|printsfx
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STDIO
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|fhtmp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|file_seek
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|template
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|DB
@@ -298,6 +387,11 @@ modifier|*
 name|template
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -346,6 +440,10 @@ name|int
 name|sigint_flag
 decl_stmt|,
 name|sighup_flag
+decl_stmt|,
+name|sigspecial
+decl_stmt|,
+name|sigspecial2
 decl_stmt|;
 end_decl_stmt
 
@@ -353,6 +451,8 @@ begin_decl_stmt
 specifier|extern
 name|jmp_buf
 name|ctrl_position
+decl_stmt|,
+name|ctrl_position2
 decl_stmt|;
 end_decl_stmt
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)z.c	5.2 (Berkeley) %G%"
+literal|"@(#)z.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -63,6 +57,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -118,7 +129,7 @@ name|strcpy
 argument_list|(
 name|help_msg
 argument_list|,
-literal|"no lines in buffer"
+literal|"buffer empty"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -191,10 +202,33 @@ return|return;
 block|}
 if|if
 condition|(
-name|sigint_flag
+name|start
+operator|==
+name|NULL
 condition|)
-name|SIGINT_ACTION
+block|{
+name|strcpy
+argument_list|(
+name|help_msg
+argument_list|,
+literal|"buffer empty"
+argument_list|)
 expr_stmt|;
+operator|*
+name|errnum
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|ungetc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|inputt
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|End_default
@@ -246,35 +280,6 @@ name|start
 operator|=
 name|End
 expr_stmt|;
-if|if
-condition|(
-name|start
-operator|==
-name|NULL
-condition|)
-block|{
-name|strcpy
-argument_list|(
-name|help_msg
-argument_list|,
-literal|"bad address"
-argument_list|)
-expr_stmt|;
-operator|*
-name|errnum
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|ungetc
-argument_list|(
-literal|'\n'
-argument_list|,
-name|inputt
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|start_default
 operator|=
 name|End_default
@@ -298,17 +303,22 @@ block|{
 comment|/* Scroll-out the next 'zsnum' of lines or until bottom. */
 if|if
 condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
-if|if
-condition|(
 name|current
 operator|==
 name|NULL
 condition|)
 break|break;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+name|SIGINT_ACTION
+expr_stmt|;
 name|get_line
 argument_list|(
 name|current

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)r.c	5.2 (Berkeley) %G%"
+literal|"@(#)r.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,12 +44,6 @@ begin_include
 include|#
 directive|include
 file|<a.out.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -87,6 +81,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -139,6 +150,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|l_filename_read
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|l_temp
@@ -153,6 +166,9 @@ operator|==
 literal|1
 condition|)
 block|{
+name|sigspecial
+operator|++
+expr_stmt|;
 name|l_filename_read
 operator|=
 name|filename_current
@@ -160,6 +176,20 @@ expr_stmt|;
 name|filename_flag
 operator|=
 literal|0
+expr_stmt|;
+name|sigspecial
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+name|SIGINT_ACTION
 expr_stmt|;
 block|}
 else|else
@@ -282,12 +312,6 @@ operator|=
 name|l_filename_read
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
 comment|/* 	 * Determine if the file can be read.  If not set the help message to 	 * something descriptive that the user should understand. 	 */
 if|if
 condition|(
@@ -478,15 +502,6 @@ argument_list|,
 name|errnum
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sigint_flag
-operator|==
-literal|1
-condition|)
-goto|goto
-name|point
-goto|;
 if|if
 condition|(
 operator|*

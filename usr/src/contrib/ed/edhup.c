@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edhup.c	5.2 (Berkeley) %G%"
+literal|"@(#)edhup.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<limits.h>
 end_include
 
 begin_include
@@ -76,6 +76,23 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -111,6 +128,9 @@ name|FILE
 modifier|*
 name|l_fp
 decl_stmt|;
+name|sigspecial
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|change_flag
@@ -223,6 +243,24 @@ argument_list|(
 name|l_fp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|STDIO
+name|fclose
+argument_list|(
+name|fhtmp
+argument_list|)
+expr_stmt|;
+name|unlink
+argument_list|(
+name|template
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DBI
 call|(
 name|dbhtmp
 operator|->
@@ -237,6 +275,8 @@ argument_list|(
 name|template
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|1

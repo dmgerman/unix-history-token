@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)d.c	5.2 (Berkeley) %G%"
+literal|"@(#)d.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,11 +34,22 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<db.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -159,7 +170,7 @@ name|strcpy
 argument_list|(
 name|help_msg
 argument_list|,
-literal|"bad address"
+literal|"buffer empty"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -178,6 +189,13 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|join_flag
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|rol
 argument_list|(
 name|inputt
@@ -186,6 +204,16 @@ name|errnum
 argument_list|)
 condition|)
 return|return;
+block|}
+else|else
+name|ss
+operator|=
+name|getc
+argument_list|(
+name|inputt
+argument_list|)
+expr_stmt|;
+comment|/* fed back from join */
 if|if
 condition|(
 operator|(
@@ -227,12 +255,6 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
 name|d_add
 argument_list|(
 name|start
@@ -241,7 +263,10 @@ name|End
 argument_list|)
 expr_stmt|;
 comment|/* for buffer clearing later(!) */
-comment|/* 	 * Now change preserve the pointers in case of undo and then adjust 	 * them. 	 */
+comment|/* 	 * Now change& preserve the pointers in case of undo and then adjust 	 * them. 	 */
+name|sigspecial
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|start
@@ -376,31 +401,25 @@ name|change_flag
 operator|=
 literal|1L
 expr_stmt|;
+operator|*
+name|errnum
+operator|=
+literal|1
+expr_stmt|;
+name|sigspecial
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
 condition|)
 comment|/* next stable spot */
 name|SIGINT_ACTION
-expr_stmt|;
-if|if
-condition|(
-name|start
-operator|==
-name|End
-condition|)
-block|{
-operator|*
-name|errnum
-operator|=
-literal|1
-expr_stmt|;
-return|return;
-block|}
-operator|*
-name|errnum
-operator|=
-literal|1
 expr_stmt|;
 block|}
 end_function
@@ -490,9 +509,14 @@ name|d_layer
 modifier|*
 name|l_temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DBI
 name|DBT
 name|l_db_key
 decl_stmt|;
+endif|#
+directive|endif
 name|LINE
 modifier|*
 name|l_temp2
@@ -506,6 +530,9 @@ decl_stmt|;
 name|l_temp
 operator|=
 name|d_stk
+expr_stmt|;
+name|sigspecial
+operator|++
 expr_stmt|;
 do|do
 block|{
@@ -525,7 +552,15 @@ name|l_temp3
 operator|=
 name|l_temp2
 expr_stmt|;
-comment|/* 			 * We do it, but db(3) says it doesn't really do it 			 * yet. 			 */
+ifdef|#
+directive|ifdef
+name|STDIO
+comment|/* no garbage collection done currently */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DBI
 name|l_db_key
 operator|.
 name|size
@@ -563,6 +598,20 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MEMORY
+name|free
+argument_list|(
+name|l_temp2
+operator|->
+name|handle
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -622,6 +671,20 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* just to be sure */
+name|sigspecial
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+name|SIGINT_ACTION
+expr_stmt|;
 block|}
 end_function
 

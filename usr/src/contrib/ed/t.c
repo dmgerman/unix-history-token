@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t.c	5.2 (Berkeley) %G%"
+literal|"@(#)t.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -69,6 +63,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -121,6 +132,8 @@ name|l_temp2
 decl_stmt|,
 modifier|*
 name|l_dest
+init|=
+name|NULL
 decl_stmt|;
 name|l_tb
 operator|=
@@ -212,12 +225,6 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
-if|if
-condition|(
 operator|*
 name|errnum
 operator|<
@@ -280,7 +287,7 @@ name|strcpy
 argument_list|(
 name|help_msg
 argument_list|,
-literal|"bad address"
+literal|"empty buffer"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -299,18 +306,15 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
-if|if
-condition|(
 name|g_flag
 operator|==
 literal|0
 condition|)
 name|u_clr_stk
 argument_list|()
+expr_stmt|;
+name|sigspecial
+operator|++
 expr_stmt|;
 for|for
 control|(
@@ -346,6 +350,16 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+break|break;
 name|l_temp1
 operator|=
 operator|(
@@ -470,6 +484,11 @@ expr_stmt|;
 if|if
 condition|(
 name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
 condition|)
 break|break;
 block|}
@@ -615,6 +634,9 @@ expr_stmt|;
 name|change_flag
 operator|=
 literal|1
+expr_stmt|;
+name|sigspecial
+operator|--
 expr_stmt|;
 operator|*
 name|errnum

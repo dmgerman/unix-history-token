@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p.c	5.2 (Berkeley) %G%"
+literal|"@(#)p.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -63,6 +57,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -103,6 +114,8 @@ decl_stmt|;
 block|{
 name|int
 name|l_ln
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -142,7 +155,7 @@ name|strcpy
 argument_list|(
 name|help_msg
 argument_list|,
-literal|"bad address"
+literal|"buffer empty"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -177,12 +190,6 @@ argument_list|(
 name|start
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
 name|current
 operator|=
 name|start
@@ -194,12 +201,6 @@ condition|;
 control|)
 block|{
 comment|/* Print out the lines. */
-if|if
-condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
 if|if
 condition|(
 name|current
@@ -217,6 +218,17 @@ name|current
 operator|->
 name|len
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+name|SIGINT_ACTION
 expr_stmt|;
 if|if
 condition|(

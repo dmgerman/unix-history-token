@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)l.c	5.2 (Berkeley) %G%"
+literal|"@(#)l.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -63,6 +57,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -136,7 +147,7 @@ name|strcpy
 argument_list|(
 name|help_msg
 argument_list|,
-literal|"bad address"
+literal|"empty buffer"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -177,12 +188,6 @@ block|{
 comment|/* 		 * Print out the line character-by-character and split the 		 * line when line length is at line_length. 		 */
 if|if
 condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
-if|if
-condition|(
 name|current
 operator|==
 name|NULL
@@ -198,6 +203,17 @@ name|current
 operator|->
 name|len
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+name|SIGINT_ACTION
 expr_stmt|;
 for|for
 control|(

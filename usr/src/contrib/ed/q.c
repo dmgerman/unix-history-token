@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)q.c	5.2 (Berkeley) %G%"
+literal|"@(#)q.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -75,6 +69,23 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -119,6 +130,15 @@ name|int
 name|l_which
 decl_stmt|;
 comment|/* Which is it? 'q' or 'Q'. */
+name|sigspecial
+operator|=
+literal|1
+expr_stmt|;
+comment|/* yes, 1, because we want to ensure it's on */
+name|sigspecial2
+operator|=
+literal|0
+expr_stmt|;
 name|l_which
 operator|=
 name|ss
@@ -270,6 +290,19 @@ argument_list|(
 name|filename_current
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|STDIO
+name|fclose
+argument_list|(
+name|fhtmp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DBI
 call|(
 name|dbhtmp
 operator|->
@@ -280,11 +313,18 @@ name|dbhtmp
 argument_list|)
 expr_stmt|;
 comment|/* Overhead as the cache is flushed. */
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|MEMORY
 name|unlink
 argument_list|(
 name|template
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|0

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)filename.c	5.2 (Berkeley) %G%"
+literal|"@(#)filename.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<limits.h>
 end_include
 
 begin_include
@@ -69,6 +69,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -335,9 +352,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|ss
 operator|!=
 literal|' '
+operator|)
+operator|||
+operator|(
+name|l_bang_flag
+operator|)
 condition|)
 name|l_fname
 index|[
@@ -348,7 +371,15 @@ operator|=
 name|ss
 expr_stmt|;
 else|else
-continue|continue;
+block|{
+operator|*
+name|errnum
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|l_cnt
@@ -487,6 +518,13 @@ argument_list|(
 name|namestream
 argument_list|)
 expr_stmt|;
+name|ungetc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|inputt
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -534,6 +572,10 @@ index|]
 operator|==
 literal|'\0'
 condition|)
+block|{
+name|sigspecial
+operator|++
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|l_fname
@@ -541,7 +583,21 @@ argument_list|,
 name|filename_current
 argument_list|)
 expr_stmt|;
-else|else
+name|sigspecial
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+name|SIGINT_ACTION
+expr_stmt|;
+block|}
 operator|*
 name|errnum
 operator|=

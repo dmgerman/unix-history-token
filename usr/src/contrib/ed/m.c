@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)m.c	5.2 (Berkeley) %G%"
+literal|"@(#)m.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -63,6 +57,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -100,6 +111,8 @@ block|{
 name|LINE
 modifier|*
 name|l_dest
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|l_old_top
@@ -190,12 +203,6 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
-if|if
-condition|(
 operator|*
 name|errnum
 operator|<
@@ -258,7 +265,7 @@ name|strcpy
 argument_list|(
 name|help_msg
 argument_list|,
-literal|"bad address"
+literal|"buffer empty"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -274,12 +281,6 @@ operator|=
 name|End_default
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
 expr_stmt|;
 comment|/* Do some address checking. */
 if|if
@@ -357,6 +358,11 @@ name|u_clr_stk
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Some more address checking. These are "legal" command constructions 	 * but are kind-a useless since the buffer doesn't change. 	 */
+operator|*
+name|errnum
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -402,6 +408,11 @@ name|NULL
 operator|)
 condition|)
 return|return;
+operator|*
+name|errnum
+operator|=
+literal|0
+expr_stmt|;
 name|l_old_top
 operator|=
 name|top
@@ -409,6 +420,9 @@ expr_stmt|;
 name|l_old_bottom
 operator|=
 name|bottom
+expr_stmt|;
+name|sigspecial
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -729,6 +743,9 @@ expr_stmt|;
 name|current
 operator|=
 name|start
+expr_stmt|;
+name|sigspecial
+operator|--
 expr_stmt|;
 operator|*
 name|errnum

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)address.c	5.2 (Berkeley) %G%"
+literal|"@(#)address.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -63,6 +57,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -348,7 +359,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Figure out what the addresses are spec'd by the user.  Note for backward  * compatability the most recent addresses in a chain are used by the commands  * (i.e. 3,5,17,22d deletes lines 17 to 22 inclusive. The two leading addresses  * 3 and 5 are dropped as cmd_loop rolls through here the extra times).  Hence,  * the code may look a little wierder than it should.  The variable l_order is  * used to control for legally constructed addresses as described in ed(1).  So,  * "$-21" and "/RE/++++" are leagal but /RE/-$ is not.  */
+comment|/*  * Figure out what the addresses are spec'd by the user.  Note for backward  * compatability the most recent addresses in a chain are used by the commands  * (i.e. 3,5,17,22d deletes lines 17 to 22 inclusive. The two leading addresses  * 3 and 5 are dropped as cmd_loop rolls through here the extra times).  Hence,  * the code may look a little wierder than it should.  The variable l_order is  * used to control for legally constructed addresses as described in ed(1).  So,  * "$-21" and "/RE/++++" are legal but /RE/-$ is not.  */
 end_comment
 
 begin_function
@@ -732,6 +743,8 @@ name|l_dot
 operator|=
 name|get_mark
 argument_list|(
+name|inputt
+argument_list|,
 name|errnum
 argument_list|)
 expr_stmt|;

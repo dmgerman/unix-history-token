@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bang.c	5.2 (Berkeley) %G%"
+literal|"@(#)bang.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<limits.h>
 end_include
 
 begin_include
@@ -69,6 +69,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -131,12 +148,6 @@ init|;
 condition|;
 control|)
 block|{
-if|if
-condition|(
-name|sigint_flag
-condition|)
-name|SIGINT_ACTION
-expr_stmt|;
 name|ss
 operator|=
 name|getchar
@@ -267,6 +278,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|filename_current
+condition|)
+block|{
 name|strcat
 argument_list|(
 name|l_shellcmd
@@ -283,6 +299,7 @@ argument_list|(
 name|filename_current
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|l_shellcmd

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)u.c	5.2 (Berkeley) %G%"
+literal|"@(#)u.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<db.h>
 end_include
 
 begin_include
@@ -69,6 +63,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBI
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -165,6 +176,9 @@ decl_stmt|,
 modifier|*
 name|l_temp
 decl_stmt|;
+name|sigspecial
+operator|++
+expr_stmt|;
 comment|/* This is done because undo can be undone. */
 name|l_current
 operator|=
@@ -255,6 +269,20 @@ name|bottom
 operator|=
 name|l_bottom
 expr_stmt|;
+name|sigspecial
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+name|SIGINT_ACTION
+expr_stmt|;
 block|}
 end_function
 
@@ -284,6 +312,9 @@ expr_stmt|;
 name|u_bottom
 operator|=
 name|bottom
+expr_stmt|;
+name|sigspecial
+operator|++
 expr_stmt|;
 comment|/* Only if there is something to delete in the buffer. */
 if|if
@@ -327,6 +358,20 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Just to sure. */
+name|sigspecial
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+name|SIGINT_ACTION
+expr_stmt|;
 block|}
 end_function
 
@@ -386,6 +431,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|sigspecial
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|u_stk
@@ -435,6 +483,20 @@ operator|->
 name|cell
 operator|)
 operator|)
+expr_stmt|;
+name|sigspecial
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sigint_flag
+operator|&&
+operator|(
+operator|!
+name|sigspecial
+operator|)
+condition|)
+name|SIGINT_ACTION
 expr_stmt|;
 block|}
 end_function
