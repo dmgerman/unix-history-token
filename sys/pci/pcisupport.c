@@ -4958,6 +4958,19 @@ operator|(
 literal|"VIA 82C598MVP (Apollo MVP3) PCI-PCI (AGP) bridge"
 operator|)
 return|;
+comment|/* Exclude the ACPI function of VT82Cxxx series */
+case|case
+literal|0x30401106
+case|:
+case|case
+literal|0x30501106
+case|:
+case|case
+literal|0x30571106
+case|:
+return|return
+name|NULL
+return|;
 comment|/* AcerLabs -- vendor 0x10b9 */
 comment|/* Funny : The datasheet told me vendor id is "10b8",sub-vendor */
 comment|/* id is '10b9" but the register always shows "10b9". -Foxfair  */
@@ -6926,18 +6939,14 @@ return|;
 case|case
 literal|0x30401106
 case|:
-return|return
-operator|(
-literal|"VIA 82C586B ACPI interface"
-operator|)
-return|;
+case|case
+literal|0x30501106
+case|:
 case|case
 literal|0x30571106
 case|:
 return|return
-operator|(
-literal|"VIA 82C686 ACPI interface"
-operator|)
+name|NULL
 return|;
 case|case
 literal|0x30581106
