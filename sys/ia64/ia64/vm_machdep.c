@@ -1342,6 +1342,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+comment|/* XXX: Should this be in cpu_thread_exit() instead? */
 comment|/* Throw away the high FP registers. */
 name|ia64_highfp_drop
 argument_list|(

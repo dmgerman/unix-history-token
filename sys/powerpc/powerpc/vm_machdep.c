@@ -581,10 +581,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * cpu_exit is called as the last action during exit.  * We release the address space of the process, block interrupts,  * and call switch_exit.  switch_exit switches to proc0's PCB and stack,  * then jumps into the middle of cpu_switch, as if it were switching  * from proc0.  */
-end_comment
-
 begin_function
 name|void
 name|cpu_exit
