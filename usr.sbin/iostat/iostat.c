@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1997, 1998  Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: iostat.c,v 1.9 1998/09/15 08:16:45 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -209,6 +209,10 @@ init|=
 literal|0
 decl_stmt|,
 name|oflag
+init|=
+literal|0
+decl_stmt|,
+name|Kflag
 init|=
 literal|0
 decl_stmt|;
@@ -427,7 +431,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:CdhIM:n:N:ot:Tw:?"
+literal|"c:CdhKIM:n:N:ot:Tw:?"
 argument_list|)
 operator|)
 operator|!=
@@ -487,6 +491,13 @@ case|case
 literal|'h'
 case|:
 name|hflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'K'
+case|:
+name|Kflag
 operator|++
 expr_stmt|;
 break|break;
@@ -957,6 +968,20 @@ operator|*
 name|argv
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|nflag
+operator|==
+literal|0
+operator|&&
+name|maxshowdevs
+operator|<
+name|num_devices_specified
+condition|)
+name|maxshowdevs
+operator|=
+name|num_devices_specified
+expr_stmt|;
 name|dev_select
 operator|=
 name|NULL
@@ -1036,11 +1061,6 @@ argument_list|,
 literal|"%s"
 argument_list|,
 name|devstat_errbuf
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|specified_devices
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Look for the traditional wait time and count arguments. 	 */
@@ -2075,6 +2095,7 @@ name|oflag
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|Iflag
@@ -2098,7 +2119,9 @@ argument_list|(
 literal|" blk xfr msps "
 argument_list|)
 expr_stmt|;
-elseif|else
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|Iflag
@@ -2116,6 +2139,7 @@ argument_list|(
 literal|"  KB/t xfrs   MB "
 argument_list|)
 expr_stmt|;
+block|}
 name|printed
 operator|++
 expr_stmt|;
@@ -2375,11 +2399,58 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|Kflag
+condition|)
+block|{
+name|int
+name|block_size
+init|=
+name|cur
+operator|.
+name|dinfo
+operator|->
+name|devices
+index|[
+name|di
+index|]
+operator|.
+name|block_size
+decl_stmt|;
+name|total_blocks
+operator|=
+name|total_blocks
+operator|*
+operator|(
+name|block_size
+condition|?
+name|block_size
+else|:
+literal|512
+operator|)
+operator|/
+literal|1024
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|oflag
 operator|>
 literal|0
 condition|)
 block|{
+name|int
+name|msdig
+init|=
+operator|(
+name|ms_per_transaction
+operator|<
+literal|100.0
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|Iflag
@@ -2388,11 +2459,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%4.0Lf%4.0Lf%5.1Lf "
+literal|"%4.0Lf%4.0Lf%5.*Lf "
 argument_list|,
 name|blocks_per_second
 argument_list|,
 name|transfers_per_second
+argument_list|,
+name|msdig
 argument_list|,
 name|ms_per_transaction
 argument_list|)
@@ -2400,11 +2473,13 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%4.1qu%4.1qu%5.1Lf "
+literal|"%4.1qu%4.1qu%5.*Lf "
 argument_list|,
 name|total_blocks
 argument_list|,
 name|total_transfers
+argument_list|,
+name|msdig
 argument_list|,
 name|ms_per_transaction
 argument_list|)
