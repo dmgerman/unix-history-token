@@ -124,12 +124,7 @@ call|(
 name|caddr_t
 call|)
 argument_list|(
-operator|(
-operator|(
-name|caddr_t
-operator|)
 name|PS_STRINGS
-operator|)
 operator|-
 name|szsigcode
 operator|-
