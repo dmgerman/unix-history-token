@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.9 (Berkeley) %G%"
+literal|"@(#)startup.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1254,6 +1254,8 @@ condition|)
 name|state
 operator||=
 name|RTS_EXTERNAL
+operator||
+name|RTS_PASSIVE
 expr_stmt|;
 name|rtadd
 argument_list|(
