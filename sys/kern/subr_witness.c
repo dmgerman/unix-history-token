@@ -2260,6 +2260,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * We have to hold a spinlock to keep lock_list valid across the check 	 * in the LC_SLEEPLOCK case.  In the LC_SPINLOCK case, it is already 	 * protected by the spinlock we are currently performing the witness 	 * checks on, so it is ok to release the lock after performing this 	 * check.  All we have to protect is the LC_SLEEPLOCK case when no 	 * spinlocks are held as we may get preempted during this check and 	 * lock_list could end up pointing to some other CPU's spinlock list. 	 */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|w_mtx
+argument_list|)
+expr_stmt|;
 name|lock_list
 operator|=
 name|PCPU_PTR
@@ -2283,6 +2290,13 @@ name|lock_list
 operator|!=
 name|NULL
 condition|)
+block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|w_mtx
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"blockable sleep lock (%s) %s @ %s:%d"
@@ -2300,6 +2314,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+block|}
 name|lock_list
 operator|=
 operator|&
@@ -2308,6 +2323,12 @@ operator|->
 name|p_sleeplocks
 expr_stmt|;
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|w_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flags
