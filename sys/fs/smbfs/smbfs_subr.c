@@ -1176,9 +1176,12 @@ name|np
 expr_stmt|;
 name|np
 operator|=
+name|VTOSMB
+argument_list|(
 name|np
 operator|->
 name|n_parent
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*	if (i == 0) 		return smb_put_dmem(mbp, vcp, "\\", 2, caseopt);*/

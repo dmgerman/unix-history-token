@@ -779,10 +779,13 @@ name|vp
 operator|=
 name|VTOSMB
 argument_list|(
+name|VTOSMB
+argument_list|(
 name|dvp
 argument_list|)
 operator|->
 name|n_parent
+argument_list|)
 operator|->
 name|n_vnode
 expr_stmt|;
@@ -920,7 +923,7 @@ name|np
 operator|->
 name|n_parent
 operator|!=
-name|dnp
+name|dvp
 operator|||
 name|np
 operator|->
@@ -1125,7 +1128,7 @@ name|np
 operator|->
 name|n_parent
 operator|=
-name|dnp
+name|dvp
 expr_stmt|;
 if|if
 condition|(
@@ -1221,7 +1224,7 @@ name|np2
 operator|->
 name|n_parent
 operator|!=
-name|dnp
+name|dvp
 operator|||
 name|np2
 operator|->
@@ -1485,8 +1488,6 @@ condition|?
 name|np
 operator|->
 name|n_parent
-operator|->
-name|n_vnode
 else|:
 name|NULL
 expr_stmt|;
@@ -1592,6 +1593,13 @@ name|vrele
 argument_list|(
 name|dvp
 argument_list|)
+expr_stmt|;
+comment|/* 			 * Indicate that we released something; see comment 			 * in smbfs_unmount(). 			 */
+name|smp
+operator|->
+name|sm_didrele
+operator|=
+literal|1
 expr_stmt|;
 block|}
 else|else

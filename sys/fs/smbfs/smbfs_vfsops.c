@@ -1452,6 +1452,15 @@ name|flags
 operator||=
 name|FORCECLOSE
 expr_stmt|;
+comment|/* 	 * Keep trying to flush the vnode list for the mount while  	 * some are still busy and we are making progress towards 	 * making them not busy. This is needed because smbfs vnodes 	 * reference their parent directory but may appear after their 	 * parent in the list; one pass over the vnode list is not 	 * sufficient in this case. 	 */
+do|do
+block|{
+name|smp
+operator|->
+name|sm_didrele
+operator|=
+literal|0
+expr_stmt|;
 comment|/* There is 1 extra root vnode reference from smbfs_mount(). */
 name|error
 operator|=
@@ -1464,6 +1473,20 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+block|}
+do|while
+condition|(
+name|error
+operator|==
+name|EBUSY
+operator|&&
+name|smp
+operator|->
+name|sm_didrele
+operator|!=
+literal|0
+condition|)
+do|;
 if|if
 condition|(
 name|error

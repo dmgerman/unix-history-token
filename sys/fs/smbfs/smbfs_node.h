@@ -97,7 +97,7 @@ name|int
 name|n_flag
 decl_stmt|;
 name|struct
-name|smbnode
+name|vnode
 modifier|*
 name|n_parent
 decl_stmt|;
