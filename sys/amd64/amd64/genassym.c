@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)genassym.c	5.11 (Berkeley) 5/10/91  *	$Id: genassym.c,v 1.57 1998/05/17 23:08:03 tegge Exp $  */
+comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)genassym.c	5.11 (Berkeley) 5/10/91  *	$Id: genassym.c,v 1.58 1998/05/28 09:29:55 phk Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"opt_vm86.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
 end_include
 
 begin_include
@@ -203,6 +209,18 @@ directive|include
 file|<machine/globaldata.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|OS
+parameter_list|(
+name|s
+parameter_list|,
+name|m
+parameter_list|)
+value|((u_int)offsetof(struct s, m))
+end_define
+
 begin_decl_stmt
 name|int
 decl|main
@@ -236,303 +254,168 @@ name|int
 name|main
 parameter_list|()
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
-name|vmmeter
-modifier|*
-name|vm
-init|=
-operator|(
-expr|struct
-name|vmmeter
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
-name|user
-modifier|*
-name|up
-init|=
-operator|(
-expr|struct
-name|user
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
-name|rusage
-modifier|*
-name|rup
-init|=
-operator|(
-expr|struct
-name|rusage
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
-name|uprof
-modifier|*
-name|uprof
-init|=
-operator|(
-expr|struct
-name|uprof
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
-name|vmspace
-modifier|*
-name|vms
-init|=
-operator|(
-expr|struct
-name|vmspace
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
-name|pcb
-modifier|*
-name|pcb
-init|=
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
-name|i386tss
-modifier|*
-name|tss
-init|=
-operator|(
-expr|struct
-name|i386tss
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
-name|trapframe
-modifier|*
-name|tf
-init|=
-operator|(
-expr|struct
-name|trapframe
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
-name|sigframe
-modifier|*
-name|sigf
-init|=
-operator|(
-expr|struct
-name|sigframe
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
-name|bootinfo
-modifier|*
-name|bootinfo
-init|=
-operator|(
-expr|struct
-name|bootinfo
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
-name|globaldata
-modifier|*
-name|globaldata
-init|=
-operator|(
-expr|struct
-name|globaldata
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|struct
-name|privatespace
-modifier|*
-name|privatespace
-init|=
-operator|(
-expr|struct
-name|privatespace
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
-literal|"#define\tP_FORW %p\n"
+literal|"#define\tP_FORW %#x\n"
 argument_list|,
-operator|&
-name|p
-operator|->
+name|OS
+argument_list|(
+name|proc
+argument_list|,
 name|p_procq
 operator|.
 name|tqe_next
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_BACK %p\n"
+literal|"#define\tP_BACK %#x\n"
 argument_list|,
-operator|&
-name|p
-operator|->
+name|OS
+argument_list|(
+name|proc
+argument_list|,
 name|p_procq
 operator|.
 name|tqe_prev
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_VMSPACE %p\n"
+literal|"#define\tP_VMSPACE %#x\n"
 argument_list|,
-operator|&
-name|p
-operator|->
+name|OS
+argument_list|(
+name|proc
+argument_list|,
 name|p_vmspace
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tVM_PMAP %p\n"
+literal|"#define\tVM_PMAP %#x\n"
 argument_list|,
-operator|&
-name|vms
-operator|->
+name|OS
+argument_list|(
+name|vmspace
+argument_list|,
 name|vm_pmap
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_ADDR %p\n"
+literal|"#define\tP_ADDR %#x\n"
 argument_list|,
-operator|&
-name|p
-operator|->
+name|OS
+argument_list|(
+name|proc
+argument_list|,
 name|p_addr
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_PRI %p\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_priority
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_RTPRIO_TYPE %p\n"
+literal|"#define\tP_PRI %#x\n"
 argument_list|,
-operator|&
-name|p
-operator|->
+name|OS
+argument_list|(
+name|proc
+argument_list|,
+name|p_priority
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tP_RTPRIO_TYPE %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|proc
+argument_list|,
 name|p_rtprio
 operator|.
 name|type
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_RTPRIO_PRIO %p\n"
+literal|"#define\tP_RTPRIO_PRIO %#x\n"
 argument_list|,
-operator|&
-name|p
-operator|->
+name|OS
+argument_list|(
+name|proc
+argument_list|,
 name|p_rtprio
 operator|.
 name|prio
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_STAT %p\n"
+literal|"#define\tP_STAT %#x\n"
 argument_list|,
-operator|&
-name|p
-operator|->
+name|OS
+argument_list|(
+name|proc
+argument_list|,
 name|p_stat
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_WCHAN %p\n"
+literal|"#define\tP_WCHAN %#x\n"
 argument_list|,
-operator|&
-name|p
-operator|->
+name|OS
+argument_list|(
+name|proc
+argument_list|,
 name|p_wchan
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_FLAG %p\n"
+literal|"#define\tP_FLAG %#x\n"
 argument_list|,
-operator|&
-name|p
-operator|->
+name|OS
+argument_list|(
+name|proc
+argument_list|,
 name|p_flag
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tP_PID %p\n"
-argument_list|,
-operator|&
-name|p
-operator|->
-name|p_pid
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_SWITCHTIME %p\n"
+literal|"#define\tP_PID %#x\n"
 argument_list|,
-operator|&
-name|p
-operator|->
+name|OS
+argument_list|(
+name|proc
+argument_list|,
+name|p_pid
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tP_SWITCHTIME %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|proc
+argument_list|,
 name|p_switchtime
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -540,22 +423,26 @@ directive|ifdef
 name|SMP
 name|printf
 argument_list|(
-literal|"#define\tP_ONCPU %p\n"
+literal|"#define\tP_ONCPU %#x\n"
 argument_list|,
-operator|&
-name|p
-operator|->
+name|OS
+argument_list|(
+name|proc
+argument_list|,
 name|p_oncpu
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_LASTCPU %p\n"
+literal|"#define\tP_LASTCPU %#x\n"
 argument_list|,
-operator|&
-name|p
-operator|->
+name|OS
+argument_list|(
+name|proc
+argument_list|,
 name|p_lastcpu
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -576,32 +463,38 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tV_TRAP %p\n"
+literal|"#define\tV_TRAP %#x\n"
 argument_list|,
-operator|&
-name|vm
-operator|->
+name|OS
+argument_list|(
+name|vmmeter
+argument_list|,
 name|v_trap
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tV_SYSCALL %p\n"
-argument_list|,
-operator|&
-name|vm
-operator|->
-name|v_syscall
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tV_INTR %p\n"
+literal|"#define\tV_SYSCALL %#x\n"
 argument_list|,
-operator|&
-name|vm
-operator|->
+name|OS
+argument_list|(
+name|vmmeter
+argument_list|,
+name|v_syscall
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tV_INTR %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|vmmeter
+argument_list|,
 name|v_intr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -683,21 +576,21 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tUSRSTACK 0x%lx\n"
+literal|"#define\tUSRSTACK %#x\n"
 argument_list|,
 name|USRSTACK
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tVM_MAXUSER_ADDRESS 0x%lx\n"
+literal|"#define\tVM_MAXUSER_ADDRESS %#x\n"
 argument_list|,
 name|VM_MAXUSER_ADDRESS
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tKERNBASE 0x%x\n"
+literal|"#define\tKERNBASE %#x\n"
 argument_list|,
 name|KERNBASE
 argument_list|)
@@ -711,112 +604,134 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_CR3 %p\n"
+literal|"#define\tPCB_CR3 %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
 name|pcb_cr3
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_EDI %p\n"
+literal|"#define\tPCB_EDI %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
 name|pcb_edi
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_ESI %p\n"
+literal|"#define\tPCB_ESI %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
 name|pcb_esi
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_EBP %p\n"
+literal|"#define\tPCB_EBP %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
 name|pcb_ebp
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_ESP %p\n"
+literal|"#define\tPCB_ESP %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
 name|pcb_esp
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_EBX %p\n"
+literal|"#define\tPCB_EBX %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
 name|pcb_ebx
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_EIP %p\n"
+literal|"#define\tPCB_EIP %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
 name|pcb_eip
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTSS_ESP0 %p\n"
+literal|"#define\tTSS_ESP0 %#x\n"
 argument_list|,
-operator|&
-name|tss
-operator|->
+name|OS
+argument_list|(
+name|i386tss
+argument_list|,
 name|tss_esp0
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_USERLDT %p\n"
+literal|"#define\tPCB_USERLDT %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
 name|pcb_ldt
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_FS %p\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_fs
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_GS %p\n"
+literal|"#define\tPCB_FS %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
+name|pcb_fs
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPCB_GS %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|pcb
+argument_list|,
 name|pcb_gs
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -824,13 +739,15 @@ directive|ifdef
 name|VM86
 name|printf
 argument_list|(
-literal|"#define\tPCB_EXT %p\n"
+literal|"#define\tPCB_EXT %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
 name|pcb_ext
 argument_list|)
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -839,130 +756,153 @@ directive|ifdef
 name|SMP
 name|printf
 argument_list|(
-literal|"#define\tPCB_MPNEST %p\n"
+literal|"#define\tPCB_MPNEST %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
 name|pcb_mpnest
 argument_list|)
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"#define\tU_PROF %p\n"
+literal|"#define\tU_PROF %#x\n"
 argument_list|,
-operator|&
-name|up
-operator|->
+name|OS
+argument_list|(
+name|user
+argument_list|,
 name|u_stats
 operator|.
 name|p_prof
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tU_PROFSCALE %p\n"
+literal|"#define\tU_PROFSCALE %#x\n"
 argument_list|,
-operator|&
-name|up
-operator|->
+name|OS
+argument_list|(
+name|user
+argument_list|,
 name|u_stats
 operator|.
 name|p_prof
 operator|.
 name|pr_scale
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPR_BASE %p\n"
+literal|"#define\tPR_BASE %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|uprof
-operator|->
+argument_list|,
 name|pr_base
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPR_SIZE %p\n"
+literal|"#define\tPR_SIZE %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|uprof
-operator|->
+argument_list|,
 name|pr_size
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPR_OFF %p\n"
+literal|"#define\tPR_OFF %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|uprof
-operator|->
+argument_list|,
 name|pr_off
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPR_SCALE %p\n"
+literal|"#define\tPR_SCALE %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|uprof
-operator|->
+argument_list|,
 name|pr_scale
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tRU_MINFLT %p\n"
+literal|"#define\tRU_MINFLT %#x\n"
 argument_list|,
-operator|&
-name|rup
-operator|->
+name|OS
+argument_list|(
+name|rusage
+argument_list|,
 name|ru_minflt
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_FLAGS %p\n"
+literal|"#define\tPCB_FLAGS %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
 name|pcb_flags
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPCB_SAVEFPU %p\n"
-argument_list|,
-operator|&
-name|pcb
-operator|->
-name|pcb_savefpu
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_SAVEFPU_SIZE %d\n"
+literal|"#define\tPCB_SAVEFPU %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|pcb
+argument_list|,
+name|pcb_savefpu
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPCB_SAVEFPU_SIZE %u\n"
 argument_list|,
 sizeof|sizeof
-name|pcb
-operator|->
-name|pcb_savefpu
+argument_list|(
+expr|struct
+name|save87
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPCB_ONFAULT %p\n"
+literal|"#define\tPCB_ONFAULT %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|pcb
-operator|->
+argument_list|,
 name|pcb_onfault
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -970,7 +910,7 @@ directive|ifdef
 name|SMP
 name|printf
 argument_list|(
-literal|"#define\tPCB_SIZE %d\n"
+literal|"#define\tPCB_SIZE %u\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -983,227 +923,271 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"#define\tTF_ES %p\n"
+literal|"#define\tTF_ES %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_es
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_DS %p\n"
+literal|"#define\tTF_DS %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_ds
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EDI %p\n"
+literal|"#define\tTF_EDI %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_edi
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_ESI %p\n"
+literal|"#define\tTF_ESI %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_esi
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EBP %p\n"
+literal|"#define\tTF_EBP %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_ebp
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_ISP %p\n"
+literal|"#define\tTF_ISP %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_isp
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EBX %p\n"
+literal|"#define\tTF_EBX %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_ebx
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EDX %p\n"
+literal|"#define\tTF_EDX %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_edx
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_ECX %p\n"
+literal|"#define\tTF_ECX %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_ecx
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EAX %p\n"
+literal|"#define\tTF_EAX %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_eax
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_TRAPNO %p\n"
+literal|"#define\tTF_TRAPNO %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_trapno
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_ERR %p\n"
+literal|"#define\tTF_ERR %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_err
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EIP %p\n"
+literal|"#define\tTF_EIP %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_eip
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_CS %p\n"
+literal|"#define\tTF_CS %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_cs
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_EFLAGS %p\n"
+literal|"#define\tTF_EFLAGS %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_eflags
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_ESP %p\n"
+literal|"#define\tTF_ESP %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_esp
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTF_SS %p\n"
+literal|"#define\tTF_SS %#x\n"
 argument_list|,
-operator|&
-name|tf
-operator|->
+name|OS
+argument_list|(
+name|trapframe
+argument_list|,
 name|tf_ss
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tSIGF_SIGNUM %p\n"
+literal|"#define\tSIGF_SIGNUM %#x\n"
 argument_list|,
-operator|&
-name|sigf
-operator|->
+name|OS
+argument_list|(
+name|sigframe
+argument_list|,
 name|sf_signum
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tSIGF_CODE %p\n"
+literal|"#define\tSIGF_CODE %#x\n"
 argument_list|,
-operator|&
-name|sigf
-operator|->
+name|OS
+argument_list|(
+name|sigframe
+argument_list|,
 name|sf_code
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tSIGF_SCP %p\n"
+literal|"#define\tSIGF_SCP %#x\n"
 argument_list|,
-operator|&
-name|sigf
-operator|->
+name|OS
+argument_list|(
+name|sigframe
+argument_list|,
 name|sf_scp
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tSIGF_HANDLER %p\n"
+literal|"#define\tSIGF_HANDLER %#x\n"
 argument_list|,
-operator|&
-name|sigf
-operator|->
+name|OS
+argument_list|(
+name|sigframe
+argument_list|,
 name|sf_handler
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tSIGF_SC %p\n"
-argument_list|,
-operator|&
-name|sigf
-operator|->
-name|sf_sc
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tB_READ %d\n"
+literal|"#define\tSIGF_SC %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|sigframe
+argument_list|,
+name|sf_sc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tB_READ %#x\n"
 argument_list|,
 name|B_READ
 argument_list|)
@@ -1238,56 +1222,66 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBOOTINFO_SIZE %d\n"
+literal|"#define\tBOOTINFO_SIZE %u\n"
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+expr|struct
 name|bootinfo
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBI_VERSION %p\n"
+literal|"#define\tBI_VERSION %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|bootinfo
-operator|->
+argument_list|,
 name|bi_version
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBI_KERNELNAME %p\n"
+literal|"#define\tBI_KERNELNAME %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|bootinfo
-operator|->
+argument_list|,
 name|bi_kernelname
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBI_NFS_DISKLESS %p\n"
+literal|"#define\tBI_NFS_DISKLESS %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|bootinfo
-operator|->
+argument_list|,
 name|bi_nfs_diskless
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tBI_ENDCOMMON %p\n"
-argument_list|,
-operator|&
-name|bootinfo
-operator|->
-name|bi_endcommon
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tNFSDISKLESS_SIZE %d\n"
+literal|"#define\tBI_ENDCOMMON %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|bootinfo
+argument_list|,
+name|bi_endcommon
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tNFSDISKLESS_SIZE %u\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1298,37 +1292,43 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBI_SIZE %p\n"
+literal|"#define\tBI_SIZE %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|bootinfo
-operator|->
+argument_list|,
 name|bi_size
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tBI_SYMTAB %p\n"
+literal|"#define\tBI_SYMTAB %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|bootinfo
-operator|->
+argument_list|,
 name|bi_symtab
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tBI_ESYMTAB %p\n"
-argument_list|,
-operator|&
-name|bootinfo
-operator|->
-name|bi_esymtab
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_SIZEOF %d\n"
+literal|"#define\tBI_ESYMTAB %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|bootinfo
+argument_list|,
+name|bi_esymtab
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tGD_SIZEOF %u\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1339,52 +1339,62 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_CURPROC %d\n"
+literal|"#define\tGD_CURPROC %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|curproc
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_NPXPROC %d\n"
+literal|"#define\tGD_NPXPROC %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|npxproc
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_CURPCB %d\n"
+literal|"#define\tGD_CURPCB %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|curpcb
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tGD_COMMON_TSS %d\n"
-argument_list|,
-operator|&
-name|globaldata
-operator|->
-name|common_tss
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_SWITCHTIME %d\n"
+literal|"#define\tGD_COMMON_TSS %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
+name|common_tss
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tGD_SWITCHTIME %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|globaldata
+argument_list|,
 name|switchtime
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1392,32 +1402,38 @@ directive|ifdef
 name|VM86
 name|printf
 argument_list|(
-literal|"#define\tGD_COMMON_TSSD %d\n"
+literal|"#define\tGD_COMMON_TSSD %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|common_tssd
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tGD_PRIVATE_TSS %d\n"
-argument_list|,
-operator|&
-name|globaldata
-operator|->
-name|private_tss
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_MY_TR %d\n"
+literal|"#define\tGD_PRIVATE_TSS %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
+name|private_tss
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tGD_MY_TR %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|globaldata
+argument_list|,
 name|my_tr
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1427,202 +1443,242 @@ directive|ifdef
 name|SMP
 name|printf
 argument_list|(
-literal|"#define\tGD_CPUID %d\n"
+literal|"#define\tGD_CPUID %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|cpuid
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_CPU_LOCKID %d\n"
+literal|"#define\tGD_CPU_LOCKID %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|cpu_lockid
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_OTHER_CPUS %d\n"
+literal|"#define\tGD_OTHER_CPUS %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|other_cpus
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_MY_IDLEPTD %d\n"
+literal|"#define\tGD_MY_IDLEPTD %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|my_idlePTD
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_SS_EFLAGS %d\n"
+literal|"#define\tGD_SS_EFLAGS %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|ss_eflags
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_PRV_CMAP1 %d\n"
+literal|"#define\tGD_PRV_CMAP1 %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|prv_CMAP1
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_PRV_CMAP2 %d\n"
+literal|"#define\tGD_PRV_CMAP2 %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|prv_CMAP2
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_PRV_CMAP3 %d\n"
+literal|"#define\tGD_PRV_CMAP3 %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|prv_CMAP3
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_PRV_PMAP1 %d\n"
+literal|"#define\tGD_PRV_PMAP1 %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|prv_PMAP1
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tGD_INSIDE_INTR %d\n"
+literal|"#define\tGD_INSIDE_INTR %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|globaldata
-operator|->
+argument_list|,
 name|inside_intr
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPS_GLOBALDATA 0x%x\n"
+literal|"#define\tPS_GLOBALDATA %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|privatespace
-operator|->
+argument_list|,
 name|globaldata
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPS_PRVPT 0x%x\n"
+literal|"#define\tPS_PRVPT %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|privatespace
-operator|->
+argument_list|,
 name|prvpt
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPS_LAPIC 0x%x\n"
+literal|"#define\tPS_LAPIC %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|privatespace
-operator|->
+argument_list|,
 name|lapic
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPS_IDLESTACK 0x%x\n"
+literal|"#define\tPS_IDLESTACK %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|privatespace
-operator|->
+argument_list|,
 name|idlestack
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPS_IDLESTACK_TOP 0x%x\n"
-argument_list|,
-operator|&
-name|privatespace
-operator|->
-name|CPAGE1
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPS_CPAGE1 0x%x\n"
+literal|"#define\tPS_IDLESTACK_TOP %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|privatespace
-operator|->
+argument_list|,
 name|CPAGE1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPS_CPAGE2 0x%x\n"
+literal|"#define\tPS_CPAGE1 %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|privatespace
-operator|->
+argument_list|,
+name|CPAGE1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPS_CPAGE2 %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|privatespace
+argument_list|,
 name|CPAGE2
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPS_CPAGE3 0x%x\n"
+literal|"#define\tPS_CPAGE3 %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|privatespace
-operator|->
+argument_list|,
 name|CPAGE3
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPS_PPAGE1 0x%x\n"
-argument_list|,
-operator|&
-name|privatespace
-operator|->
-name|PPAGE1
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPS_IOAPICS 0x%x\n"
+literal|"#define\tPS_PPAGE1 %#x\n"
 argument_list|,
-operator|&
+name|OS
+argument_list|(
 name|privatespace
-operator|->
+argument_list|,
+name|PPAGE1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tPS_IOAPICS %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|privatespace
+argument_list|,
 name|ioapics
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
