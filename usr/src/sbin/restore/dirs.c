@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.16 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,7 +91,7 @@ decl_stmt|;
 name|ino_t
 name|t_ino
 decl_stmt|;
-name|daddr_t
+name|long
 name|t_seekpt
 decl_stmt|;
 name|long
@@ -215,7 +215,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|off_t
+name|long
 name|rst_telldir
 parameter_list|()
 function_decl|;
@@ -235,7 +235,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|daddr_t
+name|long
 name|seekpt
 decl_stmt|;
 end_decl_stmt
@@ -320,14 +320,6 @@ name|struct
 name|direct
 modifier|*
 name|rst_readdir
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|rst_seekdir
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -792,7 +784,7 @@ decl_stmt|;
 name|int
 name|namelen
 decl_stmt|;
-name|daddr_t
+name|long
 name|bpt
 decl_stmt|;
 name|char
@@ -1583,14 +1575,88 @@ name|dp
 operator|->
 name|d_namlen
 operator|>
-name|MAXNAMLEN
+name|NAME_MAX
 condition|)
 block|{
 name|vprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Mangled directory\n"
+literal|"Mangled directory: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dp
+operator|->
+name|d_reclen
+operator|&
+literal|0x3
+operator|)
+operator|!=
+literal|0
+condition|)
+name|vprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"reclen not multiple of 4 "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_reclen
+operator|<
+name|DIRSIZ
+argument_list|(
+name|dp
+argument_list|)
+condition|)
+name|vprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"reclen less than DIRSIZ (%d< %d) "
+argument_list|,
+name|dp
+operator|->
+name|d_reclen
+argument_list|,
+name|DIRSIZ
+argument_list|(
+name|dp
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_namlen
+operator|>
+name|NAME_MAX
+condition|)
+name|vprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"reclen name too big (%d> %d) "
+argument_list|,
+name|dp
+operator|->
+name|d_namlen
+argument_list|,
+name|NAME_MAX
+argument_list|)
+expr_stmt|;
+name|vprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|loc
@@ -1937,7 +2003,7 @@ name|RST_DIR
 modifier|*
 name|dirp
 decl_stmt|;
-name|daddr_t
+name|long
 name|loc
 decl_stmt|,
 name|base
@@ -2326,7 +2392,7 @@ comment|/*  * Simulate finding the current offset in the directory.  */
 end_comment
 
 begin_function
-name|off_t
+name|long
 name|rst_telldir
 parameter_list|(
 name|dirp
@@ -2336,7 +2402,7 @@ modifier|*
 name|dirp
 decl_stmt|;
 block|{
-name|off_t
+name|long
 name|lseek
 parameter_list|()
 function_decl|;
@@ -3098,7 +3164,7 @@ name|dinode
 modifier|*
 name|dip
 decl_stmt|;
-name|daddr_t
+name|long
 name|seekpt
 decl_stmt|;
 block|{
