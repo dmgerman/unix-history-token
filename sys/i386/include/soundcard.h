@@ -2,28 +2,28 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_SOUNDCARD_H_
+name|SOUNDCARD_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_SOUNDCARD_H_
+name|SOUNDCARD_H
 end_define
 
 begin_comment
-comment|/*  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: soundcard.h,v 1.12 1995/03/08 18:43:49 ugen Exp $  */
+comment|/*  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *   */
 end_comment
 
 begin_comment
-comment|/*   * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough   * divercity in the world.   *   * Regards,   * Hannu Savolainen   * hannu@voxware.pp.fi   */
+comment|/*    * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough    * divercity in the world.   *   * Regards,   * Hannu Savolainen   * hannu@voxware.pp.fi   */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SOUND_VERSION
-value|203
+value|301
 end_define
 
 begin_define
@@ -119,8 +119,197 @@ name|SNDCARD_PSS
 value|11
 end_define
 
+begin_define
+define|#
+directive|define
+name|SNDCARD_SSCAPE
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCARD_PSS_MPU
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCARD_PSS_MSS
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCARD_SSCAPE_MSS
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCARD_TRXPRO
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCARD_TRXPRO_SB
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCARD_TRXPRO_MPU
+value|18
+end_define
+
 begin_comment
 comment|/***********************************  * IOCTL Commands for /dev/sequencer  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_IOWR
+end_ifndef
+
+begin_comment
+comment|/*	@(#)ioctlp.h */
+end_comment
+
+begin_comment
+comment|/* Ioctl's have the command encoded in the lower word,  * and the size of any in or out parameters in the upper  * word.  The high 2 bits of the upper word are used  * to encode the in/out status of the parameter; for now  * we restrict parameters to at most 128 bytes.  */
+end_comment
+
+begin_comment
+comment|/* #define	IOCTYPE		(0xff<<8) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOCPARM_MASK
+value|0x7f
+end_define
+
+begin_comment
+comment|/* parameters must be< 128 bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOC_VOID
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* no parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOC_OUT
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* copy out parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOC_IN
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* copy in parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOC_INOUT
+value|(IOC_IN|IOC_OUT)
+end_define
+
+begin_comment
+comment|/* the 0x20000000 is so we can distinguish new ioctl's from old */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_IO
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|((int)(IOC_VOID|(x<<8)|y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IOR
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|t
+parameter_list|)
+value|((int)(IOC_OUT|((sizeof(t)&IOCPARM_MASK)<<16)|(x<<8)|y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IOW
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|t
+parameter_list|)
+value|((int)(IOC_IN|((sizeof(t)&IOCPARM_MASK)<<16)|(x<<8)|y))
+end_define
+
+begin_comment
+comment|/* this should be _IORW, but stdio got there first */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_IOWR
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|t
+parameter_list|)
+value|((int)(IOC_INOUT|((sizeof(t)&IOCPARM_MASK)<<16)|(x<<8)|y))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_IOWR */
 end_comment
 
 begin_define
@@ -264,6 +453,28 @@ directive|define
 name|SNDCTL_SEQ_PANIC
 value|_IO  ('Q',17)
 end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_SEQ_OUTOFBAND
+value|_IOW ('Q',18, struct seq_event_rec)
+end_define
+
+begin_struct
+struct|struct
+name|seq_event_rec
+block|{
+name|unsigned
+name|char
+name|arr
+index|[
+literal|8
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -459,7 +670,7 @@ decl_stmt|,
 name|loop_end
 decl_stmt|;
 comment|/* Byte offsets from the beginning */
-comment|/*  * The base_freq and base_note fields are used when computing the  * playback speed for a note. The base_note defines the tone frequency  * which is heard if the sample is played using the base_freq as the  * playback speed.  *  * The low_note and high_note fields define the minimum and maximum note  * frequencies for which this sample is valid. It is possible to define  * more than one samples for a instrument number at the same time. The  * low_note and high_note fields are used to select the most suitable one.  *  * The fields base_note, high_note and low_note should contain  * the note frequency multiplied by 1000. For example value for the  * middle A is 440*1000.  */
+comment|/*   * The base_freq and base_note fields are used when computing the  * playback speed for a note. The base_note defines the tone frequency  * which is heard if the sample is played using the base_freq as the  * playback speed.  *  * The low_note and high_note fields define the minimum and maximum note  * frequencies for which this sample is valid. It is possible to define  * more than one samples for a instrument number at the same time. The  * low_note and high_note fields are used to select the most suitable one.  *  * The fields base_note, high_note and low_note should contain  * the note frequency multiplied by 1000. For example value for the  * middle A is 440*1000.  */
 name|unsigned
 name|int
 name|base_freq
@@ -501,7 +712,7 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* 255 == 100% */
-comment|/* 	 * The tremolo, vibrato and scale info are not supported yet. 	 * Enable by setting the mode bits WAVE_TREMOLO, WAVE_VIBRATO or 	 * WAVE_SCALE 	 */
+comment|/*  	 * The tremolo, vibrato and scale info are not supported yet. 	 * Enable by setting the mode bits WAVE_TREMOLO, WAVE_VIBRATO or 	 * WAVE_SCALE 	 */
 name|unsigned
 name|char
 name|tremolo_sweep
@@ -642,7 +853,7 @@ value|_IOWR('P', 1, struct patmgr_info)
 end_define
 
 begin_comment
-comment|/*  * The patmgr_info is a fixed size structure which is used for two  * different purposes. The intended use is for communication between  * the application using /dev/sequencer and the patch manager daemon  * associated with a synthesizer device (ioctl(SNDCTL_PMGR_ACCESS)).  *  * This structure is also used with ioctl(SNDCTL_PGMR_IFACE) which allows  * a patch manager daemon to read and write device parameters. This  * ioctl available through /dev/sequencer also. Avoid using it since it's  * extremely hardware dependent. In addition access trough /dev/sequencer  * may confuse the patch manager daemon.  */
+comment|/*  * The patmgr_info is a fixed size structure which is used for two  * different purposes. The intended use is for communication between  * the application using /dev/sequencer and the patch manager daemon  * associated with a synthesizer device (ioctl(SNDCTL_PMGR_ACCESS)).  *  * This structure is also used with ioctl(SNDCTL_PGMR_IFACE) which allows  * a patch manager daemon to read and write device parameters. This  * ioctl available through /dev/sequencer also. Avoid using it since it's  * extremely hardware dependent. In addition access trough /dev/sequencer   * may confuse the patch manager daemon.  */
 end_comment
 
 begin_struct
@@ -681,7 +892,7 @@ decl_stmt|;
 name|int
 name|command
 decl_stmt|;
-comment|/*  * Commands 0x000 to 0xfff reserved for patch manager programs  */
+comment|/*   * Commands 0x000 to 0xfff reserved for patch manager programs   */
 define|#
 directive|define
 name|PM_GET_DEVTYPE
@@ -742,7 +953,7 @@ define|#
 directive|define
 name|_PM_LOAD_PATCH
 value|0x100
-comment|/*  * Commands above 0xffff reserved for device specific use  */
+comment|/*   * Commands above 0xffff reserved for device specific use  */
 name|long
 name|parm1
 decl_stmt|;
@@ -835,7 +1046,7 @@ comment|/* A patch has been loaded by appl */
 end_comment
 
 begin_comment
-comment|/*  * /dev/sequencer input events.  *  * The data written to the /dev/sequencer is a stream of events. Events  * are records of 4 or 8 bytes. The first byte defines the size.  * Any number of events can be written with a write call. There  * is a set of macros for sending these events. Use these macros if you  * want to maximize portability of your program.  *  * Events SEQ_WAIT, SEQ_MIDIPUTC and SEQ_ECHO. Are also input events.  * (All input events are currently 4 bytes long. Be prepared to support  * 8 byte events also. If you receive any event having first byte>= 128,  * it's a 8 byte event.  *  * The events are documented at the end of this file.  *  * Normal events (4 bytes)  * There is also a 8 byte version of most of the 4 byte events. The  * 8 byte one is recommended.  */
+comment|/*  * /dev/sequencer input events.  *  * The data written to the /dev/sequencer is a stream of events. Events  * are records of 4 or 8 bytes. The first byte defines the size.   * Any number of events can be written with a write call. There  * is a set of macros for sending these events. Use these macros if you  * want to maximize portability of your program.  *  * Events SEQ_WAIT, SEQ_MIDIPUTC and SEQ_ECHO. Are also input events.  * (All input events are currently 4 bytes long. Be prepared to support  * 8 byte events also. If you receive any event having first byte>= 128,  * it's a 8 byte event.  *  * The events are documented at the end of this file.  *  * Normal events (4 bytes)  * There is also a 8 byte version of most of the 4 byte events. The  * 8 byte one is recommended.  */
 end_comment
 
 begin_define
@@ -953,7 +1164,7 @@ value|10
 end_define
 
 begin_comment
-comment|/*******************************************  *	Midi controller numbers  *******************************************  * Controllers 0 to 31 (0x00 to 0x1f) and  * 32 to 63 (0x20 to 0x3f) are continuous  * controllers.  * In the MIDI 1.0 these controllers are sent using  * two messages. Controller numbers 0 to 31 are used  * to send the LSB and the controller numbers 32 to 63  * are for the LSB.  *  * This driver uses just the numbers 0 to 31 to store both  * the LSB and MSB. The controller value is a unsigned short  * and it's valid range is between 0 and 16383 (0x0000 to 0x3fff).  * The driver sends the controller value using two messages when  * necessary.  */
+comment|/*******************************************  *	Midi controller numbers  *******************************************  * Controllers 0 to 31 (0x00 to 0x1f) and  * 32 to 63 (0x20 to 0x3f) are continuous  * controllers.  * In the MIDI 1.0 these controllers are sent using  * two messages. Controller numbers 0 to 31 are used  * to send the MSB and the controller numbers 32 to 63  * are for the LSB. Note that just 7 bits are used in MIDI bytes.  */
 end_comment
 
 begin_define
@@ -1391,7 +1602,7 @@ comment|/* Long events */
 end_comment
 
 begin_comment
-comment|/*  *	SEQ_FULLSIZE events are used for loading patches/samples to the  *	synthesizer devices. These events are passed directly to the driver  *	of the associated synthesizer device. There is no limit to the size  *	of the extended events. These events are not queued but executed  *	immediately when the write() is called (execution can take several  *	seconds of time).  *  *	When a SEQ_FULLSIZE message is written to the device, it must  *	be written using exactly one write() call. Other events cannot  *	be mixed to the same write.  *  *	For FM synths (YM3812/OPL3) use struct sbi_instrument and write it to the  *	/dev/sequencer. Don't write other data together with the instrument structure  *	Set the key field of the structure to FM_PATCH. The device field is used to  *	route the patch to the corresponding device.  *  *	For Gravis UltraSound use struct patch_info. Initialize the key field  *      to GUS_PATCH.  */
+comment|/*  *	SEQ_FULLSIZE events are used for loading patches/samples to the  *	synthesizer devices. These events are passed directly to the driver  *	of the associated synthesizer device. There is no limit to the size  *	of the extended events. These events are not queued but executed  *	immediately when the write() is called (execution can take several  *	seconds of time).   *  *	When a SEQ_FULLSIZE message is written to the device, it must  *	be written using exactly one write() call. Other events cannot  *	be mixed to the same write.  *	  *	For FM synths (YM3812/OPL3) use struct sbi_instrument and write it to the   *	/dev/sequencer. Don't write other data together with the instrument structure  *	Set the key field of the structure to FM_PATCH. The device field is used to  *	route the patch to the corresponding device.  *  *	For Gravis UltraSound use struct patch_info. Initialize the key field  *      to GUS_PATCH.  */
 end_comment
 
 begin_define
@@ -1707,6 +1918,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SNDCTL_DSP_SETBLKSIZE
+value|_IOW('P', 4, int)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SNDCTL_DSP_SAMPLESIZE
 value|SNDCTL_DSP_SETFMT
 end_define
@@ -1744,13 +1962,6 @@ define|#
 directive|define
 name|SNDCTL_DSP_SETFRAGMENT
 value|_IOWR('P',10, int)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCTL_DSP_SETBLKSIZE
-value|_IOW('P', 4, int)
 end_define
 
 begin_comment
@@ -1872,6 +2083,65 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AFMT_MPEG
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* MPEG (2) audio */
+end_comment
+
+begin_comment
+comment|/*  * Buffer status queries.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|audio_buf_info
+block|{
+name|int
+name|fragments
+decl_stmt|;
+comment|/* # of available fragments (partially usend ones not counted) */
+name|int
+name|fragsize
+decl_stmt|;
+comment|/* Size of a fragment in bytes */
+name|int
+name|bytes
+decl_stmt|;
+comment|/* Available space in bytes (includes partially used fragments) */
+comment|/* Note! 'bytes' could be more than fragments*fragsize */
+block|}
+name|audio_buf_info
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GETOSPACE
+value|_IOR ('P',12, audio_buf_info)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_GETISPACE
+value|_IOR ('P',13, audio_buf_info)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_NONBLOCK
+value|_IO  ('P',14)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOUND_PCM_READ_RATE
 value|_IOR ('P', 2, int)
 end_define
@@ -1967,68 +2237,204 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOUND_PCM_SETBLKSIZE
-value|SNDCTL_DSP_SETBLKSIZE
+name|SOUND_PCM_GETOSPACE
+value|SNDCTL_DSP_GETOSPACE
 end_define
-
-begin_comment
-comment|/*********************************************  * IOCTL /dev/pss (experimental PSS API by marc.hoffman@analog.com.  *		likely to change in near future.  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|SNDCTL_PSS_RESET
+name|SOUND_PCM_GETISPACE
+value|SNDCTL_DSP_GETISPACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_NONBLOCK
+value|SNDCTL_DSP_NONBLOCK
+end_define
+
+begin_comment
+comment|/*  * ioctl calls to be used in communication with coprocessors and  * DSP chips.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|copr_buffer
+block|{
+name|int
+name|command
+decl_stmt|;
+comment|/* Set to 0 if not used */
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|CPF_NONE
+value|0x0000
+define|#
+directive|define
+name|CPF_FIRST
+value|0x0001
+comment|/* First block */
+define|#
+directive|define
+name|CPF_LAST
+value|0x0002
+comment|/* Last block */
+name|int
+name|len
+decl_stmt|;
+name|int
+name|offs
+decl_stmt|;
+comment|/* If required by the device (0 if not used) */
+name|unsigned
+name|char
+name|data
+index|[
+literal|4000
+index|]
+decl_stmt|;
+comment|/* NOTE! 4000 is not 4k */
+block|}
+name|copr_buffer
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|copr_debug_buf
+block|{
+name|int
+name|command
+decl_stmt|;
+comment|/* Used internally. Set to 0 */
+name|int
+name|parm1
+decl_stmt|;
+name|int
+name|parm2
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+comment|/* Length of data in bytes */
+block|}
+name|copr_debug_buf
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|copr_msg
+block|{
+name|int
+name|len
+decl_stmt|;
+name|unsigned
+name|char
+name|data
+index|[
+literal|4000
+index|]
+decl_stmt|;
+block|}
+name|copr_msg
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_COPR_RESET
 value|_IO  ('C',  0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SNDCTL_PSS_SETUP_REGISTERS
-value|_IO  ('C',  1)
+name|SNDCTL_COPR_LOAD
+value|_IOWR('C',  1, copr_buffer)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SNDCTL_PSS_SPEAKER
-value|_IOW ('C',  2, struct pss_speaker)
+name|SNDCTL_COPR_RDATA
+value|_IOWR('C',  2, copr_debug_buf)
 end_define
 
-begin_struct
-struct|struct
-name|pss_speaker
-block|{
-name|int
-name|volume
-decl_stmt|;
-name|int
-name|bass
-decl_stmt|;
-name|int
-name|treb
-decl_stmt|;
-name|int
-name|mode
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|SNDCTL_COPR_RCODE
+value|_IOWR('C',  3, copr_debug_buf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_COPR_WDATA
+value|_IOW ('C',  4, copr_debug_buf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_COPR_WCODE
+value|_IOW ('C',  5, copr_debug_buf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_COPR_RUN
+value|_IOWR('C',  6, copr_debug_buf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_COPR_HALT
+value|_IOWR('C',  7, copr_debug_buf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_COPR_SENDMSG
+value|_IOW ('C',  8, copr_msg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_COPR_RCVMSG
+value|_IOR ('C',  9, copr_msg)
+end_define
 
 begin_comment
 comment|/*********************************************  * IOCTL commands for /dev/mixer  */
 end_comment
 
 begin_comment
-comment|/*  * Mixer devices  *  * There can be up to 20 different analog mixer channels. The  * SOUND_MIXER_NRDEVICES gives the currently supported maximum.  * The SOUND_MIXER_READ_DEVMASK returns a bitmask which tells  * the devices supported by the particular mixer.  */
+comment|/*   * Mixer devices  *  * There can be up to 20 different analog mixer channels. The  * SOUND_MIXER_NRDEVICES gives the currently supported maximum.   * The SOUND_MIXER_READ_DEVMASK returns a bitmask which tells  * the devices supported by the particular mixer.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SOUND_MIXER_NRDEVICES
-value|12
+value|17
 end_define
 
 begin_define
@@ -2123,6 +2529,65 @@ begin_comment
 comment|/* Recording level */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_IGAIN
+value|12
+end_define
+
+begin_comment
+comment|/* Input gain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_OGAIN
+value|13
+end_define
+
+begin_comment
+comment|/* Output gain */
+end_comment
+
+begin_comment
+comment|/*   * The AD1848 codec and compatibles have three line level inputs  * (line, aux1 and aux2). Since each card manufacturer have assigned  * different meanings to these inputs, it's inpractical to assign  * specific meanings (line, cd, synth etc.) to them.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_LINE1
+value|14
+end_define
+
+begin_comment
+comment|/* Input source 1  (aux1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_LINE2
+value|15
+end_define
+
+begin_comment
+comment|/* Input source 2  (aux2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_LINE3
+value|16
+end_define
+
+begin_comment
+comment|/* Input source 3  (line) */
+end_comment
+
 begin_comment
 comment|/* Some on/off settings (SOUND_SPECIAL_MIN - SOUND_SPECIAL_MAX) */
 end_comment
@@ -2186,14 +2651,14 @@ begin_define
 define|#
 directive|define
 name|SOUND_DEVICE_LABELS
-value|{"Vol  ", "Bass ", "Trebl", "Synth", "Pcm  ", "Spkr ", "Line ", \ 				 "Mic  ", "CD   ", "Mix  ", "Pcm2 ", "rec"}
+value|{"Vol  ", "Bass ", "Trebl", "Synth", "Pcm  ", "Spkr ", "Line ", \ 				 "Mic  ", "CD   ", "Mix  ", "Pcm2 ", "Rec  ", "IGain", "OGain", \ 				 "Line1", "Line2", "Line3"}
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOUND_DEVICE_NAMES
-value|{"vol", "bass", "treble", "synth", "pcm", "speaker", "line", \ 				 "mic", "cd", "mix", "pcm2", "rec"}
+value|{"vol", "bass", "treble", "synth", "pcm", "speaker", "line", \ 				 "mic", "cd", "mix", "pcm2", "rec", "igain", "ogain", \ 				 "line1", "line2", "line3"}
 end_define
 
 begin_comment
@@ -2353,6 +2818,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOUND_MASK_IGAIN
+value|(1<< SOUND_MIXER_IGAIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_OGAIN
+value|(1<< SOUND_MIXER_OGAIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_LINE1
+value|(1<< SOUND_MIXER_LINE1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_LINE2
+value|(1<< SOUND_MIXER_LINE2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_LINE3
+value|(1<< SOUND_MIXER_LINE3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOUND_MASK_MUTE
 value|(1<< SOUND_MIXER_MUTE)
 end_define
@@ -2463,6 +2963,41 @@ define|#
 directive|define
 name|SOUND_MIXER_READ_RECLEV
 value|MIXER_READ(SOUND_MIXER_RECLEV)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_READ_IGAIN
+value|MIXER_READ(SOUND_MIXER_IGAIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_READ_OGAIN
+value|MIXER_READ(SOUND_MIXER_OGAIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_READ_LINE1
+value|MIXER_READ(SOUND_MIXER_LINE1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_READ_LINE2
+value|MIXER_READ(SOUND_MIXER_LINE2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_READ_LINE3
+value|MIXER_READ(SOUND_MIXER_LINE3)
 end_define
 
 begin_define
@@ -2618,6 +3153,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOUND_MIXER_WRITE_IGAIN
+value|MIXER_WRITE(SOUND_MIXER_IGAIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_WRITE_OGAIN
+value|MIXER_WRITE(SOUND_MIXER_OGAIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_WRITE_LINE1
+value|MIXER_WRITE(SOUND_MIXER_LINE1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_WRITE_LINE2
+value|MIXER_WRITE(SOUND_MIXER_LINE2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_WRITE_LINE3
+value|MIXER_WRITE(SOUND_MIXER_LINE3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOUND_MIXER_WRITE_MUTE
 value|MIXER_WRITE(SOUND_MIXER_MUTE)
 end_define
@@ -2648,7 +3218,7 @@ comment|/*  * Level 2 event types for /dev/sequencer  */
 end_comment
 
 begin_comment
-comment|/*  * The 4 most significant bits of byte 0 specify the class of  * the event:  *  *	0x8X = system level events,  *	0x9X = device/port specific events, event[1] = device/port,  *		The last 4 bits give the subtype:  *			0x02	= Channel event (event[3] = chn).  *			0x01	= note event (event[4] = note).  *			(0x01 is not used alone but always with bit 0x02).  *	       event[2] = MIDI message code (0x80=note off etc.)  *  */
+comment|/*  * The 4 most significant bits of byte 0 specify the class of  * the event:   *  *	0x8X = system level events,  *	0x9X = device/port specific events, event[1] = device/port,  *		The last 4 bits give the subtype:  *			0x02	= Channel event (event[3] = chn).  *			0x01	= note event (event[4] = note).  *			(0x01 is not used alone but always with bit 0x02).  *	       event[2] = MIDI message code (0x80=note off etc.)  *  */
 end_comment
 
 begin_define
@@ -2969,7 +3539,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * This variation of the sequencer macros is used just to format one event  * using fixed buffer.  *  * The program using the macro library must define the following macros before  * using this library.  *  * #define _seqbuf 		 name of the buffer (unsigned char[])  * #define _SEQ_ADVBUF(len)	 If the applic needs to know the exact  *				 size of the event, this macro can be used.  *				 Otherwise this must be defined as empty.  * #define _seqbufptr		 Define the name of index variable or 0 if  *				 not required.  */
+comment|/*  * This variation of the sequencer macros is used just to format one event  * using fixed buffer.  *   * The program using the macro library must define the following macros before  * using this library.  *  * #define _seqbuf 		 name of the buffer (unsigned char[])   * #define _SEQ_ADVBUF(len)	 If the applic needs to know the exact  *				 size of the event, this macro can be used.  *				 Otherwise this must be defined as empty.  * #define _seqbufptr		 Define the name of index variable or 0 if  *				 not required.   */
 end_comment
 
 begin_define
@@ -3191,6 +3761,22 @@ define|\
 value|_CHN_COMMON(dev, MIDI_PITCH_BEND, chn, 0, 0, value)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SEQ_V2_X_CONTROL
+parameter_list|(
+name|dev
+parameter_list|,
+name|voice
+parameter_list|,
+name|controller
+parameter_list|,
+name|value
+parameter_list|)
+value|{_SEQ_NEEDBUF(8);\ 					_seqbuf[_seqbufptr] = SEQ_EXTENDED;\ 					_seqbuf[_seqbufptr+1] = SEQ_CONTROLLER;\ 					_seqbuf[_seqbufptr+2] = (dev);\ 					_seqbuf[_seqbufptr+3] = (voice);\ 					_seqbuf[_seqbufptr+4] = (controller);\ 					*(short *)&_seqbuf[_seqbufptr+5] = (value);\ 					_seqbuf[_seqbufptr+7] = 0;\ 					_SEQ_ADVBUF(8);}
+end_define
+
 begin_comment
 comment|/*  * The following 5 macros are incorrectly implemented and obsolete.  * Use SEQ_BENDER and SEQ_CONTROL (with proper controller) instead.  */
 end_comment
@@ -3206,7 +3792,7 @@ name|voice
 parameter_list|,
 name|value
 parameter_list|)
-value|SEQ_CONTROL(dev, voice, CTRL_PITCH_BENDER, value)
+value|SEQ_V2_X_CONTROL(dev, voice, CTRL_PITCH_BENDER, value)
 end_define
 
 begin_define
@@ -3220,7 +3806,7 @@ name|voice
 parameter_list|,
 name|value
 parameter_list|)
-value|SEQ_CONTROL(dev, voice, CTRL_PITCH_BENDER_RANGE, value)
+value|SEQ_V2_X_CONTROL(dev, voice, CTRL_PITCH_BENDER_RANGE, value)
 end_define
 
 begin_define
@@ -3391,7 +3977,7 @@ value|_TIMER_EVENT(TMR_TIMESIG, sig)
 end_define
 
 begin_comment
-comment|/*  * Events for the level 1 interface only  */
+comment|/*  * Events for the level 1 interface only   */
 end_comment
 
 begin_define
@@ -3439,18 +4025,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* !_KERNEL_SPAM */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !_MACHINE_SOUNDCARD_H_ */
-end_comment
 
 end_unit
 
