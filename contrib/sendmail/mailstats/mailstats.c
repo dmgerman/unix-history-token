@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|copyright
 argument_list|,
-literal|"@(#) Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 argument_list|)
 end_macro
 
@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: mailstats.c,v 8.98 2002/05/24 23:10:15 gshapiro Exp $"
+literal|"@(#)$Id: mailstats.c,v 8.100 2002/06/27 23:24:06 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -214,17 +214,11 @@ name|dismsgs
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|long
 name|quarmsgs
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|time_t
 name|now
 decl_stmt|;
@@ -1313,9 +1307,6 @@ argument_list|,
 literal|" M   msgsfr  bytes_from   msgsto    bytes_to  msgsrej msgsdis"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 operator|(
 name|void
 operator|)
@@ -1328,9 +1319,6 @@ argument_list|,
 literal|" msgsqur"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 operator|(
 name|void
 operator|)
@@ -1380,9 +1368,6 @@ index|[
 name|i
 index|]
 operator|||
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|stats
 operator|.
 name|stat_nq
@@ -1390,9 +1375,6 @@ index|[
 name|i
 index|]
 operator|||
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 name|stats
 operator|.
 name|stat_nr
@@ -1481,9 +1463,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 operator|(
 name|void
 operator|)
@@ -1503,9 +1482,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 if|if
 condition|(
 name|mnames
@@ -1593,9 +1569,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 name|quarmsgs
 operator|+=
 name|stats
@@ -1605,9 +1578,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 block|}
 block|}
 if|if
@@ -1639,9 +1609,6 @@ argument_list|,
 name|dismsgs
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 operator|(
 name|void
 operator|)
@@ -1656,9 +1623,6 @@ argument_list|,
 name|quarmsgs
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 operator|(
 name|void
 operator|)
@@ -1751,9 +1715,6 @@ argument_list|,
 literal|"============================================================="
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 operator|(
 name|void
 operator|)
@@ -1766,9 +1727,6 @@ argument_list|,
 literal|"========"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 operator|(
 name|void
 operator|)
@@ -1805,9 +1763,6 @@ argument_list|,
 name|dismsgs
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_QUARANTINE
 operator|(
 name|void
 operator|)
@@ -1822,9 +1777,6 @@ argument_list|,
 name|quarmsgs
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* _FFR_QUARANTINE */
 operator|(
 name|void
 operator|)
