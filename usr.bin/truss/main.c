@@ -4,7 +4,7 @@ comment|/*  * The main module for truss.  Suprisingly simple, but, then, the oth
 end_comment
 
 begin_comment
-comment|/*  * $Id: main.c,v 1.2 1997/12/06 14:39:30 peter Exp $  */
+comment|/*  * $Id: main.c,v 1.3 1997/12/06 14:41:41 peter Exp $  */
 end_comment
 
 begin_include
@@ -578,11 +578,25 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
-name|ac
+operator|(
+name|pid
+operator|==
+literal|0
 operator|&&
+name|ac
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|pid
 operator|!=
 literal|0
+operator|&&
+name|ac
+operator|!=
+literal|0
+operator|)
 condition|)
 name|usage
 argument_list|()
