@@ -98,7 +98,7 @@ begin_define
 define|#
 directive|define
 name|MAXSIZE
-value|(1024*1024*20)
+value|(1024*1024*40)
 end_define
 
 begin_define
