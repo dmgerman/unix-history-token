@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: vidcontrol.c,v 1.18 1997/10/27 07:52:10 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -787,9 +787,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|io
-decl_stmt|,
 name|size
+decl_stmt|;
+name|unsigned
+name|long
+name|io
 decl_stmt|;
 name|char
 modifier|*
@@ -1243,7 +1245,8 @@ modifier|*
 name|index
 parameter_list|)
 block|{
-name|int
+name|unsigned
+name|long
 name|mode
 decl_stmt|;
 if|if
