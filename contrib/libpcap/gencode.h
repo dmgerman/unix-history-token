@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: gencode.h,v 1.36 96/07/17 00:11:34 leres Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/gencode.h,v 1.37 1999/10/19 15:18:29 itojun Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -50,6 +50,13 @@ define|#
 directive|define
 name|Q_PROTO
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_PROTOCHAIN
+value|6
 end_define
 
 begin_comment
@@ -164,22 +171,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|Q_ISO
+name|Q_IPV6
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_ESIS
+name|Q_ICMPV6
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_ISIS
+name|Q_AH
 value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_ESP
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_PIM
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_ISO
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_ESIS
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_ISIS
+value|23
 end_define
 
 begin_comment
@@ -228,6 +270,12 @@ name|Q_UNDEF
 value|255
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|slist
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|stmt
@@ -235,6 +283,18 @@ block|{
 name|int
 name|code
 decl_stmt|;
+name|struct
+name|slist
+modifier|*
+name|jt
+decl_stmt|;
+comment|/*only for relative jump in block*/
+name|struct
+name|slist
+modifier|*
+name|jf
+decl_stmt|;
+comment|/*only for relative jump in block*/
 name|bpf_int32
 name|k
 decl_stmt|;
@@ -654,6 +714,39 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_function_decl
+name|struct
+name|block
+modifier|*
+name|gen_mcode6
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|qual
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|struct
 name|block
@@ -922,6 +1015,13 @@ name|b
 parameter_list|)
 value|((b)->ef.succ)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|no_optimize
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

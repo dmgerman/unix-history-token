@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Name to id translation routines used by the scanner.  * These functions are not time critical.  */
+comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Name to id translation routines used by the scanner.  * These functions are not time critical.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: nametoaddr.c,v 1.48 98/07/12 13:15:36 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.51 1999/11/25 08:25:35 itojun Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,33 @@ include|#
 directive|include
 file|<arpa/inet.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*INET6*/
+end_comment
 
 begin_include
 include|#
@@ -223,6 +250,12 @@ begin_comment
 comment|/*  *  Convert host name to internet address.  *  Return 0 upon failure.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INET6
+end_ifndef
+
 begin_function
 name|bpf_u_int32
 modifier|*
@@ -345,6 +378,97 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|struct
+name|addrinfo
+modifier|*
+name|pcap_nametoaddr
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|struct
+name|addrinfo
+name|hints
+decl_stmt|,
+modifier|*
+name|res
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|hints
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hints
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|hints
+operator|.
+name|ai_family
+operator|=
+name|PF_UNSPEC
+expr_stmt|;
+name|hints
+operator|.
+name|ai_socktype
+operator|=
+name|SOCK_STREAM
+expr_stmt|;
+comment|/*not really*/
+name|error
+operator|=
+name|getaddrinfo
+argument_list|(
+name|name
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|hints
+argument_list|,
+operator|&
+name|res
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+name|NULL
+return|;
+else|else
+return|return
+name|res
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*INET6*/
+end_comment
 
 begin_comment
 comment|/*  *  Convert net name to internet address.  *  Return 0 upon failure.  */
@@ -655,12 +779,13 @@ name|eproto_db
 index|[]
 init|=
 block|{
-block|{
-literal|"pup"
-block|,
-name|ETHERTYPE_PUP
-block|}
-block|,
+if|#
+directive|if
+literal|0
+comment|/* The FreeBSD elf linker generates a request to copy this array 	 * (including its size) when you link with -lpcap.  In order to 	 * not bump the major version number of this libpcap.so, we need 	 * to ensure that the array stays the same size.  Since PUP is 	 * likely never seen in real life any more, it's the first to 	 * be sacrificed (in favor of ip6). 	 */
+block|{ "pup", ETHERTYPE_PUP },
+endif|#
+directive|endif
 block|{
 literal|"xns"
 block|,
@@ -673,6 +798,17 @@ block|,
 name|ETHERTYPE_IP
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|INET6
+block|{
+literal|"ip6"
+block|,
+name|ETHERTYPE_IPV6
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"arp"
 block|,
@@ -1348,11 +1484,21 @@ else|#
 directive|else
 end_else
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|sgi
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_function_decl
 specifier|extern
