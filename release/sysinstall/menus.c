@@ -1697,7 +1697,7 @@ block|,
 block|{
 literal|"Fixit"
 block|,
-literal|"Enter repair mode with CDROM/floppy or start shell"
+literal|"Repair mode with CDROM/DVD/floppy or start shell"
 block|,
 name|NULL
 block|,
@@ -10443,7 +10443,7 @@ block|,
 literal|"Please choose a fixit option"
 block|,
 literal|"There are three ways of going into \"fixit\" mode:\n"
-literal|"- you can use the 2nd FreeBSD CDROM, in which case there will be\n"
+literal|"- you can use the live filesystem CDROM/DVD, in which case there will be\n"
 literal|"  full access to the complete set of FreeBSD commands and utilities,\n"
 literal|"- you can use the more limited (but perhaps customized) fixit floppy,\n"
 literal|"- or you can start an Emergency Holographic Shell now, which is\n"
@@ -10465,9 +10465,9 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"2 CDROM"
+literal|"2 CDROM/DVD"
 block|,
-literal|"Use the 2nd \"live\" CDROM from the distribution"
+literal|"Use the \"live\" filesystem CDROM/DVD"
 block|,
 name|NULL
 block|,
