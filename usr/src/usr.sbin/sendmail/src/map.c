@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.12 (Berkeley) %G%"
+literal|"@(#)map.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,12 +64,6 @@ argument_list|(
 name|BTREE_MAP
 argument_list|)
 end_if
-
-begin_undef
-undef|#
-directive|undef
-name|__P
-end_undef
 
 begin_include
 include|#
