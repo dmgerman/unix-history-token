@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)cpr.c	1.5		%G%"
+literal|"@(#)cpr.c	1.6		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -418,6 +418,8 @@ operator|.
 name|sg_flags
 operator||=
 name|CBREAK
+operator||
+name|XTABS
 expr_stmt|;
 name|stty
 argument_list|(
