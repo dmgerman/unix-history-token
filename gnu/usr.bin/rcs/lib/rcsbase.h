@@ -1,25 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *                     RCS common definitions and data structures  */
+comment|/* RCS common definitions and data structures */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RCSBASE
-value|"$Id: rcsbase.h,v 1.2 1994/05/14 07:00:20 rgrimes Exp $"
+value|"$Id: rcsbase.h,v 5.20 1995/06/16 06:19:24 eggert Exp $"
 end_define
 
 begin_comment
-comment|/* Copyright (C) 1982, 1988, 1989 Walter Tichy    Copyright 1990, 1991 by Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
+comment|/* Copyright 1982, 1988, 1989 Walter Tichy    Copyright 1990, 1991, 1992, 1993, 1994, 1995 Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING. If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
 end_comment
 
 begin_comment
-comment|/*****************************************************************************  * INSTRUCTIONS:  * =============  * See the Makefile for how to define C preprocessor symbols.  * If you need to change the comment leaders, update the table comtable[]  * in rcsfnms.c. (This can wait until you know what a comment leader is.)  *****************************************************************************  */
-end_comment
-
-begin_comment
-comment|/* $Log: rcsbase.h,v $  * Revision 1.2  1994/05/14  07:00:20  rgrimes  * Add new option -K from David Dawes that allows you to turn on and off  * specific keyword substitution during a rcs co command.  * Add the new keyword FreeBSD that is IDENTICAL in operation to $Id$.  *  * Revision 1.1.1.1  1993/06/18  04:22:13  jkh  * Updated GNU utilities  *  * Revision 5.11  1991/10/07  17:32:46  eggert  * Support piece tables even if !has_mmap.  *  * Revision 5.10  1991/09/24  00:28:39  eggert  * Remove unexported functions.  *  * Revision 5.9  1991/08/19  03:13:55  eggert  * Add piece tables and other tuneups, and NFS workarounds.  *  * Revision 5.8  1991/04/21  11:58:20  eggert  * Add -x, RCSINIT, MS-DOS support.  *  * Revision 5.7  1991/02/28  19:18:50  eggert  * Try setuid() if seteuid() doesn't work.  *  * Revision 5.6  1991/02/26  17:48:37  eggert  * Support new link behavior.  Move ANSI C / Posix declarations into conf.sh.  *  * Revision 5.5  1990/12/04  05:18:43  eggert  * Use -I for prompts and -q for diagnostics.  *  * Revision 5.4  1990/11/01  05:03:35  eggert  * Don't assume that builtins are functions; they may be macros.  * Permit arbitrary data in logs.  *  * Revision 5.3  1990/09/26  23:36:58  eggert  * Port wait() to non-Posix ANSI C hosts.  *  * Revision 5.2  1990/09/04  08:02:20  eggert  * Don't redefine NAME_MAX, PATH_MAX.  * Improve incomplete line handling.  Standardize yes-or-no procedure.  *  * Revision 5.1  1990/08/29  07:13:53  eggert  * Add -kkvl.  Fix type typos exposed by porting.  Clean old log messages too.  *  * Revision 5.0  1990/08/22  08:12:44  eggert  * Adjust ANSI C / Posix support.  Add -k, -V, setuid.  Don't call access().  * Remove compile-time limits; use malloc instead.  * Ansify and Posixate.  Add support for ISO 8859.  * Remove snoop and v2 support.  *  * Revision 4.9  89/05/01  15:17:14  narten  * botched previous USG fix  *  * Revision 4.8  89/05/01  14:53:05  narten  * changed #include<strings.h> -> string.h for USG systems.  *  * Revision 4.7  88/11/08  15:58:45  narten  * removed defs for functions loaded from libraries  *  * Revision 4.6  88/08/09  19:12:36  eggert  * Shrink stdio code size; remove lint; permit -Dhshsize=nn.  *  * Revision 4.5  87/12/18  17:06:41  narten  * made removed BSD ifdef, now uses V4_2BSD  *  * Revision 4.4  87/10/18  10:29:49  narten  * Updating version numbers  * Changes relative to 1.1 are actually relative to 4.2  *  * Revision 1.3  87/09/24  14:02:25  narten  * changes for lint  *  * Revision 1.2  87/03/27  14:22:02  jenkins  * Port to suns  *  * Revision 4.2  83/12/20  16:04:20  wft  * merged 3.6.1.1 and 4.1 (SMALLOG, logsize).  * moved setting of STRICT_LOCKING to Makefile.  * changed DOLLAR to UNKN (conflict with KDELIM).  *  * Revision 4.1  83/05/04  09:12:41  wft  * Added markers Id and RCSfile.  * Added Dbranch for default branches.  *  * Revision 3.6.1.1  83/12/02  21:56:22  wft  * Increased logsize, added macro SMALLOG.  *  * Revision 3.6  83/01/15  16:43:28  wft  * 4.2 prerelease  *  * Revision 3.6  83/01/15  16:43:28  wft  * Replaced dbm.h with BYTESIZ, fixed definition of rindex().  * Added variants of NCPFN and NCPPN for bsd 4.2, selected by defining V4_2BSD.  * Added macro DELNUMFORM to have uniform format for printing delta text nodes.  * Added macro DELETE to mark deleted deltas.  *  * Revision 3.5  82/12/10  12:16:56  wft  * Added two forms of DATEFORM, one using %02d, the other %.2d.  *  * Revision 3.4  82/12/04  20:01:25  wft  * added LOCKER, Locker, and USG (redefinition of rindex).  *  * Revision 3.3  82/12/03  12:22:04  wft  * Added dbm.h, stdio.h, RCSBASE, RCSSEP, RCSSUF, WORKMODE, TMPFILE3,  * PRINTDATE, PRINTTIME, map, and ctab; removed Suffix. Redefined keyvallength  * using NCPPN. Changed putc() to abort on write error.  *  * Revision 3.2  82/10/18  15:03:52  wft  * added macro STRICT_LOCKING, removed RCSUMASK.  * renamed JOINFILE[1,2] to JOINFIL[1,2].  *  * Revision 3.1  82/10/11  19:41:17  wft  * removed NBPW, NBPC, NCPW.  * added typdef int void to aid compiling  */
+comment|/*  * $Log: rcsbase.h,v $  * Revision 5.20  1995/06/16 06:19:24  eggert  * Update FSF address.  *  * Revision 5.19  1995/06/01 16:23:43  eggert  * (SIZEABLE_PATH): Don't depend on PATH_MAX: it's not worth configuring.  * (Ioffset_type,BINARY_EXPAND,MIN_UNEXPAND,MIN_UNCHANGED_EXPAND): New macros.  * (maps_memory): New macro; replaces many instances of `has_mmap'.  * (cacheptr): Renamed from cachetell.  * (struct RILE): New alternate name for RILE; the type is now recursive.  * (deallocate): New member for RILE, used for generic buffer deallocation.  * (cacheunget_): No longer take a failure arg; just call Ierror on failure.  * (struct rcslock): Renamed from struct lock, to avoid collisions with  * system headers on some hosts.  All users changed.  * (basefilename): Renamed from basename, likewise.  * (dirtpname): Remove; no longer external.  * (dirlen, dateform): Remove; no longer used.  * (cmpdate, fopenSafer, fdSafer, readAccessFilenameBuffer): New functions.  * (zonelenmax): Increase to 9 for full ISO 8601 format.  * (catchmmapints): Depend on has_NFS.  *  * Revision 5.18  1994/03/17 14:05:48  eggert  * Add primitives for reading backwards from a RILE;  * this is needed to go back and find the $Log prefix.  * Specify subprocess input via file descriptor, not file name.  Remove lint.  *  * Revision 5.17  1993/11/09 17:40:15  eggert  * Move RCS-specific time handling into rcstime.c.  * printf_string now takes two arguments, alas.  *  * Revision 5.16  1993/11/03 17:42:27  eggert  * Don't arbitrarily limit the number of joins.  Remove `nil'.  * Add Name keyword.  Don't discard ignored phrases.  * Add support for merge -A vs -E, and allow up to three labels.  * Improve quality of diagnostics and prototypes.  *  * Revision 5.15  1992/07/28  16:12:44  eggert  * Statement macro names now end in _.  *  * Revision 5.14  1992/02/17  23:02:22  eggert  * Add -T support.  Work around NFS mmap SIGBUS problem.  *  * Revision 5.13  1992/01/24  18:44:19  eggert  * Add support for bad_creat0.  lint -> RCS_lint  *  * Revision 5.12  1992/01/06  02:42:34  eggert  * while (E) ; -> while (E) continue;  *  * Revision 5.11  1991/10/07  17:32:46  eggert  * Support piece tables even if !has_mmap.  *  * Revision 5.10  1991/09/24  00:28:39  eggert  * Remove unexported functions.  *  * Revision 5.9  1991/08/19  03:13:55  eggert  * Add piece tables and other tuneups, and NFS workarounds.  *  * Revision 5.8  1991/04/21  11:58:20  eggert  * Add -x, RCSINIT, MS-DOS support.  *  * Revision 5.7  1991/02/28  19:18:50  eggert  * Try setuid() if seteuid() doesn't work.  *  * Revision 5.6  1991/02/26  17:48:37  eggert  * Support new link behavior.  Move ANSI C / Posix declarations into conf.sh.  *  * Revision 5.5  1990/12/04  05:18:43  eggert  * Use -I for prompts and -q for diagnostics.  *  * Revision 5.4  1990/11/01  05:03:35  eggert  * Don't assume that builtins are functions; they may be macros.  * Permit arbitrary data in logs.  *  * Revision 5.3  1990/09/26  23:36:58  eggert  * Port wait() to non-Posix ANSI C hosts.  *  * Revision 5.2  1990/09/04  08:02:20  eggert  * Don't redefine NAME_MAX, PATH_MAX.  * Improve incomplete line handling.  Standardize yes-or-no procedure.  *  * Revision 5.1  1990/08/29  07:13:53  eggert  * Add -kkvl.  Fix type typos exposed by porting.  Clean old log messages too.  *  * Revision 5.0  1990/08/22  08:12:44  eggert  * Adjust ANSI C / Posix support.  Add -k, -V, setuid.  Don't call access().  * Remove compile-time limits; use malloc instead.  * Ansify and Posixate.  Add support for ISO 8859.  * Remove snoop and v2 support.  *  * Revision 4.9  89/05/01  15:17:14  narten  * botched previous USG fix  *  * Revision 4.8  89/05/01  14:53:05  narten  * changed #include<strings.h> -> string.h for USG systems.  *  * Revision 4.7  88/11/08  15:58:45  narten  * removed defs for functions loaded from libraries  *  * Revision 4.6  88/08/09  19:12:36  eggert  * Shrink stdio code size; remove lint; permit -Dhshsize=nn.  *  * Revision 4.5  87/12/18  17:06:41  narten  * made removed BSD ifdef, now uses V4_2BSD  *  * Revision 4.4  87/10/18  10:29:49  narten  * Updating version numbers  * Changes relative to 1.1 are actually relative to 4.2  *  * Revision 1.3  87/09/24  14:02:25  narten  * changes for lint  *  * Revision 1.2  87/03/27  14:22:02  jenkins  * Port to suns  *  * Revision 4.2  83/12/20  16:04:20  wft  * merged 3.6.1.1 and 4.1 (SMALLOG, logsize).  * moved setting of STRICT_LOCKING to Makefile.  * changed DOLLAR to UNKN (conflict with KDELIM).  *  * Revision 4.1  83/05/04  09:12:41  wft  * Added markers Id and RCSfile.  * Added Dbranch for default branches.  *  * Revision 3.6.1.1  83/12/02  21:56:22  wft  * Increased logsize, added macro SMALLOG.  *  * Revision 3.6  83/01/15  16:43:28  wft  * 4.2 prerelease  *  * Revision 3.6  83/01/15  16:43:28  wft  * Replaced dbm.h with BYTESIZ, fixed definition of rindex().  * Added variants of NCPFN and NCPPN for bsd 4.2, selected by defining V4_2BSD.  * Added macro DELNUMFORM to have uniform format for printing delta text nodes.  * Added macro DELETE to mark deleted deltas.  *  * Revision 3.5  82/12/10  12:16:56  wft  * Added two forms of DATEFORM, one using %02d, the other %.2d.  *  * Revision 3.4  82/12/04  20:01:25  wft  * added LOCKER, Locker, and USG (redefinition of rindex).  *  * Revision 3.3  82/12/03  12:22:04  wft  * Added dbm.h, stdio.h, RCSBASE, RCSSEP, RCSSUF, WORKMODE, TMPFILE3,  * PRINTDATE, PRINTTIME, map, and ctab; removed Suffix. Redefined keyvallength  * using NCPPN. Changed putc() to abort on write error.  *  * Revision 3.2  82/10/18  15:03:52  wft  * added macro STRICT_LOCKING, removed RCSUMASK.  * renamed JOINFILE[1,2] to JOINFIL[1,2].  *  * Revision 3.1  82/10/11  19:41:17  wft  * removed NBPW, NBPC, NCPW.  * added typdef int void to aid compiling  */
 end_comment
 
 begin_include
@@ -38,19 +34,15 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PATH_MAX
+name|_POSIX_PATH_MAX
 end_ifdef
 
 begin_define
 define|#
 directive|define
 name|SIZEABLE_PATH
-value|PATH_MAX
+value|_POSIX_PATH_MAX
 end_define
-
-begin_comment
-comment|/* size of a large path; not a hard limit */
-end_comment
 
 begin_else
 else|#
@@ -61,8 +53,12 @@ begin_define
 define|#
 directive|define
 name|SIZEABLE_PATH
-value|_POSIX_PATH_MAX
+value|255
 end_define
+
+begin_comment
+comment|/* size of a large path; not a hard limit */
+end_comment
 
 begin_endif
 endif|#
@@ -224,18 +220,7 @@ value|(yearlength+16)
 end_define
 
 begin_comment
-comment|/* size of output of DATEFORM		    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|joinlength
-value|20
-end_define
-
-begin_comment
-comment|/* number of joined revisions permitted       */
+comment|/* size of output of time2date */
 end_comment
 
 begin_define
@@ -296,16 +281,16 @@ name|false
 value|0
 end_define
 
+begin_comment
+comment|/*  * RILE - readonly file  * declarecache; - declares local cache for RILE variable(s)  * setupcache - sets up the local RILE cache, but does not initialize it  * cache, uncache - caches and uncaches the local RILE;  *	(uncache,cache) is needed around functions that advance the RILE pointer  * Igeteof_(f,c,s) - get a char c from f, executing statement s at EOF  * cachegeteof_(c,s) - Igeteof_ applied to the local RILE  * Iget_(f,c) - like Igeteof_, except EOF is an error  * cacheget_(c) - Iget_ applied to the local RILE  * cacheunget_(f,c,s) - read c backwards from cached f, executing s at BOF  * Ifileno, Ioffset_type, Irewind, Itell - analogs to stdio routines  *  * By conventions, macros whose names end in _ are statements, not expressions.  * Following such macros with `; else' results in a syntax error.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|nil
-value|0
+name|maps_memory
+value|(has_map_fd || has_mmap)
 end_define
-
-begin_comment
-comment|/*  * RILE - readonly file  * declarecache; - declares local cache for RILE variable(s)  * setupcache - sets up the local RILE cache, but does not initialize it  * cache, uncache - caches and uncaches the local RILE;  *	(uncache,cache) is needed around functions that advance the RILE pointer  * Igeteof(f,c,s) - get a char c from f, executing statement s at EOF  * cachegeteof(c,s) - Igeteof applied to the local RILE  * Iget(f,c) - like Igeteof, except EOF is an error  * cacheget(c) - Iget applied to the local RILE  * Ifileno, Irewind, Iseek, Itell - analogs to stdio routines  */
-end_comment
 
 begin_if
 if|#
@@ -326,6 +311,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
+name|RILE
 block|{
 name|Iptr_type
 name|ptr
@@ -337,37 +323,36 @@ name|char
 modifier|*
 name|base
 decl_stmt|;
-comment|/* for lint, not Iptr_type even if has_mmap */
-if|#
-directive|if
-name|has_mmap
-define|#
-directive|define
-name|Ifileno
-parameter_list|(
-name|f
-parameter_list|)
-value|((f)->fd)
-name|int
-name|fd
-decl_stmt|;
-else|#
-directive|else
-define|#
-directive|define
-name|Ifileno
-parameter_list|(
-name|f
-parameter_list|)
-value|fileno((f)->stream)
-name|FILE
-modifier|*
-name|stream
-decl_stmt|;
+comment|/* not Iptr_type for lint's sake */
 name|unsigned
 name|char
 modifier|*
 name|readlim
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+if|#
+directive|if
+name|maps_memory
+name|void
+argument_list|(
+argument|*deallocate
+argument_list|)
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|RILE
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|FILE
+modifier|*
+name|stream
 decl_stmt|;
 endif|#
 directive|endif
@@ -379,7 +364,7 @@ end_typedef
 begin_if
 if|#
 directive|if
-name|has_mmap
+name|maps_memory
 end_if
 
 begin_define
@@ -402,7 +387,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|Igeteof
+name|Igeteof_
 parameter_list|(
 name|f
 parameter_list|,
@@ -410,25 +395,38 @@ name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|if ((f)->ptr==(f)->lim) s else (c)= *(f)->ptr++
+value|if ((f)->ptr==(f)->lim) s else (c)= *(f)->ptr++;
 end_define
 
 begin_define
 define|#
 directive|define
-name|cachegeteof
+name|cachegeteof_
 parameter_list|(
 name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|if (ptr==lim) s else (c)= *ptr++
+value|if (ptr==lim) s else (c)= *ptr++;
 end_define
 
 begin_else
 else|#
 directive|else
 end_else
+
+begin_decl_stmt
+name|int
+name|Igetmore
+name|P
+argument_list|(
+operator|(
+name|RILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -450,7 +448,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|Igeteof
+name|Igeteof_
 parameter_list|(
 name|f
 parameter_list|,
@@ -458,19 +456,19 @@ name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|if ((f)->ptr==(f)->readlim&& !Igetmore(f)) s else (c)= *(f)->ptr++
+value|if ((f)->ptr==(f)->readlim&& !Igetmore(f)) s else (c)= *(f)->ptr++;
 end_define
 
 begin_define
 define|#
 directive|define
-name|cachegeteof
+name|cachegeteof_
 parameter_list|(
 name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|if (ptr==rRILE->readlim&& !Igetmore(rRILE)) s else (c)= *ptr++
+value|if (ptr==rRILE->readlim&& !Igetmore(rRILE)) s else (c)= *ptr++;
 end_define
 
 begin_endif
@@ -501,23 +499,42 @@ end_define
 begin_define
 define|#
 directive|define
-name|Iget
+name|Iget_
 parameter_list|(
 name|f
 parameter_list|,
 name|c
 parameter_list|)
-value|Igeteof(f,c,Ieof();)
+value|Igeteof_(f,c,Ieof();)
 end_define
 
 begin_define
 define|#
 directive|define
-name|cacheget
+name|cacheget_
 parameter_list|(
 name|c
 parameter_list|)
-value|cachegeteof(c,Ieof();)
+value|cachegeteof_(c,Ieof();)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cacheunget_
+parameter_list|(
+name|f
+parameter_list|,
+name|c
+parameter_list|)
+value|(c)=(--ptr)[-1];
+end_define
+
+begin_define
+define|#
+directive|define
+name|Ioffset_type
+value|size_t
 end_define
 
 begin_define
@@ -527,19 +544,7 @@ name|Itell
 parameter_list|(
 name|f
 parameter_list|)
-value|((f)->ptr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|Iseek
-parameter_list|(
-name|f
-parameter_list|,
-name|p
-parameter_list|)
-value|((f)->ptr = (p))
+value|((f)->ptr - (f)->base)
 end_define
 
 begin_define
@@ -549,15 +554,25 @@ name|Irewind
 parameter_list|(
 name|f
 parameter_list|)
-value|Iseek(f, (f)->base)
+value|((f)->ptr = (f)->base)
 end_define
 
 begin_define
 define|#
 directive|define
-name|cachetell
+name|cacheptr
 parameter_list|()
 value|ptr
+end_define
+
+begin_define
+define|#
+directive|define
+name|Ifileno
+parameter_list|(
+name|f
+parameter_list|)
+value|((f)->fd)
 end_define
 
 begin_else
@@ -610,7 +625,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|Igeteof
+name|Igeteof_
 parameter_list|(
 name|f
 parameter_list|,
@@ -618,41 +633,70 @@ name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|if(((c)=getc(f))<0){testIerror(f);if(feof(f))s}else
+value|{if(((c)=getc(f))==EOF){testIerror(f);if(feof(f))s}}
 end_define
 
 begin_define
 define|#
 directive|define
-name|cachegeteof
+name|cachegeteof_
 parameter_list|(
 name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|Igeteof(ptr,c,s)
+value|Igeteof_(ptr,c,s)
 end_define
 
 begin_define
 define|#
 directive|define
-name|Iget
+name|Iget_
 parameter_list|(
 name|f
 parameter_list|,
 name|c
 parameter_list|)
-value|if (((c)=getc(f))<0) testIeof(f); else
+value|{ if (((c)=getc(f))==EOF) testIeof(f); }
 end_define
 
 begin_define
 define|#
 directive|define
-name|cacheget
+name|cacheget_
 parameter_list|(
 name|c
 parameter_list|)
-value|Iget(ptr,c)
+value|Iget_(ptr,c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cacheunget_
+parameter_list|(
+name|f
+parameter_list|,
+name|c
+parameter_list|)
+value|if(fseek(ptr,-2L,SEEK_CUR))Ierror();else cacheget_(c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Ioffset_type
+value|long
+end_define
+
+begin_define
+define|#
+directive|define
+name|Itell
+parameter_list|(
+name|f
+parameter_list|)
+value|ftell(f)
 end_define
 
 begin_define
@@ -677,13 +721,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|aputc
+name|aputc_
 parameter_list|(
 name|c
 parameter_list|,
 name|o
 parameter_list|)
-value|if (putc(c,o)<0) testOerror(o); else
+value|{ if (putc(c,o)==EOF) testOerror(o); }
 end_define
 
 begin_comment
@@ -693,7 +737,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GETCeof
+name|GETCeof_
 parameter_list|(
 name|o
 parameter_list|,
@@ -701,19 +745,19 @@ name|c
 parameter_list|,
 name|s
 parameter_list|)
-value|{ cachegeteof(c,s); if (o) aputc(c,o); }
+value|{ cachegeteof_(c,s) if (o) aputc_(c,o) }
 end_define
 
 begin_define
 define|#
 directive|define
-name|GETC
+name|GETC_
 parameter_list|(
 name|o
 parameter_list|,
 name|c
 parameter_list|)
-value|{ cacheget(c); if (o) aputc(c,o); }
+value|{ cacheget_(c) if (o) aputc_(c,o) }
 end_define
 
 begin_define
@@ -725,7 +769,7 @@ name|RCSmode
 parameter_list|,
 name|writable
 parameter_list|)
-value|((RCSmode)&~(S_IWUSR|S_IWGRP|S_IWOTH) | ((writable)?S_IWUSR:0))
+value|(((RCSmode)&(mode_t)~(S_IWUSR|S_IWGRP|S_IWOTH)) | ((writable)?S_IWUSR:0))
 end_define
 
 begin_comment
@@ -801,7 +845,7 @@ name|isdigit
 parameter_list|(
 name|c
 parameter_list|)
-value|((unsigned)((c)-'0')<= 9)
+value|(((unsigned)(c)-'0')<= 9)
 end_define
 
 begin_comment
@@ -885,6 +929,12 @@ modifier|*
 name|state
 decl_stmt|;
 comment|/* state of revision (Exp by default) */
+name|char
+specifier|const
+modifier|*
+name|name
+decl_stmt|;
+comment|/* name (if any) by which retrieved   */
 name|struct
 name|cbuf
 name|log
@@ -900,7 +950,12 @@ name|struct
 name|cbuf
 name|ig
 decl_stmt|;
-comment|/* ignored phrases of revision	    */
+comment|/* ignored phrases in admin part	    */
+name|struct
+name|cbuf
+name|igtext
+decl_stmt|;
+comment|/* ignored phrases in deltatext part  */
 name|struct
 name|hshentry
 modifier|*
@@ -913,12 +968,10 @@ modifier|*
 name|nexthsh
 decl_stmt|;
 comment|/* next revision with same hash value */
-name|unsigned
 name|long
 name|insertlns
 decl_stmt|;
 comment|/* lines inserted (computed by rlog)  */
-name|unsigned
 name|long
 name|deletelns
 decl_stmt|;
@@ -1003,7 +1056,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|lock
+name|rcslock
 block|{
 name|char
 specifier|const
@@ -1016,7 +1069,7 @@ modifier|*
 name|delta
 decl_stmt|;
 name|struct
-name|lock
+name|rcslock
 modifier|*
 name|nextlock
 decl_stmt|;
@@ -1061,7 +1114,7 @@ end_define
 begin_if
 if|#
 directive|if
-name|lint
+name|RCS_lint
 end_if
 
 begin_define
@@ -1111,13 +1164,13 @@ define|#
 directive|define
 name|mainProg
 parameter_list|(
-name|name
+name|n
 parameter_list|,
-name|cmd
+name|c
 parameter_list|,
-name|rcsid
+name|i
 parameter_list|)
-value|char const copyright[] = "Copyright 1982,1988,1989 by Walter F. Tichy\nPurdue CS\nCopyright 1990,1991 by Paul Eggert", rcsbaseId[] = RCSBASE, cmdid[] = cmd; libId(name,rcsid) int main mainArgs
+value|char const Copyright[] = "Copyright 1982,1988,1989 Walter F. Tichy, Purdue CS\nCopyright 1990,1991,1992,1993,1994,1995 Paul Eggert", baseid[] = RCSBASE, cmdid[] = c; libId(n,i) int main P((int,char**)); int main mainArgs
 end_define
 
 begin_endif
@@ -1174,6 +1227,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NAME
+value|"Name"
+end_define
+
+begin_define
+define|#
+directive|define
 name|RCSFILE
 value|"RCSfile"
 end_define
@@ -1197,13 +1257,6 @@ define|#
 directive|define
 name|STATE
 value|"State"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FREEBSD
-value|"FreeBSD"
 end_define
 
 begin_define
@@ -1235,6 +1288,8 @@ name|Locker
 block|,
 name|Log
 block|,
+name|Name
+block|,
 name|RCSfile
 block|,
 name|Revision
@@ -1242,8 +1297,6 @@ block|,
 name|Source
 block|,
 name|State
-block|,
-name|FreeBSD
 block|}
 enum|;
 end_enum
@@ -1288,7 +1341,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|exiting
 name|void
 name|exiterr
 name|P
@@ -1297,66 +1349,7 @@ operator|(
 name|void
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* maketime */
-end_comment
-
-begin_decl_stmt
-name|int
-name|setfiledate
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|char
-specifier|const
-index|[
-name|datesize
-index|]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|str2date
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-name|char
-index|[
-name|datesize
-index|]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|time2date
-name|P
-argument_list|(
-operator|(
-name|time_t
-operator|,
-name|char
-index|[
-name|datesize
-index|]
-operator|)
-argument_list|)
+name|exiting
 decl_stmt|;
 end_decl_stmt
 
@@ -1375,9 +1368,13 @@ operator|,
 name|char
 specifier|const
 operator|*
+operator|,
+name|char
+specifier|const
+operator|*
 specifier|const
 index|[
-literal|2
+literal|3
 index|]
 operator|,
 name|char
@@ -1387,31 +1384,6 @@ specifier|const
 index|[
 literal|3
 index|]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* partime */
-end_comment
-
-begin_decl_stmt
-name|int
-name|partime
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-expr|struct
-name|tm
-operator|*
-operator|,
-name|int
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1445,7 +1417,7 @@ specifier|extern
 name|char
 specifier|const
 modifier|*
-name|resultfile
+name|resultname
 decl_stmt|;
 end_decl_stmt
 
@@ -1466,22 +1438,6 @@ name|int
 name|locker_expansion
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|buf
-name|dirtfname
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|newRCSfilename
-value|(dirtfname[0].string)
-end_define
 
 begin_decl_stmt
 name|RILE
@@ -1512,10 +1468,6 @@ name|makedirtemp
 name|P
 argument_list|(
 operator|(
-name|char
-specifier|const
-operator|*
-operator|,
 name|int
 operator|)
 argument_list|)
@@ -1545,6 +1497,8 @@ operator|(
 expr|struct
 name|hshentry
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1600,7 +1554,11 @@ name|char
 specifier|const
 operator|*
 operator|,
+name|int
+operator|,
 name|mode_t
+operator|,
+name|time_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1613,6 +1571,8 @@ name|P
 argument_list|(
 operator|(
 name|int
+operator|,
+name|time_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1653,6 +1613,8 @@ name|int
 operator|,
 name|FILE
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1676,13 +1638,40 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|aflush
+name|int
+name|setmtime
 name|P
 argument_list|(
 operator|(
-name|FILE
+name|char
+specifier|const
 operator|*
+operator|,
+name|time_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ORCSclose
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ORCSerror
+name|P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1936,7 +1925,17 @@ name|bufautobegin
 parameter_list|(
 name|b
 parameter_list|)
-value|((void) ((b)->string = 0, (b)->size = 0))
+value|clear_buf(b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|clear_buf
+parameter_list|(
+name|b
+parameter_list|)
+value|(VOID ((b)->string = 0, (b)->size = 0))
 end_define
 
 begin_decl_stmt
@@ -1951,7 +1950,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|workfilename
+name|workname
 decl_stmt|;
 end_decl_stmt
 
@@ -1960,7 +1959,7 @@ specifier|extern
 name|char
 specifier|const
 modifier|*
-name|RCSfilename
+name|RCSname
 decl_stmt|;
 end_decl_stmt
 
@@ -1970,6 +1969,13 @@ name|char
 specifier|const
 modifier|*
 name|suffixes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fdlock
 decl_stmt|;
 end_decl_stmt
 
@@ -2026,7 +2032,7 @@ begin_decl_stmt
 name|char
 specifier|const
 modifier|*
-name|basename
+name|basefilename
 name|P
 argument_list|(
 operator|(
@@ -2084,7 +2090,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|pairfilenames
+name|pairnames
 name|P
 argument_list|(
 operator|(
@@ -2117,20 +2123,6 @@ operator|,
 name|int
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|size_t
-name|dirlen
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2306,6 +2298,30 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|putdtext
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|hshentry
+specifier|const
+operator|*
+operator|,
+name|char
+specifier|const
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|ttystdin
 name|P
 argument_list|(
@@ -2330,6 +2346,12 @@ operator|*
 operator|,
 operator|...
 operator|)
+argument_list|)
+name|printf_string
+argument_list|(
+literal|2
+argument_list|,
+literal|3
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2392,6 +2414,29 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|putdftext
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|hshentry
+specifier|const
+operator|*
+operator|,
+name|RILE
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* rcskeep */
 end_comment
@@ -2410,6 +2455,8 @@ name|buf
 name|prevauthor
 decl_stmt|,
 name|prevdate
+decl_stmt|,
+name|prevname
 decl_stmt|,
 name|prevrev
 decl_stmt|,
@@ -2535,7 +2582,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
 name|long
 name|rcsline
 decl_stmt|;
@@ -2556,7 +2602,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|exiting
 name|void
 name|efaterror
 name|P
@@ -2567,11 +2612,11 @@ specifier|const
 operator|*
 operator|)
 argument_list|)
+name|exiting
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|exiting
 name|void
 name|enfaterror
 name|P
@@ -2584,11 +2629,24 @@ specifier|const
 operator|*
 operator|)
 argument_list|)
+name|exiting
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|fatcleanup
+name|P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
 name|exiting
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|faterror
 name|P
@@ -2601,11 +2659,16 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|printf_string_exiting
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|exiting
 name|void
 name|fatserror
 name|P
@@ -2618,11 +2681,38 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|printf_string_exiting
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|exiting
+name|void
+name|rcsfaterror
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|printf_string_exiting
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|Ieof
 name|P
@@ -2631,11 +2721,11 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|exiting
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|exiting
 name|void
 name|Ierror
 name|P
@@ -2644,11 +2734,11 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|exiting
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|exiting
 name|void
 name|Oerror
 name|P
@@ -2657,6 +2747,7 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|exiting
 decl_stmt|;
 end_decl_stmt
 
@@ -2664,6 +2755,22 @@ begin_decl_stmt
 name|char
 modifier|*
 name|checkid
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|checksym
 name|P
 argument_list|(
 operator|(
@@ -2813,12 +2920,38 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|Orewind
+name|P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|Ozclose
 name|P
 argument_list|(
 operator|(
 name|FILE
 operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|aflush
+name|P
+argument_list|(
+operator|(
+name|FILE
 operator|*
 operator|)
 argument_list|)
@@ -2856,6 +2989,12 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|printf_string
+argument_list|(
+literal|2
+argument_list|,
+literal|3
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2891,6 +3030,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|checkssym
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|diagnose
 name|P
 argument_list|(
@@ -2901,6 +3053,12 @@ operator|*
 operator|,
 operator|...
 operator|)
+argument_list|)
+name|printf_string
+argument_list|(
+literal|1
+argument_list|,
+literal|2
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2959,6 +3117,12 @@ operator|*
 operator|,
 operator|...
 operator|)
+argument_list|)
+name|printf_string
+argument_list|(
+literal|1
+argument_list|,
+literal|2
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -3072,6 +3236,50 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|rcserror
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|printf_string
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|rcswarn
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|printf_string
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|testIerror
 name|P
 argument_list|(
@@ -3109,6 +3317,12 @@ operator|,
 operator|...
 operator|)
 argument_list|)
+name|printf_string
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -3120,6 +3334,50 @@ argument_list|(
 operator|(
 name|void
 operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|workerror
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|printf_string
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|workwarn
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+name|printf_string
+argument_list|(
+literal|1
+argument_list|,
+literal|2
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -3200,9 +3458,9 @@ end_endif
 begin_if
 if|#
 directive|if
-name|has_mmap
-operator|&&
 name|large_memory
+operator|&&
+name|maps_memory
 end_if
 
 begin_decl_stmt
@@ -3315,9 +3573,9 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-specifier|const
 name|enum
 name|tokens
+specifier|const
 name|ctab
 index|[]
 decl_stmt|;
@@ -3342,7 +3600,27 @@ name|char
 specifier|const
 operator|*
 operator|,
-name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+specifier|const
+modifier|*
+name|namedrev
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+expr|struct
+name|hshentry
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3357,6 +3635,24 @@ name|P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cmpdate
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+name|char
+specifier|const
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3394,7 +3690,7 @@ name|char
 specifier|const
 operator|*
 operator|,
-name|unsigned
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3414,7 +3710,7 @@ name|char
 specifier|const
 operator|*
 operator|,
-name|unsigned
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3493,7 +3789,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
+name|int
 name|countnumflds
 name|P
 argument_list|(
@@ -3587,11 +3883,43 @@ begin_comment
 comment|/* -ko use old string, omitting expansion */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BINARY_EXPAND
+value|5
+end_define
+
+begin_comment
+comment|/* -kb like -ko, but use binary mode I/O */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_UNEXPAND
+value|OLD_EXPAND
+end_define
+
+begin_comment
+comment|/* min value for no logical expansion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_UNCHANGED_EXPAND
+value|(OPEN_O_BINARY ? BINARY_EXPAND : OLD_EXPAND)
+end_define
+
+begin_comment
+comment|/* min value guaranteed to yield an identical file */
+end_comment
+
 begin_struct
 struct|struct
 name|diffcmd
 block|{
-name|unsigned
 name|long
 name|line1
 decl_stmt|,
@@ -3647,7 +3975,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|lock
+name|cbuf
+name|Ignored
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|rcslock
 modifier|*
 name|Locks
 decl_stmt|;
@@ -3678,7 +4014,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
+name|int
 name|TotalDeltas
 decl_stmt|;
 end_decl_stmt
@@ -3698,26 +4034,63 @@ begin_decl_stmt
 specifier|extern
 name|char
 specifier|const
+name|Kaccess
+index|[]
+decl_stmt|,
+name|Kauthor
+index|[]
+decl_stmt|,
+name|Kbranch
+index|[]
+decl_stmt|,
+name|Kcomment
+index|[]
+decl_stmt|,
+name|Kdate
+index|[]
+decl_stmt|,
 name|Kdesc
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-specifier|const
+decl_stmt|,
+name|Kexpand
+index|[]
+decl_stmt|,
+name|Khead
+index|[]
+decl_stmt|,
+name|Klocks
+index|[]
+decl_stmt|,
 name|Klog
 index|[]
+decl_stmt|,
+name|Knext
+index|[]
+decl_stmt|,
+name|Kstate
+index|[]
+decl_stmt|,
+name|Kstrict
+index|[]
+decl_stmt|,
+name|Ksymbols
+index|[]
+decl_stmt|,
+name|Ktext
+index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|char
-specifier|const
-name|Ktext
-index|[]
+name|void
+name|unexpected_EOF
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+name|exiting
 decl_stmt|;
 end_decl_stmt
 
@@ -3738,57 +4111,6 @@ operator|,
 expr|struct
 name|diffcmd
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|putdftext
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-expr|struct
-name|cbuf
-operator|,
-name|RILE
-operator|*
-operator|,
-name|FILE
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|putdtext
-name|P
-argument_list|(
-operator|(
-name|char
-specifier|const
-operator|*
-operator|,
-expr|struct
-name|cbuf
-operator|,
-name|char
-specifier|const
-operator|*
-operator|,
-name|FILE
-operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3846,11 +4168,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|ignorephrase
+name|ignorephrases
 name|P
 argument_list|(
 operator|(
-name|void
+name|char
+specifier|const
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3876,8 +4200,7 @@ name|putadmin
 name|P
 argument_list|(
 operator|(
-name|FILE
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3922,6 +4245,112 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* rcstime */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|zonelenmax
+value|9
+end_define
+
+begin_comment
+comment|/* maxiumum length of time zone string, e.g. "+12:34:56" */
+end_comment
+
+begin_decl_stmt
+name|char
+specifier|const
+modifier|*
+name|date2str
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+index|[
+name|datesize
+index|]
+operator|,
+name|char
+index|[
+name|datesize
+operator|+
+name|zonelenmax
+index|]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|time_t
+name|date2time
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+index|[
+name|datesize
+index|]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|str2date
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+name|char
+index|[
+name|datesize
+index|]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|time2date
+name|P
+argument_list|(
+operator|(
+name|time_t
+operator|,
+name|char
+index|[
+name|datesize
+index|]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|zone_set
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* rcsutil */
 end_comment
 
@@ -3929,6 +4358,25 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|RCSversion
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|fopenSafer
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+name|char
+specifier|const
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -3981,30 +4429,19 @@ begin_decl_stmt
 name|char
 specifier|const
 modifier|*
-name|date2str
+name|getusername
 name|P
 argument_list|(
 operator|(
-name|char
-specifier|const
-index|[
-name|datesize
-index|]
-operator|,
-name|char
-index|[
-name|datesize
-index|]
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-specifier|const
-modifier|*
-name|getusername
+name|int
+name|fdSafer
 name|P
 argument_list|(
 operator|(
@@ -4041,9 +4478,7 @@ name|run
 name|P
 argument_list|(
 operator|(
-name|char
-specifier|const
-operator|*
+name|int
 operator|,
 name|char
 specifier|const
@@ -4061,6 +4496,12 @@ name|runv
 name|P
 argument_list|(
 operator|(
+name|int
+operator|,
+name|char
+specifier|const
+operator|*
+operator|,
 name|char
 specifier|const
 operator|*
@@ -4143,7 +4584,7 @@ end_define
 begin_if
 if|#
 directive|if
-name|lint
+name|RCS_lint
 end_if
 
 begin_decl_stmt
@@ -4257,6 +4698,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|time_t
+name|now
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -4409,6 +4862,75 @@ end_endif
 begin_if
 if|#
 directive|if
+name|has_mmap
+operator|&&
+name|large_memory
+end_if
+
+begin_if
+if|#
+directive|if
+name|has_NFS
+operator|&&
+name|mmap_signal
+end_if
+
+begin_decl_stmt
+name|void
+name|catchmmapints
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|readAccessFilenameBuffer
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+name|unsigned
+name|char
+specifier|const
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|catchmmapints
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|has_getuid
 end_if
 
@@ -4538,6 +5060,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* version */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+specifier|const
+name|RCS_version_string
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

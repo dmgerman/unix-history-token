@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *                     RCS file name handling  */
+comment|/* RCS filename and pathname handling */
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *                     creation and deletion of /tmp temporaries  *                     pairing of RCS file names and working file names.  *                     Testprogram: define PAIRTEST  ****************************************************************************  */
+comment|/****************************************************************************  *                     creation and deletion of /tmp temporaries  *		       pairing of RCS pathnames and working pathnames.  *                     Testprogram: define PAIRTEST  ****************************************************************************  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1982, 1988, 1989 Walter Tichy    Copyright 1990, 1991 by Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
+comment|/* Copyright 1982, 1988, 1989 Walter Tichy    Copyright 1990, 1991, 1992, 1993, 1994, 1995 Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING. If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
 end_comment
 
 begin_comment
-comment|/* $Log: rcsfnms.c,v $  * Revision 1.1.1.1  1993/06/18  04:22:13  jkh  * Updated GNU utilities  *  * Revision 5.8  1991/09/24  00:28:40  eggert  * Don't export bindex().  *  * Revision 5.7  1991/08/19  03:13:55  eggert  * Fix messages when rcswriteopen fails.  * Look in $TMP and $TEMP if $TMPDIR isn't set.  Tune.  *  * Revision 5.6  1991/04/21  11:58:23  eggert  * Fix errno bugs.  Add -x, RCSINIT, MS-DOS support.  *  * Revision 5.5  1991/02/26  17:48:38  eggert  * Fix setuid bug.  Support new link behavior.  * Define more portable getcwd().  *  * Revision 5.4  1990/11/01  05:03:43  eggert  * Permit arbitrary data in comment leaders.  *  * Revision 5.3  1990/09/14  22:56:16  hammer  * added more filename extensions and their comment leaders  *  * Revision 5.2  1990/09/04  08:02:23  eggert  * Fix typo when !RCSSEP.  *  * Revision 5.1  1990/08/29  07:13:59  eggert  * Work around buggy compilers with defective argument promotion.  *  * Revision 5.0  1990/08/22  08:12:50  eggert  * Ignore signals when manipulating the semaphore file.  * Modernize list of file name extensions.  * Permit paths of arbitrary length.  Beware file names beginning with "-".  * Remove compile-time limits; use malloc instead.  * Permit dates past 1999/12/31.  Make lock and temp files faster and safer.  * Ansify and Posixate.  * Don't use access().  Fix test for non-regular files.  Tune.  *  * Revision 4.8  89/05/01  15:09:41  narten  * changed getwd to not stat empty directories.  *  * Revision 4.7  88/08/09  19:12:53  eggert  * Fix troff macro comment leader bug; add Prolog; allow cc -R; remove lint.  *  * Revision 4.6  87/12/18  11:40:23  narten  * additional file types added from 4.3 BSD version, and SPARC assembler  * comment character added. Also, more lint cleanups. (Guy Harris)  *  * Revision 4.5  87/10/18  10:34:16  narten  * Updating version numbers. Changes relative to 1.1 actually relative  * to verion 4.3  *  * Revision 1.3  87/03/27  14:22:21  jenkins  * Port to suns  *  * Revision 1.2  85/06/26  07:34:28  svb  * Comment leader '% ' for '*.tex' files added.  *  * Revision 4.3  83/12/15  12:26:48  wft  * Added check for KDELIM in file names to pairfilenames().  *  * Revision 4.2  83/12/02  22:47:45  wft  * Added csh, red, and sl file name suffixes.  *  * Revision 4.1  83/05/11  16:23:39  wft  * Added initialization of Dbranch to InitAdmin(). Canged pairfilenames():  * 1. added copying of path from workfile to RCS file, if RCS file is omitted;  * 2. added getting the file status of RCS and working files;  * 3. added ignoring of directories.  *  * Revision 3.7  83/05/11  15:01:58  wft  * Added comtable[] which pairs file name suffixes with comment leaders;  * updated InitAdmin() accordingly.  *  * Revision 3.6  83/04/05  14:47:36  wft  * fixed Suffix in InitAdmin().  *  * Revision 3.5  83/01/17  18:01:04  wft  * Added getwd() and rename(); these can be removed by defining  * V4_2BSD, since they are not needed in 4.2 bsd.  * Changed sys/param.h to sys/types.h.  *  * Revision 3.4  82/12/08  21:55:20  wft  * removed unused variable.  *  * Revision 3.3  82/11/28  20:31:37  wft  * Changed mktempfile() to store the generated file names.  * Changed getfullRCSname() to store the file and pathname, and to  * delete leading "../" and "./".  *  * Revision 3.2  82/11/12  14:29:40  wft  * changed pairfilenames() to handle file.sfx,v; also deleted checkpathnosfx(),  * checksuffix(), checkfullpath(). Semaphore name generation updated.  * mktempfile() now checks for nil path; freefilename initialized properly.  * Added Suffix .h to InitAdmin. Added testprogram PAIRTEST.  * Moved rmsema, trysema, trydiraccess, getfullRCSname from rcsutil.c to here.  *  * Revision 3.1  82/10/18  14:51:28  wft  * InitAdmin() now initializes StrictLocks=STRICT_LOCKING (def. in rcsbase.h).  * renamed checkpath() to checkfullpath().  */
+comment|/*  * $Log: rcsfnms.c,v $  * Revision 5.16  1995/06/16 06:19:24  eggert  * Update FSF address.  *  * Revision 5.15  1995/06/01 16:23:43  eggert  * (basefilename): Renamed from basename to avoid collisions.  * (dirlen): Remove (for similar reasons).  * (rcsreadopen): Open with FOPEN_RB.  * (SLASHSLASH_is_SLASH): Default is 0.  * (getcwd): Work around bad_wait_if_SIGCHLD_ignored bug.  *  * Revision 5.14  1994/03/17 14:05:48  eggert  * Strip trailing SLASHes from TMPDIR; some systems need this.  Remove lint.  *  * Revision 5.13  1993/11/03 17:42:27  eggert  * Determine whether a file name is too long indirectly,  * by examining inode numbers, instead of trying to use operating system  * primitives like pathconf, which are not trustworthy in general.  * File names may now hold white space or $.  * Do not flatten ../X in pathnames; that may yield wrong answer for symlinks.  * Add getabsname hook.  Improve quality of diagnostics.  *  * Revision 5.12  1992/07/28  16:12:44  eggert  * Add .sty.  .pl now implies Perl, not Prolog.  Fix fdlock initialization bug.  * Check that $PWD is really ".".  Be consistent about pathnames vs filenames.  *  * Revision 5.11  1992/02/17  23:02:25  eggert  * `a/RCS/b/c' is now an RCS file with an empty extension, not just `a/b/RCS/c'.  *  * Revision 5.10  1992/01/24  18:44:19  eggert  * Fix bug: Expand and Ignored weren't reinitialized.  * Avoid `char const c=ch;' compiler bug.  * Add support for bad_creat0.  *  * Revision 5.9  1992/01/06  02:42:34  eggert  * Shorten long (>31 chars) name.  * while (E) ; -> while (E) continue;  *  * Revision 5.8  1991/09/24  00:28:40  eggert  * Don't export bindex().  *  * Revision 5.7  1991/08/19  03:13:55  eggert  * Fix messages when rcswriteopen fails.  * Look in $TMP and $TEMP if $TMPDIR isn't set.  Tune.  *  * Revision 5.6  1991/04/21  11:58:23  eggert  * Fix errno bugs.  Add -x, RCSINIT, MS-DOS support.  *  * Revision 5.5  1991/02/26  17:48:38  eggert  * Fix setuid bug.  Support new link behavior.  * Define more portable getcwd().  *  * Revision 5.4  1990/11/01  05:03:43  eggert  * Permit arbitrary data in comment leaders.  *  * Revision 5.3  1990/09/14  22:56:16  hammer  * added more filename extensions and their comment leaders  *  * Revision 5.2  1990/09/04  08:02:23  eggert  * Fix typo when !RCSSEP.  *  * Revision 5.1  1990/08/29  07:13:59  eggert  * Work around buggy compilers with defective argument promotion.  *  * Revision 5.0  1990/08/22  08:12:50  eggert  * Ignore signals when manipulating the semaphore file.  * Modernize list of filename extensions.  * Permit paths of arbitrary length.  Beware filenames beginning with "-".  * Remove compile-time limits; use malloc instead.  * Permit dates past 1999/12/31.  Make lock and temp files faster and safer.  * Ansify and Posixate.  * Don't use access().  Fix test for non-regular files.  Tune.  *  * Revision 4.8  89/05/01  15:09:41  narten  * changed getwd to not stat empty directories.  *  * Revision 4.7  88/08/09  19:12:53  eggert  * Fix troff macro comment leader bug; add Prolog; allow cc -R; remove lint.  *  * Revision 4.6  87/12/18  11:40:23  narten  * additional file types added from 4.3 BSD version, and SPARC assembler  * comment character added. Also, more lint cleanups. (Guy Harris)  *  * Revision 4.5  87/10/18  10:34:16  narten  * Updating version numbers. Changes relative to 1.1 actually relative  * to verion 4.3  *  * Revision 1.3  87/03/27  14:22:21  jenkins  * Port to suns  *  * Revision 1.2  85/06/26  07:34:28  svb  * Comment leader '% ' for '*.tex' files added.  *  * Revision 4.3  83/12/15  12:26:48  wft  * Added check for KDELIM in filenames to pairfilenames().  *  * Revision 4.2  83/12/02  22:47:45  wft  * Added csh, red, and sl filename suffixes.  *  * Revision 4.1  83/05/11  16:23:39  wft  * Added initialization of Dbranch to InitAdmin(). Canged pairfilenames():  * 1. added copying of path from workfile to RCS file, if RCS file is omitted;  * 2. added getting the file status of RCS and working files;  * 3. added ignoring of directories.  *  * Revision 3.7  83/05/11  15:01:58  wft  * Added comtable[] which pairs filename suffixes with comment leaders;  * updated InitAdmin() accordingly.  *  * Revision 3.6  83/04/05  14:47:36  wft  * fixed Suffix in InitAdmin().  *  * Revision 3.5  83/01/17  18:01:04  wft  * Added getwd() and rename(); these can be removed by defining  * V4_2BSD, since they are not needed in 4.2 bsd.  * Changed sys/param.h to sys/types.h.  *  * Revision 3.4  82/12/08  21:55:20  wft  * removed unused variable.  *  * Revision 3.3  82/11/28  20:31:37  wft  * Changed mktempfile() to store the generated filenames.  * Changed getfullRCSname() to store the file and pathname, and to  * delete leading "../" and "./".  *  * Revision 3.2  82/11/12  14:29:40  wft  * changed pairfilenames() to handle file.sfx,v; also deleted checkpathnosfx(),  * checksuffix(), checkfullpath(). Semaphore name generation updated.  * mktempfile() now checks for nil path; freefilename initialized properly.  * Added Suffix .h to InitAdmin. Added testprogram PAIRTEST.  * Moved rmsema, trysema, trydiraccess, getfullRCSname from rcsutil.c to here.  *  * Revision 3.1  82/10/18  14:51:28  wft  * InitAdmin() now initializes StrictLocks=STRICT_LOCKING (def. in rcsbase.h).  * renamed checkpath() to checkfullpath().  */
 end_comment
 
 begin_include
@@ -26,22 +26,193 @@ name|libId
 argument_list|(
 argument|fnmsId
 argument_list|,
-literal|"$Id: rcsfnms.c,v 1.1.1.1 1993/06/18 04:22:13 jkh Exp $"
+literal|"$Id: rcsfnms.c,v 5.16 1995/06/16 06:19:24 eggert Exp $"
 argument_list|)
 end_macro
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+modifier|*
+name|bindex
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fin2open
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+name|size_t
+operator|,
+name|char
+specifier|const
+operator|*
+operator|,
+name|size_t
+operator|,
+name|char
+specifier|const
+operator|*
+operator|,
+name|size_t
+operator|,
+name|RILE
+operator|*
+operator|(
+operator|*
+operator|)
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|,
+expr|struct
+name|stat
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|finopen
+name|P
+argument_list|(
+operator|(
+name|RILE
+operator|*
+operator|(
+operator|*
+operator|)
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|,
+expr|struct
+name|stat
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|suffix_matches
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+name|char
+specifier|const
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|size_t
+name|dir_useful_len
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|size_t
+name|suffixlen
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|InitAdmin
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
 specifier|const
 modifier|*
-name|RCSfilename
+name|RCSname
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|workfilename
+name|workname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fdlock
 decl_stmt|;
 end_decl_stmt
 
@@ -81,7 +252,7 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|rcsdirlen
+name|rcslen
 value|(sizeof(rcsdir)-1)
 end_define
 
@@ -103,7 +274,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Temp file names to be unlinked when done, if they are not nil.  */
+comment|/* Temp names to be unlinked when done, if they are not 0.  */
 end_comment
 
 begin_define
@@ -122,7 +293,7 @@ specifier|static
 name|char
 modifier|*
 specifier|volatile
-name|tfnames
+name|tpnames
 index|[
 name|TEMPNAMES
 index|]
@@ -145,6 +316,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* * This table is present only for backwards compatibility. * Normally we ignore this table, and use the prefix of the `$Log' line instead. */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -154,168 +329,269 @@ name|comtable
 index|[]
 init|=
 block|{
-comment|/* comtable pairs each filename suffix with a comment leader. The comment   */
-comment|/* leader is placed before each line generated by the $Log keyword. This    */
-comment|/* table is used to guess the proper comment leader from the working file's */
-comment|/* suffix during initial ci (see InitAdmin()). Comment leaders are needed   */
-comment|/* for languages without multiline comments; for others they are optional.  */
+block|{
 literal|"a"
 block|,
 literal|"-- "
+block|}
 block|,
-comment|/* Ada         */
+comment|/* Ada */
+block|{
 literal|"ada"
 block|,
 literal|"-- "
+block|}
 block|,
+block|{
+literal|"adb"
+block|,
+literal|"-- "
+block|}
+block|,
+block|{
+literal|"ads"
+block|,
+literal|"-- "
+block|}
+block|,
+block|{
 literal|"asm"
 block|,
 literal|";; "
+block|}
 block|,
 comment|/* assembler (MS-DOS) */
+block|{
 literal|"bat"
 block|,
 literal|":: "
+block|}
 block|,
 comment|/* batch (MS-DOS) */
+block|{
+literal|"body"
+block|,
+literal|"-- "
+block|}
+block|,
+comment|/* Ada */
+block|{
 literal|"c"
 block|,
 literal|" * "
+block|}
 block|,
-comment|/* C           */
+comment|/* C */
+block|{
 literal|"c++"
 block|,
 literal|"// "
+block|}
 block|,
 comment|/* C++ in all its infinite guises */
+block|{
 literal|"cc"
 block|,
 literal|"// "
+block|}
 block|,
+block|{
 literal|"cpp"
 block|,
 literal|"// "
+block|}
 block|,
+block|{
 literal|"cxx"
 block|,
 literal|"// "
+block|}
 block|,
+block|{
 literal|"cl"
 block|,
 literal|";;; "
+block|}
 block|,
 comment|/* Common Lisp */
+block|{
 literal|"cmd"
 block|,
 literal|":: "
+block|}
 block|,
 comment|/* command (OS/2) */
+block|{
 literal|"cmf"
 block|,
 literal|"c "
+block|}
 block|,
-comment|/* CM Fortran  */
+comment|/* CM Fortran */
+block|{
 literal|"cs"
 block|,
 literal|" * "
+block|}
 block|,
-comment|/* C*          */
+comment|/* C* */
+block|{
 literal|"el"
 block|,
 literal|"; "
+block|}
 block|,
-comment|/* Emacs Lisp  */
+comment|/* Emacs Lisp */
+block|{
 literal|"f"
 block|,
 literal|"c "
+block|}
 block|,
-comment|/* Fortran     */
+comment|/* Fortran */
+block|{
 literal|"for"
 block|,
 literal|"c "
+block|}
 block|,
+block|{
 literal|"h"
 block|,
 literal|" * "
+block|}
 block|,
-comment|/* C-header    */
+comment|/* C-header */
+block|{
 literal|"hpp"
 block|,
 literal|"// "
+block|}
 block|,
-comment|/* C++ header  */
+comment|/* C++ header */
+block|{
 literal|"hxx"
 block|,
 literal|"// "
+block|}
 block|,
+block|{
 literal|"l"
 block|,
 literal|" * "
+block|}
 block|,
-comment|/* lex      NOTE: conflict between lex and franzlisp */
+comment|/* lex (NOTE: franzlisp disagrees) */
+block|{
 literal|"lisp"
 block|,
 literal|";;; "
+block|}
 block|,
-comment|/* Lucid Lisp  */
+comment|/* Lucid Lisp */
+block|{
 literal|"lsp"
 block|,
 literal|";; "
+block|}
 block|,
 comment|/* Microsoft Lisp */
+block|{
+literal|"m"
+block|,
+literal|"// "
+block|}
+block|,
+comment|/* Objective C */
+block|{
 literal|"mac"
 block|,
 literal|";; "
+block|}
 block|,
 comment|/* macro (DEC-10, MS-DOS, PDP-11, VMS, etc) */
+block|{
 literal|"me"
 block|,
 literal|".\\\" "
+block|}
 block|,
-comment|/* me-macros   t/nroff*/
+comment|/* troff -me */
+block|{
 literal|"ml"
 block|,
 literal|"; "
+block|}
 block|,
-comment|/* mocklisp    */
+comment|/* mocklisp */
+block|{
 literal|"mm"
 block|,
 literal|".\\\" "
+block|}
 block|,
-comment|/* mm-macros   t/nroff*/
+comment|/* troff -mm */
+block|{
 literal|"ms"
 block|,
 literal|".\\\" "
+block|}
 block|,
-comment|/* ms-macros   t/nroff*/
+comment|/* troff -ms */
+block|{
 literal|"p"
 block|,
 literal|" * "
+block|}
 block|,
-comment|/* Pascal      */
+comment|/* Pascal */
+block|{
 literal|"pas"
 block|,
 literal|" * "
+block|}
 block|,
-literal|"pl"
+block|{
+literal|"ps"
 block|,
 literal|"% "
+block|}
 block|,
-comment|/* Prolog      */
+comment|/* PostScript */
+block|{
+literal|"spec"
+block|,
+literal|"-- "
+block|}
+block|,
+comment|/* Ada */
+block|{
+literal|"sty"
+block|,
+literal|"% "
+block|}
+block|,
+comment|/* LaTeX style */
+block|{
 literal|"tex"
 block|,
 literal|"% "
+block|}
 block|,
-comment|/* TeX	       */
+comment|/* TeX */
+block|{
 literal|"y"
 block|,
 literal|" * "
+block|}
 block|,
-comment|/* yacc        */
-name|nil
+comment|/* yacc */
+block|{
+literal|0
 block|,
 literal|"# "
-comment|/* default for unknown suffix; must always be last */
+block|}
+comment|/* default for unknown suffix; must be last */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -325,6 +601,21 @@ if|#
 directive|if
 name|has_mktemp
 end_if
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+modifier|*
+name|tmp
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -405,7 +696,7 @@ parameter_list|)
 name|int
 name|n
 decl_stmt|;
-comment|/* Create a unique filename using n and the process id and store it  * into the nth slot in tfnames.  * Because of storage in tfnames, tempunlink() can unlink the file later.  * Returns a pointer to the filename created.  */
+comment|/* Create a unique pathname using n and the process id and store it  * into the nth slot in tpnames.  * Because of storage in tpnames, tempunlink() can unlink the file later.  * Return a pointer to the pathname created.  */
 block|{
 name|char
 modifier|*
@@ -416,7 +707,7 @@ specifier|const
 modifier|*
 name|t
 init|=
-name|tfnames
+name|tpnames
 index|[
 name|n
 index|]
@@ -443,14 +734,19 @@ init|=
 name|tmp
 argument_list|()
 decl_stmt|;
+name|size_t
+name|tplen
+init|=
+name|dir_useful_len
+argument_list|(
+name|tp
+argument_list|)
+decl_stmt|;
 name|p
 operator|=
 name|testalloc
 argument_list|(
-name|strlen
-argument_list|(
-name|tp
-argument_list|)
+name|tplen
 operator|+
 literal|10
 argument_list|)
@@ -460,7 +756,12 @@ name|sprintf
 argument_list|(
 name|p
 argument_list|,
-literal|"%s%cT%cXXXXXX"
+literal|"%.*s%cT%cXXXXXX"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|tplen
 argument_list|,
 name|tp
 argument_list|,
@@ -485,7 +786,12 @@ name|p
 condition|)
 name|faterror
 argument_list|(
-literal|"can't make temporary file name `%s%cT%cXXXXXX'"
+literal|"can't make temporary pathname `%.*s%cT%cXXXXXX'"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|tplen
 argument_list|,
 name|tp
 argument_list|,
@@ -500,7 +806,7 @@ else|#
 directive|else
 specifier|static
 name|char
-name|tfnamebuf
+name|tpnamebuf
 index|[
 name|TEMPNAMES
 index|]
@@ -510,7 +816,7 @@ index|]
 decl_stmt|;
 name|p
 operator|=
-name|tfnamebuf
+name|tpnamebuf
 index|[
 name|n
 index|]
@@ -532,7 +838,7 @@ directive|ifdef
 name|P_tmpdir
 name|faterror
 argument_list|(
-literal|"can't make temporary file name `%s...'"
+literal|"can't make temporary pathname `%s...'"
 argument_list|,
 name|P_tmpdir
 argument_list|)
@@ -541,7 +847,7 @@ else|#
 directive|else
 name|faterror
 argument_list|(
-literal|"can't make temporary file name"
+literal|"can't make temporary pathname"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -549,7 +855,7 @@ directive|endif
 endif|#
 directive|endif
 block|}
-name|tfnames
+name|tpnames
 index|[
 name|n
 index|]
@@ -594,7 +900,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|tfnames
+name|tpnames
 index|[
 name|i
 index|]
@@ -608,7 +914,7 @@ name|p
 argument_list|)
 decl_stmt|;
 comment|/* 		 * We would tfree(p) here, 		 * but this might dump core if we're handing a signal. 		 * We're about to exit anyway, so we won't bother. 		 */
-name|tfnames
+name|tpnames
 index|[
 name|i
 index|]
@@ -628,7 +934,7 @@ name|bindex
 parameter_list|(
 name|sp
 parameter_list|,
-name|ch
+name|c
 parameter_list|)
 specifier|register
 name|char
@@ -636,18 +942,15 @@ specifier|const
 modifier|*
 name|sp
 decl_stmt|;
+specifier|register
 name|int
-name|ch
+name|c
 decl_stmt|;
 comment|/* Function: Finds the last occurrence of character c in string sp  * and returns a pointer to the character just beyond it. If the  * character doesn't occur in the string, sp is returned.  */
 block|{
 specifier|register
 name|char
 specifier|const
-name|c
-init|=
-name|ch
-decl_stmt|,
 modifier|*
 name|r
 decl_stmt|;
@@ -789,23 +1092,23 @@ name|i
 decl_stmt|;
 name|Head
 operator|=
-name|nil
+literal|0
 expr_stmt|;
 name|Dbranch
 operator|=
-name|nil
+literal|0
 expr_stmt|;
 name|AccessList
 operator|=
-name|nil
+literal|0
 expr_stmt|;
 name|Symbols
 operator|=
-name|nil
+literal|0
 expr_stmt|;
 name|Locks
 operator|=
-name|nil
+literal|0
 expr_stmt|;
 name|StrictLocks
 operator|=
@@ -816,7 +1119,7 @@ name|Suffix
 operator|=
 name|bindex
 argument_list|(
-name|workfilename
+name|workname
 argument_list|,
 literal|'.'
 argument_list|)
@@ -825,7 +1128,7 @@ if|if
 condition|(
 name|Suffix
 operator|==
-name|workfilename
+name|workname
 condition|)
 name|Suffix
 operator|=
@@ -854,7 +1157,7 @@ condition|;
 name|i
 operator|++
 control|)
-empty_stmt|;
+continue|continue;
 name|Comment
 operator|.
 name|string
@@ -880,215 +1183,22 @@ operator|.
 name|comlead
 argument_list|)
 expr_stmt|;
+name|Expand
+operator|=
+name|KEYVAL_EXPAND
+expr_stmt|;
+name|clear_buf
+argument_list|(
+operator|&
+name|Ignored
+argument_list|)
+expr_stmt|;
 name|Lexinit
 argument_list|()
 expr_stmt|;
 comment|/* note: if !finptr, reads nothing; only initializes */
 block|}
 end_function
-
-begin_comment
-comment|/* 'cpp' does not like this line. It seems to be the leading '_' in the */
-end_comment
-
-begin_comment
-comment|/* second occurence of '_POSIX_NO_TRUNC'.  It evaluates correctly with  */
-end_comment
-
-begin_comment
-comment|/* just the first term so lets just do that for now.                    */
-end_comment
-
-begin_comment
-comment|/*#if defined(_POSIX_NO_TRUNC)&& _POSIX_NO_TRUNC!=-1*/
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_POSIX_NO_TRUNC
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LONG_NAMES_MAY_BE_SILENTLY_TRUNCATED
-value|0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LONG_NAMES_MAY_BE_SILENTLY_TRUNCATED
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|LONG_NAMES_MAY_BE_SILENTLY_TRUNCATED
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NAME_MAX
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|filenametoolong
-parameter_list|(
-name|path
-parameter_list|)
-value|(NAME_MAX< strlen(basename(path)))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
-specifier|static
-name|int
-name|filenametoolong
-parameter_list|(
-name|path
-parameter_list|)
-name|char
-modifier|*
-name|path
-decl_stmt|;
-comment|/* Yield true if the last file name in PATH is too long. */
-block|{
-specifier|static
-name|unsigned
-name|long
-name|dot_namemax
-decl_stmt|;
-specifier|register
-name|size_t
-name|namelen
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|base
-decl_stmt|;
-specifier|register
-name|unsigned
-name|long
-name|namemax
-decl_stmt|;
-name|base
-operator|=
-name|path
-operator|+
-name|dirlen
-argument_list|(
-name|path
-argument_list|)
-expr_stmt|;
-name|namelen
-operator|=
-name|strlen
-argument_list|(
-name|base
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|namelen
-operator|<=
-name|_POSIX_NAME_MAX
-condition|)
-comment|/* fast check for shorties */
-return|return
-name|false
-return|;
-if|if
-condition|(
-name|base
-operator|!=
-name|path
-condition|)
-block|{
-operator|*
-operator|--
-name|base
-operator|=
-literal|0
-expr_stmt|;
-name|namemax
-operator|=
-name|pathconf
-argument_list|(
-name|path
-argument_list|,
-name|_PC_NAME_MAX
-argument_list|)
-expr_stmt|;
-operator|*
-name|base
-operator|=
-name|SLASH
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Cache the results for the working directory, for speed. */
-if|if
-condition|(
-operator|!
-name|dot_namemax
-condition|)
-name|dot_namemax
-operator|=
-name|pathconf
-argument_list|(
-literal|"."
-argument_list|,
-name|_PC_NAME_MAX
-argument_list|)
-expr_stmt|;
-name|namemax
-operator|=
-name|dot_namemax
-expr_stmt|;
-block|}
-comment|/* If pathconf() yielded -1, namemax is now ULONG_MAX.  */
-return|return
-name|namemax
-operator|<
-name|namelen
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -1228,7 +1338,7 @@ operator|)
 operator|<
 name|size
 condition|)
-empty_stmt|;
+continue|continue;
 name|b
 operator|->
 name|string
@@ -1526,7 +1636,7 @@ begin_function
 name|char
 specifier|const
 modifier|*
-name|basename
+name|basefilename
 parameter_list|(
 name|p
 parameter_list|)
@@ -1581,30 +1691,6 @@ block|}
 end_function
 
 begin_function
-name|size_t
-name|dirlen
-parameter_list|(
-name|p
-parameter_list|)
-name|char
-specifier|const
-modifier|*
-name|p
-decl_stmt|;
-comment|/* Yield the length of P's directory, including its trailing SLASH.  */
-block|{
-return|return
-name|basename
-argument_list|(
-name|p
-argument_list|)
-operator|-
-name|p
-return|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|size_t
 name|suffixlen
@@ -1616,7 +1702,7 @@ specifier|const
 modifier|*
 name|x
 decl_stmt|;
-comment|/* Yield the length of X, an RCS filename suffix.  */
+comment|/* Yield the length of X, an RCS pathname suffix.  */
 block|{
 specifier|register
 name|char
@@ -1672,7 +1758,7 @@ specifier|const
 modifier|*
 name|name
 decl_stmt|;
-comment|/* Yield the suffix of NAME if it is an RCS filename, 0 otherwise.  */
+comment|/* Yield the suffix of NAME if it is an RCS pathname, 0 otherwise.  */
 block|{
 name|char
 specifier|const
@@ -1686,8 +1772,6 @@ modifier|*
 name|nz
 decl_stmt|;
 name|size_t
-name|dl
-decl_stmt|,
 name|nl
 decl_stmt|,
 name|xl
@@ -1749,56 +1833,60 @@ name|p
 return|;
 block|}
 else|else
-block|{
-name|dl
-operator|=
-name|dirlen
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rcsdirlen
-operator|<
-name|dl
-operator|&&
-operator|!
-name|memcmp
-argument_list|(
+for|for
+control|(
 name|p
 operator|=
 name|name
-operator|+
-operator|(
-name|dl
-operator|-=
-name|rcsdirlen
-operator|+
-literal|1
-operator|)
-argument_list|,
-name|rcsdir
-argument_list|,
-name|rcsdirlen
+init|;
+name|p
+operator|<
+name|nz
+operator|-
+name|rcslen
+condition|;
+name|p
+operator|++
+control|)
+if|if
+condition|(
+name|isSLASH
+argument_list|(
+name|p
+index|[
+name|rcslen
+index|]
 argument_list|)
 operator|&&
 operator|(
-operator|!
-name|dl
+name|p
+operator|==
+name|name
 operator|||
 name|isSLASH
 argument_list|(
-operator|*
-operator|--
 name|p
+index|[
+operator|-
+literal|1
+index|]
 argument_list|)
 operator|)
+operator|&&
+name|memcmp
+argument_list|(
+name|p
+argument_list|,
+name|rcsdir
+argument_list|,
+name|rcslen
+argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 name|nz
 return|;
-block|}
 name|x
 operator|+=
 name|xl
@@ -1826,7 +1914,7 @@ name|RILE
 modifier|*
 name|rcsreadopen
 parameter_list|(
-name|RCSname
+name|RCSpath
 parameter_list|,
 name|status
 parameter_list|,
@@ -1835,7 +1923,7 @@ parameter_list|)
 name|struct
 name|buf
 modifier|*
-name|RCSname
+name|RCSpath
 decl_stmt|;
 name|struct
 name|stat
@@ -1845,16 +1933,16 @@ decl_stmt|;
 name|int
 name|mustread
 decl_stmt|;
-comment|/* Open RCSNAME for reading and yield its FILE* descriptor.  * If successful, set *STATUS to its status.  * Pass this routine to pairfilenames() for read-only access to the file.  */
+comment|/* Open RCSPATH for reading and yield its FILE* descriptor.  * If successful, set *STATUS to its status.  * Pass this routine to pairnames() for read-only access to the file.  */
 block|{
 return|return
 name|Iopen
 argument_list|(
-name|RCSname
+name|RCSpath
 operator|->
 name|string
 argument_list|,
-name|FOPEN_R
+name|FOPEN_RB
 argument_list|,
 name|status
 argument_list|)
@@ -1924,7 +2012,9 @@ operator|&&
 operator|(
 name|mustread
 operator|||
-name|frewrite
+literal|0
+operator|<=
+name|fdlock
 operator|)
 expr_stmt|;
 name|finptr
@@ -2059,7 +2149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * D is a directory name with length DLEN (including trailing slash).  * BASE is a filename with length BASELEN.  * X is an RCS filename suffix with length XLEN.  * Use RCSOPEN to open an RCS file; MUSTREAD is set if the file must be read.  * Yield true if successful.  * Try dRCS/basex first; if that fails and x is nonempty, try dbasex.  * Put these potential names in RCSb.  * Set RCSbuf to the best RCS name found so far, and RCSerrno to its errno.  * Yield true if successful or if an unusual failure.  */
+comment|/*  * D is a directory name with length DLEN (including trailing slash).  * BASE is a filename with length BASELEN.  * X is an RCS pathname suffix with length XLEN.  * Use RCSOPEN to open an RCS file; MUSTREAD is set if the file must be read.  * Yield true if successful.  * Try dRCS/basex first; if that fails and x is nonempty, try dbasex.  * Put these potential names in RCSb.  * Set RCSbuf to the best RCS name found so far, and RCSerrno to its errno.  * Yield true if successful or if an unusual failure.  */
 end_comment
 
 begin_block
@@ -2076,7 +2166,7 @@ name|RCSb
 argument_list|,
 name|dlen
 operator|+
-name|rcsdirlen
+name|rcslen
 operator|+
 literal|1
 operator|+
@@ -2111,12 +2201,12 @@ name|dlen
 argument_list|,
 name|rcsdir
 argument_list|,
-name|rcsdirlen
+name|rcslen
 argument_list|)
 decl_stmt|;
 name|p
 operator|+=
-name|rcsdirlen
+name|rcslen
 expr_stmt|;
 operator|*
 name|p
@@ -2231,7 +2321,7 @@ end_block
 
 begin_decl_stmt
 name|int
-name|pairfilenames
+name|pairnames
 argument_list|(
 name|argc
 argument_list|,
@@ -2292,7 +2382,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Function: Pairs the filenames pointed to by argv; argc indicates  * how many there are.  * Places a pointer to the RCS filename into RCSfilename,  * and a pointer to the name of the working file into workfilename.  * If both the workfilename and the RCS filename are given, and workstdout  * is set, a warning is printed.  *  * If the RCS file exists, places its status into RCSstat.  *  * If the RCS file exists, it is RCSOPENed for reading, the file pointer  * is placed into finptr, and the admin-node is read in; returns 1.  * If the RCS file does not exist and MUSTREAD,  * print an error unless QUIET and return 0.  * Otherwise, initialize the admin node and return -1.  *  * 0 is returned on all errors, e.g. files that are not regular files.  */
+comment|/*  * Pair the pathnames pointed to by argv; argc indicates  * how many there are.  * Place a pointer to the RCS pathname into RCSname,  * and a pointer to the pathname of the working file into workname.  * If both are given, and workstdout  * is set, a warning is printed.  *  * If the RCS file exists, places its status into RCSstat.  *  * If the RCS file exists, it is RCSOPENed for reading, the file pointer  * is placed into finptr, and the admin-node is read in; returns 1.  * If the RCS file does not exist and MUSTREAD,  * print an error unless QUIET and return 0.  * Otherwise, initialize the admin node and return -1.  *  * 0 is returned on all errors, e.g. files that are not regular files.  */
 end_comment
 
 begin_block
@@ -2316,10 +2406,10 @@ decl_stmt|;
 name|char
 specifier|const
 modifier|*
-name|purefname
+name|base
 decl_stmt|,
 modifier|*
-name|pureRCSname
+name|RCSbase
 decl_stmt|,
 modifier|*
 name|x
@@ -2336,6 +2426,11 @@ name|baselen
 decl_stmt|,
 name|xlen
 decl_stmt|;
+name|fdlock
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2349,7 +2444,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* already paired filename */
+comment|/* already paired pathname */
 if|if
 condition|(
 operator|*
@@ -2360,7 +2455,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"%s option is ignored after file names"
+literal|"%s option is ignored after pathnames"
 argument_list|,
 name|arg
 argument_list|)
@@ -2369,75 +2464,13 @@ return|return
 literal|0
 return|;
 block|}
-name|purefname
+name|base
 operator|=
-name|basename
+name|basefilename
 argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-comment|/* Allocate buffer temporary to hold the default paired file name. */
-name|p
-operator|=
-name|arg
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-switch|switch
-condition|(
-operator|*
-name|p
-operator|++
-condition|)
-block|{
-comment|/* Beware characters that cause havoc with ci -k. */
-case|case
-name|KDELIM
-case|:
-name|error
-argument_list|(
-literal|"RCS file name `%s' contains %c"
-argument_list|,
-name|arg
-argument_list|,
-name|KDELIM
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-case|case
-literal|' '
-case|:
-case|case
-literal|'\n'
-case|:
-case|case
-literal|'\t'
-case|:
-name|error
-argument_list|(
-literal|"RCS file name `%s' contains white space"
-argument_list|,
-name|arg
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-default|default:
-continue|continue;
-case|case
-literal|0
-case|:
-break|break;
-block|}
-break|break;
-block|}
 name|paired
 operator|=
 name|false
@@ -2455,20 +2488,20 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* RCS file name given*/
+comment|/* RCS pathname given */
 name|RCS1
 operator|=
 name|arg
 expr_stmt|;
-name|pureRCSname
+name|RCSbase
 operator|=
-name|purefname
+name|base
 expr_stmt|;
 name|baselen
 operator|=
 name|x
 operator|-
-name|purefname
+name|base
 expr_stmt|;
 if|if
 condition|(
@@ -2479,7 +2512,7 @@ operator|&&
 operator|!
 name|rcssuffix
 argument_list|(
-name|workfilename
+name|workname
 operator|=
 name|p
 operator|=
@@ -2509,7 +2542,7 @@ operator|-
 name|baselen
 operator|)
 operator|==
-name|workfilename
+name|workname
 operator|||
 name|isSLASH
 argument_list|(
@@ -2523,7 +2556,7 @@ operator|)
 operator|&&
 name|memcmp
 argument_list|(
-name|purefname
+name|base
 argument_list|,
 name|p
 argument_list|,
@@ -2552,10 +2585,10 @@ argument_list|(
 operator|&
 name|tempbuf
 argument_list|,
-name|purefname
+name|base
 argument_list|)
 expr_stmt|;
-name|workfilename
+name|workname
 operator|=
 name|p
 operator|=
@@ -2575,19 +2608,18 @@ block|}
 else|else
 block|{
 comment|/* working file given; now try to find RCS file */
-name|workfilename
+name|workname
 operator|=
 name|arg
 expr_stmt|;
 name|baselen
 operator|=
-name|p
-operator|-
-name|purefname
-operator|-
-literal|1
+name|strlen
+argument_list|(
+name|base
+argument_list|)
 expr_stmt|;
-comment|/* derive RCS file name*/
+comment|/* Derive RCS pathname.  */
 if|if
 condition|(
 literal|1
@@ -2616,7 +2648,7 @@ name|RCS1
 operator|&&
 operator|(
 operator|(
-name|pureRCSname
+name|RCSbase
 operator|=
 name|x
 operator|-
@@ -2627,7 +2659,7 @@ name|RCS1
 operator|||
 name|isSLASH
 argument_list|(
-name|pureRCSname
+name|RCSbase
 index|[
 operator|-
 literal|1
@@ -2637,9 +2669,9 @@ operator|)
 operator|&&
 name|memcmp
 argument_list|(
-name|purefname
+name|base
 argument_list|,
-name|pureRCSname
+name|RCSbase
 argument_list|,
 name|baselen
 argument_list|)
@@ -2660,18 +2692,18 @@ name|true
 expr_stmt|;
 block|}
 else|else
-name|pureRCSname
+name|RCSbase
 operator|=
 name|RCS1
 operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* now we have a (tentative) RCS filename in RCS1 and workfilename  */
+comment|/* Now we have a (tentative) RCS pathname in RCS1 and workname.  */
 comment|/* Second, try to find the right RCS file */
 if|if
 condition|(
-name|pureRCSname
+name|RCSbase
 operator|!=
 name|RCS1
 condition|)
@@ -2720,7 +2752,7 @@ if|if
 condition|(
 name|RCS1
 condition|)
-comment|/* RCS file name was given without path.  */
+comment|/* RCS filename was given without path.  */
 name|VOID
 name|fin2open
 argument_list|(
@@ -2731,7 +2763,7 @@ name|size_t
 operator|)
 literal|0
 argument_list|,
-name|pureRCSname
+name|RCSbase
 argument_list|,
 name|baselen
 argument_list|,
@@ -2749,11 +2781,11 @@ argument_list|)
 decl_stmt|;
 else|else
 block|{
-comment|/* No RCS file name was given.  */
+comment|/* No RCS pathname was given.  */
 comment|/* Try each suffix in turn.  */
 name|dlen
 operator|=
-name|purefname
+name|base
 operator|-
 name|arg
 expr_stmt|;
@@ -2770,7 +2802,7 @@ name|arg
 argument_list|,
 name|dlen
 argument_list|,
-name|purefname
+name|base
 argument_list|,
 name|baselen
 argument_list|,
@@ -2804,7 +2836,7 @@ break|break;
 block|}
 block|}
 block|}
-name|RCSfilename
+name|RCSname
 operator|=
 name|p
 operator|=
@@ -2856,8 +2888,9 @@ name|ENOENT
 operator|||
 name|mustread
 operator|||
-operator|!
-name|frewrite
+name|fdlock
+operator|<
+literal|0
 condition|)
 block|{
 if|if
@@ -2899,66 +2932,15 @@ argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;
-if|#
-directive|if
-name|LONG_NAMES_MAY_BE_SILENTLY_TRUNCATED
-if|if
-condition|(
-name|filenametoolong
-argument_list|(
-name|p
-argument_list|)
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"RCS file name %s is too long"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-ifndef|#
-directive|ifndef
-name|NAME_MAX
-comment|/* 		 * Check workfilename too, even though it cannot be longer, 		 * because it may reside on a different filesystem. 		 */
-if|if
-condition|(
-name|filenametoolong
-argument_list|(
-name|workfilename
-argument_list|)
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"working file name %s is too long"
-argument_list|,
-name|workfilename
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-endif|#
-directive|endif
-endif|#
-directive|endif
 if|if
 condition|(
 name|paired
 operator|&&
 name|workstdout
 condition|)
-name|warn
+name|workwarn
 argument_list|(
-literal|"Option -p is set; ignoring output file %s"
-argument_list|,
-name|workfilename
+literal|"Working file ignored due to -p option"
 argument_list|)
 expr_stmt|;
 name|prevkeys
@@ -2982,8 +2964,83 @@ specifier|const
 modifier|*
 name|getfullRCSname
 parameter_list|()
-comment|/* Function: returns a pointer to the full path name of the RCS file.  * Gets the working directory's name at most once.  * Removes leading "../" and "./".  */
+comment|/*  * Return a pointer to the full pathname of the RCS file.  * Remove leading `./'.  */
 block|{
+if|if
+condition|(
+name|ROOTPATH
+argument_list|(
+name|RCSname
+argument_list|)
+condition|)
+block|{
+return|return
+name|RCSname
+return|;
+block|}
+else|else
+block|{
+specifier|static
+name|struct
+name|buf
+name|rcsbuf
+decl_stmt|;
+if|#
+directive|if
+name|needs_getabsname
+name|bufalloc
+argument_list|(
+operator|&
+name|rcsbuf
+argument_list|,
+name|SIZEABLE_PATH
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|getabsname
+argument_list|(
+name|RCSname
+argument_list|,
+name|rcsbuf
+operator|.
+name|string
+argument_list|,
+name|rcsbuf
+operator|.
+name|size
+argument_list|)
+operator|!=
+literal|0
+condition|)
+if|if
+condition|(
+name|errno
+operator|==
+name|ERANGE
+condition|)
+name|bufalloc
+argument_list|(
+operator|&
+name|rcsbuf
+argument_list|,
+name|rcsbuf
+operator|.
+name|size
+operator|<<
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|efaterror
+argument_list|(
+literal|"getabsname"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 specifier|static
 name|char
 specifier|const
@@ -2993,27 +3050,21 @@ decl_stmt|;
 specifier|static
 name|struct
 name|buf
-name|rcsbuf
-decl_stmt|,
 name|wdbuf
 decl_stmt|;
 specifier|static
 name|size_t
-name|pathlength
+name|wdlen
 decl_stmt|;
 specifier|register
 name|char
 specifier|const
 modifier|*
-name|realname
+name|r
 decl_stmt|;
 specifier|register
 name|size_t
-name|parentdirlength
-decl_stmt|;
-specifier|register
-name|unsigned
-name|dotdotcounter
+name|dlen
 decl_stmt|;
 specifier|register
 name|char
@@ -3026,22 +3077,6 @@ specifier|const
 modifier|*
 name|wd
 decl_stmt|;
-if|if
-condition|(
-name|ROOTPATH
-argument_list|(
-name|RCSfilename
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|RCSfilename
-operator|)
-return|;
-block|}
-else|else
-block|{
 if|if
 condition|(
 operator|!
@@ -3053,15 +3088,63 @@ operator|)
 condition|)
 block|{
 comment|/* Get working directory for the first time.  */
+name|char
+modifier|*
+name|PWD
+init|=
+name|cgetenv
+argument_list|(
+literal|"PWD"
+argument_list|)
+decl_stmt|;
+name|struct
+name|stat
+name|PWDstat
+decl_stmt|,
+name|dotstat
+decl_stmt|;
 if|if
 condition|(
 operator|!
 operator|(
+operator|(
 name|d
 operator|=
-name|cgetenv
+name|PWD
+operator|)
+operator|&&
+name|ROOTPATH
 argument_list|(
-literal|"PWD"
+name|PWD
+argument_list|)
+operator|&&
+name|stat
+argument_list|(
+name|PWD
+argument_list|,
+operator|&
+name|PWDstat
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|stat
+argument_list|(
+literal|"."
+argument_list|,
+operator|&
+name|dotstat
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|same_file
+argument_list|(
+name|PWDstat
+argument_list|,
+name|dotstat
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 condition|)
@@ -3078,21 +3161,10 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-operator|!
 name|has_getcwd
-operator|&&
+operator|||
+operator|!
 name|has_getwd
-name|d
-operator|=
-name|getwd
-argument_list|(
-name|wdbuf
-operator|.
-name|string
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 while|while
 condition|(
 operator|!
@@ -3110,7 +3182,9 @@ operator|.
 name|size
 argument_list|)
 operator|)
-operator|&&
+condition|)
+if|if
+condition|(
 name|errno
 operator|==
 name|ERANGE
@@ -3127,172 +3201,129 @@ operator|<<
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+elseif|else
+if|if
+condition|(
+operator|(
+name|d
+operator|=
+name|PWD
+operator|)
+condition|)
+break|break;
+else|else
+name|efaterror
+argument_list|(
+literal|"getcwd"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|d
+operator|=
+name|getwd
+argument_list|(
+name|wdbuf
+operator|.
+name|string
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|d
+operator|&&
+operator|!
+operator|(
+name|d
+operator|=
+name|PWD
+operator|)
 condition|)
 name|efaterror
 argument_list|(
-literal|"working directory"
+literal|"getwd"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
-name|parentdirlength
+name|wdlen
 operator|=
-name|strlen
+name|dir_useful_len
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|parentdirlength
-operator|&&
-name|isSLASH
-argument_list|(
 name|d
 index|[
-name|parentdirlength
-operator|-
-literal|1
-index|]
-argument_list|)
-condition|)
-block|{
-name|d
-index|[
-operator|--
-name|parentdirlength
+name|wdlen
 index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Check needed because some getwd implementations */
-comment|/* generate "/" for the root.                      */
-block|}
 name|wdptr
 operator|=
 name|wd
 operator|=
 name|d
 expr_stmt|;
-name|pathlength
-operator|=
-name|parentdirlength
-expr_stmt|;
 block|}
-comment|/*the following must be redone since RCSfilename may change*/
-comment|/* Find how many `../'s to remove from RCSfilename.  */
-name|dotdotcounter
+comment|/* 		* Remove leading `./'s from RCSname. 		* Do not try to handle `../', since removing it may yield 		* the wrong answer in the presence of symbolic links. 		*/
+for|for
+control|(
+name|r
 operator|=
-literal|0
-expr_stmt|;
-name|realname
-operator|=
-name|RCSfilename
-expr_stmt|;
-while|while
-condition|(
-name|realname
+name|RCSname
+init|;
+name|r
 index|[
 literal|0
-index|]
-operator|==
-literal|'.'
-condition|)
-block|{
-if|if
-condition|(
-name|isSLASH
-argument_list|(
-name|realname
-index|[
-literal|1
-index|]
-argument_list|)
-condition|)
-block|{
-comment|/* drop leading ./ */
-name|realname
-operator|+=
-literal|2
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|realname
-index|[
-literal|1
 index|]
 operator|==
 literal|'.'
 operator|&&
 name|isSLASH
 argument_list|(
-name|realname
+name|r
+index|[
+literal|1
+index|]
+argument_list|)
+condition|;
+name|r
+operator|+=
+literal|2
+control|)
+comment|/* `.////' is equivalent to `./'.  */
+while|while
+condition|(
+name|isSLASH
+argument_list|(
+name|r
 index|[
 literal|2
 index|]
 argument_list|)
 condition|)
-block|{
-comment|/* drop leading ../ and remember */
-name|dotdotcounter
+name|r
 operator|++
 expr_stmt|;
-name|realname
-operator|+=
-literal|3
-expr_stmt|;
-block|}
-else|else
-break|break;
-block|}
-comment|/* Now remove dotdotcounter trailing directories from wd. */
-name|parentdirlength
+comment|/* Build full pathname.  */
+name|dlen
 operator|=
-name|pathlength
+name|wdlen
 expr_stmt|;
-while|while
-condition|(
-name|dotdotcounter
-operator|&&
-name|parentdirlength
-condition|)
-block|{
-comment|/* move pointer backwards over trailing directory */
-if|if
-condition|(
-name|isSLASH
-argument_list|(
-name|wd
-index|[
-operator|--
-name|parentdirlength
-index|]
-argument_list|)
-condition|)
-block|{
-name|dotdotcounter
-operator|--
-expr_stmt|;
-block|}
-block|}
-comment|/* build full path name */
 name|bufalloc
 argument_list|(
 operator|&
 name|rcsbuf
 argument_list|,
-name|parentdirlength
+name|dlen
 operator|+
 name|strlen
 argument_list|(
-name|realname
+name|r
 argument_list|)
 operator|+
 literal|2
@@ -3311,12 +3342,12 @@ name|d
 argument_list|,
 name|wd
 argument_list|,
-name|parentdirlength
+name|dlen
 argument_list|)
 decl_stmt|;
 name|d
 operator|+=
-name|parentdirlength
+name|dlen
 expr_stmt|;
 operator|*
 name|d
@@ -3329,15 +3360,100 @@ name|strcpy
 argument_list|(
 name|d
 argument_list|,
-name|realname
+name|r
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 return|return
 name|rcsbuf
 operator|.
 name|string
 return|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|size_t
+name|dir_useful_len
+parameter_list|(
+name|d
+parameter_list|)
+name|char
+specifier|const
+modifier|*
+name|d
+decl_stmt|;
+comment|/* * D names a directory; yield the number of characters of D's useful part. * To create a file in D, append a SLASH and a file name to D's useful part. * Ignore trailing slashes if possible; not only are they ugly, * but some non-Posix systems misbehave unless the slashes are omitted. */
+block|{
+ifndef|#
+directive|ifndef
+name|SLASHSLASH_is_SLASH
+define|#
+directive|define
+name|SLASHSLASH_is_SLASH
+value|0
+endif|#
+directive|endif
+name|size_t
+name|dlen
+init|=
+name|strlen
+argument_list|(
+name|d
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|SLASHSLASH_is_SLASH
+operator|&&
+name|dlen
+operator|==
+literal|2
+operator|&&
+name|isSLASH
+argument_list|(
+name|d
+index|[
+literal|0
+index|]
+argument_list|)
+operator|&&
+name|isSLASH
+argument_list|(
+name|d
+index|[
+literal|1
+index|]
+argument_list|)
+condition|)
+operator|--
+name|dlen
+expr_stmt|;
+else|else
+while|while
+condition|(
+name|dlen
+operator|&&
+name|isSLASH
+argument_list|(
+name|d
+index|[
+name|dlen
+operator|-
+literal|1
+index|]
+argument_list|)
+condition|)
+operator|--
+name|dlen
+expr_stmt|;
+return|return
+name|dlen
+return|;
 block|}
 end_function
 
@@ -3458,15 +3574,6 @@ decl_stmt|;
 name|pid_t
 name|child
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|has_waitpid
-name|pid_t
-name|w
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -3493,6 +3600,28 @@ condition|)
 return|return
 literal|0
 return|;
+if|#
+directive|if
+name|bad_wait_if_SIGCHLD_ignored
+ifndef|#
+directive|ifndef
+name|SIGCHLD
+define|#
+directive|define
+name|SIGCHLD
+value|SIGCLD
+endif|#
+directive|endif
+name|VOID
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -3776,6 +3905,10 @@ literal|1
 expr_stmt|;
 else|#
 directive|else
+block|{
+name|pid_t
+name|w
+decl_stmt|;
 do|do
 block|{
 if|if
@@ -3807,6 +3940,7 @@ operator|!=
 name|child
 condition|)
 do|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -3930,7 +4064,7 @@ name|PAIRTEST
 end_ifdef
 
 begin_comment
-comment|/* test program for pairfilenames() and getfullRCSname() */
+comment|/* test program for pairnames() and getfullRCSname() */
 end_comment
 
 begin_decl_stmt
@@ -4045,15 +4179,15 @@ block|}
 block|}
 do|do
 block|{
-name|RCSfilename
+name|RCSname
 operator|=
-name|workfilename
+name|workname
 operator|=
-name|nil
+literal|0
 expr_stmt|;
 name|result
 operator|=
-name|pairfilenames
+name|pairnames
 argument_list|(
 name|argc
 argument_list|,
@@ -4076,11 +4210,11 @@ condition|)
 block|{
 name|diagnose
 argument_list|(
-literal|"RCS file: %s; working file: %s\nFull RCS file name: %s\n"
+literal|"RCS pathname: %s; working pathname: %s\nFull RCS pathname: %s\n"
 argument_list|,
-name|RCSfilename
+name|RCSname
 argument_list|,
-name|workfilename
+name|workname
 argument_list|,
 name|getfullRCSname
 argument_list|()
@@ -4105,11 +4239,9 @@ condition|(
 name|initflag
 condition|)
 block|{
-name|error
+name|rcserror
 argument_list|(
-literal|"RCS file %s exists already"
-argument_list|,
-name|RCSfilename
+literal|"already exists"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4119,7 +4251,7 @@ name|diagnose
 argument_list|(
 literal|"RCS file %s exists\n"
 argument_list|,
-name|RCSfilename
+name|RCSname
 argument_list|)
 expr_stmt|;
 block|}
@@ -4156,7 +4288,6 @@ block|}
 end_function
 
 begin_function
-name|exiting
 name|void
 name|exiterr
 parameter_list|()
