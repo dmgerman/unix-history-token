@@ -2751,7 +2751,7 @@ if|if
 condition|(
 name|dev
 operator|->
-name|irq
+name|irq_enabled
 condition|)
 name|DRM
 function_decl|(

@@ -465,6 +465,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRM_IF_VERSION
+parameter_list|(
+name|maj
+parameter_list|,
+name|min
+parameter_list|)
+value|(maj<< 16 | min)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_GET_PRIV_SAREA
 parameter_list|(
 name|_dev
@@ -804,6 +816,13 @@ name|drm_device
 modifier|*
 name|devXX
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DRIVER_FILE_FIELDS
+name|DRIVER_FILE_FIELDS
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1179,6 +1198,10 @@ name|devnode
 decl_stmt|;
 comment|/* Device number for mknod	   */
 name|int
+name|if_version
+decl_stmt|;
+comment|/* Highest interface version set */
+name|int
 name|flags
 decl_stmt|;
 comment|/* Flags to open(2)		   */
@@ -1229,10 +1252,6 @@ name|int
 name|buf_use
 decl_stmt|;
 comment|/* Buffers in use -- cannot alloc  */
-name|int
-name|buf_alloc
-decl_stmt|;
-comment|/* Buffer allocation in progress   */
 comment|/* Performance counters */
 name|unsigned
 name|long
@@ -1289,12 +1308,16 @@ name|irq
 decl_stmt|;
 comment|/* Interrupt used by board	   */
 name|int
-name|irqrid
+name|irq_enabled
 decl_stmt|;
-comment|/* Interrupt used by board	   */
+comment|/* True if the irq handler is enabled */
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+name|int
+name|irqrid
+decl_stmt|;
+comment|/* Interrupt used by board */
 name|struct
 name|resource
 modifier|*
@@ -1321,6 +1344,18 @@ modifier|*
 name|irqh
 decl_stmt|;
 comment|/* Handle from bus_setup_intr      */
+name|int
+name|pci_domain
+decl_stmt|;
+name|int
+name|pci_bus
+decl_stmt|;
+name|int
+name|pci_slot
+decl_stmt|;
+name|int
+name|pci_func
+decl_stmt|;
 name|atomic_t
 name|context_flag
 decl_stmt|;
@@ -1997,9 +2032,6 @@ parameter_list|(
 name|drm_device_t
 modifier|*
 name|dev
-parameter_list|,
-name|int
-name|irq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2429,7 +2461,7 @@ specifier|extern
 name|int
 name|DRM
 function_decl|(
-name|irq_busid
+name|irq_by_busid
 function_decl|)
 parameter_list|(
 name|DRM_IOCTL_ARGS

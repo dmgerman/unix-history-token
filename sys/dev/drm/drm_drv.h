@@ -315,6 +315,28 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|DRIVER_OPEN_HELPER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DRIVER_OPEN_HELPER
+parameter_list|(
+name|priv
+parameter_list|,
+name|dev
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|DRIVER_FOPS
 end_ifndef
 
@@ -535,6 +557,9 @@ block|,
 literal|0
 block|}
 block|,
+if|#
+directive|if
+name|__HAVE_IRQ
 index|[
 name|DRM_IOCTL_NR
 argument_list|(
@@ -545,7 +570,7 @@ operator|=
 block|{
 name|DRM
 argument_list|(
-name|irq_busid
+name|irq_by_busid
 argument_list|)
 block|,
 literal|0
@@ -553,6 +578,8 @@ block|,
 literal|1
 block|}
 block|,
+endif|#
+directive|endif
 index|[
 name|DRM_IOCTL_NR
 argument_list|(
@@ -2505,7 +2532,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Initialize the DRM on first open.  Called with device's lock held */
+comment|/* Initialize the DRM on first open. */
 end_comment
 
 begin_function
@@ -2524,18 +2551,20 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|DRM_SPINLOCK_ASSERT
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|dev_lock
+argument_list|)
+expr_stmt|;
 name|DRIVER_PRESETUP
 argument_list|()
 expr_stmt|;
 name|dev
 operator|->
 name|buf_use
-operator|=
-literal|0
-expr_stmt|;
-name|dev
-operator|->
-name|buf_alloc
 operator|=
 literal|0
 expr_stmt|;
@@ -2851,7 +2880,7 @@ literal|0
 expr_stmt|;
 name|dev
 operator|->
-name|irq
+name|irq_enabled
 operator|=
 literal|0
 expr_stmt|;
@@ -2864,6 +2893,12 @@ expr_stmt|;
 name|dev
 operator|->
 name|last_context
+operator|=
+literal|0
+expr_stmt|;
+name|dev
+operator|->
+name|if_version
 operator|=
 literal|0
 expr_stmt|;
@@ -2905,7 +2940,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Free resources associated with the DRM on the last close.  * Called with the device's lock held.  */
+comment|/* Free resources associated with the DRM on the last close. */
 end_comment
 
 begin_function
@@ -2939,6 +2974,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|DRM_SPINLOCK_ASSERT
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|dev_lock
+argument_list|)
+expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
 literal|"\n"
@@ -2954,9 +2997,7 @@ if|if
 condition|(
 name|dev
 operator|->
-name|irq
-operator|!=
-literal|0
+name|irq_enabled
 condition|)
 name|DRM
 function_decl|(
@@ -3663,6 +3704,57 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|dev
+operator|->
+name|irq
+operator|=
+name|pci_get_irq
+argument_list|(
+name|dev
+operator|->
+name|device
+argument_list|)
+expr_stmt|;
+comment|/* XXX Fix domain number (alpha hoses) */
+name|dev
+operator|->
+name|pci_domain
+operator|=
+literal|0
+expr_stmt|;
+name|dev
+operator|->
+name|pci_bus
+operator|=
+name|pci_get_bus
+argument_list|(
+name|dev
+operator|->
+name|device
+argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|pci_slot
+operator|=
+name|pci_get_slot
+argument_list|(
+name|dev
+operator|->
+name|device
+argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|pci_func
+operator|=
+name|pci_get_function
+argument_list|(
+name|dev
+operator|->
+name|device
+argument_list|)
+expr_stmt|;
 name|dev
 operator|->
 name|maplist

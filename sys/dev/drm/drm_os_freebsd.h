@@ -550,6 +550,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRM_SPINLOCK_ASSERT
+parameter_list|(
+name|l
+parameter_list|)
+value|mtx_assert(l, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_CURRENTPID
 value|curthread->td_proc->p_pid
 end_define
@@ -634,6 +644,15 @@ directive|define
 name|DRM_SPINUNLOCK
 parameter_list|(
 name|u
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_SPINLOCK_ASSERT
+parameter_list|(
+name|l
 parameter_list|)
 end_define
 
@@ -1085,6 +1104,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|DRM_COPY_TO_USER_UNCHECKED
+parameter_list|(
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|,
+name|arg3
+parameter_list|)
+define|\
+value|copyout(arg2, arg1, arg3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_GET_USER_UNCHECKED
 parameter_list|(
 name|val
@@ -1093,6 +1127,19 @@ name|uaddr
 parameter_list|)
 define|\
 value|((val) = fuword(uaddr), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_PUT_USER_UNCHECKED
+parameter_list|(
+name|uaddr
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|suword(uaddr, val)
 end_define
 
 begin_comment

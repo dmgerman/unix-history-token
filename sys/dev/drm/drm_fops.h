@@ -9,10 +9,6 @@ directive|include
 file|"dev/drm/drmP.h"
 end_include
 
-begin_comment
-comment|/* Requires device lock held */
-end_comment
-
 begin_function
 name|drm_file_t
 modifier|*
@@ -77,6 +73,14 @@ name|drm_file_t
 modifier|*
 name|priv
 decl_stmt|;
+name|DRM_SPINLOCK_ASSERT
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|dev_lock
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|priv
@@ -179,10 +183,6 @@ argument_list|()
 expr_stmt|;
 name|priv
 operator|=
-operator|(
-name|drm_file_t
-operator|*
-operator|)
 name|DRM
 argument_list|(
 name|find_file_by_proc
@@ -333,6 +333,13 @@ operator|!
 name|DRM_SUSER
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|DRIVER_OPEN_HELPER
+argument_list|(
+name|priv
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL

@@ -1925,6 +1925,13 @@ name|DRM_IOCTL_RADEON_CP_RESUME
 value|DRM_IO(0x58)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_RADEON_SETPARAM
+value|DRM_IOW(0x59, drm_radeon_setparam_t)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2299,6 +2306,7 @@ typedef|typedef
 struct|struct
 name|drm_radeon_texture
 block|{
+name|unsigned
 name|int
 name|offset
 decl_stmt|;
@@ -2455,6 +2463,13 @@ name|RADEON_PARAM_GART_TEX_HANDLE
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|RADEON_PARAM_SCRATCH_OFFSET
+value|11
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2579,6 +2594,38 @@ block|}
 name|drm_radeon_irq_wait_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* 1.10: Clients tell the DRM where they think the framebuffer is located in  * the card's address space, via a new generic ioctl to set parameters  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|drm_radeon_setparam
+block|{
+name|unsigned
+name|int
+name|param
+decl_stmt|;
+name|int64_t
+name|value
+decl_stmt|;
+block|}
+name|drm_radeon_setparam_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|RADEON_SETPARAM_FB_LOCATION
+value|1
+end_define
+
+begin_comment
+comment|/* determined framebuffer location */
+end_comment
 
 begin_endif
 endif|#

@@ -160,6 +160,9 @@ name|drm_radeon_sarea_t
 modifier|*
 name|sarea_priv
 decl_stmt|;
+name|u32
+name|fb_location
+decl_stmt|;
 name|int
 name|gart_size
 decl_stmt|;
@@ -655,6 +658,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|radeon_cp_setparam
+parameter_list|(
+name|DRM_IOCTL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|radeon_cp_flip
 parameter_list|(
 name|DRM_IOCTL_ARGS
@@ -978,6 +991,13 @@ define|#
 directive|define
 name|RADEON_CRTC2_OFFSET_CNTL
 value|0x0328
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_RB3D_COLOROFFSET
+value|0x1c40
 end_define
 
 begin_define
@@ -1537,6 +1557,13 @@ define|#
 directive|define
 name|RADEON_PP_TXFILTER_0
 value|0x1c54
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_PP_TXOFFSET_0
+value|0x1c5c
 end_define
 
 begin_define
