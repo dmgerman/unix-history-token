@@ -5966,15 +5966,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"vr%d: no memory for tx list\n"
-argument_list|,
-name|sc
-operator|->
-name|vr_unit
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -6144,6 +6135,9 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|start_tx
+decl_stmt|,
+modifier|*
+name|prev_tx
 decl_stmt|;
 name|sc
 operator|=
@@ -6156,22 +6150,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_OACTIVE
-condition|)
-block|{
-name|VR_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* 	 * Check for an available queue slot. If there are none, 	 * punt. 	 */
 if|if
 condition|(
@@ -6186,11 +6164,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_OACTIVE
+name|VR_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -6233,6 +6210,10 @@ name|NULL
 condition|)
 break|break;
 comment|/* Pick a descriptor off the free list. */
+name|prev_tx
+operator|=
+name|cur_tx
+expr_stmt|;
 name|cur_tx
 operator|=
 name|sc
@@ -6264,6 +6245,7 @@ name|m_head
 argument_list|)
 condition|)
 block|{
+comment|/* Rollback, send what we were able to encap. */
 name|IF_PREPEND
 argument_list|(
 operator|&
@@ -6274,15 +6256,17 @@ argument_list|,
 name|m_head
 argument_list|)
 expr_stmt|;
-name|ifp
+name|sc
 operator|->
-name|if_flags
-operator||=
-name|IFF_OACTIVE
+name|vr_cdata
+operator|.
+name|vr_tx_free
+operator|=
+name|cur_tx
 expr_stmt|;
 name|cur_tx
 operator|=
-name|NULL
+name|prev_tx
 expr_stmt|;
 break|break;
 block|}
@@ -6315,16 +6299,6 @@ name|cur_tx
 argument_list|)
 operator|=
 name|VR_TXSTAT_OWN
-expr_stmt|;
-name|VR_SETBIT16
-argument_list|(
-name|sc
-argument_list|,
-name|VR_COMMAND
-argument_list|,
-comment|/*VR_CMD_TX_ON|*/
-name|VR_CMD_TX_GO
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * If there are no frames queued, bail. 	 */
@@ -6367,6 +6341,17 @@ operator|.
 name|vr_tx_head
 operator|=
 name|start_tx
+expr_stmt|;
+comment|/* Tell the chip to start transmitting. */
+name|VR_SETBIT16
+argument_list|(
+name|sc
+argument_list|,
+name|VR_COMMAND
+argument_list|,
+comment|/*VR_CMD_TX_ON|*/
+name|VR_CMD_TX_GO
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Set a timeout in case the chip goes out to lunch. 	 */
 name|ifp
