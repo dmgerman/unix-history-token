@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.8	%G%"
+literal|"@(#)main.c	2.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -494,7 +494,7 @@ index|]
 operator|.
 name|ufd
 argument_list|,
-literal|"%s"
+literal|"*** %s"
 argument_list|,
 name|act
 operator|->
@@ -642,7 +642,7 @@ index|]
 operator|.
 name|ufd
 argument_list|,
-literal|"%s\n"
+literal|"*** %s\n"
 argument_list|,
 name|act
 operator|->
