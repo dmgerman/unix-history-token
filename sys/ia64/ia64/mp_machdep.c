@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pmap.h>
 end_include
 
@@ -127,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|<machine/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/fpu.h>
 end_include
 
 begin_function_decl
@@ -267,6 +279,13 @@ name|ap_awake
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|volatile
+name|int
+name|ap_spin
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -321,6 +340,14 @@ function|;
 end_function
 
 begin_expr_stmt
+name|ia64_set_fpsr
+argument_list|(
+name|IA64_FPSR_DEFAULT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ap_awake
 operator|=
 literal|1
@@ -341,9 +368,29 @@ end_comment
 begin_while
 while|while
 condition|(
+name|ap_spin
+condition|)
+comment|/* spin */
+empty_stmt|;
+end_while
+
+begin_asm
+asm|__asm __volatile("ssm psr.ic|psr.i;; srlz.i;;");
+end_asm
+
+begin_expr_stmt
+name|ap_awake
+operator|++
+expr_stmt|;
+end_expr_stmt
+
+begin_while
+while|while
+condition|(
 operator|!
 name|smp_started
 condition|)
+comment|/* spin */
 empty_stmt|;
 end_while
 
@@ -361,10 +408,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_asm
-asm|__asm __volatile("ssm psr.ic|psr.i;; srlz.i;;");
-end_asm
 
 begin_expr_stmt
 name|binuptime
@@ -678,6 +721,10 @@ name|pcpu
 modifier|*
 name|pc
 decl_stmt|;
+name|ap_spin
+operator|=
+literal|1
+expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|pc
@@ -687,12 +734,12 @@ argument_list|,
 argument|pc_allcpu
 argument_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|pc->pc_current_pmap = PCPU_GET(current_pmap);
-endif|#
-directive|endif
+name|pc
+operator|->
+name|pc_current_pmap
+operator|=
+name|kernel_pmap
+expr_stmt|;
 name|pc
 operator|->
 name|pc_other_cpus
@@ -713,15 +760,53 @@ operator|>
 literal|0
 condition|)
 block|{
-name|ap_stack
+name|void
+modifier|*
+name|ks
+decl_stmt|;
+comment|/* 			 * Use contigmalloc for stack so that we can 			 * use a region 7 address for it which makes 			 * it impossible to accidentally lose when 			 * recording a trapframe. 			 */
+name|ks
 operator|=
-name|kmem_alloc
+name|contigmalloc
 argument_list|(
-name|kernel_map
-argument_list|,
 name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_WAITOK
+argument_list|,
+literal|0ul
+argument_list|,
+literal|256
+operator|*
+literal|1024
+operator|*
+literal|1024
+operator|-
+literal|1
+argument_list|,
+name|PAGE_SIZE
+argument_list|,
+literal|256
+operator|*
+literal|1024
+operator|*
+literal|1024
+argument_list|)
+expr_stmt|;
+name|ap_stack
+operator|=
+name|IA64_PHYS_TO_RR7
+argument_list|(
+name|ia64_tpa
+argument_list|(
+operator|(
+name|u_int64_t
+operator|)
+name|ks
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ap_pcpu
@@ -837,6 +922,9 @@ operator|!
 name|mp_hardware
 condition|)
 return|return;
+name|breakpoint
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|mp_ipi_test
@@ -878,6 +966,22 @@ name|smp_cpus
 operator|++
 expr_stmt|;
 block|}
+name|ap_awake
+operator|=
+literal|1
+expr_stmt|;
+name|ap_spin
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+name|ap_awake
+operator|!=
+name|smp_cpus
+condition|)
+comment|/* spin */
+empty_stmt|;
 if|if
 condition|(
 name|smp_cpus
@@ -1122,6 +1226,22 @@ name|ipi
 index|]
 operator|&
 literal|0xff
+argument_list|)
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"ipi_send(%p, %ld), cpuid=%d"
+argument_list|,
+name|pipi
+argument_list|,
+name|vector
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
