@@ -47,9 +47,11 @@ directive|define
 name|__nss_compat_result
 parameter_list|(
 name|rv
+parameter_list|,
+name|err
 parameter_list|)
 define|\
-value|((rv == NSS_STATUS_TRYAGAIN) ? NS_TRYAGAIN :	\  (rv == NSS_STATUS_UNAVAIL)  ? NS_UNAVAIL  :	\  (rv == NSS_STATUS_NOTFOUND) ? NS_NOTFOUND :	\  (rv == NSS_STATUS_SUCCESS)  ? NS_SUCCESS  :	\  (rv == NSS_STATUS_RETURN)   ? NS_RETURN   : 0)
+value|((rv == NSS_STATUS_TRYAGAIN&& err == ERANGE) ? NS_RETURN : \  (rv == NSS_STATUS_TRYAGAIN) ? NS_TRYAGAIN :	\  (rv == NSS_STATUS_UNAVAIL)  ? NS_UNAVAIL  :	\  (rv == NSS_STATUS_NOTFOUND) ? NS_NOTFOUND :	\  (rv == NSS_STATUS_SUCCESS)  ? NS_SUCCESS  :	\  (rv == NSS_STATUS_RETURN)   ? NS_RETURN   : 0)
 end_define
 
 begin_endif
