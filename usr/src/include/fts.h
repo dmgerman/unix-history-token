@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -302,11 +302,6 @@ directive|define
 name|FTS_ISW
 value|0x04
 comment|/* this is a whiteout object */
-define|#
-directive|define
-name|FTS_ISWD
-value|0x08
-comment|/* this is a whiteout dir object */
 name|u_short
 name|fts_flags
 decl_stmt|;
