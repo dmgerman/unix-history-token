@@ -594,6 +594,18 @@ name|pcic_pci_ti_init
 block|}
 block|,
 block|{
+name|PCI_DEVICE_ID_PCIC_TI1210
+block|,
+literal|"TI PCI-1210 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
+block|,
+name|pcic_pci_ti_init
+block|}
+block|,
+block|{
 name|PCI_DEVICE_ID_PCIC_TI1211
 block|,
 literal|"TI PCI-1211 PCI-CardBus Bridge"
@@ -717,6 +729,30 @@ block|{
 name|PCI_DEVICE_ID_PCIC_TI1451
 block|,
 literal|"TI PCI-1451 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
+block|,
+name|pcic_pci_ti_init
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI4410
+block|,
+literal|"TI PCI-4410 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
+block|,
+name|pcic_pci_ti_init
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI4450
+block|,
+literal|"TI PCI-4450 PCI-CardBus Bridge"
 block|,
 name|PCIC_I82365SL_DF
 block|,
