@@ -1958,113 +1958,157 @@ begin_comment
 comment|/* SM_GAMES */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|u_char
-name|sb16_recmasks_L
-index|[
-name|SOUND_MIXER_NRDEVICES
-index|]
-init|=
-block|{
-literal|0x00
-block|,
-comment|/* SOUND_MIXER_VOLUME	 */
-literal|0x00
-block|,
-comment|/* SOUND_MIXER_BASS	 */
-literal|0x00
-block|,
-comment|/* SOUND_MIXER_TREBLE	 */
-literal|0x40
-block|,
-comment|/* SOUND_MIXER_SYNTH	 */
-literal|0x00
-block|,
-comment|/* SOUND_MIXER_PCM	 */
-literal|0x00
-block|,
-comment|/* SOUND_MIXER_SPEAKER	 */
-literal|0x10
-block|,
-comment|/* SOUND_MIXER_LINE	 */
-literal|0x01
-block|,
-comment|/* SOUND_MIXER_MIC	 */
-literal|0x04
-block|,
-comment|/* SOUND_MIXER_CD	 */
-literal|0x00
-block|,
-comment|/* SOUND_MIXER_IMIX	 */
-literal|0x00
-block|,
-comment|/* SOUND_MIXER_ALTPCM	 */
-literal|0x00
-block|,
-comment|/* SOUND_MIXER_RECLEV	 */
-literal|0x00
-block|,
-comment|/* SOUND_MIXER_IGAIN	 */
-literal|0x00
-comment|/* SOUND_MIXER_OGAIN	 */
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_decl_stmt
-specifier|static
-name|u_char
-name|sb16_recmasks_R
-index|[
-name|SOUND_MIXER_NRDEVICES
-index|]
-init|=
-block|{
-literal|0x00
-block|,
+begin_comment
+unit|static u_char sb16_recmasks_L[SOUND_MIXER_NRDEVICES] = { 	0x00,
 comment|/* SOUND_MIXER_VOLUME	 */
-literal|0x00
-block|,
+end_comment
+
+begin_comment
+unit|0x00,
 comment|/* SOUND_MIXER_BASS	 */
-literal|0x00
-block|,
+end_comment
+
+begin_comment
+unit|0x00,
 comment|/* SOUND_MIXER_TREBLE	 */
-literal|0x20
-block|,
+end_comment
+
+begin_comment
+unit|0x40,
 comment|/* SOUND_MIXER_SYNTH	 */
-literal|0x00
-block|,
+end_comment
+
+begin_comment
+unit|0x00,
 comment|/* SOUND_MIXER_PCM	 */
-literal|0x00
-block|,
+end_comment
+
+begin_comment
+unit|0x00,
 comment|/* SOUND_MIXER_SPEAKER	 */
-literal|0x08
-block|,
+end_comment
+
+begin_comment
+unit|0x10,
 comment|/* SOUND_MIXER_LINE	 */
-literal|0x01
-block|,
+end_comment
+
+begin_comment
+unit|0x01,
 comment|/* SOUND_MIXER_MIC	 */
-literal|0x02
-block|,
+end_comment
+
+begin_comment
+unit|0x04,
 comment|/* SOUND_MIXER_CD	 */
-literal|0x00
-block|,
+end_comment
+
+begin_comment
+unit|0x00,
 comment|/* SOUND_MIXER_IMIX	 */
-literal|0x00
-block|,
+end_comment
+
+begin_comment
+unit|0x00,
 comment|/* SOUND_MIXER_ALTPCM	 */
-literal|0x00
-block|,
+end_comment
+
+begin_comment
+unit|0x00,
 comment|/* SOUND_MIXER_RECLEV	 */
-literal|0x00
-block|,
+end_comment
+
+begin_comment
+unit|0x00,
 comment|/* SOUND_MIXER_IGAIN	 */
-literal|0x00
+end_comment
+
+begin_comment
+unit|0x00
 comment|/* SOUND_MIXER_OGAIN	 */
-block|}
-decl_stmt|;
-end_decl_stmt
+end_comment
+
+begin_comment
+unit|};  static u_char sb16_recmasks_R[SOUND_MIXER_NRDEVICES] = { 	0x00,
+comment|/* SOUND_MIXER_VOLUME	 */
+end_comment
+
+begin_comment
+unit|0x00,
+comment|/* SOUND_MIXER_BASS	 */
+end_comment
+
+begin_comment
+unit|0x00,
+comment|/* SOUND_MIXER_TREBLE	 */
+end_comment
+
+begin_comment
+unit|0x20,
+comment|/* SOUND_MIXER_SYNTH	 */
+end_comment
+
+begin_comment
+unit|0x00,
+comment|/* SOUND_MIXER_PCM	 */
+end_comment
+
+begin_comment
+unit|0x00,
+comment|/* SOUND_MIXER_SPEAKER	 */
+end_comment
+
+begin_comment
+unit|0x08,
+comment|/* SOUND_MIXER_LINE	 */
+end_comment
+
+begin_comment
+unit|0x01,
+comment|/* SOUND_MIXER_MIC	 */
+end_comment
+
+begin_comment
+unit|0x02,
+comment|/* SOUND_MIXER_CD	 */
+end_comment
+
+begin_comment
+unit|0x00,
+comment|/* SOUND_MIXER_IMIX	 */
+end_comment
+
+begin_comment
+unit|0x00,
+comment|/* SOUND_MIXER_ALTPCM	 */
+end_comment
+
+begin_comment
+unit|0x00,
+comment|/* SOUND_MIXER_RECLEV	 */
+end_comment
+
+begin_comment
+unit|0x00,
+comment|/* SOUND_MIXER_IGAIN	 */
+end_comment
+
+begin_comment
+unit|0x00
+comment|/* SOUND_MIXER_OGAIN	 */
+end_comment
+
+begin_endif
+unit|};
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Recording sources (SB Pro)  */
