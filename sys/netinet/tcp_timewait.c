@@ -5071,6 +5071,11 @@ name|ip6
 operator|=
 name|NULL
 expr_stmt|;
+name|off
+operator|=
+literal|0
+expr_stmt|;
+comment|/* fool gcc */
 block|}
 comment|/* 	 * Translate addresses into internal form. 	 * Sa check if it is AF_INET6 is done at the top of this funciton. 	 */
 name|sa6
@@ -5194,6 +5199,23 @@ operator|->
 name|if_index
 argument_list|)
 expr_stmt|;
+comment|/* check if we can safely examine src and dst ports */
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<
+name|off
+operator|+
+sizeof|sizeof
+argument_list|(
+name|th
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|m
@@ -5204,8 +5226,7 @@ name|off
 operator|+
 sizeof|sizeof
 argument_list|(
-operator|*
-name|thp
+name|th
 argument_list|)
 condition|)
 block|{
