@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.65 %G%"
+literal|"@(#)sccs.c	1.66 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3755,9 +3755,15 @@ operator|!
 name|gotpfent
 condition|)
 block|{
+name|char
+name|unlinkbuf
+index|[
+literal|100
+index|]
+decl_stmt|;
 name|strcpy
 argument_list|(
-name|buf
+name|unlinkbuf
 argument_list|,
 operator|&
 name|dir
@@ -3770,7 +3776,7 @@ argument_list|)
 expr_stmt|;
 name|unlink
 argument_list|(
-name|buf
+name|unlinkbuf
 argument_list|)
 expr_stmt|;
 block|}
