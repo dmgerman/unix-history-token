@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)implog.c	5.8 (Berkeley) %G%"
+literal|"@(#)implog.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -166,6 +172,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|follow
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|skip
 init|=
 literal|0
 decl_stmt|;
@@ -281,7 +295,7 @@ name|struct
 name|stat
 name|b
 decl_stmt|;
-name|int
+name|off_t
 name|size
 decl_stmt|;
 name|char
@@ -354,6 +368,33 @@ operator|==
 literal|0
 condition|)
 block|{
+name|follow
+operator|++
+expr_stmt|;
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-F"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|skip
+operator|++
+expr_stmt|;
 name|follow
 operator|++
 expr_stmt|;
@@ -624,7 +665,7 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"usage: implog [ -D ] [ -c ] [ -f ] [ -r ] [-h #] [-i #] [ -t # ] [-l [#]] [logfile]\n"
+literal|"usage: implog [ -D ] [ -c ] [ -f ] [ -F ] [ -r ] [-h #] [-i #] [ -t # ] [-l [#]] [logfile]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -686,6 +727,22 @@ operator|=
 name|b
 operator|.
 name|st_size
+expr_stmt|;
+if|if
+condition|(
+name|skip
+condition|)
+operator|(
+name|void
+operator|)
+name|lseek
+argument_list|(
+name|log
+argument_list|,
+name|size
+argument_list|,
+name|L_SET
+argument_list|)
 expr_stmt|;
 name|again
 label|:
