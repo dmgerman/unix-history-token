@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	nexus.h	4.8	81/03/21	*/
+comment|/*	nexus.h	4.9	81/04/02	*/
 end_comment
 
 begin_comment
@@ -67,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|NNEX730
-value|8
+value|16
 end_define
 
 begin_define
