@@ -117,7 +117,7 @@ name|NDIS_INITIALIZED
 parameter_list|(
 name|sc
 parameter_list|)
-value|(sc->ndis_block.nmb_miniportadapterctx != NULL)
+value|(sc->ndis_block->nmb_miniportadapterctx != NULL)
 end_define
 
 begin_define
@@ -241,10 +241,6 @@ name|struct
 name|mtx
 name|ndis_mtx
 decl_stmt|;
-name|struct
-name|mtx
-name|ndis_intrmtx
-decl_stmt|;
 name|device_t
 name|ndis_dev
 decl_stmt|;
@@ -252,9 +248,11 @@ name|int
 name|ndis_unit
 decl_stmt|;
 name|ndis_miniport_block
+modifier|*
 name|ndis_block
 decl_stmt|;
 name|ndis_miniport_characteristics
+modifier|*
 name|ndis_chars
 decl_stmt|;
 name|interface_type
@@ -284,6 +282,9 @@ name|ndis_packet
 modifier|*
 modifier|*
 name|ndis_txarray
+decl_stmt|;
+name|ndis_handle
+name|ndis_txpool
 decl_stmt|;
 name|int
 name|ndis_sc

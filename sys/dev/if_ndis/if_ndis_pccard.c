@@ -303,6 +303,21 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|ndisdrv_modevent
+parameter_list|(
+name|module_t
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|ndis_attach
 parameter_list|(
 name|device_t
@@ -352,10 +367,10 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|mtx_pool
-modifier|*
-name|ndis_mtxpool
+name|unsigned
+name|char
+name|drv_data
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -476,7 +491,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|DRIVER_MODULE(x, pccard, ndis_driver, ndis_devclass, 0, 0)
+value|DRIVER_MODULE(x, pccard, ndis_driver, ndis_devclass,		\ 		ndisdrv_modevent, 0)
 end_define
 
 begin_expr_stmt
@@ -503,7 +518,7 @@ name|ndis_driver
 argument_list|,
 name|ndis_devclass
 argument_list|,
-literal|0
+name|ndisdrv_modevent
 argument_list|,
 literal|0
 argument_list|)
@@ -546,6 +561,38 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|driver_object
+modifier|*
+name|drv
+decl_stmt|;
+name|vm_offset_t
+name|img
+decl_stmt|;
+name|img
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+name|drv_data
+expr_stmt|;
+name|drv
+operator|=
+name|windrv_lookup
+argument_list|(
+name|img
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|drv
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|t
 operator|=
 name|ndis_devs
@@ -629,6 +676,14 @@ argument_list|,
 name|t
 operator|->
 name|ndis_name
+argument_list|)
+expr_stmt|;
+comment|/* Create PDO for this device instance */
+name|windrv_create_pdo
+argument_list|(
+name|drv
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
