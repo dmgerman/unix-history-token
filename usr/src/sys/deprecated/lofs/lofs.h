@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs.h	8.3 (Berkeley) %G%  *  * $Id: lofs.h,v 1.8 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs.h	8.4 (Berkeley) %G%  *  * $Id: lofs.h,v 1.8 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_struct
@@ -79,6 +79,19 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|int
+name|lofs_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|make_lofs
 name|__P
 argument_list|(
@@ -118,52 +131,6 @@ parameter_list|)
 value|((struct lofsnode *)(vp)->v_data)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOFS_DIAGNOSTIC
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vnode
-modifier|*
-name|lofs_checkvp
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|,
-name|char
-operator|*
-name|fil
-operator|,
-name|int
-name|lno
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|LOFSVP
-parameter_list|(
-name|vp
-parameter_list|)
-value|lofs_checkvp(vp, __FILE__, __LINE__)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -173,11 +140,6 @@ name|vp
 parameter_list|)
 value|(LOFSP(vp)->a_lofsvp)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
