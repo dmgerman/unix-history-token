@@ -644,12 +644,9 @@ begin_comment
 comment|/* 102 is old recv */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SYS_osigreturn
-value|103
-end_define
+begin_comment
+comment|/* 103 is old sigreturn */
+end_comment
 
 begin_define
 define|#
@@ -1672,12 +1669,9 @@ name|SYS_sigsuspend
 value|341
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYS_sigaction
-value|342
-end_define
+begin_comment
+comment|/* 342 is old sigaction */
+end_comment
 
 begin_define
 define|#
@@ -1686,12 +1680,9 @@ name|SYS_sigpending
 value|343
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYS_sigreturn
-value|344
-end_define
+begin_comment
+comment|/* 344 is old sigreturn */
+end_comment
 
 begin_define
 define|#
@@ -2076,6 +2067,20 @@ define|#
 directive|define
 name|SYS_extattr_delete_link
 value|414
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_sigaction
+value|416
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_sigreturn
+value|417
 end_define
 
 begin_define

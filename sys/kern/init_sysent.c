@@ -1552,21 +1552,15 @@ block|}
 block|,
 comment|/* 102 = old recv */
 block|{
-name|SYF_MPSAFE
-operator||
-name|AS
+name|compat
 argument_list|(
-name|osigreturn_args
+argument|SYF_MPSAFE | AS(osigreturn_args)
+argument_list|,
+argument|sigreturn
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|osigreturn
 block|}
 block|,
-comment|/* 103 = osigreturn */
+comment|/* 103 = old sigreturn */
 block|{
 name|SYF_MPSAFE
 operator||
@@ -4749,21 +4743,15 @@ block|}
 block|,
 comment|/* 341 = sigsuspend */
 block|{
-name|SYF_MPSAFE
-operator||
-name|AS
+name|compat4
 argument_list|(
-name|sigaction_args
+argument|SYF_MPSAFE | AS(freebsd4_sigaction_args)
+argument_list|,
+argument|sigaction
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sigaction
 block|}
 block|,
-comment|/* 342 = sigaction */
+comment|/* 342 = old sigaction */
 block|{
 name|SYF_MPSAFE
 operator||
@@ -4781,21 +4769,15 @@ block|}
 block|,
 comment|/* 343 = sigpending */
 block|{
-name|SYF_MPSAFE
-operator||
-name|AS
+name|compat4
 argument_list|(
-name|sigreturn_args
+argument|SYF_MPSAFE | AS(freebsd4_sigreturn_args)
+argument_list|,
+argument|sigreturn
 argument_list|)
-block|,
-operator|(
-name|sy_call_t
-operator|*
-operator|)
-name|sigreturn
 block|}
 block|,
-comment|/* 344 = sigreturn */
+comment|/* 344 = old sigreturn */
 block|{
 literal|0
 block|,
@@ -5805,27 +5787,37 @@ block|}
 block|,
 comment|/* 415 = __execve_mac */
 block|{
-literal|0
+name|SYF_MPSAFE
+operator||
+name|AS
+argument_list|(
+name|sigaction_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|sigaction
 block|}
 block|,
-comment|/* 416 = newsigreturn */
+comment|/* 416 = sigaction */
 block|{
-literal|0
+name|SYF_MPSAFE
+operator||
+name|AS
+argument_list|(
+name|sigreturn_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|sigreturn
 block|}
 block|,
-comment|/* 417 = newsigaction */
+comment|/* 417 = sigreturn */
 block|{
 literal|0
 block|,

@@ -68,9 +68,13 @@ name|ps_siginfo
 decl_stmt|;
 comment|/* signals that want SA_SIGINFO args */
 name|sigset_t
+name|ps_freebsd4
+decl_stmt|;
+comment|/* signals that use freebsd4 ucontext */
+name|sigset_t
 name|ps_osigset
 decl_stmt|;
-comment|/* signals that use osigset_t */
+comment|/* signals that use<= 3.x osigset_t */
 name|sigset_t
 name|ps_usertramp
 decl_stmt|;
@@ -79,11 +83,19 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|COMPAT_43
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * Compatibility.  */
@@ -180,7 +192,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* _KERNEL&& COMPAT_43 */
 end_comment
 
 begin_comment

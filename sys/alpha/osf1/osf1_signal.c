@@ -10,6 +10,29 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_43
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"COMPAT_OSF1 requires COMPAT_43"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -3965,24 +3988,6 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-specifier|extern
-name|int
-name|osigstack
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|osf1_osigstack_args
-modifier|*
-name|uap
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|osf1_osigstack
@@ -4011,6 +4016,11 @@ name|osigstack
 argument_list|(
 name|td
 argument_list|,
+operator|(
+expr|struct
+name|osigstack_args
+operator|*
+operator|)
 name|uap
 argument_list|)
 operator|)

@@ -25,6 +25,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
+
 begin_struct
 struct|struct
 name|osigframe
@@ -65,6 +71,71 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD4
+end_ifdef
+
+begin_comment
+comment|/* FreeBSD 4.x */
+end_comment
+
+begin_struct
+struct|struct
+name|sigframe4
+block|{
+name|register_t
+name|sf_signum
+decl_stmt|;
+name|register_t
+name|sf_siginfo
+decl_stmt|;
+comment|/* code or pointer to sf_si */
+name|register_t
+name|sf_ucontext
+decl_stmt|;
+comment|/* points to sf_uc */
+name|register_t
+name|sf_addr
+decl_stmt|;
+comment|/* undocumented 4th arg */
+union|union
+block|{
+name|__siginfohandler_t
+modifier|*
+name|sf_action
+decl_stmt|;
+name|__sighandler_t
+modifier|*
+name|sf_handler
+decl_stmt|;
+block|}
+name|sf_ahu
+union|;
+name|struct
+name|ucontext4
+name|sf_uc
+decl_stmt|;
+comment|/* = *sf_ucontext */
+name|siginfo_t
+name|sf_si
+decl_stmt|;
+comment|/* = *sf_siginfo (SA_SIGINFO case) */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -16,21 +16,37 @@ name|_MACHINE_SIGFRAME_H_
 value|1
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_KERNEL
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD4
+argument_list|)
+end_if
+
+begin_comment
+comment|/* FreeBSD 4.x */
+end_comment
 
 begin_struct
 struct|struct
-name|osigframe
+name|sigframe4
 block|{
-name|struct
-name|osigcontext
-name|sf_sc
+name|unsigned
+name|long
+name|__spare__
 decl_stmt|;
-name|osiginfo_t
+name|struct
+name|ucontext4
+name|sf_uc
+decl_stmt|;
+name|siginfo_t
 name|sf_si
 decl_stmt|;
 block|}

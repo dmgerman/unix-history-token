@@ -519,7 +519,7 @@ modifier|*
 name|oact
 parameter_list|,
 name|int
-name|old
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -654,6 +654,32 @@ name|tptrseg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* flags for kern_sigaction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KSA_OSIGSET
+value|0x0001
+end_define
+
+begin_comment
+comment|/* uses osigact_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KSA_FREEBSD4
+value|0x0002
+end_define
+
+begin_comment
+comment|/* uses ucontext4 */
+end_comment
 
 begin_endif
 endif|#

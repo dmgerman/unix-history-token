@@ -52,93 +52,11 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|osigset_t
-typedef|;
-end_typedef
-
 begin_include
 include|#
 directive|include
 file|<machine/frame.h>
 end_include
-
-begin_comment
-comment|/*  * XXX why do we have compatibility structs for a new platform?  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__LIBC12_SOURCE__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
-begin_struct
-struct|struct
-name|sigcontext13
-block|{
-name|int
-name|sc_onstack
-decl_stmt|;
-comment|/* saved onstack flag */
-name|int
-name|sc_mask
-decl_stmt|;
-comment|/* saved signal mask (old style) */
-name|struct
-name|trapframe
-name|sc_frame
-decl_stmt|;
-comment|/* saved registers */
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __LIBC12_SOURCE__ || _KERNEL */
-end_comment
-
-begin_struct
-struct|struct
-name|osigcontext
-block|{
-name|int
-name|sc_onstack
-decl_stmt|;
-comment|/* saved onstack flag */
-name|int
-name|__sc_mask13
-decl_stmt|;
-comment|/* saved signal mask (old style) */
-name|struct
-name|trapframe
-name|sc_frame
-decl_stmt|;
-comment|/* saved registers */
-name|struct
-name|__sigset
-name|sc_mask
-decl_stmt|;
-comment|/* saved signal mask (new style) */
-block|}
-struct|;
-end_struct
 
 begin_endif
 endif|#

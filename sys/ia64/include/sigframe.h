@@ -18,13 +18,6 @@ end_define
 
 begin_struct
 struct|struct
-name|osigframe
-block|{ }
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|sigframe
 block|{
 name|ucontext_t

@@ -319,9 +319,9 @@ comment|/* 101 = old send */
 literal|"old.recv"
 block|,
 comment|/* 102 = old recv */
-literal|"osigreturn"
+literal|"old.sigreturn"
 block|,
-comment|/* 103 = osigreturn */
+comment|/* 103 = old sigreturn */
 literal|"bind"
 block|,
 comment|/* 104 = bind */
@@ -1036,15 +1036,15 @@ comment|/* 340 = sigprocmask */
 literal|"sigsuspend"
 block|,
 comment|/* 341 = sigsuspend */
-literal|"sigaction"
+literal|"old.sigaction"
 block|,
-comment|/* 342 = sigaction */
+comment|/* 342 = old sigaction */
 literal|"sigpending"
 block|,
 comment|/* 343 = sigpending */
-literal|"sigreturn"
+literal|"old.sigreturn"
 block|,
-comment|/* 344 = sigreturn */
+comment|/* 344 = old sigreturn */
 literal|"#345"
 block|,
 comment|/* 345 = sigtimedwait */
@@ -1258,12 +1258,12 @@ comment|/* 414 = extattr_delete_link */
 literal|"#415"
 block|,
 comment|/* 415 = __execve_mac */
-literal|"#416"
+literal|"sigaction"
 block|,
-comment|/* 416 = newsigreturn */
-literal|"#417"
+comment|/* 416 = sigaction */
+literal|"sigreturn"
 block|,
-comment|/* 417 = newsigaction */
+comment|/* 417 = sigreturn */
 literal|"#418"
 block|,
 comment|/* 418 = __xstat */
