@@ -2742,6 +2742,8 @@ operator|=
 name|alloca
 argument_list|(
 name|j
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|len
