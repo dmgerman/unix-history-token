@@ -1494,6 +1494,13 @@ name|NOHOLDER
 value|((struct thread *)-1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SPECIAL_FLAG
+value|((struct thread *)-2)
+end_define
+
 begin_struct
 specifier|static
 struct|struct
@@ -15662,10 +15669,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-define|#
-directive|define
-name|SPECIAL_FLAG
-value|NOHOLDER-1
 if|if
 condition|(
 name|lk
