@@ -468,10 +468,6 @@ operator|&&
 name|__GNUC_MINOR__
 operator|>=
 literal|7
-operator|||
-name|__GNUC__
-operator|==
-literal|3
 end_if
 
 begin_define
