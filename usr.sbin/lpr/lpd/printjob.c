@@ -7733,7 +7733,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Can't lookup default daemon uid (%d) in password file"
+literal|"Can't lookup default daemon uid (%ld) in password file"
 argument_list|,
 name|pp
 operator|->
