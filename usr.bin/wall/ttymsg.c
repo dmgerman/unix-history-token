@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ttymsg.c,v 1.2 1998/03/23 07:47:31 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,7 +170,7 @@ name|struct
 name|iovec
 name|localiov
 index|[
-literal|6
+literal|7
 index|]
 decl_stmt|;
 name|int
