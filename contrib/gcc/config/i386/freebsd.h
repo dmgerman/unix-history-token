@@ -250,7 +250,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{ "profiler-epilogue",	 MASK_PROFILER_EPILOGUE},		\      { "no-profiler-epilogue",	-MASK_PROFILER_EPILOGUE},		\      { "aout",			 MASK_AOUT},				\      { "no-aout",		-MASK_AOUT},				\      { "underscores",		 MASK_UNDERSCORES},			\      { "no-underscores",	-MASK_UNDERSCORES},
+value|{ "profiler-epilogue",	 MASK_PROFILER_EPILOGUE, "Function profiler epilogue"}, \   { "no-profiler-epilogue",	-MASK_PROFILER_EPILOGUE, "No function profiler epilogue"}, \   { "aout",			 MASK_AOUT, "Generate an a.out (vs. ELF) binary"}, \   { "no-aout",			-MASK_AOUT, "Do not generate an a.out binary"}, \   { "underscores",		 MASK_UNDERSCORES, "Add leading underscores to symbols"}, \   { "no-underscores",		-MASK_UNDERSCORES, "Do not add leading underscores to symbols"},
 end_define
 
 begin_comment
@@ -688,6 +688,79 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|ASM_OUTPUT_ALIGNED_COMMON
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGNED_COMMON
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|SIZE
+parameter_list|,
+name|ALIGN
+parameter_list|)
+define|\
+value|do {									\     if (TARGET_ELF)							\       {									\ 	fprintf ((FILE), "%s", COMMON_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\       }									\     else								\       {									\ 	int rounded = (SIZE);						\ 	if (rounded == 0) rounded = 1;					\ 	rounded += (BIGGEST_ALIGNMENT / BITS_PER_UNIT) - 1;		\ 	rounded = (rounded / (BIGGEST_ALIGNMENT / BITS_PER_UNIT)	\ 		   * (BIGGEST_ALIGNMENT / BITS_PER_UNIT));		\ 	fprintf ((FILE), "%s ", COMMON_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), ",%u\n", (rounded));				\       }									\   } while (0)
+end_define
+
+begin_comment
+comment|/* This says how to output assembler code to declare an    uninitialized internal linkage data object.  Under SVR4,    the linker seems to want the alignment of data objects    to depend on their types.  We do exactly that here.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_ALIGNED_LOCAL
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGNED_LOCAL
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|SIZE
+parameter_list|,
+name|ALIGN
+parameter_list|)
+define|\
+value|do {									\     if (TARGET_ELF)							\       {									\ 	fprintf ((FILE), "%s", LOCAL_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), "\n");						\ 	ASM_OUTPUT_ALIGNED_COMMON ((FILE), (NAME), (SIZE), (ALIGN));	\       }									\     else								\       {									\ 	int rounded = (SIZE);						\ 	if (rounded == 0) rounded = 1;					\ 	rounded += (BIGGEST_ALIGNMENT / BITS_PER_UNIT) - 1;		\ 	rounded = (rounded / (BIGGEST_ALIGNMENT / BITS_PER_UNIT)	\ 		   * (BIGGEST_ALIGNMENT / BITS_PER_UNIT));		\ 	fputs ("\t.lcomm\t", (FILE));					\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), ",%u\n", (rounded));				\       }									\   } while (0)
+end_define
+
+begin_comment
+comment|/* How to output some space.  The rules are different depending on the    object format.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_SKIP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_SKIP
+parameter_list|(
+name|FILE
+parameter_list|,
+name|SIZE
+parameter_list|)
+define|\
+value|do {									\     if (TARGET_ELF)							\       {									\         fprintf ((FILE), "%s%u\n", SKIP_ASM_OP, (SIZE));		\       }									\     else								\       {									\         fprintf ((FILE), "\t.space\t%u\n", (SIZE));			\       }									\   } while (0)
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|ASM_OUTPUT_SOURCE_LINE
 end_undef
 
@@ -880,6 +953,52 @@ name|RELOC
 parameter_list|)
 define|\
 value|{									\     if (flag_pic&& RELOC)						\       data_section ();							\     else if (TREE_CODE (DECL) == STRING_CST)				\       {									\ 	if (! flag_writable_strings)					\ 	  const_section ();						\ 	else								\ 	  data_section ();						\       }									\     else if (TREE_CODE (DECL) == VAR_DECL)				\       {									\ 	if (! DECL_READONLY_SECTION (DECL, RELOC))			\ 	  data_section ();						\ 	else								\ 	  const_section ();						\       }									\     else								\       const_section ();							\   }
+end_define
+
+begin_comment
+comment|/* A C statement (sans semicolon) to output an element in the table of    global constructors.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_CONSTRUCTOR
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_CONSTRUCTOR
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|)
+define|\
+value|do {									\     if (TARGET_ELF)							\       {									\ 	ctors_section ();						\ 	fprintf ((FILE), "%s ", INT_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), "\n");						\       }									\     else								\       {									\ 	fprintf (asm_out_file, "%s \"%s__CTOR_LIST__\",22,0,0,",	\ 		 ASM_STABS_OP, (TARGET_UNDERSCORES) ? "_" : "");	\ 	assemble_name (asm_out_file, name);				\ 	fputc ('\n', asm_out_file);					\       }									\   } while (0)
+end_define
+
+begin_comment
+comment|/* A C statement (sans semicolon) to output an element in the table of    global destructors.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_DESTRUCTOR
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_DESTRUCTOR
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|)
+define|\
+value|do {									\     if (TARGET_ELF)							\       {									\ 	dtors_section ();						\ 	fprintf ((FILE), "%s ", INT_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), "\n");						\       }									\     else								\       {									\ 	fprintf (asm_out_file, "%s \"%s__DTOR_LIST__\",22,0,0,",	\ 		 ASM_STABS_OP, (TARGET_UNDERSCORES) ? "_" : "");	\ 	assemble_name (asm_out_file, name);				\ 	fputc ('\n', asm_out_file);					\       }									\   } while (0)
 end_define
 
 begin_comment
