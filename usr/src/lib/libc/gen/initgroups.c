@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	initgroups.c	4.2	83/02/15	*/
+comment|/*	initgroups.c	4.3	83/05/01	*/
 end_comment
 
 begin_comment
@@ -102,6 +102,16 @@ operator|=
 name|getgrent
 argument_list|()
 condition|)
+block|{
+if|if
+condition|(
+name|grp
+operator|->
+name|gr_gid
+operator|==
+name|agroup
+condition|)
+continue|continue;
 for|for
 control|(
 name|i
@@ -145,7 +155,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"inigrp: %s is in too many groups\n"
+literal|"initgroups: %s is in too many groups\n"
 argument_list|,
 name|uname
 argument_list|)
@@ -165,6 +175,7 @@ operator|->
 name|gr_gid
 expr_stmt|;
 block|}
+block|}
 name|toomany
 label|:
 if|if
@@ -181,7 +192,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"setgrp"
+literal|"setgroups"
 argument_list|)
 expr_stmt|;
 return|return
