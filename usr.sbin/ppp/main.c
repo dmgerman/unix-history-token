@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.147 1999/01/25 10:19:03 brian Exp $  *  *	TODO:  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.148 1999/01/28 01:56:33 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -1036,13 +1036,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"You may not use ppp in this mode with this label\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %s\n"
 argument_list|,
 name|label
@@ -1251,7 +1244,6 @@ operator|=
 name|NULL
 expr_stmt|;
 else|else
-block|{
 name|SignalPrompt
 operator|=
 name|prompt
@@ -1265,19 +1257,6 @@ argument_list|,
 name|PROMPT_STD
 argument_list|)
 expr_stmt|;
-name|prompt_Printf
-argument_list|(
-name|prompt
-argument_list|,
-literal|"Working in %s mode\n"
-argument_list|,
-name|mode2Nam
-argument_list|(
-name|mode
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 name|ID0init
 argument_list|()
 expr_stmt|;
@@ -1415,6 +1394,18 @@ argument_list|,
 name|prompt
 argument_list|,
 name|mode
+argument_list|)
+expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|prompt
+argument_list|,
+literal|"Working in %s mode\n"
+argument_list|,
+name|mode2Nam
+argument_list|(
+name|mode
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.39 1998/10/17 12:28:03 brian Exp $  *  *  TODO:  */
+comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.40 1998/10/31 17:38:47 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -1173,6 +1173,31 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Values for ``how'' in ReadSystem */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSTEM_EXISTS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSTEM_VALIDATE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSTEM_EXEC
+value|3
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -1193,9 +1218,6 @@ name|char
 modifier|*
 name|file
 parameter_list|,
-name|int
-name|doexec
-parameter_list|,
 name|struct
 name|prompt
 modifier|*
@@ -1205,6 +1227,9 @@ name|struct
 name|datalink
 modifier|*
 name|cx
+parameter_list|,
+name|int
+name|how
 parameter_list|)
 block|{
 name|FILE
@@ -1428,11 +1453,11 @@ name|name
 argument_list|,
 name|arg
 argument_list|,
-name|doexec
-argument_list|,
 name|prompt
 argument_list|,
 name|cx
+argument_list|,
+name|how
 argument_list|)
 expr_stmt|;
 name|log_Printf
@@ -1534,6 +1559,15 @@ literal|0
 condition|)
 block|{
 comment|/* We're in business */
+if|if
+condition|(
+name|how
+operator|==
+name|SYSTEM_EXISTS
+condition|)
+return|return
+literal|0
+return|;
 while|while
 condition|(
 operator|(
@@ -1597,7 +1631,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|doexec
+operator|(
+name|how
+operator|==
+name|SYSTEM_EXEC
+operator|)
 operator|&&
 operator|(
 name|wp
@@ -1664,13 +1702,21 @@ if|if
 condition|(
 operator|(
 operator|!
-name|doexec
+operator|(
+name|how
+operator|==
+name|SYSTEM_EXEC
+operator|)
 operator|&&
 name|allowcmd
 operator|)
 operator|||
 operator|(
-name|doexec
+operator|(
+name|how
+operator|==
+name|SYSTEM_EXEC
+operator|)
 operator|&&
 operator|!
 name|allowcmd
@@ -1747,25 +1793,9 @@ block|{
 comment|/*    * Note:  The ReadSystem() calls only result in calls to the Allow*    * functions.  arg->bundle will be set to NULL for these commands !    */
 name|int
 name|def
+decl_stmt|,
+name|how
 decl_stmt|;
-if|if
-condition|(
-name|ID0realuid
-argument_list|()
-operator|==
-literal|0
-condition|)
-block|{
-name|userok
-operator|=
-name|modeok
-operator|=
-literal|1
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 name|def
 operator|=
 operator|!
@@ -1775,6 +1805,17 @@ name|name
 argument_list|,
 literal|"default"
 argument_list|)
+expr_stmt|;
+name|how
+operator|=
+name|ID0realuid
+argument_list|()
+operator|==
+literal|0
+condition|?
+name|SYSTEM_EXISTS
+else|:
+name|SYSTEM_VALIDATE
 expr_stmt|;
 name|userok
 operator|=
@@ -1798,11 +1839,11 @@ literal|"default"
 argument_list|,
 name|CONFFILE
 argument_list|,
-literal|0
-argument_list|,
 name|prompt
 argument_list|,
 name|NULL
+argument_list|,
+name|how
 argument_list|)
 operator|!=
 literal|0
@@ -1810,7 +1851,7 @@ operator|&&
 name|def
 condition|)
 return|return
-literal|"System not found"
+literal|"Configuration label not found"
 return|;
 if|if
 condition|(
@@ -1825,25 +1866,37 @@ name|name
 argument_list|,
 name|CONFFILE
 argument_list|,
-literal|0
-argument_list|,
 name|prompt
 argument_list|,
 name|NULL
+argument_list|,
+name|how
 argument_list|)
 operator|!=
 literal|0
 condition|)
 return|return
-literal|"System not found"
+literal|"Configuration label not found"
 return|;
+if|if
+condition|(
+name|how
+operator|==
+name|SYSTEM_EXISTS
+condition|)
+name|userok
+operator|=
+name|modeok
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|userok
 condition|)
 return|return
-literal|"Invalid user id"
+literal|"User access denied"
 return|;
 if|if
 condition|(
@@ -1851,7 +1904,7 @@ operator|!
 name|modeok
 condition|)
 return|return
-literal|"Invalid mode"
+literal|"Mode denied for this label"
 return|;
 return|return
 name|NULL
@@ -1908,11 +1961,11 @@ name|name
 argument_list|,
 name|file
 argument_list|,
-literal|1
-argument_list|,
 name|prompt
 argument_list|,
 name|cx
+argument_list|,
+name|SYSTEM_EXEC
 argument_list|)
 return|;
 block|}
