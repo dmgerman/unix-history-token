@@ -66,6 +66,11 @@ decl_stmt|;
 name|int
 name|sc_flags
 decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|sc_led_dev
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -113,8 +118,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|bus_release_resource_t
-name|fhc_release_resource
+name|bus_get_resource_list_t
+name|fhc_get_resource_list
 decl_stmt|;
 end_decl_stmt
 
@@ -152,6 +157,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_SPARC64_FHC_FHCVAR_H_ */
+end_comment
 
 end_unit
 

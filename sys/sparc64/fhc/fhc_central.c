@@ -165,7 +165,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_release_resource
 argument_list|,
-name|fhc_release_resource
+name|bus_generic_rl_release_resource
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -180,6 +180,13 @@ argument_list|(
 name|bus_deactivate_resource
 argument_list|,
 name|bus_generic_deactivate_resource
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_get_resource_list
+argument_list|,
+name|fhc_get_resource_list
 argument_list|)
 block|,
 comment|/* ofw_bus interface */
