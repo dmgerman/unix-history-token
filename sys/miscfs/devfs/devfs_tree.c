@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.30 1996/09/10 08:27:33 bde Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.31 1996/09/29 15:00:37 bde Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_devfs.h"
+end_include
 
 begin_include
 include|#
@@ -2944,6 +2950,17 @@ name|dnp
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|dev
+operator|==
+name|NODEV
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|dnp
 operator|=
 name|findbdev
@@ -2962,7 +2979,7 @@ name|dnp
 condition|)
 return|return
 operator|(
-literal|0
+name|ENOENT
 operator|)
 return|;
 return|return

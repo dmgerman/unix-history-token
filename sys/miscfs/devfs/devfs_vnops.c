@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.30 1996/10/16 23:14:00 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.31 1996/10/17 22:47:23 julian Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -2576,6 +2576,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|DBPRINT
+argument_list|(
+operator|(
+literal|"write\n"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -2602,13 +2609,6 @@ return|return
 name|error
 return|;
 block|}
-name|DBPRINT
-argument_list|(
-operator|(
-literal|"write\n"
-operator|)
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|ap
