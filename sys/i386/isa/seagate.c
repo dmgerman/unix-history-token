@@ -4,7 +4,7 @@ comment|/*  * (Free/Net/386)BSD ST01/02, Future Domain TMC-885, TMC-950 SCSI dri
 end_comment
 
 begin_comment
-comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.26 1997/09/21 21:41:35 gibbs Exp $  */
+comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.27 1997/11/07 09:20:30 phk Exp $  */
 end_comment
 
 begin_comment
@@ -3355,7 +3355,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|sea_wait_for_req_deassert
 parameter_list|(
@@ -3371,10 +3371,35 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
-asm|asm (" 	1:      testb $0x10, %2 		jz 2f 		loop 1b 	2:" 	: "=c" (cnt)
+asm|__asm __volatile (" 	1:      testb $0x10, %2 		jz 2f 		loop 1b 	2:"
+block|:
+literal|"=c"
+operator|(
+name|cnt
+operator|)
 comment|/* output */
-asm|: "0" (cnt), "m" (*z->STATUS));
+operator|:
+literal|"0"
+operator|(
+name|cnt
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|z
+operator|->
+name|STATUS
+operator|)
+block|)
+function|;
+end_function
+
+begin_comment
 comment|/* input */
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -3402,32 +3427,36 @@ literal|0
 operator|)
 return|;
 block|}
+end_if
+
+begin_comment
 comment|/* PRINT (("sea_wait_for_req_deassert %s count=%d\n", msg, cnt)); */
+end_comment
+
+begin_return
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/*  * Establish I_T_L or I_T_L_Q nexus for new or existing command  * including ARBITRATION, SELECTION, and initial message out  * for IDENTIFY and queue messages.  * Return 1 if selection succeded.  */
 end_comment
 
-begin_function
-name|int
+begin_macro
+unit|int
 name|sea_select
-parameter_list|(
-specifier|volatile
-name|adapter_t
-modifier|*
-name|z
-parameter_list|,
-name|scb_t
-modifier|*
-name|scb
-parameter_list|)
+argument_list|(
+argument|volatile adapter_t *z
+argument_list|,
+argument|scb_t *scb
+argument_list|)
+end_macro
+
+begin_block
 block|{
 comment|/* Start arbitration. */
 operator|*
@@ -3958,7 +3987,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 name|int
@@ -4886,7 +4915,31 @@ argument_list|,
 literal|"blind block read"
 argument_list|)
 expr_stmt|;
-asm|asm(" 			shr $2, %%ecx; 			cld; 			rep; 			movsl; " : : 			"D" (z->DATA), "S" (data), "c" (BLOCK_SIZE) : 			"cx", "si", "di" );
+asm|__asm __volatile (" 			shr $2, %%ecx; 			cld; 			rep; 			movsl; " : :
+literal|"D"
+operator|(
+name|z
+operator|->
+name|DATA
+operator|)
+operator|,
+literal|"S"
+operator|(
+name|data
+operator|)
+operator|,
+literal|"c"
+operator|(
+name|BLOCK_SIZE
+operator|)
+operator|:
+literal|"cx"
+operator|,
+literal|"si"
+operator|,
+literal|"di"
+block|)
+empty_stmt|;
 name|data
 operator|+=
 name|BLOCK_SIZE
@@ -4897,24 +4950,79 @@ name|BLOCK_SIZE
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_else
 else|else
 block|{
 endif|#
 directive|endif
-asm|asm ("cld 		1:      movb (%%ebx), %%al 			xorb $1, %%al 			testb $0xf, %%al 			jnz 2f 			testb $0x10, %%al 			jz 1b 			lodsb 			movb %%al, (%%edi) 			loop 1b 		2:" 		: "=S" (data), "=c" (len)
+asm|__asm __volatile ("cld 		1:      movb (%%ebx), %%al 			xorb $1, %%al 			testb $0xf, %%al 			jnz 2f 			testb $0x10, %%al 			jz 1b 			lodsb 			movb %%al, (%%edi) 			loop 1b 		2:"
+block|:
+literal|"=S"
+operator|(
+name|data
+operator|)
+operator|,
+literal|"=c"
+operator|(
+name|len
+operator|)
 comment|/* output */
-asm|: "D" (z->DATA), "b" (z->STATUS),
+operator|:
+literal|"D"
+operator|(
+name|z
+operator|->
+name|DATA
+operator|)
+operator|,
+literal|"b"
+operator|(
+name|z
+operator|->
+name|STATUS
+operator|)
+operator|,
 comment|/* input */
-asm|"0" (data), "1" (len) 		: "eax", "ebx", "edi");
+literal|"0"
+operator|(
+name|data
+operator|)
+operator|,
+literal|"1"
+operator|(
+name|len
+operator|)
+operator|:
+literal|"eax"
+operator|,
+literal|"ebx"
+operator|,
+literal|"edi"
+block|)
+empty_stmt|;
+end_else
+
+begin_comment
 comment|/* clobbered */
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|SEA_BLINDTRANSFER
-block|}
+end_ifdef
+
+begin_endif
+unit|}
 endif|#
 directive|endif
-name|PRINT
-argument_list|(
+end_endif
+
+begin_expr_stmt
+unit|PRINT
+operator|(
 operator|(
 literal|"sea (DATAOUT) send %ld bytes\n"
 operator|,
@@ -4923,13 +5031,19 @@ name|plen
 operator|-
 name|len
 operator|)
-argument_list|)
+operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|*
 name|plen
 operator|=
 name|len
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|*
 name|pdata
 operator|=
@@ -4939,30 +5053,26 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|/*  * Receive data from the target.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|sea_data_input
-parameter_list|(
-name|adapter_t
-modifier|*
-name|z
-parameter_list|,
-name|u_char
-modifier|*
-modifier|*
-name|pdata
-parameter_list|,
-name|u_long
-modifier|*
-name|plen
-parameter_list|)
+argument_list|(
+argument|adapter_t *z
+argument_list|,
+argument|u_char **pdata
+argument_list|,
+argument|u_long *plen
+argument_list|)
+end_macro
+
+begin_block
 block|{
 specifier|volatile
 name|u_char
@@ -5011,7 +5121,31 @@ argument_list|,
 literal|"blind block read"
 argument_list|)
 expr_stmt|;
-asm|asm(" 			shr $2, %%ecx; 			cld; 			rep; 			movsl; " : : 			"S" (z->DATA), "D" (data), "c" (BLOCK_SIZE) : 			"cx", "si", "di" );
+asm|__asm __volatile (" 			shr $2, %%ecx; 			cld; 			rep; 			movsl; " : :
+literal|"S"
+operator|(
+name|z
+operator|->
+name|DATA
+operator|)
+operator|,
+literal|"D"
+operator|(
+name|data
+operator|)
+operator|,
+literal|"c"
+operator|(
+name|BLOCK_SIZE
+operator|)
+operator|:
+literal|"cx"
+operator|,
+literal|"si"
+operator|,
+literal|"di"
+block|)
+empty_stmt|;
 name|data
 operator|+=
 name|BLOCK_SIZE
@@ -5022,6 +5156,9 @@ name|BLOCK_SIZE
 expr_stmt|;
 block|}
 block|}
+end_block
+
+begin_else
 else|else
 block|{
 endif|#
@@ -5033,28 +5170,123 @@ operator|>=
 literal|512
 condition|)
 block|{
-asm|asm ("  cld 			1:      movb (%%esi), %%al 				xorb $5, %%al 				testb $0xf, %%al 				jnz 2f 				testb $0x10, %%al 				jz 1b 				movb (%%ebx), %%al 				stosb 				loop 1b 			2:" 			: "=D" (data), "=c" (len)
+asm|__asm __volatile ("  cld 			1:      movb (%%esi), %%al 				xorb $5, %%al 				testb $0xf, %%al 				jnz 2f 				testb $0x10, %%al 				jz 1b 				movb (%%ebx), %%al 				stosb 				loop 1b 			2:"
+block|:
+literal|"=D"
+operator|(
+name|data
+operator|)
+operator|,
+literal|"=c"
+operator|(
+name|len
+operator|)
 comment|/* output */
-asm|: "b" (z->DATA), "S" (z->STATUS), 				"0" (data), "1" (len)
+operator|:
+literal|"b"
+operator|(
+name|z
+operator|->
+name|DATA
+operator|)
+operator|,
+literal|"S"
+operator|(
+name|z
+operator|->
+name|STATUS
+operator|)
+operator|,
+literal|"0"
+operator|(
+name|data
+operator|)
+operator|,
+literal|"1"
+operator|(
+name|len
+operator|)
 comment|/* input */
-asm|: "eax", "ebx", "esi");
+operator|:
+literal|"eax"
+operator|,
+literal|"ebx"
+operator|,
+literal|"esi"
+block|)
+empty_stmt|;
 comment|/* clobbered */
 block|}
+end_else
+
+begin_else
 else|else
 block|{
-asm|asm ("  cld 			1:      movb (%%esi), %%al 				xorb $5, %%al 				testb $0xf, %%al 				jnz 2f 				testb $0x10, %%al 				jz 1b 				movb (%%ebx), %%al 				stosb 				movb $1000, %%al 			3:      testb $0x10, (%%esi) 				jz 4f 				dec %%al 				jnz 3b 			4:      loop 1b 			2:" 			: "=D" (data), "=c" (len)
+asm|__asm __volatile ("  cld 			1:      movb (%%esi), %%al 				xorb $5, %%al 				testb $0xf, %%al 				jnz 2f 				testb $0x10, %%al 				jz 1b 				movb (%%ebx), %%al 				stosb 				movb $1000, %%al 			3:      testb $0x10, (%%esi) 				jz 4f 				dec %%al 				jnz 3b 			4:      loop 1b 			2:"
+block|:
+literal|"=D"
+operator|(
+name|data
+operator|)
+operator|,
+literal|"=c"
+operator|(
+name|len
+operator|)
 comment|/* output */
-asm|: "b" (z->DATA), "S" (z->STATUS), 				"0" (data), "1" (len)
+operator|:
+literal|"b"
+operator|(
+name|z
+operator|->
+name|DATA
+operator|)
+operator|,
+literal|"S"
+operator|(
+name|z
+operator|->
+name|STATUS
+operator|)
+operator|,
+literal|"0"
+operator|(
+name|data
+operator|)
+operator|,
+literal|"1"
+operator|(
+name|len
+operator|)
 comment|/* input */
-asm|: "eax", "ebx", "esi");
+operator|:
+literal|"eax"
+operator|,
+literal|"ebx"
+operator|,
+literal|"esi"
+block|)
+empty_stmt|;
+end_else
+
+begin_comment
 comment|/* clobbered */
-block|}
+end_comment
+
+begin_ifdef
+unit|}
 ifdef|#
 directive|ifdef
 name|SEA_BLINDTRANSFER
-block|}
+end_ifdef
+
+begin_endif
+unit|}
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|PRINT
 argument_list|(
 operator|(
@@ -5067,11 +5299,17 @@ name|len
 operator|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|*
 name|plen
 operator|=
 name|len
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|*
 name|pdata
 operator|=
@@ -5081,28 +5319,26 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|/*  * Send the command to the target.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|sea_cmd_output
-parameter_list|(
-name|target_t
-modifier|*
-name|t
-parameter_list|,
-name|u_char
-modifier|*
-name|cmd
-parameter_list|,
-name|int
-name|cmdlen
-parameter_list|)
+argument_list|(
+argument|target_t *t
+argument_list|,
+argument|u_char *cmd
+argument_list|,
+argument|int cmdlen
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|adapter_t
 modifier|*
@@ -5281,7 +5517,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Send the message to the target.  */
