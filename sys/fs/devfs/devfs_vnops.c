@@ -2527,6 +2527,37 @@ operator|(
 literal|0
 operator|)
 return|;
+case|case
+name|_POSIX_MAC_PRESENT
+case|:
+ifdef|#
+directive|ifdef
+name|MAC
+comment|/* 		 * If MAC is enabled, devfs automatically supports 		 * trivial non-persistant label storage. 		 */
+operator|*
+name|ap
+operator|->
+name|a_retval
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
+operator|*
+name|ap
+operator|->
+name|a_retval
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MAC */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 default|default:
 return|return
 operator|(
