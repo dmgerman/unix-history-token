@@ -578,9 +578,11 @@ name|info
 operator|==
 name|NULL
 condition|)
-name|pfatal
+name|errx
 argument_list|(
-literal|"cannot alloc %u bytes for inoinfo\n"
+name|EEXIT
+argument_list|,
+literal|"cannot alloc %u bytes for inoinfo"
 argument_list|,
 call|(
 name|unsigned
@@ -755,9 +757,11 @@ name|info
 operator|==
 name|NULL
 condition|)
-name|pfatal
+name|errx
 argument_list|(
-literal|"cannot alloc %u bytes for inoinfo\n"
+name|EEXIT
+argument_list|,
+literal|"cannot alloc %u bytes for inoinfo"
 argument_list|,
 call|(
 name|unsigned
