@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mktemp.c,v 1.6 1997/02/22 15:02:16 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -385,7 +385,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|path
 argument_list|,
