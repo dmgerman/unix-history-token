@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.19 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2180,6 +2180,27 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|filename
+index|[
+literal|0
+index|]
+operator|==
+literal|'|'
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"fileclass: pipes (F%c%s) not supported due to security problems"
+argument_list|,
+name|class
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|stat
