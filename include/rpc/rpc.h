@@ -165,6 +165,12 @@ directive|include
 file|<rpc/pmap_prot.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -174,6 +180,11 @@ end_include
 begin_comment
 comment|/* rpcbind interface functions */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
