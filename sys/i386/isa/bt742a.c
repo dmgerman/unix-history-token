@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.26 1994/10/10 00:46:09 jkh Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.27 1994/10/12 04:15:30 phk Exp $  */
 end_comment
 
 begin_comment
@@ -1985,6 +1985,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|btprobing
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|isa_driver
 name|btdriver
@@ -2269,6 +2278,11 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|btprobing
+condition|)
 name|printf
 argument_list|(
 literal|"bt%d: bt_cmd, host not idle(0x%x)\n"
@@ -2368,6 +2382,11 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|btprobing
+condition|)
 name|printf
 argument_list|(
 literal|"bt%d: bt_cmd, cmd/data port full\n"
@@ -2456,6 +2475,11 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|btprobing
+condition|)
 name|printf
 argument_list|(
 literal|"bt%d: bt_cmd, cmd/data port empty %d\n"
@@ -2530,6 +2554,11 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|btprobing
+condition|)
 name|printf
 argument_list|(
 literal|"bt%d: bt_cmd, host not finished(0x%x)\n"
@@ -2587,6 +2616,10 @@ name|bt_data
 modifier|*
 name|bt
 decl_stmt|;
+name|btprobing
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -2781,6 +2814,10 @@ index|[
 name|unit
 index|]
 decl_stmt|;
+name|btprobing
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * fill in the prototype scsi_link. 	 */
 name|bt
 operator|->
@@ -4567,6 +4604,8 @@ literal|10000
 argument_list|)
 expr_stmt|;
 comment|/*          * Displaying Board ID and Hardware Revision          *                                   94/05/18 amurai@spec.co.jp          */
+name|i
+operator|=
 name|bt_cmd
 argument_list|(
 name|unit
@@ -4591,6 +4630,13 @@ name|binfo
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+condition|)
+return|return
+name|i
+return|;
 name|printf
 argument_list|(
 literal|"bt%d: Bt%c%c%c%c/%c%d-"
