@@ -24,7 +24,7 @@ file|<time.h>
 end_include
 
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.h,v 1.1.1.1 1996/06/17 12:26:06 jkh Exp $  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.h,v 1.2 1996/06/17 15:28:08 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -47,12 +47,6 @@ name|int
 name|fd_ctrl
 decl_stmt|;
 name|int
-name|binary
-decl_stmt|;
-name|int
-name|passive
-decl_stmt|;
-name|int
 name|addrtype
 decl_stmt|;
 name|char
@@ -65,6 +59,12 @@ name|file
 decl_stmt|;
 name|int
 name|errno
+decl_stmt|;
+name|int
+name|is_binary
+decl_stmt|;
+name|int
+name|is_passive
 decl_stmt|;
 block|}
 typedef|*
@@ -185,14 +185,23 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|ftpAscii
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|ftpBinary
 parameter_list|(
 name|FILE
 modifier|*
 name|fp
-parameter_list|,
-name|int
-name|status
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c)1995, 1996 Jordan Hubbard  *  * All rights reserved.  *  * This source code may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of the software nor does  * the author assume any responsibility for damages incurred with  * its use.  *  * $Id$  *  * TCL Interface code for functions provided by the ftp library.  *  */
+comment|/*  * Copyright (c)1995, 1996 Jordan Hubbard  *  * All rights reserved.  *  * This source code may be used, modified, copied, distributed, and  * sold, in both source and binary form provided that the above  * copyright and these terms are retained, verbatim, as the first  * lines of this file.  Under no circumstances is the author  * responsible for the proper functioning of the software nor does  * the author assume any responsibility for damages incurred with  * its use.  *  * $Id: ftp_pkg.c,v 1.1.1.1 1996/06/17 12:26:06 jkh Exp $  *  * TCL Interface code for functions provided by the ftp library.  *  */
 end_comment
 
 begin_include
@@ -802,14 +802,14 @@ name|fp
 decl_stmt|;
 name|CHECK_ARGS
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 name|argv
 index|[
 literal|0
 index|]
 argument_list|,
-literal|"fileId bool"
+literal|"fileId"
 argument_list|)
 expr_stmt|;
 if|if
@@ -836,18 +836,10 @@ condition|)
 return|return
 name|TCL_ERROR
 return|;
-comment|/* Debug("ftp_pkg: set binary mode to %d", atoi(argv[2])); */
+comment|/* Debug("ftp_pkg: set binary mode"); */
 name|ftpBinary
 argument_list|(
 name|fp
-argument_list|,
-name|atoi
-argument_list|(
-name|argv
-index|[
-literal|2
-index|]
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
