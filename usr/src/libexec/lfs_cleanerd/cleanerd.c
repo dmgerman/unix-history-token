@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cleanerd.c	8.1 (Berkeley) %G%"
+literal|"@(#)cleanerd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,6 +209,7 @@ name|__P
 argument_list|(
 operator|(
 name|fsid_t
+operator|*
 operator|,
 expr|struct
 name|timeval
@@ -225,6 +226,7 @@ name|__P
 argument_list|(
 operator|(
 name|fsid_t
+operator|*
 operator|,
 name|u_long
 operator|)
@@ -239,6 +241,7 @@ name|__P
 argument_list|(
 operator|(
 name|fsid_t
+operator|*
 operator|,
 name|BLOCK_INFO
 operator|*
@@ -256,6 +259,7 @@ name|__P
 argument_list|(
 operator|(
 name|fsid_t
+operator|*
 operator|,
 name|BLOCK_INFO
 operator|*
@@ -523,7 +527,7 @@ operator|)
 return|;
 else|else
 block|{
-comment|/*  		 * from lfsSegUsage.c (Mendel's code). 		 * priority calculation is done using INTEGER arithmetic. 		 * sizes are in BLOCKS (that is why we use lblkno below). 		 * age is in seconds. 		 * 		 * priority = ((seg_size - live) * age) / (seg_size + live)  		 */
+comment|/*  		 * from lfsSegUsage.c (Mendel's code). 		 * priority calculation is done using INTEGER arithmetic. 		 * sizes are in BLOCKS (that is why we use lblkno below). 		 * age is in seconds. 		 * 		 * priority = ((seg_size - live) * age) / (seg_size + live) 		 */
 ifdef|#
 directive|ifdef
 name|VERBOSE
@@ -887,6 +891,7 @@ if|if
 condition|(
 name|lfs_segwait
 argument_list|(
+operator|&
 name|fsid
 argument_list|,
 operator|&
@@ -1305,6 +1310,7 @@ if|if
 condition|(
 name|lfs_segclean
 argument_list|(
+operator|&
 name|fsp
 operator|->
 name|fi_statfsp
@@ -1870,6 +1876,7 @@ if|if
 condition|(
 name|lfs_bmapv
 argument_list|(
+operator|&
 name|fsp
 operator|->
 name|fi_statfsp
@@ -2087,6 +2094,7 @@ if|if
 condition|(
 name|lfs_markv
 argument_list|(
+operator|&
 name|fsp
 operator|->
 name|fi_statfsp
