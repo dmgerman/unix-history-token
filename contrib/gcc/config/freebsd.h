@@ -111,7 +111,7 @@ value|FBSD_CPP_SPEC
 end_define
 
 begin_comment
-comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling.     (like the default, except no -lg, and no -p).  */
+comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling.  Add the appropriate    libc_r if supporting threads.    (like the default, except no -lg, and no -p).  */
 end_comment
 
 begin_undef
@@ -124,7 +124,7 @@ begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"\   %{!shared: \     %{!pg: \       %{!pthread:-lc} \       %{pthread:-lc_r}} \     %{pg: \       %{!pthread:-lc_p} \       %{pthread:-lc_r_p}} \   }"
+value|"\   %{!shared: \     %{!pg: %{pthread:-lc_r} -lc} \     %{pg:  %{pthread:-lc_r_p} -lc_p} \   }"
 end_define
 
 begin_comment
