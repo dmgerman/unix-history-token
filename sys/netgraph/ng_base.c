@@ -108,7 +108,7 @@ name|MODULE_VERSION
 argument_list|(
 name|netgraph
 argument_list|,
-literal|1
+name|NG_ABI_VERSION
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5214,6 +5214,12 @@ operator|(
 literal|0
 operator|)
 return|;
+name|node
+operator|->
+name|nd_flags
+operator||=
+name|NG_INVALID
+expr_stmt|;
 if|if
 condition|(
 name|node
