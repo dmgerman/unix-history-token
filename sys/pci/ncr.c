@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.114 1998/02/04 03:47:16 eivind Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.115 1998/02/09 06:10:56 eivind Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -1585,36 +1585,28 @@ begin_struct
 struct|struct
 name|tstamp
 block|{
-name|struct
-name|timeval
+name|int
 name|start
 decl_stmt|;
-name|struct
-name|timeval
+name|int
 name|end
 decl_stmt|;
-name|struct
-name|timeval
+name|int
 name|select
 decl_stmt|;
-name|struct
-name|timeval
+name|int
 name|command
 decl_stmt|;
-name|struct
-name|timeval
+name|int
 name|data
 decl_stmt|;
-name|struct
-name|timeval
+name|int
 name|status
 decl_stmt|;
-name|struct
-name|timeval
+name|int
 name|disconnect
 decl_stmt|;
-name|struct
-name|timeval
+name|int
 name|reselect
 decl_stmt|;
 block|}
@@ -2901,13 +2893,11 @@ specifier|static
 name|int
 name|ncr_delta
 parameter_list|(
-name|struct
-name|timeval
+name|int
 modifier|*
 name|from
 parameter_list|,
-name|struct
-name|timeval
+name|int
 modifier|*
 name|to
 parameter_list|)
@@ -3465,7 +3455,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.114 1998/02/04 03:47:16 eivind Exp $\n"
+literal|"\n$Id: ncr.c,v 1.115 1998/02/09 06:10:56 eivind Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -3998,14 +3988,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|KVAR_TIME_TV_SEC
+name|KVAR_SECOND
 value|(0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|KVAR_TIME
+name|KVAR_TICKS
 value|(1)
 end_define
 
@@ -4043,12 +4033,10 @@ index|[]
 init|=
 block|{
 operator|&
-name|time
-operator|.
-name|tv_sec
+name|time_second
 block|,
 operator|&
-name|time
+name|ticks
 block|,
 operator|&
 name|ncr_cache
@@ -4085,7 +4073,7 @@ argument_list|)
 block|,
 name|KVAR
 argument_list|(
-name|KVAR_TIME_TV_SEC
+name|KVAR_SECOND
 argument_list|)
 block|,
 name|NADDR
@@ -4458,7 +4446,7 @@ argument_list|)
 block|,
 name|KVAR
 argument_list|(
-name|KVAR_TIME
+name|KVAR_TICKS
 argument_list|)
 block|,
 name|NADDR
@@ -5064,7 +5052,7 @@ argument_list|)
 block|,
 name|KVAR
 argument_list|(
-name|KVAR_TIME
+name|KVAR_TICKS
 argument_list|)
 block|,
 name|NADDR
@@ -5132,7 +5120,7 @@ argument_list|)
 block|,
 name|KVAR
 argument_list|(
-name|KVAR_TIME
+name|KVAR_TICKS
 argument_list|)
 block|,
 name|NADDR
@@ -5948,7 +5936,7 @@ argument_list|)
 block|,
 name|KVAR
 argument_list|(
-name|KVAR_TIME
+name|KVAR_TICKS
 argument_list|)
 block|,
 name|NADDR
@@ -6492,13 +6480,13 @@ block|,  }
 comment|/*-------------------------< DATA_IN>--------------------*/
 block|,
 block|{
-comment|/* **	Because the size depends on the **	#define MAX_SCATTER parameter, **	it is filled in at runtime. ** **	SCR_JUMP ^ IFFALSE (WHEN (SCR_DATA_IN)), **		PADDR (no_data), **	SCR_COPY (sizeof (struct timeval)), **		KVAR (KVAR_TIME), **		NADDR (header.stamp.data), **	SCR_MOVE_TBL ^ SCR_DATA_IN, **		offsetof (struct dsb, data[ 0]), ** **  ##===========< i=1; i<MAX_SCATTER>========= **  ||	SCR_CALL ^ IFFALSE (WHEN (SCR_DATA_IN)), **  ||		PADDR (checkatn), **  ||	SCR_MOVE_TBL ^ SCR_DATA_IN, **  ||		offsetof (struct dsb, data[ i]), **  ##========================================== ** **	SCR_CALL, **		PADDR (checkatn), **	SCR_JUMP, **		PADDR (no_data), */
+comment|/* **	Because the size depends on the **	#define MAX_SCATTER parameter, **	it is filled in at runtime. ** **	SCR_JUMP ^ IFFALSE (WHEN (SCR_DATA_IN)), **		PADDR (no_data), **	SCR_COPY (sizeof (struct timeval)), **		KVAR (KVAR_TICKS), **		NADDR (header.stamp.data), **	SCR_MOVE_TBL ^ SCR_DATA_IN, **		offsetof (struct dsb, data[ 0]), ** **  ##===========< i=1; i<MAX_SCATTER>========= **  ||	SCR_CALL ^ IFFALSE (WHEN (SCR_DATA_IN)), **  ||		PADDR (checkatn), **  ||	SCR_MOVE_TBL ^ SCR_DATA_IN, **  ||		offsetof (struct dsb, data[ i]), **  ##========================================== ** **	SCR_CALL, **		PADDR (checkatn), **	SCR_JUMP, **		PADDR (no_data), */
 literal|0
 block|}
 comment|/*-------------------------< DATA_OUT>-------------------*/
 block|,
 block|{
-comment|/* **	Because the size depends on the **	#define MAX_SCATTER parameter, **	it is filled in at runtime. ** **	SCR_JUMP ^ IFFALSE (WHEN (SCR_DATA_OUT)), **		PADDR (no_data), **	SCR_COPY (sizeof (struct timeval)), **		KVAR (KVAR_TIME), **		NADDR (header.stamp.data), **	SCR_MOVE_TBL ^ SCR_DATA_OUT, **		offsetof (struct dsb, data[ 0]), ** **  ##===========< i=1; i<MAX_SCATTER>========= **  ||	SCR_CALL ^ IFFALSE (WHEN (SCR_DATA_OUT)), **  ||		PADDR (dispatch), **  ||	SCR_MOVE_TBL ^ SCR_DATA_OUT, **  ||		offsetof (struct dsb, data[ i]), **  ##========================================== ** **	SCR_CALL, **		PADDR (dispatch), **	SCR_JUMP, **		PADDR (no_data), ** **--------------------------------------------------------- */
+comment|/* **	Because the size depends on the **	#define MAX_SCATTER parameter, **	it is filled in at runtime. ** **	SCR_JUMP ^ IFFALSE (WHEN (SCR_DATA_OUT)), **		PADDR (no_data), **	SCR_COPY (sizeof (struct timeval)), **		KVAR (KVAR_TICKS), **		NADDR (header.stamp.data), **	SCR_MOVE_TBL ^ SCR_DATA_OUT, **		offsetof (struct dsb, data[ 0]), ** **  ##===========< i=1; i<MAX_SCATTER>========= **  ||	SCR_CALL ^ IFFALSE (WHEN (SCR_DATA_OUT)), **  ||		PADDR (dispatch), **  ||	SCR_MOVE_TBL ^ SCR_DATA_OUT, **  ||		offsetof (struct dsb, data[ i]), **  ##========================================== ** **	SCR_CALL, **		PADDR (dispatch), **	SCR_JUMP, **		PADDR (no_data), ** **--------------------------------------------------------- */
 operator|(
 name|u_long
 operator|)
@@ -8069,7 +8057,7 @@ name|ncrcmd
 operator|)
 name|KVAR
 argument_list|(
-name|KVAR_TIME
+name|KVAR_TICKS
 argument_list|)
 expr_stmt|;
 operator|*
@@ -8274,7 +8262,7 @@ name|ncrcmd
 operator|)
 name|KVAR
 argument_list|(
-name|KVAR_TIME
+name|KVAR_TICKS
 argument_list|)
 expr_stmt|;
 operator|*
@@ -12786,9 +12774,6 @@ name|tstamp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|gettime
-argument_list|(
-operator|&
 name|cp
 operator|->
 name|phys
@@ -12798,7 +12783,8 @@ operator|.
 name|stamp
 operator|.
 name|start
-argument_list|)
+operator|=
+name|ticks
 expr_stmt|;
 comment|/*---------------------------------------------------- 	** 	**	Get device quirks from a speciality table. 	** 	**---------------------------------------------------- 	*/
 if|if
@@ -14036,9 +14022,7 @@ name|cp
 operator|->
 name|tlimit
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 operator|+
 name|xp
 operator|->
@@ -17552,9 +17536,7 @@ decl_stmt|;
 name|u_long
 name|thistime
 init|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 decl_stmt|;
 name|u_long
 name|step
@@ -18689,9 +18671,7 @@ expr_stmt|;
 comment|/*======================================== 	**	do the register dump 	**======================================== 	*/
 if|if
 condition|(
-name|time
-operator|.
-name|tv_sec
+name|time_second
 operator|-
 name|np
 operator|->
@@ -18705,7 +18685,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|np
@@ -24243,13 +24223,11 @@ specifier|static
 name|int
 name|ncr_delta
 parameter_list|(
-name|struct
-name|timeval
+name|int
 modifier|*
 name|from
 parameter_list|,
-name|struct
-name|timeval
+name|int
 modifier|*
 name|to
 parameter_list|)
@@ -24258,8 +24236,6 @@ if|if
 condition|(
 operator|!
 name|from
-operator|->
-name|tv_sec
 condition|)
 return|return
 operator|(
@@ -24271,8 +24247,6 @@ if|if
 condition|(
 operator|!
 name|to
-operator|->
-name|tv_sec
 condition|)
 return|return
 operator|(
@@ -24284,32 +24258,13 @@ return|return
 operator|(
 operator|(
 name|to
-operator|->
-name|tv_sec
 operator|-
 name|from
-operator|->
-name|tv_sec
-operator|-
-literal|2
 operator|)
 operator|*
 literal|1000
-operator|+
-operator|+
-operator|(
-name|to
-operator|->
-name|tv_usec
-operator|-
-name|from
-operator|->
-name|tv_usec
-operator|+
-literal|2000000
-operator|)
 operator|/
-literal|1000
+name|hz
 operator|)
 return|;
 block|}
@@ -24350,13 +24305,11 @@ decl_stmt|;
 name|u_long
 name|diff
 decl_stmt|;
-name|gettime
-argument_list|(
-operator|&
 name|PROFILE
 operator|.
 name|end
-argument_list|)
+operator|=
+name|ticks
 expr_stmt|;
 name|st
 operator|=

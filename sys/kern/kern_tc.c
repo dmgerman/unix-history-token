@@ -10,7 +10,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998 Poul-Henning Kamp<phk@FreeBSD.org>  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_clock.c	8.5 (Berkeley) 1/21/94  * $Id: kern_clock.c,v 1.58 1998/03/16 10:19:12 phk Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998 Poul-Henning Kamp<phk@FreeBSD.org>  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_clock.c	8.5 (Berkeley) 1/21/94  * $Id: kern_clock.c,v 1.59 1998/03/26 20:51:31 phk Exp $  */
 end_comment
 
 begin_include
@@ -365,6 +365,12 @@ name|timecounter
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|time_t
+name|time_second
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Clock handling routines.  *  * This code is written to operate with two timers that run independently of  * each other.  *  * The main timer, running hz times per second, is used to trigger interval  * timers, timeouts and rescheduling as needed.  *  * The second timer handles kernel and user profiling,  * and does resource use estimation.  If the second timer is programmable,  * it is randomized to avoid aliasing between the two clocks.  For example,  * the randomization prevents an adversary from always giving up the cpu  * just before its quantum expires.  Otherwise, it would never accumulate  * cpu ticks.  The mean frequency of the second timer is stathz.  *  * If no second timer exists, stathz will be zero; in this case we drive  * profiling and statistics off the main clock.  This WILL NOT be accurate;  * do not do it unless absolutely necessary.  *  * The statistics clock may (or may not) be run at a higher rate while  * profiling.  This profile clock runs at profhz.  We require that profhz  * be an integral multiple of stathz.  *  * If the statistics clock is running fast, it must be divided by the ratio  * profhz/stathz for statistics.  (For profiling, every tick counts.)  *  * Time-of-day is maintained using a "timecounter", which may or may  * not be related to the hardware generating the above mentioned  * interrupts.  */
 end_comment
@@ -416,13 +422,6 @@ end_decl_stmt
 begin_comment
 comment|/* ratio: prof / stat */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|timeval
-name|time
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|volatile
@@ -712,12 +711,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compute number of hz until specified time.  Used to  * compute third argument to timeout() from an absolute time.  * XXX this interface is often inconvenient.  We often just need the  * number of ticks in a timeval, but to use hzto() for that we have  * to add `time' to the timeval and do everything at splclock().  */
+comment|/*  * Compute number of ticks in the specified amount of time.  */
 end_comment
 
 begin_function
 name|int
-name|hzto
+name|tvtohz
 parameter_list|(
 name|tv
 parameter_list|)
@@ -742,19 +741,10 @@ name|int
 name|s
 decl_stmt|;
 comment|/* 	 * If the number of usecs in the whole seconds part of the time 	 * difference fits in a long, then the total number of usecs will 	 * fit in an unsigned long.  Compute the total and convert it to 	 * ticks, rounding up and adding 1 to allow for the current tick 	 * to expire.  Rounding also depends on unsigned long arithmetic 	 * to avoid overflow. 	 * 	 * Otherwise, if the number of ticks in the whole seconds part of 	 * the time difference fits in a long, then convert the parts to 	 * ticks separately and add, using similar rounding methods and 	 * overflow avoidance.  This method would work in the previous 	 * case but it is slightly slower and assumes that hz is integral. 	 * 	 * Otherwise, round the time difference down to the maximum 	 * representable value. 	 * 	 * If ints have 32 bits, then the maximum value for any timeout in 	 * 10ms ticks is 248 days. 	 */
-name|s
-operator|=
-name|splclock
-argument_list|()
-expr_stmt|;
 name|sec
 operator|=
 name|tv
 operator|->
-name|tv_sec
-operator|-
-name|time
-operator|.
 name|tv_sec
 expr_stmt|;
 name|usec
@@ -762,15 +752,6 @@ operator|=
 name|tv
 operator|->
 name|tv_usec
-operator|-
-name|time
-operator|.
-name|tv_usec
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -814,7 +795,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"hzto: negative time difference %ld sec %ld usec\n"
+literal|"tvotohz: negative time difference %ld sec %ld usec\n"
 argument_list|,
 name|sec
 argument_list|,
@@ -912,6 +893,74 @@ expr_stmt|;
 return|return
 operator|(
 name|ticks
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Compute number of hz until specified time.  Used to  * compute third argument to timeout() from an absolute time.  */
+end_comment
+
+begin_function
+name|int
+name|hzto
+parameter_list|(
+name|tv
+parameter_list|)
+name|struct
+name|timeval
+modifier|*
+name|tv
+decl_stmt|;
+block|{
+specifier|register
+name|long
+name|sec
+decl_stmt|,
+name|usec
+decl_stmt|;
+name|struct
+name|timeval
+name|t2
+decl_stmt|;
+name|getmicrotime
+argument_list|(
+operator|&
+name|t2
+argument_list|)
+expr_stmt|;
+name|t2
+operator|.
+name|tv_sec
+operator|=
+name|tv
+operator|->
+name|tv_sec
+operator|-
+name|t2
+operator|.
+name|tv_sec
+expr_stmt|;
+name|t2
+operator|.
+name|tv_usec
+operator|=
+name|tv
+operator|->
+name|tv_usec
+operator|-
+name|t2
+operator|.
+name|tv_usec
+expr_stmt|;
+return|return
+operator|(
+name|tvtohz
+argument_list|(
+operator|&
+name|t2
+argument_list|)
 operator|)
 return|;
 block|}
@@ -2435,21 +2484,11 @@ operator|->
 name|get_timecount
 argument_list|()
 expr_stmt|;
-name|time
-operator|.
-name|tv_sec
+name|time_second
 operator|=
 name|tc
 operator|->
 name|offset_sec
-expr_stmt|;
-name|time
-operator|.
-name|tv_usec
-operator|=
-name|tc
-operator|->
-name|offset_micro
 expr_stmt|;
 name|timecounter
 operator|=
@@ -2824,17 +2863,7 @@ operator|)
 operator|>>
 literal|32
 expr_stmt|;
-name|time
-operator|.
-name|tv_usec
-operator|=
-name|tc
-operator|->
-name|offset_micro
-expr_stmt|;
-name|time
-operator|.
-name|tv_sec
+name|time_second
 operator|=
 name|tc
 operator|->

@@ -1775,9 +1775,7 @@ operator|.
 name|nr_firstnet
 argument_list|)
 operator|+
-name|time
-operator|.
-name|tv_sec
+name|time_second
 operator|%
 operator|(
 name|nnets
@@ -1920,9 +1918,7 @@ name|sat_addr
 operator|.
 name|s_node
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 block|}
 else|else
@@ -2037,9 +2033,7 @@ literal|0
 operator|,
 name|nodeinc
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 operator||
 literal|1
 init|;
@@ -2212,9 +2206,7 @@ name|sat_addr
 operator|.
 name|s_node
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 block|}
 comment|/* 	 * if we are still trying to probe, then we have finished all 	 * the possible addresses, so we need to give up 	 */

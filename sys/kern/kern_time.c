@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_time.c	8.1 (Berkeley) 6/10/93  * $Id: kern_time.c,v 1.42 1998/02/25 04:10:32 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_time.c	8.1 (Berkeley) 6/10/93  * $Id: kern_time.c,v 1.43 1998/03/26 20:51:41 phk Exp $  */
 end_comment
 
 begin_include
@@ -1035,31 +1035,12 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|s
-operator|=
-name|splclock
-argument_list|()
-expr_stmt|;
-name|timevaladd
-argument_list|(
-operator|&
-name|atv
-argument_list|,
-operator|&
-name|time
-argument_list|)
-expr_stmt|;
 name|timo
 operator|=
-name|hzto
+name|tvtohz
 argument_list|(
 operator|&
 name|atv
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|p
@@ -1119,18 +1100,10 @@ operator|)
 condition|)
 block|{
 comment|/*- 			 * XXX this is unnecessary and possibly wrong if the timeout 			 * expired.  Then the remaining time should be zero.  If the 			 * calculation gives a nonzero value, then we have a bug. 			 * (1) if settimeofday() was called, then the calculation is 			 *     probably wrong, since `time' has probably become 			 *     inconsistent with the ending time `atv'. 			 *     XXX (1) should be fixed now with p->p_sleepend; 			 * (2) otherwise, our calculation of `timo' was wrong, perhaps 			 *     due to `tick' being wrong when hzto() was called or 			 *     changing afterwards (it can be wrong or change due to 			 *     hzto() not knowing about adjtime(2) or tickadj(8)). 			 *     Then we should be sleeping again instead instead of 			 *     returning.  Rounding up in hzto() probably fixes this 			 *     problem for small timeouts, but the absolute error may 			 *     be large for large timeouts. 			 */
-name|s
-operator|=
-name|splclock
-argument_list|()
-expr_stmt|;
-name|utv
-operator|=
-name|time
-expr_stmt|;
-name|splx
+name|getmicrotime
 argument_list|(
-name|s
+operator|&
+name|utv
 argument_list|)
 expr_stmt|;
 if|if
@@ -2360,6 +2333,10 @@ name|uap
 decl_stmt|;
 block|{
 name|struct
+name|timeval
+name|ctv
+decl_stmt|;
+name|struct
 name|itimerval
 name|aitv
 decl_stmt|;
@@ -2384,6 +2361,7 @@ operator|=
 name|splclock
 argument_list|()
 expr_stmt|;
+comment|/* XXX still needed ? */
 if|if
 condition|(
 name|uap
@@ -2410,6 +2388,13 @@ operator|.
 name|it_value
 argument_list|)
 condition|)
+block|{
+name|getmicrotime
+argument_list|(
+operator|&
+name|ctv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|timercmp
@@ -2420,7 +2405,7 @@ operator|.
 name|it_value
 argument_list|,
 operator|&
-name|time
+name|ctv
 argument_list|,
 operator|<
 argument_list|)
@@ -2442,9 +2427,10 @@ operator|.
 name|it_value
 argument_list|,
 operator|&
-name|time
+name|ctv
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|aitv
@@ -2550,6 +2536,10 @@ block|{
 name|struct
 name|itimerval
 name|aitv
+decl_stmt|;
+name|struct
+name|timeval
+name|ctv
 decl_stmt|;
 specifier|register
 name|struct
@@ -2713,6 +2703,7 @@ operator|=
 name|splclock
 argument_list|()
 expr_stmt|;
+comment|/* XXX: still needed ? */
 if|if
 condition|(
 name|uap
@@ -2759,6 +2750,12 @@ name|it_value
 argument_list|)
 condition|)
 block|{
+name|getmicrotime
+argument_list|(
+operator|&
+name|ctv
+argument_list|)
+expr_stmt|;
 name|timevaladd
 argument_list|(
 operator|&
@@ -2767,7 +2764,7 @@ operator|.
 name|it_value
 argument_list|,
 operator|&
-name|time
+name|ctv
 argument_list|)
 expr_stmt|;
 name|p
@@ -2848,6 +2845,10 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|timeval
+name|ctv
+decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -2904,6 +2905,7 @@ operator|=
 name|splclock
 argument_list|()
 expr_stmt|;
+comment|/* XXX: still neeeded ? */
 name|timevaladd
 argument_list|(
 operator|&
@@ -2921,6 +2923,12 @@ operator|.
 name|it_interval
 argument_list|)
 expr_stmt|;
+name|getmicrotime
+argument_list|(
+operator|&
+name|ctv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|timercmp
@@ -2933,7 +2941,7 @@ operator|.
 name|it_value
 argument_list|,
 operator|&
-name|time
+name|ctv
 argument_list|,
 operator|>
 argument_list|)

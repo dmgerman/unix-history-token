@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.33 1997/12/16 17:40:23 eivind Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.34 1998/02/09 06:09:25 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -891,9 +891,7 @@ name|shmseg
 operator|->
 name|shm_dtime
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 if|if
 condition|(
@@ -1561,9 +1559,7 @@ name|shmseg
 operator|->
 name|shm_atime
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 name|shmseg
 operator|->
@@ -2125,9 +2121,7 @@ name|shmseg
 operator|->
 name|shm_ctime
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 break|break;
 case|case
@@ -2805,9 +2799,7 @@ name|shmseg
 operator|->
 name|shm_ctime
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 name|shm_committed
 operator|+=

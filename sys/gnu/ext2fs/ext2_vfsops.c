@@ -4446,9 +4446,7 @@ name|s_es
 operator|->
 name|s_wtime
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 name|allerror
 operator|=

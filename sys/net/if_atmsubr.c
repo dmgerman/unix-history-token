@@ -289,7 +289,7 @@ argument_list|(
 name|ENETDOWN
 argument_list|)
 expr_stmt|;
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|ifp
@@ -999,7 +999,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|ifp

@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.53 1998/01/08 23:41:28 eivind Exp $ */
+comment|/* $Id: if_ppp.c,v 1.54 1998/03/22 06:51:54 peter Exp $ */
 end_comment
 
 begin_comment
@@ -1092,9 +1092,7 @@ name|sc
 operator|->
 name|sc_last_recv
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 return|return
 name|sc
@@ -2392,9 +2390,7 @@ argument_list|()
 expr_stmt|;
 name|t
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 operator|(
 operator|(
@@ -3824,9 +3820,7 @@ name|sc
 operator|->
 name|sc_last_sent
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 operator|*
 name|mtod
@@ -3846,9 +3840,7 @@ name|sc
 operator|->
 name|sc_last_sent
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 endif|#
 directive|endif
@@ -4000,7 +3992,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|ifp
@@ -6816,9 +6808,7 @@ name|sc
 operator|->
 name|sc_last_recv
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 operator|*
 name|mtod
@@ -6838,9 +6828,7 @@ name|sc
 operator|->
 name|sc_last_recv
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 endif|#
 directive|endif
@@ -6952,9 +6940,7 @@ name|sc
 operator|->
 name|sc_last_recv
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 comment|/* update time of last pkt rcvd */
 break|break;
@@ -7025,9 +7011,7 @@ name|sc
 operator|->
 name|sc_last_recv
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 comment|/* update time of last pkt rcvd */
 break|break;
@@ -7121,7 +7105,7 @@ name|if_ibytes
 operator|+=
 name|ilen
 expr_stmt|;
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|ifp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_msg.c,v 1.16 1997/08/02 14:31:37 bde Exp $ */
+comment|/*	$Id: sysv_msg.c,v 1.17 1997/11/06 19:29:24 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1389,9 +1389,7 @@ name|msqptr
 operator|->
 name|msg_ctime
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 break|break;
 case|case
@@ -1968,9 +1966,7 @@ name|msqptr
 operator|->
 name|msg_ctime
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 block|}
 else|else
@@ -3319,9 +3315,7 @@ name|msqptr
 operator|->
 name|msg_stime
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -4152,9 +4146,7 @@ name|msqptr
 operator|->
 name|msg_rtime
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 comment|/* 	 * Make msgsz the actual amount that we'll be returning. 	 * Note that this effectively truncates the message if it is too long 	 * (since msgsz is never increased). 	 */
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bootp_subr.c,v 1.11 1998/03/14 04:13:56 tegge Exp $	*/
+comment|/*	$Id: bootp_subr.c,v 1.12 1998/03/28 10:33:15 bde Exp $	*/
 end_comment
 
 begin_comment
@@ -4053,16 +4053,14 @@ return|return;
 comment|/*    * Wait until arp entries can be handled.    */
 while|while
 condition|(
-name|time
-operator|.
-name|tv_sec
+name|time_second
 operator|==
 literal|0
 condition|)
 name|tsleep
 argument_list|(
 operator|&
-name|time
+name|time_second
 argument_list|,
 name|PZERO
 operator|+

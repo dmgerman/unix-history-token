@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.25 1998/03/28 10:33:09 bde Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.26 1998/03/28 11:50:04 dufault Exp $  */
 end_comment
 
 begin_comment
@@ -6788,31 +6788,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|s
-operator|=
-name|splclock
-argument_list|()
-expr_stmt|;
-name|timevaladd
-argument_list|(
-operator|&
-name|atv
-argument_list|,
-operator|&
-name|time
-argument_list|)
-expr_stmt|;
 name|timo
 operator|=
-name|hzto
+name|tvtohz
 argument_list|(
 operator|&
 name|atv
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}

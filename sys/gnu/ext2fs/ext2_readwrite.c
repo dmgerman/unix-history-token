@@ -1313,7 +1313,7 @@ name|IO_SYNC
 operator|)
 condition|)
 block|{
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|tv

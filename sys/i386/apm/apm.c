@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.68 1998/01/24 02:54:08 eivind Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.69 1998/02/09 06:08:06 eivind Exp $  */
 end_comment
 
 begin_include
@@ -1689,11 +1689,12 @@ operator|&
 name|resume_time
 argument_list|)
 expr_stmt|;
+name|getmicrotime
+argument_list|(
+operator|&
 name|tmp_time
-operator|=
-name|time
+argument_list|)
 expr_stmt|;
-comment|/* because 'time' is volatile */
 name|timevaladd
 argument_list|(
 operator|&
@@ -1703,10 +1704,16 @@ operator|&
 name|diff_time
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FIXME
+comment|/* XXX THIS DOESN'T WORK!!! */
 name|time
 operator|=
 name|tmp_time
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|APM_FIXUP_CALLTODO

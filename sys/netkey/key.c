@@ -6223,9 +6223,7 @@ name|secassoc
 operator|->
 name|lifetime1
 operator|+=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 operator|+
 name|maxlarvallifetime
 expr_stmt|;
@@ -7285,9 +7283,7 @@ name|ap
 operator|->
 name|expiretime
 operator|<
-name|time
-operator|.
-name|tv_sec
+name|time_second
 condition|)
 block|{
 name|DPRINTF
@@ -7340,9 +7336,7 @@ name|ap
 operator|->
 name|expiretime
 operator|<
-name|time
-operator|.
-name|tv_sec
+name|time_second
 condition|)
 block|{
 comment|/*        *  Since we're already looking at the list, we may as        *  well delete expired entries as we scan through the list.        *  This should really be done by a function like key_reaper()        *  but until we code key_reaper(), this is a quick,  dirty        *  hack.        */
@@ -7846,9 +7840,7 @@ name|ap
 operator|->
 name|expiretime
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 operator|+
 name|maxacquiretime
 expr_stmt|;

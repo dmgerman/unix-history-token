@@ -338,9 +338,7 @@ name|ip
 operator|->
 name|i_ctime
 operator|=
-name|time
-operator|.
-name|tv_sec
+name|time_second
 expr_stmt|;
 block|}
 name|ip
@@ -648,7 +646,7 @@ argument_list|(
 name|ovp
 argument_list|)
 expr_stmt|;
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|tv

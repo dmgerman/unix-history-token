@@ -1129,7 +1129,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|tv
@@ -1679,7 +1679,7 @@ name|i_flag
 operator||=
 name|IN_CHANGE
 expr_stmt|;
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|tv
@@ -2433,7 +2433,7 @@ name|i_flag
 operator||=
 name|IN_CHANGE
 expr_stmt|;
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|tv
@@ -4067,7 +4067,7 @@ name|i_flags
 operator||=
 name|UF_OPAQUE
 expr_stmt|;
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|tv
@@ -5339,7 +5339,7 @@ operator||=
 name|UF_OPAQUE
 expr_stmt|;
 comment|/* 	 * Make sure inode goes to disk before directory entry. 	 */
-name|gettime
+name|getmicrotime
 argument_list|(
 operator|&
 name|tv
