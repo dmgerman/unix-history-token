@@ -2471,6 +2471,10 @@ argument_list|,
 name|op
 operator|==
 name|KERN_PROC_ALL
+operator|||
+name|op
+operator|==
+name|KERN_PROC_PROC
 condition|?
 literal|3
 else|:
@@ -2585,6 +2589,10 @@ argument_list|,
 name|op
 operator|==
 name|KERN_PROC_ALL
+operator|||
+name|op
+operator|==
+name|KERN_PROC_PROC
 condition|?
 literal|3
 else|:

@@ -1273,7 +1273,7 @@ literal|0
 expr_stmt|;
 name|miblen
 operator|=
-literal|4
+literal|3
 expr_stmt|;
 if|if
 condition|(
@@ -1293,6 +1293,10 @@ literal|3
 index|]
 operator|=
 name|uid
+expr_stmt|;
+name|miblen
+operator|=
+literal|4
 expr_stmt|;
 block|}
 elseif|else
@@ -1314,6 +1318,10 @@ literal|3
 index|]
 operator|=
 name|tdev
+expr_stmt|;
+name|miblen
+operator|=
+literal|4
 expr_stmt|;
 block|}
 name|st
