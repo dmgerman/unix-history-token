@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tth19.c	3.15 %G%"
+literal|"@(#)tth19.c	3.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,7 +136,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|struct
+name|tt_str
 modifier|*
 name|gen_VS
 decl_stmt|;
@@ -144,7 +145,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|struct
+name|tt_str
 modifier|*
 name|gen_VE
 decl_stmt|;
@@ -552,18 +554,11 @@ name|tt_col
 operator|+=
 name|n
 expr_stmt|;
-while|while
-condition|(
-operator|--
-name|n
-operator|>=
-literal|0
-condition|)
-name|ttputc
+name|ttwrite
 argument_list|(
-operator|*
 name|p
-operator|++
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 block|}
@@ -795,7 +790,7 @@ if|if
 condition|(
 name|gen_VS
 condition|)
-name|ttputs
+name|ttxputs
 argument_list|(
 name|gen_VS
 argument_list|)
@@ -860,7 +855,7 @@ if|if
 condition|(
 name|gen_VE
 condition|)
-name|ttputs
+name|ttxputs
 argument_list|(
 name|gen_VE
 argument_list|)

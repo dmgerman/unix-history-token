@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttf100.c	3.7 %G%"
+literal|"@(#)ttf100.c	3.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,7 +122,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|struct
+name|tt_str
 modifier|*
 name|gen_AE
 decl_stmt|,
@@ -138,6 +139,28 @@ end_macro
 
 begin_block
 block|{
+specifier|static
+name|struct
+name|tt_str
+name|ae
+init|=
+block|{
+literal|"\033%"
+block|,
+literal|2
+block|}
+decl_stmt|;
+specifier|static
+name|struct
+name|tt_str
+name|as
+init|=
+block|{
+literal|"\033$"
+block|,
+literal|2
+block|}
+decl_stmt|;
 if|if
 condition|(
 name|tt_generic
@@ -163,11 +186,13 @@ name|WWM_GRP
 expr_stmt|;
 name|gen_AS
 operator|=
-literal|"\033$"
+operator|&
+name|as
 expr_stmt|;
 name|gen_AE
 operator|=
-literal|"\033%"
+operator|&
+name|ae
 expr_stmt|;
 return|return
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)tt.h	3.14 %G%  */
+comment|/*  * @(#)tt.h	3.15 %G%  */
 end_comment
 
 begin_comment
@@ -240,18 +240,33 @@ begin_comment
 comment|/* pointer for it */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|tttgetstr
-parameter_list|(
-name|s
-parameter_list|)
-value|tgetstr((s),&tt_strp)
-end_define
+begin_struct
+struct|struct
+name|tt_str
+block|{
+name|char
+modifier|*
+name|ts_str
+decl_stmt|;
+name|int
+name|ts_n
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_function_decl
-name|char
+name|struct
+name|tt_str
+modifier|*
+name|tttgetstr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|tt_str
 modifier|*
 name|ttxgetstr
 parameter_list|()
@@ -278,7 +293,17 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|tputs((s), (n), tttputc)
+value|tputs((s)->ts_str, (n), tttputc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ttxputs
+parameter_list|(
+name|s
+parameter_list|)
+value|ttwrite((s)->ts_str, (s)->ts_n)
 end_define
 
 begin_comment
