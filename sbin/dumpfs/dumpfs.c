@@ -1014,15 +1014,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"avgfpdir %d\tavgfilesize %d\n"
-argument_list|,
-name|afs
-operator|.
-name|fs_avgfpdir
+literal|"avgfilesize %d\tavgfpdir %d\n"
 argument_list|,
 name|afs
 operator|.
 name|fs_avgfilesize
+argument_list|,
+name|afs
+operator|.
+name|fs_avgfpdir
 argument_list|)
 expr_stmt|;
 name|printf
