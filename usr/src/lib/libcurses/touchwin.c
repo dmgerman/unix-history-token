@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touchwin.c	5.10 (Berkeley) %G%"
+literal|"@(#)touchwin.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,8 @@ decl_stmt|,
 name|ex
 decl_stmt|;
 block|{
+return|return
+operator|(
 name|__touchline
 argument_list|(
 name|win
@@ -75,7 +77,8 @@ name|ex
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
