@@ -328,24 +328,6 @@ name|n
 decl_stmt|,
 name|n1
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-if|if
-condition|(
-name|encrypt_output
-condition|)
-name|ring_encrypt
-argument_list|(
-operator|&
-name|netoring
-argument_list|,
-name|encrypt_output
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ENCRYPTION */
 if|if
 condition|(
 operator|(

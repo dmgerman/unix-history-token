@@ -35,11 +35,6 @@ name|defined
 argument_list|(
 name|AUTHENTICATION
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ENCRYPTION
-argument_list|)
 end_if
 
 begin_include
@@ -180,33 +175,7 @@ begin_function
 name|void
 name|net_encrypt
 parameter_list|()
-block|{
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-if|if
-condition|(
-name|encrypt_output
-condition|)
-name|ring_encrypt
-argument_list|(
-operator|&
-name|netoring
-argument_list|,
-name|encrypt_output
-argument_list|)
-expr_stmt|;
-else|else
-name|ring_clearto
-argument_list|(
-operator|&
-name|netoring
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ENCRYPTION */
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -376,7 +345,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(AUTHENTICATION) || defined(ENCRYPTION) */
+comment|/* defined(AUTHENTICATION) */
 end_comment
 
 end_unit

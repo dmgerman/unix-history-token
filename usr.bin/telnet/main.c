@@ -207,17 +207,7 @@ literal|"[-r] "
 argument_list|,
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-literal|"[-x] [host-name [port]]"
-else|#
-directive|else
-comment|/* ENCRYPTION */
 literal|"[host-name [port]]"
-endif|#
-directive|endif
-comment|/* ENCRYPTION */
 argument_list|)
 expr_stmt|;
 name|exit
@@ -877,22 +867,6 @@ break|break;
 case|case
 literal|'x'
 case|:
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-name|encrypt_auto
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|decrypt_auto
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* ENCRYPTION */
 name|fprintf
 argument_list|(
 name|stderr
@@ -902,9 +876,6 @@ argument_list|,
 name|prompt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* ENCRYPTION */
 break|break;
 case|case
 literal|'?'

@@ -97,24 +97,6 @@ modifier|*
 name|mark
 decl_stmt|;
 comment|/* marker (user defined) */
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-name|unsigned
-name|char
-modifier|*
-name|clearto
-decl_stmt|;
-comment|/* Data to this point is clear text */
-name|unsigned
-name|char
-modifier|*
-name|encryyptedto
-decl_stmt|;
-comment|/* Data is encrypted to here */
-endif|#
-directive|endif
-comment|/* ENCRYPTION */
 name|int
 name|size
 decl_stmt|;
@@ -305,53 +287,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|ring_encrypt
-name|P
-argument_list|(
-operator|(
-name|Ring
-operator|*
-name|ring
-operator|,
-name|void
-argument_list|(
-operator|*
-name|func
-argument_list|)
-argument_list|()
-operator|)
-argument_list|)
-decl_stmt|,
-name|ring_clearto
-name|P
-argument_list|(
-operator|(
-name|Ring
-operator|*
-name|ring
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ENCRYPTION */
-end_comment
 
 begin_decl_stmt
 specifier|extern

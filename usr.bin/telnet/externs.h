@@ -649,55 +649,6 @@ begin_comment
 comment|/* Who are we connected to? */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-end_ifdef
-
-begin_extern
-extern|extern void (*encrypt_output
-end_extern
-
-begin_expr_stmt
-unit|)
-name|P
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_extern
-extern|extern int (*decrypt_input
-end_extern
-
-begin_expr_stmt
-unit|)
-name|P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ENCRYPTION */
-end_comment
-
 begin_comment
 comment|/*  * We keep track of each side of the option negotiation.  */
 end_comment
