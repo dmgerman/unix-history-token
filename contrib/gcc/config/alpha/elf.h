@@ -200,6 +200,12 @@ begin_comment
 comment|/* Output #ident as a .ident.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_IDENT
+end_undef
+
 begin_define
 define|#
 directive|define
