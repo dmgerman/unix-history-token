@@ -917,6 +917,26 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"ARCHIVE"
 block|,
+literal|"Python 06408*"
+block|,
+literal|"*"
+block|}
+block|,
+name|SA_QUIRK_NOCOMP
+operator||
+name|SA_QUIRK_NODREAD
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"ARCHIVE"
+block|,
 literal|"Python 25601*"
 block|,
 literal|"*"
