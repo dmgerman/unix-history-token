@@ -1972,7 +1972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the entries file into a list, hashing on the file name.  */
+comment|/* Read the entries file into a list, hashing on the file name.     UPDATE_DIR is the name of the current directory, for use in error    messages, or NULL if not known (that is, noone has gotten around    to updating the caller to pass in the information).  */
 end_comment
 
 begin_function
@@ -1981,9 +1981,15 @@ modifier|*
 name|Entries_Open
 parameter_list|(
 name|aflag
+parameter_list|,
+name|update_dir
 parameter_list|)
 name|int
 name|aflag
+decl_stmt|;
+name|char
+modifier|*
+name|update_dir
 decl_stmt|;
 block|{
 name|List
@@ -2155,6 +2161,24 @@ name|fpin
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|update_dir
+operator|!=
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"in directory %s:"
+argument_list|,
+name|update_dir
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|0
@@ -2166,6 +2190,7 @@ argument_list|,
 name|CVSADM_ENT
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 while|while
@@ -3303,13 +3328,49 @@ block|{
 comment|/* Create Entries.Log so that Entries_Close will do something.  */
 name|fp
 operator|=
-name|open_file
+name|CVS_FOPEN
 argument_list|(
 name|CVSADM_ENTLOG
 argument_list|,
 literal|"a"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
+comment|/* As in subdir_record, just silently skip the whole thing 		   if there is no CVSADM directory.  */
+if|if
+condition|(
+operator|!
+name|isdir
+argument_list|(
+name|CVSADM
+argument_list|)
+condition|)
+return|return;
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|save_errno
+argument_list|,
+literal|"cannot open %s"
+argument_list|,
+name|entfilename
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|fclose
@@ -3330,6 +3391,7 @@ argument_list|,
 name|CVSADM_ENTLOG
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}

@@ -269,7 +269,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Send the appropriate responses for a file described by FILE,    UPDATE_DIR, REPOSITORY, and VERS.  FILE_INFO is the result of    statting the file, or NULL if it hasn't been statted yet.  This is    called after server_register or server_scratch.  In the latter case    the file is to be removed (and vers can be NULL).  In the former    case, vers must be non-NULL, and UPDATED indicates whether the file    is now up to date (SERVER_UPDATED, yes, SERVER_MERGED, no,    SERVER_PATCHED, yes, but file is a diff from user version to    repository version, SERVER_RCS_DIFF, yes, like SERVER_PATCHED but    with an RCS style diff).  */
+comment|/* Send the appropriate responses for a file described by FINFO and    VERS.  This is called after server_register or server_scratch.  In    the latter case the file is to be removed (and VERS can be NULL).    In the former case, VERS must be non-NULL, and UPDATED indicates    whether the file is now up to date (SERVER_UPDATED, yes,    SERVER_MERGED, no, SERVER_PATCHED, yes, but file is a diff from    user version to repository version, SERVER_RCS_DIFF, yes, like    SERVER_PATCHED but with an RCS style diff).  MODE is the mode the    file should get, or (mode_t) -1 if this should be obtained from the    file itself.  CHECKSUM is the MD5 checksum of the file, or NULL if    this need not be sent.  If FILEBUF is not NULL, it holds the    contents of the file, in which case the file itself may not exist.    If FILEBUF is not NULL, server_updated will free it.  */
 end_comment
 
 begin_enum
@@ -286,6 +286,23 @@ name|SERVER_RCS_DIFF
 block|}
 enum|;
 end_enum
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|buffer
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -307,14 +324,18 @@ expr|enum
 name|server_updated_arg4
 name|updated
 operator|,
-expr|struct
-name|stat
-operator|*
+name|mode_t
+name|mode
 operator|,
 name|unsigned
 name|char
 operator|*
 name|checksum
+operator|,
+expr|struct
+name|buffer
+operator|*
+name|filebuf
 operator|)
 argument_list|)
 decl_stmt|;

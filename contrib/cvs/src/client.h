@@ -33,6 +33,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

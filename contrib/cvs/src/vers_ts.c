@@ -994,7 +994,7 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
-name|CVS_STAT
+name|CVS_LSTAT
 argument_list|(
 name|file
 argument_list|,
@@ -1256,7 +1256,7 @@ name|ts
 decl_stmt|;
 if|if
 condition|(
-name|CVS_STAT
+name|CVS_LSTAT
 argument_list|(
 name|file
 argument_list|,

@@ -388,5 +388,25 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|fsortcmp
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|Node
+operator|*
+name|p
+operator|,
+specifier|const
+name|Node
+operator|*
+name|q
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

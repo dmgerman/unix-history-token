@@ -884,6 +884,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * The user file is still unmodified, so nothing special at 		 * all to do -- no lists updated, unless the sticky -k option 		 * has changed.  If the sticky tag has changed, we just need 		 * to re-register the entry 		 */
+comment|/* TODO: decide whether we need to check file permissions 		   for a mismatch, and return T_CONFLICT if so. */
 if|if
 condition|(
 name|vers

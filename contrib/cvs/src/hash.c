@@ -1862,6 +1862,46 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * compare two files list node (for sort)  */
+end_comment
+
+begin_function
+name|int
+name|fsortcmp
+parameter_list|(
+name|p
+parameter_list|,
+name|q
+parameter_list|)
+specifier|const
+name|Node
+modifier|*
+name|p
+decl_stmt|;
+specifier|const
+name|Node
+modifier|*
+name|q
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|strcmp
+argument_list|(
+name|p
+operator|->
+name|key
+argument_list|,
+name|q
+operator|->
+name|key
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Debugging functions.  Quite useful to call from within gdb. */
 end_comment
 

@@ -1473,6 +1473,8 @@ argument_list|(
 name|frame
 operator|->
 name|aflag
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

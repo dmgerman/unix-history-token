@@ -1921,7 +1921,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"\ Copyright (c) 1989-1997 Brian Berliner, david d `zoo' zuhn, \n\                         Jeff Polk, and other authors\n"
+literal|"\ Copyright (c) 1989-1998 Brian Berliner, david d `zoo' zuhn, \n\                         Jeff Polk, and other authors\n"
 argument_list|,
 name|stdout
 argument_list|)

@@ -2203,6 +2203,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Open question: should CVS_STAT be lstat by default?  We need    to use lstat in order to handle symbolic links correctly with    the PreservePermissions option. -twp */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CVS_LSTAT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CVS_LSTAT
+value|lstat
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef

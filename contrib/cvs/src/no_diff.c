@@ -95,6 +95,30 @@ literal|1
 operator|)
 return|;
 comment|/* different since we couldn't tell */
+ifdef|#
+directive|ifdef
+name|PRESERVE_PERMISSIONS_SUPPORT
+comment|/* If special files are in use, then any mismatch of file metadata        information also means that the files should be considered different. */
+if|if
+condition|(
+name|preserve_perms
+operator|&&
+name|special_file_mismatch
+argument_list|(
+name|finfo
+argument_list|,
+name|vers
+operator|->
+name|vn_user
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vers

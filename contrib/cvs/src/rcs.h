@@ -369,6 +369,23 @@ argument_list|)
 expr_stmt|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|rcsbuffer
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * exported interfaces  */
 end_comment
@@ -433,6 +450,10 @@ operator|*
 operator|,
 name|FILE
 operator|*
+operator|*
+operator|,
+expr|struct
+name|rcsbuffer
 operator|*
 operator|)
 argument_list|)
@@ -1094,6 +1115,13 @@ name|RCSNode
 operator|*
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|preserve_perms
 decl_stmt|;
 end_decl_stmt
 

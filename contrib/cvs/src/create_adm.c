@@ -202,6 +202,7 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* We want to print out the entire update_dir, since a lot of 	   our code calls this function with dir == "." or dir == 	   NULL.  I hope that gives enough information in cases like 	   absolute pathnames; printing out xgetwd or something would 	   be way too verbose in the common cases.  */
 if|if
 condition|(
 name|warn
@@ -214,8 +215,15 @@ literal|0
 argument_list|,
 name|errno
 argument_list|,
-literal|"warning: cannot make directory %s"
+literal|"warning: cannot make directory %s in %s"
 argument_list|,
+name|CVSADM
+argument_list|,
+name|update_dir
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
@@ -230,9 +238,11 @@ literal|1
 argument_list|,
 name|errno
 argument_list|,
-literal|"cannot make directory %s"
+literal|"cannot make directory %s in %s"
 argument_list|,
-name|tmp
+name|CVSADM
+argument_list|,
+name|update_dir
 argument_list|)
 expr_stmt|;
 block|}
