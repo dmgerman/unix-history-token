@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.39 %G%"
+literal|"@(#)sccs.c	1.40 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3647,6 +3647,13 @@ name|osig
 function_decl|)
 parameter_list|()
 function_decl|;
+name|printf
+argument_list|(
+literal|"\n------- %s -------\n"
+argument_list|,
+name|gfile
+argument_list|)
+expr_stmt|;
 comment|/* create context for diff to run in */
 if|if
 condition|(
