@@ -740,7 +740,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  *  * MP SAFE  */
+comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  *  * MP SAFE.  */
 end_comment
 
 begin_function
@@ -759,6 +759,20 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+if|if
+condition|(
+name|SIGISEMPTY
+argument_list|(
+name|p
+operator|->
+name|p_siglist
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|tmpset
 operator|=
 name|p
@@ -778,13 +792,9 @@ if|if
 condition|(
 name|SIGISEMPTY
 argument_list|(
-name|p
-operator|->
-name|p_siglist
+name|tmpset
 argument_list|)
-operator|||
-operator|(
-operator|!
+operator|&&
 operator|(
 name|p
 operator|->
@@ -792,20 +802,14 @@ name|p_flag
 operator|&
 name|P_TRACED
 operator|)
-operator|&&
-name|SIGISEMPTY
-argument_list|(
-name|tmpset
-argument_list|)
-operator|)
+operator|==
+literal|0
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 name|mtx_enter
 argument_list|(
 operator|&
