@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.65 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.66 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4955,6 +4955,45 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|error
+operator|=
+name|nfsrv_access
+argument_list|(
+name|vp
+argument_list|,
+name|VWRITE
+argument_list|,
+name|cred
+argument_list|,
+operator|(
+name|nd
+operator|.
+name|ni_cnd
+operator|.
+name|cn_flags
+operator|&
+name|RDONLY
+operator|)
+argument_list|,
+name|nfsd
+operator|->
+name|nd_procp
+argument_list|)
+condition|)
+block|{
+name|vput
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|nfsm_reply
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|nqsrv_getl
 argument_list|(
 name|vp

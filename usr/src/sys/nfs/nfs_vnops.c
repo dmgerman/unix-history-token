@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.107 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.108 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2553,6 +2553,8 @@ name|a_vap
 decl_stmt|;
 name|u_quad_t
 name|frev
+decl_stmt|,
+name|tsize
 decl_stmt|;
 if|if
 condition|(
@@ -2654,6 +2656,12 @@ name|error
 operator|)
 return|;
 block|}
+name|tsize
+operator|=
+name|np
+operator|->
+name|n_size
+expr_stmt|;
 name|np
 operator|->
 name|n_size
@@ -3060,6 +3068,36 @@ expr_stmt|;
 block|}
 name|nfsm_reqdone
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|np
+operator|->
+name|n_size
+operator|=
+name|np
+operator|->
+name|n_vattr
+operator|.
+name|va_size
+operator|=
+name|tsize
+expr_stmt|;
+name|vnode_pager_setsize
+argument_list|(
+name|vp
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|np
+operator|->
+name|n_size
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
