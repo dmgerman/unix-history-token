@@ -4,7 +4,7 @@ comment|/* gzio.c -- IO on .gz files  * Copyright (C) 1995-1998 Jean-loup Gailly
 end_comment
 
 begin_comment
-comment|/* @(#) $Id: gzio.c,v 1.1.1.3 1999/01/10 09:46:54 peter Exp $ */
+comment|/* @(#) $FreeBSD$ */
 end_comment
 
 begin_include

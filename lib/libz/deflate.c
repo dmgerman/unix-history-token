@@ -8,7 +8,7 @@ comment|/*  *  ALGORITHM  *  *      The "deflation" process depends on being abl
 end_comment
 
 begin_comment
-comment|/* @(#) $Id: deflate.c,v 1.1.1.3 1999/01/10 09:46:53 peter Exp $ */
+comment|/* @(#) $FreeBSD$ */
 end_comment
 
 begin_include

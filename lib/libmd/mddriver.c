@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MDDRIVER.C - test driver for MD2, MD4 and MD5  * $Id: mddriver.c,v 1.3 1997/02/22 15:07:24 peter Exp $  */
+comment|/* MDDRIVER.C - test driver for MD2, MD4 and MD5  * $FreeBSD$  */
 end_comment
 
 begin_comment

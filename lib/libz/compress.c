@@ -4,7 +4,7 @@ comment|/* compress.c -- compress a memory buffer  * Copyright (C) 1995-1998 Jea
 end_comment
 
 begin_comment
-comment|/* @(#) $Id$ */
+comment|/* @(#) $FreeBSD$ */
 end_comment
 
 begin_include

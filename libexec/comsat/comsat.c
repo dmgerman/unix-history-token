@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: comsat.c,v 1.11 1997/11/20 07:23:44 charnier Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftpd.c,v 1.55 1999/04/25 22:23:35 imp Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

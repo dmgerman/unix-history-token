@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: logwtmp.c,v 1.8 1998/10/09 11:24:19 jkh Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /home/ncvs/src/lib/libncurses/TESTS/newdemo.c,v 1.1.1.1 1994/10/07 08:58:56 ache Exp $  *  *  newdemo.c	-	A demo program using PDCurses. The program illustrate  *  	 		the use of colours for text output.  */
+comment|/* $FreeBSD$  *  *  newdemo.c	-	A demo program using PDCurses. The program illustrate  *  	 		the use of colours for text output.  */
 end_comment
 
 begin_include
