@@ -265,6 +265,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|printf
+argument_list|(
+literal|"Elan-mmcr driver\n"
+argument_list|)
+expr_stmt|;
 name|make_dev
 argument_list|(
 operator|&
@@ -290,7 +295,7 @@ name|SYSINIT
 argument_list|(
 name|elan
 argument_list|,
-name|SI_SUB_DRIVERS
+name|SI_SUB_PSEUDO
 argument_list|,
 name|SI_ORDER_MIDDLE
 operator|+
