@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)line.c	5.4 (Berkeley) %G%"
+literal|"@(#)line.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -496,6 +496,9 @@ break|break;
 name|enter_boldface
 label|:
 comment|/* 			 * We have "X\bX" (including the current char). 			 * Switch into boldface mode. 			 */
+name|column
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|column
@@ -587,6 +590,9 @@ goto|;
 name|enter_underline
 label|:
 comment|/* 			 * We have either "_\bX" or "X\b_" (including 			 * the current char).  Switch into underline mode. 			 */
+name|column
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|column

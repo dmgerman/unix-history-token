@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.9 (Berkeley) %G%"
+literal|"@(#)output.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,6 +214,8 @@ expr_stmt|;
 name|column
 operator|+=
 name|ul_width
+operator|+
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -236,6 +238,8 @@ expr_stmt|;
 name|column
 operator|+=
 name|bo_width
+operator|+
+literal|1
 expr_stmt|;
 break|break;
 case|case
