@@ -52,7 +52,16 @@ end_comment
 begin_struct
 struct|struct
 name|mdthread
-block|{ }
+block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|int
+name|dummy
+decl_stmt|;
+endif|#
+directive|endif
+block|}
 struct|;
 end_struct
 
