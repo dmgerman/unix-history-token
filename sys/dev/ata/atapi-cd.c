@@ -1471,6 +1471,13 @@ name|M_ACD
 argument_list|)
 expr_stmt|;
 block|}
+name|destroy_dev
+argument_list|(
+name|cdp
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
 name|devstat_remove_entry
 argument_list|(
 name|cdp

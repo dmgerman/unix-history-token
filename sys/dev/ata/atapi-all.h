@@ -1149,6 +1149,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|atapi_reinit
+parameter_list|(
+name|struct
+name|ata_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|atapi_start
 parameter_list|(
 name|struct
@@ -1202,17 +1213,6 @@ parameter_list|,
 name|atapi_callback_t
 parameter_list|,
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|atapi_reinit
-parameter_list|(
-name|struct
-name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
