@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)traverse.c	1.10 (Berkeley) %G%"
+literal|"@(#)traverse.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1029,21 +1029,19 @@ name|blks
 operator|=
 name|frags
 operator|*
-name|BLKING
-argument_list|(
 name|sblock
-argument_list|)
+operator|->
+name|fs_fsize
+operator|/
+name|TP_BSIZE
 expr_stmt|;
 name|tbperdb
 operator|=
-name|BLKING
-argument_list|(
-name|sblock
-argument_list|)
-operator|*
 name|sblock
 operator|->
-name|fs_frag
+name|fs_bsize
+operator|/
+name|TP_BSIZE
 expr_stmt|;
 for|for
 control|(

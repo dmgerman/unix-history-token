@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)itime.c	1.5 (Berkeley) %G%"
+literal|"@(#)itime.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1070,14 +1070,11 @@ name|s
 operator|-
 name|NDADDR
 operator|*
-name|BLKING
-argument_list|(
-name|sblock
-argument_list|)
-operator|*
 name|sblock
 operator|->
-name|fs_frag
+name|fs_bsize
+operator|/
+name|TP_BSIZE
 argument_list|,
 name|TP_NINDIR
 argument_list|)
