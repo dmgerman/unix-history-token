@@ -8024,7 +8024,7 @@ name|dot3StatsFrameTooLongs
 operator|++
 expr_stmt|;
 block|}
-comment|/* 		 * Be fairly liberal about what we allow as a "reasonable" length 		 * so that a [crufty] packet will make it to BPF (and can thus 		 * be analyzed). Note that all that is really important is that 		 * we have a length that will fit into one mbuf cluster or less; 		 * the upper layer protocols can then figure out the length from 		 * their own length field(s). 		 */
+comment|/* 		 * Be fairly liberal about what we allow as a "reasonable" length 		 * so that a [crufty] packet will make it to BPF (and can thus 		 * be analyzed). Note that all that is really important is that 		 * we have a length that will fit into one mbuf cluster or less; 		 * the upper layer protocols can then figure out the length from 		 * their own length field(s). 		 * But make sure that we have at least a full ethernet header 		 * or we would be unable to call ether_input() later. 		 */
 if|if
 condition|(
 operator|(
@@ -8035,6 +8035,8 @@ argument_list|(
 expr|struct
 name|ed_ring
 argument_list|)
+operator|+
+name|ETHER_HDR_LEN
 operator|)
 operator|&&
 operator|(
