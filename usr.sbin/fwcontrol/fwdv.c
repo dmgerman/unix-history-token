@@ -560,7 +560,21 @@ name|errno
 operator|==
 name|EAGAIN
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"(EAGAIN)\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|err
 argument_list|(
 literal|1
@@ -637,7 +651,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|printf("%08x %08x %08x %08x\n", 			htonl(ptr[0]), htonl(ptr[1]), 			htonl(ptr[2]), htonl(ptr[3]));
+block|fprintf(stderr, "%08x %08x %08x %08x\n", 			htonl(ptr[0]), htonl(ptr[1]), 			htonl(ptr[2]), htonl(ptr[3]));
 endif|#
 directive|endif
 name|ciph
@@ -728,7 +742,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|printf("(%d,%d) ", dv->sct, dv->dseq);
+block|fprintf(stderr, "(%d,%d) ", dv->sct, dv->dseq);
 endif|#
 directive|endif
 if|if
@@ -749,11 +763,13 @@ block|{
 if|#
 directive|if
 literal|0
-block|printf("%d(%d) ", k, m);
+block|fprintf(stderr, "%d(%d) ", k, m);
 else|#
 directive|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%d"
 argument_list|,
 name|k
@@ -824,8 +840,10 @@ name|npad
 operator|+=
 name|nb
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"(%d blocks padded)"
 argument_list|,
 name|npad
@@ -862,15 +880,17 @@ literal|0
 condition|)
 block|{
 comment|/* every second */
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
 name|fflush
 argument_list|(
-name|stdout
+name|stderr
 argument_list|)
 expr_stmt|;
 name|m
@@ -1057,8 +1077,10 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1438,7 +1460,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("%08x %08x %08x\n", htonl(hdr[0]), htonl(hdr[1]), htonl(hdr[2]));
+block|fprintf(stderr, "%08x %08x %08x\n", 			htonl(hdr[0]), htonl(hdr[1]), htonl(hdr[2]));
 endif|#
 directive|endif
 name|frames
@@ -1519,8 +1541,10 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\nend of file(len=%d)\n"
 argument_list|,
 name|len
@@ -1570,8 +1594,10 @@ condition|(
 name|header
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%d"
 argument_list|,
 name|frames
@@ -1601,14 +1627,16 @@ literal|30
 operator|==
 literal|0
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
-name|stdout
+name|stderr
 argument_list|)
 expr_stmt|;
 name|system
@@ -1860,14 +1888,16 @@ operator|==
 name|EAGAIN
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"again"
+name|stderr
+argument_list|,
+literal|"(EAGAIN)\n"
 argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
-name|stdout
+name|stderr
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1932,14 +1962,16 @@ operator|==
 name|EAGAIN
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"again"
+name|stderr
+argument_list|,
+literal|"(EAGAIN)\n"
 argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
-name|stdout
+name|stderr
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1954,20 +1986,16 @@ literal|"write failed"
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|printf("."); fflush(stdout);
-endif|#
-directive|endif
 block|}
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -2003,8 +2031,10 @@ operator|)
 operator|*
 literal|1e-6
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%d frames, %.2f secs, %.2f frames/sec\n"
 argument_list|,
 name|frames
