@@ -1727,7 +1727,7 @@ block|}
 comment|/* 	 * Report Card configuration information before we start configuring 	 * each channel on the card... 	 */
 name|printf
 argument_list|(
-literal|"src%d: %uK RAM (%d mempages) @ %08x-%08x, %u ports.\n"
+literal|"src%d: %uK RAM (%d mempages) @ %p-%p, %u ports.\n"
 argument_list|,
 name|hc
 operator|->
@@ -1743,16 +1743,10 @@ name|hc
 operator|->
 name|mempages
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|hc
 operator|->
 name|mem_start
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|hc
 operator|->
 name|mem_end
@@ -3974,6 +3968,9 @@ operator|(
 name|sca_descriptor
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|blkp
 operator|->
 name|txdesc
@@ -3987,7 +3984,7 @@ name|u_short
 call|)
 argument_list|(
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 operator|&
 name|txdesc
@@ -5049,9 +5046,9 @@ endif|#
 directive|endif
 argument|hc = sc->hc; 	dmac =&hc->sca->dmac[DMAC_RXCH(sc->scachan)];  	if (hc->mempages) 		SRC_SET_MEM(hc->iobase, sc->rxdesc);
 comment|/* 	 * This phase initializes the contents of the descriptor table 	 * needed to construct a circular buffer... 	 */
-argument|rxd = (sca_descriptor *)(hc->mem_start + (sc->rxdesc& hc->winmsk)); 	rxda_d = (u_int) hc->mem_start - (sc->rxdesc& ~hc->winmsk);  	for (rxbuf = sc->rxstart; 	     rxbuf< sc->rxend; 	     rxbuf += SR_BUF_SIZ, rxd++) {
+argument|rxd = (sca_descriptor *)(hc->mem_start + (sc->rxdesc& hc->winmsk)); 	rxda_d = (uintptr_t) hc->mem_start - (sc->rxdesc& ~hc->winmsk);  	for (rxbuf = sc->rxstart; 	     rxbuf< sc->rxend; 	     rxbuf += SR_BUF_SIZ, rxd++) {
 comment|/* 		 * construct the circular chain... 		 */
-argument|rxda = (u_int)& rxd[
+argument|rxda = (uintptr_t)&rxd[
 literal|1
 argument|] - rxda_d + hc->mem_pstart; 		rxd->cp = (u_short)(rxda&
 literal|0xffff
@@ -5093,7 +5090,7 @@ argument|); 	sarb_v = (u_char)(((sc->rxdesc + hc->mem_pstart)>>
 literal|16
 argument|)&
 literal|0xff
-argument|);  	SRC_PUT16(hc->sca_base, dmac->cda, cda_v); 	SRC_PUT8(hc->sca_base, dmac->sarb, sarb_v);  	rxd = (sca_descriptor *)sc->rxstart;  	SRC_PUT16(hc->sca_base, dmac->eda, 		  (u_short)((u_int)& rxd[sc->rxmax -
+argument|);  	SRC_PUT16(hc->sca_base, dmac->cda, cda_v); 	SRC_PUT8(hc->sca_base, dmac->sarb, sarb_v);  	rxd = (sca_descriptor *)(uintptr_t)sc->rxstart;  	SRC_PUT16(hc->sca_base, dmac->eda, 		  (u_short)((uintptr_t)&rxd[sc->rxmax -
 literal|1
 argument|]&
 literal|0xffff
@@ -5124,9 +5121,9 @@ argument|].txdesc);
 comment|/* 	 * Initialize the array of descriptors for transmission 	 */
 argument|for (blk =
 literal|0
-argument|; blk< SR_TX_BLOCKS; blk++) { 		blkp =&sc->block[blk]; 		txd = (sca_descriptor *)(hc->mem_start 					 + (blkp->txdesc& hc->winmsk)); 		txda_d = (u_int) hc->mem_start 		    - (blkp->txdesc& ~hc->winmsk);  		x =
+argument|; blk< SR_TX_BLOCKS; blk++) { 		blkp =&sc->block[blk]; 		txd = (sca_descriptor *)(hc->mem_start 					 + (blkp->txdesc& hc->winmsk)); 		txda_d = (uintptr_t) hc->mem_start 		    - (blkp->txdesc& ~hc->winmsk);  		x =
 literal|0
-argument|; 		txbuf = blkp->txstart; 		for (; txbuf< blkp->txend; txbuf += SR_BUF_SIZ, txd++) { 			txda = (u_int)& txd[
+argument|; 		txbuf = blkp->txstart; 		for (; txbuf< blkp->txend; txbuf += SR_BUF_SIZ, txd++) { 			txda = (uintptr_t)&txd[
 literal|1
 argument|] - txda_d + hc->mem_pstart; 			txd->cp = (u_short)(txda&
 literal|0xffff
@@ -5142,7 +5139,7 @@ argument|; 			txd->stat =
 literal|0
 argument|; 			x++; 		}  		txd--; 		txd->cp = (u_short)((blkp->txdesc + hc->mem_pstart)&
 literal|0xffff
-argument|);  		blkp->txtail = (u_int)txd - (u_int)hc->mem_start; 	}  	SRC_PUT8(hc->sca_base, dmac->dsr,
+argument|);  		blkp->txtail = (uintptr_t)txd - (uintptr_t)hc->mem_start; 	}  	SRC_PUT8(hc->sca_base, dmac->dsr,
 literal|0
 argument|);
 comment|/* Disable DMA */
@@ -5270,9 +5267,9 @@ comment|/* 	 * loop until desc->stat == (0xff || EOM) Clear the status and 	 * l
 argument|if (hc->mempages) 		SRC_SET_MEM(hc->iobase, sc->rxdesc);  	rxdesc = (sca_descriptor *) 	    (hc->mem_start + (sc->rxdesc& hc->winmsk)); 	endp = rxdesc; 	rxdesc =&rxdesc[sc->rxhind]; 	endp =&endp[sc->rxmax];
 comment|/* 	 * allow loop, but abort it if we wrap completely... 	 */
 argument|while (rxdesc != cda) { 		loopcnt++;  		if (loopcnt> sc->rxmax) { 			printf(
-literal|"sr%d: eat pkt %d loop, cda %x, "
-literal|"rxdesc %x, stat %x.\n"
-argument|, 			       sc->unit, loopcnt, (u_int) cda, (u_int) rxdesc, 			       rxdesc->stat); 			break; 		} 		stat = rxdesc->stat;  		rxdesc->len =
+literal|"sr%d: eat pkt %d loop, cda %p, "
+literal|"rxdesc %p, stat %x.\n"
+argument|, 			       sc->unit, loopcnt, cda, rxdesc, 			       rxdesc->stat); 			break; 		} 		stat = rxdesc->stat;  		rxdesc->len =
 literal|0
 argument|; 		rxdesc->stat =
 literal|0xff
@@ -5280,9 +5277,9 @@ argument|;  		rxdesc++; 		sc->rxhind++;  		if (rxdesc == endp) { 			rxdesc = (sc
 literal|0
 argument|; 		} 		if (single&& (stat == SCA_DESC_EOM)) 			break; 	}
 comment|/* 	 * Update the eda to the previous descriptor. 	 */
-argument|rxdesc = (sca_descriptor *)sc->rxdesc; 	rxdesc =&rxdesc[(sc->rxhind + sc->rxmax -
+argument|rxdesc = (sca_descriptor *)(uintptr_t)sc->rxdesc; 	rxdesc =&rxdesc[(sc->rxhind + sc->rxmax -
 literal|2
-argument|) % sc->rxmax];  	SRC_PUT16(hc->sca_base, 		  hc->sca->dmac[DMAC_RXCH(sc->scachan)].eda, 		  (u_short)((u_int)(rxdesc + hc->mem_pstart)&
+argument|) % sc->rxmax];  	SRC_PUT16(hc->sca_base, 		  hc->sca->dmac[DMAC_RXCH(sc->scachan)].eda, 		  (u_short)(((uintptr_t)rxdesc + hc->mem_pstart)&
 literal|0xffff
 argument|)); }
 comment|/*  * While there is packets available in the rx buffer, read them out  * into mbufs and ship them off.  */
@@ -5479,9 +5476,9 @@ comment|/* NETGRAPH */
 comment|/* 			 * Update the eda to the previous descriptor. 			 */
 argument|i = (len + SR_BUF_SIZ -
 literal|1
-argument|) / SR_BUF_SIZ; 			sc->rxhind = (sc->rxhind + i) % sc->rxmax;  			rxdesc = (sca_descriptor *)sc->rxdesc; 			rxndx = (sc->rxhind + sc->rxmax -
+argument|) / SR_BUF_SIZ; 			sc->rxhind = (sc->rxhind + i) % sc->rxmax;  			rxdesc = (sca_descriptor *)(uintptr_t)sc->rxdesc; 			rxndx = (sc->rxhind + sc->rxmax -
 literal|2
-argument|) % sc->rxmax; 			rxdesc =&rxdesc[rxndx];  			SRC_PUT16(hc->sca_base, 				  hc->sca->dmac[DMAC_RXCH(sc->scachan)].eda, 				  (u_short)((u_int)(rxdesc + hc->mem_pstart)&
+argument|) % sc->rxmax; 			rxdesc =&rxdesc[rxndx];  			SRC_PUT16(hc->sca_base, 				  hc->sca->dmac[DMAC_RXCH(sc->scachan)].eda, 				  (u_short)(((uintptr_t)rxdesc + hc->mem_pstart)&
 literal|0xffff
 argument|));  		} else { 			int got_st3
 argument_list|,
