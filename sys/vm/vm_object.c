@@ -4715,6 +4715,9 @@ operator|=
 name|source
 expr_stmt|;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|idx
@@ -4750,9 +4753,6 @@ name|NULL
 condition|)
 continue|continue;
 comment|/* 		 * We must wait for pending I/O to complete before we can 		 * rename the page. 		 * 		 * We do not have to VM_PROT_NONE the page as mappings should 		 * not be changed by this operation. 		 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4813,6 +4813,9 @@ argument_list|(
 name|orig_object
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 goto|goto
 name|retry
 goto|;
@@ -4832,10 +4835,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|orig_object
