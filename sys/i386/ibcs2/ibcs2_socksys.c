@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Mostyn Lewis  * All rights reserved.  *  * This software is based on code which is:  * Copyright (c) 1994  Mike Jagdis (jaggy@purplet.demon.co.uk)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ibcs2_socksys.c,v 1.2 1994/10/13 23:10:58 sos Exp $  */
+comment|/*-  * Copyright (c) 1994 Mostyn Lewis  * All rights reserved.  *  * This software is based on code which is:  * Copyright (c) 1994  Mike Jagdis (jaggy@purplet.demon.co.uk)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ibcs2_socksys.c,v 1.1 1994/10/14 08:53:08 sos Exp $  */
 end_comment
 
 begin_include
@@ -387,7 +387,7 @@ begin_decl_stmt
 name|int
 name|ss_debug
 init|=
-literal|1
+literal|10
 decl_stmt|;
 end_decl_stmt
 
@@ -449,9 +449,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -664,9 +661,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 name|error
 operator|=
 literal|0
@@ -679,31 +673,13 @@ block|{
 case|case
 name|CMD_SO_SS_DEBUG
 case|:
-name|ss_debug
-operator|=
-operator|(
-operator|(
-expr|struct
-name|ss_call
-operator|*
-operator|)
-name|arg
-operator|)
-operator|->
-name|arg
-index|[
-literal|1
-index|]
-expr_stmt|;
+comment|/* ss_debug = ((struct ss_call *)arg)->arg[1]; */
 break|break;
 case|case
 name|CMD_SO_SOCKET
 case|:
 block|{
 comment|/* NO CONV */
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -729,9 +705,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 operator|(
 operator|(
 expr|struct
@@ -770,9 +743,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -819,9 +789,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 operator|(
 operator|(
 expr|struct
@@ -860,9 +827,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -888,9 +852,6 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 name|SYSCALL
 argument_list|(
 name|SYS_socket
@@ -900,9 +861,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -921,9 +879,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 name|put_socket_fops
 argument_list|(
 name|p
@@ -950,9 +905,6 @@ argument_list|,
 name|SS_STRUCT_SOCKADDR
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -971,9 +923,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 name|put_socket_fops
 argument_list|(
 name|p
@@ -1167,9 +1116,6 @@ operator|(
 name|error
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -1179,9 +1125,6 @@ argument_list|(
 literal|"ss_syscall: remapped INADDR_ANY to localhost\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 block|}
 block|}
 name|SYSCALL
@@ -1600,6 +1543,9 @@ operator|)
 return|;
 block|}
 name|IBCS2_MAGIC_RETURN
+argument_list|(
+name|arg
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1643,9 +1589,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -2153,9 +2096,6 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 comment|/* No dogs allowed */
 if|if
 condition|(
@@ -2220,6 +2160,18 @@ condition|(
 name|cmd
 condition|)
 block|{
+case|case
+name|SS_SIOCSOCKSYS
+case|:
+comment|/* ss syscall */
+return|return
+name|ss_syscall
+argument_list|(
+name|arg
+argument_list|,
+name|p
+argument_list|)
+return|;
 case|case
 name|SS_SIOCSHIWAT
 case|:
@@ -2841,6 +2793,9 @@ operator|)
 return|;
 block|}
 name|IBCS2_MAGIC_RETURN
+argument_list|(
+name|arg
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2886,9 +2841,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -3407,9 +3359,6 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 if|if
 condition|(
 operator|*
@@ -3746,6 +3695,9 @@ operator|)
 return|;
 block|}
 name|IBCS2_MAGIC_RETURN
+argument_list|(
+name|arg
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3777,9 +3729,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -3795,9 +3744,6 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 comment|/* minor = 0 is the socksys device itself. No special handling 	 *           will be needed as it is controlled by the application 	 *           via ioctls. 	 */
 if|if
 condition|(
@@ -3863,9 +3809,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -3879,13 +3822,7 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 comment|/* Grab a socket. */
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -3899,9 +3836,6 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 name|args
 index|[
 literal|0
@@ -3972,9 +3906,6 @@ return|;
 comment|/* MRL whatever */
 block|}
 comment|/* Connect the socket to X. */
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -3988,9 +3919,6 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 name|args
 index|[
 literal|0
@@ -4116,9 +4044,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -4134,9 +4059,6 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 return|return
 operator|(
 literal|0
@@ -4161,9 +4083,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 name|int
 name|fd
 decl_stmt|;
@@ -4219,9 +4138,6 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 if|if
 condition|(
 name|fp
@@ -4231,9 +4147,6 @@ operator|==
 name|DTYPE_SOCKET
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -4243,9 +4156,6 @@ argument_list|(
 literal|"is a socket\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 return|return
 operator|(
 name|close_s
@@ -4259,9 +4169,6 @@ return|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -4271,9 +4178,6 @@ argument_list|(
 literal|"is not a socket\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 return|return
 operator|(
 name|ENOTSOCK
@@ -4508,9 +4412,6 @@ argument_list|,
 name|SS_NATIVE_TO_ALIEN
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -4528,9 +4429,6 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 block|}
 else|else
 block|{
@@ -4559,9 +4457,6 @@ operator|,
 name|retval
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -4577,9 +4472,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 block|}
 return|return
 operator|(
@@ -4674,9 +4566,6 @@ index|]
 operator|=
 name|cmd_ordinal
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -4703,9 +4592,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 name|indicator
 operator|=
 name|ss_convert
@@ -4717,9 +4603,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -4733,9 +4616,6 @@ argument_list|,
 name|indicator
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 if|if
 condition|(
 name|indicator
@@ -4760,9 +4640,6 @@ argument_list|,
 name|SS_ALIEN_TO_NATIVE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -4776,9 +4653,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 if|if
 condition|(
 name|error
@@ -4824,9 +4698,6 @@ argument_list|,
 name|SS_NATIVE_TO_ALIEN
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -4844,9 +4715,6 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 block|}
 else|else
 block|{
@@ -4870,9 +4738,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -4888,9 +4753,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 block|}
 return|return
 operator|(
@@ -5620,9 +5482,6 @@ argument_list|,
 name|indicator
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -5636,9 +5495,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 return|return
 operator|(
 name|error
@@ -5656,9 +5512,6 @@ argument_list|,
 name|indicator
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -5672,9 +5525,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 return|return
 operator|(
 name|error
@@ -5819,9 +5669,6 @@ operator|(
 name|error
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -5837,9 +5684,6 @@ operator|.
 name|alien_family
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 if|if
 condition|(
 name|hdr
@@ -5875,9 +5719,6 @@ expr|struct
 name|sockaddr
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -5893,9 +5734,6 @@ operator|.
 name|alien_family
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 name|error
 operator|=
 name|copyout
@@ -6092,9 +5930,6 @@ operator|(
 name|error
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -6110,9 +5945,6 @@ operator|.
 name|alien_family
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 name|hdr
 operator|.
 name|alien_family
@@ -6123,9 +5955,6 @@ name|native
 operator|.
 name|family
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SS_DEBUG
 if|if
 condition|(
 name|ss_debug
@@ -6141,9 +5970,6 @@ operator|.
 name|alien_family
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SS_DEBUG */
 name|error
 operator|=
 name|copyout
