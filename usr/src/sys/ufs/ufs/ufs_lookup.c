@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.50 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.51 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1384,7 +1384,9 @@ comment|/* 	 * Insert name into cache (as non-existent) if appropriate. 	 */
 if|if
 condition|(
 operator|(
-name|flags
+name|cnp
+operator|->
+name|cn_flags
 operator|&
 name|MAKEENTRY
 operator|)
@@ -1943,7 +1945,9 @@ block|}
 comment|/* 	 * Insert name into cache if appropriate. 	 */
 if|if
 condition|(
-name|flags
+name|cnp
+operator|->
+name|cn_flags
 operator|&
 name|MAKEENTRY
 condition|)
