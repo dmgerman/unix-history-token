@@ -803,7 +803,9 @@ name|pwdb
 argument_list|(
 literal|"-u"
 argument_list|,
-name|user
+name|pwd
+operator|->
+name|pw_name
 argument_list|,
 name|NULL
 argument_list|)
