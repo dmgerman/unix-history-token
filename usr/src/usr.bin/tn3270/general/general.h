@@ -23,5 +23,25 @@ parameter_list|)
 value|(numberof(x)-1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ClearStructure
+parameter_list|(
+name|x
+parameter_list|)
+value|bzero((char *)&x, sizeof x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ClearArray
+parameter_list|(
+name|x
+parameter_list|)
+value|bzero((char *)x, sizeof x)
+end_define
+
 end_unit
 
