@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ns_if.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ns_if.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,25 +18,13 @@ decl_stmt|;
 comment|/* protocol-independent info */
 define|#
 directive|define
-name|ia_addr
-value|ia_ifa.ifa_addr
-define|#
-directive|define
-name|ia_broadaddr
-value|ia_ifa.ifa_broadaddr
-define|#
-directive|define
-name|ia_dstaddr
-value|ia_ifa.ifa_dstaddr
-define|#
-directive|define
 name|ia_ifp
 value|ia_ifa.ifa_ifp
-name|union
-name|ns_net
+comment|/*	union	ns_net	ia_net;		/* network number of interface */
+define|#
+directive|define
 name|ia_net
-decl_stmt|;
-comment|/* network number of interface */
+value|ia_addr.sns_addr.x_net
 name|int
 name|ia_flags
 decl_stmt|;
@@ -45,7 +33,53 @@ name|ns_ifaddr
 modifier|*
 name|ia_next
 decl_stmt|;
-comment|/* next in list of internet addresses */
+comment|/* next in list of xerox addresses */
+name|struct
+name|sockaddr_ns
+name|ia_addr
+decl_stmt|;
+comment|/* reserve space for my address */
+name|struct
+name|sockaddr_ns
+name|ia_dstaddr
+decl_stmt|;
+comment|/* space for my broadcast address */
+define|#
+directive|define
+name|ia_broadaddr
+value|ia_dstaddr
+name|struct
+name|sockaddr_ns
+name|ia_netmask
+decl_stmt|;
+comment|/* space for my network mask */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ns_aliasreq
+block|{
+name|char
+name|ifra_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if name, e.g. "en0" */
+name|struct
+name|sockaddr_ns
+name|ifra_addr
+decl_stmt|;
+name|struct
+name|sockaddr_ns
+name|ifra_broadaddr
+decl_stmt|;
+define|#
+directive|define
+name|ifra_dstaddr
+value|ifra_broadaddr
 block|}
 struct|;
 end_struct
@@ -61,7 +95,7 @@ name|IA_SNS
 parameter_list|(
 name|ia
 parameter_list|)
-value|((struct sockaddr_ns *)(&((struct ns_ifaddr *)ia)->ia_addr))
+value|(&(((struct ns_ifaddr *)(ia))->ia_addr))
 end_define
 
 begin_comment

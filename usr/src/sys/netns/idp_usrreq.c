@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)idp_usrreq.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)idp_usrreq.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -121,6 +121,11 @@ name|sockaddr_ns
 name|idp_ns
 init|=
 block|{
+sizeof|sizeof
+argument_list|(
+name|idp_ns
+argument_list|)
+block|,
 name|AF_NS
 block|}
 decl_stmt|;
@@ -224,31 +229,31 @@ specifier|register
 name|struct
 name|ifaddr
 modifier|*
-name|ia
+name|ifa
 decl_stmt|;
 for|for
 control|(
-name|ia
+name|ifa
 operator|=
 name|ifp
 operator|->
 name|if_addrlist
 init|;
-name|ia
+name|ifa
 condition|;
-name|ia
+name|ifa
 operator|=
-name|ia
+name|ifa
 operator|->
 name|ifa_next
 control|)
 block|{
 if|if
 condition|(
-name|ia
+name|ifa
 operator|->
 name|ifa_addr
-operator|.
+operator|->
 name|sa_family
 operator|==
 name|AF_NS
@@ -262,7 +267,7 @@ name|x_net
 operator|=
 name|IA_SNS
 argument_list|(
-name|ia
+name|ifa
 argument_list|)
 operator|->
 name|sns_addr

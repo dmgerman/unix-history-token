@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)spp_usrreq.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)spp_usrreq.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -625,6 +625,16 @@ argument_list|,
 expr|struct
 name|sockaddr_ns
 operator|*
+argument_list|)
+expr_stmt|;
+name|sns
+operator|->
+name|sns_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sns
 argument_list|)
 expr_stmt|;
 name|sns
@@ -3725,32 +3735,20 @@ operator|>
 name|mtu
 condition|)
 block|{
+comment|/* 					 * Here we are only being called 					 * from usrreq(), so it is OK to 					 * block. 					 */
 name|m
 operator|=
-name|m_copy
+name|m_copym
 argument_list|(
 name|m0
 argument_list|,
 literal|0
 argument_list|,
 name|mtu
+argument_list|,
+name|M_WAIT
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOBUFS
-expr_stmt|;
-goto|goto
-name|bad_copy
-goto|;
-block|}
 if|if
 condition|(
 name|cb
@@ -3807,8 +3805,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|bad_copy
-label|:
 name|cb
 operator|->
 name|s_cc
@@ -7133,7 +7129,7 @@ condition|)
 block|{
 name|u_short
 modifier|*
-name|s
+name|p
 init|=
 name|mtod
 argument_list|(
@@ -7152,7 +7148,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|s
+name|p
 index|[
 literal|0
 index|]
@@ -7160,7 +7156,7 @@ operator|==
 literal|5
 operator|)
 operator|&&
-name|s
+name|p
 index|[
 literal|1
 index|]
@@ -7182,7 +7178,7 @@ operator|*
 operator|)
 operator|(
 operator|&
-name|s
+name|p
 index|[
 literal|2
 index|]
@@ -8258,6 +8254,13 @@ name|mbuf
 operator|*
 operator|)
 name|i
+argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
 argument_list|,
 operator|(
 expr|struct
