@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)win.c	3.5 84/04/05"
+literal|"@(#)win.c	3.6 84/04/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,6 +217,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We have to do this little maneuver to make sure 	 * addwin() puts w at the top, so we don't waste an 	 * insert and delete operation. 	 */
+name|setselwin
+argument_list|(
+operator|(
+expr|struct
+name|ww
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
 name|addwin
 argument_list|(
 name|w
@@ -224,12 +235,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|selwin
-operator|=
+name|setselwin
+argument_list|(
 name|w
-expr_stmt|;
-name|reframe
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|wwupdate
 argument_list|()
@@ -649,7 +658,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Add a window at the top of normal windows or foreground windows.  */
+comment|/*  * Add a window at the top of normal windows or foreground windows.  * For normal windows, we put it behind the current window.  */
 end_comment
 
 begin_expr_stmt
@@ -703,6 +712,22 @@ name|wwadd
 argument_list|(
 name|w
 argument_list|,
+name|selwin
+operator|!=
+literal|0
+operator|&&
+name|selwin
+operator|!=
+name|w
+operator|&&
+operator|!
+name|isfg
+argument_list|(
+name|selwin
+argument_list|)
+condition|?
+name|selwin
+else|:
 name|fgwin
 argument_list|)
 expr_stmt|;
