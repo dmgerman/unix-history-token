@@ -8,20 +8,21 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"@(#)at.c 4.6 (Berkeley) 5/25/84"
+literal|"@(#)at.c	4.8	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|not lint
 end_endif
 
 begin_comment
-comment|/*  *      Synopsis:       at [-s] [-c] [-m] time [filename]  *                                                *   *  *      Execute commands at a later date.  *  *  *      Modifications by:       Steve Wall  *                              Computer Systems Research Group  *                              University of California @ Berkeley  *  */
+comment|/*  *	Synopsis:	at [-s] [-c] [-m] time [filename]  *						  *   *  *	Execute commands at a later date.  *  *  *	Modifications by:	Steve Wall  *				Computer Systems Research Group  *				University of California @ Berkeley  *  */
 end_comment
 
 begin_include
@@ -352,7 +353,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A table of the number of days in each month of the year.  *  *      yeartable[0] -- normal year  *      yeartable[1] -- leap year  */
+comment|/*  * A table of the number of days in each month of the year.  *  *	yeartable[0] -- normal year  *	yeartable[1] -- leap year  */
 end_comment
 
 begin_decl_stmt
@@ -573,25 +574,25 @@ comment|/* do cleanup on an interrupt signal */
 name|int
 name|dateindex
 decl_stmt|;
-comment|/* if a day is specified, what option                                            is it? (mon day, week, dayofweek) */
+comment|/* if a day is specified, what option 					   is it? (mon day, week, dayofweek) */
 name|int
 name|shell
 init|=
 literal|0
 decl_stmt|;
-comment|/* what shell do we use to run job?                                               BOURNE = 0   CSHELL = 1 */
+comment|/* what shell do we use to run job?    					   BOURNE = 0	CSHELL = 1 */
 name|int
 name|shflag
 init|=
 literal|0
 decl_stmt|;
-comment|/* override the current shell and run                                            job using the Bourne Shell */
+comment|/* override the current shell and run 					   job using the Bourne Shell */
 name|int
 name|cshflag
 init|=
 literal|0
 decl_stmt|;
-comment|/* override the current shell and run                                             job using the Cshell */
+comment|/* override the current shell and run  					   job using the Cshell */
 name|int
 name|mailflag
 init|=
@@ -634,14 +635,14 @@ name|FILE
 modifier|*
 name|pwfil
 decl_stmt|;
-comment|/* "pwd" process (used to get the                                            current working directory */
+comment|/* "pwd" process (used to get the 					   current working directory */
 name|argv
 operator|++
 expr_stmt|;
 name|argc
 operator|--
 expr_stmt|;
-comment|/*          * Interpret command line flags if they exist.          */
+comment|/* 	 * Interpret command line flags if they exist. 	 */
 while|while
 condition|(
 name|argc
@@ -706,7 +707,7 @@ name|mailflag
 operator|++
 expr_stmt|;
 break|break;
-default|default  :
+default|default	 :
 name|usage
 argument_list|()
 expr_stmt|;
@@ -738,7 +739,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Get the time it is when "at" is invoked. We set both nowtime and           * attime to this value so that as we interpret the time the job is to          * be run we can compare the two values to determine such things as          * whether of not the job should be run the same day the "at" command          * is given, whether a job is to be run next year, etc.          */
+comment|/* 	 * Get the time it is when "at" is invoked. We set both nowtime and  	 * attime to this value so that as we interpret the time the job is to 	 * be run we can compare the two values to determine such things as 	 * whether of not the job should be run the same day the "at" command 	 * is given, whether a job is to be run next year, etc. 	 */
 name|getnowtime
 argument_list|(
 operator|&
@@ -767,7 +768,7 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/*          * Interpret argv[1] and create the time of day that the job is to          * be run. This is the same function that was used in the old "at"          */
+comment|/* 	 * Interpret argv[1] and create the time of day that the job is to 	 * be run. This is the same function that was used in the old "at" 	 */
 name|maketime
 argument_list|(
 operator|&
@@ -796,7 +797,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*          * If no argv[2] exists, then we are reading from standard input          * and only a time of day has been specified. Therefore, we set          * the standard input flag, and indicate that a date was not          * specified (NODATEFOUND).          */
+comment|/* 	 * If no argv[2] exists, then we are reading from standard input 	 * and only a time of day has been specified. Therefore, we set 	 * the standard input flag, and indicate that a date was not 	 * specified (NODATEFOUND). 	 */
 if|if
 condition|(
 operator|!
@@ -814,7 +815,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          * Otherwise, we are dealing with a request to run a job on a certain          * day of year or a certain day of week.          *          * We send  argv to the function "getdateindex" which returns the           * index value of the requested day in the table "dates_info"           * (see line 50 for table). If 'getdateindex" returns a NODATEFOUND,           * then the requested day format was not found in the table (usually           * this means that the argument is a "filename"). If the requested           * day is found, we continue to process command line arguments.          */
+comment|/* 	 * Otherwise, we are dealing with a request to run a job on a certain 	 * day of year or a certain day of week. 	 * 	 * We send  argv to the function "getdateindex" which returns the  	 * index value of the requested day in the table "dates_info"  	 * (see line 50 for table). If 'getdateindex" returns a NODATEFOUND,  	 * then the requested day format was not found in the table (usually  	 * this means that the argument is a "filename"). If the requested  	 * day is found, we continue to process command line arguments. 	 */
 if|if
 condition|(
 operator|(
@@ -836,7 +837,7 @@ expr_stmt|;
 operator|--
 name|argc
 expr_stmt|;
-comment|/*                          * Determine the day of year that the job will be run                          * depending on the value of argv.                          */
+comment|/* 			 * Determine the day of year that the job will be run 			 * depending on the value of argv. 			 */
 name|makedayofyear
 argument_list|(
 name|dateindex
@@ -844,7 +845,7 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/*                          * If we were dealing with the<month day> format,                          * we need to skip over the next argv (the day of                          * month).                          */
+comment|/* 			 * If we were dealing with the<month day> format, 			 * we need to skip over the next argv (the day of 			 * month). 			 */
 if|if
 condition|(
 name|dates_info
@@ -862,7 +863,7 @@ expr_stmt|;
 operator|--
 name|argc
 expr_stmt|;
-comment|/*                          * If 'week' was requested, we need to skip over                           * the next argv ('week').                          */
+comment|/* 			 * If 'week' was requested, we need to skip over  			 * the next argv ('week'). 			 */
 if|if
 condition|(
 name|strcmp
@@ -881,7 +882,7 @@ expr_stmt|;
 operator|--
 name|argc
 expr_stmt|;
-comment|/*                          * If no more arguments exist, then we are reading                          * from standard input. Thus, we set the standard                          * input flag (++standardin).                          */
+comment|/* 			 * If no more arguments exist, then we are reading 			 * from standard input. Thus, we set the standard 			 * input flag (++standardin). 			 */
 if|if
 condition|(
 operator|!
@@ -895,7 +896,7 @@ name|standardin
 expr_stmt|;
 block|}
 block|}
-comment|/*          * If we get to this point and "dateindex" is set to NODATEFOUND,          * then we are dealing with a request with only a "time" specified          * (i.e. at 400p) and perhaps 'week' specified (i.e. at 400p week).          * If 'week' is specified, we just set excecution for 7 days in the          * future. Otherwise, we need to check to see if the requested time           * has already passed for the current day. If it has, then we add           * one to the day of year that the job will be executed.          */
+comment|/* 	 * If we get to this point and "dateindex" is set to NODATEFOUND, 	 * then we are dealing with a request with only a "time" specified 	 * (i.e. at 400p) and perhaps 'week' specified (i.e. at 400p week). 	 * If 'week' is specified, we just set excecution for 7 days in the 	 * future. Otherwise, we need to check to see if the requested time  	 * has already passed for the current day. If it has, then we add  	 * one to the day of year that the job will be executed. 	 */
 if|if
 condition|(
 name|dateindex
@@ -948,7 +949,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*          * Start off assuming we're going to read from standard input,          * but if a filename has been given to read from, open it.          */
+comment|/* 	 * Start off assuming we're going to read from standard input, 	 * but if a filename has been given to read from, open it. 	 */
 name|inputfile
 operator|=
 name|stdin
@@ -992,7 +993,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*          * Create the filename for the spoolfile.          */
+comment|/* 	 * Create the filename for the spoolfile. 	 */
 name|makeatfile
 argument_list|(
 name|atfile
@@ -1014,7 +1015,7 @@ operator|.
 name|min
 argument_list|)
 expr_stmt|;
-comment|/*          * Open the spoolfile for writing.          */
+comment|/* 	 * Open the spoolfile for writing. 	 */
 if|if
 condition|(
 operator|(
@@ -1042,7 +1043,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * On an interrupt signal, clean up any open files and unlink the          * spoolfile.          */
+comment|/* 	 * On an interrupt signal, clean up any open files and unlink the 	 * spoolfile. 	 */
 name|signal
 argument_list|(
 name|SIGINT
@@ -1050,7 +1051,7 @@ argument_list|,
 name|cleanup
 argument_list|)
 expr_stmt|;
-comment|/*          * Determine what shell we should use to run the job. If the user          * didn't explicitly request that his/her current shell be over-          * ridden (shflag of cshflag) then we use the current shell.          */
+comment|/* 	 * Determine what shell we should use to run the job. If the user 	 * didn't explicitly request that his/her current shell be over- 	 * ridden (shflag of cshflag) then we use the current shell. 	 */
 if|if
 condition|(
 operator|(
@@ -1098,7 +1099,7 @@ name|BOURNE
 operator|)
 expr_stmt|;
 block|}
-comment|/*          * Put some standard information at the top of the spoolfile.          * This info is used by the other "at"-oriented programs (atq,          * atrm, atrun).          */
+comment|/* 	 * Put some standard information at the top of the spoolfile. 	 * This info is used by the other "at"-oriented programs (atq, 	 * atrm, atrun). 	 */
 name|fprintf
 argument_list|(
 name|spoolfile
@@ -1147,7 +1148,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/*          * Set the modes for any files created by the job being run.          */
+comment|/* 	 * Set the modes for any files created by the job being run. 	 */
 name|c
 operator|=
 name|umask
@@ -1169,7 +1170,7 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-comment|/*          * Get the current working directory so we know what directory to           * run the job from.          */
+comment|/* 	 * Get the current working directory so we know what directory to  	 * run the job from. 	 */
 if|if
 condition|(
 operator|(
@@ -1222,7 +1223,7 @@ argument_list|(
 name|pwfil
 argument_list|)
 expr_stmt|;
-comment|/*          * Copy the user's environment to the spoolfile.          */
+comment|/* 	 * Copy the user's environment to the spoolfile. 	 */
 if|if
 condition|(
 name|environ
@@ -1237,7 +1238,7 @@ name|spoolfile
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Now that we have all the files set up, we can start reading in          * the job. (I added the prompt "at>" so that the user could tell          * when/if he/she was supposed to enter commands from standard          * input. The old "at" just sat there and didn't send any kind of           * message that said it was waiting for input if it was reading          * form standard input).          */
+comment|/* 	 * Now that we have all the files set up, we can start reading in 	 * the job. (I added the prompt "at>" so that the user could tell 	 * when/if he/she was supposed to enter commands from standard 	 * input. The old "at" just sat there and didn't send any kind of  	 * message that said it was waiting for input if it was reading 	 * form standard input). 	 */
 while|while
 condition|(
 name|fputs
@@ -1275,7 +1276,7 @@ name|spoolfile
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Close all files and change the mode and the owner of the spoolfile.          */
+comment|/* 	 * Close all files and change the mode and the owner of the spoolfile. 	 */
 name|fclose
 argument_list|(
 name|inputfile
@@ -1365,7 +1366,7 @@ operator|=
 operator|*
 name|environptr
 expr_stmt|;
-comment|/*                  * We don't want the termcap or terminal entry so skip them.                  */
+comment|/* 		 * We don't want the termcap or terminal entry so skip them. 		 */
 if|if
 condition|(
 name|strncmp
@@ -1385,7 +1386,7 @@ name|environptr
 expr_stmt|;
 continue|continue;
 block|}
-comment|/*                  * Set up the proper syntax. ("setenv xx yy" for the Cshell                  * and "xx = 'yy'" for the Bourne shell).                  */
+comment|/* 		 * Set up the proper syntax. ("setenv xx yy" for the Cshell 		 * and "xx = 'yy'" for the Bourne shell). 		 */
 if|if
 condition|(
 name|shell
@@ -1452,7 +1453,7 @@ expr_stmt|;
 operator|++
 name|tmp
 expr_stmt|;
-comment|/*                  * Now copy the entry.                  */
+comment|/* 		 * Now copy the entry. 		 */
 while|while
 condition|(
 operator|*
@@ -1520,7 +1521,7 @@ operator|*
 name|spoolfile
 argument_list|)
 expr_stmt|;
-comment|/*                  * If it's the Bourne shell, we need to "export" environment                  * settings.                  */
+comment|/* 		 * If it's the Bourne shell, we need to "export" environment 		 * settings. 		 */
 if|if
 condition|(
 name|shell
@@ -1571,7 +1572,7 @@ operator|++
 name|environptr
 expr_stmt|;
 block|}
-comment|/*          * My god, it worked! (I hope)          */
+comment|/* 	 * My god, it worked! (I hope) 	 */
 return|return;
 block|}
 end_block
@@ -1670,7 +1671,7 @@ operator|%
 literal|100
 argument_list|)
 expr_stmt|;
-comment|/*                  * Make sure that the file name that we've created is unique.                  */
+comment|/* 		 * Make sure that the file name that we've created is unique. 		 */
 if|if
 condition|(
 name|access
@@ -1893,7 +1894,7 @@ name|datetypes
 modifier|*
 name|daterequested
 decl_stmt|;
-comment|/* pointer to information about                                                    the type of date option                                                    we're dealing with */
+comment|/* pointer to information about 						   the type of date option 						   we're dealing with */
 name|daterequested
 operator|=
 operator|&
@@ -1902,7 +1903,7 @@ index|[
 name|dateindex
 index|]
 expr_stmt|;
-comment|/*          * If we're dealing with a day of week, determine the number of days          * in the future the next day of this type will fall on. Add this          * value to "attime.yday".          */
+comment|/* 	 * If we're dealing with a day of week, determine the number of days 	 * in the future the next day of this type will fall on. Add this 	 * value to "attime.yday". 	 */
 if|if
 condition|(
 name|daterequested
@@ -1961,7 +1962,7 @@ operator|+=
 literal|7
 expr_stmt|;
 block|}
-comment|/*          * If we're dealing with a month and day of month, determine the          * day of year that this date will fall on.          */
+comment|/* 	 * If we're dealing with a month and day of month, determine the 	 * day of year that this date will fall on. 	 */
 if|if
 condition|(
 name|daterequested
@@ -1971,7 +1972,7 @@ operator|==
 name|MONTH
 condition|)
 block|{
-comment|/*                  * If a day of month isn't specified, print a message                  * and exit.                  */
+comment|/* 		 * If a day of month isn't specified, print a message 		 * and exit. 		 */
 if|if
 condition|(
 operator|!
@@ -1992,7 +1993,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*                  * Scan the day of month value and make sure that it                  * has no characters in it. If characters are found or                  * the day requested is zero, print a message and exit.                  */
+comment|/* 		 * Scan the day of month value and make sure that it 		 * has no characters in it. If characters are found or 		 * the day requested is zero, print a message and exit. 		 */
 name|ptr
 operator|=
 operator|*
@@ -2045,7 +2046,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*                  * Set the month of year and day of month values. Since                  * the first 7 values in our dateinfo table do not deal                  * with month names, we subtract 7 from the month of year                  * value.                  */
+comment|/* 		 * Set the month of year and day of month values. Since 		 * the first 7 values in our dateinfo table do not deal 		 * with month names, we subtract 7 from the month of year 		 * value. 		 */
 name|attime
 operator|.
 name|mon
@@ -2070,7 +2071,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/*                  * Test the day of month value to make sure that the                  * value is legal.                  */
+comment|/* 		 * Test the day of month value to make sure that the 		 * value is legal. 		 */
 if|if
 condition|(
 operator|(
@@ -2115,7 +2116,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*                  * Finally, we determine the day of year.                  */
+comment|/* 		 * Finally, we determine the day of year. 		 */
 name|attime
 operator|.
 name|yday
@@ -2129,7 +2130,7 @@ operator|++
 name|argv
 expr_stmt|;
 block|}
-comment|/*          * If 'week' is specified, add 7 to the day of year.          */
+comment|/* 	 * If 'week' is specified, add 7 to the day of year. 	 */
 if|if
 condition|(
 name|strncmp
@@ -2150,7 +2151,7 @@ name|yday
 operator|+=
 literal|7
 expr_stmt|;
-comment|/*          * Now that all that is done, see if the requested execution time          * has already passed for this year, and if it has, set execution          * for next year.          */
+comment|/* 	 * Now that all that is done, see if the requested execution time 	 * has already passed for this year, and if it has, set execution 	 * for next year. 	 */
 if|if
 condition|(
 name|isnextyear
@@ -2165,7 +2166,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Should the job be run next year? We check for the following situations:  *  *      1) the requested time has already passed for the current year.   *      2) the day of year is greater than the number of days in the year.   *  * If either of these tests succeed, we increment "attime.year" by 1.   * If #2 is true, we also subtract the number of days in the current year  * from "attime.yday". #2 can only occur if someone specifies a job to  * be run "tomorrow" on Dec. 31 or if they specify a job to be run a  * 'week' later and the date is at least Dec. 24. (I think so anyway)  */
+comment|/*  * Should the job be run next year? We check for the following situations:  *  *	1) the requested time has already passed for the current year.   *	2) the day of year is greater than the number of days in the year.   *  * If either of these tests succeed, we increment "attime.year" by 1.   * If #2 is true, we also subtract the number of days in the current year  * from "attime.yday". #2 can only occur if someone specifies a job to  * be run "tomorrow" on Dec. 31 or if they specify a job to be run a  * 'week' later and the date is at least Dec. 24. (I think so anyway)  */
 end_comment
 
 begin_macro
@@ -2327,8 +2328,8 @@ comment|/* the day of year after conversion */
 name|int
 name|monthofyear
 decl_stmt|;
-comment|/* the month of year that we are                                            dealing with */
-comment|/*          * Are we dealing with a leap year?          */
+comment|/* the month of year that we are 					   dealing with */
+comment|/* 	 * Are we dealing with a leap year? 	 */
 name|leap
 operator|=
 name|isleap
@@ -2350,7 +2351,7 @@ name|attime
 operator|.
 name|mday
 expr_stmt|;
-comment|/*          * Determine the day of year.          */
+comment|/* 	 * Determine the day of year. 	 */
 while|while
 condition|(
 name|monthofyear

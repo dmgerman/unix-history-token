@@ -11,17 +11,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atq.c       4.1 (Berkeley) 5/25/84"
+literal|"@(#)atq.c	1.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|not lint
 end_endif
 
 begin_comment
-comment|/*  *  *      Synopsis:  atq [ -c ] [ -n ] [ name ... ]  *  *  *      Print the queue of files waiting to be executed. These files   *      were created by using the "at" command and are located in the   *      directory "/usr/spool/at".  *  *  *      Author: Steve Wall  *              Computer Systems Research Group  *              University of California @ Berkeley  *  */
+comment|/*  *  *	Synopsis:  atq [ -c ] [ -n ] [ name ... ]  *  *  *	Print the queue of files waiting to be executed. These files   *	were created by using the "at" command and are located in the   *	directory "/usr/spool/at".  *  *  *	Author: Steve Wall  *		Computer Systems Research Group  *		University of California @ Berkeley  *  */
 end_comment
 
 begin_include
@@ -91,7 +92,7 @@ value|"/usr/spool/at/lasttimedone"
 end_define
 
 begin_comment
-comment|/* update time record                                                             file */
+comment|/* update time record  							   file */
 end_comment
 
 begin_comment
@@ -154,7 +155,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* only print jobs belonging to a                                             certain person */
+comment|/* only print jobs belonging to a  					   certain person */
 end_comment
 
 begin_decl_stmt
@@ -197,7 +198,7 @@ name|nflag
 init|=
 literal|0
 decl_stmt|;
-comment|/* just print the number of jobs in                                             queue */
+comment|/* just print the number of jobs in  					   queue */
 name|int
 name|usage
 parameter_list|()
@@ -227,7 +228,7 @@ name|int
 name|countfiles
 parameter_list|()
 function_decl|;
-comment|/* count the number of files in queue                                            for a given person */
+comment|/* count the number of files in queue 					   for a given person */
 name|char
 modifier|*
 modifier|*
@@ -240,7 +241,7 @@ operator|,
 operator|++
 name|argv
 expr_stmt|;
-comment|/*          * Interpret command line flags if they exist.          */
+comment|/* 	 * Interpret command line flags if they exist. 	 */
 while|while
 condition|(
 name|argc
@@ -290,7 +291,7 @@ name|nflag
 operator|++
 expr_stmt|;
 break|break;
-default|default  :
+default|default	 :
 name|usage
 argument_list|()
 expr_stmt|;
@@ -302,7 +303,7 @@ operator|++
 name|argv
 expr_stmt|;
 block|}
-comment|/*          * If a certain name (or names) is requested, set a pointer to the          * beginning of the list.          */
+comment|/* 	 * If a certain name (or names) is requested, set a pointer to the 	 * beginning of the list. 	 */
 if|if
 condition|(
 operator|*
@@ -318,7 +319,7 @@ operator|=
 name|argv
 expr_stmt|;
 block|}
-comment|/*          * Move to the spooling area and scan the directory, placing the          * files in the queue structure. The queue comes back sorted by          * execution time or creation time.          */
+comment|/* 	 * Move to the spooling area and scan the directory, placing the 	 * files in the queue structure. The queue comes back sorted by 	 * execution time or creation time. 	 */
 if|if
 condition|(
 name|chdir
@@ -379,7 +380,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Either print a message stating:          *          *      1) that the spooling area is empty.          *      2) the number of jobs in the spooling area.          *      3) the number of jobs in the spooling area belonging to           *         a certain person.          *      4) that the person requested doesn't have any files in the          *         spooling area.          *          * or send the queue off to "printqueue" for printing.          *          * This whole process might seem a bit elaborate, but it's worthwhile          * to print some informative messages for the user.          *          */
+comment|/* 	 * Either print a message stating: 	 * 	 *	1) that the spooling area is empty. 	 *	2) the number of jobs in the spooling area. 	 *	3) the number of jobs in the spooling area belonging to  	 *	   a certain person. 	 *	4) that the person requested doesn't have any files in the 	 *	   spooling area. 	 * 	 * or send the queue off to "printqueue" for printing. 	 * 	 * This whole process might seem a bit elaborate, but it's worthwhile 	 * to print some informative messages for the user. 	 * 	 */
 if|if
 condition|(
 operator|(
@@ -517,7 +518,7 @@ name|numfiles
 init|=
 literal|0
 decl_stmt|;
-comment|/* number of files owned by a                                                    certain person(s) */
+comment|/* number of files owned by a 						   certain person(s) */
 name|char
 modifier|*
 modifier|*
@@ -529,7 +530,7 @@ name|stat
 name|stbuf
 decl_stmt|;
 comment|/* buffer for file stats */
-comment|/*          * For each file in the queue, see if the user(s) own the file. We          * have to use "entryfound" (rather than simply incrementing "numfiles")          * so that if a person's name appears twice on the command line we           * don't double the number of files owned by him/her.          */
+comment|/* 	 * For each file in the queue, see if the user(s) own the file. We 	 * have to use "entryfound" (rather than simply incrementing "numfiles") 	 * so that if a person's name appears twice on the command line we  	 * don't double the number of files owned by him/her. 	 */
 for|for
 control|(
 name|i
@@ -659,7 +660,7 @@ name|int
 name|plastrun
 parameter_list|()
 function_decl|;
-comment|/* print the last time the                                                     spooling area was updated */
+comment|/* print the last time the  						   spooling area was updated */
 name|int
 name|getid
 parameter_list|()
@@ -676,22 +677,22 @@ modifier|*
 name|getname
 parameter_list|()
 function_decl|;
-comment|/* get the login name of a                                                     person using their uid */
+comment|/* get the login name of a  						   person using their uid */
 name|struct
 name|stat
 name|stbuf
 decl_stmt|;
 comment|/* buffer for file stats */
-comment|/*          * Print the time the spooling area was last modified and the header          * for the queue.          */
+comment|/* 	 * Print the time the spooling area was last modified and the header 	 * for the queue. 	 */
 name|plastrun
 argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" Rank     Execution Date     Owner     Job #   Job Name\n"
+literal|" Rank	  Execution Date     Owner     Job #   Job Name\n"
 argument_list|)
 expr_stmt|;
-comment|/*          * Print the queue. If a certain name(s) was requested, print only jobs          * belonging to that person(s), otherwise print the entire queue.          * Once again, we have to use "entryfound" (rather than simply           * comparing each command line argument) so that if a person's name           * appears twice we don't print each file owned by him/her twice.          *          *          * "printrank", "printdate", and "printjobname" all take existing           * data and display it in a friendly manner.          *          */
+comment|/* 	 * Print the queue. If a certain name(s) was requested, print only jobs 	 * belonging to that person(s), otherwise print the entire queue. 	 * Once again, we have to use "entryfound" (rather than simply  	 * comparing each command line argument) so that if a person's name  	 * appears twice we don't print each file owned by him/her twice. 	 * 	 * 	 * "printrank", "printdate", and "printjobname" all take existing  	 * data and display it in a friendly manner. 	 * 	 */
 for|for
 control|(
 name|i
@@ -968,13 +969,13 @@ comment|/* detail of time it is right */
 name|u_long
 name|lasttime
 decl_stmt|;
-comment|/* last update time in seconds                                                    since 1/1/70 */
+comment|/* last update time in seconds 						   since 1/1/70 */
 name|FILE
 modifier|*
 name|last
 decl_stmt|;
-comment|/* file where last update hour                                                    is stored */
-comment|/*          * Open the file where the last update time is stored, and grab the          * last update hour. The update time is measured in seconds since          * 1/1/70.          */
+comment|/* file where last update hour 						   is stored */
+comment|/* 	 * Open the file where the last update time is stored, and grab the 	 * last update hour. The update time is measured in seconds since 	 * 1/1/70. 	 */
 if|if
 condition|(
 operator|(
@@ -1020,7 +1021,7 @@ argument_list|(
 name|last
 argument_list|)
 expr_stmt|;
-comment|/*          * Get a broken down representation of the last update time.          */
+comment|/* 	 * Get a broken down representation of the last update time. 	 */
 name|loc
 operator|=
 name|localtime
@@ -1029,7 +1030,7 @@ operator|&
 name|lasttime
 argument_list|)
 expr_stmt|;
-comment|/*          * Print the time that the spooling area was last updated.          */
+comment|/* 	 * Print the time that the spooling area was last updated. 	 */
 name|printf
 argument_list|(
 literal|"\n LAST EXECUTION TIME: %s "
@@ -1172,7 +1173,7 @@ name|yday
 init|=
 literal|0
 decl_stmt|;
-comment|/* day of year file will be                                                     executed */
+comment|/* day of year file will be  						   executed */
 name|int
 name|min
 init|=
@@ -1207,7 +1208,7 @@ name|int
 name|get_mth_day
 parameter_list|()
 function_decl|;
-comment|/* convert a day of year to a                                                    month and day of month */
+comment|/* convert a day of year to a 						   month and day of month */
 name|char
 name|date
 index|[
@@ -1215,7 +1216,7 @@ literal|18
 index|]
 decl_stmt|;
 comment|/* reformatted execution date */
-comment|/*          * Pick off the necessary info from the file name and convert the day          * of year to a month and day of month.          */
+comment|/* 	 * Pick off the necessary info from the file name and convert the day 	 * of year to a month and day of month. 	 */
 name|sscanf
 argument_list|(
 name|filename
@@ -1248,7 +1249,7 @@ operator|&
 name|day
 argument_list|)
 expr_stmt|;
-comment|/*          * Format the execution date of a job.          */
+comment|/* 	 * Format the execution date of a job. 	 */
 name|sprintf
 argument_list|(
 name|date
@@ -1269,7 +1270,7 @@ argument_list|,
 name|min
 argument_list|)
 expr_stmt|;
-comment|/*          * Print the date the job will be executed.          */
+comment|/* 	 * Print the date the job will be executed. 	 */
 name|printf
 argument_list|(
 literal|"%-21.18s"
@@ -1322,8 +1323,8 @@ comment|/* for loop index */
 name|int
 name|leap
 decl_stmt|;
-comment|/* are we dealing with a leap                                                    year? */
-comment|/* Table of the number of days                                                     in each month of the year.                                                       dofy_tab[1] -- regular year                                                      dofy_tab[2] -- leap year                                                                                */
+comment|/* are we dealing with a leap 						   year? */
+comment|/* Table of the number of days  						   in each month of the year.  						     dofy_tab[1] -- regular year 						     dofy_tab[2] -- leap year  									      */
 specifier|static
 name|int
 name|dofy_tab
@@ -1390,9 +1391,9 @@ literal|30
 block|,
 literal|31
 block|}
-block|,         }
+block|, 	}
 decl_stmt|;
-comment|/*          * Are we dealing with a leap year?          */
+comment|/* 	 * Are we dealing with a leap year? 	 */
 name|leap
 operator|=
 operator|(
@@ -1417,7 +1418,7 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
-comment|/*          * Calculate the month of the year and day of the month.          */
+comment|/* 	 * Calculate the month of the year and day of the month. 	 */
 while|while
 condition|(
 name|dayofyear
@@ -1498,7 +1499,7 @@ modifier|*
 name|filename
 decl_stmt|;
 comment|/* job file in spooling area */
-comment|/*          * Open the job file and grab the first line.          */
+comment|/* 	 * Open the job file and grab the first line. 	 */
 name|printf
 argument_list|(
 literal|"   "
@@ -1567,7 +1568,7 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
-comment|/*          * Put a pointer at the begining of the line and remove the basename          * from the job file.          */
+comment|/* 	 * Put a pointer at the begining of the line and remove the basename 	 * from the job file. 	 */
 name|ch
 operator|=
 name|jobname
@@ -1779,7 +1780,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:  atq [-c] [-n] [name ...]\n"
+literal|"usage:	atq [-c] [-n] [name ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -11,17 +11,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrm.c      4.1 (Berkeley) 5/25/84"
+literal|"@(#)atrm.c	1.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|not lint
 end_endif
 
 begin_comment
-comment|/*  *      synopsis: atrm [-f] [-i] [-] [[job #] [user] ...]  *  *  *      Remove files from the directory /usr/spool/at. These files  *      represent jobs to be run at a later date.  *  *      Author: Steve Wall  *              Computer Systems Research Group  *              University of California @ Berkeley  *  */
+comment|/*  *	synopsis: atrm [-f] [-i] [-] [[job #] [user] ...]  *  *  *	Remove files from the directory /usr/spool/at. These files  *	represent jobs to be run at a later date.  *  *	Author: Steve Wall  *		Computer Systems Research Group  *		University of California @ Berkeley  *  */
 end_comment
 
 begin_include
@@ -212,7 +213,7 @@ modifier|*
 name|namelist
 decl_stmt|;
 comment|/* names of jobs in spooling area */
-comment|/*          * If job number, user name, or "-" is not specified, just print          * usage info and exit.          */
+comment|/* 	 * If job number, user name, or "-" is not specified, just print 	 * usage info and exit. 	 */
 if|if
 condition|(
 name|argc
@@ -228,7 +229,7 @@ expr_stmt|;
 operator|++
 name|argv
 expr_stmt|;
-comment|/*          * Process command line flags.          */
+comment|/* 	 * Process command line flags. 	 */
 while|while
 condition|(
 operator|*
@@ -284,7 +285,7 @@ operator|--
 name|argc
 expr_stmt|;
 block|}
-comment|/*          * If all jobs are to be removed and extra command line arguments           * are given, print usage info and exit.          */
+comment|/* 	 * If all jobs are to be removed and extra command line arguments  	 * are given, print usage info and exit. 	 */
 if|if
 condition|(
 name|allflag
@@ -294,7 +295,7 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/*          * If only certain jobs are to be removed and no job #'s or user          * names are specified, print usage info and exit.          */
+comment|/* 	 * If only certain jobs are to be removed and no job #'s or user 	 * names are specified, print usage info and exit. 	 */
 if|if
 condition|(
 operator|!
@@ -306,7 +307,7 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/*          * If interactive removal and quiet removal are requested, override          * quiet removal and run interactively.          */
+comment|/* 	 * If interactive removal and quiet removal are requested, override 	 * quiet removal and run interactively. 	 */
 if|if
 condition|(
 name|iflag
@@ -317,7 +318,7 @@ name|fflag
 operator|=
 literal|0
 expr_stmt|;
-comment|/*           * Move to spooling area and get user id of person requesting removal.          */
+comment|/*  	 * Move to spooling area and get user id of person requesting removal. 	 */
 if|if
 condition|(
 name|chdir
@@ -345,7 +346,7 @@ operator|=
 name|getuid
 argument_list|()
 expr_stmt|;
-comment|/*          * Get a list of the files in the spooling area.          */
+comment|/* 	 * Get a list of the files in the spooling area. 	 */
 if|if
 condition|(
 operator|(
@@ -378,7 +379,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Build an array of pointers to the file stats for all jobs in          * the spooling area.          */
+comment|/* 	 * Build an array of pointers to the file stats for all jobs in 	 * the spooling area. 	 */
 for|for
 control|(
 name|i
@@ -459,7 +460,7 @@ operator|=
 name|statptr
 expr_stmt|;
 block|}
-comment|/*          * If all jobs belonging to the user are to be removed, compare          * the user's id to the owner of the file. If they match, remove          * the file. If the user is the super-user, don't bother comparing          * the id's. After all files are removed, exit (status 0).          */
+comment|/* 	 * If all jobs belonging to the user are to be removed, compare 	 * the user's id to the owner of the file. If they match, remove 	 * the file. If the user is the super-user, don't bother comparing 	 * the id's. After all files are removed, exit (status 0). 	 */
 if|if
 condition|(
 name|allflag
@@ -528,7 +529,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * If only certain jobs are to be removed, interpret each command          * line argument. A check is done to see if it is a user's name or          * a job number (inode #). If it's a user's name, compare the argument          * to the files owner. If it's a job number, compare the argument to          * the inode number of the file. In either case, if a match occurs,          * try to remove the file. (The function "isusername" scans the          * argument to see if it is all digits which we will assume means           * that it's a job number (a fairly safe assumption?). This is done          * because we have to determine whether we are dealing with a user          * name or a job number. By assuming that only arguments that are          * all digits is a job number, we allow users to have digits in          * their login name i.e. "johndoe2").          */
+comment|/* 	 * If only certain jobs are to be removed, interpret each command 	 * line argument. A check is done to see if it is a user's name or 	 * a job number (inode #). If it's a user's name, compare the argument 	 * to the files owner. If it's a job number, compare the argument to 	 * the inode number of the file. In either case, if a match occurs, 	 * try to remove the file. (The function "isusername" scans the 	 * argument to see if it is all digits which we will assume means  	 * that it's a job number (a fairly safe assumption?). This is done 	 * because we have to determine whether we are dealing with a user 	 * name or a job number. By assuming that only arguments that are 	 * all digits is a job number, we allow users to have digits in 	 * their login name i.e. "johndoe2"). 	 */
 while|while
 condition|(
 name|argc
@@ -561,7 +562,7 @@ operator|++
 name|i
 control|)
 block|{
-comment|/*                           * if argv is a username, compare his/her uid to                          * the uid of the owner of the file......                          */
+comment|/*  			 * if argv is a username, compare his/her uid to 			 * the uid of the owner of the file...... 			 */
 if|if
 condition|(
 name|isuname
@@ -610,7 +611,7 @@ operator|!=
 name|userid
 condition|)
 continue|continue;
-comment|/*                          * otherwise, we assume that the argv is a job # and                          * thus compare argv to the inode (job #) of the file.                          */
+comment|/* 			 * otherwise, we assume that the argv is a job # and 			 * thus compare argv to the inode (job #) of the file. 			 */
 block|}
 else|else
 block|{
@@ -662,7 +663,7 @@ name|st_uid
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*                  * If a requested argument doesn't exist, print a message.                  */
+comment|/* 		 * If a requested argument doesn't exist, print a message. 		 */
 if|if
 condition|(
 operator|!

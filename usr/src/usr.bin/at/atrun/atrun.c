@@ -8,20 +8,21 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"@(#)atrun.c      4.4 (Berkeley) 5/25/84"
+literal|"@(#)atrun.c	4.6	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|not lint
 end_endif
 
 begin_comment
-comment|/*  *      Synopsis: atrun  *  *  *      Run jobs created by at(1)  *  *  *      Modifications by:       Steve Wall  *                              Computer Systems Research Group  *                              University of California @ Berkeley  *  */
+comment|/*  *	Synopsis: atrun  *  *  *	Run jobs created by at(1)  *  *  *	Modifications by:	Steve Wall  *				Computer Systems Research Group  *				University of California @ Berkeley  *  */
 end_comment
 
 begin_include
@@ -96,7 +97,7 @@ value|"/bin/mail"
 end_define
 
 begin_comment
-comment|/* program to use for sending                                                    mail */
+comment|/* program to use for sending 						   mail */
 end_comment
 
 begin_define
@@ -202,19 +203,19 @@ modifier|*
 name|jobqueue
 decl_stmt|;
 comment|/* queue of jobs to be run */
-comment|/*          * Move to the spooling area.          */
+comment|/* 	 * Move to the spooling area. 	 */
 name|chdir
 argument_list|(
 name|ATDIR
 argument_list|)
 expr_stmt|;
-comment|/*          * Create a filename that represents the time it is now. This is used          * to determine if the execution time for a job has arrived.          */
+comment|/* 	 * Create a filename that represents the time it is now. This is used 	 * to determine if the execution time for a job has arrived. 	 */
 name|makenowtime
 argument_list|(
 name|nowtime
 argument_list|)
 expr_stmt|;
-comment|/*          * Create a queue of the jobs that should be run.          */
+comment|/* 	 * Create a queue of the jobs that should be run. 	 */
 if|if
 condition|(
 operator|(
@@ -247,7 +248,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * If there are jobs to be run, run them.          */
+comment|/* 	 * If there are jobs to be run, run them. 	 */
 if|if
 condition|(
 name|numjobs
@@ -281,7 +282,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*          * Record the last update time.          */
+comment|/* 	 * Record the last update time. 	 */
 name|updatetime
 argument_list|()
 expr_stmt|;
@@ -313,7 +314,7 @@ name|tm
 modifier|*
 name|now
 decl_stmt|;
-comment|/* broken down representation of the                                            time it is right now */
+comment|/* broken down representation of the 					   time it is right now */
 name|struct
 name|timeval
 name|time
@@ -324,7 +325,7 @@ name|timezone
 name|zone
 decl_stmt|;
 comment|/* time zone we're in (NOT USED) */
-comment|/*          * Get the time of day.          */
+comment|/* 	 * Get the time of day. 	 */
 if|if
 condition|(
 name|gettimeofday
@@ -350,7 +351,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Get a broken down representation of the time it is right now.          */
+comment|/* 	 * Get a broken down representation of the time it is right now. 	 */
 name|now
 operator|=
 name|localtime
@@ -361,7 +362,7 @@ operator|.
 name|tv_sec
 argument_list|)
 expr_stmt|;
-comment|/*          * Create a string to be used in determining whether or not a job          * should be run. The syntax is yy.ddd.hhmm .          */
+comment|/* 	 * Create a string to be used in determining whether or not a job 	 * should be run. The syntax is yy.ddd.hhmm . 	 */
 name|sprintf
 argument_list|(
 name|nowtime
@@ -424,7 +425,7 @@ comment|/* exit status of the job */
 name|int
 name|notifybymail
 decl_stmt|;
-comment|/* should we notify the owner of the                                            job after the job is run? */
+comment|/* should we notify the owner of the 					   job after the job is run? */
 name|char
 name|shell
 index|[
@@ -451,7 +452,7 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-comment|/* file sent to forked shell for exec-                                            ution */
+comment|/* file sent to forked shell for exec- 					   ution */
 name|char
 name|jobname
 index|[
@@ -481,7 +482,7 @@ modifier|*
 name|infile
 decl_stmt|;
 comment|/* I/O stream to spoolfile */
-comment|/*          * First we fork a child so that the main can run other jobs.          */
+comment|/* 	 * First we fork a child so that the main can run other jobs. 	 */
 if|if
 condition|(
 name|pid
@@ -490,7 +491,7 @@ name|fork
 argument_list|()
 condition|)
 return|return;
-comment|/*          * Open the spoolfile.          */
+comment|/* 	 * Open the spoolfile. 	 */
 if|if
 condition|(
 operator|(
@@ -518,7 +519,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Grab the 3-line header out of the spoolfile.          */
+comment|/* 	 * Grab the 3-line header out of the spoolfile. 	 */
 name|fscanf
 argument_list|(
 name|infile
@@ -546,7 +547,7 @@ argument_list|,
 name|mailvar
 argument_list|)
 expr_stmt|;
-comment|/*          * Check to see if we should send mail to the owner.          */
+comment|/* 	 * Check to see if we should send mail to the owner. 	 */
 name|notifybymail
 operator|=
 operator|(
@@ -565,7 +566,7 @@ argument_list|(
 name|infile
 argument_list|)
 expr_stmt|;
-comment|/*          * Move the spoolfile to the directory where jobs are run from and          * then move into that directory.          */
+comment|/* 	 * Move the spoolfile to the directory where jobs are run from and 	 * then move into that directory. 	 */
 name|sprintf
 argument_list|(
 name|runfile
@@ -589,7 +590,7 @@ argument_list|(
 name|PASTDIR
 argument_list|)
 expr_stmt|;
-comment|/*          * Create a temporary file where we will redirect errors to.          * Just to make sure we've got a unique file, we'll run an "access"          * check on the file.          */
+comment|/* 	 * Create a temporary file where we will redirect errors to. 	 * Just to make sure we've got a unique file, we'll run an "access" 	 * check on the file. 	 */
 for|for
 control|(
 name|i
@@ -652,7 +653,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*          * Get the stats of the job being run.          */
+comment|/* 	 * Get the stats of the job being run. 	 */
 if|if
 condition|(
 name|stat
@@ -678,7 +679,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Fork another child that will run the job.          */
+comment|/* 	 * Fork another child that will run the job. 	 */
 if|if
 condition|(
 name|pid
@@ -687,7 +688,7 @@ name|fork
 argument_list|()
 condition|)
 block|{
-comment|/*                  * If the child fails, save the job so that it gets                  * rerun the next time "atrun" is executed and then exit.                  */
+comment|/* 		 * If the child fails, save the job so that it gets 		 * rerun the next time "atrun" is executed and then exit. 		 */
 if|if
 condition|(
 name|pid
@@ -714,7 +715,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*                  * Wait for the child to terminate.                  */
+comment|/* 		 * Wait for the child to terminate. 		 */
 name|wait
 argument_list|(
 operator|(
@@ -724,7 +725,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*                  * Get the stats of the error file and determine the exit                  * status of the child. We assume that if there is anything                  * in the error file then the job ran into some errors.                  */
+comment|/* 		 * Get the stats of the error file and determine the exit 		 * status of the child. We assume that if there is anything 		 * in the error file then the job ran into some errors. 		 */
 if|if
 condition|(
 name|stat
@@ -765,7 +766,7 @@ else|:
 name|ABNORMAL
 operator|)
 expr_stmt|;
-comment|/* If errors occured, then we send mail to the owner                  * telling him/her that we ran into trouble.                    *                  * (NOTE: this could easily be modified so that if any                   * errors occured while running a job, mail is sent regard-                  * less of whether the -m flag was set or not.                  *                  * i.e. rather than:                  *                  *      "if (notifybymail)" use                  * use:                  *                  *      "if ((exitstatus == ABNORMAL) || (notifybymail))"                  *                  * It's up to you if you want to implement this.                  *                  */
+comment|/* If errors occured, then we send mail to the owner 		 * telling him/her that we ran into trouble.   		 * 		 * (NOTE: this could easily be modified so that if any  		 * errors occured while running a job, mail is sent regard- 		 * less of whether the -m flag was set or not. 		 * 		 * i.e. rather than: 		 * 		 *	"if (notifybymail)" use 		 * use: 		 * 		 *	"if ((exitstatus == ABNORMAL) || (notifybymail))" 		 * 		 * It's up to you if you want to implement this. 		 * 		 */
 if|if
 condition|(
 name|notifybymail
@@ -784,7 +785,7 @@ argument_list|,
 name|exitstatus
 argument_list|)
 expr_stmt|;
-comment|/*                  * Remove the errorfile and the jobfile.                  */
+comment|/* 		 * Remove the errorfile and the jobfile. 		 */
 if|if
 condition|(
 name|unlink
@@ -821,8 +822,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * HERE'S WHERE WE SET UP AND FORK THE SHELL.          */
-comment|/*          * Run the job as the owner of the jobfile          */
+comment|/* 	 * HERE'S WHERE WE SET UP AND FORK THE SHELL. 	 */
+comment|/* 	 * Run the job as the owner of the jobfile 	 */
 name|setgid
 argument_list|(
 name|jobbuf
@@ -837,7 +838,7 @@ operator|.
 name|st_uid
 argument_list|)
 expr_stmt|;
-comment|/*          * Close all open files so that we can reopen a temporary file          * for stdout and sterr.          */
+comment|/* 	 * Close all open files so that we can reopen a temporary file 	 * for stdout and sterr. 	 */
 for|for
 control|(
 name|i
@@ -856,7 +857,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-comment|/*          * Reposition stdin, stdout, and stderr.          *          *      stdin  = /dev/null          *      stout  = /dev/null          *      stderr = /tmp/at.err{pid}          *                */
+comment|/* 	 * Reposition stdin, stdout, and stderr. 	 * 	 *	stdin  = /dev/null 	 *	stout  = /dev/null 	 *	stderr = /tmp/at.err{pid} 	 *	 	 */
 name|open
 argument_list|(
 literal|"/dev/null"
@@ -882,7 +883,7 @@ argument_list|,
 literal|00644
 argument_list|)
 expr_stmt|;
-comment|/*          * Now we fork the shell.          *          * See if the shell is in /bin          */
+comment|/* 	 * Now we fork the shell. 	 * 	 * See if the shell is in /bin 	 */
 name|sprintf
 argument_list|(
 name|whichshell
@@ -903,7 +904,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*          * If not in /bin, look for the shell in /usr/bin.          */
+comment|/* 	 * If not in /bin, look for the shell in /usr/bin. 	 */
 name|sprintf
 argument_list|(
 name|whichshell
@@ -924,7 +925,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*          * If not in /bin, look for the shell in /usr/new.          */
+comment|/* 	 * If not in /bin, look for the shell in /usr/new. 	 */
 name|sprintf
 argument_list|(
 name|whichshell
@@ -945,7 +946,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*          * If we don't succeed by now, we're really having troubles,          * so we'll send the owner some mail.          */
+comment|/* 	 * If we don't succeed by now, we're really having troubles, 	 * so we'll send the owner some mail. 	 */
 name|fprintf
 argument_list|(
 name|stderr
@@ -1015,14 +1016,14 @@ name|FILE
 modifier|*
 name|errptr
 decl_stmt|;
-comment|/* I/O stream to file containing error                                            messages */
+comment|/* I/O stream to file containing error 					   messages */
 name|FILE
 modifier|*
 name|popen
 parameter_list|()
 function_decl|;
 comment|/* initiate I/O to a process */
-comment|/*          * Create the full name for the mail process.          */
+comment|/* 	 * Create the full name for the mail process. 	 */
 name|sprintf
 argument_list|(
 name|mailtouser
@@ -1034,7 +1035,7 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
-comment|/*          * Open a stream to the mail process.          */
+comment|/* 	 * Open a stream to the mail process. 	 */
 if|if
 condition|(
 operator|(
@@ -1062,7 +1063,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Send the letter. If the job exited normally, just send a          * quick letter notifying the owner that everthing went ok.          */
+comment|/* 	 * Send the letter. If the job exited normally, just send a 	 * quick letter notifying the owner that everthing went ok. 	 */
 if|if
 condition|(
 name|exitstatus
@@ -1087,7 +1088,7 @@ literal|"any errors.\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * If the job exited abnormally, send a letter notifying the user          * that the job didn't run proberly. Also, send a copy of the errors           * that occured to the user.          */
+comment|/* 	 * If the job exited abnormally, send a letter notifying the user 	 * that the job didn't run proberly. Also, send a copy of the errors  	 * that occured to the user. 	 */
 else|else
 block|{
 if|if
@@ -1097,7 +1098,7 @@ operator|==
 name|ABNORMAL
 condition|)
 block|{
-comment|/*                          * Write the intro to the letter.                          */
+comment|/* 			 * Write the intro to the letter. 			 */
 name|fprintf
 argument_list|(
 name|mailptr
@@ -1128,7 +1129,7 @@ argument_list|,
 literal|" errors that occured follows:\n\n\n"
 argument_list|)
 expr_stmt|;
-comment|/*                          * Open the file containing a log of the errors that                          * occured.                          */
+comment|/* 			 * Open the file containing a log of the errors that 			 * occured. 			 */
 if|if
 condition|(
 operator|(
@@ -1156,7 +1157,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*                          * Send the copy of the errors to the owner.                          */
+comment|/* 			 * Send the copy of the errors to the owner. 			 */
 name|fputc
 argument_list|(
 literal|'\t'
@@ -1206,7 +1207,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*          * Sign the letter.          */
+comment|/* 	 * Sign the letter. 	 */
 name|fprintf
 argument_list|(
 name|mailptr
@@ -1221,7 +1222,7 @@ argument_list|,
 literal|"The Atrun Program\n"
 argument_list|)
 expr_stmt|;
-comment|/*          * Close the stream to the mail process.          */
+comment|/* 	 * Close the stream to the mail process. 	 */
 name|pclose
 argument_list|(
 name|mailptr
@@ -1269,7 +1270,7 @@ name|direntry
 operator|->
 name|d_name
 expr_stmt|;
-comment|/*          * Count the number of dots found in the directory entry.          */
+comment|/* 	 * Count the number of dots found in the directory entry. 	 */
 while|while
 condition|(
 operator|*
@@ -1287,7 +1288,7 @@ operator|==
 literal|'.'
 operator|)
 expr_stmt|;
-comment|/*          * If the directory entry doesn't represent a job, just return a 0.          */
+comment|/* 	 * If the directory entry doesn't represent a job, just return a 0. 	 */
 if|if
 condition|(
 name|numdot
@@ -1299,7 +1300,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/*          * If a directory entry represents a job, determine if it's time to          * run it.          */
+comment|/* 	 * If a directory entry represents a job, determine if it's time to 	 * run it. 	 */
 return|return
 operator|(
 name|strncmp
@@ -1345,7 +1346,7 @@ modifier|*
 name|lastimefile
 decl_stmt|;
 comment|/* file where recored is kept */
-comment|/*          * Get the time of day.          */
+comment|/* 	 * Get the time of day. 	 */
 if|if
 condition|(
 name|gettimeofday
@@ -1371,7 +1372,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Open the record file.          */
+comment|/* 	 * Open the record file. 	 */
 if|if
 condition|(
 operator|(
@@ -1406,7 +1407,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Record the last update time (in seconds since 1/1/70).          */
+comment|/* 	 * Record the last update time (in seconds since 1/1/70). 	 */
 name|fprintf
 argument_list|(
 name|lastimefile
@@ -1421,7 +1422,7 @@ operator|.
 name|tv_sec
 argument_list|)
 expr_stmt|;
-comment|/*          * Close the record file.          */
+comment|/* 	 * Close the record file. 	 */
 name|fclose
 argument_list|(
 name|lastimefile
