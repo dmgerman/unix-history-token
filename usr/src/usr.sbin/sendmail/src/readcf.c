@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.86 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.87 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5876,15 +5876,6 @@ name|val
 condition|)
 block|{
 case|case
-literal|'r'
-case|:
-comment|/* reject 8-bit, don't convert MIME */
-name|MimeMode
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
 literal|'m'
 case|:
 comment|/* convert 8-bit, convert MIME */
@@ -5896,23 +5887,14 @@ name|MM_MIME8BIT
 expr_stmt|;
 break|break;
 case|case
-literal|'j'
-case|:
-comment|/* "just send 8" */
-name|MimeMode
-operator|=
-name|MM_PASS8BIT
-expr_stmt|;
-break|break;
-case|case
 literal|'p'
 case|:
 comment|/* pass 8 bit, convert MIME */
 name|MimeMode
 operator|=
-name|MM_PASS8BIT
-operator||
 name|MM_CVTMIME
+operator||
+name|MM_PASS8BIT
 expr_stmt|;
 break|break;
 case|case
@@ -5924,28 +5906,20 @@ operator|=
 name|MM_CVTMIME
 expr_stmt|;
 break|break;
-case|case
-literal|'a'
-case|:
+if|#
+directive|if
+literal|0
+block|case 'r':
+comment|/* reject 8-bit, don't convert MIME */
+block|MimeMode = 0; 			break;  		  case 'j':
+comment|/* "just send 8" */
+block|MimeMode = MM_PASS8BIT; 			break;  		  case 'a':
 comment|/* encode 8 bit if available */
-name|MimeMode
-operator|=
-name|MM_MIME8BIT
-operator||
-name|MM_PASS8BIT
-operator||
-name|MM_CVTMIME
-expr_stmt|;
-break|break;
-case|case
-literal|'c'
-case|:
+block|MimeMode = MM_MIME8BIT|MM_PASS8BIT|MM_CVTMIME; 			break;  		  case 'c':
 comment|/* convert 8 bit to MIME, never 7 bit */
-name|MimeMode
-operator|=
-name|MM_MIME8BIT
-expr_stmt|;
-break|break;
+block|MimeMode = MM_MIME8BIT; 			break;
+endif|#
+directive|endif
 default|default:
 name|syserr
 argument_list|(
