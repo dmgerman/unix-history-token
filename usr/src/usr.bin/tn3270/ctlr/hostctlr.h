@@ -512,7 +512,7 @@ begin_define
 define|#
 directive|define
 name|CMD_SNA_ERASE_WRITE
-value|0x55
+value|0xf5
 end_define
 
 begin_define
