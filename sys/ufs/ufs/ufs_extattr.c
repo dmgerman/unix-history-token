@@ -487,7 +487,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether the name passed is a valid name for an actual  * attribute.  *  * Invalid currently consists of:  *	 NULL pointer for attrname  *	 zero-length attrname (used to retrieve application attribute list)  */
+comment|/*-  * Determine whether the name passed is a valid name for an actual  * attribute.  *  * Invalid currently consists of:  *	 NULL pointer for attrname  *	 zero-length attrname (used to retrieve application attribute list)  */
 end_comment
 
 begin_function
