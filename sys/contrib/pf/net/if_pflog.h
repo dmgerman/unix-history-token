@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: if_pflog.h,v 1.9 2003/07/15 20:27:27 dhartmei Exp $ */
+comment|/* $OpenBSD: if_pflog.h,v 1.10 2004/03/19 04:52:04 frantzen Exp $ */
 end_comment
 
 begin_comment
@@ -116,7 +116,7 @@ begin_define
 define|#
 directive|define
 name|PFLOG_REAL_HDRLEN
-value|offsetof(struct pfloghdr, pad);
+value|offsetof(struct pfloghdr, pad)
 end_define
 
 begin_comment

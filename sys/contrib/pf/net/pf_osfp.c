@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pf_osfp.c,v 1.3 2003/08/27 18:23:36 frantzen Exp $ */
+comment|/*	$OpenBSD: pf_osfp.c,v 1.9 2004/01/04 20:08:42 pvalchev Exp $ */
 end_comment
 
 begin_comment
@@ -164,6 +164,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -226,7 +232,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|<sys/stdarg.h>
 end_include
 
 begin_define
@@ -538,6 +544,7 @@ name|optlen
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|u_int8_t
 modifier|*
 name|optp
@@ -653,7 +660,15 @@ expr_stmt|;
 name|optp
 operator|=
 operator|(
-name|caddr_t
+specifier|const
+name|u_int8_t
+operator|*
+operator|)
+operator|(
+operator|(
+specifier|const
+name|char
+operator|*
 operator|)
 name|tcp
 operator|+
@@ -662,6 +677,7 @@ argument_list|(
 operator|*
 name|tcp
 argument_list|)
+operator|)
 expr_stmt|;
 for|for
 control|(

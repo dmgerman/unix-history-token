@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: if_pflog.c,v 1.9 2003/05/14 08:42:00 canacar Exp $	*/
+comment|/*	$OpenBSD: if_pflog.c,v 1.11 2003/12/31 11:18:25 cedric Exp $	*/
 end_comment
 
 begin_comment
@@ -680,9 +680,9 @@ name|int
 name|pflog_packet
 parameter_list|(
 name|struct
-name|ifnet
+name|pfi_kif
 modifier|*
-name|ifp
+name|kif
 parameter_list|,
 name|struct
 name|mbuf
@@ -734,7 +734,7 @@ name|m1
 decl_stmt|;
 if|if
 condition|(
-name|ifp
+name|kif
 operator|==
 name|NULL
 operator|||
@@ -752,6 +752,17 @@ operator|-
 literal|1
 operator|)
 return|;
+name|bzero
+argument_list|(
+operator|&
+name|hdr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hdr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|hdr
 operator|.
 name|length
@@ -784,9 +795,9 @@ name|hdr
 operator|.
 name|ifname
 argument_list|,
-name|ifp
+name|kif
 operator|->
-name|if_xname
+name|pfik_name
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -821,20 +832,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|bzero
-argument_list|(
-name|hdr
-operator|.
-name|ruleset
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hdr
-operator|.
-name|ruleset
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -863,24 +860,9 @@ expr_stmt|;
 if|if
 condition|(
 name|ruleset
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|bzero
-argument_list|(
-name|hdr
-operator|.
-name|ruleset
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hdr
-operator|.
-name|ruleset
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
 name|memcpy
 argument_list|(
 name|hdr
