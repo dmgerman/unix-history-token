@@ -58,6 +58,12 @@ modifier|*
 name|nm_so
 decl_stmt|;
 comment|/* Rpc socket */
+name|struct
+name|ucred
+modifier|*
+name|nm_cred
+decl_stmt|;
+comment|/* Cached mount-time credential */
 name|int
 name|nm_sotype
 decl_stmt|;

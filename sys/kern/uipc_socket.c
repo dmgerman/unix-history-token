@@ -517,6 +517,8 @@ name|type
 parameter_list|,
 name|proto
 parameter_list|,
+name|cred
+parameter_list|,
 name|td
 parameter_list|)
 name|int
@@ -534,6 +536,11 @@ name|type
 decl_stmt|;
 name|int
 name|proto
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
 decl_stmt|;
 name|struct
 name|thread
@@ -706,11 +713,7 @@ name|so_cred
 operator|=
 name|crhold
 argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|cred
 argument_list|)
 expr_stmt|;
 name|so

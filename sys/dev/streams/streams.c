@@ -1058,6 +1058,12 @@ argument_list|,
 name|protocol
 argument_list|,
 name|td
+operator|->
+name|td_proc
+operator|->
+name|p_ucred
+argument_list|,
+name|td
 argument_list|)
 operator|)
 operator|!=

@@ -697,6 +697,12 @@ argument_list|,
 literal|0
 argument_list|,
 name|td
+operator|->
+name|td_proc
+operator|->
+name|p_ucred
+argument_list|,
+name|td
 argument_list|)
 operator|)
 condition|)

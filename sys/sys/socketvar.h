@@ -1839,6 +1839,11 @@ name|int
 name|proto
 operator|,
 expr|struct
+name|ucred
+operator|*
+name|cred
+operator|,
+expr|struct
 name|thread
 operator|*
 name|td

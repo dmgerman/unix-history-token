@@ -968,6 +968,14 @@ argument_list|,
 name|ap
 operator|->
 name|a_td
+operator|->
+name|td_proc
+operator|->
+name|p_ucred
+argument_list|,
+name|ap
+operator|->
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if

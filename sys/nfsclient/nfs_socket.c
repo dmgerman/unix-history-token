@@ -652,6 +652,10 @@ name|nmp
 operator|->
 name|nm_soproto
 argument_list|,
+name|nmp
+operator|->
+name|nm_cred
+argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
