@@ -1994,11 +1994,19 @@ argument_list|,
 name|FROM_NADDR
 argument_list|,
 literal|"    discard RIP response from unknown port"
-literal|" %d"
+literal|" %d on host %s"
 argument_list|,
+name|ntohs
+argument_list|(
 name|from
 operator|->
 name|sin_port
+argument_list|)
+argument_list|,
+name|naddr_ntoa
+argument_list|(
+name|FROM_NADDR
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
