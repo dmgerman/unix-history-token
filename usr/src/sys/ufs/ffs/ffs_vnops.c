@@ -1,24 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_vnops.c	4.26	82/06/10	*/
+comment|/*	ffs_vnops.c	4.27	82/06/25	*/
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIMFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../h/sysrenam.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
