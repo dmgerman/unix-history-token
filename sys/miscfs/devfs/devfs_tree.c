@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.12 1996/01/02 09:14:44 peter Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.13 1996/01/21 09:03:15 julian Exp $  */
 end_comment
 
 begin_include
@@ -1887,14 +1887,24 @@ expr_stmt|;
 comment|/* 	 * Keep removing the next front node till no more exist 	 */
 while|while
 condition|(
+operator|(
+operator|(
+name|devnm_p
+operator|)
 name|devnmp
+operator|)
 operator|->
 name|next_front
 condition|)
 block|{
 name|dev_free_name
 argument_list|(
+operator|(
+operator|(
+name|devnm_p
+operator|)
 name|devnmp
+operator|)
 operator|->
 name|next_front
 argument_list|)
@@ -1903,6 +1913,9 @@ block|}
 comment|/* 	 * then free the main node 	 */
 name|dev_free_name
 argument_list|(
+operator|(
+name|devnm_p
+operator|)
 name|devnmp
 argument_list|)
 expr_stmt|;
