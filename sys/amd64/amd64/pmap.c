@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.229 1999/04/07 03:57:45 msmith Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.230 1999/04/10 02:58:17 alc Exp $  */
 end_comment
 
 begin_comment
@@ -865,6 +865,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|__inline
 name|void
 name|pmap_changebit
 name|__P
@@ -878,6 +879,23 @@ name|bit
 operator|,
 name|boolean_t
 name|setem
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|pmap_clearbit
+name|__P
+argument_list|(
+operator|(
+name|vm_offset_t
+name|pa
+operator|,
+name|int
+name|bit
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4376,8 +4394,10 @@ operator|->
 name|pindex
 argument_list|)
 expr_stmt|;
-name|invltlb_1pg
+name|pmap_TLB_invalidate
 argument_list|(
+name|pmap
+argument_list|,
 name|pteva
 argument_list|)
 expr_stmt|;
@@ -6972,8 +6992,10 @@ argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
-name|invltlb_1pg
+name|pmap_TLB_invalidate
 argument_list|(
+name|pmap
+argument_list|,
 name|va
 argument_list|)
 expr_stmt|;
@@ -7292,11 +7314,11 @@ if|if
 condition|(
 name|anyvalid
 condition|)
-block|{
-name|invltlb
-argument_list|()
+name|pmap_TLB_invalidate_all
+argument_list|(
+name|pmap
+argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -7942,8 +7964,10 @@ if|if
 condition|(
 name|anychanged
 condition|)
-name|invltlb
-argument_list|()
+name|pmap_TLB_invalidate_all
+argument_list|(
+name|pmap
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -10179,9 +10203,23 @@ operator||
 name|PG_V
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SMP
+argument_list|)
+comment|/* The page directory is not shared between CPUs */
+name|cpu_invltlb
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|invltlb
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 for|for
 control|(
@@ -11739,8 +11777,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|invltlb
-argument_list|()
+name|pmap_TLB_invalidate_all
+argument_list|(
+name|pmap
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -11944,6 +11984,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__inline
 name|void
 name|pmap_changebit
 parameter_list|(
@@ -12212,6 +12253,34 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *	pmap_clearbit:  *  *	Clear a bit/bits in every pte mapping a given physical page.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|pmap_clearbit
+parameter_list|(
+name|vm_offset_t
+name|pa
+parameter_list|,
+name|int
+name|bit
+parameter_list|)
+block|{
+name|pmap_changebit
+argument_list|(
+name|pa
+argument_list|,
+name|bit
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  *      pmap_page_protect:  *  *      Lower the permission for all mappings to a given page.  */
 end_comment
 
@@ -12248,13 +12317,11 @@ name|VM_PROT_EXECUTE
 operator|)
 condition|)
 block|{
-name|pmap_changebit
+name|pmap_clearbit
 argument_list|(
 name|phys
 argument_list|,
 name|PG_RW
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -12539,15 +12606,11 @@ name|vm_offset_t
 name|pa
 parameter_list|)
 block|{
-name|pmap_changebit
+name|pmap_clearbit
 argument_list|(
-operator|(
 name|pa
-operator|)
 argument_list|,
 name|PG_M
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -12565,15 +12628,11 @@ name|vm_offset_t
 name|pa
 parameter_list|)
 block|{
-name|pmap_changebit
+name|pmap_clearbit
 argument_list|(
-operator|(
 name|pa
-operator|)
 argument_list|,
 name|PG_A
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
