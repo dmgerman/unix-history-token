@@ -533,9 +533,6 @@ modifier|*
 name|cue_mbuf
 decl_stmt|;
 name|int
-name|cue_accum
-decl_stmt|;
-name|int
 name|cue_idx
 decl_stmt|;
 block|}

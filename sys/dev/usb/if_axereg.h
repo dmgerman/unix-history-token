@@ -444,9 +444,6 @@ modifier|*
 name|axe_mbuf
 decl_stmt|;
 name|int
-name|axe_accum
-decl_stmt|;
-name|int
 name|axe_idx
 decl_stmt|;
 block|}
