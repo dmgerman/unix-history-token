@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.22 1999/01/08 11:58:25 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.24 1999/02/20 23:26:16 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * USB Universal Host Controller driver.  * Handles PIIX3 and PIIX4.  *  * Data sheets: ftp://download.intel.com/design/intarch/datashts/29055002.pdf  *              ftp://download.intel.com/design/intarch/datashts/29056201.pdf  * UHCI spec: http://www.intel.com/design/usb/uhci11d.pdf  * USB spec: http://www.teleport.com/cgi-bin/mailmerge.cgi/~usb/cgiform.tpl  */
+comment|/*  * USB Universal Host Controller driver.  * Handles PIIX3 and PIIX4.  *  * Data sheets: ftp://download.intel.com/design/intarch/datashts/29055002.pdf  *              ftp://download.intel.com/design/intarch/datashts/29056201.pdf  * UHCI spec: http://www.intel.com/design/usb/uhci11d.pdf  * USB spec: http://www.usb.org/cgi-usb/mailmerge.cgi/home/usb/docs/developers/ cgiform.tpl  */
 end_comment
 
 begin_include
@@ -4106,7 +4106,7 @@ argument_list|(
 literal|10
 argument_list|,
 operator|(
-literal|"uhci_check_intr: len=%d, status=0x%x\n"
+literal|"uhci_ii_done: len=%d, status=0x%x\n"
 operator|,
 name|len
 operator|,
@@ -4128,7 +4128,7 @@ literal|1
 operator|+
 operator|(
 name|status
-operator|==
+operator|&
 name|UHCI_TD_STALLED
 operator|)
 argument_list|,
@@ -4167,7 +4167,7 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|==
+operator|&
 name|UHCI_TD_STALLED
 condition|)
 name|reqh
