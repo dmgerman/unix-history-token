@@ -217,5 +217,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|sm_check_hostname
+parameter_list|(
+name|struct
+name|svc_req
+modifier|*
+name|req
+parameter_list|,
+name|char
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
