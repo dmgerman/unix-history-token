@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	6.6 (Berkeley) %G%"
+literal|"@(#)mci.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -725,7 +725,7 @@ name|MCIS_OPEN
 condition|)
 block|{
 comment|/* poke the connection to see if it's still alive */
-name|smtpnoop
+name|smtpprobe
 argument_list|(
 name|mci
 argument_list|)

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.19 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.20 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.19 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.20 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1833,11 +1833,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPNOOP -- send a NOOP (no operation) command to check the connection state */
+comment|/* **  SMTPPROBE -- check the connection state */
 end_comment
 
 begin_expr_stmt
-name|smtpnoop
+name|smtpprobe
 argument_list|(
 name|mci
 argument_list|)
@@ -1874,7 +1874,7 @@ name|BlankEnvelope
 decl_stmt|;
 name|smtpmessage
 argument_list|(
-literal|"NOOP"
+literal|"RSET"
 argument_list|,
 name|m
 argument_list|,
