@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mscp.h	4.2	82/05/26	*/
+comment|/*	mscp.h	4.3	82/11/13	*/
 end_comment
 
 begin_comment
@@ -946,20 +946,6 @@ begin_comment
 comment|/* Message from an internal diagnostic */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|short
-name|quad
-index|[
-literal|4
-index|]
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* a word-aligned quadword */
-end_comment
-
 begin_comment
 comment|/*  * An MSCP packet  */
 end_comment
@@ -1583,7 +1569,7 @@ begin_define
 define|#
 directive|define
 name|mslg_busaddr
-value|mslg_unitid
+value|mslg_unitid.val[0]
 end_define
 
 begin_define

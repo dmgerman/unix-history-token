@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	5.1	82/11/06	*/
+comment|/*	vm_machdep.c	5.2	82/11/13	*/
 end_comment
 
 begin_include
@@ -232,6 +232,12 @@ block|}
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
@@ -266,6 +272,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Check that a process will not be too large.  */
@@ -374,6 +385,15 @@ argument_list|(
 name|v
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|pte
+operator|=
+name|pte
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|size

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.30	82/05/26	*/
+comment|/*	ubareg.h	4.31	82/11/13	*/
 end_comment
 
 begin_comment
@@ -623,6 +623,10 @@ begin_comment
 comment|/* purge bdp */
 end_comment
 
+begin_comment
+comment|/* the DELAY is for a hardware problem */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -632,8 +636,7 @@ name|uba
 parameter_list|,
 name|bdp
 parameter_list|)
-define|\
-value|((uba)->uba_dpr[bdp] |= (UBADPR_PURGE|UBADPR_NXM|UBADPR_UCE))
+value|{ \     ((uba)->uba_dpr[bdp] |= (UBADPR_PURGE|UBADPR_NXM|UBADPR_UCE)); \     DELAY(8); \ }
 end_define
 
 begin_endif
@@ -733,7 +736,7 @@ name|uba
 parameter_list|,
 name|bdp
 parameter_list|)
-value|{ \ 	if (cpu==VAX_750) { \ 		UBA_PURGE750((uba), (bdp)); break; \ 	} \ }
+value|{ \ 	if (cpu==VAX_750) { \ 		UBA_PURGE750((uba), (bdp)); \ 	} \ }
 end_define
 
 begin_endif

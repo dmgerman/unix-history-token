@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.70	82/11/03	*/
+comment|/*	machdep.c	4.71	82/11/13	*/
 end_comment
 
 begin_include
@@ -237,11 +237,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|MUSH
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -349,6 +349,11 @@ name|pte
 modifier|*
 name|pte
 decl_stmt|;
+name|int
+name|mapaddr
+decl_stmt|,
+name|j
+decl_stmt|;
 specifier|register
 name|caddr_t
 name|v
@@ -430,7 +435,7 @@ name|maxmem
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * First determine how many buffers are reasonable. 	 * Current alg is 16 per megabyte, with min of 16. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
+comment|/* 	 * Determine how many buffers to allocate. 	 * Use 10% of memory, with min of 16. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
 if|if
 condition|(
 name|nbuf
@@ -441,17 +446,20 @@ block|{
 name|nbuf
 operator|=
 operator|(
-literal|16
-operator|*
+operator|(
 name|physmem
+operator|*
+name|NBPG
 operator|)
 operator|/
-name|btoc
-argument_list|(
-literal|1024
+literal|10
+operator|)
+operator|/
+operator|(
+literal|2
 operator|*
-literal|1024
-argument_list|)
+name|CLBYTES
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -495,7 +503,11 @@ literal|256
 expr_stmt|;
 comment|/* sanity */
 block|}
-comment|/* 	 * Allocate space for system data structures. 	 */
+comment|/* 	 * Allocate space for system data structures. 	 * The first available real memory address is in "firstaddr". 	 * As pages of memory are allocated, "firstaddr" is incremented. 	 * The first available kernel virtual address is in "v". 	 * As pages of kernel virtual memory are allocated, "v" is incremented. 	 * An index into the kernel page table corresponding to the 	 * virtual memory address maintained in "v" is kept in "mapaddr". 	 */
+name|mapaddr
+operator|=
+name|firstaddr
+expr_stmt|;
 name|v
 operator|=
 call|(
@@ -548,6 +560,76 @@ operator|*
 name|nbuf
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nbuf
+condition|;
+name|i
+operator|++
+control|)
+block|{
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+literal|2
+operator|*
+name|CLSIZE
+condition|;
+name|j
+operator|++
+control|)
+block|{
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
+operator|&
+name|Sysmap
+index|[
+name|mapaddr
+operator|+
+name|j
+index|]
+operator|)
+operator|=
+name|PG_V
+operator||
+name|PG_KW
+operator||
+name|firstaddr
+expr_stmt|;
+name|clearseg
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|firstaddr
+argument_list|)
+expr_stmt|;
+name|firstaddr
+operator|++
+expr_stmt|;
+block|}
+name|mapaddr
+operator|+=
+name|MAXBSIZE
+operator|/
+name|NBPG
+expr_stmt|;
+block|}
 name|valloc
 argument_list|(
 name|buf
@@ -701,8 +783,8 @@ operator|/
 literal|4
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|QUOTA
 name|valloclim
 argument_list|(
@@ -730,7 +812,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Now allocate space for core map 	 */
+comment|/* 	 * Now allocate space for core map 	 * Allow space for all of phsical memory minus the amount  	 * dedicated to the system. The amount of physical memory 	 * dedicated to the system is the total virtual memory of 	 * the system minus the space in the buffers which is not 	 * allocated real memory. 	 */
 name|ncmap
 operator|=
 operator|(
@@ -746,6 +828,18 @@ name|v
 operator|&
 operator|~
 literal|0x80000000
+operator|)
+operator|+
+operator|(
+name|nbuf
+operator|*
+operator|(
+name|MAXBSIZE
+operator|-
+literal|2
+operator|*
+name|CLBYTES
+operator|)
 operator|)
 operator|)
 operator|/
@@ -818,34 +912,11 @@ operator|~
 literal|0x80000000
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unixsize
-operator|>=
-name|physmem
-operator|-
-literal|8
-operator|*
-name|UPAGES
-condition|)
-name|panic
-argument_list|(
-literal|"no memory"
-argument_list|)
-expr_stmt|;
-name|pte
-operator|=
-operator|&
-name|Sysmap
-index|[
-name|firstaddr
-index|]
-expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-name|firstaddr
+name|mapaddr
 init|;
 name|i
 operator|<
@@ -872,14 +943,35 @@ name|PG_V
 operator||
 name|PG_KW
 operator||
-name|i
+name|firstaddr
 expr_stmt|;
 name|clearseg
 argument_list|(
-name|i
+operator|(
+name|unsigned
+operator|)
+name|firstaddr
 argument_list|)
 expr_stmt|;
+name|firstaddr
+operator|++
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|firstaddr
+operator|>=
+name|physmem
+operator|-
+literal|8
+operator|*
+name|UPAGES
+condition|)
+name|panic
+argument_list|(
+literal|"no memory"
+argument_list|)
+expr_stmt|;
 name|mtpr
 argument_list|(
 name|TBIA
@@ -923,7 +1015,7 @@ expr_stmt|;
 comment|/* 	 * Initialize memory allocator and swap 	 * and user page table maps. 	 * 	 * THE USER PAGE TABLE MAP IS CALLED ``kernelmap'' 	 * WHICH IS A VERY UNDESCRIPTIVE AND INCONSISTENT NAME. 	 */
 name|meminit
 argument_list|(
-name|unixsize
+name|firstaddr
 argument_list|,
 name|maxmem
 argument_list|)

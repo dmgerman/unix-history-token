@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.14	82/10/21	*/
+comment|/*	uda.c	4.15	82/11/13	*/
 end_comment
 
 begin_include
@@ -3880,20 +3880,9 @@ name|mp
 operator|->
 name|mslg_event
 argument_list|,
-operator|*
-operator|(
-operator|(
-name|long
-operator|*
-operator|)
-operator|&
 name|mp
 operator|->
 name|mslg_busaddr
-index|[
-literal|0
-index|]
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
