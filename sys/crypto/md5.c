@@ -1424,28 +1424,6 @@ directive|endif
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-end_if
-
-begin_decl_stmt
-name|u_int32_t
-name|X
-index|[
-literal|16
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -1516,6 +1494,12 @@ operator|==
 name|BIG_ENDIAN
 comment|/* 4 byte words */
 comment|/* what a brute force but fast! */
+name|u_int32_t
+name|X
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|u_int8_t
 modifier|*
 name|y
