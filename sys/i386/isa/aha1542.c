@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *	$Id: aha1542.c,v 1.10 1993/10/13 16:34:10 rgrimes Exp $  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *	$Id: aha1542.c,v 1.11 1993/10/15 09:43:51 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -4445,23 +4445,20 @@ operator|.
 name|scsi_dev
 expr_stmt|;
 comment|/***********************************************\ 	* Initialize memory transfer speed		* 	\***********************************************/
-if|if
-condition|(
-operator|!
-operator|(
-name|aha_set_bus_speed
+comment|/*  * XXX This code seems to BREAK more boards than it makes  * work right, we are just going to NOP this here...  */
+if|#
+directive|if
+literal|0
+block|if(!(aha_set_bus_speed(unit))) 	{ 		return(EIO); 	}
+else|#
+directive|else
+name|printf
 argument_list|(
-name|unit
+literal|"\n"
 argument_list|)
-operator|)
-condition|)
-block|{
-return|return
-operator|(
-name|EIO
-operator|)
-return|;
-block|}
+expr_stmt|;
+endif|#
+directive|endif
 comment|/***********************************************\ 	* Initialize mail box 				* 	\***********************************************/
 name|lto3b
 argument_list|(
