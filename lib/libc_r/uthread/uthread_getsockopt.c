@@ -50,7 +50,7 @@ name|void
 modifier|*
 name|optval
 parameter_list|,
-name|int
+name|socklen_t
 modifier|*
 name|optlen
 parameter_list|)

@@ -20,6 +20,24 @@ comment|/*  * Definitions related to sockets: types, address families, options. 
 end_comment
 
 begin_comment
+comment|/*  * Data types.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_char
+name|sa_family_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|socklen_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Types  */
 end_comment
 
@@ -749,7 +767,7 @@ name|u_char
 name|sa_len
 decl_stmt|;
 comment|/* total length */
-name|u_char
+name|sa_family_t
 name|sa_family
 decl_stmt|;
 comment|/* address family */
@@ -835,7 +853,7 @@ name|u_char
 name|__ss_len
 decl_stmt|;
 comment|/* address length */
-name|u_char
+name|sa_family_t
 name|__ss_family
 decl_stmt|;
 comment|/* address family */
@@ -893,13 +911,6 @@ define|#
 directive|define
 name|PF_INET
 value|AF_INET
-end_define
-
-begin_define
-define|#
-directive|define
-name|PF_INET6
-value|AF_INET6
 end_define
 
 begin_define
@@ -1219,11 +1230,12 @@ begin_struct
 struct|struct
 name|msghdr
 block|{
-name|caddr_t
+name|void
+modifier|*
 name|msg_name
 decl_stmt|;
 comment|/* optional address */
-name|u_int
+name|socklen_t
 name|msg_namelen
 decl_stmt|;
 comment|/* size of address */
@@ -1233,15 +1245,16 @@ modifier|*
 name|msg_iov
 decl_stmt|;
 comment|/* scatter/gather array */
-name|u_int
+name|int
 name|msg_iovlen
 decl_stmt|;
 comment|/* # elements in msg_iov */
-name|caddr_t
+name|void
+modifier|*
 name|msg_control
 decl_stmt|;
 comment|/* ancillary data, see below */
-name|u_int
+name|socklen_t
 name|msg_controllen
 decl_stmt|;
 comment|/* ancillary data buffer len */
@@ -1371,7 +1384,7 @@ begin_struct
 struct|struct
 name|cmsghdr
 block|{
-name|u_int
+name|socklen_t
 name|cmsg_len
 decl_stmt|;
 comment|/* data byte count, including hdr */
@@ -1704,7 +1717,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|,
-name|int
+name|socklen_t
 operator|*
 operator|)
 argument_list|)
@@ -1724,7 +1737,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|,
-name|int
+name|socklen_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1743,7 +1756,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|,
-name|int
+name|socklen_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1761,7 +1774,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|,
-name|int
+name|socklen_t
 operator|*
 operator|)
 argument_list|)
@@ -1780,7 +1793,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|,
-name|int
+name|socklen_t
 operator|*
 operator|)
 argument_list|)
@@ -1802,7 +1815,7 @@ operator|,
 name|void
 operator|*
 operator|,
-name|int
+name|socklen_t
 operator|*
 operator|)
 argument_list|)
@@ -1861,7 +1874,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|,
-name|int
+name|socklen_t
 operator|*
 operator|)
 argument_list|)
@@ -1927,7 +1940,7 @@ expr|struct
 name|sockaddr
 operator|*
 operator|,
-name|int
+name|socklen_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1995,7 +2008,7 @@ specifier|const
 name|void
 operator|*
 operator|,
-name|int
+name|socklen_t
 operator|)
 argument_list|)
 decl_stmt|;

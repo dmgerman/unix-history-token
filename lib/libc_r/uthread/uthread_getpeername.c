@@ -45,7 +45,7 @@ name|sockaddr
 modifier|*
 name|peer
 parameter_list|,
-name|int
+name|socklen_t
 modifier|*
 name|paddrlen
 parameter_list|)

@@ -69,7 +69,7 @@ name|sockaddr
 modifier|*
 name|to
 parameter_list|,
-name|int
+name|socklen_t
 name|to_len
 parameter_list|)
 block|{

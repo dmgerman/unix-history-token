@@ -51,7 +51,7 @@ name|void
 modifier|*
 name|optval
 parameter_list|,
-name|int
+name|socklen_t
 name|optlen
 parameter_list|)
 block|{
