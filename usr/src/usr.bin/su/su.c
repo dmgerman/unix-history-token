@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.18 (Berkeley) %G%"
+literal|"@(#)su.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|ARGSTR
-value|"-flmn"
+value|"-Kflm"
 end_define
 
 begin_decl_stmt
@@ -227,7 +227,7 @@ name|asme
 decl_stmt|,
 name|ch
 decl_stmt|,
-name|fulllogin
+name|asthem
 decl_stmt|,
 name|fastlogin
 decl_stmt|,
@@ -314,7 +314,7 @@ name|NULL
 expr_stmt|;
 name|asme
 operator|=
-name|fulllogin
+name|asthem
 operator|=
 name|fastlogin
 operator|=
@@ -345,6 +345,19 @@ operator|)
 name|ch
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|KERBEROS
+case|case
+literal|'K'
+case|:
+name|use_kerberos
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'f'
 case|:
@@ -359,7 +372,11 @@ case|:
 case|case
 literal|'l'
 case|:
-name|fulllogin
+name|asme
+operator|=
+literal|0
+expr_stmt|;
+name|asthem
 operator|=
 literal|1
 expr_stmt|;
@@ -371,20 +388,11 @@ name|asme
 operator|=
 literal|1
 expr_stmt|;
-break|break;
-ifdef|#
-directive|ifdef
-name|KERBEROS
-case|case
-literal|'n'
-case|:
-name|use_kerberos
+name|asthem
 operator|=
 literal|0
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'?'
 case|:
@@ -936,7 +944,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|fulllogin
+name|asthem
 condition|)
 block|{
 name|p
@@ -1004,7 +1012,7 @@ block|}
 block|}
 if|if
 condition|(
-name|fulllogin
+name|asthem
 operator|||
 name|pwd
 operator|->
@@ -1083,7 +1091,7 @@ comment|/* csh strips the first character... */
 operator|*
 name|np
 operator|=
-name|fulllogin
+name|asthem
 condition|?
 literal|"-su"
 else|:
