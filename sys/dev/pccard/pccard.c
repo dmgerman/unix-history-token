@@ -643,7 +643,7 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -663,10 +663,10 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|offset
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|deltap
 parameter_list|)
@@ -1899,13 +1899,13 @@ decl_stmt|;
 name|int
 name|matches
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|fcn
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|vendor
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|prod
 decl_stmt|;
 specifier|const
@@ -5160,7 +5160,7 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|flags
 parameter_list|)
 block|{
@@ -5200,10 +5200,10 @@ parameter_list|,
 name|int
 name|rid
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|offset
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|deltap
 parameter_list|)
@@ -5570,7 +5570,7 @@ name|PCCARD_IVAR_VENDOR
 case|:
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|result
@@ -5587,7 +5587,7 @@ name|PCCARD_IVAR_PRODUCT
 case|:
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|result
@@ -5604,7 +5604,7 @@ name|PCCARD_IVAR_PRODEXT
 case|:
 operator|*
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 name|result
@@ -5621,7 +5621,7 @@ name|PCCARD_IVAR_FUNCTION
 case|:
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|result
@@ -5655,7 +5655,7 @@ return|;
 block|}
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|result
