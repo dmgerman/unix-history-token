@@ -36,13 +36,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|splmem
-value|splhigh
-end_define
-
-begin_define
-define|#
-directive|define
 name|MINALLOCSIZE
 value|UMA_SMALLEST_UNIT
 end_define
@@ -99,7 +92,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* Don't ask the VM for pages */
+comment|/* don't ask VM for pages */
 end_comment
 
 begin_define
@@ -157,18 +150,10 @@ name|struct
 name|mtx
 name|ks_mtx
 decl_stmt|;
-comment|/* Lock for stats */
+comment|/* lock for stats */
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|malloc_mtx
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -296,6 +281,14 @@ name|M_IOV
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|malloc_mtx
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* XXX struct malloc_type is unused for contig*(). */
