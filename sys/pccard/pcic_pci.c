@@ -4024,9 +4024,10 @@ name|PCI_POWERSTATE_D0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Allocated/deallocate interrupt.  This forces the PCI BIOS or 	 * other MD method to route the interrupts to this card. 	 * This so we get the interrupt number in the probe message. 	 * We only need to route interrupts when we're doing pci 	 * parallel interrupt routing. 	 * 	 * Note: The CLPD6729 is a special case.  See its init function 	 * for an explaination of ISA vs PCI interrupts. XXX Might be other 	 * special cases as well. 	 */
+comment|/* 	 * Allocated/deallocate interrupt.  This forces the PCI BIOS or 	 * other MD method to route the interrupts to this card. 	 * This so we get the interrupt number in the probe message. 	 * We only need to route interrupts when we're doing pci 	 * parallel interrupt routing. 	 * 	 * We use two different variables for the memory based and I/O 	 * based cards, so the check here is a little more complex than 	 * one would otherwise hope. 	 * 	 * XXX The bus code for PCI really should do this for us. 	 */
 if|if
 condition|(
+operator|(
 name|pcic_intr_path
 operator|==
 name|pcic_iw_pci
@@ -4034,6 +4035,17 @@ operator|&&
 name|device_id
 operator|!=
 name|PCI_DEVICE_ID_PCIC_CLPD6729
+operator|)
+operator|||
+operator|(
+name|pcic_pd6729_intr_path
+operator|==
+name|pcic_iw_pci
+operator|&&
+name|device_id
+operator|==
+name|PCI_DEVICE_ID_PCIC_CLPD6729
+operator|)
 condition|)
 block|{
 name|rid
@@ -4043,7 +4055,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__i386__
-comment|/* 		 * IRQ 0 is invalid on x86, but not other platforms. 		 * If we have irq 0, then write 255 to force a new, non- 		 * bogus one to be assigned. 		 */
+comment|/* 		 * IRQ 0 is invalid on x86, but not other platforms. 		 * If we have irq 0, then write 255 to force a new, non- 		 * bogus one to be assigned.  I think that in -current 		 * the code in this ifdef may be obsolete with the new 		 * invalid mapping that we're doing in the pci layer -- imp 		 */
 if|if
 condition|(
 name|pci_get_irq
@@ -4220,7 +4232,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * General PCI based card dispatch routine.  Right now  * it only understands the Ricoh, CL-PD6832 and TI parts.  It does  * try to do generic things with other parts.  */
+comment|/*  * Generic pci interrupt attach routine.  It tries to understand all parts,  * and do sane things for those parts it does not understand.  */
 end_comment
 
 begin_function
@@ -4596,6 +4608,11 @@ name|itm
 operator|->
 name|flags
 expr_stmt|;
+comment|/* 		 * We have to use the ISA interrupt routine for status 		 * changes since we don't have any "yenta" pci registers. 		 * We have to do this even when we're using pci type 		 * interrupts because on these cards the interrupts are 		 * cleared in the same way that the ISA cards clear them. 		 */
+name|intr
+operator|=
+name|pcic_isa_intr
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -4897,6 +4914,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|intr
+operator|==
+name|NULL
+condition|)
 name|intr
 operator|=
 name|pcic_pci_intr
@@ -4988,6 +5011,12 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|intr
+operator|==
+name|NULL
+condition|)
 name|intr
 operator|=
 name|pcic_isa_intr
@@ -5493,6 +5522,45 @@ decl_stmt|;
 name|u_int32_t
 name|stat
 decl_stmt|;
+name|int
+name|doit
+init|=
+literal|0
+decl_stmt|;
+comment|/* 	 * The 6729 controller is a weird one, and we have to use 	 * the ISA registers to check to see if the card is there. 	 * Otherwise we look at the PCI state register to find out 	 * if the card is there. 	 */
+if|if
+condition|(
+name|sp
+operator|->
+name|controller
+operator|==
+name|PCIC_PD6729
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|sp
+operator|->
+name|getb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_STATUS
+argument_list|)
+operator|&
+name|PCIC_CD
+operator|)
+operator|==
+name|PCIC_CD
+condition|)
+name|doit
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 name|stat
 operator|=
 name|bus_space_read_4
@@ -5523,6 +5591,21 @@ operator|->
 name|func_intr
 operator|!=
 literal|0
+condition|)
+name|doit
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|doit
+operator|&&
+name|sc
+operator|->
+name|func_intr
+operator|!=
+name|NULL
 condition|)
 name|sc
 operator|->
