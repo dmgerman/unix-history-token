@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.36 1999/05/30 16:52:27 phk Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.37 1999/05/31 11:26:32 phk Exp $  */
 end_comment
 
 begin_include
@@ -2202,9 +2202,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"spkropen: entering with dev = %x\n"
+literal|"spkropen: entering with dev = %s\n"
 argument_list|,
+name|devtoname
+argument_list|(
 name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2300,9 +2303,12 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"spkrwrite: entering with dev = %x, count = %d\n"
+literal|"spkrwrite: entering with dev = %s, count = %d\n"
 argument_list|,
+name|devtoname
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|uio
 operator|->
@@ -2445,9 +2451,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"spkrclose: entering with dev = %x\n"
+literal|"spkrclose: entering with dev = %s\n"
 argument_list|,
+name|devtoname
+argument_list|(
 name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
