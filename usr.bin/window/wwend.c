@@ -31,6 +31,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ww.h"
 end_include
 
@@ -75,6 +81,16 @@ expr_stmt|;
 block|}
 name|xxend
 argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGIO
+argument_list|,
+name|SIG_DFL
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
