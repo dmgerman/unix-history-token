@@ -962,12 +962,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
-name|dumplo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_offset_t
 name|phys_avail
 index|[
