@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: write.c,v 1.3 1993/11/30 20:55:47 jkh Exp $"
+literal|"$Id: write.c,v 1.4 1993/12/12 17:01:24 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -656,10 +656,15 @@ endif|#
 directive|endif
 comment|/* OBJ_VMS */
 comment|/* 	 * After every sub-segment, we fake an ".align ...". This conforms to BSD4.2 	 * brane-damage. We then fake ".fill 0" because that is the kind of frag 	 * that requires least thought. ".align" frags like to have a following 	 * frag since that makes calculating their intended length trivial. 	 */
+ifndef|#
+directive|ifndef
+name|SUB_SEGMENT_ALIGN
 define|#
 directive|define
 name|SUB_SEGMENT_ALIGN
 value|(2)
+endif|#
+directive|endif
 for|for
 control|(
 name|frchainP
