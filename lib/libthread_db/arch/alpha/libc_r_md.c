@@ -37,7 +37,6 @@ name|jmp_buf
 name|jb
 parameter_list|,
 name|prgregset_t
-modifier|*
 name|r
 parameter_list|)
 block|{
