@@ -272,10 +272,6 @@ literal|0x70008086
 case|:
 comment|/* Intel 82371SB */
 case|case
-literal|0x71108086
-case|:
-comment|/* Intel 82371AB */
-case|case
 literal|0x71988086
 case|:
 comment|/* Intel 82443MX */
@@ -303,10 +299,6 @@ case|case
 literal|0x05961106
 case|:
 comment|/* VIA 82C596 PCI-ISA */
-case|case
-literal|0x06861106
-case|:
-comment|/* VIA 82C686 PCI-ISA */
 comment|/* AcerLabs -- vendor 0x10b9 */
 comment|/* Funny : The datasheet told me vendor id is "10b8",sub-vendor */
 comment|/* id is '10b9" but the register always shows "10b9". -Foxfair  */
