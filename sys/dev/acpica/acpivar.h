@@ -15,6 +15,12 @@ directive|include
 file|<sys/eventhandler.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|devclass_t
@@ -49,6 +55,15 @@ name|acpi_enabled
 decl_stmt|;
 name|int
 name|acpi_sstate
+decl_stmt|;
+name|struct
+name|sysctl_ctx_list
+name|acpi_sysctl_ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|acpi_sysctl_tree
 decl_stmt|;
 define|#
 directive|define
