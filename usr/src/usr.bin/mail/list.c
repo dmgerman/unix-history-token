@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)list.c	8.1 (Berkeley) %G%"
+literal|"@(#)list.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1775,9 +1775,10 @@ operator|*
 name|cp2
 operator|++
 operator|=
-operator|*
-operator|--
+literal|'\\'
+expr_stmt|;
 name|cp
+operator|--
 expr_stmt|;
 break|break;
 case|case
@@ -1923,6 +1924,13 @@ operator|=
 literal|'\v'
 expr_stmt|;
 break|break;
+default|default:
+operator|*
+name|cp2
+operator|++
+operator|=
+name|c
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1973,18 +1981,23 @@ condition|)
 operator|*
 name|cp2
 operator|++
-operator|&=
+operator|=
+name|c
+operator|&
 literal|037
 expr_stmt|;
 else|else
+block|{
 operator|*
 name|cp2
 operator|++
 operator|=
-operator|*
-operator|--
-name|cp
+literal|'^'
 expr_stmt|;
+name|cp
+operator|--
+expr_stmt|;
+block|}
 block|}
 else|else
 operator|*
