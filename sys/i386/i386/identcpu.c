@@ -460,6 +460,13 @@ name|CPUCLASS_686
 block|}
 block|,
 comment|/* CPU_PIII */
+block|{
+literal|"Pentium 4"
+block|,
+name|CPUCLASS_686
+block|}
+block|,
+comment|/* CPU_P4 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -881,6 +888,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+break|break;
+case|case
+literal|0xf00
+case|:
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Pentium 4"
+argument_list|)
+expr_stmt|;
+name|cpu
+operator|=
+name|CPU_P4
+expr_stmt|;
 break|break;
 default|default:
 name|strcat
