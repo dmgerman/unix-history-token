@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.11 (Berkeley) %G%"
+literal|"@(#)mci.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -812,6 +812,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* clear out any expired connections */
+name|mci_scan
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
