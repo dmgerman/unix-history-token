@@ -350,9 +350,9 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do {									\     char *_name = (NAME);						\
+value|do {									\     const char *xname = (NAME);						\
 comment|/* Hack to avoid writing lots of rtl in				\        FUNCTION_PROFILER_EPILOGUE ().  */
-value|\     if (*_name == '.'&& strcmp(_name + 1, "mexitcount") == 0)		\       {									\ 	if (flag_pic)							\ 	  fprintf ((FILE), "*%s@GOT(%%ebx)", _name);			\ 	else								\ 	  fprintf ((FILE), "%s", _name);				\       }									\     else								\       fprintf (FILE, "%s", _name);					\ } while (0)
+value|\     if (*xname == '.'&& strcmp(xname + 1, "mexitcount") == 0)		\       {									\ 	if (flag_pic)							\ 	  fprintf ((FILE), "*%s@GOT(%%ebx)", xname);			\ 	else								\ 	  fprintf ((FILE), "%s", xname);				\       }									\     else 								\       {									\ 	  if (xname[0] == '%')						\ 	    xname += 2;							\ 	  if (xname[0] == '*')						\ 	    xname += 1;							\ 	  else								\ 	    fputs (user_label_prefix, FILE);				\ 	  fputs (xname, FILE);						\       }									\ } while (0)
 end_define
 
 begin_comment
