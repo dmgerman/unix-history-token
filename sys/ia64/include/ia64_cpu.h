@@ -1470,11 +1470,40 @@ name|result
 return|;
 end_return
 
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|ia64_disable_highfp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("ssm psr.dfh;; srlz.d");
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_enable_highfp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("rsm psr.dfh;; srlz.d");
+block|}
+end_function
+
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !LOCORE */
+end_comment
 
 begin_endif
 endif|#

@@ -339,7 +339,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * EFI-Provided FPSWA interface (Floating Point SoftWare Assist  */
+comment|/*  * EFI-Provided FPSWA interface (Floating Point SoftWare Assist)  */
 end_comment
 
 begin_comment
@@ -1661,6 +1661,10 @@ block|}
 case|case
 name|IA64_VEC_FLOATING_POINT_FAULT
 case|:
+comment|/* FALLTHROUGH */
+case|case
+name|IA64_VEC_FLOATING_POINT_TRAP
+case|:
 block|{
 name|FP_STATE
 name|fp_state
@@ -1671,7 +1675,7 @@ decl_stmt|;
 name|FPSWA_BUNDLE
 name|bundle
 decl_stmt|;
-comment|/* Always fatal in kernel.  Should never happen. */
+comment|/* Always fatal in kernel. Should never happen. */
 if|if
 condition|(
 operator|!
@@ -1697,12 +1701,6 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 name|copyin
@@ -1725,12 +1723,6 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|i
@@ -1743,7 +1735,6 @@ expr_stmt|;
 comment|/* EFAULT, basically */
 name|ucode
 operator|=
-comment|/*a0*/
 literal|0
 expr_stmt|;
 comment|/* exception summary */
@@ -1791,6 +1782,10 @@ operator|.
 name|fp_high_volatile
 operator|=
 name|NULL
+expr_stmt|;
+comment|/* 		 * We have the high FP registers disabled while in the 		 * kernel. Enable them for the FPSWA handler only. 		 */
+name|ia64_enable_highfp
+argument_list|()
 expr_stmt|;
 comment|/* The docs are unclear.  Is Fpswa reentrant? */
 name|fpswa_ret
@@ -1842,6 +1837,9 @@ argument_list|,
 operator|&
 name|fp_state
 argument_list|)
+expr_stmt|;
+name|ia64_disable_highfp
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2003,9 +2001,7 @@ directive|if
 literal|0
 block|if (fpswa_ret.status& 1) {
 comment|/* 				 * New exception needs to be raised. 				 * If set then the following bits also apply: 				 *& 2 -> fault was converted to a trap 				 *& 4 -> SIMD caused the exception 				 */
-block|i = SIGFPE; 				ucode =
-comment|/*a0*/
-block|0;
+block|i = SIGFPE; 				ucode = 0;
 comment|/* exception summary */
 block|break; 			}
 endif|#
@@ -2016,14 +2012,12 @@ name|SIGFPE
 expr_stmt|;
 name|ucode
 operator|=
-comment|/*a0*/
 literal|0
 expr_stmt|;
 comment|/* exception summary */
 break|break;
 block|}
 else|else
-block|{
 name|panic
 argument_list|(
 literal|"bad fpswa return code %lx"
@@ -2033,276 +2027,6 @@ operator|.
 name|status
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-case|case
-name|IA64_VEC_FLOATING_POINT_TRAP
-case|:
-block|{
-name|FP_STATE
-name|fp_state
-decl_stmt|;
-name|FPSWA_RET
-name|fpswa_ret
-decl_stmt|;
-name|FPSWA_BUNDLE
-name|bundle
-decl_stmt|;
-comment|/* Always fatal in kernel.  Should never happen. */
-if|if
-condition|(
-operator|!
-name|user
-condition|)
-goto|goto
-name|dopanic
-goto|;
-if|if
-condition|(
-name|fpswa_interface
-operator|==
-name|NULL
-condition|)
-block|{
-name|i
-operator|=
-name|SIGFPE
-expr_stmt|;
-name|ucode
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|copyin
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|framep
-operator|->
-name|tf_special
-operator|.
-name|iip
-operator|)
-argument_list|,
-operator|&
-name|bundle
-argument_list|,
-literal|16
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
-condition|)
-block|{
-name|i
-operator|=
-name|SIGBUS
-expr_stmt|;
-comment|/* EFAULT, basically */
-name|ucode
-operator|=
-comment|/*a0*/
-literal|0
-expr_stmt|;
-comment|/* exception summary */
-break|break;
-block|}
-comment|/* f6-f15 are saved in exception_save */
-name|fp_state
-operator|.
-name|bitmask_low64
-operator|=
-literal|0xffc0
-expr_stmt|;
-comment|/* bits 6 - 15 */
-name|fp_state
-operator|.
-name|bitmask_high64
-operator|=
-literal|0x0
-expr_stmt|;
-name|fp_state
-operator|.
-name|fp_low_preserved
-operator|=
-name|NULL
-expr_stmt|;
-name|fp_state
-operator|.
-name|fp_low_volatile
-operator|=
-operator|&
-name|framep
-operator|->
-name|tf_scratch_fp
-operator|.
-name|fr6
-expr_stmt|;
-name|fp_state
-operator|.
-name|fp_high_preserved
-operator|=
-name|NULL
-expr_stmt|;
-name|fp_state
-operator|.
-name|fp_high_volatile
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* The docs are unclear.  Is Fpswa reentrant? */
-name|fpswa_ret
-operator|=
-name|fpswa_interface
-operator|->
-name|Fpswa
-argument_list|(
-literal|0
-argument_list|,
-operator|&
-name|bundle
-argument_list|,
-operator|&
-name|framep
-operator|->
-name|tf_special
-operator|.
-name|psr
-argument_list|,
-operator|&
-name|framep
-operator|->
-name|tf_special
-operator|.
-name|fpsr
-argument_list|,
-operator|&
-name|framep
-operator|->
-name|tf_special
-operator|.
-name|isr
-argument_list|,
-operator|&
-name|framep
-operator|->
-name|tf_special
-operator|.
-name|pr
-argument_list|,
-operator|&
-name|framep
-operator|->
-name|tf_special
-operator|.
-name|cfm
-argument_list|,
-operator|&
-name|fp_state
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fpswa_ret
-operator|.
-name|status
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* fixed */
-comment|/* 			 * should we increment iip like the fault case? 			 * or has fpswa done something like normalizing a 			 * register so that we should just rerun it? 			 */
-goto|goto
-name|out
-goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|fpswa_ret
-operator|.
-name|status
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"FATAL: FPSWA err1 %lx, err2 %lx, err3 %lx\n"
-argument_list|,
-name|fpswa_ret
-operator|.
-name|err1
-argument_list|,
-name|fpswa_ret
-operator|.
-name|err2
-argument_list|,
-name|fpswa_ret
-operator|.
-name|err3
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"fpswa fatal error on fp trap"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|fpswa_ret
-operator|.
-name|status
-operator|>
-literal|0
-condition|)
-block|{
-name|i
-operator|=
-name|SIGFPE
-expr_stmt|;
-name|ucode
-operator|=
-comment|/*a0*/
-literal|0
-expr_stmt|;
-comment|/* exception summary */
-break|break;
-block|}
-else|else
-block|{
-name|panic
-argument_list|(
-literal|"bad fpswa return code %lx"
-argument_list|,
-name|fpswa_ret
-operator|.
-name|status
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 case|case
 name|IA64_VEC_DISABLED_FP
