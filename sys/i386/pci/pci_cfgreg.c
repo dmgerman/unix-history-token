@@ -478,7 +478,7 @@ if|if
 condition|(
 name|PCIbios
 operator|.
-name|entry
+name|ventry
 operator|==
 literal|0
 condition|)
@@ -2523,7 +2523,7 @@ if|if
 condition|(
 name|PCIbios
 operator|.
-name|entry
+name|ventry
 operator|!=
 literal|0
 operator|&&
