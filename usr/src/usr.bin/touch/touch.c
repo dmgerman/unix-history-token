@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touch.c	5.5 (Berkeley) %G%"
+literal|"@(#)touch.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -462,10 +462,9 @@ literal|1
 expr_stmt|;
 name|stime_arg2
 argument_list|(
+operator|*
 name|argv
-index|[
-literal|0
-index|]
+operator|++
 argument_list|,
 name|len
 operator|==
