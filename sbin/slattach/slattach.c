@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slattach.c,v 1.29 1997/12/21 13:42:27 eivind Exp $"
+literal|"$Id: slattach.c,v 1.30 1998/01/25 09:16:55 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1002,17 +1002,14 @@ comment|/* switch to slip line discipline */
 comment|/* upon INT log a timestamp and exit.  */
 if|if
 condition|(
-operator|(
-name|long
-operator|)
 name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|sigint_handler
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|SIG_ERR
 condition|)
 name|syslog
 argument_list|(
@@ -1024,17 +1021,14 @@ expr_stmt|;
 comment|/* upon TERM log a timestamp and exit.  */
 if|if
 condition|(
-operator|(
-name|long
-operator|)
 name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
 name|sigterm_handler
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|SIG_ERR
 condition|)
 name|syslog
 argument_list|(
@@ -1046,17 +1040,14 @@ expr_stmt|;
 comment|/* upon HUP redial and reconnect.  */
 if|if
 condition|(
-operator|(
-name|long
-operator|)
 name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
 name|sighup_handler
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|SIG_ERR
 condition|)
 name|syslog
 argument_list|(
@@ -1331,17 +1322,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|long
-operator|)
 name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
 name|sighup_handler
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|SIG_ERR
 condition|)
 comment|/* Re-enable HUP signal */
 name|syslog
