@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dosys.c	4.3 (Berkeley) 82/04/20"
+literal|"@(#)dosys.c	4.4 (Berkeley) 82/06/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -644,23 +644,6 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-if|#
-directive|if
-name|vax
-if|if
-condition|(
-name|lstat
-argument_list|(
-name|name
-argument_list|,
-operator|&
-name|stbuff
-argument_list|)
-operator|<
-literal|0
-condition|)
-else|#
-directive|else
 if|if
 condition|(
 name|stat
@@ -673,8 +656,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-endif|#
-directive|endif
 if|if
 condition|(
 name|force

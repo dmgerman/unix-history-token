@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.4 (Berkeley) 82/04/20"
+literal|"@(#)files.c	4.5 (Berkeley) 82/06/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,7 +307,7 @@ directive|if
 name|vax
 if|if
 condition|(
-name|lstat
+name|stat
 argument_list|(
 name|filename
 argument_list|,
@@ -1805,19 +1805,6 @@ name|struct
 name|stat
 name|buf
 decl_stmt|;
-if|#
-directive|if
-name|vax
-name|lstat
-argument_list|(
-name|f
-argument_list|,
-operator|&
-name|buf
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|stat
 argument_list|(
 name|f
@@ -1826,8 +1813,6 @@ operator|&
 name|buf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|arlen
 operator|=
 name|buf
