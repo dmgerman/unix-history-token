@@ -507,7 +507,7 @@ name|VF_DAEMONOPEN
 init|=
 literal|0x80000
 block|,
-comment|/* the daemon has us open */
+comment|/* the daemon has us open (only superdev) */
 block|}
 enum|;
 end_enum
@@ -570,10 +570,6 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|int
-name|opencount
-decl_stmt|;
-comment|/* number of times we've been opened */
 if|#
 directive|if
 name|VINUMDEBUG
@@ -1179,10 +1175,6 @@ name|flags
 decl_stmt|;
 comment|/* status and configuration flags */
 name|int
-name|opencount
-decl_stmt|;
-comment|/* number of opens (all the same process) */
-name|int
 name|openflags
 decl_stmt|;
 comment|/* flags supplied to last open(2) */
@@ -1190,10 +1182,6 @@ name|u_int64_t
 name|size
 decl_stmt|;
 comment|/* size of volume */
-name|int
-name|disk
-decl_stmt|;
-comment|/* disk index */
 name|int
 name|blocksize
 decl_stmt|;
@@ -1306,6 +1294,10 @@ begin_struct
 struct|struct
 name|mc
 block|{
+name|struct
+name|timeval
+name|time
+decl_stmt|;
 name|int
 name|seq
 decl_stmt|;
@@ -1315,19 +1307,6 @@ decl_stmt|;
 name|short
 name|line
 decl_stmt|;
-name|short
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|ALLOC_KVA
-value|1
-comment|/* allocated via kva calls */
-name|int
-modifier|*
-name|databuf
-decl_stmt|;
-comment|/* really vm_object_t */
 name|caddr_t
 name|address
 decl_stmt|;
@@ -1499,6 +1478,16 @@ init|=
 literal|16
 block|,
 comment|/* print info about revive conflicts */
+name|DEBUG_EOFINFO
+init|=
+literal|32
+block|,
+comment|/* print info about EOF detection */
+name|DEBUG_MEMFREE
+init|=
+literal|64
+block|,
+comment|/* keep info about Frees */
 name|DEBUG_REMOTEGDB
 init|=
 literal|256
