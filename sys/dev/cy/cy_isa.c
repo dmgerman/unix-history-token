@@ -1387,8 +1387,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|swihand_t
+name|void
 name|siopoll
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|arg
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2789,6 +2797,7 @@ name|sio_ih
 operator|==
 name|NULL
 condition|)
+block|{
 name|cdevsw_add
 argument_list|(
 operator|&
@@ -2962,13 +2971,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/* ensure an edge for the next interrupt */
-end_comment
-
-begin_expr_stmt
 name|cy_outb
 argument_list|(
 name|cy_iobase
@@ -2980,18 +2983,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|adapter
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|int
 name|sioopen
 parameter_list|(
@@ -7803,7 +7804,11 @@ begin_function
 specifier|static
 name|void
 name|siopoll
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
 block|{
 name|int
 name|unit
