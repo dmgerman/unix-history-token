@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_pcb.c	6.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_pcb.c	6.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -755,19 +755,14 @@ condition|)
 block|{
 name|ia
 operator|=
-operator|(
-expr|struct
-name|in_ifaddr
-operator|*
-operator|)
-name|ifa_ifwithnet
+name|in_iaonnetof
 argument_list|(
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
+name|in_netof
+argument_list|(
 name|sin
+operator|->
+name|sin_addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -916,6 +911,11 @@ name|ro
 operator|->
 name|ro_rt
 operator|==
+operator|(
+expr|struct
+name|rtentry
+operator|*
+operator|)
 literal|0
 condition|)
 name|ifp
@@ -966,16 +966,6 @@ name|ifp
 condition|)
 break|break;
 block|}
-else|else
-name|ia
-operator|=
-operator|(
-expr|struct
-name|in_ifaddr
-operator|*
-operator|)
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ia
