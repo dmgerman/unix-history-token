@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.41 1998/01/19 02:59:33 brian Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.42 1998/01/21 02:15:26 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -437,6 +437,7 @@ name|cmd
 operator|==
 name|RTM_ADD
 condition|)
+block|{
 if|if
 condition|(
 name|gateway
@@ -594,6 +595,7 @@ name|rtm_addrs
 operator||=
 name|RTA_GATEWAY
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -773,6 +775,7 @@ name|EEXIST
 operator|)
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -823,6 +826,7 @@ condition|)
 goto|goto
 name|failed
 goto|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1286,6 +1290,7 @@ name|dl
 operator|->
 name|sdl_alen
 condition|)
+block|{
 if|if
 condition|(
 name|dl
@@ -1294,6 +1299,7 @@ name|sdl_type
 operator|==
 name|IFT_ETHER
 condition|)
+block|{
 if|if
 condition|(
 name|dl
@@ -1378,6 +1384,7 @@ argument_list|,
 literal|"??:??:??:??:??:??"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|sprintf
 argument_list|(
@@ -1390,6 +1397,7 @@ operator|->
 name|sdl_type
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
