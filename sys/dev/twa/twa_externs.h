@@ -553,5 +553,39 @@ begin_comment
 comment|/* freeze ccb flow from CAM */
 end_comment
 
+begin_function_decl
+specifier|extern
+name|void
+name|twa_set_timer
+parameter_list|(
+name|struct
+name|twa_request
+modifier|*
+name|tr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Set a timer to time a given request */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|twa_unset_timer
+parameter_list|(
+name|struct
+name|twa_request
+modifier|*
+name|tr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Unset a previously set timer */
+end_comment
+
 end_unit
 

@@ -7,15 +7,11 @@ begin_comment
 comment|/*  * 3ware driver for 9000 series storage controllers.  *  * Author: Vinod Kashyap  */
 end_comment
 
-begin_comment
-comment|/*  * The scheme for the driver version is:  *<major change>.<external release>.<3ware internal release>.<development release>  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|TWA_DRIVER_VERSION_STRING
-value|"2.50.00.000"
+value|"2.50.02.011"
 end_define
 
 begin_define
@@ -202,12 +198,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TWA_CMD_IN_PROGRESS
+name|TWA_CMD_MAPPED
 value|(1<<4)
 end_define
 
 begin_comment
+comment|/* request has been mapped */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TWA_CMD_IN_PROGRESS
+value|(1<<5)
+end_define
+
+begin_comment
 comment|/* bus_dmamap_load returned EINPROGRESS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TWA_CMD_TIMER_SET
+value|(1<<6)
+end_define
+
+begin_comment
+comment|/* request is being timed */
 end_comment
 
 begin_comment
@@ -444,7 +462,7 @@ modifier|*
 name|tr_data
 decl_stmt|;
 comment|/* ptr to data being passed to firmware */
-name|size_t
+name|u_int32_t
 name|tr_length
 decl_stmt|;
 comment|/* length of buffer being passed to firmware */
@@ -453,7 +471,7 @@ modifier|*
 name|tr_real_data
 decl_stmt|;
 comment|/* ptr to, and length of data passed */
-name|size_t
+name|u_int32_t
 name|tr_real_length
 decl_stmt|;
 comment|/* to us from above, in case a buffer copy 							was done due to non-compliance to  							alignment requirements */
@@ -509,7 +527,7 @@ name|tr_cmd_phys
 decl_stmt|;
 comment|/* physical address of command in controller space */
 name|bus_dmamap_t
-name|tr_dma_map
+name|tr_buf_map
 decl_stmt|;
 comment|/* DMA map for data */
 block|}
@@ -689,7 +707,15 @@ name|twa_bus_tag
 decl_stmt|;
 comment|/* bus space tag */
 name|bus_dma_tag_t
-name|twa_dma_tag
+name|twa_parent_tag
+decl_stmt|;
+comment|/* parent DMA tag */
+name|bus_dma_tag_t
+name|twa_cmd_tag
+decl_stmt|;
+comment|/* cmd DMA tag */
+name|bus_dma_tag_t
+name|twa_buf_tag
 decl_stmt|;
 comment|/* data buffer DMA tag */
 name|bus_dmamap_t
