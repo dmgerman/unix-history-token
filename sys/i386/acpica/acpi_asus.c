@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Driver for extra ACPI-controlled gadgets (hotkeys, leds, etc) found on  * recent Asus (and Medion) laptops.  Inspired by the Acpi4Asus project which  * implements these features in the Linux kernel.  *  *<http://sourceforge.net/projects/acpi4asus/>  *  * Currently should support most features, but could use some more testing.  * Particularly the display-switching stuff is a bit hairy.  If you have an  * Asus laptop which doesn't appear to be supported, or strange things happen  * when using this driver, please report to<acpi@FreeBSD.org>.  *  * XXX:  * Led support is disabled for the time being because it causes the kernel to  * panic when unloading the module.  This is being investigated.  *  */
+comment|/*  * Driver for extra ACPI-controlled gadgets (hotkeys, leds, etc) found on  * recent Asus (and Medion) laptops.  Inspired by the Acpi4Asus project which  * implements these features in the Linux kernel.  *  *<http://sourceforge.net/projects/acpi4asus/>  *  * Currently should support most features, but could use some more testing.  * Particularly the display-switching stuff is a bit hairy.  If you have an  * Asus laptop which doesn't appear to be supported, or strange things happen  * when using this driver, please report to<acpi@FreeBSD.org>.  *  */
 end_comment
 
 begin_include
@@ -511,12 +511,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|void
@@ -558,11 +552,6 @@ name|state
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1103,9 +1092,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* Attach leds */
 if|if
 condition|(
@@ -1182,8 +1168,6 @@ argument_list|,
 literal|"wled"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Attach brightness for GPLV/SPLV models */
 if|if
 condition|(
@@ -1710,9 +1694,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* Turn the lights off */
 if|if
 condition|(
@@ -1759,8 +1740,6 @@ operator|->
 name|s_wled
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Remove notify handler */
 name|AcpiRemoveNotifyHandler
 argument_list|(
@@ -1789,12 +1768,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
 
 begin_function
 specifier|static
@@ -2067,11 +2040,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
