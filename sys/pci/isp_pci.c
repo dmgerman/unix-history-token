@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_pci.c,v 1.24 1999/07/02 23:18:03 mjacob Exp $ */
+comment|/* $Id: isp_pci.c,v 1.25 1999/07/05 20:24:46 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -409,11 +409,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ISP_DISABLE_2200_SUPPORT
-end_ifdef
+end_ifndef
 
 begin_decl_stmt
 specifier|static
