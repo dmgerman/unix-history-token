@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	6.1	83/07/29	*/
+comment|/*	kern_sig.c	5.24	83/08/20	*/
 end_comment
 
 begin_include
@@ -2071,6 +2071,11 @@ operator|=
 name|p
 operator|->
 name|p_sig
+operator|&
+operator|~
+name|p
+operator|->
+name|p_sigmask
 expr_stmt|;
 if|if
 condition|(
@@ -2087,15 +2092,9 @@ condition|)
 name|sigbits
 operator|&=
 operator|~
-operator|(
 name|p
 operator|->
 name|p_sigignore
-operator||
-name|p
-operator|->
-name|p_sigmask
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2219,7 +2218,7 @@ operator|&
 name|STRC
 condition|)
 do|;
-comment|/* 			 * If the traced bit got turned off or signal 			 * is being masked, then put the signal taken 			 * above back into p_sig and go back up to the 			 * top to rescan signals.  This ensures that 			 * p_sig* and u_signal are consistent. 			 */
+comment|/* 			 * If the traced bit got turned off, 			 * then put the signal taken above back into p_sig 			 * and go back up to the top to rescan signals. 			 * This ensures that p_sig* and u_signal are consistent. 			 */
 if|if
 condition|(
 operator|(
@@ -2231,14 +2230,6 @@ name|STRC
 operator|)
 operator|==
 literal|0
-operator|||
-operator|(
-name|p
-operator|->
-name|p_sigmask
-operator|&
-name|sigmask
-operator|)
 condition|)
 block|{
 name|p
@@ -2263,6 +2254,34 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+comment|/* 			 * If signal is being masked put it back 			 * into p_sig and look for other signals. 			 */
+name|sigmask
+operator|=
+literal|1
+operator|<<
+operator|(
+name|sig
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_sigmask
+operator|&
+name|sigmask
+condition|)
+block|{
+name|p
+operator|->
+name|p_sig
+operator||=
+name|sigmask
+expr_stmt|;
+continue|continue;
+block|}
 block|}
 switch|switch
 condition|(
