@@ -92,6 +92,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|nflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* do not create .snap directory */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|quad_t
 name|fssize
 decl_stmt|;

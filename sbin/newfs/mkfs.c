@@ -4597,6 +4597,9 @@ name|group
 modifier|*
 name|grp
 decl_stmt|;
+name|int
+name|entries
+decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -4627,6 +4630,18 @@ literal|35
 argument_list|,
 literal|"Cannot retrieve operator gid"
 argument_list|)
+expr_stmt|;
+name|entries
+operator|=
+operator|(
+name|nflag
+operator|)
+condition|?
+name|ROOTLINKCNT
+operator|-
+literal|1
+else|:
+name|ROOTLINKCNT
 expr_stmt|;
 if|if
 condition|(
@@ -4679,7 +4694,7 @@ name|dp1
 operator|.
 name|di_nlink
 operator|=
-name|ROOTLINKCNT
+name|entries
 expr_stmt|;
 name|node
 operator|.
@@ -4691,7 +4706,7 @@ name|makedir
 argument_list|(
 name|root_dir
 argument_list|,
-name|ROOTLINKCNT
+name|entries
 argument_list|)
 expr_stmt|;
 name|node
@@ -4769,7 +4784,13 @@ argument_list|,
 name|ROOTINO
 argument_list|)
 expr_stmt|;
-comment|/* 		 * create the .snap directory 		 */
+if|if
+condition|(
+operator|!
+name|nflag
+condition|)
+block|{
+comment|/* 			 * create the .snap directory 			 */
 name|node
 operator|.
 name|dp1
@@ -4887,6 +4908,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
 block|{
 comment|/* 		 * initialize the node 		 */
@@ -4939,7 +4961,7 @@ name|dp2
 operator|.
 name|di_nlink
 operator|=
-name|ROOTLINKCNT
+name|entries
 expr_stmt|;
 name|node
 operator|.
@@ -4951,7 +4973,7 @@ name|makedir
 argument_list|(
 name|root_dir
 argument_list|,
-name|ROOTLINKCNT
+name|entries
 argument_list|)
 expr_stmt|;
 name|node
@@ -5029,7 +5051,13 @@ argument_list|,
 name|ROOTINO
 argument_list|)
 expr_stmt|;
-comment|/* 		 * create the .snap directory 		 */
+if|if
+condition|(
+operator|!
+name|nflag
+condition|)
+block|{
+comment|/* 			 * create the .snap directory 			 */
 name|node
 operator|.
 name|dp2
@@ -5146,6 +5174,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
