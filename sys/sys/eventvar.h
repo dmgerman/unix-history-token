@@ -23,7 +23,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* minimize copyout calls */
+comment|/* minimize copy{in,out} calls */
 end_comment
 
 begin_define
@@ -74,34 +74,13 @@ define|#
 directive|define
 name|KQ_SLEEP
 value|0x02
-union|union
-block|{
 name|struct
 name|kevent
-modifier|*
-name|b_kevp
-index|[
-name|KQ_NEVENTS
-index|]
-decl_stmt|;
-name|struct
-name|kevent
-name|b_kev
-index|[
-name|KQ_NEVENTS
-index|]
-decl_stmt|;
-block|}
-name|kq_buf
-union|;
-define|#
-directive|define
-name|kq_kevp
-value|kq_buf.b_kevp
-define|#
-directive|define
 name|kq_kev
-value|kq_buf.b_kev
+index|[
+name|KQ_NEVENTS
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
