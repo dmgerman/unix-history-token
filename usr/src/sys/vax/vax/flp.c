@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	flp.c	4.5	81/03/09	*/
+comment|/*	flp.c	4.6	82/06/14	*/
 end_comment
 
 begin_if
@@ -181,7 +181,9 @@ operator|.
 name|fl_buf
 operator|=
 name|geteblk
-argument_list|()
+argument_list|(
+literal|512
+argument_list|)
 expr_stmt|;
 name|fltab
 operator|.

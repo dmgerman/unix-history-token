@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.24	82/05/04	*/
+comment|/*	lp.c	4.25	82/06/14	*/
 end_comment
 
 begin_include
@@ -626,7 +626,9 @@ operator|->
 name|sc_inbuf
 operator|=
 name|geteblk
-argument_list|()
+argument_list|(
+literal|512
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -806,7 +808,7 @@ name|n
 operator|=
 name|min
 argument_list|(
-name|BSIZE
+literal|512
 argument_list|,
 name|u
 operator|.
