@@ -323,6 +323,28 @@ begin_comment
 comment|/* don't interpret special files */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISOFS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISOFSMNT_NORRIP
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* disable Rock Ridge Ext.*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * exported mount flags.  */
 end_comment
