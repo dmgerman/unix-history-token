@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.5 (Berkeley) %G%"
+literal|"@(#)mount.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,6 +180,8 @@ decl_stmt|,
 name|fd
 decl_stmt|,
 name|rval
+decl_stmt|,
+name|sfake
 decl_stmt|;
 name|char
 modifier|*
@@ -337,17 +339,36 @@ name|rval
 operator|=
 literal|0
 expr_stmt|;
-while|while
-condition|(
-operator|(
+for|for
+control|(
+name|sfake
+operator|=
+name|fake
+init|;
 name|fs
 operator|=
 name|getfsent
 argument_list|()
-operator|)
-condition|)
+condition|;
+name|fake
+operator|=
+name|sfake
+control|)
+block|{
 if|if
 condition|(
+name|BADTYPE
+argument_list|(
+name|fs
+operator|->
+name|fs_type
+argument_list|)
+condition|)
+continue|continue;
+comment|/* `/' is special, it's always mounted */
+if|if
+condition|(
+operator|!
 name|strcmp
 argument_list|(
 name|fs
@@ -356,15 +377,11 @@ name|fs_file
 argument_list|,
 literal|"/"
 argument_list|)
-operator|&&
-operator|!
-name|BADTYPE
-argument_list|(
-name|fs
-operator|->
-name|fs_type
-argument_list|)
 condition|)
+name|fake
+operator|=
+literal|1
+expr_stmt|;
 name|rval
 operator||=
 name|mountfs
@@ -386,6 +403,7 @@ operator|->
 name|fs_type
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|rval
