@@ -132,6 +132,9 @@ name|int
 name|acpi_s4bios
 decl_stmt|;
 name|int
+name|acpi_disable_on_poweroff
+decl_stmt|;
+name|int
 name|acpi_verbose
 decl_stmt|;
 name|bus_dma_tag_t
