@@ -485,7 +485,7 @@ return|return
 name|Dists
 operator|==
 operator|(
-name|DIST_BIN
+name|DIST_BASE
 operator||
 name|DIST_CRYPTO
 operator|)
@@ -4420,7 +4420,7 @@ block|,
 literal|"Select the distributions you wish to install."
 block|,
 literal|"Please check off the distributions you wish to install.  At the\n"
-literal|"very minimum, this should be \"bin\"."
+literal|"very minimum, this should be \"base\"."
 block|,
 name|NULL
 block|,
@@ -4488,7 +4488,7 @@ literal|' '
 block|}
 block|,
 block|{
-literal|" bin"
+literal|" base"
 block|,
 literal|"Binary base distribution (required)"
 block|,
@@ -4507,7 +4507,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-name|DIST_BIN
+name|DIST_BASE
 block|}
 block|,
 ifdef|#

@@ -391,7 +391,7 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Hmmmmm!  I can't seem to access the documentation you selected!\n"
-literal|"Have you loaded the bin distribution?  Is your network connected?"
+literal|"Have you loaded the base distribution?  Is your network connected?"
 argument_list|)
 expr_stmt|;
 return|return

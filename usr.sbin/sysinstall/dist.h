@@ -22,7 +22,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DIST_BIN
+name|DIST_BASE
 value|0x00001
 end_define
 
@@ -783,7 +783,7 @@ define|#
 directive|define
 name|_DIST_USER
 define|\
-value|( DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_CRYPTO )
+value|( DIST_BASE | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_CRYPTO )
 end_define
 
 begin_define

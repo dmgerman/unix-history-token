@@ -1027,18 +1027,18 @@ operator|!
 operator|(
 name|Dists
 operator|&
-name|DIST_BIN
+name|DIST_BASE
 operator|)
 condition|)
 block|{
-comment|/* No bin selected?  Not much of an upgrade.. */
+comment|/* No base selected?  Not much of an upgrade.. */
 if|if
 condition|(
 name|msgYesNo
 argument_list|(
-literal|"You didn't select the bin distribution as one of the distributons to load.\n"
+literal|"You didn't select the base distribution as one of the distributons to load.\n"
 literal|"This one is pretty vital to a successful upgrade.  Are you SURE you don't\n"
-literal|"want to select the bin distribution?  Chose No to bring up the Distributions\n"
+literal|"want to select the base distribution?  Chose No to bring up the Distributions\n"
 literal|"menu again."
 argument_list|)
 operator|!=
@@ -1068,7 +1068,7 @@ operator|!
 operator|(
 name|Dists
 operator|&
-name|DIST_BIN
+name|DIST_BASE
 operator|)
 condition|)
 name|extractingBin
@@ -1578,7 +1578,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Hmmmm.  We couldn't even extract the bin distribution.  This upgrade\n"
+literal|"Hmmmm.  We couldn't even extract the base distribution.  This upgrade\n"
 literal|"should be considered a failure and started from the beginning, sorry!\n"
 literal|"The system will reboot now."
 argument_list|)
@@ -1607,7 +1607,7 @@ operator|!
 operator|(
 name|Dists
 operator|&
-name|DIST_BIN
+name|DIST_BASE
 operator|)
 condition|)
 block|{
@@ -1623,7 +1623,7 @@ else|else
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Hmmmm.  We couldn't even extract the bin distribution.  This upgrade\n"
+literal|"Hmmmm.  We couldn't even extract the base distribution.  This upgrade\n"
 literal|"should be considered a failure and started from the beginning, sorry!\n"
 literal|"The system will reboot now."
 argument_list|)
@@ -1742,7 +1742,7 @@ expr_stmt|;
 comment|/* Make sure at least BIN is selected */
 name|Dists
 operator||=
-name|DIST_BIN
+name|DIST_BASE
 expr_stmt|;
 if|if
 condition|(
@@ -2081,7 +2081,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Hmmmm.  We couldn't even extract the bin distribution.  This upgrade\n"
+literal|"Hmmmm.  We couldn't even extract the base distribution.  This upgrade\n"
 literal|"should be considered a failure and started from the beginning, sorry!\n"
 literal|"The system will reboot now."
 argument_list|)
@@ -2107,7 +2107,7 @@ operator|!
 operator|(
 name|Dists
 operator|&
-name|DIST_BIN
+name|DIST_BASE
 operator|)
 condition|)
 block|{
@@ -2123,7 +2123,7 @@ else|else
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Hmmmm.  We couldn't even extract the bin distribution.  This upgrade\n"
+literal|"Hmmmm.  We couldn't even extract the base distribution.  This upgrade\n"
 literal|"should be considered a failure and started from the beginning, sorry!\n"
 literal|"The system will reboot now."
 argument_list|)
