@@ -1049,6 +1049,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
+operator|==
+name|ARCHIVE_EOF
 condition|)
 name|state
 operator|->
@@ -1056,6 +1058,18 @@ name|end_of_stream
 operator|=
 name|ret
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ret
+operator|!=
+name|ARCHIVE_OK
+condition|)
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 block|}
 block|}
@@ -1222,7 +1236,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process the next code and fill the stack with the expansion  * of the code.  Returns TRUE if we hit the end of the data.  */
+comment|/*  * Process the next code and fill the stack with the expansion  * of the code.  Returns ARCHIVE_FATAL if there is a fatal I/O or  * format error, ARCHIVE_EOF if we hit end of data, ARCHIVE_OK otherwise.  */
 end_comment
 
 begin_function
@@ -1447,12 +1461,24 @@ name|state
 operator|->
 name|free_ent
 condition|)
-comment|/* XXX invalid code?  This is fatal. XXX */
+block|{
+comment|/* An invalid code is a fatal error. */
+name|archive_set_error
+argument_list|(
+name|a
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"Invalid compressed data"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|1
+name|ARCHIVE_FATAL
 operator|)
 return|;
+block|}
 comment|/* Special case for KwKwK string. */
 if|if
 condition|(
@@ -1638,7 +1664,7 @@ name|newcode
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ARCHIVE_OK
 operator|)
 return|;
 block|}

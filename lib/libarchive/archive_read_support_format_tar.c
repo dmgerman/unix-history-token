@@ -1520,6 +1520,14 @@ name|bid
 operator|++
 expr_stmt|;
 comment|/* Now let's look at the actual header and see if it matches. */
+if|if
+condition|(
+name|a
+operator|->
+name|compression_read_ahead
+operator|!=
+name|NULL
+condition|)
 name|bytes_read
 operator|=
 call|(
@@ -1536,6 +1544,12 @@ argument_list|,
 literal|512
 argument_list|)
 expr_stmt|;
+else|else
+name|bytes_read
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Empty file. */
 if|if
 condition|(
 name|bytes_read
@@ -4274,8 +4288,8 @@ case|case
 literal|'S'
 case|:
 comment|/* GNU sparse files */
-comment|/* I would like to support these someday... */
-break|break;
+comment|/* 		 * Sparse files are really just regular files with 		 * sparse information in the extended area. 		 */
+comment|/* FALL THROUGH */
 default|default:
 comment|/* Regular file  and non-standard types */
 comment|/* 		 * Per POSIX: non-recognized types should always be 		 * treated as regular files. 		 */

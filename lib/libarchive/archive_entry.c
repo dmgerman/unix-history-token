@@ -2694,7 +2694,10 @@ name|st_rdev
 operator|=
 name|makedev
 argument_list|(
+name|major
+argument_list|(
 name|m
+argument_list|)
 argument_list|,
 name|minor
 argument_list|(
@@ -2742,7 +2745,10 @@ argument_list|(
 name|d
 argument_list|)
 argument_list|,
+name|minor
+argument_list|(
 name|m
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
