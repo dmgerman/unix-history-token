@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)bad144.c	4.1 (Berkeley) 81/05/10"
+literal|"@(#)bad144.c	4.2 (Berkeley) 81/05/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -641,7 +641,7 @@ operator|--
 expr_stmt|;
 name|dkbad
 operator|.
-name|bt_magic
+name|bt_mbz
 operator|=
 literal|0
 expr_stmt|;
