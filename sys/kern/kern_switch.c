@@ -905,6 +905,9 @@ name|thread
 modifier|*
 name|tda
 decl_stmt|;
+name|int
+name|count
+decl_stmt|;
 name|CTR4
 argument_list|(
 name|KTR_RUNQ
@@ -1148,6 +1151,10 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * Add the thread to the ksegrp's run queue at 	 * the appropriate place. 	 */
+name|count
+operator|=
+literal|0
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|td2
@@ -1183,6 +1190,28 @@ name|td_runq
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+comment|/* XXX Debugging hack */
+if|if
+condition|(
+operator|++
+name|count
+operator|>
+literal|10000
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"setrunqueue(): corrupt kq_runq, td= %p\n"
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"deadlock in setrunqueue"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 if|if
