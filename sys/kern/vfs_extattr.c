@@ -18935,11 +18935,6 @@ name|uap
 decl_stmt|;
 block|{
 name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|vp
