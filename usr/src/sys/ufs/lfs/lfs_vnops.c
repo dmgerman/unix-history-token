@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.9	81/03/09	*/
+comment|/*	lfs_vnops.c	4.10	81/04/28	*/
 end_comment
 
 begin_include
@@ -147,6 +147,22 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+name|FPORT
+condition|)
+block|{
+name|ptstat
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|stat1
 argument_list|(
 name|fp
@@ -156,20 +172,6 @@ argument_list|,
 name|uap
 operator|->
 name|sb
-argument_list|,
-name|fp
-operator|->
-name|f_flag
-operator|&
-name|FPIPE
-condition|?
-name|fp
-operator|->
-name|f_un
-operator|.
-name|f_offset
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -243,11 +245,6 @@ argument_list|,
 name|uap
 operator|->
 name|sb
-argument_list|,
-operator|(
-name|off_t
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 name|iput
@@ -268,8 +265,6 @@ argument_list|(
 name|ip
 argument_list|,
 name|ub
-argument_list|,
-name|pipeadj
 argument_list|)
 specifier|register
 expr|struct
@@ -284,12 +279,6 @@ name|struct
 name|stat
 modifier|*
 name|ub
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|off_t
-name|pipeadj
 decl_stmt|;
 end_decl_stmt
 
@@ -393,8 +382,6 @@ operator|=
 name|ip
 operator|->
 name|i_size
-operator|-
-name|pipeadj
 expr_stmt|;
 comment|/* 	 * next the dates in the disk 	 */
 name|bp
