@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* * ---------------------------------------------------------------------------- * "THE BEER-WARE LICENSE" (Revision 42): *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you * can do whatever you want with this stuff. If we meet some day, and you think * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp * ---------------------------------------------------------------------------- * * $Id: libdisk.h,v 1.27 1997/03/19 01:54:04 bde Exp $ * */
+comment|/* * ---------------------------------------------------------------------------- * "THE BEER-WARE LICENSE" (Revision 42): *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you * can do whatever you want with this stuff. If we meet some day, and you think * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp * ---------------------------------------------------------------------------- * * $Id: libdisk.h,v 1.28 1998/01/20 11:03:15 bde Exp $ * */
 end_comment
 
 begin_define
@@ -72,10 +72,19 @@ name|u_char
 modifier|*
 name|boot1
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+comment|/* the alpha only has one boot program */
 name|u_char
 modifier|*
 name|boot2
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|chunk
 modifier|*
