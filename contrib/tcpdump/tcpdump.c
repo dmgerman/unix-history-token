@@ -371,7 +371,7 @@ name|DLT_EN10MB
 block|}
 block|,
 block|{
-name|ether_if_print
+name|token_if_print
 block|,
 name|DLT_IEEE802
 block|}

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header$"
+literal|"@(#) $Header: /home/ncvs/src/contrib/tcpdump/print-token.c,v 1.1 1999/02/20 11:17:55 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
