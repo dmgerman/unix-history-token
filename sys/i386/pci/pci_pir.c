@@ -294,6 +294,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_PCI_BIOS_FOR_READ_WRITE
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -342,6 +348,11 @@ name|bytes
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -898,6 +909,9 @@ name|int
 name|bytes
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_PCI_BIOS_FOR_READ_WRITE
 return|return
 operator|(
 name|usebios
@@ -929,6 +943,26 @@ name|bytes
 argument_list|)
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|pcireg_cfgread
+argument_list|(
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|,
+name|reg
+argument_list|,
+name|bytes
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1183,6 +1217,9 @@ name|int
 name|bytes
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_PCI_BIOS_FOR_READ_WRITE
 if|if
 condition|(
 name|usebios
@@ -1218,11 +1255,30 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|pcireg_cfgwrite
+argument_list|(
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|,
+name|reg
+argument_list|,
+name|data
+argument_list|,
+name|bytes
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/*  * Route a PCI interrupt  *  * XXX we don't do anything "right" with the function number in the PIR table  *     (because the consumer isn't currently passing it in).  We don't care  *     anyway, due to the way PCI interrupts are assigned.  */
+comment|/*  * Route a PCI interrupt  */
 end_comment
 
 begin_function
@@ -1466,16 +1522,6 @@ name|pe
 argument_list|,
 name|pin
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|irq
-operator|!=
-name|PCI_INVALID_IRQ
-condition|)
-name|already
-operator|=
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2777,6 +2823,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_PCI_BIOS_FOR_READ_WRITE
+end_ifdef
+
 begin_comment
 comment|/*  * Config space access using BIOS functions   */
 end_comment
@@ -3033,6 +3085,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Determine whether there is a PCI BIOS present  */
