@@ -1017,6 +1017,15 @@ name|_PWF_PASSWD
 expr_stmt|;
 block|}
 comment|/* uid, gid */
+if|if
+condition|(
+name|pw
+operator|->
+name|pw_fields
+operator|&
+name|_PWF_UID
+condition|)
+block|{
 name|__pwproto
 operator|->
 name|pw_uid
@@ -1025,6 +1034,20 @@ name|pw
 operator|->
 name|pw_uid
 expr_stmt|;
+name|__pwproto_flags
+operator||=
+name|_PWF_UID
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pw
+operator|->
+name|pw_fields
+operator|&
+name|_PWF_GID
+condition|)
+block|{
 name|__pwproto
 operator|->
 name|pw_gid
@@ -1035,10 +1058,9 @@ name|pw_gid
 expr_stmt|;
 name|__pwproto_flags
 operator||=
-name|_PWF_UID
-operator||
 name|_PWF_GID
 expr_stmt|;
+block|}
 comment|/* gecos */
 if|if
 condition|(
