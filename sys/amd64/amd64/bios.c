@@ -332,6 +332,14 @@ literal|0
 operator|)
 operator|&&
 operator|(
+name|BIOS_START
+operator|<=
+name|sdh
+operator|->
+name|entry
+operator|)
+operator|&&
+operator|(
 name|sdh
 operator|->
 name|entry
