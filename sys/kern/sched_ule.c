@@ -458,6 +458,17 @@ begin_comment
 comment|/* KSE was added as transferable. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KEF_HOLD
+value|KEF_SCHED3
+end_define
+
+begin_comment
+comment|/* KSE is temporarily bound. */
+end_comment
+
 begin_struct
 struct|struct
 name|kg_sched
@@ -5155,6 +5166,13 @@ name|ke
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Hold this kse on this cpu so that sched_prio() doesn't 		 * cause excessive migration.  We only want migration to 		 * happen as the result of a wakeup. 		 */
+name|ke
+operator|->
+name|ke_flags
+operator||=
+name|KEF_HOLD
+expr_stmt|;
 name|adjustrunqueue
 argument_list|(
 name|td
@@ -5291,6 +5309,13 @@ argument_list|)
 argument_list|,
 name|ke
 argument_list|)
+expr_stmt|;
+comment|/* 			 * Don't allow the kse to migrate from a preemption. 			 */
+name|ke
+operator|->
+name|ke_flags
+operator||=
+name|KEF_HOLD
 expr_stmt|;
 name|setrunqueue
 argument_list|(
@@ -7301,15 +7326,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TD_IS_RUNNING
-argument_list|(
-name|td
-argument_list|)
+name|ke
+operator|->
+name|ke_flags
+operator|&
+name|KEF_HOLD
 condition|)
+block|{
+name|ke
+operator|->
+name|ke_flags
+operator|&=
+operator|~
+name|KEF_HOLD
+expr_stmt|;
 name|canmigrate
 operator|=
 literal|0
 expr_stmt|;
+block|}
 comment|/* 	 * If this thread is pinned or bound, notify the target cpu. 	 */
 if|if
 condition|(
@@ -7457,6 +7492,14 @@ operator|<
 name|curthread
 operator|->
 name|td_priority
+operator|&&
+name|ke
+operator|->
+name|ke_runq
+operator|==
+name|kseq
+operator|->
+name|ksq_curr
 condition|)
 name|curthread
 operator|->
