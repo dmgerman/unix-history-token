@@ -4316,7 +4316,7 @@ argument_list|(
 name|_udatasel
 argument_list|)
 expr_stmt|;
-else|else
+comment|/* 	 * Always reset pcb->pcb_gs to udatasel, it will be loaded into gs 	 * by cpu_switch_load_gs when this process returns from the system 	 * call. Failing to reset pcb_gs here can cause cpu_switch_load_gs 	 * to trigger a general protection fault if the parent process had 	 * modified gs to point at a LDT entry. 	 */
 name|pcb
 operator|->
 name|pcb_gs
