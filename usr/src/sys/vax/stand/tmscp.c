@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.3 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.4 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -324,12 +324,9 @@ literal|0
 condition|)
 block|{
 name|ctmscpbuf
-operator|.
-name|i_unit
 operator|=
+operator|*
 name|io
-operator|->
-name|i_unit
 expr_stmt|;
 name|ctmscpbuf
 operator|.
