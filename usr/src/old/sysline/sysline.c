@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysline.c	5.4 (Berkeley) %G%"
+literal|"@(#)sysline.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5946,6 +5946,10 @@ name|struct
 name|whod
 name|wd
 decl_stmt|;
+define|#
+directive|define
+name|WHOD_HDR_SIZE
+value|(sizeof (wd) - sizeof (wd.wd_we))
 specifier|static
 name|char
 name|buffer
@@ -6089,12 +6093,10 @@ operator|)
 operator|&
 name|wd
 argument_list|,
-sizeof|sizeof
-name|wd
+name|WHOD_HDR_SIZE
 argument_list|)
 operator|!=
-sizeof|sizeof
-name|wd
+name|WHOD_HDR_SIZE
 condition|)
 return|return
 name|sprintf
