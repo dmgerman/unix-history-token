@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.117 1997/02/16 23:36:13 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.118 1997/02/17 13:30:16 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1241,16 +1241,16 @@ block|}
 name|fixit_common
 argument_list|()
 expr_stmt|;
-name|msgConfirm
-argument_list|(
-literal|"Please remove the FreeBSD CDROM now."
-argument_list|)
-expr_stmt|;
 name|mediaDevice
 operator|->
 name|shutdown
 argument_list|(
 name|mediaDevice
+argument_list|)
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Please remove the FreeBSD CDROM now."
 argument_list|)
 expr_stmt|;
 return|return
@@ -1403,16 +1403,16 @@ expr_stmt|;
 name|fixit_common
 argument_list|()
 expr_stmt|;
-name|msgConfirm
-argument_list|(
-literal|"Please remove the fixit floppy now."
-argument_list|)
-expr_stmt|;
 name|unmount
 argument_list|(
 literal|"/mnt2"
 argument_list|,
 name|MNT_FORCE
+argument_list|)
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Please remove the fixit floppy now."
 argument_list|)
 expr_stmt|;
 return|return
@@ -2272,7 +2272,7 @@ argument_list|()
 expr_stmt|;
 name|systemExecute
 argument_list|(
-literal|"rm -f /etc/localtime /etc/wall_cmos_clock; tzsetup"
+literal|"tzsetup"
 argument_list|)
 expr_stmt|;
 name|restorescr
@@ -2314,6 +2314,15 @@ name|w
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Now would be a good time to checkpoint the configuration data */
+name|configSysconfig
+argument_list|(
+literal|"/etc/sysconfig"
+argument_list|)
+expr_stmt|;
+name|sync
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|directory_exists
@@ -2407,6 +2416,35 @@ name|w
 argument_list|)
 expr_stmt|;
 block|}
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to register your FreeBSD system at this time?\n\n"
+literal|"PLEASE, take just 5 minutes to do this.  If we're ever to get any\n"
+literal|"significant base of commercial software for FreeBSD, we need to\n"
+literal|"be able to provide more information about the size of our user community.\n"
+literal|"This is where your registration can really help us, and you can also\n"
+literal|"sign up for the new FreeBSD newsletter (its free!) at the same time.\n"
+argument_list|)
+condition|)
+name|configRegister
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+name|msgConfirm
+argument_list|(
+literal|"OK, but if you should change your mind then you always can register\n"
+literal|"later by typing ``/stand/sysinstall register'' or by simply visiting our\n"
+literal|"web site at http://www.freebsd.org/register.html"
+argument_list|)
+expr_stmt|;
 comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
 comment|/* Give user the option of one last configuration spree */
 name|installConfigure
@@ -2526,29 +2564,14 @@ block|}
 if|if
 condition|(
 operator|!
-name|mediaDevice
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|dmenuOpenSimple
-argument_list|(
-operator|&
-name|MenuMedia
-argument_list|,
-name|FALSE
-argument_list|)
-operator|||
-operator|!
-name|mediaDevice
+name|mediaVerify
+argument_list|()
 condition|)
 return|return
 name|DITEM_FAILURE
 operator||
 name|DITEM_RESTORE
 return|;
-block|}
 name|str
 operator|=
 name|variable_get
@@ -2632,19 +2655,15 @@ literal|"adjust your media configuration and try again?"
 argument_list|)
 condition|)
 block|{
+name|mediaDevice
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|dmenuOpenSimple
-argument_list|(
-operator|&
-name|MenuMedia
-argument_list|,
-name|FALSE
-argument_list|)
-operator|||
-operator|!
-name|mediaDevice
+name|mediaVerify
+argument_list|()
 condition|)
 return|return
 name|DITEM_FAILURE
