@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.42 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4033,20 +4033,19 @@ name|printf
 argument_list|(
 literal|"%2.0f "
 argument_list|,
-comment|/* user + nice */
 operator|(
 name|cur
 operator|.
 name|time
 index|[
-literal|0
+name|CP_USER
 index|]
 operator|+
 name|cur
 operator|.
 name|time
 index|[
-literal|1
+name|CP_NICE
 index|]
 operator|)
 operator|*
@@ -4060,17 +4059,25 @@ name|printf
 argument_list|(
 literal|"%2.0f "
 argument_list|,
+operator|(
 name|cur
 operator|.
 name|time
 index|[
-literal|2
+name|CP_SYS
 index|]
+operator|+
+name|cur
+operator|.
+name|time
+index|[
+name|CP_INTR
+index|]
+operator|)
 operator|*
 name|pct
 argument_list|)
 expr_stmt|;
-comment|/* system */
 operator|(
 name|void
 operator|)
@@ -4082,13 +4089,12 @@ name|cur
 operator|.
 name|time
 index|[
-literal|3
+name|CP_IDLE
 index|]
 operator|*
 name|pct
 argument_list|)
 expr_stmt|;
-comment|/* idle */
 block|}
 end_function
 
