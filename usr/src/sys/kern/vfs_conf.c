@@ -1,31 +1,29 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mount.h"
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/ffs_extern.h>
 end_include
 
 begin_comment
 comment|/*  * This specifies the filesystem used to mount the root.  * This specification should be done by /etc/config.  */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|ufs_mountroot
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
@@ -35,7 +33,7 @@ name|mountroot
 function_decl|)
 parameter_list|()
 init|=
-name|ufs_mountroot
+name|ffs_mountroot
 function_decl|;
 end_function_decl
 
@@ -74,14 +72,14 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NFS
+name|LFS
 end_ifdef
 
 begin_decl_stmt
 specifier|extern
 name|struct
 name|vfsops
-name|nfs_vfsops
+name|lfs_vfsops
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +107,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vfsops
+name|nfs_vfsops
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|vfsops
@@ -117,12 +134,7 @@ name|vfssw
 index|[]
 init|=
 block|{
-operator|(
-expr|struct
-name|vfsops
-operator|*
-operator|)
-literal|0
+name|NULL
 block|,
 comment|/* 0 = MOUNT_NONE */
 operator|&
@@ -138,12 +150,7 @@ block|,
 comment|/* 2 = MOUNT_NFS */
 else|#
 directive|else
-operator|(
-expr|struct
-name|vfsops
-operator|*
-operator|)
-literal|0
+name|NULL
 block|,
 endif|#
 directive|endif
@@ -156,23 +163,26 @@ block|,
 comment|/* 3 = MOUNT_MFS */
 else|#
 directive|else
-operator|(
-expr|struct
-name|vfsops
-operator|*
-operator|)
-literal|0
+name|NULL
 block|,
 endif|#
 directive|endif
-operator|(
-expr|struct
-name|vfsops
-operator|*
-operator|)
-literal|0
+name|NULL
 block|,
 comment|/* 4 = MOUNT_PC */
+ifdef|#
+directive|ifdef
+name|LFS
+operator|&
+name|lfs_vfsops
+block|,
+comment|/* 5 = MOUNT_LFS */
+else|#
+directive|else
+name|NULL
+block|,
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
