@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	8.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8737,6 +8737,15 @@ name|SZOMB
 condition|?
 literal|0
 else|:
+ifdef|#
+directive|ifdef
+name|pmap_resident_count
+name|pgtok
+argument_list|(
+argument|pmap_resident_count(&pick->p_vmspace->vm_pmap)
+argument_list|)
+else|#
+directive|else
 name|pgtok
 argument_list|(
 name|pick
@@ -8745,6 +8754,8 @@ name|p_vmspace
 operator|->
 name|vm_rssize
 argument_list|)
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 block|}
