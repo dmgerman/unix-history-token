@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* read.c - read a source file -    Copyright (C) 1986, 87, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99,    2000 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* read.c - read a source file -    Copyright 1986, 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    1998, 1999, 2000 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -9,16 +9,16 @@ directive|if
 literal|0
 end_if
 
+begin_comment
+comment|/* If your chars aren't 8 bits, you will change this a bit.    But then, GNU isn't spozed to run on your machine anyway.    (RMS is so shortsighted sometimes.)  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MASK_CHAR
 value|(0xFF)
 end_define
-
-begin_comment
-comment|/* If your chars aren't 8 bits, you will 				   change this a bit.  But then, GNU isn't 				   spozed to run on your machine anyway. 				   (RMS is so shortsighted sometimes.) 				   */
-end_comment
 
 begin_else
 else|#
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|MASK_CHAR
-value|((int)(unsigned char)-1)
+value|((int)(unsigned char) -1)
 end_define
 
 begin_endif
@@ -38,7 +38,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is the largest known floating point format (for now). It will    grow when we do 4361 style flonums. */
+comment|/* This is the largest known floating point format (for now). It will    grow when we do 4361 style flonums.  */
 end_comment
 
 begin_define
@@ -53,7 +53,7 @@ comment|/* Routines that read assembler source text to build spagetti in memory.
 end_comment
 
 begin_comment
-comment|/* for isdigit() */
+comment|/* For isdigit ().  */
 end_comment
 
 begin_include
@@ -147,29 +147,7 @@ parameter_list|,
 name|P2VAR
 parameter_list|)
 define|\
-value|do {                                                   \   if ((SIZE)>= 8)                                      \     (P2VAR) = 3;                                        \   else if ((SIZE)>= 4)                                 \     (P2VAR) = 2;                                        \   else if ((SIZE)>= 2)                                 \     (P2VAR) = 1;                                        \   else                                                  \     (P2VAR) = 0;                                        \  } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* The NOP_OPCODE is for the alignment fill value.  * fill it a nop instruction so that the disassembler does not choke  * on it  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOP_OPCODE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NOP_OPCODE
-value|0x00
+value|do								\     {                                                   	\       if ((SIZE)>= 8)                                      	\ 	(P2VAR) = 3;                                        	\       else if ((SIZE)>= 4)                                 	\ 	(P2VAR) = 2;                                        	\       else if ((SIZE)>= 2)                                 	\ 	(P2VAR) = 1;                                        	\       else                                                  	\ 	(P2VAR) = 0;                                        	\     }								\   while (0)
 end_define
 
 begin_endif
@@ -185,7 +163,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*->next char of source file to parse. */
+comment|/*->next char of source file to parse.  */
 end_comment
 
 begin_if
@@ -305,6 +283,10 @@ directive|ifndef
 name|LEX_HASH
 end_ifndef
 
+begin_comment
+comment|/* The IA-64 assembler uses # as a suffix designating a symbol.  We include    it in the symbol and strip it out in tc_canonicalize_symbol_name.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -362,7 +344,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* used by is_... macros. our ctype[] */
+comment|/* Used by is_... macros. our ctype[].  */
 end_comment
 
 begin_decl_stmt
@@ -636,7 +618,7 @@ name|LEX_TILDE
 block|,
 literal|0
 block|,
-comment|/* pqrstuvwxyz{|}~. */
+comment|/* pqrstuvwxyz{|}~.  */
 literal|3
 block|,
 literal|3
@@ -897,15 +879,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * In: a character.  * Out: 1 if this character ends a line.  */
+comment|/* In: a character.    Out: 1 if this character ends a line.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|Z_
-value|(0)
-end_define
 
 begin_decl_stmt
 name|char
@@ -918,557 +893,596 @@ block|{
 ifdef|#
 directive|ifdef
 name|CR_EOL
-literal|99
+literal|1
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-literal|99
+literal|1
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-literal|99
+literal|1
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
 comment|/* @abcdefghijklmno */
 else|#
 directive|else
-literal|99
+literal|1
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-literal|99
+literal|1
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
 comment|/* @abcdefghijklmno */
 endif|#
 directive|endif
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
 comment|/* */
-ifdef|#
-directive|ifdef
-name|TC_HPPA
-name|Z_
+literal|0
 block|,
-literal|99
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
 comment|/* _!"#$%&'()*+,-./ */
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
-block|,
-comment|/* 0123456789:;<=>? */
-else|#
-directive|else
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-comment|/* */
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-literal|99
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
+literal|0
 block|,
 comment|/* 0123456789:;<=>? */
-endif|#
-directive|endif
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
 comment|/* */
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
-block|,
-comment|/* */
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
+literal|0
 block|,
 comment|/* */
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
-block|,
-comment|/* */
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
+literal|0
 block|,
 comment|/* */
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
-block|,
-comment|/* */
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
-block|,
-name|Z_
+literal|0
 block|,
 comment|/* */
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
 comment|/* */
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
-name|Z_
+literal|0
 block|,
+comment|/* */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
 comment|/* */
 block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_undef
-undef|#
-directive|undef
-name|Z_
-end_undef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IGNORE_OPCODE_CASE
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|original_case_string
+index|[
+literal|128
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* Functions private to this file. */
+comment|/* Functions private to this file.  */
 end_comment
 
 begin_decl_stmt
@@ -1480,7 +1494,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1st char of each buffer of lines is here. */
+comment|/* 1st char of each buffer of lines is here.  */
 end_comment
 
 begin_decl_stmt
@@ -1492,11 +1506,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*->1 + last char in buffer. */
+comment|/*->1 + last char in buffer.  */
 end_comment
 
 begin_comment
-comment|/* TARGET_BYTES_BIG_ENDIAN is required to be defined to either 0 or 1 in the    tc-<CPU>.h file.  See the "Porting GAS" section of the internals manual. */
+comment|/* TARGET_BYTES_BIG_ENDIAN is required to be defined to either 0 or 1    in the tc-<CPU>.h file.  See the "Porting GAS" section of the    internals manual.  */
 end_comment
 
 begin_decl_stmt
@@ -1516,7 +1530,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* JF a hack */
+comment|/* JF a hack.  */
 end_comment
 
 begin_decl_stmt
@@ -1536,7 +1550,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Variables for handling include file directory table. */
+comment|/* Variables for handling include file directory table.  */
+end_comment
+
+begin_comment
+comment|/* Table of pointers to directories to search for .include's.  */
 end_comment
 
 begin_decl_stmt
@@ -1548,7 +1566,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Table of pointers to directories to 			   search for .include's */
+comment|/* How many are in the table.  */
 end_comment
 
 begin_decl_stmt
@@ -1558,7 +1576,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* How many are in the table */
+comment|/* Length of longest in table.  */
 end_comment
 
 begin_decl_stmt
@@ -1568,10 +1586,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Length of longest in table */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -2033,7 +2047,7 @@ argument_list|,
 name|chunksize
 argument_list|)
 expr_stmt|;
-comment|/* Use machine dependent syntax */
+comment|/* Use machine dependent syntax.  */
 for|for
 control|(
 name|p
@@ -2058,7 +2072,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Use more.  FIXME-SOMEDAY. */
+comment|/* Use more.  FIXME-SOMEDAY.  */
 if|if
 condition|(
 name|flag_mri
@@ -2077,7 +2091,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* set up pseudo-op tables */
+comment|/* Set up pseudo-op tables.  */
 end_comment
 
 begin_decl_stmt
@@ -2155,7 +2169,7 @@ operator|-
 literal|4
 block|}
 block|,
-comment|/* block */
+comment|/* block  */
 block|{
 literal|"byte"
 block|,
@@ -2393,7 +2407,7 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* dim */
+comment|/* dim  */
 block|{
 literal|"double"
 block|,
@@ -2402,7 +2416,7 @@ block|,
 literal|'d'
 block|}
 block|,
-comment|/* dsect */
+comment|/* dsect  */
 block|{
 literal|"eject"
 block|,
@@ -2411,7 +2425,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* Formfeed listing */
+comment|/* Formfeed listing.  */
 block|{
 literal|"else"
 block|,
@@ -2471,7 +2485,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* endef */
+comment|/* endef  */
 block|{
 literal|"equ"
 block|,
@@ -2504,7 +2518,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* extend */
+comment|/* extend  */
 block|{
 literal|"extern"
 block|,
@@ -2513,7 +2527,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* We treat all undef as ext */
+comment|/* We treat all undef as ext.  */
 block|{
 literal|"appfile"
 block|,
@@ -2799,7 +2813,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* Listing flags */
+comment|/* Listing flags.  */
 block|{
 literal|"linkonce"
 block|,
@@ -2816,7 +2830,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* Turn listing on */
+comment|/* Turn listing on.  */
 block|{
 literal|"llen"
 block|,
@@ -2898,7 +2912,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* Turn listing off */
+comment|/* Turn listing off.  */
 block|{
 literal|"nopage"
 block|,
@@ -2989,7 +3003,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* set paper size */
+comment|/* Set paper size.  */
 block|{
 literal|"purgem"
 block|,
@@ -3038,9 +3052,9 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* Subtitle of listing */
-comment|/* scl */
-comment|/* sect */
+comment|/* Subtitle of listing.  */
+comment|/* scl  */
+comment|/* sect  */
 block|{
 literal|"set"
 block|,
@@ -3065,7 +3079,7 @@ block|,
 literal|'f'
 block|}
 block|,
-comment|/* size */
+comment|/* size  */
 block|{
 literal|"space"
 block|,
@@ -3138,7 +3152,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* tag */
+comment|/* tag  */
 block|{
 literal|"text"
 block|,
@@ -3173,7 +3187,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* Listing title */
+comment|/* Listing title.  */
 block|{
 literal|"ttl"
 block|,
@@ -3182,7 +3196,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* type */
+comment|/* type  */
 block|{
 literal|"uleb128"
 block|,
@@ -3191,8 +3205,8 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* use */
-comment|/* val */
+comment|/* use  */
+comment|/* val  */
 block|{
 literal|"xcom"
 block|,
@@ -3248,7 +3262,7 @@ name|NULL
 block|,
 literal|0
 block|}
-comment|/* end sentinel */
+comment|/* End sentinel.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3405,7 +3419,7 @@ operator|=
 name|hash_new
 argument_list|()
 expr_stmt|;
-comment|/* Do the target-specific pseudo ops. */
+comment|/* Do the target-specific pseudo ops.  */
 name|pop_table_name
 operator|=
 literal|"md"
@@ -3413,7 +3427,7 @@ expr_stmt|;
 name|md_pop_insert
 argument_list|()
 expr_stmt|;
-comment|/* Now object specific.  Skip any that were in the target table. */
+comment|/* Now object specific.  Skip any that were in the target table.  */
 name|pop_table_name
 operator|=
 literal|"obj"
@@ -3425,7 +3439,7 @@ expr_stmt|;
 name|obj_pop_insert
 argument_list|()
 expr_stmt|;
-comment|/* Now portable ones.  Skip any that we've seen already. */
+comment|/* Now portable ones.  Skip any that we've seen already.  */
 name|pop_table_name
 operator|=
 literal|"standard"
@@ -3447,7 +3461,7 @@ directive|define
 name|HANDLE_CONDITIONAL_ASSEMBLY
 parameter_list|()
 define|\
-value|if (ignore_input ())							\     {									\       while (! is_end_of_line[(unsigned char) *input_line_pointer++])	\ 	if (input_line_pointer == buffer_limit)				\ 	  break;							\       continue;								\     }
+value|if (ignore_input ())							\     {									\       while (!is_end_of_line[(unsigned char) *input_line_pointer++])	\ 	if (input_line_pointer == buffer_limit)				\ 	  break;							\       continue;								\     }
 end_define
 
 begin_comment
@@ -3526,7 +3540,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	read_a_source_file()  *  * We read the file, putting things into a web that  * represents what we have been reading.  */
+comment|/* We read the file, putting things into a web that represents what we    have been reading.  */
 end_comment
 
 begin_function
@@ -3549,7 +3563,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-comment|/* string of symbol, '\0' appended */
+comment|/* String of symbol, '\0' appended.  */
 specifier|register
 name|int
 name|temp
@@ -3558,6 +3572,15 @@ name|pseudo_typeS
 modifier|*
 name|pop
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WARN_COMMENTS
+name|found_comment
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|buffer
 operator|=
 name|input_scrub_new_file
@@ -3599,7 +3622,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* We have another line to parse. */
+comment|/* We have another line to parse.  */
 name|know
 argument_list|(
 name|buffer_limit
@@ -3611,7 +3634,7 @@ operator|==
 literal|'\n'
 argument_list|)
 expr_stmt|;
-comment|/* Must have a sentinel. */
+comment|/* Must have a sentinel.  */
 name|contin
 label|:
 comment|/* JF this goto is my fault I admit it. 				   Someone brave please re-write the whole 				   input section here?  Pleeze???  */
@@ -3622,8 +3645,8 @@ operator|<
 name|buffer_limit
 condition|)
 block|{
-comment|/* We have more of this buffer to parse. */
-comment|/* 	   * We now have input_line_pointer->1st char of next line. 	   * If input_line_pointer [-1] == '\n' then we just 	   * scanned another line: so bump line counters. 	   */
+comment|/* We have more of this buffer to parse.  */
+comment|/* We now have input_line_pointer->1st char of next line. 	     If input_line_pointer [-1] == '\n' then we just 	     scanned another line: so bump line counters.  */
 if|if
 condition|(
 name|is_end_of_line
@@ -3921,7 +3944,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	   * We are at the begining of a line, or similar place. 	   * We expect a well-formed assembler statement. 	   * A "symbol-name:" is a statement. 	   * 	   * Depending on what compiler is used, the order of these tests 	   * may vary to catch most common case 1st. 	   * Each test is independent of all other tests at the (top) level. 	   * PLEASE make a compiler that doesn't use this assembler. 	   * It is crufty to waste a compiler's time encoding things for this 	   * assembler, which then wastes more time decoding it. 	   * (And communicating via (linear) files is silly! 	   * If you must pass stuff, please pass a tree!) 	   */
+comment|/* We are at the begining of a line, or similar place. 	     We expect a well-formed assembler statement. 	     A "symbol-name:" is a statement.  	     Depending on what compiler is used, the order of these tests 	     may vary to catch most common case 1st. 	     Each test is independent of all other tests at the (top) level. 	     PLEASE make a compiler that doesn't use this assembler. 	     It is crufty to waste a compiler's time encoding things for this 	     assembler, which then wastes more time decoding it. 	     (And communicating via (linear) files is silly! 	     If you must pass stuff, please pass a tree!)  */
 if|if
 condition|(
 operator|(
@@ -3946,14 +3969,12 @@ name|c
 operator|==
 literal|0
 condition|)
-block|{
 name|c
 operator|=
 operator|*
 name|input_line_pointer
 operator|++
 expr_stmt|;
-block|}
 name|know
 argument_list|(
 name|c
@@ -3961,7 +3982,7 @@ operator|!=
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/* No further leading whitespace. */
+comment|/* No further leading whitespace.  */
 ifndef|#
 directive|ifndef
 name|NO_LISTING
@@ -4103,7 +4124,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	   * C is the 1st significant character. 	   * Input_line_pointer points after that character. 	   */
+comment|/* C is the 1st significant character. 	     Input_line_pointer points after that character.  */
 if|if
 condition|(
 name|is_name_beginner
@@ -4112,7 +4133,7 @@ name|c
 argument_list|)
 condition|)
 block|{
-comment|/* want user-defined label or pseudo/opcode */
+comment|/* Want user-defined label or pseudo/opcode.  */
 name|HANDLE_CONDITIONAL_ASSEMBLY
 argument_list|()
 expr_stmt|;
@@ -4126,8 +4147,8 @@ operator|=
 name|get_symbol_end
 argument_list|()
 expr_stmt|;
-comment|/* name's delimiter */
-comment|/* 	       * C is character after symbol. 	       * That character's place in the input line is now '\0'. 	       * S points to the beginning of the symbol. 	       *   [In case of pseudo-op, s->'.'.] 	       * Input_line_pointer->'\0' where c was. 	       */
+comment|/* name's delimiter.  */
+comment|/* C is character after symbol. 	         That character's place in the input line is now '\0'. 	         S points to the beginning of the symbol. 	           [In case of pseudo-op, s->'.'.] 	         Input_line_pointer->'\0' where c was.  */
 if|if
 condition|(
 name|TC_START_LABEL
@@ -4243,15 +4264,15 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* user-defined label */
+comment|/* User-defined label.  */
+comment|/* Put ':' back for error messages' sake.  */
 operator|*
 name|input_line_pointer
 operator|++
 operator|=
 literal|':'
 expr_stmt|;
-comment|/* Put ':' back for error messages' sake. */
-comment|/* Input_line_pointer->after ':'. */
+comment|/* Input_line_pointer->after ':'.  */
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
@@ -4309,14 +4330,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* expect pseudo-op or machine instruction */
+comment|/* Expect pseudo-op or machine instruction.  */
 name|pop
 operator|=
 name|NULL
 expr_stmt|;
-define|#
-directive|define
-name|IGNORE_OPCODE_CASE
 ifdef|#
 directive|ifdef
 name|IGNORE_OPCODE_CASE
@@ -4327,6 +4345,30 @@ name|s2
 init|=
 name|s
 decl_stmt|;
+name|strncpy
+argument_list|(
+name|original_case_string
+argument_list|,
+name|s2
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|original_case_string
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|original_case_string
+index|[
+sizeof|sizeof
+argument_list|(
+name|original_case_string
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -4416,7 +4458,7 @@ literal|'.'
 operator|)
 condition|)
 block|{
-comment|/* 		       * PSEUDO - OP. 		       * 		       * WARNING: c has next char, which may be end-of-line. 		       * We lookup the pseudo-op table with s+1 because we 		       * already know that the pseudo-op begins with a '.'. 		       */
+comment|/* PSEUDO - OP.  		         WARNING: c has next char, which may be end-of-line. 		         We lookup the pseudo-op table with s+1 because we 		         already know that the pseudo-op begins with a '.'.  */
 if|if
 condition|(
 name|pop
@@ -4582,7 +4624,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Print the error msg now, while we still can */
+comment|/* Print the error msg now, while we still can.  */
 if|if
 condition|(
 name|pop
@@ -4612,13 +4654,13 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Put it back for error messages etc. */
+comment|/* Put it back for error messages etc.  */
 operator|*
 name|input_line_pointer
 operator|=
 name|c
 expr_stmt|;
-comment|/* The following skip of whitespace is compulsory. 			 A well shaped space is sometimes all that separates 			 keyword from operands. */
+comment|/* The following skip of whitespace is compulsory. 			 A well shaped space is sometimes all that separates 			 keyword from operands.  */
 if|if
 condition|(
 name|c
@@ -4632,7 +4674,7 @@ condition|)
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* 		       * Input_line is restored. 		       * Input_line_pointer->1st non-blank char 		       * after pseudo-operation. 		       */
+comment|/* Input_line is restored. 		         Input_line_pointer->1st non-blank char 		         after pseudo-operation.  */
 call|(
 modifier|*
 name|pop
@@ -4675,8 +4717,8 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* WARNING: c has char, which may be end-of-line. */
-comment|/* Also: input_line_pointer->`\0` where c was. */
+comment|/* WARNING: c has char, which may be end-of-line.  */
+comment|/* Also: input_line_pointer->`\0` where c was.  */
 operator|*
 name|input_line_pointer
 operator|=
@@ -4922,21 +4964,18 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* Assemble 1 instruction. */
+comment|/* Assemble 1 instruction.  */
 operator|*
 name|input_line_pointer
 operator|++
 operator|=
 name|c
 expr_stmt|;
-comment|/* We resume loop AFTER the end-of-line from 			 this instruction. */
+comment|/* We resume loop AFTER the end-of-line from 			 this instruction.  */
 block|}
-comment|/* if (*s=='.') */
 block|}
-comment|/* if c==':' */
 continue|continue;
 block|}
-comment|/* if (is_name_beginner(c) */
 comment|/* Empty statement?  */
 if|if
 condition|(
@@ -4968,7 +5007,7 @@ name|c
 argument_list|)
 condition|)
 block|{
-comment|/* local label  ("4:") */
+comment|/* local label  ("4:")  */
 name|char
 modifier|*
 name|backup
@@ -4984,6 +5023,7 @@ name|c
 operator|-
 literal|'0'
 expr_stmt|;
+comment|/* Read the whole number.  */
 while|while
 condition|(
 name|isdigit
@@ -5014,7 +5054,6 @@ operator|++
 name|input_line_pointer
 expr_stmt|;
 block|}
-comment|/* read the whole number */
 if|if
 condition|(
 name|LOCAL_LABELS_DOLLAR
@@ -5120,7 +5159,7 @@ name|c
 argument_list|)
 condition|)
 block|{
-comment|/* Its a comment.  Better say APP or NO_APP */
+comment|/* Its a comment.  Better say APP or NO_APP.  */
 name|char
 modifier|*
 name|ends
@@ -5190,7 +5229,7 @@ name|unsigned
 name|int
 name|num
 decl_stmt|;
-comment|/* The end of the #APP wasn't in this buffer.  We 		     keep reading in buffers until we find the #NO_APP 		     that goes with this #APP  There is one.  The specs 		     guarentee it. . . */
+comment|/* The end of the #APP wasn't in this buffer.  We 		     keep reading in buffers until we find the #NO_APP 		     that goes with this #APP  There is one.  The specs 		     guarentee it...  */
 name|tmp_len
 operator|=
 name|buffer_limit
@@ -5477,16 +5516,15 @@ condition|)
 continue|continue;
 endif|#
 directive|endif
-comment|/* as_warn("Junk character %d.",c);  Now done by ignore_rest */
+comment|/* as_warn (_("Junk character %d."),c); Now done by ignore_rest.  */
 name|input_line_pointer
 operator|--
 expr_stmt|;
-comment|/* Report unknown char as ignored. */
+comment|/* Report unknown char as ignored.  */
 name|ignore_rest_of_line
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* while (input_line_pointer<buffer_limit) */
 ifdef|#
 directive|ifdef
 name|md_after_pass_hook
@@ -5537,7 +5575,6 @@ goto|;
 block|}
 block|}
 block|}
-comment|/* while (more buffers to scan) */
 name|quit
 label|:
 ifdef|#
@@ -5548,10 +5585,32 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Close the input file.  */
 name|input_scrub_close
 argument_list|()
 expr_stmt|;
-comment|/* Close the input file */
+ifdef|#
+directive|ifdef
+name|WARN_COMMENTS
+block|{
+if|if
+condition|(
+name|warn_comment
+operator|&&
+name|found_comment
+condition|)
+name|as_warn_where
+argument_list|(
+name|found_comment_file
+argument_list|,
+name|found_comment
+argument_list|,
+literal|"first comment found here"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5571,13 +5630,13 @@ modifier|*
 name|stopcp
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|TC_M68K
 name|char
 modifier|*
 name|s
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TC_M68K
 name|int
 name|inquote
 init|=
@@ -5638,26 +5697,8 @@ operator|!
 name|inquote
 expr_stmt|;
 block|}
-operator|*
-name|stopcp
-operator|=
-operator|*
-name|s
-expr_stmt|;
-operator|*
-name|s
-operator|=
-literal|'\0'
-expr_stmt|;
-return|return
-name|s
-return|;
 else|#
 directive|else
-name|char
-modifier|*
-name|s
-decl_stmt|;
 for|for
 control|(
 name|s
@@ -5679,6 +5720,8 @@ name|s
 operator|++
 control|)
 empty_stmt|;
+endif|#
+directive|endif
 operator|*
 name|stopcp
 operator|=
@@ -5693,8 +5736,6 @@ expr_stmt|;
 return|return
 name|s
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -5804,9 +5845,6 @@ name|int
 name|max
 decl_stmt|;
 block|{
-name|char
-name|default_fill
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|md_do_align
@@ -5825,6 +5863,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Only make a frag if we HAVE to...  */
+if|if
+condition|(
+name|n
+operator|!=
+literal|0
+operator|&&
+operator|!
+name|need_pass_2
+condition|)
+block|{
 if|if
 condition|(
 name|fill
@@ -5839,36 +5888,25 @@ argument_list|(
 name|now_seg
 argument_list|)
 condition|)
-name|default_fill
-operator|=
-name|NOP_OPCODE
+name|frag_align_code
+argument_list|(
+name|n
+argument_list|,
+name|max
+argument_list|)
 expr_stmt|;
 else|else
-name|default_fill
-operator|=
+name|frag_align
+argument_list|(
+name|n
+argument_list|,
 literal|0
-expr_stmt|;
-name|fill
-operator|=
-operator|&
-name|default_fill
-expr_stmt|;
-name|len
-operator|=
-literal|1
+argument_list|,
+name|max
+argument_list|)
 expr_stmt|;
 block|}
-comment|/* Only make a frag if we HAVE to. . . */
-if|if
-condition|(
-name|n
-operator|!=
-literal|0
-operator|&&
-operator|!
-name|need_pass_2
-condition|)
-block|{
+elseif|else
 if|if
 condition|(
 name|len
@@ -6002,7 +6040,7 @@ name|align
 operator|=
 name|arg
 expr_stmt|;
-comment|/* Default value from pseudo-op table */
+comment|/* Default value from pseudo-op table.  */
 block|}
 else|else
 block|{
@@ -6422,7 +6460,7 @@ operator|=
 name|get_symbol_end
 argument_list|()
 expr_stmt|;
-comment|/* just after name is now '\0' */
+comment|/* Just after name is now '\0'.  */
 name|p
 operator|=
 name|input_line_pointer
@@ -6647,10 +6685,8 @@ name|flag_one
 decl_stmt|;
 if|if
 condition|(
-operator|(
 operator|!
 name|temp
-operator|)
 operator|||
 operator|!
 name|flag_one
@@ -7159,7 +7195,7 @@ decl_stmt|;
 name|int
 name|length
 decl_stmt|;
-comment|/* Some assemblers tolerate immediately following '"' */
+comment|/* Some assemblers tolerate immediately following '"'.  */
 if|if
 condition|(
 operator|(
@@ -7869,7 +7905,7 @@ operator|)
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* The magic number BSD_FILL_SIZE_CROCK_4 is from BSD 4.2 VAX        * flavoured AS.  The following bizzare behaviour is to be        * compatible with above.  I guess they tried to take up to 8        * bytes from a 4-byte expression and they forgot to sign        * extend. Un*x Sux. */
+comment|/* The magic number BSD_FILL_SIZE_CROCK_4 is from BSD 4.2 VAX          flavoured AS.  The following bizzare behaviour is to be          compatible with above.  I guess they tried to take up to 8          bytes from a 4-byte expression and they forgot to sign          extend. Un*x Sux.  */
 define|#
 directive|define
 name|BSD_FILL_SIZE_CROCK_4
@@ -7897,7 +7933,7 @@ name|size
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Note: .fill (),0 emits no frag (since we are asked to .fill 0 bytes)        * but emits no error message because it seems a legal thing to do.        * It is a degenerate case of .fill but could be emitted by a compiler.        */
+comment|/* Note: .fill (),0 emits no frag (since we are asked to .fill 0 bytes)          but emits no error message because it seems a legal thing to do.          It is a degenerate case of .fill but could be emitted by a 	 compiler.  */
 block|}
 name|demand_empty_rest_of_line
 argument_list|()
@@ -8469,11 +8505,11 @@ name|needs_align
 parameter_list|,
 name|bytes_p
 parameter_list|)
-comment|/* 1 if this was a ".bss" directive, which may require a 3rd argument 	(alignment); 0 if it was an ".lcomm" (2 args only)  */
+comment|/* 1 if this was a ".bss" directive, which may require a 3rd argument 	(alignment); 0 if it was an ".lcomm" (2 args only).  */
 name|int
 name|needs_align
 decl_stmt|;
-comment|/* 1 if the alignment value should be interpreted as the byte boundary, 	rather than the power of 2. */
+comment|/* 1 if the alignment value should be interpreted as the byte boundary, 	rather than the power of 2.  */
 name|int
 name|bytes_p
 decl_stmt|;
@@ -8893,7 +8929,6 @@ name|align
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* if needs align */
 else|else
 block|{
 comment|/* Assume some objects may require alignment on some systems.  */
@@ -9081,7 +9116,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* detach from old frag	*/
+comment|/* Detach from old frag.  */
 if|if
 condition|(
 name|S_GET_SEGMENT
@@ -9151,7 +9186,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|OBJ_COFF
-comment|/* The symbol may already have been created with a preceding          ".globl" directive -- be careful not to step on storage class          in that case.  Otherwise, set it to static. */
+comment|/* The symbol may already have been created with a preceding          ".globl" directive -- be careful not to step on storage class          in that case.  Otherwise, set it to static.  */
 if|if
 condition|(
 name|S_GET_STORAGE_CLASS
@@ -9212,10 +9247,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* s_lcomm_internal() */
-end_comment
 
 begin_function
 name|void
@@ -9290,7 +9321,7 @@ name|symbolS
 modifier|*
 name|symbolP
 decl_stmt|;
-comment|/* we permit ANY defined expression: BSD4.2 demands constants */
+comment|/* We permit ANY defined expression: BSD4.2 demands constants.  */
 name|name
 operator|=
 name|input_line_pointer
@@ -9394,7 +9425,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* FIXME-SOON I pulled a (&& symbolP->sy_other == 0&&      symbolP->sy_desc == 0) out of this test because coff doesn't have      those fields, and I can't see when they'd ever be tripped.  I      don't think I understand why they were here so I may have      introduced a bug. As recently as 1.37 didn't have this test      anyway.  xoxorich. */
+comment|/* FIXME-SOON I pulled a (&& symbolP->sy_other == 0&&      symbolP->sy_desc == 0) out of this test because coff doesn't have      those fields, and I can't see when they'd ever be tripped.  I      don't think I understand why they were here so I may have      introduced a bug. As recently as 1.37 didn't have this test      anyway.  xoxorich.  */
 if|if
 condition|(
 name|S_GET_SEGMENT
@@ -9412,7 +9443,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* The name might be an undefined .global symbol; be sure to 	 keep the "external" bit. */
+comment|/* The name might be an undefined .global symbol; be sure to 	 keep the "external" bit.  */
 name|S_SET_SEGMENT
 argument_list|(
 name|symbolP
@@ -9466,10 +9497,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* s_lsym() */
-end_comment
 
 begin_comment
 comment|/* Read a line into an sb.  */
@@ -10162,6 +10189,51 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|symbolS
+modifier|*
+name|sym
+init|=
+name|exp
+operator|->
+name|X_add_symbol
+decl_stmt|;
+name|offsetT
+name|off
+init|=
+name|exp
+operator|->
+name|X_add_number
+operator|*
+name|OCTETS_PER_BYTE
+decl_stmt|;
+if|if
+condition|(
+name|exp
+operator|->
+name|X_op
+operator|!=
+name|O_constant
+operator|&&
+name|exp
+operator|->
+name|X_op
+operator|!=
+name|O_symbol
+condition|)
+block|{
+comment|/* Handle complex expressions.  */
+name|sym
+operator|=
+name|make_expr_symbol
+argument_list|(
+name|exp
+argument_list|)
+expr_stmt|;
+name|off
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|p
 operator|=
 name|frag_var
@@ -10177,21 +10249,15 @@ name|relax_substateT
 operator|)
 literal|0
 argument_list|,
-name|exp
-operator|->
-name|X_add_symbol
+name|sym
 argument_list|,
-name|exp
-operator|->
-name|X_add_number
-operator|*
-name|OCTETS_PER_BYTE
+name|off
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 operator|*
@@ -10303,10 +10369,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* s_org() */
-end_comment
 
 begin_comment
 comment|/* Handle parsing for the MRI SECT/SECTION pseudo-op.  This should be    called by the obj-format routine which handles section changing    when in MRI mode.  It will create a new section, and return it.  It    will set *TYPE to the section type: one of 'C' (code), 'D' (data),    'M' (mixed), or 'R' (romable).  If BFD_ASSEMBLER is defined, the    flags will be set in the section.  */
@@ -11090,7 +11152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function provides a generic repeat block implementation.   It allows    different directives to be used as the start/end keys. */
+comment|/* This function provides a generic repeat block implementation.   It allows    different directives to be used as the start/end keys.  */
 end_comment
 
 begin_function
@@ -11215,7 +11277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Skip to end of current repeat loop; EXTRA indicates how many additional    input buffers to skip.  Assumes that conditionals preceding the loop end    are properly nested.      This function makes it easier to implement a premature "break" out of the    loop.  The EXTRA arg accounts for other buffers we might have inserted,    such as line substitutions. */
+comment|/* Skip to end of current repeat loop; EXTRA indicates how many additional    input buffers to skip.  Assumes that conditionals preceding the loop end    are properly nested.     This function makes it easier to implement a premature "break" out of the    loop.  The EXTRA arg accounts for other buffers we might have inserted,    such as line substitutions.  */
 end_comment
 
 begin_function
@@ -11284,7 +11346,7 @@ name|symbolS
 modifier|*
 name|symbolP
 decl_stmt|;
-comment|/*    * Especial apologies for the random logic:    * this just grew, and could be parsed much more simply!    * Dean in haste.    */
+comment|/* Especial apologies for the random logic:      this just grew, and could be parsed much more simply!      Dean in haste.  */
 name|name
 operator|=
 name|input_line_pointer
@@ -11364,7 +11426,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* Turn '. = mumble' into a .org mumble */
+comment|/* Turn '. = mumble' into a .org mumble.  */
 specifier|register
 name|segT
 name|segment
@@ -11524,7 +11586,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|OBJ_COFF
-comment|/* "set" symbols are local unless otherwise specified. */
+comment|/* "set" symbols are local unless otherwise specified.  */
 name|SF_SET_LOCAL
 argument_list|(
 name|symbolP
@@ -11534,7 +11596,6 @@ endif|#
 directive|endif
 comment|/* OBJ_COFF */
 block|}
-comment|/* make a new symbol */
 name|symbol_table_insert
 argument_list|(
 name|symbolP
@@ -11584,10 +11645,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* s_set() */
-end_comment
 
 begin_function
 name|void
@@ -12623,10 +12680,6 @@ directive|endif
 block|}
 end_function
 
-begin_comment
-comment|/* s_text() */
-end_comment
-
 begin_escape
 end_escape
 
@@ -12650,31 +12703,23 @@ operator|*
 name|input_line_pointer
 index|]
 condition|)
-block|{
 name|input_line_pointer
 operator|++
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ignore_rest_of_line
 argument_list|()
 expr_stmt|;
-block|}
-comment|/* Return having already swallowed end-of-line. */
+comment|/* Return having already swallowed end-of-line.  */
 block|}
 end_function
-
-begin_comment
-comment|/* Return pointing just after end-of-line. */
-end_comment
 
 begin_function
 name|void
 name|ignore_rest_of_line
 parameter_list|()
-comment|/* For suspect lines: gives warning. */
 block|{
+comment|/* For suspect lines: gives warning.  */
 if|if
 condition|(
 operator|!
@@ -12741,16 +12786,14 @@ operator|*
 name|input_line_pointer
 index|]
 condition|)
-block|{
 name|input_line_pointer
 operator|++
 expr_stmt|;
 block|}
-block|}
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* Return pointing just after end-of-line. */
+comment|/* Return pointing just after end-of-line.  */
 name|know
 argument_list|(
 name|is_end_of_line
@@ -12792,15 +12835,13 @@ operator|*
 name|input_line_pointer
 index|]
 condition|)
-block|{
 name|input_line_pointer
 operator|++
 expr_stmt|;
-block|}
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* Return pointing just after end-of-line. */
+comment|/* Return pointing just after end-of-line.  */
 name|know
 argument_list|(
 name|is_end_of_line
@@ -12821,7 +12862,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *			pseudo_set()  *  * In:	Pointer to a symbol.  *	Input_line_pointer->expression.  *  * Out:	Input_line_pointer->just after any whitespace after expression.  *	Tried to set symbol to value of expression.  *	Will change symbols type, value, and frag;  */
+comment|/* In:	Pointer to a symbol.   	Input_line_pointer->expression.     Out:	Input_line_pointer->just after any whitespace after expression.   	Tried to set symbol to value of expression.   	Will change symbols type, value, and frag;  */
 end_comment
 
 begin_function
@@ -12868,7 +12909,7 @@ argument_list|(
 name|symbolP
 argument_list|)
 expr_stmt|;
-comment|/* NULL pointer is logic error. */
+comment|/* NULL pointer is logic error.  */
 if|#
 directive|if
 operator|(
@@ -13335,7 +13376,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			cons()  *  * CONStruct more frag of .bytes, or .words etc.  * Should need_pass_2 be 1 then emit no frag(s).  * This understands EXPRESSIONS.  *  * Bug (?)  *  * This has a split personality. We use expression() to read the  * value. We can detect if the value won't fit in a byte or word.  * But we can't detect if expression() discarded significant digits  * in the case of a long. Not worth the crocks required to fix it.  */
+comment|/*  			cons()     CONStruct more frag of .bytes, or .words etc.    Should need_pass_2 be 1 then emit no frag(s).    This understands EXPRESSIONS.     Bug (?)     This has a split personality. We use expression() to read the    value. We can detect if the value won't fit in a byte or word.    But we can't detect if expression() discarded significant digits    in the case of a long. Not worth the crocks required to fix it.  */
 end_comment
 
 begin_comment
@@ -13499,15 +13540,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* worker to do .byte etc statements */
-end_comment
-
-begin_comment
-comment|/* clobbers input_line_pointer, checks */
-end_comment
-
-begin_comment
-comment|/* end-of-line. */
+comment|/* Worker to do .byte etc statements.    Clobbers input_line_pointer and checks end-of-line.  */
 end_comment
 
 begin_function
@@ -13523,7 +13556,7 @@ specifier|register
 name|int
 name|nbytes
 decl_stmt|;
-comment|/* 1=.byte, 2=.word, 4=.long */
+comment|/* 1=.byte, 2=.word, 4=.long.  */
 name|int
 name|rva
 decl_stmt|;
@@ -13713,7 +13746,7 @@ expr_stmt|;
 name|input_line_pointer
 operator|--
 expr_stmt|;
-comment|/* Put terminator back into stream. */
+comment|/* Put terminator back into stream.  */
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
@@ -14575,7 +14608,7 @@ specifier|register
 name|valueT
 name|unmask
 decl_stmt|;
-comment|/* JF<< of>= number of bits in the object is undefined.  In 	 particular SPARC (Sun 4) has problems */
+comment|/* JF<< of>= number of bits in the object is undefined.  In 	 particular SPARC (Sun 4) has problems.  */
 if|if
 condition|(
 name|nbytes
@@ -14622,7 +14655,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Don't store these bits. */
+comment|/* Don't store these bits.  */
 name|mask
 operator|=
 operator|~
@@ -14658,7 +14691,7 @@ operator|=
 operator|~
 name|mask
 expr_stmt|;
-comment|/* Do store these bits. */
+comment|/* Do store these bits.  */
 ifdef|#
 directive|ifdef
 name|NEVER
@@ -14673,7 +14706,7 @@ operator|>>
 literal|1
 operator|)
 expr_stmt|;
-comment|/* Includes sign bit now. */
+comment|/* Includes sign bit now.  */
 endif|#
 directive|endif
 name|get
@@ -14717,7 +14750,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* Leading bits contain both 0s& 1s. */
+comment|/* Leading bits contain both 0s& 1s.  */
 name|as_warn
 argument_list|(
 name|_
@@ -14739,7 +14772,7 @@ name|use
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* put bytes in right order. */
+comment|/* Put bytes in right order.  */
 name|md_number_to_chars
 argument_list|(
 name|p
@@ -15202,7 +15235,7 @@ operator|==
 literal|':'
 condition|)
 block|{
-comment|/* bitfields */
+comment|/* Bitfields.  */
 name|long
 name|value
 init|=
@@ -15232,8 +15265,8 @@ name|hold
 expr_stmt|;
 break|break;
 block|}
-comment|/* next piece is not a bitfield */
-comment|/* In the general case, we can't allow 	     full expressions with symbol 	     differences and such.  The relocation 	     entries for symbols not defined in this 	     assembly would require arbitrary field 	     widths, positions, and masks which most 	     of our current object formats don't 	     support.  	     In the specific case where a symbol 	     *is* defined in this assembly, we 	     *could* build fixups and track it, but 	     this could lead to confusion for the 	     backends.  I'm lazy. I'll take any 	     SEG_ABSOLUTE. I think that means that 	     you can use a previous .set or 	     .equ type symbol.  xoxorich. */
+comment|/* Next piece is not a bitfield.  */
+comment|/* In the general case, we can't allow 	     full expressions with symbol 	     differences and such.  The relocation 	     entries for symbols not defined in this 	     assembly would require arbitrary field 	     widths, positions, and masks which most 	     of our current object formats don't 	     support.  	     In the specific case where a symbol 	     *is* defined in this assembly, we 	     *could* build fixups and track it, but 	     this could lead to confusion for the 	     backends.  I'm lazy. I'll take any 	     SEG_ABSOLUTE. I think that means that 	     you can use a previous .set or 	     .equ type symbol.  xoxorich.  */
 if|if
 condition|(
 name|exp
@@ -15264,7 +15297,7 @@ operator|=
 name|O_constant
 expr_stmt|;
 block|}
-comment|/* implied zero width bitfield */
+comment|/* Implied zero width bitfield.  */
 if|if
 condition|(
 name|exp
@@ -15299,7 +15332,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* too complex */
+comment|/* Too complex.  */
 if|if
 condition|(
 operator|(
@@ -15342,7 +15375,7 @@ operator|*
 name|nbytes
 expr_stmt|;
 block|}
-comment|/* too big */
+comment|/* Too big.  */
 if|if
 condition|(
 name|width
@@ -15363,13 +15396,13 @@ name|value
 expr_stmt|;
 break|break;
 block|}
-comment|/* won't fit */
+comment|/* Won't fit.  */
+comment|/* Skip ':'.  */
 name|hold
 operator|=
 operator|++
 name|input_line_pointer
 expr_stmt|;
-comment|/* skip ':' */
 operator|(
 name|void
 operator|)
@@ -15418,7 +15451,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* too complex */
+comment|/* Too complex.  */
 name|value
 operator||=
 operator|(
@@ -15468,7 +15501,7 @@ condition|)
 block|{
 break|break;
 block|}
-comment|/* all the bitfields we're gonna get */
+comment|/* All the bitfields we're gonna get.  */
 name|hold
 operator|=
 operator|++
@@ -15483,7 +15516,6 @@ name|exp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* forever loop */
 name|exp
 operator|->
 name|X_add_number
@@ -15503,13 +15535,8 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* if looks like a bitfield */
 block|}
 end_function
-
-begin_comment
-comment|/* parse_bitfield_cons() */
-end_comment
 
 begin_endif
 endif|#
@@ -15687,7 +15714,7 @@ operator|++
 operator|)
 expr_stmt|;
 block|}
-comment|/* Left justify */
+comment|/* Left justify.  */
 while|while
 condition|(
 name|scan
@@ -15703,7 +15730,7 @@ name|scan
 operator|++
 expr_stmt|;
 block|}
-comment|/* Create correct expression */
+comment|/* Create correct expression.  */
 name|exp
 operator|->
 name|X_op
@@ -15716,7 +15743,7 @@ name|X_add_number
 operator|=
 name|result
 expr_stmt|;
-comment|/* Fake it so that we can read the next char too */
+comment|/* Fake it so that we can read the next char too.  */
 if|if
 condition|(
 name|input_line_pointer
@@ -16033,7 +16060,7 @@ block|{
 name|int
 name|d
 decl_stmt|;
-comment|/* The MRI assembler accepts arbitrary underscores strewn about 	 through the hex constant, so we ignore them as well. */
+comment|/* The MRI assembler accepts arbitrary underscores strewn about 	 through the hex constant, so we ignore them as well.  */
 if|if
 condition|(
 operator|*
@@ -16182,7 +16209,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *			float_cons()  *  * CONStruct some more frag chars of .floats .ffloats etc.  * Makes 0 or more new frags.  * If need_pass_2 == 1, no frags are emitted.  * This understands only floating literals, not expressions. Sorry.  *  * A floating constant is defined by atof_generic(), except it is preceded  * by 0d 0f 0g or 0h. After observing the STRANGE way my BSD AS does its  * reading, I decided to be incompatible. This always tries to give you  * rounded bits to the precision of the pseudo-op. Former AS did premature  * truncatation, restored noisy bits instead of trailing 0s AND gave you  * a choice of 2 flavours of noise according to which of 2 floating-point  * scanners you directed AS to use.  *  * In:	input_line_pointer->whitespace before, or '0' of flonum.  *  */
+comment|/*  			float_cons()     CONStruct some more frag chars of .floats .ffloats etc.    Makes 0 or more new frags.    If need_pass_2 == 1, no frags are emitted.    This understands only floating literals, not expressions. Sorry.     A floating constant is defined by atof_generic(), except it is preceded    by 0d 0f 0g or 0h. After observing the STRANGE way my BSD AS does its    reading, I decided to be incompatible. This always tries to give you    rounded bits to the precision of the pseudo-op. Former AS did premature    truncatation, restored noisy bits instead of trailing 0s AND gave you    a choice of 2 flavours of noise according to which of 2 floating-point    scanners you directed AS to use.     In:	input_line_pointer->whitespace before, or '0' of flonum.  */
 end_comment
 
 begin_function
@@ -16191,12 +16218,12 @@ name|float_cons
 parameter_list|(
 name|float_type
 parameter_list|)
-comment|/* Clobbers input_line-pointer, checks end-of-line. */
+comment|/* Clobbers input_line-pointer, checks end-of-line.  */
 specifier|register
 name|int
 name|float_type
 decl_stmt|;
-comment|/* 'f':.ffloat ... 'F':.float ... */
+comment|/* 'f':.ffloat ... 'F':.float ...  */
 block|{
 specifier|register
 name|char
@@ -16206,13 +16233,13 @@ decl_stmt|;
 name|int
 name|length
 decl_stmt|;
-comment|/* Number of chars in an object. */
+comment|/* Number of chars in an object.  */
 specifier|register
 name|char
 modifier|*
 name|err
 decl_stmt|;
-comment|/* Error from scanning floating literal. */
+comment|/* Error from scanning floating literal.  */
 name|char
 name|temp
 index|[
@@ -16240,11 +16267,11 @@ endif|#
 directive|endif
 do|do
 block|{
-comment|/* input_line_pointer->1st char of a flonum (we hope!). */
+comment|/* input_line_pointer->1st char of a flonum (we hope!).  */
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
-comment|/* Skip any 0{letter} that may be present. Don't even check if the        * letter is legal. Someone may invent a "z" format and this routine        * has no use for such information. Lusers beware: you get        * diagnostics if your input is ill-conditioned.        */
+comment|/* Skip any 0{letter} that may be present. Don't even check if the          letter is legal. Someone may invent a "z" format and this routine          has no use for such information. Lusers beware: you get          diagnostics if your input is ill-conditioned.  */
 if|if
 condition|(
 name|input_line_pointer
@@ -16405,7 +16432,6 @@ name|X_add_number
 operator|<=
 literal|0
 condition|)
-block|{
 name|as_warn
 argument_list|(
 name|_
@@ -16414,7 +16440,6 @@ literal|"unresolvable or nonpositive repeat count; using 1"
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|count
 operator|=
@@ -16468,25 +16493,21 @@ operator|==
 literal|','
 condition|)
 do|;
+comment|/* Put terminator back into stream.  */
 operator|--
 name|input_line_pointer
 expr_stmt|;
-comment|/* Put terminator back into stream.  */
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* float_cons() */
-end_comment
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Return the size of a LEB128 value */
+comment|/* Return the size of a LEB128 value.  */
 end_comment
 
 begin_function
@@ -17383,6 +17404,9 @@ name|exp
 operator|->
 name|X_op
 decl_stmt|;
+name|int
+name|nbytes
+decl_stmt|;
 if|if
 condition|(
 name|op
@@ -17467,6 +17491,36 @@ operator|=
 name|O_constant
 expr_stmt|;
 block|}
+comment|/* Let check_eh_frame know that data is being emitted.  nbytes == -1 is      a signal that this is leb128 data.  It shouldn't optimize this away.  */
+name|nbytes
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|check_eh_frame
+argument_list|(
+name|exp
+argument_list|,
+operator|&
+name|nbytes
+argument_list|)
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* Let the backend know that subsequent data may be byte aligned.  */
+ifdef|#
+directive|ifdef
+name|md_cons_align
+name|md_cons_align
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|op
@@ -17569,7 +17623,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Otherwise, we have to create a variable sized fragment and  	 resolve things later.  */
+comment|/* Otherwise, we have to create a variable sized fragment and 	 resolve things later.  */
 name|frag_var
 argument_list|(
 name|rs_leb128
@@ -17661,7 +17715,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			stringer()  *  * We read 0 or more ',' separated, double-quoted strings.  *  * Caller should have checked need_pass_2 is FALSE because we don't check it.  */
+comment|/* We read 0 or more ',' separated, double-quoted strings.    Caller should have checked need_pass_2 is FALSE because we don't    check it.  */
 end_comment
 
 begin_function
@@ -17670,13 +17724,13 @@ name|stringer
 parameter_list|(
 name|append_zero
 parameter_list|)
-comment|/* Worker to do .ascii etc statements. */
-comment|/* Checks end-of-line. */
+comment|/* Worker to do .ascii etc statements.  */
+comment|/* Checks end-of-line.  */
 specifier|register
 name|int
 name|append_zero
 decl_stmt|;
-comment|/* 0: don't append '\0', else 1 */
+comment|/* 0: don't append '\0', else 1.  */
 block|{
 specifier|register
 name|unsigned
@@ -17695,7 +17749,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*    * The following awkward logic is to parse ZERO or more strings,    * comma separated. Recall a string expression includes spaces    * before the opening '\"' and spaces after the closing '\"'.    * We fake a leading ',' if there is (supposed to be)    * a 1st, expression. We keep demanding expressions for each    * ','.    */
+comment|/* The following awkward logic is to parse ZERO or more strings,      comma separated. Recall a string expression includes spaces      before the opening '\"' and spaces after the closing '\"'.      We fake a leading ',' if there is (supposed to be)      a 1st, expression. We keep demanding expressions for each ','.  */
 if|if
 condition|(
 name|is_it_end_of_statement
@@ -17706,11 +17760,11 @@ name|c
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Skip loop. */
+comment|/* Skip loop.  */
 operator|++
 name|input_line_pointer
 expr_stmt|;
-comment|/* Compensate for end of loop. */
+comment|/* Compensate for end of loop.  */
 block|}
 else|else
 block|{
@@ -17718,7 +17772,7 @@ name|c
 operator|=
 literal|','
 expr_stmt|;
-comment|/* Do loop. */
+comment|/* Do loop.  */
 block|}
 while|while
 condition|(
@@ -17750,7 +17804,7 @@ case|:
 operator|++
 name|input_line_pointer
 expr_stmt|;
-comment|/*->1st char of string. */
+comment|/*->1st char of string.  */
 name|start
 operator|=
 name|input_line_pointer
@@ -17928,7 +17982,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* FIXME-SOMEDAY: I had trouble here on characters with the     high bits set.  We'll probably also have trouble with     multibyte chars, wide chars, etc.  Also be careful about     returning values bigger than 1 byte.  xoxorich. */
+comment|/* FIXME-SOMEDAY: I had trouble here on characters with the     high bits set.  We'll probably also have trouble with     multibyte chars, wide chars, etc.  Also be careful about     returning values bigger than 1 byte.  xoxorich.  */
 end_comment
 
 begin_function
@@ -18048,7 +18102,7 @@ case|case
 literal|'"'
 case|:
 break|break;
-comment|/* As itself. */
+comment|/* As itself.  */
 case|case
 literal|'0'
 case|:
@@ -18236,7 +18290,7 @@ break|break;
 case|case
 literal|'\n'
 case|:
-comment|/* To be compatible with BSD 4.2 as: give the luser a linefeed!! */
+comment|/* To be compatible with BSD 4.2 as: give the luser a linefeed!!  */
 name|as_warn
 argument_list|(
 name|_
@@ -18274,7 +18328,6 @@ directive|endif
 comment|/* ONLY_STANDARD_ESCAPES */
 break|break;
 block|}
-comment|/* switch on escaped char */
 break|break;
 endif|#
 directive|endif
@@ -18282,7 +18335,6 @@ comment|/* ! defined (NO_STRING_ESCAPES) */
 default|default:
 break|break;
 block|}
-comment|/* switch on char */
 return|return
 operator|(
 name|c
@@ -18290,10 +18342,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* next_char_of_string() */
-end_comment
 
 begin_escape
 end_escape
@@ -18484,10 +18532,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* get_known_segmented_expression() */
-end_comment
-
 begin_function
 name|offsetT
 name|get_absolute_expression
@@ -18544,7 +18588,7 @@ end_function
 
 begin_function
 name|char
-comment|/* return terminator */
+comment|/* Return terminator.  */
 name|get_absolute_expression_and_terminator
 parameter_list|(
 name|val_pointer
@@ -18553,7 +18597,7 @@ name|long
 modifier|*
 name|val_pointer
 decl_stmt|;
-comment|/* return value of expression */
+comment|/* Return value of expression.  */
 block|{
 comment|/* FIXME: val_pointer should probably be offsetT *.  */
 operator|*
@@ -18579,7 +18623,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			demand_copy_C_string()  *  * Like demand_copy_string, but return NULL if the string contains any '\0's.  * Give a warning if that happens.  */
+comment|/* Like demand_copy_string, but return NULL if the string contains any '\0's.    Give a warning if that happens.  */
 end_comment
 
 begin_function
@@ -18674,7 +18718,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			demand_copy_string()  *  * Demand string, but return a safe (=private) copy of the string.  * Return NULL if we can't read a string here.  */
+comment|/* Demand string, but return a safe (=private) copy of the string.    Return NULL if we can't read a string here.  */
 end_comment
 
 begin_function
@@ -18720,7 +18764,7 @@ block|{
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* Skip opening quote. */
+comment|/* Skip opening quote.  */
 while|while
 condition|(
 name|is_a_char
@@ -18744,7 +18788,7 @@ name|len
 operator|++
 expr_stmt|;
 block|}
-comment|/* JF this next line is so demand_copy_C_string will return a 	 null terminated string. */
+comment|/* JF this next line is so demand_copy_C_string will return a 	 null terminated string.  */
 name|obstack_1grow
 argument_list|(
 operator|&
@@ -18793,15 +18837,11 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* demand_copy_string() */
-end_comment
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  *		is_it_end_of_statement()  *  * In:	Input_line_pointer->next character.  *  * Do:	Skip input_line_pointer over all whitespace.  *  * Out:	1 if input_line_pointer->end-of-line. */
+comment|/* In:	Input_line_pointer->next character.     Do:	Skip input_line_pointer over all whitespace.     Out:	1 if input_line_pointer->end-of-line.  */
 end_comment
 
 begin_function
@@ -18828,10 +18868,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* is_it_end_of_statement() */
-end_comment
-
 begin_function
 name|void
 name|equals
@@ -18853,7 +18889,7 @@ name|symbolS
 modifier|*
 name|symbolP
 decl_stmt|;
-comment|/* symbol we are working with */
+comment|/* Symbol we are working with.  */
 name|char
 modifier|*
 name|stop
@@ -18920,7 +18956,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* Turn '. = mumble' into a .org mumble */
+comment|/* Turn '. = mumble' into a .org mumble.  */
 specifier|register
 name|segT
 name|segment
@@ -18954,6 +18990,32 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|OBJ_COFF
+name|int
+name|local
+decl_stmt|;
+name|symbolP
+operator|=
+name|symbol_find
+argument_list|(
+name|sym_name
+argument_list|)
+expr_stmt|;
+name|local
+operator|=
+name|symbolP
+operator|==
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|local
+condition|)
+endif|#
+directive|endif
+comment|/* OBJ_COFF */
 name|symbolP
 operator|=
 name|symbol_find_or_make
@@ -18992,6 +19054,22 @@ name|symbolP
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OBJ_COFF
+comment|/* "set" symbols are local unless otherwise specified.  */
+if|if
+condition|(
+name|local
+condition|)
+name|SF_SET_LOCAL
+argument_list|(
+name|symbolP
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* OBJ_COFF */
 name|pseudo_set
 argument_list|(
 name|symbolP
@@ -19003,10 +19081,10 @@ condition|(
 name|flag_mri
 condition|)
 block|{
+comment|/* Check garbage after the expression.  */
 name|ignore_rest_of_line
 argument_list|()
 expr_stmt|;
-comment|/* check garbage after the expression */
 name|mri_comment_end
 argument_list|(
 name|stop
@@ -19019,15 +19097,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* equals() */
-end_comment
-
-begin_comment
-comment|/* .include -- include a file at this point. */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
+comment|/* .include -- include a file at this point.  */
 end_comment
 
 begin_function
@@ -19257,7 +19327,7 @@ name|filename
 expr_stmt|;
 name|gotit
 label|:
-comment|/* malloc Storage leak when file is found on path.  FIXME-SOMEDAY. */
+comment|/* malloc Storage leak when file is found on path.  FIXME-SOMEDAY.  */
 name|register_dependency
 argument_list|(
 name|path
@@ -19270,10 +19340,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* s_include() */
-end_comment
 
 begin_function
 name|void
@@ -19321,7 +19387,7 @@ index|]
 operator|=
 literal|"."
 expr_stmt|;
-comment|/* Current dir */
+comment|/* Current dir.  */
 name|include_dir_count
 operator|=
 literal|2
@@ -19362,7 +19428,7 @@ index|]
 operator|=
 name|path
 expr_stmt|;
-comment|/* New one */
+comment|/* New one.  */
 name|i
 operator|=
 name|strlen
@@ -19382,10 +19448,6 @@ name|i
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* add_include_dir() */
-end_comment
 
 begin_escape
 end_escape
@@ -19421,36 +19483,6 @@ name|void
 name|generate_lineno_debug
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
-name|ECOFF_DEBUGGING
-comment|/* ECOFF assemblers automatically generate debugging information.       FIXME: This should probably be handled elsewhere.  */
-if|if
-condition|(
-name|debug_type
-operator|==
-name|DEBUG_UNSPECIFIED
-condition|)
-block|{
-if|if
-condition|(
-name|ECOFF_DEBUGGING
-operator|&&
-name|ecoff_no_current_file
-argument_list|()
-condition|)
-name|debug_type
-operator|=
-name|DEBUG_ECOFF
-expr_stmt|;
-else|else
-name|debug_type
-operator|=
-name|DEBUG_NONE
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|debug_type
@@ -19461,6 +19493,9 @@ name|DEBUG_UNSPECIFIED
 case|:
 case|case
 name|DEBUG_NONE
+case|:
+case|case
+name|DEBUG_DWARF
 case|:
 break|break;
 case|case
@@ -19478,12 +19513,9 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-name|DEBUG_DWARF
-case|:
-case|case
 name|DEBUG_DWARF2
 case|:
-comment|/* FIXME.  */
+comment|/* ??? We could here indicate to dwarf2dbg.c that something 	 has changed.  However, since there is additional backend 	 support that is required (calling dwarf2_emit_insn), we 	 let dwarf2dbg.c call as_where on its own.  */
 break|break;
 block|}
 block|}
@@ -19836,7 +19868,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Inserts the given line into the input stream.          This call avoids macro/conditionals nesting checking, since the contents of    the line are assumed to replace the contents of a line already scanned.     An appropriate use of this function would be substition of input lines when    called by md_start_line_hook().  The given line is assumed to already be    properly scrubbed.  */
+comment|/* Inserts the given line into the input stream.     This call avoids macro/conditionals nesting checking, since the contents of    the line are assumed to replace the contents of a line already scanned.     An appropriate use of this function would be substition of input lines when    called by md_start_line_hook().  The given line is assumed to already be    properly scrubbed.  */
 end_comment
 
 begin_function
@@ -19927,10 +19959,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of read.c */
-end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* macro.h - header file for macro support for gas and gasp    Copyright (C) 1994, 95, 96, 97, 1998 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* macro.h - header file for macro support for gas and gasp    Copyright 1994, 1995, 1996, 1997, 1998, 2000    Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -28,7 +28,7 @@ file|"sb.h"
 end_include
 
 begin_comment
-comment|/* Structures used to store macros.      Each macro knows its name and included text.  It gets built with a    list of formal arguments, and also keeps a hash table which points    into the list to speed up formal search.  Each formal knows its    name and its default value.  Each time the macro is expanded, the    formals get the actual values attatched to them. */
+comment|/* Structures used to store macros.     Each macro knows its name and included text.  It gets built with a    list of formal arguments, and also keeps a hash table which points    into the list to speed up formal search.  Each formal knows its    name and its default value.  Each time the macro is expanded, the    formals get the actual values attatched to them.  */
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ value|(-3)
 end_define
 
 begin_comment
-comment|/* describe the macro. */
+comment|/* describe the macro.  */
 end_comment
 
 begin_typedef
@@ -104,11 +104,11 @@ block|{
 name|sb
 name|sub
 decl_stmt|;
-comment|/* substitution text. */
+comment|/* substitution text.  */
 name|int
 name|formal_count
 decl_stmt|;
-comment|/* number of formal args. */
+comment|/* number of formal args.  */
 name|formal_entry
 modifier|*
 name|formals
@@ -119,7 +119,7 @@ name|hash_control
 modifier|*
 name|formal_hash
 decl_stmt|;
-comment|/* hash table of formals. */
+comment|/* hash table of formals.  */
 block|}
 name|macro_entry
 typedef|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* size.c -- report size of various sections of an executable file.    Copyright 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* size.c -- report size of various sections of an executable file.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -349,7 +349,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\ Usage: %s [-ABdoxV] [--format=berkeley|sysv] [--radix=8|10|16]\n\        [--target=bfdname] [--version] [--help] [file...]\n"
+literal|"\ Usage: %s [-A | --format=sysv | -B | --format=berkeley]\n\        [-o | --radix=8 | -d | --radix=10 | -h | --radix=16]\n\        [-V | --version] [--target=bfdname] [--help] [file...]\n"
 argument_list|)
 argument_list|,
 name|program_name
@@ -569,7 +569,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ABVdox"
+literal|"ABVdfox"
 argument_list|,
 name|long_options
 argument_list|,
@@ -774,6 +774,12 @@ name|radix
 operator|=
 name|octal
 expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+comment|/* FIXME : For sysv68, `-f' means `full format', i.e. 		   `[fname:] M(.text) + N(.data) + O(.bss) + P(.comment) = Q' 		   where `fname: ' appears only if there are>= 2 input files, 		   and M, N, O, P, Q are expressed in decimal by default, 		   hexa or octal if requested by `-x' or `-o'. 		   Just to make things interesting, Solaris also accepts -f, 		   which prints out the size of each allocatable section, the 		   name of the section, and the total of the section sizes.  */
+comment|/* For the moment, accept `-f' silently, and ignore it.  */
 break|break;
 case|case
 literal|0

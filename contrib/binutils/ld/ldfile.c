@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Linker file opening and searching.    Copyright (C) 1991, 92, 93, 94, 95, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Linker file opening and searching.    Copyright 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  ldfile.c   look after all the file stuff   */
+comment|/* ldfile.c:  look after all the file stuff.  */
 end_comment
 
 begin_include
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"ldemul.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libiberty.h"
 end_include
 
 begin_include
@@ -216,7 +222,7 @@ comment|/* MPW */
 end_comment
 
 begin_comment
-comment|/* The MPW path char is a colon. */
+comment|/* The MPW path char is a colon.  */
 end_comment
 
 begin_decl_stmt
@@ -561,7 +567,7 @@ name|einfo
 argument_list|(
 name|_
 argument_list|(
-literal|"%P: skipping incompatible %s when searching for %s"
+literal|"%P: skipping incompatible %s when searching for %s\n"
 argument_list|)
 argument_list|,
 name|attempt
@@ -1004,6 +1010,11 @@ name|search_arch_type
 modifier|*
 name|arch
 decl_stmt|;
+name|boolean
+name|found
+init|=
+name|false
+decl_stmt|;
 comment|/* Try to open<filename><suffix> or lib<filename><suffix>.a */
 for|for
 control|(
@@ -1026,8 +1037,8 @@ operator|->
 name|next
 control|)
 block|{
-if|if
-condition|(
+name|found
+operator|=
 name|ldfile_open_file_search
 argument_list|(
 name|arch
@@ -1040,13 +1051,17 @@ literal|"lib"
 argument_list|,
 literal|".a"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|found
 condition|)
-return|return;
+break|break;
 ifdef|#
 directive|ifdef
 name|VMS
-if|if
-condition|(
+name|found
+operator|=
 name|ldfile_open_file_search
 argument_list|(
 name|arch
@@ -1059,12 +1074,16 @@ literal|":lib"
 argument_list|,
 literal|".a"
 argument_list|)
-condition|)
-return|return;
-endif|#
-directive|endif
+expr_stmt|;
 if|if
 condition|(
+name|found
+condition|)
+break|break;
+endif|#
+directive|endif
+name|found
+operator|=
 name|ldemul_find_potential_libraries
 argument_list|(
 name|arch
@@ -1073,9 +1092,25 @@ name|name
 argument_list|,
 name|entry
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|found
 condition|)
-return|return;
+break|break;
 block|}
+comment|/* If we have found the file, we don't need to search directories 	 again.  */
+if|if
+condition|(
+name|found
+condition|)
+name|entry
+operator|->
+name|search_dirs_flag
+operator|=
+name|false
+expr_stmt|;
+else|else
 name|einfo
 argument_list|(
 name|_
@@ -1282,7 +1317,7 @@ index|[
 literal|1000
 index|]
 decl_stmt|;
-comment|/* First try raw name */
+comment|/* First try raw name.  */
 name|result
 operator|=
 name|try_open
@@ -1303,7 +1338,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/* Try now prefixes */
+comment|/* Try now prefixes.  */
 for|for
 control|(
 name|search
@@ -1548,9 +1583,7 @@ operator|->
 name|cmd_switch
 argument_list|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -1560,7 +1593,6 @@ name|cmd_switch
 operator|==
 name|NULL
 condition|)
-block|{
 name|einfo
 argument_list|(
 name|_
@@ -1571,7 +1603,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|tp
 operator|->
@@ -1704,7 +1735,7 @@ name|char
 modifier|*
 name|name
 init|=
-name|buystring
+name|xstrdup
 argument_list|(
 name|in_name
 argument_list|)
@@ -1801,7 +1832,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Set the output architecture */
+comment|/* Set the output architecture.  */
 end_comment
 
 begin_function

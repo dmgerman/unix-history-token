@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* PE COFF header information */
+comment|/* pe.h  -  PE COFF header information      Copyright 2000, 2001 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -562,8 +562,71 @@ name|IMAGE_FILE_MACHINE_THUMB
 value|0x1c2
 end_define
 
+begin_define
+define|#
+directive|define
+name|IMAGE_SUBSYSTEM_UNKNOWN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_SUBSYSTEM_NATIVE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_SUBSYSTEM_WINDOWS_GUI
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_SUBSYSTEM_WINDOWS_CUI
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_SUBSYSTEM_POSIX_CUI
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_SUBSYSTEM_WINDOWS_CE_GUI
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_SUBSYSTEM_EFI_APPLICATION
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER
+value|12
+end_define
+
 begin_comment
-comment|/* Magic values that are true for all dos/nt implementations */
+comment|/* Magic values that are true for all dos/nt implementations.  */
 end_comment
 
 begin_define
@@ -581,7 +644,7 @@ value|0x00004550
 end_define
 
 begin_comment
-comment|/* NT allows long filenames, we want to accommodate this.  This may break      some of the bfd functions */
+comment|/* NT allows long filenames, we want to accommodate this.    This may break some of the bfd functions.  */
 end_comment
 
 begin_undef
@@ -598,112 +661,112 @@ value|18
 end_define
 
 begin_comment
-comment|/* # characters in a file name		*/
+comment|/* # characters in a file name.  */
 end_comment
 
 begin_struct
 struct|struct
-name|external_PEI_filehdr
+name|external_PEI_DOS_hdr
 block|{
-comment|/* DOS header fields */
+comment|/* DOS header fields - always at offset zero in the EXE file.  */
 name|char
 name|e_magic
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Magic number, 0x5a4d */
+comment|/* Magic number, 0x5a4d.  */
 name|char
 name|e_cblp
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Bytes on last page of file, 0x90 */
+comment|/* Bytes on last page of file, 0x90.  */
 name|char
 name|e_cp
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Pages in file, 0x3 */
+comment|/* Pages in file, 0x3.  */
 name|char
 name|e_crlc
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Relocations, 0x0 */
+comment|/* Relocations, 0x0.  */
 name|char
 name|e_cparhdr
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Size of header in paragraphs, 0x4 */
+comment|/* Size of header in paragraphs, 0x4.  */
 name|char
 name|e_minalloc
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Minimum extra paragraphs needed, 0x0 */
+comment|/* Minimum extra paragraphs needed, 0x0.  */
 name|char
 name|e_maxalloc
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Maximum extra paragraphs needed, 0xFFFF */
+comment|/* Maximum extra paragraphs needed, 0xFFFF.  */
 name|char
 name|e_ss
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Initial (relative) SS value, 0x0 */
+comment|/* Initial (relative) SS value, 0x0.  */
 name|char
 name|e_sp
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Initial SP value, 0xb8 */
+comment|/* Initial SP value, 0xb8.  */
 name|char
 name|e_csum
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Checksum, 0x0 */
+comment|/* Checksum, 0x0.  */
 name|char
 name|e_ip
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Initial IP value, 0x0 */
+comment|/* Initial IP value, 0x0.  */
 name|char
 name|e_cs
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Initial (relative) CS value, 0x0 */
+comment|/* Initial (relative) CS value, 0x0.  */
 name|char
 name|e_lfarlc
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* File address of relocation table, 0x40 */
+comment|/* File address of relocation table, 0x40.  */
 name|char
 name|e_ovno
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Overlay number, 0x0 */
+comment|/* Overlay number, 0x0.  */
 name|char
 name|e_res
 index|[
@@ -713,21 +776,21 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Reserved words, all 0x0 */
+comment|/* Reserved words, all 0x0.  */
 name|char
 name|e_oemid
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* OEM identifier (for e_oeminfo), 0x0 */
+comment|/* OEM identifier (for e_oeminfo), 0x0.  */
 name|char
 name|e_oeminfo
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* OEM information; e_oemid specific, 0x0 */
+comment|/* OEM information; e_oemid specific, 0x0.  */
 name|char
 name|e_res2
 index|[
@@ -737,14 +800,14 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* Reserved words, all 0x0 */
+comment|/* Reserved words, all 0x0.  */
 name|char
 name|e_lfanew
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* File address of new exe header, 0x80 */
+comment|/* File address of new exe header, usually 0x80.  */
 name|char
 name|dos_message
 index|[
@@ -754,64 +817,288 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* other stuff, always follow DOS header */
+comment|/* Other stuff, always follow DOS header.  */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|external_PEI_IMAGE_hdr
+block|{
 name|char
 name|nt_signature
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* required NT signature, 0x4550 */
-comment|/* From standard header */
+comment|/* required NT signature, 0x4550.  */
+comment|/* From standard header.  */
 name|char
 name|f_magic
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* magic number			*/
+comment|/* Magic number.		*/
 name|char
 name|f_nscns
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* number of sections		*/
+comment|/* Number of sections.		*/
 name|char
 name|f_timdat
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* time& date stamp		*/
+comment|/* Time& date stamp.		*/
 name|char
 name|f_symptr
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* file pointer to symtab	*/
+comment|/* File pointer to symtab.	*/
 name|char
 name|f_nsyms
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* number of symtab entries	*/
+comment|/* Number of symtab entries.	*/
 name|char
 name|f_opthdr
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* sizeof(optional hdr)		*/
+comment|/* Sizeof(optional hdr).	*/
 name|char
 name|f_flags
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* flags			*/
+comment|/* Flags.			*/
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|external_PEI_filehdr
+block|{
+comment|/* DOS header fields - always at offset zero in the EXE file.  */
+name|char
+name|e_magic
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Magic number, 0x5a4d.  */
+name|char
+name|e_cblp
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Bytes on last page of file, 0x90.  */
+name|char
+name|e_cp
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Pages in file, 0x3.  */
+name|char
+name|e_crlc
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Relocations, 0x0.  */
+name|char
+name|e_cparhdr
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Size of header in paragraphs, 0x4.  */
+name|char
+name|e_minalloc
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Minimum extra paragraphs needed, 0x0.  */
+name|char
+name|e_maxalloc
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Maximum extra paragraphs needed, 0xFFFF.  */
+name|char
+name|e_ss
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Initial (relative) SS value, 0x0.  */
+name|char
+name|e_sp
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Initial SP value, 0xb8.  */
+name|char
+name|e_csum
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Checksum, 0x0.  */
+name|char
+name|e_ip
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Initial IP value, 0x0.  */
+name|char
+name|e_cs
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Initial (relative) CS value, 0x0.  */
+name|char
+name|e_lfarlc
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* File address of relocation table, 0x40.  */
+name|char
+name|e_ovno
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Overlay number, 0x0.  */
+name|char
+name|e_res
+index|[
+literal|4
+index|]
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Reserved words, all 0x0.  */
+name|char
+name|e_oemid
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* OEM identifier (for e_oeminfo), 0x0.  */
+name|char
+name|e_oeminfo
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* OEM information; e_oemid specific, 0x0.  */
+name|char
+name|e_res2
+index|[
+literal|10
+index|]
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Reserved words, all 0x0.  */
+name|char
+name|e_lfanew
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* File address of new exe header, usually 0x80.  */
+name|char
+name|dos_message
+index|[
+literal|16
+index|]
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Other stuff, always follow DOS header.  */
+comment|/* Note: additional bytes may be inserted before the signature.  Use    the e_lfanew field to find the actual location of the NT signature.  */
+name|char
+name|nt_signature
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* required NT signature, 0x4550.  */
+comment|/* From standard header.  */
+name|char
+name|f_magic
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Magic number.		*/
+name|char
+name|f_nscns
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Number of sections.		*/
+name|char
+name|f_timdat
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Time& date stamp.		*/
+name|char
+name|f_symptr
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* File pointer to symtab.	*/
+name|char
+name|f_nsyms
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* Number of symtab entries.	*/
+name|char
+name|f_opthdr
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Sizeof(optional hdr).	*/
+name|char
+name|f_flags
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Flags.			*/
 block|}
 struct|;
 end_struct
@@ -861,6 +1148,10 @@ begin_comment
 comment|/* COFF_IMAGE_WITH_PE */
 end_comment
 
+begin_comment
+comment|/* 32-bit PE a.out header: */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -868,7 +1159,7 @@ block|{
 name|AOUTHDR
 name|standard
 decl_stmt|;
-comment|/* NT extra fields; see internal.h for descriptions */
+comment|/* NT extra fields; see internal.h for descriptions.  */
 name|char
 name|ImageBase
 index|[
@@ -995,7 +1286,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES]; */
+comment|/* IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];  */
 name|char
 name|DataDirectory
 index|[
@@ -1008,7 +1299,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* 16 entries, 2 elements/entry, 4 chars */
+comment|/* 16 entries, 2 elements/entry, 4 chars.  */
 block|}
 name|PEAOUTHDR
 typedef|;
@@ -1027,6 +1318,170 @@ name|AOUTSZ
 value|(AOUTHDRSZ + 196)
 end_define
 
+begin_comment
+comment|/* Like PEAOUTHDR, except that the "standard" member has no BaseOfData    (aka data_start) member and that some of the members are 8 instead    of just 4 bytes long.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|AOUTHDR
+name|standard
+decl_stmt|;
+comment|/* NT extra fields; see internal.h for descriptions.  */
+name|char
+name|ImageBase
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|char
+name|SectionAlignment
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|char
+name|FileAlignment
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|char
+name|MajorOperatingSystemVersion
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|MinorOperatingSystemVersion
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|MajorImageVersion
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|MinorImageVersion
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|MajorSubsystemVersion
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|MinorSubsystemVersion
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|Reserved1
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|char
+name|SizeOfImage
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|char
+name|SizeOfHeaders
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|char
+name|CheckSum
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|char
+name|Subsystem
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|DllCharacteristics
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|char
+name|SizeOfStackReserve
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|char
+name|SizeOfStackCommit
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|char
+name|SizeOfHeapReserve
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|char
+name|SizeOfHeapCommit
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|char
+name|LoaderFlags
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|char
+name|NumberOfRvaAndSizes
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];  */
+name|char
+name|DataDirectory
+index|[
+literal|16
+index|]
+index|[
+literal|2
+index|]
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* 16 entries, 2 elements/entry, 4 chars.  */
+block|}
+name|PEPAOUTHDR
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|PEPAOUTSZ
+value|240
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -1041,7 +1496,7 @@ value|18
 end_define
 
 begin_comment
-comment|/* # characters in a file name		*/
+comment|/* # characters in a file name.  */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* bucomm.h -- binutils common include file.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* bucomm.h -- binutils common include file.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -662,28 +662,14 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* Stubs that do something close enough.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|textdomain
-parameter_list|(
-name|String
-parameter_list|)
-value|(String)
-end_define
-
 begin_define
 define|#
 directive|define
 name|gettext
 parameter_list|(
-name|String
+name|Msgid
 parameter_list|)
-value|(String)
+value|(Msgid)
 end_define
 
 begin_define
@@ -691,11 +677,11 @@ define|#
 directive|define
 name|dgettext
 parameter_list|(
-name|Domain
+name|Domainname
 parameter_list|,
-name|Message
+name|Msgid
 parameter_list|)
-value|(Message)
+value|(Msgid)
 end_define
 
 begin_define
@@ -703,26 +689,44 @@ define|#
 directive|define
 name|dcgettext
 parameter_list|(
-name|Domain
+name|Domainname
 parameter_list|,
-name|Message
+name|Msgid
 parameter_list|,
-name|Type
+name|Category
 parameter_list|)
-value|(Message)
+value|(Msgid)
 end_define
+
+begin_define
+define|#
+directive|define
+name|textdomain
+parameter_list|(
+name|Domainname
+parameter_list|)
+value|while (0)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|bindtextdomain
 parameter_list|(
-name|Domain
+name|Domainname
 parameter_list|,
-name|Directory
+name|Dirname
 parameter_list|)
-value|(Domain)
+value|while (0)
 end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-v850.h -- Header file for tc-v850.c.    Copyright (C) 1996, 1997 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* tc-v850.h -- Header file for tc-v850.c.    Copyright 1996, 1997, 1998, 2000 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -95,6 +95,31 @@ name|fixp
 parameter_list|)
 value|v850_force_relocation(fixp)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+end_ifdef
+
+begin_comment
+comment|/* This arranges for gas/write.c to not apply a relocation if    obj_fix_adjustable() says it is not adjustable.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FIX_ADJUSTABLE
+parameter_list|(
+name|fixP
+parameter_list|)
+value|obj_fix_adjustable (fixP)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -249,6 +274,13 @@ name|v850_pcrel_from_section
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|DWARF2_LINE_MIN_INSN_LENGTH
+value|2
+end_define
 
 end_unit
 

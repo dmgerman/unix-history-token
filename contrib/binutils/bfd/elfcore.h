@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF core file support for BFD.    Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF core file support for BFD.    Copyright 1995, 1996, 1997, 1998, 2000, 2001    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_function
@@ -69,7 +69,7 @@ name|char
 modifier|*
 name|corename
 decl_stmt|;
-comment|/* xvecs must match if both are ELF files for the same target. */
+comment|/* xvecs must match if both are ELF files for the same target.  */
 if|if
 condition|(
 name|core_bfd
@@ -90,7 +90,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/* See if the name in the corefile matches the executable name. */
+comment|/* See if the name in the corefile matches the executable name.  */
 name|corename
 operator|=
 name|elf_tdata
@@ -183,6 +183,8 @@ comment|/* Elf file header, internal form */
 name|Elf_Internal_Phdr
 modifier|*
 name|i_phdrp
+init|=
+name|NULL
 decl_stmt|;
 comment|/* Elf program header, internal form */
 name|unsigned
@@ -193,6 +195,23 @@ name|struct
 name|elf_backend_data
 modifier|*
 name|ebd
+decl_stmt|;
+name|struct
+name|elf_obj_tdata
+modifier|*
+name|preserved_tdata
+init|=
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+decl_stmt|;
+name|struct
+name|elf_obj_tdata
+modifier|*
+name|new_tdata
+init|=
+name|NULL
 decl_stmt|;
 comment|/* Read in the ELF header in external format.  */
 if|if
@@ -237,7 +256,7 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/* Check the magic number. */
+comment|/* Check the magic number.  */
 if|if
 condition|(
 name|elf_file_p
@@ -248,20 +267,11 @@ argument_list|)
 operator|==
 name|false
 condition|)
-block|{
+goto|goto
 name|wrong
-label|:
-name|bfd_set_error
-argument_list|(
-name|bfd_error_wrong_format
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
+goto|;
 comment|/* FIXME: Check EI_VERSION here ! */
-comment|/* Check the address size ("class"). */
+comment|/* Check the address size ("class").  */
 if|if
 condition|(
 name|x_ehdr
@@ -276,7 +286,7 @@ condition|)
 goto|goto
 name|wrong
 goto|;
-comment|/* Check the byteorder. */
+comment|/* Check the byteorder.  */
 switch|switch
 condition|(
 name|x_ehdr
@@ -324,11 +334,8 @@ goto|goto
 name|wrong
 goto|;
 block|}
-comment|/* Give abfd an elf_obj_tdata. */
-name|elf_tdata
-argument_list|(
-name|abfd
-argument_list|)
+comment|/* Give abfd an elf_obj_tdata.  */
+name|new_tdata
 operator|=
 operator|(
 expr|struct
@@ -348,18 +355,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|elf_tdata
-argument_list|(
-name|abfd
-argument_list|)
+name|new_tdata
 operator|==
 name|NULL
 condition|)
 return|return
 name|NULL
 return|;
-comment|/* FIXME: from here on down, "goto wrong" will leak memory.  */
-comment|/* Swap in the rest of the header, now that we have the byte order. */
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|=
+name|new_tdata
+expr_stmt|;
+comment|/* Swap in the rest of the header, now that we have the byte order.  */
 name|i_ehdrp
 operator|=
 name|elf_elfheader
@@ -523,7 +533,7 @@ goto|;
 block|}
 block|}
 block|}
-comment|/* If there is no program header, or the type is not a core file, then      we are hosed. */
+comment|/* If there is no program header, or the type is not a core file, then      we are hosed.  */
 if|if
 condition|(
 name|i_ehdrp
@@ -556,7 +566,26 @@ condition|)
 goto|goto
 name|wrong
 goto|;
-comment|/* Allocate space for the program headers. */
+comment|/* Move to the start of the program headers.  */
+if|if
+condition|(
+name|bfd_seek
+argument_list|(
+name|abfd
+argument_list|,
+name|i_ehdrp
+operator|->
+name|e_phoff
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|wrong
+goto|;
+comment|/* Allocate space for the program headers.  */
 name|i_phdrp
 operator|=
 operator|(
@@ -583,9 +612,9 @@ condition|(
 operator|!
 name|i_phdrp
 condition|)
-return|return
-name|NULL
-return|;
+goto|goto
+name|fail
+goto|;
 name|elf_tdata
 argument_list|(
 name|abfd
@@ -595,7 +624,7 @@ name|phdr
 operator|=
 name|i_phdrp
 expr_stmt|;
-comment|/* Read and convert to internal form. */
+comment|/* Read and convert to internal form.  */
 for|for
 control|(
 name|phindex
@@ -640,9 +669,9 @@ argument_list|(
 name|x_phdr
 argument_list|)
 condition|)
-return|return
-name|NULL
-return|;
+goto|goto
+name|fail
+goto|;
 name|elf_swap_phdr_in
 argument_list|(
 name|abfd
@@ -656,7 +685,7 @@ name|phindex
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Process each program header. */
+comment|/* Process each program header.  */
 for|for
 control|(
 name|phindex
@@ -687,11 +716,11 @@ argument_list|,
 name|phindex
 argument_list|)
 condition|)
-return|return
-name|NULL
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
-comment|/* Set the machine architecture. */
+comment|/* Set the machine architecture.  */
 if|if
 condition|(
 operator|!
@@ -716,11 +745,11 @@ name|elf_machine_code
 operator|!=
 name|EM_NONE
 condition|)
-return|return
-name|NULL
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
-comment|/* Save the entry point from the ELF header. */
+comment|/* Save the entry point from the ELF header.  */
 name|bfd_get_start_address
 argument_list|(
 name|abfd
@@ -730,10 +759,81 @@ name|i_ehdrp
 operator|->
 name|e_entry
 expr_stmt|;
+comment|/* Let the backend double check the format and override global      information.  */
+if|if
+condition|(
+name|ebd
+operator|->
+name|elf_backend_object_p
+condition|)
+block|{
+if|if
+condition|(
+call|(
+modifier|*
+name|ebd
+operator|->
+name|elf_backend_object_p
+call|)
+argument_list|(
+name|abfd
+argument_list|)
+operator|==
+name|false
+condition|)
+goto|goto
+name|wrong
+goto|;
+block|}
 return|return
 name|abfd
 operator|->
 name|xvec
+return|;
+name|wrong
+label|:
+name|bfd_set_error
+argument_list|(
+name|bfd_error_wrong_format
+argument_list|)
+expr_stmt|;
+name|fail
+label|:
+if|if
+condition|(
+name|i_phdrp
+operator|!=
+name|NULL
+condition|)
+name|bfd_release
+argument_list|(
+name|abfd
+argument_list|,
+name|i_phdrp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|new_tdata
+operator|!=
+name|NULL
+condition|)
+name|bfd_release
+argument_list|(
+name|abfd
+argument_list|,
+name|new_tdata
+argument_list|)
+expr_stmt|;
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|=
+name|preserved_tdata
+expr_stmt|;
+return|return
+name|NULL
 return|;
 block|}
 end_function

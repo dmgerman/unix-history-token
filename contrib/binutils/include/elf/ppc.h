@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* PPC ELF support for BFD.    Copyright (C) 1995, 1998 Free Software Foundation, Inc.     By Michael Meissner, Cygnus Support,<meissner@cygnus.com>, from information    in the System V Application Binary Interface, PowerPC Processor Supplement    and the PowerPC Embedded Application Binary Interface (eabi).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* PPC ELF support for BFD.    Copyright 1995, 1996, 1998, 2000 Free Software Foundation, Inc.     By Michael Meissner, Cygnus Support,<meissner@cygnus.com>, from information    in the System V Application Binary Interface, PowerPC Processor Supplement    and the PowerPC Embedded Application Binary Interface (eabi).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -553,14 +553,10 @@ argument_list|)
 end_macro
 
 begin_macro
-name|EMPTY_RELOC
+name|END_RELOC_NUMBERS
 argument_list|(
 argument|R_PPC_max
 argument_list|)
-end_macro
-
-begin_macro
-name|END_RELOC_NUMBERS
 end_macro
 
 begin_comment
@@ -575,11 +571,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* PowerPC embedded flag  */
-end_comment
-
-begin_comment
-comment|/* CYGNUS local bits below */
+comment|/* PowerPC embedded flag.  */
 end_comment
 
 begin_define
@@ -590,7 +582,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|/* PowerPC -mrelocatable flag */
+comment|/* PowerPC -mrelocatable flag.  */
 end_comment
 
 begin_define
@@ -601,11 +593,11 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* PowerPC -mrelocatable-lib flag */
+comment|/* PowerPC -mrelocatable-lib flag.  */
 end_comment
 
 begin_comment
-comment|/* Processor specific section headers, sh_type field */
+comment|/* Processor specific section headers, sh_type field.  */
 end_comment
 
 begin_define
@@ -620,7 +612,7 @@ comment|/* Link editor is to sort the \ 						   entries in this section \ 					
 end_comment
 
 begin_comment
-comment|/* Processor specific section flags, sh_flags field */
+comment|/* Processor specific section flags, sh_flags field.  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Linker command language support.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Linker command language support.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ldemul.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ldlex.h"
 end_include
 
@@ -91,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"ldfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldemul.h"
 end_include
 
 begin_include
@@ -163,7 +163,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|startup_file
@@ -218,7 +218,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|current_target
@@ -227,7 +227,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|output_target
@@ -260,7 +260,6 @@ operator|(
 name|void
 argument_list|(
 operator|*
-name|func
 argument_list|)
 argument_list|(
 name|lang_statement_union_type
@@ -269,7 +268,6 @@ argument_list|)
 operator|,
 name|lang_statement_union_type
 operator|*
-name|s
 operator|)
 argument_list|)
 decl_stmt|;
@@ -286,18 +284,42 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|name
 operator|,
 name|lang_input_file_enum_type
-name|file_type
 operator|,
 specifier|const
 name|char
 operator|*
-name|target
 operator|,
 name|boolean
-name|add_to_list
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|lang_memory_region_type
+modifier|*
+name|lang_memory_default
+name|PARAMS
+argument_list|(
+operator|(
+name|asection
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|lang_map_flags
+name|PARAMS
+argument_list|(
+operator|(
+name|flagword
 operator|)
 argument_list|)
 decl_stmt|;
@@ -312,7 +334,6 @@ argument_list|(
 operator|(
 name|lang_output_section_statement_type
 operator|*
-name|s
 operator|)
 argument_list|)
 decl_stmt|;
@@ -371,7 +392,6 @@ operator|,
 specifier|const
 name|char
 operator|*
-name|string
 operator|)
 argument_list|)
 decl_stmt|;
@@ -441,6 +461,28 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|void
+name|output_section_callback
+name|PARAMS
+argument_list|(
+operator|(
+name|lang_wild_statement_type
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|lang_input_statement_type
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|lang_input_statement_type
 modifier|*
 name|lookup_name
@@ -450,7 +492,6 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|name
 operator|)
 argument_list|)
 decl_stmt|;
@@ -465,7 +506,6 @@ argument_list|(
 operator|(
 name|lang_input_statement_type
 operator|*
-name|entry
 operator|,
 name|lang_statement_list_type
 operator|*
@@ -483,26 +523,21 @@ argument_list|(
 operator|(
 name|lang_wild_statement_type
 operator|*
-name|s
 operator|,
 specifier|const
 name|char
 operator|*
-name|section
 operator|,
 specifier|const
 name|char
 operator|*
-name|file
 operator|,
 specifier|const
 name|char
 operator|*
-name|target
 operator|,
 name|lang_output_section_statement_type
 operator|*
-name|output
 operator|)
 argument_list|)
 decl_stmt|;
@@ -519,7 +554,6 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|name
 operator|)
 argument_list|)
 decl_stmt|;
@@ -534,7 +568,6 @@ argument_list|(
 operator|(
 name|lang_statement_union_type
 operator|*
-name|statement
 operator|)
 argument_list|)
 decl_stmt|;
@@ -549,7 +582,6 @@ argument_list|(
 operator|(
 name|lang_statement_union_type
 operator|*
-name|statement
 operator|,
 name|boolean
 operator|)
@@ -592,16 +624,13 @@ argument_list|(
 operator|(
 name|lang_statement_union_type
 operator|*
-name|s
 operator|,
 specifier|const
 name|char
 operator|*
-name|target
 operator|,
 name|lang_output_section_statement_type
 operator|*
-name|output_section_statement
 operator|)
 argument_list|)
 decl_stmt|;
@@ -616,7 +645,6 @@ argument_list|(
 operator|(
 name|lang_output_section_statement_type
 operator|*
-name|output_section_statement
 operator|)
 argument_list|)
 decl_stmt|;
@@ -631,11 +659,9 @@ argument_list|(
 operator|(
 name|lang_assignment_statement_type
 operator|*
-name|assignment
 operator|,
 name|lang_output_section_statement_type
 operator|*
-name|output_section
 operator|)
 argument_list|)
 decl_stmt|;
@@ -650,7 +676,6 @@ argument_list|(
 operator|(
 name|lang_input_statement_type
 operator|*
-name|statm
 operator|)
 argument_list|)
 decl_stmt|;
@@ -682,7 +707,6 @@ argument_list|(
 operator|(
 name|lang_input_section_type
 operator|*
-name|in
 operator|)
 argument_list|)
 decl_stmt|;
@@ -697,7 +721,6 @@ argument_list|(
 operator|(
 name|lang_fill_statement_type
 operator|*
-name|fill
 operator|)
 argument_list|)
 decl_stmt|;
@@ -712,7 +735,6 @@ argument_list|(
 operator|(
 name|lang_data_statement_type
 operator|*
-name|data
 operator|)
 argument_list|)
 decl_stmt|;
@@ -741,7 +763,6 @@ argument_list|(
 operator|(
 name|lang_reloc_statement_type
 operator|*
-name|reloc
 operator|)
 argument_list|)
 decl_stmt|;
@@ -756,7 +777,6 @@ argument_list|(
 operator|(
 name|lang_padding_statement_type
 operator|*
-name|s
 operator|)
 argument_list|)
 decl_stmt|;
@@ -771,11 +791,9 @@ argument_list|(
 operator|(
 name|lang_wild_statement_type
 operator|*
-name|w
 operator|,
 name|lang_output_section_statement_type
 operator|*
-name|os
 operator|)
 argument_list|)
 decl_stmt|;
@@ -807,11 +825,9 @@ argument_list|(
 operator|(
 name|lang_statement_union_type
 operator|*
-name|s
 operator|,
 name|lang_output_section_statement_type
 operator|*
-name|os
 operator|)
 argument_list|)
 decl_stmt|;
@@ -826,11 +842,9 @@ argument_list|(
 operator|(
 name|lang_statement_union_type
 operator|*
-name|s
 operator|,
 name|lang_output_section_statement_type
 operator|*
-name|os
 operator|)
 argument_list|)
 decl_stmt|;
@@ -859,21 +873,16 @@ operator|(
 name|lang_statement_union_type
 operator|*
 operator|*
-name|this_ptr
 operator|,
 name|fill_type
-name|fill
 operator|,
 name|unsigned
 name|int
-name|power
 operator|,
 name|asection
 operator|*
-name|output_section_statement
 operator|,
 name|bfd_vma
-name|dot
 operator|)
 argument_list|)
 decl_stmt|;
@@ -889,20 +898,15 @@ operator|(
 name|lang_statement_union_type
 operator|*
 operator|*
-name|this_ptr
 operator|,
 name|lang_output_section_statement_type
 operator|*
-name|output_section_statement
 operator|,
 name|fill_type
-name|fill
 operator|,
 name|bfd_vma
-name|dot
 operator|,
 name|boolean
-name|relax
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1036,6 +1040,28 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|gc_section_callback
+name|PARAMS
+argument_list|(
+operator|(
+name|lang_wild_statement_type
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|lang_input_statement_type
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|lang_record_phdrs
 name|PARAMS
 argument_list|(
@@ -1097,6 +1123,63 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|lang_vers_match_lang_c
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_elf_version_expr
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lang_vers_match_lang_cplusplus
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_elf_version_expr
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|lang_vers_match_lang_java
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|bfd_elf_version_expr
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|lang_do_version_exports_section
 name|PARAMS
@@ -1121,6 +1204,29 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|os_region_check
+name|PARAMS
+argument_list|(
+operator|(
+name|lang_output_section_statement_type
+operator|*
+operator|,
+expr|struct
+name|memory_region_struct
+operator|*
+operator|,
+name|etree_type
+operator|*
+operator|,
+name|bfd_vma
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 name|void
@@ -1139,12 +1245,37 @@ operator|,
 name|lang_input_statement_type
 operator|*
 operator|,
-name|void
-operator|*
+name|PTR
 operator|)
 argument_list|)
 expr_stmt|;
 end_typedef
+
+begin_decl_stmt
+specifier|static
+name|void
+name|walk_wild
+name|PARAMS
+argument_list|(
+operator|(
+name|lang_wild_statement_type
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|callback_t
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1165,8 +1296,7 @@ operator|*
 operator|,
 name|callback_t
 operator|,
-name|void
-operator|*
+name|PTR
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1191,8 +1321,7 @@ operator|*
 operator|,
 name|callback_t
 operator|,
-name|void
-operator|*
+name|PTR
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1209,8 +1338,7 @@ specifier|const
 name|bfd_target
 operator|*
 operator|,
-name|void
-operator|*
+name|PTR
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1278,8 +1406,7 @@ specifier|const
 name|bfd_target
 operator|*
 operator|,
-name|void
-operator|*
+name|PTR
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1395,6 +1522,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|unique_sections
+modifier|*
+name|unique_section_list
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|etree_type
 modifier|*
 name|base
@@ -1455,6 +1590,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Don't beautify the line below with "innocent" whitespace, it breaks    the K&R C preprocessor!  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1464,7 +1603,8 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(cat(x,_type)*) new_statement(cat(x,_enum), sizeof(cat(x,_type)),y)
+define|\
+value|(cat (x,_type)*) new_statement (cat (x,_enum), sizeof (cat (x,_type)), y)
 end_define
 
 begin_define
@@ -1474,7 +1614,8 @@ name|outside_section_address
 parameter_list|(
 name|q
 parameter_list|)
-value|( (q)->output_offset + (q)->output_section->vma)
+define|\
+value|((q)->output_offset + (q)->output_section->vma)
 end_define
 
 begin_define
@@ -1484,7 +1625,8 @@ name|outside_symbol_address
 parameter_list|(
 name|q
 parameter_list|)
-value|((q)->value +   outside_section_address(q->section))
+define|\
+value|((q)->value + outside_section_address (q->section))
 end_define
 
 begin_define
@@ -1516,8 +1658,83 @@ return|;
 block|}
 end_function
 
+begin_function
+name|boolean
+name|unique_section_p
+parameter_list|(
+name|secnam
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|secnam
+decl_stmt|;
+block|{
+name|struct
+name|unique_sections
+modifier|*
+name|unam
+decl_stmt|;
+for|for
+control|(
+name|unam
+operator|=
+name|unique_section_list
+init|;
+name|unam
+condition|;
+name|unam
+operator|=
+name|unam
+operator|->
+name|next
+control|)
+if|if
+condition|(
+name|wildcardp
+argument_list|(
+name|unam
+operator|->
+name|name
+argument_list|)
+condition|?
+name|fnmatch
+argument_list|(
+name|unam
+operator|->
+name|name
+argument_list|,
+name|secnam
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
+else|:
+name|strcmp
+argument_list|(
+name|unam
+operator|->
+name|name
+argument_list|,
+name|secnam
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/*----------------------------------------------------------------------   Generic traversal routines for finding matching sections. */
+comment|/* Generic traversal routines for finding matching sections.  */
 end_comment
 
 begin_function
@@ -1551,12 +1768,11 @@ decl_stmt|;
 name|callback_t
 name|callback
 decl_stmt|;
-name|void
-modifier|*
+name|PTR
 name|data
 decl_stmt|;
 block|{
-comment|/* Don't process sections from files which were excluded. */
+comment|/* Don't process sections from files which were excluded.  */
 if|if
 condition|(
 name|ptr
@@ -1616,10 +1832,6 @@ literal|0
 argument_list|)
 operator|==
 literal|0
-condition|?
-name|true
-else|:
-name|false
 expr_stmt|;
 else|else
 name|match
@@ -1636,10 +1848,6 @@ name|filename
 argument_list|)
 operator|==
 literal|0
-condition|?
-name|true
-else|:
-name|false
 expr_stmt|;
 if|if
 condition|(
@@ -1664,18 +1872,15 @@ name|s
 decl_stmt|;
 name|boolean
 name|wildcard
+init|=
+name|false
 decl_stmt|;
 if|if
 condition|(
 name|section
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|wildcard
-operator|=
-name|false
-expr_stmt|;
-else|else
 name|wildcard
 operator|=
 name|wildcardp
@@ -1707,6 +1912,20 @@ block|{
 name|boolean
 name|match
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|sname
+init|=
+name|bfd_get_section_name
+argument_list|(
+name|file
+operator|->
+name|the_bfd
+argument_list|,
+name|s
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|section
@@ -1717,24 +1936,7 @@ name|match
 operator|=
 name|true
 expr_stmt|;
-else|else
-block|{
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|name
-operator|=
-name|bfd_get_section_name
-argument_list|(
-name|file
-operator|->
-name|the_bfd
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|wildcard
@@ -1745,16 +1947,12 @@ name|fnmatch
 argument_list|(
 name|section
 argument_list|,
-name|name
+name|sname
 argument_list|,
 literal|0
 argument_list|)
 operator|==
 literal|0
-condition|?
-name|true
-else|:
-name|false
 expr_stmt|;
 else|else
 name|match
@@ -1763,19 +1961,27 @@ name|strcmp
 argument_list|(
 name|section
 argument_list|,
-name|name
+name|sname
 argument_list|)
 operator|==
 literal|0
-condition|?
-name|true
-else|:
-name|false
 expr_stmt|;
-block|}
+comment|/* If this is a wild-card output section statement, exclude 	     sections that match UNIQUE_SECTION_LIST.  */
 if|if
 condition|(
 name|match
+operator|&&
+operator|(
+name|data
+operator|==
+name|NULL
+operator|||
+operator|!
+name|unique_section_p
+argument_list|(
+name|sname
+argument_list|)
+operator|)
 condition|)
 call|(
 modifier|*
@@ -1831,8 +2037,7 @@ decl_stmt|;
 name|callback_t
 name|callback
 decl_stmt|;
-name|void
-modifier|*
+name|PTR
 name|data
 decl_stmt|;
 block|{
@@ -1974,8 +2179,7 @@ decl_stmt|;
 name|callback_t
 name|callback
 decl_stmt|;
-name|void
-modifier|*
+name|PTR
 name|data
 decl_stmt|;
 block|{
@@ -2087,7 +2291,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*----------------------------------------------------------------------   lang_for_each_statement walks the parse tree and calls the provided   function for each node */
+comment|/* lang_for_each_statement walks the parse tree and calls the provided    function for each node.  */
 end_comment
 
 begin_function_decl
@@ -2340,7 +2544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*----------------------------------------------------------------------    build a new statement node for the parse tree   */
+comment|/* Build a new statement node for the parse tree.  */
 end_comment
 
 begin_function
@@ -2421,7 +2625,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   Build a new input file node for the language. There are several ways   in which we treat an input file, eg, we only look at symbols, or   prefix it with a -l etc.    We can be supplied with requests for input files more than once;   they may, for example be split over serveral lines like foo.o(.text)   foo.o(.data) etc, so when asked for a file we check that we havn't   got it already so we don't duplicate the bfd.   */
+comment|/* Build a new input file node for the language.  There are several    ways in which we treat an input file, eg, we only look at symbols,    or prefix it with a -l etc.     We can be supplied with requests for input files more than once;    they may, for example be split over serveral lines like foo.o(.text)    foo.o(.data) etc, so when asked for a file we check that we haven't    got it already so we don't duplicate the bfd.  */
 end_comment
 
 begin_function
@@ -2438,7 +2642,7 @@ name|target
 parameter_list|,
 name|add_to_list
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2446,7 +2650,7 @@ decl_stmt|;
 name|lang_input_file_enum_type
 name|file_type
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|target
@@ -2872,7 +3076,7 @@ name|file_type
 parameter_list|,
 name|target
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2880,7 +3084,7 @@ decl_stmt|;
 name|lang_input_file_enum_type
 name|file_type
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|target
@@ -2906,7 +3110,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Build enough state so that the parser can build its tree */
+comment|/* Build enough state so that the parser can build its tree.  */
 end_comment
 
 begin_function
@@ -2986,7 +3190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*----------------------------------------------------------------------  A region is an area of memory declared with the  MEMORY {  name:org=exp, len=exp ... }  syntax.   We maintain a list of all the regions here   If no regions are specified in the script, then the default is used  which is created when looked up to be the entire data space */
+comment|/*----------------------------------------------------------------------   A region is an area of memory declared with the   MEMORY {  name:org=exp, len=exp ... }   syntax.    We maintain a list of all the regions here.    If no regions are specified in the script, then the default is used   which is created when looked up to be the entire data space.  */
 end_comment
 
 begin_decl_stmt
@@ -3016,10 +3220,10 @@ name|lang_memory_region_lookup
 parameter_list|(
 name|name
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
-name|CONST
+specifier|const
 name|name
 decl_stmt|;
 block|{
@@ -3095,7 +3299,7 @@ name|new
 operator|->
 name|name
 operator|=
-name|buystring
+name|xstrdup
 argument_list|(
 name|name
 argument_list|)
@@ -3170,6 +3374,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|lang_memory_region_type
 modifier|*
 name|lang_memory_default
@@ -3278,10 +3483,10 @@ name|lang_output_section_find
 parameter_list|(
 name|name
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
-name|CONST
+specifier|const
 name|name
 decl_stmt|;
 block|{
@@ -3359,10 +3564,10 @@ name|lang_output_section_statement_lookup
 parameter_list|(
 name|name
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
-name|CONST
+specifier|const
 name|name
 decl_stmt|;
 block|{
@@ -3494,7 +3699,7 @@ operator|->
 name|memspec
 operator|=
 operator|(
-name|CONST
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3995,8 +4200,7 @@ name|s
 operator|->
 name|bfd_section
 expr_stmt|;
-comment|/* We initialize an output sections output offset to minus its own */
-comment|/* vma to allow us to output a section through itself */
+comment|/* We initialize an output sections output offset to minus its own      vma to allow us to output a section through itself.  */
 name|s
 operator|->
 name|bfd_section
@@ -4260,10 +4464,6 @@ name|already_linked_table
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -4359,7 +4559,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* FIXME: When doing a relocateable link, we may have trouble      copying relocations in other sections that refer to local symbols      in the section being discarded.  Those relocations will have to      be converted somehow; as of this writing I'm not sure that any of      the backends handle that correctly.       It is tempting to instead not discard link once sections when      doing a relocateable link (technically, they should be discarded      whenever we are building constructors).  However, that fails,      because the linker winds up combining all the link once sections      into a single large link once section, which defeats the purpose      of having link once sections in the first place.       Also, not merging link once sections in a relocateable link      causes trouble for MIPS ELF, which relies in link once semantics      to handle the .reginfo section correctly.  */
+comment|/* FIXME: When doing a relocatable link, we may have trouble      copying relocations in other sections that refer to local symbols      in the section being discarded.  Those relocations will have to      be converted somehow; as of this writing I'm not sure that any of      the backends handle that correctly.       It is tempting to instead not discard link once sections when      doing a relocatable link (technically, they should be discarded      whenever we are building constructors).  However, that fails,      because the linker winds up combining all the link once sections      into a single large link once section, which defeats the purpose      of having link once sections in the first place.       Also, not merging link once sections in a relocatable link      causes trouble for MIPS ELF, which relies in link once semantics      to handle the .reginfo section correctly.  */
 name|name
 operator|=
 name|bfd_get_section_name
@@ -4555,19 +4755,9 @@ name|output_section
 operator|=
 name|bfd_abs_section_ptr
 expr_stmt|;
-if|if
-condition|(
 name|sec
 operator|->
-name|comdat
-operator|!=
-name|NULL
-condition|)
-name|sec
-operator|->
-name|comdat
-operator|->
-name|sec
+name|kept_section
 operator|=
 name|l
 operator|->
@@ -4973,7 +5163,6 @@ name|bfd_section
 operator|==
 name|NULL
 condition|)
-block|{
 name|init_os
 argument_list|(
 name|output
@@ -4981,15 +5170,22 @@ argument_list|)
 expr_stmt|;
 name|first
 operator|=
-name|true
+operator|!
+name|output
+operator|->
+name|bfd_section
+operator|->
+name|linker_has_input
 expr_stmt|;
-block|}
-else|else
-name|first
+name|output
+operator|->
+name|bfd_section
+operator|->
+name|linker_has_input
 operator|=
-name|false
+literal|1
 expr_stmt|;
-comment|/* Add a section reference to the list */
+comment|/* Add a section reference to the list.  */
 name|new
 operator|=
 name|new_stat
@@ -5215,6 +5411,31 @@ name|output
 operator|->
 name|section_alignment
 expr_stmt|;
+if|if
+condition|(
+name|section
+operator|->
+name|flags
+operator|&
+name|SEC_BLOCK
+condition|)
+block|{
+name|section
+operator|->
+name|output_section
+operator|->
+name|flags
+operator||=
+name|SEC_BLOCK
+expr_stmt|;
+comment|/* FIXME: This value should really be obtained from the bfd...  */
+name|output
+operator|->
+name|block_value
+operator|=
+literal|128
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -5602,8 +5823,7 @@ name|lang_input_statement_type
 modifier|*
 name|file
 decl_stmt|;
-name|void
-modifier|*
+name|PTR
 name|output
 decl_stmt|;
 block|{
@@ -6020,6 +6240,15 @@ operator|=
 name|bfd_get_error
 argument_list|()
 expr_stmt|;
+comment|/* See if the emulation has some special knowledge.  */
+if|if
+condition|(
+name|ldemul_unrecognized_file
+argument_list|(
+name|entry
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|err
@@ -6120,15 +6349,6 @@ name|the_bfd
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* See if the emulation has some special knowledge.  */
-if|if
-condition|(
-name|ldemul_unrecognized_file
-argument_list|(
-name|entry
-argument_list|)
-condition|)
-return|return;
 comment|/* Try to interpret the file as a linker script.  */
 name|ldfile_open_command_file
 argument_list|(
@@ -6423,8 +6643,7 @@ argument_list|,
 name|output_section_callback
 argument_list|,
 operator|(
-name|void
-operator|*
+name|PTR
 operator|)
 name|output
 argument_list|)
@@ -6480,8 +6699,7 @@ name|bfd_target
 modifier|*
 name|target
 decl_stmt|;
-name|void
-modifier|*
+name|PTR
 name|data
 decl_stmt|;
 block|{
@@ -6839,8 +7057,7 @@ name|bfd_target
 modifier|*
 name|target
 decl_stmt|;
-name|void
-modifier|*
+name|PTR
 name|data
 decl_stmt|;
 block|{
@@ -6920,7 +7137,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Oh dear, we now have two potential candidates for a successful match.      Compare their names and choose the better one. */
+comment|/* Oh dear, we now have two potential candidates for a successful match.      Compare their names and choose the better one.  */
 if|if
 condition|(
 name|name_compare
@@ -7063,7 +7280,7 @@ name|bfd
 modifier|*
 name|output
 decl_stmt|;
-comment|/* Has the user told us which output format to use ?  */
+comment|/* Has the user told us which output format to use?  */
 if|if
 condition|(
 name|output_target
@@ -7075,7 +7292,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/* No - has the current target been set to something other than the default ?  */
+comment|/* No - has the current target been set to something other than          the default?  */
 if|if
 condition|(
 name|current_target
@@ -7086,7 +7303,7 @@ name|output_target
 operator|=
 name|current_target
 expr_stmt|;
-comment|/* No - can we determine the format of the first input file ? */
+comment|/* No - can we determine the format of the first input file?  */
 else|else
 block|{
 name|output_target
@@ -7107,7 +7324,7 @@ name|default_target
 expr_stmt|;
 block|}
 block|}
-comment|/* Has the user requested a particular endianness on the command line ?  */
+comment|/* Has the user requested a particular endianness on the command      line?  */
 if|if
 condition|(
 name|command_line
@@ -7134,12 +7351,19 @@ argument_list|(
 name|get_target
 argument_list|,
 operator|(
-name|void
-operator|*
+name|PTR
 operator|)
 name|output_target
 argument_list|)
 expr_stmt|;
+comment|/* If the target is not supported, we cannot do anything.  */
+if|if
+condition|(
+name|target
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|command_line
@@ -7157,7 +7381,7 @@ name|desired_endian
 operator|=
 name|BFD_ENDIAN_LITTLE
 expr_stmt|;
-comment|/* See if the target has the wrong endianness.  This should not happen 	 if the linker script has provided big and little endian alternatives, 	 but some scrips don't do this.  */
+comment|/* See if the target has the wrong endianness.  This should 	     not happen if the linker script has provided big and 	     little endian alternatives, but some scrips don't do 	     this.  */
 if|if
 condition|(
 name|target
@@ -7167,7 +7391,7 @@ operator|!=
 name|desired_endian
 condition|)
 block|{
-comment|/* If it does, then see if the target provides 	     an alternative with the correct endianness.  */
+comment|/* If it does, then see if the target provides 		 an alternative with the correct endianness.  */
 if|if
 condition|(
 name|target
@@ -7196,7 +7420,7 @@ name|name
 expr_stmt|;
 else|else
 block|{
-comment|/* Try to find a target as similar as possible to the default 		 target, but which has the desired endian characteristic.  */
+comment|/* Try to find a target as similar as possible to 		     the default target, but which has the desired 		     endian characteristic.  */
 operator|(
 name|void
 operator|)
@@ -7205,13 +7429,12 @@ argument_list|(
 name|closest_target_match
 argument_list|,
 operator|(
-name|void
-operator|*
+name|PTR
 operator|)
 name|target
 argument_list|)
 expr_stmt|;
-comment|/* Oh dear - we could not find any targets that satisfy our requirements.  */
+comment|/* Oh dear - we could not find any targets that 		     satisfy our requirements.  */
 if|if
 condition|(
 name|winner
@@ -7233,6 +7456,7 @@ name|winner
 operator|->
 name|name
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -7288,7 +7512,12 @@ name|delete_output_file_on_failure
 operator|=
 name|true
 expr_stmt|;
-comment|/*  output->flags |= D_PAGED;*/
+if|#
+directive|if
+literal|0
+block|output->flags |= D_PAGED;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -7588,7 +7817,7 @@ break|break;
 case|case
 name|lang_wild_statement_enum
 case|:
-comment|/* Maybe we should load the file's symbols */
+comment|/* Maybe we should load the file's symbols.  */
 if|if
 condition|(
 name|s
@@ -7642,7 +7871,7 @@ name|bfd_link_hash_entry
 modifier|*
 name|undefs
 decl_stmt|;
-comment|/* We must continually search the entries in the group                until no new symbols are added to the list of undefined                symbols.  */
+comment|/* We must continually search the entries in the group 	       until no new symbols are added to the list of undefined 	       symbols.  */
 do|do
 block|{
 name|undefs
@@ -7715,10 +7944,17 @@ name|target
 operator|=
 name|current_target
 expr_stmt|;
-comment|/* If we are being called from within a group, and this                  is an archive which has already been searched, then                  force it to be researched.  */
+comment|/* If we are being called from within a group, and this                  is an archive which has already been searched, then                  force it to be researched unless the whole archive 		 has been loaded already.  */
 if|if
 condition|(
 name|force
+operator|&&
+operator|!
+name|s
+operator|->
+name|input_statement
+operator|.
+name|whole_archive
 operator|&&
 name|s
 operator|->
@@ -7799,7 +8035,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* If there are [COMMONS] statements, put a wild one into the bss section */
+comment|/* If there are [COMMONS] statements, put a wild one into the bss    section.  */
 end_comment
 
 begin_function
@@ -7811,14 +8047,14 @@ block|{
 if|#
 directive|if
 literal|0
-block|lang_output_section_statement_lookup (".text");   lang_output_section_statement_lookup (".data");    default_common_section =     lang_output_section_statement_lookup (".bss");     if (placed_commons == false)     {       lang_wild_statement_type *new =       new_stat (lang_wild_statement,&default_common_section->children);        new->section_name = "COMMON";       new->filename = (char *) NULL;       lang_list_init (&new->children);     }
+block|lang_output_section_statement_lookup (".text");   lang_output_section_statement_lookup (".data");    default_common_section = lang_output_section_statement_lookup (".bss");    if (placed_commons == false)     {       lang_wild_statement_type *new =       new_stat (lang_wild_statement,&default_common_section->children);        new->section_name = "COMMON";       new->filename = (char *) NULL;       lang_list_init (&new->children);     }
 endif|#
 directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/*  Add the supplied name to the symbol table as an undefined reference.  Remove items from the chain as we open input bfds  */
+comment|/* Add the supplied name to the symbol table as an undefined reference.    Remove items from the chain as we open input bfds.  */
 end_comment
 
 begin_typedef
@@ -7854,10 +8090,10 @@ name|ldlang_add_undef
 parameter_list|(
 name|name
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
-name|CONST
+specifier|const
 name|name
 decl_stmt|;
 block|{
@@ -7893,7 +8129,7 @@ name|new
 operator|->
 name|name
 operator|=
-name|buystring
+name|xstrdup
 argument_list|(
 name|name
 argument_list|)
@@ -7902,7 +8138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Run through the list of undefineds created above and place them    into the linker hash table as undefined symbols belonging to the    script file. */
+comment|/* Run through the list of undefineds created above and place them    into the linker hash table as undefined symbols belonging to the    script file.  */
 end_comment
 
 begin_function
@@ -8019,7 +8255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Open input files and attatch to output sections */
+comment|/* Open input files and attatch to output sections.  */
 end_comment
 
 begin_function
@@ -8037,7 +8273,7 @@ name|lang_statement_union_type
 modifier|*
 name|s
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|target
@@ -8233,7 +8469,7 @@ argument_list|(
 name|output_section_statement
 argument_list|)
 expr_stmt|;
-comment|/* Make sure that any sections mentioned in the assignment              are initialized.  */
+comment|/* Make sure that any sections mentioned in the assignment 	     are initialized.  */
 name|exp_init_os
 argument_list|(
 name|s
@@ -8254,7 +8490,7 @@ break|break;
 case|case
 name|lang_address_statement_enum
 case|:
-comment|/* Mark the specified section with the supplied address */
+comment|/* Mark the specified section with the supplied address.  */
 block|{
 name|lang_output_section_statement_type
 modifier|*
@@ -10272,7 +10508,7 @@ name|bfd_vma
 name|dot
 decl_stmt|;
 block|{
-comment|/* Align this section first to the      input sections requirement, then      to the output section's requirement.      If this alignment is> than any seen before,      then record it too. Perform the alignment by      inserting a magic 'padding' statement.      */
+comment|/* Align this section first to the      input sections requirement, then      to the output section's requirement.      If this alignment is> than any seen before,      then record it too. Perform the alignment by      inserting a magic 'padding' statement.  */
 name|unsigned
 name|opb
 init|=
@@ -10321,7 +10557,7 @@ argument_list|)
 argument_list|)
 operator|)
 decl_stmt|;
-comment|/* Link into existing chain */
+comment|/* Link into existing chain.  */
 name|new
 operator|->
 name|header
@@ -10383,7 +10619,7 @@ operator|*
 name|opb
 expr_stmt|;
 block|}
-comment|/* Remember the most restrictive alignment */
+comment|/* Remember the most restrictive alignment.  */
 if|if
 condition|(
 name|power
@@ -10417,7 +10653,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Work out how much this section will move the dot point */
+comment|/* Work out how much this section will move the dot point.  */
 end_comment
 
 begin_function
@@ -10534,7 +10770,7 @@ argument_list|,
 name|dot
 argument_list|)
 expr_stmt|;
-comment|/* Remember where in the output section this input section goes */
+comment|/* Remember where in the output section this input section goes.  */
 name|i
 operator|->
 name|output_offset
@@ -10547,7 +10783,7 @@ name|bfd_section
 operator|->
 name|vma
 expr_stmt|;
-comment|/* Mark how big the output section must be to contain this now 	 */
+comment|/* Mark how big the output section must be to contain this now.  */
 if|if
 condition|(
 name|i
@@ -10625,7 +10861,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|(((bfd_get_section_flags (bfd, s)& (SEC_ALLOC | SEC_LOAD)) != (SEC_ALLOC | SEC_LOAD)) \    || bfd_section_size (bfd, s) == 0)
+value|(((bfd_get_section_flags (bfd, s)& (SEC_ALLOC | SEC_LOAD))	\     != (SEC_ALLOC | SEC_LOAD))					\    || bfd_section_size (bfd, s) == 0)
 end_define
 
 begin_comment
@@ -11087,12 +11323,14 @@ decl_stmt|;
 name|lang_output_section_statement_type
 modifier|*
 name|os
-init|=
+decl_stmt|;
+name|os
+operator|=
 operator|&
 name|s
 operator|->
 name|output_section_statement
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|os
@@ -11606,7 +11844,7 @@ argument_list|,
 name|relax
 argument_list|)
 expr_stmt|;
-comment|/* put the section within the requested block size, or align at                the block boundary */
+comment|/* Put the section within the requested block size, or 	       align at the block boundary.  */
 name|after
 operator|=
 name|ALIGN_N
@@ -11695,7 +11933,7 @@ name|processed
 operator|=
 name|true
 expr_stmt|;
-comment|/* Update dot in the region ? 	       We only do this if the section is going to be allocated, 	       since unallocated sections do not contribute to the region's 	       overall size in memory. 	        	       If the SEC_NEVER_LOAD bit is not set, it will affect the 	       addresses of sections after it. We have to update 	       dot.  */
+comment|/* Update dot in the region ? 	       We only do this if the section is going to be allocated, 	       since unallocated sections do not contribute to the region's 	       overall size in memory.  	       If the SEC_NEVER_LOAD bit is not set, it will affect the 	       addresses of sections after it. We have to update 	       dot.  */
 if|if
 condition|(
 name|os
@@ -11771,7 +12009,7 @@ operator|->
 name|vma
 argument_list|)
 expr_stmt|;
-comment|/* if there's no load address specified, use the run region as                    the load region */
+comment|/* If there's no load address specified, use the run 		   region as the load region.  */
 if|if
 condition|(
 name|os
@@ -11823,7 +12061,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* don't allocate twice */
+comment|/* Don't allocate twice.  */
 if|if
 condition|(
 name|os
@@ -11835,7 +12073,7 @@ operator|->
 name|region
 condition|)
 block|{
-comment|/* set load_base, which will be handled later */
+comment|/* Set load_base, which will be handled later.  */
 name|os
 operator|->
 name|load_base
@@ -12654,14 +12892,16 @@ block|{
 name|lang_output_section_statement_type
 modifier|*
 name|os
-init|=
+decl_stmt|;
+name|os
+operator|=
 operator|&
 operator|(
 name|s
 operator|->
 name|output_section_statement
 operator|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|os
@@ -12723,7 +12963,7 @@ operator|->
 name|load_base
 condition|)
 block|{
-comment|/* If nothing has been placed into the output section then 		   it won't have a bfd_section. */
+comment|/* If nothing has been placed into the output section then 		   it won't have a bfd_section.  */
 if|if
 condition|(
 name|os
@@ -13309,14 +13549,16 @@ condition|)
 block|{
 name|unsigned
 name|opb
-init|=
+decl_stmt|;
+name|opb
+operator|=
 name|bfd_arch_mach_octets_per_byte
 argument_list|(
 name|ldfile_output_architecture
 argument_list|,
 name|ldfile_output_machine
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|h
 operator|->
 name|type
@@ -13555,7 +13797,7 @@ block|{
 name|bfd_vma
 name|val
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|send
@@ -13751,7 +13993,7 @@ name|bfd
 modifier|*
 name|input_bfd
 decl_stmt|;
-name|CONST
+specifier|const
 name|bfd_arch_info_type
 modifier|*
 name|compatible
@@ -13832,8 +14074,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|bfd_count_sections
+argument_list|(
+name|input_bfd
+argument_list|)
+condition|)
 block|{
+comment|/* If the input bfd has no contents, it shouldn't set the 	     private data of the output bfd. */
 name|bfd_error_handler_type
 name|pfn
 init|=
@@ -14374,7 +14624,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* run through the input files and ensure that every input section has somewhere to go. If one is found without a destination then create an input request and place it into the statement tree. */
+comment|/* Run through the input files and ensure that every input section has    somewhere to go.  If one is found without a destination then create    an input request and place it into the statement tree.  */
 end_comment
 
 begin_function
@@ -14430,7 +14680,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/* This section of the file is not attatched, root 	         around for a sensible place for it to go */
+comment|/* This section of the file is not attatched, root 	         around for a sensible place for it to go.  */
 if|if
 condition|(
 name|file
@@ -14579,7 +14829,7 @@ name|lang_memory_region_type
 modifier|*
 name|ptr
 decl_stmt|;
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -14823,7 +15073,7 @@ comment|/* Not used.  */
 end_comment
 
 begin_endif
-unit|void lang_for_each_input_section (func)      void (*func) PARAMS ((bfd * ab, asection * as)); {   LANG_FOR_EACH_INPUT_STATEMENT (f)     {       asection * s;        for (s = f->the_bfd->sections; 	   s != (asection *) NULL; 	   s = s->next) 	{ 	  func (f->the_bfd, s); 	}     } }
+unit|void lang_for_each_input_section (func)      void (*func) PARAMS ((bfd *ab, asection *as)); {   LANG_FOR_EACH_INPUT_STATEMENT (f)     {       asection *s;        for (s = f->the_bfd->sections; 	   s != (asection *) NULL; 	   s = s->next) 	{ 	  func (f->the_bfd, s); 	}     } }
 endif|#
 directive|endif
 end_endif
@@ -14968,7 +15218,7 @@ name|name
 parameter_list|,
 name|from_script
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -15137,9 +15387,14 @@ argument_list|(
 name|output_section_statement_name
 argument_list|)
 expr_stmt|;
-comment|/* Add this statement to tree */
-comment|/*  add_statement(lang_output_section_statement_enum,       output_section_statement);*/
-comment|/* Make next things chain into subchain of this */
+comment|/* Add this statement to tree.  */
+if|#
+directive|if
+literal|0
+block|add_statement (lang_output_section_statement_enum, 		 output_section_statement);
+endif|#
+directive|endif
+comment|/* Make next things chain into subchain of this.  */
 if|if
 condition|(
 name|os
@@ -15278,7 +15533,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Reset the current counters in the regions */
+comment|/* Reset the current counters in the regions.  */
 end_comment
 
 begin_function
@@ -15373,8 +15628,7 @@ modifier|*
 name|file
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
-name|void
-modifier|*
+name|PTR
 name|data
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
@@ -15722,23 +15976,23 @@ name|current_target
 operator|=
 name|default_target
 expr_stmt|;
+comment|/* Open the output file.  */
 name|lang_for_each_statement
 argument_list|(
 name|ldlang_open_output
 argument_list|)
 expr_stmt|;
-comment|/* Open the output file */
 name|ldemul_create_output_section_statements
 argument_list|()
 expr_stmt|;
-comment|/* Add to the hash table all undefineds on the command line */
+comment|/* Add to the hash table all undefineds on the command line.  */
 name|lang_place_undefineds
 argument_list|()
 expr_stmt|;
 name|already_linked_table_init
 argument_list|()
 expr_stmt|;
-comment|/* Create a bfd for each input file */
+comment|/* Create a bfd for each input file.  */
 name|current_target
 operator|=
 name|default_target
@@ -15786,11 +16040,11 @@ condition|)
 name|lang_gc_sections
 argument_list|()
 expr_stmt|;
-comment|/* Size up the common data */
+comment|/* Size up the common data.  */
 name|lang_common
 argument_list|()
 expr_stmt|;
-comment|/* Run through the contours of the script and attach input sections      to the correct output sections      */
+comment|/* Run through the contours of the script and attach input sections      to the correct output sections.  */
 name|map_input_to_output_sections
 argument_list|(
 name|statement_list
@@ -15810,7 +16064,7 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Find any sections not attached explicitly and handle them */
+comment|/* Find any sections not attached explicitly and handle them.  */
 name|lang_place_orphans
 argument_list|()
 expr_stmt|;
@@ -15821,7 +16075,7 @@ comment|/* We must record the program headers before we try to fix the      sect
 name|lang_record_phdrs
 argument_list|()
 expr_stmt|;
-comment|/* Now run around and relax if we can */
+comment|/* Now run around and relax if we can.  */
 if|if
 condition|(
 name|command_line
@@ -15865,7 +16119,7 @@ name|relax_again
 operator|=
 name|false
 expr_stmt|;
-comment|/* Note: pe-dll.c does something like this also.  If you find 	     you need to change this code, you probably need to change 	     pe-dll.c also.  DJ */
+comment|/* Note: pe-dll.c does something like this also.  If you find 	     you need to change this code, you probably need to change 	     pe-dll.c also.  DJ  */
 comment|/* Do all the assignments with our current guesses as to 	     section sizes.  */
 name|lang_do_assignments
 argument_list|(
@@ -15956,7 +16210,7 @@ comment|/* Fix any .startof. or .sizeof. symbols.  */
 name|lang_set_startof
 argument_list|()
 expr_stmt|;
-comment|/* Do all the assignments, now that we know the final restingplaces      of all the symbols */
+comment|/* Do all the assignments, now that we know the final resting places      of all the symbols.  */
 name|lang_do_assignments
 argument_list|(
 name|statement_list
@@ -15991,7 +16245,7 @@ condition|)
 name|lang_check_section_addresses
 argument_list|()
 expr_stmt|;
-comment|/* Final stuffs */
+comment|/* Final stuffs.  */
 name|ldemul_finish
 argument_list|()
 expr_stmt|;
@@ -16157,7 +16411,7 @@ name|name
 parameter_list|,
 name|address
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -16170,14 +16424,16 @@ block|{
 name|lang_address_statement_type
 modifier|*
 name|ad
-init|=
+decl_stmt|;
+name|ad
+operator|=
 name|new_stat
 argument_list|(
 name|lang_address_statement
 argument_list|,
 name|stat_ptr
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|ad
 operator|->
 name|section_name
@@ -16205,7 +16461,7 @@ name|name
 parameter_list|,
 name|cmdline
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -16244,7 +16500,7 @@ name|lang_add_target
 parameter_list|(
 name|name
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -16276,7 +16532,7 @@ name|lang_add_map
 parameter_list|(
 name|name
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -16552,7 +16808,7 @@ name|lang_startup
 parameter_list|(
 name|name
 parameter_list|)
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|name
@@ -16687,7 +16943,7 @@ argument_list|(
 name|lma_memspec
 argument_list|)
 expr_stmt|;
-comment|/* if no runtime region has been given, but the load region has been,          use the load region */
+comment|/* If no runtime region has been given, but the load region has          been, use the load region.  */
 if|if
 condition|(
 name|strcmp
@@ -16724,7 +16980,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  Create an absolute symbol with the given name with the value of the  address of first byte of the section named.   If the symbol already exists, then do nothing. */
+comment|/* Create an absolute symbol with the given name with the value of the    address of first byte of the section named.     If the symbol already exists, then do nothing.  */
 end_comment
 
 begin_function
@@ -16872,7 +17128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  Create an absolute symbol with the given name with the value of the  address of the first byte after the end of the section named.   If the symbol already exists, then do nothing. */
+comment|/* Create an absolute symbol with the given name with the value of the    address of the first byte after the end of the section named.     If the symbol already exists, then do nothing.  */
 end_comment
 
 begin_function
@@ -17710,24 +17966,16 @@ argument_list|,
 name|l
 operator|->
 name|flags
-operator|==
+operator|!=
 name|NULL
-condition|?
-name|false
-else|:
-name|true
 argument_list|,
 name|flags
 argument_list|,
 name|l
 operator|->
 name|at
-operator|==
+operator|!=
 name|NULL
-condition|?
-name|false
-else|:
-name|true
 argument_list|,
 name|at
 argument_list|,
@@ -18467,6 +18715,10 @@ name|region
 decl_stmt|;
 name|lang_memory_region_type
 modifier|*
+name|default_region
+decl_stmt|;
+name|lang_memory_region_type
+modifier|*
 name|lma_region
 decl_stmt|;
 name|struct
@@ -18479,6 +18731,13 @@ name|lang_nocrossref
 modifier|*
 name|nocrossref
 decl_stmt|;
+name|default_region
+operator|=
+name|lang_memory_region_lookup
+argument_list|(
+literal|"*default*"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|memspec
@@ -18557,12 +18816,14 @@ name|fill
 operator|=
 name|fill
 expr_stmt|;
+comment|/* Assign a region to the sections, if one has been specified. 	 Override the assignment of the default section, but not 	 other sections.  */
 if|if
 condition|(
 name|region
 operator|!=
 name|NULL
 operator|&&
+operator|(
 name|l
 operator|->
 name|os
@@ -18570,6 +18831,15 @@ operator|->
 name|region
 operator|==
 name|NULL
+operator|||
+name|l
+operator|->
+name|os
+operator|->
+name|region
+operator|==
+name|default_region
+operator|)
 condition|)
 name|l
 operator|->
@@ -18579,6 +18849,7 @@ name|region
 operator|=
 name|region
 expr_stmt|;
+comment|/* We only set lma_region for the first overlay section, as 	 subsequent overlay sections will have load_base set relative 	 to the first section.  Also, don't set lma_region if 	 load_base is specified.  FIXME:  There should really be a test 	 that `AT ( LDADDR )' doesn't conflict with `AT>LMA_REGION' 	 rather than letting LDADDR simply override LMA_REGION.  */
 if|if
 condition|(
 name|lma_region
@@ -18590,6 +18861,20 @@ operator|->
 name|os
 operator|->
 name|lma_region
+operator|==
+name|NULL
+operator|&&
+name|l
+operator|->
+name|next
+operator|==
+name|NULL
+operator|&&
+name|l
+operator|->
+name|os
+operator|->
+name|load_base
 operator|==
 name|NULL
 condition|)
@@ -19907,6 +20192,87 @@ argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|lang_add_unique
+parameter_list|(
+name|name
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|{
+name|struct
+name|unique_sections
+modifier|*
+name|ent
+decl_stmt|;
+for|for
+control|(
+name|ent
+operator|=
+name|unique_section_list
+init|;
+name|ent
+condition|;
+name|ent
+operator|=
+name|ent
+operator|->
+name|next
+control|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|ent
+operator|->
+name|name
+argument_list|,
+name|name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return;
+name|ent
+operator|=
+operator|(
+expr|struct
+name|unique_sections
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+expr|*
+name|ent
+argument_list|)
+expr_stmt|;
+name|ent
+operator|->
+name|name
+operator|=
+name|xstrdup
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+name|ent
+operator|->
+name|next
+operator|=
+name|unique_section_list
+expr_stmt|;
+name|unique_section_list
+operator|=
+name|ent
 expr_stmt|;
 block|}
 end_function

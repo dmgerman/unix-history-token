@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* write.h    Copyright (C) 1987, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* write.h    Copyright 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -181,17 +181,17 @@ comment|/* Where is the first byte to fix up?  */
 name|long
 name|fx_where
 decl_stmt|;
-comment|/* NULL or Symbol whose value we add in. */
+comment|/* NULL or Symbol whose value we add in.  */
 name|symbolS
 modifier|*
 name|fx_addsy
 decl_stmt|;
-comment|/* NULL or Symbol whose value we subtract. */
+comment|/* NULL or Symbol whose value we subtract.  */
 name|symbolS
 modifier|*
 name|fx_subsy
 decl_stmt|;
-comment|/* Absolute number we add in. */
+comment|/* Absolute number we add in.  */
 name|valueT
 name|fx_offset
 decl_stmt|;
@@ -312,7 +312,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Chains fixSs. */
+comment|/* Chains fixSs.  */
 end_comment
 
 begin_decl_stmt
@@ -327,7 +327,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Chains fixSs. */
+comment|/* Chains fixSs.  */
 end_comment
 
 begin_decl_stmt
@@ -342,7 +342,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Chains fixSs. */
+comment|/* Chains fixSs.  */
 end_comment
 
 begin_decl_stmt
@@ -355,7 +355,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Last frag in segment. */
+comment|/* Last frag in segment.  */
 end_comment
 
 begin_decl_stmt
@@ -368,7 +368,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Last frag in segment. */
+comment|/* Last frag in segment.  */
 end_comment
 
 begin_endif
@@ -390,7 +390,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -> one of above. */
+comment|/* -> one of above.  */
 end_comment
 
 begin_endif
@@ -489,6 +489,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|get_recorded_alignment
+name|PARAMS
+argument_list|(
+operator|(
+name|segT
+name|seg
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|subsegs_finish
 name|PARAMS
@@ -520,6 +534,8 @@ name|relax_frag
 name|PARAMS
 argument_list|(
 operator|(
+name|segT
+operator|,
 name|fragS
 operator|*
 operator|,
@@ -755,10 +771,6 @@ end_endif
 
 begin_comment
 comment|/* __write_h__ */
-end_comment
-
-begin_comment
-comment|/* end of write.h */
 end_comment
 
 end_unit

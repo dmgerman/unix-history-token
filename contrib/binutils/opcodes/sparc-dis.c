@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Print SPARC instructions.    Copyright (C) 1989, 91-97, 1998 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Print SPARC instructions.    Copyright 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|MASK_V9
-value|((1<< SPARC_OPCODE_ARCH_V9) \ 		 | (1<< SPARC_OPCODE_ARCH_V9A))
+value|((1<< SPARC_OPCODE_ARCH_V9) \ 		 | (1<< SPARC_OPCODE_ARCH_V9A) \ 		 | (1<< SPARC_OPCODE_ARCH_V9B))
 end_define
 
 begin_comment
@@ -562,6 +562,10 @@ block|,
 literal|"softint"
 block|,
 literal|"tick_cmpr"
+block|,
+literal|"sys_tick"
+block|,
+literal|"sys_tick_cmpr"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1910,6 +1914,28 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'3'
+case|:
+call|(
+name|info
+operator|->
+name|fprintf_func
+call|)
+argument_list|(
+name|stream
+argument_list|,
+literal|"%d"
+argument_list|,
+name|X_IMM
+argument_list|(
+name|insn
+argument_list|,
+literal|3
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'K'
 case|:
 block|{
@@ -2365,7 +2391,7 @@ argument_list|(
 name|insn
 argument_list|)
 operator|>
-literal|23
+literal|25
 condition|)
 call|(
 modifier|*
@@ -2420,7 +2446,7 @@ argument_list|(
 name|insn
 argument_list|)
 operator|>
-literal|23
+literal|25
 condition|)
 call|(
 modifier|*
@@ -3347,6 +3373,18 @@ return|return
 name|SPARC_OPCODE_ARCH_MASK
 argument_list|(
 name|SPARC_OPCODE_ARCH_V9A
+argument_list|)
+return|;
+case|case
+name|bfd_mach_sparc_v8plusb
+case|:
+case|case
+name|bfd_mach_sparc_v9b
+case|:
+return|return
+name|SPARC_OPCODE_ARCH_MASK
+argument_list|(
+name|SPARC_OPCODE_ARCH_V9B
 argument_list|)
 return|;
 block|}

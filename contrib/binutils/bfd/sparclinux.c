@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for linux flavored sparc a.out binaries.    Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for linux flavored sparc a.out binaries.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 2000    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -355,7 +355,7 @@ value|(strncmp (name, GOT_REF_PREFIX, sizeof GOT_REF_PREFIX - 1) == 0)
 end_define
 
 begin_comment
-comment|/* See if a symbol name is a reference to the procedure linkage table. */
+comment|/* See if a symbol name is a reference to the procedure linkage table.  */
 end_comment
 
 begin_ifndef
@@ -1912,7 +1912,7 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
-comment|/* h2 does not follow indirect symbols. */
+comment|/* h2 does not follow indirect symbols.  */
 name|h2
 operator|=
 name|linux_link_hash_lookup
@@ -2214,7 +2214,7 @@ name|is_plt
 expr_stmt|;
 block|}
 block|}
-comment|/* Quick and dirty way of stripping these symbols from the         symtab. */
+comment|/* Quick and dirty way of stripping these symbols from the         symtab.  */
 if|if
 condition|(
 name|bfd_is_abs_section
@@ -2293,7 +2293,7 @@ condition|)
 return|return
 name|true
 return|;
-comment|/* First find the fixups... */
+comment|/* First find the fixups...  */
 name|linux_link_hash_traverse
 argument_list|(
 name|linux_hash_table

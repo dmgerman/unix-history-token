@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-c30.c -- Assembly code for the Texas Instruments TMS320C30    Copyright (C) 1998, 1999 Free Software Foundation.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-c30.c -- Assembly code for the Texas Instruments TMS320C30    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*    Texas Instruments TMS320C30 machine specific gas.    Written by Steven Haworth (steve@pm.cse.rmit.edu.au).    Bugs& suggestions are completely welcome.  This is free software.    Please help us make it better.  */
+comment|/* Texas Instruments TMS320C30 machine specific gas.    Written by Steven Haworth (steve@pm.cse.rmit.edu.au).    Bugs& suggestions are completely welcome.  This is free software.    Please help us make it better.  */
 end_comment
 
 begin_include
@@ -20,7 +20,7 @@ file|"opcode/tic30.h"
 end_include
 
 begin_comment
-comment|/* put here all non-digit non-letter charcters that may occur in an operand */
+comment|/* Put here all non-digit non-letter charcters that may occur in an    operand.  */
 end_comment
 
 begin_decl_stmt
@@ -135,7 +135,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Chars that mean this number is a floating point constant */
+comment|/* Chars that mean this number is a floating point constant.  */
 end_comment
 
 begin_comment
@@ -157,7 +157,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Chars that can be used to separate mant from exp in floating point nums */
+comment|/* Chars that can be used to separate mant from exp in floating point    nums.  */
 end_comment
 
 begin_decl_stmt
@@ -1428,7 +1428,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Check if instruction is a parallel instruction by seeing if the first      character is a q. */
+comment|/* Check if instruction is a parallel instruction by seeing if the first      character is a q.  */
 if|if
 condition|(
 operator|*
@@ -1901,7 +1901,7 @@ name|tm
 operator|->
 name|operands
 decl_stmt|;
-comment|/* If operands are not the same, then see if any of the operands are not          required.  Then recheck with number of given operands.  If they are still not          the same, then give an error, otherwise carry on. */
+comment|/* If operands are not the same, then see if any of the operands are not          required.  Then recheck with number of given operands.  If they are still not          the same, then give an error, otherwise carry on.  */
 for|for
 control|(
 name|i
@@ -2021,7 +2021,7 @@ name|addr_insn
 init|=
 literal|0
 decl_stmt|;
-comment|/* Store instruction uses the second operand for the address mode. */
+comment|/* Store instruction uses the second operand for the address mode.  */
 if|if
 condition|(
 operator|(
@@ -2136,7 +2136,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* Now set the addressing mode for 3 operand instructions. */
+comment|/* Now set the addressing mode for 3 operand instructions.  */
 if|if
 condition|(
 operator|(
@@ -2166,7 +2166,7 @@ name|op3T2
 operator|)
 condition|)
 block|{
-comment|/* Set the addressing mode to the values used for 2 operand instructions in the          G addressing field of the opcode. */
+comment|/* Set the addressing mode to the values used for 2 operand instructions in the          G addressing field of the opcode.  */
 name|char
 modifier|*
 name|p
@@ -2303,7 +2303,7 @@ return|return;
 block|}
 break|break;
 block|}
-comment|/* Now make up the opcode for the 3 operand instructions.  As in parallel          instructions, there will be no unresolved values, so they can be fully formed          and added to the frag table. */
+comment|/* Now make up the opcode for the 3 operand instructions.  As in parallel          instructions, there will be no unresolved values, so they can be fully formed          and added to the frag table.  */
 name|insn
 operator|.
 name|opcode
@@ -2536,7 +2536,7 @@ name|tm
 operator|->
 name|base_opcode
 expr_stmt|;
-comment|/* Create frag for instruction - all instructions are 4 bytes long. */
+comment|/* Create frag for instruction - all instructions are 4 bytes long.  */
 name|p
 operator|=
 name|frag_more
@@ -4120,7 +4120,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that the assembler doesn't complain about fitting a 24-bit 		     address into 8 bits. */
+comment|/* Ensure that the assembler doesn't complain about fitting a 24-bit 		     address into 8 bits.  */
 name|fix
 operator|->
 name|fx_no_overflow
@@ -4427,7 +4427,7 @@ operator|&
 name|NotReq
 condition|)
 block|{
-comment|/* Check for NOP instruction without arguments. */
+comment|/* Check for NOP instruction without arguments.  */
 name|md_number_to_chars
 argument_list|(
 name|p
@@ -4455,7 +4455,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Check for instructions without operands. */
+comment|/* Check for instructions without operands.  */
 name|md_number_to_chars
 argument_list|(
 name|p
@@ -4587,7 +4587,7 @@ decl_stmt|;
 name|int
 name|swap_operands
 decl_stmt|;
-comment|/* Whether to swap operands around. */
+comment|/* Whether to swap operands around.  */
 name|unsigned
 name|p_field
 decl_stmt|;
@@ -5608,7 +5608,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Get number of R register and indirect reference contained within the first 	       two operands of each instruction.  This is required for the multiply 	       parallel instructions which require two R registers and two indirect 	       references, but not in any particular place. */
+comment|/* Get number of R register and indirect reference contained within the first 	       two operands of each instruction.  This is required for the multiply 	       parallel instructions which require two R registers and two indirect 	       references, but not in any particular place.  */
 if|if
 condition|(
 operator|(
@@ -6065,7 +6065,7 @@ operator|.
 name|p_field
 argument_list|)
 expr_stmt|;
-comment|/* Finalise opcode.  This is easier for parallel instructions as they have to be      fully resolved, there are no memory addresses allowed, except through indirect      addressing, so there are no labels to resolve. */
+comment|/* Finalise opcode.  This is easier for parallel instructions as they have to be      fully resolved, there are no memory addresses allowed, except through indirect      addressing, so there are no labels to resolve.  */
 block|{
 name|p_insn
 operator|.
@@ -7441,7 +7441,7 @@ block|}
 break|break;
 block|}
 block|}
-comment|/* Opcode is finalised at this point for all parallel instructions. */
+comment|/* Opcode is finalised at this point for all parallel instructions.  */
 block|{
 comment|/* Output opcode */
 name|char
@@ -8032,7 +8032,7 @@ operator|==
 literal|'('
 condition|)
 block|{
-comment|/* Parenthesis found, so check if a displacement value is inside.  If so, get 	         the value and remove it from the buffer. */
+comment|/* Parenthesis found, so check if a displacement value is inside.  If so, get 	         the value and remove it from the buffer.  */
 if|if
 condition|(
 name|is_digit_char
@@ -8902,7 +8902,8 @@ operator|!
 name|is_end_of_line
 index|[
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|next_line
@@ -9051,7 +9052,8 @@ operator|!
 name|is_end_of_line
 index|[
 call|(
-name|int
+name|unsigned
+name|char
 call|)
 argument_list|(
 name|c
@@ -9060,9 +9062,6 @@ operator|*
 name|line
 argument_list|)
 index|]
-operator|&&
-operator|*
-name|line
 condition|)
 block|{
 if|if
@@ -9308,7 +9307,7 @@ name|END_OPERANDS
 end_undef
 
 begin_comment
-comment|/* In order to get gas to ignore any | chars at the start of a line,    this function returns true if a | is found in a line. */
+comment|/* In order to get gas to ignore any | chars at the start of a line,    this function returns true if a | is found in a line.  */
 end_comment
 
 begin_function
@@ -9499,7 +9498,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* Special fix for LDP instruction. */
+comment|/* Special fix for LDP instruction.  */
 name|value
 operator|=
 operator|(
@@ -9728,7 +9727,7 @@ operator|->
 name|fx_size
 argument_list|)
 expr_stmt|;
-comment|/* Find the opcode that represents the current instruction in the fr_literal      storage area, and check bit 21.  Bit 21 contains whether the current instruction      is a delayed one or not, and then set the offset value appropriately. */
+comment|/* Find the opcode that represents the current instruction in the fr_literal      storage area, and check bit 21.  Bit 21 contains whether the current instruction      is a delayed one or not, and then set the offset value appropriately.  */
 if|if
 condition|(
 name|fixP
@@ -9861,15 +9860,11 @@ name|is_end_of_line
 index|[
 operator|(
 name|unsigned
+name|char
 operator|)
 operator|*
 name|input_line_pointer
 index|]
-operator|&&
-operator|(
-operator|*
-name|input_line_pointer
-operator|)
 operator|&&
 operator|(
 operator|*

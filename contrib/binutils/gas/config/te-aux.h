@@ -6,7 +6,7 @@ name|TE_AUX
 end_define
 
 begin_comment
-comment|/* From obj-coff.h:    This internal_lineno crap is to stop namespace pollution from the    bfd internal coff headerfile. */
+comment|/* From obj-coff.h:    This internal_lineno crap is to stop namespace pollution from the    bfd internal coff headerfile.  */
 end_comment
 
 begin_define

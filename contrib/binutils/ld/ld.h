@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ld.h -- general linker header file    Copyright (C) 1991, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ld.h -- general linker header file    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -95,28 +95,14 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* Stubs that do something close enough.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|textdomain
-parameter_list|(
-name|String
-parameter_list|)
-value|(String)
-end_define
-
 begin_define
 define|#
 directive|define
 name|gettext
 parameter_list|(
-name|String
+name|Msgid
 parameter_list|)
-value|(String)
+value|(Msgid)
 end_define
 
 begin_define
@@ -124,11 +110,11 @@ define|#
 directive|define
 name|dgettext
 parameter_list|(
-name|Domain
+name|Domainname
 parameter_list|,
-name|Message
+name|Msgid
 parameter_list|)
-value|(Message)
+value|(Msgid)
 end_define
 
 begin_define
@@ -136,26 +122,44 @@ define|#
 directive|define
 name|dcgettext
 parameter_list|(
-name|Domain
+name|Domainname
 parameter_list|,
-name|Message
+name|Msgid
 parameter_list|,
-name|Type
+name|Category
 parameter_list|)
-value|(Message)
+value|(Msgid)
 end_define
+
+begin_define
+define|#
+directive|define
+name|textdomain
+parameter_list|(
+name|Domainname
+parameter_list|)
+value|while (0)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|bindtextdomain
 parameter_list|(
-name|Domain
+name|Domainname
 parameter_list|,
-name|Directory
+name|Dirname
 parameter_list|)
-value|(Domain)
+value|while (0)
 end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
 
 begin_define
 define|#
@@ -409,7 +413,7 @@ comment|/* If true, build MIPS embedded PIC relocation tables in the output     
 name|boolean
 name|embedded_relocs
 decl_stmt|;
-comment|/* If true, force generation of a file with a .exe file. */
+comment|/* If true, force generation of a file with a .exe file.  */
 name|boolean
 name|force_exe_suffix
 decl_stmt|;
@@ -527,10 +531,15 @@ decl_stmt|;
 name|boolean
 name|stats
 decl_stmt|;
+comment|/* If set, orphan input sections will be mapped to separate output      sections.  */
+name|boolean
+name|unique_orphan_sections
+decl_stmt|;
+name|unsigned
 name|int
 name|split_by_reloc
 decl_stmt|;
-name|boolean
+name|bfd_size_type
 name|split_by_file
 decl_stmt|;
 block|}

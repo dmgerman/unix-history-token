@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* bfdlink.h -- header file for BFD link routines    Copyright 1993, 94, 95, 96, 97, 1999 Free Software Foundation, Inc.    Written by Steve Chamberlain and Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* bfdlink.h -- header file for BFD link routines    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Written by Steve Chamberlain and Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -384,6 +384,10 @@ comment|/* true if BFD should generate a relocateable object file.  */
 name|boolean
 name|relocateable
 decl_stmt|;
+comment|/* true if BFD should generate relocation information in the final executable.  */
+name|boolean
+name|emitrelocations
+decl_stmt|;
 comment|/* true if BFD should generate a "task linked" object file,      similar to relocatable but also with globals converted to statics. */
 name|boolean
 name|task_link
@@ -411,6 +415,10 @@ decl_stmt|;
 comment|/* true if BFD should generate errors for undefined symbols      even if generating a shared object.  */
 name|boolean
 name|no_undefined
+decl_stmt|;
+comment|/* true if BFD should allow undefined symbols in shared objects even      when no_undefined is set to disallow undefined symbols.  The net      result will be that undefined symbols in regular objects will      still trigger an error, but undefined symbols in shared objects      will be ignored.  The implementation of no_undefined makes the      assumption that the runtime linker will choke on undefined      symbols.  However there is at least one system (BeOS) where      undefined symbols in shared libraries is normal since the kernel      patches them at load time to select which function is most      appropriate for the current architecture.  I.E. dynamically      select an appropriate memset function.  Apparently it is also      normal for HPPA shared libraries to have undefined symbols.  */
+name|boolean
+name|allow_shlib_undefined
 decl_stmt|;
 comment|/* Which symbols to strip.  */
 name|enum
@@ -483,6 +491,18 @@ specifier|const
 name|char
 modifier|*
 name|fini_function
+decl_stmt|;
+comment|/* true if the new ELF dynamic tags are enabled. */
+name|boolean
+name|new_dtags
+decl_stmt|;
+comment|/* May be used to set DT_FLAGS for ELF. */
+name|bfd_vma
+name|flags
+decl_stmt|;
+comment|/* May be used to set DT_FLAGS_1 for ELF. */
+name|bfd_vma
+name|flags_1
 decl_stmt|;
 block|}
 struct|;

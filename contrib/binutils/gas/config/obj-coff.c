@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* coff object file format    Copyright (C) 1989, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* coff object file format    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -42,6 +42,28 @@ begin_define
 define|#
 directive|define
 name|KEEP_RELOC_INFO
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* The BFD_ASSEMBLER version of obj_coff_section will use this macro to set    a new section's attributes when a directive has no valid flags or the    "w" flag is used. This default should be appropriate for most.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TC_COFF_SECTION_DEFAULT_ATTRIBUTES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TC_COFF_SECTION_DEFAULT_ATTRIBUTES
+value|(SEC_LOAD | SEC_DATA)
 end_define
 
 begin_endif
@@ -880,9 +902,13 @@ expr_stmt|;
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
 name|BFD_ASSEMBLER
+operator|||
+name|defined
+name|S_SET_WEAK
 name|S_SET_WEAK
 argument_list|(
 name|symbolP
@@ -981,7 +1007,7 @@ parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|((char*)(&((X)->sy_symbol.ost_auxent->x_file.x_n.x_offset))[1])
+value|((char*) (&((X)->sy_symbol.ost_auxent->x_file.x_n.x_offset))[1])
 end_define
 
 begin_comment
@@ -1343,7 +1369,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Merge a debug symbol containing debug information into a normal symbol. */
+comment|/* Merge a debug symbol containing debug information into a normal symbol.  */
 end_comment
 
 begin_function
@@ -1449,7 +1475,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Move the debug flags. */
+comment|/* Move the debug flags.  */
 name|SF_SET_DEBUG_FIELD
 argument_list|(
 name|normal
@@ -1469,6 +1495,7 @@ name|c_dot_file_symbol
 parameter_list|(
 name|filename
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -1806,7 +1833,7 @@ name|fragS
 modifier|*
 name|frag
 decl_stmt|;
-name|int
+name|addressT
 name|offset
 decl_stmt|;
 name|int
@@ -1842,6 +1869,10 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OBJ_XCOFF
+comment|/* The native aix assembler accepts negative line number */
 if|if
 condition|(
 name|num
@@ -1863,6 +1894,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* OBJ_XCOFF */
 name|new_line
 operator|->
 name|next
@@ -2489,6 +2523,8 @@ block|{
 name|symbolS
 modifier|*
 name|symbolP
+init|=
+name|NULL
 decl_stmt|;
 comment|/* DIM BUG FIX sac@cygnus.com */
 name|dim_index
@@ -2516,7 +2552,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* if not inside .def/.endef */
-comment|/* Set the section number according to storage class. */
+comment|/* Set the section number according to storage class.  */
 switch|switch
 condition|(
 name|S_GET_STORAGE_CLASS
@@ -2568,7 +2604,7 @@ argument_list|(
 name|def_symbol_in_progress
 argument_list|)
 expr_stmt|;
-comment|/* Do not emit this symbol. */
+comment|/* Do not emit this symbol.  */
 comment|/* intentional fallthrough */
 case|case
 name|C_BLOCK
@@ -2718,6 +2754,24 @@ case|:
 case|case
 name|C_FIELD
 case|:
+comment|/* According to the COFF documentation:         http://osr5doc.sco.com:1996/topics/COFF_SectNumFld.html         A special section number (-2) marks symbolic debugging symbols,        including structure/union/enumeration tag names, typedefs, and        the name of the file. A section number of -1 indicates that the        symbol has a value but is not relocatable. Examples of        absolute-valued symbols include automatic and register variables,        function arguments, and .eos symbols.         But from Ian Lance Taylor:         http://sources.redhat.com/ml/binutils/2000-08/msg00202.html         the actual tools all marked them as section -1. So the GNU COFF        assembler follows historical COFF assemblers.         However, it causes problems for djgpp         http://sources.redhat.com/ml/binutils/2000-08/msg00210.html         By defining STRICTCOFF, a COFF port can make the assembler to        follow the documented behavior.  */
+ifdef|#
+directive|ifdef
+name|STRICTCOFF
+case|case
+name|C_MOS
+case|:
+case|case
+name|C_MOE
+case|:
+case|case
+name|C_MOU
+case|:
+case|case
+name|C_EOS
+case|:
+endif|#
+directive|endif
 name|SF_SET_DEBUG
 argument_list|(
 name|def_symbol_in_progress
@@ -2731,6 +2785,9 @@ name|absolute_section
 argument_list|)
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|STRICTCOFF
 case|case
 name|C_MOS
 case|:
@@ -2751,6 +2808,8 @@ name|absolute_section
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|C_EXT
 case|:
@@ -2800,8 +2859,8 @@ break|break;
 block|}
 comment|/* switch on storage class */
 comment|/* Now that we have built a debug symbol, try to find if we should      merge with an existing symbol or not.  If a symbol is C_EFCN or      absolute_section or untagged SEG_DEBUG it never merges.  We also      don't merge labels, which are in a different namespace, nor      symbols which have not yet been defined since they are typically      unique, nor do we merge tags with non-tags.  */
-comment|/* Two cases for functions.  Either debug followed by definition or      definition followed by debug.  For definition first, we will      merge the debug symbol into the definition.  For debug first, the      lineno entry MUST point to the definition function or else it      will point off into space when obj_crawl_symbol_chain() merges      the debug symbol into the real symbol.  Therefor, let's presume      the debug symbol is a real function reference. */
-comment|/* FIXME-SOON If for some reason the definition label/symbol is      never seen, this will probably leave an undefined symbol at link      time. */
+comment|/* Two cases for functions.  Either debug followed by definition or      definition followed by debug.  For definition first, we will      merge the debug symbol into the definition.  For debug first, the      lineno entry MUST point to the definition function or else it      will point off into space when obj_crawl_symbol_chain() merges      the debug symbol into the real symbol.  Therefor, let's presume      the debug symbol is a real function reference.  */
+comment|/* FIXME-SOON If for some reason the definition label/symbol is      never seen, this will probably leave an undefined symbol at link      time.  */
 if|if
 condition|(
 name|S_GET_STORAGE_CLASS
@@ -2919,7 +2978,7 @@ block|}
 else|else
 block|{
 comment|/* This symbol already exists, merge the newly created symbol 	 into the old one.  This is not mandatory. The linker can 	 handle duplicate symbols correctly. But I guess that it save 	 a *lot* of space if the assembly file defines a lot of 	 symbols. [loic] */
-comment|/* The debug entry (def_symbol_in_progress) is merged into the 	 previous definition. */
+comment|/* The debug entry (def_symbol_in_progress) is merged into the 	 previous definition.  */
 name|c_symbol_merge
 argument_list|(
 name|def_symbol_in_progress
@@ -2962,7 +3021,7 @@ operator|==
 name|C_STAT
 condition|)
 block|{
-comment|/* For functions, and tags, and static symbols, the symbol 	     *must* be where the debug symbol appears.  Move the 	     existing symbol to the current place. */
+comment|/* For functions, and tags, and static symbols, the symbol 	     *must* be where the debug symbol appears.  Move the 	     existing symbol to the current place.  */
 comment|/* If it already is at the end of the symbol list, do nothing */
 if|if
 condition|(
@@ -3083,7 +3142,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* That is, if this is the first time we've seen the 	     function... */
+comment|/* That is, if this is the first time we've seen the 	     function...  */
 name|symbol_table_insert
 argument_list|(
 name|def_symbol_in_progress
@@ -3493,7 +3552,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Assume that the symbol referred to by .tag is always defined.      This was a bad assumption.  I've added find_or_make. xoxorich. */
+comment|/* Assume that the symbol referred to by .tag is always defined.      This was a bad assumption.  I've added find_or_make. xoxorich.  */
 name|SA_SET_SYM_TAGNDX
 argument_list|(
 name|def_symbol_in_progress
@@ -3771,7 +3830,7 @@ argument_list|)
 expr_stmt|;
 comment|/* FIXME: gcc can generate address expressions here in 	     unusual cases (search for "obscure" in sdbout.c).  We 	     just ignore the offset here, thus generating incorrect 	     debugging information.  We ignore the rest of the line 	     just below.  */
 block|}
-comment|/* Otherwise, it is the name of a non debug symbol and its value          will be calculated later. */
+comment|/* Otherwise, it is the name of a non debug symbol and its value          will be calculated later.  */
 operator|*
 name|input_line_pointer
 operator|=
@@ -3801,7 +3860,7 @@ name|void
 name|coff_obj_read_begin_hook
 parameter_list|()
 block|{
-comment|/* These had better be the same.  Usually 18 bytes. */
+comment|/* These had better be the same.  Usually 18 bytes.  */
 ifndef|#
 directive|ifndef
 name|BFD_HEADERS
@@ -4017,6 +4076,18 @@ argument_list|(
 name|symp
 argument_list|)
 operator|&&
+name|S_GET_STORAGE_CLASS
+argument_list|(
+name|symp
+argument_list|)
+operator|!=
+name|C_LABEL
+operator|&&
+name|symbol_constant_p
+argument_list|(
+name|symp
+argument_list|)
+operator|&&
 operator|(
 name|real
 operator|=
@@ -4048,6 +4119,7 @@ name|punt
 operator|=
 literal|1
 expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(
@@ -4378,7 +4450,7 @@ name|flags
 operator||=
 name|BSF_FUNCTION
 expr_stmt|;
-comment|/* more ... */
+comment|/* more ...  */
 block|}
 comment|/* Double check weak symbols.  */
 if|if
@@ -5029,6 +5101,8 @@ name|exp
 decl_stmt|;
 name|flagword
 name|flags
+decl_stmt|,
+name|oldflags
 decl_stmt|;
 name|asection
 modifier|*
@@ -5091,7 +5165,7 @@ literal|0
 expr_stmt|;
 name|flags
 operator|=
-name|SEC_LOAD
+name|SEC_NO_FLAGS
 expr_stmt|;
 if|if
 condition|(
@@ -5169,6 +5243,10 @@ name|flags
 operator|&=
 operator|~
 name|SEC_LOAD
+expr_stmt|;
+name|flags
+operator||=
+name|SEC_NEVER_LOAD
 expr_stmt|;
 break|break;
 case|case
@@ -5282,16 +5360,6 @@ operator|)
 name|exp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|!=
-name|SEC_NO_FLAGS
-condition|)
-block|{
-name|flagword
-name|oldflags
-decl_stmt|;
 name|oldflags
 operator|=
 name|bfd_get_section_flags
@@ -5301,16 +5369,54 @@ argument_list|,
 name|sec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|oldflags
-operator|&=
-name|SEC_LINK_ONCE
-operator||
-name|SEC_LINK_DUPLICATES
+operator|==
+name|SEC_NO_FLAGS
+condition|)
+block|{
+comment|/* Set section flags for a new section just created by subseg_new.          Provide a default if no flags were parsed.  */
+if|if
+condition|(
+name|flags
+operator|==
+name|SEC_NO_FLAGS
+condition|)
+name|flags
+operator|=
+name|TC_COFF_SECTION_DEFAULT_ATTRIBUTES
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COFF_LONG_SECTION_NAMES
+comment|/* Add SEC_LINK_ONCE and SEC_LINK_DUPLICATES_DISCARD to .gnu.linkonce          sections so adjust_reloc_syms in write.c will correctly handle          relocs which refer to non-local symbols in these sections.  */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|name
+argument_list|,
+literal|".gnu.linkonce"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+literal|".gnu.linkonce"
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|flags
 operator||=
-name|oldflags
+name|SEC_LINK_ONCE
+operator||
+name|SEC_LINK_DUPLICATES_DISCARD
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -5342,6 +5448,55 @@ argument_list|(
 name|bfd_get_error
 argument_list|()
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|flags
+operator|!=
+name|SEC_NO_FLAGS
+condition|)
+block|{
+comment|/* This section's attributes have already been set. Warn if the          attributes don't match.  */
+name|flagword
+name|matchflags
+init|=
+operator|(
+name|SEC_ALLOC
+operator||
+name|SEC_LOAD
+operator||
+name|SEC_READONLY
+operator||
+name|SEC_CODE
+operator||
+name|SEC_DATA
+operator||
+name|SEC_SHARED
+operator||
+name|SEC_NEVER_LOAD
+operator|)
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|^
+name|oldflags
+operator|)
+operator|&
+name|matchflags
+condition|)
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"Ignoring changed section attributes for %s"
+argument_list|)
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -5417,7 +5572,7 @@ name|alignment_power
 operator|+
 name|OCTETS_PER_BYTE_POWER
 decl_stmt|;
-comment|/* The COFF back end in BFD requires that all section sizes be      rounded up to multiples of the corresponding section alignments,      supposedly because standard COFF has no other way of encoding alignment      for sections.  If your COFF flavor has a different way of encoding      section alignment, then skip this step, as TICOFF does. */
+comment|/* The COFF back end in BFD requires that all section sizes be      rounded up to multiples of the corresponding section alignments,      supposedly because standard COFF has no other way of encoding alignment      for sections.  If your COFF flavor has a different way of encoding      section alignment, then skip this step, as TICOFF does.  */
 name|size
 operator|=
 name|bfd_get_section_size_before_reloc
@@ -5452,7 +5607,14 @@ operator|&
 name|mask
 condition|)
 block|{
-name|size
+name|bfd_vma
+name|new_size
+decl_stmt|;
+name|fragS
+modifier|*
+name|last
+decl_stmt|;
+name|new_size
 operator|=
 operator|(
 name|size
@@ -5469,8 +5631,59 @@ name|stdoutput
 argument_list|,
 name|sec
 argument_list|,
-name|size
+name|new_size
 argument_list|)
+expr_stmt|;
+comment|/* If the size had to be rounded up, add some padding in          the last non-empty frag.  */
+name|fragp
+operator|=
+name|seg_info
+argument_list|(
+name|sec
+argument_list|)
+operator|->
+name|frchainP
+operator|->
+name|frch_root
+expr_stmt|;
+name|last
+operator|=
+name|seg_info
+argument_list|(
+name|sec
+argument_list|)
+operator|->
+name|frchainP
+operator|->
+name|frch_last
+expr_stmt|;
+while|while
+condition|(
+name|fragp
+operator|->
+name|fr_next
+operator|!=
+name|last
+condition|)
+name|fragp
+operator|=
+name|fragp
+operator|->
+name|fr_next
+expr_stmt|;
+name|last
+operator|->
+name|fr_address
+operator|=
+name|size
+expr_stmt|;
+name|fragp
+operator|->
+name|fr_offset
+operator|+=
+name|new_size
+operator|-
+name|size
 expr_stmt|;
 block|}
 endif|#
@@ -5706,7 +5919,7 @@ name|unsigned
 name|int
 name|stroff
 decl_stmt|;
-comment|/* Make space for this first symbol. */
+comment|/* Make space for this first symbol.  */
 name|p
 operator|=
 name|frag_more
@@ -5714,7 +5927,7 @@ argument_list|(
 literal|12
 argument_list|)
 expr_stmt|;
-comment|/* Zero it out. */
+comment|/* Zero it out.  */
 name|memset
 argument_list|(
 name|p
@@ -5935,7 +6148,7 @@ file|"frags.h"
 end_include
 
 begin_comment
-comment|/* This is needed because we include internal bfd things. */
+comment|/* This is needed because we include internal bfd things.  */
 end_comment
 
 begin_include
@@ -6807,6 +7020,9 @@ name|rs_align
 case|:
 case|case
 name|rs_align_code
+case|:
+case|case
+name|rs_align_test
 case|:
 block|{
 name|addressT
@@ -7806,6 +8022,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|buffer
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -8098,6 +8316,9 @@ name|rs_align
 case|:
 case|case
 name|rs_align_code
+case|:
+case|case
+name|rs_align_test
 case|:
 case|case
 name|rs_org
@@ -8836,7 +9057,7 @@ literal|0
 decl_stmt|;
 comment|/* Symbol has leading _ */
 comment|/* Effective symbol */
-comment|/* Store the pointer in the offset. */
+comment|/* Store the pointer in the offset.  */
 name|S_SET_ZEROES
 argument_list|(
 name|symbolP
@@ -9336,7 +9557,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* if not inside .def/.endef */
-comment|/* Set the section number according to storage class. */
+comment|/* Set the section number according to storage class.  */
 switch|switch
 condition|(
 name|S_GET_STORAGE_CLASS
@@ -9387,7 +9608,7 @@ argument_list|(
 name|def_symbol_in_progress
 argument_list|)
 expr_stmt|;
-comment|/* Do not emit this symbol. */
+comment|/* Do not emit this symbol.  */
 comment|/* intentional fallthrough */
 case|case
 name|C_BLOCK
@@ -9472,7 +9693,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/* Value is always set to . */
+comment|/* Value is always set to .  */
 name|def_symbol_in_progress
 operator|->
 name|sy_frag
@@ -9588,8 +9809,8 @@ break|break;
 block|}
 comment|/* switch on storage class */
 comment|/* Now that we have built a debug symbol, try to find if we should      merge with an existing symbol or not.  If a symbol is C_EFCN or      absolute_section or untagged SEG_DEBUG it never merges.  We also      don't merge labels, which are in a different namespace, nor      symbols which have not yet been defined since they are typically      unique, nor do we merge tags with non-tags.  */
-comment|/* Two cases for functions.  Either debug followed by definition or      definition followed by debug.  For definition first, we will      merge the debug symbol into the definition.  For debug first, the      lineno entry MUST point to the definition function or else it      will point off into space when crawl_symbols() merges the debug      symbol into the real symbol.  Therefor, let's presume the debug      symbol is a real function reference. */
-comment|/* FIXME-SOON If for some reason the definition label/symbol is      never seen, this will probably leave an undefined symbol at link      time. */
+comment|/* Two cases for functions.  Either debug followed by definition or      definition followed by debug.  For definition first, we will      merge the debug symbol into the definition.  For debug first, the      lineno entry MUST point to the definition function or else it      will point off into space when crawl_symbols() merges the debug      symbol into the real symbol.  Therefor, let's presume the debug      symbol is a real function reference.  */
+comment|/* FIXME-SOON If for some reason the definition label/symbol is      never seen, this will probably leave an undefined symbol at link      time.  */
 if|if
 condition|(
 name|S_GET_STORAGE_CLASS
@@ -9690,7 +9911,7 @@ argument_list|,
 name|symbolP
 argument_list|)
 expr_stmt|;
-comment|/* FIXME-SOON Should *def_symbol_in_progress be free'd? xoxorich. */
+comment|/* FIXME-SOON Should *def_symbol_in_progress be free'd? xoxorich.  */
 name|def_symbol_in_progress
 operator|=
 name|symbolP
@@ -9715,7 +9936,7 @@ operator|==
 name|C_STAT
 condition|)
 block|{
-comment|/* For functions, and tags, and static symbols, the symbol 	     *must* be where the debug symbol appears.  Move the 	     existing symbol to the current place. */
+comment|/* For functions, and tags, and static symbols, the symbol 	     *must* be where the debug symbol appears.  Move the 	     existing symbol to the current place.  */
 comment|/* If it already is at the end of the symbol list, do nothing */
 if|if
 condition|(
@@ -9848,7 +10069,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* That is, if this is the first time we've seen the 	     function... */
+comment|/* That is, if this is the first time we've seen the 	     function...  */
 name|symbol_table_insert
 argument_list|(
 name|def_symbol_in_progress
@@ -10266,7 +10487,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Assume that the symbol referred to by .tag is always defined.      This was a bad assumption.  I've added find_or_make. xoxorich. */
+comment|/* Assume that the symbol referred to by .tag is always defined.      This was a bad assumption.  I've added find_or_make. xoxorich.  */
 name|SA_SET_SYM_TAGNDX
 argument_list|(
 name|def_symbol_in_progress
@@ -10543,7 +10764,7 @@ argument_list|)
 expr_stmt|;
 comment|/* FIXME: gcc can generate address expressions here in 	     unusual cases (search for "obscure" in sdbout.c).  We 	     just ignore the offset here, thus generating incorrect 	     debugging information.  We ignore the rest of the line 	     just below.  */
 block|}
-comment|/* Otherwise, it is the name of a non debug symbol and 	 its value will be calculated later. */
+comment|/* Otherwise, it is the name of a non debug symbol and 	 its value will be calculated later.  */
 operator|*
 name|input_line_pointer
 operator|=
@@ -10647,7 +10868,7 @@ name|void
 name|coff_obj_read_begin_hook
 parameter_list|()
 block|{
-comment|/* These had better be the same.  Usually 18 bytes. */
+comment|/* These had better be the same.  Usually 18 bytes.  */
 ifndef|#
 directive|ifndef
 name|BFD_HEADERS
@@ -10873,7 +11094,7 @@ name|symbolS
 modifier|*
 name|real_symbolP
 decl_stmt|;
-comment|/* L* and C_EFCN symbols never merge. */
+comment|/* L* and C_EFCN symbols never merge.  */
 if|if
 condition|(
 operator|!
@@ -10922,8 +11143,8 @@ operator|!=
 name|symbolP
 condition|)
 block|{
-comment|/* FIXME-SOON: where do dups come from? 		 Maybe tag references before definitions? xoxorich. */
-comment|/* Move the debug data from the debug symbol to the 		 real symbol. Do NOT do the oposite (i.e. move from 		 real symbol to debug symbol and remove real symbol from the 		 list.) Because some pointers refer to the real symbol 		 whereas no pointers refer to the debug symbol. */
+comment|/* FIXME-SOON: where do dups come from? 		 Maybe tag references before definitions? xoxorich.  */
+comment|/* Move the debug data from the debug symbol to the 		 real symbol. Do NOT do the oposite (i.e. move from 		 real symbol to debug symbol and remove real symbol from the 		 list.) Because some pointers refer to the real symbol 		 whereas no pointers refer to the debug symbol.  */
 name|c_symbol_merge
 argument_list|(
 name|symbolP
@@ -11074,7 +11295,7 @@ name|symbolP
 argument_list|)
 condition|)
 block|{
-comment|/* Handle the nested blocks auxiliary info. */
+comment|/* Handle the nested blocks auxiliary info.  */
 if|if
 condition|(
 name|S_GET_STORAGE_CLASS
@@ -11161,7 +11382,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* If we are able to identify the type of a function, and we 	       are out of a function (last_functionP == 0) then, the 	       function symbol will be associated with an auxiliary 	       entry. */
+comment|/* If we are able to identify the type of a function, and we 	       are out of a function (last_functionP == 0) then, the 	       function symbol will be associated with an auxiliary 	       entry.  */
 if|if
 condition|(
 name|last_functionP
@@ -11201,7 +11422,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* make it at least 1 */
-comment|/* Clobber possible stale .dim information. */
+comment|/* Clobber possible stale .dim information.  */
 if|#
 directive|if
 literal|0
@@ -11331,7 +11552,7 @@ name|symbolP
 argument_list|)
 condition|)
 block|{
-comment|/* First descriptor of a structure must point to 	       the first slot after the structure description. */
+comment|/* First descriptor of a structure must point to 	       the first slot after the structure description.  */
 name|last_tagP
 operator|=
 name|symbolP
@@ -11446,7 +11667,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* We must put the external symbols apart. The loader 	 does not bomb if we do not. But the references in 	 the endndx field for a .bb symbol are not corrected 	 if an external symbol is removed between .bb and .be. 	 I.e in the following case : 	 [20] .bb endndx = 22 	 [21] foo external 	 [22] .be 	 ld will move the symbol 21 to the end of the list but 	 endndx will still be 22 instead of 21. */
+comment|/* We must put the external symbols apart. The loader 	 does not bomb if we do not. But the references in 	 the endndx field for a .bb symbol are not corrected 	 if an external symbol is removed between .bb and .be. 	 I.e in the following case : 	 [20] .bb endndx = 22 	 [21] foo external 	 [22] .be 	 ld will move the symbol 21 to the end of the list but 	 endndx will still be 22 instead of 21.  */
 if|if
 condition|(
 name|SF_GET_LOCAL
@@ -12005,7 +12226,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* The symbol list should be ordered according to the following sequence    * order :    * . .file symbol    * . debug entries for functions    * . fake symbols for the sections, including .text .data and .bss    * . defined symbols    * . undefined symbols    * But this is not mandatory. The only important point is to put the    * undefined symbols at the end of the list.    */
-comment|/* Is there a .file symbol ? If not insert one at the beginning. */
+comment|/* Is there a .file symbol ? If not insert one at the beginning.  */
 if|if
 condition|(
 name|symbol_rootP
@@ -12547,7 +12768,17 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Turn a pointer to a symbol into the symbols' index */
+comment|/* Turn a pointer to a symbol into the symbols' index, 		     provided that it has been initialised.  */
+if|if
+condition|(
+name|line_ptr
+operator|->
+name|line
+operator|.
+name|l_addr
+operator|.
+name|l_symndx
+condition|)
 name|line_ptr
 operator|->
 name|line
@@ -12938,6 +13169,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|subseg_text_p
+argument_list|(
+name|now_seg
+argument_list|)
+condition|)
+name|frag_align_code
+argument_list|(
+name|SUB_SEGMENT_ALIGN
+argument_list|(
+name|now_seg
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|frag_align
 argument_list|(
 name|SUB_SEGMENT_ALIGN
@@ -12945,13 +13194,6 @@ argument_list|(
 name|now_seg
 argument_list|)
 argument_list|,
-name|subseg_text_p
-argument_list|(
-name|now_seg
-argument_list|)
-condition|?
-name|NOP_OPCODE
-else|:
 literal|0
 argument_list|,
 literal|0
@@ -13320,7 +13562,7 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Look for ".stab" segments and fill in their initial symbols      correctly. */
+comment|/* Look for ".stab" segments and fill in their initial symbols      correctly.  */
 for|for
 control|(
 name|i
@@ -13649,7 +13891,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* Recent changes to write need this, but where it should      go is up to Ken.. */
+comment|/* Recent changes to write need this, but where it should      go is up to Ken..  */
 block|if (bfd_close_all_done (abfd) == false)     as_fatal (_("Can't close %s: %s"), out_file_name, 	      bfd_errmsg (bfd_get_error ()));
 else|#
 directive|else
@@ -14384,7 +14626,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Move all the auxiliary information */
-comment|/* Move the debug flags. */
+comment|/* Move the debug flags.  */
 name|SF_SET_DEBUG_FIELD
 argument_list|(
 name|normal
@@ -15102,7 +15344,7 @@ name|symbolP
 argument_list|)
 control|)
 block|{
-comment|/* Used to save the offset of the name. It is used to point 	       to the string in memory but must be a file offset. */
+comment|/* Used to save the offset of the name. It is used to point 	       to the string in memory but must be a file offset.  */
 specifier|register
 name|char
 modifier|*
@@ -15252,11 +15494,11 @@ return|return;
 if|#
 directive|if
 literal|0
-block|char *name;   char c;   int temp;   char *p;    symbolS *symbolP;    name = input_line_pointer;    c = get_symbol_end ();   p = input_line_pointer;   *p = c;   SKIP_WHITESPACE ();   if (*input_line_pointer != ',')     {       as_bad (_("Expected comma after name"));       ignore_rest_of_line ();       return;     }   if (*input_line_pointer == '\n')     {       as_bad (_("Missing size expression"));       return;     }   input_line_pointer++;   if ((temp = get_absolute_expression ())< 0)     {       as_warn (_("lcomm length (%d.)<0! Ignored."), temp);       ignore_rest_of_line ();       return;     }   *p = 0;    symbolP = symbol_find_or_make(name);    if (S_GET_SEGMENT(symbolP) == SEG_UNKNOWN&&       S_GET_VALUE(symbolP) == 0)     {       if (! need_pass_2) 	{ 	  char *p; 	  segT current_seg = now_seg;
+block|char *name;   char c;   int temp;   char *p;    symbolS *symbolP;    name = input_line_pointer;    c = get_symbol_end ();   p = input_line_pointer;   *p = c;   SKIP_WHITESPACE ();   if (*input_line_pointer != ',')     {       as_bad (_("Expected comma after name"));       ignore_rest_of_line ();       return;     }   if (*input_line_pointer == '\n')     {       as_bad (_("Missing size expression"));       return;     }   input_line_pointer++;   if ((temp = get_absolute_expression ())< 0)     {       as_warn (_("lcomm length (%d.)<0! Ignored."), temp);       ignore_rest_of_line ();       return;     }   *p = 0;    symbolP = symbol_find_or_make (name);    if (S_GET_SEGMENT (symbolP) == SEG_UNKNOWN&&       S_GET_VALUE (symbolP) == 0)     {       if (! need_pass_2) 	{ 	  char *p; 	  segT current_seg = now_seg;
 comment|/* save current seg     */
 block|subsegT current_subseg = now_subseg;  	  subseg_set (SEG_E2, 1); 	  symbolP->sy_frag = frag_now; 	  p = frag_var(rs_org, 1, 1, (relax_substateT)0, symbolP, 		       (offsetT) temp, (char *) 0); 	  *p = 0; 	  subseg_set (current_seg, current_subseg);
 comment|/* restore current seg */
-block|S_SET_SEGMENT(symbolP, SEG_E2); 	  S_SET_STORAGE_CLASS(symbolP, C_STAT); 	}     }   else     as_bad(_("Symbol %s already defined"), name);    demand_empty_rest_of_line();
+block|S_SET_SEGMENT (symbolP, SEG_E2); 	  S_SET_STORAGE_CLASS (symbolP, C_STAT); 	}     }   else     as_bad (_("Symbol %s already defined"), name);    demand_empty_rest_of_line ();
 endif|#
 directive|endif
 block|}
@@ -15309,6 +15551,9 @@ name|rs_align
 case|:
 case|case
 name|rs_align_code
+case|:
+case|case
+name|rs_align_test
 case|:
 case|case
 name|rs_org
@@ -15577,7 +15822,7 @@ name|add_symbolP
 argument_list|)
 condition|)
 block|{
-comment|/* Relocation should be done via the associated 'bal' entry 	     point symbol. */
+comment|/* Relocation should be done via the associated 'bal' entry 	     point symbol.  */
 if|if
 condition|(
 operator|!
@@ -15956,7 +16201,7 @@ name|add_symbol_segment
 argument_list|)
 condition|)
 block|{
-comment|/* Difference of 2 symbols from same segment.  Can't 		 make difference of 2 undefineds: 'value' means 		 something different for N_UNDF. */
+comment|/* Difference of 2 symbols from same segment.  Can't 		 make difference of 2 undefineds: 'value' means 		 something different for N_UNDF.  */
 ifdef|#
 directive|ifdef
 name|TC_I960
@@ -16051,7 +16296,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Different segments in subtraction. */
+comment|/* Different segments in subtraction.  */
 name|know
 argument_list|(
 operator|!
@@ -16107,7 +16352,7 @@ name|this_segment_type
 if|#
 directive|if
 literal|0
-comment|/* Okay for 68k, at least... */
+comment|/* Okay for 68k, at least...  */
 condition|&& !pcrel
 endif|#
 directive|endif
@@ -16244,7 +16489,7 @@ name|pcrel
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Lie. Don't want further pcrel processing. */
+comment|/* Lie. Don't want further pcrel processing.  */
 if|if
 condition|(
 operator|!
@@ -16465,7 +16710,7 @@ argument_list|(
 name|COFF_COMMON_ADDEND
 argument_list|)
 comment|/* 386 COFF uses a peculiar format in which the 		     value of a common symbol is stored in the .text 		     segment (I've checked this on SVR3.2 and SCO 		     3.2.2) Ian Taylor<ian@cygnus.com>.  */
-comment|/* This is also true for 68k COFF on sysv machines 		     (Checked on Motorola sysv68 R3V6 and R3V7.1, and also on 		     UNIX System V/M68000, Release 1.0 from ATT/Bell Labs) 		     Philippe De Muyter<phdm@info.ucl.ac.be>. */
+comment|/* This is also true for 68k COFF on sysv machines 		     (Checked on Motorola sysv68 R3V6 and R3V7.1, and also on 		     UNIX System V/M68000, Release 1.0 from ATT/Bell Labs) 		     Philippe De Muyter<phdm@info.ucl.ac.be>.  */
 if|if
 condition|(
 name|S_IS_COMMON
@@ -16825,7 +17070,7 @@ directive|endif
 block|}
 comment|/* not a bit fix */
 block|}
-comment|/* For each fixS in this segment. */
+comment|/* For each fixS in this segment.  */
 block|}
 end_function
 
@@ -16868,7 +17113,7 @@ name|unsigned
 name|int
 name|stroff
 decl_stmt|;
-comment|/* Make space for this first symbol. */
+comment|/* Make space for this first symbol.  */
 name|p
 operator|=
 name|frag_more
@@ -16876,7 +17121,7 @@ argument_list|(
 literal|12
 argument_list|)
 expr_stmt|;
-comment|/* Zero it out. */
+comment|/* Zero it out.  */
 name|memset
 argument_list|(
 name|p
@@ -17033,7 +17278,7 @@ name|frchainP
 operator|->
 name|frch_root
 decl_stmt|;
-comment|/* Look for the associated string table section. */
+comment|/* Look for the associated string table section.  */
 name|secname
 operator|=
 name|segment_info
@@ -17121,7 +17366,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* If we found the section, get its size. */
+comment|/* If we found the section, get its size.  */
 if|if
 condition|(
 name|stabstrseg
@@ -17150,7 +17395,7 @@ literal|12
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Look for the first frag of sufficient size for the initial stab      symbol, and collect a pointer to it. */
+comment|/* Look for the first frag of sufficient size for the initial stab      symbol, and collect a pointer to it.  */
 while|while
 condition|(
 name|frag
@@ -17187,7 +17432,7 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Write in the number of stab symbols and the size of the string      table. */
+comment|/* Write in the number of stab symbols and the size of the string      table.  */
 name|bfd_h_put_16
 argument_list|(
 name|abfd
@@ -17522,6 +17767,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|coff_separate_stab_sections
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -17533,6 +17791,18 @@ argument_list|(
 name|coff_pseudo_table
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|coff_separate_stab_sections
+parameter_list|()
+block|{
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -17551,11 +17821,19 @@ comment|/* dfl_leading_underscore */
 literal|1
 block|,
 comment|/* emit_section_symbols */
+literal|0
+block|,
+comment|/* begin */
+name|c_dot_file_symbol
+block|,
 name|coff_frob_symbol
 block|,
 literal|0
 block|,
 comment|/* frob_file */
+literal|0
+block|,
+comment|/* frob_file_before_adjust */
 name|coff_frob_file_after_relocs
 block|,
 literal|0
@@ -17575,7 +17853,19 @@ block|,
 comment|/* s_get_other */
 literal|0
 block|,
+comment|/* s_set_other */
+literal|0
+block|,
 comment|/* s_get_desc */
+literal|0
+block|,
+comment|/* s_set_desc */
+literal|0
+block|,
+comment|/* s_get_type */
+literal|0
+block|,
+comment|/* s_set_type */
 literal|0
 block|,
 comment|/* copy_symbol_attributes */
@@ -17585,6 +17875,10 @@ comment|/* generate_asm_lineno */
 literal|0
 block|,
 comment|/* process_stab */
+name|coff_separate_stab_sections
+block|,
+name|obj_coff_init_stab_section
+block|,
 literal|0
 block|,
 comment|/* sec_sym_ok_for_reloc */

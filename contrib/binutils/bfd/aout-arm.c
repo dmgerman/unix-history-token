@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for raw ARM a.out binaries.    Copyright (C) 1994, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)     This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for raw ARM a.out binaries.    Copyright 1994, 1995, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -131,7 +131,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* Avoid multiple defininitions from aoutx if supporting standarad a.out     as well as our own.  */
+comment|/* Avoid multiple defininitions from aoutx if supporting standarad a.out    as well as our own.  */
 end_comment
 
 begin_define
@@ -1000,7 +1000,7 @@ operator|->
 name|size
 expr_stmt|;
 comment|/* Size as a power of two */
-comment|/* Special case for branch relocations. */
+comment|/* Special case for branch relocations.  */
 if|if
 condition|(
 name|howto
@@ -1210,7 +1210,7 @@ parameter_list|,
 name|RELOC
 parameter_list|)
 define|\
-value|MY(put_reloc)(BFD, EXT, IDX, VAL, HOWTO, RELOC)
+value|MY(put_reloc) (BFD, EXT, IDX, VAL, HOWTO, RELOC)
 end_define
 
 begin_function
@@ -1281,7 +1281,7 @@ name|RELOC_STD_BITS_EXTERN_LITTLE
 operator|)
 condition|)
 block|{
-comment|/* The reloc is still external, so don't modify anything. */
+comment|/* The reloc is still external, so don't modify anything.  */
 operator|*
 name|amount
 operator|=
@@ -1357,7 +1357,7 @@ parameter_list|,
 name|ADDR
 parameter_list|)
 define|\
-value|MY(relocatable_reloc)(HOW, BFD, REL,&(AMOUNT), ADDR)
+value|MY(relocatable_reloc) (HOW, BFD, REL,&(AMOUNT), ADDR)
 end_define
 
 begin_function

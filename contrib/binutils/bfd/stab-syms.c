@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Table of stab names for the BFD library.    Copyright (C) 1990, 91, 92, 93, 94, 95, 1996 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Table of stab names for the BFD library.    Copyright 1990, 1991, 1992, 1994, 1995, 1996, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -17,7 +17,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* Value doesn't matter. */
+comment|/* Value doesn't matter.  */
 end_comment
 
 begin_include
@@ -64,7 +64,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/* These are not really stab symbols, but it is    convenient to have them here for the sake of nm.    For completeness, we could also add N_TEXT etc, but those    are never needed, since nm treats those specially. */
+comment|/* These are not really stab symbols, but it is    convenient to have them here for the sake of nm.    For completeness, we could also add N_TEXT etc, but those    are never needed, since nm treats those specially.  */
 end_comment
 
 begin_define
@@ -81,7 +81,7 @@ comment|/* Data set element symbol */
 value|\   __define_name (N_SETB, "SETB")
 comment|/* Bss set element symbol */
 value|\   __define_name (N_SETV, "SETV")
-comment|/* Pointer to set vector in data area. */
+comment|/* Pointer to set vector in data area.  */
 value|\   __define_name (N_INDR, "INDR") \   __define_name (N_WARNING, "WARNING")
 end_define
 

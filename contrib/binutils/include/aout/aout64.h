@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* `a.out' object-file definitions, including extensions to 64-bit fields */
+comment|/* `a.out' object-file definitions, including extensions to 64-bit fields     Copyright 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -1328,12 +1328,29 @@ block|}
 struct|;
 end_struct
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RELOC_EXT_BITS_EXTERN_BIG
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|RELOC_EXT_BITS_EXTERN_BIG
 value|((unsigned int) 0x80)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RELOC_EXT_BITS_EXTERN_LITTLE
+end_ifndef
 
 begin_define
 define|#
@@ -1342,12 +1359,34 @@ name|RELOC_EXT_BITS_EXTERN_LITTLE
 value|((unsigned int) 0x01)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RELOC_EXT_BITS_TYPE_BIG
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|RELOC_EXT_BITS_TYPE_BIG
 value|((unsigned int) 0x1F)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RELOC_EXT_BITS_TYPE_SH_BIG
+end_ifndef
 
 begin_define
 define|#
@@ -1356,6 +1395,17 @@ name|RELOC_EXT_BITS_TYPE_SH_BIG
 value|0
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RELOC_EXT_BITS_TYPE_LITTLE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1363,12 +1413,28 @@ name|RELOC_EXT_BITS_TYPE_LITTLE
 value|((unsigned int) 0xF8)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RELOC_EXT_BITS_TYPE_SH_LITTLE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|RELOC_EXT_BITS_TYPE_SH_LITTLE
 value|3
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Bytes per relocation entry */

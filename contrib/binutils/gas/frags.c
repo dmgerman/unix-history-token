@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* frags.c - manage frags -    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* frags.c - manage frags -    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -152,7 +152,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			frag_grow()  *  * Try to augment current frag by nchars chars.  * If there is no room, close of the current frag with a ".fill 0"  * and begin a new frag. Unless the new frag has nchars chars available  * do not return. Do not set up any fields of *now_frag.  */
+comment|/* Try to augment current frag by nchars chars.    If there is no room, close of the current frag with a ".fill 0"    and begin a new frag. Unless the new frag has nchars chars available    do not return. Do not set up any fields of *now_frag.  */
 end_comment
 
 begin_function
@@ -216,6 +216,16 @@ name|nchars
 operator|+
 name|SIZEOF_STRUCT_FRAG
 expr_stmt|;
+if|if
+condition|(
+name|frchain_now
+operator|->
+name|frch_obstack
+operator|.
+name|chunk_size
+operator|>
+literal|0
+condition|)
 while|while
 condition|(
 operator|(
@@ -230,6 +240,18 @@ name|frch_obstack
 argument_list|)
 operator|)
 operator|<
+name|nchars
+operator|&&
+operator|(
+name|unsigned
+name|long
+operator|)
+name|frchain_now
+operator|->
+name|frch_obstack
+operator|.
+name|chunk_size
+operator|>
 name|nchars
 condition|)
 block|{
@@ -282,7 +304,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			frag_new()  *  * Call this to close off a completed frag, and start up a new (empty)  * frag, in the same subsegment as the old frag.  * [frchain_now remains the same but frag_now is updated.]  * Because this calculates the correct value of fr_fix by  * looking at the obstack 'frags', it needs to know how many  * characters at the end of the old frag belong to the maximal  * variable part;  The rest must belong to fr_fix.  * It doesn't actually set up the old frag's fr_var.  You may have  * set fr_var == 1, but allocated 10 chars to the end of the frag;  * In this case you pass old_frags_var_max_size == 10.  * In fact, you may use fr_var for something totally unrelated to the  * size of the variable part of the frag;  None of the generic frag  * handling code makes use of fr_var.  *  * Make a new frag, initialising some components. Link new frag at end  * of frchain_now.  */
+comment|/* Call this to close off a completed frag, and start up a new (empty)    frag, in the same subsegment as the old frag.    [frchain_now remains the same but frag_now is updated.]    Because this calculates the correct value of fr_fix by    looking at the obstack 'frags', it needs to know how many    characters at the end of the old frag belong to the maximal    variable part;  The rest must belong to fr_fix.    It doesn't actually set up the old frag's fr_var.  You may have    set fr_var == 1, but allocated 10 chars to the end of the frag;    In this case you pass old_frags_var_max_size == 10.    In fact, you may use fr_var for something totally unrelated to the    size of the variable part of the frag;  None of the generic frag    handling code makes use of fr_var.     Make a new frag, initialising some components. Link new frag at end    of frchain_now.  */
 end_comment
 
 begin_function
@@ -291,7 +313,7 @@ name|frag_new
 parameter_list|(
 name|old_frags_var_max_size
 parameter_list|)
-comment|/* Number of chars (already allocated on obstack frags) in 	variable_length part of frag. */
+comment|/* Number of chars (already allocated on obstack frags) in 	variable_length part of frag.  */
 name|int
 name|old_frags_var_max_size
 decl_stmt|;
@@ -333,7 +355,7 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* This will align the obstack so the next struct we allocate on it      will begin at a correct boundary. */
+comment|/* This will align the obstack so the next struct we allocate on it      will begin at a correct boundary.  */
 name|obstack_finish
 argument_list|(
 operator|&
@@ -394,7 +416,7 @@ operator|->
 name|fr_line
 argument_list|)
 expr_stmt|;
-comment|/* Generally, frag_now->points to an address rounded up to next      alignment.  However, characters will add to obstack frags      IMMEDIATELY after the struct frag, even if they are not starting      at an alignment address. */
+comment|/* Generally, frag_now->points to an address rounded up to next      alignment.  However, characters will add to obstack frags      IMMEDIATELY after the struct frag, even if they are not starting      at an alignment address.  */
 name|former_last_fragP
 operator|->
 name|fr_next
@@ -444,15 +466,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* frag_new() */
-end_comment
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			frag_more()  *  * Start a new frag unless we have n more chars of room in the current frag.  * Close off the old frag with a .fill 0.  *  * Return the address of the 1st char to write into. Advance  * frag_now_growth past the new chars.  */
+comment|/* Start a new frag unless we have n more chars of room in the current frag.    Close off the old frag with a .fill 0.     Return the address of the 1st char to write into. Advance    frag_now_growth past the new chars.  */
 end_comment
 
 begin_function
@@ -547,15 +565,11 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* frag_more() */
-end_comment
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			frag_var()  *  * Start a new frag unless we have max_chars more chars of room in the current frag.  * Close off the old frag with a .fill 0.  *  * Set up a machine_dependent relaxable frag, then start a new frag.  * Return the address of the 1st char of the var part of the old frag  * to write into.  */
+comment|/* Start a new frag unless we have max_chars more chars of room in the    current frag.  Close off the old frag with a .fill 0.     Set up a machine_dependent relaxable frag, then start a new frag.    Return the address of the 1st char of the var part of the old frag    to write into.  */
 end_comment
 
 begin_function
@@ -736,7 +750,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			frag_variant()  *  * OVE: This variant of frag_var assumes that space for the tail has been  *      allocated by caller.  *      No call to frag_grow is done.  */
+comment|/* OVE: This variant of frag_var assumes that space for the tail has been 	allocated by caller. 	No call to frag_grow is done.  */
 end_comment
 
 begin_function
@@ -898,15 +912,11 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* frag_variant() */
-end_comment
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			frag_wane()  *  * Reduce the variable end of a frag to a harmless state.  */
+comment|/* Reduce the variable end of a frag to a harmless state.  */
 end_comment
 
 begin_function
@@ -979,28 +989,31 @@ block|{
 name|addressT
 name|new_off
 decl_stmt|;
+name|addressT
+name|mask
+decl_stmt|;
+name|mask
+operator|=
+operator|(
+operator|~
+operator|(
+name|addressT
+operator|)
+literal|0
+operator|)
+operator|<<
+name|alignment
+expr_stmt|;
 name|new_off
 operator|=
 operator|(
-operator|(
 name|abs_section_offset
 operator|+
-name|alignment
-operator|-
-literal|1
+operator|~
+name|mask
 operator|)
 operator|&
-operator|~
-operator|(
-operator|(
-literal|1
-operator|<<
-name|alignment
-operator|)
-operator|-
-literal|1
-operator|)
-operator|)
+name|mask
 expr_stmt|;
 if|if
 condition|(
@@ -1150,6 +1163,137 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* The NOP_OPCODE is for the alignment fill value.  Fill it with a nop    instruction so that the disassembler does not choke on it.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOP_OPCODE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NOP_OPCODE
+value|0x00
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Use this to restrict the amount of memory allocated for representing    the alignment code.  Needs to be large enough to hold any fixed sized    prologue plus the replicating portion.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX_MEM_FOR_RS_ALIGN_CODE
+end_ifndef
+
+begin_comment
+comment|/* Assume that if HANDLE_ALIGN is not defined then no special action      is required to code fill, which means that we get just repeat the      one NOP_OPCODE byte.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HANDLE_ALIGN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX_MEM_FOR_RS_ALIGN_CODE
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAX_MEM_FOR_RS_ALIGN_CODE
+value|((1<< alignment) - 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|void
+name|frag_align_code
+parameter_list|(
+name|alignment
+parameter_list|,
+name|max
+parameter_list|)
+name|int
+name|alignment
+decl_stmt|;
+name|int
+name|max
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+name|frag_var
+argument_list|(
+name|rs_align_code
+argument_list|,
+name|MAX_MEM_FOR_RS_ALIGN_CODE
+argument_list|,
+literal|1
+argument_list|,
+operator|(
+name|relax_substateT
+operator|)
+name|max
+argument_list|,
+operator|(
+name|symbolS
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|offsetT
+operator|)
+name|alignment
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+operator|*
+name|p
+operator|=
+name|NOP_OPCODE
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|addressT
 name|frag_now_fix_octets
@@ -1246,10 +1390,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of frags.c */
-end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* hash.c -- gas hash table code    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 98, 1999    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* hash.c -- gas hash table code    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999,    2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -723,6 +723,11 @@ endif|#
 directive|endif
 name|p
 operator|=
+operator|(
+expr|struct
+name|hash_entry
+operator|*
+operator|)
 name|obstack_alloc
 argument_list|(
 operator|&
@@ -731,8 +736,10 @@ operator|->
 name|memory
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -869,6 +876,11 @@ endif|#
 directive|endif
 name|p
 operator|=
+operator|(
+expr|struct
+name|hash_entry
+operator|*
+operator|)
 name|obstack_alloc
 argument_list|(
 operator|&
@@ -877,8 +889,10 @@ operator|->
 name|memory
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -1496,6 +1510,10 @@ begin_comment
 comment|/* This test program is left over from the old hash table code.  */
 end_comment
 
+begin_comment
+comment|/* Number of hash tables to maintain (at once) in any testing.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1504,11 +1522,7 @@ value|(6)
 end_define
 
 begin_comment
-comment|/* number of hash tables to maintain */
-end_comment
-
-begin_comment
-comment|/* (at once) in any testing */
+comment|/* We can have 12 statistics.  */
 end_comment
 
 begin_define
@@ -1519,7 +1533,7 @@ value|(12)
 end_define
 
 begin_comment
-comment|/* we can have 12 statistics */
+comment|/* Display statistics here.  */
 end_comment
 
 begin_decl_stmt
@@ -1532,7 +1546,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* display statistics here */
+comment|/* Human farts here.  */
 end_comment
 
 begin_decl_stmt
@@ -1545,7 +1559,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* human farts here */
+comment|/* We test many hash tables at once.  */
 end_comment
 
 begin_decl_stmt
@@ -1559,7 +1573,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* we test many hash tables at once */
+comment|/* Points to curent hash_control.  */
 end_comment
 
 begin_decl_stmt
@@ -1568,10 +1582,6 @@ modifier|*
 name|h
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* points to curent hash_control */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -1620,19 +1630,15 @@ name|command
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Number 0:TABLES-1 of current hashed symbol table.  */
+end_comment
+
 begin_decl_stmt
 name|int
 name|number
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* number 0:TABLES-1 of current hashed */
-end_comment
-
-begin_comment
-comment|/* symbol table */
-end_comment
 
 begin_function
 name|int
@@ -1706,7 +1712,7 @@ argument_list|(
 name|command
 argument_list|)
 expr_stmt|;
-comment|/* ecch! */
+comment|/* Ecch!  */
 switch|switch
 condition|(
 name|command
@@ -2151,7 +2157,7 @@ argument_list|(
 name|answer
 argument_list|)
 expr_stmt|;
-comment|/* will one day clean up answer here */
+comment|/* Will one day clean up answer here.  */
 name|retval
 operator|=
 name|malloc
@@ -2253,12 +2259,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Determine number: what hash table to use.    Also determine h: points to hash_control.  */
+end_comment
+
 begin_function
 name|void
 name|whattable
 parameter_list|()
-comment|/* determine number: what hash table to use */
-comment|/* also determine h: points to hash_control */
 block|{
 for|for
 control|(
@@ -2346,11 +2354,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* #ifdef TEST */
-end_comment
-
-begin_comment
-comment|/* end of hash.c */
+comment|/* TEST */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* HPPA ELF support for BFD.    Copyright (C) 1993, 1994, 1999 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* HPPA ELF support for BFD.    Copyright 1993, 1994, 1995, 1998, 1999, 2000    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -304,7 +304,7 @@ comment|/* No reloc */
 end_comment
 
 begin_comment
-comment|/* These relocation types do simple base + offset relocations.  */
+comment|/*		Data / Inst. Format	   Relocation Expression	  */
 end_comment
 
 begin_macro
@@ -316,6 +316,10 @@ literal|1
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		32-bit word            	   symbol + addend    		  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -324,6 +328,10 @@ argument_list|,
 literal|2
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		long immediate (7)	   LR(symbol, addend) 		  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -334,6 +342,10 @@ literal|3
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		branch external (19)	   RR(symbol, addend) 		  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -342,6 +354,10 @@ argument_list|,
 literal|4
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		branch external (19)	   symbol + addend    		  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -353,7 +369,37 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* PC-relative relocation types        Typically used for calls.        Note PCREL17C and PCREL17F differ only in overflow handling.        PCREL17C never reports a relocation error.         When supporting argument relocations, function calls must be        accompanied by parameter relocation information.  This information is        carried in the ten high-order bits of the addend field.  The remaining        22 bits of of the addend field are sign-extended to form the Addend.         Note the code to build argument relocations depends on the        addend being zero.  A consequence of this limitation is GAS        can not perform relocation reductions for function symbols.  */
+comment|/*		load/store (1)		   RR(symbol, addend) 		  */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_DIR14F
+argument_list|,
+literal|7
+argument_list|)
+end_macro
+
+begin_comment
+comment|/*		load/store (1)		   symbol, addend 		  */
+end_comment
+
+begin_comment
+comment|/* PC-relative relocation types    Typically used for calls.    Note PCREL17C and PCREL17F differ only in overflow handling.    PCREL17C never reports a relocation error.     When supporting argument relocations, function calls must be    accompanied by parameter relocation information.  This information is    carried in the ten high-order bits of the addend field.  The remaining    22 bits of of the addend field are sign-extended to form the Addend.     Note the code to build argument relocations depends on the    addend being zero.  A consequence of this limitation is GAS    can not perform relocation reductions for function symbols.  */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_PCREL12F
+argument_list|,
+literal|8
+argument_list|)
+end_macro
+
+begin_comment
+comment|/*		op& branch (17)	   symbol - PC - 8 + addend    	  */
 end_comment
 
 begin_macro
@@ -365,6 +411,10 @@ literal|9
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		32-bit word		   symbol - PC - 8 + addend    	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -373,6 +423,10 @@ argument_list|,
 literal|10
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		long immediate (7)	   L(symbol - PC - 8 + addend) 	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -383,6 +437,10 @@ literal|11
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		branch external (19)	   R(symbol - PC - 8 + addend) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -391,6 +449,10 @@ argument_list|,
 literal|12
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		branch (20)		   symbol - PC - 8 + addend    	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -401,6 +463,10 @@ literal|13
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		branch (20)		   symbol - PC - 8 + addend    	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -410,6 +476,10 @@ literal|14
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store (1)		   R(symbol - PC - 8 + addend) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -418,6 +488,10 @@ argument_list|,
 literal|15
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             symbol - PC - 8 + addend    	  */
+end_comment
 
 begin_comment
 comment|/* DP-relative relocation types.  */
@@ -432,6 +506,10 @@ literal|18
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		long immediate (7)         LR(symbol - GP, addend)  	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -440,6 +518,10 @@ argument_list|,
 literal|19
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store mod. comp. (2)  RR(symbol - GP, addend)  	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -450,6 +532,10 @@ literal|20
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store doubleword (3)  RR(symbol - GP, addend)  	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -458,6 +544,10 @@ argument_list|,
 literal|22
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             RR(symbol - GP, addend)  	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -469,7 +559,11 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* Data linkage table (DLT) relocation types         SOM DLT_REL fixup requests are used to for static data references        from position-independent code within shared libraries.  They are        similar to the GOT relocation types in some SVR4 implementations.  */
+comment|/*		load/store (1)             symbol - GP + addend     	  */
+end_comment
+
+begin_comment
+comment|/* Data linkage table (DLT) relocation types     SOM DLT_REL fixup requests are used to for static data references    from position-independent code within shared libraries.  They are    similar to the GOT relocation types in some SVR4 implementations.  */
 end_comment
 
 begin_macro
@@ -481,6 +575,10 @@ literal|26
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		long immediate (7)         LR(symbol - GP, addend) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -490,6 +588,10 @@ literal|30
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store (1)             RR(symbol - GP, addend) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -498,6 +600,10 @@ argument_list|,
 literal|31
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             symbol - GP + addend    	  */
+end_comment
 
 begin_comment
 comment|/* DLT indirect relocation types  */
@@ -512,6 +618,10 @@ literal|34
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		long immediate (7)         L(ltoff(symbol + addend)) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -521,6 +631,10 @@ literal|38
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store (1)             R(ltoff(symbol + addend)) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -529,6 +643,10 @@ argument_list|,
 literal|39
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             ltoff(symbol + addend)    	  */
+end_comment
 
 begin_comment
 comment|/* Base relative relocation types.  Ugh.  These imply lots of state */
@@ -543,6 +661,10 @@ literal|40
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		none                       no reloc; base := sym     	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -551,6 +673,10 @@ argument_list|,
 literal|41
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		32-bit word                symbol - SECT + addend    	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -561,6 +687,10 @@ literal|42
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		long immediate (7)         LR(symbol - base, addend) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -569,6 +699,10 @@ argument_list|,
 literal|43
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		branch external (19)       RR(symbol - base, addend) 	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -579,6 +713,10 @@ literal|44
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		branch external (19)       symbol - base + addend    	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -588,6 +726,10 @@ literal|46
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store (1)             RR(symbol - base, addend) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -596,6 +738,10 @@ argument_list|,
 literal|47
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             symbol - base, addend     	  */
+end_comment
 
 begin_comment
 comment|/* Segment relative relocation types.  */
@@ -610,6 +756,10 @@ literal|48
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		none                       no relocation; SB := sym  	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -618,6 +768,10 @@ argument_list|,
 literal|49
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		32-bit word                symbol - SB + addend 	  */
+end_comment
 
 begin_comment
 comment|/* Offsets from the PLT.  */
@@ -632,6 +786,10 @@ literal|50
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		long immediate (7)         LR(pltoff(symbol), addend) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -640,6 +798,10 @@ argument_list|,
 literal|54
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             RR(pltoff(symbol), addend) 	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -650,6 +812,10 @@ literal|55
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store (1)             pltoff(symbol) + addend    	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -658,6 +824,10 @@ argument_list|,
 literal|57
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		32-bit word                ltoff(fptr(symbol+addend))     */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -668,6 +838,10 @@ literal|58
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		long immediate (7)         L(ltoff(fptr(symbol+addend)))  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -677,6 +851,10 @@ literal|62
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store (1)             R(ltoff(fptr(symbol+addend)))  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -685,6 +863,10 @@ argument_list|,
 literal|64
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		64-bit doubleword          fptr(symbol+addend) 		  */
+end_comment
 
 begin_comment
 comment|/* Plabel relocation types.  */
@@ -699,6 +881,10 @@ literal|65
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		32-bit word	  	   fptr(symbol) 		  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -708,6 +894,10 @@ literal|66
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		long immediate (7)         L(fptr(symbol))		  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -716,6 +906,10 @@ argument_list|,
 literal|70
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             R(fptr(symbol))		  */
+end_comment
 
 begin_comment
 comment|/* PCREL relocations.  */
@@ -730,6 +924,10 @@ literal|72
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		64-bit doubleword          symbol - PC - 8 + addend       */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -738,6 +936,10 @@ argument_list|,
 literal|73
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		branch& link (21)         symbol - PC - 8 + addend       */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -748,6 +950,10 @@ literal|74
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		branch& link (21)         symbol - PC - 8 + addend       */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -756,6 +962,10 @@ argument_list|,
 literal|75
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store mod. comp. (2)  R(symbol - PC - 8 + addend)    */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -766,6 +976,10 @@ literal|76
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store doubleword (3)  R(symbol - PC - 8 + addend)    */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -774,6 +988,10 @@ argument_list|,
 literal|77
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             symbol - PC - 8 + addend       */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -784,6 +1002,10 @@ literal|78
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store mod. comp. (2)  symbol - PC - 8 + addend       */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -792,6 +1014,10 @@ argument_list|,
 literal|79
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store doubleword (3)  symbol - PC - 8 + addend       */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -802,6 +1028,10 @@ literal|80
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		64-bit doubleword          symbol + addend    		  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -810,6 +1040,10 @@ argument_list|,
 literal|81
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		64-bit doubleword          RR(symbol, addend) 		  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -820,6 +1054,10 @@ literal|82
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		64-bit doubleword          RR(symbol, addend) 		  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -828,6 +1066,10 @@ argument_list|,
 literal|83
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store mod. comp. (2)  RR(symbol, addend) 		  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -838,6 +1080,10 @@ literal|84
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store doubleword (3)  RR(symbol, addend) 		  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -846,6 +1092,10 @@ argument_list|,
 literal|85
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             symbol + addend    		  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -856,6 +1106,10 @@ literal|86
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store mod. comp. (2)  symbol + addend    		  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -864,6 +1118,10 @@ argument_list|,
 literal|87
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store doubleword (3)  symbol + addend    		  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -874,6 +1132,10 @@ literal|88
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		64-bit doubleword          symbol - GP + addend 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -882,6 +1144,10 @@ argument_list|,
 literal|91
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store mod. comp. (2)  RR(symbol - GP, addend) 	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -892,6 +1158,10 @@ literal|92
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store doubleword (3)  RR(symbol - GP, addend) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -900,6 +1170,10 @@ argument_list|,
 literal|93
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             symbol - GP + addend    	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -910,6 +1184,10 @@ literal|94
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store mod. comp. (2)  symbol - GP + addend    	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -918,6 +1196,10 @@ argument_list|,
 literal|95
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store doubleword (3)  symbol - GP + addend    	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -928,6 +1210,10 @@ literal|96
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		64-bit doubleword          ltoff(symbol + addend)    	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -936,6 +1222,10 @@ argument_list|,
 literal|99
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store mod. comp. (2)  R(ltoff(symbol + addend)) 	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -946,6 +1236,10 @@ literal|100
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store doubleword (3)  R(ltoff(symbol + addend)) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -954,6 +1248,10 @@ argument_list|,
 literal|101
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             ltoff(symbol + addend)    	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -964,6 +1262,10 @@ literal|102
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store mod. comp. (2)  ltoff(symbol + addend)    	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -972,6 +1274,10 @@ argument_list|,
 literal|103
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store doubleword (3)  ltoff(symbol + addend)    	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -982,6 +1288,10 @@ literal|104
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		64-bit doubleword          symbol - SECT + addend 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -990,6 +1300,10 @@ argument_list|,
 literal|107
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store mod. comp. (2)  RR(symbol - base, addend) 	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1000,6 +1314,10 @@ literal|108
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store doubleword (3)  RR(symbol - base, addend) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1008,6 +1326,10 @@ argument_list|,
 literal|112
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		64-bit doubleword          symbol - SB + addend 	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1018,6 +1340,10 @@ literal|115
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store mod. comp. (2)  RR(pltoff(symbol), addend) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1026,6 +1352,10 @@ argument_list|,
 literal|116
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store doubleword (3)  RR(pltoff(symbol), addend) 	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1036,6 +1366,10 @@ literal|117
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store (1)             pltoff(symbol) + addend    	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1044,6 +1378,10 @@ argument_list|,
 literal|118
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store mod. comp. (2)  pltoff(symbol) + addend    	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1054,6 +1392,10 @@ literal|119
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store doubleword (3)  pltoff(symbol) + addend    	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1062,6 +1404,10 @@ argument_list|,
 literal|120
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		64-bit doubleword          ltoff(fptr(symbol+addend))     */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1072,6 +1418,10 @@ literal|123
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store mod. comp. (2)  R(ltoff(fptr(symbol+addend)))  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1080,6 +1430,10 @@ argument_list|,
 literal|124
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store doubleword (3)  R(ltoff(fptr(symbol+addend)))  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1090,6 +1444,10 @@ literal|125
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store (1)             ltoff(fptr(symbol+addend))     */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1098,6 +1456,10 @@ argument_list|,
 literal|126
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store mod. comp. (2)  ltoff(fptr(symbol+addend))     */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1108,6 +1470,10 @@ literal|127
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store doubleword (3)  ltoff(fptr(symbol+addend))     */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1116,6 +1482,10 @@ argument_list|,
 literal|128
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		data                       Dynamic relocations only 	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1126,6 +1496,10 @@ literal|129
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		plt                                                 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1134,6 +1508,10 @@ argument_list|,
 literal|130
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		plt                                                 	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1144,6 +1522,10 @@ literal|153
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		32-bit word                symbol - TP + addend    	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1152,6 +1534,10 @@ argument_list|,
 literal|154
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		long immediate (7)         LR(symbol - TP, addend) 	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1162,6 +1548,10 @@ literal|158
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store (1)             RR(symbol - TP, addend) 	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1170,6 +1560,10 @@ argument_list|,
 literal|162
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		long immediate (7)         L(ltoff(symbol - TP + addend)) */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1180,6 +1574,10 @@ literal|166
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store (1)             R(ltoff(symbol - TP + addend)) */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1188,6 +1586,10 @@ argument_list|,
 literal|167
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             ltoff(symbol - TP + addend)    */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1198,6 +1600,10 @@ literal|216
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		64-bit word                symbol - TP + addend        	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1206,6 +1612,10 @@ argument_list|,
 literal|219
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store mod. comp. (2)  RR(symbol - TP, addend)     	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1216,6 +1626,10 @@ literal|220
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store doubleword (3)  RR(symbol - TP, addend)     	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1224,6 +1638,10 @@ argument_list|,
 literal|221
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             symbol - TP + addend        	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1234,6 +1652,10 @@ literal|222
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store mod. comp. (2)  symbol - TP + addend        	  */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1242,6 +1664,10 @@ argument_list|,
 literal|223
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store doubleword (3)  symbol - TP + addend        	  */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1252,6 +1678,10 @@ literal|224
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		64-bit doubleword          ltoff(symbol - TP + addend)    */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1260,6 +1690,10 @@ argument_list|,
 literal|227
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store mod. comp. (2)  R(ltoff(symbol - TP + addend)) */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1270,6 +1704,10 @@ literal|228
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store doubleword (3)  R(ltoff(symbol - TP + addend)) */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1278,6 +1716,10 @@ argument_list|,
 literal|229
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*		load/store (1)             ltoff(symbol - TP + addend)    */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -1288,6 +1730,10 @@ literal|230
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store mod. comp. (2)  ltoff(symbol - TP + addend)    */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -1297,15 +1743,33 @@ literal|231
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*		load/store doubleword (3)  ltoff(symbol - TP + addend)    */
+end_comment
+
 begin_macro
-name|EMPTY_RELOC
+name|RELOC_NUMBER
 argument_list|(
-argument|R_PARISC_UNIMPLEMENTED
+argument|R_PARISC_GNU_VTENTRY
+argument_list|,
+literal|232
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_PARISC_GNU_VTINHERIT
+argument_list|,
+literal|233
 argument_list|)
 end_macro
 
 begin_macro
 name|END_RELOC_NUMBERS
+argument_list|(
+argument|R_PARISC_UNIMPLEMENTED
+argument_list|)
 end_macro
 
 begin_ifndef
@@ -1404,95 +1868,99 @@ begin_comment
 comment|/* Processor specific dynamic array tags.  */
 end_comment
 
+begin_comment
+comment|/* Arggh.  HP's tools define these symbols based on the    old value of DT_LOOS.  So we must do the same to be    compatible.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DT_HP_LOAD_MAP
-value|(DT_LOOS + 0x0)
+value|(OLD_DT_LOOS + 0x0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_HP_DLD_FLAGS
-value|(DT_LOOS + 0x1)
+value|(OLD_DT_LOOS + 0x1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_HP_DLD_HOOK
-value|(DT_LOOS + 0x2)
+value|(OLD_DT_LOOS + 0x2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_HP_UX10_INIT
-value|(DT_LOOS + 0x3)
+value|(OLD_DT_LOOS + 0x3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_HP_UX10_INITSZ
-value|(DT_LOOS + 0x4)
+value|(OLD_DT_LOOS + 0x4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_HP_PREINIT
-value|(DT_LOOS + 0x5)
+value|(OLD_DT_LOOS + 0x5)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_HP_PREINITSZ
-value|(DT_LOOS + 0x6)
+value|(OLD_DT_LOOS + 0x6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_HP_NEEDED
-value|(DT_LOOS + 0x7)
+value|(OLD_DT_LOOS + 0x7)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_HP_TIME_STAMP
-value|(DT_LOOS + 0x8)
+value|(OLD_DT_LOOS + 0x8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_HP_CHECKSUM
-value|(DT_LOOS + 0x9)
+value|(OLD_DT_LOOS + 0x9)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_HP_GST_SIZE
-value|(DT_LOOS + 0xa)
+value|(OLD_DT_LOOS + 0xa)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_HP_GST_VERSION
-value|(DT_LOOS + 0xb)
+value|(OLD_DT_LOOS + 0xb)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_HP_GST_HASHVAL
-value|(DT_LOOS + 0xc)
+value|(OLD_DT_LOOS + 0xc)
 end_define
 
 begin_comment

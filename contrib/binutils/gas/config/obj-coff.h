@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* coff object file format    Copyright (C) 1989, 90, 91, 92, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* coff object file format    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -76,7 +76,7 @@ file|"bfd.h"
 end_include
 
 begin_comment
-comment|/* This internal_lineno crap is to stop namespace pollution from the    bfd internal coff headerfile. */
+comment|/* This internal_lineno crap is to stop namespace pollution from the    bfd internal coff headerfile.  */
 end_comment
 
 begin_define
@@ -577,6 +577,30 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|TC_TIC54X
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"coff/tic54x.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|"coff1-c54x"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TC_TIC80
 end_ifdef
 
@@ -864,7 +888,7 @@ value|(S_GET_NUMBER_AUXILIARY (s) = (v))
 end_define
 
 begin_comment
-comment|/* True if a symbol name is in the string table, i.e. its length is> 8. */
+comment|/* True if a symbol name is in the string table, i.e. its length is> 8.  */
 end_comment
 
 begin_define
@@ -1186,7 +1210,7 @@ value|(0x000001ff)
 end_define
 
 begin_comment
-comment|/* Bits 0-8 are used by the i960 port. */
+comment|/* Bits 0-8 are used by the i960 port.  */
 end_comment
 
 begin_define
@@ -1241,7 +1265,7 @@ value|(0x0000ffff)
 end_define
 
 begin_comment
-comment|/* bits 12-15 are general purpose. */
+comment|/* bits 12-15 are general purpose.  */
 end_comment
 
 begin_define
@@ -1362,11 +1386,11 @@ value|(0x00200000)
 end_define
 
 begin_comment
-comment|/* Get the section of the forward symbol. */
+comment|/* Get the section of the forward symbol.  */
 end_comment
 
 begin_comment
-comment|/* All other bits are unused. */
+comment|/* All other bits are unused.  */
 end_comment
 
 begin_comment
@@ -1876,6 +1900,7 @@ name|c_dot_file_symbol
 name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|filename
@@ -2186,7 +2211,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Magic number of paged executable. */
+comment|/* Magic number of paged executable.  */
 end_comment
 
 begin_define
@@ -2213,7 +2238,7 @@ name|struct
 name|internal_syment
 name|ost_entry
 decl_stmt|;
-comment|/* Auxiliary entry. */
+comment|/* Auxiliary entry.  */
 name|union
 name|internal_auxent
 name|ost_auxent
@@ -2398,7 +2423,7 @@ value|((s)->sy_symbol.ost_entry.n_scnum == 0 \&& S_GET_VALUE (s) != 0)
 end_define
 
 begin_comment
-comment|/* True if a symbol name is in the string table, i.e. its length is> 8. */
+comment|/* True if a symbol name is in the string table, i.e. its length is> 8.  */
 end_comment
 
 begin_define
@@ -2468,7 +2493,7 @@ name|S_GET_NAME
 parameter_list|(
 name|s
 parameter_list|)
-value|((char*)(s)->sy_symbol.ost_entry.n_offset)
+value|((char*) (s)->sy_symbol.ost_entry.n_offset)
 end_define
 
 begin_comment
@@ -2558,7 +2583,7 @@ name|s
 parameter_list|,
 name|v
 parameter_list|)
-value|((s)->sy_symbol.ost_entry.n_offset = (unsigned long)(v))
+value|((s)->sy_symbol.ost_entry.n_offset = (unsigned long) (v))
 end_define
 
 begin_comment
@@ -2987,7 +3012,7 @@ value|(0x000001ff)
 end_define
 
 begin_comment
-comment|/* Bits 0-8 are used by the i960 port. */
+comment|/* Bits 0-8 are used by the i960 port.  */
 end_comment
 
 begin_define
@@ -3042,7 +3067,7 @@ value|(0x0000ffff)
 end_define
 
 begin_comment
-comment|/* bits 12-15 are general purpose. */
+comment|/* bits 12-15 are general purpose.  */
 end_comment
 
 begin_define
@@ -3163,7 +3188,7 @@ value|(0x00200000)
 end_define
 
 begin_comment
-comment|/* Get the section of the forward symbol. */
+comment|/* Get the section of the forward symbol.  */
 end_comment
 
 begin_define
@@ -3178,7 +3203,7 @@ comment|/* Has a lnnoptr */
 end_comment
 
 begin_comment
-comment|/* All other bits are unused. */
+comment|/* All other bits are unused.  */
 end_comment
 
 begin_comment
@@ -3699,7 +3724,7 @@ parameter_list|(
 name|h
 parameter_list|)
 define|\
-value|(long)(FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ + \ 	   H_GET_TEXT_SIZE(h) + H_GET_DATA_SIZE(h) + \ 	   H_GET_RELOCATION_SIZE(h) + H_GET_LINENO_SIZE(h) + \ 	   H_GET_SYMBOL_TABLE_SIZE(h) + \ 	   (h)->string_table_size)
+value|(long) (FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ + \ 	   H_GET_TEXT_SIZE(h) + H_GET_DATA_SIZE(h) + \ 	   H_GET_RELOCATION_SIZE(h) + H_GET_LINENO_SIZE(h) + \ 	   H_GET_SYMBOL_TABLE_SIZE(h) + \ 	   (h)->string_table_size)
 end_define
 
 begin_define
@@ -3710,7 +3735,7 @@ parameter_list|(
 name|h
 parameter_list|)
 define|\
-value|(long)(FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ)
+value|(long) (FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ)
 end_define
 
 begin_define
@@ -3721,7 +3746,7 @@ parameter_list|(
 name|h
 parameter_list|)
 define|\
-value|(long)(FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ + \ 	   H_GET_TEXT_SIZE(h))
+value|(long) (FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ + \ 	   H_GET_TEXT_SIZE(h))
 end_define
 
 begin_define
@@ -3742,7 +3767,7 @@ parameter_list|(
 name|h
 parameter_list|)
 define|\
-value|(long)(FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ + \ 	   H_GET_TEXT_SIZE(h) + H_GET_DATA_SIZE(h))
+value|(long) (FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ + \ 	   H_GET_TEXT_SIZE(h) + H_GET_DATA_SIZE(h))
 end_define
 
 begin_define
@@ -3753,7 +3778,7 @@ parameter_list|(
 name|h
 parameter_list|)
 define|\
-value|(long)(FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ + \ 	   H_GET_TEXT_SIZE(h) + H_GET_DATA_SIZE(h) + \ 	   H_GET_RELOCATION_SIZE(h))
+value|(long) (FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ + \ 	   H_GET_TEXT_SIZE(h) + H_GET_DATA_SIZE(h) + \ 	   H_GET_RELOCATION_SIZE(h))
 end_define
 
 begin_define
@@ -3764,7 +3789,7 @@ parameter_list|(
 name|h
 parameter_list|)
 define|\
-value|(long)(FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ + \ 	   H_GET_TEXT_SIZE(h) + H_GET_DATA_SIZE(h) + \ 	   H_GET_RELOCATION_SIZE(h) + H_GET_LINENO_SIZE(h))
+value|(long) (FILHSZ + OBJ_COFF_AOUTHDRSZ + \ 	   H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ + \ 	   H_GET_TEXT_SIZE(h) + H_GET_DATA_SIZE(h) + \ 	   H_GET_RELOCATION_SIZE(h) + H_GET_LINENO_SIZE(h))
 end_define
 
 begin_comment
@@ -3986,7 +4011,7 @@ name|H_GET_HEADER_SIZE
 parameter_list|(
 name|h
 parameter_list|)
-value|(sizeof(FILHDR) \ 					 + sizeof(AOUTHDR)\ 					 + (H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ))
+value|(sizeof (FILHDR) \ 					 + sizeof (AOUTHDR)\ 					 + (H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ))
 end_define
 
 begin_else
@@ -4005,7 +4030,7 @@ name|H_GET_HEADER_SIZE
 parameter_list|(
 name|h
 parameter_list|)
-value|(sizeof(FILHDR) \ 					 + (H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ))
+value|(sizeof (FILHDR) \ 					 + (H_GET_NUMBER_OF_SECTIONS(h) * SCNHSZ))
 end_define
 
 begin_endif
@@ -4288,15 +4313,15 @@ name|struct
 name|internal_filehdr
 name|filehdr
 decl_stmt|;
-comment|/* File header, not machine dep. */
+comment|/* File header, not machine dep.  */
 name|long
 name|string_table_size
 decl_stmt|;
-comment|/* names + '\0' + sizeof(int) */
+comment|/* names + '\0' + sizeof (int) */
 name|long
 name|relocation_size
 decl_stmt|;
-comment|/* Cumulated size of relocation 			   information for all sections in 			   bytes. */
+comment|/* Cumulated size of relocation 			   information for all sections in 			   bytes.  */
 name|long
 name|lineno_size
 decl_stmt|;

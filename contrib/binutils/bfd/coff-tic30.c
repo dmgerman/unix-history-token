@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for TMS320C30 coff binaries.    Copyright (C) 1998, 1999 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* BFD back-end for TMS320C30 coff binaries.    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -226,7 +226,7 @@ value|tic30_coff_reloc_type_lookup
 end_define
 
 begin_comment
-comment|/* For the case statement use the code values used in tc_gen_reloc to    map to the howto table entries that match those in both the aout    and coff implementations. */
+comment|/* For the case statement use the code values used in tc_gen_reloc to    map to the howto table entries that match those in both the aout    and coff implementations.  */
 end_comment
 
 begin_function
@@ -418,7 +418,7 @@ value|dst->r_stuff[0] = 'S'; \ dst->r_stuff[1] = 'C';
 end_define
 
 begin_comment
-comment|/* Code to turn a r_type into a howto ptr, uses the above howto table. */
+comment|/* Code to turn a r_type into a howto ptr, uses the above howto table.  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ARC ELF support for BFD.    Copyright (C) 1995, 1997 Free Software Foundation, Inc.    Contributed by Doug Evans, (dje@cygnus.com)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ARC ELF support for BFD.    Copyright 1995, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.    Contributed by Doug Evans, (dje@cygnus.com)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -73,14 +73,10 @@ argument_list|)
 end_macro
 
 begin_macro
-name|EMPTY_RELOC
+name|END_RELOC_NUMBERS
 argument_list|(
 argument|R_ARC_max
 argument_list|)
-end_macro
-
-begin_macro
-name|END_RELOC_NUMBERS
 end_macro
 
 begin_comment
@@ -105,33 +101,33 @@ end_comment
 begin_define
 define|#
 directive|define
-name|E_ARC_MACH_BASE
-value|0x00000000
+name|E_ARC_MACH_ARC5
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|E_ARC_MACH_UNUSED1
-value|0x00000001
+name|E_ARC_MACH_ARC6
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|E_ARC_MACH_UNUSED2
-value|0x00000002
+name|E_ARC_MACH_ARC7
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|E_ARC_MACH_UNUSED4
-value|0x00000003
+name|E_ARC_MACH_ARC8
+value|3
 end_define
 
 begin_comment
-comment|/* Leave bits 0xf0 alone in case we ever have more than 16 cpu types.    Highly unlikely, but what the heck.  */
+comment|/* Leave bits 0xf0 alone in case we ever have more than 16 cpu types.  */
 end_comment
 
 begin_comment

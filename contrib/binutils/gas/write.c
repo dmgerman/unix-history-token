@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* write.c - emit .o file    Copyright (C) 1986, 87, 90, 91, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* write.c - emit .o file    Copyright 1986, 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* This thing should be set up to do byteordering correctly.  But... */
+comment|/* This thing should be set up to do byteordering correctly.  But...  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ directive|include
 file|"output-file.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"dwarf2dbg.h"
+end_include
+
 begin_comment
 comment|/* This looks like a good idea.  Let's try turning it on always, for now.  */
 end_comment
@@ -46,28 +52,6 @@ define|#
 directive|define
 name|BFD_FAST_SECTION_FILL
 end_define
-
-begin_comment
-comment|/* The NOP_OPCODE is for the alignment fill value.  Fill it with a nop    instruction so that the disassembler does not choke on it.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOP_OPCODE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NOP_OPCODE
-value|0x00
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -128,6 +112,48 @@ parameter_list|,
 name|SEG
 parameter_list|)
 value|TC_FORCE_RELOCATION(FIXP)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TC_LINKRELAX_FIXUP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TC_LINKRELAX_FIXUP
+parameter_list|(
+name|SEG
+parameter_list|)
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TC_FIX_ADJUSTABLE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TC_FIX_ADJUSTABLE
+parameter_list|(
+name|fix
+parameter_list|)
+value|1
 end_define
 
 begin_endif
@@ -292,7 +318,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Last frag in segment. */
+comment|/* Last frag in segment.  */
 end_comment
 
 begin_decl_stmt
@@ -304,7 +330,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Last frag in segment. */
+comment|/* Last frag in segment.  */
 end_comment
 
 begin_decl_stmt
@@ -317,7 +343,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Last frag in segment. */
+comment|/* Last frag in segment.  */
 end_comment
 
 begin_endif
@@ -357,7 +383,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Tracks object file bytes. */
+comment|/* Tracks object file bytes.  */
 end_comment
 
 begin_ifndef
@@ -385,7 +411,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* BFD_ASSEMBLER */
+comment|/* BFD_ASSEMBLER  */
 end_comment
 
 begin_decl_stmt
@@ -631,7 +657,26 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|relax_and_size_seg
+name|relax_seg
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|size_seg
 name|PARAMS
 argument_list|(
 operator|(
@@ -840,8 +885,51 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BFD_ASSEMBLER
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|OBJ_COFF
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TE_GO32
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|void
+name|set_segment_vma
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  *			fix_new()  *  * Create a fixS in obstack 'notes'.  */
+comment|/* Create a fixS in obstack 'notes'.  */
 end_comment
 
 begin_function
@@ -870,46 +958,46 @@ name|fragS
 modifier|*
 name|frag
 decl_stmt|;
-comment|/* Which frag? */
+comment|/* Which frag?  */
 name|int
 name|where
 decl_stmt|;
-comment|/* Where in that frag? */
+comment|/* Where in that frag?  */
 name|int
 name|size
 decl_stmt|;
-comment|/* 1, 2, or 4 usually. */
+comment|/* 1, 2, or 4 usually.  */
 name|symbolS
 modifier|*
 name|add_symbol
 decl_stmt|;
-comment|/* X_add_symbol. */
+comment|/* X_add_symbol.  */
 name|symbolS
 modifier|*
 name|sub_symbol
 decl_stmt|;
-comment|/* X_op_symbol. */
+comment|/* X_op_symbol.  */
 name|offsetT
 name|offset
 decl_stmt|;
-comment|/* X_add_number. */
+comment|/* X_add_number.  */
 name|int
 name|pcrel
 decl_stmt|;
-comment|/* TRUE if PC-relative relocation. */
+comment|/* TRUE if PC-relative relocation.  */
 ifdef|#
 directive|ifdef
 name|BFD_ASSEMBLER
 name|bfd_reloc_code_real_type
 name|r_type
 decl_stmt|;
-comment|/* Relocation type */
+comment|/* Relocation type.  */
 else|#
 directive|else
 name|int
 name|r_type
 decl_stmt|;
-comment|/* Relocation type */
+comment|/* Relocation type.  */
 endif|#
 directive|endif
 block|{
@@ -1120,7 +1208,7 @@ operator|->
 name|fx_line
 argument_list|)
 expr_stmt|;
-comment|/* Usually, we want relocs sorted numerically, but while      comparing to older versions of gas that have relocs      reverse sorted, it is convenient to have this compile      time option.  xoxorich. */
+comment|/* Usually, we want relocs sorted numerically, but while      comparing to older versions of gas that have relocs      reverse sorted, it is convenient to have this compile      time option.  xoxorich.  */
 block|{
 ifdef|#
 directive|ifdef
@@ -1188,7 +1276,7 @@ name|fixP
 expr_stmt|;
 else|#
 directive|else
-comment|/* REVERSE_SORT_RELOCS */
+comment|/* REVERSE_SORT_RELOCS  */
 name|fixP
 operator|->
 name|fx_next
@@ -1222,7 +1310,7 @@ name|fixP
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* REVERSE_SORT_RELOCS */
+comment|/* REVERSE_SORT_RELOCS  */
 block|}
 return|return
 name|fixP
@@ -1257,41 +1345,41 @@ name|fragS
 modifier|*
 name|frag
 decl_stmt|;
-comment|/* Which frag? */
+comment|/* Which frag?  */
 name|int
 name|where
 decl_stmt|;
-comment|/* Where in that frag? */
+comment|/* Where in that frag?  */
 name|int
 name|size
 decl_stmt|;
-comment|/* 1, 2, or 4 usually. */
+comment|/* 1, 2, or 4 usually.  */
 name|symbolS
 modifier|*
 name|add_symbol
 decl_stmt|;
-comment|/* X_add_symbol. */
+comment|/* X_add_symbol.  */
 name|offsetT
 name|offset
 decl_stmt|;
-comment|/* X_add_number. */
+comment|/* X_add_number.  */
 name|int
 name|pcrel
 decl_stmt|;
-comment|/* TRUE if PC-relative relocation. */
+comment|/* TRUE if PC-relative relocation.  */
 ifdef|#
 directive|ifdef
 name|BFD_ASSEMBLER
 name|bfd_reloc_code_real_type
 name|r_type
 decl_stmt|;
-comment|/* Relocation type */
+comment|/* Relocation type.  */
 else|#
 directive|else
 name|int
 name|r_type
 decl_stmt|;
-comment|/* Relocation type */
+comment|/* Relocation type.  */
 endif|#
 directive|endif
 block|{
@@ -1347,15 +1435,15 @@ name|fragS
 modifier|*
 name|frag
 decl_stmt|;
-comment|/* Which frag? */
+comment|/* Which frag?  */
 name|int
 name|where
 decl_stmt|;
-comment|/* Where in that frag? */
+comment|/* Where in that frag?  */
 name|int
 name|size
 decl_stmt|;
-comment|/* 1, 2, or 4 usually. */
+comment|/* 1, 2, or 4 usually.  */
 name|expressionS
 modifier|*
 name|exp
@@ -1364,20 +1452,20 @@ comment|/* Expression.  */
 name|int
 name|pcrel
 decl_stmt|;
-comment|/* TRUE if PC-relative relocation. */
+comment|/* TRUE if PC-relative relocation.  */
 ifdef|#
 directive|ifdef
 name|BFD_ASSEMBLER
 name|bfd_reloc_code_real_type
 name|r_type
 decl_stmt|;
-comment|/* Relocation type */
+comment|/* Relocation type.  */
 else|#
 directive|else
 name|int
 name|r_type
 decl_stmt|;
-comment|/* Relocation type */
+comment|/* Relocation type.  */
 endif|#
 directive|endif
 block|{
@@ -1408,6 +1496,18 @@ block|{
 case|case
 name|O_absent
 case|:
+break|break;
+case|case
+name|O_register
+case|:
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"register value used as expression"
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|O_add
@@ -1551,7 +1651,7 @@ name|exp
 operator|->
 name|X_add_symbol
 expr_stmt|;
-comment|/* Fall through.   */
+comment|/* Fall through.  */
 case|case
 name|O_constant
 case|:
@@ -1623,7 +1723,7 @@ name|long
 name|length
 decl_stmt|;
 block|{
-comment|/* Don't trust memcpy() of 0 chars. */
+comment|/* Don't trust memcpy() of 0 chars.  */
 if|if
 condition|(
 name|length
@@ -1670,7 +1770,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This routine records the largest alignment seen for each segment.  * If the beginning of the segment is aligned on the worst-case  * boundary, all of the other alignments within it will work.  At  * least one object format really uses this info.  */
+comment|/* This routine records the largest alignment seen for each segment.    If the beginning of the segment is aligned on the worst-case    boundary, all of the other alignments within it will work.  At    least one object format really uses this info.  */
 end_comment
 
 begin_function
@@ -1681,7 +1781,7 @@ name|seg
 parameter_list|,
 name|align
 parameter_list|)
-comment|/* Segment to which alignment pertains */
+comment|/* Segment to which alignment pertains.  */
 name|segT
 name|seg
 decl_stmt|;
@@ -1753,6 +1853,52 @@ directive|endif
 block|}
 end_function
 
+begin_function
+name|int
+name|get_recorded_alignment
+parameter_list|(
+name|seg
+parameter_list|)
+name|segT
+name|seg
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|seg
+operator|==
+name|absolute_section
+condition|)
+return|return
+literal|0
+return|;
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+return|return
+name|bfd_get_section_alignment
+argument_list|(
+name|stdoutput
+argument_list|,
+name|seg
+argument_list|)
+return|;
+else|#
+directive|else
+return|return
+name|section_alignment
+index|[
+operator|(
+name|int
+operator|)
+name|seg
+index|]
+return|;
+endif|#
+directive|endif
+block|}
+end_function
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1817,7 +1963,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined (BFD_ASSEMBLER) */
+comment|/* defined (BFD_ASSEMBLER)  */
 end_comment
 
 begin_if
@@ -2168,7 +2314,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* BFD */
+comment|/* BFD  */
 end_comment
 
 begin_if
@@ -2203,6 +2349,7 @@ name|fragP
 parameter_list|)
 name|segT
 name|sec
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|fragS
 modifier|*
@@ -2244,6 +2391,9 @@ name|rs_align
 case|:
 case|case
 name|rs_align_code
+case|:
+case|case
+name|rs_align_test
 case|:
 case|case
 name|rs_org
@@ -2416,6 +2566,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|rs_dwarf2dbg
+case|:
+name|dwarf2dbg_convert_frag
+argument_list|(
+name|fragP
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|rs_machine_dependent
 case|:
 ifdef|#
@@ -2473,7 +2632,7 @@ name|fr_fix
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*        * After md_convert_frag, we make the frag into a ".space 0".        * Md_convert_frag() should set up any fixSs and constants        * required.        */
+comment|/* After md_convert_frag, we make the frag into a ".space 0". 	 md_convert_frag() should set up any fixSs and constants 	 required.  */
 name|frag_wane
 argument_list|(
 name|fragP
@@ -2577,7 +2736,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined (BFD_ASSEMBLER) || !defined (BFD) */
+comment|/* defined (BFD_ASSEMBLER) || !defined (BFD)  */
 end_comment
 
 begin_ifdef
@@ -2589,7 +2748,81 @@ end_ifdef
 begin_function
 specifier|static
 name|void
-name|relax_and_size_seg
+name|relax_seg
+parameter_list|(
+name|abfd
+parameter_list|,
+name|sec
+parameter_list|,
+name|do_code
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|asection
+modifier|*
+name|sec
+decl_stmt|;
+name|PTR
+name|do_code
+decl_stmt|;
+block|{
+name|flagword
+name|flags
+init|=
+name|bfd_get_section_flags
+argument_list|(
+name|abfd
+argument_list|,
+name|sec
+argument_list|)
+decl_stmt|;
+name|segment_info_type
+modifier|*
+name|seginfo
+init|=
+name|seg_info
+argument_list|(
+name|sec
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SEC_CODE
+operator|)
+operator|==
+operator|!
+name|do_code
+operator|&&
+name|seginfo
+operator|&&
+name|seginfo
+operator|->
+name|frchainP
+condition|)
+name|relax_segment
+argument_list|(
+name|seginfo
+operator|->
+name|frchainP
+operator|->
+name|frch_root
+argument_list|,
+name|sec
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|size_seg
 parameter_list|(
 name|abfd
 parameter_list|,
@@ -2636,15 +2869,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|flags
-operator|=
-name|bfd_get_section_flags
-argument_list|(
-name|abfd
-argument_list|,
-name|sec
-argument_list|)
-expr_stmt|;
 name|seginfo
 operator|=
 name|seg_info
@@ -2661,17 +2885,6 @@ operator|->
 name|frchainP
 condition|)
 block|{
-name|relax_segment
-argument_list|(
-name|seginfo
-operator|->
-name|frchainP
-operator|->
-name|frch_root
-argument_list|,
-name|sec
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|fragp
@@ -2717,7 +2930,7 @@ name|fragp
 operator|->
 name|fr_next
 control|)
-comment|/* walk to last elt */
+comment|/* Walk to last elt.  */
 empty_stmt|;
 name|size
 operator|=
@@ -2734,6 +2947,15 @@ else|else
 name|size
 operator|=
 literal|0
+expr_stmt|;
+name|flags
+operator|=
+name|bfd_get_section_flags
+argument_list|(
+name|abfd
+argument_list|,
+name|sec
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3165,7 +3387,7 @@ name|fixp
 operator|->
 name|fx_done
 condition|)
-comment|/* ignore it */
+comment|/* Ignore it.  */
 empty_stmt|;
 elseif|else
 if|if
@@ -3624,7 +3846,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* If the section symbol isn't going to be output, the relocs 	   at least should still work.  If not, figure out what to do 	   when we run into that case.  	   We refetch the segment when calling section_symbol, rather 	   than using symsec, because S_GET_VALUE may wind up changing 	   the section when it calls resolve_symbol_value. */
+comment|/* If the section symbol isn't going to be output, the relocs 	   at least should still work.  If not, figure out what to do 	   when we run into that case.  	   We refetch the segment when calling section_symbol, rather 	   than using symsec, because S_GET_VALUE may wind up changing 	   the section when it calls resolve_symbol_value.  */
 name|fixp
 operator|->
 name|fx_offset
@@ -3677,7 +3899,7 @@ block|}
 if|#
 directive|if
 literal|1
-comment|/*def RELOC_REQUIRES_SYMBOL*/
+comment|/* def RELOC_REQUIRES_SYMBOL  */
 else|else
 block|{
 comment|/* There was no symbol required by this relocation.  However, 	   BFD doesn't really handle relocations without symbols well. 	   (At least, the COFF support doesn't.)  So for now we fake up 	   a local symbol in the absolute section.  */
@@ -3690,7 +3912,12 @@ argument_list|(
 name|absolute_section
 argument_list|)
 expr_stmt|;
-comment|/*	fixp->fx_addsy->sy_used_in_reloc = 1; */
+if|#
+directive|if
+literal|0
+block|fixp->fx_addsy->sy_used_in_reloc = 1;
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif
@@ -3739,6 +3966,7 @@ argument_list|(
 name|sec
 argument_list|)
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -4177,7 +4405,7 @@ operator|--
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* If this is an undefined symbol which was equated to another          symbol, then use generate the reloc against the latter symbol          rather than the former.  */
+comment|/* If this is an undefined symbol which was equated to another          symbol, then generate the reloc against the latter symbol          rather than the former.  */
 name|sym
 operator|=
 name|fixp
@@ -4882,7 +5110,7 @@ name|buf
 argument_list|)
 condition|)
 block|{
-comment|/* Do it the old way. Can this ever happen? */
+comment|/* Do it the old way. Can this ever happen?  */
 while|while
 condition|(
 name|count
@@ -5267,7 +5495,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* BFD_ASSEMBLER || (! BFD&& ! OBJ_AOUT) */
+comment|/* BFD_ASSEMBLER || (! BFD&& ! OBJ_AOUT)  */
 end_comment
 
 begin_if
@@ -5317,7 +5545,7 @@ argument_list|,
 name|SEG_BSS
 argument_list|)
 expr_stmt|;
-comment|/*    * Now the addresses of frags are correct within the segment.    */
+comment|/* Now the addresses of frags are correct within the segment.  */
 name|know
 argument_list|(
 name|text_last_frag
@@ -5353,7 +5581,7 @@ operator|&
 name|headers
 argument_list|)
 expr_stmt|;
-comment|/*    * Join the 2 segments into 1 huge segment.    * To do this, re-compute every rn_address in the SEG_DATA frags.    * Then join the data frags after the text frags.    *    * Determine a_data [length of data segment].    */
+comment|/* Join the 2 segments into 1 huge segment.      To do this, re-compute every rn_address in the SEG_DATA frags.      Then join the data frags after the text frags.       Determine a_data [length of data segment].  */
 if|if
 condition|(
 name|data_frag_root
@@ -5410,7 +5638,7 @@ operator|&
 name|headers
 argument_list|)
 expr_stmt|;
-comment|/*& in file of the data segment. */
+comment|/*& in file of the data segment.  */
 ifdef|#
 directive|ifdef
 name|OBJ_BOUT
@@ -5454,15 +5682,12 @@ name|fragP
 operator|->
 name|fr_next
 control|)
-block|{
 name|fragP
 operator|->
 name|fr_address
 operator|+=
 name|slide
 expr_stmt|;
-block|}
-comment|/* for each data frag */
 name|know
 argument_list|(
 name|text_last_frag
@@ -5540,7 +5765,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* ! OBJ_BOUT */
+comment|/* ! OBJ_BOUT  */
 name|bss_address_frag
 operator|.
 name|fr_address
@@ -5561,8 +5786,8 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ! OBJ_BOUT */
-comment|/* Slide all the frags */
+comment|/* ! OBJ_BOUT  */
+comment|/* Slide all the frags.  */
 if|if
 condition|(
 name|bss_frag_root
@@ -5589,15 +5814,12 @@ name|fragP
 operator|->
 name|fr_next
 control|)
-block|{
 name|fragP
 operator|->
 name|fr_address
 operator|+=
 name|slide
 expr_stmt|;
-block|}
-comment|/* for each bss frag */
 block|}
 if|if
 condition|(
@@ -5635,7 +5857,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! BFD_ASSEMBLER&& ! BFD */
+comment|/* ! BFD_ASSEMBLER&& ! BFD  */
 end_comment
 
 begin_if
@@ -5821,6 +6043,85 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BFD_ASSEMBLER
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|OBJ_COFF
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TE_GO32
+argument_list|)
+end_if
+
+begin_function
+specifier|static
+name|void
+name|set_segment_vma
+parameter_list|(
+name|abfd
+parameter_list|,
+name|sec
+parameter_list|,
+name|xxx
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|asection
+modifier|*
+name|sec
+decl_stmt|;
+name|PTR
+name|xxx
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+specifier|static
+name|bfd_vma
+name|addr
+init|=
+literal|0
+decl_stmt|;
+name|bfd_set_section_vma
+argument_list|(
+name|abfd
+argument_list|,
+name|sec
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+name|addr
+operator|+=
+name|bfd_section_size
+argument_list|(
+name|abfd
+argument_list|,
+name|sec
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BFD_ASSEMBLER&& OBJ_COFF&& !TE_PE  */
+end_comment
+
 begin_comment
 comment|/* Finish the subsegments.  After every sub-segment, we fake an    ".align ...".  This conforms to BSD4.2 brane-damage.  We then fake    ".fill 0" because that is the kind of frag that requires least    thought.  ".align" frags like to have a following frag since that    makes calculating their intended length trivial.  */
 end_comment
@@ -5897,6 +6198,9 @@ operator|->
 name|frch_next
 control|)
 block|{
+name|int
+name|alignment
+decl_stmt|;
 name|subseg_set
 argument_list|(
 name|frchainP
@@ -5909,8 +6213,8 @@ name|frch_subseg
 argument_list|)
 expr_stmt|;
 comment|/* This now gets called even if we had errors.  In that case,          any alignment is meaningless, and, moreover, will look weird          if we are generating a listing.  */
-name|frag_align
-argument_list|(
+name|alignment
+operator|=
 name|had_errors
 argument_list|()
 condition|?
@@ -5920,14 +6224,49 @@ name|SUB_SEGMENT_ALIGN
 argument_list|(
 name|now_seg
 argument_list|)
-argument_list|,
+expr_stmt|;
+comment|/* The last subsegment gets an aligment corresponding to the 	 alignment of the section.  This allows proper nop-filling 	 at the end of code-bearing sections.  */
+if|if
+condition|(
+operator|!
+name|frchainP
+operator|->
+name|frch_next
+operator|||
+name|frchainP
+operator|->
+name|frch_next
+operator|->
+name|frch_seg
+operator|!=
+name|now_seg
+condition|)
+name|alignment
+operator|=
+name|get_recorded_alignment
+argument_list|(
+name|now_seg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|subseg_text_p
 argument_list|(
 name|now_seg
 argument_list|)
-condition|?
-name|NOP_OPCODE
-else|:
+condition|)
+name|frag_align_code
+argument_list|(
+name|alignment
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|frag_align
+argument_list|(
+name|alignment
+argument_list|,
 literal|0
 argument_list|,
 literal|0
@@ -5984,7 +6323,7 @@ name|fragS
 modifier|*
 name|fragP
 decl_stmt|;
-comment|/* Track along all frags. */
+comment|/* Track along all frags.  */
 endif|#
 directive|endif
 comment|/* Do we really want to write it?  */
@@ -6084,13 +6423,13 @@ block|}
 ifdef|#
 directive|ifdef
 name|OBJ_VMS
-comment|/* Under VMS we try to be compatible with VAX-11 "C".  Thus, we call      a routine to check for the definition of the procedure "_main",      and if so -- fix it up so that it can be program entry point. */
+comment|/* Under VMS we try to be compatible with VAX-11 "C".  Thus, we call      a routine to check for the definition of the procedure "_main",      and if so -- fix it up so that it can be program entry point.  */
 name|vms_check_for_main
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* OBJ_VMS */
+comment|/* OBJ_VMS  */
 comment|/* From now on, we don't care about sub-segments.  Build one frag chain      for each segment. Linked thru fr_next.  */
 ifdef|#
 directive|ifdef
@@ -6280,7 +6619,33 @@ name|bfd_map_over_sections
 argument_list|(
 name|stdoutput
 argument_list|,
-name|relax_and_size_seg
+name|relax_seg
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|1
+argument_list|)
+expr_stmt|;
+name|bfd_map_over_sections
+argument_list|(
+name|stdoutput
+argument_list|,
+name|relax_seg
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+name|bfd_map_over_sections
+argument_list|(
+name|stdoutput
+argument_list|,
+name|size_seg
 argument_list|,
 operator|(
 name|char
@@ -6296,11 +6661,43 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* BFD_ASSEMBLER */
+comment|/* BFD_ASSEMBLER  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BFD_ASSEMBLER
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|OBJ_COFF
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TE_GO32
+argument_list|)
+comment|/* Now that the segments have their final sizes, run through the      sections and set their vma and lma. !BFD gas sets them, and BFD gas      should too. Currently, only DJGPP uses this code, but other      COFF targets may need to execute this too.  */
+name|bfd_map_over_sections
+argument_list|(
+name|stdoutput
+argument_list|,
+name|set_segment_vma
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|BFD_ASSEMBLER
-comment|/*    *    * Crawl the symbol chain.    *    * For each symbol whose value depends on a frag, take the address of    * that frag and subsume it into the value of the symbol.    * After this, there is just one way to lookup a symbol value.    * Values are left in their final state for object file emission.    * We adjust the values of 'L' local symbols, even if we do    * not intend to emit them to the object file, because their values    * are needed for fix-ups.    *    * Unless we saw a -L flag, remove all symbols that begin with 'L'    * from the symbol chain.  (They are still pointed to by the fixes.)    *    * Count the remaining symbols.    * Assign a symbol number to each symbol.    * Count the number of string-table chars we will emit.    * Put this info into the headers as appropriate.    *    */
+comment|/* Crawl the symbol chain.       For each symbol whose value depends on a frag, take the address of      that frag and subsume it into the value of the symbol.      After this, there is just one way to lookup a symbol value.      Values are left in their final state for object file emission.      We adjust the values of 'L' local symbols, even if we do      not intend to emit them to the object file, because their values      are needed for fix-ups.       Unless we saw a -L flag, remove all symbols that begin with 'L'      from the symbol chain.  (They are still pointed to by the fixes.)       Count the remaining symbols.      Assign a symbol number to each symbol.      Count the number of string-table chars we will emit.      Put this info into the headers as appropriate.  */
 name|know
 argument_list|(
 name|zero_address_frag
@@ -6344,7 +6741,7 @@ argument_list|,
 name|string_byte_count
 argument_list|)
 expr_stmt|;
-comment|/*    * Addresses of frags now reflect addresses we use in the object file.    * Symbol values are correct.    * Scan the frags, converting any ".org"s and ".align"s to ".fill"s.    * Also converting any machine-dependent frags using md_convert_frag();    */
+comment|/* Addresses of frags now reflect addresses we use in the object file.      Symbol values are correct.      Scan the frags, converting any ".org"s and ".align"s to ".fill"s.      Also converting any machine-dependent frags using md_convert_frag();  */
 name|subseg_change
 argument_list|(
 name|SEG_TEXT
@@ -6453,7 +6850,7 @@ directive|endif
 block|}
 endif|#
 directive|endif
-comment|/* ! BFD_ASSEMBLER */
+comment|/* ! BFD_ASSEMBLER  */
 ifndef|#
 directive|ifndef
 name|WORKING_DOT_WORD
@@ -6709,13 +7106,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* TC_NS32K */
+comment|/* TC_NS32K  */
 endif|#
 directive|endif
-comment|/* TC_SPARC|TC_A29K|NEED_FX_R_TYPE */
+comment|/* TC_SPARC|TC_A29K|NEED_FX_R_TYPE  */
 endif|#
 directive|endif
-comment|/* BFD_ASSEMBLER */
+comment|/* BFD_ASSEMBLER  */
 operator|*
 name|prevP
 operator|=
@@ -6829,6 +7226,7 @@ name|fr_opcode
 expr_stmt|;
 name|table_addr
 operator|=
+operator|(
 name|lie
 operator|->
 name|dispfrag
@@ -6843,6 +7241,7 @@ operator|->
 name|dispfrag
 operator|->
 name|fr_literal
+operator|)
 operator|)
 expr_stmt|;
 comment|/* Create the jump around the long jumps.  This is a short 	   jump from table_ptr+0 to table_ptr+n*long_jump_size.  */
@@ -6918,8 +7317,8 @@ operator|==
 literal|2
 condition|)
 continue|continue;
-comment|/* Patch the jump table */
-comment|/* This is the offset from ??? to table_ptr+0 */
+comment|/* Patch the jump table.  */
+comment|/* This is the offset from ??? to table_ptr+0.  */
 name|to_addr
 operator|=
 name|table_addr
@@ -6944,6 +7343,18 @@ name|sub
 argument_list|)
 operator|->
 name|fr_address
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|TC_CHECK_ADJUSTED_BROKEN_DOT_WORD
+name|TC_CHECK_ADJUSTED_BROKEN_DOT_WORD
+argument_list|(
+name|to_addr
+argument_list|,
+name|lie
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -7001,8 +7412,8 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Install the long jump */
-comment|/* this is a long jump from table_ptr+0 to the final target */
+comment|/* Install the long jump.  */
+comment|/* This is a long jump from table_ptr+0 to the final target.  */
 name|from_addr
 operator|=
 name|table_addr
@@ -7066,7 +7477,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* not WORKING_DOT_WORD */
+comment|/* not WORKING_DOT_WORD  */
 ifndef|#
 directive|ifndef
 name|BFD_ASSEMBLER
@@ -7074,7 +7485,7 @@ ifndef|#
 directive|ifndef
 name|OBJ_VMS
 block|{
-comment|/* not vms */
+comment|/* not vms  */
 name|char
 modifier|*
 name|the_object_file
@@ -7082,7 +7493,7 @@ decl_stmt|;
 name|long
 name|object_file_size
 decl_stmt|;
-comment|/*      * Scan every FixS performing fixups. We had to wait until now to do      * this because md_convert_frag() may have made some fixSs.      */
+comment|/* Scan every FixS performing fixups. We had to wait until now to        do this because md_convert_frag() may have made some fixSs.  */
 name|int
 name|trsize
 decl_stmt|,
@@ -7134,7 +7545,7 @@ argument_list|,
 name|drsize
 argument_list|)
 expr_stmt|;
-comment|/* FIXME move this stuff into the pre-write-hook */
+comment|/* FIXME: Move this stuff into the pre-write-hook.  */
 name|H_SET_MAGIC_NUMBER
 argument_list|(
 operator|&
@@ -7157,7 +7568,7 @@ operator|&
 name|headers
 argument_list|)
 expr_stmt|;
-comment|/* extra coff stuff */
+comment|/* Extra coff stuff.  */
 name|object_file_size
 operator|=
 name|H_GET_FILE_SIZE
@@ -7204,7 +7615,7 @@ name|headers
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Emit code.      */
+comment|/* Emit code.  */
 for|for
 control|(
 name|fragP
@@ -7303,7 +7714,6 @@ condition|;
 name|count
 operator|--
 control|)
-block|{
 name|append
 argument_list|(
 operator|&
@@ -7319,9 +7729,6 @@ name|fill_size
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* for each  */
-block|}
-comment|/* for each code frag. */
 name|know
 argument_list|(
 operator|(
@@ -7351,7 +7758,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Emit relocations.      */
+comment|/* Emit relocations.  */
 name|obj_emit_relocations
 argument_list|(
 operator|&
@@ -7403,7 +7810,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TC_I960
-comment|/* Make addresses in data relocation directives relative to beginning of      * first data fragment, not end of last text fragment:  alignment of the      * start of the data segment may place a gap between the segments.      */
+comment|/* Make addresses in data relocation directives relative to beginning of        first data fragment, not end of last text fragment:  alignment of the        start of the data segment may place a gap between the segments.  */
 name|obj_emit_relocations
 argument_list|(
 operator|&
@@ -7420,7 +7827,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* TC_I960 */
+comment|/* TC_I960  */
 name|obj_emit_relocations
 argument_list|(
 operator|&
@@ -7435,7 +7842,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* TC_I960 */
+comment|/* TC_I960  */
 name|know
 argument_list|(
 operator|(
@@ -7477,7 +7884,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Emit line number entries.      */
+comment|/* Emit line number entries.  */
 name|OBJ_EMIT_LINENO
 argument_list|(
 operator|&
@@ -7535,7 +7942,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Emit symbols.      */
+comment|/* Emit symbols.  */
 name|obj_emit_symbols
 argument_list|(
 operator|&
@@ -7597,22 +8004,19 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Emit strings.      */
+comment|/* Emit strings.  */
 if|if
 condition|(
 name|string_byte_count
 operator|>
 literal|0
 condition|)
-block|{
 name|obj_emit_strings
 argument_list|(
 operator|&
 name|next_object_file_charP
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* only if we have a string table */
 ifdef|#
 directive|ifdef
 name|BFD_HEADERS
@@ -7638,7 +8042,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* Write the data to the file */
+comment|/* Write the data to the file.  */
 name|output_file_append
 argument_list|(
 name|the_object_file
@@ -7656,11 +8060,10 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* non vms output */
 else|#
 directive|else
-comment|/* OBJ_VMS */
-comment|/*    *	Now do the VMS-dependent part of writing the object file    */
+comment|/* OBJ_VMS  */
+comment|/* Now do the VMS-dependent part of writing the object file.  */
 name|vms_write_object_file
 argument_list|(
 name|H_GET_TEXT_SIZE
@@ -7688,10 +8091,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* OBJ_VMS */
+comment|/* OBJ_VMS  */
 else|#
 directive|else
-comment|/* BFD_ASSEMBLER */
+comment|/* BFD_ASSEMBLER  */
 comment|/* Resolve symbol values.  This needs to be done before processing      the relocations.  */
 if|if
 condition|(
@@ -8182,7 +8585,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* BFD_ASSEMBLER */
+comment|/* BFD_ASSEMBLER  */
 block|}
 end_function
 
@@ -8192,11 +8595,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! BFD */
-end_comment
-
-begin_comment
-comment|/*  *			relax_segment()  *  * Now we have a segment, not a crowd of sub-segments, we can make fr_address  * values.  *  * Relax the frags.  *  * After this, all frags in this segment have addresses that are correct  * within the segment. Since segments live in different file addresses,  * these frag addresses may not be the same as final object-file addresses.  */
+comment|/* ! BFD  */
 end_comment
 
 begin_ifdef
@@ -8204,73 +8603,6 @@ ifdef|#
 directive|ifdef
 name|TC_GENERIC_RELAX_TABLE
 end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|is_dnrange
-name|PARAMS
-argument_list|(
-operator|(
-name|fragS
-operator|*
-operator|,
-name|fragS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Subroutines of relax_segment.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|is_dnrange
-parameter_list|(
-name|f1
-parameter_list|,
-name|f2
-parameter_list|)
-name|fragS
-modifier|*
-name|f1
-decl_stmt|;
-name|fragS
-modifier|*
-name|f2
-decl_stmt|;
-block|{
-for|for
-control|(
-init|;
-name|f1
-condition|;
-name|f1
-operator|=
-name|f1
-operator|->
-name|fr_next
-control|)
-if|if
-condition|(
-name|f1
-operator|->
-name|fr_next
-operator|==
-name|f2
-condition|)
-return|return
-literal|1
-return|;
-return|return
-literal|0
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/* Relax a fragment by scanning TC_GENERIC_RELAX_TABLE.  */
@@ -8280,10 +8612,15 @@ begin_function
 name|long
 name|relax_frag
 parameter_list|(
+name|segment
+parameter_list|,
 name|fragP
 parameter_list|,
 name|stretch
 parameter_list|)
+name|segT
+name|segment
+decl_stmt|;
 name|fragS
 modifier|*
 name|fragP
@@ -8309,53 +8646,42 @@ name|relax_substateT
 name|this_state
 decl_stmt|;
 name|long
-name|aim
-decl_stmt|,
-name|target
-decl_stmt|,
 name|growth
+decl_stmt|;
+name|offsetT
+name|aim
+decl_stmt|;
+name|addressT
+name|target
+decl_stmt|;
+name|addressT
+name|address
 decl_stmt|;
 name|symbolS
 modifier|*
 name|symbolP
-init|=
-name|fragP
-operator|->
-name|fr_symbol
-decl_stmt|;
-name|long
-name|offset
-init|=
-name|fragP
-operator|->
-name|fr_offset
-decl_stmt|;
-comment|/* Recompute was_address by undoing "+= stretch" done by relax_segment.  */
-name|unsigned
-name|long
-name|was_address
-init|=
-name|fragP
-operator|->
-name|fr_address
-operator|-
-name|stretch
-decl_stmt|;
-name|unsigned
-name|long
-name|address
-init|=
-name|fragP
-operator|->
-name|fr_address
 decl_stmt|;
 specifier|const
 name|relax_typeS
 modifier|*
 name|table
-init|=
-name|TC_GENERIC_RELAX_TABLE
 decl_stmt|;
+name|target
+operator|=
+name|fragP
+operator|->
+name|fr_offset
+expr_stmt|;
+name|address
+operator|=
+name|fragP
+operator|->
+name|fr_address
+expr_stmt|;
+name|table
+operator|=
+name|TC_GENERIC_RELAX_TABLE
+expr_stmt|;
 name|this_state
 operator|=
 name|fragP
@@ -8370,15 +8696,28 @@ name|table
 operator|+
 name|this_state
 expr_stmt|;
-name|target
+name|symbolP
 operator|=
-name|offset
+name|fragP
+operator|->
+name|fr_symbol
 expr_stmt|;
 if|if
 condition|(
 name|symbolP
 condition|)
 block|{
+name|fragS
+modifier|*
+name|sym_frag
+decl_stmt|;
+name|sym_frag
+operator|=
+name|symbol_get_frag
+argument_list|(
+name|symbolP
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|DIFF_EXPR_OK
@@ -8438,9 +8777,9 @@ endif|#
 directive|endif
 name|know
 argument_list|(
-name|symbolP
-operator|->
-name|sy_frag
+name|sym_frag
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8457,9 +8796,7 @@ operator|==
 name|absolute_section
 operator|)
 operator|||
-name|symbolP
-operator|->
-name|sy_frag
+name|sym_frag
 operator|==
 operator|&
 name|zero_address_frag
@@ -8472,34 +8809,31 @@ argument_list|(
 name|symbolP
 argument_list|)
 operator|+
-name|symbol_get_frag
-argument_list|(
-name|symbolP
-argument_list|)
+name|sym_frag
 operator|->
 name|fr_address
 expr_stmt|;
-comment|/* If frag has yet to be reached on this pass, 	 assume it will move by STRETCH just as we did. 	 If this is not so, it will be because some frag 	 between grows, and that will force another pass.  	 Beware zero-length frags.  	 There should be a faster way to do this.  */
+comment|/* If frag has yet to be reached on this pass, 	 assume it will move by STRETCH just as we did. 	 If this is not so, it will be because some frag 	 between grows, and that will force another pass.  */
 if|if
 condition|(
-name|symbol_get_frag
-argument_list|(
-name|symbolP
-argument_list|)
-operator|->
-name|fr_address
-operator|>=
-name|was_address
+name|stretch
+operator|!=
+literal|0
 operator|&&
-name|is_dnrange
-argument_list|(
+name|sym_frag
+operator|->
+name|relax_marker
+operator|!=
 name|fragP
-argument_list|,
-name|symbol_get_frag
+operator|->
+name|relax_marker
+operator|&&
+name|S_GET_SEGMENT
 argument_list|(
 name|symbolP
 argument_list|)
-argument_list|)
+operator|==
+name|segment
 condition|)
 block|{
 name|target
@@ -8521,7 +8855,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TC_PCREL_ADJUST
-comment|/* Currently only the ns32k family needs this */
+comment|/* Currently only the ns32k family needs this.  */
 name|aim
 operator|+=
 name|TC_PCREL_ADJUST
@@ -8529,15 +8863,20 @@ argument_list|(
 name|fragP
 argument_list|)
 expr_stmt|;
-comment|/*#else*/
+comment|/* #else */
 comment|/* This machine doesn't want to use pcrel_adjust.      In that case, pcrel_adjust should be zero.  */
-comment|/*  assert (fragP->fr_targ.ns32k.pcrel_adjust == 0);*/
+if|#
+directive|if
+literal|0
+block|assert (fragP->fr_targ.ns32k.pcrel_adjust == 0);
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|md_prepare_relax_scan
-comment|/* formerly called M68K_AIM_KLUDGE */
+comment|/* formerly called M68K_AIM_KLUDGE  */
 name|md_prepare_relax_scan
 argument_list|(
 name|fragP
@@ -8560,7 +8899,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* Look backwards. */
+comment|/* Look backwards.  */
 for|for
 control|(
 name|next_state
@@ -8586,7 +8925,7 @@ literal|0
 expr_stmt|;
 else|else
 block|{
-comment|/* Grow to next state. */
+comment|/* Grow to next state.  */
 name|this_state
 operator|=
 name|next_state
@@ -8607,7 +8946,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Look forwards. */
+comment|/* Look forwards.  */
 for|for
 control|(
 name|next_state
@@ -8633,7 +8972,7 @@ literal|0
 expr_stmt|;
 else|else
 block|{
-comment|/* Grow to next state. */
+comment|/* Grow to next state.  */
 name|this_state
 operator|=
 name|next_state
@@ -8686,7 +9025,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined (TC_GENERIC_RELAX_TABLE) */
+comment|/* defined (TC_GENERIC_RELAX_TABLE)  */
 end_comment
 
 begin_comment
@@ -8706,12 +9045,12 @@ specifier|register
 name|relax_addressT
 name|address
 decl_stmt|;
-comment|/* Address now. */
+comment|/* Address now.  */
 specifier|register
 name|int
 name|alignment
 decl_stmt|;
-comment|/* Alignment (binary). */
+comment|/* Alignment (binary).  */
 block|{
 name|relax_addressT
 name|mask
@@ -8772,6 +9111,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Now we have a segment, not a crowd of sub-segments, we can make    fr_address values.     Relax the frags.     After this, all frags in this segment have addresses that are correct    within the segment. Since segments live in different file addresses,    these frag addresses may not be the same as final object-file    addresses.  */
+end_comment
+
 begin_function
 name|void
 name|relax_segment
@@ -8829,7 +9172,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* In case md_estimate_size_before_relax() wants to make fixSs. */
+comment|/* In case md_estimate_size_before_relax() wants to make fixSs.  */
 name|subseg_change
 argument_list|(
 name|segment
@@ -8857,6 +9200,12 @@ operator|->
 name|fr_next
 control|)
 block|{
+name|fragP
+operator|->
+name|relax_marker
+operator|=
+literal|0
+expr_stmt|;
 name|fragP
 operator|->
 name|fr_address
@@ -8895,6 +9244,9 @@ name|rs_align
 case|:
 case|case
 name|rs_align_code
+case|:
+case|case
+name|rs_align_test
 case|:
 block|{
 name|addressT
@@ -9003,7 +9355,7 @@ break|break;
 ifndef|#
 directive|ifndef
 name|WORKING_DOT_WORD
-comment|/* Broken words don't concern us yet */
+comment|/* Broken words don't concern us yet.  */
 case|case
 name|rs_broken_word
 case|:
@@ -9013,7 +9365,7 @@ directive|endif
 case|case
 name|rs_leb128
 case|:
-comment|/* Initial guess is always 1; doing otherwise can result in  	     stable solutions that are larger than the minimum.  */
+comment|/* Initial guess is always 1; doing otherwise can result in 	     stable solutions that are larger than the minimum.  */
 name|address
 operator|+=
 name|fragP
@@ -9034,6 +9386,17 @@ name|fragP
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|rs_dwarf2dbg
+case|:
+name|address
+operator|+=
+name|dwarf2dbg_estimate_size_before_relax
+argument_list|(
+name|fragP
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|BAD_CASE
 argument_list|(
@@ -9044,27 +9407,25 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* switch(fr_type) */
 block|}
-comment|/* for each frag in the segment */
 comment|/* Do relax().  */
 block|{
 name|long
 name|stretch
 decl_stmt|;
-comment|/* May be any size, 0 or negative. */
-comment|/* Cumulative number of addresses we have */
-comment|/* relaxed this pass. */
-comment|/* We may have relaxed more than one address. */
-name|long
+comment|/* May be any size, 0 or negative.  */
+comment|/* Cumulative number of addresses we have relaxed this pass.        We may have relaxed more than one address.  */
+name|int
 name|stretched
 decl_stmt|;
-comment|/* Have we stretched on this pass? */
+comment|/* Have we stretched on this pass?  */
 comment|/* This is 'cuz stretch may be zero, when, in fact some piece of code        grew, and another shrank.  If a branch instruction doesn't fit anymore,        we could be scrod.  */
 do|do
 block|{
 name|stretch
 operator|=
+literal|0
+expr_stmt|;
 name|stretched
 operator|=
 literal|0
@@ -9099,6 +9460,12 @@ name|symbolS
 modifier|*
 name|symbolP
 decl_stmt|;
+name|fragP
+operator|->
+name|relax_marker
+operator|^=
+literal|1
+expr_stmt|;
 name|was_address
 operator|=
 name|fragP
@@ -9135,7 +9502,7 @@ block|{
 case|case
 name|rs_fill
 case|:
-comment|/* .fill never relaxes. */
+comment|/* .fill never relaxes.  */
 name|growth
 operator|=
 literal|0
@@ -9408,7 +9775,7 @@ block|}
 block|}
 break|break;
 block|}
-comment|/* case rs_broken_word */
+comment|/* case rs_broken_word  */
 endif|#
 directive|endif
 case|case
@@ -9416,6 +9783,9 @@ name|rs_align
 case|:
 case|case
 name|rs_align_code
+case|:
+case|case
+name|rs_align_test
 case|:
 block|{
 name|addressT
@@ -9501,12 +9871,12 @@ case|case
 name|rs_org
 case|:
 block|{
-name|long
+name|addressT
 name|target
 init|=
 name|offset
 decl_stmt|;
-name|long
+name|addressT
 name|after
 decl_stmt|;
 if|if
@@ -9612,7 +9982,7 @@ name|fr_address
 operator|)
 expr_stmt|;
 block|}
-comment|/* if we have a symbol */
+comment|/* if we have a symbol  */
 name|know
 argument_list|(
 name|fragP
@@ -9641,7 +10011,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* Growth may be negative, but variable part of frag 			 cannot have fewer than 0 chars.  That is, we can't 			 .org backwards. */
+comment|/* Growth may be negative, but variable part of frag 			 cannot have fewer than 0 chars.  That is, we can't 			 .org backwards.  */
 name|as_bad_where
 argument_list|(
 name|fragP
@@ -9690,11 +10060,11 @@ operator|=
 name|stretch
 expr_stmt|;
 block|}
+comment|/* This is an absolute growth factor  */
 name|growth
 operator|-=
 name|stretch
 expr_stmt|;
-comment|/* This is an absolute growth factor */
 break|break;
 block|}
 case|case
@@ -9792,6 +10162,8 @@ name|growth
 operator|=
 name|md_relax_frag
 argument_list|(
+name|segment
+argument_list|,
 name|fragP
 argument_list|,
 name|stretch
@@ -9807,6 +10179,8 @@ name|growth
 operator|=
 name|relax_frag
 argument_list|(
+name|segment
+argument_list|,
 name|fragP
 argument_list|,
 name|stretch
@@ -9814,7 +10188,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* TC_GENERIC_RELAX_TABLE */
+comment|/* TC_GENERIC_RELAX_TABLE  */
 endif|#
 directive|endif
 break|break;
@@ -9877,6 +10251,17 @@ name|fragP
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|rs_dwarf2dbg
+case|:
+name|growth
+operator|=
+name|dwarf2dbg_relax_frag
+argument_list|(
+name|fragP
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|BAD_CASE
 argument_list|(
@@ -9897,28 +10282,25 @@ operator|+=
 name|growth
 expr_stmt|;
 name|stretched
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* For each frag in the segment. */
+comment|/* For each frag in the segment.  */
 block|}
 do|while
 condition|(
 name|stretched
 condition|)
 do|;
-comment|/* Until nothing further to relax. */
+comment|/* Until nothing further to relax.  */
 block|}
-comment|/* do_relax */
-comment|/*    * We now have valid fr_address'es for each frag.    */
-comment|/*    * All fr_address's are correct, relative to their own segment.    * We have made all the fixS we will ever make.    */
+comment|/* do_relax  */
+comment|/* We now have valid fr_address'es for each frag.  */
+comment|/* All fr_address's are correct, relative to their own segment.      We have made all the fixS we will ever make.  */
 block|}
 end_function
-
-begin_comment
-comment|/* relax_segment() */
-end_comment
 
 begin_if
 if|#
@@ -9985,7 +10367,7 @@ decl_stmt|;
 name|segT
 name|this_segment_type
 decl_stmt|;
-comment|/* N_TYPE bits for segment. */
+comment|/* N_TYPE bits for segment.  */
 block|{
 name|long
 name|seg_reloc_count
@@ -10031,6 +10413,11 @@ comment|/* If the linker is doing the relaxing, we must not do any fixups.      
 if|if
 condition|(
 name|linkrelax
+operator|&&
+name|TC_LINKRELAX_FIXUP
+argument_list|(
+name|this_segment_type
+argument_list|)
 condition|)
 block|{
 for|for
@@ -10271,7 +10658,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* It's just -sym */
+comment|/* It's just -sym.  */
 if|if
 condition|(
 name|S_GET_SEGMENT
@@ -10355,7 +10742,7 @@ name|add_symbol_segment
 argument_list|)
 condition|)
 block|{
-comment|/* Difference of 2 symbols from same segment. 		 Can't make difference of 2 undefineds: 'value' means 		 something different for N_UNDF. */
+comment|/* Difference of 2 symbols from same segment. 		 Can't make difference of 2 undefineds: 'value' means 		 something different for N_UNDF.  */
 ifdef|#
 directive|ifdef
 name|TC_I960
@@ -10384,7 +10771,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* TC_I960 */
+comment|/* TC_I960  */
 name|add_number
 operator|+=
 name|S_GET_VALUE
@@ -10405,7 +10792,7 @@ name|pcrel
 operator|=
 literal|0
 expr_stmt|;
-comment|/* No further pcrel processing. */
+comment|/* No further pcrel processing.  */
 comment|/* Let the target machine make the final determination 		 as to whether or not a relocation will be needed to 		 handle this fixup.  */
 if|if
 condition|(
@@ -10440,7 +10827,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Different segments in subtraction. */
+comment|/* Different segments in subtraction.  */
 name|know
 argument_list|(
 operator|!
@@ -10494,7 +10881,7 @@ name|this_segment_type
 if|#
 directive|if
 literal|0
-comment|/* Do this even if it's already described as pc-relative.  For example, 	 on the m68k, an operand of "pc@(foo-.-2)" should address "foo" in a 	 pc-relative mode.  */
+comment|/* Do this even if it's already described as 			  pc-relative.  For example, on the m68k, an 			  operand of "pc@(foo-.-2)" should address 			  "foo" in a pc-relative mode.  */
 condition|&& pcrel
 endif|#
 directive|endif
@@ -10665,11 +11052,11 @@ name|fixP
 argument_list|)
 condition|)
 block|{
-comment|/* 	       * This fixup was made when the symbol's segment was 	       * SEG_UNKNOWN, but it is now in the local segment. 	       * So we know how to do the address without relocation. 	       */
+comment|/* This fixup was made when the symbol's segment was 		 SEG_UNKNOWN, but it is now in the local segment. 		 So we know how to do the address without relocation.  */
 ifdef|#
 directive|ifdef
 name|TC_I960
-comment|/* reloc_callj() may replace a 'call' with a 'calls' or a 		 'bal', in which cases it modifies *fixP as appropriate. 		 In the case of a 'calls', no further work is required, 		 and *fixP has been set up to make the rest of the code 		 below a no-op. */
+comment|/* reloc_callj() may replace a 'call' with a 'calls' or a 		 'bal', in which cases it modifies *fixP as appropriate. 		 In the case of a 'calls', no further work is required, 		 and *fixP has been set up to make the rest of the code 		 below a no-op.  */
 name|reloc_callj
 argument_list|(
 name|fixP
@@ -10677,7 +11064,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* TC_I960 */
+comment|/* TC_I960  */
 name|add_number
 operator|+=
 name|S_GET_VALUE
@@ -10694,11 +11081,11 @@ argument_list|,
 name|this_segment_type
 argument_list|)
 expr_stmt|;
+comment|/* Lie.  Don't want further pcrel processing.  */
 name|pcrel
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Lie. Don't want further pcrel processing. */
 comment|/* Let the target machine make the final determination 		 as to whether or not a relocation will be needed to 		 handle this fixup.  */
 if|if
 condition|(
@@ -10746,7 +11133,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* TC_I960 */
+comment|/* TC_I960  */
 name|add_number
 operator|+=
 name|S_GET_VALUE
@@ -10809,7 +11196,7 @@ operator|==
 literal|13
 condition|)
 block|{
-comment|/* This is a COBR instruction.  They have only a 		       * 13-bit displacement and are only to be used 		       * for local branches: flag as error, don't generate 		       * relocation. 		       */
+comment|/* This is a COBR instruction.  They have only a 			 13-bit displacement and are only to be used 			 for local branches: flag as error, don't generate 			 relocation.  */
 name|as_bad_where
 argument_list|(
 name|fixP
@@ -10840,10 +11227,10 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* COBR */
+comment|/* COBR.  */
 endif|#
 directive|endif
-comment|/* TC_I960 */
+comment|/* TC_I960  */
 ifdef|#
 directive|ifdef
 name|OBJ_COFF
@@ -10866,10 +11253,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* TE_I386AIX */
+comment|/* TE_I386AIX  */
 endif|#
 directive|endif
-comment|/* OBJ_COFF */
+comment|/* OBJ_COFF  */
 operator|++
 name|seg_reloc_count
 expr_stmt|;
@@ -10879,87 +11266,13 @@ block|{
 name|seg_reloc_count
 operator|++
 expr_stmt|;
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
+if|if
+condition|(
+name|TC_FIX_ADJUSTABLE
 argument_list|(
-name|TC_V850
+name|fixP
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|OBJ_ELF
-argument_list|)
-operator|)
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|TC_M68K
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|OBJ_ELF
-argument_list|)
-operator|)
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|TC_ARM
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|OBJ_ELF
-argument_list|)
-operator|)
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|TC_I960
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|OBJ_ELF
-argument_list|)
-operator|)
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TC_I386
-argument_list|)
-operator|||
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|OBJ_ELF
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|OBJ_COFF
-argument_list|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|TE_PE
-argument_list|)
+condition|)
 name|add_number
 operator|+=
 name|S_GET_VALUE
@@ -10967,16 +11280,6 @@ argument_list|(
 name|add_symbolP
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
-endif|#
-directive|endif
-endif|#
-directive|endif
-endif|#
-directive|endif
 block|}
 block|}
 block|}
@@ -11150,7 +11453,7 @@ expr_stmt|;
 name|mask
 operator|--
 expr_stmt|;
-comment|/* set all bits to one */
+comment|/* Set all bits to one.  */
 name|mask
 operator|<<=
 name|size
@@ -11257,7 +11560,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* generic error checking */
+comment|/* Generic error checking.  */
 block|}
 ifdef|#
 directive|ifdef
@@ -11312,7 +11615,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* not a bit fix */
+comment|/* Not a bit fix.  */
 ifdef|#
 directive|ifdef
 name|TC_VALIDATE_FIX
@@ -11340,7 +11643,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* For each fixS in this segment. */
+comment|/* For each fixS in this segment.  */
 name|TC_ADJUST_RELOC_COUNT
 argument_list|(
 name|fixP
@@ -11512,7 +11815,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* for debugging */
+comment|/* For debugging.  */
 end_comment
 
 begin_decl_stmt
@@ -11809,10 +12112,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_comment
-comment|/* end of write.c */
-end_comment
 
 end_unit
 

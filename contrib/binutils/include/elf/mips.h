@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MIPS ELF support for BFD.    Copyright (C) 1993, 1994, 1995, 1996, 1998 Free Software Foundation, Inc.     By Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>, from    information in the System V Application Binary Interface, MIPS    Processor Supplement.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* MIPS ELF support for BFD.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     By Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>, from    information in the System V Application Binary Interface, MIPS    Processor Supplement.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -63,6 +63,10 @@ literal|2
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* In Elf 64: alias R_MIPS_ADD */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -71,6 +75,10 @@ argument_list|,
 literal|3
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* In Elf 64: alias R_MIPS_REL */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -108,6 +116,10 @@ literal|7
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* In Elf 64: alias R_MIPS_GPREL */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -126,6 +138,10 @@ literal|9
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* In Elf 64: alias R_MIPS_GOT */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -143,6 +159,10 @@ argument_list|,
 literal|11
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* In Elf 64: alias R_MIPS_CALL */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -486,6 +506,9 @@ end_macro
 
 begin_macro
 name|END_RELOC_NUMBERS
+argument_list|(
+argument|R_MIPS_maxext
+argument_list|)
 end_macro
 
 begin_comment
@@ -526,6 +549,17 @@ value|0x00000004
 end_define
 
 begin_comment
+comment|/* Code in file uses UCODE (obsolete) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_MIPS_UCODE
+value|0x00000010
+end_define
+
+begin_comment
 comment|/* Code in file uses new ABI (-n32 on Irix 6).  */
 end_comment
 
@@ -537,7 +571,51 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* Indicates code compiled for a 64-bit machine in 32-bit mode.     (regs are 32-bits wide.) */
+comment|/* Process the .MIPS.options section first by ld */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_MIPS_OPTIONS_FIRST
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Architectural Extensions used by this file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_MIPS_ARCH_ASE
+value|0x0f000000
+end_define
+
+begin_comment
+comment|/* Use MDMX multimedia extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_MIPS_ARCH_ASE_MDMX
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Use MIPS-16 ISA extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_MIPS_ARCH_ASE_M16
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Indicates code compiled for a 64-bit machine in 32-bit mode.    (regs are 32-bits wide.) */
 end_comment
 
 begin_define
@@ -600,6 +678,39 @@ define|#
 directive|define
 name|E_MIPS_ARCH_4
 value|0x30000000
+end_define
+
+begin_comment
+comment|/* -mips5 code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_ARCH_5
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* -mips32 code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_ARCH_32
+value|0x50000000
+end_define
+
+begin_comment
+comment|/* -mips64 code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_ARCH_64
+value|0x60000000
 end_define
 
 begin_comment
@@ -705,6 +816,20 @@ define|#
 directive|define
 name|E_MIPS_MACH_4111
 value|0x00880000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_MACH_MIPS32_4K
+value|0x00890000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_MACH_SB1
+value|0x008a0000
 end_define
 
 begin_escape
@@ -1041,7 +1166,7 @@ value|0x7000001a
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* Delta C++: symbol table */
 end_comment
 
 begin_define
@@ -1052,7 +1177,7 @@ value|0x7000001b
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* Delta C++: instance table */
 end_comment
 
 begin_define
@@ -1063,7 +1188,7 @@ value|0x7000001c
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* Delta C++: class table */
 end_comment
 
 begin_define
@@ -1085,7 +1210,7 @@ value|0x7000001e
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* Delta C++: declarations */
 end_comment
 
 begin_define
@@ -1129,7 +1254,7 @@ value|0x70000022
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* Special pixie sections */
 end_comment
 
 begin_define
@@ -1140,7 +1265,7 @@ value|0x70000023
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* Address translation table (for debug info) */
 end_comment
 
 begin_define
@@ -1151,7 +1276,7 @@ value|0x70000024
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* SGI internal address translation table (for debug info) */
 end_comment
 
 begin_define
@@ -1162,7 +1287,7 @@ value|0x70000025
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* Intermediate code */
 end_comment
 
 begin_define
@@ -1173,7 +1298,7 @@ value|0x70000026
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* C++ exception handling region info */
 end_comment
 
 begin_define
@@ -1184,7 +1309,7 @@ value|0x70000027
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* Obsolete address translation table (for debug info) */
 end_comment
 
 begin_define
@@ -1195,7 +1320,7 @@ value|0x70000028
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* Runtime procedure descriptor table exception information (ucode) ??? */
 end_comment
 
 begin_define
@@ -1640,24 +1765,24 @@ value|0x20000000
 end_define
 
 begin_comment
-comment|/* This section contains 32 bit addresses.  */
+comment|/* This section contains address data of size implied by section    element size.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SHF_MIPS_ADDR32
+name|SHF_MIPS_ADDR
 value|0x40000000
 end_define
 
 begin_comment
-comment|/* This section contains 64 bit addresses.  */
+comment|/* This section contains string data.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SHF_MIPS_ADDR64
+name|SHF_MIPS_STRING
 value|0x80000000
 end_define
 
@@ -1694,6 +1819,17 @@ name|SHF_MIPS_NAMES
 value|0x02000000
 end_define
 
+begin_comment
+comment|/* Section contais text/data which may be replicated in other sections.    Linker should retain only one copy.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_MIPS_NODUPES
+value|0x01000000
+end_define
+
 begin_escape
 end_escape
 
@@ -1724,7 +1860,7 @@ value|0x70000001
 end_define
 
 begin_comment
-comment|/* Options (for what ???).  */
+comment|/* .MIPS.options section.  */
 end_comment
 
 begin_define
@@ -2061,7 +2197,7 @@ value|0x70000023
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* Address of .MIPS.symlib */
 end_comment
 
 begin_define
@@ -2072,7 +2208,7 @@ value|0x70000024
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* The GOT index of the first PTE for a segment */
 end_comment
 
 begin_define
@@ -2083,7 +2219,7 @@ value|0x70000025
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* The GOT index of the first PTE for a local symbol */
 end_comment
 
 begin_define
@@ -2094,7 +2230,7 @@ value|0x70000026
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* The GOT index of the first PTE for a hidden symbol */
 end_comment
 
 begin_define
@@ -2105,7 +2241,7 @@ value|0x70000027
 end_define
 
 begin_comment
-comment|/* ??? */
+comment|/* The GOT index of the first PTE for a protected symbol */
 end_comment
 
 begin_define
@@ -2262,9 +2398,12 @@ begin_define
 define|#
 directive|define
 name|RHS_NO_LIBRARY_REPLACEMENT
-define|\
 value|0x00000004
 end_define
+
+begin_comment
+comment|/* DSO address may not be relocated. */
+end_comment
 
 begin_define
 define|#
@@ -2273,12 +2412,20 @@ name|RHF_NO_MOVE
 value|0x00000008
 end_define
 
+begin_comment
+comment|/* SGI specific features. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RHF_SGI_ONLY
 value|0x00000010
 end_define
+
+begin_comment
+comment|/* Guarantee that .init will finish executing before any non-init    code in DSO is called. */
+end_comment
 
 begin_define
 define|#
@@ -2287,12 +2434,20 @@ name|RHF_GUARANTEE_INIT
 value|0x00000020
 end_define
 
+begin_comment
+comment|/* Contains Delta C++ code. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RHF_DELTA_C_PLUS_PLUS
 value|0x00000040
 end_define
+
+begin_comment
+comment|/* Guarantee that .init will start executing before any non-init    code in DSO is called. */
+end_comment
 
 begin_define
 define|#
@@ -2301,12 +2456,20 @@ name|RHF_GUARANTEE_START_INIT
 value|0x00000080
 end_define
 
+begin_comment
+comment|/* Generated by pixie. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RHF_PIXIE
 value|0x00000100
 end_define
+
+begin_comment
+comment|/* Delay-load DSO by default. */
+end_comment
 
 begin_define
 define|#
@@ -2315,12 +2478,20 @@ name|RHF_DEFAULT_DELAY_LOAD
 value|0x00000200
 end_define
 
+begin_comment
+comment|/* Object may be requickstarted */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RHF_REQUICKSTART
 value|0x00000400
 end_define
+
+begin_comment
+comment|/* Object has been requickstarted */
+end_comment
 
 begin_define
 define|#
@@ -2329,6 +2500,10 @@ name|RHF_REQUICKSTARTED
 value|0x00000800
 end_define
 
+begin_comment
+comment|/* Generated by cord. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2336,12 +2511,20 @@ name|RHF_CORD
 value|0x00001000
 end_define
 
+begin_comment
+comment|/* Object contains no unresolved undef symbols. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RHF_NO_UNRES_UNDEF
 value|0x00002000
 end_define
+
+begin_comment
+comment|/* Symbol table is in a safe order. */
+end_comment
 
 begin_define
 define|#
@@ -2612,6 +2795,50 @@ block|}
 name|Elf64_Mips_Internal_Rela
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* MIPS ELF 64 relocation info access macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELF64_MIPS_R_SSYM
+parameter_list|(
+name|i
+parameter_list|)
+value|(((i)>> 24)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF64_MIPS_R_TYPE3
+parameter_list|(
+name|i
+parameter_list|)
+value|(((i)>> 16)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF64_MIPS_R_TYPE2
+parameter_list|(
+name|i
+parameter_list|)
+value|(((i)>> 8)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF64_MIPS_R_TYPE
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)& 0xff)
+end_define
 
 begin_comment
 comment|/* Values found in the r_ssym field of a relocation entry.  */
@@ -3166,7 +3393,7 @@ value|0x40000
 end_define
 
 begin_comment
-comment|/* Force floating-point debug mode.  */
+comment|/* Force precise floating-point 				   exceptions (debug mode).  */
 end_comment
 
 begin_define
@@ -3272,7 +3499,7 @@ begin_define
 define|#
 directive|define
 name|OHW_R4KEOP
-value|0x01
+value|0x00000001
 end_define
 
 begin_comment
@@ -3283,7 +3510,7 @@ begin_define
 define|#
 directive|define
 name|OHW_R8KPFETCH
-value|0x02
+value|0x00000002
 end_define
 
 begin_comment
@@ -3294,7 +3521,7 @@ begin_define
 define|#
 directive|define
 name|OHW_R5KEOP
-value|0x04
+value|0x00000004
 end_define
 
 begin_comment
@@ -3305,11 +3532,22 @@ begin_define
 define|#
 directive|define
 name|OHW_R5KCVTL
-value|0x08
+value|0x00000008
 end_define
 
 begin_comment
-comment|/* R5000 cvt.[ds].l bug (clean == 1).  */
+comment|/* R5000 cvt.[ds].l bug 					   (clean == 1).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OHW_R10KLDL
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Needs R10K misaligned 					   load patch. */
 end_comment
 
 begin_comment

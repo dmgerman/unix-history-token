@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic symbol-table support for the BFD library.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic symbol-table support for the BFD library.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* SECTION 	Symbols  	BFD tries to maintain as much symbol information as it can when 	it moves information from file to file. BFD passes information 	to applications though the<<asymbol>> structure. When the 	application requests the symbol table, BFD reads the table in 	the native form and translates parts of it into the internal 	format. To maintain more than the information passed to 	applications, some targets keep some information ``behind the 	scenes'' in a structure only the particular back end knows 	about. For example, the coff back end keeps the original 	symbol table structure as well as the canonical structure when 	a BFD is read in. On output, the coff back end can reconstruct 	the output symbol table so that no information is lost, even 	information unique to coff which BFD doesn't know or 	understand. If a coff symbol table were read, but were written 	through an a.out back end, all the coff specific information 	would be lost. The symbol table of a BFD 	is not necessarily read in until a canonicalize request is 	made. Then the BFD back end fills in a table provided by the 	application with pointers to the canonical information.  To 	output symbols, the application provides BFD with a table of 	pointers to pointers to<<asymbol>>s. This allows applications 	like the linker to output a symbol as it was read, since the ``behind 	the scenes'' information will be still available. @menu @* Reading Symbols:: @* Writing Symbols:: @* Mini Symbols:: @* typedef asymbol:: @* symbol handling functions:: @end menu  INODE Reading Symbols, Writing Symbols, Symbols, Symbols SUBSECTION 	Reading symbols  	There are two stages to reading a symbol table from a BFD: 	allocating storage, and the actual reading process. This is an 	excerpt from an application which reads the symbol table:  |	  long storage_needed; |	  asymbol **symbol_table; |	  long number_of_symbols; |	  long i; | |	  storage_needed = bfd_get_symtab_upper_bound (abfd); | |         if (storage_needed< 0) |           FAIL | |	  if (storage_needed == 0) { |	     return ; |	  } |	  symbol_table = (asymbol **) xmalloc (storage_needed); |	    ... |	  number_of_symbols = |	     bfd_canonicalize_symtab (abfd, symbol_table); | |         if (number_of_symbols< 0) |           FAIL | |	  for (i = 0; i< number_of_symbols; i++) { |	     process_symbol (symbol_table[i]); |	  }  	All storage for the symbols themselves is in an objalloc 	connected to the BFD; it is freed when the BFD is closed.   INODE Writing Symbols, Mini Symbols, Reading Symbols, Symbols SUBSECTION 	Writing symbols  	Writing of a symbol table is automatic when a BFD open for 	writing is closed. The application attaches a vector of 	pointers to pointers to symbols to the BFD being written, and 	fills in the symbol count. The close and cleanup code reads 	through the table provided and performs all the necessary 	operations. The BFD output code must always be provided with an 	``owned'' symbol: one which has come from another BFD, or one 	which has been created using<<bfd_make_empty_symbol>>.  Here is an 	example showing the creation of a symbol table with only one element:  |	#include "bfd.h" |	main() |	{ |	  bfd *abfd; |	  asymbol *ptrs[2]; |	  asymbol *new; | |	  abfd = bfd_openw("foo","a.out-sunos-big"); |	  bfd_set_format(abfd, bfd_object); |	  new = bfd_make_empty_symbol(abfd); |	  new->name = "dummy_symbol"; |	  new->section = bfd_make_section_old_way(abfd, ".text"); |	  new->flags = BSF_GLOBAL; |	  new->value = 0x12345; | |	  ptrs[0] = new; |	  ptrs[1] = (asymbol *)0; | |	  bfd_set_symtab(abfd, ptrs, 1); |	  bfd_close(abfd); |	} | |	./makesym |	nm foo |	00012345 A dummy_symbol  	Many formats cannot represent arbitary symbol information; for  	instance, the<<a.out>> object format does not allow an 	arbitary number of sections. A symbol pointing to a section 	which is not one  of<<.text>>,<<.data>> or<<.bss>> cannot 	be described.  INODE Mini Symbols, typedef asymbol, Writing Symbols, Symbols SUBSECTION 	Mini Symbols  	Mini symbols provide read-only access to the symbol table. 	They use less memory space, but require more time to access. 	They can be useful for tools like nm or objdump, which may 	have to handle symbol tables of extremely large executables.  	The<<bfd_read_minisymbols>> function will read the symbols 	into memory in an internal form.  It will return a<<void *>> 	pointer to a block of memory, a symbol count, and the size of 	each symbol.  The pointer is allocated using<<malloc>>, and 	should be freed by the caller when it is no longer needed.  	The function<<bfd_minisymbol_to_symbol>> will take a pointer 	to a minisymbol, and a pointer to a structure returned by<<bfd_make_empty_symbol>>, and return a<<asymbol>> structure. 	The return value may or may not be the same as the value from<<bfd_make_empty_symbol>> which was passed in.  */
+comment|/* SECTION 	Symbols  	BFD tries to maintain as much symbol information as it can when 	it moves information from file to file. BFD passes information 	to applications though the<<asymbol>> structure. When the 	application requests the symbol table, BFD reads the table in 	the native form and translates parts of it into the internal 	format. To maintain more than the information passed to 	applications, some targets keep some information ``behind the 	scenes'' in a structure only the particular back end knows 	about. For example, the coff back end keeps the original 	symbol table structure as well as the canonical structure when 	a BFD is read in. On output, the coff back end can reconstruct 	the output symbol table so that no information is lost, even 	information unique to coff which BFD doesn't know or 	understand. If a coff symbol table were read, but were written 	through an a.out back end, all the coff specific information 	would be lost. The symbol table of a BFD 	is not necessarily read in until a canonicalize request is 	made. Then the BFD back end fills in a table provided by the 	application with pointers to the canonical information.  To 	output symbols, the application provides BFD with a table of 	pointers to pointers to<<asymbol>>s. This allows applications 	like the linker to output a symbol as it was read, since the ``behind 	the scenes'' information will be still available. @menu @* Reading Symbols:: @* Writing Symbols:: @* Mini Symbols:: @* typedef asymbol:: @* symbol handling functions:: @end menu  INODE Reading Symbols, Writing Symbols, Symbols, Symbols SUBSECTION 	Reading symbols  	There are two stages to reading a symbol table from a BFD: 	allocating storage, and the actual reading process. This is an 	excerpt from an application which reads the symbol table:  |	  long storage_needed; |	  asymbol **symbol_table; |	  long number_of_symbols; |	  long i; | |	  storage_needed = bfd_get_symtab_upper_bound (abfd); | |         if (storage_needed< 0) |           FAIL | |	  if (storage_needed == 0) { |	     return ; |	  } |	  symbol_table = (asymbol **) xmalloc (storage_needed); |	    ... |	  number_of_symbols = |	     bfd_canonicalize_symtab (abfd, symbol_table); | |         if (number_of_symbols< 0) |           FAIL | |	  for (i = 0; i< number_of_symbols; i++) { |	     process_symbol (symbol_table[i]); |	  }  	All storage for the symbols themselves is in an objalloc 	connected to the BFD; it is freed when the BFD is closed.  INODE Writing Symbols, Mini Symbols, Reading Symbols, Symbols SUBSECTION 	Writing symbols  	Writing of a symbol table is automatic when a BFD open for 	writing is closed. The application attaches a vector of 	pointers to pointers to symbols to the BFD being written, and 	fills in the symbol count. The close and cleanup code reads 	through the table provided and performs all the necessary 	operations. The BFD output code must always be provided with an 	``owned'' symbol: one which has come from another BFD, or one 	which has been created using<<bfd_make_empty_symbol>>.  Here is an 	example showing the creation of a symbol table with only one element:  |	#include "bfd.h" |	main() |	{ |	  bfd *abfd; |	  asymbol *ptrs[2]; |	  asymbol *new; | |	  abfd = bfd_openw("foo","a.out-sunos-big"); |	  bfd_set_format(abfd, bfd_object); |	  new = bfd_make_empty_symbol(abfd); |	  new->name = "dummy_symbol"; |	  new->section = bfd_make_section_old_way(abfd, ".text"); |	  new->flags = BSF_GLOBAL; |	  new->value = 0x12345; | |	  ptrs[0] = new; |	  ptrs[1] = (asymbol *)0; | |	  bfd_set_symtab(abfd, ptrs, 1); |	  bfd_close(abfd); |	} | |	./makesym |	nm foo |	00012345 A dummy_symbol  	Many formats cannot represent arbitary symbol information; for  	instance, the<<a.out>> object format does not allow an 	arbitary number of sections. A symbol pointing to a section 	which is not one  of<<.text>>,<<.data>> or<<.bss>> cannot 	be described.  INODE Mini Symbols, typedef asymbol, Writing Symbols, Symbols SUBSECTION 	Mini Symbols  	Mini symbols provide read-only access to the symbol table. 	They use less memory space, but require more time to access. 	They can be useful for tools like nm or objdump, which may 	have to handle symbol tables of extremely large executables.  	The<<bfd_read_minisymbols>> function will read the symbols 	into memory in an internal form.  It will return a<<void *>> 	pointer to a block of memory, a symbol count, and the size of 	each symbol.  The pointer is allocated using<<malloc>>, and 	should be freed by the caller when it is no longer needed.  	The function<<bfd_minisymbol_to_symbol>> will take a pointer 	to a minisymbol, and a pointer to a structure returned by<<bfd_make_empty_symbol>>, and return a<<asymbol>> structure. 	The return value may or may not be the same as the value from<<bfd_make_empty_symbol>> which was passed in.  */
 end_comment
 
 begin_comment
@@ -141,7 +141,7 @@ comment|/* FUNCTION 	bfd_is_local_label_name  SYNOPSIS         boolean bfd_is_lo
 end_comment
 
 begin_comment
-comment|/* FUNCTION 	bfd_canonicalize_symtab  DESCRIPTION 	Read the symbols from the BFD @var{abfd}, and fills in 	the vector @var{location} with pointers to the symbols and 	a trailing NULL. 	Return the actual number of symbol pointers, not 	including the NULL.   .#define bfd_canonicalize_symtab(abfd, location) \ .     BFD_SEND (abfd, _bfd_canonicalize_symtab,\ .                  (abfd, location))  */
+comment|/* FUNCTION 	bfd_canonicalize_symtab  DESCRIPTION 	Read the symbols from the BFD @var{abfd}, and fills in 	the vector @var{location} with pointers to the symbols and 	a trailing NULL. 	Return the actual number of symbol pointers, not 	including the NULL.  .#define bfd_canonicalize_symtab(abfd, location) \ .     BFD_SEND (abfd, _bfd_canonicalize_symtab,\ .                  (abfd, location))  */
 end_comment
 
 begin_comment
@@ -588,7 +588,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Return the single-character symbol type corresponding to    section S, or '?' for an unknown COFF section.       Check for any leading string which matches, so .text5 returns    't' as well as .text */
+comment|/* Return the single-character symbol type corresponding to    section S, or '?' for an unknown COFF section.     Check for any leading string which matches, so .text5 returns    't' as well as .text */
 end_comment
 
 begin_function
@@ -884,7 +884,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_is_undefined_symclass   DESCRIPTION 	Returns non-zero if the class symbol returned by 	bfd_decode_symclass represents an undefined symbol. 	Returns zero otherwise.  SYNOPSIS 	boolean bfd_is_undefined_symclass (int symclass); */
+comment|/* FUNCTION 	bfd_is_undefined_symclass  DESCRIPTION 	Returns non-zero if the class symbol returned by 	bfd_decode_symclass represents an undefined symbol. 	Returns zero otherwise.  SYNOPSIS 	boolean bfd_is_undefined_symclass (int symclass); */
 end_comment
 
 begin_function
@@ -1274,12 +1274,10 @@ name|b
 parameter_list|)
 specifier|const
 name|PTR
-modifier|*
 name|a
 decl_stmt|;
 specifier|const
 name|PTR
-modifier|*
 name|b
 decl_stmt|;
 block|{
@@ -2171,7 +2169,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* if we did not see a function def, leave space for one. */
+comment|/* if we did not see a function def, leave space for one.  */
 if|if
 condition|(
 name|saw_fun
@@ -2411,7 +2409,7 @@ case|case
 name|N_SO
 case|:
 comment|/* The main file name.  */
-comment|/* The following code creates a new indextable entry with 	         a NULL function name if there were no N_FUNs in a file. 	         Note that a N_SO without a file name is an EOF and 	         there could be 2 N_SO following it with the new filename  	         and directory. */
+comment|/* The following code creates a new indextable entry with 	         a NULL function name if there were no N_FUNs in a file. 	         Note that a N_SO without a file name is an EOF and 	         there could be 2 N_SO following it with the new filename 	         and directory.  */
 if|if
 condition|(
 name|saw_fun
@@ -3347,12 +3345,10 @@ name|true
 expr_stmt|;
 if|if
 condition|(
+name|IS_ABSOLUTE_PATH
+argument_list|(
 name|file_name
-index|[
-literal|0
-index|]
-operator|==
-literal|'/'
+argument_list|)
 operator|||
 name|directory_name
 operator|==

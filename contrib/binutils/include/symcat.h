@@ -27,6 +27,11 @@ name|defined
 argument_list|(
 name|ALMOST_STDC
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_STRINGIZE
+argument_list|)
 end_if
 
 begin_define
@@ -85,6 +90,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* Note one should never pass extra whitespace to the CONCATn macros,    e.g. CONCAT2(foo, bar) because traditonal C will keep the space between    the two labels instead of concatenating them.  Instead, make sure to    write CONCAT2(foo,bar).  */
+end_comment
 
 begin_define
 define|#
@@ -197,6 +206,10 @@ parameter_list|)
 value|CONCAT4(a,b,c,d)
 end_define
 
+begin_comment
+comment|/* Note the layer of indirection here is typically used to allow    stringification of the expansion of macros.  I.e. "#define foo    bar", "XSTRING(foo)", to yield "bar".  Be aware that this only    works for __STDC__, not for traditional C which will still resolve    to "foo".  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -210,8 +223,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|SYM_CAT_H
 end_endif
+
+begin_comment
+comment|/* SYM_CAT_H */
+end_comment
 
 end_unit
 

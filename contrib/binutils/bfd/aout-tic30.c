@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for TMS320C30 a.out binaries.    Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* BFD back-end for TMS320C30 a.out binaries.    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -663,7 +663,7 @@ file|"aoutx.h"
 end_include
 
 begin_comment
-comment|/* This table lists the relocation types for the TMS320C30.  There are    only a few relocations required, and all must be divided by 4 (>>    2) to get the 32-bit addresses in the format the TMS320C30 likes    it. */
+comment|/* This table lists the relocation types for the TMS320C30.  There are    only a few relocations required, and all must be divided by 4 (>>    2) to get the 32-bit addresses in the format the TMS320C30 likes    it.  */
 end_comment
 
 begin_decl_stmt
@@ -1213,7 +1213,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function is used as a callback for 16-bit relocs.  This is    required for relocations between segments.  A line in aoutx.h    requires that any relocations for the data section should point to    the end of the aligned text section, plus an offset.  By default,    this does not happen, therefore this function takes care of    that. */
+comment|/* This function is used as a callback for 16-bit relocs.  This is    required for relocations between segments.  A line in aoutx.h    requires that any relocations for the data section should point to    the end of the aligned text section, plus an offset.  By default,    this does not happen, therefore this function takes care of    that.  */
 end_comment
 
 begin_function
@@ -1269,7 +1269,7 @@ block|{
 name|bfd_vma
 name|relocation
 decl_stmt|;
-comment|/* Make sure that the symbol's section is defined. */
+comment|/* Make sure that the symbol's section is defined.  */
 if|if
 condition|(
 name|symbol
@@ -1296,7 +1296,7 @@ name|bfd_reloc_ok
 else|:
 name|bfd_reloc_undefined
 return|;
-comment|/* Get the size of the input section and turn it into the TMS320C30      32-bit address format. */
+comment|/* Get the size of the input section and turn it into the TMS320C30      32-bit address format.  */
 name|relocation
 operator|=
 operator|(
@@ -1350,7 +1350,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function does the same thing as tic30_aout_fix_16 except for 32    bit relocations. */
+comment|/* This function does the same thing as tic30_aout_fix_16 except for 32    bit relocations.  */
 end_comment
 
 begin_function
@@ -1406,7 +1406,7 @@ block|{
 name|bfd_vma
 name|relocation
 decl_stmt|;
-comment|/* Make sure that the symbol's section is defined. */
+comment|/* Make sure that the symbol's section is defined.  */
 if|if
 condition|(
 name|symbol
@@ -1433,7 +1433,7 @@ name|bfd_reloc_ok
 else|:
 name|bfd_reloc_undefined
 return|;
-comment|/* Get the size of the input section and turn it into the TMS320C30      32-bit address format. */
+comment|/* Get the size of the input section and turn it into the TMS320C30      32-bit address format.  */
 name|relocation
 operator|=
 operator|(
@@ -1487,7 +1487,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function is used to work out pc-relative offsets for the    TMS320C30.  The data already placed by md_pcrel_from within gas is    useless for a relocation, so we just get the offset value and place    a version of this within the object code.    tic30_aout_final_link_relocate will then calculate the required    relocation to add on to the value in the object code. */
+comment|/* This function is used to work out pc-relative offsets for the    TMS320C30.  The data already placed by md_pcrel_from within gas is    useless for a relocation, so we just get the offset value and place    a version of this within the object code.    tic30_aout_final_link_relocate will then calculate the required    relocation to add on to the value in the object code.  */
 end_comment
 
 begin_function
@@ -1567,7 +1567,7 @@ operator|-
 literal|1
 argument_list|)
 decl_stmt|;
-comment|/* The byte before the location of the fix contains bits 23-16 of      the pcrel instruction.  Bit 21 is set for a delayed instruction      which requires on offset of 3 instead of 1. */
+comment|/* The byte before the location of the fix contains bits 23-16 of      the pcrel instruction.  Bit 21 is set for a delayed instruction      which requires on offset of 3 instead of 1.  */
 if|if
 condition|(
 name|offset_data
@@ -1607,7 +1607,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* These macros will get 24-bit values from the bfd definition.    Big-endian only. */
+comment|/* These macros will get 24-bit values from the bfd definition.    Big-endian only.  */
 end_comment
 
 begin_define
@@ -1619,7 +1619,8 @@ name|BFD
 parameter_list|,
 name|ADDR
 parameter_list|)
-value|(bfd_get_8(BFD,ADDR)<< 16) | \                               (bfd_get_8(BFD,ADDR+1)<< 8) | \                               (bfd_get_8(BFD,ADDR+2))
+define|\
+value|(bfd_get_8 (BFD, ADDR    )<< 16) |		\  (bfd_get_8 (BFD, ADDR + 1)<<  8) |		\  (bfd_get_8 (BFD, ADDR + 2)      )
 end_define
 
 begin_define
@@ -1633,7 +1634,8 @@ name|DATA
 parameter_list|,
 name|ADDR
 parameter_list|)
-value|bfd_put_8(BFD,(bfd_byte)((DATA>> 16)& 0xFF),ADDR); \ 	                               bfd_put_8(BFD,(bfd_byte)((DATA>> 8)& 0xFF),ADDR+1); \ 		         				   bfd_put_8(BFD,(bfd_byte)(DATA& 0xFF),ADDR+2)
+define|\
+value|bfd_put_8 (BFD, (bfd_byte) ((DATA>> 16)& 0xFF), ADDR    );	\  bfd_put_8 (BFD, (bfd_byte) ((DATA>>  8)& 0xFF), ADDR + 1);	\  bfd_put_8 (BFD, (bfd_byte) ( DATA& 0xFF), ADDR + 2)
 end_define
 
 begin_comment
@@ -2926,7 +2928,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ENTRY_CAN_BE_ZERO
-comment|/* The NEWSOS3 entry-point is/was 0, which (amongst other lossage)    * means that it isn't obvious if EXEC_P should be set.    * All of the following must be true for an executable:    * There must be no relocations, the bfd can be neither an    * archive nor an archive element, and the file must be executable. */
+comment|/* The NEWSOS3 entry-point is/was 0, which (amongst other lossage)    * means that it isn't obvious if EXEC_P should be set.    * All of the following must be true for an executable:    * There must be no relocations, the bfd can be neither an    * archive nor an archive element, and the file must be executable.  */
 if|if
 condition|(
 name|exec
@@ -3007,10 +3009,6 @@ end_function
 
 begin_comment
 comment|/* Copy private section data.  This actually does nothing with the    sections.  It copies the subformat field.  We copy it here, because    we need to know whether this is a QMAGIC file before we set the    section contents, and copy_private_bfd_data is not called until    after the section contents have been set.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED */
 end_comment
 
 begin_function
@@ -3697,7 +3695,7 @@ decl_stmt|;
 name|int
 name|pad
 decl_stmt|;
-comment|/* Set the executable header size to 0, as we don't want one for an      output. */
+comment|/* Set the executable header size to 0, as we don't want one for an      output.  */
 name|adata
 argument_list|(
 name|abfd
@@ -4008,7 +4006,7 @@ name|user_set_vma
 operator|=
 literal|1
 expr_stmt|;
-comment|/* We are fully resized, so don't readjust in final_link. */
+comment|/* We are fully resized, so don't readjust in final_link.  */
 name|adata
 argument_list|(
 name|abfd

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end data structures for ELF files.    Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 1999, 2000 Free Software    Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end data structures for ELF files.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -39,6 +39,20 @@ include|#
 directive|include
 file|"bfdlink.h"
 end_include
+
+begin_comment
+comment|/* The number of entries in a section is its size divided by the size    of a single entry.  This is normally only applicaable to reloc and    symbol table sections.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUM_SHDR_ENTRIES
+parameter_list|(
+name|shdr
+parameter_list|)
+value|((shdr)->sh_size / (shdr)->sh_entsize)
+end_define
 
 begin_comment
 comment|/* If size isn't specified as 64 or 32, NAME macro should fail.  */
@@ -468,6 +482,12 @@ name|struct
 name|elf_link_local_dynamic_entry
 modifier|*
 name|dynlocal
+decl_stmt|;
+comment|/* A linked list of DT_RPATH/DT_RUNPATH names found in dynamic      objects included in the link.  */
+name|struct
+name|bfd_link_needed_list
+modifier|*
+name|runpath
 decl_stmt|;
 block|}
 struct|;
@@ -939,7 +959,7 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* A function to set the type of the info field.  Processor-specific      types should be handled here. */
+comment|/* A function to set the type of the info field.  Processor-specific      types should be handled here.  */
 name|int
 argument_list|(
 argument|*elf_backend_get_symbol_type
@@ -989,7 +1009,23 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* A function to handle unusual program segment types when creating BFD      sections from ELF program segments. */
+comment|/* A function to convert machine dependent section header flags to      BFD internal section header flags.  */
+name|boolean
+argument_list|(
+argument|*elf_backend_section_flags
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|flagword
+operator|*
+operator|,
+name|Elf32_Internal_Shdr
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* A function to handle unusual program segment types when creating BFD      sections from ELF program segments.  */
 name|boolean
 argument_list|(
 argument|*elf_backend_section_from_phdr
@@ -1538,6 +1574,10 @@ name|PARAMS
 argument_list|(
 operator|(
 expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+expr|struct
 name|elf_link_hash_entry
 operator|*
 operator|)
@@ -1598,7 +1638,7 @@ name|may_use_rela_p
 range|:
 literal|1
 decl_stmt|;
-comment|/* Whether the default relocation type is RELA.  If a backend with      this flag set wants REL relocations for a particular section,      it must note that explicitly.  Similarly, if this flag is clear,      and the backend wants RELA relocations for a particular       section.  */
+comment|/* Whether the default relocation type is RELA.  If a backend with      this flag set wants REL relocations for a particular section,      it must note that explicitly.  Similarly, if this flag is clear,      and the backend wants RELA relocations for a particular      section.  */
 name|unsigned
 name|default_use_rela_p
 range|:
@@ -2003,7 +2043,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* we don't need these inside bfd anymore, and I think      these weren't used outside bfd. */
+comment|/* we don't need these inside bfd anymore, and I think      these weren't used outside bfd.  */
 block|void *prstatus;
 comment|/* The raw /proc prstatus structure */
 block|void *prpsinfo;
@@ -2019,7 +2059,7 @@ name|int
 name|gp_size
 decl_stmt|;
 comment|/* The gp size (MIPS only, for now) */
-comment|/* Information grabbed from an elf core file. */
+comment|/* Information grabbed from an elf core file.  */
 name|int
 name|core_signal
 decl_stmt|;
@@ -2048,7 +2088,7 @@ modifier|*
 modifier|*
 name|sym_hashes
 decl_stmt|;
-comment|/* A mapping from local symbols to offsets into the global offset      table, used when linking.  This is indexed by the symbol index.      Like for the globals, we use a union and two names primarily to      document the intent of any particular piece of code.  The field      should be used as a count until size_dynamic_sections, at which      point the contents of the .got is fixed.  Afterward, if an entry      is -1, then the symbol does not require a global offset table entry. */
+comment|/* A mapping from local symbols to offsets into the global offset      table, used when linking.  This is indexed by the symbol index.      Like for the globals, we use a union and two names primarily to      document the intent of any particular piece of code.  The field      should be used as a count until size_dynamic_sections, at which      point the contents of the .got is fixed.  Afterward, if an entry      is -1, then the symbol does not require a global offset table entry.  */
 union|union
 block|{
 name|bfd_signed_vma
@@ -2074,6 +2114,12 @@ name|char
 modifier|*
 name|dt_name
 decl_stmt|;
+comment|/* When a reference in a regular object is resolved by a shared      object is loaded into via the DT_NEEDED entries by the linker      ELF emulation code, we need to add the shared object to the      DT_NEEDED list of the resulting binary to indicate the dependency      as if the -l option is passed to the linker. This field holds the      name of the loaded shared object.  */
+specifier|const
+name|char
+modifier|*
+name|dt_soname
+decl_stmt|;
 comment|/* Irix 5 often screws up the symbol table, sorting local symbols      after global symbols.  This flag is set if the symbol table in      this BFD appears to be screwed up.  If it is, we ignore the      sh_info field in the symbol table header, and always read all the      symbols.  */
 name|boolean
 name|bad_symtab
@@ -2092,16 +2138,14 @@ name|mips_elf_find_line
 modifier|*
 name|find_line_info
 decl_stmt|;
-comment|/* A place to stash dwarf1 info for this bfd. */
+comment|/* A place to stash dwarf1 info for this bfd.  */
 name|struct
 name|dwarf1_debug
 modifier|*
 name|dwarf1_find_line_info
 decl_stmt|;
-comment|/* A place to stash dwarf2 info for this bfd. */
-name|struct
-name|dwarf2_debug
-modifier|*
+comment|/* A place to stash dwarf2 info for this bfd.  */
+name|PTR
 name|dwarf2_find_line_info
 decl_stmt|;
 comment|/* An array of stub sections indexed by symbol number, used by the      MIPS ELF linker.  FIXME: We should figure out some way to only      include this field for a MIPS ELF target.  */
@@ -2145,6 +2189,23 @@ name|int
 operator|)
 name|LINKER_SECTION_MAX
 index|]
+decl_stmt|;
+comment|/* The Irix 5 support uses two virtual sections, which represent      text/data symbols defined in dynamic objects.  */
+name|asymbol
+modifier|*
+name|elf_data_symbol
+decl_stmt|;
+name|asymbol
+modifier|*
+name|elf_text_symbol
+decl_stmt|;
+name|asection
+modifier|*
+name|elf_data_section
+decl_stmt|;
+name|asection
+modifier|*
+name|elf_text_section
 decl_stmt|;
 block|}
 struct|;
@@ -2358,6 +2419,16 @@ parameter_list|(
 name|bfd
 parameter_list|)
 value|(elf_tdata(bfd) -> dt_name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_dt_soname
+parameter_list|(
+name|bfd
+parameter_list|)
+value|(elf_tdata(bfd) -> dt_soname)
 end_define
 
 begin_define
@@ -2935,6 +3006,10 @@ name|PARAMS
 argument_list|(
 operator|(
 expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+expr|struct
 name|elf_link_hash_entry
 operator|*
 operator|)
@@ -3340,12 +3415,12 @@ operator|*
 operator|,
 name|bfd_vma
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
 operator|*
 operator|,
-name|CONST
+specifier|const
 name|char
 operator|*
 operator|*
@@ -4323,6 +4398,48 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|bfd_elf32_write_relocs
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|bfd_elf32_slurp_reloc_table
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|asymbol
+operator|*
+operator|*
+operator|,
+name|boolean
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|boolean
 name|bfd_elf32_add_dynamic_entry
 name|PARAMS
@@ -4753,6 +4870,48 @@ name|Elf_Internal_Phdr
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|bfd_elf64_write_relocs
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|bfd_elf64_slurp_reloc_table
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|asymbol
+operator|*
+operator|*
+operator|,
+name|boolean
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-ppc.c -- Assemble for the PowerPC or POWER (RS/6000)    Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000     Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* tc-ppc.c -- Assemble for the PowerPC or POWER (RS/6000)    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"elf/ppc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dwarf2dbg.h"
 end_include
 
 begin_endif
@@ -542,6 +548,19 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ppc_xcoff_cons
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ppc_machine
 name|PARAMS
 argument_list|(
 operator|(
@@ -1183,6 +1202,14 @@ literal|2
 block|}
 block|,
 block|{
+literal|"llong"
+block|,
+name|ppc_xcoff_cons
+block|,
+literal|3
+block|}
+block|,
+block|{
 literal|"word"
 block|,
 name|ppc_xcoff_cons
@@ -1202,6 +1229,14 @@ block|{
 literal|"vbyte"
 block|,
 name|ppc_vbyte
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"machine"
+block|,
+name|ppc_machine
 block|,
 literal|0
 block|}
@@ -1255,6 +1290,22 @@ block|{
 literal|"lcomm"
 block|,
 name|ppc_elf_lcomm
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"file"
+block|,
+name|dwarf2_directive_file
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"loc"
+block|,
+name|dwarf2_directive_loc
 block|,
 literal|0
 block|}
@@ -1418,7 +1469,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* List of registers that are pre-defined:     Each general register has predefined names of the form:    1. r<reg_num> which has the value<reg_num>.    2. r.<reg_num> which has the value<reg_num>.      Each floating point register has predefined names of the form:    1. f<reg_num> which has the value<reg_num>.    2. f.<reg_num> which has the value<reg_num>.     Each condition register has predefined names of the form:    1. cr<reg_num> which has the value<reg_num>.    2. cr.<reg_num> which has the value<reg_num>.     There are individual registers as well:    sp or r.sp     has the value 1    rtoc or r.toc  has the value 2    fpscr          has the value 0    xer            has the value 1    lr             has the value 8    ctr            has the value 9    pmr            has the value 0    dar            has the value 19    dsisr          has the value 18    dec            has the value 22    sdr1           has the value 25    srr0           has the value 26    srr1           has the value 27     The table is sorted. Suitable for searching by a binary search. */
+comment|/* List of registers that are pre-defined:     Each general register has predefined names of the form:    1. r<reg_num> which has the value<reg_num>.    2. r.<reg_num> which has the value<reg_num>.     Each floating point register has predefined names of the form:    1. f<reg_num> which has the value<reg_num>.    2. f.<reg_num> which has the value<reg_num>.     Each vector unit register has predefined names of the form:    1. v<reg_num> which has the value<reg_num>.    2. v.<reg_num> which has the value<reg_num>.     Each condition register has predefined names of the form:    1. cr<reg_num> which has the value<reg_num>.    2. cr.<reg_num> which has the value<reg_num>.     There are individual registers as well:    sp or r.sp     has the value 1    rtoc or r.toc  has the value 2    fpscr          has the value 0    xer            has the value 1    lr             has the value 8    ctr            has the value 9    pmr            has the value 0    dar            has the value 19    dsisr          has the value 18    dec            has the value 22    sdr1           has the value 25    srr0           has the value 26    srr1           has the value 27     The table is sorted. Suitable for searching by a binary search.  */
 end_comment
 
 begin_decl_stmt
@@ -2393,6 +2444,391 @@ block|}
 block|,
 comment|/* Machine Status Save/Restore Register 1 */
 block|{
+literal|"v.0"
+block|,
+literal|0
+block|}
+block|,
+comment|/* Vector registers */
+block|{
+literal|"v.1"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"v.10"
+block|,
+literal|10
+block|}
+block|,
+block|{
+literal|"v.11"
+block|,
+literal|11
+block|}
+block|,
+block|{
+literal|"v.12"
+block|,
+literal|12
+block|}
+block|,
+block|{
+literal|"v.13"
+block|,
+literal|13
+block|}
+block|,
+block|{
+literal|"v.14"
+block|,
+literal|14
+block|}
+block|,
+block|{
+literal|"v.15"
+block|,
+literal|15
+block|}
+block|,
+block|{
+literal|"v.16"
+block|,
+literal|16
+block|}
+block|,
+block|{
+literal|"v.17"
+block|,
+literal|17
+block|}
+block|,
+block|{
+literal|"v.18"
+block|,
+literal|18
+block|}
+block|,
+block|{
+literal|"v.19"
+block|,
+literal|19
+block|}
+block|,
+block|{
+literal|"v.2"
+block|,
+literal|2
+block|}
+block|,
+block|{
+literal|"v.20"
+block|,
+literal|20
+block|}
+block|,
+block|{
+literal|"v.21"
+block|,
+literal|21
+block|}
+block|,
+block|{
+literal|"v.22"
+block|,
+literal|22
+block|}
+block|,
+block|{
+literal|"v.23"
+block|,
+literal|23
+block|}
+block|,
+block|{
+literal|"v.24"
+block|,
+literal|24
+block|}
+block|,
+block|{
+literal|"v.25"
+block|,
+literal|25
+block|}
+block|,
+block|{
+literal|"v.26"
+block|,
+literal|26
+block|}
+block|,
+block|{
+literal|"v.27"
+block|,
+literal|27
+block|}
+block|,
+block|{
+literal|"v.28"
+block|,
+literal|28
+block|}
+block|,
+block|{
+literal|"v.29"
+block|,
+literal|29
+block|}
+block|,
+block|{
+literal|"v.3"
+block|,
+literal|3
+block|}
+block|,
+block|{
+literal|"v.30"
+block|,
+literal|30
+block|}
+block|,
+block|{
+literal|"v.31"
+block|,
+literal|31
+block|}
+block|,
+block|{
+literal|"v.4"
+block|,
+literal|4
+block|}
+block|,
+block|{
+literal|"v.5"
+block|,
+literal|5
+block|}
+block|,
+block|{
+literal|"v.6"
+block|,
+literal|6
+block|}
+block|,
+block|{
+literal|"v.7"
+block|,
+literal|7
+block|}
+block|,
+block|{
+literal|"v.8"
+block|,
+literal|8
+block|}
+block|,
+block|{
+literal|"v.9"
+block|,
+literal|9
+block|}
+block|,
+block|{
+literal|"v0"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"v1"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"v10"
+block|,
+literal|10
+block|}
+block|,
+block|{
+literal|"v11"
+block|,
+literal|11
+block|}
+block|,
+block|{
+literal|"v12"
+block|,
+literal|12
+block|}
+block|,
+block|{
+literal|"v13"
+block|,
+literal|13
+block|}
+block|,
+block|{
+literal|"v14"
+block|,
+literal|14
+block|}
+block|,
+block|{
+literal|"v15"
+block|,
+literal|15
+block|}
+block|,
+block|{
+literal|"v16"
+block|,
+literal|16
+block|}
+block|,
+block|{
+literal|"v17"
+block|,
+literal|17
+block|}
+block|,
+block|{
+literal|"v18"
+block|,
+literal|18
+block|}
+block|,
+block|{
+literal|"v19"
+block|,
+literal|19
+block|}
+block|,
+block|{
+literal|"v2"
+block|,
+literal|2
+block|}
+block|,
+block|{
+literal|"v20"
+block|,
+literal|20
+block|}
+block|,
+block|{
+literal|"v21"
+block|,
+literal|21
+block|}
+block|,
+block|{
+literal|"v22"
+block|,
+literal|22
+block|}
+block|,
+block|{
+literal|"v23"
+block|,
+literal|23
+block|}
+block|,
+block|{
+literal|"v24"
+block|,
+literal|24
+block|}
+block|,
+block|{
+literal|"v25"
+block|,
+literal|25
+block|}
+block|,
+block|{
+literal|"v26"
+block|,
+literal|26
+block|}
+block|,
+block|{
+literal|"v27"
+block|,
+literal|27
+block|}
+block|,
+block|{
+literal|"v28"
+block|,
+literal|28
+block|}
+block|,
+block|{
+literal|"v29"
+block|,
+literal|29
+block|}
+block|,
+block|{
+literal|"v3"
+block|,
+literal|3
+block|}
+block|,
+block|{
+literal|"v30"
+block|,
+literal|30
+block|}
+block|,
+block|{
+literal|"v31"
+block|,
+literal|31
+block|}
+block|,
+block|{
+literal|"v4"
+block|,
+literal|4
+block|}
+block|,
+block|{
+literal|"v5"
+block|,
+literal|5
+block|}
+block|,
+block|{
+literal|"v6"
+block|,
+literal|6
+block|}
+block|,
+block|{
+literal|"v7"
+block|,
+literal|7
+block|}
+block|,
+block|{
+literal|"v8"
+block|,
+literal|8
+block|}
+block|,
+block|{
+literal|"v9"
+block|,
+literal|9
+block|}
+block|,
+block|{
 literal|"xer"
 block|,
 literal|1
@@ -2405,7 +2841,7 @@ begin_define
 define|#
 directive|define
 name|REG_NAME_CNT
-value|(sizeof(pre_defined_registers) / sizeof(struct pd_reg))
+value|(sizeof (pre_defined_registers) / sizeof (struct pd_reg))
 end_define
 
 begin_comment
@@ -2938,6 +3374,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Whether to target xcoff64 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ppc_xcoff64
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Opcode hash table.  */
 end_comment
 
@@ -2981,7 +3430,7 @@ name|SHLIB_NONE
 block|,
 name|SHLIB_PIC
 block|,
-name|SHILB_MRELOCATABLE
+name|SHLIB_MRELOCATABLE
 block|}
 name|shlib
 init|=
@@ -3237,7 +3686,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The current section and the previous section. See ppc_previous. */
+comment|/* The current section and the previous section. See ppc_previous.  */
 end_comment
 
 begin_decl_stmt
@@ -3488,6 +3937,46 @@ return|;
 break|break;
 endif|#
 directive|endif
+comment|/* a64 and a32 determine whether to use XCOFF64 or XCOFF32.  */
+case|case
+literal|'a'
+case|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"64"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ppc_xcoff64
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"32"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ppc_xcoff64
+operator|=
+literal|0
+expr_stmt|;
+else|else
+return|return
+literal|0
+return|;
+break|break;
 case|case
 literal|'m'
 case|:
@@ -3535,7 +4024,7 @@ name|ppc_cpu
 operator|=
 name|PPC_OPCODE_POWER
 expr_stmt|;
-comment|/* -m601 means to assemble for the Motorola PowerPC 601, which includes          instructions that are holdovers from the Power. */
+comment|/* -m601 means to assemble for the Motorola PowerPC 601, which includes          instructions that are holdovers from the Power.  */
 elseif|else
 if|if
 condition|(
@@ -3589,6 +4078,15 @@ name|strcmp
 argument_list|(
 name|arg
 argument_list|,
+literal|"405"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
 literal|"603"
 argument_list|)
 operator|==
@@ -3606,6 +4104,24 @@ condition|)
 name|ppc_cpu
 operator|=
 name|PPC_OPCODE_PPC
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"7400"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ppc_cpu
+operator|=
+name|PPC_OPCODE_PPC
+operator||
+name|PPC_OPCODE_ALTIVEC
 expr_stmt|;
 comment|/* -mppc64 and -m620 mean to assemble for the 64-bit PowerPC          620.  */
 elseif|else
@@ -3748,7 +4264,7 @@ condition|)
 block|{
 name|shlib
 operator|=
-name|SHILB_MRELOCATABLE
+name|SHLIB_MRELOCATABLE
 expr_stmt|;
 name|ppc_flags
 operator||=
@@ -3770,7 +4286,7 @@ condition|)
 block|{
 name|shlib
 operator|=
-name|SHILB_MRELOCATABLE
+name|SHLIB_MRELOCATABLE
 expr_stmt|;
 name|ppc_flags
 operator||=
@@ -3978,7 +4494,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\ PowerPC options:\n\ -u			ignored\n\ -mpwrx, -mpwr2		generate code for IBM POWER/2 (RIOS2)\n\ -mpwr			generate code for IBM POWER (RIOS1)\n\ -m601			generate code for Motorola PowerPC 601\n\ -mppc, -mppc32, -m403, -m603, -m604\n\ 			generate code for Motorola PowerPC 603/604\n\ -mppc64, -m620		generate code for Motorola PowerPC 620\n\ -mppc64bridge		generate code for PowerPC 64, including bridge insns\n\ -mcom			generate code Power/PowerPC common instructions\n\ -many			generate code for any architecture (PWR/PWRX/PPC)\n\ -mregnames		Allow symbolic names for registers\n\ -mno-regnames		Do not allow symbolic names for registers\n"
+literal|"\ PowerPC options:\n\ -u			ignored\n\ -mpwrx, -mpwr2		generate code for IBM POWER/2 (RIOS2)\n\ -mpwr			generate code for IBM POWER (RIOS1)\n\ -m601			generate code for Motorola PowerPC 601\n\ -mppc, -mppc32, -m403, -m405, -m603, -m604\n\ 			generate code for Motorola PowerPC 603/604\n\ -mppc64, -m620		generate code for Motorola PowerPC 620\n\ -mppc64bridge		generate code for PowerPC 64, including bridge insns\n\ -mcom			generate code Power/PowerPC common instructions\n\ -many			generate code for any architecture (PWR/PWRX/PPC)\n\ -mregnames		Allow symbolic names for registers\n\ -mno-regnames		Do not allow symbolic names for registers\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4257,6 +4773,108 @@ return|;
 block|}
 end_function
 
+begin_function
+name|unsigned
+name|long
+name|ppc_mach
+parameter_list|()
+block|{
+return|return
+operator|(
+name|ppc_size
+operator|==
+name|PPC_OPCODE_64
+operator|)
+condition|?
+literal|620
+else|:
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|ppc_subseg_align
+parameter_list|()
+block|{
+return|return
+operator|(
+name|ppc_xcoff64
+operator|)
+condition|?
+literal|3
+else|:
+literal|2
+return|;
+block|}
+end_function
+
+begin_function
+specifier|extern
+name|char
+modifier|*
+name|ppc_target_format
+parameter_list|()
+block|{
+ifdef|#
+directive|ifdef
+name|OBJ_COFF
+ifdef|#
+directive|ifdef
+name|TE_PE
+return|return
+operator|(
+name|target_big_endian
+condition|?
+literal|"pe-powerpc"
+else|:
+literal|"pe-powerpcle"
+operator|)
+return|;
+elif|#
+directive|elif
+name|TE_POWERMAC
+else|#
+directive|else
+return|return
+operator|(
+name|ppc_xcoff64
+condition|?
+literal|"aixcoff64-rs6000"
+else|:
+literal|"aixcoff-rs6000"
+operator|)
+return|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|TE_POWERMAC
+return|return
+literal|"xcoff-powermac"
+return|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+return|return
+operator|(
+name|target_big_endian
+condition|?
+literal|"elf32-powerpc"
+else|:
+literal|"elf32-powerpcle"
+operator|)
+return|;
+endif|#
+directive|endif
+block|}
+end_function
+
 begin_comment
 comment|/* This function is called when the assembler starts up.  It is called    after the options have been parsed and the output file has been    opened.  */
 end_comment
@@ -4302,7 +4920,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|OBJ_ELF
-comment|/* Set the ELF flags if desired. */
+comment|/* Set the ELF flags if desired.  */
 if|if
 condition|(
 name|ppc_flags
@@ -5130,7 +5748,7 @@ name|str
 parameter_list|,
 name|reloc
 parameter_list|)
-value|{ str, sizeof(str)-1, reloc }
+value|{ str, sizeof (str)-1, reloc }
 specifier|static
 name|struct
 name|map_bfd
@@ -5715,7 +6333,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Like normal .long/.short/.word, except support @got, etc. */
+comment|/* Like normal .long/.short/.word, except support @got, etc.  */
 end_comment
 
 begin_comment
@@ -5723,7 +6341,7 @@ comment|/* clobbers input_line_pointer, checks */
 end_comment
 
 begin_comment
-comment|/* end-of-line. */
+comment|/* end-of-line.  */
 end_comment
 
 begin_function
@@ -5904,7 +6522,7 @@ do|;
 name|input_line_pointer
 operator|--
 expr_stmt|;
-comment|/* Put terminator back into stream. */
+comment|/* Put terminator back into stream.  */
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
@@ -6446,7 +7064,7 @@ name|SHLIB_PIC
 case|:
 return|return;
 case|case
-name|SHILB_MRELOCATABLE
+name|SHLIB_MRELOCATABLE
 case|:
 if|if
 condition|(
@@ -6666,7 +7284,7 @@ name|TE_PE
 end_ifdef
 
 begin_comment
-comment|/*  * Summary of parse_toc_entry().  *  * in:	Input_line_pointer points to the '[' in one of:  *  *        [toc] [tocv] [toc32] [toc64]  *  *      Anything else is an error of one kind or another.  *  * out:	  *   return value: success or failure  *   toc_kind:     kind of toc reference  *   input_line_pointer:  *     success: first char after the ']'  *     failure: unchanged  *  * settings:  *  *     [toc]   - rv == success, toc_kind = default_toc  *     [tocv]  - rv == success, toc_kind = data_in_toc  *     [toc32] - rv == success, toc_kind = must_be_32  *     [toc64] - rv == success, toc_kind = must_be_64  *  */
+comment|/*  * Summary of parse_toc_entry().  *  * in:	Input_line_pointer points to the '[' in one of:  *  *        [toc] [tocv] [toc32] [toc64]  *  *      Anything else is an error of one kind or another.  *  * out:  *   return value: success or failure  *   toc_kind:     kind of toc reference  *   input_line_pointer:  *     success: first char after the ']'  *     failure: unchanged  *  * settings:  *  *     [toc]   - rv == success, toc_kind = default_toc  *     [tocv]  - rv == success, toc_kind = data_in_toc  *     [toc32] - rv == success, toc_kind = must_be_32  *     [toc64] - rv == success, toc_kind = must_be_64  *  */
 end_comment
 
 begin_enum
@@ -6846,14 +7464,14 @@ comment|/* put back the delimiting char */
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
-comment|/* leading whitespace could be there. */
+comment|/* leading whitespace could be there.  */
 name|c
 operator|=
 operator|*
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* input_line_pointer->past char in c. */
+comment|/* input_line_pointer->past char in c.  */
 if|if
 condition|(
 name|c
@@ -7491,7 +8109,7 @@ operator|==
 literal|'['
 condition|)
 block|{
-comment|/* We are expecting something like the second argument here:  	        lwz r4,[toc].GS.0.static_int(rtoc)                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ 	     The argument following the `]' must be a symbol name, and the               register must be the toc register: 'rtoc' or '2'  	     The effect is to 0 as the displacement field 	     in the instruction, and issue an IMAGE_REL_PPC_TOCREL16 (or 	     the appropriate variation) reloc against it based on the symbol. 	     The linker will build the toc, and insert the resolved toc offset.  	     Note: 	     o The size of the toc entry is currently assumed to be 	       32 bits. This should not be assumed to be a hard coded 	       number. 	     o In an effort to cope with a change from 32 to 64 bits, 	       there are also toc entries that are specified to be 	       either 32 or 64 bits:                  lwz r4,[toc32].GS.0.static_int(rtoc) 	         lwz r4,[toc64].GS.0.static_int(rtoc) 	       These demand toc entries of the specified size, and the 	       instruction probably requires it.           */
+comment|/* We are expecting something like the second argument here:  	        lwz r4,[toc].GS.0.static_int(rtoc)                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ 	     The argument following the `]' must be a symbol name, and the              register must be the toc register: 'rtoc' or '2'  	     The effect is to 0 as the displacement field 	     in the instruction, and issue an IMAGE_REL_PPC_TOCREL16 (or 	     the appropriate variation) reloc against it based on the symbol. 	     The linker will build the toc, and insert the resolved toc offset.  	     Note: 	     o The size of the toc entry is currently assumed to be 	       32 bits. This should not be assumed to be a hard coded 	       number. 	     o In an effort to cope with a change from 32 to 64 bits, 	       there are also toc entries that are specified to be 	       either 32 or 64 bits:                  lwz r4,[toc32].GS.0.static_int(rtoc) 	         lwz r4,[toc64].GS.0.static_int(rtoc) 	       These demand toc entries of the specified size, and the 	       instruction probably requires it.           */
 name|int
 name|valid_toc
 decl_stmt|;
@@ -7862,7 +8480,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|OBJ_ELF
-comment|/* Allow @HA, @L, @H on constants. */
+comment|/* Allow @HA, @L, @H on constants.  */
 name|char
 modifier|*
 name|orig_str
@@ -8334,6 +8952,16 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+name|dwarf2_emit_insn
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Create any fixups.  At this point we do not use a      bfd_reloc_code_real_type, but instead just use the      BFD_RELOC_UNUSED plus the operand index.  This lets us easily      handle fixups for any operand type, although that is admittedly      not a very exciting feature.  We pick a BFD reloc type in      md_apply_fix.  */
 for|for
 control|(
@@ -9204,7 +9832,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The .comm and .lcomm pseudo-ops for XCOFF.  XCOFF puts common    symbols in the .bss segment as though they were local common    symbols, and uses a different smclas.  */
+comment|/* The .comm and .lcomm pseudo-ops for XCOFF.  XCOFF puts common    symbols in the .bss segment as though they were local common    symbols, and uses a different smclas.  The native Aix 4.3.3 assember    aligns .comm and .lcomm to 4 bytes.  */
 end_comment
 
 begin_function
@@ -9343,7 +9971,7 @@ literal|','
 condition|)
 name|align
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 else|else
 block|{
@@ -9372,7 +10000,7 @@ argument_list|)
 expr_stmt|;
 name|align
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 block|}
 block|}
@@ -9386,28 +10014,6 @@ decl_stmt|;
 name|char
 name|lcomm_endc
 decl_stmt|;
-if|if
-condition|(
-name|size
-operator|<=
-literal|1
-condition|)
-name|align
-operator|=
-literal|0
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|size
-operator|<=
-literal|2
-condition|)
-name|align
-operator|=
-literal|1
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|size
@@ -9788,6 +10394,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10136,6 +10743,12 @@ argument_list|)
 operator|->
 name|align
 operator|=
+operator|(
+name|ppc_xcoff64
+operator|)
+condition|?
+literal|3
+else|:
 literal|2
 expr_stmt|;
 name|symbol_get_tc
@@ -10312,6 +10925,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10426,6 +11040,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10476,6 +11091,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10538,6 +11154,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10631,6 +11248,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10922,6 +11540,7 @@ argument_list|)
 operator|==
 name|C_STSYM
 condition|)
+block|{
 name|symbol_get_tc
 argument_list|(
 name|sym
@@ -10931,6 +11550,29 @@ name|within
 operator|=
 name|ppc_current_block
 expr_stmt|;
+comment|/* In this case :               .bs name        .stabx	"z",arrays_,133,0        .es                .comm arrays_,13768,3                resolve_symbol_value will copy the exp's "within" into sym's when the        offset is 0.  Since this seems to be corner case problem,        only do the correction for storage class C_STSYM.  A better solution        would be to have the tc	field updated in ppc_symbol_new_hook. */
+if|if
+condition|(
+name|exp
+operator|.
+name|X_op
+operator|==
+name|O_symbol
+condition|)
+block|{
+name|symbol_get_tc
+argument_list|(
+name|exp
+operator|.
+name|X_add_symbol
+argument_list|)
+operator|->
+name|within
+operator|=
+name|ppc_current_block
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|exp
@@ -11031,6 +11673,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -11369,6 +12012,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|symbolS
@@ -11463,6 +12107,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|symbolS
@@ -11745,6 +12390,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -11873,6 +12519,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|symbolS
@@ -11960,6 +12607,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|symbolS
@@ -12055,6 +12703,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|symbolS
@@ -12150,6 +12799,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -12241,6 +12891,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|symbolS
@@ -12317,6 +12968,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -12560,12 +13212,32 @@ end_function
 begin_function
 specifier|static
 name|void
+name|ppc_machine
+parameter_list|(
+name|dummy
+parameter_list|)
+name|int
+name|dummy
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|discard_rest_of_line
+argument_list|()
+expr_stmt|;
+comment|/* What does aix use this for?  */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|ppc_vbyte
 parameter_list|(
 name|dummy
 parameter_list|)
 name|int
 name|dummy
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|expressionS
@@ -12945,6 +13617,14 @@ name|input_line_pointer
 expr_stmt|;
 name|cons
 argument_list|(
+operator|(
+name|ppc_size
+operator|==
+name|PPC_OPCODE_64
+operator|)
+condition|?
+literal|8
+else|:
 literal|4
 argument_list|)
 expr_stmt|;
@@ -13004,6 +13684,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|symbolS
@@ -13055,6 +13736,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -13135,6 +13817,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -13215,6 +13898,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -13293,6 +13977,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -13361,7 +14046,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* pseudo-op: .ualong    behaviour: much like .int, with the exception that no alignment is                performed. 	      FIXME: test the alignment statement    errors:    None    warnings:  None */
+comment|/* pseudo-op: .ualong    behaviour: much like .int, with the exception that no alignment is               performed. 	      FIXME: test the alignment statement    errors:    None    warnings:  None */
 end_comment
 
 begin_function
@@ -13373,6 +14058,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 comment|/* try for long */
@@ -13397,6 +14083,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|unsigned
@@ -13550,7 +14237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* pseudo-op:     behaviour:     errors:        warnings:   */
+comment|/* pseudo-op:    behaviour:    errors:    warnings: */
 end_comment
 
 begin_function
@@ -13837,7 +14524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * implement the .section pseudo op:  *	.section name {, "flags"}  *                ^         ^  *                |         +--- optional flags: 'b' for bss  *                |                              'i' for info  *                +-- section name               'l' for lib  *                                               'n' for noload  *                                               'o' for over  *                                               'w' for data  *						 'd' (apparently m88k for data)  *                                               'x' for text  * But if the argument is not a quoted string, treat it as a  * subsegment number.  *  * FIXME: this is a copy of the section processing from obj-coff.c, with  * additions/changes for the moto-pas assembler support. There are three  * categories:  *  * FIXME: I just noticed this. This doesn't work at all really. It it   *        setting bits that bfd probably neither understands or uses. The  *        correct approach (?) will have to incorporate extra fields attached  *        to the section to hold the system specific stuff. (krk)  *  * Section Contents:  * 'a' - unknown - referred to in documentation, but no definition supplied  * 'c' - section has code  * 'd' - section has initialized data  * 'u' - section has uninitialized data  * 'i' - section contains directives (info)  * 'n' - section can be discarded  * 'R' - remove section at link time  *  * Section Protection:  * 'r' - section is readable  * 'w' - section is writeable  * 'x' - section is executable  * 's' - section is sharable  *  * Section Alignment:  * '0' - align to byte boundary  * '1' - align to halfword undary  * '2' - align to word boundary  * '3' - align to doubleword boundary  * '4' - align to quadword boundary  * '5' - align to 32 byte boundary  * '6' - align to 64 byte boundary  *  */
+comment|/*  * implement the .section pseudo op:  *	.section name {, "flags"}  *                ^         ^  *                |         +--- optional flags: 'b' for bss  *                |                              'i' for info  *                +-- section name               'l' for lib  *                                               'n' for noload  *                                               'o' for over  *                                               'w' for data  *						 'd' (apparently m88k for data)  *                                               'x' for text  * But if the argument is not a quoted string, treat it as a  * subsegment number.  *  * FIXME: this is a copy of the section processing from obj-coff.c, with  * additions/changes for the moto-pas assembler support. There are three  * categories:  *  * FIXME: I just noticed this. This doesn't work at all really. It it  *        setting bits that bfd probably neither understands or uses. The  *        correct approach (?) will have to incorporate extra fields attached  *        to the section to hold the system specific stuff. (krk)  *  * Section Contents:  * 'a' - unknown - referred to in documentation, but no definition supplied  * 'c' - section has code  * 'd' - section has initialized data  * 'u' - section has uninitialized data  * 'i' - section contains directives (info)  * 'n' - section can be discarded  * 'R' - remove section at link time  *  * Section Protection:  * 'r' - section is readable  * 'w' - section is writeable  * 'x' - section is executable  * 's' - section is sharable  *  * Section Alignment:  * '0' - align to byte boundary  * '1' - align to halfword undary  * '2' - align to word boundary  * '3' - align to doubleword boundary  * '4' - align to quadword boundary  * '5' - align to 32 byte boundary  * '6' - align to 64 byte boundary  *  */
 end_comment
 
 begin_function
@@ -13848,6 +14535,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 comment|/* Strip out the section name */
@@ -14378,6 +15066,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -14451,6 +15140,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -16996,7 +17686,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Turn a string in input_line_pointer into a floating point constant    of type type, and store the appropriate bytes in *litp.  The number    of LITTLENUMS emitted is stored in *sizep .  An error message is    returned, or NULL on OK.  */
+comment|/* Turn a string in input_line_pointer into a floating point constant    of type TYPE, and store the appropriate bytes in *LITP.  The number    of LITTLENUMS emitted is stored in *SIZEP.  An error message is    returned, or NULL on OK.  */
 end_comment
 
 begin_function
@@ -17359,10 +18049,6 @@ end_function
 
 begin_comment
 comment|/* We have no need to default values of symbols.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -18832,12 +19518,6 @@ name|shift
 operator|==
 literal|0
 operator|&&
-name|operand
-operator|->
-name|insert
-operator|==
-name|NULL
-operator|&&
 name|fixp
 operator|->
 name|fx_addsy
@@ -19012,6 +19692,43 @@ argument_list|,
 name|value
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|BFD_RELOC_64
+case|:
+if|if
+condition|(
+name|fixp
+operator|->
+name|fx_pcrel
+condition|)
+name|fixp
+operator|->
+name|fx_r_type
+operator|=
+name|BFD_RELOC_64_PCREL
+expr_stmt|;
+comment|/* fall through */
+case|case
+name|BFD_RELOC_64_PCREL
+case|:
+name|md_number_to_chars
+argument_list|(
+name|fixp
+operator|->
+name|fx_frag
+operator|->
+name|fr_literal
+operator|+
+name|fixp
+operator|->
+name|fx_where
+argument_list|,
+name|value
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 break|break;

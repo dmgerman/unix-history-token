@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* COFF specific linker code.    Copyright 1994, 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* COFF specific linker code.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -198,6 +198,40 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Return true if SYM is a weak, external symbol.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_WEAK_EXTERNAL
+parameter_list|(
+name|abfd
+parameter_list|,
+name|sym
+parameter_list|)
+define|\
+value|((sym).n_sclass == C_WEAKEXT				\    || (obj_pe (abfd)&& (sym).n_sclass == C_NT_WEAK))
+end_define
+
+begin_comment
+comment|/* Return true if SYM is an external symbol.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_EXTERNAL
+parameter_list|(
+name|abfd
+parameter_list|,
+name|sym
+parameter_list|)
+define|\
+value|((sym).n_sclass == C_EXT || IS_WEAK_EXTERNAL (abfd, sym))
+end_define
 
 begin_comment
 comment|/* Define macros so that the ISFCN, et. al., macros work correctly.    These macros are defined in include/coff/internal.h in terms of    N_TMASK, etc.  These definitions require a user to define local    variables with the appropriate names, and with values from the    coff_data (abfd) structure.  */
@@ -1676,24 +1710,12 @@ break|break;
 block|}
 if|if
 condition|(
-name|sym
-operator|.
-name|n_sclass
-operator|==
-name|C_WEAKEXT
-operator|||
-operator|(
-name|obj_pe
+name|IS_WEAK_EXTERNAL
 argument_list|(
 name|abfd
-argument_list|)
-operator|&&
+argument_list|,
 name|sym
-operator|.
-name|n_sclass
-operator|==
-name|C_NT_WEAK
-operator|)
+argument_list|)
 condition|)
 name|flags
 operator|=
@@ -4005,8 +4027,7 @@ name|type
 operator|==
 name|bfd_indirect_link_order
 operator|&&
-operator|(
-name|bfd_get_flavour
+name|bfd_family_coff
 argument_list|(
 name|p
 operator|->
@@ -4018,9 +4039,6 @@ name|section
 operator|->
 name|owner
 argument_list|)
-operator|==
-name|bfd_target_coff_flavour
-operator|)
 condition|)
 block|{
 name|sub
@@ -4414,7 +4432,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/* If doing task linking (ld --task-link) then make a pass through the      global symbols, writing out any that are defined, and making them      static. */
+comment|/* If doing task linking (ld --task-link) then make a pass through the      global symbols, writing out any that are defined, and making them      static.  */
 if|if
 condition|(
 name|info
@@ -4983,6 +5001,13 @@ condition|)
 return|return
 name|false
 return|;
+name|obj_coff_strings_written
+argument_list|(
+name|abfd
+argument_list|)
+operator|=
+name|true
+expr_stmt|;
 block|}
 name|_bfd_stringtab_free
 argument_list|(
@@ -5837,7 +5862,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Place a marker against all symbols which are used by relocations.    This marker can be picked up by the 'do we skip this symbol ?'    loop in _bfd_coff_link_input_bfd() and used to prevent skipping    that symbol.     */
+comment|/* Place a marker against all symbols which are used by relocations.    This marker can be picked up by the 'do we skip this symbol ?'    loop in _bfd_coff_link_input_bfd() and used to prevent skipping    that symbol.    */
 end_comment
 
 begin_function
@@ -8226,7 +8251,7 @@ name|isym
 expr_stmt|;
 break|break;
 block|}
-comment|/* If doing task linking, convert normal global function symbols to 	     static functions. */
+comment|/* If doing task linking, convert normal global function symbols to 	     static functions.  */
 if|if
 condition|(
 name|finfo
@@ -8235,32 +8260,12 @@ name|info
 operator|->
 name|task_link
 operator|&&
-operator|(
-name|isym
-operator|.
-name|n_sclass
-operator|==
-name|C_EXT
-operator|||
-name|isym
-operator|.
-name|n_sclass
-operator|==
-name|C_WEAKEXT
-operator|||
-operator|(
-name|obj_pe
+name|IS_EXTERNAL
 argument_list|(
 name|input_bfd
-argument_list|)
-operator|&&
+argument_list|,
 name|isym
-operator|.
-name|n_sclass
-operator|==
-name|C_NT_WEAK
-operator|)
-operator|)
+argument_list|)
 condition|)
 name|isym
 operator|.
@@ -10680,7 +10685,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* This reloc is against a symbol we are                              stripping.  This should have been handled 			     by the 'dont_skip_symbol' code in the while 			     loop at the top of this function. */
+comment|/* This reloc is against a symbol we are                              stripping.  This should have been handled 			     by the 'dont_skip_symbol' code in the while 			     loop at the top of this function.  */
 name|is
 operator|=
 name|finfo
@@ -11335,7 +11340,7 @@ name|n_sclass
 operator|=
 name|C_EXT
 expr_stmt|;
-comment|/* If doing task linking and this is the pass where we convert      defined globals to statics, then do that conversion now.  If the      symbol is not being converted, just ignore it and it will be      output during a later pass. */
+comment|/* If doing task linking and this is the pass where we convert      defined globals to statics, then do that conversion now.  If the      symbol is not being converted, just ignore it and it will be      output during a later pass.  */
 if|if
 condition|(
 name|finfo
@@ -11345,37 +11350,17 @@ condition|)
 block|{
 if|if
 condition|(
-name|isym
-operator|.
-name|n_sclass
-operator|!=
-name|C_EXT
-operator|&&
-name|isym
-operator|.
-name|n_sclass
-operator|!=
-name|C_WEAKEXT
-operator|&&
-operator|(
 operator|!
-name|obj_pe
+name|IS_EXTERNAL
 argument_list|(
 name|output_bfd
-argument_list|)
-operator|||
+argument_list|,
 name|isym
-operator|.
-name|n_sclass
-operator|!=
-name|C_NT_WEAK
-operator|)
+argument_list|)
 condition|)
-block|{
 return|return
 name|true
 return|;
-block|}
 name|isym
 operator|.
 name|n_sclass
@@ -11383,6 +11368,38 @@ operator|=
 name|C_STAT
 expr_stmt|;
 block|}
+comment|/* When a weak symbol is not overriden by a strong one,      turn it into an external symbol when not building a      shared or relocateable object.  */
+if|if
+condition|(
+operator|!
+name|finfo
+operator|->
+name|info
+operator|->
+name|shared
+operator|&&
+operator|!
+name|finfo
+operator|->
+name|info
+operator|->
+name|relocateable
+operator|&&
+name|IS_WEAK_EXTERNAL
+argument_list|(
+name|finfo
+operator|->
+name|output_bfd
+argument_list|,
+name|isym
+argument_list|)
+condition|)
+name|isym
+operator|.
+name|n_sclass
+operator|=
+name|C_EXT
+expr_stmt|;
 name|isym
 operator|.
 name|n_numaux
@@ -11823,7 +11840,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write out task global symbols, converting them to statics.  Called    via coff_link_hash_traverse.  Calls bfd_coff_write_global_sym to do    the dirty work, if the symbol we are processing needs conversion. */
+comment|/* Write out task global symbols, converting them to statics.  Called    via coff_link_hash_traverse.  Calls bfd_coff_write_global_sym to do    the dirty work, if the symbol we are processing needs conversion.  */
 end_comment
 
 begin_function
@@ -12948,6 +12965,21 @@ block|}
 elseif|else
 if|if
 condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_undefweak
+condition|)
+name|val
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|!
 name|info
 operator|->
@@ -13005,7 +13037,7 @@ operator|->
 name|base_file
 condition|)
 block|{
-comment|/* Emit a reloc if the backend thinks it needs it. */
+comment|/* Emit a reloc if the backend thinks it needs it.  */
 if|if
 condition|(
 name|sym

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Intel 386 COFF files.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Intel 386 COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -234,6 +234,9 @@ block|{
 name|symvalue
 name|diff
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|COFF_WITH_PE
 if|if
 condition|(
 name|output_bfd
@@ -247,6 +250,8 @@ condition|)
 return|return
 name|bfd_reloc_continue
 return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|bfd_is_com_section
@@ -286,6 +291,66 @@ block|}
 else|else
 block|{
 comment|/* For some reason bfd_perform_relocation always effectively 	 ignores the addend for a COFF target when producing 	 relocateable output.  This seems to be always wrong for 386 	 COFF, so we handle the addend here instead.  */
+ifdef|#
+directive|ifdef
+name|COFF_WITH_PE
+if|if
+condition|(
+name|output_bfd
+operator|==
+operator|(
+name|bfd
+operator|*
+operator|)
+name|NULL
+condition|)
+block|{
+name|reloc_howto_type
+modifier|*
+name|howto
+init|=
+name|reloc_entry
+operator|->
+name|howto
+decl_stmt|;
+comment|/* Although PC relative relocations are very similar between 	     PE and non-PE formats, but they are off by 1<< howto->size 	     bytes. For the external relocation, PE is very different 	     from others. See md_apply_fix3 () in gas/config/tc-i386.c. 	     When we link PE and non-PE object files together to 	     generate a non-PE executable, we have to compensate it 	     here.  */
+if|if
+condition|(
+name|howto
+operator|->
+name|pc_relative
+operator|==
+name|true
+operator|&&
+name|howto
+operator|->
+name|pcrel_offset
+operator|==
+name|true
+condition|)
+name|diff
+operator|=
+operator|-
+operator|(
+literal|1
+operator|<<
+name|howto
+operator|->
+name|size
+operator|)
+expr_stmt|;
+else|else
+name|diff
+operator|=
+operator|-
+name|reloc_entry
+operator|->
+name|addend
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
 name|diff
 operator|=
 name|reloc_entry
@@ -306,6 +371,17 @@ operator|->
 name|type
 operator|==
 name|R_IMAGEBASE
+operator|&&
+name|output_bfd
+operator|!=
+name|NULL
+operator|&&
+name|bfd_get_flavour
+argument_list|(
+name|output_bfd
+argument_list|)
+operator|==
+name|bfd_target_coff_flavour
 condition|)
 name|diff
 operator|-=
@@ -1464,6 +1540,19 @@ operator|->
 name|r_type
 operator|==
 name|R_IMAGEBASE
+operator|&&
+operator|(
+name|bfd_get_flavour
+argument_list|(
+name|sec
+operator|->
+name|output_section
+operator|->
+name|owner
+argument_list|)
+operator|==
+name|bfd_target_coff_flavour
+operator|)
 condition|)
 block|{
 operator|*
@@ -1758,6 +1847,8 @@ operator||
 name|SEC_LINK_ONCE
 operator||
 name|SEC_LINK_DUPLICATES
+operator||
+name|SEC_READONLY
 endif|#
 directive|endif
 operator||
@@ -1823,7 +1914,7 @@ block|,
 name|bfd_putl16
 block|,
 comment|/* hdrs */
-comment|/* Note that we allow an object file to be treated as a core file as well. */
+comment|/* Note that we allow an object file to be treated as a core file as well.  */
 block|{
 name|_bfd_dummy_target
 block|,

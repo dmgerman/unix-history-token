@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ldlang.h - linker command language support    Copyright 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.        This file is part of GLD, the Gnu Linker.        GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.        GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ldlang.h - linker command language support    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001    Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -534,7 +534,7 @@ comment|/* 1 means search a set of directories for this file.  */
 name|boolean
 name|search_dirs_flag
 decl_stmt|;
-comment|/* 1 means this is base file of incremental load.      Do not load this file's text or data.      Also default text_start to after this file's bss. */
+comment|/* 1 means this is base file of incremental load.      Do not load this file's text or data.      Also default text_start to after this file's bss.  */
 name|boolean
 name|just_syms_flag
 decl_stmt|;
@@ -549,7 +549,12 @@ decl_stmt|;
 name|boolean
 name|loaded
 decl_stmt|;
-comment|/*    unsigned int globals_in_this_file;*/
+if|#
+directive|if
+literal|0
+block|unsigned int globals_in_this_file;
+endif|#
+directive|endif
 specifier|const
 name|char
 modifier|*
@@ -870,6 +875,37 @@ name|nocrossref_list
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* This structure is used to hold a list of input section names which    will not match an output section in the linker script.  */
+end_comment
+
+begin_struct
+struct|struct
+name|unique_sections
+block|{
+name|struct
+name|unique_sections
+modifier|*
+name|next
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|unique_sections
+modifier|*
+name|unique_section_list
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|lang_output_section_statement_type
@@ -928,6 +964,13 @@ begin_decl_stmt
 specifier|extern
 name|boolean
 name|entry_from_cmdline
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|lang_statement_list_type
+name|file_chain
 decl_stmt|;
 end_decl_stmt
 
@@ -1422,22 +1465,8 @@ parameter_list|(
 name|statement
 parameter_list|)
 define|\
-value|extern lang_statement_list_type file_chain;			\   lang_input_statement_type *statement;				\   for (statement = (lang_input_statement_type *)file_chain.head;\        statement != (lang_input_statement_type *)NULL;		\        statement = (lang_input_statement_type *)statement->next)
+value|lang_input_statement_type *statement;				\   for (statement = (lang_input_statement_type *)file_chain.head;\        statement != (lang_input_statement_type *)NULL;		\        statement = (lang_input_statement_type *)statement->next)\  extern void lang_process PARAMS ((void));
 end_define
-
-begin_decl_stmt
-unit|\
-specifier|extern
-name|void
-name|lang_process
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1985,6 +2014,35 @@ operator|*
 operator|,
 expr|struct
 name|bfd_elf_version_deps
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|boolean
+name|unique_section_p
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|lang_add_unique
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
 operator|*
 operator|)
 argument_list|)

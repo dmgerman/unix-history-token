@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic ECOFF swapping routines, for BFD.    Copyright 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic ECOFF swapping routines, for BFD.    Copyright 1992, 1993, 1994, 1995, 1996, 2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* NOTE: This is a header file, but it contains executable routines.    This is done this way because these routines are substantially    similar, but are not identical, for all ECOFF targets.     These are routines to swap the ECOFF symbolic information in and    out.  The routines are defined statically.  You can set breakpoints    on them in gdb by naming the including source file; e.g.,    'coff-mips.c':ecoff_swap_hdr_in.     Before including this header file, one of ECOFF_32 or ECOFF_64 must    be defined.  These are checked when swapping information that    depends upon the target size.  This code works for 32 bit and 64    bit ECOFF, but may need to be generalized in the future.     Some header file which defines the external forms of these    structures must also be included before including this header file.    Currently this is either coff/mips.h or coff/alpha.h.     If the symbol TEST is defined when this file is compiled, a    comparison is made to ensure that, in fact, the output is    bit-for-bit the same as the input.  Of course, this symbol should    only be defined when deliberately testing the code on a machine    with the proper byte sex and such.  */
+comment|/* NOTE: This is a header file, but it contains executable routines.    This is done this way because these routines are substantially    similar, but are not identical, for all ECOFF targets.     These are routines to swap the ECOFF symbolic information in and    out.  The routines are defined statically.  You can set breakpoints    on them in gdb by naming the including source file; e.g.,    'coff-mips.c':ecoff_swap_hdr_in.     Before including this header file, one of ECOFF_32, ECOFF_64,    ECOFF_SIGNED_32 or ECOFF_SIGNED_64 must be defined.  These are    checked when swapping information that depends upon the target    size.  This code works for 32 bit and 64 bit ECOFF, but may need to    be generalized in the future.     Some header file which defines the external forms of these    structures must also be included before including this header file.    Currently this is either coff/mips.h or coff/alpha.h.     If the symbol TEST is defined when this file is compiled, a    comparison is made to ensure that, in fact, the output is    bit-for-bit the same as the input.  Of course, this symbol should    only be defined when deliberately testing the code on a machine    with the proper byte sex and such.  */
 end_comment
 
 begin_ifdef
@@ -50,6 +50,56 @@ define|#
 directive|define
 name|ecoff_put_off
 value|bfd_h_put_64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ECOFF_SIGNED_32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ecoff_get_off
+value|bfd_h_get_signed_32
+end_define
+
+begin_define
+define|#
+directive|define
+name|ecoff_put_off
+value|bfd_h_put_signed_32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ECOFF_SIGNED_64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ecoff_get_off
+value|bfd_h_get_signed_64
+end_define
+
+begin_define
+define|#
+directive|define
+name|ecoff_put_off
+value|bfd_h_put_signed_64
 end_define
 
 begin_endif
@@ -1559,15 +1609,27 @@ operator|->
 name|f_rss
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_64
+argument_list|)
 if|if
 condition|(
 name|intern
 operator|->
 name|rss
 operator|==
+operator|(
+name|signed
+name|long
+operator|)
 literal|0xffffffff
 condition|)
 name|intern
@@ -1715,9 +1777,17 @@ operator|->
 name|f_copt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_32
+argument_list|)
 name|intern
 operator|->
 name|ipdFirst
@@ -1754,9 +1824,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_64
+argument_list|)
 name|intern
 operator|->
 name|ipdFirst
@@ -1861,7 +1939,7 @@ operator|->
 name|f_crfd
 argument_list|)
 expr_stmt|;
-comment|/* now the fun stuff... */
+comment|/* now the fun stuff...  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -2343,9 +2421,17 @@ operator|->
 name|f_copt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_32
+argument_list|)
 name|bfd_h_put_16
 argument_list|(
 name|abfd
@@ -2382,9 +2468,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_64
+argument_list|)
 name|bfd_h_put_32
 argument_list|(
 name|abfd
@@ -2489,7 +2583,7 @@ operator|->
 name|f_crfd
 argument_list|)
 expr_stmt|;
-comment|/* now the fun stuff... */
+comment|/* now the fun stuff...  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -3053,9 +3147,17 @@ operator|->
 name|p_cbLineOffset
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_64
+argument_list|)
 name|intern
 operator|->
 name|gp_prologue
@@ -3605,9 +3707,17 @@ operator|->
 name|p_cbLineOffset
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_64
+argument_list|)
 name|bfd_h_put_8
 argument_list|(
 name|abfd
@@ -3842,7 +3952,7 @@ comment|/* MPW_C */
 end_comment
 
 begin_comment
-comment|/* Same routines, but with ECOFF_64 code removed, so ^&%$#&! MPW C doesn't    corrupt itself and then freak out. */
+comment|/* Same routines, but with ECOFF_64 code removed, so ^&%$#&! MPW C doesn't    corrupt itself and then freak out.  */
 end_comment
 
 begin_comment
@@ -4579,7 +4689,7 @@ operator|->
 name|s_value
 argument_list|)
 expr_stmt|;
-comment|/* now the fun stuff... */
+comment|/* now the fun stuff...  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -4937,7 +5047,7 @@ operator|->
 name|s_value
 argument_list|)
 expr_stmt|;
-comment|/* now the fun stuff... */
+comment|/* now the fun stuff...  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -5251,7 +5361,7 @@ operator|*
 operator|)
 name|ext_copy
 expr_stmt|;
-comment|/* now the fun stuff... */
+comment|/* now the fun stuff...  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -5372,9 +5482,17 @@ name|reserved
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_32
+argument_list|)
 name|intern
 operator|->
 name|ifd
@@ -5394,9 +5512,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_64
+argument_list|)
 name|intern
 operator|->
 name|ifd
@@ -5520,7 +5646,7 @@ operator|*
 name|intern_copy
 expr_stmt|;
 comment|/* Make it reasonable to do in-place.  */
-comment|/* now the fun stuff... */
+comment|/* now the fun stuff...  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -5577,9 +5703,17 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_64
+argument_list|)
 name|ext
 operator|->
 name|es_bits2
@@ -5651,9 +5785,17 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_64
+argument_list|)
 name|ext
 operator|->
 name|es_bits2
@@ -5675,9 +5817,17 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_32
+argument_list|)
 name|bfd_h_put_signed_16
 argument_list|(
 name|abfd
@@ -5697,9 +5847,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ECOFF_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_64
+argument_list|)
 name|bfd_h_put_signed_32
 argument_list|(
 name|abfd

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ppc.h -- Header file for PowerPC opcode table    Copyright 1994, 1995 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ppc.h -- Header file for PowerPC opcode table    Copyright 1994, 1995, 1999, 2000 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -179,6 +179,17 @@ define|#
 directive|define
 name|PPC_OPCODE_64_BRIDGE
 value|(0400)
+end_define
+
+begin_comment
+comment|/* Opcode is supported by Altivec Vector Unit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPCODE_ALTIVEC
+value|(01000)
 end_define
 
 begin_comment
@@ -414,6 +425,17 @@ define|#
 directive|define
 name|PPC_OPERAND_NEGATIVE
 value|(04000)
+end_define
+
+begin_comment
+comment|/* This operand names a vector unit register.  The disassembler    prints these with a leading 'v'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPERAND_VR
+value|(010000)
 end_define
 
 begin_escape

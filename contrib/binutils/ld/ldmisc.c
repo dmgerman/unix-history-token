@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ldmisc.c    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ldmisc.c    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -177,9 +177,7 @@ condition|)
 operator|++
 name|string
 expr_stmt|;
-comment|/* This is a hack for better error reporting on XCOFF, or the MS PE   */
-comment|/* format.  Xcoff has a single '.', while the NT PE for PPC has '..'. */
-comment|/* So we remove all of them.                                          */
+comment|/* This is a hack for better error reporting on XCOFF, or the MS PE      format.  Xcoff has a single '.', while the NT PE for PPC has      '..'.  So we remove all of them.  */
 while|while
 condition|(
 name|string
@@ -665,7 +663,7 @@ break|break;
 case|case
 literal|'F'
 case|:
-comment|/* error is fatal */
+comment|/* Error is fatal.  */
 name|fatal
 operator|=
 name|true
@@ -674,7 +672,7 @@ break|break;
 case|case
 literal|'P'
 case|:
-comment|/* print program name */
+comment|/* Print program name.  */
 name|fprintf
 argument_list|(
 name|fp
@@ -801,7 +799,7 @@ break|break;
 case|case
 literal|'S'
 case|:
-comment|/* print script file and linenumber */
+comment|/* Print script file and linenumber.  */
 if|if
 condition|(
 name|parsing_defsym
@@ -850,7 +848,7 @@ break|break;
 case|case
 literal|'R'
 case|:
-comment|/* Print all that's interesting about a relent */
+comment|/* Print all that's interesting about a relent.  */
 block|{
 name|arelent
 modifier|*
@@ -1309,7 +1307,7 @@ argument_list|)
 expr_stmt|;
 name|last_file
 operator|=
-name|buystring
+name|xstrdup
 argument_list|(
 name|filename
 argument_list|)
@@ -1327,7 +1325,7 @@ argument_list|)
 expr_stmt|;
 name|last_function
 operator|=
-name|buystring
+name|xstrdup
 argument_list|(
 name|functionname
 argument_list|)
@@ -1598,7 +1596,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Format info message and print on stdout. */
+comment|/* Format info message and print on stdout.  */
 end_comment
 
 begin_comment
@@ -1686,7 +1684,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ('e' for error.) Format info message and print on stderr. */
+comment|/* ('e' for error.) Format info message and print on stderr.  */
 end_comment
 
 begin_function
@@ -1802,56 +1800,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|char
-modifier|*
-name|buystring
-parameter_list|(
-name|x
-parameter_list|)
-name|CONST
-name|char
-modifier|*
-name|CONST
-name|x
-decl_stmt|;
-block|{
-name|size_t
-name|l
-init|=
-name|strlen
-argument_list|(
-name|x
-argument_list|)
-operator|+
-literal|1
-decl_stmt|;
-name|char
-modifier|*
-name|r
-init|=
-name|xmalloc
-argument_list|(
-name|l
-argument_list|)
-decl_stmt|;
-name|memcpy
-argument_list|(
-name|r
-argument_list|,
-name|x
-argument_list|,
-name|l
-argument_list|)
-expr_stmt|;
-return|return
-name|r
-return|;
-block|}
-end_function
-
 begin_comment
-comment|/* ('m' for map) Format info message and print on map. */
+comment|/* ('m' for map) Format info message and print on map.  */
 end_comment
 
 begin_function

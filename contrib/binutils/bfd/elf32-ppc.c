@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* PowerPC-specific support for 32-bit ELF    Copyright 1994, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* PowerPC-specific support for 32-bit ELF    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -633,6 +633,40 @@ name|PLT_NUM_SINGLE_ENTRIES
 value|8192
 end_define
 
+begin_comment
+comment|/* Will references to this symbol always reference the symbol    in this object?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_REFERENCES_LOCAL
+parameter_list|(
+name|INFO
+parameter_list|,
+name|H
+parameter_list|)
+define|\
+value|((! INFO->shared							\     || INFO->symbolic							\     || H->dynindx == -1							\     || ELF_ST_VISIBILITY (H->other) == STV_INTERNAL			\     || ELF_ST_VISIBILITY (H->other) == STV_HIDDEN)			\&& (H->elf_link_hash_flags& ELF_LINK_HASH_DEF_REGULAR) != 0)
+end_define
+
+begin_comment
+comment|/* Will _calls_ to this symbol always call the version in this object?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_CALLS_LOCAL
+parameter_list|(
+name|INFO
+parameter_list|,
+name|H
+parameter_list|)
+define|\
+value|((! INFO->shared							\     || INFO->symbolic							\     || H->dynindx == -1							\     || ELF_ST_VISIBILITY (H->other) != STV_DEFAULT)			\&& (H->elf_link_hash_flags& ELF_LINK_HASH_DEF_REGULAR) != 0)
+end_define
+
 begin_escape
 end_escape
 
@@ -915,7 +949,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* The high order 16 bits of an address, plus 1 if the contents of      the low 16 bits, treated as a signed number, is negative.	*/
+comment|/* The high order 16 bits of an address, plus 1 if the contents of      the low 16 bits, treated as a signed number, is negative.  */
 name|HOWTO
 argument_list|(
 name|R_PPC_ADDR16_HA
@@ -1001,7 +1035,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* An absolute 16 bit branch, for which bit 10 should be set to      indicate that the branch is expected to be taken.	The lower two      bits must be zero.	 */
+comment|/* An absolute 16 bit branch, for which bit 10 should be set to      indicate that the branch is expected to be taken.	The lower two      bits must be zero.  */
 name|HOWTO
 argument_list|(
 name|R_PPC_ADDR14_BRTAKEN
@@ -1087,7 +1121,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* A relative 26 bit branch; the lower two bits must be zero.	 */
+comment|/* A relative 26 bit branch; the lower two bits must be zero.  */
 name|HOWTO
 argument_list|(
 name|R_PPC_REL24
@@ -1130,7 +1164,7 @@ name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* A relative 16 bit branch; the lower two bits must be zero.	 */
+comment|/* A relative 16 bit branch; the lower two bits must be zero.  */
 name|HOWTO
 argument_list|(
 name|R_PPC_REL14
@@ -1173,7 +1207,7 @@ name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* A relative 16 bit branch.	Bit 10 should be set to indicate that      the branch is expected to be taken.  The lower two bits must be      zero.  */
+comment|/* A relative 16 bit branch.  Bit 10 should be set to indicate that      the branch is expected to be taken.  The lower two bits must be      zero.  */
 name|HOWTO
 argument_list|(
 name|R_PPC_REL14_BRTAKEN
@@ -1216,7 +1250,7 @@ name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* A relative 16 bit branch.	Bit 10 should be set to indicate that      the branch is not expected to be taken.  The lower two bits must      be zero.  */
+comment|/* A relative 16 bit branch.  Bit 10 should be set to indicate that      the branch is not expected to be taken.  The lower two bits must      be zero.  */
 name|HOWTO
 argument_list|(
 name|R_PPC_REL14_BRNTAKEN
@@ -1818,7 +1852,7 @@ name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 32-bit relocation to the symbol's procedure linkage table.      FIXME: not supported. */
+comment|/* 32-bit relocation to the symbol's procedure linkage table.      FIXME: not supported.  */
 name|HOWTO
 argument_list|(
 name|R_PPC_PLT32
@@ -1861,7 +1895,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 32-bit PC relative relocation to the symbol's procedure linkage table.      FIXME: not supported. */
+comment|/* 32-bit PC relative relocation to the symbol's procedure linkage table.      FIXME: not supported.  */
 name|HOWTO
 argument_list|(
 name|R_PPC_PLTREL32
@@ -2076,7 +2110,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 32-bit section relative relocation. */
+comment|/* 32-bit section relative relocation.  */
 name|HOWTO
 argument_list|(
 name|R_PPC_SECTOFF
@@ -2119,7 +2153,7 @@ name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 16-bit lower half section relative relocation. */
+comment|/* 16-bit lower half section relative relocation.  */
 name|HOWTO
 argument_list|(
 name|R_PPC_SECTOFF_LO
@@ -2162,7 +2196,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 16-bit upper half section relative relocation. */
+comment|/* 16-bit upper half section relative relocation.  */
 name|HOWTO
 argument_list|(
 name|R_PPC_SECTOFF_HI
@@ -2205,7 +2239,7 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 16-bit upper half adjusted section relative relocation. */
+comment|/* 16-bit upper half adjusted section relative relocation.  */
 name|HOWTO
 argument_list|(
 name|R_PPC_SECTOFF_HA
@@ -2908,7 +2942,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This function handles relaxing for the PPC with option --mpc860c0[=<n>].     The MPC860, revision C0 or earlier contains a bug in the die.    If all of the following conditions are true, the next instruction    to be executed *may* be treated as a no-op.    1/ A forward branch is executed.    2/ The branch is predicted as not taken.    3/ The branch is taken.    4/ The branch is located in the last 5 words of a page.       (The EOP limit is 5 by default but may be specified as any value from 1-10.)        Our software solution is to detect these problematic branches in a    linker pass and modify them as follows:    1/ Unconditional branches - Since these are always predicted taken,       there is no problem and no action is required.    2/ Conditional backward branches - No problem, no action required.    3/ Conditional forward branches - Ensure that the "inverse prediction       bit" is set (ensure it is predicted taken).    4/ Conditional register branches - Ensure that the "y bit" is set       (ensure it is predicted taken). */
+comment|/* This function handles relaxing for the PPC with option --mpc860c0[=<n>].     The MPC860, revision C0 or earlier contains a bug in the die.    If all of the following conditions are true, the next instruction    to be executed *may* be treated as a no-op.    1/ A forward branch is executed.    2/ The branch is predicted as not taken.    3/ The branch is taken.    4/ The branch is located in the last 5 words of a page.       (The EOP limit is 5 by default but may be specified as any value from 1-10.)     Our software solution is to detect these problematic branches in a    linker pass and modify them as follows:    1/ Unconditional branches - Since these are always predicted taken,       there is no problem and no action is required.    2/ Conditional backward branches - No problem, no action required.    3/ Conditional forward branches - Ensure that the "inverse prediction       bit" is set (ensure it is predicted taken).    4/ Conditional register branches - Ensure that the "y bit" is set       (ensure it is predicted taken). */
 end_comment
 
 begin_comment
@@ -2963,7 +2997,7 @@ operator|*
 operator|)
 name|arg2
 decl_stmt|;
-comment|/* Sort by offset. */
+comment|/* Sort by offset.  */
 return|return
 operator|(
 operator|(
@@ -3055,7 +3089,7 @@ name|comb_curr
 decl_stmt|,
 name|comb_count
 decl_stmt|;
-comment|/* We never have to do this more than once per input section. */
+comment|/* We never have to do this more than once per input section.  */
 operator|*
 name|again
 operator|=
@@ -3078,7 +3112,7 @@ name|isec
 operator|->
 name|_raw_size
 expr_stmt|;
-comment|/* We're only interested in text sections which overlap the   troublesome area at the end of a page. */
+comment|/* We're only interested in text sections which overlap the      troublesome area at the end of a page.  */
 if|if
 condition|(
 name|link_info
@@ -3108,7 +3142,7 @@ decl_stmt|;
 name|boolean
 name|section_modified
 decl_stmt|;
-comment|/* Get the section contents. */
+comment|/* Get the section contents.  */
 comment|/* Get cached copy if it exists.  */
 if|if
 condition|(
@@ -3251,7 +3285,7 @@ name|free_relocs
 operator|=
 name|internal_relocs
 expr_stmt|;
-comment|/* Setup a faster access method for the reloc info we need. */
+comment|/* Setup a faster access method for the reloc info we need.  */
 name|rela_comb
 operator|=
 operator|(
@@ -3328,7 +3362,7 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-comment|/* Prologue constants are sometimes present in the ".text"               sections and they can be identified by their associated relocation.               We don't want to process those words and some others which               can also be identified by their relocations.  However, not all               conditional branches will have a relocation so we will               only ignore words that 1) have a reloc, and 2) the reloc               is not applicable to a conditional branch.               The array rela_comb is built here for use in the EOP scan loop. */
+comment|/* Prologue constants are sometimes present in the ".text"               sections and they can be identified by their associated relocation.               We don't want to process those words and some others which               can also be identified by their relocations.  However, not all               conditional branches will have a relocation so we will               only ignore words that 1) have a reloc, and 2) the reloc               is not applicable to a conditional branch.               The array rela_comb is built here for use in the EOP scan loop.  */
 switch|switch
 condition|(
 name|r_type
@@ -3341,15 +3375,15 @@ comment|/* absolute, predicted not taken */
 case|case
 name|R_PPC_REL14
 case|:
-comment|/* relative cond. br. */
+comment|/* relative cond. br.  */
 case|case
 name|R_PPC_REL14_BRNTAKEN
 case|:
 comment|/* rel. cond. br., predicted not taken */
-comment|/* We should check the instruction. */
+comment|/* We should check the instruction.  */
 break|break;
 default|default:
-comment|/* The word is not a conditional branch - ignore it. */
+comment|/* The word is not a conditional branch - ignore it.  */
 name|rela_comb
 index|[
 name|comb_count
@@ -3389,7 +3423,7 @@ name|ppc_elf_sort_rela
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Enumerate each EOP region that overlaps this section. */
+comment|/* Enumerate each EOP region that overlaps this section.  */
 name|end_section
 operator|=
 name|isec
@@ -3443,7 +3477,7 @@ name|isec
 operator|->
 name|vma
 expr_stmt|;
-comment|/* begins in the middle of its first EOP region. */
+comment|/* begins in the middle of its first EOP region.  */
 for|for
 control|(
 init|;
@@ -3460,7 +3494,7 @@ operator|+=
 name|PAGESIZE
 control|)
 block|{
-comment|/* Check each word in this EOP region. */
+comment|/* Check each word in this EOP region.  */
 for|for
 control|(
 init|;
@@ -3485,7 +3519,7 @@ name|skip
 decl_stmt|,
 name|modified
 decl_stmt|;
-comment|/* Don't process this word if there is a relocation for it and               the relocation indicates the word is not a conditional branch. */
+comment|/* Don't process this word if there is a relocation for it and               the relocation indicates the word is not a conditional branch.  */
 name|skip
 operator|=
 name|false
@@ -3546,7 +3580,7 @@ condition|(
 name|skip
 condition|)
 continue|continue;
-comment|/* Check the current word for a problematic conditional branch. */
+comment|/* Check the current word for a problematic conditional branch.  */
 define|#
 directive|define
 name|BO0
@@ -3625,7 +3659,7 @@ block|{
 name|bfd_vma
 name|target
 decl_stmt|;
-comment|/* This branch is predicted as "normal".                       If this is a forward branch, it is problematic. */
+comment|/* This branch is predicted as "normal".                       If this is a forward branch, it is problematic.  */
 name|target
 operator|=
 name|insn
@@ -3714,7 +3748,7 @@ name|insn
 argument_list|)
 condition|)
 block|{
-comment|/* This branch is predicted as not-taken. 		      If this is a forward branch, it is problematic.                       Since we can't tell statically if it will branch forward,                       always set the prediction bit. */
+comment|/* This branch is predicted as not-taken. 		      If this is a forward branch, it is problematic.                       Since we can't tell statically if it will branch forward,                       always set the prediction bit.  */
 name|insn
 operator||=
 literal|0x00200000
@@ -3762,7 +3796,7 @@ name|insn
 argument_list|)
 condition|)
 block|{
-comment|/* This branch is predicted as not-taken. 		      If this is a forward branch, it is problematic.                       Since we can't tell statically if it will branch forward,                       always set the prediction bit. */
+comment|/* This branch is predicted as not-taken. 		      If this is a forward branch, it is problematic.                       Since we can't tell statically if it will branch forward,                       always set the prediction bit.  */
 name|insn
 operator||=
 literal|0x00200000
@@ -3981,7 +4015,7 @@ index|[
 name|R_PPC_ADDR32
 index|]
 condition|)
-comment|/* Initialize howto table if needed */
+comment|/* Initialize howto table if needed.  */
 name|ppc_elf_howto_init
 argument_list|()
 expr_stmt|;
@@ -4479,7 +4513,7 @@ index|[
 name|R_PPC_ADDR32
 index|]
 condition|)
-comment|/* Initialize howto table if needed */
+comment|/* Initialize howto table if needed.  */
 name|ppc_elf_howto_init
 argument_list|()
 expr_stmt|;
@@ -4669,7 +4703,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function to set whether a module needs the -mrelocatable bit set. */
+comment|/* Function to set whether a module needs the -mrelocatable bit set.  */
 end_comment
 
 begin_function
@@ -4854,76 +4888,18 @@ decl_stmt|;
 comment|/* Check if we have the same endianess */
 if|if
 condition|(
-name|ibfd
-operator|->
-name|xvec
-operator|->
-name|byteorder
-operator|!=
-name|obfd
-operator|->
-name|xvec
-operator|->
-name|byteorder
-operator|&&
-name|obfd
-operator|->
-name|xvec
-operator|->
-name|byteorder
-operator|!=
-name|BFD_ENDIAN_UNKNOWN
-condition|)
-block|{
-specifier|const
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-if|if
-condition|(
-name|bfd_big_endian
+name|_bfd_generic_verify_endian_match
 argument_list|(
 name|ibfd
-argument_list|)
-condition|)
-name|msg
-operator|=
-name|_
-argument_list|(
-literal|"%s: compiled for a big endian system and target is little endian"
-argument_list|)
-expr_stmt|;
-else|else
-name|msg
-operator|=
-name|_
-argument_list|(
-literal|"%s: compiled for a little endian system and target is big endian"
-argument_list|)
-expr_stmt|;
-call|(
-modifier|*
-name|_bfd_error_handler
-call|)
-argument_list|(
-name|msg
 argument_list|,
-name|bfd_get_filename
-argument_list|(
-name|ibfd
+name|obfd
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|bfd_set_error
-argument_list|(
-name|bfd_error_wrong_format
-argument_list|)
-expr_stmt|;
+operator|==
+name|false
+condition|)
 return|return
 name|false
 return|;
-block|}
 if|if
 condition|(
 name|bfd_get_flavour
@@ -5701,7 +5677,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* If we have a non-zero sized .sbss2 or .PPC.EMB.sbss0 sections, we need to bump up    the number of section headers.  */
+comment|/* If we have a non-zero sized .sbss2 or .PPC.EMB.sbss0 sections, we    need to bump up the number of section headers.  */
 end_comment
 
 begin_function
@@ -5820,7 +5796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Modify the segment map if needed */
+comment|/* Modify the segment map if needed.  */
 end_comment
 
 begin_function
@@ -6138,35 +6114,12 @@ argument_list|)
 operator|->
 name|dynamic_sections_created
 operator|||
-operator|(
-operator|(
-operator|!
+name|SYMBOL_CALLS_LOCAL
+argument_list|(
 name|info
-operator|->
-name|shared
-operator|||
-name|info
-operator|->
-name|symbolic
-operator|||
+argument_list|,
 name|h
-operator|->
-name|dynindx
-operator|==
-operator|-
-literal|1
-operator|)
-operator|&&
-operator|(
-name|h
-operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_DEF_REGULAR
-operator|)
-operator|!=
-literal|0
-operator|)
+argument_list|)
 operator|||
 operator|(
 name|info
@@ -6183,7 +6136,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* A PLT entry is not required/allowed when:  	     1. We are not using ld.so; because then the PLT entry 	     can't be set up, so we can't use one.  	     2. We know for certain that a symbol is defined in 	     this object, because this object is the application, 	     is linked with -Bsymbolic, or because the symbol is local.  	     3. GC has rendered the entry unused. 	     Note, however, that in an executable all references to the 	     symbol go to the PLT, so we can't turn it off in that case. 	     ??? The correct thing to do here is to reference count 	     all uses of the symbol, not just those to the GOT or PLT.  */
+comment|/* A PLT entry is not required/allowed when:  	     1. We are not using ld.so; because then the PLT entry 	     can't be set up, so we can't use one.  	     2. We know for certain that a call to this symbol 	     will go to this object.  	     3. GC has rendered the entry unused. 	     Note, however, that in an executable all references to the 	     symbol go to the PLT, so we can't turn it off in that case. 	     ??? The correct thing to do here is to reference count 	     all uses of the symbol, not just those to the GOT or PLT.  */
 name|h
 operator|->
 name|plt
@@ -7071,7 +7024,7 @@ name|char
 modifier|*
 name|outname
 decl_stmt|;
-comment|/* Remember whether there are any relocation sections. */
+comment|/* Remember whether there are any relocation sections.  */
 name|relocs
 operator|=
 name|true
@@ -7372,6 +7325,12 @@ condition|)
 return|return
 name|false
 return|;
+name|info
+operator|->
+name|flags
+operator||=
+name|DF_TEXTREL
+expr_stmt|;
 block|}
 block|}
 return|return
@@ -8682,6 +8641,13 @@ literal|"_GLOBAL_OFFSET_TABLE_"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|SYMBOL_REFERENCES_LOCAL
+argument_list|(
+name|info
+argument_list|,
+name|h
+argument_list|)
 condition|)
 break|break;
 comment|/* fall through */
@@ -9273,7 +9239,13 @@ name|refcount
 operator|--
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|local_got_refcounts
+operator|!=
+name|NULL
+condition|)
 block|{
 if|if
 condition|(
@@ -9369,10 +9341,6 @@ end_escape
 
 begin_comment
 comment|/* Hook called by the linker routine which adds symbols from an object    file.  We use it to put .comm items in .sbss, and not .bss.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -10060,26 +10028,12 @@ name|info
 operator|->
 name|shared
 operator|&&
-operator|(
+name|SYMBOL_REFERENCES_LOCAL
+argument_list|(
 name|info
-operator|->
-name|symbolic
-operator|||
+argument_list|,
 name|h
-operator|->
-name|dynindx
-operator|==
-operator|-
-literal|1
-operator|)
-operator|&&
-operator|(
-name|h
-operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_DEF_REGULAR
-operator|)
+argument_list|)
 condition|)
 block|{
 name|rela
@@ -11112,7 +11066,7 @@ index|[
 name|R_PPC_ADDR32
 index|]
 condition|)
-comment|/* Initialize howto table if needed */
+comment|/* Initialize howto table if needed.  */
 name|ppc_elf_howto_init
 argument_list|()
 expr_stmt|;
@@ -11254,6 +11208,9 @@ name|r_symndx
 decl_stmt|;
 name|bfd_vma
 name|relocation
+decl_stmt|;
+name|int
+name|will_become_local
 decl_stmt|;
 comment|/* Unknown relocation handling */
 if|if
@@ -11470,6 +11427,11 @@ operator|->
 name|st_value
 operator|)
 expr_stmt|;
+comment|/* Relocs to local symbols are always resolved.  */
+name|will_become_local
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -11529,6 +11491,16 @@ name|root
 operator|.
 name|string
 expr_stmt|;
+comment|/* Can this relocation be resolved immediately?  */
+name|will_become_local
+operator|=
+name|SYMBOL_REFERENCES_LOCAL
+argument_list|(
+name|info
+argument_list|,
+name|h
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|h
@@ -11563,9 +11535,19 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|r_type
 operator|==
 name|R_PPC_PLT32
+operator|||
+name|r_type
+operator|==
+name|R_PPC_PLTREL24
+operator|)
+operator|&&
+name|splt
+operator|!=
+name|NULL
 operator|&&
 name|h
 operator|->
@@ -11624,29 +11606,8 @@ name|info
 operator|->
 name|shared
 operator|||
-operator|(
 operator|!
-name|info
-operator|->
-name|symbolic
-operator|&&
-name|h
-operator|->
-name|dynindx
-operator|!=
-operator|-
-literal|1
-operator|)
-operator|||
-operator|(
-name|h
-operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_DEF_REGULAR
-operator|)
-operator|==
-literal|0
+name|will_become_local
 operator|)
 operator|)
 operator|||
@@ -11655,31 +11616,8 @@ name|info
 operator|->
 name|shared
 operator|&&
-operator|(
-operator|(
 operator|!
-name|info
-operator|->
-name|symbolic
-operator|&&
-name|h
-operator|->
-name|dynindx
-operator|!=
-operator|-
-literal|1
-operator|)
-operator|||
-operator|(
-name|h
-operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_DEF_REGULAR
-operator|)
-operator|==
-literal|0
-operator|)
+name|will_become_local
 operator|&&
 operator|(
 operator|(
@@ -11694,6 +11632,7 @@ literal|0
 comment|/* Testing SEC_DEBUGGING here may be wrong.                              It's here to avoid a crash when                              generating a shared library with DWARF                              debugging information.  */
 operator|||
 operator|(
+operator|(
 name|input_section
 operator|->
 name|flags
@@ -11702,6 +11641,17 @@ name|SEC_DEBUGGING
 operator|)
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|h
+operator|->
+name|elf_link_hash_flags
+operator|&
+name|ELF_LINK_HASH_DEF_DYNAMIC
+operator|)
+operator|!=
+literal|0
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -11740,10 +11690,6 @@ operator|||
 name|r_type
 operator|==
 name|R_PPC_ADDR14_BRNTAKEN
-operator|||
-name|r_type
-operator|==
-name|R_PPC_PLTREL24
 operator|||
 name|r_type
 operator|==
@@ -12206,6 +12152,13 @@ literal|"_GLOBAL_OFFSET_TABLE_"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|SYMBOL_REFERENCES_LOCAL
+argument_list|(
+name|info
+argument_list|,
+name|h
+argument_list|)
 condition|)
 break|break;
 comment|/* fall through */
@@ -12526,47 +12479,10 @@ comment|/* h->dynindx may be -1 if this symbol was marked to                  be
 elseif|else
 if|if
 condition|(
-name|h
-operator|!=
-name|NULL
-operator|&&
-operator|(
-operator|(
 operator|!
-name|info
-operator|->
-name|symbolic
-operator|&&
-name|h
-operator|->
-name|dynindx
-operator|!=
-operator|-
-literal|1
-operator|)
-operator|||
-operator|(
-name|h
-operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_DEF_REGULAR
-operator|)
-operator|==
-literal|0
-operator|)
+name|will_become_local
 condition|)
 block|{
-name|BFD_ASSERT
-argument_list|(
-name|h
-operator|->
-name|dynindx
-operator|!=
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 name|outrel
 operator|.
 name|r_info
@@ -13073,26 +12989,12 @@ name|info
 operator|->
 name|shared
 operator|&&
-operator|(
+name|SYMBOL_REFERENCES_LOCAL
+argument_list|(
 name|info
-operator|->
-name|symbolic
-operator|||
+argument_list|,
 name|h
-operator|->
-name|dynindx
-operator|==
-operator|-
-literal|1
-operator|)
-operator|&&
-operator|(
-name|h
-operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_DEF_REGULAR
-operator|)
+argument_list|)
 operator|)
 condition|)
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF linking support for BFD.    Copyright 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF linking support for BFD.    Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -125,9 +125,14 @@ literal|3
 expr_stmt|;
 break|break;
 default|default:
-name|abort
-argument_list|()
+name|bfd_set_error
+argument_list|(
+name|bfd_error_bad_value
+argument_list|)
 expr_stmt|;
+return|return
+name|false
+return|;
 block|}
 name|flags
 operator|=
@@ -383,8 +388,6 @@ argument_list|)
 decl_stmt|;
 name|int
 name|ptralign
-init|=
-literal|0
 decl_stmt|;
 switch|switch
 condition|(
@@ -412,9 +415,14 @@ literal|3
 expr_stmt|;
 break|break;
 default|default:
-name|abort
-argument_list|()
+name|bfd_set_error
+argument_list|(
+name|bfd_error_bad_value
+argument_list|)
 expr_stmt|;
+return|return
+name|false
+return|;
 block|}
 comment|/* We need to create .plt, .rel[a].plt, .got, .got.plt, .dynbss, and      .rel[a].bss sections.  */
 name|flags
@@ -1215,7 +1223,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Assign dynsym indicies.  In a shared library we generate a section    symbol for each output section, which come first.  Next come all of    the back-end allocated local dynamic syms, followed by the rest of    the global symbols.  */
+comment|/* Assign dynsym indices.  In a shared library we generate a section    symbol for each output section, which come first.  Next come all of    the back-end allocated local dynamic syms, followed by the rest of    the global symbols.  */
 end_comment
 
 begin_function

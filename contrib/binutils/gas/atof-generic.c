@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* atof_generic.c - turn a string of digits into a Flonum    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 1998    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* atof_generic.c - turn a string of digits into a Flonum    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -109,13 +109,13 @@ name|string_of_decimal_exponent_marks
 parameter_list|,
 name|address_of_generic_floating_point_number
 parameter_list|)
-comment|/* return pointer to just AFTER number we read. */
+comment|/* return pointer to just AFTER number we read.  */
 name|char
 modifier|*
 modifier|*
 name|address_of_string_pointer
 decl_stmt|;
-comment|/* At most one per number. */
+comment|/* At most one per number.  */
 specifier|const
 name|char
 modifier|*
@@ -134,7 +134,7 @@ block|{
 name|int
 name|return_value
 decl_stmt|;
-comment|/* 0 means OK. */
+comment|/* 0 means OK.  */
 name|char
 modifier|*
 name|first_digit
@@ -477,10 +477,10 @@ block|}
 else|else
 block|{
 break|break;
-comment|/* p -> char after pre-decimal digits. */
+comment|/* p -> char after pre-decimal digits.  */
 block|}
 block|}
-comment|/* For each digit before decimal mark. */
+comment|/* For each digit before decimal mark.  */
 ifndef|#
 directive|ifndef
 name|OLD_FLOAT_READS
@@ -612,7 +612,7 @@ name|c
 argument_list|)
 condition|)
 block|{
-comment|/* This may be retracted below. */
+comment|/* This may be retracted below.  */
 name|number_of_digits_after_decimal
 operator|++
 expr_stmt|;
@@ -646,7 +646,7 @@ block|}
 break|break;
 block|}
 block|}
-comment|/* For each digit after decimal mark. */
+comment|/* For each digit after decimal mark.  */
 block|}
 while|while
 condition|(
@@ -863,7 +863,7 @@ block|{
 name|int
 name|count
 decl_stmt|;
-comment|/* Number of useful digits left to scan. */
+comment|/* Number of useful digits left to scan.  */
 name|LITTLENUM_TYPE
 modifier|*
 name|digits_binary_low
@@ -916,14 +916,14 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-comment|/* Number of destination littlenums. */
+comment|/* Number of destination littlenums.  */
 comment|/* Includes guard bits (two littlenums worth) */
 if|#
 directive|if
 literal|0
 comment|/* The integer version below is very close, and it doesn't 	 require floating point support (which is currently buggy on 	 the Alpha).  */
 block|maximum_useful_digits = (((double) (precision - 2)) 			       * ((double) (LITTLENUM_NUMBER_OF_BITS)) 			       / (LOG_TO_BASE_2_OF_10)) 	+ 2;
-comment|/* 2 :: guard digits. */
+comment|/* 2 :: guard digits.  */
 else|#
 directive|else
 name|maximum_useful_digits
@@ -950,7 +950,7 @@ operator|)
 operator|+
 literal|2
 expr_stmt|;
-comment|/* 2 :: guard digits. */
+comment|/* 2 :: guard digits.  */
 endif|#
 directive|endif
 if|if
@@ -1055,7 +1055,7 @@ argument_list|,
 name|size_of_digits_in_chars
 argument_list|)
 expr_stmt|;
-comment|/* Digits_binary_low[] is allocated and zeroed. */
+comment|/* Digits_binary_low[] is allocated and zeroed.  */
 comment|/*        * Parse the decimal digits as if * digits_low was in the units position.        * Emit a binary number into digits_binary_low[].        *        * Use a large-precision version of:        * (((1st-digit) * 10 + 2nd-digit) * 10 + 3rd-digit ...) * 10 + last-digit        */
 for|for
 control|(
@@ -1188,7 +1188,7 @@ block|{
 operator|++
 name|count
 expr_stmt|;
-comment|/* '.' doesn't alter digits used count. */
+comment|/* '.' doesn't alter digits used count.  */
 block|}
 block|}
 comment|/*        * Digits_binary_low[] properly encodes the value of the digits.        * Forget about any high-order littlenums that are 0.        */
@@ -1256,7 +1256,7 @@ decl_stmt|;
 name|int
 name|decimal_exponent_is_negative
 decl_stmt|;
-comment|/* This refers to the "-56" in "12.34E-56". */
+comment|/* This refers to the "-56" in "12.34E-56".  */
 comment|/* FALSE: decimal_exponent is positive (or 0) */
 comment|/* TRUE:  decimal_exponent is negative */
 name|FLONUM_TYPE
@@ -1278,7 +1278,7 @@ name|size_of_power_in_littlenums
 operator|=
 name|precision
 expr_stmt|;
-comment|/* Precision has a built-in fudge factor so we get a few guard bits. */
+comment|/* Precision has a built-in fudge factor so we get a few guard bits.  */
 name|decimal_exponent_is_negative
 operator|=
 name|decimal_exponent
@@ -1296,7 +1296,7 @@ operator|-
 name|decimal_exponent
 expr_stmt|;
 block|}
-comment|/* From now on: the decimal exponent is> 0. Its sign is separate. */
+comment|/* From now on: the decimal exponent is> 0. Its sign is separate.  */
 name|size_of_power_in_chars
 operator|=
 name|size_of_power_in_littlenums
@@ -1406,7 +1406,7 @@ name|place_number_limit
 decl_stmt|;
 comment|/* Any 10^(2^n) whose "n" exceeds this */
 comment|/* value will fall off the end of */
-comment|/* flonum_XXXX_powers_of_ten[]. */
+comment|/* flonum_XXXX_powers_of_ten[].  */
 name|int
 name|place_number
 decl_stmt|;
@@ -1436,10 +1436,10 @@ name|place_number
 operator|=
 literal|1
 init|;
-comment|/* Place value of this bit of exponent. */
+comment|/* Place value of this bit of exponent.  */
 name|decimal_exponent
 condition|;
-comment|/* Quit when no more 1 bits in exponent. */
+comment|/* Quit when no more 1 bits in exponent.  */
 name|decimal_exponent
 operator|>>=
 literal|1
@@ -1599,7 +1599,7 @@ directive|endif
 block|}
 comment|/* If this bit of decimal_exponent was computable.*/
 block|}
-comment|/* If this bit of decimal_exponent was set. */
+comment|/* If this bit of decimal_exponent was set.  */
 block|}
 comment|/* For each bit of binary representation of exponent */
 ifdef|#
@@ -1640,7 +1640,7 @@ argument_list|,
 name|address_of_generic_floating_point_number
 argument_list|)
 expr_stmt|;
-comment|/* Assert sign of the number we made is '+'. */
+comment|/* Assert sign of the number we made is '+'.  */
 name|address_of_generic_floating_point_number
 operator|->
 name|sign

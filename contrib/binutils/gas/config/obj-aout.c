@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* a.out object file format    Copyright (C) 1989, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* a.out object file format    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1999, 2000, 2001    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -410,6 +410,7 @@ decl_stmt|;
 name|int
 modifier|*
 name|punt
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|flagword
@@ -893,7 +894,7 @@ comment|/* ! BFD_ASSEMBLER */
 end_comment
 
 begin_comment
-comment|/* Relocation. */
+comment|/* Relocation.  */
 end_comment
 
 begin_comment
@@ -919,7 +920,7 @@ name|fixS
 modifier|*
 name|fixP
 decl_stmt|;
-comment|/* Fixup chain for this segment. */
+comment|/* Fixup chain for this segment.  */
 name|relax_addressT
 name|segment_address_in_file
 decl_stmt|;
@@ -1576,7 +1577,7 @@ name|symbolP
 argument_list|)
 control|)
 block|{
-comment|/* Used to save the offset of the name. It is used to point 	 to the string in memory but must be a file offset. */
+comment|/* Used to save the offset of the name. It is used to point 	 to the string in memory but must be a file offset.  */
 specifier|register
 name|char
 modifier|*
@@ -1598,7 +1599,7 @@ operator|->
 name|sy_name_offset
 argument_list|)
 expr_stmt|;
-comment|/* Any symbol still undefined and is not a dbg symbol is made N_EXT. */
+comment|/* Any symbol still undefined and is not a dbg symbol is made N_EXT.  */
 if|if
 condition|(
 operator|!
@@ -1740,9 +1741,10 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-comment|/* Assume delimiter is part of expression.      BSD4.2 as fails with delightful bug, so we      are not being incompatible here. */
+comment|/* Assume delimiter is part of expression.      BSD4.2 as fails with delightful bug, so we      are not being incompatible here.  */
 name|new_logical_line
 argument_list|(
 operator|(
@@ -1783,6 +1785,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -1867,7 +1870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle .type.  On {Net,Open}BSD, this is used to set the n_other field,    which is then apparently used when doing dynamic linking.  Older    versions ogas ignored the .type pseudo-op, so we also ignore it if    we can't parse it.  */
+comment|/* Handle .type.  On {Net,Open}BSD, this is used to set the n_other field,    which is then apparently used when doing dynamic linking.  Older    versions of gas ignored the .type pseudo-op, so we also ignore it if    we can't parse it.  */
 end_comment
 
 begin_function
@@ -1879,6 +1882,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -1903,7 +1907,7 @@ argument_list|()
 expr_stmt|;
 name|sym
 operator|=
-name|symbol_find
+name|symbol_find_or_make
 argument_list|(
 name|name
 argument_list|)
@@ -1913,13 +1917,6 @@ name|input_line_pointer
 operator|=
 name|c
 expr_stmt|;
-if|if
-condition|(
-name|sym
-operator|!=
-name|NULL
-condition|)
-block|{
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
@@ -2029,7 +2026,6 @@ endif|#
 directive|endif
 block|}
 block|}
-block|}
 comment|/* Ignore everything else on the line.  */
 name|s_ignore
 argument_list|(
@@ -2080,7 +2076,7 @@ operator|=
 operator|&
 name|symbol_rootP
 expr_stmt|;
-comment|/*->last symbol chain link. */
+comment|/*->last symbol chain link.  */
 while|while
 condition|(
 operator|(
@@ -2195,7 +2191,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* OK, here is how we decide which symbols go out into the brave 	 new symtab.  Symbols that do are:  	 * symbols with no name (stabd's?) 	 * symbols with debug info in their N_TYPE  	 Symbols that don't are: 	 * symbols that are registers 	 * symbols with \1 as their 3rd character (numeric labels) 	 * "local labels" as defined by S_LOCAL_NAME(name) if the -L 	 switch was passed to gas.  	 All other symbols are output.  We complain if a deleted 	 symbol was marked external. */
+comment|/* OK, here is how we decide which symbols go out into the brave 	 new symtab.  Symbols that do are:  	 * symbols with no name (stabd's?) 	 * symbols with debug info in their N_TYPE  	 Symbols that don't are: 	 * symbols that are registers 	 * symbols with \1 as their 3rd character (numeric labels) 	 * "local labels" as defined by S_LOCAL_NAME(name) if the -L 	 switch was passed to gas.  	 All other symbols are output.  We complain if a deleted 	 symbol was marked external.  */
 if|if
 condition|(
 operator|!
@@ -2268,7 +2264,7 @@ name|symbolP
 argument_list|)
 condition|)
 block|{
-comment|/* Ordinary case. */
+comment|/* Ordinary case.  */
 name|symbolP
 operator|->
 name|sy_name_offset
@@ -2289,7 +2285,7 @@ literal|1
 expr_stmt|;
 block|}
 else|else
-comment|/* .Stabd case. */
+comment|/* .Stabd case.  */
 name|symbolP
 operator|->
 name|sy_name_offset
@@ -2338,7 +2334,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* oops. */
+comment|/* oops.  */
 comment|/* Unhook it from the chain */
 operator|*
 name|symbolPP
@@ -2549,10 +2545,8 @@ end_function
 
 begin_function
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|s_sect
-parameter_list|)
+parameter_list|()
 block|{
 comment|/* Strip out the section name */
 name|char
@@ -2784,6 +2778,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|void
+name|obj_aout_s_set_other
+name|PARAMS
+argument_list|(
+operator|(
+name|symbolS
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|obj_aout_s_get_desc
 name|PARAMS
@@ -2791,6 +2801,104 @@ argument_list|(
 operator|(
 name|symbolS
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_aout_s_set_desc
+name|PARAMS
+argument_list|(
+operator|(
+name|symbolS
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|obj_aout_s_get_type
+name|PARAMS
+argument_list|(
+operator|(
+name|symbolS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_aout_s_set_type
+name|PARAMS
+argument_list|(
+operator|(
+name|symbolS
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|obj_aout_separate_stab_sections
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|obj_aout_sec_sym_ok_for_reloc
+name|PARAMS
+argument_list|(
+operator|(
+name|asection
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|obj_aout_process_stab
+name|PARAMS
+argument_list|(
+operator|(
+name|segT
+operator|,
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2838,6 +2946,115 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|obj_aout_s_set_other
+parameter_list|(
+name|sym
+parameter_list|,
+name|o
+parameter_list|)
+name|symbolS
+modifier|*
+name|sym
+decl_stmt|;
+name|int
+name|o
+decl_stmt|;
+block|{
+name|aout_symbol
+argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|->
+name|other
+operator|=
+name|o
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|obj_aout_sec_sym_ok_for_reloc
+parameter_list|(
+name|sec
+parameter_list|)
+name|asection
+modifier|*
+name|sec
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+return|return
+name|obj_sec_sym_ok_for_reloc
+argument_list|(
+name|sec
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|obj_aout_process_stab
+parameter_list|(
+name|seg
+parameter_list|,
+name|w
+parameter_list|,
+name|s
+parameter_list|,
+name|t
+parameter_list|,
+name|o
+parameter_list|,
+name|d
+parameter_list|)
+name|segT
+name|seg
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|int
+name|w
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|int
+name|t
+decl_stmt|;
+name|int
+name|o
+decl_stmt|;
+name|int
+name|d
+decl_stmt|;
+block|{
+name|aout_process_stab
+argument_list|(
+name|w
+argument_list|,
+name|s
+argument_list|,
+name|t
+argument_list|,
+name|o
+argument_list|,
+name|d
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|obj_aout_s_get_desc
 parameter_list|(
@@ -2862,6 +3079,112 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|obj_aout_s_set_desc
+parameter_list|(
+name|sym
+parameter_list|,
+name|d
+parameter_list|)
+name|symbolS
+modifier|*
+name|sym
+decl_stmt|;
+name|int
+name|d
+decl_stmt|;
+block|{
+name|aout_symbol
+argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|->
+name|desc
+operator|=
+name|d
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|obj_aout_s_get_type
+parameter_list|(
+name|sym
+parameter_list|)
+name|symbolS
+modifier|*
+name|sym
+decl_stmt|;
+block|{
+return|return
+name|aout_symbol
+argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|->
+name|type
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|obj_aout_s_set_type
+parameter_list|(
+name|sym
+parameter_list|,
+name|t
+parameter_list|)
+name|symbolS
+modifier|*
+name|sym
+decl_stmt|;
+name|int
+name|t
+decl_stmt|;
+block|{
+name|aout_symbol
+argument_list|(
+name|symbol_get_bfdsym
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator|->
+name|type
+operator|=
+name|t
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|obj_aout_separate_stab_sections
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* When changed, make sure these table entries match the single-format    definitions in obj-aout.h.  */
+end_comment
+
 begin_decl_stmt
 specifier|const
 name|struct
@@ -2877,10 +3200,19 @@ comment|/* dfl_leading_underscore */
 literal|0
 block|,
 comment|/* emit_section_symbols */
+literal|0
+block|,
+comment|/* begin */
+literal|0
+block|,
+comment|/* app_file */
 name|obj_aout_frob_symbol
 block|,
 name|obj_aout_frob_file
 block|,
+literal|0
+block|,
+comment|/* frob_file_before_adjust */
 literal|0
 block|,
 comment|/* frob_file_after_relocs */
@@ -2898,7 +3230,15 @@ block|,
 comment|/* s_set_align */
 name|obj_aout_s_get_other
 block|,
+name|obj_aout_s_set_other
+block|,
 name|obj_aout_s_get_desc
+block|,
+name|obj_aout_s_set_desc
+block|,
+name|obj_aout_s_get_type
+block|,
+name|obj_aout_s_set_type
 block|,
 literal|0
 block|,
@@ -2906,12 +3246,15 @@ comment|/* copy_symbol_attributes */
 literal|0
 block|,
 comment|/* generate_asm_lineno */
+name|obj_aout_process_stab
+block|,
+name|obj_aout_separate_stab_sections
+block|,
 literal|0
 block|,
-comment|/* process_stab */
-literal|0
+comment|/* init_stab_section */
+name|obj_aout_sec_sym_ok_for_reloc
 block|,
-comment|/* sec_sym_ok_for_reloc */
 name|aout_pop_insert
 block|,
 literal|0
@@ -2931,10 +3274,6 @@ endif|#
 directive|endif
 endif|BFD_ASSEMBLER
 end_endif
-
-begin_comment
-comment|/* end of obj-aout.c */
-end_comment
 
 end_unit
 

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* as.c - GAS main program.    Copyright (C) 1987, 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* as.c - GAS main program.    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  * Main program for AS; a 32-bit assembler of GNU.  * Understands command arguments.  * Has a few routines that don't fit in other modules because they  * are shared.  *  *  *			bugs  *  * : initialisers  *	Since no-one else says they will support them in future: I  * don't support them now.  *  */
+comment|/* Main program for AS; a 32-bit assembler of GNU.  * Understands command arguments.  * Has a few routines that don't fit in other modules because they  * are shared.  *  *			bugs  *  * : initialisers  *	Since no-one else says they will support them in future: I  * don't support them now.  */
 end_comment
 
 begin_include
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"macro.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dwarf2dbg.h"
 end_include
 
 begin_ifdef
@@ -206,6 +212,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* True if a listing is wanted.  */
+end_comment
+
 begin_decl_stmt
 name|int
 name|listing
@@ -213,7 +223,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* true if a listing is wanted */
+comment|/* Name of listing file.  */
 end_comment
 
 begin_decl_stmt
@@ -227,10 +237,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Name of listing file.  */
-end_comment
-
-begin_comment
 comment|/* Type of debugging to generate.  */
 end_comment
 
@@ -239,7 +245,7 @@ name|enum
 name|debug_info_type
 name|debug_type
 init|=
-name|DEBUG_NONE
+name|DEBUG_UNSPECIFIED
 decl_stmt|;
 end_decl_stmt
 
@@ -255,16 +261,16 @@ literal|100
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* argv[0]  */
+end_comment
+
 begin_decl_stmt
 name|char
 modifier|*
 name|myname
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* argv[0] */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -353,7 +359,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Keep a record of the itbl files we read in. */
+comment|/* Keep a record of the itbl files we read in.  */
 end_comment
 
 begin_struct
@@ -431,6 +437,16 @@ decl_stmt|,
 name|i386elf
 decl_stmt|,
 name|i386aout
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|emulation
+name|crisaout
+decl_stmt|,
+name|criself
 decl_stmt|;
 end_decl_stmt
 
@@ -894,7 +910,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\ Options:\n\   -a[sub-option...]	  turn on listings\n\                       	  Sub-options [default hls]:\n\                       	  c      omit false conditionals\n\                       	  d      omit debugging directives\n\                       	  h      include high-level source\n\                       	  l      include assembly\n\                       	  m      include macro expansions\n\                       	  n      omit forms processing\n\                       	  s      include symbols\n\                       	  L      include line debug statistics (if applicable)\n\                       	  =FILE  list to FILE (must be last sub-option)\n"
+literal|"\ Options:\n\   -a[sub-option...]	  turn on listings\n\                       	  Sub-options [default hls]:\n\                       	  c      omit false conditionals\n\                       	  d      omit debugging directives\n\                       	  h      include high-level source\n\                       	  l      include assembly\n\                       	  m      include macro expansions\n\                       	  n      omit forms processing\n\                       	  s      include symbols\n\                       	  =FILE  list to FILE (must be last sub-option)\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1047,6 +1063,16 @@ argument_list|,
 name|_
 argument_list|(
 literal|"\   --help                  show this message and exit\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"\   --target-help           show target specific options\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1318,7 +1344,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Since it is easy to do here we interpret the special arg "-"  * to mean "use stdin" and we set that argv[] pointing to "".  * After we have munged argv[], the only things left are source file  * name(s) and ""(s) denoting stdin. These file names are used  * (perhaps more than once) later.  *  * check for new machine-dep cmdline options in  * md_parse_option definitions in config/tc-*.c  */
+comment|/* Since it is easy to do here we interpret the special arg "-"    to mean "use stdin" and we set that argv[] pointing to "".    After we have munged argv[], the only things left are source file    name(s) and ""(s) denoting stdin. These file names are used    (perhaps more than once) later.     check for new machine-dep cmdline options in    md_parse_option definitions in config/tc-*.c.  */
 end_comment
 
 begin_function
@@ -1416,7 +1442,7 @@ block|,
 ifndef|#
 directive|ifndef
 name|VMS
-comment|/* -v takes an argument on VMS, so we don't make it a generic          option.  */
+comment|/* -v takes an argument on VMS, so we don't make it a generic        option.  */
 literal|'v'
 block|,
 endif|#
@@ -1425,7 +1451,7 @@ literal|'w'
 block|,
 literal|'X'
 block|,
-comment|/* New option for extending instruction set (see also --itbl below) */
+comment|/* New option for extending instruction set (see also --itbl below)  */
 literal|'t'
 block|,
 literal|':'
@@ -1622,7 +1648,7 @@ directive|define
 name|OPTION_LISTING_LHS_WIDTH2
 value|(OPTION_STD_BASE + 10)
 block|{
-literal|"listing-lhs-width"
+literal|"listing-lhs-width2"
 block|,
 name|required_argument
 block|,
@@ -1755,8 +1781,22 @@ block|}
 block|,
 define|#
 directive|define
-name|OPTION_WARN_FATAL
+name|OPTION_TARGET_HELP
 value|(OPTION_STD_BASE + 19)
+block|{
+literal|"target-help"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_TARGET_HELP
+block|}
+block|,
+define|#
+directive|define
+name|OPTION_WARN_FATAL
+value|(OPTION_STD_BASE + 20)
 block|{
 literal|"fatal-warnings"
 block|,
@@ -1766,9 +1806,10 @@ name|NULL
 block|,
 name|OPTION_WARN_FATAL
 block|}
+comment|/* When you add options here, check that they do not collide with        OPTION_MD_BASE.  See as.h.  */
 block|}
 decl_stmt|;
-comment|/* Construct the option lists from the standard list and the      target dependent list.  */
+comment|/* Construct the option lists from the standard list and the target      dependent list.  Include space for an extra NULL option and      always NULL terminate.  */
 name|shortopts
 operator|=
 name|concat
@@ -1799,6 +1840,12 @@ name|std_longopts
 argument_list|)
 operator|+
 name|md_longopts_size
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|option
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1829,6 +1876,30 @@ argument_list|,
 name|md_longopts
 argument_list|,
 name|md_longopts_size
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|longopts
+operator|+
+sizeof|sizeof
+argument_list|(
+name|std_longopts
+argument_list|)
+operator|+
+name|md_longopts_size
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|option
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Make a local copy of the old argv.  */
@@ -1989,7 +2060,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-comment|/*FALLTHRU*/
+comment|/* Fall through.  */
 case|case
 literal|'?'
 case|:
@@ -2032,6 +2103,19 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
+case|case
+name|OPTION_TARGET_HELP
+case|:
+name|md_show_usage
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
 case|case
 name|OPTION_HELP
 case|:
@@ -2091,7 +2175,7 @@ name|printf
 argument_list|(
 name|_
 argument_list|(
-literal|"Copyright 2000 Free Software Foundation, Inc.\n"
+literal|"Copyright 2001 Free Software Foundation, Inc.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2242,7 +2326,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|long
+name|valueT
 name|i
 decl_stmt|;
 name|struct
@@ -2291,6 +2375,28 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+name|i
+operator|=
+name|bfd_scan_vma
+argument_list|(
+name|s
+argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|i
 operator|=
 name|strtol
@@ -2307,6 +2413,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|n
 operator|=
 operator|(
@@ -2352,7 +2460,7 @@ case|case
 literal|'t'
 case|:
 block|{
-comment|/* optarg is the name of the file containing the instruction  	       formats, opcodes, register names, etc. */
+comment|/* optarg is the name of the file containing the instruction 	       formats, opcodes, register names, etc.  */
 name|struct
 name|itbl_file_list
 modifier|*
@@ -2405,7 +2513,7 @@ name|itbl_files
 operator|=
 name|n
 expr_stmt|;
-comment|/* Parse the file and add the new instructions to our internal 	       table.  If multiple instruction tables are specified, the  	       information from this table gets appended onto the existing  	       internal table. */
+comment|/* Parse the file and add the new instructions to our internal 	       table.  If multiple instruction tables are specified, the 	       information from this table gets appended onto the existing 	       internal table.  */
 name|itbl_files
 operator|->
 name|name
@@ -2643,6 +2751,18 @@ condition|(
 name|optarg
 condition|)
 block|{
+if|if
+condition|(
+name|md_parse_option
+argument_list|(
+name|optc
+argument_list|,
+name|optarg
+argument_list|)
+operator|!=
+literal|0
+condition|)
+break|break;
 while|while
 condition|(
 operator|*
@@ -2763,8 +2883,7 @@ break|break;
 case|case
 literal|'D'
 case|:
-comment|/* DEBUG is implemented: it debugs different */
-comment|/* things from other people's assemblers. */
+comment|/* DEBUG is implemented: it debugs different 	     things from other people's assemblers.  */
 name|flag_debug
 operator|=
 literal|1
@@ -2782,7 +2901,7 @@ case|case
 literal|'I'
 case|:
 block|{
-comment|/* Include file directory */
+comment|/* Include file directory.  */
 name|char
 modifier|*
 name|temp
@@ -2817,7 +2936,7 @@ break|break;
 case|case
 literal|'X'
 case|:
-comment|/* -X means treat warnings as errors */
+comment|/* -X means treat warnings as errors.  */
 break|break;
 block|}
 block|}
@@ -3186,6 +3305,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Assemble it.  */
 name|perform_an_assembly_pass
 argument_list|(
 name|argc
@@ -3193,7 +3313,6 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/* Assemble it. */
 name|cond_finish_check
 argument_list|(
 operator|-
@@ -3208,6 +3327,10 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* If we've been collecting dwarf2 .debug_line info, either for      assembly debugging or on behalf of the compiler, emit it now.  */
+name|dwarf2_finish
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|seen_at_least_1_file
@@ -3498,7 +3621,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*			perform_an_assembly_pass()  *  * Here to attempt 1 pass over each input file.  * We scan argv[*] looking for filenames or exactly "" which is  * shorthand for stdin. Any argv that is NULL is not a file-name.  * We set need_pass_2 TRUE if, after this, we still have unresolved  * expressions of the form (unknown value)+-(unknown value).  *  * Note the un*x semantics: there is only 1 logical input file, but it  * may be a catenation of many 'physical' input files.  */
+comment|/* Here to attempt 1 pass over each input file.    We scan argv[*] looking for filenames or exactly "" which is    shorthand for stdin. Any argv that is NULL is not a file-name.    We set need_pass_2 TRUE if, after this, we still have unresolved    expressions of the form (unknown value)+-(unknown value).     Note the un*x semantics: there is only 1 logical input file, but it    may be a catenation of many 'physical' input files.  */
 end_comment
 
 begin_function
@@ -3570,7 +3693,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Create the three fixed ones */
+comment|/* Create the three fixed ones.  */
 block|{
 name|segT
 name|seg
@@ -3697,7 +3820,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* @@ FIXME -- we're setting the RELOC flag so that sections are assumed      to have relocs, otherwise we don't find out in time. */
+comment|/* @@ FIXME -- we're setting the RELOC flag so that sections are assumed      to have relocs, otherwise we don't find out in time.  */
 name|applicable
 operator|=
 name|bfd_applicable_section_flags
@@ -3819,14 +3942,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Skip argv[0].  */
 name|argv
 operator|++
 expr_stmt|;
-comment|/* skip argv[0] */
 name|argc
 operator|--
 expr_stmt|;
-comment|/* skip argv[0] */
 while|while
 condition|(
 name|argc
@@ -3839,7 +3961,7 @@ operator|*
 name|argv
 condition|)
 block|{
-comment|/* Is it a file-name argument? */
+comment|/* Is it a file-name argument?  */
 name|PROGRESS
 argument_list|(
 literal|1
@@ -3848,7 +3970,7 @@ expr_stmt|;
 name|saw_a_file
 operator|++
 expr_stmt|;
-comment|/* argv->"" if stdin desired, else->filename */
+comment|/* argv->"" if stdin desired, else->filename  */
 name|read_a_source_file
 argument_list|(
 operator|*
@@ -3859,7 +3981,7 @@ block|}
 name|argv
 operator|++
 expr_stmt|;
-comment|/* completed that argv */
+comment|/* completed that argv  */
 block|}
 if|if
 condition|(
@@ -3873,10 +3995,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* perform_an_assembly_pass() */
-end_comment
 
 begin_comment
 comment|/* The interface between the macro code and gas expression handling.  */
@@ -3984,10 +4102,6 @@ name|idx
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of as.c */
-end_comment
 
 end_unit
 

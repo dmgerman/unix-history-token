@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* listing.c - mainting assembly listings    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* listing.c - mainting assembly listings    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  Contributed by Steve Chamberlain  		sac@cygnus.com    A listing page looks like:   LISTING_HEADER  sourcefilename pagenumber  TITLE LINE  SUBTITLE LINE  linenumber address data  source  linenumber address data  source  linenumber address data  source  linenumber address data  source   If not overridden, the listing commands are:   .title  "stuff"  	Put "stuff" onto the title line  .sbttl  "stuff"         Put stuff onto the subtitle line    If these commands come within 10 lines of the top of the page, they   will affect the page they are on, as well as any subsequent page   .eject  	Thow a page  .list  	Increment the enable listing counter  .nolist  	Decrement the enable listing counter   .psize Y[,X]  	Set the paper size to X wide and Y high. Setting a psize Y of 	zero will suppress form feeds except where demanded by .eject   If the counter goes below zero, listing is suppressed.    Listings are a maintained by read calling various listing_<foo>  functions.  What happens most is that the macro NO_LISTING is not  defined (from the Makefile), then the macro LISTING_NEWLINE expands  into a call to listing_newline.  The call is done from read.c, every  time it sees a newline, and -l is on the command line.   The function listing_newline remembers the frag associated with the  newline, and creates a new frag - note that this is wasteful, but not  a big deal, since listing slows things down a lot anyway.  The  function also rememebers when the filename changes.   When all the input has finished, and gas has had a chance to settle  down, the listing is output. This is done by running down the list of  frag/source file records, and opening the files as needed and printing  out the bytes and chars associated with them.   The only things which the architecture can change about the listing  are defined in these macros:   LISTING_HEADER		The name of the architecture  LISTING_WORD_SIZE      The make of the number of bytes in a word, this determines  			the clumping of the output data. eg a value of 			2 makes words look like 1234 5678, whilst 1 			would make the same value look like 12 34 56 			78  LISTING_LHS_WIDTH      Number of words of above size for the lhs   LISTING_LHS_WIDTH_SECOND   Number of words for the data on the lhs  			for the second line   LISTING_LHS_CONT_LINES	Max number of lines to use up for a continutation  LISTING_RHS_WIDTH      Number of chars from the input file to print                         on a line */
+comment|/*  Contributed by Steve Chamberlain<sac@cygnus.com>   A listing page looks like:   LISTING_HEADER  sourcefilename pagenumber  TITLE LINE  SUBTITLE LINE  linenumber address data  source  linenumber address data  source  linenumber address data  source  linenumber address data  source   If not overridden, the listing commands are:   .title  "stuff"  	Put "stuff" onto the title line  .sbttl  "stuff"         Put stuff onto the subtitle line    If these commands come within 10 lines of the top of the page, they   will affect the page they are on, as well as any subsequent page   .eject  	Thow a page  .list  	Increment the enable listing counter  .nolist  	Decrement the enable listing counter   .psize Y[,X]  	Set the paper size to X wide and Y high. Setting a psize Y of 	zero will suppress form feeds except where demanded by .eject   If the counter goes below zero, listing is suppressed.   Listings are a maintained by read calling various listing_<foo>  functions.  What happens most is that the macro NO_LISTING is not  defined (from the Makefile), then the macro LISTING_NEWLINE expands  into a call to listing_newline.  The call is done from read.c, every  time it sees a newline, and -l is on the command line.   The function listing_newline remembers the frag associated with the  newline, and creates a new frag - note that this is wasteful, but not  a big deal, since listing slows things down a lot anyway.  The  function also rememebers when the filename changes.   When all the input has finished, and gas has had a chance to settle  down, the listing is output. This is done by running down the list of  frag/source file records, and opening the files as needed and printing  out the bytes and chars associated with them.   The only things which the architecture can change about the listing  are defined in these macros:   LISTING_HEADER		The name of the architecture  LISTING_WORD_SIZE      The make of the number of bytes in a word, this determines  			the clumping of the output data. eg a value of 			2 makes words look like 1234 5678, whilst 1 			would make the same value look like 12 34 56 			78  LISTING_LHS_WIDTH      Number of words of above size for the lhs   LISTING_LHS_WIDTH_SECOND   Number of words for the data on the lhs  			for the second line   LISTING_LHS_CONT_LINES	Max number of lines to use up for a continutation  LISTING_RHS_WIDTH      Number of chars from the input file to print                         on a line */
 end_comment
 
 begin_include
@@ -152,7 +152,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This structure remembers which .s were used */
+comment|/* This structure remembers which .s were used.  */
 end_comment
 
 begin_typedef
@@ -185,24 +185,24 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* This structure rememebrs which line from which file goes into which    frag */
+comment|/* This structure rememebrs which line from which file goes into which    frag.  */
 end_comment
 
 begin_struct
 struct|struct
 name|list_info_struct
 block|{
-comment|/* Frag which this line of source is nearest to */
+comment|/* Frag which this line of source is nearest to.  */
 name|fragS
 modifier|*
 name|frag
 decl_stmt|;
-comment|/* The actual line in the source file */
+comment|/* The actual line in the source file.  */
 name|unsigned
 name|int
 name|line
 decl_stmt|;
-comment|/* Pointer to the file info struct for the file which this line      belongs to */
+comment|/* Pointer to the file info struct for the file which this line      belongs to.  */
 name|file_info_type
 modifier|*
 name|file
@@ -212,23 +212,23 @@ name|char
 modifier|*
 name|line_contents
 decl_stmt|;
-comment|/* Next in list */
+comment|/* Next in list.  */
 name|struct
 name|list_info_struct
 modifier|*
 name|next
 decl_stmt|;
-comment|/* Pointer to the file info struct for the high level language      source line that belongs here */
+comment|/* Pointer to the file info struct for the high level language      source line that belongs here.  */
 name|file_info_type
 modifier|*
 name|hll_file
 decl_stmt|;
-comment|/* High level language source line */
+comment|/* High level language source line.  */
 name|unsigned
 name|int
 name|hll_line
 decl_stmt|;
-comment|/* Pointer to any error message associated with this line */
+comment|/* Pointer to any error message associated with this line.  */
 name|char
 modifier|*
 name|message
@@ -627,6 +627,17 @@ modifier|*
 name|message
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|listing_tail
+operator|!=
+operator|(
+name|list_info_type
+operator|*
+operator|)
+name|NULL
+condition|)
+block|{
 name|unsigned
 name|int
 name|l
@@ -670,17 +681,6 @@ argument_list|,
 name|message
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|listing_tail
-operator|!=
-operator|(
-name|list_info_type
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
 name|listing_tail
 operator|->
 name|message
@@ -755,7 +755,7 @@ modifier|*
 name|file_name
 decl_stmt|;
 block|{
-comment|/* Find an entry with this file name */
+comment|/* Find an entry with this file name.  */
 name|file_info_type
 modifier|*
 name|p
@@ -796,7 +796,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* Make new entry */
+comment|/* Make new entry.  */
 name|p
 operator|=
 operator|(
@@ -1070,7 +1070,7 @@ name|list_info_type
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Detect if we are reading from stdin by examining the file 	 name returned by as_where().  	 [FIXME: We rely upon the name in the strcmp below being the 	 same as the one used by input_scrub_new_file(), if that is 	 not true, then this code will fail].  	 If we are reading from stdin, then we need to save each input line 	 here (assuming of course that we actually have a line of input to read), 	 so that it can be displayed in the listing that is produced at the end 	 of the assembly.  */
+comment|/* Detect if we are reading from stdin by examining the file 	 name returned by as_where().  	 [FIXME: We rely upon the name in the strcmp below being the 	 same as the one used by input_scrub_new_file(), if that is 	 not true, then this code will fail].  	 If we are reading from stdin, then we need to save each input 	 line here (assuming of course that we actually have a line of 	 input to read), so that it can be displayed in the listing 	 that is produced at the end of the assembly.  */
 if|if
 condition|(
 name|strcmp
@@ -1544,7 +1544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  This function returns the next source line from the file supplied,  truncated to size.  It appends a fake line to the end of each input  file to make */
+comment|/* This function returns the next source line from the file supplied,    truncated to size.  It appends a fake line to the end of each input    file to make.  */
 end_comment
 
 begin_function
@@ -1587,7 +1587,7 @@ name|p
 init|=
 name|line
 decl_stmt|;
-comment|/* If we couldn't open the file, return an empty line */
+comment|/* If we couldn't open the file, return an empty line.  */
 if|if
 condition|(
 name|file
@@ -1686,11 +1686,11 @@ argument_list|(
 name|last_open_file
 argument_list|)
 expr_stmt|;
+comment|/* Leave room for null.  */
 name|size
 operator|-=
 literal|1
 expr_stmt|;
-comment|/* leave room for null */
 while|while
 condition|(
 name|c
@@ -1816,7 +1816,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* current title */
+comment|/* Current title */
 end_comment
 
 begin_decl_stmt
@@ -1828,7 +1828,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* current subtitle */
+comment|/* Current subtitle */
 end_comment
 
 begin_decl_stmt
@@ -1840,7 +1840,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of lines printed on current page */
+comment|/* Number of lines printed on current page */
 end_comment
 
 begin_function
@@ -1855,7 +1855,7 @@ modifier|*
 name|list
 decl_stmt|;
 block|{
-comment|/* Grope around, see if we can see a title or subtitle edict coming up      soon  (we look down 10 lines of the page and see if it's there)*/
+comment|/* Grope around, see if we can see a title or subtitle edict coming up      soon.  (we look down 10 lines of the page and see if it's there)  */
 if|if
 condition|(
 operator|(
@@ -2064,7 +2064,7 @@ name|unsigned
 name|int
 name|octet_in_frag
 decl_stmt|;
-comment|/* Find first frag which says it belongs to this line */
+comment|/* Find first frag which says it belongs to this line.  */
 name|frag
 operator|=
 name|list
@@ -2095,7 +2095,7 @@ name|data_buffer_size
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Dump all the frags which belong to this line */
+comment|/* Dump all the frags which belong to this line.  */
 while|while
 condition|(
 name|frag_ptr
@@ -2113,7 +2113,7 @@ operator|==
 name|first
 condition|)
 block|{
-comment|/* Print as many bytes from the fixed part as is sensible */
+comment|/* Print as many bytes from the fixed part as is sensible.  */
 name|octet_in_frag
 operator|=
 literal|0
@@ -2185,6 +2185,14 @@ name|octet_in_frag
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|frag_ptr
+operator|->
+name|fr_type
+operator|==
+name|rs_fill
+condition|)
 block|{
 name|unsigned
 name|int
@@ -2198,7 +2206,7 @@ name|var_rep_idx
 init|=
 name|octet_in_frag
 decl_stmt|;
-comment|/* Print as many bytes from the variable part as is sensible */
+comment|/* Print as many bytes from the variable part as is sensible.  */
 while|while
 condition|(
 operator|(
@@ -2384,7 +2392,7 @@ decl_stmt|;
 name|int
 name|cur
 decl_stmt|;
-comment|/* Print the stuff on the first line */
+comment|/* Print the stuff on the first line.  */
 name|listing_page
 argument_list|(
 name|list
@@ -2402,7 +2410,7 @@ operator|)
 operator|*
 name|listing_lhs_width
 expr_stmt|;
-comment|/* Print the hex for the first line */
+comment|/* Print the hex for the first line.  */
 if|if
 condition|(
 name|address
@@ -2493,7 +2501,7 @@ argument_list|,
 name|address
 argument_list|)
 expr_stmt|;
-comment|/* And the data to go along with it */
+comment|/* And the data to go along with it.  */
 name|idx
 operator|=
 literal|0
@@ -2682,7 +2690,7 @@ name|idx
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Print any more lines of data, but more compactly */
+comment|/* Print any more lines of data, but more compactly.  */
 name|fprintf
 argument_list|(
 name|list_file
@@ -3854,6 +3862,15 @@ break|break;
 case|case
 name|EDICT_NOLIST_NEXT
 case|:
+if|if
+condition|(
+name|show_listing
+operator|==
+literal|0
+condition|)
+name|list_line
+operator|--
+expr_stmt|;
 break|break;
 case|case
 name|EDICT_EJECT
@@ -3933,6 +3950,18 @@ operator|->
 name|edict
 operator|==
 name|EDICT_LIST
+operator|||
+operator|(
+name|list
+operator|->
+name|edict
+operator|==
+name|EDICT_NOLIST_NEXT
+operator|&&
+name|show_listing
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* Enable listing for the single line that caused the enable.  */
@@ -4192,6 +4221,10 @@ operator|->
 name|edict
 operator|==
 name|EDICT_NOLIST_NEXT
+operator|&&
+name|show_listing
+operator|==
+literal|1
 condition|)
 operator|--
 name|show_listing
@@ -4884,7 +4917,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Dummy functions for when compiled without listing enabled */
+comment|/* Dummy functions for when compiled without listing enabled.  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-arm.h    Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org) 	Modified by David Taylor (dtaylor@armltd.co.uk)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* This file is tc-arm.h    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org) 	Modified by David Taylor (dtaylor@armltd.co.uk)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -514,11 +514,15 @@ parameter_list|)
 value|((FIXP)->tc_fix_data = NULL)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
 name|OBJ_ELF
-end_ifdef
+operator|||
+name|defined
+name|OBJ_COFF
+end_if
 
 begin_include
 include|#
@@ -552,6 +556,20 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* This arranges for gas/write.c to not apply a relocation if    obj_fix_adjustable() says it is not adjustable.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FIX_ADJUSTABLE
+parameter_list|(
+name|fixP
+parameter_list|)
+value|obj_fix_adjustable (fixP)
+end_define
 
 begin_else
 else|#
@@ -998,9 +1016,125 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DWARF2_LINE_MIN_INSN_LENGTH
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MAX_MEM_FOR_RS_ALIGN_CODE
+value|31
+end_define
+
 begin_comment
-comment|/* end of tc-arm.h */
+comment|/* For frags in code sections we need to record whether they contain    ARM code or THUMB code.  This is that if they have to be aligned,    they can contain the correct type of no-op instruction.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FRAG_TYPE
+value|int
+end_define
+
+begin_define
+define|#
+directive|define
+name|TC_FRAG_INIT
+parameter_list|(
+name|fragp
+parameter_list|)
+value|arm_init_frag (fragp)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|arm_init_frag
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|frag
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|HANDLE_ALIGN
+parameter_list|(
+name|fragp
+parameter_list|)
+value|arm_handle_align (fragp)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|arm_handle_align
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|frag
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|md_do_align
+parameter_list|(
+name|N
+parameter_list|,
+name|FILL
+parameter_list|,
+name|LEN
+parameter_list|,
+name|MAX
+parameter_list|,
+name|LABEL
+parameter_list|)
+define|\
+value|if (FILL == NULL&& (N) != 0&& ! need_pass_2&& subseg_text_p (now_seg))	\     {										\       arm_frag_align_code (N, MAX);						\       goto LABEL;								\     }
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|arm_frag_align_code
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

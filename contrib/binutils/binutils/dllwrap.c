@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dllwrap.c -- wrapper for DLLTOOL and GCC to generate PE style DLLs    Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Mumit Khan (khan@xraylith.wisc.edu).     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* dllwrap.c -- wrapper for DLLTOOL and GCC to generate PE style DLLs    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Mumit Khan (khan@xraylith.wisc.edu).     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -3897,7 +3897,7 @@ condition|(
 name|verbose
 condition|)
 block|{
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|dlltool_cmdline
 argument_list|,
@@ -3905,14 +3905,14 @@ literal|" -v"
 argument_list|)
 expr_stmt|;
 block|}
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|dlltool_cmdline
 argument_list|,
 literal|" --dllname "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|dlltool_cmdline
 argument_list|,
@@ -3969,7 +3969,7 @@ literal|'\t'
 argument_list|)
 operator|)
 decl_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|dlltool_cmdline
 argument_list|,
@@ -3982,14 +3982,14 @@ else|:
 literal|" "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|dlltool_cmdline
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|dlltool_cmdline
 argument_list|,
@@ -4053,21 +4053,21 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|driver_cmdline
 argument_list|,
 name|driver_flags
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|driver_cmdline
 argument_list|,
 literal|" -o "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|driver_cmdline
 argument_list|,
@@ -4116,28 +4116,28 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|driver_cmdline
 argument_list|,
 literal|" -Wl,-e,"
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|driver_cmdline
 argument_list|,
 name|entry_point
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|dlltool_cmdline
 argument_list|,
 literal|" --exclude-symbol="
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|dlltool_cmdline
 argument_list|,
@@ -4221,14 +4221,14 @@ operator|=
 name|tmpbuf
 expr_stmt|;
 block|}
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|driver_cmdline
 argument_list|,
 literal|" -Wl,--image-base,"
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|driver_cmdline
 argument_list|,
@@ -4240,7 +4240,7 @@ condition|(
 name|verbose
 condition|)
 block|{
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|driver_cmdline
 argument_list|,
@@ -4298,7 +4298,7 @@ literal|'\t'
 argument_list|)
 operator|)
 decl_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|driver_cmdline
 argument_list|,
@@ -4311,14 +4311,14 @@ else|:
 literal|" "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|driver_cmdline
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|driver_cmdline
 argument_list|,
@@ -4353,7 +4353,7 @@ argument_list|(
 literal|1024
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step_pre1
 argument_list|,
@@ -4367,14 +4367,14 @@ condition|(
 name|export_all
 condition|)
 block|{
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step_pre1
 argument_list|,
 literal|" --export-all --exclude-symbol="
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step_pre1
 argument_list|,
@@ -4382,14 +4382,14 @@ literal|"_cygwin_dll_entry@12,DllMainCRTStartup@12,DllMain@12,DllEntryPoint@12"
 argument_list|)
 expr_stmt|;
 block|}
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step_pre1
 argument_list|,
 literal|" --output-def "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step_pre1
 argument_list|,
@@ -4490,7 +4490,7 @@ literal|'\t'
 argument_list|)
 operator|)
 decl_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step_pre1
 argument_list|,
@@ -4503,14 +4503,14 @@ else|:
 literal|" "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step_pre1
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step_pre1
 argument_list|,
@@ -4548,14 +4548,14 @@ name|step_pre1
 argument_list|)
 expr_stmt|;
 block|}
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|dlltool_cmdline
 argument_list|,
 literal|" --def "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|dlltool_cmdline
 argument_list|,
@@ -4699,7 +4699,7 @@ operator|+
 literal|20
 argument_list|)
 decl_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step1
 argument_list|,
@@ -4724,7 +4724,7 @@ literal|'\t'
 argument_list|)
 operator|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step1
 argument_list|,
@@ -4737,14 +4737,14 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step1
 argument_list|,
 name|base_file_name
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step1
 argument_list|,
@@ -4764,14 +4764,14 @@ operator|->
 name|length
 condition|)
 block|{
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step1
 argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step1
 argument_list|,
@@ -4906,7 +4906,7 @@ operator|+
 literal|20
 argument_list|)
 decl_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step2
 argument_list|,
@@ -4931,7 +4931,7 @@ literal|'\t'
 argument_list|)
 operator|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step2
 argument_list|,
@@ -4944,14 +4944,14 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step2
 argument_list|,
 name|base_file_name
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step2
 argument_list|,
@@ -4964,7 +4964,7 @@ else|:
 literal|" "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step2
 argument_list|,
@@ -4989,7 +4989,7 @@ literal|'\t'
 argument_list|)
 operator|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step2
 argument_list|,
@@ -5002,14 +5002,14 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step2
 argument_list|,
 name|exp_file_name
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step2
 argument_list|,
@@ -5029,14 +5029,14 @@ operator|->
 name|length
 condition|)
 block|{
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step2
 argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step2
 argument_list|,
@@ -5095,7 +5095,7 @@ operator|+
 literal|20
 argument_list|)
 decl_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step3
 argument_list|,
@@ -5120,7 +5120,7 @@ literal|'\t'
 argument_list|)
 operator|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step3
 argument_list|,
@@ -5133,14 +5133,14 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step3
 argument_list|,
 name|base_file_name
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step3
 argument_list|,
@@ -5171,7 +5171,7 @@ literal|'\t'
 argument_list|)
 operator|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step3
 argument_list|,
@@ -5184,14 +5184,14 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step3
 argument_list|,
 name|exp_file_name
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step3
 argument_list|,
@@ -5211,14 +5211,14 @@ operator|->
 name|length
 condition|)
 block|{
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step3
 argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step3
 argument_list|,
@@ -5277,7 +5277,7 @@ operator|+
 literal|20
 argument_list|)
 decl_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step4
 argument_list|,
@@ -5302,7 +5302,7 @@ literal|'\t'
 argument_list|)
 operator|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step4
 argument_list|,
@@ -5315,14 +5315,14 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step4
 argument_list|,
 name|base_file_name
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step4
 argument_list|,
@@ -5335,7 +5335,7 @@ else|:
 literal|" "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step4
 argument_list|,
@@ -5360,7 +5360,7 @@ literal|'\t'
 argument_list|)
 operator|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step4
 argument_list|,
@@ -5373,14 +5373,14 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step4
 argument_list|,
 name|exp_file_name
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step4
 argument_list|,
@@ -5400,14 +5400,14 @@ operator|->
 name|length
 condition|)
 block|{
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step4
 argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step4
 argument_list|,
@@ -5422,14 +5422,14 @@ condition|(
 name|output_lib_file_name
 condition|)
 block|{
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step4
 argument_list|,
 literal|" --output-lib "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step4
 argument_list|,
@@ -5499,7 +5499,7 @@ literal|'\t'
 argument_list|)
 operator|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step5
 argument_list|,
@@ -5512,14 +5512,14 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step5
 argument_list|,
 name|exp_file_name
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step5
 argument_list|,
@@ -5539,14 +5539,14 @@ operator|->
 name|length
 condition|)
 block|{
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step5
 argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-name|dyn_string_append
+name|dyn_string_append_cstr
 argument_list|(
 name|step5
 argument_list|,

@@ -6,7 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"ansidecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
 end_include
 
 begin_function_decl
@@ -66,7 +72,7 @@ name|str
 expr_stmt|;
 while|while
 condition|(
-name|isspace
+name|ISSPACE
 argument_list|(
 operator|*
 name|p
@@ -364,7 +370,7 @@ block|}
 comment|/* digits, with 0 or 1 periods in it.  */
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|p
@@ -383,7 +389,7 @@ literal|0
 decl_stmt|;
 while|while
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 operator|*
 name|p
@@ -457,7 +463,7 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|p
 index|[
@@ -468,7 +474,7 @@ condition|)
 block|{
 while|while
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
 name|p
 index|[

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* strings -- print the strings of printable characters in files    Copyright (C) 1993, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* strings -- print the strings of printable characters in files    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -146,11 +146,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_comment
+comment|/* Not all printable characters have ASCII codes (depending upon the    LOCALE set) but on some older systems it is not safe to test isprint    without first testing isascii...  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
 name|isascii
-end_ifdef
+operator|&&
+operator|!
+name|defined
+name|HAVE_LOCALE_H
+end_if
 
 begin_define
 define|#
@@ -541,7 +550,7 @@ name|HAVE_LC_MESSAGES
 argument_list|)
 name|setlocale
 argument_list|(
-name|LC_MESSAGES
+name|LC_ALL
 argument_list|,
 literal|""
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 32-bit ELF support for ARM    Copyright 1998, 1999 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* 32-bit ELF support for ARM    Copyright 1998, 1999, 2000, 2001 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_typedef
@@ -367,10 +367,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* The linker script knows the section names for placement.    The entry_names are used to do simple name mangling on the stubs.    Given a function name, and its type, the stub can be found. The    name can be changed. The only requirement is the %s be present.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -380,6 +376,10 @@ name|abfd
 parameter_list|)
 value|(elf_elfheader (abfd)->e_flags& EF_INTERWORK)
 end_define
+
+begin_comment
+comment|/* The linker script knows the section names for placement.    The entry_names are used to do simple name mangling on the stubs.    Given a function name, and its type, the stub can be found. The    name can be changed. The only requirement is the %s be present.  */
+end_comment
 
 begin_define
 define|#
@@ -432,53 +432,32 @@ value|16
 end_define
 
 begin_comment
-comment|/* The first entry in a procedure linkage table looks like    this.  It is set up so that any shared library function that is    called before the relocation has been set up calls the dynamic    linker first */
+comment|/* The first entry in a procedure linkage table looks like    this.  It is set up so that any shared library function that is    called before the relocation has been set up calls the dynamic    linker first.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 specifier|const
-name|bfd_byte
+name|unsigned
+name|long
 name|elf32_arm_plt0_entry
 index|[
 name|PLT_ENTRY_SIZE
+operator|/
+literal|4
 index|]
 init|=
 block|{
-literal|0x04
-block|,
-literal|0xe0
-block|,
-literal|0x2d
-block|,
-literal|0xe5
+literal|0xe52de004
 block|,
 comment|/* str   lr, [sp, #-4]!     */
-literal|0x10
-block|,
-literal|0xe0
-block|,
-literal|0x9f
-block|,
-literal|0xe5
+literal|0xe59fe010
 block|,
 comment|/* ldr   lr, [pc, #16]      */
-literal|0x0e
+literal|0xe08fe00e
 block|,
-literal|0xe0
-block|,
-literal|0x8f
-block|,
-literal|0xe0
-block|,
-comment|/* adr   lr, pc, lr         */
-literal|0x08
-block|,
-literal|0xf0
-block|,
-literal|0xbe
-block|,
-literal|0xe5
+comment|/* add   lr, pc, lr         */
+literal|0xe5bef008
 comment|/* ldr   pc, [lr, #8]!      */
 block|}
 decl_stmt|;
@@ -491,47 +470,26 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|bfd_byte
+name|unsigned
+name|long
 name|elf32_arm_plt_entry
 index|[
 name|PLT_ENTRY_SIZE
+operator|/
+literal|4
 index|]
 init|=
 block|{
-literal|0x04
-block|,
-literal|0xc0
-block|,
-literal|0x9f
-block|,
-literal|0xe5
+literal|0xe59fc004
 block|,
 comment|/* ldr   ip, [pc, #4]       */
-literal|0x0c
-block|,
-literal|0xc0
-block|,
-literal|0x8f
-block|,
-literal|0xe0
+literal|0xe08fc00c
 block|,
 comment|/* add   ip, pc, ip         */
-literal|0x00
-block|,
-literal|0xf0
-block|,
-literal|0x9c
-block|,
-literal|0xe5
+literal|0xe59cf000
 block|,
 comment|/* ldr   pc, [ip]           */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
+literal|0x00000000
 comment|/* offset to symbol in got  */
 block|}
 decl_stmt|;
@@ -646,7 +604,7 @@ value|((struct elf32_arm_link_hash_table *) ((info)->hash))
 end_define
 
 begin_comment
-comment|/* ARM ELF linker hash table */
+comment|/* ARM ELF linker hash table.  */
 end_comment
 
 begin_struct
@@ -673,7 +631,7 @@ name|bfd
 modifier|*
 name|bfd_of_glue_owner
 decl_stmt|;
-comment|/* A boolean indicating whether knowledge of the ARM's pipeline        length should be applied by the linker.  */
+comment|/* A boolean indicating whether knowledge of the ARM's pipeline      length should be applied by the linker.  */
 name|int
 name|no_pipeline_knowledge
 decl_stmt|;
@@ -830,7 +788,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Create an ARM elf linker hash table */
+comment|/* Create an ARM elf linker hash table.  */
 end_comment
 
 begin_function
@@ -947,6 +905,10 @@ name|root
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Locate the Thumb encoded calling stub for NAME.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1089,6 +1051,10 @@ name|hash
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Locate the ARM encoded calling stub for NAME.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1233,7 +1199,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*    ARM->Thumb glue:     .arm    __func_from_arm:    ldr r12, __func_addr    bx  r12    __func_addr:    .word func    @ behave as if you saw a ARM_32 reloc  */
+comment|/* ARM->Thumb glue:     .arm    __func_from_arm:    ldr r12, __func_addr    bx  r12    __func_addr:    .word func    @ behave as if you saw a ARM_32 reloc.  */
 end_comment
 
 begin_define
@@ -1274,7 +1240,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    Thumb->ARM:                          Thumb->(non-interworking aware) ARM     .thumb                               .thumb    .align 2                             .align 2    __func_from_thumb:              __func_from_thumb:    bx pc                                push {r6, lr}    nop                                  ldr  r6, __func_addr    .arm                                         mov  lr, pc    __func_change_to_arm:                        bx   r6    b func                       .arm    __func_back_to_thumb:    ldmia r13! {r6, lr}    bx    lr    __func_addr:    .word        func  */
+comment|/* Thumb->ARM:                          Thumb->(non-interworking aware) ARM     .thumb                               .thumb    .align 2                             .align 2    __func_from_thumb:              __func_from_thumb:    bx pc                                push {r6, lr}    nop                                  ldr  r6, __func_addr    .arm                                         mov  lr, pc    __func_change_to_arm:                        bx   r6    b func                       .arm    __func_back_to_thumb:    ldmia r13! {r6, lr}    bx    lr    __func_addr:    .word        func  */
 end_comment
 
 begin_define
@@ -1720,13 +1686,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* We've already seen this guy.  */
 name|free
 argument_list|(
 name|tmp_name
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* we've already seen this guy */
 block|}
 comment|/* The only trick here is using hash_table->arm_glue_size as the value. Even      though the section isn't allocated yet, this is where we will be putting      it.  */
 name|_bfd_generic_link_add_one_symbol
@@ -1938,13 +1904,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* We've already seen this guy.  */
 name|free
 argument_list|(
 name|tmp_name
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* we've already seen this guy */
 block|}
 name|_bfd_generic_link_add_one_symbol
 argument_list|(
@@ -1982,7 +1948,7 @@ operator|&
 name|myh
 argument_list|)
 expr_stmt|;
-comment|/* If we mark it 'thumb', the disassembler will do a better job.  */
+comment|/* If we mark it 'Thumb', the disassembler will do a better job.  */
 name|bind
 operator|=
 name|ELF_ST_BIND
@@ -2008,7 +1974,6 @@ argument_list|(
 name|tmp_name
 argument_list|)
 expr_stmt|;
-comment|/* Allocate another symbol to mark where we switch to arm mode.  */
 define|#
 directive|define
 name|CHANGE_TO_ARM
@@ -2017,6 +1982,7 @@ define|#
 directive|define
 name|BACK_FROM_ARM
 value|"__%s_back_from_arm"
+comment|/* Allocate another symbol to mark where we switch to Arm mode.  */
 name|tmp_name
 operator|=
 operator|(
@@ -2584,7 +2550,7 @@ operator|->
 name|r_info
 argument_list|)
 expr_stmt|;
-comment|/* These are the only relocation types we care about */
+comment|/* These are the only relocation types we care about.  */
 if|if
 condition|(
 name|r_type
@@ -2781,12 +2747,12 @@ name|error_return
 goto|;
 block|}
 block|}
-comment|/* If the relocation is not against a symbol it cannot concern us. */
+comment|/* If the relocation is not against a symbol it cannot concern us.  */
 name|h
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* We don't care about local symbols */
+comment|/* We don't care about local symbols.  */
 if|if
 condition|(
 name|r_index
@@ -2796,7 +2762,7 @@ operator|->
 name|sh_info
 condition|)
 continue|continue;
-comment|/* This is an external symbol */
+comment|/* This is an external symbol.  */
 name|r_index
 operator|-=
 name|symtab_hdr
@@ -2927,7 +2893,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The thumb form of a long branch is a bit finicky, because the offset    encoding is split over two fields, each in it's own instruction. They    can occur in any order. So given a thumb form of long branch, and an    offset, insert the offset into the thumb branch and return finished    instruction.     It takes two thumb instructions to encode the target address. Each has    11 bits to invest. The upper 11 bits are stored in one (identifed by    H-0.. see below), the lower 11 bits are stored in the other (identified    by H-1).     Combine together and shifted left by 1 (it's a half word address) and    there you have it.     Op: 1111 = F,    H-0, upper address-0 = 000    Op: 1111 = F,    H-1, lower address-0 = 800     They can be ordered either way, but the arm tools I've seen always put    the lower one first. It probably doesn't matter. krk@cygnus.com     XXX:  Actually the order does matter.  The second instruction (H-1)    moves the computed address into the PC, so it must be the second one    in the sequence.  The problem, however is that whilst little endian code    stores the instructions in HI then LOW order, big endian code does the    reverse.  nickc@cygnus.com  */
+comment|/* The thumb form of a long branch is a bit finicky, because the offset    encoding is split over two fields, each in it's own instruction. They    can occur in any order. So given a thumb form of long branch, and an    offset, insert the offset into the thumb branch and return finished    instruction.     It takes two thumb instructions to encode the target address. Each has    11 bits to invest. The upper 11 bits are stored in one (identifed by    H-0.. see below), the lower 11 bits are stored in the other (identified    by H-1).     Combine together and shifted left by 1 (it's a half word address) and    there you have it.     Op: 1111 = F,    H-0, upper address-0 = 000    Op: 1111 = F,    H-1, lower address-0 = 800     They can be ordered either way, but the arm tools I've seen always put    the lower one first. It probably doesn't matter. krk@cygnus.com     XXX:  Actually the order does matter.  The second instruction (H-1)    moves the computed address into the PC, so it must be the second one    in the sequence.  The problem, however is that whilst little endian code    stores the instructions in HI then LOW order, big endian code does the    reverse.  nickc@cygnus.com.  */
 end_comment
 
 begin_define
@@ -2983,14 +2949,14 @@ name|rel_off
 operator|>>=
 literal|1
 expr_stmt|;
-comment|/* half word aligned address */
+comment|/* Half word aligned address.  */
 name|low_bits
 operator|=
 name|rel_off
 operator|&
 literal|0x000007FF
 expr_stmt|;
-comment|/* the bottom 11 bits */
+comment|/* The bottom 11 bits.  */
 name|high_bits
 operator|=
 operator|(
@@ -3001,7 +2967,7 @@ operator|)
 operator|&
 literal|0x000007FF
 expr_stmt|;
-comment|/* the top 11 bits */
+comment|/* The top 11 bits.  */
 if|if
 condition|(
 operator|(
@@ -3048,11 +3014,11 @@ operator||
 name|low_bits
 expr_stmt|;
 else|else
+comment|/* FIXME: abort is probably not the right call. krk@cygnus.com  */
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* error - not a valid branch instruction form */
-comment|/* FIXME: abort is probably not the right call. krk@cygnus.com */
+comment|/* error - not a valid branch instruction form.  */
 return|return
 name|br_insn
 return|;
@@ -3060,7 +3026,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Thumb code calling an ARM function */
+comment|/* Thumb code calling an ARM function.  */
 end_comment
 
 begin_function
@@ -3359,26 +3325,27 @@ argument_list|)
 expr_stmt|;
 name|ret_offset
 operator|=
+comment|/* Address of destination of the stub.  */
 operator|(
 operator|(
 name|bfd_signed_vma
 operator|)
 name|val
 operator|)
-comment|/* Address of destination of the stub */
 operator|-
 operator|(
 call|(
 name|bfd_signed_vma
 call|)
+comment|/* Offset from the start of the current section to the start of the stubs.  */
 argument_list|(
 name|s
 operator|->
 name|output_offset
-comment|/* Offset from the start of the current section to the start of the stubs.  */
+comment|/* Offset of the start of this stub from the start of the stubs.  */
 operator|+
 name|my_offset
-comment|/* Offset of the start of this stub from the start of the stubs.  */
+comment|/* Address of the start of the current section.  */
 operator|+
 name|s
 operator|->
@@ -3386,15 +3353,14 @@ name|output_section
 operator|->
 name|vma
 argument_list|)
-comment|/* Address of the start of the current section.  */
+comment|/* The branch instruction is 4 bytes into the stub.  */
 operator|+
 literal|4
-comment|/* The branch instruction is 4 bytes into the stub.  */
+comment|/* ARM branches work from the pc of the instruction + 8.  */
 operator|+
 literal|8
 operator|)
 expr_stmt|;
-comment|/* ARM branches work from the pc of the instruction + 8.  */
 name|bfd_put_32
 argument_list|(
 name|output_bfd
@@ -3489,7 +3455,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Arm code calling a Thumb function */
+comment|/* Arm code calling a Thumb function.  */
 end_comment
 
 begin_function
@@ -3824,7 +3790,7 @@ name|tmp
 operator|&
 literal|0xFF000000
 expr_stmt|;
-comment|/* Somehow these are both 4 too far, so subtract 8. */
+comment|/* Somehow these are both 4 too far, so subtract 8.  */
 name|ret_offset
 operator|=
 name|s
@@ -4045,6 +4011,25 @@ name|elf32_arm_link_hash_table
 modifier|*
 name|globals
 decl_stmt|;
+comment|/* If the start address has been set, then set the EF_ARM_HASENTRY      flag.  Setting this more than once is redundant, but the cost is      not too high, and it keeps the code simple.            The test is done  here, rather than somewhere else, because the      start address is only set just before the final link commences.       Note - if the user deliberately sets a start address of 0, the      flag will not be set.  */
+if|if
+condition|(
+name|bfd_get_start_address
+argument_list|(
+name|output_bfd
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|elf_elfheader
+argument_list|(
+name|output_bfd
+argument_list|)
+operator|->
+name|e_flags
+operator||=
+name|EF_ARM_HASENTRY
+expr_stmt|;
 name|globals
 operator|=
 name|elf32_arm_hash_table
@@ -4205,7 +4190,15 @@ case|:
 case|case
 name|R_ARM_REL32
 case|:
-comment|/* When generating a shared object, these relocations are copied 	 into the output file to be resolved at run time. */
+ifndef|#
+directive|ifndef
+name|OLD_ARM_ABI
+case|case
+name|R_ARM_XPC25
+case|:
+endif|#
+directive|endif
+comment|/* When generating a shared object, these relocations are copied 	 into the output file to be resolved at run time.  */
 if|if
 condition|(
 name|info
@@ -4651,7 +4644,7 @@ name|sreloc
 operator|->
 name|reloc_count
 expr_stmt|;
-comment|/* If this reloc is against an external symbol, we do not want to 	     fiddle with the addend.  Otherwise, we need to include the symbol 	     value so that it becomes an addend for the dynamic reloc. */
+comment|/* If this reloc is against an external symbol, we do not want to 	     fiddle with the addend.  Otherwise, we need to include the symbol 	     value so that it becomes an addend for the dynamic reloc.  */
 if|if
 condition|(
 operator|!
@@ -4690,11 +4683,68 @@ condition|(
 name|r_type
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|OLD_ARM_ABI
+case|case
+name|R_ARM_XPC25
+case|:
+comment|/* Arm BLX instruction.  */
+endif|#
+directive|endif
 case|case
 name|R_ARM_PC24
 case|:
 comment|/* Arm B/BL instruction */
-comment|/* Check for arm calling thumb function.  */
+ifndef|#
+directive|ifndef
+name|OLD_ARM_ABI
+if|if
+condition|(
+name|r_type
+operator|==
+name|R_ARM_XPC25
+condition|)
+block|{
+comment|/* Check for Arm calling Arm function.  */
+comment|/* FIXME: Should we translate the instruction into a BL 		 instruction instead ?  */
+if|if
+condition|(
+name|sym_flags
+operator|!=
+name|STT_ARM_TFUNC
+condition|)
+name|_bfd_error_handler
+argument_list|(
+name|_
+argument_list|(
+literal|"\ %s: Warning: Arm BLX instruction targets Arm function '%s'."
+argument_list|)
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|input_bfd
+argument_list|)
+argument_list|,
+name|h
+condition|?
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|string
+else|:
+literal|"(local)"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+block|{
+comment|/* Check for Arm calling Thumb function.  */
 if|if
 condition|(
 name|sym_flags
@@ -4730,6 +4780,7 @@ expr_stmt|;
 return|return
 name|bfd_reloc_ok
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -4866,7 +4917,17 @@ literal|8
 expr_stmt|;
 block|}
 block|}
-comment|/* It is not an error for an undefined weak reference to be 	     out of range.  Any program that branches to such a symbol 	     is going to crash anyway, so there is no point worrying  	     about getting the destination exactly right.  */
+name|signed_addend
+operator|=
+name|value
+expr_stmt|;
+name|signed_addend
+operator|>>=
+name|howto
+operator|->
+name|rightshift
+expr_stmt|;
+comment|/* It is not an error for an undefined weak reference to be 	     out of range.  Any program that branches to such a symbol 	     is going to crash anyway, so there is no point worrying 	     about getting the destination exactly right.  */
 if|if
 condition|(
 operator|!
@@ -4882,16 +4943,6 @@ name|bfd_link_hash_undefweak
 condition|)
 block|{
 comment|/* Perform a signed range check.  */
-name|signed_addend
-operator|=
-name|value
-expr_stmt|;
-name|signed_addend
-operator|>>=
-name|howto
-operator|->
-name|rightshift
-expr_stmt|;
 if|if
 condition|(
 name|signed_addend
@@ -4933,6 +4984,61 @@ return|return
 name|bfd_reloc_overflow
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|OLD_ARM_ABI
+comment|/* If necessary set the H bit in the BLX instruction.  */
+if|if
+condition|(
+name|r_type
+operator|==
+name|R_ARM_XPC25
+operator|&&
+operator|(
+operator|(
+name|value
+operator|&
+literal|2
+operator|)
+operator|==
+literal|2
+operator|)
+condition|)
+name|value
+operator|=
+operator|(
+name|signed_addend
+operator|&
+name|howto
+operator|->
+name|dst_mask
+operator|)
+operator||
+operator|(
+name|bfd_get_32
+argument_list|(
+name|input_bfd
+argument_list|,
+name|hit_data
+argument_list|)
+operator|&
+operator|(
+operator|~
+name|howto
+operator|->
+name|dst_mask
+operator|)
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|24
+operator|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|value
 operator|=
 operator|(
@@ -5148,7 +5254,7 @@ return|;
 case|case
 name|R_ARM_THM_ABS5
 case|:
-comment|/* Support ldr and str instructions for the thumb. */
+comment|/* Support ldr and str instructions for the thumb.  */
 ifdef|#
 directive|ifdef
 name|USE_REL
@@ -5224,10 +5330,18 @@ expr_stmt|;
 return|return
 name|bfd_reloc_ok
 return|;
+ifndef|#
+directive|ifndef
+name|OLD_ARM_ABI
+case|case
+name|R_ARM_THM_XPC22
+case|:
+endif|#
+directive|endif
 case|case
 name|R_ARM_THM_PC22
 case|:
-comment|/* Thumb BL (branch long instruction). */
+comment|/* Thumb BL (branch long instruction).  */
 block|{
 name|bfd_vma
 name|relocation
@@ -5317,7 +5431,7 @@ operator|)
 operator|-
 literal|0x400
 expr_stmt|;
-comment|/* sign extend */
+comment|/* Sign extend.  */
 name|addend
 operator|=
 operator|(
@@ -5339,7 +5453,55 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* If it is not a call to thumb, assume call to arm. 	   If it is a call relative to a section name, then it is not a 	   function call at all, but rather a long jump.  */
+ifndef|#
+directive|ifndef
+name|OLD_ARM_ABI
+if|if
+condition|(
+name|r_type
+operator|==
+name|R_ARM_THM_XPC22
+condition|)
+block|{
+comment|/* Check for Thumb to Thumb call.  */
+comment|/* FIXME: Should we translate the instruction into a BL 	       instruction instead ?  */
+if|if
+condition|(
+name|sym_flags
+operator|==
+name|STT_ARM_TFUNC
+condition|)
+name|_bfd_error_handler
+argument_list|(
+name|_
+argument_list|(
+literal|"\ %s: Warning: Thumb BLX instruction targets thumb function '%s'."
+argument_list|)
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|input_bfd
+argument_list|)
+argument_list|,
+name|h
+condition|?
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|string
+else|:
+literal|"(local)"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+block|{
+comment|/* If it is not a call to Thumb, assume call to Arm. 	       If it is a call relative to a section name, then it is not a 	       function call at all, but rather a long jump.  */
 if|if
 condition|(
 name|sym_flags
@@ -5386,6 +5548,7 @@ return|return
 name|bfd_reloc_dangerous
 return|;
 block|}
+block|}
 name|relocation
 operator|=
 name|value
@@ -5422,7 +5585,7 @@ name|Elf_Internal_Ehdr
 modifier|*
 name|i_ehdrp
 decl_stmt|;
-comment|/* Elf file header, internal form */
+comment|/* Elf file header, internal form.  */
 name|i_ehdrp
 operator|=
 name|elf_elfheader
@@ -5571,6 +5734,33 @@ operator|&
 literal|0x7ff
 operator|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OLD_ARM_ABI
+if|if
+condition|(
+name|r_type
+operator|==
+name|R_ARM_THM_XPC22
+operator|&&
+operator|(
+operator|(
+name|lower_insn
+operator|&
+literal|0x1800
+operator|)
+operator|==
+literal|0x0800
+operator|)
+condition|)
+comment|/* Remove bit zero of the adjusted offset.  Bit zero can only be 	     set if the upper insn is at a half-word boundary, since the 	     destination address, an ARM instruction, must always be on a 	     word boundary.  The semantics of the BLX (1) instruction, however, 	     are that bit zero in the offset must always be zero, and the 	     corresponding bit one in the target address will be set from bit 	     one of the source address.  */
+name|lower_insn
+operator|&=
+operator|~
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Put the relocated value back in the object file:  */
 name|bfd_put_16
 argument_list|(
@@ -5656,7 +5846,7 @@ condition|)
 return|return
 name|bfd_reloc_notsupported
 return|;
-comment|/* Note that sgot->output_offset is not involved in this          calculation.  We always want the start of .got.  If we          define _GLOBAL_OFFSET_TABLE in a different way, as is          permitted by the ABI, we might have to change this          calculation. */
+comment|/* Note that sgot->output_offset is not involved in this          calculation.  We always want the start of .got.  If we          define _GLOBAL_OFFSET_TABLE in a different way, as is          permitted by the ABI, we might have to change this          calculation.  */
 name|value
 operator|-=
 name|sgot
@@ -5691,7 +5881,7 @@ return|;
 case|case
 name|R_ARM_GOTPC
 case|:
-comment|/* Use global offset table as symbol value. */
+comment|/* Use global offset table as symbol value.  */
 name|BFD_ASSERT
 argument_list|(
 name|sgot
@@ -5742,7 +5932,7 @@ return|;
 case|case
 name|R_ARM_GOT32
 case|:
-comment|/* Relocation is to the entry for this symbol in the          global offset table. */
+comment|/* Relocation is to the entry for this symbol in the          global offset table.  */
 if|if
 condition|(
 name|sgot
@@ -5819,7 +6009,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* This is actually a static link, or it is a -Bsymbolic link 		 and the symbol is defined locally.  We must initialize this 		 entry in the global offset table.  Since the offset must 		 always be a multiple of 4, we use the least significant bit 		 to record whether we have initialized it already.  		 When doing a dynamic link, we create a .rel.got relocation 		 entry to initialize the value.  This is done in the 		 finish_dynamic_symbol routine. */
+comment|/* This is actually a static link, or it is a -Bsymbolic link 		 and the symbol is defined locally.  We must initialize this 		 entry in the global offset table.  Since the offset must 		 always be a multiple of 4, we use the least significant bit 		 to record whether we have initialized it already.  		 When doing a dynamic link, we create a .rel.got relocation 		 entry to initialize the value.  This is done in the 		 finish_dynamic_symbol routine.  */
 if|if
 condition|(
 operator|(
@@ -5899,7 +6089,7 @@ index|[
 name|r_symndx
 index|]
 expr_stmt|;
-comment|/* The offset must always be a multiple of 4.  We use the 	     least significant bit to record whether we have already 	     generated the necessary reloc. */
+comment|/* The offset must always be a multiple of 4.  We use the 	     least significant bit to record whether we have already 	     generated the necessary reloc.  */
 if|if
 condition|(
 operator|(
@@ -6063,7 +6253,7 @@ case|case
 name|R_ARM_PLT32
 case|:
 comment|/* Relocation is to the entry for this symbol in the          procedure linkage table.  */
-comment|/* Resolve a PLT32 reloc against a local symbol directly,          without using the procedure linkage table. */
+comment|/* Resolve a PLT32 reloc against a local symbol directly,          without using the procedure linkage table.  */
 if|if
 condition|(
 name|h
@@ -6285,11 +6475,139 @@ name|bfd_signed_vma
 name|increment
 decl_stmt|;
 block|{
-name|bfd_vma
-name|contents
-decl_stmt|;
 name|bfd_signed_vma
 name|addend
+decl_stmt|;
+if|if
+condition|(
+name|howto
+operator|->
+name|type
+operator|==
+name|R_ARM_THM_PC22
+condition|)
+block|{
+name|int
+name|upper_insn
+decl_stmt|,
+name|lower_insn
+decl_stmt|;
+name|int
+name|upper
+decl_stmt|,
+name|lower
+decl_stmt|;
+name|upper_insn
+operator|=
+name|bfd_get_16
+argument_list|(
+name|abfd
+argument_list|,
+name|address
+argument_list|)
+expr_stmt|;
+name|lower_insn
+operator|=
+name|bfd_get_16
+argument_list|(
+name|abfd
+argument_list|,
+name|address
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+name|upper
+operator|=
+name|upper_insn
+operator|&
+literal|0x7ff
+expr_stmt|;
+name|lower
+operator|=
+name|lower_insn
+operator|&
+literal|0x7ff
+expr_stmt|;
+name|addend
+operator|=
+operator|(
+name|upper
+operator|<<
+literal|12
+operator|)
+operator||
+operator|(
+name|lower
+operator|<<
+literal|1
+operator|)
+expr_stmt|;
+name|addend
+operator|+=
+name|increment
+expr_stmt|;
+name|addend
+operator|>>=
+literal|1
+expr_stmt|;
+name|upper_insn
+operator|=
+operator|(
+name|upper_insn
+operator|&
+literal|0xf800
+operator|)
+operator||
+operator|(
+operator|(
+name|addend
+operator|>>
+literal|11
+operator|)
+operator|&
+literal|0x7ff
+operator|)
+expr_stmt|;
+name|lower_insn
+operator|=
+operator|(
+name|lower_insn
+operator|&
+literal|0xf800
+operator|)
+operator||
+operator|(
+name|addend
+operator|&
+literal|0x7ff
+operator|)
+expr_stmt|;
+name|bfd_put_16
+argument_list|(
+name|abfd
+argument_list|,
+name|upper_insn
+argument_list|,
+name|address
+argument_list|)
+expr_stmt|;
+name|bfd_put_16
+argument_list|(
+name|abfd
+argument_list|,
+name|lower_insn
+argument_list|,
+name|address
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|bfd_vma
+name|contents
 decl_stmt|;
 name|contents
 operator|=
@@ -6354,9 +6672,6 @@ operator|->
 name|type
 condition|)
 block|{
-case|case
-name|R_ARM_THM_PC22
-case|:
 default|default:
 name|addend
 operator|+=
@@ -6414,6 +6729,7 @@ argument_list|,
 name|address
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6857,7 +7173,7 @@ name|def
 operator|.
 name|section
 expr_stmt|;
-comment|/* In these cases, we don't need the relocation value. 	         We check specially because in some obscure cases 	         sec->output_section will be NULL. */
+comment|/* In these cases, we don't need the relocation value. 	         We check specially because in some obscure cases 	         sec->output_section will be NULL.  */
 switch|switch
 condition|(
 name|r_type
@@ -7518,7 +7834,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function to keep ARM specific flags in the ELF header. */
+comment|/* Function to keep ARM specific flags in the ELF header.  */
 end_comment
 
 begin_function
@@ -7557,6 +7873,16 @@ condition|)
 block|{
 if|if
 condition|(
+name|EF_ARM_EABI_VERSION
+argument_list|(
+name|flags
+argument_list|)
+operator|==
+name|EF_ARM_EABI_UNKNOWN
+condition|)
+block|{
+if|if
+condition|(
 name|flags
 operator|&
 name|EF_INTERWORK
@@ -7589,6 +7915,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
 block|{
 name|elf_elfheader
@@ -7615,7 +7942,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy backend specific data from one object module to another */
+comment|/* Copy backend specific data from one object module to another.  */
 end_comment
 
 begin_function
@@ -7685,6 +8012,13 @@ name|elf_flags_init
 argument_list|(
 name|obfd
 argument_list|)
+operator|&&
+name|EF_ARM_EABI_VERSION
+argument_list|(
+name|out_flags
+argument_list|)
+operator|==
+name|EF_ARM_EABI_UNKNOWN
 operator|&&
 name|in_flags
 operator|!=
@@ -7858,6 +8192,21 @@ name|asection
 modifier|*
 name|sec
 decl_stmt|;
+comment|/* Check if we have the same endianess.  */
+if|if
+condition|(
+name|_bfd_generic_verify_endian_match
+argument_list|(
+name|ibfd
+argument_list|,
+name|obfd
+argument_list|)
+operator|==
+name|false
+condition|)
+return|return
+name|false
+return|;
 if|if
 condition|(
 name|bfd_get_flavour
@@ -7877,83 +8226,8 @@ condition|)
 return|return
 name|true
 return|;
-comment|/* Check if we have the same endianess */
-if|if
-condition|(
-name|ibfd
-operator|->
-name|xvec
-operator|->
-name|byteorder
-operator|!=
-name|obfd
-operator|->
-name|xvec
-operator|->
-name|byteorder
-operator|&&
-name|obfd
-operator|->
-name|xvec
-operator|->
-name|byteorder
-operator|!=
-name|BFD_ENDIAN_UNKNOWN
-operator|&&
-name|ibfd
-operator|->
-name|xvec
-operator|->
-name|byteorder
-operator|!=
-name|BFD_ENDIAN_UNKNOWN
-condition|)
-block|{
-call|(
-modifier|*
-name|_bfd_error_handler
-call|)
-argument_list|(
-name|_
-argument_list|(
-literal|"%s: compiled for a %s endian system and target is %s endian"
-argument_list|)
-argument_list|,
-name|bfd_get_filename
-argument_list|(
-name|ibfd
-argument_list|)
-argument_list|,
-name|bfd_big_endian
-argument_list|(
-name|ibfd
-argument_list|)
-condition|?
-literal|"big"
-else|:
-literal|"little"
-argument_list|,
-name|bfd_big_endian
-argument_list|(
-name|obfd
-argument_list|)
-condition|?
-literal|"big"
-else|:
-literal|"little"
-argument_list|)
-expr_stmt|;
-name|bfd_set_error
-argument_list|(
-name|bfd_error_wrong_format
-argument_list|)
-expr_stmt|;
-return|return
-name|false
-return|;
-block|}
 comment|/* The input BFD must have had its flags initialised.  */
-comment|/* The following seems bogus to me -- The flags are initialized in      the assembler but I don't think an elf_flags_init field is      written into the object */
+comment|/* The following seems bogus to me -- The flags are initialized in      the assembler but I don't think an elf_flags_init field is      written into the object.  */
 comment|/* BFD_ASSERT (elf_flags_init (ibfd)); */
 name|in_flags
 operator|=
@@ -8125,27 +8399,69 @@ condition|)
 return|return
 name|true
 return|;
-comment|/* If any of the input BFDs is non-PIC, the output is also position       dependent.  */
+comment|/* Complain about various flag mismatches.  */
 if|if
 condition|(
-operator|!
+name|EF_ARM_EABI_VERSION
+argument_list|(
+name|in_flags
+argument_list|)
+operator|!=
+name|EF_ARM_EABI_VERSION
+argument_list|(
+name|out_flags
+argument_list|)
+condition|)
+block|{
+name|_bfd_error_handler
+argument_list|(
+name|_
+argument_list|(
+literal|"\ Error: %s compiled for EABI version %d, whereas %s is compiled for version %d"
+argument_list|)
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|ibfd
+argument_list|)
+argument_list|,
 operator|(
 name|in_flags
 operator|&
-name|EF_PIC
+name|EF_ARM_EABIMASK
 operator|)
-condition|)
-name|elf_elfheader
+operator|>>
+literal|24
+argument_list|,
+name|bfd_get_filename
 argument_list|(
 name|obfd
 argument_list|)
-operator|->
-name|e_flags
-operator|&=
-operator|~
-name|EF_PIC
+argument_list|,
+operator|(
+name|out_flags
+operator|&
+name|EF_ARM_EABIMASK
+operator|)
+operator|>>
+literal|24
+argument_list|)
 expr_stmt|;
-comment|/* Complain about various flag mismatches.  */
+return|return
+name|false
+return|;
+block|}
+comment|/* Not sure what needs to be checked for EABI versions>= 1.  */
+if|if
+condition|(
+name|EF_ARM_EABI_VERSION
+argument_list|(
+name|in_flags
+argument_list|)
+operator|==
+name|EF_ARM_EABI_UNKNOWN
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -8389,15 +8705,16 @@ name|EF_INTERWORK
 condition|?
 name|_
 argument_list|(
-literal|"does not"
+literal|"does"
 argument_list|)
 else|:
 name|_
 argument_list|(
-literal|"does"
+literal|"does not"
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|flags_compatible
 return|;
@@ -8405,7 +8722,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Display the flags field */
+comment|/* Display the flags field.  */
 end_comment
 
 begin_function
@@ -8435,6 +8752,10 @@ operator|*
 operator|)
 name|ptr
 decl_stmt|;
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
 name|BFD_ASSERT
 argument_list|(
 name|abfd
@@ -8454,7 +8775,16 @@ argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
-comment|/* Ignore init flag - it may not be set, despite the flags field containing valid data.  */
+name|flags
+operator|=
+name|elf_elfheader
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|e_flags
+expr_stmt|;
+comment|/* Ignore init flag - it may not be set, despite the flags field      containing valid data.  */
 comment|/* xgettext:c-format */
 name|fprintf
 argument_list|(
@@ -8473,14 +8803,21 @@ operator|->
 name|e_flags
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|EF_ARM_EABI_VERSION
+argument_list|(
+name|flags
+argument_list|)
+condition|)
+block|{
+case|case
+name|EF_ARM_EABI_UNKNOWN
+case|:
+comment|/* The following flag bits are GNU extenstions and not part of the 	 official ARM ELF extended ABI.  Hence they are only decoded if 	 the EABI version is not set.  */
 if|if
 condition|(
-name|elf_elfheader
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|e_flags
+name|flags
 operator|&
 name|EF_INTERWORK
 condition|)
@@ -8494,25 +8831,9 @@ literal|" [interworking enabled]"
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-name|_
-argument_list|(
-literal|" [interworking not enabled]"
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|elf_elfheader
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|e_flags
+name|flags
 operator|&
 name|EF_APCS_26
 condition|)
@@ -8539,12 +8860,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|elf_elfheader
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|e_flags
+name|flags
 operator|&
 name|EF_APCS_FLOAT
 condition|)
@@ -8558,25 +8874,9 @@ literal|" [floats passed in float registers]"
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-name|_
-argument_list|(
-literal|" [floats passed in integer registers]"
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|elf_elfheader
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|e_flags
+name|flags
 operator|&
 name|EF_PIC
 condition|)
@@ -8590,6 +8890,103 @@ literal|" [position independent]"
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|EF_NEW_ABI
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|" [new ABI]"
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|EF_OLD_ABI
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|" [old ABI]"
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|EF_SOFT_FLOAT
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|" [software FP]"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|flags
+operator|&=
+operator|~
+operator|(
+name|EF_INTERWORK
+operator||
+name|EF_APCS_26
+operator||
+name|EF_APCS_FLOAT
+operator||
+name|EF_PIC
+operator||
+name|EF_NEW_ABI
+operator||
+name|EF_OLD_ABI
+operator||
+name|EF_SOFT_FLOAT
+operator|)
+expr_stmt|;
+break|break;
+case|case
+name|EF_ARM_EABI_VER1
+case|:
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|" [Version1 EABI]"
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|EF_ARM_SYMSARESORTED
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|" [sorted symbol table]"
+argument_list|)
+argument_list|)
+expr_stmt|;
 else|else
 name|fprintf
 argument_list|(
@@ -8597,7 +8994,86 @@ name|file
 argument_list|,
 name|_
 argument_list|(
-literal|" [absolute position]"
+literal|" [unsorted symbol table]"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|flags
+operator|&=
+operator|~
+name|EF_ARM_SYMSARESORTED
+expr_stmt|;
+break|break;
+default|default:
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|"<EABI version unrecognised>"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|flags
+operator|&=
+operator|~
+name|EF_ARM_EABIMASK
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|EF_ARM_RELEXEC
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|" [relocatable executable]"
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|EF_ARM_HASENTRY
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|" [has entry point]"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|flags
+operator|&=
+operator|~
+operator|(
+name|EF_ARM_RELEXEC
+operator||
+name|EF_ARM_HASENTRY
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|"<Unrecognised flag bits set>"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8652,7 +9128,6 @@ operator|->
 name|st_info
 argument_list|)
 return|;
-break|break;
 case|case
 name|STT_ARM_16BIT
 case|:
@@ -8671,6 +9146,8 @@ operator|->
 name|st_info
 argument_list|)
 return|;
+break|break;
+default|default:
 break|break;
 block|}
 return|return
@@ -9940,7 +10417,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the nearest line to a particular section and offset, for error    reporting.   This code is a duplicate of the code in elf.c, except    that it also accepts STT_ARM_TFUNC as a symbol that names a function. */
+comment|/* Find the nearest line to a particular section and offset, for error    reporting.   This code is a duplicate of the code in elf.c, except    that it also accepts STT_ARM_TFUNC as a symbol that names a function.  */
 end_comment
 
 begin_function
@@ -10035,6 +10512,14 @@ argument_list|,
 name|line_ptr
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|dwarf2_find_line_info
 argument_list|)
 condition|)
 return|return
@@ -11528,6 +12013,12 @@ condition|)
 return|return
 name|false
 return|;
+name|info
+operator|->
+name|flags
+operator||=
+name|DF_TEXTREL
+expr_stmt|;
 block|}
 block|}
 return|return
@@ -11784,8 +12275,15 @@ operator|*
 literal|4
 expr_stmt|;
 comment|/* Fill in the entry in the procedure linkage table.  */
-name|memcpy
+name|bfd_put_32
 argument_list|(
+name|output_bfd
+argument_list|,
+name|elf32_arm_plt_entry
+index|[
+literal|0
+index|]
+argument_list|,
 name|splt
 operator|->
 name|contents
@@ -11795,10 +12293,52 @@ operator|->
 name|plt
 operator|.
 name|offset
+operator|+
+literal|0
+argument_list|)
+expr_stmt|;
+name|bfd_put_32
+argument_list|(
+name|output_bfd
 argument_list|,
 name|elf32_arm_plt_entry
+index|[
+literal|1
+index|]
 argument_list|,
-name|PLT_ENTRY_SIZE
+name|splt
+operator|->
+name|contents
+operator|+
+name|h
+operator|->
+name|plt
+operator|.
+name|offset
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+name|bfd_put_32
+argument_list|(
+name|output_bfd
+argument_list|,
+name|elf32_arm_plt_entry
+index|[
+literal|2
+index|]
+argument_list|,
+name|splt
+operator|->
+name|contents
+operator|+
+name|h
+operator|->
+name|plt
+operator|.
+name|offset
+operator|+
+literal|8
 argument_list|)
 expr_stmt|;
 name|bfd_put_32
@@ -11945,6 +12485,25 @@ operator|->
 name|st_shndx
 operator|=
 name|SHN_UNDEF
+expr_stmt|;
+comment|/* If the symbol is weak, we do need to clear the value. 	     Otherwise, the PLT entry would provide a definition for 	     the symbol even if the symbol wasn't defined anywhere, 	     and so the symbol would never be NULL.  */
+if|if
+condition|(
+operator|(
+name|h
+operator|->
+name|elf_link_hash_flags
+operator|&
+name|ELF_LINK_HASH_REF_REGULAR_NONWEAK
+operator|)
+operator|==
+literal|0
+condition|)
+name|sym
+operator|->
+name|st_value
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -12702,17 +13261,72 @@ name|_raw_size
 operator|>
 literal|0
 condition|)
-name|memcpy
+block|{
+name|bfd_put_32
 argument_list|(
+name|output_bfd
+argument_list|,
+name|elf32_arm_plt0_entry
+index|[
+literal|0
+index|]
+argument_list|,
 name|splt
 operator|->
 name|contents
-argument_list|,
-name|elf32_arm_plt0_entry
-argument_list|,
-name|PLT_ENTRY_SIZE
+operator|+
+literal|0
 argument_list|)
 expr_stmt|;
+name|bfd_put_32
+argument_list|(
+name|output_bfd
+argument_list|,
+name|elf32_arm_plt0_entry
+index|[
+literal|1
+index|]
+argument_list|,
+name|splt
+operator|->
+name|contents
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+name|bfd_put_32
+argument_list|(
+name|output_bfd
+argument_list|,
+name|elf32_arm_plt0_entry
+index|[
+literal|2
+index|]
+argument_list|,
+name|splt
+operator|->
+name|contents
+operator|+
+literal|8
+argument_list|)
+expr_stmt|;
+name|bfd_put_32
+argument_list|(
+name|output_bfd
+argument_list|,
+name|elf32_arm_plt0_entry
+index|[
+literal|3
+index|]
+argument_list|,
+name|splt
+operator|->
+name|contents
+operator|+
+literal|12
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* UnixWare sets the entsize of .plt to 4, although that doesn't 	 really seem like the right value.  */
 name|elf_section_data
 argument_list|(
@@ -12854,7 +13468,7 @@ name|Elf_Internal_Ehdr
 modifier|*
 name|i_ehdrp
 decl_stmt|;
-comment|/* Elf file header, internal form */
+comment|/* ELF file header, internal form.  */
 name|i_ehdrp
 operator|=
 name|elf_elfheader

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* chew    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 1998    Free Software Foundation, Inc.    Contributed by steve chamberlain @cygnus  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* chew    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2001    Free Software Foundation, Inc.    Contributed by steve chamberlain @cygnus  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* Yet another way of extracting documentation from source.    No, I haven't finished it yet, but I hope you people like it better    than the old way       sac     Basically, this is a sort of string forth, maybe we should call it    struth?     You define new words thus:    :<newword><oldwords> ;  */
+comment|/* Yet another way of extracting documentation from source.    No, I haven't finished it yet, but I hope you people like it better    than the old way     sac     Basically, this is a sort of string forth, maybe we should call it    struth?     You define new words thus:    :<newword><oldwords> ;  */
 end_comment
 
 begin_comment
@@ -74,7 +74,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Here is a string type ... */
+comment|/* Here is a string type ...  */
 end_comment
 
 begin_typedef
@@ -275,27 +275,23 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|init_string_with_size
-argument_list|,
-operator|(
+parameter_list|(
 name|buffer
-operator|,
+parameter_list|,
 name|size
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|buffer
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|size
-argument_list|)
+decl_stmt|;
 block|{
 name|buffer
 operator|->
@@ -319,23 +315,19 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|init_string
-argument_list|,
-operator|(
+parameter_list|(
 name|buffer
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|buffer
-argument_list|)
+decl_stmt|;
 block|{
 name|init_string_with_size
 argument_list|(
@@ -345,29 +337,25 @@ name|DEF_SIZE
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
-name|DEFUN
-argument_list|(
 name|find
-argument_list|,
-operator|(
+parameter_list|(
 name|str
-operator|,
+parameter_list|,
 name|what
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|str
-name|AND
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|what
-argument_list|)
+decl_stmt|;
 block|{
 name|unsigned
 name|int
@@ -430,29 +418,25 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|write_buffer
-argument_list|,
-operator|(
+parameter_list|(
 name|buffer
-operator|,
+parameter_list|,
 name|f
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|buffer
-name|AND
+decl_stmt|;
 name|FILE
-operator|*
+modifier|*
 name|f
-argument_list|)
+decl_stmt|;
 block|{
 name|fwrite
 argument_list|(
@@ -470,23 +454,19 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|delete_string
-argument_list|,
-operator|(
+parameter_list|(
 name|buffer
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|buffer
-argument_list|)
+decl_stmt|;
 block|{
 name|free
 argument_list|(
@@ -496,30 +476,26 @@ name|ptr
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|char
 modifier|*
-name|DEFUN
-argument_list|(
 name|addr
-argument_list|,
-operator|(
+parameter_list|(
 name|buffer
-operator|,
+parameter_list|,
 name|idx
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|buffer
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|idx
-argument_list|)
+decl_stmt|;
 block|{
 return|return
 name|buffer
@@ -529,29 +505,25 @@ operator|+
 name|idx
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|char
-name|DEFUN
-argument_list|(
 name|at
-argument_list|,
-operator|(
+parameter_list|(
 name|buffer
-operator|,
+parameter_list|,
 name|pos
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|buffer
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|pos
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -573,28 +545,24 @@ name|pos
 index|]
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|catchar
-argument_list|,
-operator|(
+parameter_list|(
 name|buffer
-operator|,
+parameter_list|,
 name|ch
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|buffer
-name|AND
+decl_stmt|;
 name|int
 name|ch
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -642,29 +610,25 @@ operator|=
 name|ch
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|overwrite_string
-argument_list|,
-operator|(
+parameter_list|(
 name|dst
-operator|,
+parameter_list|,
 name|src
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|dst
-name|AND
+decl_stmt|;
 name|string_type
-operator|*
+modifier|*
 name|src
-argument_list|)
+decl_stmt|;
 block|{
 name|free
 argument_list|(
@@ -698,35 +662,31 @@ operator|->
 name|ptr
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|catbuf
-argument_list|,
-operator|(
+parameter_list|(
 name|buffer
-operator|,
+parameter_list|,
 name|buf
-operator|,
+parameter_list|,
 name|len
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|buffer
-name|AND
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|buf
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|len
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -797,29 +757,25 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|cattext
-argument_list|,
-operator|(
+parameter_list|(
 name|buffer
-operator|,
+parameter_list|,
 name|string
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|buffer
-name|AND
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|string
-argument_list|)
+decl_stmt|;
 block|{
 name|catbuf
 argument_list|(
@@ -838,29 +794,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|catstr
-argument_list|,
-operator|(
+parameter_list|(
 name|dst
-operator|,
+parameter_list|,
 name|src
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|dst
-name|AND
+decl_stmt|;
 name|string_type
-operator|*
+modifier|*
 name|src
-argument_list|)
+decl_stmt|;
 block|{
 name|catbuf
 argument_list|(
@@ -876,30 +828,26 @@ name|write_idx
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|unsigned
 name|int
-name|DEFUN
-argument_list|(
 name|skip_white_and_stars
-argument_list|,
-operator|(
+parameter_list|(
 name|src
-operator|,
+parameter_list|,
 name|idx
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|src
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|idx
-argument_list|)
+decl_stmt|;
 block|{
 name|char
 name|c
@@ -962,7 +910,7 @@ return|return
 name|idx
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/***********************************************************************/
@@ -1659,21 +1607,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|exec
-argument_list|,
-operator|(
+parameter_list|(
 name|word
-operator|)
-argument_list|,
+parameter_list|)
 name|dict_type
-operator|*
+modifier|*
 name|word
-argument_list|)
+decl_stmt|;
 block|{
 name|pc
 operator|=
@@ -1693,7 +1637,7 @@ call|)
 argument_list|()
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_macro
 name|WORD
@@ -1908,27 +1852,23 @@ begin_comment
 comment|/* This function removes everything not inside comments starting on    the first char of the line from the  string, also when copying    comments, removes blank space and leading *'s.    Blank lines are turned into one blank line.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|remove_noncomments
-argument_list|,
-operator|(
+parameter_list|(
 name|src
-operator|,
+parameter_list|,
 name|dst
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|src
-name|AND
+decl_stmt|;
 name|string_type
-operator|*
+modifier|*
 name|dst
-argument_list|)
+decl_stmt|;
 block|{
 name|unsigned
 name|int
@@ -1946,7 +1886,7 @@ name|idx
 argument_list|)
 condition|)
 block|{
-comment|/* Now see if we have a comment at the start of the line */
+comment|/* Now see if we have a comment at the start of the line.  */
 if|if
 condition|(
 name|at
@@ -2009,7 +1949,7 @@ condition|)
 name|idx
 operator|++
 expr_stmt|;
-comment|/* Copy to the end of the line, or till the end of the 	       comment */
+comment|/* Copy to the end of the line, or till the end of the 	     comment.  */
 while|while
 condition|(
 name|at
@@ -2136,7 +2076,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 specifier|static
@@ -2179,9 +2119,9 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|paramstuff
+parameter_list|(
+name|void
 parameter_list|)
 block|{
 name|unsigned
@@ -2196,6 +2136,10 @@ name|unsigned
 name|int
 name|idx
 decl_stmt|;
+name|unsigned
+name|int
+name|len
+decl_stmt|;
 name|string_type
 name|out
 decl_stmt|;
@@ -2205,7 +2149,7 @@ operator|&
 name|out
 argument_list|)
 expr_stmt|;
-comment|/* make sure that it's not already param'd or proto'd */
+comment|/* Make sure that it's not already param'd or proto'd.  */
 if|if
 condition|(
 name|find
@@ -2242,7 +2186,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Find the open paren */
+comment|/* Find the open paren.  */
 for|for
 control|(
 name|openp
@@ -2273,7 +2217,7 @@ name|fname
 operator|=
 name|openp
 expr_stmt|;
-comment|/* Step back to the fname */
+comment|/* Step back to the fname.  */
 name|fname
 operator|--
 expr_stmt|;
@@ -2332,6 +2276,42 @@ expr_stmt|;
 name|fname
 operator|++
 expr_stmt|;
+comment|/* Output type, omitting trailing whitespace character(s), if          any.  */
+for|for
+control|(
+name|len
+operator|=
+name|fname
+init|;
+literal|0
+operator|<
+name|len
+condition|;
+name|len
+operator|--
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|isspace
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+name|at
+argument_list|(
+name|tos
+argument_list|,
+name|len
+operator|-
+literal|1
+argument_list|)
+argument_list|)
+condition|)
+break|break;
+block|}
 for|for
 control|(
 name|idx
@@ -2340,13 +2320,11 @@ literal|0
 init|;
 name|idx
 operator|<
-name|fname
+name|len
 condition|;
 name|idx
 operator|++
 control|)
-comment|/* Output type */
-block|{
 name|catchar
 argument_list|(
 operator|&
@@ -2360,7 +2338,6 @@ name|idx
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|cattext
 argument_list|(
 operator|&
@@ -2370,6 +2347,42 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* Insert a newline between type and fnname */
+comment|/* Output function name, omitting trailing whitespace          character(s), if any.  */
+for|for
+control|(
+name|len
+operator|=
+name|openp
+init|;
+literal|0
+operator|<
+name|len
+condition|;
+name|len
+operator|--
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|isspace
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+name|at
+argument_list|(
+name|tos
+argument_list|,
+name|len
+operator|-
+literal|1
+argument_list|)
+argument_list|)
+condition|)
+break|break;
+block|}
 for|for
 control|(
 name|idx
@@ -2378,13 +2391,11 @@ name|fname
 init|;
 name|idx
 operator|<
-name|openp
+name|len
 condition|;
 name|idx
 operator|++
 control|)
-comment|/* Output fnname */
-block|{
 name|catchar
 argument_list|(
 operator|&
@@ -2398,7 +2409,6 @@ name|idx
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|cattext
 argument_list|(
 operator|&
@@ -2407,8 +2417,12 @@ argument_list|,
 literal|" PARAMS ("
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|idx
+operator|=
+name|openp
+init|;
 name|at
 argument_list|(
 name|tos
@@ -2424,8 +2438,10 @@ name|idx
 argument_list|)
 operator|!=
 literal|';'
-condition|)
-block|{
+condition|;
+name|idx
+operator|++
+control|)
 name|catchar
 argument_list|(
 operator|&
@@ -2439,10 +2455,6 @@ name|idx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|idx
-operator|++
-expr_stmt|;
-block|}
 name|cattext
 argument_list|(
 operator|&
@@ -2626,7 +2638,7 @@ comment|/* turn everything not starting with a . into a comment */
 end_comment
 
 begin_endif
-unit|WORD(manglecomments) {     unsigned int idx = 0;     string_type out;     init_string(&out);          while (at(tos, idx))      { 	if (at(tos,idx) == '\n'&& at(tos,idx+1) =='*')  	{ 	    cattext(&out,"	/*"); 	    idx+=2; 	} 	else if (at(tos,idx) == '*'&& at(tos,idx+1) =='}')  	{ 	    cattext(&out,"*/"); 	    idx+=2; 	} 	else   	{ 	    catchar(&out, at(tos, idx)); 	    idx++; 	}     }       overwrite_string(tos,&out);          pc++;      }
+unit|WORD (manglecomments) {   unsigned int idx = 0;   string_type out;   init_string (&out);    while (at (tos, idx))     {       if (at (tos, idx) == '\n'&& at (tos, idx + 1) == '*') 	{ 	  cattext (&out, "	/*"); 	  idx += 2; 	}       else if (at (tos, idx) == '*'&& at (tos, idx + 1) == '}') 	{ 	  cattext (&out, "*/"); 	  idx += 2; 	}       else 	{ 	  catchar (&out, at (tos, idx)); 	  idx++; 	}     }    overwrite_string (tos,&out);    pc++; }
 endif|#
 directive|endif
 end_endif
@@ -2638,9 +2650,9 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|outputdots
+parameter_list|(
+name|void
 parameter_list|)
 block|{
 name|unsigned
@@ -2739,7 +2751,7 @@ argument_list|(
 operator|&
 name|out
 argument_list|,
-literal|" /*"
+literal|"/*"
 argument_list|)
 expr_stmt|;
 name|idx
@@ -2964,7 +2976,7 @@ argument_list|(
 operator|&
 name|out
 argument_list|,
-literal|" /*"
+literal|"/*"
 argument_list|)
 expr_stmt|;
 name|idx
@@ -3550,7 +3562,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* This qualifies as a<< startup */
+comment|/* This qualifies as a<< startup.  */
 name|idx
 operator|+=
 literal|2
@@ -3649,30 +3661,26 @@ block|}
 end_block
 
 begin_comment
-comment|/* A command is all upper case,and alone on a line */
+comment|/* A command is all upper case,and alone on a line.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
-name|DEFUN
-argument_list|(
 name|iscommand
-argument_list|,
-operator|(
+parameter_list|(
 name|ptr
-operator|,
+parameter_list|,
 name|idx
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|ptr
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|idx
-argument_list|)
+decl_stmt|;
 block|{
 name|unsigned
 name|int
@@ -3767,35 +3775,31 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
-name|DEFUN
-argument_list|(
 name|copy_past_newline
-argument_list|,
-operator|(
+parameter_list|(
 name|ptr
-operator|,
+parameter_list|,
 name|idx
-operator|,
+parameter_list|,
 name|dst
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|ptr
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|idx
-name|AND
+decl_stmt|;
 name|string_type
-operator|*
+modifier|*
 name|dst
-argument_list|)
+decl_stmt|;
 block|{
 name|int
 name|column
@@ -3833,7 +3837,7 @@ operator|==
 literal|'\t'
 condition|)
 block|{
-comment|/* Expand tabs.  Neither makeinfo nor TeX can cope well with 	       them.  */
+comment|/* Expand tabs.  Neither makeinfo nor TeX can cope well with 	     them.  */
 do|do
 name|catchar
 argument_list|(
@@ -3892,7 +3896,7 @@ return|return
 name|idx
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_macro
 name|WORD
@@ -3932,7 +3936,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* indent    Take the string at the top of the stack, do some prettying */
+comment|/* indent    Take the string at the top of the stack, do some prettying.  */
 end_comment
 
 begin_macro
@@ -3969,7 +3973,7 @@ operator|&
 name|out
 argument_list|)
 expr_stmt|;
-comment|/* Drop leading nl */
+comment|/* Drop leading nl.  */
 while|while
 condition|(
 name|at
@@ -3990,7 +3994,7 @@ name|c
 operator|=
 name|idx
 expr_stmt|;
-comment|/* If the first char is a '.' prepend a newline so that it is        recognized properly later.  */
+comment|/* If the first char is a '.' prepend a newline so that it is      recognized properly later.  */
 if|if
 condition|(
 name|at
@@ -4010,7 +4014,7 @@ argument_list|,
 literal|'\n'
 argument_list|)
 expr_stmt|;
-comment|/* Find the last char */
+comment|/* Find the last char.  */
 while|while
 condition|(
 name|at
@@ -4025,7 +4029,7 @@ name|idx
 operator|++
 expr_stmt|;
 block|}
-comment|/* find the last non white before the nl */
+comment|/* Find the last non white before the nl.  */
 name|idx
 operator|--
 expr_stmt|;
@@ -4053,7 +4057,7 @@ expr_stmt|;
 name|idx
 operator|++
 expr_stmt|;
-comment|/* Copy buffer upto last char, but blank lines before and after        dots don't count */
+comment|/* Copy buffer upto last char, but blank lines before and after      dots don't count.  */
 name|sl
 operator|=
 literal|1
@@ -4099,7 +4103,7 @@ operator|==
 literal|'.'
 condition|)
 block|{
-comment|/* Ignore two newlines before a dot*/
+comment|/* Ignore two newlines before a dot.  */
 name|c
 operator|++
 expr_stmt|;
@@ -4119,7 +4123,7 @@ operator|&&
 name|sl
 condition|)
 block|{
-comment|/* remember that this line started with a dot */
+comment|/* remember that this line started with a dot.  */
 name|dot
 operator|=
 literal|2
@@ -4154,7 +4158,7 @@ block|{
 name|c
 operator|++
 expr_stmt|;
-comment|/* Ignore two newlines when last line was dot */
+comment|/* Ignore two newlines when last line was dot.  */
 block|}
 name|catchar
 argument_list|(
@@ -4210,7 +4214,7 @@ name|c
 operator|++
 expr_stmt|;
 block|}
-comment|/* Append nl*/
+comment|/* Append nl.  */
 name|catchar
 argument_list|(
 operator|&
@@ -4752,28 +4756,24 @@ expr_stmt|;
 block|}
 end_block
 
-begin_decl_stmt
+begin_function
 name|char
 modifier|*
-name|DEFUN
-argument_list|(
 name|nextword
-argument_list|,
-operator|(
+parameter_list|(
 name|string
-operator|,
+parameter_list|,
 name|word
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|string
-name|AND
+decl_stmt|;
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|word
-argument_list|)
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -5049,7 +5049,7 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|dict_type
@@ -5058,21 +5058,17 @@ name|root
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 name|dict_type
 modifier|*
-name|DEFUN
-argument_list|(
 name|lookup_word
-argument_list|,
-operator|(
+parameter_list|(
 name|word
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|word
-argument_list|)
+decl_stmt|;
 block|{
 name|dict_type
 modifier|*
@@ -5125,14 +5121,14 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 specifier|static
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|perform
+parameter_list|(
+name|void
 parameter_list|)
 block|{
 name|tos
@@ -5149,7 +5145,7 @@ name|idx
 argument_list|)
 condition|)
 block|{
-comment|/* It's worth looking through the command list */
+comment|/* It's worth looking through the command list.  */
 if|if
 condition|(
 name|iscommand
@@ -5230,21 +5226,17 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|dict_type
 modifier|*
-name|DEFUN
-argument_list|(
 name|newentry
-argument_list|,
-operator|(
+parameter_list|(
 name|word
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|word
-argument_list|)
+decl_stmt|;
 block|{
 name|dict_type
 modifier|*
@@ -5310,28 +5302,24 @@ return|return
 name|new
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 name|unsigned
 name|int
-name|DEFUN
-argument_list|(
 name|add_to_definition
-argument_list|,
-operator|(
+parameter_list|(
 name|entry
-operator|,
+parameter_list|,
 name|word
-operator|)
-argument_list|,
+parameter_list|)
 name|dict_type
-operator|*
+modifier|*
 name|entry
-name|AND
+decl_stmt|;
 name|stinst_type
 name|word
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -5399,31 +5387,33 @@ name|code_end
 operator|++
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|void
-name|DEFUN
-argument_list|(
 name|add_intrinsic
-argument_list|,
-operator|(
-name|name
-operator|,
-name|func
-operator|)
-argument_list|,
-name|char
-operator|*
-name|name
-name|AND
-name|void
 argument_list|(
-operator|*
+name|name
+argument_list|,
 name|func
 argument_list|)
-argument_list|()
-argument_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|func
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_block
 block|{
 name|dict_type
 modifier|*
@@ -5449,22 +5439,18 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_block
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|add_var
-argument_list|,
-operator|(
+parameter_list|(
 name|name
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|name
-argument_list|)
+decl_stmt|;
 block|{
 name|dict_type
 modifier|*
@@ -5507,24 +5493,20 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|compile
-argument_list|,
-operator|(
+parameter_list|(
 name|string
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|string
-argument_list|)
+decl_stmt|;
 block|{
-comment|/* add words to the dictionary */
+comment|/* Add words to the dictionary.  */
 name|char
 modifier|*
 name|word
@@ -5605,7 +5587,7 @@ name|dict_type
 modifier|*
 name|ptr
 decl_stmt|;
-comment|/* Compile a word and add to dictionary */
+comment|/* Compile a word and add to dictionary.  */
 name|string
 operator|=
 name|nextword
@@ -5654,7 +5636,7 @@ block|{
 case|case
 literal|'"'
 case|:
-comment|/* got a string, embed magic push string 			function */
+comment|/* got a string, embed magic push string 		     function */
 name|add_to_definition
 argument_list|(
 name|ptr
@@ -5707,7 +5689,7 @@ case|:
 case|case
 literal|'9'
 case|:
-comment|/* Got a number, embedd the magic push number 			function */
+comment|/* Got a number, embedd the magic push number 		     function */
 name|add_to_definition
 argument_list|(
 name|ptr
@@ -5796,14 +5778,14 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 specifier|static
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|bang
+parameter_list|(
+name|void
 parameter_list|)
 block|{
 operator|*
@@ -6010,27 +5992,23 @@ expr_stmt|;
 block|}
 end_block
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|read_in
-argument_list|,
-operator|(
+parameter_list|(
 name|str
-operator|,
+parameter_list|,
 name|file
-operator|)
-argument_list|,
+parameter_list|)
 name|string_type
-operator|*
+modifier|*
 name|str
-name|AND
+decl_stmt|;
 name|FILE
-operator|*
+modifier|*
 name|file
-argument_list|)
+decl_stmt|;
 block|{
 name|char
 name|buff
@@ -6092,14 +6070,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 specifier|static
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|usage
+parameter_list|(
+name|void
 parameter_list|)
 block|{
 name|fprintf
@@ -6135,26 +6113,22 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|int
-name|DEFUN
-argument_list|(
-expr|main
-argument_list|,
-operator|(
+name|main
+parameter_list|(
 name|ac
-operator|,
+parameter_list|,
 name|av
-operator|)
-argument_list|,
+parameter_list|)
 name|int
 name|ac
-name|AND
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|av
 index|[]
-argument_list|)
+decl_stmt|;
 block|{
 name|unsigned
 name|int
@@ -6401,7 +6375,7 @@ argument_list|,
 name|strip_trailing_newlines
 argument_list|)
 expr_stmt|;
-comment|/* Put a nl at the start */
+comment|/* Put a nl at the start.  */
 name|catchar
 argument_list|(
 operator|&
@@ -6619,7 +6593,7 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 

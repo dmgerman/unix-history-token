@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* DWARF 2 support.    Copyright 1994, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.     Adapted from gdb/dwarf2read.c by Gavin Koch of Cygnus Solutions    (gavin@cygnus.com).     From the dwarf2read.c header:    Adapted by Gary Funck (gary@intrepid.com), Intrepid Technology,    Inc.  with support from Florida State University (under contract    with the Ada Joint Program Office), and Silicon Graphics, Inc.    Initial contribution by Brent Benson, Harris Computer Systems, Inc.,    based on Fred Fish's (Cygnus Support) implementation of DWARF 1    support in dwarfread.c  This file is part of BFD.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* DWARF 2 support.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     Adapted from gdb/dwarf2read.c by Gavin Koch of Cygnus Solutions    (gavin@cygnus.com).     From the dwarf2read.c header:    Adapted by Gary Funck (gary@intrepid.com), Intrepid Technology,    Inc.  with support from Florida State University (under contract    with the Ada Joint Program Office), and Silicon Graphics, Inc.    Initial contribution by Brent Benson, Harris Computer Systems, Inc.,    based on Fred Fish's (Cygnus Support) implementation of DWARF 1    support in dwarfread.c  This file is part of BFD.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -88,7 +88,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Attributes have a name and a value */
+comment|/* Attributes have a name and a value.  */
 end_comment
 
 begin_struct
@@ -132,7 +132,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Get at parts of an attribute structure */
+comment|/* Get at parts of an attribute structure.  */
 end_comment
 
 begin_define
@@ -186,7 +186,7 @@ value|((attr)->u.addr)
 end_define
 
 begin_comment
-comment|/* Blocks are a bunch of untyped bytes. */
+comment|/* Blocks are a bunch of untyped bytes.  */
 end_comment
 
 begin_struct
@@ -209,28 +209,28 @@ begin_struct
 struct|struct
 name|dwarf2_debug
 block|{
-comment|/* A list of all previously read comp_units. */
+comment|/* A list of all previously read comp_units.  */
 name|struct
 name|comp_unit
 modifier|*
 name|all_comp_units
 decl_stmt|;
-comment|/* The next unread compilation unit within the .debug_info section.      Zero indicates that the .debug_info section has not been loaded      into a buffer yet.*/
+comment|/* The next unread compilation unit within the .debug_info section.      Zero indicates that the .debug_info section has not been loaded      into a buffer yet.  */
 name|char
 modifier|*
 name|info_ptr
 decl_stmt|;
-comment|/* Pointer to the end of the .debug_info section memory buffer. */
+comment|/* Pointer to the end of the .debug_info section memory buffer.  */
 name|char
 modifier|*
 name|info_ptr_end
 decl_stmt|;
-comment|/* Pointer to the .debug_abbrev section loaded into memory. */
+comment|/* Pointer to the .debug_abbrev section loaded into memory.  */
 name|char
 modifier|*
 name|dwarf_abbrev_buffer
 decl_stmt|;
-comment|/* Length of the loaded .debug_abbrev section. */
+comment|/* Length of the loaded .debug_abbrev section.  */
 name|unsigned
 name|long
 name|dwarf_abbrev_size
@@ -239,6 +239,11 @@ comment|/* Buffer for decode_line_info.  */
 name|char
 modifier|*
 name|dwarf_line_buffer
+decl_stmt|;
+comment|/* Length of the loaded .debug_line section.  */
+name|unsigned
+name|long
+name|dwarf_line_size
 decl_stmt|;
 block|}
 struct|;
@@ -264,82 +269,82 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* A minimal decoding of DWARF2 compilation units.  We only decode    what's needed to get to the line number information. */
+comment|/* A minimal decoding of DWARF2 compilation units.  We only decode    what's needed to get to the line number information.  */
 end_comment
 
 begin_struct
 struct|struct
 name|comp_unit
 block|{
-comment|/* Chain the previously read compilation units. */
+comment|/* Chain the previously read compilation units.  */
 name|struct
 name|comp_unit
 modifier|*
 name|next_unit
 decl_stmt|;
-comment|/* Keep the bdf convenient (for memory allocation). */
+comment|/* Keep the bdf convenient (for memory allocation).  */
 name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-comment|/* The lowest and higest addresses contained in this compilation      unit as specified in the compilation unit header. */
+comment|/* The lowest and higest addresses contained in this compilation      unit as specified in the compilation unit header.  */
 name|struct
 name|arange
 name|arange
 decl_stmt|;
-comment|/* The DW_AT_name attribute (for error messages). */
+comment|/* The DW_AT_name attribute (for error messages).  */
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* The abbrev hash table. */
+comment|/* The abbrev hash table.  */
 name|struct
 name|abbrev_info
 modifier|*
 modifier|*
 name|abbrevs
 decl_stmt|;
-comment|/* Note that an error was found by comp_unit_find_nearest_line. */
+comment|/* Note that an error was found by comp_unit_find_nearest_line.  */
 name|int
 name|error
 decl_stmt|;
-comment|/* The DW_AT_comp_dir attribute */
+comment|/* The DW_AT_comp_dir attribute.  */
 name|char
 modifier|*
 name|comp_dir
 decl_stmt|;
-comment|/* True if there is a line number table associated with this comp. unit. */
+comment|/* True if there is a line number table associated with this comp. unit.  */
 name|int
 name|stmtlist
 decl_stmt|;
-comment|/* The offset into .debug_line of the line number table. */
+comment|/* The offset into .debug_line of the line number table.  */
 name|unsigned
 name|long
 name|line_offset
 decl_stmt|;
-comment|/* Pointer to the first child die for the comp unit. */
+comment|/* Pointer to the first child die for the comp unit.  */
 name|char
 modifier|*
 name|first_child_die_ptr
 decl_stmt|;
-comment|/* The end of the comp unit. */
+comment|/* The end of the comp unit.  */
 name|char
 modifier|*
 name|end_ptr
 decl_stmt|;
-comment|/* The decoded line number, NULL if not yet decoded. */
+comment|/* The decoded line number, NULL if not yet decoded.  */
 name|struct
 name|line_info_table
 modifier|*
 name|line_table
 decl_stmt|;
-comment|/* A list of the functions found in this comp. unit. */
+comment|/* A list of the functions found in this comp. unit.  */
 name|struct
 name|funcinfo
 modifier|*
 name|function_table
 decl_stmt|;
-comment|/* Address size for this unit - from unit header */
+comment|/* Address size for this unit - from unit header.  */
 name|unsigned
 name|char
 name|addr_size
@@ -349,11 +354,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* VERBATIM     The following function up to the END VERBATIM mark are     copied directly from dwarf2read.c. */
+comment|/* VERBATIM    The following function up to the END VERBATIM mark are    copied directly from dwarf2read.c.  */
 end_comment
 
 begin_comment
-comment|/* read dwarf information from a buffer */
+comment|/* Read dwarf information from a buffer.  */
 end_comment
 
 begin_function
@@ -984,7 +989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This data structure holds the information of an abbrev. */
+comment|/* This data structure holds the information of an abbrev.  */
 end_comment
 
 begin_struct
@@ -995,33 +1000,33 @@ name|unsigned
 name|int
 name|number
 decl_stmt|;
-comment|/* number identifying abbrev */
+comment|/* Number identifying abbrev.  */
 name|enum
 name|dwarf_tag
 name|tag
 decl_stmt|;
-comment|/* dwarf tag */
+comment|/* DWARF tag.  */
 name|int
 name|has_children
 decl_stmt|;
-comment|/* boolean */
+comment|/* Boolean.  */
 name|unsigned
 name|int
 name|num_attrs
 decl_stmt|;
-comment|/* number of attributes */
+comment|/* Number of attributes.  */
 name|struct
 name|attr_abbrev
 modifier|*
 name|attrs
 decl_stmt|;
-comment|/* an array of attribute descriptions */
+comment|/* An array of attribute descriptions.  */
 name|struct
 name|abbrev_info
 modifier|*
 name|next
 decl_stmt|;
-comment|/* next in chain */
+comment|/* Next in chain.  */
 block|}
 struct|;
 end_struct
@@ -1171,6 +1176,8 @@ parameter_list|(
 name|abfd
 parameter_list|,
 name|offset
+parameter_list|,
+name|stash
 parameter_list|)
 name|bfd
 modifier|*
@@ -1179,6 +1186,11 @@ decl_stmt|;
 name|unsigned
 name|int
 name|offset
+decl_stmt|;
+name|struct
+name|dwarf2_debug
+modifier|*
+name|stash
 decl_stmt|;
 block|{
 name|struct
@@ -1210,20 +1222,6 @@ name|abbrev_form
 decl_stmt|,
 name|hash_number
 decl_stmt|;
-name|struct
-name|dwarf2_debug
-modifier|*
-name|stash
-decl_stmt|;
-name|stash
-operator|=
-name|elf_tdata
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|dwarf2_find_line_info
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1333,7 +1331,7 @@ block|}
 if|if
 condition|(
 name|offset
-operator|>
+operator|>=
 name|stash
 operator|->
 name|dwarf_abbrev_size
@@ -1346,7 +1344,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"Dwarf Error: Abbrev offset (%u) bigger than abbrev size (%u)."
+literal|"Dwarf Error: Abbrev offset (%u) greater than or equal to abbrev size (%u)."
 argument_list|)
 argument_list|,
 name|offset
@@ -1411,7 +1409,7 @@ name|abbrev_ptr
 operator|+=
 name|bytes_read
 expr_stmt|;
-comment|/* loop until we reach an abbrev number of 0 */
+comment|/* Loop until we reach an abbrev number of 0.  */
 while|while
 condition|(
 name|abbrev_number
@@ -1435,7 +1433,7 @@ name|abbrev_info
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* read in abbrev header */
+comment|/* Read in abbrev header.  */
 name|cur_abbrev
 operator|->
 name|number
@@ -1475,7 +1473,7 @@ name|abbrev_ptr
 operator|+=
 literal|1
 expr_stmt|;
-comment|/* now read in declarations */
+comment|/* Now read in declarations.  */
 name|abbrev_name
 operator|=
 name|read_unsigned_leb128
@@ -2377,7 +2375,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Source line information table routines. */
+comment|/* Source line information table routines.  */
 end_comment
 
 begin_define
@@ -2421,7 +2419,7 @@ decl_stmt|;
 name|int
 name|end_sequence
 decl_stmt|;
-comment|/* end of (sequential) code sequence */
+comment|/* End of (sequential) code sequence.  */
 block|}
 struct|;
 end_struct
@@ -2665,10 +2663,10 @@ name|name
 expr_stmt|;
 if|if
 condition|(
-operator|*
+name|IS_ABSOLUTE_PATH
+argument_list|(
 name|filename
-operator|==
-literal|'/'
+argument_list|)
 condition|)
 return|return
 name|filename
@@ -2762,7 +2760,7 @@ name|arange
 modifier|*
 name|arange
 decl_stmt|;
-comment|/* first see if we can cheaply extend an existing range: */
+comment|/* First see if we can cheaply extend an existing range.  */
 name|arange
 operator|=
 operator|&
@@ -2829,7 +2827,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* this is the first address range: store it in unit->arange: */
+comment|/* This is the first address range: store it in unit->arange.  */
 name|unit
 operator|->
 name|arange
@@ -2856,7 +2854,7 @@ name|high_pc
 expr_stmt|;
 return|return;
 block|}
-comment|/* need to allocate a new arange and insert it into the arange list: */
+comment|/* Need to allocate a new arange and insert it into the arange list.  */
 name|arange
 operator|=
 name|bfd_zalloc
@@ -2906,7 +2904,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Decode the line number information for UNIT. */
+comment|/* Decode the line number information for UNIT.  */
 end_comment
 
 begin_function
@@ -2917,11 +2915,18 @@ modifier|*
 name|decode_line_info
 parameter_list|(
 name|unit
+parameter_list|,
+name|stash
 parameter_list|)
 name|struct
 name|comp_unit
 modifier|*
 name|unit
+decl_stmt|;
+name|struct
+name|dwarf2_debug
+modifier|*
+name|stash
 decl_stmt|;
 block|{
 name|bfd
@@ -2931,11 +2936,6 @@ init|=
 name|unit
 operator|->
 name|abfd
-decl_stmt|;
-name|struct
-name|dwarf2_debug
-modifier|*
-name|stash
 decl_stmt|;
 name|struct
 name|line_info_table
@@ -2975,15 +2975,6 @@ name|extended_op
 decl_stmt|,
 name|adj_opcode
 decl_stmt|;
-name|stash
-operator|=
-name|elf_tdata
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|dwarf2_find_line_info
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2995,10 +2986,6 @@ block|{
 name|asection
 modifier|*
 name|msec
-decl_stmt|;
-name|unsigned
-name|long
-name|size
 decl_stmt|;
 name|msec
 operator|=
@@ -3035,7 +3022,9 @@ return|return
 literal|0
 return|;
 block|}
-name|size
+name|stash
+operator|->
+name|dwarf_line_size
 operator|=
 name|msec
 operator|->
@@ -3053,7 +3042,9 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-name|size
+name|stash
+operator|->
+name|dwarf_line_size
 argument_list|)
 expr_stmt|;
 if|if
@@ -3081,13 +3072,55 @@ name|dwarf_line_buffer
 argument_list|,
 literal|0
 argument_list|,
-name|size
+name|stash
+operator|->
+name|dwarf_line_size
 argument_list|)
 condition|)
 return|return
 literal|0
 return|;
-comment|/* FIXME: We ought to apply the relocs against this section before 	 we process it.... */
+comment|/* FIXME: We ought to apply the relocs against this section before 	 we process it...  */
+block|}
+comment|/* Since we are using un-relocated data, it is possible to get a bad value      for the line_offset.  Validate it here so that we won't get a segfault      below.  */
+if|if
+condition|(
+name|unit
+operator|->
+name|line_offset
+operator|>=
+name|stash
+operator|->
+name|dwarf_line_size
+condition|)
+block|{
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
+argument_list|(
+name|_
+argument_list|(
+literal|"Dwarf Error: Line offset (%u) greater than or equal to line size (%u)."
+argument_list|)
+argument_list|,
+name|unit
+operator|->
+name|line_offset
+argument_list|,
+name|stash
+operator|->
+name|dwarf_line_size
+argument_list|)
+expr_stmt|;
+name|bfd_set_error
+argument_list|(
+name|bfd_error_bad_value
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 name|table
 operator|=
@@ -3167,7 +3200,7 @@ name|unit
 operator|->
 name|line_offset
 expr_stmt|;
-comment|/* read in the prologue */
+comment|/* Read in the prologue.  */
 name|lh
 operator|.
 name|total_length
@@ -3364,7 +3397,7 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Read directory table  */
+comment|/* Read directory table.  */
 while|while
 condition|(
 operator|(
@@ -3459,7 +3492,7 @@ name|line_ptr
 operator|+=
 name|bytes_read
 expr_stmt|;
-comment|/* Read file name table */
+comment|/* Read file name table.  */
 while|while
 condition|(
 operator|(
@@ -3643,7 +3676,7 @@ operator|<
 name|line_end
 condition|)
 block|{
-comment|/* state machine registers  */
+comment|/* State machine registers.  */
 name|bfd_vma
 name|address
 init|=
@@ -3698,7 +3731,7 @@ name|low_pc
 init|=
 literal|0
 decl_stmt|;
-comment|/* Decode the table. */
+comment|/* Decode the table.  */
 while|while
 condition|(
 operator|!
@@ -3730,7 +3763,7 @@ name|line_ptr
 operator|+=
 literal|1
 expr_stmt|;
-comment|/* ignore length */
+comment|/* Ignore length.  */
 name|extended_op
 operator|=
 name|read_1_byte
@@ -4201,7 +4234,7 @@ literal|2
 expr_stmt|;
 break|break;
 default|default:
-comment|/* special operand */
+comment|/* Special operand.  */
 name|adj_opcode
 operator|=
 name|op_code
@@ -4238,7 +4271,7 @@ operator|.
 name|line_range
 operator|)
 expr_stmt|;
-comment|/* append row to matrix using current values */
+comment|/* Append row to matrix using current values.  */
 name|add_line_info
 argument_list|(
 name|table
@@ -4282,7 +4315,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* If ADDR is within TABLE set the output parameters and return true,    otherwise return false.  The output parameters, FILENAME_PTR and    LINENUMBER_PTR, are pointers to the objects to be filled in. */
+comment|/* If ADDR is within TABLE set the output parameters and return true,    otherwise return false.  The output parameters, FILENAME_PTR and    LINENUMBER_PTR, are pointers to the objects to be filled in.  */
 end_comment
 
 begin_function
@@ -4409,7 +4442,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function table functions. */
+comment|/* Function table functions.  */
 end_comment
 
 begin_struct
@@ -4436,7 +4469,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* If ADDR is within TABLE, set FUNCTIONNAME_PTR, and return true. */
+comment|/* If ADDR is within TABLE, set FUNCTIONNAME_PTR, and return true.  */
 end_comment
 
 begin_function
@@ -4519,11 +4552,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* DWARF2 Compilation unit functions. */
+comment|/* DWARF2 Compilation unit functions.  */
 end_comment
 
 begin_comment
-comment|/* Scan over each die in a comp. unit looking for functions to add    to the function table. */
+comment|/* Scan over each die in a comp. unit looking for functions to add    to the function table.  */
 end_comment
 
 begin_function
@@ -4886,9 +4919,9 @@ name|parse_comp_unit
 parameter_list|(
 name|abfd
 parameter_list|,
-name|info_ptr
+name|stash
 parameter_list|,
-name|end_ptr
+name|unit_length
 parameter_list|,
 name|abbrev_length
 parameter_list|)
@@ -4896,13 +4929,13 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-name|char
+name|struct
+name|dwarf2_debug
 modifier|*
-name|info_ptr
+name|stash
 decl_stmt|;
-name|char
-modifier|*
-name|end_ptr
+name|bfd_vma
+name|unit_length
 decl_stmt|;
 name|unsigned
 name|int
@@ -4950,6 +4983,22 @@ decl_stmt|;
 name|struct
 name|attribute
 name|attr
+decl_stmt|;
+name|char
+modifier|*
+name|info_ptr
+init|=
+name|stash
+operator|->
+name|info_ptr
+decl_stmt|;
+name|char
+modifier|*
+name|end_ptr
+init|=
+name|info_ptr
+operator|+
+name|unit_length
 decl_stmt|;
 name|version
 operator|=
@@ -5131,7 +5180,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Read the abbrevs for this compilation unit into a table */
+comment|/* Read the abbrevs for this compilation unit into a table.  */
 name|abbrevs
 operator|=
 name|read_abbrevs
@@ -5139,6 +5188,8 @@ argument_list|(
 name|abfd
 argument_list|,
 name|abbrev_offset
+argument_list|,
+name|stash
 argument_list|)
 expr_stmt|;
 if|if
@@ -5472,7 +5523,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if UNIT contains the address given by ADDR. */
+comment|/* Return true if UNIT contains the address given by ADDR.  */
 end_comment
 
 begin_function
@@ -5552,7 +5603,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* If UNIT contains ADDR, set the output parameters to the values for    the line containing ADDR.  The output parameters, FILENAME_PTR,    FUNCTIONNAME_PTR, and LINENUMBER_PTR, are pointers to the objects    to be filled in.       Return true of UNIT contains ADDR, and no errors were encountered;    false otherwise.  */
+comment|/* If UNIT contains ADDR, set the output parameters to the values for    the line containing ADDR.  The output parameters, FILENAME_PTR,    FUNCTIONNAME_PTR, and LINENUMBER_PTR, are pointers to the objects    to be filled in.     Return true of UNIT contains ADDR, and no errors were encountered;    false otherwise.  */
 end_comment
 
 begin_function
@@ -5569,6 +5620,8 @@ parameter_list|,
 name|functionname_ptr
 parameter_list|,
 name|linenumber_ptr
+parameter_list|,
+name|stash
 parameter_list|)
 name|struct
 name|comp_unit
@@ -5594,6 +5647,11 @@ name|unsigned
 name|int
 modifier|*
 name|linenumber_ptr
+decl_stmt|;
+name|struct
+name|dwarf2_debug
+modifier|*
+name|stash
 decl_stmt|;
 block|{
 name|boolean
@@ -5644,6 +5702,8 @@ operator|=
 name|decode_line_info
 argument_list|(
 name|unit
+argument_list|,
+name|stash
 argument_list|)
 expr_stmt|;
 if|if
@@ -5721,6 +5781,119 @@ block|}
 end_function
 
 begin_comment
+comment|/* Locate a section in a BFD containing debugging info.  The search starts from the    section after AFTER_SEC, or from the first section in the BFD if AFTER_SEC is    NULL.  The search works by examining the names of the sections.  There are two    permissiable names.  The first is .debug_info.  This is the standard DWARF2 name.    The second is a prefix .gnu.linkonce.wi.  This is a variation on the .debug_info    section which has a checksum describing the contents appended onto the name.  This    allows the linker to identify and discard duplicate debugging sections for    different compilation units.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_DEBUG_INFO
+value|".debug_info"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GNU_LINKONCE_INFO
+value|".gnu.linkonce.wi."
+end_define
+
+begin_function
+specifier|static
+name|asection
+modifier|*
+name|find_debug_info
+parameter_list|(
+name|abfd
+parameter_list|,
+name|after_sec
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|asection
+modifier|*
+name|after_sec
+decl_stmt|;
+block|{
+name|asection
+modifier|*
+name|msec
+decl_stmt|;
+if|if
+condition|(
+name|after_sec
+condition|)
+name|msec
+operator|=
+name|after_sec
+operator|->
+name|next
+expr_stmt|;
+else|else
+name|msec
+operator|=
+name|abfd
+operator|->
+name|sections
+expr_stmt|;
+while|while
+condition|(
+name|msec
+condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|msec
+operator|->
+name|name
+argument_list|,
+name|DWARF2_DEBUG_INFO
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|msec
+return|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|msec
+operator|->
+name|name
+argument_list|,
+name|GNU_LINKONCE_INFO
+argument_list|,
+name|strlen
+argument_list|(
+name|GNU_LINKONCE_INFO
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|msec
+return|;
+name|msec
+operator|=
+name|msec
+operator|->
+name|next
+expr_stmt|;
+block|}
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* The DWARF2 version of find_nearest line.  Return true if the line    is found without error.  ADDR_SIZE is the number of bytes in the    initial .debug_info length field and in the abbreviation offset.    You may use zero to indicate that the default value should be    used.  */
 end_comment
 
@@ -5743,6 +5916,8 @@ parameter_list|,
 name|linenumber_ptr
 parameter_list|,
 name|addr_size
+parameter_list|,
+name|pinfo
 parameter_list|)
 name|bfd
 modifier|*
@@ -5782,21 +5957,26 @@ name|unsigned
 name|int
 name|addr_size
 decl_stmt|;
+name|PTR
+modifier|*
+name|pinfo
+decl_stmt|;
 block|{
-comment|/* Read each compilation unit from the section .debug_info, and check      to see if it contains the address we are searching for.  If yes,      lookup the address, and return the line number info.  If no, go      on to the next compilation unit.         We keep a list of all the previously read compilation units, and      a pointer to the next un-read compilation unit.  Check the       previously read units before reading more.      */
+comment|/* Read each compilation unit from the section .debug_info, and check      to see if it contains the address we are searching for.  If yes,      lookup the address, and return the line number info.  If no, go      on to the next compilation unit.       We keep a list of all the previously read compilation units, and      a pointer to the next un-read compilation unit.  Check the      previously read units before reading more.  */
 name|struct
 name|dwarf2_debug
 modifier|*
 name|stash
 init|=
-name|elf_tdata
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|dwarf2_find_line_info
+operator|(
+expr|struct
+name|dwarf2_debug
+operator|*
+operator|)
+operator|*
+name|pinfo
 decl_stmt|;
-comment|/* What address are we looking for? */
+comment|/* What address are we looking for?  */
 name|bfd_vma
 name|addr
 init|=
@@ -5854,22 +6034,15 @@ operator|!
 name|stash
 condition|)
 block|{
+name|unsigned
+name|long
+name|total_size
+decl_stmt|;
 name|asection
 modifier|*
 name|msec
 decl_stmt|;
-name|unsigned
-name|long
-name|size
-decl_stmt|;
 name|stash
-operator|=
-name|elf_tdata
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|dwarf2_find_line_info
 operator|=
 operator|(
 expr|struct
@@ -5895,13 +6068,21 @@ condition|)
 return|return
 name|false
 return|;
+operator|*
+name|pinfo
+operator|=
+operator|(
+name|PTR
+operator|)
+name|stash
+expr_stmt|;
 name|msec
 operator|=
-name|bfd_get_section_by_name
+name|find_debug_info
 argument_list|(
 name|abfd
 argument_list|,
-literal|".debug_info"
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -5909,27 +6090,34 @@ condition|(
 operator|!
 name|msec
 condition|)
-block|{
-comment|/* No dwarf2 info.  Note that at this point the stash 	     has been allocated, but contains zeros, this lets 	     future calls to this function fail quicker. */
+comment|/* No dwarf2 info.  Note that at this point the stash 	   has been allocated, but contains zeros, this lets 	   future calls to this function fail quicker.  */
 return|return
 name|false
 return|;
-block|}
-name|size
+comment|/* There can be more than one DWARF2 info section in a BFD these days.          Read them all in and produce one large stash.  We do this in two 	 passes - in the first pass we just accumulate the section sizes. 	 In the second pass we read in the section's contents.  The allows 	 us to avoid reallocing the data as we add sections to the stash.  */
+for|for
+control|(
+name|total_size
 operator|=
+literal|0
+init|;
+name|msec
+condition|;
+name|msec
+operator|=
+name|find_debug_info
+argument_list|(
+name|abfd
+argument_list|,
+name|msec
+argument_list|)
+control|)
+name|total_size
+operator|+=
 name|msec
 operator|->
 name|_raw_size
 expr_stmt|;
-if|if
-condition|(
-name|size
-operator|==
-literal|0
-condition|)
-return|return
-name|false
-return|;
 name|stash
 operator|->
 name|info_ptr
@@ -5942,19 +6130,82 @@ name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-name|size
+name|total_size
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|stash
 operator|->
 name|info_ptr
+operator|==
+name|NULL
 condition|)
 return|return
 name|false
 return|;
+name|stash
+operator|->
+name|info_ptr_end
+operator|=
+name|stash
+operator|->
+name|info_ptr
+expr_stmt|;
+for|for
+control|(
+name|msec
+operator|=
+name|find_debug_info
+argument_list|(
+name|abfd
+argument_list|,
+name|NULL
+argument_list|)
+init|;
+name|msec
+condition|;
+name|msec
+operator|=
+name|find_debug_info
+argument_list|(
+name|abfd
+argument_list|,
+name|msec
+argument_list|)
+control|)
+block|{
+name|unsigned
+name|long
+name|size
+decl_stmt|;
+name|unsigned
+name|long
+name|start
+decl_stmt|;
+name|size
+operator|=
+name|msec
+operator|->
+name|_raw_size
+expr_stmt|;
+if|if
+condition|(
+name|size
+operator|==
+literal|0
+condition|)
+continue|continue;
+name|start
+operator|=
+name|stash
+operator|->
+name|info_ptr_end
+operator|-
+name|stash
+operator|->
+name|info_ptr
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -5967,23 +6218,15 @@ argument_list|,
 name|stash
 operator|->
 name|info_ptr
+operator|+
+name|start
 argument_list|,
 literal|0
 argument_list|,
 name|size
 argument_list|)
 condition|)
-block|{
-name|stash
-operator|->
-name|info_ptr
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|false
-return|;
-block|}
+continue|continue;
 name|stash
 operator|->
 name|info_ptr_end
@@ -5992,11 +6235,27 @@ name|stash
 operator|->
 name|info_ptr
 operator|+
+name|start
+operator|+
 name|size
 expr_stmt|;
-comment|/* FIXME: There is a problem with the contents of the 	 .debug_info section.  The 'low' and 'high' addresses of the 	 comp_units are computed by relocs against symbols in the 	 .text segment.  We need these addresses in order to determine 	 the nearest line number, and so we have to resolve the 	 relocs.  There is a similar problem when the .debug_line 	 section is processed as well (e.g., there may be relocs 	 against the operand of the DW_LNE_set_address operator). 	  	 Unfortunately getting hold of the reloc information is hard...  	 For now, this means that disassembling object files (as 	 opposed to fully executables) does not always work as well as 	 we would like.  */
 block|}
-comment|/* A null info_ptr indicates that there is no dwarf2 info       (or that an error occured while setting up the stash). */
+name|BFD_ASSERT
+argument_list|(
+name|stash
+operator|->
+name|info_ptr_end
+operator|=
+name|stash
+operator|->
+name|info_ptr
+operator|+
+name|total_size
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* FIXME: There is a problem with the contents of the      .debug_info section.  The 'low' and 'high' addresses of the      comp_units are computed by relocs against symbols in the      .text segment.  We need these addresses in order to determine      the nearest line number, and so we have to resolve the      relocs.  There is a similar problem when the .debug_line      section is processed as well (e.g., there may be relocs      against the operand of the DW_LNE_set_address operator).       Unfortunately getting hold of the reloc information is hard...       For now, this means that disassembling object files (as      opposed to fully executables) does not always work as well as      we would like.  */
+comment|/* A null info_ptr indicates that there is no dwarf2 info      (or that an error occured while setting up the stash).  */
 if|if
 condition|(
 operator|!
@@ -6007,7 +6266,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* Check the previously read comp. units first. */
+comment|/* Check the previously read comp. units first.  */
 for|for
 control|(
 name|each
@@ -6045,9 +6304,11 @@ argument_list|,
 name|functionname_ptr
 argument_list|,
 name|linenumber_ptr
+argument_list|,
+name|stash
 argument_list|)
 return|;
-comment|/* Read each remaining comp. units checking each as they are read. */
+comment|/* Read each remaining comp. units checking each as they are read.  */
 while|while
 condition|(
 name|stash
@@ -6119,13 +6380,7 @@ argument_list|(
 name|abfd
 argument_list|,
 name|stash
-operator|->
-name|info_ptr
 argument_list|,
-name|stash
-operator|->
-name|info_ptr
-operator|+
 name|length
 argument_list|,
 name|addr_size
@@ -6156,7 +6411,7 @@ name|all_comp_units
 operator|=
 name|each
 expr_stmt|;
-comment|/* DW_AT_low_pc and DW_AT_high_pc are optional for 		 compilation units.  If we don't have them (i.e., 		 unit->high == 0), we need to consult the line info 		 table to see if a compilation unit contains the given 		 address. */
+comment|/* DW_AT_low_pc and DW_AT_high_pc are optional for 		 compilation units.  If we don't have them (i.e., 		 unit->high == 0), we need to consult the line info 		 table to see if a compilation unit contains the given 		 address.  */
 if|if
 condition|(
 name|each
@@ -6189,6 +6444,8 @@ argument_list|,
 name|functionname_ptr
 argument_list|,
 name|linenumber_ptr
+argument_list|,
+name|stash
 argument_list|)
 return|;
 block|}
@@ -6207,6 +6464,8 @@ argument_list|,
 name|functionname_ptr
 argument_list|,
 name|linenumber_ptr
+argument_list|,
+name|stash
 argument_list|)
 expr_stmt|;
 if|if
@@ -6225,10 +6484,6 @@ name|false
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of file */
-end_comment
 
 end_unit
 

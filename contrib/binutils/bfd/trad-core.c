@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back end for traditional Unix core files (U-area and raw sections)    Copyright 1988, 89, 91, 92, 93, 94, 95, 96, 98, 99, 2000    Free Software Foundation, Inc.    Written by John Gilmore of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back end for traditional Unix core files (U-area and raw sections)    Copyright 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999,    2000    Free Software Foundation, Inc.    Written by John Gilmore of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -37,11 +37,78 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DIRENT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_NDIR_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ndir.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_DIR_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/dir.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NDIR_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ndir.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -321,7 +388,7 @@ name|u_dsize
 operator|>
 literal|0x1000000
 condition|)
-comment|/* Remember, it's in pages... */
+comment|/* Remember, it's in pages...  */
 block|{
 name|bfd_set_error
 argument_list|(
@@ -817,7 +884,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* This is tricky.  As the "register section", we give them the entire      upage and stack.  u.u_ar0 points to where "register 0" is stored.      There are two tricks with this, though.  One is that the rest of the      registers might be at positive or negative (or both) displacements      from *u_ar0.  The other is that u_ar0 is sometimes an absolute address      in kernel memory, and on other systems it is an offset from the beginning      of the `struct user'.            As a practical matter, we don't know where the registers actually are,      so we have to pass the whole area to GDB.  We encode the value of u_ar0      by setting the .regs section up so that its virtual memory address      0 is at the place pointed to by u_ar0 (by setting the vma of the start      of the section to -u_ar0).  GDB uses this info to locate the regs,      using minor trickery to get around the offset-or-absolute-addr problem. */
+comment|/* This is tricky.  As the "register section", we give them the entire      upage and stack.  u.u_ar0 points to where "register 0" is stored.      There are two tricks with this, though.  One is that the rest of the      registers might be at positive or negative (or both) displacements      from *u_ar0.  The other is that u_ar0 is sometimes an absolute address      in kernel memory, and on other systems it is an offset from the beginning      of the `struct user'.       As a practical matter, we don't know where the registers actually are,      so we have to pass the whole area to GDB.  We encode the value of u_ar0      by setting the .regs section up so that its virtual memory address      0 is at the place pointed to by u_ar0 (by setting the vma of the start      of the section to -u_ar0).  GDB uses this info to locate the regs,      using minor trickery to get around the offset-or-absolute-addr problem.  */
 name|core_regsec
 argument_list|(
 name|abfd

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ECOFF object file format.    Copyright (C) 1993, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ECOFF object file format.    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -73,6 +73,19 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ecoff_pop_insert
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ecoff_separate_stab_sections
 name|PARAMS
 argument_list|(
 operator|(
@@ -259,7 +272,7 @@ block|,
 ifndef|#
 directive|ifndef
 name|TC_MIPS
-comment|/* For TC_MIPS, tc-mips.c adds this. */
+comment|/* For TC_MIPS, tc-mips.c adds this.  */
 block|{
 literal|"weakext"
 block|,
@@ -298,6 +311,10 @@ block|,
 comment|/* Sentinel.  */
 block|{
 name|NULL
+block|,
+name|s_ignore
+block|,
+literal|0
 block|}
 block|}
 decl_stmt|;
@@ -387,7 +404,7 @@ decl_stmt|;
 define|#
 directive|define
 name|n_names
-value|(sizeof (names) / sizeof (names[0]))
+value|((int) (sizeof (names) / sizeof (names[0])))
 name|addr
 operator|=
 literal|0
@@ -1041,6 +1058,7 @@ parameter_list|)
 name|asection
 modifier|*
 name|sec
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
@@ -1065,6 +1083,7 @@ decl_stmt|;
 name|int
 modifier|*
 name|puntp
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|ecoff_frob_symbol
@@ -1089,6 +1108,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|ecoff_separate_stab_sections
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|const
 name|struct
@@ -1101,13 +1132,22 @@ block|,
 literal|0
 block|,
 comment|/* dfl_leading_underscore */
+comment|/* FIXME: A comment why emit_section_symbols is different here (1) from      the single-format definition (0) would be in order.  */
 literal|1
 block|,
 comment|/* emit_section_symbols */
+literal|0
+block|,
+comment|/* begin */
+name|ecoff_new_file
+block|,
 name|obj_ecoff_frob_symbol
 block|,
 name|ecoff_frob_file
 block|,
+literal|0
+block|,
+comment|/* frob_file_before_adjust */
 literal|0
 block|,
 comment|/* frob_file_after_relocs */
@@ -1128,7 +1168,19 @@ block|,
 comment|/* s_get_other */
 literal|0
 block|,
+comment|/* s_set_other */
+literal|0
+block|,
 comment|/* s_get_desc */
+literal|0
+block|,
+comment|/* s_set_desc */
+literal|0
+block|,
+comment|/* s_get_type */
+literal|0
+block|,
+comment|/* s_set_type */
 literal|0
 block|,
 comment|/* copy_symbol_attributes */
@@ -1136,6 +1188,11 @@ name|ecoff_generate_asm_lineno
 block|,
 name|ecoff_stab
 block|,
+name|ecoff_separate_stab_sections
+block|,
+literal|0
+block|,
+comment|/* init_stab_section */
 name|ecoff_sec_sym_ok_for_reloc
 block|,
 name|ecoff_pop_insert
@@ -1145,7 +1202,7 @@ block|,
 name|ecoff_read_begin_hook
 block|,
 name|ecoff_symbol_new_hook
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-alpha.c - Processor-specific code for the DEC Alpha AXP CPU.    Copyright (C) 1989, 93-98, 1999 Free Software Foundation, Inc.    Contributed by Carnegie Mellon University, 1993.    Written by Alessandro Forin, based on earlier gas-1.38 target CPU files.    Modified by Ken Raeburn for gas-2.x and ECOFF support.    Modified by Richard Henderson for ELF support.    Modified by Klaus K"ampf for EVAX (OpenVMS/Alpha) support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-alpha.c - Processor-specific code for the DEC Alpha AXP CPU.    Copyright 1989, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Carnegie Mellon University, 1993.    Written by Alessandro Forin, based on earlier gas-1.38 target CPU files.    Modified by Ken Raeburn for gas-2.x and ECOFF support.    Modified by Richard Henderson for ELF support.    Modified by Klaus K"ampf for EVAX (OpenVMS/Alpha) support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"elf/alpha.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dwarf2dbg.h"
 end_include
 
 begin_endif
@@ -210,7 +216,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Extra expression types. */
+comment|/* Extra expression types.  */
 end_comment
 
 begin_define
@@ -417,7 +423,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((offsetT)(x)>> 15) == 0 || ((offsetT)(x)>> 15) == -1)
+value|(((offsetT) (x)>> 15) == 0 || ((offsetT) (x)>> 15) == -1)
 end_define
 
 begin_define
@@ -428,7 +434,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((offsetT)(x)>> 31) == 0 || ((offsetT)(x)>> 31) == -1)
+value|(((offsetT) (x)>> 31) == 0 || ((offsetT) (x)>> 31) == -1)
 end_define
 
 begin_else
@@ -443,7 +449,7 @@ name|range_signed_16
 parameter_list|(
 name|x
 parameter_list|)
-value|((offsetT)(x)>= -(offsetT)0x8000&&	\ 				 (offsetT)(x)<=  (offsetT)0x7FFF)
+value|((offsetT) (x)>= -(offsetT) 0x8000&&	\ 				 (offsetT) (x)<=  (offsetT) 0x7FFF)
 end_define
 
 begin_define
@@ -453,7 +459,7 @@ name|range_signed_32
 parameter_list|(
 name|x
 parameter_list|)
-value|((offsetT)(x)>= -(offsetT)0x80000000&& \ 				 (offsetT)(x)<=  (offsetT)0x7FFFFFFF)
+value|((offsetT) (x)>= -(offsetT) 0x80000000&& \ 				 (offsetT) (x)<=  (offsetT) 0x7FFFFFFF)
 end_define
 
 begin_endif
@@ -482,7 +488,7 @@ name|sign_extend_16
 parameter_list|(
 name|x
 parameter_list|)
-value|((short)(x))
+value|((short) (x))
 end_define
 
 begin_define
@@ -492,7 +498,7 @@ name|sign_extend_32
 parameter_list|(
 name|x
 parameter_list|)
-value|((int)(x))
+value|((int) (x))
 end_define
 
 begin_else
@@ -507,7 +513,7 @@ name|sign_extend_16
 parameter_list|(
 name|x
 parameter_list|)
-value|((offsetT)(((x)& 0xFFFF) ^ 0x8000) - 0x8000)
+value|((offsetT) (((x)& 0xFFFF) ^ 0x8000) - 0x8000)
 end_define
 
 begin_define
@@ -517,7 +523,7 @@ name|sign_extend_32
 parameter_list|(
 name|x
 parameter_list|)
-value|((offsetT)(((x)& 0xFFFFFFFF) \ 					   ^ 0x80000000) - 0x80000000)
+value|((offsetT) (((x)& 0xFFFFFFFF) \ 					   ^ 0x80000000) - 0x80000000)
 end_define
 
 begin_endif
@@ -538,7 +544,7 @@ name|t
 parameter_list|,
 name|r
 parameter_list|)
-value|(memset(&(t), 0, sizeof(t)),		\ 				 (t).X_op = O_register,			\ 				 (t).X_add_number = (r))
+value|(memset (&(t), 0, sizeof (t)),		\ 				 (t).X_op = O_register,			\ 				 (t).X_add_number = (r))
 end_define
 
 begin_define
@@ -550,7 +556,7 @@ name|t
 parameter_list|,
 name|r
 parameter_list|)
-value|(memset(&(t), 0, sizeof(t)),		\ 				 (t).X_op = O_pregister,		\ 				 (t).X_add_number = (r))
+value|(memset (&(t), 0, sizeof (t)),		\ 				 (t).X_op = O_pregister,		\ 				 (t).X_add_number = (r))
 end_define
 
 begin_define
@@ -562,7 +568,7 @@ name|t
 parameter_list|,
 name|r
 parameter_list|)
-value|(memset(&(t), 0, sizeof(t)),		\ 				 (t).X_op = O_cpregister,		\ 				 (t).X_add_number = (r))
+value|(memset (&(t), 0, sizeof (t)),		\ 				 (t).X_op = O_cpregister,		\ 				 (t).X_add_number = (r))
 end_define
 
 begin_define
@@ -574,7 +580,7 @@ name|t
 parameter_list|,
 name|r
 parameter_list|)
-value|(memset(&(t), 0, sizeof(t)),		\ 				 (t).X_op = O_register,			\ 				 (t).X_add_number = (r)+32)
+value|(memset (&(t), 0, sizeof (t)),		\ 				 (t).X_op = O_register,			\ 				 (t).X_add_number = (r) + 32)
 end_define
 
 begin_define
@@ -588,7 +594,7 @@ name|s
 parameter_list|,
 name|a
 parameter_list|)
-value|(memset(&(t), 0, sizeof(t)),		\ 				 (t).X_op = O_symbol,			\ 				 (t).X_add_symbol = (s),		\ 				 (t).X_add_number = (a))
+value|(memset (&(t), 0, sizeof (t)),		\ 				 (t).X_op = O_symbol,			\ 				 (t).X_add_symbol = (s),		\ 				 (t).X_add_number = (a))
 end_define
 
 begin_define
@@ -600,7 +606,7 @@ name|t
 parameter_list|,
 name|n
 parameter_list|)
-value|(memset(&(t), 0, sizeof(t)),		\ 				 (t).X_op = O_constant,			\ 				 (t).X_add_number = (n))
+value|(memset (&(t), 0, sizeof (t)),		\ 				 (t).X_op = O_constant,			\ 				 (t).X_add_number = (n))
 end_define
 
 begin_escape
@@ -1319,6 +1325,45 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|s_alpha_file
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|s_alpha_loc
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|s_alpha_stab
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|s_alpha_coff_wrapper
 name|PARAMS
 argument_list|(
@@ -1716,7 +1761,7 @@ block|,
 define|#
 directive|define
 name|OPTION_RELAX
-value|(OPTION_32ADDR+1)
+value|(OPTION_32ADDR + 1)
 block|{
 literal|"relax"
 block|,
@@ -1733,11 +1778,11 @@ name|OBJ_ELF
 define|#
 directive|define
 name|OPTION_MDEBUG
-value|(OPTION_RELAX+1)
+value|(OPTION_RELAX + 1)
 define|#
 directive|define
 name|OPTION_NO_MDEBUG
-value|(OPTION_MDEBUG+1)
+value|(OPTION_MDEBUG + 1)
 block|{
 literal|"mdebug"
 block|,
@@ -2088,7 +2133,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Symbols referring to said sections. */
+comment|/* Symbols referring to said sections.  */
 end_comment
 
 begin_ifdef
@@ -2190,15 +2235,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* The active .ent symbol.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|OBJ_ELF
 end_ifdef
+
+begin_comment
+comment|/* The active .ent symbol.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2339,6 +2384,7 @@ begin_decl_stmt
 name|int
 name|alpha_flag_mdebug
 init|=
+operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
@@ -2484,7 +2530,7 @@ parameter_list|(
 name|op
 parameter_list|)
 define|\
-value|&alpha_reloc_op[ ((!USER_RELOC_P (op))					\ 		  ? (abort (), 0)					\ 		  : (int)(op) - (int)O_literal) ]
+value|&alpha_reloc_op[ ((!USER_RELOC_P (op))					\ 		  ? (abort (), 0)					\ 		  : (int) (op) - (int) O_literal) ]
 end_define
 
 begin_define
@@ -2746,7 +2792,7 @@ name|ALPHA_RELOC_SEQUENCE_OK
 parameter_list|(
 name|X
 parameter_list|)
-value|((X)> 0&& ((unsigned)(X)) == (X))
+value|((X)> 0&& ((unsigned) (X)) == (X))
 end_define
 
 begin_comment
@@ -2837,7 +2883,7 @@ name|cpu_types
 index|[]
 init|=
 block|{
-comment|/* Ad hoc convention: cpu number gets palcode, process code doesn't.      This supports usage under DU 4.0b that does ".arch ev4", and       usage in MILO that does -m21064.  Probably something more      specific like -m21064-pal should be used, but oh well.  */
+comment|/* Ad hoc convention: cpu number gets palcode, process code doesn't.      This supports usage under DU 4.0b that does ".arch ev4", and      usage in MILO that does -m21064.  Probably something more      specific like -m21064-pal should be used, but oh well.  */
 block|{
 literal|"21064"
 block|,
@@ -5000,7 +5046,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Turn a string in input_line_pointer into a floating point constant    of type type, and store the appropriate bytes in *litP.  The number    of LITTLENUMS emitted is stored in *sizeP.  An error message is    returned, or NULL on OK.  */
+comment|/* Turn a string in input_line_pointer into a floating point constant    of type TYPE, and store the appropriate bytes in *LITP.  The number    of LITTLENUMS emitted is stored in *SIZEP.  An error message is    returned, or NULL on OK.  */
 end_comment
 
 begin_comment
@@ -5367,7 +5413,7 @@ name|OBJ_EVAX
 case|case
 literal|'+'
 case|:
-comment|/* For g++.  Hash any name> 63 chars long. */
+comment|/* For g++.  Hash any name> 63 chars long.  */
 name|alpha_flag_hash_long_names
 operator|=
 literal|1
@@ -6039,6 +6085,15 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+case|case
+name|BFD_RELOC_VTABLE_INHERIT
+case|:
+case|case
+name|BFD_RELOC_VTABLE_ENTRY
+case|:
+return|return
+literal|1
+return|;
 default|default:
 block|{
 specifier|const
@@ -6715,6 +6770,12 @@ name|BFD_RELOC_ALPHA_USER_GPRELLOW
 case|:
 endif|#
 directive|endif
+case|case
+name|BFD_RELOC_VTABLE_INHERIT
+case|:
+case|case
+name|BFD_RELOC_VTABLE_ENTRY
+case|:
 return|return
 literal|1
 return|;
@@ -6890,6 +6951,12 @@ name|BFD_RELOC_ALPHA_USER_GPRELLOW
 case|:
 endif|#
 directive|endif
+case|case
+name|BFD_RELOC_VTABLE_ENTRY
+case|:
+case|case
+name|BFD_RELOC_VTABLE_INHERIT
+case|:
 return|return
 literal|0
 return|;
@@ -7377,7 +7444,7 @@ name|RELOC_OP_P
 end_ifdef
 
 begin_comment
-comment|/* Before the relocations are written, reorder them, so that user supplied    !lituse relocations follow the appropriate !literal relocations.  Also    convert the gas-internal relocations to the appropriate linker relocations.    */
+comment|/* Before the relocations are written, reorder them, so that user    supplied !lituse relocations follow the appropriate !literal    relocations.  Also convert the gas-internal relocations to the    appropriate linker relocations.  */
 end_comment
 
 begin_function
@@ -7402,7 +7469,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Go over each section, reordering the relocations so that all of the          explicit LITUSE's are adjacent to the explicit LITERAL's */
+comment|/* Go over each section, reordering the relocations so that all          of the explicit LITUSE's are adjacent to the explicit          LITERAL's.  */
 name|bfd_map_over_sections
 argument_list|(
 name|stdoutput
@@ -7441,6 +7508,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
@@ -7448,6 +7516,7 @@ name|sec
 decl_stmt|;
 name|PTR
 name|ptr
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|segment_info_type
@@ -7501,7 +7570,7 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* If seginfo is NULL, we did not create this section; don't do anything with      it.  By using a pointer to a pointer, we can update the links in place.  */
+comment|/* If seginfo is NULL, we did not create this section; don't do      anything with it.  By using a pointer to a pointer, we can update      the links in place.  */
 if|if
 condition|(
 name|seginfo
@@ -8935,7 +9004,7 @@ init|=
 name|input_line_pointer
 operator|++
 decl_stmt|;
-comment|/* First try for parenthesized register ... */
+comment|/* First try for parenthesized register ...  */
 name|expression
 argument_list|(
 name|tok
@@ -10645,7 +10714,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Take care of alignment duties */
+comment|/* Take care of alignment duties.  */
 if|if
 condition|(
 name|alpha_auto_align_on
@@ -10702,6 +10771,16 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+name|dwarf2_emit_insn
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Apply the fixups in order */
 for|for
 control|(
@@ -10828,7 +10907,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|OBJ_ELF
-comment|/* These relocation types are only used internally. */
+comment|/* These relocation types are only used internally.  */
 case|case
 name|BFD_RELOC_ALPHA_GPDISP_HI16
 case|:
@@ -13408,7 +13487,7 @@ break|break;
 case|case
 name|O_subtract
 case|:
-comment|/* Assume that this difference expression will be resolved to an 	 absolute value and that that value will fit in 16 bits. */
+comment|/* Assume that this difference expression will be resolved to an 	 absolute value and that that value will fit in 16 bits.  */
 name|assert
 argument_list|(
 name|explicit_reloc
@@ -14503,13 +14582,16 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"bad instruction format for lda !%s!%d"
+literal|"bad instruction format for lda !%s!%ld"
 argument_list|)
 argument_list|,
 name|r
 operator|->
 name|name
 argument_list|,
+operator|(
+name|long
+operator|)
 name|reloc
 operator|->
 name|X_add_number
@@ -20586,6 +20668,16 @@ argument_list|(
 name|sym
 argument_list|,
 name|STO_ALPHA_NOPV
+operator||
+operator|(
+name|S_GET_OTHER
+argument_list|(
+name|sym
+argument_list|)
+operator|&
+operator|~
+name|STO_ALPHA_STD_GPLOAD
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -20598,6 +20690,16 @@ argument_list|(
 name|sym
 argument_list|,
 name|STO_ALPHA_STD_GPLOAD
+operator||
+operator|(
+name|S_GET_OTHER
+argument_list|(
+name|sym
+argument_list|)
+operator|&
+operator|~
+name|STO_ALPHA_STD_GPLOAD
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -20619,6 +20721,228 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+block|}
+end_function
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|first_file_directive
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|s_alpha_file
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+comment|/* Save the first .file directive we see, so that we can change our      minds about whether ecoff debugging should or shouldn't be enabled.  */
+if|if
+condition|(
+name|alpha_flag_mdebug
+operator|<
+literal|0
+operator|&&
+operator|!
+name|first_file_directive
+condition|)
+block|{
+name|char
+modifier|*
+name|start
+init|=
+name|input_line_pointer
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|discard_rest_of_line
+argument_list|()
+expr_stmt|;
+name|len
+operator|=
+name|input_line_pointer
+operator|-
+name|start
+expr_stmt|;
+name|first_file_directive
+operator|=
+name|xmalloc
+argument_list|(
+name|len
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|first_file_directive
+argument_list|,
+name|start
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|first_file_directive
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|input_line_pointer
+operator|=
+name|start
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ECOFF_DEBUGGING
+condition|)
+name|ecoff_directive_file
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|dwarf2_directive_file
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|s_alpha_loc
+parameter_list|(
+name|ignore
+parameter_list|)
+name|int
+name|ignore
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|ECOFF_DEBUGGING
+condition|)
+name|ecoff_directive_loc
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|dwarf2_directive_loc
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|s_alpha_stab
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
+block|{
+comment|/* If we've been undecided about mdebug, make up our minds in favour.  */
+if|if
+condition|(
+name|alpha_flag_mdebug
+operator|<
+literal|0
+condition|)
+block|{
+name|segT
+name|sec
+init|=
+name|subseg_new
+argument_list|(
+literal|".mdebug"
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+name|bfd_set_section_flags
+argument_list|(
+name|stdoutput
+argument_list|,
+name|sec
+argument_list|,
+name|SEC_HAS_CONTENTS
+operator||
+name|SEC_READONLY
+argument_list|)
+expr_stmt|;
+name|bfd_set_section_alignment
+argument_list|(
+name|stdoutput
+argument_list|,
+name|sec
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+name|ecoff_read_begin_hook
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|first_file_directive
+condition|)
+block|{
+name|char
+modifier|*
+name|save_ilp
+init|=
+name|input_line_pointer
+decl_stmt|;
+name|input_line_pointer
+operator|=
+name|first_file_directive
+expr_stmt|;
+name|ecoff_directive_file
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|input_line_pointer
+operator|=
+name|save_ilp
+expr_stmt|;
+name|free
+argument_list|(
+name|first_file_directive
+argument_list|)
+expr_stmt|;
+block|}
+name|alpha_flag_mdebug
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|s_stab
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -20656,15 +20980,11 @@ name|ecoff_directive_dim
 block|,
 name|ecoff_directive_endef
 block|,
-name|ecoff_directive_file
-block|,
 name|ecoff_directive_scl
 block|,
 name|ecoff_directive_tag
 block|,
 name|ecoff_directive_val
-block|,
-name|ecoff_directive_loc
 block|,   }
 expr_stmt|;
 name|assert
@@ -23919,6 +24239,38 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+literal|"file"
+block|,
+name|s_alpha_file
+block|,
+literal|5
+block|}
+block|,
+block|{
+literal|"loc"
+block|,
+name|s_alpha_loc
+block|,
+literal|9
+block|}
+block|,
+block|{
+literal|"stabs"
+block|,
+name|s_alpha_stab
+block|,
+literal|'s'
+block|}
+block|,
+block|{
+literal|"stabn"
+block|,
+name|s_alpha_stab
+block|,
+literal|'n'
+block|}
+block|,
 comment|/* COFF debugging related pseudos.  */
 block|{
 literal|"begin"
@@ -23961,7 +24313,7 @@ literal|4
 block|}
 block|,
 block|{
-literal|"file"
+literal|"scl"
 block|,
 name|s_alpha_coff_wrapper
 block|,
@@ -23969,7 +24321,7 @@ literal|5
 block|}
 block|,
 block|{
-literal|"scl"
+literal|"tag"
 block|,
 name|s_alpha_coff_wrapper
 block|,
@@ -23977,27 +24329,11 @@ literal|6
 block|}
 block|,
 block|{
-literal|"tag"
-block|,
-name|s_alpha_coff_wrapper
-block|,
-literal|7
-block|}
-block|,
-block|{
 literal|"val"
 block|,
 name|s_alpha_coff_wrapper
 block|,
-literal|8
-block|}
-block|,
-block|{
-literal|"loc"
-block|,
-name|s_alpha_coff_wrapper
-block|,
-literal|9
+literal|7
 block|}
 block|,
 else|#
@@ -24599,121 +24935,18 @@ condition|)
 block|{
 if|if
 condition|(
-name|n
-operator|>
-literal|2
-operator|&&
-operator|(
-name|bfd_get_section_flags
+name|subseg_text_p
 argument_list|(
-name|stdoutput
-argument_list|,
 name|now_seg
 argument_list|)
-operator|&
-name|SEC_CODE
-operator|)
-operator|!=
-literal|0
 condition|)
-block|{
-specifier|static
-name|char
-specifier|const
-name|unop
-index|[
-literal|4
-index|]
-init|=
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0xe0
-block|,
-literal|0x2f
-block|}
-decl_stmt|;
-specifier|static
-name|char
-specifier|const
-name|nopunop
-index|[
-literal|8
-index|]
-init|=
-block|{
-literal|0x1f
-block|,
-literal|0x04
-block|,
-literal|0xff
-block|,
-literal|0x47
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0xe0
-block|,
-literal|0x2f
-block|}
-decl_stmt|;
-comment|/* First, make sure we're on a four-byte boundary, in case 	     someone has been putting .byte values into the text 	     section.  The DEC assembler silently fills with unaligned 	     no-op instructions.  This will zero-fill, then nop-fill 	     with proper alignment.  */
-if|if
-condition|(
-name|alpha_current_align
-operator|<
-literal|2
-condition|)
-name|frag_align
-argument_list|(
-literal|2
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|alpha_current_align
-operator|<
-literal|3
-condition|)
-name|frag_align_pattern
-argument_list|(
-literal|3
-argument_list|,
-name|unop
-argument_list|,
-sizeof|sizeof
-name|unop
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|>
-literal|3
-condition|)
-name|frag_align_pattern
+name|frag_align_code
 argument_list|(
 name|n
 argument_list|,
-name|nopunop
-argument_list|,
-sizeof|sizeof
-name|nopunop
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|frag_align
 argument_list|(
@@ -24780,7 +25013,198 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-comment|/* ??? if alpha_flag_relax&& force&& elf, record the requested alignment      in a reloc for the linker to see.  */
+comment|/* ??? If alpha_flag_relax&& force&& elf, record the requested alignment      in a reloc for the linker to see.  */
+block|}
+end_function
+
+begin_comment
+comment|/* This is called from HANDLE_ALIGN in write.c.  Fill in the contents    of an rs_align_code fragment.  */
+end_comment
+
+begin_function
+name|void
+name|alpha_handle_align
+parameter_list|(
+name|fragp
+parameter_list|)
+name|fragS
+modifier|*
+name|fragp
+decl_stmt|;
+block|{
+specifier|static
+name|char
+specifier|const
+name|unop
+index|[
+literal|4
+index|]
+init|=
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0xe0
+block|,
+literal|0x2f
+block|}
+decl_stmt|;
+specifier|static
+name|char
+specifier|const
+name|nopunop
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|0x1f
+block|,
+literal|0x04
+block|,
+literal|0xff
+block|,
+literal|0x47
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0xe0
+block|,
+literal|0x2f
+block|}
+decl_stmt|;
+name|int
+name|bytes
+decl_stmt|,
+name|fix
+decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+name|fragp
+operator|->
+name|fr_type
+operator|!=
+name|rs_align_code
+condition|)
+return|return;
+name|bytes
+operator|=
+name|fragp
+operator|->
+name|fr_next
+operator|->
+name|fr_address
+operator|-
+name|fragp
+operator|->
+name|fr_address
+operator|-
+name|fragp
+operator|->
+name|fr_fix
+expr_stmt|;
+name|p
+operator|=
+name|fragp
+operator|->
+name|fr_literal
+operator|+
+name|fragp
+operator|->
+name|fr_fix
+expr_stmt|;
+name|fix
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|bytes
+operator|&
+literal|3
+condition|)
+block|{
+name|fix
+operator|=
+name|bytes
+operator|&
+literal|3
+expr_stmt|;
+name|memset
+argument_list|(
+name|p
+argument_list|,
+literal|0
+argument_list|,
+name|fix
+argument_list|)
+expr_stmt|;
+name|p
+operator|+=
+name|fix
+expr_stmt|;
+name|bytes
+operator|-=
+name|fix
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bytes
+operator|&
+literal|4
+condition|)
+block|{
+name|memcpy
+argument_list|(
+name|p
+argument_list|,
+name|unop
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|p
+operator|+=
+literal|4
+expr_stmt|;
+name|bytes
+operator|-=
+literal|4
+expr_stmt|;
+name|fix
+operator|+=
+literal|4
+expr_stmt|;
+block|}
+name|memcpy
+argument_list|(
+name|p
+argument_list|,
+name|nopunop
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+name|fragp
+operator|->
+name|fr_fix
+operator|+=
+name|fix
+expr_stmt|;
+name|fragp
+operator|->
+name|fr_var
+operator|=
+literal|8
+expr_stmt|;
 block|}
 end_function
 

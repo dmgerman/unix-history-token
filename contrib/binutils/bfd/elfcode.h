@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF executable support for BFD.    Copyright 1991, 92, 93, 94, 95, 96, 97, 98, 1999 Free Software    Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  Sufficient support for gdb.     Rewritten by Mark Eichin @ Cygnus Support, from information    published in "System V Application Binary Interface", chapters 4    and 5, as well as the various "Processor Supplement" documents    derived from it. Added support for assembler and other object file    utilities.  Further work done by Ken Raeburn (Cygnus Support), Michael    Meissner (Open Software Foundation), and Peter Hoogenboom (University    of Utah) to finish and extend this.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF executable support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001 Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  Sufficient support for gdb.     Rewritten by Mark Eichin @ Cygnus Support, from information    published in "System V Application Binary Interface", chapters 4    and 5, as well as the various "Processor Supplement" documents    derived from it. Added support for assembler and other object file    utilities.  Further work done by Ken Raeburn (Cygnus Support), Michael    Meissner (Open Software Foundation), and Peter Hoogenboom (University    of Utah) to finish and extend this.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -343,6 +343,20 @@ define|#
 directive|define
 name|elf_write_out_phdrs
 value|NAME(bfd_elf,write_out_phdrs)
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_write_relocs
+value|NAME(bfd_elf,write_relocs)
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_slurp_reloc_table
+value|NAME(bfd_elf,slurp_reloc_table)
 end_define
 
 begin_define
@@ -693,48 +707,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|boolean
-name|elf_slurp_reloc_table
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|*
-operator|,
-name|boolean
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|write_relocs
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|boolean
 name|elf_file_p
 name|PARAMS
 argument_list|(
@@ -895,7 +867,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Translate an ELF symbol in external format into an ELF symbol in internal    format. */
+comment|/* Translate an ELF symbol in external format into an ELF symbol in internal    format.  */
 end_comment
 
 begin_function
@@ -1060,7 +1032,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Translate an ELF symbol in internal format into an ELF symbol in external    format. */
+comment|/* Translate an ELF symbol in internal format into an ELF symbol in external    format.  */
 end_comment
 
 begin_function
@@ -1178,7 +1150,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Translate an ELF file header in external format into an ELF file header in    internal format. */
+comment|/* Translate an ELF file header in external format into an ELF file header in    internal format.  */
 end_comment
 
 begin_function
@@ -1206,6 +1178,16 @@ modifier|*
 name|dst
 decl_stmt|;
 block|{
+name|int
+name|signed_vma
+init|=
+name|get_elf_backend_data
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|sign_extend_vma
+decl_stmt|;
 name|memcpy
 argument_list|(
 name|dst
@@ -1270,6 +1252,28 @@ operator|->
 name|e_version
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|signed_vma
+condition|)
+name|dst
+operator|->
+name|e_entry
+operator|=
+name|get_signed_word
+argument_list|(
+name|abfd
+argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
+name|src
+operator|->
+name|e_entry
+argument_list|)
+expr_stmt|;
+else|else
 name|dst
 operator|->
 name|e_entry
@@ -1444,7 +1448,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Translate an ELF file header in internal format into an ELF file header in    external format. */
+comment|/* Translate an ELF file header in internal format into an ELF file header in    external format.  */
 end_comment
 
 begin_function
@@ -1472,6 +1476,16 @@ modifier|*
 name|dst
 decl_stmt|;
 block|{
+name|int
+name|signed_vma
+init|=
+name|get_elf_backend_data
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|sign_extend_vma
+decl_stmt|;
 name|memcpy
 argument_list|(
 name|dst
@@ -1485,7 +1499,7 @@ argument_list|,
 name|EI_NIDENT
 argument_list|)
 expr_stmt|;
-comment|/* note that all elements of dst are *arrays of unsigned char* already... */
+comment|/* note that all elements of dst are *arrays of unsigned char* already...  */
 name|bfd_h_put_16
 argument_list|(
 name|abfd
@@ -1525,6 +1539,24 @@ operator|->
 name|e_version
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|signed_vma
+condition|)
+name|put_signed_word
+argument_list|(
+name|abfd
+argument_list|,
+name|src
+operator|->
+name|e_entry
+argument_list|,
+name|dst
+operator|->
+name|e_entry
+argument_list|)
+expr_stmt|;
+else|else
 name|put_word
 argument_list|(
 name|abfd
@@ -1659,7 +1691,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Translate an ELF section header table entry in external format into an    ELF section header table entry in internal format. */
+comment|/* Translate an ELF section header table entry in external format into an    ELF section header table entry in internal format.  */
 end_comment
 
 begin_function
@@ -1905,7 +1937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Translate an ELF section header table entry in internal format into an    ELF section header table entry in external format. */
+comment|/* Translate an ELF section header table entry in internal format into an    ELF section header table entry in external format.  */
 end_comment
 
 begin_function
@@ -1933,7 +1965,7 @@ modifier|*
 name|dst
 decl_stmt|;
 block|{
-comment|/* note that all elements of dst are *arrays of unsigned char* already... */
+comment|/* note that all elements of dst are *arrays of unsigned char* already...  */
 name|bfd_h_put_32
 argument_list|(
 name|abfd
@@ -2068,7 +2100,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Translate an ELF program header table entry in external format into an    ELF program header table entry in internal format. */
+comment|/* Translate an ELF program header table entry in external format into an    ELF program header table entry in internal format.  */
 end_comment
 
 begin_function
@@ -2311,7 +2343,7 @@ modifier|*
 name|dst
 decl_stmt|;
 block|{
-comment|/* note that all elements of dst are *arrays of unsigned char* already... */
+comment|/* note that all elements of dst are *arrays of unsigned char* already...  */
 name|bfd_h_put_32
 argument_list|(
 name|abfd
@@ -2420,7 +2452,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Translate an ELF reloc from external format to internal format. */
+comment|/* Translate an ELF reloc from external format to internal format.  */
 end_comment
 
 begin_function
@@ -2565,7 +2597,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Translate an ELF reloc from internal format to external format. */
+comment|/* Translate an ELF reloc from internal format to external format.  */
 end_comment
 
 begin_function
@@ -2961,6 +2993,41 @@ name|abfd
 argument_list|)
 decl_stmt|;
 name|struct
+name|sec
+modifier|*
+name|preserved_sections
+init|=
+name|abfd
+operator|->
+name|sections
+decl_stmt|;
+name|unsigned
+name|int
+name|preserved_section_count
+init|=
+name|abfd
+operator|->
+name|section_count
+decl_stmt|;
+name|enum
+name|bfd_architecture
+name|previous_arch
+init|=
+name|bfd_get_arch
+argument_list|(
+name|abfd
+argument_list|)
+decl_stmt|;
+name|unsigned
+name|long
+name|previous_mach
+init|=
+name|bfd_get_mach
+argument_list|(
+name|abfd
+argument_list|)
+decl_stmt|;
+name|struct
 name|elf_obj_tdata
 modifier|*
 name|new_tdata
@@ -2971,6 +3038,19 @@ name|asection
 modifier|*
 name|s
 decl_stmt|;
+comment|/* Clear section information, since there might be a recognized bfd that      we now check if we can replace, and we don't want to append to it.  */
+name|abfd
+operator|->
+name|sections
+operator|=
+name|NULL
+expr_stmt|;
+name|abfd
+operator|->
+name|section_count
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Read in the ELF header in external format.  */
 if|if
 condition|(
@@ -3013,7 +3093,7 @@ goto|goto
 name|got_no_match
 goto|;
 block|}
-comment|/* Now check to see if we have a valid ELF file, and one that BFD can      make use of.  The magic number must match, the address size ('class')      and byte-swapping must match our XVEC entry, and it must have a      section header table (FIXME: See comments re sections at top of this      file). */
+comment|/* Now check to see if we have a valid ELF file, and one that BFD can      make use of.  The magic number must match, the address size ('class')      and byte-swapping must match our XVEC entry, and it must have a      section header table (FIXME: See comments re sections at top of this      file).  */
 if|if
 condition|(
 operator|(
@@ -3183,7 +3263,7 @@ condition|)
 goto|goto
 name|got_wrong_format_error
 goto|;
-comment|/* If there is no section header table, we're hosed. */
+comment|/* If there is no section header table, we're hosed.  */
 if|if
 condition|(
 name|i_ehdrp
@@ -3195,7 +3275,7 @@ condition|)
 goto|goto
 name|got_wrong_format_error
 goto|;
-comment|/* As a simple sanity check, verify that the what BFD thinks is the      size of each section header table entry actually matches the size      recorded in the file. */
+comment|/* As a simple sanity check, verify that the what BFD thinks is the      size of each section header table entry actually matches the size      recorded in the file.  */
 if|if
 condition|(
 name|i_ehdrp
@@ -3447,15 +3527,15 @@ goto|goto
 name|got_no_match
 goto|;
 block|}
-comment|/* Remember the entry point specified in the ELF file header. */
-name|bfd_get_start_address
+comment|/* Remember the entry point specified in the ELF file header.  */
+name|bfd_set_start_address
 argument_list|(
 name|abfd
-argument_list|)
-operator|=
+argument_list|,
 name|i_ehdrp
 operator|->
 name|e_entry
+argument_list|)
 expr_stmt|;
 comment|/* Allocate space for a copy of the section header table in      internal form, seek to the section header table in the file,      read it in, and convert it to internal form.  */
 name|i_shdrp
@@ -3843,7 +3923,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Read in the string table containing the names of the sections.  We      will need the base pointer to this table later. */
+comment|/* Read in the string table containing the names of the sections.  We      will need the base pointer to this table later.  */
 comment|/* We read this inline now, so that we don't have to go through      bfd_section_from_shdr with it (since this particular strtab is      used to find all of the ELF section names.) */
 name|shstrtab
 operator|=
@@ -4040,6 +4120,16 @@ operator|)
 return|;
 name|got_wrong_format_error
 label|:
+comment|/* There is way too much undoing of half-known state here.  The caller,      bfd_check_format_matches, really shouldn't iterate on live bfd's to      check match/no-match like it does.  We have to rely on that a call to      bfd_default_set_arch_mach with the previously known mach, undoes what      was done by the first bfd_default_set_arch_mach (with mach 0) here.      For this to work, only elf-data and the mach may be changed by the      target-specific elf_backend_object_p function.  Note that saving the      whole bfd here and restoring it would be even worse; the first thing      you notice is that the cached bfd file position gets out of sync.  */
+name|bfd_default_set_arch_mach
+argument_list|(
+name|abfd
+argument_list|,
+name|previous_arch
+argument_list|,
+name|previous_mach
+argument_list|)
+expr_stmt|;
 name|bfd_set_error
 argument_list|(
 name|bfd_error_wrong_format
@@ -4101,6 +4191,18 @@ argument_list|)
 operator|=
 name|preserved_tdata
 expr_stmt|;
+name|abfd
+operator|->
+name|sections
+operator|=
+name|preserved_sections
+expr_stmt|;
+name|abfd
+operator|->
+name|section_count
+operator|=
+name|preserved_section_count
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -4121,9 +4223,8 @@ comment|/* Write out the relocs.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|write_relocs
+name|elf_write_relocs
 parameter_list|(
 name|abfd
 parameter_list|,
@@ -4298,7 +4399,7 @@ comment|/* Every relocation section should be either an SHT_RELA or an        SH
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* orelocation has the data, reloc_count has the count... */
+comment|/* orelocation has the data, reloc_count has the count...  */
 if|if
 condition|(
 name|use_rela_p
@@ -4933,7 +5034,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* swap the header before spitting it out... */
+comment|/* swap the header before spitting it out...  */
 if|#
 directive|if
 name|DEBUG
@@ -5000,7 +5101,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* at this point we've concocted all the ELF sections... */
+comment|/* at this point we've concocted all the ELF sections...  */
 name|x_shdrp
 operator|=
 operator|(
@@ -5133,7 +5234,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* need to dump the string table too... */
+comment|/* need to dump the string table too...  */
 return|return
 name|true
 return|;
@@ -5202,7 +5303,7 @@ name|x_versymp
 init|=
 name|NULL
 decl_stmt|;
-comment|/* Read each raw ELF symbol, converting from external ELF form to      internal ELF form, and then using the information to create a      canonical bfd symbol table entry.       Note that we allocate the initial bfd canonical symbol buffer      based on a one-to-one mapping of the ELF symbols to canonical      symbols.  We actually use all the ELF symbols, so there will be no      space left over at the end.  When we have all the symbols, we      build the caller's pointer vector. */
+comment|/* Read each raw ELF symbol, converting from external ELF form to      internal ELF form, and then using the information to create a      canonical bfd symbol table entry.       Note that we allocate the initial bfd canonical symbol buffer      based on a one-to-one mapping of the ELF symbols to canonical      symbols.  We actually use all the ELF symbols, so there will be no      space left over at the end.  When we have all the symbols, we      build the caller's pointer vector.  */
 if|if
 condition|(
 operator|!
@@ -6228,7 +6329,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read  relocations for ASECT from REL_HDR.  There are RELOC_COUNT of     them.  */
+comment|/* Read  relocations for ASECT from REL_HDR.  There are RELOC_COUNT of    them.  */
 end_comment
 
 begin_function
@@ -6699,7 +6800,6 @@ comment|/* Read in and swap the external relocs.  */
 end_comment
 
 begin_function
-specifier|static
 name|boolean
 name|elf_slurp_reloc_table
 parameter_list|(
@@ -6804,13 +6904,10 @@ name|rel_hdr
 expr_stmt|;
 name|reloc_count
 operator|=
+name|NUM_SHDR_ENTRIES
+argument_list|(
 name|rel_hdr
-operator|->
-name|sh_size
-operator|/
-name|rel_hdr
-operator|->
-name|sh_entsize
+argument_list|)
 expr_stmt|;
 name|rel_hdr2
 operator|=
@@ -6823,15 +6920,10 @@ operator|=
 operator|(
 name|rel_hdr2
 condition|?
-operator|(
+name|NUM_SHDR_ENTRIES
+argument_list|(
 name|rel_hdr2
-operator|->
-name|sh_size
-operator|/
-name|rel_hdr2
-operator|->
-name|sh_entsize
-operator|)
+argument_list|)
 else|:
 literal|0
 operator|)
@@ -6894,13 +6986,10 @@ name|this_hdr
 expr_stmt|;
 name|reloc_count
 operator|=
+name|NUM_SHDR_ENTRIES
+argument_list|(
 name|rel_hdr
-operator|->
-name|sh_size
-operator|/
-name|rel_hdr
-operator|->
-name|sh_entsize
+argument_list|)
 expr_stmt|;
 name|rel_hdr2
 operator|=
@@ -7626,7 +7715,7 @@ parameter_list|(
 name|Elf_External_Note
 parameter_list|)
 operator|,
-function_decl|ARCH_SIZE / 8
+function_decl|4
 operator|,
 function_decl|1
 operator|,
@@ -7642,7 +7731,7 @@ function_decl|elf_write_out_phdrs
 operator|,
 function_decl|elf_write_shdrs_and_ehdr
 operator|,
-function_decl|write_relocs
+function_decl|elf_write_relocs
 operator|,
 function_decl|elf_swap_symbol_out
 operator|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF support for BFD.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -290,12 +290,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ELFOSABI_MONTEREY
+name|ELFOSABI_AIX
 value|7
 end_define
 
 begin_comment
-comment|/* Monterey */
+comment|/* AIX */
 end_comment
 
 begin_define
@@ -398,7 +398,7 @@ comment|/* Start of padding bytes */
 end_comment
 
 begin_comment
-comment|/* Values for e_type, which identifies the object file type */
+comment|/* Values for e_type, which identifies the object file type.  */
 end_comment
 
 begin_define
@@ -501,7 +501,7 @@ comment|/* Processor-specific */
 end_comment
 
 begin_comment
-comment|/* Values for e_machine, which identifies the architecture */
+comment|/* Values for e_machine, which identifies the architecture.  These numbers    are officially assigned by registry@sco.com.  See below for a list of    ad-hoc numbers used during initial development.  */
 end_comment
 
 begin_define
@@ -581,6 +581,10 @@ begin_comment
 comment|/* Intel 80486 */
 end_comment
 
+begin_comment
+comment|/* Reserved for future use */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -612,21 +616,6 @@ end_define
 
 begin_comment
 comment|/* IBM System/370 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_MIPS_RS4_BE
-value|10
-end_define
-
-begin_comment
-comment|/* MIPS R4000 big-endian */
-end_comment
-
-begin_comment
-comment|/* Depreciated */
 end_comment
 
 begin_define
@@ -832,7 +821,7 @@ value|45
 end_define
 
 begin_comment
-comment|/* Argonaut RISC Core, Argonaut Technologies Inc. */
+comment|/* ARC Cores */
 end_comment
 
 begin_define
@@ -1014,6 +1003,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EM_X86_64
+value|62
+end_define
+
+begin_comment
+comment|/* Advanced Micro Devices X86-64 processor */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EM_FX66
 value|66
 end_define
@@ -1107,7 +1107,7 @@ value|74
 end_define
 
 begin_comment
-comment|/* STMicroelectronics ST19 8-bit microcontroller */
+comment|/* STMicroelectronics ST19 8-bit cpu */
 end_comment
 
 begin_define
@@ -1124,16 +1124,93 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EM_CRIS
+value|76
+end_define
+
+begin_comment
+comment|/* Axis Communications 32-bit embedded processor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_JAVELIN
+value|77
+end_define
+
+begin_comment
+comment|/* Infineon Technologies 32-bit embedded cpu */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_FIREPATH
+value|78
+end_define
+
+begin_comment
+comment|/* Element 14 64-bit DSP processor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_ZSP
+value|79
+end_define
+
+begin_comment
+comment|/* LSI Logic's 16-bit DSP processor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_MMIX
+value|80
+end_define
+
+begin_comment
+comment|/* Donald Knuth's educational 64-bit processor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_HUANY
+value|81
+end_define
+
+begin_comment
+comment|/* Harvard's machine-independent format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_PRISM
+value|82
+end_define
+
+begin_comment
+comment|/* SiTera Prism */
+end_comment
+
+begin_comment
+comment|/* If it is necessary to assign new unofficial EM_* values, please pick large    random numbers (0x8523, 0xa7f2, etc.) to minimize the chances of collision    with official or non-GNU unofficial values.     NOTE: Do not just increment the most recent number by one.    Somebody else somewhere will do exactly the same thing, and you    will have a collision.  Instead, pick a random number.     Normally, each entity or maintainer responsible for a machine with an    unofficial e_machine number should eventually ask registry@sco.com for    an officially blessed number to be added to the list above.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EM_PJ
 value|99
 end_define
 
 begin_comment
 comment|/* picoJava */
-end_comment
-
-begin_comment
-comment|/* If it is necessary to assign new unofficial EM_* values, please pick large    random numbers (0x8523, 0xa7f2, etc.) to minimize the chances of collision    with official or non-GNU unofficial values.     NOTE: Do not just increment the most recent number by one.    Somebody else somewhere will do exactly the same thing, and you    will have a collision.  Instead, pick a random number.  */
 end_comment
 
 begin_comment
@@ -1280,7 +1357,7 @@ comment|/* See the above comment before you add a new EM_* value here.  */
 end_comment
 
 begin_comment
-comment|/* Values for e_version */
+comment|/* Values for e_version.  */
 end_comment
 
 begin_define
@@ -1306,7 +1383,7 @@ comment|/* Current version */
 end_comment
 
 begin_comment
-comment|/* Values for program header, p_type field */
+comment|/* Values for program header, p_type field.  */
 end_comment
 
 begin_define
@@ -1431,7 +1508,7 @@ comment|/* Processor-specific */
 end_comment
 
 begin_comment
-comment|/* Program segment permissions, in program header p_flags field */
+comment|/* Program segment permissions, in program header p_flags field.  */
 end_comment
 
 begin_define
@@ -1498,7 +1575,7 @@ comment|/* Processor-specific reserved bits */
 end_comment
 
 begin_comment
-comment|/* Values for section header, sh_type field */
+comment|/* Values for section header, sh_type field.  */
 end_comment
 
 begin_define
@@ -1641,7 +1718,7 @@ value|14
 end_define
 
 begin_comment
-comment|/* Array of pointers to init functions */
+comment|/* Array of ptrs to init functions */
 end_comment
 
 begin_define
@@ -1652,7 +1729,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* Array of pointers to finish functions */
+comment|/* Array of ptrs to finish functions */
 end_comment
 
 begin_define
@@ -1663,7 +1740,29 @@ value|16
 end_define
 
 begin_comment
-comment|/* Array of pointers to pre-init functions */
+comment|/* Array of ptrs to pre-init funcs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_GROUP
+value|17
+end_define
+
+begin_comment
+comment|/* Section contains a section group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_SYMTAB_SHNDX
+value|18
+end_define
+
+begin_comment
+comment|/* Indicies for SHN_XINDEX entries */
 end_comment
 
 begin_define
@@ -1674,7 +1773,7 @@ value|0x60000000
 end_define
 
 begin_comment
-comment|/* Operating system specific semantics, lo */
+comment|/* First of OS specific semantics */
 end_comment
 
 begin_define
@@ -1685,7 +1784,7 @@ value|0x6fffffff
 end_define
 
 begin_comment
-comment|/* Operating system specific semantics, hi */
+comment|/* Last of OS specific semantics */
 end_comment
 
 begin_comment
@@ -1799,7 +1898,7 @@ comment|/* New value, defined in Oct 4, 1999 Draft */
 end_comment
 
 begin_comment
-comment|/* Values for section header, sh_flags field */
+comment|/* Values for section header, sh_flags field.  */
 end_comment
 
 begin_define
@@ -1887,7 +1986,18 @@ value|(1<< 8)
 end_define
 
 begin_comment
-comment|/* OS specifci processing required */
+comment|/* OS specific processing required */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_GROUP
+value|(1<< 9)
+end_define
+
+begin_comment
+comment|/* Member of a section group */
 end_comment
 
 begin_comment
@@ -1921,7 +2031,7 @@ comment|/* Processor-specific semantics */
 end_comment
 
 begin_comment
-comment|/* Values of note segment descriptor types for core files. */
+comment|/* Values of note segment descriptor types for core files.  */
 end_comment
 
 begin_define
@@ -1984,7 +2094,7 @@ comment|/*   note name must be "LINUX".  */
 end_comment
 
 begin_comment
-comment|/* Note segments for core files on dir-style procfs systems. */
+comment|/* Note segments for core files on dir-style procfs systems.  */
 end_comment
 
 begin_define
@@ -2073,7 +2183,7 @@ comment|/* Contains a version string.  */
 end_comment
 
 begin_comment
-comment|/* These three macros disassemble and assemble a symbol table st_info field,    which contains the symbol binding and symbol type.  The STB_ and STT_    defines identify the binding and type. */
+comment|/* These three macros disassemble and assemble a symbol table st_info field,    which contains the symbol binding and symbol type.  The STB_ and STT_    defines identify the binding and type.  */
 end_comment
 
 begin_define
@@ -2194,7 +2304,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* undefined symbol index */
+comment|/* Undefined symbol index */
 end_comment
 
 begin_define
@@ -2385,7 +2495,7 @@ comment|/* Application-specific semantics */
 end_comment
 
 begin_comment
-comment|/* Special section indices, which may show up in st_shndx fields, among    other places. */
+comment|/* Special section indices, which may show up in st_shndx fields, among    other places.  */
 end_comment
 
 begin_define
@@ -2479,6 +2589,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHN_XINDEX
+value|0xFFFF
+end_define
+
+begin_comment
+comment|/* Section index it held elsewhere */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SHN_HIRESERVE
 value|0xFFFF
 end_define
@@ -2536,7 +2657,7 @@ comment|/* Treat as STB_LOCAL inside current component */
 end_comment
 
 begin_comment
-comment|/* relocation info handling macros */
+comment|/* Relocation info handling macros.  */
 end_comment
 
 begin_define
@@ -2604,7 +2725,7 @@ value|(((bfd_vma) (s)<< 32) + (bfd_vma) (t))
 end_define
 
 begin_comment
-comment|/* Dynamic section tags */
+comment|/* Dynamic section tags.  */
 end_comment
 
 begin_define
@@ -3132,7 +3253,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* From     http://docs.sun.com:80/ab2/coll.45.13/LLM/@Ab2PageView/21165?Ab2Lang=C&Ab2Enc=iso-8859-1     DTF_1_CONFEXP is the same as DTF_1_PARINIT. It is a typo. The value    defined here is the same as the one in<sys/link.h> on Solaris 8. */
+comment|/* From     http://docs.sun.com:80/ab2/coll.45.13/LLM/@Ab2PageView/21165?Ab2Lang=C&Ab2Enc=iso-8859-1     DTF_1_CONFEXP is the same as DTF_1_PARINIT. It is a typo. The value    defined here is the same as the one in<sys/link.h> on Solaris 8.  */
 end_comment
 
 begin_define
@@ -3481,7 +3602,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* Symbol bound to object to be lazy 					   loaded */
+comment|/* Symbol bound to object to be lazy loaded */
 end_comment
 
 begin_comment
@@ -3508,6 +3629,21 @@ directive|define
 name|SYMINFO_NUM
 value|2
 end_define
+
+begin_comment
+comment|/* Section Group Flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GRP_COMDAT
+value|0x1
+end_define
+
+begin_comment
+comment|/* A COMDAT group */
+end_comment
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ECOFF debugging support.    Copyright (C) 1993, 94, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.  A    good deal of it comes directly from mips-tfile.c, by Michael    Meissner<meissner@osf.org>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ECOFF debugging support.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.  A    good deal of it comes directly from mips-tfile.c, by Michael    Meissner<meissner@osf.org>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -65,7 +65,7 @@ comment|/* This file constructs the information used by the ECOFF debugging    f
 end_comment
 
 begin_comment
-comment|/* Here is a brief description of the MIPS ECOFF symbol table, by    Michael Meissner.  The MIPS symbol table has the following pieces:  	Symbolic Header 	    | 	    +--	Auxiliary Symbols 	    | 	    +--	Dense number table 	    | 	    +--	Optimizer Symbols 	    | 	    +--	External Strings 	    | 	    +--	External Symbols 	    | 	    +--	Relative file descriptors 	    | 	    +--	File table 		    | 		    +--	Procedure table 		    | 		    +--	Line number table 		    | 		    +--	Local Strings 		    | 		    +--	Local Symbols     The symbolic header points to each of the other tables, and also    contains the number of entries.  It also contains a magic number    and MIPS compiler version number, such as 2.0.     The auxiliary table is a series of 32 bit integers, that are    referenced as needed from the local symbol table.  Unlike standard    COFF, the aux.  information does not follow the symbol that uses    it, but rather is a separate table.  In theory, this would allow    the MIPS compilers to collapse duplicate aux. entries, but I've not    noticed this happening with the 1.31 compiler suite.  The different    types of aux. entries are:      1)	dnLow: Low bound on array dimension.      2)	dnHigh: High bound on array dimension.      3)	isym: Index to the local symbol which is the start of the 	function for the end of function first aux. entry.      4)	width: Width of structures and bitfields.      5)	count: Count of ranges for variant part.      6)	rndx: A relative index into the symbol table.  The relative 	index field has two parts: rfd which is a pointer into the 	relative file index table or ST_RFDESCAPE which says the next 	aux. entry is the file number, and index: which is the pointer 	into the local symbol within a given file table.  This is for 	things like references to types defined in another file.      7)	Type information: This is like the COFF type bits, except it 	is 32 bits instead of 16; they still have room to add new 	basic types; and they can handle more than 6 levels of array, 	pointer, function, etc.  Each type information field contains 	the following structure members:  	    a)	fBitfield: a bit that says this is a bitfield, and the 		size in bits follows as the next aux. entry.  	    b)	continued: a bit that says the next aux. entry is a 		continuation of the current type information (in case 		there are more than 6 levels of array/ptr/function).  	    c)	bt: an integer containing the base type before adding 		array, pointer, function, etc. qualifiers.  The 		current base types that I have documentation for are:  			btNil		-- undefined 			btAdr		-- address - integer same size as ptr 			btChar		-- character 			btUChar		-- unsigned character 			btShort		-- short 			btUShort	-- unsigned short 			btInt		-- int 			btUInt		-- unsigned int 			btLong		-- long 			btULong		-- unsigned long 			btFloat		-- float (real) 			btDouble	-- Double (real) 			btStruct	-- Structure (Record) 			btUnion		-- Union (variant) 			btEnum		-- Enumerated 			btTypedef	-- defined via a typedef isymRef 			btRange		-- subrange of int 			btSet		-- pascal sets 			btComplex	-- fortran complex 			btDComplex	-- fortran double complex 			btIndirect	-- forward or unnamed typedef 			btFixedDec	-- Fixed Decimal 			btFloatDec	-- Float Decimal 			btString	-- Varying Length Character String 			btBit		-- Aligned Bit String 			btPicture	-- Picture 			btVoid		-- Void (MIPS cc revision>= 2.00)  	    d)	tq0 - tq5: type qualifier fields as needed.  The 		current type qualifier fields I have documentation for 		are:  			tqNil		-- no more qualifiers 			tqPtr		-- pointer 			tqProc		-- procedure 			tqArray		-- array 			tqFar		-- 8086 far pointers 			tqVol		-- volatile      The dense number table is used in the front ends, and disappears by    the time the .o is created.     With the 1.31 compiler suite, the optimization symbols don't seem    to be used as far as I can tell.     The linker is the first entity that creates the relative file    descriptor table, and I believe it is used so that the individual    file table pointers don't have to be rewritten when the objects are    merged together into the program file.     Unlike COFF, the basic symbol& string tables are split into    external and local symbols/strings.  The relocation information    only goes off of the external symbol table, and the debug    information only goes off of the internal symbol table.  The    external symbols can have links to an appropriate file index and    symbol within the file to give it the appropriate type information.    Because of this, the external symbols are actually larger than the    internal symbols (to contain the link information), and contain the    local symbol structure as a member, though this member is not the    first member of the external symbol structure (!).  I suspect this    split is to make strip easier to deal with.     Each file table has offsets for where the line numbers, local    strings, local symbols, and procedure table starts from within the    global tables, and the indexs are reset to 0 for each of those    tables for the file.     The procedure table contains the binary equivalents of the .ent    (start of the function address), .frame (what register is the    virtual frame pointer, constant offset from the register to obtain    the VFP, and what register holds the return address), .mask/.fmask    (bitmask of saved registers, and where the first register is stored    relative to the VFP) assembler directives.  It also contains the    low and high bounds of the line numbers if debugging is turned on.     The line number table is a compressed form of the normal COFF line    table.  Each line number entry is either 1 or 3 bytes long, and    contains a signed delta from the previous line, and an unsigned    count of the number of instructions this statement takes.     The local symbol table contains the following fields:      1)	iss: index to the local string table giving the name of the 	symbol.      2)	value: value of the symbol (address, register number, etc.).      3)	st: symbol type.  The current symbol types are:  	    stNil	  -- Nuthin' special 	    stGlobal	  -- external symbol 	    stStatic	  -- static 	    stParam	  -- procedure argument 	    stLocal	  -- local variable 	    stLabel	  -- label 	    stProc	  -- External Procedure 	    stBlock	  -- beginning of block 	    stEnd	  -- end (of anything) 	    stMember	  -- member (of anything) 	    stTypedef	  -- type definition 	    stFile	  -- file name 	    stRegReloc	  -- register relocation 	    stForward	  -- forwarding address 	    stStaticProc  -- Static procedure 	    stConstant	  -- const      4)	sc: storage class.  The current storage classes are:  	    scText	  -- text symbol 	    scData	  -- initialized data symbol 	    scBss	  -- un-initialized data symbol 	    scRegister	  -- value of symbol is register number 	    scAbs	  -- value of symbol is absolute 	    scUndefined   -- who knows? 	    scCdbLocal	  -- variable's value is IN se->va.?? 	    scBits	  -- this is a bit field 	    scCdbSystem	  -- value is IN debugger's address space 	    scRegImage	  -- register value saved on stack 	    scInfo	  -- symbol contains debugger information 	    scUserStruct  -- addr in struct user for current process 	    scSData	  -- load time only small data 	    scSBss	  -- load time only small common 	    scRData	  -- load time only read only data 	    scVar	  -- Var parameter (fortranpascal) 	    scCommon	  -- common variable 	    scSCommon	  -- small common 	    scVarRegister -- Var parameter in a register 	    scVariant	  -- Variant record 	    scSUndefined  -- small undefined(external) data 	    scInit	  -- .init section symbol      5)	index: pointer to a local symbol or aux. entry.       For the following program:  	#include<stdio.h>  	main(){ 		printf("Hello World!\n"); 		return 0; 	}     Mips-tdump produces the following information:     Global file header:        magic number             0x162        # sections               2        timestamp                645311799, Wed Jun 13 17:16:39 1990        symbolic header offset   284        symbolic header size     96        optional header          56        flags                    0x0     Symbolic header, magic number = 0x7009, vstamp = 1.31:         Info                      Offset      Number       Bytes        ====                      ======      ======      =====         Line numbers                 380           4           4 [13]        Dense numbers                  0           0           0        Procedures Tables            384           1          52        Local Symbols                436          16         192        Optimization Symbols           0           0           0        Auxiliary Symbols            628          39         156        Local Strings                784          80          80        External Strings             864         144         144        File Tables                 1008           2         144        Relative Files                 0           0           0        External Symbols            1152          20         320     File #0, "hello2.c"         Name index  = 1          Readin      = No        Merge       = No         Endian      = LITTLE        Debug level = G2         Language    = C        Adr         = 0x00000000         Info                       Start      Number        Size      Offset        ====                       =====      ======        ====      ======        Local strings                  0          15          15         784        Local symbols                  0           6          72         436        Line numbers                   0          13          13         380        Optimization symbols           0           0           0           0        Procedures                     0           1          52         384        Auxiliary symbols              0          14          56         628        Relative Files                 0           0           0           0      There are 6 local symbols, starting at 436  	Symbol# 0: "hello2.c" 	    End+1 symbol  = 6 	    String index  = 1 	    Storage class = Text        Index  = 6 	    Symbol type   = File        Value  = 0  	Symbol# 1: "main" 	    End+1 symbol  = 5 	    Type          = int 	    String index  = 10 	    Storage class = Text        Index  = 12 	    Symbol type   = Proc        Value  = 0  	Symbol# 2: "" 	    End+1 symbol  = 4 	    String index  = 0 	    Storage class = Text        Index  = 4 	    Symbol type   = Block       Value  = 8  	Symbol# 3: "" 	    First symbol  = 2 	    String index  = 0 	    Storage class = Text        Index  = 2 	    Symbol type   = End         Value  = 28  	Symbol# 4: "main" 	    First symbol  = 1 	    String index  = 10 	    Storage class = Text        Index  = 1 	    Symbol type   = End         Value  = 52  	Symbol# 5: "hello2.c" 	    First symbol  = 0 	    String index  = 1 	    Storage class = Text        Index  = 0 	    Symbol type   = End         Value  = 0      There are 14 auxiliary table entries, starting at 628.  	* #0               0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #1              24, [  24/      0], [ 6 0:0 0:0:0:0:0:0] 	* #2               8, [   8/      0], [ 2 0:0 0:0:0:0:0:0] 	* #3              16, [  16/      0], [ 4 0:0 0:0:0:0:0:0] 	* #4              24, [  24/      0], [ 6 0:0 0:0:0:0:0:0] 	* #5              32, [  32/      0], [ 8 0:0 0:0:0:0:0:0] 	* #6              40, [  40/      0], [10 0:0 0:0:0:0:0:0] 	* #7              44, [  44/      0], [11 0:0 0:0:0:0:0:0] 	* #8              12, [  12/      0], [ 3 0:0 0:0:0:0:0:0] 	* #9              20, [  20/      0], [ 5 0:0 0:0:0:0:0:0] 	* #10             28, [  28/      0], [ 7 0:0 0:0:0:0:0:0] 	* #11             36, [  36/      0], [ 9 0:0 0:0:0:0:0:0] 	  #12              5, [   5/      0], [ 1 1:0 0:0:0:0:0:0] 	  #13             24, [  24/      0], [ 6 0:0 0:0:0:0:0:0]      There are 1 procedure descriptor entries, starting at 0.  	Procedure descriptor 0: 	    Name index   = 10          Name          = "main" 	    .mask 0x80000000,-4        .fmask 0x00000000,0 	    .frame $29,24,$31 	    Opt. start   = -1          Symbols start = 1 	    First line # = 3           Last line #   = 6 	    Line Offset  = 0           Address       = 0x00000000  	There are 4 bytes holding line numbers, starting at 380. 	    Line           3,   delta     0,   count  2 	    Line           4,   delta     1,   count  3 	    Line           5,   delta     1,   count  2 	    Line           6,   delta     1,   count  6     File #1, "/usr/include/stdio.h"      Name index  = 1          Readin      = No     Merge       = Yes        Endian      = LITTLE     Debug level = G2         Language    = C     Adr         = 0x00000000      Info                       Start      Number        Size      Offset     ====                       =====      ======        ====      ======     Local strings                 15          65          65         799     Local symbols                  6          10         120         508     Line numbers                   0           0           0         380     Optimization symbols           0           0           0           0     Procedures                     1           0           0         436     Auxiliary symbols             14          25         100         684     Relative Files                 0           0           0           0      There are 10 local symbols, starting at 442  	Symbol# 0: "/usr/include/stdio.h" 	    End+1 symbol  = 10 	    String index  = 1 	    Storage class = Text        Index  = 10 	    Symbol type   = File        Value  = 0  	Symbol# 1: "_iobuf" 	    End+1 symbol  = 9 	    String index  = 22 	    Storage class = Info        Index  = 9 	    Symbol type   = Block       Value  = 20  	Symbol# 2: "_cnt" 	    Type          = int 	    String index  = 29 	    Storage class = Info        Index  = 4 	    Symbol type   = Member      Value  = 0  	Symbol# 3: "_ptr" 	    Type          = ptr to char 	    String index  = 34 	    Storage class = Info        Index  = 15 	    Symbol type   = Member      Value  = 32  	Symbol# 4: "_base" 	    Type          = ptr to char 	    String index  = 39 	    Storage class = Info        Index  = 16 	    Symbol type   = Member      Value  = 64  	Symbol# 5: "_bufsiz" 	    Type          = int 	    String index  = 45 	    Storage class = Info        Index  = 4 	    Symbol type   = Member      Value  = 96  	Symbol# 6: "_flag" 	    Type          = short 	    String index  = 53 	    Storage class = Info        Index  = 3 	    Symbol type   = Member      Value  = 128  	Symbol# 7: "_file" 	    Type          = char 	    String index  = 59 	    Storage class = Info        Index  = 2 	    Symbol type   = Member      Value  = 144  	Symbol# 8: "" 	    First symbol  = 1 	    String index  = 0 	    Storage class = Info        Index  = 1 	    Symbol type   = End         Value  = 0  	Symbol# 9: "/usr/include/stdio.h" 	    First symbol  = 0 	    String index  = 1 	    Storage class = Text        Index  = 0 	    Symbol type   = End         Value  = 0      There are 25 auxiliary table entries, starting at 642.  	* #14             -1, [4095/1048575], [63 1:1 f:f:f:f:f:f] 	  #15          65544, [   8/     16], [ 2 0:0 1:0:0:0:0:0] 	  #16          65544, [   8/     16], [ 2 0:0 1:0:0:0:0:0] 	* #17         196656, [  48/     48], [12 0:0 3:0:0:0:0:0] 	* #18           8191, [4095/      1], [63 1:1 0:0:0:0:f:1] 	* #19              1, [   1/      0], [ 0 1:0 0:0:0:0:0:0] 	* #20          20479, [4095/      4], [63 1:1 0:0:0:0:f:4] 	* #21              1, [   1/      0], [ 0 1:0 0:0:0:0:0:0] 	* #22              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #23              2, [   2/      0], [ 0 0:1 0:0:0:0:0:0] 	* #24            160, [ 160/      0], [40 0:0 0:0:0:0:0:0] 	* #25              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #26              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #27              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #28              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #29              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #30              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #31              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #32              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #33              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #34              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #35              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #36              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #37              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #38              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0]      There are 0 procedure descriptor entries, starting at 1.     There are 20 external symbols, starting at 1152  	Symbol# 0: "_iob" 	    Type          = array [3 {160}] of struct _iobuf { ifd = 1, index = 1 } 	    String index  = 0           Ifd    = 1 	    Storage class = Nil         Index  = 17 	    Symbol type   = Global      Value  = 60  	Symbol# 1: "fopen" 	    String index  = 5           Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 2: "fdopen" 	    String index  = 11          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 3: "freopen" 	    String index  = 18          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 4: "popen" 	    String index  = 26          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 5: "tmpfile" 	    String index  = 32          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 6: "ftell" 	    String index  = 40          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 7: "rewind" 	    String index  = 46          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 8: "setbuf" 	    String index  = 53          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 9: "setbuffer" 	    String index  = 60          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 10: "setlinebuf" 	    String index  = 70          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 11: "fgets" 	    String index  = 81          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 12: "gets" 	    String index  = 87          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 13: "ctermid" 	    String index  = 92          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 14: "cuserid" 	    String index  = 100         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 15: "tempnam" 	    String index  = 108         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 16: "tmpnam" 	    String index  = 116         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 17: "sprintf" 	    String index  = 123         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 18: "main" 	    Type          = int 	    String index  = 131         Ifd    = 0 	    Storage class = Text        Index  = 1 	    Symbol type   = Proc        Value  = 0  	Symbol# 19: "printf" 	    String index  = 136         Ifd    = 0 	    Storage class = Undefined   Index  = 1048575 	    Symbol type   = Proc        Value  = 0     The following auxiliary table entries were unused:      #0               0  0x00000000  void     #2               8  0x00000008  char     #3              16  0x00000010  short     #4              24  0x00000018  int     #5              32  0x00000020  long     #6              40  0x00000028  float     #7              44  0x0000002c  double     #8              12  0x0000000c  unsigned char     #9              20  0x00000014  unsigned short     #10             28  0x0000001c  unsigned int     #11             36  0x00000024  unsigned long     #14              0  0x00000000  void     #15             24  0x00000018  int     #19             32  0x00000020  long     #20             40  0x00000028  float     #21             44  0x0000002c  double     #22             12  0x0000000c  unsigned char     #23             20  0x00000014  unsigned short     #24             28  0x0000001c  unsigned int     #25             36  0x00000024  unsigned long     #26             48  0x00000030  struct no name { ifd = -1, index = 1048575 } */
+comment|/* Here is a brief description of the MIPS ECOFF symbol table, by    Michael Meissner.  The MIPS symbol table has the following pieces:  	Symbolic Header 	    | 	    +--	Auxiliary Symbols 	    | 	    +--	Dense number table 	    | 	    +--	Optimizer Symbols 	    | 	    +--	External Strings 	    | 	    +--	External Symbols 	    | 	    +--	Relative file descriptors 	    | 	    +--	File table 		    | 		    +--	Procedure table 		    | 		    +--	Line number table 		    | 		    +--	Local Strings 		    | 		    +--	Local Symbols     The symbolic header points to each of the other tables, and also    contains the number of entries.  It also contains a magic number    and MIPS compiler version number, such as 2.0.     The auxiliary table is a series of 32 bit integers, that are    referenced as needed from the local symbol table.  Unlike standard    COFF, the aux.  information does not follow the symbol that uses    it, but rather is a separate table.  In theory, this would allow    the MIPS compilers to collapse duplicate aux. entries, but I've not    noticed this happening with the 1.31 compiler suite.  The different    types of aux. entries are:      1)	dnLow: Low bound on array dimension.      2)	dnHigh: High bound on array dimension.      3)	isym: Index to the local symbol which is the start of the 	function for the end of function first aux. entry.      4)	width: Width of structures and bitfields.      5)	count: Count of ranges for variant part.      6)	rndx: A relative index into the symbol table.  The relative 	index field has two parts: rfd which is a pointer into the 	relative file index table or ST_RFDESCAPE which says the next 	aux. entry is the file number, and index: which is the pointer 	into the local symbol within a given file table.  This is for 	things like references to types defined in another file.      7)	Type information: This is like the COFF type bits, except it 	is 32 bits instead of 16; they still have room to add new 	basic types; and they can handle more than 6 levels of array, 	pointer, function, etc.  Each type information field contains 	the following structure members:  	    a)	fBitfield: a bit that says this is a bitfield, and the 		size in bits follows as the next aux. entry.  	    b)	continued: a bit that says the next aux. entry is a 		continuation of the current type information (in case 		there are more than 6 levels of array/ptr/function).  	    c)	bt: an integer containing the base type before adding 		array, pointer, function, etc. qualifiers.  The 		current base types that I have documentation for are:  			btNil		-- undefined 			btAdr		-- address - integer same size as ptr 			btChar		-- character 			btUChar		-- unsigned character 			btShort		-- short 			btUShort	-- unsigned short 			btInt		-- int 			btUInt		-- unsigned int 			btLong		-- long 			btULong		-- unsigned long 			btFloat		-- float (real) 			btDouble	-- Double (real) 			btStruct	-- Structure (Record) 			btUnion		-- Union (variant) 			btEnum		-- Enumerated 			btTypedef	-- defined via a typedef isymRef 			btRange		-- subrange of int 			btSet		-- pascal sets 			btComplex	-- fortran complex 			btDComplex	-- fortran double complex 			btIndirect	-- forward or unnamed typedef 			btFixedDec	-- Fixed Decimal 			btFloatDec	-- Float Decimal 			btString	-- Varying Length Character String 			btBit		-- Aligned Bit String 			btPicture	-- Picture 			btVoid		-- Void (MIPS cc revision>= 2.00)  	    d)	tq0 - tq5: type qualifier fields as needed.  The 		current type qualifier fields I have documentation for 		are:  			tqNil		-- no more qualifiers 			tqPtr		-- pointer 			tqProc		-- procedure 			tqArray		-- array 			tqFar		-- 8086 far pointers 			tqVol		-- volatile     The dense number table is used in the front ends, and disappears by    the time the .o is created.     With the 1.31 compiler suite, the optimization symbols don't seem    to be used as far as I can tell.     The linker is the first entity that creates the relative file    descriptor table, and I believe it is used so that the individual    file table pointers don't have to be rewritten when the objects are    merged together into the program file.     Unlike COFF, the basic symbol& string tables are split into    external and local symbols/strings.  The relocation information    only goes off of the external symbol table, and the debug    information only goes off of the internal symbol table.  The    external symbols can have links to an appropriate file index and    symbol within the file to give it the appropriate type information.    Because of this, the external symbols are actually larger than the    internal symbols (to contain the link information), and contain the    local symbol structure as a member, though this member is not the    first member of the external symbol structure (!).  I suspect this    split is to make strip easier to deal with.     Each file table has offsets for where the line numbers, local    strings, local symbols, and procedure table starts from within the    global tables, and the indexs are reset to 0 for each of those    tables for the file.     The procedure table contains the binary equivalents of the .ent    (start of the function address), .frame (what register is the    virtual frame pointer, constant offset from the register to obtain    the VFP, and what register holds the return address), .mask/.fmask    (bitmask of saved registers, and where the first register is stored    relative to the VFP) assembler directives.  It also contains the    low and high bounds of the line numbers if debugging is turned on.     The line number table is a compressed form of the normal COFF line    table.  Each line number entry is either 1 or 3 bytes long, and    contains a signed delta from the previous line, and an unsigned    count of the number of instructions this statement takes.     The local symbol table contains the following fields:      1)	iss: index to the local string table giving the name of the 	symbol.      2)	value: value of the symbol (address, register number, etc.).      3)	st: symbol type.  The current symbol types are:  	    stNil	  -- Nuthin' special 	    stGlobal	  -- external symbol 	    stStatic	  -- static 	    stParam	  -- procedure argument 	    stLocal	  -- local variable 	    stLabel	  -- label 	    stProc	  -- External Procedure 	    stBlock	  -- beginning of block 	    stEnd	  -- end (of anything) 	    stMember	  -- member (of anything) 	    stTypedef	  -- type definition 	    stFile	  -- file name 	    stRegReloc	  -- register relocation 	    stForward	  -- forwarding address 	    stStaticProc  -- Static procedure 	    stConstant	  -- const      4)	sc: storage class.  The current storage classes are:  	    scText	  -- text symbol 	    scData	  -- initialized data symbol 	    scBss	  -- un-initialized data symbol 	    scRegister	  -- value of symbol is register number 	    scAbs	  -- value of symbol is absolute 	    scUndefined   -- who knows? 	    scCdbLocal	  -- variable's value is IN se->va.?? 	    scBits	  -- this is a bit field 	    scCdbSystem	  -- value is IN debugger's address space 	    scRegImage	  -- register value saved on stack 	    scInfo	  -- symbol contains debugger information 	    scUserStruct  -- addr in struct user for current process 	    scSData	  -- load time only small data 	    scSBss	  -- load time only small common 	    scRData	  -- load time only read only data 	    scVar	  -- Var parameter (fortranpascal) 	    scCommon	  -- common variable 	    scSCommon	  -- small common 	    scVarRegister -- Var parameter in a register 	    scVariant	  -- Variant record 	    scSUndefined  -- small undefined(external) data 	    scInit	  -- .init section symbol      5)	index: pointer to a local symbol or aux. entry.     For the following program:  	#include<stdio.h>  	main(){ 		printf("Hello World!\n"); 		return 0; 	}     Mips-tdump produces the following information:     Global file header:        magic number             0x162        # sections               2        timestamp                645311799, Wed Jun 13 17:16:39 1990        symbolic header offset   284        symbolic header size     96        optional header          56        flags                    0x0     Symbolic header, magic number = 0x7009, vstamp = 1.31:         Info                      Offset      Number       Bytes        ====                      ======      ======      =====         Line numbers                 380           4           4 [13]        Dense numbers                  0           0           0        Procedures Tables            384           1          52        Local Symbols                436          16         192        Optimization Symbols           0           0           0        Auxiliary Symbols            628          39         156        Local Strings                784          80          80        External Strings             864         144         144        File Tables                 1008           2         144        Relative Files                 0           0           0        External Symbols            1152          20         320     File #0, "hello2.c"         Name index  = 1          Readin      = No        Merge       = No         Endian      = LITTLE        Debug level = G2         Language    = C        Adr         = 0x00000000         Info                       Start      Number        Size      Offset        ====                       =====      ======        ====      ======        Local strings                  0          15          15         784        Local symbols                  0           6          72         436        Line numbers                   0          13          13         380        Optimization symbols           0           0           0           0        Procedures                     0           1          52         384        Auxiliary symbols              0          14          56         628        Relative Files                 0           0           0           0      There are 6 local symbols, starting at 436  	Symbol# 0: "hello2.c" 	    End+1 symbol  = 6 	    String index  = 1 	    Storage class = Text        Index  = 6 	    Symbol type   = File        Value  = 0  	Symbol# 1: "main" 	    End+1 symbol  = 5 	    Type          = int 	    String index  = 10 	    Storage class = Text        Index  = 12 	    Symbol type   = Proc        Value  = 0  	Symbol# 2: "" 	    End+1 symbol  = 4 	    String index  = 0 	    Storage class = Text        Index  = 4 	    Symbol type   = Block       Value  = 8  	Symbol# 3: "" 	    First symbol  = 2 	    String index  = 0 	    Storage class = Text        Index  = 2 	    Symbol type   = End         Value  = 28  	Symbol# 4: "main" 	    First symbol  = 1 	    String index  = 10 	    Storage class = Text        Index  = 1 	    Symbol type   = End         Value  = 52  	Symbol# 5: "hello2.c" 	    First symbol  = 0 	    String index  = 1 	    Storage class = Text        Index  = 0 	    Symbol type   = End         Value  = 0      There are 14 auxiliary table entries, starting at 628.  	* #0               0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #1              24, [  24/      0], [ 6 0:0 0:0:0:0:0:0] 	* #2               8, [   8/      0], [ 2 0:0 0:0:0:0:0:0] 	* #3              16, [  16/      0], [ 4 0:0 0:0:0:0:0:0] 	* #4              24, [  24/      0], [ 6 0:0 0:0:0:0:0:0] 	* #5              32, [  32/      0], [ 8 0:0 0:0:0:0:0:0] 	* #6              40, [  40/      0], [10 0:0 0:0:0:0:0:0] 	* #7              44, [  44/      0], [11 0:0 0:0:0:0:0:0] 	* #8              12, [  12/      0], [ 3 0:0 0:0:0:0:0:0] 	* #9              20, [  20/      0], [ 5 0:0 0:0:0:0:0:0] 	* #10             28, [  28/      0], [ 7 0:0 0:0:0:0:0:0] 	* #11             36, [  36/      0], [ 9 0:0 0:0:0:0:0:0] 	  #12              5, [   5/      0], [ 1 1:0 0:0:0:0:0:0] 	  #13             24, [  24/      0], [ 6 0:0 0:0:0:0:0:0]      There are 1 procedure descriptor entries, starting at 0.  	Procedure descriptor 0: 	    Name index   = 10          Name          = "main" 	    .mask 0x80000000,-4        .fmask 0x00000000,0 	    .frame $29,24,$31 	    Opt. start   = -1          Symbols start = 1 	    First line # = 3           Last line #   = 6 	    Line Offset  = 0           Address       = 0x00000000  	There are 4 bytes holding line numbers, starting at 380. 	    Line           3,   delta     0,   count  2 	    Line           4,   delta     1,   count  3 	    Line           5,   delta     1,   count  2 	    Line           6,   delta     1,   count  6     File #1, "/usr/include/stdio.h"      Name index  = 1          Readin      = No     Merge       = Yes        Endian      = LITTLE     Debug level = G2         Language    = C     Adr         = 0x00000000      Info                       Start      Number        Size      Offset     ====                       =====      ======        ====      ======     Local strings                 15          65          65         799     Local symbols                  6          10         120         508     Line numbers                   0           0           0         380     Optimization symbols           0           0           0           0     Procedures                     1           0           0         436     Auxiliary symbols             14          25         100         684     Relative Files                 0           0           0           0      There are 10 local symbols, starting at 442  	Symbol# 0: "/usr/include/stdio.h" 	    End+1 symbol  = 10 	    String index  = 1 	    Storage class = Text        Index  = 10 	    Symbol type   = File        Value  = 0  	Symbol# 1: "_iobuf" 	    End+1 symbol  = 9 	    String index  = 22 	    Storage class = Info        Index  = 9 	    Symbol type   = Block       Value  = 20  	Symbol# 2: "_cnt" 	    Type          = int 	    String index  = 29 	    Storage class = Info        Index  = 4 	    Symbol type   = Member      Value  = 0  	Symbol# 3: "_ptr" 	    Type          = ptr to char 	    String index  = 34 	    Storage class = Info        Index  = 15 	    Symbol type   = Member      Value  = 32  	Symbol# 4: "_base" 	    Type          = ptr to char 	    String index  = 39 	    Storage class = Info        Index  = 16 	    Symbol type   = Member      Value  = 64  	Symbol# 5: "_bufsiz" 	    Type          = int 	    String index  = 45 	    Storage class = Info        Index  = 4 	    Symbol type   = Member      Value  = 96  	Symbol# 6: "_flag" 	    Type          = short 	    String index  = 53 	    Storage class = Info        Index  = 3 	    Symbol type   = Member      Value  = 128  	Symbol# 7: "_file" 	    Type          = char 	    String index  = 59 	    Storage class = Info        Index  = 2 	    Symbol type   = Member      Value  = 144  	Symbol# 8: "" 	    First symbol  = 1 	    String index  = 0 	    Storage class = Info        Index  = 1 	    Symbol type   = End         Value  = 0  	Symbol# 9: "/usr/include/stdio.h" 	    First symbol  = 0 	    String index  = 1 	    Storage class = Text        Index  = 0 	    Symbol type   = End         Value  = 0      There are 25 auxiliary table entries, starting at 642.  	* #14             -1, [4095/1048575], [63 1:1 f:f:f:f:f:f] 	  #15          65544, [   8/     16], [ 2 0:0 1:0:0:0:0:0] 	  #16          65544, [   8/     16], [ 2 0:0 1:0:0:0:0:0] 	* #17         196656, [  48/     48], [12 0:0 3:0:0:0:0:0] 	* #18           8191, [4095/      1], [63 1:1 0:0:0:0:f:1] 	* #19              1, [   1/      0], [ 0 1:0 0:0:0:0:0:0] 	* #20          20479, [4095/      4], [63 1:1 0:0:0:0:f:4] 	* #21              1, [   1/      0], [ 0 1:0 0:0:0:0:0:0] 	* #22              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #23              2, [   2/      0], [ 0 0:1 0:0:0:0:0:0] 	* #24            160, [ 160/      0], [40 0:0 0:0:0:0:0:0] 	* #25              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #26              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #27              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #28              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #29              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #30              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #31              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #32              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #33              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #34              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #35              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #36              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #37              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0] 	* #38              0, [   0/      0], [ 0 0:0 0:0:0:0:0:0]      There are 0 procedure descriptor entries, starting at 1.     There are 20 external symbols, starting at 1152  	Symbol# 0: "_iob" 	    Type          = array [3 {160}] of struct _iobuf { ifd = 1, index = 1 } 	    String index  = 0           Ifd    = 1 	    Storage class = Nil         Index  = 17 	    Symbol type   = Global      Value  = 60  	Symbol# 1: "fopen" 	    String index  = 5           Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 2: "fdopen" 	    String index  = 11          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 3: "freopen" 	    String index  = 18          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 4: "popen" 	    String index  = 26          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 5: "tmpfile" 	    String index  = 32          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 6: "ftell" 	    String index  = 40          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 7: "rewind" 	    String index  = 46          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 8: "setbuf" 	    String index  = 53          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 9: "setbuffer" 	    String index  = 60          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 10: "setlinebuf" 	    String index  = 70          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 11: "fgets" 	    String index  = 81          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 12: "gets" 	    String index  = 87          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 13: "ctermid" 	    String index  = 92          Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 14: "cuserid" 	    String index  = 100         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 15: "tempnam" 	    String index  = 108         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 16: "tmpnam" 	    String index  = 116         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 17: "sprintf" 	    String index  = 123         Ifd    = 1 	    Storage class = Nil         Index  = 1048575 	    Symbol type   = Proc        Value  = 0  	Symbol# 18: "main" 	    Type          = int 	    String index  = 131         Ifd    = 0 	    Storage class = Text        Index  = 1 	    Symbol type   = Proc        Value  = 0  	Symbol# 19: "printf" 	    String index  = 136         Ifd    = 0 	    Storage class = Undefined   Index  = 1048575 	    Symbol type   = Proc        Value  = 0     The following auxiliary table entries were unused:      #0               0  0x00000000  void     #2               8  0x00000008  char     #3              16  0x00000010  short     #4              24  0x00000018  int     #5              32  0x00000020  long     #6              40  0x00000028  float     #7              44  0x0000002c  double     #8              12  0x0000000c  unsigned char     #9              20  0x00000014  unsigned short     #10             28  0x0000001c  unsigned int     #11             36  0x00000024  unsigned long     #14              0  0x00000000  void     #15             24  0x00000018  int     #19             32  0x00000020  long     #20             40  0x00000028  float     #21             44  0x0000002c  double     #22             12  0x0000000c  unsigned char     #23             20  0x00000014  unsigned short     #24             28  0x0000001c  unsigned int     #25             36  0x00000024  unsigned long     #26             48  0x00000030  struct no name { ifd = -1, index = 1048575 } */
 end_comment
 
 begin_escape
@@ -543,16 +543,16 @@ name|hash_no
 init|=
 literal|0
 block|,
-comment|/* don't hash type */
+comment|/* Don't hash type */
 name|hash_yes
 init|=
 literal|1
 block|,
-comment|/* ok to hash type, or use previous hash */
+comment|/* OK to hash type, or use previous hash */
 name|hash_record
 init|=
 literal|2
-comment|/* ok to record hash, but don't use prev. */
+comment|/* OK to record hash, but don't use prev.  */
 block|}
 name|hash_state_t
 typedef|;
@@ -645,7 +645,7 @@ comment|/* Structures to provide n-number of virtual arrays, each of which can  
 end_comment
 
 begin_comment
-comment|/* FIXME: Yes, there can be such strings while emitting C++ class debug    info.  Templates are the offender here, the test case in question     having a mangled class name of       t7rb_tree4Z4xkeyZt4pair2ZC4xkeyZt7xsocket1Z4UserZt9select1st2Zt4pair\      2ZC4xkeyZt7xsocket1Z4UserZ4xkeyZt4less1Z4xkey     Repeat that a couple dozen times while listing the class members and    you've got strings over 4k.  Hack around this for now by increasing    the page size.  A proper solution would abandon this structure scheme    certainly for very large strings, and possibly entirely.  */
+comment|/* FIXME: Yes, there can be such strings while emitting C++ class debug    info.  Templates are the offender here, the test case in question    having a mangled class name of       t7rb_tree4Z4xkeyZt4pair2ZC4xkeyZt7xsocket1Z4UserZt9select1st2Zt4pair\      2ZC4xkeyZt7xsocket1Z4UserZ4xkeyZt4less1Z4xkey     Repeat that a couple dozen times while listing the class members and    you've got strings over 4k.  Hack around this for now by increasing    the page size.  A proper solution would abandon this structure scheme    certainly for very large strings, and possibly entirely.  */
 end_comment
 
 begin_ifndef
@@ -841,7 +841,7 @@ value|\ }
 end_define
 
 begin_comment
-comment|/* Master type for indexes within the symbol table. */
+comment|/* Master type for indexes within the symbol table.  */
 end_comment
 
 begin_typedef
@@ -4848,7 +4848,7 @@ name|scope_delta
 operator|=
 literal|1
 expr_stmt|;
-comment|/* For every block type except file, struct, union, or 	 enumeration blocks, push a level on the tag stack.  We omit 	 file types, so that tags can span file boundaries.  */
+comment|/* For every block type except file, struct, union, or          enumeration blocks, push a level on the tag stack.  We omit          file types, so that tags can span file boundaries.  */
 if|if
 condition|(
 name|type
@@ -5719,7 +5719,7 @@ index|[
 literal|5
 index|]
 expr_stmt|;
-comment|/* For anything that adds additional information, we must not hash,      so check here, and reset our state. */
+comment|/* For anything that adds additional information, we must not hash,      so check here, and reset our state.  */
 if|if
 condition|(
 name|state
@@ -5956,7 +5956,7 @@ name|hash_ptr
 expr_stmt|;
 block|}
 block|}
-comment|/* Everything is set up, add the aux symbol. */
+comment|/* Everything is set up, add the aux symbol.  */
 if|if
 condition|(
 name|vp
@@ -6300,7 +6300,7 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/* NOTE:  Mips documentation claims that the bitfield width goes here.      But it needs to be emitted earlier. */
+comment|/* NOTE:  Mips documentation claims that the bitfield width goes here.      But it needs to be emitted earlier.  */
 return|return
 name|ret
 return|;
@@ -7190,6 +7190,7 @@ decl_stmt|;
 comment|/* file name */
 name|int
 name|indx
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|fake
@@ -7289,13 +7290,24 @@ name|symbol_table_frozen
 operator|&&
 name|debug_type
 operator|==
-name|DEBUG_NONE
+name|DEBUG_UNSPECIFIED
 condition|)
 name|debug_type
 operator|=
 name|DEBUG_ECOFF
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|debug_type
+operator|==
+name|DEBUG_UNSPECIFIED
+condition|)
+name|debug_type
+operator|=
+name|DEBUG_NONE
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NO_LISTING
@@ -7436,7 +7448,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* If this is a new file, create it. */
+comment|/* If this is a new file, create it.  */
 if|if
 condition|(
 name|fil_ptr
@@ -7628,7 +7640,7 @@ name|fil_ptr
 operator|->
 name|next_file
 expr_stmt|;
-comment|/* Add void& int types to the file (void should be first to catch 	 errant 0's within the index fields).  */
+comment|/* Add void& int types to the file (void should be first to catch          errant 0's within the index fields).  */
 name|fil_ptr
 operator|->
 name|void_type
@@ -7721,7 +7733,7 @@ if|if
 condition|(
 name|debug_type
 operator|==
-name|DEBUG_NONE
+name|DEBUG_UNSPECIFIED
 condition|)
 name|debug_type
 operator|=
@@ -8107,6 +8119,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -8243,6 +8256,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -8484,6 +8498,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -8668,6 +8683,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -8841,6 +8857,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -8907,6 +8924,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -9080,6 +9098,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -9173,7 +9192,7 @@ literal|0
 index|]
 condition|)
 block|{
-comment|/* FIXME: We could handle this by setting the continued bit.              There would still be a limit: the .type argument can not              be infinite.  */
+comment|/* FIXME: We could handle this by setting the continued bit. 	     There would still be a limit: the .type argument can not 	     be infinite.  */
 name|as_warn
 argument_list|(
 name|_
@@ -9295,7 +9314,7 @@ operator|==
 name|tq_Proc
 condition|)
 block|{
-comment|/* If this is a function, ignore it, so that we don't get two 	 entries (one from the .ent, and one for the .def that 	 precedes it).  Save the type information so that the end 	 block can properly add it after the begin block index.  For 	 MIPS knows what reason, we must strip off the function type 	 at this point.  */
+comment|/* If this is a function, ignore it, so that we don't get two          entries (one from the .ent, and one for the .def that          precedes it).  Save the type information so that the end          block can properly add it after the begin block index.  For          MIPS knows what reason, we must strip off the function type          at this point.  */
 name|coff_is_function
 operator|=
 literal|1
@@ -9345,6 +9364,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -9439,6 +9459,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|expressionS
@@ -9549,6 +9570,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -9686,7 +9708,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* If this is an array, make sure the same number of dimensions 	 and sizes were passed, creating extra sizes for multiply 	 dimensioned arrays if not passed.  */
+comment|/* If this is an array, make sure the same number of dimensions          and sizes were passed, creating extra sizes for multiply          dimensioned arrays if not passed.  */
 name|coff_type
 operator|.
 name|extra_sizes
@@ -9844,7 +9866,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* Is this a bitfield?  This is indicated by a structure memeber 	 having a size field that isn't an array.  */
+comment|/* Is this a bitfield?  This is indicated by a structure memeber          having a size field that isn't an array.  */
 name|coff_type
 operator|.
 name|bitfield
@@ -9986,7 +10008,7 @@ condition|)
 block|{
 default|default:
 break|break;
-comment|/* For the beginning of structs, unions, and enumerations, the 	 size info needs to be passed in the value field.  */
+comment|/* For the beginning of structs, unions, and enumerations, the          size info needs to be passed in the value field.  */
 case|case
 name|st_Block
 case|:
@@ -10038,7 +10060,7 @@ name|T_ENUM
 operator|)
 expr_stmt|;
 break|break;
-comment|/* For the end of structs, unions, and enumerations, omit the 	 name which is always ".eos".  This needs to be done last, so 	 that any error reporting above gives the correct name.  */
+comment|/* For the end of structs, unions, and enumerations, omit the          name which is always ".eos".  This needs to be done last, so          that any error reporting above gives the correct name.  */
 case|case
 name|st_End
 case|:
@@ -10064,7 +10086,7 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-comment|/* Members of structures and unions that aren't bitfields, need 	 to adjust the value from a byte offset to a bit offset. 	 Members of enumerations do not have the value adjusted, and 	 can be distinguished by indx == indexNil.  For enumerations, 	 update the maximum enumeration value.  */
+comment|/* Members of structures and unions that aren't bitfields, need          to adjust the value from a byte offset to a bit offset.          Members of enumerations do not have the value adjusted, and          can be distinguished by indx == indexNil.  For enumerations,          update the maximum enumeration value.  */
 case|case
 name|st_Member
 case|:
@@ -10202,6 +10224,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10416,6 +10439,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10591,6 +10615,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -10675,6 +10700,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -10760,6 +10786,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -10854,6 +10881,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -10952,7 +10980,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* Alpha-OSF1 adds "the offset of saved $a0 from $sp", according 	 to Sandro.  I don't yet know where this value should be stored, if 	 anywhere.  */
+comment|/* Alpha-OSF1 adds "the offset of saved $a0 from $sp", according to      Sandro.  I don't yet know where this value should be stored, if      anywhere.  */
 block|demand_empty_rest_of_line ();
 else|#
 directive|else
@@ -10981,6 +11009,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -11075,6 +11104,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|lineno_list_t
@@ -11404,6 +11434,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -11412,7 +11443,7 @@ operator|!
 name|stabs_seen
 condition|)
 block|{
-comment|/* Add a dummy @stabs dymbol. */
+comment|/* Add a dummy @stabs dymbol.  */
 name|stabs_seen
 operator|=
 literal|1
@@ -11469,7 +11500,7 @@ name|TC_MIPS
 end_ifndef
 
 begin_comment
-comment|/* For TC_MIPS use the version in tc-mips.c. */
+comment|/* For TC_MIPS use the version in tc-mips.c.  */
 end_comment
 
 begin_function
@@ -11657,6 +11688,7 @@ name|desc
 parameter_list|)
 name|segT
 name|sec
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|what
@@ -12217,6 +12249,9 @@ argument_list|(
 name|sym
 argument_list|)
 operator|<=
+operator|(
+name|unsigned
+operator|)
 name|bfd_get_gp_size
 argument_list|(
 name|stdoutput
@@ -12231,7 +12266,7 @@ specifier|static
 name|asymbol
 name|scom_symbol
 decl_stmt|;
-comment|/* We must construct a fake section similar to bfd_com_section 	 but with the name .scommon.  */
+comment|/* We must construct a fake section similar to bfd_com_section          but with the name .scommon.  */
 if|if
 condition|(
 name|scom_section
@@ -12539,6 +12574,11 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 operator|*
 name|bufend
 operator|-
@@ -12548,6 +12588,7 @@ name|buf
 operator|+
 name|offset
 operator|)
+argument_list|)
 operator|<
 name|add
 condition|)
@@ -12753,7 +12794,7 @@ name|totcount
 operator|=
 literal|0
 expr_stmt|;
-comment|/* For some reason the address of the first procedure is ignored      when reading line numbers.  This doesn't matter if the address of      the first procedure is 0, but when gcc is generating MIPS      embedded PIC code, it will put strings in the .text section      before the first procedure.  We cope by inserting a dummy line if      the address of the first procedure is not 0.  Hopefully this      won't screw things up too badly.         Don't do this for ECOFF assembly source line numbers.  They work      without this extra attention.  */
+comment|/* For some reason the address of the first procedure is ignored      when reading line numbers.  This doesn't matter if the address of      the first procedure is 0, but when gcc is generating MIPS      embedded PIC code, it will put strings in the .text section      before the first procedure.  We cope by inserting a dummy line if      the address of the first procedure is not 0.  Hopefully this      won't screw things up too badly.       Don't do this for ECOFF assembly source line numbers.  They work      without this extra attention.  */
 if|if
 condition|(
 name|debug_type
@@ -12880,7 +12921,7 @@ decl_stmt|;
 name|long
 name|delta
 decl_stmt|;
-comment|/* Get the offset to the memory address of the next line number 	 (in words).  Do this first, so that we can skip ahead to the 	 next useful line number entry.  */
+comment|/* Get the offset to the memory address of the next line number          (in words).  Do this first, so that we can skip ahead to the          next useful line number entry.  */
 if|if
 condition|(
 name|l
@@ -13945,7 +13986,7 @@ block|{
 name|symint_t
 name|indx
 decl_stmt|;
-comment|/* The value of a block start symbol is the 			 offset from the start of the procedure.  For 			 other symbols we just use the gas value (but 			 we must offset it by the vma of the section, 			 just as BFD does, because BFD will not see 			 this value).  */
+comment|/* The value of a block start symbol is the 		         offset from the start of the procedure.  For 		         other symbols we just use the gas value (but 		         we must offset it by the vma of the section, 		         just as BFD does, because BFD will not see 		         this value).  */
 if|if
 condition|(
 name|sym_ptr
@@ -14122,7 +14163,7 @@ name|st
 operator|=
 name|st_StaticProc
 expr_stmt|;
-comment|/* Get the type and storage class based on where 			 the symbol actually wound up.  Traditionally, 			 N_LBRAC and N_RBRAC are *not* relocated. */
+comment|/* Get the type and storage class based on where 		         the symbol actually wound up.  Traditionally, 		         N_LBRAC and N_RBRAC are *not* relocated.  */
 name|indx
 operator|=
 name|sym_ptr
@@ -14319,6 +14360,9 @@ literal|0
 operator|||
 name|s
 operator|>
+operator|(
+name|unsigned
+operator|)
 name|bfd_get_gp_size
 argument_list|(
 name|stdoutput
@@ -14382,6 +14426,9 @@ argument_list|(
 name|as_sym
 argument_list|)
 operator|<=
+operator|(
+name|unsigned
+operator|)
 name|bfd_get_gp_size
 argument_list|(
 name|stdoutput
@@ -14502,7 +14549,7 @@ name|sc_Abs
 expr_stmt|;
 else|else
 block|{
-comment|/* This must be a user named section.                                  This is not possible in ECOFF, but it                                  is in ELF.  */
+comment|/* This must be a user named section. 			         This is not possible in ECOFF, but it 			         is in ELF.  */
 name|sc
 operator|=
 name|sc_Data
@@ -14535,7 +14582,7 @@ operator|)
 name|sc
 expr_stmt|;
 block|}
-comment|/* This is just an external symbol if it is 			 outside a procedure and it has a type. 			 FIXME: g++ will generate symbols which have 			 different names in the debugging information 			 than the actual symbol.  Should we handle 			 them here?  */
+comment|/* This is just an external symbol if it is 		         outside a procedure and it has a type. 		         FIXME: g++ will generate symbols which have 		         different names in the debugging information 		         than the actual symbol.  Should we handle 		         them here?  */
 if|if
 condition|(
 operator|(
@@ -14594,7 +14641,7 @@ name|local
 operator|=
 literal|0
 expr_stmt|;
-comment|/* This is just an external symbol if it is a                          common symbol.  */
+comment|/* This is just an external symbol if it is a 		         common symbol.  */
 if|if
 condition|(
 name|S_IS_COMMON
@@ -14606,7 +14653,7 @@ name|local
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If an st_end symbol has an associated gas 			 symbol, then it is a local label created for 			 a .bend or .end directive.  Stabs line 			 numbers will have \001 in the names.  */
+comment|/* If an st_end symbol has an associated gas 		         symbol, then it is a local label created for 		         a .bend or .end directive.  Stabs line 		         numbers will have \001 in the names.  */
 if|if
 condition|(
 name|local
@@ -14845,7 +14892,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-comment|/* The value of the symbol marking the end of a 			 procedure is the size of the procedure.  The 			 value of the symbol marking the end of a 			 block is the offset from the start of the 			 procedure to the block.  */
+comment|/* The value of the symbol marking the end of a 		         procedure is the size of the procedure.  The 		         value of the symbol marking the end of a 		         block is the offset from the start of the 		         procedure to the block.  */
 if|if
 condition|(
 name|begin_type
@@ -14925,7 +14972,7 @@ name|as_sym
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* If the size is odd, this is probably a                              mips16 function; force it to be even.  */
+comment|/* If the size is odd, this is probably a 			     mips16 function; force it to be even.  */
 if|if
 condition|(
 operator|(
@@ -15133,10 +15180,15 @@ condition|)
 block|{
 if|if
 condition|(
+call|(
+name|bfd_size_type
+call|)
+argument_list|(
 operator|*
 name|bufend
 operator|-
 name|sym_out
+argument_list|)
 operator|<
 name|external_sym_size
 condition|)
@@ -15287,7 +15339,7 @@ name|fil_ptr
 operator|->
 name|file_index
 expr_stmt|;
-comment|/* Don't try to merge an FDR which has an                          external symbol attached to it.  */
+comment|/* Don't try to merge an FDR which has an 		         external symbol attached to it.  */
 if|if
 condition|(
 name|S_IS_EXTERNAL
@@ -15662,7 +15714,7 @@ condition|(
 name|first
 condition|)
 block|{
-comment|/* This code used to force the adr of the very                          first fdr to be 0.  However, the native tools                          don't do that, and I can't remember why it                          used to work that way, so I took it out.  */
+comment|/* This code used to force the adr of the very 		         first fdr to be 0.  However, the native tools 		         don't do that, and I can't remember why it 		         used to work that way, so I took it out.  */
 name|fil_ptr
 operator|->
 name|fdr
@@ -15692,10 +15744,15 @@ name|adr
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|bfd_size_type
+call|)
+argument_list|(
 operator|*
 name|bufend
 operator|-
 name|pdr_out
+argument_list|)
 operator|<
 name|external_pdr_size
 condition|)
@@ -16038,6 +16095,11 @@ control|)
 block|{
 if|if
 condition|(
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 operator|*
 name|bufend
 operator|-
@@ -16046,6 +16108,7 @@ name|char
 operator|*
 operator|)
 name|aux_out
+argument_list|)
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -16411,10 +16474,16 @@ name|objects_per_page
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 operator|*
 name|bufend
 operator|-
 name|str_out
+argument_list|)
 operator|<
 name|str_cnt
 condition|)
@@ -16837,10 +16906,15 @@ control|)
 block|{
 if|if
 condition|(
+call|(
+name|bfd_size_type
+call|)
+argument_list|(
 operator|*
 name|bufend
 operator|-
 name|fdr_out
+argument_list|)
 operator|<
 name|external_fdr_size
 condition|)
@@ -17557,6 +17631,10 @@ name|offset
 expr_stmt|;
 if|if
 condition|(
+call|(
+name|bfd_size_type
+call|)
+argument_list|(
 name|bufend
 operator|-
 operator|(
@@ -17564,6 +17642,7 @@ name|buf
 operator|+
 name|offset
 operator|)
+argument_list|)
 operator|<
 name|proc_cnt
 operator|*

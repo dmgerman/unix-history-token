@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF object file format.    Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ELF object file format.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -26,6 +26,10 @@ name|OBJ_ELF
 value|1
 end_define
 
+begin_comment
+comment|/* Note that all macros in this file should be wrapped in #ifndef, for    sake of obj-multi.h which includes this file.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -47,7 +51,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<bfd.h>
+file|"bfd.h"
 end_include
 
 begin_define
@@ -83,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|ECOFF_DEBUGGING
-value|alpha_flag_mdebug
+value|(alpha_flag_mdebug> 0)
 end_define
 
 begin_decl_stmt
@@ -232,6 +236,32 @@ name|OBJ_SYMFIELD_TYPE
 value|struct elf_obj_sy
 end_define
 
+begin_comment
+comment|/* Symbol fields used by the ELF back end.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELF_TARGET_SYMBOL_FIELDS
+value|int local:1;
+end_define
+
+begin_comment
+comment|/* Don't change this; change ELF_TARGET_SYMBOL_FIELDS instead.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_SYMBOL_FIELDS
+value|ELF_TARGET_SYMBOL_FIELDS
+end_define
+
+begin_comment
+comment|/* #include "targ-cpu.h" */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -257,6 +287,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|obj_begin
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -264,6 +300,11 @@ name|obj_begin
 parameter_list|()
 value|elf_begin ()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -289,7 +330,7 @@ name|elf_symbol
 parameter_list|(
 name|asymbol
 parameter_list|)
-value|((elf_symbol_type *)(&(asymbol)->the_bfd))
+value|((elf_symbol_type *) (&(asymbol)->the_bfd))
 end_define
 
 begin_ifndef
@@ -484,6 +525,37 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|obj_frob_file_before_adjust
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|obj_frob_file_before_adjust
+value|elf_frob_file_before_adjust
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|elf_frob_file_before_adjust
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|obj_frob_file_after_relocs
 end_ifndef
 
@@ -512,12 +584,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|obj_app_file
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|obj_app_file
 value|elf_file_symbol
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -526,6 +609,7 @@ name|elf_file_symbol
 name|PARAMS
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -615,6 +699,36 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|obj_elf_text
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fix
+modifier|*
+name|obj_elf_vtable_inherit
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fix
+modifier|*
+name|obj_elf_vtable_entry
 name|PARAMS
 argument_list|(
 operator|(
@@ -738,6 +852,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SEPARATE_STAB_SECTIONS
+end_ifndef
+
+begin_comment
+comment|/* Avoid ifndef each separate macro setting by wrapping the whole of the    stab group on the assumption that whoever sets SEPARATE_STAB_SECTIONS    caters to ECOFF_DEBUGGING and the right setting of INIT_STAB_SECTIONS    and OBJ_PROCESS_STAB too, without needing the tweaks below.  */
+end_comment
+
 begin_comment
 comment|/* Stabs go in a separate section.  */
 end_comment
@@ -813,7 +937,7 @@ parameter_list|(
 name|seg
 parameter_list|)
 define|\
-value|((void)(ECOFF_DEBUGGING ? 0 : (obj_elf_init_stab_section (seg), 0)))
+value|((void) (ECOFF_DEBUGGING ? 0 : (obj_elf_init_stab_section (seg), 0)))
 end_define
 
 begin_undef
@@ -850,6 +974,15 @@ end_endif
 
 begin_comment
 comment|/* ECOFF_DEBUGGING */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SEPARATE_STAB_SECTIONS not defined.  */
 end_comment
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* flonum_mult.c - multiply two flonums    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.     This file is part of Gas, the GNU Assembler.     The GNU assembler is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY.  No author or distributor    accepts responsibility to anyone for the consequences of using it    or for whether it serves any particular purpose or works at all,    unless he says so in writing.  Refer to the GNU Assembler General    Public License for full details.     Everyone is granted permission to copy, modify and redistribute    the GNU Assembler, but only under the conditions described in the    GNU Assembler General Public License.  A copy of this license is    supposed to have been given to you along with the GNU Assembler    so you can know your rights and responsibilities.  It should be    in a file named COPYING.  Among other things, the copyright    notice and this notice must be preserved on all copies.  */
+comment|/* flonum_mult.c - multiply two flonums    Copyright 1987, 1990, 1991, 1992, 1995, 2000    Free Software Foundation, Inc.     This file is part of Gas, the GNU Assembler.     The GNU assembler is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY.  No author or distributor    accepts responsibility to anyone for the consequences of using it    or for whether it serves any particular purpose or works at all,    unless he says so in writing.  Refer to the GNU Assembler General    Public License for full details.     Everyone is granted permission to copy, modify and redistribute    the GNU Assembler, but only under the conditions described in the    GNU Assembler General Public License.  A copy of this license is    supposed to have been given to you along with the GNU Assembler    so you can know your rights and responsibilities.  It should be    in a file named COPYING.  Among other things, the copyright    notice and this notice must be preserved on all copies.  */
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ file|"flonum.h"
 end_include
 
 begin_comment
-comment|/*	plan for a . b => p(roduct) 	 	 	+-------+-------+-/   /-+-------+-------+ 	| a	| a	|  ...	| a	| a	| 	|  A	|  A-1	|	|  1	|  0	| 	+-------+-------+-/   /-+-------+-------+ 	 	 	+-------+-------+-/   /-+-------+-------+ 	| b	| b	|  ...	| b	| b	| 	|  B	|  B-1	|	|  1	|  0	| 	+-------+-------+-/   /-+-------+-------+ 	 	 	+-------+-------+-/   /-+-------+-/   /-+-------+-------+ 	| p	| p	|  ...	| p	|  ...	| p	| p	| 	|  A+B+1|  A+B	|	|  N	|	|  1	|  0	| 	+-------+-------+-/   /-+-------+-/   /-+-------+-------+ 	 	/^\ 	(carry) a .b	   ...	    |	   ...	 a .b	 a .b 	A  B 		    |		  0  1	  0  0 	| 	...	    |	   ...	 a .b 	|		  1  0 	| 	|	   ... 	| 	| 	| 	|		  ___ 	|		  \ 	+-----  P  =>  a .b 	N	  /__  i  j 	 	N = 0 ... A+B 	 	for all i,j where i+j=N 	[i,j integers> 0] 	 	a[], b[], p[] may not intersect. 	Zero length factors signify 0 significant bits: treat as 0.0. 	0.0 factors do the right thing. 	Zero length product OK. 	 	I chose the ForTran accent "foo[bar]" instead of the C accent "*garply" 	because I felt the ForTran way was more intuitive. The C way would 	probably yield better code on most C compilers. Dean Elsner. 	(C style also gives deeper insight [to me] ... oh well ...) 	*/
+comment|/*	plan for a . b => p(roduct)  	+-------+-------+-/   /-+-------+-------+ 	| a	| a	|  ...	| a	| a	| 	|  A	|  A-1	|	|  1	|  0	| 	+-------+-------+-/   /-+-------+-------+  	+-------+-------+-/   /-+-------+-------+ 	| b	| b	|  ...	| b	| b	| 	|  B	|  B-1	|	|  1	|  0	| 	+-------+-------+-/   /-+-------+-------+  	+-------+-------+-/   /-+-------+-/   /-+-------+-------+ 	| p	| p	|  ...	| p	|  ...	| p	| p	| 	|  A+B+1|  A+B	|	|  N	|	|  1	|  0	| 	+-------+-------+-/   /-+-------+-/   /-+-------+-------+  	/^\ 	(carry) a .b	   ...	    |	   ...	 a .b	 a .b 	A  B 		    |		  0  1	  0  0 	| 	...	    |	   ...	 a .b 	|		  1  0 	| 	|	   ... 	| 	| 	| 	|		  ___ 	|		  \ 	+-----  P  =>  a .b 	N	  /__  i  j  	N = 0 ... A+B  	for all i,j where i+j=N 	[i,j integers> 0]  	a[], b[], p[] may not intersect. 	Zero length factors signify 0 significant bits: treat as 0.0. 	0.0 factors do the right thing. 	Zero length product OK.  	I chose the ForTran accent "foo[bar]" instead of the C accent "*garply" 	because I felt the ForTran way was more intuitive. The C way would 	probably yield better code on most C compilers. Dean Elsner. 	(C style also gives deeper insight [to me] ... oh well ...)  */
 end_comment
 
 begin_escape
@@ -50,23 +50,23 @@ block|{
 name|int
 name|size_of_a
 decl_stmt|;
-comment|/* 0 origin */
+comment|/* 0 origin  */
 name|int
 name|size_of_b
 decl_stmt|;
-comment|/* 0 origin */
+comment|/* 0 origin  */
 name|int
 name|size_of_product
 decl_stmt|;
-comment|/* 0 origin */
+comment|/* 0 origin  */
 name|int
 name|size_of_sum
 decl_stmt|;
-comment|/* 0 origin */
+comment|/* 0 origin  */
 name|int
 name|extra_product_positions
 decl_stmt|;
-comment|/* 1 origin */
+comment|/* 1 origin  */
 name|unsigned
 name|long
 name|work
@@ -86,11 +86,11 @@ name|long
 name|significant
 decl_stmt|;
 comment|/* TRUE when we emit a non-0 littlenum  */
-comment|/* ForTran accent follows. */
+comment|/* ForTran accent follows.  */
 name|int
 name|P
 decl_stmt|;
-comment|/* Scan product low-order -> high. */
+comment|/* Scan product low-order -> high.  */
 name|int
 name|N
 decl_stmt|;
@@ -98,11 +98,11 @@ comment|/* As in sum above.  */
 name|int
 name|A
 decl_stmt|;
-comment|/* Which [] of a? */
+comment|/* Which [] of a?  */
 name|int
 name|B
 decl_stmt|;
-comment|/* Which [] of b? */
+comment|/* Which [] of b?  */
 if|if
 condition|(
 operator|(
@@ -134,7 +134,7 @@ literal|'+'
 operator|)
 condition|)
 block|{
-comment|/* ... 		   Got to fail somehow.  Any suggestions? */
+comment|/* Got to fail somehow.  Any suggestions?  */
 name|product
 operator|->
 name|sign
@@ -224,12 +224,12 @@ name|P
 operator|=
 name|extra_product_positions
 expr_stmt|;
-comment|/* P< 0 */
+comment|/* P< 0  */
 name|exponent
 operator|-=
 name|extra_product_positions
 expr_stmt|;
-comment|/* Increases exponent. */
+comment|/* Increases exponent.  */
 block|}
 else|else
 block|{
@@ -442,7 +442,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/*    * [P]-> position # size_of_sum + 1.    * This is where 'carry' should go.    */
+comment|/* [P]-> position # size_of_sum + 1.      This is where 'carry' should go.  */
 ifdef|#
 directive|ifdef
 name|TRACE
@@ -466,7 +466,6 @@ name|extra_product_positions
 operator|>
 literal|0
 condition|)
-block|{
 name|product
 operator|->
 name|low
@@ -476,11 +475,10 @@ index|]
 operator|=
 name|carry
 expr_stmt|;
-block|}
 else|else
 block|{
-comment|/* No room at high order for carry littlenum. */
-comment|/* Shift right 1 to make room for most significant littlenum. */
+comment|/* No room at high order for carry littlenum.  */
+comment|/* Shift right 1 to make room for most significant littlenum.  */
 name|exponent
 operator|++
 expr_stmt|;
@@ -525,11 +523,9 @@ block|}
 block|}
 block|}
 else|else
-block|{
 name|P
 operator|--
 expr_stmt|;
-block|}
 name|product
 operator|->
 name|leader
@@ -548,10 +544,6 @@ name|exponent
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of flonum_mult.c */
-end_comment
 
 end_unit
 

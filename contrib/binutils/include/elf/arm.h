@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ARM ELF support for BFD.    Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ARM ELF support for BFD.    Copyright 1998, 1999, 2000, 2001 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -97,6 +97,52 @@ define|#
 directive|define
 name|EF_SOFT_FLOAT
 value|0x200
+end_define
+
+begin_comment
+comment|/* Other constants defined in the ARM ELF spec. version A-08.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_ARM_SYMSARESORTED
+value|0x04
+end_define
+
+begin_comment
+comment|/* NB conflicts with EF_INTERWORK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_ARM_EABIMASK
+value|0xFF000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_ARM_EABI_VERSION
+parameter_list|(
+name|flags
+parameter_list|)
+value|((flags)& EF_ARM_EABIMASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_ARM_EABI_UNKNOWN
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_ARM_EABI_VER1
+value|0x01000000
 end_define
 
 begin_comment
@@ -205,6 +251,28 @@ begin_comment
 comment|/* Segment contains the location addressed by the static base.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PF_ARM_PI
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Segment is position-independent.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_ARM_ABS
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Segment must be loaded at its base address.  */
+end_comment
+
 begin_comment
 comment|/* Relocation types.  */
 end_comment
@@ -251,6 +319,128 @@ argument_list|,
 literal|3
 argument_list|)
 end_macro
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OLD_ARM_ABI
+end_ifdef
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_ABS8
+argument_list|,
+literal|4
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_ABS16
+argument_list|,
+literal|5
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_ABS12
+argument_list|,
+literal|6
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_THM_ABS5
+argument_list|,
+literal|7
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_THM_PC22
+argument_list|,
+literal|8
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_SBREL32
+argument_list|,
+literal|9
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_AMP_VCALL9
+argument_list|,
+literal|10
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_THM_PC11
+argument_list|,
+literal|11
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Cygnus extension to abi: Thumb unconditional branch.  */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_THM_PC9
+argument_list|,
+literal|12
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Cygnus extension to abi: Thumb conditional branch.  */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_GNU_VTINHERIT
+argument_list|,
+literal|13
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_ARM_GNU_VTENTRY
+argument_list|,
+literal|14
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not OLD_ARM_ABI */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -369,6 +559,15 @@ literal|16
 argument_list|)
 end_macro
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not OLD_ARM_ABI */
+end_comment
+
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
@@ -379,7 +578,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* copy symbol at runtime */
+comment|/* Copy symbol at runtime.  */
 end_comment
 
 begin_macro
@@ -392,7 +591,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* create GOT entry */
+comment|/* Create GOT entry.  */
 end_comment
 
 begin_macro
@@ -405,7 +604,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* create PLT entry */
+comment|/* Create PLT entry.  */
 end_comment
 
 begin_macro
@@ -418,7 +617,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* adjust by program base */
+comment|/* Adjust by program base.  */
 end_comment
 
 begin_macro
@@ -431,7 +630,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* 32 bit offset to GOT */
+comment|/* 32 bit offset to GOT.  */
 end_comment
 
 begin_macro
@@ -444,7 +643,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* 32 bit PC relative offset to GOT */
+comment|/* 32 bit PC relative offset to GOT.  */
 end_comment
 
 begin_macro
@@ -457,7 +656,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* 32 bit GOT entry */
+comment|/* 32 bit GOT entry.  */
 end_comment
 
 begin_macro
@@ -470,7 +669,40 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* 32 bit PLT address */
+comment|/* 32 bit PLT address.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OLD_ARM_ABI
+end_ifdef
+
+begin_macro
+name|FAKE_RELOC
+argument_list|(
+argument|FIRST_INVALID_RELOC
+argument_list|,
+literal|28
+argument_list|)
+end_macro
+
+begin_macro
+name|FAKE_RELOC
+argument_list|(
+argument|LAST_INVALID_RELOC
+argument_list|,
+literal|249
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not OLD_ARM_ABI */
 end_comment
 
 begin_macro
@@ -519,7 +751,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* Cygnus extension to abi: Thumb unconditional branch */
+comment|/* Cygnus extension to abi: Thumb unconditional branch.  */
 end_comment
 
 begin_macro
@@ -532,7 +764,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* Cygnus extension to abi: Thumb conditional branch */
+comment|/* Cygnus extension to abi: Thumb conditional branch.  */
 end_comment
 
 begin_macro
@@ -561,6 +793,15 @@ argument_list|,
 literal|249
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not OLD_ARM_ABI */
+end_comment
 
 begin_macro
 name|RELOC_NUMBER
@@ -618,12 +859,19 @@ end_macro
 
 begin_macro
 name|END_RELOC_NUMBERS
+argument_list|(
+argument|R_ARM_max
+argument_list|)
 end_macro
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _ELF_ARM_H */
+end_comment
 
 end_unit
 

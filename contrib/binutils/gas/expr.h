@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* expr.h -> header file for expr.c    Copyright (C) 1987, 92-98, 1999 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* expr.h -> header file for expr.c    Copyright 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -200,7 +200,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* "result" should be type (expressionS *). */
+comment|/* "result" should be type (expressionS *).  */
 end_comment
 
 begin_define
@@ -214,11 +214,11 @@ value|expr (0, result)
 end_define
 
 begin_comment
-comment|/* If an expression is O_big, look here for its value. These common    data may be clobbered whenever expr() is called. */
+comment|/* If an expression is O_big, look here for its value. These common    data may be clobbered whenever expr() is called.  */
 end_comment
 
 begin_comment
-comment|/* Flonums returned here.  Big enough to hold most precise flonum. */
+comment|/* Flonums returned here.  Big enough to hold most precise flonum.  */
 end_comment
 
 begin_decl_stmt
@@ -229,7 +229,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Bignums returned here. */
+comment|/* Bignums returned here.  */
 end_comment
 
 begin_decl_stmt
@@ -241,7 +241,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of littlenums in above. */
+comment|/* Number of littlenums in above.  */
 end_comment
 
 begin_define
@@ -431,10 +431,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* end of expr.h */
-end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* input_scrub.c - Break up input buffers into whole numbers of lines.    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 1997    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* input_scrub.c - Break up input buffers into whole numbers of lines.    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -63,7 +63,7 @@ value|("\0")
 end_define
 
 begin_comment
-comment|/* memcpy of 0 chars might choke. */
+comment|/* memcpy of 0 chars might choke.  */
 end_comment
 
 begin_define
@@ -89,7 +89,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*->1st char of full buffer area. */
+comment|/*->1st char of full buffer area.  */
 end_comment
 
 begin_decl_stmt
@@ -101,7 +101,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*->after last full line in buffer. */
+comment|/*->after last full line in buffer.  */
 end_comment
 
 begin_decl_stmt
@@ -112,7 +112,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*>=0. Number of chars in partial line in buffer. */
+comment|/*>=0. Number of chars in partial line in buffer.  */
+end_comment
+
+begin_comment
+comment|/* Because we need AFTER_STRING just after last full line, it clobbers    1st part of partial line. So we preserve 1st part of partial line    here.  */
 end_comment
 
 begin_decl_stmt
@@ -126,19 +130,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Because we need AFTER_STRING just after last */
-end_comment
-
-begin_comment
-comment|/* full line, it clobbers 1st part of partial */
-end_comment
-
-begin_comment
-comment|/* line. So we preserve 1st part of partial */
-end_comment
-
-begin_comment
-comment|/* line here. */
+comment|/* What is the largest size buffer that input_file_give_next_buffer()    could return to us?  */
 end_comment
 
 begin_decl_stmt
@@ -148,18 +140,6 @@ name|int
 name|buffer_length
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* What is the largest size buffer that */
-end_comment
-
-begin_comment
-comment|/* input_file_give_next_buffer() could */
-end_comment
-
-begin_comment
-comment|/* return to us? */
-end_comment
 
 begin_comment
 comment|/* The index into an sb structure we are reading from.  -1 if none.  */
@@ -210,11 +190,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* We can have more than one source file open at once, though the info for all    but the latest one are saved off in a struct input_save.  These files remain    open, so we are limited by the number of open files allowed by the    underlying OS. We may also sequentially read more than one source file in an    assembly. */
+comment|/* We can have more than one source file open at once, though the info for all    but the latest one are saved off in a struct input_save.  These files remain    open, so we are limited by the number of open files allowed by the    underlying OS. We may also sequentially read more than one source file in an    assembly.  */
 end_comment
 
 begin_comment
-comment|/* We must track the physical file and line number for error messages. We also    track a "logical" file and line number corresponding to (C?)  compiler    source line numbers.  Whenever we open a file we must fill in    physical_input_file. So if it is NULL we have not opened any files yet. */
+comment|/* We must track the physical file and line number for error messages. We also    track a "logical" file and line number corresponding to (C?)  compiler    source line numbers.  Whenever we open a file we must fill in    physical_input_file. So if it is NULL we have not opened any files yet.  */
 end_comment
 
 begin_decl_stmt
@@ -242,11 +222,11 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* 1-origin line number in a source file. */
+comment|/* 1-origin line number in a source file.  */
 end_comment
 
 begin_comment
-comment|/* A line ends in '\n' or eof. */
+comment|/* A line ends in '\n' or eof.  */
 end_comment
 
 begin_decl_stmt
@@ -315,23 +295,23 @@ decl_stmt|;
 name|int
 name|from_sb_is_expansion
 decl_stmt|;
-comment|/* Should we do a conditional check? */
+comment|/* Should we do a conditional check?  */
 name|struct
 name|input_save
 modifier|*
 name|next_saved_file
 decl_stmt|;
-comment|/* Chain of input_saves */
+comment|/* Chain of input_saves.  */
 name|char
 modifier|*
 name|input_file_save
 decl_stmt|;
-comment|/* Saved state of input routines */
+comment|/* Saved state of input routines.  */
 name|char
 modifier|*
 name|saved_position
 decl_stmt|;
-comment|/* Caller's saved position in buf */
+comment|/* Caller's saved position in buf.  */
 block|}
 struct|;
 end_struct
@@ -390,7 +370,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Saved information about the file that .include'd this one.  When we hit EOF,    we automatically pop to that file. */
+comment|/* Saved information about the file that .include'd this one.  When we hit EOF,    we automatically pop to that file.  */
 end_comment
 
 begin_decl_stmt
@@ -403,7 +383,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Push the state of input reading and scrubbing so that we can #include.    The return value is a 'void *' (fudged for old compilers) to a save    area, which can be restored by passing it to input_scrub_pop(). */
+comment|/* Push the state of input reading and scrubbing so that we can #include.    The return value is a 'void *' (fudged for old compilers) to a save    area, which can be restored by passing it to input_scrub_pop().  */
 end_comment
 
 begin_function
@@ -598,10 +578,6 @@ name|saved
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* input_scrub_push() */
-end_comment
 
 begin_function
 specifier|static
@@ -811,7 +787,7 @@ operator|)
 name|BEFORE_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* Line number things. */
+comment|/* Line number things.  */
 name|logical_input_line
 operator|=
 operator|-
@@ -829,7 +805,7 @@ name|physical_input_file
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* No file read yet. */
+comment|/* No file read yet.  */
 name|next_saved_file
 operator|=
 name|NULL
@@ -870,13 +846,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Start reading input from a new file. */
+comment|/* Start reading input from a new file.    Return start of caller's part of buffer.  */
 end_comment
 
 begin_function
 name|char
 modifier|*
-comment|/* Return start of caller's part of buffer. */
 name|input_scrub_new_file
 parameter_list|(
 name|filename
@@ -927,7 +902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Include a file from the current file.  Save our state, cause it to    be restored on EOF, and begin handling a new file.  Same result as    input_scrub_new_file. */
+comment|/* Include a file from the current file.  Save our state, cause it to    be restored on EOF, and begin handling a new file.  Same result as    input_scrub_new_file.  */
 end_comment
 
 begin_function
@@ -1000,7 +975,7 @@ name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"buffers nested too deeply"
+literal|"macros nested too deeply"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1123,7 +1098,7 @@ name|char
 modifier|*
 name|limit
 decl_stmt|;
-comment|/*->just after last char of buffer. */
+comment|/*->just after last char of buffer.  */
 if|if
 condition|(
 name|sb_index
@@ -1159,7 +1134,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|md_macro_end
-comment|/* allow the target to clean up per-macro expansion data */
+comment|/* Allow the target to clean up per-macro expansion 	         data.  */
 name|md_macro_end
 argument_list|()
 expr_stmt|;
@@ -1284,7 +1259,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-comment|/* Find last newline. */
+comment|/* Find last newline.  */
 for|for
 control|(
 name|p
@@ -1478,7 +1453,7 @@ comment|/* Tell the listing we've finished the file.  */
 name|LISTING_EOF
 argument_list|()
 expr_stmt|;
-comment|/* If we should pop to another file at EOF, do it. */
+comment|/* If we should pop to another file at EOF, do it.  */
 if|if
 condition|(
 name|next_saved_file
@@ -1493,7 +1468,7 @@ name|next_saved_file
 argument_list|)
 expr_stmt|;
 comment|/* Pop state */
-comment|/* partial_where is now correct to return, since we popped it. */
+comment|/* partial_where is now correct to return, since we popped it.  */
 block|}
 block|}
 return|return
@@ -1504,22 +1479,17 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* input_scrub_next_buffer() */
-end_comment
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  * The remaining part of this file deals with line numbers, error  * messages and so on.  */
+comment|/* The remaining part of this file deals with line numbers, error    messages and so on.  Return TRUE if we opened any file.  */
 end_comment
 
 begin_function
 name|int
 name|seen_at_least_1_file
 parameter_list|()
-comment|/* TRUE if we opened any file. */
 block|{
 return|return
 operator|(
@@ -1563,7 +1533,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			new_logical_line()  *  * Tells us what the new logical line number and file are.  * If the line_number is -1, we don't change the current logical line  * number.  If it is -2, we decrement the logical line number (this is  * to support the .appfile pseudo-op inserted into the stream by  * do_scrub_chars).  * If the fname is NULL, we don't change the current logical file name.  * Returns nonzero if the filename actually changes.  */
+comment|/* Tells us what the new logical line number and file are.    If the line_number is -1, we don't change the current logical line    number.  If it is -2, we decrement the logical line number (this is    to support the .appfile pseudo-op inserted into the stream by    do_scrub_chars).    If the fname is NULL, we don't change the current logical file name.    Returns nonzero if the filename actually changes.  */
 end_comment
 
 begin_function
@@ -1578,7 +1548,7 @@ name|char
 modifier|*
 name|fname
 decl_stmt|;
-comment|/* DON'T destroy it! We point to it! */
+comment|/* DON'T destroy it!  We point to it!  */
 name|int
 name|line_number
 decl_stmt|;
@@ -1641,15 +1611,11 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* new_logical_line() */
-end_comment
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			a s _ w h e r e ()  *  * Return the current file name and line number.  * namep should be char * const *, but there are compilers which screw  * up declarations like that, and it's easier to avoid it.  */
+comment|/* Return the current file name and line number.    namep should be char * const *, but there are compilers which screw    up declarations like that, and it's easier to avoid it.  */
 end_comment
 
 begin_function
@@ -1752,15 +1718,11 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* as_where() */
-end_comment
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			a s _ h o w m u c h ()  *  * Output to given stream how much of line we have scanned so far.  * Assumes we have scanned up to and including input_line_pointer.  * No free '\n' at end of line.  */
+comment|/* Output to given stream how much of line we have scanned so far.    Assumes we have scanned up to and including input_line_pointer.    No free '\n' at end of line.  */
 end_comment
 
 begin_function
@@ -1773,15 +1735,14 @@ name|FILE
 modifier|*
 name|stream
 decl_stmt|;
-comment|/* Opened for write please. */
+comment|/* Opened for write please.  */
 block|{
 specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-comment|/* Scan input line. */
-comment|/* register char c; JF unused */
+comment|/* Scan input line.  */
 for|for
 control|(
 name|p
@@ -1802,7 +1763,7 @@ block|{     }
 operator|++
 name|p
 expr_stmt|;
-comment|/* p->1st char of line. */
+comment|/* p->1st char of line.  */
 for|for
 control|(
 init|;
@@ -1814,7 +1775,7 @@ name|p
 operator|++
 control|)
 block|{
-comment|/* Assume ASCII. EBCDIC& other micro-computer char sets ignored. */
+comment|/* Assume ASCII. EBCDIC& other micro-computer char sets ignored.  */
 name|as_1_char
 argument_list|(
 operator|(
@@ -1905,10 +1866,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of input_scrub.c */
-end_comment
 
 end_unit
 

@@ -215,7 +215,7 @@ comment|/* defparse.y - parser for .def files */
 end_comment
 
 begin_comment
-comment|/*   Copyright (C) 1995, 1997, 1998, 1999 Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/*   Copyright 1995, 1997, 1998, 1999 Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -3075,7 +3075,7 @@ begin_line
 line|#
 directive|line
 number|3
-file|"/usr/share/misc/bison.simple"
+file|"/usr/share/bison/bison.simple"
 end_line
 
 begin_comment
@@ -4019,7 +4019,7 @@ begin_line
 line|#
 directive|line
 number|217
-file|"/usr/share/misc/bison.simple"
+file|"/usr/share/bison/bison.simple"
 end_line
 
 begin_comment
@@ -6374,7 +6374,7 @@ comment|/* the action file gets copied in in place of this dollarsign */
 line|#
 directive|line
 number|543
-file|"/usr/share/misc/bison.simple"
+file|"/usr/share/bison/bison.simple"
 name|yyvsp
 operator|-=
 name|yylen

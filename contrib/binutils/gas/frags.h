@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* frags.h - Header file for the frag concept.    Copyright (C) 1987, 92, 93, 94, 95, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* frags.h - Header file for the frag concept.    Copyright 1987, 1992, 1993, 1994, 1995, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -33,24 +33,24 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * A code fragment (frag) is some known number of chars, followed by some  * unknown number of chars. Typically the unknown number of chars is an  * instruction address whose size is yet unknown. We always know the greatest  * possible size the unknown number of chars may become, and reserve that  * much room at the end of the frag.  * Once created, frags do not change address during assembly.  * We chain the frags in (a) forward-linked list(s). The object-file address  * of the 1st char of a frag is generally not known until after relax().  * Many things at assembly time describe an address by {object-file-address  * of a particular frag}+offset.   BUG: it may be smarter to have a single pointer off to various different  notes for different frag kinds. See how code pans  */
+comment|/* A code fragment (frag) is some known number of chars, followed by some    unknown number of chars. Typically the unknown number of chars is an    instruction address whose size is yet unknown. We always know the greatest    possible size the unknown number of chars may become, and reserve that    much room at the end of the frag.    Once created, frags do not change address during assembly.    We chain the frags in (a) forward-linked list(s). The object-file address    of the 1st char of a frag is generally not known until after relax().    Many things at assembly time describe an address by {object-file-address    of a particular frag}+offset.     BUG: it may be smarter to have a single pointer off to various different    notes for different frag kinds.  See how code pans.   */
 end_comment
 
 begin_struct
 struct|struct
 name|frag
 block|{
-comment|/* Object file address (as an octet offset). */
+comment|/* Object file address (as an octet offset).  */
 name|addressT
 name|fr_address
 decl_stmt|;
-comment|/* Chain forward; ascending address order.  Rooted in frch_root. */
+comment|/* Chain forward; ascending address order.  Rooted in frch_root.  */
 name|struct
 name|frag
 modifier|*
 name|fr_next
 decl_stmt|;
-comment|/* (Fixed) number of octets we know we have.  May be 0. */
+comment|/* (Fixed) number of octets we know we have.  May be 0.  */
 name|offsetT
 name|fr_fix
 decl_stmt|;
@@ -58,12 +58,12 @@ comment|/* May be used for (Variable) number of octets after above.      The gen
 name|offsetT
 name|fr_var
 decl_stmt|;
-comment|/* For variable-length tail. */
+comment|/* For variable-length tail.  */
 name|symbolS
 modifier|*
 name|fr_symbol
 decl_stmt|;
-comment|/* For variable-length tail. */
+comment|/* For variable-length tail.  */
 name|offsetT
 name|fr_offset
 decl_stmt|;
@@ -82,6 +82,13 @@ name|line
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* Flipped each relax pass so we can easily determine whether      fr_address has been adjusted.  */
+name|unsigned
+name|int
+name|relax_marker
+range|:
+literal|1
+decl_stmt|;
 comment|/* What state is my tail in? */
 name|relax_stateT
 name|fr_type
@@ -148,11 +155,11 @@ define|#
 directive|define
 name|SIZEOF_STRUCT_FRAG
 define|\
-value|((char *)zero_address_frag.fr_literal-(char *)&zero_address_frag)
+value|((char *) zero_address_frag.fr_literal - (char *)&zero_address_frag)
 end_define
 
 begin_comment
-comment|/* We want to say fr_literal[0] above. */
+comment|/* We want to say fr_literal[0] above.  */
 end_comment
 
 begin_comment
@@ -194,7 +201,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* For foreign-segment symbol fixups. */
+comment|/* For foreign-segment symbol fixups.  */
 end_comment
 
 begin_decl_stmt
@@ -205,7 +212,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* For local common (N_BSS segment) fixups. */
+comment|/* For local common (N_BSS segment) fixups.  */
 end_comment
 
 begin_decl_stmt
@@ -222,11 +229,11 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * A macro to speed up appending exactly 1 char  * to current frag.  */
+comment|/* A macro to speed up appending exactly 1 char to current frag.  */
 end_comment
 
 begin_comment
-comment|/* JF changed< 1 to<= 1 to avoid a race conditon */
+comment|/* JF changed< 1 to<= 1 to avoid a race conditon.  */
 end_comment
 
 begin_define
@@ -237,7 +244,7 @@ parameter_list|(
 name|datum
 parameter_list|)
 define|\
-value|{					\   if (obstack_room(&frags )<= 1) {\     frag_wane (frag_now);	\     frag_new (0);		\   }				\   obstack_1grow(&frags, datum );	\ }
+value|{							\   if (obstack_room (&frags)<= 1)			\     {							\       frag_wane (frag_now);				\       frag_new (0);					\     }							\   obstack_1grow (&frags, datum);			\ }
 end_define
 
 begin_else
@@ -363,6 +370,22 @@ name|fill_pattern
 operator|,
 name|int
 name|n_fill
+operator|,
+name|int
+name|max
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|frag_align_code
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|alignment
 operator|,
 name|int
 name|max

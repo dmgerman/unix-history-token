@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ar.c - Archive modify and extract.    Copyright 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ar.c - Archive modify and extract.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -909,7 +909,7 @@ name|s
 argument_list|,
 name|_
 argument_list|(
-literal|"Usage: %s [-]{dmpqrstx}[abcfilNoPsSuvV] [member-name] [count] archive-file file...\n"
+literal|"Usage: %s [-X32_64] [-]{dmpqrstx}[abcfilNoPsSuvV] [member-name] [count] archive-file file...\n"
 argument_list|)
 argument_list|,
 name|program_name
@@ -1148,6 +1148,16 @@ literal|"  [V]          - display the version number\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  [-X32_64]    - (ignored)\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 comment|/* xgettext:c-format */
@@ -1262,9 +1272,19 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|filename
+operator|==
+name|NULL
+operator|||
+operator|(
+name|bslash
+operator|!=
+name|NULL
+operator|&&
 name|bslash
 operator|>
 name|filename
+operator|)
 condition|)
 name|filename
 operator|=
@@ -1639,9 +1659,19 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|temp
+operator|==
+name|NULL
+operator|||
+operator|(
+name|bslash
+operator|!=
+name|NULL
+operator|&&
 name|bslash
 operator|>
 name|temp
+operator|)
 condition|)
 name|temp
 operator|=
@@ -1816,6 +1846,33 @@ argument_list|(
 name|remove_output
 argument_list|)
 expr_stmt|;
+comment|/* Ignored for (partial) AIX compatibility.  On AIX,      the -X option can be used to ignore certain kinds      of object files in the archive (the 64-bit objects      or the 32-bit objects).  GNU ar always looks at all      kinds of objects in an archive.  */
+while|while
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-X32_64"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|argv
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|is_ranlib
@@ -3099,9 +3156,13 @@ if|if
 condition|(
 name|verbose
 condition|)
+comment|/* xgettext:c-format */
 name|printf
 argument_list|(
-literal|"\n<%s>\n\n"
+name|_
+argument_list|(
+literal|"\n<member %s>\n\n"
+argument_list|)
 argument_list|,
 name|bfd_get_filename
 argument_list|(

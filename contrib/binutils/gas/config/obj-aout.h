@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyright (C) 1989, 90, 91, 92, 93, 94, 95, 96, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -61,7 +61,7 @@ file|"aout_gnu.h"
 end_include
 
 begin_comment
-comment|/* Needed to define struct nlist. Sigh. */
+comment|/* Needed to define struct nlist. Sigh.  */
 end_comment
 
 begin_else
@@ -1053,14 +1053,14 @@ comment|/* a.out header */
 name|long
 name|string_table_size
 decl_stmt|;
-comment|/* names + '\0' + sizeof(int) */
+comment|/* names + '\0' + sizeof (int) */
 block|}
 name|object_headers
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* line numbering stuff. */
+comment|/* line numbering stuff.  */
 end_comment
 
 begin_define
@@ -1140,10 +1140,6 @@ define|#
 directive|define
 name|AOUT_STABS
 end_define
-
-begin_comment
-comment|/* end of obj-aout.h */
-end_comment
 
 end_unit
 

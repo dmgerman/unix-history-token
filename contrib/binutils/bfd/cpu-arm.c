@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD support for the ARM processor    Copyright 1994, 95, 97, 1999 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD support for the ARM processor    Copyright 1994, 1997, 1999, 2000 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -336,7 +336,13 @@ name|bfd_mach_arm_4
 block|,
 literal|"strongarm1100"
 block|}
-block|, }
+block|,
+block|{
+name|bfd_mach_arm_XScale
+block|,
+literal|"xscale"
+block|}
+block|}
 struct|;
 end_struct
 
@@ -593,9 +599,39 @@ argument_list|)
 block|,
 name|N
 argument_list|(
-argument|bfd_mach_arm_5T
+name|bfd_mach_arm_5T
 argument_list|,
 literal|"armv5t"
+argument_list|,
+name|false
+argument_list|,
+operator|&
+name|arch_info_struct
+index|[
+literal|8
+index|]
+argument_list|)
+block|,
+name|N
+argument_list|(
+name|bfd_mach_arm_5TE
+argument_list|,
+literal|"armv5te"
+argument_list|,
+name|false
+argument_list|,
+operator|&
+name|arch_info_struct
+index|[
+literal|9
+index|]
+argument_list|)
+block|,
+name|N
+argument_list|(
+argument|bfd_mach_arm_XScale
+argument_list|,
+literal|"xscale"
 argument_list|,
 argument|false
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* objdump.c -- dump information about an object file.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* objdump.c -- dump information about an object file.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1318,7 +1318,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\   -b, --target=BFDNAME           Specify the target object format as BFDNAME\n\   -m, --architecture=MACHINE     Specify the target architecture as MACHINE\n\   -j, --section=NAME             Only display information for section NAME\n\   -M, --disassembler-options=OPT Pass text OPT on to the disassembler\n\   -EB --endian=big               Assume big endian format when disassembling\n\   -EL --endian=little            Assume little endian format when disassembling\n\       --file-start-context       Include context from start of file (with -S)\n\   -l, --line-numbers             Include line numbers and filenames in output\n\   -C, --demangle                 Decode mangled/processed symbol names\n\   -w, --wide                     Format output for more than 80 columns\n\   -z, --disassemble-zeroes       Do not skip blocks of zeroes when disassembling\n\       --start-address=ADDR       Only process data whoes address is>= ADDR\n\       --stop-address=ADDR        Only process data whoes address is<= ADDR\n\       --prefix-addresses         Print complete address alongside disassembly\n\       --[no-]show-raw-insn       Display hex alongside symbolic disassembly\n\       --adjust-vma=OFFSET        Add OFFSET to all displayed section addresses\n\ \n"
+literal|"\   -b, --target=BFDNAME           Specify the target object format as BFDNAME\n\   -m, --architecture=MACHINE     Specify the target architecture as MACHINE\n\   -j, --section=NAME             Only display information for section NAME\n\   -M, --disassembler-options=OPT Pass text OPT on to the disassembler\n\   -EB --endian=big               Assume big endian format when disassembling\n\   -EL --endian=little            Assume little endian format when disassembling\n\       --file-start-context       Include context from start of file (with -S)\n\   -l, --line-numbers             Include line numbers and filenames in output\n\   -C, --demangle[=STYLE]         Decode mangled/processed symbol names\n\                                   The STYLE, if specified, can be `auto', 'gnu',\n\                                   'lucid', 'arm', 'hp', 'edg', or 'gnu-new-abi'\n\   -w, --wide                     Format output for more than 80 columns\n\   -z, --disassemble-zeroes       Do not skip blocks of zeroes when disassembling\n\       --start-address=ADDR       Only process data whoes address is>= ADDR\n\       --stop-address=ADDR        Only process data whoes address is<= ADDR\n\       --prefix-addresses         Print complete address alongside disassembly\n\       --[no-]show-raw-insn       Display hex alongside symbolic disassembly\n\       --adjust-vma=OFFSET        Add OFFSET to all displayed section addresses\n\ \n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1464,7 +1464,7 @@ block|,
 block|{
 literal|"demangle"
 block|,
-name|no_argument
+name|optional_argument
 block|,
 name|NULL
 block|,
@@ -2054,6 +2054,20 @@ argument_list|(
 name|SEC_SORT_ENTRIES
 argument_list|,
 literal|"SORT_ENTRIES"
+argument_list|)
+expr_stmt|;
+name|PF
+argument_list|(
+name|SEC_BLOCK
+argument_list|,
+literal|"BLOCK"
+argument_list|)
+expr_stmt|;
+name|PF
+argument_list|(
+name|SEC_CLINK
+argument_list|,
+literal|"CLINK"
 argument_list|)
 expr_stmt|;
 name|PF
@@ -6238,6 +6252,9 @@ name|bytes_per_chunk
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DISASSEMBLER_NEEDS_RELOCS
 comment|/* FIXME: This is wrong.  It tests the number of octets                  in the last instruction, not the current one.  */
 if|if
 condition|(
@@ -6263,7 +6280,7 @@ name|relppp
 operator|)
 operator|->
 name|address
-operator|<
+operator|<=
 name|addr_offset
 operator|+
 name|octets
@@ -6277,6 +6294,8 @@ operator|=
 name|INSN_HAS_RELOC
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|info
 operator|->
 name|flags
@@ -6948,8 +6967,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|dump_reloc_info
-operator|&&
 operator|(
 name|section
 operator|->
@@ -6959,6 +6976,13 @@ name|SEC_RELOC
 operator|)
 operator|!=
 literal|0
+ifndef|#
+directive|ifndef
+name|DISASSEMBLER_NEEDS_RELOCS
+operator|&&
+name|dump_reloc_info
+endif|#
+directive|endif
 condition|)
 block|{
 while|while
@@ -7002,6 +7026,23 @@ operator|/
 name|opb
 operator|)
 condition|)
+ifdef|#
+directive|ifdef
+name|DISASSEMBLER_NEEDS_RELOCS
+if|if
+condition|(
+operator|!
+name|dump_reloc_info
+condition|)
+operator|++
+operator|(
+operator|*
+name|relppp
+operator|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 block|{
 name|arelent
 modifier|*
@@ -7735,8 +7776,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|dump_reloc_info
-operator|&&
 operator|(
 name|section
 operator|->
@@ -7746,6 +7785,13 @@ name|SEC_RELOC
 operator|)
 operator|!=
 literal|0
+ifndef|#
+directive|ifndef
+name|DISASSEMBLER_NEEDS_RELOCS
+operator|&&
+name|dump_reloc_info
+endif|#
+directive|endif
 condition|)
 block|{
 name|long
@@ -11899,10 +11945,12 @@ name|display_target_list
 parameter_list|()
 block|{
 specifier|extern
+specifier|const
 name|bfd_target
 modifier|*
+specifier|const
+modifier|*
 name|bfd_target_vector
-index|[]
 decl_stmt|;
 name|char
 modifier|*
@@ -11913,8 +11961,10 @@ name|t
 decl_stmt|;
 name|dummy_name
 operator|=
-name|choose_temp_base
-argument_list|()
+name|make_temp_file
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -11931,6 +11981,7 @@ name|t
 operator|++
 control|)
 block|{
+specifier|const
 name|bfd_target
 modifier|*
 name|p
@@ -12117,10 +12168,12 @@ name|last
 decl_stmt|;
 block|{
 specifier|extern
+specifier|const
 name|bfd_target
 modifier|*
+specifier|const
+modifier|*
 name|bfd_target_vector
-index|[]
 decl_stmt|;
 name|int
 name|t
@@ -12181,8 +12234,10 @@ argument_list|)
 expr_stmt|;
 name|dummy_name
 operator|=
-name|choose_temp_base
-argument_list|()
+name|make_temp_file
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -12260,6 +12315,7 @@ name|t
 operator|++
 control|)
 block|{
+specifier|const
 name|bfd_target
 modifier|*
 name|p
@@ -12452,10 +12508,12 @@ decl_stmt|,
 name|columns
 decl_stmt|;
 specifier|extern
+specifier|const
 name|bfd_target
 modifier|*
+specifier|const
+modifier|*
 name|bfd_target_vector
-index|[]
 decl_stmt|;
 name|char
 modifier|*
@@ -12788,6 +12846,46 @@ name|do_demangle
 operator|=
 name|true
 expr_stmt|;
+if|if
+condition|(
+name|optarg
+operator|!=
+name|NULL
+condition|)
+block|{
+name|enum
+name|demangling_styles
+name|style
+decl_stmt|;
+name|style
+operator|=
+name|cplus_demangle_name_to_style
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|style
+operator|==
+name|unknown_demangling
+condition|)
+name|fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"unknown demangling style `%s'"
+argument_list|)
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|cplus_demangle_set_style
+argument_list|(
+name|style
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'w'

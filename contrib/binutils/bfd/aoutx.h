@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD semi-generic back-end for a.out binaries.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD semi-generic back-end for a.out binaries.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000,    2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* SECTION 	a.out backends   DESCRIPTION  	BFD supports a number of different flavours of a.out format, 	though the major differences are only the sizes of the 	structures on disk, and the shape of the relocation 	information.  	The support is split into a basic support file @file{aoutx.h} 	and other files which derive functions from the base. One 	derivation file is @file{aoutf1.h} (for a.out flavour 1), and 	adds to the basic a.out functions support for sun3, sun4, 386 	and 29k a.out files, to create a target jump vector for a 	specific target.  	This information is further split out into more specific files 	for each machine, including @file{sunos.c} for sun3 and sun4, 	@file{newsos3.c} for the Sony NEWS, and @file{demo64.c} for a 	demonstration of a 64 bit a.out format.  	The base file @file{aoutx.h} defines general mechanisms for 	reading and writing records to and from disk and various 	other methods which BFD requires. It is included by 	@file{aout32.c} and @file{aout64.c} to form the names<<aout_32_swap_exec_header_in>>,<<aout_64_swap_exec_header_in>>, etc.  	As an example, this is what goes on to make the back end for a 	sun4, from @file{aout32.c}:  |	#define ARCH_SIZE 32 |	#include "aoutx.h"  	Which exports names:  |	... |	aout_32_canonicalize_reloc |	aout_32_find_nearest_line |	aout_32_get_lineno |	aout_32_get_reloc_upper_bound |	...  	from @file{sunos.c}:  |	#define TARGET_NAME "a.out-sunos-big" |	#define VECNAME    sunos_big_vec |	#include "aoutf1.h"  	requires all the names from @file{aout32.c}, and produces the jump vector  |	sunos_big_vec  	The file @file{host-aout.c} is a special case.  It is for a large set 	of hosts that use ``more or less standard'' a.out files, and 	for which cross-debugging is not interesting.  It uses the 	standard 32-bit a.out support routines, but determines the 	file offsets and addresses of the text, data, and BSS 	sections, the machine architecture and machine type, and the 	entry point address, in a host-dependent manner.  Once these 	values have been determined, generic code is used to handle 	the  object file.  	When porting it to run on a new system, you must supply:  |        HOST_PAGE_SIZE |        HOST_SEGMENT_SIZE |        HOST_MACHINE_ARCH       (optional) |        HOST_MACHINE_MACHINE    (optional) |        HOST_TEXT_START_ADDR |        HOST_STACK_END_ADDR  	in the file @file{../include/sys/h-@var{XXX}.h} (for your host).  These 	values, plus the structures and macros defined in @file{a.out.h} on 	your host system, will produce a BFD target that will access 	ordinary a.out files on your host. To configure a new machine 	to use @file{host-aout.c}, specify:  |	TDEFAULTS = -DDEFAULT_VECTOR=host_aout_big_vec |	TDEPFILES= host-aout.o trad-core.o  	in the @file{config/@var{XXX}.mt} file, and modify @file{configure.in} 	to use the 	@file{@var{XXX}.mt} file (by setting "<<bfd_target=XXX>>") when your 	configuration is selected.  */
+comment|/* SECTION 	a.out backends  DESCRIPTION  	BFD supports a number of different flavours of a.out format, 	though the major differences are only the sizes of the 	structures on disk, and the shape of the relocation 	information.  	The support is split into a basic support file @file{aoutx.h} 	and other files which derive functions from the base. One 	derivation file is @file{aoutf1.h} (for a.out flavour 1), and 	adds to the basic a.out functions support for sun3, sun4, 386 	and 29k a.out files, to create a target jump vector for a 	specific target.  	This information is further split out into more specific files 	for each machine, including @file{sunos.c} for sun3 and sun4, 	@file{newsos3.c} for the Sony NEWS, and @file{demo64.c} for a 	demonstration of a 64 bit a.out format.  	The base file @file{aoutx.h} defines general mechanisms for 	reading and writing records to and from disk and various 	other methods which BFD requires. It is included by 	@file{aout32.c} and @file{aout64.c} to form the names<<aout_32_swap_exec_header_in>>,<<aout_64_swap_exec_header_in>>, etc.  	As an example, this is what goes on to make the back end for a 	sun4, from @file{aout32.c}:  |	#define ARCH_SIZE 32 |	#include "aoutx.h"  	Which exports names:  |	... |	aout_32_canonicalize_reloc |	aout_32_find_nearest_line |	aout_32_get_lineno |	aout_32_get_reloc_upper_bound |	...  	from @file{sunos.c}:  |	#define TARGET_NAME "a.out-sunos-big" |	#define VECNAME    sunos_big_vec |	#include "aoutf1.h"  	requires all the names from @file{aout32.c}, and produces the jump vector  |	sunos_big_vec  	The file @file{host-aout.c} is a special case.  It is for a large set 	of hosts that use ``more or less standard'' a.out files, and 	for which cross-debugging is not interesting.  It uses the 	standard 32-bit a.out support routines, but determines the 	file offsets and addresses of the text, data, and BSS 	sections, the machine architecture and machine type, and the 	entry point address, in a host-dependent manner.  Once these 	values have been determined, generic code is used to handle 	the  object file.  	When porting it to run on a new system, you must supply:  |        HOST_PAGE_SIZE |        HOST_SEGMENT_SIZE |        HOST_MACHINE_ARCH       (optional) |        HOST_MACHINE_MACHINE    (optional) |        HOST_TEXT_START_ADDR |        HOST_STACK_END_ADDR  	in the file @file{../include/sys/h-@var{XXX}.h} (for your host).  These 	values, plus the structures and macros defined in @file{a.out.h} on 	your host system, will produce a BFD target that will access 	ordinary a.out files on your host. To configure a new machine 	to use @file{host-aout.c}, specify:  |	TDEFAULTS = -DDEFAULT_VECTOR=host_aout_big_vec |	TDEPFILES= host-aout.o trad-core.o  	in the @file{config/@var{XXX}.mt} file, and modify @file{configure.in} 	to use the 	@file{@var{XXX}.mt} file (by setting "<<bfd_target=XXX>>") when your 	configuration is selected.  */
 end_comment
 
 begin_comment
@@ -231,6 +231,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MY_swap_ext_reloc_in
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MY_swap_ext_reloc_in
+value|NAME(aout,swap_ext_reloc_in)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MY_swap_std_reloc_out
 end_ifndef
 
@@ -239,6 +257,24 @@ define|#
 directive|define
 name|MY_swap_std_reloc_out
 value|NAME(aout,swap_std_reloc_out)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MY_swap_ext_reloc_out
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MY_swap_ext_reloc_out
+value|NAME(aout,swap_ext_reloc_out)
 end_define
 
 begin_endif
@@ -1682,7 +1718,7 @@ name|TABLE_SIZE
 parameter_list|(
 name|TABLE
 parameter_list|)
-value|(sizeof(TABLE)/sizeof(TABLE[0]))
+value|(sizeof (TABLE)/sizeof (TABLE[0]))
 end_define
 
 begin_decl_stmt
@@ -1783,6 +1819,20 @@ condition|(
 name|code
 condition|)
 block|{
+name|EXT
+argument_list|(
+name|BFD_RELOC_8
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|EXT
+argument_list|(
+name|BFD_RELOC_16
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|EXT
 argument_list|(
 name|BFD_RELOC_32
@@ -2023,7 +2073,7 @@ operator|*
 operator|)
 name|raw_bytes
 decl_stmt|;
-comment|/* The internal_exec structure has some fields that are unused in this      configuration (IE for i960), so ensure that all such uninitialized      fields are zero'd out.  There are places where two of these structs      are memcmp'd, and thus the contents do matter. */
+comment|/* The internal_exec structure has some fields that are unused in this      configuration (IE for i960), so ensure that all such uninitialized      fields are zero'd out.  There are places where two of these structs      are memcmp'd, and thus the contents do matter.  */
 name|memset
 argument_list|(
 operator|(
@@ -2215,7 +2265,7 @@ operator|*
 operator|)
 name|raw_bytes
 decl_stmt|;
-comment|/* Now fill in fields in the raw data, from the fields in the exec struct. */
+comment|/* Now fill in fields in the raw data, from the fields in the exec struct.  */
 name|bfd_h_put_32
 argument_list|(
 name|abfd
@@ -2440,7 +2490,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* FUNCTION 	aout_@var{size}_some_aout_object_p  SYNOPSIS 	const bfd_target *aout_@var{size}_some_aout_object_p 	 (bfd *abfd, 	  const bfd_target *(*callback_to_real_object_p)());  DESCRIPTION 	Some a.out variant thinks that the file open in @var{abfd} 	checking is an a.out file.  Do some more checking, and set up 	for access if it really is.  Call back to the calling 	environment's "finish up" function just before returning, to 	handle any last-minute setup. */
+comment|/* FUNCTION 	aout_@var{size}_some_aout_object_p  SYNOPSIS 	const bfd_target *aout_@var{size}_some_aout_object_p 	 (bfd *abfd, 	  const bfd_target *(*callback_to_real_object_p) ());  DESCRIPTION 	Some a.out variant thinks that the file open in @var{abfd} 	checking is an a.out file.  Do some more checking, and set up 	for access if it really is.  Call back to the calling 	environment's "finish up" function just before returning, to 	handle any last-minute setup. */
 end_comment
 
 begin_decl_stmt
@@ -2841,7 +2891,7 @@ argument_list|)
 operator|=
 name|RELOC_STD_SIZE
 expr_stmt|;
-comment|/* The default symbol entry size is that of traditional Unix. */
+comment|/* The default symbol entry size is that of traditional Unix.  */
 name|obj_symbol_entry_size
 argument_list|(
 name|abfd
@@ -3241,7 +3291,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* Now that the segment addresses have been worked out, take a better      guess at whether the file is executable.  If the entry point      is within the text segment, assume it is.  (This makes files      executable even if their entry point address is 0, as long as      their text starts at zero.).       This test had to be changed to deal with systems where the text segment      runs at a different location than the default.  The problem is that the      entry address can appear to be outside the text segment, thus causing an      erroneous conclusion that the file isn't executable.       To fix this, we now accept any non-zero entry point as an indication of      executability.  This will work most of the time, since only the linker      sets the entry point, and that is likely to be non-zero for most systems. */
+comment|/* Now that the segment addresses have been worked out, take a better      guess at whether the file is executable.  If the entry point      is within the text segment, assume it is.  (This makes files      executable even if their entry point address is 0, as long as      their text starts at zero.).       This test had to be changed to deal with systems where the text segment      runs at a different location than the default.  The problem is that the      entry address can appear to be outside the text segment, thus causing an      erroneous conclusion that the file isn't executable.       To fix this, we now accept any non-zero entry point as an indication of      executability.  This will work most of the time, since only the linker      sets the entry point, and that is likely to be non-zero for most systems.  */
 if|if
 condition|(
 name|execp
@@ -3769,9 +3819,27 @@ case|case
 name|bfd_mach_mips10000
 case|:
 case|case
+name|bfd_mach_mips12000
+case|:
+case|case
 name|bfd_mach_mips16
 case|:
-comment|/* FIXME: These should be MIPS3 or MIPS4.  */
+case|case
+name|bfd_mach_mips32
+case|:
+case|case
+name|bfd_mach_mips32_4k
+case|:
+case|case
+name|bfd_mach_mips5
+case|:
+case|case
+name|bfd_mach_mips64
+case|:
+case|case
+name|bfd_mach_mips_sb1
+case|:
+comment|/* FIXME: These should be MIPS3, MIPS4, MIPS16, MIPS32, etc.  */
 name|arch_flags
 operator|=
 name|M_MIPS2
@@ -3832,6 +3900,24 @@ operator|*
 name|unknown
 operator|=
 name|false
+expr_stmt|;
+break|break;
+case|case
+name|bfd_arch_cris
+case|:
+if|if
+condition|(
+name|machine
+operator|==
+literal|0
+operator|||
+name|machine
+operator|==
+literal|255
+condition|)
+name|arch_flags
+operator|=
+name|M_CRIS
 expr_stmt|;
 break|break;
 default|default:
@@ -5339,7 +5425,7 @@ argument_list|)
 operator|->
 name|_raw_size
 expr_stmt|;
-comment|/* Rule (heuristic) for when to pad to a new page.  Note that there      are (at least) two ways demand-paged (ZMAGIC) files have been      handled.  Most Berkeley-based systems start the text segment at      (TARGET_PAGE_SIZE).  However, newer versions of SUNOS start the text      segment right after the exec header; the latter is counted in the      text segment size, and is paged in by the kernel with the rest of      the text. */
+comment|/* Rule (heuristic) for when to pad to a new page.  Note that there      are (at least) two ways demand-paged (ZMAGIC) files have been      handled.  Most Berkeley-based systems start the text segment at      (TARGET_PAGE_SIZE).  However, newer versions of SUNOS start the text      segment right after the exec header; the latter is counted in the      text segment size, and is paged in by the kernel with the rest of      the text.  */
 comment|/* This perhaps isn't the right way to do this, but made it simpler for me      to understand enough to implement it.  Better would probably be to go      right from BFD flags to alignment/positioning characteristics.  But the      old code was sloppy enough about handling the flags, and had enough      other magic, that it was a little hard for me to understand.  I think      I understand it better now, but I haven't time to do the cleanup this      minute.  */
 if|if
 condition|(
@@ -7457,6 +7543,29 @@ index|]
 operator||=
 name|N_EXT
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|cache_ptr
+operator|->
+name|flags
+operator|&
+name|BSF_LOCAL
+operator|)
+operator|!=
+literal|0
+condition|)
+name|sym_pointer
+operator|->
+name|e_type
+index|[
+literal|0
+index|]
+operator|&=
+operator|~
+name|N_EXT
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7632,7 +7741,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Native-level interface to symbols. */
+comment|/* Native-level interface to symbols.  */
 end_comment
 
 begin_decl_stmt
@@ -7956,7 +8065,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* We read the symbols into a buffer, which is discarded when this    function exits.  We read the strings into a buffer large enough to    hold them all plus all the cached symbol entries. */
+comment|/* We read the symbols into a buffer, which is discarded when this    function exits.  We read the strings into a buffer large enough to    hold them all plus all the cached symbol entries.  */
 end_comment
 
 begin_decl_stmt
@@ -8873,7 +8982,7 @@ comment|/* Standard reloc stuff */
 end_comment
 
 begin_comment
-comment|/* Output standard relocation information to a file in target byte order. */
+comment|/* Output standard relocation information to a file in target byte order.  */
 end_comment
 
 begin_function_decl
@@ -9326,7 +9435,7 @@ comment|/* Extended stuff */
 end_comment
 
 begin_comment
-comment|/* Output extended relocation information to a file in target byte order. */
+comment|/* Output extended relocation information to a file in target byte order.  */
 end_comment
 
 begin_function_decl
@@ -10834,12 +10943,7 @@ operator|,
 name|cache_ptr
 operator|++
 control|)
-name|NAME
-argument_list|(
-name|aout
-argument_list|,
-name|swap_ext_reloc_in
-argument_list|)
+name|MY_swap_ext_reloc_in
 argument_list|(
 name|abfd
 argument_list|,
@@ -11071,12 +11175,7 @@ operator|,
 operator|++
 name|generic
 control|)
-name|NAME
-argument_list|(
-name|aout
-argument_list|,
-name|swap_ext_reloc_out
-argument_list|)
+name|MY_swap_ext_reloc_out
 argument_list|(
 name|abfd
 argument_list|,
@@ -11621,10 +11720,6 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_decl_stmt
 name|alent
 modifier|*
@@ -11665,10 +11760,6 @@ name|NULL
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_decl_stmt
 name|void
@@ -11831,10 +11922,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_decl_stmt
 name|void
@@ -12469,7 +12556,7 @@ name|line_file_name
 init|=
 name|NULL
 decl_stmt|;
-comment|/* Value of current_file_name at line number. */
+comment|/* Value of current_file_name at line number.  */
 name|CONST
 name|char
 modifier|*
@@ -12477,7 +12564,7 @@ name|line_directory_name
 init|=
 name|NULL
 decl_stmt|;
-comment|/* Value of directory_name at line number. */
+comment|/* Value of directory_name at line number.  */
 name|bfd_vma
 name|low_line_vma
 init|=
@@ -12750,7 +12837,7 @@ name|symbol
 operator|.
 name|name
 expr_stmt|;
-comment|/* Look ahead to next symbol to check if that too is an N_SO. */
+comment|/* Look ahead to next symbol to check if that too is an N_SO.  */
 name|p
 operator|++
 expr_stmt|;
@@ -12787,7 +12874,7 @@ condition|)
 goto|goto
 name|next
 goto|;
-comment|/* Found a second N_SO  First is directory; second is filename. */
+comment|/* Found a second N_SO  First is directory; second is filename.  */
 name|directory_name
 operator|=
 name|current_file_name
@@ -13228,10 +13315,6 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_decl_stmt
 name|int
 name|NAME
@@ -13306,6 +13389,14 @@ name|abfd
 argument_list|)
 operator|!=
 name|bfd_object
+operator|||
+name|abfd
+operator|->
+name|tdata
+operator|.
+name|aout_data
+operator|==
+name|NULL
 condition|)
 return|return
 name|true
@@ -18596,7 +18687,7 @@ name|aout_link_hash_entry
 modifier|*
 name|hresolve
 decl_stmt|;
-comment|/* We have saved the hash table entry for this symbol, if 	     there is one.  Note that we could just look it up again 	     in the hash table, provided we first check that it is an 	     external symbol. */
+comment|/* We have saved the hash table entry for this symbol, if 	     there is one.  Note that we could just look it up again 	     in the hash table, provided we first check that it is an 	     external symbol.  */
 name|h
 operator|=
 operator|*
@@ -25407,6 +25498,35 @@ block|}
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|MY_put_ext_reloc
+name|MY_put_ext_reloc
+argument_list|(
+name|finfo
+operator|->
+name|output_bfd
+argument_list|,
+name|r_extern
+argument_list|,
+name|r_index
+argument_list|,
+name|p
+operator|->
+name|offset
+argument_list|,
+name|howto
+argument_list|,
+operator|&
+name|erel
+argument_list|,
+name|pr
+operator|->
+name|addend
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|PUT_WORD
 argument_list|(
 name|finfo
@@ -25561,6 +25681,9 @@ operator|.
 name|r_addend
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* MY_put_ext_reloc */
 name|rel_ptr
 operator|=
 operator|(

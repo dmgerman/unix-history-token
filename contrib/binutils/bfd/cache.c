@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD library -- caching of file descriptors.    Copyright 1990, 91, 92, 93, 94, 95, 1996, 2000    Free Software Foundation, Inc.    Hacked by Steve Chamberlain of Cygnus Support (steve@cygnus.com).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD library -- caching of file descriptors.    Copyright 1990, 1991, 1992, 1993, 1994, 1996, 2000, 2001    Free Software Foundation, Inc.    Hacked by Steve Chamberlain of Cygnus Support (steve@cygnus.com).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* SECTION 	File caching  	The file caching mechanism is embedded within BFD and allows 	the application to open as many BFDs as it wants without 	regard to the underlying operating system's file descriptor 	limit (often as low as 20 open files).  The module in<<cache.c>> maintains a least recently used list of<<BFD_CACHE_MAX_OPEN>> files, and exports the name<<bfd_cache_lookup>>, which runs around and makes sure that 	the required BFD is open. If not, then it chooses a file to 	close, closes it and opens the one wanted, returning its file 	handle.   */
+comment|/* SECTION 	File caching  	The file caching mechanism is embedded within BFD and allows 	the application to open as many BFDs as it wants without 	regard to the underlying operating system's file descriptor 	limit (often as low as 20 open files).  The module in<<cache.c>> maintains a least recently used list of<<BFD_CACHE_MAX_OPEN>> files, and exports the name<<bfd_cache_lookup>>, which runs around and makes sure that 	the required BFD is open. If not, then it chooses a file to 	close, closes it and opens the one wanted, returning its file 	handle.  */
 end_comment
 
 begin_include
@@ -107,7 +107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   INTERNAL_FUNCTION   	bfd_cache_lookup     DESCRIPTION  	Check to see if the required BFD is the same as the last one  	looked up. If so, then it can use the stream in the BFD with  	impunity, since it can't have changed since the last lookup;  	otherwise, it has to perform the complicated lookup function.     .#define bfd_cache_lookup(x) \   .    ((x)==bfd_last_cache? \   .      (FILE*)(bfd_last_cache->iostream): \   .       bfd_cache_lookup_worker(x))      */
+comment|/*   INTERNAL_FUNCTION   	bfd_cache_lookup    DESCRIPTION  	Check to see if the required BFD is the same as the last one  	looked up. If so, then it can use the stream in the BFD with  	impunity, since it can't have changed since the last lookup;  	otherwise, it has to perform the complicated lookup function.    .#define bfd_cache_lookup(x) \   .    ((x)==bfd_last_cache? \   .      (FILE*) (bfd_last_cache->iostream): \   .       bfd_cache_lookup_worker(x))   */
 end_comment
 
 begin_comment
@@ -541,7 +541,7 @@ name|cacheable
 operator|=
 name|true
 expr_stmt|;
-comment|/* Allow it to be closed later. */
+comment|/* Allow it to be closed later.  */
 if|if
 condition|(
 name|open_files
@@ -698,7 +698,7 @@ name|abfd
 operator|->
 name|filename
 argument_list|,
-name|FOPEN_WB
+name|FOPEN_WUB
 argument_list|)
 expr_stmt|;
 name|abfd
@@ -744,7 +744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION 	bfd_cache_lookup_worker  SYNOPSIS 	FILE *bfd_cache_lookup_worker(bfd *abfd);  DESCRIPTION 	Called when the macro<<bfd_cache_lookup>> fails to find a 	quick answer.  Find a file descriptor for @var{abfd}.  If 	necessary, it open it.  If there are already more than<<BFD_CACHE_MAX_OPEN>> files open, it tries to close one first, to 	avoid running out of file descriptors.   */
+comment|/* INTERNAL_FUNCTION 	bfd_cache_lookup_worker  SYNOPSIS 	FILE *bfd_cache_lookup_worker(bfd *abfd);  DESCRIPTION 	Called when the macro<<bfd_cache_lookup>> fails to find a 	quick answer.  Find a file descriptor for @var{abfd}.  If 	necessary, it open it.  If there are already more than<<BFD_CACHE_MAX_OPEN>> files open, it tries to close one first, to 	avoid running out of file descriptors. */
 end_comment
 
 begin_function

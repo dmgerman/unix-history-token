@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end definitions used by all NetBSD targets.    Copyright (C) 1990, 91, 92, 94, 95, 96, 97, 98, 2000    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end definitions used by all NetBSD targets.    Copyright 1990, 1991, 1992, 1994, 1995, 1996, 1997, 1998, 2000    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* Check for our machine type (part of magic number). */
+comment|/* Check for our machine type (part of magic number).  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is the normal load address for executables. */
+comment|/* This is the normal load address for executables.  */
 end_comment
 
 begin_define
@@ -54,7 +54,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Determine if this is a shared library using the flags. */
+comment|/* Determine if this is a shared library using the flags.  */
 end_comment
 
 begin_define
@@ -79,7 +79,7 @@ parameter_list|(
 name|exec
 parameter_list|)
 define|\
-value|((enum machine_type)(((exec).a_info>> 16)& 0x03ff))
+value|((enum machine_type) (((exec).a_info>> 16)& 0x03ff))
 end_define
 
 begin_define
@@ -107,7 +107,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|((exec).a_info = ((magic)& 0xffff) \ 	 | (((int)(type)& 0x3ff)<< 16) \ 	 | (((flags)& 0x3f)<< 24))
+value|((exec).a_info = ((magic)& 0xffff) \ 	 | (((int) (type)& 0x3ff)<< 16) \ 	 | (((flags)& 0x3f)<< 24))
 end_define
 
 begin_define
@@ -120,7 +120,7 @@ parameter_list|,
 name|machtype
 parameter_list|)
 define|\
-value|((exec).a_info = \          ((exec).a_info& 0xfb00ffff) | ((((int)(machtype))&0x3ff)<< 16))
+value|((exec).a_info = \          ((exec).a_info& 0xfb00ffff) | ((((int) (machtype))&0x3ff)<< 16))
 end_define
 
 begin_define

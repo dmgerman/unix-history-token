@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for ALPHA Extended-Coff files.    Copyright 1993, 94, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.    Modified from coff-mips.c by Steve Chamberlain<sac@cygnus.com> and    Ian Lance Taylor<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for ALPHA Extended-Coff files.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Modified from coff-mips.c by Steve Chamberlain<sac@cygnus.com> and    Ian Lance Taylor<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -758,30 +758,37 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|arelent
 modifier|*
 name|reloc
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asymbol
 modifier|*
 name|sym
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|PTR
 name|data
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
 name|sec
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd
 modifier|*
 name|output_bfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|error_message
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
@@ -1681,6 +1688,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|PTR
 name|filehdr
@@ -2606,6 +2614,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|const
 name|arelent
@@ -4455,6 +4464,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|bfd_reloc_code_real_type
 name|code
@@ -4617,6 +4627,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|output_bfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|struct
 name|bfd_link_info
@@ -5434,7 +5445,7 @@ argument_list|)
 operator|->
 name|sym_hashes
 expr_stmt|;
-comment|/* On the Alpha, the .lita section must be addressable by the global      pointer.  To support large programs, we need to allow multiple      global pointers.  This works as long as each input .lita section      is<64KB big.  This implies that when producing relocatable      output, the .lita section is limited to 64KB. . */
+comment|/* On the Alpha, the .lita section must be addressable by the global      pointer.  To support large programs, we need to allow multiple      global pointers.  This works as long as each input .lita section      is<64KB big.  This implies that when producing relocatable      output, the .lita section is limited to 64KB. .  */
 name|lita_sec
 operator|=
 name|symndx_to_section
@@ -7504,10 +7515,6 @@ begin_comment
 comment|/* Do final adjustments to the filehdr and the aouthdr.  This routine    sets the dynamic bits in the file header.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|boolean
@@ -7532,6 +7539,7 @@ name|struct
 name|internal_aouthdr
 modifier|*
 name|ahdr
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -8042,7 +8050,7 @@ name|left
 operator|=
 name|size
 expr_stmt|;
-comment|/* I don't know what the next eight bytes are for. */
+comment|/* I don't know what the next eight bytes are for.  */
 if|if
 condition|(
 name|bfd_read
@@ -8414,7 +8422,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Pad to an even boundary... 	 Note that last_file->origin can be odd in the case of 	 BSD-4.4-style element with a long odd size. */
+comment|/* Pad to an even boundary... 	 Note that last_file->origin can be odd in the case of 	 BSD-4.4-style element with a long odd size.  */
 name|filestart
 operator|=
 name|last_file
@@ -8691,6 +8699,10 @@ block|,
 name|false
 block|,
 literal|4
+block|,
+name|false
+block|,
+literal|2
 block|,
 name|alpha_ecoff_swap_filehdr_in
 block|,

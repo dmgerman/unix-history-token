@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-ppc.h -- Header file for tc-ppc.c.    Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* tc-ppc.h -- Header file for tc-ppc.c.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -108,11 +108,32 @@ name|TARGET_ARCH
 value|(ppc_arch ())
 end_define
 
+begin_define
+define|#
+directive|define
+name|TARGET_MACH
+value|(ppc_mach ())
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|enum
 name|bfd_architecture
 name|ppc_arch
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|long
+name|ppc_mach
 name|PARAMS
 argument_list|(
 operator|(
@@ -137,103 +158,21 @@ begin_comment
 comment|/* The target BFD format.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OBJ_COFF
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TE_PE
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|TARGET_FORMAT
-value|(target_big_endian ? "pe-powerpc" : "pe-powerpcle")
+value|(ppc_target_format ())
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|TARGET_FORMAT
-value|"aixcoff-rs6000"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PowerMac has a BFD slightly different from AIX's.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TE_POWERMAC
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TARGET_FORMAT
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_FORMAT
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|TARGET_FORMAT
-value|"xcoff-powermac"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OBJ_ELF
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TARGET_FORMAT
-value|(target_big_endian ? "elf32-powerpc" : "elf32-powerpcle")
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|ppc_target_format
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Permit temporary numeric labels.  */
@@ -719,6 +658,19 @@ begin_comment
 comment|/* Niclas Andersson<nican@ida.liu.se> says this is needed.  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ppc_subseg_align
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -726,7 +678,7 @@ name|SUB_SEGMENT_ALIGN
 parameter_list|(
 name|SEG
 parameter_list|)
-value|2
+value|ppc_subseg_align()
 end_define
 
 begin_comment
@@ -938,7 +890,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Keep relocations relative to the GOT, or non-PC relative. */
+comment|/* Keep relocations relative to the GOT, or non-PC relative.  */
 end_comment
 
 begin_define
@@ -965,6 +917,13 @@ name|FIX
 parameter_list|)
 define|\
 value|((FIX)->fx_addsy == NULL \    || (! S_IS_EXTERNAL ((FIX)->fx_addsy) \&& ! S_IS_WEAK ((FIX)->fx_addsy) \&& S_IS_DEFINED ((FIX)->fx_addsy) \&& ! S_IS_COMMON ((FIX)->fx_addsy)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF2_LINE_MIN_INSN_LENGTH
+value|4
 end_define
 
 begin_endif

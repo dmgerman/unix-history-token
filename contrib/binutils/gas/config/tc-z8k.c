@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-z8k.c -- Assemble code for the Zilog Z800n    Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 1999 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-z8k.c -- Assemble code for the Zilog Z800n    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*   Written By Steve Chamberlain   sac@cygnus.com   */
+comment|/* Written By Steve Chamberlain<sac@cygnus.com>.  */
 end_comment
 
 begin_define
@@ -49,25 +49,7 @@ name|char
 name|comment_chars
 index|[]
 init|=
-block|{
-literal|'!'
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-name|line_separator_chars
-index|[]
-init|=
-block|{
-literal|';'
-block|,
-literal|0
-block|}
+literal|"!"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,11 +59,17 @@ name|char
 name|line_comment_chars
 index|[]
 init|=
-block|{
-literal|'#'
-block|,
-literal|0
-block|}
+literal|"#"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+name|line_separator_chars
+index|[]
+init|=
+literal|";"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,10 +99,6 @@ name|int
 name|md_reloc_size
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* This table describes all the machine specific pseudo-ops the assembler    has to support.  The fields are:    pseudo-op name without dot    function to call to execute this pseudo-op    Integer arg to pass to the function    */
-end_comment
 
 begin_function_decl
 name|void
@@ -328,6 +312,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* This table describes all the machine specific pseudo-ops the assembler    has to support.  The fields are:    pseudo-op name without dot    function to call to execute this pseudo-op    Integer arg to pass to the function    */
+end_comment
 
 begin_decl_stmt
 specifier|const
@@ -550,15 +538,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Chars that mean this number is a floating point constant */
-end_comment
-
-begin_comment
-comment|/* As in 0f12.456 */
-end_comment
-
-begin_comment
-comment|/* or    0d1.2345e12 */
+comment|/* Chars that mean this number is a floating point constant.    As in 0f12.456    or    0d1.2345e12  */
 end_comment
 
 begin_decl_stmt
@@ -571,6 +551,10 @@ literal|"rRsSfFdDxXpP"
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Opcode mnemonics.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -579,10 +563,6 @@ modifier|*
 name|opcode_hash_control
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Opcode mnemonics */
-end_comment
 
 begin_function
 name|void
@@ -623,15 +603,7 @@ name|opcode
 operator|++
 control|)
 block|{
-comment|/* Only enter unique codes into the table */
-name|char
-modifier|*
-name|src
-init|=
-name|opcode
-operator|->
-name|name
-decl_stmt|;
+comment|/* Only enter unique codes into the table.  */
 if|if
 condition|(
 name|strcmp
@@ -676,11 +648,11 @@ operator|->
 name|name
 expr_stmt|;
 block|}
-comment|/* default to z8002 */
+comment|/* Default to z8002.  */
 name|s_unseg
 argument_list|()
 expr_stmt|;
-comment|/* insert the pseudo ops too */
+comment|/* Insert the pseudo ops, too.  */
 for|for
 control|(
 name|idx
@@ -726,7 +698,7 @@ name|idx
 index|]
 operator|.
 name|poc_name
-operator|,
+expr_stmt|;
 name|fake_opcode
 operator|->
 name|func
@@ -790,27 +762,27 @@ typedef|typedef
 struct|struct
 name|z8k_op
 block|{
+comment|/* 'b','w','r','q'.  */
 name|char
 name|regsize
 decl_stmt|;
-comment|/* 'b','w','r','q' */
+comment|/* 0 .. 15.  */
 name|unsigned
 name|int
 name|reg
 decl_stmt|;
-comment|/* 0..15 */
 name|int
 name|mode
 decl_stmt|;
+comment|/* Any other register associated with the mode.  */
 name|unsigned
 name|int
 name|x_reg
 decl_stmt|;
-comment|/* any other register associated with the mode */
+comment|/* Any expression.  */
 name|expressionS
 name|exp
 decl_stmt|;
-comment|/* any expression */
 block|}
 name|op_type
 typedef|;
@@ -865,27 +837,23 @@ name|the_interrupt
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 name|char
 modifier|*
-name|DEFUN
-argument_list|(
 name|whatreg
-argument_list|,
-operator|(
+parameter_list|(
 name|reg
-operator|,
+parameter_list|,
 name|src
-operator|)
-argument_list|,
+parameter_list|)
 name|int
-operator|*
+modifier|*
 name|reg
-name|AND
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|src
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -946,44 +914,40 @@ literal|1
 return|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/*   parse operands    rh0-rh7, rl0-rl7   r0-r15   rr0-rr14   rq0--rq12   WREG r0,r1,r2,r3,r4,r5,r6,r7,fp,sp   r0l,r0h,..r7l,r7h   @WREG   @WREG+   @-WREG   #const    */
+comment|/* Parse operands     rh0-rh7, rl0-rl7    r0-r15    rr0-rr14    rq0--rq12    WREG r0,r1,r2,r3,r4,r5,r6,r7,fp,sp    r0l,r0h,..r7l,r7h    @WREG    @WREG+    @-WREG    #const */
 end_comment
 
 begin_comment
-comment|/* try and parse a reg name, returns number of chars consumed */
+comment|/* Try to parse a reg name.  Return a pointer to the first character    in SRC after the reg name.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|char
 modifier|*
-name|DEFUN
-argument_list|(
 name|parse_reg
-argument_list|,
-operator|(
+parameter_list|(
 name|src
-operator|,
+parameter_list|,
 name|mode
-operator|,
+parameter_list|,
 name|reg
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|src
-name|AND
+decl_stmt|;
 name|int
-operator|*
+modifier|*
 name|mode
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
-operator|*
+modifier|*
 name|reg
-argument_list|)
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -1301,29 +1265,25 @@ return|return
 name|res
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 name|char
 modifier|*
-name|DEFUN
-argument_list|(
 name|parse_exp
-argument_list|,
-operator|(
+parameter_list|(
 name|s
-operator|,
+parameter_list|,
 name|op
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|s
-name|AND
+decl_stmt|;
 name|expressionS
-operator|*
+modifier|*
 name|op
-argument_list|)
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -1372,33 +1332,29 @@ return|return
 name|new
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* The many forms of operand:<rb><r><rr><rq>    @r    #exp    exp    exp(r)    r(#exp)    r(r)       */
+comment|/* The many forms of operand:<rb><r><rr><rq>    @r    #exp    exp    exp(r)    r(#exp)    r(r)    */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|char
 modifier|*
-name|DEFUN
-argument_list|(
 name|checkfor
-argument_list|,
-operator|(
+parameter_list|(
 name|ptr
-operator|,
+parameter_list|,
 name|what
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|ptr
-name|AND
+decl_stmt|;
 name|char
 name|what
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1411,7 +1367,6 @@ name|ptr
 operator|++
 expr_stmt|;
 else|else
-block|{
 name|as_bad
 argument_list|(
 name|_
@@ -1422,37 +1377,32 @@ argument_list|,
 name|what
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|ptr
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* Make sure the mode supplied is the size of a word */
+comment|/* Make sure the mode supplied is the size of a word.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|regword
-argument_list|,
-operator|(
+parameter_list|(
 name|mode
-operator|,
+parameter_list|,
 name|string
-operator|)
-argument_list|,
+parameter_list|)
 name|int
 name|mode
-name|AND
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|string
-argument_list|)
+decl_stmt|;
 block|{
 name|int
 name|ok
@@ -1480,32 +1430,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* Make sure the mode supplied is the size of an address */
+comment|/* Make sure the mode supplied is the size of an address.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|regaddr
-argument_list|,
-operator|(
+parameter_list|(
 name|mode
-operator|,
+parameter_list|,
 name|string
-operator|)
-argument_list|,
+parameter_list|)
 name|int
 name|mode
-name|AND
+decl_stmt|;
 name|char
-operator|*
+modifier|*
 name|string
-argument_list|)
+decl_stmt|;
 block|{
 name|int
 name|ok
@@ -1537,7 +1483,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_struct
 struct|struct
@@ -1561,74 +1507,89 @@ name|ctrl_table
 index|[]
 init|=
 block|{
+block|{
 literal|0x2
 block|,
 literal|"fcw"
+block|}
 block|,
-literal|0X3
+block|{
+literal|0x3
 block|,
 literal|"refresh"
+block|}
 block|,
+block|{
 literal|0x4
 block|,
 literal|"psapseg"
+block|}
 block|,
+block|{
 literal|0x5
 block|,
 literal|"psapoff"
+block|}
 block|,
+block|{
 literal|0x5
 block|,
 literal|"psap"
+block|}
 block|,
+block|{
 literal|0x6
 block|,
 literal|"nspseg"
+block|}
 block|,
+block|{
 literal|0x7
 block|,
 literal|"nspoff"
+block|}
 block|,
+block|{
 literal|0x7
 block|,
 literal|"nsp"
+block|}
 block|,
+block|{
 literal|0
 block|,
 literal|0
 block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|get_ctrl_operand
-argument_list|,
-operator|(
+parameter_list|(
 name|ptr
-operator|,
+parameter_list|,
 name|mode
-operator|,
+parameter_list|,
 name|dst
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|ptr
-name|AND
-expr|struct
+decl_stmt|;
+name|struct
 name|z8k_op
-operator|*
+modifier|*
 name|mode
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|dst
-argument_list|)
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -1636,9 +1597,6 @@ name|src
 init|=
 operator|*
 name|ptr
-decl_stmt|;
-name|int
-name|r
 decl_stmt|;
 name|int
 name|i
@@ -1747,7 +1705,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-end_decl_stmt
+end_function
 
 begin_struct
 struct|struct
@@ -1771,66 +1729,77 @@ name|flag_table
 index|[]
 init|=
 block|{
+block|{
 literal|0x1
 block|,
 literal|"p"
+block|}
 block|,
+block|{
 literal|0x1
 block|,
 literal|"v"
+block|}
 block|,
+block|{
 literal|0x2
 block|,
 literal|"s"
+block|}
 block|,
+block|{
 literal|0x4
 block|,
 literal|"z"
+block|}
 block|,
+block|{
 literal|0x8
 block|,
 literal|"c"
+block|}
 block|,
+block|{
 literal|0x0
 block|,
 literal|"+"
+block|}
 block|,
+block|{
 literal|0
 block|,
 literal|0
 block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|get_flags_operand
-argument_list|,
-operator|(
+parameter_list|(
 name|ptr
-operator|,
+parameter_list|,
 name|mode
-operator|,
+parameter_list|,
 name|dst
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|ptr
-name|AND
-expr|struct
+decl_stmt|;
+name|struct
 name|z8k_op
-operator|*
+modifier|*
 name|mode
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|dst
-argument_list|)
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -1838,9 +1807,6 @@ name|src
 init|=
 operator|*
 name|ptr
-decl_stmt|;
-name|int
-name|r
 decl_stmt|;
 name|int
 name|i
@@ -1962,7 +1928,7 @@ name|j
 expr_stmt|;
 return|return;
 block|}
-end_decl_stmt
+end_function
 
 begin_struct
 struct|struct
@@ -1986,58 +1952,65 @@ name|intr_table
 index|[]
 init|=
 block|{
+block|{
 literal|0x1
 block|,
 literal|"nvi"
+block|}
 block|,
+block|{
 literal|0x2
 block|,
 literal|"vi"
+block|}
 block|,
+block|{
 literal|0x3
 block|,
 literal|"both"
+block|}
 block|,
+block|{
 literal|0x3
 block|,
 literal|"all"
+block|}
 block|,
+block|{
 literal|0
 block|,
 literal|0
 block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|get_interrupt_operand
-argument_list|,
-operator|(
+parameter_list|(
 name|ptr
-operator|,
+parameter_list|,
 name|mode
-operator|,
+parameter_list|,
 name|dst
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|ptr
-name|AND
-expr|struct
+decl_stmt|;
+name|struct
 name|z8k_op
-operator|*
+modifier|*
 name|mode
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|dst
-argument_list|)
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -2045,9 +2018,6 @@ name|src
 init|=
 operator|*
 name|ptr
-decl_stmt|;
-name|int
-name|r
 decl_stmt|;
 name|int
 name|i
@@ -2156,7 +2126,7 @@ literal|0x0
 expr_stmt|;
 return|return;
 block|}
-end_decl_stmt
+end_function
 
 begin_struct
 struct|struct
@@ -2180,130 +2150,173 @@ name|table
 index|[]
 init|=
 block|{
+block|{
 literal|0x0
 block|,
 literal|"f"
+block|}
 block|,
+block|{
 literal|0x1
 block|,
 literal|"lt"
+block|}
 block|,
+block|{
 literal|0x2
 block|,
 literal|"le"
+block|}
 block|,
+block|{
 literal|0x3
 block|,
 literal|"ule"
+block|}
 block|,
+block|{
 literal|0x4
 block|,
 literal|"ov"
+block|}
 block|,
+block|{
 literal|0x4
 block|,
 literal|"pe"
+block|}
 block|,
+block|{
 literal|0x5
 block|,
 literal|"mi"
+block|}
 block|,
+block|{
 literal|0x6
 block|,
 literal|"eq"
+block|}
 block|,
+block|{
 literal|0x6
 block|,
 literal|"z"
+block|}
 block|,
+block|{
 literal|0x7
 block|,
 literal|"c"
+block|}
 block|,
+block|{
 literal|0x7
 block|,
 literal|"ult"
+block|}
 block|,
+block|{
 literal|0x8
 block|,
 literal|"t"
+block|}
 block|,
+block|{
 literal|0x9
 block|,
 literal|"ge"
+block|}
 block|,
+block|{
 literal|0xa
 block|,
 literal|"gt"
+block|}
 block|,
+block|{
 literal|0xb
 block|,
 literal|"ugt"
+block|}
 block|,
+block|{
 literal|0xc
 block|,
 literal|"nov"
+block|}
 block|,
+block|{
 literal|0xc
 block|,
 literal|"po"
+block|}
 block|,
+block|{
 literal|0xd
 block|,
 literal|"pl"
+block|}
 block|,
+block|{
 literal|0xe
 block|,
 literal|"ne"
+block|}
 block|,
+block|{
 literal|0xe
 block|,
 literal|"nz"
+block|}
 block|,
+block|{
 literal|0xf
 block|,
 literal|"nc"
+block|}
 block|,
+block|{
 literal|0xf
 block|,
 literal|"uge"
+block|}
 block|,
+block|{
 literal|0
 block|,
 literal|0
 block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|get_cc_operand
-argument_list|,
-operator|(
+parameter_list|(
 name|ptr
-operator|,
+parameter_list|,
 name|mode
-operator|,
+parameter_list|,
 name|dst
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|ptr
-name|AND
-expr|struct
+decl_stmt|;
+name|struct
 name|z8k_op
-operator|*
+modifier|*
 name|mode
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|dst
-argument_list|)
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -2311,9 +2324,6 @@ name|src
 init|=
 operator|*
 name|ptr
-decl_stmt|;
-name|int
-name|r
 decl_stmt|;
 name|int
 name|i
@@ -2421,7 +2431,7 @@ operator|=
 literal|0x8
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 specifier|static
@@ -2447,6 +2457,7 @@ decl_stmt|;
 name|unsigned
 name|int
 name|dst
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -2459,18 +2470,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|end
-decl_stmt|;
-name|unsigned
-name|int
-name|num
-decl_stmt|;
-name|unsigned
-name|int
-name|len
-decl_stmt|;
-name|unsigned
-name|int
-name|size
 decl_stmt|;
 name|mode
 operator|->
@@ -2627,7 +2626,7 @@ condition|(
 name|end
 condition|)
 block|{
-comment|/* Got Ra(Rb) */
+comment|/* Got Ra(Rb).  */
 name|src
 operator|=
 name|end
@@ -2639,7 +2638,6 @@ name|src
 operator|!=
 literal|')'
 condition|)
-block|{
 name|as_bad
 argument_list|(
 name|_
@@ -2648,13 +2646,10 @@ literal|"Missing ) in ra(rb)"
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|src
 operator|++
 expr_stmt|;
-block|}
 name|regaddr
 argument_list|(
 name|mode
@@ -2664,7 +2659,12 @@ argument_list|,
 literal|"ra(rb) ra"
 argument_list|)
 expr_stmt|;
-comment|/*		  regword (mode->mode, "ra(rb) rb");*/
+if|#
+directive|if
+literal|0
+block|regword (mode->mode, "ra(rb) rb");
+endif|#
+directive|endif
 name|mode
 operator|->
 name|mode
@@ -2693,7 +2693,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Got Ra(disp) */
+comment|/* Got Ra(disp).  */
 if|if
 condition|(
 operator|*
@@ -2774,7 +2774,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* No initial reg */
+comment|/* No initial reg.  */
 name|src
 operator|=
 name|parse_exp
@@ -2865,7 +2865,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Just an address */
+comment|/* Just an address.  */
 name|mode
 operator|->
 name|mode
@@ -3171,7 +3171,9 @@ name|ptr
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+name|NULL
+return|;
 if|if
 condition|(
 operator|*
@@ -3220,7 +3222,9 @@ name|ptr
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+name|NULL
+return|;
 if|if
 condition|(
 operator|*
@@ -3404,31 +3408,27 @@ block|}
 end_function
 
 begin_comment
-comment|/* Passed a pointer to a list of opcodes which use different    addressing modes, return the opcode which matches the opcodes    provided    */
+comment|/* Passed a pointer to a list of opcodes which use different    addressing modes.  Return the opcode which matches the opcodes    provided.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|opcode_entry_type
 modifier|*
-name|DEFUN
-argument_list|(
 name|get_specific
-argument_list|,
-operator|(
+parameter_list|(
 name|opcode
-operator|,
+parameter_list|,
 name|operands
-operator|)
-argument_list|,
+parameter_list|)
 name|opcode_entry_type
-operator|*
+modifier|*
 name|opcode
-name|AND
+decl_stmt|;
 name|op_type
-operator|*
+modifier|*
 name|operands
-argument_list|)
+decl_stmt|;
 block|{
 name|opcode_entry_type
 modifier|*
@@ -3449,11 +3449,6 @@ name|opcode
 operator|->
 name|noperands
 decl_stmt|;
-name|unsigned
-name|int
-name|dispreg
-decl_stmt|;
-name|unsigned
 name|int
 name|this_index
 init|=
@@ -3496,6 +3491,7 @@ name|i
 operator|++
 control|)
 block|{
+name|unsigned
 name|int
 name|mode
 init|=
@@ -3526,7 +3522,7 @@ name|CLASS_MASK
 operator|)
 condition|)
 block|{
-comment|/* it could be an pc rel operand, if this is a da mode and 	   we like disps, then insert it */
+comment|/* It could be an pc rel operand, if this is a da mode 		 and we like disps, then insert it.  */
 if|if
 condition|(
 name|mode
@@ -3543,7 +3539,7 @@ operator|==
 name|CLASS_DISP
 condition|)
 block|{
-comment|/* This is the case */
+comment|/* This is the case.  */
 name|operands
 index|[
 name|i
@@ -3569,7 +3565,7 @@ name|i
 index|]
 condition|)
 block|{
-comment|/* Can't think of a way to turn what we've been given into 	     something that's ok */
+comment|/* Can't think of a way to turn what we've been 		     given into something that's OK.  */
 goto|goto
 name|fail
 goto|;
@@ -3596,7 +3592,7 @@ operator|&&
 name|segmented_mode
 condition|)
 block|{
-comment|/* ok */
+comment|/* OK.  */
 block|}
 elseif|else
 if|if
@@ -3609,7 +3605,7 @@ operator|!
 name|segmented_mode
 condition|)
 block|{
-comment|/* ok */
+comment|/* OK.  */
 block|}
 else|else
 goto|goto
@@ -3705,108 +3701,28 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
-specifier|static
-name|void
-name|DEFUN
-argument_list|(
-name|check_operand
-argument_list|,
-operator|(
-name|operand
-operator|,
-name|width
-operator|,
-name|string
-operator|)
-argument_list|,
-expr|struct
-name|z8k_op
-operator|*
-name|operand
-name|AND
-name|unsigned
-name|int
-name|width
-name|AND
-name|char
-operator|*
-name|string
-argument_list|)
-block|{
-if|if
-condition|(
-name|operand
-operator|->
-name|exp
-operator|.
-name|X_add_symbol
-operator|==
+begin_if
+if|#
+directive|if
 literal|0
-operator|&&
-name|operand
-operator|->
-name|exp
-operator|.
-name|X_op_symbol
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* No symbol involved, let's look at offset, it's dangerous if any of        the high bits are not 0 or ff's, find out by oring or anding with        the width and seeing if the answer is 0 or all fs*/
-if|if
-condition|(
-operator|(
-name|operand
-operator|->
-name|exp
-operator|.
-name|X_add_number
-operator|&
-operator|~
-name|width
-operator|)
-operator|!=
-literal|0
-operator|&&
-operator|(
-name|operand
-operator|->
-name|exp
-operator|.
-name|X_add_number
-operator||
-name|width
-operator|)
-operator|!=
-operator|(
-operator|~
-literal|0
-operator|)
-condition|)
-block|{
-name|as_warn
-argument_list|(
-name|_
-argument_list|(
-literal|"operand %s0x%x out of range."
-argument_list|)
-argument_list|,
-name|string
-argument_list|,
-name|operand
-operator|->
-name|exp
-operator|.
-name|X_add_number
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-end_decl_stmt
+end_if
+
+begin_comment
+comment|/* Not used.  */
+end_comment
+
+begin_comment
+unit|static void check_operand (operand, width, string)      struct z8k_op *operand;      unsigned int width;      char *string; {   if (operand->exp.X_add_symbol == 0&& operand->exp.X_op_symbol == 0)     {
+comment|/* No symbol involved, let's look at offset, it's dangerous if 	 any of the high bits are not 0 or ff's, find out by oring or 	 anding with the width and seeing if the answer is 0 or all 	 fs.  */
+end_comment
+
+begin_endif
+unit|if ((operand->exp.X_add_number& ~width) != 0&& 	  (operand->exp.X_add_number | width) != (~0)) 	{ 	  as_warn (_("operand %s0x%x out of range."), 		   string, operand->exp.X_add_number); 	}     }  }
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -3818,31 +3734,27 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|newfix
-argument_list|,
-operator|(
+parameter_list|(
 name|ptr
-operator|,
+parameter_list|,
 name|type
-operator|,
+parameter_list|,
 name|operand
-operator|)
-argument_list|,
+parameter_list|)
 name|int
 name|ptr
-name|AND
+decl_stmt|;
 name|int
 name|type
-name|AND
+decl_stmt|;
 name|expressionS
-operator|*
+modifier|*
 name|operand
-argument_list|)
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -3876,40 +3788,36 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|char
 modifier|*
-name|DEFUN
-argument_list|(
 name|apply_fix
-argument_list|,
-operator|(
+parameter_list|(
 name|ptr
-operator|,
+parameter_list|,
 name|type
-operator|,
+parameter_list|,
 name|operand
-operator|,
+parameter_list|,
 name|size
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|ptr
-name|AND
+decl_stmt|;
 name|int
 name|type
-name|AND
+decl_stmt|;
 name|expressionS
-operator|*
+modifier|*
 name|operand
-name|AND
+decl_stmt|;
 name|int
 name|size
-argument_list|)
+decl_stmt|;
 block|{
 name|int
 name|n
@@ -3918,12 +3826,6 @@ name|operand
 operator|->
 name|X_add_number
 decl_stmt|;
-name|operand
-operator|->
-name|X_add_number
-operator|=
-name|n
-expr_stmt|;
 name|newfix
 argument_list|(
 operator|(
@@ -3939,9 +3841,6 @@ argument_list|,
 name|operand
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|1
 switch|switch
 condition|(
 name|size
@@ -3950,7 +3849,7 @@ block|{
 case|case
 literal|8
 case|:
-comment|/* 8 nibbles == 32 bits */
+comment|/* 8 nibbles == 32 bits.  */
 operator|*
 name|ptr
 operator|++
@@ -3986,7 +3885,7 @@ expr_stmt|;
 case|case
 literal|4
 case|:
-comment|/* 4 niblles == 16 bits */
+comment|/* 4 nibbles == 16 bits.  */
 operator|*
 name|ptr
 operator|++
@@ -4027,16 +3926,14 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
 return|return
 name|ptr
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* Now we know what sort of opcodes it is, lets build the bytes -  */
+comment|/* Now we know what sort of opcodes it is.  Let's build the bytes.  */
 end_comment
 
 begin_define
@@ -4068,33 +3965,17 @@ name|struct
 name|z8k_op
 modifier|*
 name|operand
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-name|unsigned
-name|int
-name|i
-decl_stmt|;
-name|int
-name|length
-decl_stmt|;
-name|char
-modifier|*
-name|output
-decl_stmt|;
 name|char
 modifier|*
 name|output_ptr
 init|=
 name|buffer
 decl_stmt|;
-name|char
-name|part
-decl_stmt|;
 name|int
 name|c
-decl_stmt|;
-name|char
-name|high
 decl_stmt|;
 name|int
 name|nib
@@ -4132,20 +4013,19 @@ name|this_try
 operator|->
 name|byte_info
 expr_stmt|;
-name|top
-label|:
-empty_stmt|;
 for|for
 control|(
 name|nibble
 operator|=
 literal|0
 init|;
+operator|(
 name|c
 operator|=
 operator|*
 name|class_ptr
 operator|++
+operator|)
 condition|;
 name|nibble
 operator|++
@@ -4165,18 +4045,13 @@ expr_stmt|;
 case|case
 name|CLASS_ADDRESS
 case|:
-comment|/* Direct address, we don't cope with the SS mode right now */
+comment|/* Direct address, we don't cope with the SS mode right now.  */
 if|if
 condition|(
 name|segmented_mode
 condition|)
 block|{
-name|da_operand
-operator|->
-name|X_add_number
-operator||=
-literal|0x80000000
-expr_stmt|;
+comment|/* da_operand->X_add_number |= 0x80000000;  --  Now set at relocation time.  */
 name|output_ptr
 operator|=
 name|apply_fix
@@ -4215,7 +4090,7 @@ break|break;
 case|case
 name|CLASS_DISP8
 case|:
-comment|/* pc rel 8 bit */
+comment|/* pc rel 8 bit  */
 name|output_ptr
 operator|=
 name|apply_fix
@@ -4237,7 +4112,7 @@ break|break;
 case|case
 name|CLASS_0DISP7
 case|:
-comment|/* pc rel 7 bit */
+comment|/* pc rel 7 bit  */
 operator|*
 name|output_ptr
 operator|=
@@ -4264,7 +4139,7 @@ break|break;
 case|case
 name|CLASS_1DISP7
 case|:
-comment|/* pc rel 7 bit */
+comment|/* pc rel 7 bit  */
 operator|*
 name|output_ptr
 operator|=
@@ -4319,13 +4194,11 @@ name|X_add_number
 operator|==
 literal|2
 condition|)
-block|{
 operator|*
 name|output_ptr
 operator||=
 literal|2
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4335,7 +4208,6 @@ name|X_add_number
 operator|!=
 literal|1
 condition|)
-block|{
 name|as_bad
 argument_list|(
 name|_
@@ -4345,9 +4217,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 else|else
-block|{
 name|as_bad
 argument_list|(
 name|_
@@ -4356,7 +4226,6 @@ literal|"immediate 1 or 2 expected"
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|output_ptr
 operator|++
 expr_stmt|;
@@ -4461,7 +4330,6 @@ index|]
 operator|==
 literal|0
 condition|)
-block|{
 name|as_bad
 argument_list|(
 name|_
@@ -4470,7 +4338,7 @@ literal|"can't use R0 here"
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* Fall through.  */
 case|case
 name|CLASS_REG
 case|:
@@ -4486,7 +4354,7 @@ case|:
 case|case
 name|CLASS_REG_QUAD
 case|:
-comment|/* Insert bit mattern of 	 right reg */
+comment|/* Insert bit mattern of right reg.  */
 operator|*
 name|output_ptr
 operator|++
@@ -4502,6 +4370,48 @@ break|break;
 case|case
 name|CLASS_DISP
 case|:
+switch|switch
+condition|(
+name|c
+operator|&
+name|ARG_MASK
+condition|)
+block|{
+case|case
+name|ARG_DISP12
+case|:
+name|output_ptr
+operator|=
+name|apply_fix
+argument_list|(
+name|output_ptr
+argument_list|,
+name|R_CALLR
+argument_list|,
+name|da_operand
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ARG_DISP16
+case|:
+name|output_ptr
+operator|=
+name|apply_fix
+argument_list|(
+name|output_ptr
+argument_list|,
+name|R_REL16
+argument_list|,
+name|da_operand
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
 name|output_ptr
 operator|=
 name|apply_fix
@@ -4515,6 +4425,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+block|}
 name|da_operand
 operator|=
 literal|0
@@ -4667,7 +4578,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* Copy from the nibble buffer into the frag */
+comment|/* Copy from the nibble buffer into the frag.  */
 block|{
 name|int
 name|length
@@ -4732,24 +4643,23 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is the guts of the machine-dependent assembler.  STR points to a    machine dependent instruction.  This funciton is supposed to emit    the frags/bytes it assembles to.    */
+comment|/* This is the guts of the machine-dependent assembler.  STR points to a    machine dependent instruction.  This function is supposed to emit    the frags/bytes it assembles to.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|md_assemble
-argument_list|,
-operator|(
+parameter_list|(
 name|str
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|str
-argument_list|)
+decl_stmt|;
 block|{
+name|char
+name|c
+decl_stmt|;
 name|char
 modifier|*
 name|op_start
@@ -4757,10 +4667,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|op_end
-decl_stmt|;
-name|unsigned
-name|int
-name|i
 decl_stmt|;
 name|struct
 name|z8k_op
@@ -4777,16 +4683,7 @@ name|opcode_entry_type
 modifier|*
 name|prev_opcode
 decl_stmt|;
-name|char
-modifier|*
-name|dot
-init|=
-literal|0
-decl_stmt|;
-name|char
-name|c
-decl_stmt|;
-comment|/* Drop leading whitespace */
+comment|/* Drop leading whitespace.  */
 while|while
 condition|(
 operator|*
@@ -4797,7 +4694,7 @@ condition|)
 name|str
 operator|++
 expr_stmt|;
-comment|/* find the op code end */
+comment|/* Find the op code end.  */
 for|for
 control|(
 name|op_start
@@ -4819,7 +4716,6 @@ condition|;
 name|op_end
 operator|++
 control|)
-block|{     }
 empty_stmt|;
 if|if
 condition|(
@@ -4886,7 +4782,7 @@ operator|==
 literal|250
 condition|)
 block|{
-comment|/* was really a pseudo op */
+comment|/* Was really a pseudo op.  */
 name|pseudo_typeS
 modifier|*
 name|p
@@ -4995,7 +4891,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Couldn't find an opcode which matched the operands */
+comment|/* Couldn't find an opcode which matched the operands.  */
 name|char
 modifier|*
 name|where
@@ -5038,22 +4934,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|tc_crawl_symbol_chain
-argument_list|,
-operator|(
+parameter_list|(
 name|headers
-operator|)
-argument_list|,
+parameter_list|)
 name|object_headers
-operator|*
+modifier|*
 name|headers
-argument_list|)
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 name|printf
 argument_list|(
@@ -5064,44 +4957,38 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 name|symbolS
 modifier|*
-name|DEFUN
-argument_list|(
 name|md_undefined_symbol
-argument_list|,
-operator|(
+parameter_list|(
 name|name
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|name
-argument_list|)
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|tc_headers_hook
-argument_list|,
-operator|(
+parameter_list|(
 name|headers
-operator|)
-argument_list|,
+parameter_list|)
 name|object_headers
-operator|*
+modifier|*
 name|headers
-argument_list|)
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 name|printf
 argument_list|(
@@ -5112,14 +4999,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* Various routines to kill one day */
+comment|/* Various routines to kill one day.  */
 end_comment
 
 begin_comment
-comment|/* Equal to MAX_PRECISION in atof-ieee.c */
+comment|/* Equal to MAX_PRECISION in atof-ieee.c.  */
 end_comment
 
 begin_define
@@ -5130,7 +5017,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* Turn a string in input_line_pointer into a floating point constant of type    type, and store the appropriate bytes in *litP.  The number of LITTLENUMS    emitted is stored in *sizeP .  An error message is returned, or NULL on OK.    */
+comment|/* Turn a string in input_line_pointer into a floating point constant    of type TYPE, and store the appropriate bytes in *LITP.  The number    of LITTLENUMS emitted is stored in *SIZEP.  An error message is    returned, or NULL on OK.  */
 end_comment
 
 begin_function
@@ -5507,13 +5394,16 @@ parameter_list|)
 name|object_headers
 modifier|*
 name|headers
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|segT
 name|seg
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|fragS
 modifier|*
 name|fragP
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|printf
@@ -5530,24 +5420,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|valueT
-name|DEFUN
-argument_list|(
 name|md_section_align
-argument_list|,
-operator|(
+parameter_list|(
 name|seg
-operator|,
+parameter_list|,
 name|size
-operator|)
-argument_list|,
+parameter_list|)
 name|segT
 name|seg
-name|AND
+decl_stmt|;
 name|valueT
 name|size
-argument_list|)
+decl_stmt|;
 block|{
 return|return
 operator|(
@@ -5584,7 +5470,7 @@ operator|)
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|void
@@ -5663,7 +5549,12 @@ operator|++
 operator|=
 name|val
 expr_stmt|;
-comment|/*    if (val != 0) abort();*/
+if|#
+directive|if
+literal|0
+block|if (val != 0) 	abort ();
+endif|#
+directive|endif
 break|break;
 case|case
 name|R_DISP7
@@ -5674,7 +5565,12 @@ operator|++
 operator|+=
 name|val
 expr_stmt|;
-comment|/*    if (val != 0) abort();*/
+if|#
+directive|if
+literal|0
+block|if (val != 0) 	abort ();
+endif|#
+directive|endif
 break|break;
 case|case
 name|R_IMM8
@@ -5788,10 +5684,12 @@ specifier|register
 name|fragS
 modifier|*
 name|fragP
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 specifier|register
 name|segT
 name|segment_type
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|printf
@@ -5809,33 +5707,29 @@ block|}
 end_function
 
 begin_comment
-comment|/* Put number into target byte order */
+comment|/* Put number into target byte order.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|md_number_to_chars
-argument_list|,
-operator|(
+parameter_list|(
 name|ptr
-operator|,
+parameter_list|,
 name|use
-operator|,
+parameter_list|,
 name|nbytes
-operator|)
-argument_list|,
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|ptr
-name|AND
+decl_stmt|;
 name|valueT
 name|use
-name|AND
+decl_stmt|;
 name|int
 name|nbytes
-argument_list|)
+decl_stmt|;
 block|{
 name|number_to_chars_bigendian
 argument_list|(
@@ -5847,7 +5741,7 @@ name|nbytes
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|long
@@ -5858,6 +5752,7 @@ parameter_list|)
 name|fixS
 modifier|*
 name|fixP
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|abort
@@ -5875,6 +5770,7 @@ parameter_list|)
 name|symbolS
 modifier|*
 name|s
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{ }
 end_function
@@ -5945,7 +5841,6 @@ argument_list|(
 name|sub
 argument_list|)
 condition|)
-block|{
 name|as_bad
 argument_list|(
 name|_
@@ -5964,7 +5859,6 @@ name|sub
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|int
@@ -6006,7 +5900,7 @@ name|fix_ptr
 operator|->
 name|fx_addsy
 expr_stmt|;
-comment|/* If this relocation is attached to a symbol then it's ok      to output it */
+comment|/* If this relocation is attached to a symbol then it's ok      to output it.  */
 if|if
 condition|(
 name|fix_ptr
@@ -6016,7 +5910,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* cons likes to create reloc32's whatever the size of the reloc.. */
+comment|/* cons likes to create reloc32's whatever the size of the reloc.  */
 switch|switch
 condition|(
 name|fix_ptr
@@ -6061,7 +5955,6 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|intr
 operator|->
 name|r_type
@@ -6070,7 +5963,6 @@ name|fix_ptr
 operator|->
 name|fx_r_type
 expr_stmt|;
-block|}
 name|intr
 operator|->
 name|r_vaddr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD PowerPC CPU definition    Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.    Contributed by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD PowerPC CPU definition    Copyright 1994, 1995, 1996, 2000 Free Software Foundation, Inc.    Contributed by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -141,9 +141,8 @@ block|,
 comment|/* 8 bits in a byte */
 name|bfd_arch_powerpc
 block|,
-literal|603
+name|bfd_mach_ppc_603
 block|,
-comment|/* for the mpc603 */
 literal|"powerpc"
 block|,
 literal|"powerpc:603"
@@ -176,12 +175,11 @@ block|,
 comment|/* 8 bits in a byte */
 name|bfd_arch_powerpc
 block|,
-literal|604
+name|bfd_mach_ppc_ec603e
 block|,
-comment|/* for the mpc604 */
 literal|"powerpc"
 block|,
-literal|"powerpc:604"
+literal|"powerpc:EC603e"
 block|,
 literal|3
 block|,
@@ -211,12 +209,11 @@ block|,
 comment|/* 8 bits in a byte */
 name|bfd_arch_powerpc
 block|,
-literal|403
+name|bfd_mach_ppc_604
 block|,
-comment|/* for the 403 */
 literal|"powerpc"
 block|,
-literal|"powerpc:403"
+literal|"powerpc:604"
 block|,
 literal|3
 block|,
@@ -246,12 +243,283 @@ block|,
 comment|/* 8 bits in a byte */
 name|bfd_arch_powerpc
 block|,
-literal|601
+name|bfd_mach_ppc_403
 block|,
-comment|/* for the mpc601 */
+literal|"powerpc"
+block|,
+literal|"powerpc:403"
+block|,
+literal|3
+block|,
+name|false
+block|,
+comment|/* not the default */
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|arch_info_struct
+index|[
+literal|4
+index|]
+block|}
+block|,
+block|{
+literal|32
+block|,
+comment|/* 32 bits in a word */
+literal|32
+block|,
+comment|/* 32 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
+name|bfd_mach_ppc_601
+block|,
 literal|"powerpc"
 block|,
 literal|"powerpc:601"
+block|,
+literal|3
+block|,
+name|false
+block|,
+comment|/* not the default */
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|arch_info_struct
+index|[
+literal|5
+index|]
+block|}
+block|,
+block|{
+literal|64
+block|,
+comment|/* 64 bits in a word */
+literal|64
+block|,
+comment|/* 64 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
+name|bfd_mach_ppc_620
+block|,
+literal|"powerpc"
+block|,
+literal|"powerpc:620"
+block|,
+literal|3
+block|,
+name|false
+block|,
+comment|/* not the default */
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|arch_info_struct
+index|[
+literal|6
+index|]
+block|}
+block|,
+block|{
+literal|64
+block|,
+comment|/* 64 bits in a word */
+literal|64
+block|,
+comment|/* 64 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
+name|bfd_mach_ppc_630
+block|,
+literal|"powerpc"
+block|,
+literal|"powerpc:630"
+block|,
+literal|3
+block|,
+name|false
+block|,
+comment|/* not the default */
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|arch_info_struct
+index|[
+literal|7
+index|]
+block|}
+block|,
+block|{
+literal|64
+block|,
+comment|/* 64 bits in a word */
+literal|64
+block|,
+comment|/* 64 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
+name|bfd_mach_ppc_a35
+block|,
+literal|"powerpc"
+block|,
+literal|"powerpc:a35"
+block|,
+literal|3
+block|,
+name|false
+block|,
+comment|/* not the default */
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|arch_info_struct
+index|[
+literal|8
+index|]
+block|}
+block|,
+block|{
+literal|64
+block|,
+comment|/* 64 bits in a word */
+literal|64
+block|,
+comment|/* 64 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
+name|bfd_mach_ppc_rs64ii
+block|,
+literal|"powerpc"
+block|,
+literal|"powerpc:rs64ii"
+block|,
+literal|3
+block|,
+name|false
+block|,
+comment|/* not the default */
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|arch_info_struct
+index|[
+literal|9
+index|]
+block|}
+block|,
+block|{
+literal|64
+block|,
+comment|/* 64 bits in a word */
+literal|64
+block|,
+comment|/* 64 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
+name|bfd_mach_ppc_rs64iii
+block|,
+literal|"powerpc"
+block|,
+literal|"powerpc:rs64iii"
+block|,
+literal|3
+block|,
+name|false
+block|,
+comment|/* not the default */
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|arch_info_struct
+index|[
+literal|10
+index|]
+block|}
+block|,
+block|{
+literal|32
+block|,
+comment|/* 32 bits in a word */
+literal|32
+block|,
+comment|/* 32 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
+name|bfd_mach_ppc_7400
+block|,
+literal|"powerpc"
+block|,
+literal|"powerpc:7400"
+block|,
+literal|3
+block|,
+name|false
+block|,
+comment|/* not the default */
+name|powerpc_compatible
+block|,
+name|bfd_default_scan
+block|,
+operator|&
+name|arch_info_struct
+index|[
+literal|11
+index|]
+block|}
+block|,
+block|{
+literal|32
+block|,
+comment|/* 32 bits in a word */
+literal|32
+block|,
+comment|/* 32 bits in an address */
+literal|8
+block|,
+comment|/* 8 bits in a byte */
+name|bfd_arch_powerpc
+block|,
+name|bfd_mach_ppc_860
+block|,
+literal|"powerpc"
+block|,
+literal|"powerpc:MPC8XX"
 block|,
 literal|3
 block|,
@@ -285,7 +553,7 @@ block|,
 comment|/* 8 bits in a byte */
 name|bfd_arch_powerpc
 block|,
-literal|0
+name|bfd_mach_ppc
 block|,
 comment|/* for the POWER/PowerPC common architecture */
 literal|"powerpc"

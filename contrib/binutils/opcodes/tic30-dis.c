@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Disassembly routines for TMS320C30 architecture    Copyright (C) 1998, 1999 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Disassembly routines for TMS320C30 architecture    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -48,7 +48,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Gets the type of instruction based on the top 2 or 3 bits of the    instruction word. */
+comment|/* Gets the type of instruction based on the top 2 or 3 bits of the    instruction word.  */
 end_comment
 
 begin_define
@@ -62,7 +62,7 @@ value|(insn& 0x80000000 ? insn& 0xC0000000 : insn& 0xE0000000)
 end_define
 
 begin_comment
-comment|/* Instruction types. */
+comment|/* Instruction types.  */
 end_comment
 
 begin_define
@@ -108,7 +108,7 @@ value|0x60000000
 end_define
 
 begin_comment
-comment|/* Specific instruction id bits. */
+comment|/* Specific instruction id bits.  */
 end_comment
 
 begin_define
@@ -147,7 +147,7 @@ value|0x1C3F0000
 end_define
 
 begin_comment
-comment|/* Addressing modes. */
+comment|/* Addressing modes.  */
 end_comment
 
 begin_define
@@ -200,7 +200,7 @@ value|0x08700000
 end_define
 
 begin_comment
-comment|/* TMS320C30 program counter for current instruction. */
+comment|/* TMS320C30 program counter for current instruction.  */
 end_comment
 
 begin_decl_stmt
@@ -420,7 +420,7 @@ name|info
 operator|->
 name|buffer_vma
 decl_stmt|;
-comment|/* Obtain the current instruction word from the buffer. */
+comment|/* Obtain the current instruction word from the buffer.  */
 name|insn_word
 operator|=
 operator|(
@@ -483,7 +483,7 @@ name|pc
 operator|/
 literal|4
 expr_stmt|;
-comment|/* Get the instruction refered to by the current instruction word      and print it out based on its type. */
+comment|/* Get the instruction refered to by the current instruction word      and print it out based on its type.  */
 if|if
 condition|(
 operator|!
@@ -1150,7 +1150,7 @@ name|src_op
 decl_stmt|,
 name|dest_op
 decl_stmt|;
-comment|/* Determine whether instruction is a store or a normal instruction. */
+comment|/* Determine whether instruction is a store or a normal instruction.  */
 if|if
 condition|(
 operator|(
@@ -1197,7 +1197,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Get the destination register. */
+comment|/* Get the destination register.  */
 if|if
 condition|(
 name|insn
@@ -1224,7 +1224,7 @@ name|dest_op
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Get the source operand based on addressing mode. */
+comment|/* Get the source operand based on addressing mode.  */
 switch|switch
 condition|(
 name|insn_word
@@ -1235,7 +1235,7 @@ block|{
 case|case
 name|AM_REGISTER
 case|:
-comment|/* Check for the NOP instruction before getting the operand. */
+comment|/* Check for the NOP instruction before getting the operand.  */
 if|if
 condition|(
 operator|(
@@ -1311,7 +1311,7 @@ break|break;
 case|case
 name|AM_IMM
 case|:
-comment|/* Get the value of the immediate operand based on variable type. */
+comment|/* Get the value of the immediate operand based on variable type.  */
 switch|switch
 condition|(
 name|insn
@@ -1399,7 +1399,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Handle special case for LDP instruction. */
+comment|/* Handle special case for LDP instruction.  */
 if|if
 condition|(
 operator|(
@@ -1449,7 +1449,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Handle case for stack and rotate instructions. */
+comment|/* Handle case for stack and rotate instructions.  */
 elseif|else
 if|if
 condition|(
@@ -1491,7 +1491,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Output instruction to stream. */
+comment|/* Output instruction to stream.  */
 name|info
 operator|->
 name|fprintf_func
@@ -1942,7 +1942,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Parse out the names of each of the parallel instructions from the      q_insn1_insn2 format. */
+comment|/* Parse out the names of each of the parallel instructions from the      q_insn1_insn2 format.  */
 name|name1
 operator|=
 operator|(
@@ -2015,7 +2015,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* Get the operands of the instruction based on the operand order. */
+comment|/* Get the operands of the instruction based on the operand order.  */
 switch|switch
 condition|(
 name|insn
@@ -3088,7 +3088,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Get the operands for 24-bit immediate jumps. */
+comment|/* Get the operands for 24-bit immediate jumps.  */
 if|if
 condition|(
 name|insn
@@ -3126,7 +3126,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Get the operand for the trap instruction. */
+comment|/* Get the operand for the trap instruction.  */
 elseif|else
 if|if
 condition|(
@@ -3169,7 +3169,7 @@ name|insn_word
 operator|&
 literal|0x0000FFFF
 expr_stmt|;
-comment|/* Get the operands for the DB instructions. */
+comment|/* Get the operands for the DB instructions.  */
 if|if
 condition|(
 name|insn
@@ -3242,7 +3242,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Get the operands for the standard branches. */
+comment|/* Get the operands for the standard branches.  */
 elseif|else
 if|if
 condition|(
@@ -3360,7 +3360,7 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* Print destination of branch in relation to current symbol. */
+comment|/* Print destination of branch in relation to current symbol.  */
 if|if
 condition|(
 name|print_label
@@ -3427,7 +3427,7 @@ operator|/
 literal|4
 operator|)
 expr_stmt|;
-comment|/* Check for delayed instruction, if so adjust destination. */
+comment|/* Check for delayed instruction, if so adjust destination.  */
 if|if
 condition|(
 name|insn_word
@@ -3564,7 +3564,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Determine which bits identify the sections of the indirect operand based on the      size in bytes. */
+comment|/* Determine which bits identify the sections of the indirect      operand based on the size in bytes.  */
 switch|switch
 condition|(
 name|size

@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obj-format for ieee-695 records.    Copyright (C) 1991, 92, 93, 94, 95, 1997, 1998 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* obj-format for ieee-695 records.    Copyright 1991, 1992, 1993, 1994, 1997, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*   created by    steve chamberlain steve@cygnus.com   */
+comment|/* Created by Steve Chamberlain<steve@cygnus.com>.  */
 end_comment
 
 begin_comment
-comment|/*   this will hopefully become the port through which bfd and gas talk,   for the moment, only ieee is known to work well.   */
+comment|/* This will hopefully become the port through which bfd and gas talk,    for the moment, only ieee is known to work well.  */
 end_comment
 
 begin_include
@@ -49,7 +49,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* How many addresses does the .align take? */
+comment|/* How many addresses does the .align take?  */
 end_comment
 
 begin_function
@@ -61,16 +61,16 @@ name|address
 parameter_list|,
 name|alignment
 parameter_list|)
+comment|/* Address now.  */
 specifier|register
 name|relax_addressT
 name|address
 decl_stmt|;
-comment|/* Address now. */
+comment|/* Alignment (binary).  */
 specifier|register
 name|long
 name|alignment
 decl_stmt|;
-comment|/* Alignment (binary). */
 block|{
 name|relax_addressT
 name|mask
@@ -114,34 +114,26 @@ block|}
 end_function
 
 begin_comment
-comment|/* relax_align() */
+comment|/* Calculate the size of the frag chain    and create a bfd section to contain all of it.  */
 end_comment
 
-begin_comment
-comment|/* calculate the size of the frag chain and create a bfd section    to contain all of it */
-end_comment
-
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|size_section
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|,
+parameter_list|,
 name|idx
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|idx
-argument_list|)
+decl_stmt|;
 block|{
 name|asection
 modifier|*
@@ -301,12 +293,10 @@ operator|*
 operator|)
 name|NULL
 condition|)
-block|{
 name|name
 operator|=
 literal|".data"
 expr_stmt|;
-block|}
 name|segment_info
 index|[
 name|idx
@@ -329,7 +319,7 @@ name|name
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* Make it output through itself */
+comment|/* Make it output through itself.  */
 name|sec
 operator|->
 name|output_section
@@ -353,33 +343,29 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* run through a frag chain and write out the data to go with it */
+comment|/* Run through a frag chain and write out the data to go with it.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|fill_section
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|,
+parameter_list|,
 name|idx
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-name|AND
+decl_stmt|;
 name|unsigned
 name|int
 name|idx
-argument_list|)
+decl_stmt|;
 block|{
 name|asection
 modifier|*
@@ -553,28 +539,24 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* Count the relocations in a chain */
+comment|/* Count the relocations in a chain.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|unsigned
 name|int
-name|DEFUN
-argument_list|(
 name|count_entries_in_chain
-argument_list|,
-operator|(
+parameter_list|(
 name|idx
-operator|)
-argument_list|,
+parameter_list|)
 name|unsigned
 name|int
 name|idx
-argument_list|)
+decl_stmt|;
 block|{
 name|unsigned
 name|int
@@ -584,7 +566,7 @@ name|fixS
 modifier|*
 name|fixup_ptr
 decl_stmt|;
-comment|/* Count the relocations */
+comment|/* Count the relocations.  */
 name|fixup_ptr
 operator|=
 name|segment_info
@@ -623,26 +605,22 @@ return|return
 name|nrelocs
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* output all the relocations for a section */
+comment|/* Output all the relocations for a section.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
-name|DEFUN
-argument_list|(
 name|do_relocs_for
-argument_list|,
-operator|(
+parameter_list|(
 name|idx
-operator|)
-argument_list|,
+parameter_list|)
 name|unsigned
 name|int
 name|idx
-argument_list|)
+decl_stmt|;
 block|{
 name|unsigned
 name|int
@@ -814,8 +792,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* We can't represent complicated things in a reloc yet */
-block|if (from->fx_addsy == 0 || from->fx_subsy != 0) abort();
+comment|/* We can't represent complicated things in a reloc yet.  */
+block|if (from->fx_addsy == 0 || from->fx_subsy != 0) 	    abort ();
 endif|#
 directive|endif
 name|s
@@ -878,7 +856,7 @@ name|from
 operator|->
 name|fx_offset
 expr_stmt|;
-comment|/* If we know the symbol which we want to relocate to, turn 	     this reloaction into a section relative.  	     If this relocation is pcrelative, and we know the 	     destination, we still want to keep the relocation - since 	     the linker might relax some of the bytes, but it stops 	     being pc relative and turns into an absolute relocation. */
+comment|/* If we know the symbol which we want to relocate to, turn 	     this reloaction into a section relative.  	     If this relocation is pcrelative, and we know the 	     destination, we still want to keep the relocation - since 	     the linker might relax some of the bytes, but it stops 	     being pc relative and turns into an absolute relocation.  */
 if|if
 condition|(
 name|s
@@ -928,8 +906,7 @@ name|howto
 operator|->
 name|pcrel_offset
 condition|)
-block|{
-comment|/* This is a pcrel relocation, the addend should be adjusted */
+comment|/* This is a pcrel relocation, the addend should 		       be adjusted.  */
 name|to
 operator|->
 name|addend
@@ -940,7 +917,6 @@ name|address
 operator|+
 literal|1
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -978,8 +954,7 @@ name|howto
 operator|->
 name|pcrel_offset
 condition|)
-block|{
-comment|/* This is a pcrel relocation, the addend should be adjusted */
+comment|/* This is a pcrel relocation, the addend should 		       be adjusted.  */
 name|to
 operator|->
 name|addend
@@ -992,16 +967,13 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-block|}
 else|else
-block|{
 name|to
 operator|->
 name|section
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|ptrs
 operator|++
 expr_stmt|;
@@ -1012,7 +984,7 @@ operator|->
 name|fx_next
 expr_stmt|;
 block|}
-comment|/* attatch to the section */
+comment|/* Attatch to the section.  */
 name|section
 operator|->
 name|orelocation
@@ -1033,27 +1005,23 @@ name|SEC_LOAD
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* do the symbols.. */
+comment|/* Do the symbols.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|DEFUN
-argument_list|(
 name|do_symbols
-argument_list|,
-operator|(
+parameter_list|(
 name|abfd
-operator|)
-argument_list|,
+parameter_list|)
 name|bfd
-operator|*
+modifier|*
 name|abfd
-argument_list|)
+decl_stmt|;
 block|{
 specifier|extern
 name|symbolS
@@ -1169,7 +1137,6 @@ name|flags
 operator|==
 literal|0
 condition|)
-block|{
 name|ptr
 operator|->
 name|sy_symbol
@@ -1180,7 +1147,6 @@ name|flags
 operator|=
 name|BSF_LOCAL
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -1349,18 +1315,16 @@ operator|=
 name|count
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
-comment|/* The generic as->bfd converter. Other backends may have special case    code */
+comment|/* The generic as->bfd converter. Other backends may have special case    code.  */
 end_comment
 
 begin_function
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|bfd_as_write_hook
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|i
@@ -1378,7 +1342,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|size_section
 argument_list|(
 name|abfd
@@ -1386,7 +1349,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -1744,7 +1706,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Look up the name, if it doesn't exist, make it */
+comment|/* Look up the name, if it doesn't exist, make it.  */
 while|while
 condition|(
 operator|*
@@ -1816,11 +1778,9 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 goto|goto
 name|ok
 goto|;
-block|}
 block|}
 else|else
 break|break;
@@ -2026,7 +1986,7 @@ literal|0
 block|}
 block|,
 literal|0
-block|,  }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2063,10 +2023,8 @@ end_if
 begin_function
 specifier|extern
 name|void
-name|DEFUN_VOID
-parameter_list|(
 name|write_object_file
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|i
@@ -2172,7 +2130,7 @@ operator|->
 name|frch_next
 control|)
 block|{
-comment|/* Run through all the sub-segments and align them up. Also close any 	 open frags. We tack a .fill onto the end of the frag chain so 	 that any .align's size can be worked by looking at the next 	 frag.  */
+comment|/* Run through all the sub-segments and align them up.  Also 	 close any open frags.  We tack a .fill onto the end of the 	 frag chain so that any .align's size can be worked by looking 	 at the next frag.  */
 name|subseg_set
 argument_list|(
 name|frchain_ptr
@@ -2229,7 +2187,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Now build one big frag chain for each segment, linked through 	   fr_next. */
+comment|/* Now build one big frag chain for each segment, linked through      fr_next.  */
 for|for
 control|(
 name|i
@@ -2254,7 +2212,12 @@ name|frchain
 modifier|*
 name|next_frchain_ptr
 decl_stmt|;
-comment|/*	struct frag **head_ptr = segment_info[i].frag_root;*/
+if|#
+directive|if
+literal|0
+block|struct frag **head_ptr = segment_info[i].frag_root;
+endif|#
+directive|endif
 name|segment_info
 index|[
 name|i
@@ -2274,7 +2237,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* Im not sure what this is for */
+comment|/* I'm not sure what this is for.  */
 block|for (frchain_ptr = segment_info[i].frchainP->frch_root; 	   frchain_ptr != (struct frchain *) NULL; 	   frchain_ptr = frchain_ptr->frch_next) 	{ 	  *head_ptr = frchain_ptr; 	  head_ptr =&frchain_ptr->next; 	}
 endif|#
 directive|endif
@@ -2292,7 +2255,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|relax_segment
 argument_list|(
 name|segment_info
@@ -2305,8 +2267,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* Now the addresses of the frags are correct within the segment */
+comment|/* Now the addresses of the frags are correct within the segment.  */
 name|bfd_as_write_hook
 argument_list|()
 expr_stmt|;
@@ -2430,10 +2391,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* end of obj-ieee.c */
-end_comment
 
 end_unit
 

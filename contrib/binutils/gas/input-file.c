@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* input_file.c - Deal with Input Files -    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 98, 1999    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* input_file.c - Deal with Input Files -    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -121,7 +121,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* These hooks accomodate most operating systems. */
+comment|/* These hooks accomodate most operating systems.  */
 end_comment
 
 begin_function
@@ -148,7 +148,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|/* Return BUFFER_SIZE. */
+comment|/* Return BUFFER_SIZE.  */
 end_comment
 
 begin_function
@@ -335,7 +335,7 @@ name|char
 modifier|*
 name|filename
 decl_stmt|;
-comment|/* "" means use stdin. Must not be 0. */
+comment|/* "" means use stdin. Must not be 0.  */
 name|int
 name|pre
 decl_stmt|;
@@ -360,7 +360,7 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Filename may not be NULL. */
+comment|/* Filename may not be NULL.  */
 if|if
 condition|(
 name|filename
@@ -369,7 +369,7 @@ literal|0
 index|]
 condition|)
 block|{
-comment|/* We have a file name. Suck it and see. */
+comment|/* We have a file name. Suck it and see.  */
 name|f_in
 operator|=
 name|fopen
@@ -386,7 +386,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* use stdin for the input file. */
+comment|/* use stdin for the input file.  */
 name|f_in
 operator|=
 name|stdin
@@ -398,7 +398,7 @@ argument_list|(
 literal|"{standard input}"
 argument_list|)
 expr_stmt|;
-comment|/* For error messages. */
+comment|/* For error messages.  */
 block|}
 if|if
 condition|(
@@ -574,10 +574,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* input_file_close() */
-end_comment
-
-begin_comment
 comment|/* This function is passed to do_scrub_chars.  */
 end_comment
 
@@ -660,13 +656,13 @@ name|char
 modifier|*
 name|where
 decl_stmt|;
-comment|/* Where to place 1st character of new buffer. */
+comment|/* Where to place 1st character of new buffer.  */
 block|{
 name|char
 modifier|*
 name|return_value
 decl_stmt|;
-comment|/* -> Last char of what we read, + 1. */
+comment|/* -> Last char of what we read, + 1.  */
 specifier|register
 name|int
 name|size
@@ -788,10 +784,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of input-file.c */
-end_comment
 
 end_unit
 

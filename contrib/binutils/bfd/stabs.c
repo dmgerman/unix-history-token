@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Stabs in sections linking support.    Copyright 1996, 1997, 1998, 1999 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Stabs in sections linking support.    Copyright 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -206,7 +206,7 @@ name|stab_excl_list
 modifier|*
 name|excls
 decl_stmt|;
-comment|/* This is used to map input stab offsets within their sections      to output stab offsets, to take into account stabs that have      been deleted.  If it is NULL, the output offsets are the same      as the input offsets, because no stabs have been deleted from      this section.  Otherwise the i'th entry is the number of      bytes of stabs that have been deleted prior to the i'th      stab. */
+comment|/* This is used to map input stab offsets within their sections      to output stab offsets, to take into account stabs that have      been deleted.  If it is NULL, the output offsets are the same      as the input offsets, because no stabs have been deleted from      this section.  Otherwise the i'th entry is the number of      bytes of stabs that have been deleted prior to the i'th      stab.  */
 name|bfd_size_type
 modifier|*
 name|cumulative_skips
@@ -1611,7 +1611,7 @@ operator|->
 name|strings
 argument_list|)
 expr_stmt|;
-comment|/* Calculate the `cumulative_skips' array now that stabs have been      deleted for this section. */
+comment|/* Calculate the `cumulative_skips' array now that stabs have been      deleted for this section.  */
 if|if
 condition|(
 name|skip

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-m68851.h     Copyright (C) 1987-1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* This file is tc-m68851.h     Copyright 1987, 1988, 1989, 1990, 1991, 1992, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/* I suppose we have to copyright this file.  Someone on the net sent it
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1987 Free Software Foundation, Inc.        This file is part of Gas, the GNU Assembler.        The GNU assembler is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY.  No author or distributor    accepts responsibility to anyone for the consequences of using it    or for whether it serves any particular purpose or works at all,    unless he says so in writing.  Refer to the GNU Assembler General    Public License for full details.        Everyone is granted permission to copy, modify and redistribute    the GNU Assembler, but only under the conditions described in the    GNU Assembler General Public License.  A copy of this license is    supposed to have been given to you along with the GNU Assembler    so you can know your rights and responsibilities.  It should be    in a file named COPYING.  Among other things, the copyright    notice and this notice must be preserved on all copies.  */
+comment|/* Copyright (C) 1987 Free Software Foundation, Inc.     This file is part of Gas, the GNU Assembler.     The GNU assembler is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY.  No author or distributor    accepts responsibility to anyone for the consequences of using it    or for whether it serves any particular purpose or works at all,    unless he says so in writing.  Refer to the GNU Assembler General    Public License for full details.     Everyone is granted permission to copy, modify and redistribute    the GNU Assembler, but only under the conditions described in the    GNU Assembler General Public License.  A copy of this license is    supposed to have been given to you along with the GNU Assembler    so you can know your rights and responsibilities.  It should be    in a file named COPYING.  Among other things, the copyright    notice and this notice must be preserved on all copies.  */
 end_comment
 
 begin_ifdef
@@ -22,7 +22,7 @@ name|m68851
 end_ifdef
 
 begin_comment
-comment|/*   I didn't use much imagination in choosing the    following codes, so many of them aren't very   mnemonic. -rab      P  pmmu register   Possible values:   000	TC	Translation Control reg   100	CAL	Current Access Level   101	VAL	Validate Access Level   110	SCC	Stack Change Control   111	AC	Access Control      W  wide pmmu registers   Possible values:   001	DRP	Dma Root Pointer   010	SRP	Supervisor Root Pointer   011	CRP	Cpu Root Pointer      f	function code register   0	SFC   1	DFC      V	VAL register only      X	BADx, BACx   100	BAD	Breakpoint Acknowledge Data   101	BAC	Breakpoint Acknowledge Control      Y	PSR   Z	PCSR      |	memory 		(modes 2-6, 7.*)      */
+comment|/*   I didn't use much imagination in choosing the   following codes, so many of them aren't very   mnemonic. -rab    P  pmmu register   Possible values:   000	TC	Translation Control reg   100	CAL	Current Access Level   101	VAL	Validate Access Level   110	SCC	Stack Change Control   111	AC	Access Control    W  wide pmmu registers   Possible values:   001	DRP	Dma Root Pointer   010	SRP	Supervisor Root Pointer   011	CRP	Cpu Root Pointer    f	function code register   0	SFC   1	DFC    V	VAL register only    X	BADx, BACx   100	BAD	Breakpoint Acknowledge Data   101	BAC	Breakpoint Acknowledge Control    Y	PSR   Z	PCSR    |	memory 		(modes 2-6, 7.*)    */
 end_comment
 
 begin_comment
@@ -4190,10 +4190,6 @@ end_endif
 
 begin_comment
 comment|/* m68851 */
-end_comment
-
-begin_comment
-comment|/* end of tc-m68851.h */
 end_comment
 
 end_unit

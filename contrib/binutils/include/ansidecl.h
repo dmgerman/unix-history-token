@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ANSI and traditional C compatability macros    Copyright 1991, 1992, 1996, 1999 Free Software Foundation, Inc.    This file is part of the GNU C Library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ANSI and traditional C compatability macros    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000    Free Software Foundation, Inc.    This file is part of the GNU C Library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -737,6 +737,29 @@ end_endif
 begin_comment
 comment|/* ATTRIBUTE_PRINTF */
 end_comment
+
+begin_comment
+comment|/* We use __extension__ in some places to suppress -pedantic warnings    about GCC extensions.  This feature didn't work properly before    gcc 2.8.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GCC_VERSION
+operator|<
+literal|2008
+end_if
+
+begin_define
+define|#
+directive|define
+name|__extension__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

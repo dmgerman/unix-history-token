@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* itbl-ops.c    Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* itbl-ops.c    Copyright 1997, 1999, 2000, 2001 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -189,7 +189,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* These structures define the instructions and registers for a processor.  * If the type is an instruction, the structure defines the format of an  * instruction where the fields are the list of operands.  * The flags field below uses the same values as those defined in the  * gnu assembler and are machine specific. */
+comment|/* These structures define the instructions and registers for a processor.  * If the type is an instruction, the structure defines the format of an  * instruction where the fields are the list of operands.  * The flags field below uses the same values as those defined in the  * gnu assembler and are machine specific.  */
 end_comment
 
 begin_struct
@@ -826,7 +826,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Add to end of fields' list. */
+comment|/* Add to end of fields' list.  */
 name|f
 operator|=
 name|alloc_field
@@ -925,7 +925,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* initialize for gas */
+comment|/* Initialize for gas.  */
 end_comment
 
 begin_function
@@ -956,7 +956,7 @@ operator|!
 name|itbl_have_entries
 condition|)
 return|return;
-comment|/* Since register names don't have a prefix, put them in the symbol table so      they can't be used as symbols.  This simplifies argument parsing as      we can let gas parse registers for us. */
+comment|/* Since register names don't have a prefix, put them in the symbol table so      they can't be used as symbols.  This simplifies argument parsing as      we can let gas parse registers for us.  */
 comment|/* Use symbol_create instead of symbol_new so we don't try to      output registers into the object file's symbol table.  */
 for|for
 control|(
@@ -1038,7 +1038,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Append insns to opcodes table and increase number of opcodes   * Structure of opcodes table:   * struct itbl_opcode  * {  *   const char *name;  *   const char *args; 		- string describing the arguments.    *   unsigned long match; 	- opcode, or ISA level if pinfo=INSN_MACRO   *   unsigned long mask; 	- opcode mask, or macro id if pinfo=INSN_MACRO   *   unsigned long pinfo; 	- insn flags, or INSN_MACRO   * };  * examples:  *	{"li",      "t,i",  0x34000000, 0xffe00000, WR_t    },  *	{"li",      "t,I",  0,    (int) M_LI,   INSN_MACRO  },  */
+comment|/* Append insns to opcodes table and increase number of opcodes  * Structure of opcodes table:  * struct itbl_opcode  * {  *   const char *name;  *   const char *args; 		- string describing the arguments.  *   unsigned long match; 	- opcode, or ISA level if pinfo=INSN_MACRO  *   unsigned long mask; 	- opcode mask, or macro id if pinfo=INSN_MACRO  *   unsigned long pinfo; 	- insn flags, or INSN_MACRO  * };  * examples:  *	{"li",      "t,i",  0x34000000, 0xffe00000, WR_t    },  *	{"li",      "t,I",  0,    (int) M_LI,   INSN_MACRO  },  */
 end_comment
 
 begin_function_decl
@@ -1179,7 +1179,7 @@ operator|>
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* FIXME since ITBL_OPCODES culd be a static table, 		we can't realloc or delete the old memory. */
+comment|/* FIXME since ITBL_OPCODES culd be a static table, 		we can't realloc or delete the old memory.  */
 name|new_opcodes
 operator|=
 operator|(
@@ -1222,7 +1222,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* FIXME! some NUMOPCODES are calculated expressions. 		These need to be changed before itbls can be supported. */
+comment|/* FIXME! some NUMOPCODES are calculated expressions. 		These need to be changed before itbls can be supported.  */
 name|id
 operator|=
 name|ITBL_NUM_MACROS
@@ -1385,7 +1385,7 @@ name|ITBL_NUM_OPCODES
 operator|=
 name|new_num_opcodes
 expr_stmt|;
-comment|/* FIXME 		At this point, we can free the entries, as they should have 		been added to the assembler's tables. 		Don't free name though, since name is being used by the new 		opcodes table.  		Eventually, we should also free the new opcodes table itself  		on exit. 	*/
+comment|/* FIXME 		At this point, we can free the entries, as they should have 		been added to the assembler's tables. 		Don't free name though, since name is being used by the new 		opcodes table.  		Eventually, we should also free the new opcodes table itself 		on exit. 	*/
 block|}
 end_function
 
@@ -1761,6 +1761,8 @@ name|struct
 name|itbl_entry
 modifier|*
 name|e
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|itbl_field
@@ -1827,7 +1829,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* opcode not in table; invalid instrustion */
+comment|/* opcode not in table; invalid instruction */
 name|opcode
 operator|=
 name|build_opcode
@@ -1852,7 +1854,7 @@ name|f
 operator|->
 name|next
 control|)
-comment|/* for each arg, ... */
+comment|/* for each arg, ...  */
 block|{
 name|struct
 name|itbl_entry
@@ -2000,7 +2002,7 @@ operator|)
 operator|==
 literal|'x'
 condition|)
-comment|/* hex begins 0x... */
+comment|/* hex begins 0x...  */
 block|{
 name|n
 operator|+=
@@ -2127,7 +2129,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* error*/
+comment|/* error */
 name|processor
 operator|=
 name|get_processor
@@ -2160,7 +2162,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* opcode not in table; invalid instrustion */
+comment|/* opcode not in table; invalid instruction */
 name|strcpy
 argument_list|(
 name|s
@@ -2170,7 +2172,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* parse insn's args (if any) */
+comment|/* Parse insn's args (if any).  */
 for|for
 control|(
 name|f
@@ -2187,7 +2189,7 @@ name|f
 operator|->
 name|next
 control|)
-comment|/* for each arg, ... */
+comment|/* for each arg, ...  */
 block|{
 name|struct
 name|itbl_entry
@@ -2206,7 +2208,7 @@ name|e
 operator|->
 name|fields
 condition|)
-comment|/* first operand is preceeded by tab */
+comment|/* First operand is preceeded by tab.  */
 name|strcat
 argument_list|(
 name|s
@@ -2215,7 +2217,7 @@ literal|"\t"
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* ','s separate following operands */
+comment|/* ','s separate following operands.  */
 name|strcat
 argument_list|(
 name|s
@@ -2251,7 +2253,7 @@ case|:
 case|case
 name|e_greg
 case|:
-comment|/* Accept either a string name 			 * or '$' followed by the register number */
+comment|/* Accept either a string name 	     or '$' followed by the register number.  */
 name|r
 operator|=
 name|find_entry_byval
@@ -2301,9 +2303,9 @@ break|break;
 case|case
 name|e_addr
 case|:
-comment|/* use assembler's symbol table to find symbol */
-comment|/* FIXME!! Do we need this? 			 *   if so, what about relocs?? 			*/
-comment|/* If not a symbol, fall thru to IMMED */
+comment|/* Use assembler's symbol table to find symbol.  */
+comment|/* FIXME!! Do we need this?  If so, what about relocs??  */
+comment|/* If not a symbol, fall through to IMMED.  */
 case|case
 name|e_immed
 case|:
@@ -2329,7 +2331,7 @@ block|}
 return|return
 literal|1
 return|;
-comment|/* done! */
+comment|/* Done!  */
 block|}
 end_function
 
@@ -2757,7 +2759,7 @@ name|e
 operator|->
 name|next
 control|)
-comment|/* for each entry, ... */
+comment|/* for each entry, ...  */
 block|{
 if|if
 condition|(
@@ -2845,7 +2847,7 @@ name|e
 operator|->
 name|next
 control|)
-comment|/* for each entry, ... */
+comment|/* for each entry, ...  */
 block|{
 if|if
 condition|(
@@ -2857,7 +2859,7 @@ name|processor
 condition|)
 continue|continue;
 comment|/* For insns, we might not know the range of the opcode, 	 * so a range of 0 will allow this routine to match against 	 * the range of the entry to be compared with. 	 * This could cause ambiguities. 	 * For operands, we get an extracted value and a range. 	 */
-comment|/* if range is 0, mask val against the range of the compared entry. */
+comment|/* if range is 0, mask val against the range of the compared entry.  */
 if|if
 condition|(
 name|r
@@ -2977,7 +2979,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return a pointer to the list of entries for a given processor and type. */
+comment|/* Return a pointer to the list of entries for a given processor and type.  */
 end_comment
 
 begin_function
@@ -3009,7 +3011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return an integral value for the processor passed from yyparse. */
+comment|/* Return an integral value for the processor passed from yyparse.  */
 end_comment
 
 begin_function
@@ -3046,7 +3048,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return an integral value for the entry type passed from yyparse. */
+comment|/* Return an integral value for the entry type passed from yyparse.  */
 end_comment
 
 begin_function

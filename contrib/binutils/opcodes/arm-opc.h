@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Opcode table for the ARM.     Copyright 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Opcode table for the ARM.     Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_struct
@@ -44,7 +44,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* format of the assembler string :        %%			%    %<bitfield>d		print the bitfield in decimal    %<bitfield>x		print the bitfield in hex    %<bitfield>X		print the bitfield as 1 hex digit without leading "0x"    %<bitfield>r		print as an ARM register    %<bitfield>f		print a floating point constant if>7 else a 			floating point register    %c			print condition code (always bits 28-31)    %P			print floating point precision in arithmetic insn    %Q			print floating point precision in ldf/stf insn    %R			print floating point rounding mode    %<bitnum>'c		print specified char iff bit is one    %<bitnum>`c		print specified char iff bit is zero    %<bitnum>?ab		print a if bit is one else print b    %p			print 'p' iff bits 12-15 are 15    %t			print 't' iff bit 21 set and bit 24 clear    %h                   print 'h' iff bit 5 set, else print 'b'    %o			print operand2 (immediate or register + shift)    %a			print address for ldr/str instruction    %s                   print address for ldr/str halfword/signextend instruction    %b			print branch destination    %A			print address for ldc/stc/ldf/stf instruction    %m			print register mask for ldm/stm instruction    %C			print the PSR sub type.    %F			print the COUNT field of a LFM/SFM instruction. Thumb specific format options:    %D                   print Thumb register (bits 0..2 as high number if bit 7 set)    %S                   print Thumb register (bits 3..5 as high number if bit 6 set)    %<bitfield>I         print bitfield as a signed decimal    				(top bit of range being the sign bit)    %M                   print Thumb register mask    %N                   print Thumb register mask (with LR)    %O                   print Thumb register mask (with PC)    %T                   print Thumb condition code (always bits 8-11)    %<bitfield>B         print Thumb branch destination (signed displacement)    %<bitfield>W         print (bitfield * 4) as a decimal    %<bitfield>H         print (bitfield * 2) as a decimal    %<bitfield>a         print (bitfield * 4) as a pc-rel offset + decoded symbol */
+comment|/* format of the assembler string :        %%			%    %<bitfield>d		print the bitfield in decimal    %<bitfield>x		print the bitfield in hex    %<bitfield>X		print the bitfield as 1 hex digit without leading "0x"    %<bitfield>r		print as an ARM register    %<bitfield>f		print a floating point constant if>7 else a 			floating point register    %c			print condition code (always bits 28-31)    %P			print floating point precision in arithmetic insn    %Q			print floating point precision in ldf/stf insn    %R			print floating point rounding mode    %<bitnum>'c		print specified char iff bit is one    %<bitnum>`c		print specified char iff bit is zero    %<bitnum>?ab		print a if bit is one else print b    %p			print 'p' iff bits 12-15 are 15    %t			print 't' iff bit 21 set and bit 24 clear    %h                   print 'h' iff bit 5 set, else print 'b'    %o			print operand2 (immediate or register + shift)    %a			print address for ldr/str instruction    %s                   print address for ldr/str halfword/signextend instruction    %b			print branch destination    %B			print arm BLX(1) destination    %A			print address for ldc/stc/ldf/stf instruction    %m			print register mask for ldm/stm instruction    %C			print the PSR sub type.    %F			print the COUNT field of a LFM/SFM instruction. Thumb specific format options:    %D                   print Thumb register (bits 0..2 as high number if bit 7 set)    %S                   print Thumb register (bits 3..5 as high number if bit 6 set)    %<bitfield>I         print bitfield as a signed decimal    				(top bit of range being the sign bit)    %M                   print Thumb register mask    %N                   print Thumb register mask (with LR)    %O                   print Thumb register mask (with PC)    %T                   print Thumb condition code (always bits 8-11)    %<bitfield>B         print Thumb branch destination (signed displacement)    %<bitfield>W         print (bitfield * 4) as a decimal    %<bitfield>H         print (bitfield * 2) as a decimal    %<bitfield>a         print (bitfield * 4) as a pc-rel offset + decoded symbol */
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ name|arm_opcodes
 index|[]
 init|=
 block|{
-comment|/* ARM instructions */
+comment|/* ARM instructions.  */
 block|{
 literal|0xe1a00000
 block|,
@@ -116,6 +116,322 @@ block|,
 literal|"%22?sumlal%c%20's\t%12-15r, %16-19r, %0-3r, %8-11r"
 block|}
 block|,
+comment|/* XScale instructions.  */
+block|{
+literal|0x0e200010
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"mia%c\tacc0, %0-3r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x0e280010
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"miaph%c\tacc0, %0-3r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x0e2c0010
+block|,
+literal|0x0ffc0ff0
+block|,
+literal|"mia%17'T%17`B%16'T%16`B%c\tacc0, %0-3r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x0c400000
+block|,
+literal|0x0ff00fff
+block|,
+literal|"mar%c\tacc0, %12-15r, %16-19r"
+block|}
+block|,
+block|{
+literal|0x0c500000
+block|,
+literal|0x0ff00fff
+block|,
+literal|"mra%c\t%12-15r, %16-19r, acc0"
+block|}
+block|,
+block|{
+literal|0xf450f000
+block|,
+literal|0xfc70f000
+block|,
+literal|"pld\t%a"
+block|}
+block|,
+comment|/* V5 Instructions.  */
+block|{
+literal|0xe1200070
+block|,
+literal|0xfff000f0
+block|,
+literal|"bkpt\t0x%16-19X%12-15X%8-11X%0-3X"
+block|}
+block|,
+block|{
+literal|0xfa000000
+block|,
+literal|0xfe000000
+block|,
+literal|"blx\t%B"
+block|}
+block|,
+block|{
+literal|0x012fff30
+block|,
+literal|0x0ffffff0
+block|,
+literal|"blx%c\t%0-3r"
+block|}
+block|,
+block|{
+literal|0x016f0f10
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"clz%c\t%12-15r, %0-3r"
+block|}
+block|,
+block|{
+literal|0xfc100000
+block|,
+literal|0xfe100000
+block|,
+literal|"ldc2%22'l\t%8-11d, cr%12-15d, %A"
+block|}
+block|,
+block|{
+literal|0xfc000000
+block|,
+literal|0xfe100000
+block|,
+literal|"stc2%22'l\t%8-11d, cr%12-15d, %A"
+block|}
+block|,
+block|{
+literal|0xfe000000
+block|,
+literal|0xff000010
+block|,
+literal|"cdp2\t%8-11d, %20-23d, cr%12-15d, cr%16-19d, cr%0-3d, {%5-7d}"
+block|}
+block|,
+block|{
+literal|0xfe000010
+block|,
+literal|0xff100010
+block|,
+literal|"mcr2\t%8-11d, %21-23d, %12-15r, cr%16-19d, cr%0-3d, {%5-7d}"
+block|}
+block|,
+block|{
+literal|0xfe100010
+block|,
+literal|0xff100010
+block|,
+literal|"mrc2\t%8-11d, %21-23d, %12-15r, cr%16-19d, cr%0-3d, {%5-7d}"
+block|}
+block|,
+comment|/* V5E "El Segundo" Instructions.  */
+block|{
+literal|0x000000d0
+block|,
+literal|0x0e1000f0
+block|,
+literal|"ldr%cd\t%12-15r, %s"
+block|}
+block|,
+block|{
+literal|0x000000f0
+block|,
+literal|0x0e1000f0
+block|,
+literal|"str%cd\t%12-15r, %s"
+block|}
+block|,
+block|{
+literal|0x01000080
+block|,
+literal|0x0ff000f0
+block|,
+literal|"smlabb%c\t%16-19r, %0-3r, %8-11r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x010000a0
+block|,
+literal|0x0ff000f0
+block|,
+literal|"smlatb%c\t%16-19r, %0-3r, %8-11r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x010000c0
+block|,
+literal|0x0ff000f0
+block|,
+literal|"smlabt%c\t%16-19r, %0-3r, %8-11r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x010000e0
+block|,
+literal|0x0ff000f0
+block|,
+literal|"smlatt%c\t%16-19r, %0-3r, %8-11r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x01200080
+block|,
+literal|0x0ff000f0
+block|,
+literal|"smlawb%c\t%16-19r, %0-3r, %8-11r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x012000c0
+block|,
+literal|0x0ff000f0
+block|,
+literal|"smlawt%c\t%16-19r, %0-3r, %8-11r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x01400080
+block|,
+literal|0x0ff000f0
+block|,
+literal|"smlalbb%c\t%12-15r, %16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x014000a0
+block|,
+literal|0x0ff000f0
+block|,
+literal|"smlaltb%c\t%12-15r, %16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x014000c0
+block|,
+literal|0x0ff000f0
+block|,
+literal|"smlalbt%c\t%12-15r, %16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x014000e0
+block|,
+literal|0x0ff000f0
+block|,
+literal|"smlaltt%c\t%12-15r, %16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x01600080
+block|,
+literal|0x0ff0f0f0
+block|,
+literal|"smulbb%c\t%16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x016000a0
+block|,
+literal|0x0ff0f0f0
+block|,
+literal|"smultb%c\t%16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x016000c0
+block|,
+literal|0x0ff0f0f0
+block|,
+literal|"smulbt%c\t%16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x016000e0
+block|,
+literal|0x0ff0f0f0
+block|,
+literal|"smultt%c\t%16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x012000a0
+block|,
+literal|0x0ff0f0f0
+block|,
+literal|"smulwb%c\t%16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x012000e0
+block|,
+literal|0x0ff0f0f0
+block|,
+literal|"smulwt%c\t%16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x01000050
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"qadd%c\t%12-15r, %0-3r, %16-19r"
+block|}
+block|,
+block|{
+literal|0x01400050
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"qdadd%c\t%12-15r, %0-3r, %16-19r"
+block|}
+block|,
+block|{
+literal|0x01200050
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"qsub%c\t%12-15r, %0-3r, %16-19r"
+block|}
+block|,
+block|{
+literal|0x01600050
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"qdsub%c\t%12-15r, %0-3r, %16-19r"
+block|}
+block|,
+block|{
+literal|0x0c400000
+block|,
+literal|0x0ff00000
+block|,
+literal|"mcrr%c\t%8-11d, %4-7d, %12-15r, %16-19r, cr%0-3d"
+block|}
+block|,
+block|{
+literal|0x0c500000
+block|,
+literal|0x0ff00000
+block|,
+literal|"mrrc%c\t%8-11d, %4-7d, %12-15r, %16-19r, cr%0-3d"
+block|}
+block|,
+comment|/* ARM Instructions.  */
 block|{
 literal|0x00000090
 block|,
@@ -776,16 +1092,35 @@ name|thumb_opcodes
 index|[]
 init|=
 block|{
-comment|/* Thumb instructions */
+comment|/* Thumb instructions.  */
+comment|/* ARM V5 ISA extends Thumb.  */
+block|{
+literal|0xbe00
+block|,
+literal|0xff00
+block|,
+literal|"bkpt\t%0-7x"
+block|}
+block|,
+block|{
+literal|0x4780
+block|,
+literal|0xff87
+block|,
+literal|"blx\t%3-6r"
+block|}
+block|,
+comment|/* note: 4 bit register number.  */
+comment|/* Note: this is BLX(2).  BLX(1) is done in arm-dis.c/print_insn_thumb()      as an extension of the special processing there for Thumb BL.      BL and BLX(1) involve 2 successive 16-bit instructions, which must      always appear together in the correct order.  So, the empty      string is put in this table, and the string interpreter takes<empty>      to mean it has a pair of BL-ish instructions.  */
 block|{
 literal|0x46C0
 block|,
 literal|0xFFFF
 block|,
-literal|"nop\t\t\t(mov r8,r8)"
+literal|"nop\t\t\t(mov r8, r8)"
 block|}
 block|,
-comment|/* format 5 instructions do not update the PSR */
+comment|/* Format 5 instructions do not update the PSR.  */
 block|{
 literal|0x1C00
 block|,
@@ -794,7 +1129,7 @@ block|,
 literal|"mov\t%0-2r, %3-5r\t\t(add %0-2r, %3-5r, #%6-8d)"
 block|}
 block|,
-comment|/* format 4 */
+comment|/* Format 4.  */
 block|{
 literal|0x4000
 block|,

@@ -20,6 +20,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -121,6 +127,10 @@ ifdef|#
 directive|ifdef
 name|__GNUC__
 end_ifdef
+
+begin_macro
+name|__extension__
+end_macro
 
 begin_typedef
 typedef|typedef

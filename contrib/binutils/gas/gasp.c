@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gasp.c - Gnu assembler preprocessor main program.    Copyright (C) 1994, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GASP, the GNU Assembler Preprocessor.     GASP is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GASP is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GASP; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* gasp.c - Gnu assembler preprocessor main program.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GASP, the GNU Assembler Preprocessor.     GASP is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GASP is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GASP; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  This program translates the input macros and stuff into a form suitable for gas to consume.     gasp [-sdhau] [-c char] [-o<outfile>]<infile>*    -s copy source to output   -c<char> comments are started with<char> instead of !   -u allow unreasonable stuff   -p print line numbers   -d print debugging stats   -s semi colons start comments   -a use alternate syntax      Pseudo ops can start with or without a .      Labels have to be in first column.   -I specify include dir     Macro arg parameters subsituted by name, don't need the&.      String can start with ' too.      Strings can be surrounded by<..>      A %<exp> in a string evaluates the expression       Literal char in a string with !   */
+comment|/* This program translates the input macros and stuff into a form suitable for gas to consume.    gasp [-sdhau] [-c char] [-o<outfile>]<infile>*    -s copy source to output   -c<char> comments are started with<char> instead of !   -u allow unreasonable stuff   -p print line numbers   -d print debugging stats   -s semi colons start comments   -a use alternate syntax      Pseudo ops can start with or without a .      Labels have to be in first column.   -I specify include dir     Macro arg parameters subsituted by name, don't need the&.      String can start with ' too.      Strings can be surrounded by<..>      A %<exp> in a string evaluates the expression      Literal char in a string with ! */
 end_comment
 
 begin_include
@@ -164,7 +164,7 @@ value|30
 end_define
 
 begin_comment
-comment|/* Maximum include depth */
+comment|/* Maximum include depth.  */
 end_comment
 
 begin_define
@@ -175,7 +175,7 @@ value|1000
 end_define
 
 begin_comment
-comment|/* Maximum number of expansions */
+comment|/* Maximum number of expansions.  */
 end_comment
 
 begin_decl_stmt
@@ -185,7 +185,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -u on command line */
+comment|/* -u on command line.  */
 end_comment
 
 begin_decl_stmt
@@ -195,7 +195,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -d on command line */
+comment|/* -d on command line.  */
 end_comment
 
 begin_decl_stmt
@@ -205,7 +205,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -p flag on command line */
+comment|/* -p flag on command line.  */
 end_comment
 
 begin_decl_stmt
@@ -215,7 +215,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -c flag on command line */
+comment|/* -c flag on command line.  */
 end_comment
 
 begin_decl_stmt
@@ -225,7 +225,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of WARNINGs generated so far. */
+comment|/* Number of WARNINGs generated so far.  */
 end_comment
 
 begin_decl_stmt
@@ -235,7 +235,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of ERRORs generated so far. */
+comment|/* Number of ERRORs generated so far.  */
 end_comment
 
 begin_decl_stmt
@@ -245,7 +245,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of fatal ERRORs generated so far (either 0 or 1). */
+comment|/* Number of fatal ERRORs generated so far (either 0 or 1).  */
 end_comment
 
 begin_decl_stmt
@@ -257,7 +257,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -a on command line */
+comment|/* -a on command line.  */
 end_comment
 
 begin_decl_stmt
@@ -269,7 +269,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -M on command line */
+comment|/* -M on command line.  */
 end_comment
 
 begin_decl_stmt
@@ -289,7 +289,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Default radix */
+comment|/* Default radix.  */
 end_comment
 
 begin_decl_stmt
@@ -299,11 +299,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Seen .END */
+comment|/* Seen .END.  */
 end_comment
 
 begin_comment
-comment|/* The output stream */
+comment|/* The output stream.  */
 end_comment
 
 begin_decl_stmt
@@ -314,7 +314,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the attributes of each character are stored as a bit pattern    chartype, which gives us quick tests. */
+comment|/* The attributes of each character are stored as a bit pattern    chartype, which gives us quick tests.  */
 end_comment
 
 begin_define
@@ -446,11 +446,11 @@ block|{
 name|int
 name|on
 decl_stmt|;
-comment|/* is the level being output */
+comment|/* Is the level being output.  */
 name|int
 name|hadelse
 decl_stmt|;
-comment|/* has an aelse been seen */
+comment|/* Has an aelse been seen.  */
 block|}
 name|ifstack
 index|[
@@ -466,7 +466,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The final and intermediate results of expression evaluation are kept in    exp_t's.  Note that a symbol is not an sb, but a pointer into the input    line.  It must be coped somewhere safe before the next line is read in. */
+comment|/* The final and intermediate results of expression evaluation are kept in    exp_t's.  Note that a symbol is not an sb, but a pointer into the input    line.  It must be coped somewhere safe before the next line is read in.  */
 end_comment
 
 begin_typedef
@@ -492,26 +492,26 @@ block|{
 name|int
 name|value
 decl_stmt|;
-comment|/* constant part */
+comment|/* Constant part.  */
 name|symbol
 name|add_symbol
 decl_stmt|;
-comment|/* name part */
+comment|/* Name part.  */
 name|symbol
 name|sub_symbol
 decl_stmt|;
-comment|/* name part */
+comment|/* Name part.  */
 block|}
 name|exp_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* Hashing is done in a pretty standard way.  A hash_table has a    pointer to a vector of pointers to hash_entrys, and the size of the    vector.  A hash_entry contains a union of all the info we like to    store in hash table.  If there is a hash collision, hash_entries    with the same hash are kept in a chain. */
+comment|/* Hashing is done in a pretty standard way.  A hash_table has a    pointer to a vector of pointers to hash_entrys, and the size of the    vector.  A hash_entry contains a union of all the info we like to    store in hash table.  If there is a hash collision, hash_entries    with the same hash are kept in a chain.  */
 end_comment
 
 begin_comment
-comment|/* What the data in a hash_entry means */
+comment|/* What the data in a hash_entry means.  */
 end_comment
 
 begin_typedef
@@ -520,15 +520,15 @@ enum|enum
 block|{
 name|hash_integer
 block|,
-comment|/* name->integer mapping */
+comment|/* Name->integer mapping.  */
 name|hash_string
 block|,
-comment|/* name->string mapping */
+comment|/* Name->string mapping.  */
 name|hash_macro
 block|,
-comment|/* name is a macro */
+comment|/* Name is a macro.  */
 name|hash_formal
-comment|/* name is a formal argument */
+comment|/* Name is a formal argument.  */
 block|}
 name|hash_type
 typedef|;
@@ -542,11 +542,11 @@ block|{
 name|sb
 name|key
 decl_stmt|;
-comment|/* symbol name */
+comment|/* Symbol name.  */
 name|hash_type
 name|type
 decl_stmt|;
-comment|/* symbol meaning */
+comment|/* Symbol meaning.  */
 union|union
 block|{
 name|sb
@@ -573,7 +573,7 @@ name|hs
 modifier|*
 name|next
 decl_stmt|;
-comment|/* next hash_entry with same hash key */
+comment|/* Next hash_entry with same hash key.  */
 block|}
 name|hash_entry
 typedef|;
@@ -597,7 +597,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* how we nest files and expand macros etc.     we keep a stack of of include_stack structs.  each include file    pushes a new level onto the stack.  we keep an sb with a pushback    too.  unget chars are pushed onto the pushback sb, getchars first    checks the pushback sb before reading from the input stream.     small things are expanded by adding the text of the item onto the    pushback sb.  larger items are grown by pushing a new level and    allocating the entire pushback buf for the item.  each time    something like a macro is expanded, the stack index is changed. we    can then perform an exitm by popping all entries off the stack with    the same stack index.  if we're being reasonable, we can detect    recusive expansion by checking the index is reasonably small.  */
+comment|/* How we nest files and expand macros etc.     We keep a stack of of include_stack structs.  Each include file    pushes a new level onto the stack.  We keep an sb with a pushback    too.  unget chars are pushed onto the pushback sb, getchars first    checks the pushback sb before reading from the input stream.     Small things are expanded by adding the text of the item onto the    pushback sb.  Larger items are grown by pushing a new level and    allocating the entire pushback buf for the item.  Each time    something like a macro is expanded, the stack index is changed.  We    can then perform an exitm by popping all entries off the stack with    the same stack index.  If we're being reasonable, we can detect    recusive expansion by checking the index is reasonably small.  */
 end_comment
 
 begin_typedef
@@ -623,31 +623,31 @@ block|{
 name|sb
 name|pushback
 decl_stmt|;
-comment|/* current pushback stream */
+comment|/* Current pushback stream.  */
 name|int
 name|pushback_index
 decl_stmt|;
-comment|/* next char to read from stream */
+comment|/* Next char to read from stream.  */
 name|FILE
 modifier|*
 name|handle
 decl_stmt|;
-comment|/* open file */
+comment|/* Open file.  */
 name|sb
 name|name
 decl_stmt|;
-comment|/* name of file */
+comment|/* Name of file.  */
 name|int
 name|linecount
 decl_stmt|;
-comment|/* number of lines read so far */
+comment|/* Number of lines read so far.  */
 name|include_type
 name|type
 decl_stmt|;
 name|int
 name|index
 decl_stmt|;
-comment|/* index of this layer */
+comment|/* Index of this layer.  */
 block|}
 name|include_stack
 index|[
@@ -672,7 +672,7 @@ value|(sp - include_stack)
 end_define
 
 begin_comment
-comment|/* Include file list */
+comment|/* Include file list.  */
 end_comment
 
 begin_typedef
@@ -2178,7 +2178,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do { include_print_where_line (stderr); fprintf x ; fatals++; quit(); } while(0)
+value|do						\     {						\       include_print_where_line (stderr);	\       fprintf x;				\       fatals++;					\       quit ();					\     }						\   while (0)
 end_define
 
 begin_define
@@ -2189,7 +2189,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do { include_print_where_line (stderr); fprintf x; errors++; } while(0)
+value|do						\     {						\       include_print_where_line (stderr);	\       fprintf x;				\       errors++;					\     }						\   while (0)
 end_define
 
 begin_define
@@ -2200,11 +2200,11 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do { include_print_where_line (stderr); fprintf x; warnings++;} while(0)
+value|do						\     {						\       include_print_where_line (stderr);	\       fprintf x;				\       warnings++;				\     }						\   while (0)
 end_define
 
 begin_comment
-comment|/* exit the program and return the right ERROR code. */
+comment|/* Exit the program and return the right ERROR code.  */
 end_comment
 
 begin_function
@@ -2280,11 +2280,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* hash table maintenance. */
+comment|/* Hash table maintenance.  */
 end_comment
 
 begin_comment
-comment|/* build a new hash table with size buckets, and fill in the info at ptr. */
+comment|/* Build a new hash table with size buckets    and fill in the info at ptr.  */
 end_comment
 
 begin_function
@@ -2362,7 +2362,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* calculate and return the hash value of the sb at key. */
+comment|/* Calculate and return the hash value of the sb at key.  */
 end_comment
 
 begin_function
@@ -2433,7 +2433,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* lookup key in hash_table tab, if present, then return it, otherwise    build a new one and fill it with hash_integer. */
+comment|/* Look up key in hash_table tab.  If present, then return it,    otherwise build a new one and fill it with hash_integer.  */
 end_comment
 
 begin_function
@@ -2598,7 +2598,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* add sb name with key into hash_table tab.  if replacing old value    and again, then ERROR. */
+comment|/* Add sb name with key into hash_table tab.    If replacing old value and again, then ERROR.  */
 end_comment
 
 begin_function
@@ -2722,7 +2722,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* add integer name to hash_table tab with sb key. */
+comment|/* Add integer name to hash_table tab with sb key.  */
 end_comment
 
 begin_function
@@ -2771,7 +2771,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* lookup sb key in hash_table tab.  if found return hash_entry result,    else 0. */
+comment|/* Look up sb key in hash_table tab.    If found, return hash_entry result, else 0.  */
 end_comment
 
 begin_function
@@ -2876,11 +2876,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* expressions     are handled in a really simple recursive decent way. each bit of    the machine takes an index into an sb and a pointer to an exp_t,    modifies the *exp_t and returns the index of the first character    past the part of the expression parsed.   expression precedence:   ( )  unary + - ~   * /   + -&   | ~  */
+comment|/* expressions     are handled in a really simple recursive decent way. each bit of    the machine takes an index into an sb and a pointer to an exp_t,    modifies the *exp_t and returns the index of the first character    past the part of the expression parsed.   expression precedence:   ( )  unary + - ~   * /   + -&   | ~ */
 end_comment
 
 begin_comment
-comment|/* make sure that the exp_t at term is constant, if not the give the op ERROR. */
+comment|/* Make sure that the exp_t at term is constant.    If not the give the op ERROR.  */
 end_comment
 
 begin_function
@@ -2934,7 +2934,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* turn the number in string at idx into a number of base,    fill in ptr and return the index of the first character not in the    number. */
+comment|/* Turn the number in string at idx into a number of base, fill in    ptr, and return the index of the first character not in the number.  */
 end_comment
 
 begin_function
@@ -3871,7 +3871,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* change nn+symbol to symbol + nn */
+comment|/* Change nn+symbol to symbol + nn.  */
 if|if
 condition|(
 name|rhs
@@ -4209,7 +4209,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* parse the expression at offset idx into string, fill up res with    the result. return the index of the first char past the expression.    */
+comment|/* Parse the expression at offset idx into string, fill up res with    the result.  Return the index of the first char past the    expression.  */
 end_comment
 
 begin_function
@@ -4254,7 +4254,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* turn the expression at exp into text and glue it onto the end of    string. */
+comment|/* Turn the expression at exp into text and glue it onto the end of    string.  */
 end_comment
 
 begin_function
@@ -4434,7 +4434,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* parse the expression at offset idx into sb in, return the value in val.      if the expression is not constant, give ERROR emsg.  returns the index    of the first character past the end of the expression. */
+comment|/* Parse the expression at offset idx into sb in.  Return the value in    val.  If the expression is not constant, give ERROR emsg.  Return    the index of the first character past the end of the expression.  */
 end_comment
 
 begin_function
@@ -4520,6 +4520,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Current label parsed from line.  */
+end_comment
+
 begin_decl_stmt
 name|sb
 name|label
@@ -4527,7 +4531,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* current label parsed from line */
+comment|/* Hash table for all assigned variables.  */
 end_comment
 
 begin_decl_stmt
@@ -4537,7 +4541,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* hash table for all assigned variables */
+comment|/* Hash table for keyword.  */
 end_comment
 
 begin_decl_stmt
@@ -4547,7 +4551,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* hash table for keyword */
+comment|/* Hash table for eq variables.  */
 end_comment
 
 begin_decl_stmt
@@ -4555,10 +4559,6 @@ name|hash_table
 name|vars
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* hash table for  eq variables */
-end_comment
 
 begin_define
 define|#
@@ -4574,13 +4574,13 @@ literal|0
 end_if
 
 begin_endif
-unit|static void strip_comments (out)      sb *out; {   char *s = out->ptr;   int i = 0;   for (i = 0; i< out->len; i++)     {       if (ISCOMMENTCHAR(s[i])) 	{ 	  out->len = i; 	  return; 	}     } }
+unit|static void strip_comments (out)      sb *out; {   char *s = out->ptr;   int i = 0;   for (i = 0; i< out->len; i++)     {       if (ISCOMMENTCHAR (s[i])) 	{ 	  out->len = i; 	  return; 	}     } }
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* push back character ch so that it can be read again. */
+comment|/* Push back character ch so that it can be read again.  */
 end_comment
 
 begin_function
@@ -4633,7 +4633,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* push the sb ptr onto the include stack, with the given name, type and index. */
+comment|/* Push the sb ptr onto the include stack, with the given name, type    and index.  */
 end_comment
 
 begin_function
@@ -4757,7 +4757,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* used in ERROR messages, print info on where the include stack is onto file. */
+comment|/* Used in ERROR messages, print info on where the include stack is    onto file.  */
 end_comment
 
 begin_function
@@ -4817,7 +4817,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* used in listings, print the line number onto file. */
+comment|/* Used in listings, print the line number onto file.  */
 end_comment
 
 begin_function
@@ -4908,7 +4908,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* read a line from the top of the include stack into sb in. */
+comment|/* Read a line from the top of the include stack into sb in.  */
 end_comment
 
 begin_function
@@ -5060,7 +5060,7 @@ operator|==
 literal|'+'
 condition|)
 block|{
-comment|/* continued line */
+comment|/* Continued line.  */
 if|if
 condition|(
 name|copysource
@@ -5124,7 +5124,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* find a label from sb in and put it in out. */
+comment|/* Find a label from sb in and put it in out.  */
 end_comment
 
 begin_function
@@ -5255,7 +5255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* find all strange base stuff and turn into decimal. also    find all the other numbers and convert them from the default radix */
+comment|/* Find all strange base stuff and turn into decimal.  Also    find all the other numbers and convert them from the default radix.  */
 end_comment
 
 begin_function
@@ -5536,7 +5536,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* copy entire names through quickly */
+comment|/* Copy entire names through quickly.  */
 name|sb_add_char
 argument_list|(
 name|out
@@ -5609,7 +5609,7 @@ block|{
 name|int
 name|value
 decl_stmt|;
-comment|/* all numbers must start with a digit, let's chew it and 	     spit out decimal */
+comment|/* All numbers must start with a digit, let's chew it and 	     spit out decimal.  */
 name|idx
 operator|=
 name|sb_strtol
@@ -5640,7 +5640,7 @@ argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
-comment|/* skip all undigsested letters */
+comment|/* Skip all undigsested letters.  */
 while|while
 condition|(
 name|idx
@@ -5709,7 +5709,7 @@ index|[
 name|idx
 index|]
 decl_stmt|;
-comment|/* copy entire names through quickly */
+comment|/* Copy entire names through quickly.  */
 name|sb_add_char
 argument_list|(
 name|out
@@ -5762,7 +5762,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* nothing special, just pass it through */
+comment|/* Nothing special, just pass it through.  */
 name|sb_add_char
 argument_list|(
 name|out
@@ -5784,7 +5784,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .end */
+comment|/* .end  */
 end_comment
 
 begin_function
@@ -5823,7 +5823,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .assign */
+comment|/* .assign  */
 end_comment
 
 begin_function
@@ -5848,7 +5848,7 @@ modifier|*
 name|in
 decl_stmt|;
 block|{
-comment|/* stick label in symbol table with following value */
+comment|/* Stick label in symbol table with following value.  */
 name|exp_t
 name|e
 decl_stmt|;
@@ -5906,7 +5906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .radix [b|q|d|h] */
+comment|/* .radix [b|q|d|h]  */
 end_comment
 
 begin_function
@@ -6005,7 +6005,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse off a .b, .w or .l */
+comment|/* Parse off a .b, .w or .l.  */
 end_comment
 
 begin_function
@@ -6201,7 +6201,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .data [.b|.w|.l]<data>*      or d[bwl]<data>* */
+comment|/* .data [.b|.w|.l]<data>*     or d[bwl]<data>*  */
 end_comment
 
 begin_function
@@ -6511,7 +6511,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .datab [.b|.w|.l]<repeat>,<fill> */
+comment|/* .datab [.b|.w|.l]<repeat>,<fill>  */
 end_comment
 
 begin_function
@@ -6612,7 +6612,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .align<size> */
+comment|/* .align<size>  */
 end_comment
 
 begin_function
@@ -6748,7 +6748,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .res[.b|.w|.l]<size> */
+comment|/* .res[.b|.w|.l]<size>  */
 end_comment
 
 begin_function
@@ -6875,7 +6875,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .export */
+comment|/* .export  */
 end_comment
 
 begin_function
@@ -6906,7 +6906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .print [list] [nolist] */
+comment|/* .print [list] [nolist]  */
 end_comment
 
 begin_function
@@ -7013,7 +7013,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .head */
+comment|/* .head  */
 end_comment
 
 begin_function
@@ -7077,7 +7077,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .page */
+comment|/* .page  */
 end_comment
 
 begin_function
@@ -7097,7 +7097,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .form [lin=<value>] [col=<value>] */
+comment|/* .form [lin=<value>] [col=<value>]  */
 end_comment
 
 begin_function
@@ -7389,7 +7389,7 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/* Turns the next expression into a string */
+comment|/* Turns the next expression into a string.  */
 name|idx
 operator|=
 name|exp_get_abs
@@ -7468,7 +7468,7 @@ operator|&&
 name|expand
 condition|)
 block|{
-comment|/* Keep the quotes */
+comment|/* Keep the quotes.  */
 name|sb_add_char
 argument_list|(
 name|out
@@ -7663,7 +7663,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* skip along sb in starting at idx, suck off whitespace a ( and more    whitespace.  return the idx of the next char */
+comment|/* Skip along sb in starting at idx, suck off whitespace a ( and more    whitespace.  Return the idx of the next char.  */
 end_comment
 
 begin_function
@@ -7733,7 +7733,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* skip along sb in starting at idx, suck off whitespace a ) and more    whitespace.  return the idx of the next char */
+comment|/* Skip along sb in starting at idx, suck off whitespace a ) and more    whitespace.  Return the idx of the next char.  */
 end_comment
 
 begin_function
@@ -7803,7 +7803,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .len */
+comment|/* .len  */
 end_comment
 
 begin_function
@@ -7905,7 +7905,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .instr */
+comment|/* .instr  */
 end_comment
 
 begin_function
@@ -8357,7 +8357,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* scan line, change tokens in the hash table to their replacements */
+comment|/* Scan line, change tokens in the hash table to their replacements.  */
 end_comment
 
 begin_function
@@ -8927,7 +8927,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* may be a simple name subsitution, see if we have a word */
+comment|/* May be a simple name subsitution, see if we have a word.  */
 name|sb
 name|acc
 decl_stmt|;
@@ -8999,7 +8999,7 @@ condition|(
 name|ptr
 condition|)
 block|{
-comment|/* Found a definition for it */
+comment|/* Found a definition for it.  */
 name|sb_add_sb
 argument_list|(
 name|buf
@@ -9015,7 +9015,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* No definition, just copy the word */
+comment|/* No definition, just copy the word.  */
 name|sb_add_sb
 argument_list|(
 name|buf
@@ -9198,7 +9198,7 @@ condition|(
 name|more
 condition|)
 block|{
-comment|/* Find any label and pseudo op that we're intested in */
+comment|/* Find any label and pseudo op that we're intested in.  */
 name|int
 name|l
 decl_stmt|;
@@ -9531,7 +9531,7 @@ operator|&
 name|acc
 argument_list|)
 condition|)
-block|{    		}
+block|{  		}
 elseif|else
 if|if
 condition|(
@@ -9549,7 +9549,7 @@ operator|&
 name|line
 argument_list|)
 condition|)
-block|{   		    }
+block|{  		    }
 else|else
 block|{
 block|{
@@ -9635,7 +9635,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Only a label on this line */
+comment|/* Only a label on this line.  */
 if|if
 condition|(
 name|label
@@ -9745,7 +9745,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* name: .ASSIGNA<value> */
+comment|/* name: .ASSIGNA<value>  */
 end_comment
 
 begin_function
@@ -9871,7 +9871,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* name: .ASSIGNC<string> */
+comment|/* name: .ASSIGNC<string>  */
 end_comment
 
 begin_function
@@ -9993,7 +9993,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* name: .REG (reg) */
+comment|/* name: .REG (reg)  */
 end_comment
 
 begin_function
@@ -10013,7 +10013,7 @@ modifier|*
 name|in
 decl_stmt|;
 block|{
-comment|/* remove reg stuff from inside parens */
+comment|/* Remove reg stuff from inside parens.  */
 name|sb
 name|what
 decl_stmt|;
@@ -10678,7 +10678,7 @@ decl_stmt|;
 name|int
 name|same
 decl_stmt|;
-comment|/* This is a string comparision */
+comment|/* This is a string comparision.  */
 name|idx
 operator|=
 name|getstring
@@ -10785,7 +10785,7 @@ name|same
 expr_stmt|;
 block|}
 else|else
-comment|/* This is a numeric expression */
+comment|/* This is a numeric expression.  */
 block|{
 name|int
 name|vala
@@ -10989,7 +10989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .AIF */
+comment|/* .AIF  */
 end_comment
 
 begin_function
@@ -11070,7 +11070,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .AELSE */
+comment|/* .AELSE  */
 end_comment
 
 begin_function
@@ -11141,7 +11141,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .AENDI */
+comment|/* .AENDI  */
 end_comment
 
 begin_function
@@ -11587,7 +11587,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* MRI IFC, IFNC.  */
+comment|/* MRI IFC, IFNC  */
 end_comment
 
 begin_function
@@ -11784,7 +11784,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .ENDR */
+comment|/* .ENDR  */
 end_comment
 
 begin_function
@@ -11827,7 +11827,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .AWHILE */
+comment|/* .AWHILE  */
 end_comment
 
 begin_function
@@ -11925,7 +11925,7 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Turn      	.AWHILE exp 	     foo 	.AENDW      into         foo 	.AWHILE exp 	foo 	.ENDW    */
+comment|/* Turn      	.AWHILE exp 	     foo 	.AENDW      into         foo 	.AWHILE exp 	foo 	.ENDW   */
 if|if
 condition|(
 name|doit
@@ -11988,7 +11988,7 @@ argument_list|,
 literal|"\t.AENDW\n"
 argument_list|)
 expr_stmt|;
-comment|/* Push another WHILE */
+comment|/* Push another WHILE.  */
 name|include_buf
 argument_list|(
 operator|&
@@ -12025,7 +12025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .AENDW */
+comment|/* .AENDW  */
 end_comment
 
 begin_function
@@ -12050,7 +12050,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .EXITM        Pop things off the include stack until the type and index changes */
+comment|/* .EXITM     Pop things off the include stack until the type and index changes.  */
 end_comment
 
 begin_function
@@ -12115,7 +12115,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .AREPEAT */
+comment|/* .AREPEAT  */
 end_comment
 
 begin_function
@@ -12144,15 +12144,15 @@ decl_stmt|;
 name|sb
 name|exp
 decl_stmt|;
-comment|/* buffer with expression in it */
+comment|/* Buffer with expression in it.  */
 name|sb
 name|copy
 decl_stmt|;
-comment|/* expanded repeat block */
+comment|/* Expanded repeat block.  */
 name|sb
 name|sub
 decl_stmt|;
-comment|/* contents of AREPEAT */
+comment|/* Contents of AREPEAT.  */
 name|int
 name|rc
 decl_stmt|;
@@ -12273,7 +12273,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* Push back the text following the repeat, and another repeat block 	 so 	 .AREPEAT 20 	 foo 	 .AENDR 	 gets turned into 	 foo 	 .AREPEAT 19 	 foo 	 .AENDR 	 */
+comment|/* Push back the text following the repeat, and another repeat block 	 so 	 .AREPEAT 20 	 foo 	 .AENDR 	 gets turned into 	 foo 	 .AREPEAT 19 	 foo 	 .AENDR       */
 name|int
 name|index
 init|=
@@ -12400,7 +12400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .ENDM */
+comment|/* .ENDM  */
 end_comment
 
 begin_function
@@ -12522,11 +12522,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* MACRO PROCESSING */
+comment|/* Macro processing.  */
 end_comment
 
 begin_comment
-comment|/* Parse off LOCAL n1, n2,... Invent a label name for it */
+comment|/* Parse off LOCAL n1, n2,... Invent a label name for it.  */
 end_comment
 
 begin_function
@@ -12773,7 +12773,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* STRING HANDLING */
+comment|/* String handling.  */
 end_comment
 
 begin_function
@@ -13174,7 +13174,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .SDATA[C|Z]<string> */
+comment|/* .SDATA[C|Z]<string>  */
 end_comment
 
 begin_function
@@ -13494,7 +13494,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* .SDATAB<count><string> */
+comment|/* .SDATAB<count><string>  */
 end_comment
 
 begin_function
@@ -14025,7 +14025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get the next character from the include stack.  If there's anything    in the pushback buffer, take that first.  If we're at eof, pop from    the stack and try again.  Keep the linecount up to date. */
+comment|/* Get the next character from the include stack.  If there's anything    in the pushback buffer, take that first.  If we're at eof, pop from    the stack and try again.  Keep the linecount up to date.  */
 end_comment
 
 begin_function
@@ -14069,7 +14069,7 @@ operator|++
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* When they've all gone, reset the pointer */
+comment|/* When they've all gone, reset the pointer.  */
 if|if
 condition|(
 name|sp
@@ -14233,7 +14233,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Initialize the chartype vector. */
+comment|/* Initialize the chartype vector.  */
 end_comment
 
 begin_function
@@ -14448,7 +14448,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* What to do with all the keywords */
+comment|/* What to do with all the keywords.  */
 end_comment
 
 begin_define
@@ -14459,7 +14459,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* Run substitution over the line */
+comment|/* Run substitution over the line.  */
 end_comment
 
 begin_define
@@ -14470,7 +14470,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* Spit out the label */
+comment|/* Spit out the label.  */
 end_comment
 
 begin_define
@@ -15376,7 +15376,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Look for a pseudo op on the line. If one's there then call    its handler. */
+comment|/* Look for a pseudo op on the line. If one's there then call    its handler.  */
 end_comment
 
 begin_function
@@ -15423,7 +15423,7 @@ operator|||
 name|mri
 condition|)
 block|{
-comment|/* Scan forward and find pseudo name */
+comment|/* Scan forward and find pseudo name.  */
 name|char
 modifier|*
 name|in
@@ -15527,8 +15527,8 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* This one causes lots of pain when trying to preprocess 	     ordinary code */
-block|WARNING ((stderr, _("Unrecognised pseudo op `%s'.\n"), sb_name (acc)));
+comment|/* This one causes lots of pain when trying to preprocess 	     ordinary code.  */
+block|WARNING ((stderr, _("Unrecognised pseudo op `%s'.\n"), 		    sb_name (acc)));
 endif|#
 directive|endif
 return|return
@@ -15546,7 +15546,7 @@ operator|&
 name|LAB
 condition|)
 block|{
-comment|/* output the label */
+comment|/* Output the label.  */
 if|if
 condition|(
 name|label
@@ -15646,11 +15646,11 @@ operator|&
 name|PROCESS
 condition|)
 block|{
-comment|/* Polish the rest of the line before handling the pseudo op */
+comment|/* Polish the rest of the line before handling the pseudo op.  */
 if|#
 directive|if
 literal|0
-block|strip_comments(line);
+block|strip_comments (line);
 endif|#
 directive|endif
 name|sb_reset
@@ -16549,7 +16549,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Build the keyword hash table - put each keyword in the table twice,    once upper and once lower case.*/
+comment|/* Build the keyword hash table - put each keyword in the table twice,    once upper and once lower case.  */
 end_comment
 
 begin_function
@@ -17336,7 +17336,7 @@ case|:
 name|show_help
 argument_list|()
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED  */
 case|case
 literal|'v'
 case|:
@@ -17372,7 +17372,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED  */
 case|case
 literal|0
 case|:
@@ -17385,7 +17385,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED  */
 block|}
 block|}
 name|process_init
@@ -17462,7 +17462,7 @@ name|outfile
 operator|=
 name|stdout
 expr_stmt|;
-comment|/* Process all the input files */
+comment|/* Process all the input files.  */
 while|while
 condition|(
 name|optind

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Function declarations for libiberty.    Written by Cygnus Support, 1994.     The libiberty library provides a number of functions which are    missing on some operating systems.  We do not declare those here,    to avoid conflicts with the system header files on operating    systems that do support those functions.  In this file we only    declare those functions which are specific to libiberty.  */
+comment|/* Function declarations for libiberty.     Copyright 2001 Free Software Foundation, Inc.        Note - certain prototypes declared in this header file are for    functions whoes implementation copyright does not belong to the    FSF.  Those prototypes are present in this file for reference    purposes only and their presence in this file should not construed    as an indication of ownership by the FSF of the implementation of    those functions in any way or form whatsoever.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.        Written by Cygnus Support, 1994.     The libiberty library provides a number of functions which are    missing on some operating systems.  We do not declare those here,    to avoid conflicts with the system header files on operating    systems that do support those functions.  In this file we only    declare those functions which are specific to libiberty.  */
 end_comment
 
 begin_ifndef
@@ -30,6 +30,19 @@ directive|endif
 include|#
 directive|include
 file|"ansidecl.h"
+ifdef|#
+directive|ifdef
+name|ANSI_PROTOTYPES
+comment|/* Get a definition for size_t.  */
+include|#
+directive|include
+file|<stddef.h>
+comment|/* Get a definition for va_list.  */
+include|#
+directive|include
+file|<stdarg.h>
+endif|#
+directive|endif
 comment|/* Build an argument vector from a string.  Allocates memory using    malloc.  Use freeargv to free the vector.  */
 specifier|extern
 name|char
@@ -75,6 +88,7 @@ argument_list|)
 name|ATTRIBUTE_MALLOC
 decl_stmt|;
 comment|/* Return the last component of a path name.  Note that we can't use a    prototype here because the parameter is declared inconsistently    across different systems, sometimes as "char *" and sometimes as    "const char *" */
+comment|/* HAVE_DECL_* is a three-state macro: undefined, 0 or 1.  If it is    undefined, we haven't run the autoconf check so provide the    declaration without arguments.  If it is 0, we checked and failed    to find the declaration so provide a fully prototyped one.  If it    is 1, we found it so don't provide any declaration at all.  */
 if|#
 directive|if
 name|defined
@@ -106,6 +120,16 @@ name|defined
 argument_list|(
 name|__CYGWIN32__
 argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|HAVE_DECL_BASENAME
+argument_list|)
+operator|&&
+operator|!
+name|HAVE_DECL_BASENAME
+operator|)
 specifier|extern
 name|char
 modifier|*
@@ -121,6 +145,13 @@ argument_list|)
 decl_stmt|;
 else|#
 directive|else
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_DECL_BASENAME
+argument_list|)
 specifier|extern
 name|char
 modifier|*
@@ -129,6 +160,22 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* A well-defined basename () that is always compiled in.  */
+specifier|extern
+name|char
+modifier|*
+name|lbasename
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* Concatenate an arbitrary number of strings, up to (char *) NULL.    Allocates memory using xmalloc.  */
 specifier|extern
 name|char
@@ -359,20 +406,19 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Report an allocation failure.  */
+specifier|extern
+name|void
+name|xmalloc_failed
+name|PARAMS
+argument_list|(
+operator|(
+name|size_t
+operator|)
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
 comment|/* Allocate memory without fail.  If malloc fails, this will print a    message to stderr (using the name set by xmalloc_set_program_name,    if any) and then call xexit.  */
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-comment|/* Get a definition for size_t.  */
-include|#
-directive|include
-file|<stddef.h>
-comment|/* Get a definition for va_list.  */
-include|#
-directive|include
-file|<stdarg.h>
-endif|#
-directive|endif
 specifier|extern
 name|PTR
 name|xmalloc
@@ -602,6 +648,13 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
+define|#
+directive|define
+name|ARRAY_SIZE
+parameter_list|(
+name|a
+parameter_list|)
+value|(sizeof (a) / sizeof ((a)[0]))
 ifdef|#
 directive|ifdef
 name|__cplusplus

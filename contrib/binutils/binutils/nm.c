@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* nm.c -- Describe symbol table of a rel file.    Copyright 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* nm.c -- Describe symbol table of a rel file.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1324,12 +1324,11 @@ block|,
 block|{
 literal|"demangle"
 block|,
-name|no_argument
+name|optional_argument
 block|,
-operator|&
-name|do_demangle
+literal|0
 block|,
-literal|1
+literal|'C'
 block|}
 block|,
 block|{
@@ -1611,7 +1610,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\n\   -a, --debug-syms       Display debugger-only symbols\n\   -A, --print-file-name  Print name of the input file before every symbol\n\   -B                     Same as --format=bsd\n\   -C, --demangle         Decode low-level symbol names into user-level names\n\       --no-demangle      Do not demangle low-level symbol names\n\   -D, --dynamic          Display dynamic symbols instead of normal symbols\n\       --defined-only     Display only defined symbols\n\   -e                     (ignored)\n\   -f, --format=FORMAT    Use the output format FORMAT.  FORMAT can be `bsd',\n\                            `sysv' or `posix'.  The default is `bsd'\n\   -g, --extern-only      Display only external symbols\n\   -h, --help             Display this information\n\   -l, --line-numbers     Use debugging information to find a filename and\n\                            line number for each symbol\n\   -n, --numeric-sort     Sort symbols numerically by address\n\   -o                     Same as -A\n\   -p, --no-sort          Do not sort the symbols\n\   -P, --portability      Same as --format=posix\n\   -r, --reverse-sort     Reverse the sense of the sort\n\   -s, --print-armap      Include index for symbols from archive members\n\       --size-sort        Sort symbols by size\n\   -t, --radix=RADIX      Use RADIX for printing symbol values\n\       --target=BFDNAME   Specify the target object format as BFDNAME\n\   -u, --undefined-only   Display only undefined symbols\n\   -V, --version          Display this program's version number\n\ \n"
+literal|"\n\   -a, --debug-syms       Display debugger-only symbols\n\   -A, --print-file-name  Print name of the input file before every symbol\n\   -B                     Same as --format=bsd\n\   -C, --demangle[=STYLE] Decode low-level symbol names into user-level names\n\                           The STYLE, if specified, can be `auto' (the default),\n\                           `gnu', 'lucid', 'arm', 'hp', 'edg' or 'gnu-new-abi'\n\       --no-demangle      Do not demangle low-level symbol names\n\   -D, --dynamic          Display dynamic symbols instead of normal symbols\n\       --defined-only     Display only defined symbols\n\   -e                     (ignored)\n\   -f, --format=FORMAT    Use the output format FORMAT.  FORMAT can be `bsd',\n\                            `sysv' or `posix'.  The default is `bsd'\n\   -g, --extern-only      Display only external symbols\n\   -h, --help             Display this information\n\   -l, --line-numbers     Use debugging information to find a filename and\n\                            line number for each symbol\n\   -n, --numeric-sort     Sort symbols numerically by address\n\   -o                     Same as -A\n\   -p, --no-sort          Do not sort the symbols\n\   -P, --portability      Same as --format=posix\n\   -r, --reverse-sort     Reverse the sense of the sort\n\   -s, --print-armap      Include index for symbols from archive members\n\       --size-sort        Sort symbols by size\n\   -t, --radix=RADIX      Use RADIX for printing symbol values\n\       --target=BFDNAME   Specify the target object format as BFDNAME\n\   -u, --undefined-only   Display only undefined symbols\n\   -V, --version          Display this program's version number\n\   -X 32_64               (ignored)\n\ \n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1925,7 +1924,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aABCDef:glnopPrst:uvV"
+literal|"aABCDef:glnopPrst:uvVX:"
 argument_list|,
 name|long_options
 argument_list|,
@@ -1981,6 +1980,46 @@ name|do_demangle
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|optarg
+operator|!=
+name|NULL
+condition|)
+block|{
+name|enum
+name|demangling_styles
+name|style
+decl_stmt|;
+name|style
+operator|=
+name|cplus_demangle_name_to_style
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|style
+operator|==
+name|unknown_demangling
+condition|)
+name|fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"unknown demangling style `%s'"
+argument_list|)
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|cplus_demangle_set_style
+argument_list|(
+name|style
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'D'
@@ -2097,6 +2136,30 @@ case|:
 name|show_version
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+comment|/* Ignored for (partial) AIX compatibility.  On AIX, the 	     argument has values 32, 64, or 32_64, and specfies that 	     only 32-bit, only 64-bit, or both kinds of objects should 	     be examined.  The default is 32.  So plain AIX nm on a 	     library archive with both kinds of objects will ignore 	     the 64-bit ones.  For GNU nm, the default is and always 	     has been -X 32_64, and other options are not supported.  */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"32_64"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"Only -X 32_64 is supported"
+argument_list|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -6249,22 +6312,19 @@ name|type
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%*s"
-argument_list|,
 ifdef|#
 directive|ifdef
 name|BFD64
-literal|16
-argument_list|,
-else|#
-directive|else
-literal|8
-argument_list|,
+name|printf
+argument_list|(
+literal|"        "
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-literal|""
+name|printf
+argument_list|(
+literal|"        "
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* symbols.c -symbol table-    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* symbols.c -symbol table-    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* #define DEBUG_SYMS / * to debug symbol list maintenance */
+comment|/* #define DEBUG_SYMS / * to debug symbol list maintenance.  */
 end_comment
 
 begin_include
@@ -98,7 +98,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Below are commented in "symbols.h". */
+comment|/* Below are commented in "symbols.h".  */
 end_comment
 
 begin_decl_stmt
@@ -155,6 +155,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|DOLLAR_LABEL_CHAR
+value|'\001'
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCAL_LABEL_CHAR
+value|'\002'
+end_define
 
 begin_decl_stmt
 name|struct
@@ -224,7 +238,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* symbol_new()       Return a pointer to a new symbol.  Die if we can't make a new    symbol.  Fill in the symbol's values.  Add symbol to end of symbol    chain.      This function should be called in the general case of creating a    symbol.  However, if the output file symbol table has already been    set, and you are certain that this symbol won't be wanted in the    output file, you can call symbol_create.  */
+comment|/* Return a pointer to a new symbol.  Die if we can't make a new    symbol.  Fill in the symbol's values.  Add symbol to end of symbol    chain.     This function should be called in the general case of creating a    symbol.  However, if the output file symbol table has already been    set, and you are certain that this symbol won't be wanted in the    output file, you can call symbol_create.  */
 end_comment
 
 begin_function
@@ -271,7 +285,7 @@ argument_list|,
 name|frag
 argument_list|)
 decl_stmt|;
-comment|/*    * Link to end of symbol chain.    */
+comment|/* Link to end of symbol chain.  */
 ifdef|#
 directive|ifdef
 name|BFD_ASSEMBLER
@@ -344,7 +358,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* +1 for \0 */
+comment|/* +1 for \0.  */
 name|obstack_grow
 argument_list|(
 operator|&
@@ -464,20 +478,20 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* It is copied, the caller can destroy/modify */
+comment|/* It is copied, the caller can destroy/modify.  */
 name|segT
 name|segment
 decl_stmt|;
-comment|/* Segment identifier (SEG_<something>) */
+comment|/* Segment identifier (SEG_<something>).  */
 name|valueT
 name|valu
 decl_stmt|;
-comment|/* Symbol value */
+comment|/* Symbol value.  */
 name|fragS
 modifier|*
 name|frag
 decl_stmt|;
-comment|/* Associated fragment */
+comment|/* Associated fragment.  */
 block|{
 name|char
 modifier|*
@@ -511,7 +525,7 @@ name|symbolS
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* symbol must be born in some fixed state.  This seems as good as any. */
+comment|/* symbol must be born in some fixed state.  This seems as good as any.  */
 name|memset
 argument_list|(
 name|symbolP
@@ -1015,7 +1029,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			colon()  *  * We have just seen "<name>:".  * Creates a struct symbol unless it already exists.  *  * Gripes if we are redefining a symbol incompatibly (and ignores it).  *  */
+comment|/* We have just seen "<name>:".    Creates a struct symbol unless it already exists.     Gripes if we are redefining a symbol incompatibly (and ignores it).  */
 end_comment
 
 begin_function
@@ -1025,21 +1039,21 @@ name|colon
 parameter_list|(
 name|sym_name
 parameter_list|)
-comment|/* just seen "x:" - rattle symbols& frags */
+comment|/* Just seen "x:" - rattle symbols& frags.  */
 specifier|const
 name|char
 modifier|*
 name|sym_name
 decl_stmt|;
-comment|/* symbol name, as a cannonical string */
-comment|/* We copy this string: OK to alter later. */
+comment|/* Symbol name, as a cannonical string.  */
+comment|/* We copy this string: OK to alter later.  */
 block|{
 specifier|register
 name|symbolS
 modifier|*
 name|symbolP
 decl_stmt|;
-comment|/* symbol we are working with */
+comment|/* Symbol we are working with.  */
 comment|/* Sun local labels go out of scope whenever a non-local symbol is      defined.  */
 if|if
 condition|(
@@ -1158,7 +1172,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* We want to store the pointer to where to insert the jump table in the 	 fr_opcode of the rs_broken_word frag.  This requires a little 	 hackery.  */
+comment|/* We want to store the pointer to where to insert the jump 	 table in the fr_opcode of the rs_broken_word frag.  This 	 requires a little hackery.  */
 while|while
 condition|(
 name|frag_tmp
@@ -1255,7 +1269,7 @@ name|symbolP
 return|;
 endif|#
 directive|endif
-comment|/*        *	Now check for undefined symbols        */
+comment|/* Now check for undefined symbols.  */
 if|if
 condition|(
 name|LOCAL_SYMBOL_CHECK
@@ -1420,11 +1434,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* if we have one, it better be zero. */
+comment|/* if we have one, it better be zero.  */
 block|}
 else|else
 block|{
-comment|/* 	       *	There are still several cases to check: 	       *		A .comm/.lcomm symbol being redefined as 	       *			initialized data is OK 	       *		A .comm/.lcomm symbol being redefined with 	       *			a larger size is also OK 	       * 	       * This only used to be allowed on VMS gas, but Sun cc 	       * on the sparc also depends on it. 	       */
+comment|/* There are still several cases to check:  		 A .comm/.lcomm symbol being redefined as initialized 		 data is OK  		 A .comm/.lcomm symbol being redefined with a larger 		 size is also OK  		 This only used to be allowed on VMS gas, but Sun cc 		 on the sparc also depends on it.  */
 if|if
 condition|(
 operator|(
@@ -1476,7 +1490,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 		   *	Select which of the 2 cases this is 		   */
+comment|/* Select which of the 2 cases this is.  */
 if|if
 condition|(
 name|now_seg
@@ -1484,7 +1498,7 @@ operator|!=
 name|data_section
 condition|)
 block|{
-comment|/* 		       *   New .comm for prev .comm symbol. 		       *	If the new size is larger we just 		       *	change its value.  If the new size 		       *	is smaller, we ignore this symbol 		       */
+comment|/* New .comm for prev .comm symbol.  			 If the new size is larger we just change its 			 value.  If the new size is smaller, we ignore 			 this symbol.  */
 if|if
 condition|(
 name|S_GET_VALUE
@@ -1553,7 +1567,7 @@ argument_list|,
 name|now_seg
 argument_list|)
 expr_stmt|;
-comment|/* keep N_EXT bit */
+comment|/* Keep N_EXT bit.  */
 block|}
 block|}
 else|else
@@ -1639,7 +1653,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|as_fatal
+name|as_bad
 argument_list|(
 name|_
 argument_list|(
@@ -1669,11 +1683,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* if the undefined symbol has no value */
+comment|/* if the undefined symbol has no value  */
 block|}
 else|else
 block|{
-comment|/* Don't blow up if the definition is the same */
+comment|/* Don't blow up if the definition is the same.  */
 if|if
 condition|(
 operator|!
@@ -1700,7 +1714,7 @@ operator|==
 name|now_seg
 operator|)
 condition|)
-name|as_fatal
+name|as_bad
 argument_list|(
 name|_
 argument_list|(
@@ -1711,7 +1725,6 @@ name|sym_name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* if this symbol is not yet defined */
 block|}
 ifdef|#
 directive|ifdef
@@ -1793,7 +1806,6 @@ name|symbolP
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* if we have seen this symbol before */
 if|if
 condition|(
 name|mri_common_symbol
@@ -1899,7 +1911,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			symbol_table_insert()  *  * Die if we can't insert the symbol.  *  */
+comment|/* Die if we can't insert the symbol.  */
 end_comment
 
 begin_function
@@ -2018,19 +2030,15 @@ name|error_string
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* on error */
+comment|/* on error  */
 block|}
 end_function
-
-begin_comment
-comment|/* symbol_table_insert() */
-end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			symbol_find_or_make()  *  * If a symbol name does not exist, create it as undefined, and insert  * it into the symbol table. Return a pointer to it.  */
+comment|/* If a symbol name does not exist, create it as undefined, and insert    it into the symbol table.  Return a pointer to it.  */
 end_comment
 
 begin_function
@@ -2150,10 +2158,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* symbol_find_or_make() */
-end_comment
-
 begin_function
 name|symbolS
 modifier|*
@@ -2171,7 +2175,7 @@ name|symbolS
 modifier|*
 name|symbolP
 decl_stmt|;
-comment|/* Let the machine description default it, e.g. for register names. */
+comment|/* Let the machine description default it, e.g. for register names.  */
 name|symbolP
 operator|=
 name|md_undefined_symbol
@@ -2214,11 +2218,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* symbol_make() */
-end_comment
-
-begin_comment
-comment|/*  *			symbol_find()  *  * Implement symbol table lookup.  * In:	A symbol's name as a string: '\0' can't be part of a symbol name.  * Out:	NULL if the name was not in the symbol table, else the address  *	of a struct symbol associated with that name.  */
+comment|/* Implement symbol table lookup.    In:	A symbol's name as a string: '\0' can't be part of a symbol name.    Out:	NULL if the name was not in the symbol table, else the address    of a struct symbol associated with that name.  */
 end_comment
 
 begin_function
@@ -2265,10 +2265,6 @@ directive|endif
 comment|/* STRIP_UNDERSCORE */
 block|}
 end_function
-
-begin_comment
-comment|/* symbol_find() */
-end_comment
 
 begin_function
 name|symbolS
@@ -2486,11 +2482,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Once upon a time, symbols were kept in a singly linked list.  At  * least coff needs to be able to rearrange them from time to time, for  * which a doubly linked list is much more convenient.  Loic did these  * as macros which seemed dangerous to me so they're now functions.  * xoxorich.  */
+comment|/* Once upon a time, symbols were kept in a singly linked list.  At    least coff needs to be able to rearrange them from time to time, for    which a doubly linked list is much more convenient.  Loic did these    as macros which seemed dangerous to me so they're now functions.    xoxorich.  */
 end_comment
 
 begin_comment
-comment|/* Link symbol ADDME after symbol TARGET in the chain. */
+comment|/* Link symbol ADDME after symbol TARGET in the chain.  */
 end_comment
 
 begin_function
@@ -2600,7 +2596,7 @@ name|addme
 expr_stmt|;
 return|return;
 block|}
-comment|/* if the list is empty */
+comment|/* if the list is empty  */
 if|if
 condition|(
 name|target
@@ -2641,7 +2637,7 @@ operator|=
 name|addme
 expr_stmt|;
 block|}
-comment|/* if we have a next */
+comment|/* if we have a next  */
 name|addme
 operator|->
 name|sy_next
@@ -2679,7 +2675,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set the chain pointers of SYMBOL to null. */
+comment|/* Set the chain pointers of SYMBOL to null.  */
 end_comment
 
 begin_function
@@ -2730,7 +2726,7 @@ name|SYMBOLS_NEED_BACKPOINTERS
 end_ifdef
 
 begin_comment
-comment|/* Remove SYMBOLP from the list. */
+comment|/* Remove SYMBOLP from the list.  */
 end_comment
 
 begin_function
@@ -2784,7 +2780,7 @@ operator|->
 name|sy_next
 expr_stmt|;
 block|}
-comment|/* if it was the root */
+comment|/* if it was the root  */
 if|if
 condition|(
 name|symbolP
@@ -2801,7 +2797,7 @@ operator|->
 name|sy_previous
 expr_stmt|;
 block|}
-comment|/* if it was the tail */
+comment|/* if it was the tail  */
 if|if
 condition|(
 name|symbolP
@@ -2822,7 +2818,7 @@ operator|->
 name|sy_previous
 expr_stmt|;
 block|}
-comment|/* if not last */
+comment|/* if not last  */
 if|if
 condition|(
 name|symbolP
@@ -2843,7 +2839,7 @@ operator|->
 name|sy_next
 expr_stmt|;
 block|}
-comment|/* if not first */
+comment|/* if not first  */
 name|debug_verify_symchain
 argument_list|(
 operator|*
@@ -2857,7 +2853,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Link symbol ADDME before symbol TARGET in the chain. */
+comment|/* Link symbol ADDME before symbol TARGET in the chain.  */
 end_comment
 
 begin_function
@@ -2946,7 +2942,7 @@ operator|=
 name|addme
 expr_stmt|;
 block|}
-comment|/* if not first */
+comment|/* if not first  */
 name|addme
 operator|->
 name|sy_previous
@@ -3211,7 +3207,10 @@ name|locsym
 operator|->
 name|lsy_offset
 operator|/
-name|OCTETS_PER_BYTE
+name|bfd_octets_per_byte
+argument_list|(
+name|stdoutput
+argument_list|)
 return|;
 name|final_val
 operator|=
@@ -3228,7 +3227,10 @@ operator|->
 name|lsy_offset
 operator|)
 operator|/
-name|OCTETS_PER_BYTE
+name|bfd_octets_per_byte
+argument_list|(
+name|stdoutput
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4744,16 +4746,12 @@ operator|-
 name|dollar_labels
 index|]
 return|;
-comment|/* if we get here, label isn't defined */
+comment|/* If we get here, label isn't defined.  */
 return|return
 literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* dollar_label_defined() */
-end_comment
 
 begin_function
 specifier|static
@@ -4817,7 +4815,7 @@ name|dollar_labels
 index|]
 operator|)
 return|;
-comment|/* If we get here, we haven't seen the label before, therefore its instance      count is zero.  */
+comment|/* If we get here, we haven't seen the label before.      Therefore its instance count is zero.  */
 return|return
 literal|0
 return|;
@@ -4908,7 +4906,7 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-comment|/* if we get to here, we don't have label listed yet. */
+comment|/* If we get to here, we don't have label listed yet.  */
 if|if
 condition|(
 name|dollar_labels
@@ -5030,7 +5028,7 @@ name|dollar_label_max
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* if we needed to grow */
+comment|/* if we needed to grow  */
 name|dollar_labels
 index|[
 name|dollar_label_count
@@ -5059,13 +5057,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *			dollar_label_name()  *  * Caller must copy returned name: we re-use the area for the next name.  *  * The mth occurence of label n: is turned into the symbol "Ln^Am"  * where n is the label number and m is the instance number. "L" makes  * it a label discarded unless debugging and "^A"('\1') ensures no  * ordinary symbol SHOULD get the same name as a local label  * symbol. The first "4:" is "L4^A1" - the m numbers begin at 1.  *  * fb labels get the same treatment, except that ^B is used in place of ^A.  */
+comment|/* Caller must copy returned name: we re-use the area for the next name.     The mth occurence of label n: is turned into the symbol "Ln^Am"    where n is the label number and m is the instance number. "L" makes    it a label discarded unless debugging and "^A"('\1') ensures no    ordinary symbol SHOULD get the same name as a local label    symbol. The first "4:" is "L4^A1" - the m numbers begin at 1.     fb labels get the same treatment, except that ^B is used in place    of ^A.  */
 end_comment
 
 begin_function
 name|char
 modifier|*
-comment|/* Return local label name. */
+comment|/* Return local label name.  */
 name|dollar_label_name
 parameter_list|(
 name|n
@@ -5076,17 +5074,17 @@ specifier|register
 name|long
 name|n
 decl_stmt|;
-comment|/* we just saw "n$:" : n a number */
+comment|/* we just saw "n$:" : n a number.  */
 specifier|register
 name|int
 name|augend
 decl_stmt|;
-comment|/* 0 for current instance, 1 for new instance */
+comment|/* 0 for current instance, 1 for new instance.  */
 block|{
 name|long
 name|i
 decl_stmt|;
-comment|/* Returned to caller, then copied.  used for created names ("4f") */
+comment|/* Returned to caller, then copied.  Used for created names ("4f").  */
 specifier|static
 name|char
 name|symbol_name_build
@@ -5110,7 +5108,7 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/* build up a number, BACKWARDS */
+comment|/* Build up a number, BACKWARDS.  */
 name|know
 argument_list|(
 name|n
@@ -5150,8 +5148,8 @@ operator|++
 operator|=
 literal|'L'
 expr_stmt|;
-comment|/* Next code just does sprintf( {}, "%d", n); */
-comment|/* label number */
+comment|/* Next code just does sprintf( {}, "%d", n);  */
+comment|/* Label number.  */
 name|q
 operator|=
 name|symbol_name_temporary
@@ -5208,10 +5206,10 @@ operator|*
 name|p
 operator|++
 operator|=
-literal|1
+name|DOLLAR_LABEL_CHAR
 expr_stmt|;
-comment|/* ^A */
-comment|/* instance number */
+comment|/* ^A  */
+comment|/* Instance number.  */
 name|q
 operator|=
 name|symbol_name_temporary
@@ -5269,7 +5267,7 @@ literal|'\0'
 condition|)
 empty_stmt|;
 empty_stmt|;
-comment|/* The label, as a '\0' ended string, starts at symbol_name_build. */
+comment|/* The label, as a '\0' ended string, starts at symbol_name_build.  */
 return|return
 name|symbol_name_build
 return|;
@@ -5277,7 +5275,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sombody else's idea of local labels. They are made by "n:" where n  * is any decimal digit. Refer to them with  *  "nb" for previous (backward) n:  *  or "nf" for next (forward) n:.  *  * We do a little better and let n be any number, not just a single digit, but  * since the other guy's assembler only does ten, we treat the first ten  * specially.  *  * Like someone else's assembler, we have one set of local label counters for  * entire assembly, not one set per (sub)segment like in most assemblers. This  * implies that one can refer to a label in another segment, and indeed some  * crufty compilers have done just that.  *  * Since there could be a LOT of these things, treat them as a sparse array.  */
+comment|/* Sombody else's idea of local labels. They are made by "n:" where n    is any decimal digit. Refer to them with     "nb" for previous (backward) n:    or "nf" for next (forward) n:.     We do a little better and let n be any number, not just a single digit, but    since the other guy's assembler only does ten, we treat the first ten    specially.     Like someone else's assembler, we have one set of local label counters for    entire assembly, not one set per (sub)segment like in most assemblers. This    implies that one can refer to a label in another segment, and indeed some    crufty compilers have done just that.     Since there could be a LOT of these things, treat them as a sparse    array.  */
 end_comment
 
 begin_define
@@ -5328,7 +5326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* this must be more than FB_LABEL_SPECIAL */
+comment|/* This must be more than FB_LABEL_SPECIAL.  */
 end_comment
 
 begin_define
@@ -5364,11 +5362,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* fb_label_init() */
-end_comment
-
-begin_comment
-comment|/* add one to the instance number of this fb label */
+comment|/* Add one to the instance number of this fb label.  */
 end_comment
 
 begin_function
@@ -5443,11 +5437,11 @@ index|]
 expr_stmt|;
 return|return;
 block|}
-comment|/* if we find it */
+comment|/* if we find it  */
 block|}
-comment|/* for each existing label */
+comment|/* for each existing label  */
 block|}
-comment|/* if we get to here, we don't have label listed yet. */
+comment|/* If we get to here, we don't have label listed yet.  */
 if|if
 condition|(
 name|fb_labels
@@ -5553,7 +5547,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* if we needed to grow */
+comment|/* if we needed to grow  */
 name|fb_labels
 index|[
 name|fb_label_count
@@ -5649,9 +5643,9 @@ index|]
 operator|)
 return|;
 block|}
-comment|/* if we find it */
+comment|/* if we find it  */
 block|}
-comment|/* for each existing label */
+comment|/* for each existing label  */
 block|}
 comment|/* We didn't find the label, so this must be a reference to the      first instance.  */
 return|return
@@ -5661,13 +5655,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *			fb_label_name()  *  * Caller must copy returned name: we re-use the area for the next name.  *  * The mth occurence of label n: is turned into the symbol "Ln^Bm"  * where n is the label number and m is the instance number. "L" makes  * it a label discarded unless debugging and "^B"('\2') ensures no  * ordinary symbol SHOULD get the same name as a local label  * symbol. The first "4:" is "L4^B1" - the m numbers begin at 1.  *  * dollar labels get the same treatment, except that ^A is used in place of ^B. */
+comment|/* Caller must copy returned name: we re-use the area for the next name.     The mth occurence of label n: is turned into the symbol "Ln^Bm"    where n is the label number and m is the instance number. "L" makes    it a label discarded unless debugging and "^B"('\2') ensures no    ordinary symbol SHOULD get the same name as a local label    symbol. The first "4:" is "L4^B1" - the m numbers begin at 1.     dollar labels get the same treatment, except that ^A is used in    place of ^B.  */
 end_comment
 
 begin_function
 name|char
 modifier|*
-comment|/* Return local label name. */
+comment|/* Return local label name.  */
 name|fb_label_name
 parameter_list|(
 name|n
@@ -5677,16 +5671,16 @@ parameter_list|)
 name|long
 name|n
 decl_stmt|;
-comment|/* we just saw "n:", "nf" or "nb" : n a number */
+comment|/* We just saw "n:", "nf" or "nb" : n a number.  */
 name|long
 name|augend
 decl_stmt|;
-comment|/* 0 for nb, 1 for n:, nf */
+comment|/* 0 for nb, 1 for n:, nf.  */
 block|{
 name|long
 name|i
 decl_stmt|;
-comment|/* Returned to caller, then copied.  used for created names ("4f") */
+comment|/* Returned to caller, then copied.  Used for created names ("4f").  */
 specifier|static
 name|char
 name|symbol_name_build
@@ -5710,7 +5704,7 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/* build up a number, BACKWARDS */
+comment|/* Build up a number, BACKWARDS.  */
 name|know
 argument_list|(
 name|n
@@ -5733,14 +5727,25 @@ name|p
 operator|=
 name|symbol_name_build
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOCAL_LABEL_PREFIX
+operator|*
+name|p
+operator|++
+operator|=
+name|LOCAL_LABEL_PREFIX
+expr_stmt|;
+endif|#
+directive|endif
 operator|*
 name|p
 operator|++
 operator|=
 literal|'L'
 expr_stmt|;
-comment|/* Next code just does sprintf( {}, "%d", n); */
-comment|/* label number */
+comment|/* Next code just does sprintf( {}, "%d", n);  */
+comment|/* Label number.  */
 name|q
 operator|=
 name|symbol_name_temporary
@@ -5797,10 +5802,10 @@ operator|*
 name|p
 operator|++
 operator|=
-literal|2
+name|LOCAL_LABEL_CHAR
 expr_stmt|;
-comment|/* ^B */
-comment|/* instance number */
+comment|/* ^B  */
+comment|/* Instance number.  */
 name|q
 operator|=
 name|symbol_name_temporary
@@ -5858,7 +5863,7 @@ literal|'\0'
 condition|)
 empty_stmt|;
 empty_stmt|;
-comment|/* The label, as a '\0' ended string, starts at symbol_name_build. */
+comment|/* The label, as a '\0' ended string, starts at symbol_name_build.  */
 return|return
 operator|(
 name|symbol_name_build
@@ -5868,11 +5873,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* fb_label_name() */
-end_comment
-
-begin_comment
-comment|/*  * decode name that may have been generated by foo_label_name() above.  If  * the name wasn't generated by foo_label_name(), then return it unaltered.  * This is used for error messages.  */
+comment|/* Decode name that may have been generated by foo_label_name() above.    If the name wasn't generated by foo_label_name(), then return it    unaltered.  This is used for error messages.  */
 end_comment
 
 begin_function
@@ -5909,17 +5910,34 @@ specifier|const
 name|char
 modifier|*
 name|message_format
-init|=
-name|_
-argument_list|(
-literal|"\"%d\" (instance number %d of a %s label)"
-argument_list|)
 decl_stmt|;
+name|int
+name|index
+init|=
+literal|0
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LOCAL_LABEL_PREFIX
 if|if
 condition|(
 name|s
 index|[
-literal|0
+name|index
+index|]
+operator|==
+name|LOCAL_LABEL_PREFIX
+condition|)
+operator|++
+name|index
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|s
+index|[
+name|index
 index|]
 operator|!=
 literal|'L'
@@ -5936,6 +5954,8 @@ operator|,
 name|p
 operator|=
 name|s
+operator|+
+name|index
 operator|+
 literal|1
 init|;
@@ -5970,7 +5990,7 @@ condition|(
 operator|*
 name|p
 operator|==
-literal|1
+name|DOLLAR_LABEL_CHAR
 condition|)
 name|type
 operator|=
@@ -5982,7 +6002,7 @@ condition|(
 operator|*
 name|p
 operator|==
-literal|2
+name|LOCAL_LABEL_CHAR
 condition|)
 name|type
 operator|=
@@ -6026,6 +6046,13 @@ operator|*
 name|p
 operator|-
 literal|'0'
+expr_stmt|;
+name|message_format
+operator|=
+name|_
+argument_list|(
+literal|"\"%d\" (instance number %d of a %s label)"
+argument_list|)
 expr_stmt|;
 name|symbol_decode
 operator|=
@@ -6474,7 +6501,7 @@ name|bsym
 operator|->
 name|flags
 expr_stmt|;
-comment|/* sanity check */
+comment|/* Sanity check.  */
 if|if
 condition|(
 operator|(
@@ -6696,7 +6723,7 @@ name|bsym
 operator|->
 name|flags
 expr_stmt|;
-comment|/* sanity check */
+comment|/* Sanity check.  */
 if|if
 condition|(
 operator|(
@@ -6776,14 +6803,14 @@ name|strchr
 argument_list|(
 name|name
 argument_list|,
-literal|'\001'
+name|DOLLAR_LABEL_CHAR
 argument_list|)
 operator|||
 name|strchr
 argument_list|(
 name|name
 argument_list|,
-literal|'\002'
+name|LOCAL_LABEL_CHAR
 argument_list|)
 operator|||
 operator|(
@@ -7093,6 +7120,49 @@ literal|0
 condition|)
 block|{
 comment|/* Let .weak override .global.  */
+return|return;
+block|}
+if|if
+condition|(
+name|s
+operator|->
+name|bsym
+operator|->
+name|flags
+operator|&
+name|BSF_SECTION_SYM
+condition|)
+block|{
+name|char
+modifier|*
+name|file
+decl_stmt|;
+name|unsigned
+name|int
+name|line
+decl_stmt|;
+comment|/* Do not reassign section symbols.  */
+name|as_where
+argument_list|(
+operator|&
+name|file
+argument_list|,
+operator|&
+name|line
+argument_list|)
+expr_stmt|;
+name|as_warn_where
+argument_list|(
+name|file
+argument_list|,
+name|line
+argument_list|,
+name|_
+argument_list|(
+literal|"Section symbols are already global"
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|s
@@ -8136,7 +8206,7 @@ literal|0
 return|;
 else|#
 directive|else
-comment|/* FIXME */
+comment|/* FIXME.  */
 return|return
 literal|0
 return|;
@@ -8557,7 +8627,7 @@ name|symbol_rootP
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* In case we have 0 symbols (!!) */
+comment|/* In case we have 0 symbols (!!)  */
 name|sy_hash
 operator|=
 name|hash_new
@@ -8619,7 +8689,7 @@ endif|#
 directive|endif
 else|#
 directive|else
-comment|/* Can't initialise a union. Sigh. */
+comment|/* Can't initialise a union. Sigh.  */
 name|S_SET_SEGMENT
 argument_list|(
 operator|&
@@ -9885,10 +9955,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_comment
-comment|/* end of symbols.c */
-end_comment
 
 end_unit
 

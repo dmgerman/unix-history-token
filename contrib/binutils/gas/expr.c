@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* expr.c -operands, expressions-    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* expr.c -operands, expressions-    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  * This is really a branch office of as-read.c. I split it out to clearly  * distinguish the world of expressions from the world of statements.  * (It also gives smaller files to re-compile.)  * Here, "operand"s are of expressions, not instructions.  */
+comment|/* This is really a branch office of as-read.c. I split it out to clearly    distinguish the world of expressions from the world of statements.    (It also gives smaller files to re-compile.)    Here, "operand"s are of expressions, not instructions.  */
 end_comment
 
 begin_include
@@ -177,7 +177,8 @@ name|operator
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -745,7 +746,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * Build any floating-point literal here.  * Also build any bignum literal here.  */
+comment|/* Build any floating-point literal here.    Also build any bignum literal here.  */
 end_comment
 
 begin_comment
@@ -774,7 +775,7 @@ index|[
 literal|6
 index|]
 block|,
-comment|/* low (JF: Was 0) */
+comment|/* low.  (JF: Was 0)  */
 operator|&
 name|generic_bignum
 index|[
@@ -785,21 +786,21 @@ operator|-
 literal|1
 index|]
 block|,
-comment|/* high JF: (added +6) */
+comment|/* high.  JF: (added +6)  */
 literal|0
 block|,
-comment|/* leader */
+comment|/* leader.  */
 literal|0
 block|,
-comment|/* exponent */
+comment|/* exponent.  */
 literal|0
-comment|/* sign */
+comment|/* sign.  */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* If nonzero, we've been asked to assemble nan, +inf or -inf */
+comment|/* If nonzero, we've been asked to assemble nan, +inf or -inf.  */
 end_comment
 
 begin_decl_stmt
@@ -823,8 +824,7 @@ modifier|*
 name|expressionP
 decl_stmt|;
 block|{
-comment|/* input_line_pointer->*/
-comment|/* floating-point constant. */
+comment|/* input_line_pointer -> floating-point constant.  */
 name|int
 name|error_code
 decl_stmt|;
@@ -884,8 +884,7 @@ name|X_op
 operator|=
 name|O_big
 expr_stmt|;
-comment|/* input_line_pointer->just after constant, */
-comment|/* which may point to whitespace. */
+comment|/* input_line_pointer -> just after constant, which may point to      whitespace.  */
 name|expressionP
 operator|->
 name|X_add_number
@@ -1050,7 +1049,7 @@ name|char
 modifier|*
 name|start
 decl_stmt|;
-comment|/* start of number. */
+comment|/* Start of number.  */
 name|char
 modifier|*
 name|suffix
@@ -1063,41 +1062,41 @@ decl_stmt|;
 name|valueT
 name|number
 decl_stmt|;
-comment|/* offset or (absolute) value */
+comment|/* Offset or (absolute) value.  */
 name|short
 name|int
 name|digit
 decl_stmt|;
-comment|/* value of next digit in current radix */
+comment|/* Value of next digit in current radix.  */
 name|short
 name|int
 name|maxdig
 init|=
 literal|0
 decl_stmt|;
-comment|/* highest permitted digit value. */
+comment|/* Highest permitted digit value.  */
 name|int
 name|too_many_digits
 init|=
 literal|0
 decl_stmt|;
-comment|/* if we see>= this number of */
+comment|/* If we see>= this number of.  */
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* points to name of symbol */
+comment|/* Points to name of symbol.  */
 name|symbolS
 modifier|*
 name|symbolP
 decl_stmt|;
-comment|/* points to symbol */
+comment|/* Points to symbol.  */
 name|int
 name|small
 decl_stmt|;
-comment|/* true if fits in 32 bits. */
-comment|/* May be bignum, or may fit in 32 bits. */
-comment|/* Most numbers fit into 32 bits, and we want this case to be fast.      so we pretend it will fit into 32 bits.  If, after making up a 32      bit number, we realise that we have scanned more digits than      comfortably fit into 32 bits, we re-scan the digits coding them      into a bignum.  For decimal and octal numbers we are      conservative: Some numbers may be assumed bignums when in fact      they do fit into 32 bits.  Numbers of any radix can have excess      leading zeros: We strive to recognise this and cast them back      into 32 bits.  We must check that the bignum really is more than      32 bits, and change it back to a 32-bit number if it fits.  The      number we are looking for is expected to be positive, but if it      fits into 32 bits as an unsigned number, we let it be a 32-bit      number.  The cavalier approach is for speed in ordinary cases. */
+comment|/* True if fits in 32 bits.  */
+comment|/* May be bignum, or may fit in 32 bits.  */
+comment|/* Most numbers fit into 32 bits, and we want this case to be fast.      so we pretend it will fit into 32 bits.  If, after making up a 32      bit number, we realise that we have scanned more digits than      comfortably fit into 32 bits, we re-scan the digits coding them      into a bignum.  For decimal and octal numbers we are      conservative: Some numbers may be assumed bignums when in fact      they do fit into 32 bits.  Numbers of any radix can have excess      leading zeros: We strive to recognise this and cast them back      into 32 bits.  We must check that the bignum really is more than      32 bits, and change it back to a 32-bit number if it fits.  The      number we are looking for is expected to be positive, but if it      fits into 32 bits as an unsigned number, we let it be a 32-bit      number.  The cavalier approach is for speed in ordinary cases.  */
 comment|/* This has been extended for 64 bits.  We blindly assume that if      you're compiling in 64-bit mode, the target is a 64-bit machine.      This should be cleaned up.  */
 ifdef|#
 directive|ifdef
@@ -1379,7 +1378,7 @@ operator|)
 operator|/
 literal|4
 expr_stmt|;
-comment|/* very rough */
+comment|/* Very rough.  */
 block|}
 undef|#
 directive|undef
@@ -1427,8 +1426,8 @@ operator|+
 name|digit
 expr_stmt|;
 block|}
-comment|/* c contains character after number. */
-comment|/* input_line_pointer->char after c. */
+comment|/* c contains character after number.  */
+comment|/* input_line_pointer->char after c.  */
 name|small
 operator|=
 operator|(
@@ -1465,7 +1464,7 @@ name|input_line_pointer
 operator|=
 name|start
 expr_stmt|;
-comment|/*->1st digit. */
+comment|/* -> 1st digit.  */
 name|know
 argument_list|(
 name|LITTLENUM_NUMBER_OF_BITS
@@ -1488,7 +1487,7 @@ operator|+=
 literal|2
 control|)
 block|{
-comment|/* Convert one 64-bit word. */
+comment|/* Convert one 64-bit word.  */
 name|int
 name|ndigit
 init|=
@@ -1553,7 +1552,7 @@ literal|"A bignum with underscores may not have more than 8 hex digits in any wo
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Add this chunk to the bignum.  Shift things down 2 little digits.*/
+comment|/* Add this chunk to the bignum. 	     Shift things down 2 little digits.  */
 name|know
 argument_list|(
 name|LITTLENUM_NUMBER_OF_BITS
@@ -1595,7 +1594,7 @@ operator|-
 literal|2
 index|]
 expr_stmt|;
-comment|/* Add the new digits as the least significant new ones. */
+comment|/* Add the new digits as the least significant new ones.  */
 name|generic_bignum
 index|[
 literal|0
@@ -1615,7 +1614,7 @@ operator|>>
 literal|16
 expr_stmt|;
 block|}
-comment|/* Again, c is char after number, input_line_pointer->after c. */
+comment|/* Again, c is char after number, input_line_pointer->after c.  */
 if|if
 condition|(
 name|num_little_digits
@@ -1651,7 +1650,7 @@ literal|"A bignum with underscores must have exactly 4 words."
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* We might have some leading zeros.  These can be trimmed to give        * us a change to fit this constant into a small number.        */
+comment|/* We might have some leading zeros.  These can be trimmed to give 	 us a change to fit this constant into a small number.  */
 while|while
 condition|(
 name|generic_bignum
@@ -1677,7 +1676,7 @@ operator|<=
 literal|2
 condition|)
 block|{
-comment|/* will fit into 32 bits. */
+comment|/* will fit into 32 bits.  */
 name|number
 operator|=
 name|generic_bignum_to_int32
@@ -1718,11 +1717,11 @@ name|small
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Number of littlenums in the bignum.  */
 name|number
 operator|=
 name|num_little_digits
 expr_stmt|;
-comment|/* number of littlenums in the bignum. */
 block|}
 block|}
 elseif|else
@@ -1732,17 +1731,17 @@ operator|!
 name|small
 condition|)
 block|{
-comment|/*        * we saw a lot of digits. manufacture a bignum the hard way.        */
+comment|/* We saw a lot of digits. manufacture a bignum the hard way.  */
 name|LITTLENUM_TYPE
 modifier|*
 name|leader
 decl_stmt|;
-comment|/*->high order littlenum of the bignum. */
+comment|/* -> high order littlenum of the bignum.  */
 name|LITTLENUM_TYPE
 modifier|*
 name|pointer
 decl_stmt|;
-comment|/*->littlenum we are frobbing now. */
+comment|/* -> littlenum we are frobbing now.  */
 name|long
 name|carry
 decl_stmt|;
@@ -1782,7 +1781,7 @@ name|input_line_pointer
 operator|=
 name|start
 expr_stmt|;
-comment|/*->1st digit. */
+comment|/* -> 1st digit.  */
 name|c
 operator|=
 operator|*
@@ -1866,7 +1865,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* room to grow a longer bignum. */
+comment|/* Room to grow a longer bignum.  */
 operator|*
 operator|++
 name|leader
@@ -1876,8 +1875,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* again, c is char after number, */
-comment|/* input_line_pointer->after c. */
+comment|/* Again, c is char after number.  */
+comment|/* input_line_pointer -> after c.  */
 name|know
 argument_list|(
 name|LITTLENUM_NUMBER_OF_BITS
@@ -1894,7 +1893,7 @@ operator|+
 literal|2
 condition|)
 block|{
-comment|/* will fit into 32 bits. */
+comment|/* Will fit into 32 bits.  */
 name|number
 operator|=
 name|generic_bignum_to_int32
@@ -1933,6 +1932,7 @@ endif|#
 directive|endif
 else|else
 block|{
+comment|/* Number of littlenums in the bignum.  */
 name|number
 operator|=
 name|leader
@@ -1941,7 +1941,6 @@ name|generic_bignum
 operator|+
 literal|1
 expr_stmt|;
-comment|/* number of littlenums in the bignum. */
 block|}
 block|}
 if|if
@@ -1973,7 +1972,7 @@ condition|(
 name|small
 condition|)
 block|{
-comment|/*        * here with number, in correct radix. c is the next char.        * note that unlike un*x, we allow "011f" "0x9f" to        * both mean the same as the (conventional) "9f". this is simply easier        * than checking for strict canonical form. syntax sux!        */
+comment|/* Here with number, in correct radix. c is the next char. 	 Note that unlike un*x, we allow "011f" "0x9f" to both mean 	 the same as the (conventional) "9f". 	 This is simply easier than checking for strict canonical 	 form.  Syntax sux!  */
 if|if
 condition|(
 name|LOCAL_LABELS_FB
@@ -1983,7 +1982,7 @@ operator|==
 literal|'b'
 condition|)
 block|{
-comment|/* 	   * backward ref to local label. 	   * because it is backward, expect it to be defined. 	   */
+comment|/* Backward ref to local label. 	     Because it is backward, expect it to be defined.  */
 comment|/* Construct a local label.  */
 name|name
 operator|=
@@ -1997,7 +1996,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* seen before, or symbol is defined: ok */
+comment|/* Seen before, or symbol is defined: OK.  */
 name|symbolP
 operator|=
 name|symbol_find
@@ -2021,7 +2020,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* local labels are never absolute. don't waste time 		 checking absoluteness. */
+comment|/* Local labels are never absolute.  Don't waste time 		 checking absoluteness.  */
 name|know
 argument_list|(
 name|SEG_NORMAL
@@ -2048,7 +2047,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* either not seen or not defined. */
+comment|/* Either not seen or not defined.  */
 comment|/* @@ Should print out the original string instead of 		 the parsed number.  */
 name|as_bad
 argument_list|(
@@ -2088,7 +2087,7 @@ operator|==
 literal|'f'
 condition|)
 block|{
-comment|/* 	   * forward reference. expect symbol to be undefined or 	   * unknown. undefined: seen it before. unknown: never seen 	   * it before. 	   * construct a local label name, then an undefined symbol. 	   * don't create a xseg frag for it: caller may do that. 	   * just return it as never seen before. 	   */
+comment|/* Forward reference.  Expect symbol to be undefined or 	     unknown.  undefined: seen it before.  unknown: never seen 	     it before.  	     Construct a local label name, then an undefined symbol. 	     Don't create a xseg frag for it: caller may do that. 	     Just return it as never seen before.  */
 name|name
 operator|=
 name|fb_label_name
@@ -2108,11 +2107,11 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* we have no need to check symbol properties. */
+comment|/* We have no need to check symbol properties.  */
 ifndef|#
 directive|ifndef
 name|many_segments
-comment|/* since "know" puts its arg into a "string", we 	     can't have newlines in the argument.  */
+comment|/* Since "know" puts its arg into a "string", we 	     can't have newlines in the argument.  */
 name|know
 argument_list|(
 name|S_GET_SEGMENT
@@ -2294,13 +2293,13 @@ expr_stmt|;
 name|input_line_pointer
 operator|--
 expr_stmt|;
-comment|/* restore following character. */
+comment|/* Restore following character.  */
 block|}
-comment|/* really just a number */
+comment|/* Really just a number.  */
 block|}
 else|else
 block|{
-comment|/* not a small number */
+comment|/* Not a small number.  */
 name|expressionP
 operator|->
 name|X_op
@@ -2313,11 +2312,11 @@ name|X_add_number
 operator|=
 name|number
 expr_stmt|;
-comment|/* number of littlenums */
+comment|/* Number of littlenums.  */
 name|input_line_pointer
 operator|--
 expr_stmt|;
-comment|/*->char following number. */
+comment|/* -> char following number.  */
 block|}
 block|}
 end_function
@@ -2736,7 +2735,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Summary of operand().  *  * in:	Input_line_pointer points to 1st char of operand, which may  *	be a space.  *  * out:	A expressionS.  *	The operand may have been empty: in this case X_op == O_absent.  *	Input_line_pointer->(next non-blank) char after operand.  */
+comment|/* In:	Input_line_pointer points to 1st char of operand, which may 	be a space.     Out:	A expressionS. 	The operand may have been empty: in this case X_op == O_absent. 	Input_line_pointer->(next non-blank) char after operand.  */
 end_comment
 
 begin_function
@@ -2758,12 +2757,12 @@ name|symbolS
 modifier|*
 name|symbolP
 decl_stmt|;
-comment|/* points to symbol */
+comment|/* Points to symbol.  */
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* points to name of symbol */
+comment|/* Points to name of symbol.  */
 name|segT
 name|segment
 decl_stmt|;
@@ -2774,18 +2773,32 @@ name|X_unsigned
 operator|=
 literal|1
 expr_stmt|;
-comment|/* digits, assume it is a bignum. */
+comment|/* Digits, assume it is a bignum.  */
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
-comment|/* leading whitespace is part of operand. */
+comment|/* Leading whitespace is part of operand.  */
 name|c
 operator|=
 operator|*
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* input_line_pointer->past char in c. */
+comment|/* input_line_pointer -> past char in c.  */
+if|if
+condition|(
+name|is_end_of_line
+index|[
+operator|(
+name|unsigned
+name|char
+operator|)
+name|c
+index|]
+condition|)
+goto|goto
+name|eol
+goto|;
 switch|switch
 condition|(
 name|c
@@ -2837,10 +2850,42 @@ name|expressionP
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|LITERAL_PREFIXDOLLAR_HEX
+case|case
+literal|'$'
+case|:
+name|integer_constant
+argument_list|(
+literal|16
+argument_list|,
+name|expressionP
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|LITERAL_PREFIXPERCENT_BIN
+case|case
+literal|'%'
+case|:
+name|integer_constant
+argument_list|(
+literal|2
+argument_list|,
+name|expressionP
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'0'
 case|:
-comment|/* non-decimal radix */
+comment|/* Non-decimal radix.  */
 if|if
 condition|(
 name|NUMBERS_WITH_SUFFIX
@@ -2989,7 +3034,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The string was only zero */
+comment|/* The string was only zero.  */
 name|expressionP
 operator|->
 name|X_op
@@ -3230,7 +3275,7 @@ name|cp
 operator|==
 literal|'b'
 condition|)
-comment|/* looks like a difference expression */
+comment|/* Looks like a difference expression.  */
 goto|goto
 name|is_0f_label
 goto|;
@@ -3243,7 +3288,7 @@ name|input_line_pointer
 operator|+
 literal|1
 condition|)
-comment|/* No characters has been accepted -- looks like                          end of operand. */
+comment|/* No characters has been accepted -- looks like 			 end of operand.  */
 goto|goto
 name|is_0f_label
 goto|;
@@ -3280,7 +3325,7 @@ expr_stmt|;
 break|break;
 name|is_0f_float
 label|:
-comment|/* fall through */
+comment|/* Fall through.  */
 empty_stmt|;
 block|}
 case|case
@@ -3390,7 +3435,7 @@ literal|'['
 case|:
 endif|#
 directive|endif
-comment|/* didn't begin with digit& not a name */
+comment|/* Didn't begin with digit& not a name.  */
 name|segment
 operator|=
 name|expression
@@ -3398,7 +3443,7 @@ argument_list|(
 name|expressionP
 argument_list|)
 expr_stmt|;
-comment|/* Expression() will pass trailing whitespace */
+comment|/* expression () will pass trailing whitespace.  */
 if|if
 condition|(
 operator|(
@@ -3408,7 +3453,6 @@ literal|'('
 operator|&&
 operator|*
 name|input_line_pointer
-operator|++
 operator|!=
 literal|')'
 operator|)
@@ -3420,28 +3464,47 @@ literal|'['
 operator|&&
 operator|*
 name|input_line_pointer
-operator|++
 operator|!=
 literal|']'
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|RELAX_PAREN_GROUPING
+if|if
+condition|(
+name|c
+operator|!=
+literal|'('
+condition|)
+endif|#
+directive|endif
 name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Missing ')' assumed"
+literal|"Missing '%c' assumed"
 argument_list|)
+argument_list|,
+name|c
+operator|==
+literal|'('
+condition|?
+literal|')'
+else|:
+literal|']'
 argument_list|)
-expr_stmt|;
-name|input_line_pointer
-operator|--
 expr_stmt|;
 block|}
+else|else
+name|input_line_pointer
+operator|++
+expr_stmt|;
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
-comment|/* here with input_line_pointer->char after "(...)" */
+comment|/* Here with input_line_pointer -> char after "(...)".  */
 return|return
 name|segment
 return|;
@@ -3504,7 +3567,7 @@ operator|!
 name|flag_m68k_mri
 condition|)
 block|{
-comment|/* Warning: to conform to other people's assemblers NO 	     ESCAPEMENT is permitted for a single quote. The next 	     character, parity errors and all, is taken as the value 	     of the operand. VERY KINKY.  */
+comment|/* Warning: to conform to other people's assemblers NO 	     ESCAPEMENT is permitted for a single quote.  The next 	     character, parity errors and all, is taken as the value 	     of the operand.  VERY KINKY.  */
 name|expressionP
 operator|->
 name|X_op
@@ -3560,7 +3623,7 @@ directive|endif
 case|case
 literal|'~'
 case|:
-comment|/* ~ is permitted to start a label on the Delta.  */
+comment|/* '~' is permitted to start a label on the Delta.  */
 if|if
 condition|(
 name|is_name_beginner
@@ -3592,7 +3655,7 @@ operator|==
 name|O_constant
 condition|)
 block|{
-comment|/* input_line_pointer -> char after operand */
+comment|/* input_line_pointer -> char after operand.  */
 if|if
 condition|(
 name|c
@@ -3609,7 +3672,7 @@ name|expressionP
 operator|->
 name|X_add_number
 expr_stmt|;
-comment|/* Notice: '-' may overflow: no warning is given. This is 		   compatible with other people's assemblers. Sigh.  */
+comment|/* Notice: '-' may overflow: no warning is given. 		   This is compatible with other people's 		   assemblers.  Sigh.  */
 name|expressionP
 operator|->
 name|X_unsigned
@@ -3743,7 +3806,7 @@ argument_list|)
 case|case
 literal|'$'
 case|:
-comment|/* $ is the program counter when in MRI mode, or when DOLLAR_DOT          is defined.  */
+comment|/* '$' is the program counter when in MRI mode, or when          DOLLAR_DOT is defined.  */
 ifndef|#
 directive|ifndef
 name|DOLLAR_DOT
@@ -3768,7 +3831,7 @@ name|input_line_pointer
 argument_list|)
 condition|)
 block|{
-comment|/* In MRI mode, $ is also used as the prefix for a              hexadecimal constant.  */
+comment|/* In MRI mode, '$' is also used as the prefix for a              hexadecimal constant.  */
 name|integer_constant
 argument_list|(
 literal|16
@@ -4041,15 +4104,9 @@ block|}
 case|case
 literal|','
 case|:
-case|case
-literal|'\n'
-case|:
-case|case
-literal|'\0'
-case|:
 name|eol
 label|:
-comment|/* can't imagine any other kind of operand */
+comment|/* Can't imagine any other kind of operand.  */
 name|expressionP
 operator|->
 name|X_op
@@ -4159,28 +4216,14 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|is_end_of_line
-index|[
-operator|(
-name|unsigned
-name|char
-operator|)
-name|c
-index|]
-condition|)
-goto|goto
-name|eol
-goto|;
-if|if
-condition|(
 name|is_name_beginner
 argument_list|(
 name|c
 argument_list|)
 condition|)
-comment|/* here if did not begin with a digit */
+comment|/* Here if did not begin with a digit.  */
 block|{
-comment|/* 	   * Identifier begins here. 	   * This is kludged for speed, so code is repeated. 	   */
+comment|/* Identifier begins here. 	     This is kludged for speed, so code is repeated.  */
 name|isname
 label|:
 name|name
@@ -4459,7 +4502,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Let the target try to parse it.  Success is indicated by changing 	     the X_op field to something other than O_absent and pointing 	     input_line_pointer passed the expression.  If it can't parse the 	     expression, X_op and input_line_pointer should be unchanged.  */
+comment|/* Let the target try to parse it.  Success is indicated by changing 	     the X_op field to something other than O_absent and pointing 	     input_line_pointer past the expression.  If it can't parse the 	     expression, X_op and input_line_pointer should be unchanged.  */
 name|expressionP
 operator|->
 name|X_op
@@ -4510,7 +4553,7 @@ block|}
 block|}
 break|break;
 block|}
-comment|/*    * It is more 'efficient' to clean up the expressionS when they are created.    * Doing it here saves lines of code.    */
+comment|/* It is more 'efficient' to clean up the expressionS when they are      created.  Doing it here saves lines of code.  */
 name|clean_up_expression
 argument_list|(
 name|expressionP
@@ -4519,7 +4562,7 @@ expr_stmt|;
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
-comment|/*->1st char after operand. */
+comment|/* -> 1st char after operand.  */
 name|know
 argument_list|(
 operator|*
@@ -4574,19 +4617,15 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* operand() */
-end_comment
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Internal. Simplify a struct expression for use by expr() */
+comment|/* Internal.  Simplify a struct expression for use by expr ().  */
 end_comment
 
 begin_comment
-comment|/*  * In:	address of a expressionS.  *	The X_op field of the expressionS may only take certain values.  *	Elsewise we waste time special-case testing. Sigh. Ditto SEG_ABSENT.  * Out:	expressionS may have been modified:  *	'foo-foo' symbol references cancelled to 0,  *		which changes X_op from O_subtract to O_constant.  *	Unused fields zeroed to help expr().  */
+comment|/* In:	address of a expressionS. 	The X_op field of the expressionS may only take certain values. 	Elsewise we waste time special-case testing. Sigh. Ditto SEG_ABSENT.     Out:	expressionS may have been modified: 	'foo-foo' symbol references cancelled to 0, which changes X_op 	from O_subtract to O_constant. 	Unused fields zeroed to help expr ().  */
 end_comment
 
 begin_function
@@ -4766,11 +4805,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Expression parser. */
+comment|/* Expression parser.  */
 end_comment
 
 begin_comment
-comment|/*  * We allow an empty expression, and just assume (absolute,0) silently.  * Unary operators and parenthetical expressions are treated as operands.  * As usual, Q==quantity==operand, O==operator, X==expression mnemonics.  *  * We used to do a aho/ullman shift-reduce parser, but the logic got so  * warped that I flushed it and wrote a recursive-descent parser instead.  * Now things are stable, would anybody like to write a fast parser?  * Most expressions are either register (which does not even reach here)  * or 1 symbol. Then "symbol+constant" and "symbol-symbol" are common.  * So I guess it doesn't really matter how inefficient more complex expressions  * are parsed.  *  * After expr(RANK,resultP) input_line_pointer->operator of rank<= RANK.  * Also, we have consumed any leading or trailing spaces (operand does that)  * and done all intervening operators.  *  * This returns the segment of the result, which will be  * absolute_section or the segment of a symbol.  */
+comment|/* We allow an empty expression, and just assume (absolute,0) silently.    Unary operators and parenthetical expressions are treated as operands.    As usual, Q==quantity==operand, O==operator, X==expression mnemonics.     We used to do a aho/ullman shift-reduce parser, but the logic got so    warped that I flushed it and wrote a recursive-descent parser instead.    Now things are stable, would anybody like to write a fast parser?    Most expressions are either register (which does not even reach here)    or 1 symbol. Then "symbol+constant" and "symbol-symbol" are common.    So I guess it doesn't really matter how inefficient more complex expressions    are parsed.     After expr(RANK,resultP) input_line_pointer->operator of rank<= RANK.    Also, we have consumed any leading or trailing spaces (operand does that)    and done all intervening operators.     This returns the segment of the result, which will be    absolute_section or the segment of a symbol.  */
 end_comment
 
 begin_undef
@@ -4786,6 +4825,10 @@ name|__
 value|O_illegal
 end_define
 
+begin_comment
+comment|/* Maps ASCII -> operators.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -4796,7 +4839,6 @@ literal|256
 index|]
 init|=
 block|{
-comment|/* maps ASCII->operators */
 name|__
 block|,
 name|__
@@ -5322,7 +5364,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *	Rank	Examples  *	0	operand, (expression)  *	1	||  *	2&&  *	3	=<><<=>=>  *	4	+ -  *	5	used for * / % in MRI mode  *	6& ^ ! |  *	7	* / %<<>>  *	8	unary - unary ~  */
+comment|/* Rank	Examples    0	operand, (expression)    1	||    2&&    3	=<><<=>=>    4	+ -    5	used for * / % in MRI mode    6& ^ ! |    7	* / %<<>>    8	unary - unary ~ */
 end_comment
 
 begin_decl_stmt
@@ -5352,7 +5394,7 @@ block|,
 comment|/* O_register */
 literal|0
 block|,
-comment|/* O_bit */
+comment|/* O_big */
 literal|9
 block|,
 comment|/* O_uminus */
@@ -5482,14 +5524,14 @@ begin_define
 define|#
 directive|define
 name|STANDARD_MUL_PRECEDENCE
-value|(7)
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|MRI_MUL_PRECEDENCE
-value|(5)
+value|6
 end_define
 
 begin_function
@@ -5591,7 +5633,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return the encoding for the operator at INPUT_LINE_POINTER.    Advance INPUT_LINE_POINTER to the last character in the operator    (i.e., don't change it for a single character operator).  */
+comment|/* Return the encoding for the operator at INPUT_LINE_POINTER, and    sets NUM_CHARS to the number of characters in the operator.    Does not advance INPUT_LINE_POINTER.  */
 end_comment
 
 begin_function
@@ -5599,7 +5641,13 @@ specifier|static
 specifier|inline
 name|operatorT
 name|operator
-parameter_list|()
+parameter_list|(
+name|num_chars
+parameter_list|)
+name|int
+modifier|*
+name|num_chars
+decl_stmt|;
 block|{
 name|int
 name|c
@@ -5614,6 +5662,21 @@ name|input_line_pointer
 operator|&
 literal|0xff
 expr_stmt|;
+operator|*
+name|num_chars
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|is_end_of_line
+index|[
+name|c
+index|]
+condition|)
+return|return
+name|O_illegal
+return|;
 switch|switch
 condition|(
 name|c
@@ -5669,8 +5732,10 @@ name|O_le
 expr_stmt|;
 break|break;
 block|}
-operator|++
-name|input_line_pointer
+operator|*
+name|num_chars
+operator|=
+literal|2
 expr_stmt|;
 return|return
 name|ret
@@ -5693,8 +5758,10 @@ index|[
 name|c
 index|]
 return|;
-operator|++
-name|input_line_pointer
+operator|*
+name|num_chars
+operator|=
+literal|2
 expr_stmt|;
 return|return
 name|O_eq
@@ -5734,8 +5801,10 @@ name|O_ge
 expr_stmt|;
 break|break;
 block|}
-operator|++
-name|input_line_pointer
+operator|*
+name|num_chars
+operator|=
+literal|2
 expr_stmt|;
 return|return
 name|ret
@@ -5768,8 +5837,10 @@ name|c
 index|]
 return|;
 block|}
-operator|++
-name|input_line_pointer
+operator|*
+name|num_chars
+operator|=
+literal|2
 expr_stmt|;
 return|return
 name|O_bit_exclusive_or
@@ -5792,8 +5863,10 @@ index|[
 name|c
 index|]
 return|;
-operator|++
-name|input_line_pointer
+operator|*
+name|num_chars
+operator|=
+literal|2
 expr_stmt|;
 return|return
 name|O_logical_or
@@ -5816,14 +5889,16 @@ index|[
 name|c
 index|]
 return|;
-operator|++
-name|input_line_pointer
+operator|*
+name|num_chars
+operator|=
+literal|2
 expr_stmt|;
 return|return
 name|O_logical_and
 return|;
 block|}
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED  */
 block|}
 end_function
 
@@ -5842,12 +5917,12 @@ parameter_list|)
 name|int
 name|rankarg
 decl_stmt|;
-comment|/* Larger # is higher rank. */
+comment|/* Larger # is higher rank.  */
 name|expressionS
 modifier|*
 name|resultP
 decl_stmt|;
-comment|/* Deliver result here. */
+comment|/* Deliver result here.  */
 block|{
 name|operator_rankT
 name|rank
@@ -5869,6 +5944,9 @@ decl_stmt|;
 name|operatorT
 name|op_right
 decl_stmt|;
+name|int
+name|op_chars
+decl_stmt|;
 name|know
 argument_list|(
 name|rank
@@ -5883,6 +5961,7 @@ argument_list|(
 name|resultP
 argument_list|)
 expr_stmt|;
+comment|/* operand () gobbles spaces.  */
 name|know
 argument_list|(
 operator|*
@@ -5891,11 +5970,13 @@ operator|!=
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/* Operand() gobbles spaces. */
 name|op_left
 operator|=
 name|operator
-argument_list|()
+argument_list|(
+operator|&
+name|op_chars
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -5918,9 +5999,10 @@ name|segT
 name|rightseg
 decl_stmt|;
 name|input_line_pointer
-operator|++
+operator|+=
+name|op_chars
 expr_stmt|;
-comment|/*->after 1st character of operator. */
+comment|/* -> after operator.  */
 name|rightseg
 operator|=
 name|expr
@@ -6080,7 +6162,10 @@ expr_stmt|;
 name|op_right
 operator|=
 name|operator
-argument_list|()
+argument_list|(
+operator|&
+name|op_chars
+argument_list|)
 expr_stmt|;
 name|know
 argument_list|(
@@ -6128,10 +6213,10 @@ operator|)
 name|O_logical_or
 argument_list|)
 expr_stmt|;
-comment|/* input_line_pointer->after right-hand quantity. */
-comment|/* left-hand quantity in resultP */
-comment|/* right-hand quantity in right. */
-comment|/* operator in op_left. */
+comment|/* input_line_pointer->after right-hand quantity.  */
+comment|/* left-hand quantity in resultP.  */
+comment|/* right-hand quantity in right.  */
+comment|/* operator in op_left.  */
 if|if
 condition|(
 name|resultP
@@ -6251,6 +6336,28 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* Optimize common cases.  */
+ifdef|#
+directive|ifdef
+name|md_optimize_expr
+if|if
+condition|(
+name|md_optimize_expr
+argument_list|(
+name|resultP
+argument_list|,
+name|op_left
+argument_list|,
+operator|&
+name|right
+argument_list|)
+condition|)
+block|{
+comment|/* Skip.  */
+empty_stmt|;
+block|}
+elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|op_left
@@ -6921,7 +7028,7 @@ operator|=
 name|op_right
 expr_stmt|;
 block|}
-comment|/* While next operator is>= this rank. */
+comment|/* While next operator is>= this rank.  */
 comment|/* The PA port needs this information.  */
 if|if
 condition|(
@@ -6954,7 +7061,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			get_symbol_end()  *  * This lives here because it belongs equally in expr.c& read.c.  * Expr.c is just a branch office read.c anyway, and putting it  * here lessens the crowd at read.c.  *  * Assume input_line_pointer is at start of symbol name.  * Advance input_line_pointer past symbol name.  * Turn that character into a '\0', returning its former value.  * This allows a string compare (RMS wants symbol names to be strings)  * of the symbol name.  * There will always be a char following symbol name, because all good  * lines end in end-of-line.  */
+comment|/* This lives here because it belongs equally in expr.c& read.c.    expr.c is just a branch office read.c anyway, and putting it    here lessens the crowd at read.c.     Assume input_line_pointer is at start of symbol name.    Advance input_line_pointer past symbol name.    Turn that character into a '\0', returning its former value.    This allows a string compare (RMS wants symbol names to be strings)    of the symbol name.    There will always be a char following symbol name, because all good    lines end in end-of-line.  */
 end_comment
 
 begin_function
@@ -7048,10 +7155,6 @@ name|X_add_number
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of expr.c */
-end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* stabs.c -- Parse COFF debugging information    Copyright (C) 1996, 98, 99, 2000 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* stabs.c -- Parse COFF debugging information    Copyright 1996, 2000 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -358,6 +358,20 @@ operator|,
 name|debug_type
 operator|,
 name|boolean
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|external_coff_symbol_p
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|sym_class
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2416,6 +2430,9 @@ name|false
 return|;
 break|break;
 case|case
+name|C_WEAKEXT
+case|:
+case|case
 name|C_EXT
 case|:
 if|if
@@ -2658,6 +2675,44 @@ break|break;
 block|}
 return|return
 name|true
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Determine if a symbol has external visibility.  */
+end_comment
+
+begin_function
+specifier|static
+name|boolean
+name|external_coff_symbol_p
+parameter_list|(
+name|sym_class
+parameter_list|)
+name|int
+name|sym_class
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|sym_class
+condition|)
+block|{
+case|case
+name|C_EXT
+case|:
+case|case
+name|C_WEAKEXT
+case|:
+return|return
+name|true
+return|;
+default|default:
+break|break;
+block|}
+return|return
+name|false
 return|;
 block|}
 end_function
@@ -3067,6 +3122,9 @@ condition|)
 break|break;
 comment|/* Fall through.  */
 case|case
+name|C_WEAKEXT
+case|:
+case|case
 name|C_EXT
 case|:
 if|if
@@ -3284,9 +3342,10 @@ name|fnname
 argument_list|,
 name|type
 argument_list|,
+name|external_coff_symbol_p
+argument_list|(
 name|fnclass
-operator|==
-name|C_EXT
+argument_list|)
 argument_list|,
 name|bfd_asymbol_value
 argument_list|(

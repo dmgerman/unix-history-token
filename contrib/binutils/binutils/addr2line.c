@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* addr2line.c -- convert addresses to line number and function name    Copyright 1997, 98, 99, 2000 Free Software Foundation, Inc.    Contributed by Ulrich Lauther<Ulrich.Lauther@zfe.siemens.de>     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* addr2line.c -- convert addresses to line number and function name    Copyright 1997, 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Ulrich Lauther<Ulrich.Lauther@mchp.siemens.de>     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* Derived from objdump.c and nm.c by Ulrich.Lauther@zfe.siemens.de     Usage:     addr2line [options] addr addr ...    or    addr2line [options]      both forms write results to stdout, the second form reads addresses    to be converted from stdin.  */
+comment|/* Derived from objdump.c and nm.c by Ulrich.Lauther@mchp.siemens.de     Usage:     addr2line [options] addr addr ...    or    addr2line [options]      both forms write results to stdout, the second form reads addresses    to be converted from stdin.  */
 end_comment
 
 begin_include
@@ -148,7 +148,7 @@ block|,
 block|{
 literal|"demangle"
 block|,
-name|no_argument
+name|optional_argument
 block|,
 name|NULL
 block|,
@@ -330,7 +330,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\ Usage: %s [-CfsHV] [-b bfdname] [--target=bfdname]\n\        [-e executable] [--exe=executable] [--demangle]\n\        [--basenames] [--functions] [addr addr ...]\n"
+literal|"\ Usage: %s [-CfsHV] [-b bfdname] [--target=bfdname]\n\        [-e executable] [--exe=executable] [--demangle[=style]]\n\        [--basenames] [--functions] [addr addr ...]\n"
 argument_list|)
 argument_list|,
 name|program_name
@@ -1076,6 +1076,7 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -1194,6 +1195,46 @@ name|do_demangle
 operator|=
 name|true
 expr_stmt|;
+if|if
+condition|(
+name|optarg
+operator|!=
+name|NULL
+condition|)
+block|{
+name|enum
+name|demangling_styles
+name|style
+decl_stmt|;
+name|style
+operator|=
+name|cplus_demangle_name_to_style
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|style
+operator|==
+name|unknown_demangling
+condition|)
+name|fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"unknown demangling style `%s'"
+argument_list|)
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|cplus_demangle_set_style
+argument_list|(
+name|style
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'e'

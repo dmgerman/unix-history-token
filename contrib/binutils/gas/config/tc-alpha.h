@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-alpha.h    Copyright (C) 1994, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.    Written by Ken Raeburn<raeburn@cygnus.com>.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* This file is tc-alpha.h    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Written by Ken Raeburn<raeburn@cygnus.com>.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -298,6 +298,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|HANDLE_ALIGN
+parameter_list|(
+name|fragp
+parameter_list|)
+value|alpha_handle_align (fragp)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|alpha_handle_align
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|frag
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MAX_MEM_FOR_RS_ALIGN_CODE
+value|(3 + 4 + 8)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -478,6 +510,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|DWARF2_LINE_MIN_INSN_LENGTH
+value|4
+end_define
 
 end_unit
 

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 8 and 16 bit COFF relocation functions, for BFD.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* 8 and 16 bit COFF relocation functions, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  Most of this hacked by  Steve Chamberlain, 			sac@cygnus.com  */
+comment|/* Most of this hacked by Steve Chamberlain<sac@cygnus.com>.  */
 end_comment
 
 begin_comment
@@ -91,7 +91,7 @@ operator|->
 name|sym_ptr_ptr
 operator|)
 decl_stmt|;
-comment|/* A symbol holds a pointer to a section, and an offset from the      base of the section.  To relocate, we find where the section will      live in the output and add that in */
+comment|/* A symbol holds a pointer to a section, and an offset from the      base of the section.  To relocate, we find where the section will      live in the output and add that in.  */
 if|if
 condition|(
 name|bfd_is_und_section
@@ -292,7 +292,7 @@ operator|->
 name|vma
 expr_stmt|;
 block|}
-comment|/* Add the value contained in the relocation */
+comment|/* Add the value contained in the relocation.  */
 name|value
 operator|+=
 name|reloc
@@ -357,7 +357,7 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Find all symbols past this point, and make them know      what's happened */
+comment|/* Find all symbols past this point, and make them know      what's happened.  */
 while|while
 condition|(
 operator|*
@@ -380,7 +380,7 @@ operator|==
 name|input_section
 condition|)
 block|{
-comment|/* This was pointing into this section, so mangle it */
+comment|/* This was pointing into this section, so mangle it.  */
 if|if
 condition|(
 name|p
@@ -513,7 +513,7 @@ modifier|*
 name|again
 decl_stmt|;
 block|{
-comment|/* Get enough memory to hold the stuff */
+comment|/* Get enough memory to hold the stuff.  */
 name|bfd
 modifier|*
 name|input_bfd
@@ -596,7 +596,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* Get the relocs and think about them */
+comment|/* Get the relocs and think about them.  */
 name|reloc_count
 operator|=
 name|bfd_canonicalize_reloc
@@ -872,7 +872,7 @@ modifier|*
 name|symbols
 decl_stmt|;
 block|{
-comment|/* Get enough memory to hold the stuff */
+comment|/* Get enough memory to hold the stuff.  */
 name|bfd
 modifier|*
 name|input_bfd
@@ -947,7 +947,7 @@ argument_list|,
 name|symbols
 argument_list|)
 return|;
-comment|/* read in the section */
+comment|/* Read in the section.  */
 if|if
 condition|(
 operator|!
@@ -1063,7 +1063,7 @@ name|unsigned
 name|int
 name|idx
 decl_stmt|;
-comment|/* Find how long a run we can do */
+comment|/* Find how long a run we can do.  */
 while|while
 condition|(
 name|dst_address
@@ -1083,7 +1083,7 @@ condition|(
 name|reloc
 condition|)
 block|{
-comment|/* Note that the relaxing didn't tie up the addresses in the 		 relocation, so we use the original address to work out the 		 run of non-relocated data */
+comment|/* Note that the relaxing didn't tie up the addresses in the 		 relocation, so we use the original address to work out the 		 run of non-relocated data.  */
 name|run
 operator|=
 name|reloc
@@ -1107,7 +1107,7 @@ operator|-
 name|dst_address
 expr_stmt|;
 block|}
-comment|/* Copy the bytes */
+comment|/* Copy the bytes.  */
 for|for
 control|(
 name|idx
@@ -1121,7 +1121,6 @@ condition|;
 name|idx
 operator|++
 control|)
-block|{
 name|data
 index|[
 name|dst_address
@@ -1134,8 +1133,7 @@ name|src_address
 operator|++
 index|]
 expr_stmt|;
-block|}
-comment|/* Now do the relocation */
+comment|/* Now do the relocation.  */
 if|if
 condition|(
 name|reloc

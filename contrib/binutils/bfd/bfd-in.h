@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Contributed by Cygnus Support.  ** NOTE: bfd.h and bfd-in2.h are GENERATED files.  Don't change them; ** instead, change bfd-in.h or the other BFD source files processed to ** generate these files.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Main header file for the bfd library -- portable access to object files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Contributed by Cygnus Support.  ** NOTE: bfd.h and bfd-in2.h are GENERATED files.  Don't change them; ** instead, change bfd-in.h or the other BFD source files processed to ** generate these files.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* bfd.h -- The only header file required by users of the bfd library   The bfd.h file is generated from bfd-in.h and various .c files; if you change it, your changes will probably be lost.  All the prototypes and definitions following the comment "THE FOLLOWING IS EXTRACTED FROM THE SOURCE" are extracted from the source files for BFD.  If you change it, someone oneday will extract it from the source again, and your changes will be lost.  To save yourself from this bind, change the definitions in the source in the bfd directory.  Type "make docs" and then "make headers" in that directory, and magically this file will change to reflect your changes.  If you don't have the tools to perform the extraction, then you are safe from someone on your system trampling over your header files. You should still maintain the equivalence between the source and this file though; every change you make to the .c file should be reflected here.  */
+comment|/* bfd.h -- The only header file required by users of the bfd library  The bfd.h file is generated from bfd-in.h and various .c files; if you change it, your changes will probably be lost.  All the prototypes and definitions following the comment "THE FOLLOWING IS EXTRACTED FROM THE SOURCE" are extracted from the source files for BFD.  If you change it, someone oneday will extract it from the source again, and your changes will be lost.  To save yourself from this bind, change the definitions in the source in the bfd directory.  Type "make docs" and then "make headers" in that directory, and magically this file will change to reflect your changes.  If you don't have the tools to perform the extraction, then you are safe from someone on your system trampling over your header files. You should still maintain the equivalence between the source and this file though; every change you make to the .c file should be reflected here.  */
 end_comment
 
 begin_ifndef
@@ -101,7 +101,7 @@ name|bfd
 typedef|;
 comment|/* To squelch erroneous compiler warnings ("illegal pointer    combination") from the SVR3 compiler, we would like to typedef    boolean to int (it doesn't like functions which return boolean.    Making sure they are never implicitly declared to return int    doesn't seem to help).  But this file is not configured based on    the host.  */
 comment|/* General rules: functions which are boolean return true on success    and false on failure (unless they're a predicate).   -- bfd.doc */
-comment|/* I'm sure this is going to break something and someone is going to    force me to change it. */
+comment|/* I'm sure this is going to break something and someone is going to    force me to change it.  */
 comment|/* typedef enum boolean {false, true} boolean; */
 comment|/* Yup, SVR4 has a "typedef enum boolean" in<sys/types.h>  -fnf */
 comment|/* It gets worse if the host also defines a true/false enum... -sts */
@@ -136,7 +136,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|MPW
-comment|/* Pre-emptive strike - get the file with the enum. */
+comment|/* Pre-emptive strike - get the file with the enum.  */
 include|#
 directive|include
 file|<Types.h>
@@ -178,7 +178,7 @@ typedef|;
 endif|#
 directive|endif
 comment|/* A pointer to a position in a file.  */
-comment|/* FIXME:  This should be using off_t from<sys/types.h>.    For now, try to avoid breaking stuff by not including<sys/types.h> here.    This will break on systems with 64-bit file offsets (e.g. 4.4BSD).    Probably the best long-term answer is to avoid using file_ptr AND off_t     in this header file, and to handle this in the BFD implementation    rather than in its interface.  */
+comment|/* FIXME:  This should be using off_t from<sys/types.h>.    For now, try to avoid breaking stuff by not including<sys/types.h> here.    This will break on systems with 64-bit file offsets (e.g. 4.4BSD).    Probably the best long-term answer is to avoid using file_ptr AND off_t    in this header file, and to handle this in the BFD implementation    rather than in its interface.  */
 comment|/* typedef off_t	file_ptr; */
 typedef|typedef
 name|long
@@ -355,7 +355,7 @@ name|s
 parameter_list|,
 name|x
 parameter_list|)
-value|fprintf(s, "%08lx", x)
+value|fprintf (s, "%08lx", x)
 define|#
 directive|define
 name|sprintf_vma
@@ -364,7 +364,7 @@ name|s
 parameter_list|,
 name|x
 parameter_list|)
-value|sprintf(s, "%08lx", x)
+value|sprintf (s, "%08lx", x)
 endif|#
 directive|endif
 comment|/* not BFD64  */
@@ -811,7 +811,7 @@ comment|/* Stab type.  */
 name|char
 name|stab_other
 decl_stmt|;
-comment|/* Stab other. */
+comment|/* Stab other.  */
 name|short
 name|stab_desc
 decl_stmt|;
@@ -1398,6 +1398,14 @@ parameter_list|)
 value|((abfd)->xvec->flavour)
 define|#
 directive|define
+name|bfd_family_coff
+parameter_list|(
+name|abfd
+parameter_list|)
+define|\
+value|(bfd_get_flavour (abfd) == bfd_target_coff_flavour || \    bfd_get_flavour (abfd) == bfd_target_xcoff_flavour)
+define|#
+directive|define
 name|bfd_big_endian
 parameter_list|(
 name|abfd
@@ -1518,7 +1526,7 @@ name|abfd
 parameter_list|,
 name|bool
 parameter_list|)
-value|(((abfd)->cacheable = (boolean)(bool)), true)
+value|(((abfd)->cacheable = (boolean) (bool)), true)
 specifier|extern
 name|boolean
 name|bfd_record_phdr
@@ -1773,6 +1781,37 @@ operator|,
 name|unsigned
 name|char
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Byte swapping routines which take size and endiannes as arguments.  */
+name|bfd_vma
+name|bfd_get_bits
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_byte
+operator|*
+operator|,
+name|int
+operator|,
+name|boolean
+operator|)
+argument_list|)
+decl_stmt|;
+name|void
+name|bfd_put_bits
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd_vma
+operator|,
+name|bfd_byte
+operator|*
+operator|,
+name|int
+operator|,
+name|boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2395,6 +2434,21 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
+name|void
+name|bfd_elf_set_dt_needed_soname
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -2403,6 +2457,23 @@ name|PARAMS
 argument_list|(
 operator|(
 name|bfd
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|struct
+name|bfd_link_needed_list
+modifier|*
+name|bfd_elf_get_runpath_list
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
 operator|*
 operator|)
 argument_list|)
@@ -2434,6 +2505,57 @@ operator|,
 name|void
 operator|*
 name|phdrs
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Return the arch_size field of an elf bfd, or -1 if not elf.  */
+specifier|extern
+name|int
+name|bfd_get_arch_size
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Return true if address "naturally" sign extends, or -1 if not elf.  */
+specifier|extern
+name|int
+name|bfd_get_sign_extend_vma
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_m68k_elf32_create_embedded_relocs
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+expr|struct
+name|sec
+operator|*
+operator|,
+expr|struct
+name|sec
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2858,6 +2980,33 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
+specifier|extern
+name|boolean
+name|bfd_m68k_coff_create_embedded_relocs
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+expr|struct
+name|sec
+operator|*
+operator|,
+expr|struct
+name|sec
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* ARM Interworking support.  Called from linker.  */
 specifier|extern
 name|boolean
@@ -2989,6 +3138,33 @@ operator|*
 operator|,
 expr|struct
 name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* TI COFF load page support.  */
+specifier|extern
+name|void
+name|bfd_ticoff_set_section_load_page
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|sec
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|bfd_ticoff_get_section_load_page
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|sec
 operator|*
 operator|)
 argument_list|)

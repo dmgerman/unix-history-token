@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* as.h - global header file    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* as.h - global header file    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * I think this stuff is largely out of date.  xoxorich.  *  * CAPITALISED names are #defined.  * "lowercaseH" is #defined if "lowercase.h" has been #include-d.  * "lowercaseT" is a typedef of "lowercase" objects.  * "lowercaseP" is type "pointer to object of type 'lowercase'".  * "lowercaseS" is typedef struct ... lowercaseS.  *  * #define DEBUG to enable all the "know" assertion tests.  * #define SUSPECT when debugging hash code.  * #define COMMON as "extern" for all modules except one, where you #define  *	COMMON as "".  * If TEST is #defined, then we are testing a module: #define COMMON as "".  */
+comment|/* I think this stuff is largely out of date.  xoxorich.  *  * CAPITALISED names are #defined.  * "lowercaseH" is #defined if "lowercase.h" has been #include-d.  * "lowercaseT" is a typedef of "lowercase" objects.  * "lowercaseP" is type "pointer to object of type 'lowercase'".  * "lowercaseS" is typedef struct ... lowercaseS.  *  * #define DEBUG to enable all the "know" assertion tests.  * #define SUSPECT when debugging hash code.  * #define COMMON as "extern" for all modules except one, where you #define  *	COMMON as "".  * If TEST is #defined, then we are testing a module: #define COMMON as "".  */
 end_comment
 
 begin_include
@@ -237,7 +237,7 @@ comment|/* Now, tend to the rest of the configuration.  */
 end_comment
 
 begin_comment
-comment|/* System include files first... */
+comment|/* System include files first...  */
 end_comment
 
 begin_include
@@ -364,14 +364,14 @@ value|150
 end_define
 
 begin_comment
-comment|/* The first getopt value for machine-dependent long options.    170 gives the standard options room to grow.  */
+comment|/* The first getopt value for machine-dependent long options.    190 gives the standard options room to grow.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|OPTION_MD_BASE
-value|170
+value|190
 end_define
 
 begin_ifdef
@@ -532,7 +532,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Now GNU header files... */
+comment|/* Now GNU header files...  */
 end_comment
 
 begin_include
@@ -825,7 +825,7 @@ name|__PTR_TO_INT
 parameter_list|(
 name|P
 parameter_list|)
-value|((int)(P))
+value|((int) (P))
 end_define
 
 begin_undef
@@ -841,7 +841,7 @@ name|__INT_TO_PTR
 parameter_list|(
 name|P
 parameter_list|)
-value|((char *)(P))
+value|((char *) (P))
 end_define
 
 begin_endif
@@ -1010,7 +1010,7 @@ parameter_list|(
 name|val
 parameter_list|)
 define|\
-value|{ \       as_fatal(_("Case value %ld unexpected at line %d of file \"%s\"\n"), \ 	       (long) val, __LINE__, __FILE__); \ 	   }
+value|{									    \     as_fatal (_("Case value %ld unexpected at line %d of file \"%s\"\n"),   \ 	      (long) val, __LINE__, __FILE__);				    \   }
 end_define
 
 begin_escape
@@ -1109,7 +1109,7 @@ name|COMMON
 end_define
 
 begin_comment
-comment|/* declare our COMMONs storage here. */
+comment|/* declare our COMMONs storage here.  */
 end_comment
 
 begin_else
@@ -1208,7 +1208,7 @@ comment|/* input_scrub.c */
 end_comment
 
 begin_comment
-comment|/*  * Supplies sanitised buffers to read.c.  * Also understands printing line-number part of error messages.  */
+comment|/* Supplies sanitised buffers to read.c.    Also understands printing line-number part of error messages.  */
 end_comment
 
 begin_escape
@@ -1337,12 +1337,12 @@ name|SEG_UNKNOWN
 block|,
 name|SEG_GOOF
 block|,
-comment|/* Only happens if AS has a logic error. */
+comment|/* Only happens if AS has a logic error.  */
 comment|/* Invented so we don't crash printing */
-comment|/* error message involving weird segment. */
+comment|/* error message involving weird segment.  */
 name|SEG_EXPR
 block|,
-comment|/* Intermediate expression values. */
+comment|/* Intermediate expression values.  */
 name|SEG_DEBUG
 block|,
 comment|/* Debug segment */
@@ -1413,7 +1413,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Segment our instructions emit to. */
+comment|/* Segment our instructions emit to.  */
 end_comment
 
 begin_decl_stmt
@@ -1600,18 +1600,21 @@ begin_enum
 enum|enum
 name|_relax_state
 block|{
-comment|/* Variable chars to be repeated fr_offset times.        Fr_symbol unused. Used with fr_offset == 0 for a        constant length frag. */
+comment|/* Variable chars to be repeated fr_offset times.      Fr_symbol unused. Used with fr_offset == 0 for a      constant length frag.  */
 name|rs_fill
 init|=
 literal|1
 block|,
-comment|/* Align.  The fr_offset field holds the power of 2 to which to        align.  The fr_var field holds the number of characters in the        fill pattern.  The fr_subtype field holds the maximum number of        bytes to skip when aligning, or 0 if there is no maximum.  */
+comment|/* Align.  The fr_offset field holds the power of 2 to which to      align.  The fr_var field holds the number of characters in the      fill pattern.  The fr_subtype field holds the maximum number of      bytes to skip when aligning, or 0 if there is no maximum.  */
 name|rs_align
 block|,
-comment|/* Align code.  The fr_offset field holds the power of 2 to which        to align.  This type is only generated by machine specific        code, which is normally responsible for handling the fill        pattern.  The fr_subtype field holds the maximum number of        bytes to skip when aligning, or 0 if there is no maximum.  */
+comment|/* Align code.  The fr_offset field holds the power of 2 to which      to align.  This type is only generated by machine specific      code, which is normally responsible for handling the fill      pattern.  The fr_subtype field holds the maximum number of      bytes to skip when aligning, or 0 if there is no maximum.  */
 name|rs_align_code
 block|,
-comment|/* Org: Fr_offset, fr_symbol: address. 1 variable char: fill        character. */
+comment|/* Test for alignment.  Like rs_align, but used by several targets      to warn if data is not properly aligned.  */
+name|rs_align_test
+block|,
+comment|/* Org: Fr_offset, fr_symbol: address. 1 variable char: fill      character.  */
 name|rs_org
 block|,
 ifndef|#
@@ -1625,14 +1628,17 @@ directive|endif
 comment|/* machine-specific relaxable (or similarly alterable) instruction */
 name|rs_machine_dependent
 block|,
-comment|/* .space directive with expression operand that needs to be computed        later.  Similar to rs_org, but different.        fr_symbol: operand        1 variable char: fill character  */
+comment|/* .space directive with expression operand that needs to be computed      later.  Similar to rs_org, but different.      fr_symbol: operand      1 variable char: fill character  */
 name|rs_space
 block|,
-comment|/* A DWARF leb128 value; only ELF uses this.  The subtype is 0 for        unsigned, 1 for signed.  */
+comment|/* A DWARF leb128 value; only ELF uses this.  The subtype is 0 for      unsigned, 1 for signed.  */
 name|rs_leb128
 block|,
 comment|/* Exception frame information which we may be able to optimize.  */
 name|rs_cfa
+block|,
+comment|/* Cross-fragment dwarf2 line number optimization.  */
+name|rs_dwarf2dbg
 block|}
 enum|;
 end_enum
@@ -1823,7 +1829,7 @@ comment|/* -Z */
 end_comment
 
 begin_comment
-comment|/* This is true if the assembler should output time and space usage. */
+comment|/* This is true if the assembler should output time and space usage.  */
 end_comment
 
 begin_decl_stmt
@@ -1881,7 +1887,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* TRUE if we need a second pass. */
+comment|/* TRUE if we need a second pass.  */
 end_comment
 
 begin_decl_stmt
@@ -1914,7 +1920,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Type of debugging information we should generate.  We currently    support stabs, ECOFF, and DWARF2.  */
+comment|/* Type of debugging information we should generate.  We currently support    stabs, ECOFF, and DWARF2.     NOTE!  This means debug information about the assembly source code itself    and _not_ about possible debug information from a high-level language.    This is especially relevant to DWARF2, since the compiler may emit line    number directives that the assembler resolves.  */
 end_comment
 
 begin_enum
@@ -3077,6 +3083,23 @@ directive|include
 file|"targ-env.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TC_ARC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"struc-symbol.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -3170,6 +3193,40 @@ directive|define
 name|flag_m68k_mri
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WARN_COMMENTS
+end_ifdef
+
+begin_decl_stmt
+name|COMMON
+name|int
+name|warn_comment
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|COMMON
+name|unsigned
+name|int
+name|found_comment
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|COMMON
+name|char
+modifier|*
+name|found_comment_file
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -3364,10 +3421,6 @@ end_endif
 
 begin_comment
 comment|/* GAS */
-end_comment
-
-begin_comment
-comment|/* end of as.h */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ppc-dis.c -- Disassemble PowerPC instructions    Copyright 1994 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ppc-dis.c -- Disassemble PowerPC instructions    Copyright 1994, 1995, 2000 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -55,7 +55,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Print a big endian PowerPC instruction.  For convenience, also    disassemble instructions supported by the Motorola PowerPC 601.  */
+comment|/* Print a big endian PowerPC instruction.  For convenience, also    disassemble instructions supported by the Motorola PowerPC 601    and the Altivec vector unit.  */
 end_comment
 
 begin_function
@@ -87,13 +87,15 @@ argument_list|,
 name|PPC_OPCODE_PPC
 operator||
 name|PPC_OPCODE_601
+operator||
+name|PPC_OPCODE_ALTIVEC
 argument_list|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Print a little endian PowerPC instruction.  For convenience, also    disassemble instructions supported by the Motorola PowerPC 601.  */
+comment|/* Print a little endian PowerPC instruction.  For convenience, also    disassemble instructions supported by the Motorola PowerPC 601    and the Altivec vector unit.  */
 end_comment
 
 begin_function
@@ -125,6 +127,8 @@ argument_list|,
 name|PPC_OPCODE_PPC
 operator||
 name|PPC_OPCODE_601
+operator||
+name|PPC_OPCODE_ALTIVEC
 argument_list|)
 return|;
 block|}
@@ -734,6 +738,35 @@ operator|->
 name|stream
 argument_list|,
 literal|"f%ld"
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|operand
+operator|->
+name|flags
+operator|&
+name|PPC_OPERAND_VR
+operator|)
+operator|!=
+literal|0
+condition|)
+call|(
+modifier|*
+name|info
+operator|->
+name|fprintf_func
+call|)
+argument_list|(
+name|info
+operator|->
+name|stream
+argument_list|,
+literal|"v%ld"
 argument_list|,
 name|value
 argument_list|)

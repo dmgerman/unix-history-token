@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Routines to link ECOFF debugging information.    Copyright 1993, 94, 95, 96, 97, 1999 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Routines to link ECOFF debugging information.    Copyright 1993, 1994, 1995, 1996, 1997, 2000    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -320,7 +320,7 @@ operator|*
 name|ext_copy
 expr_stmt|;
 comment|/* Make it reasonable to do in-place.  */
-comment|/* now the fun stuff... */
+comment|/* now the fun stuff...  */
 if|if
 condition|(
 name|bigend
@@ -713,7 +713,7 @@ operator|*
 name|intern_copy
 expr_stmt|;
 comment|/* Make it reasonable to do in-place.  */
-comment|/* now the fun stuff... */
+comment|/* now the fun stuff...  */
 if|if
 condition|(
 name|bigend
@@ -1081,7 +1081,7 @@ operator|*
 name|ext_copy
 expr_stmt|;
 comment|/* Make it reasonable to do in-place.  */
-comment|/* now the fun stuff... */
+comment|/* now the fun stuff...  */
 if|if
 condition|(
 name|bigend
@@ -1314,7 +1314,7 @@ operator|*
 name|intern_copy
 expr_stmt|;
 comment|/* Make it reasonable to do in-place.  */
-comment|/* now the fun stuff... */
+comment|/* now the fun stuff...  */
 if|if
 condition|(
 name|bigend
@@ -2540,10 +2540,6 @@ begin_comment
 comment|/* Initialize the FDR hash table.  This returns a handle which is then    passed in to bfd_ecoff_debug_accumulate, et. al.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|PTR
 name|bfd_ecoff_debug_init
@@ -2816,10 +2812,6 @@ begin_comment
 comment|/* Free the accumulated debugging information.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|void
 name|bfd_ecoff_debug_free
@@ -2917,10 +2909,6 @@ end_function
 
 begin_comment
 comment|/* Accumulate the debugging information from INPUT_BFD into    OUTPUT_BFD.  The INPUT_DEBUG argument points to some ECOFF    debugging information which we want to link into the information    pointed to by the OUTPUT_DEBUG argument.  OUTPUT_SWAP and    INPUT_SWAP point to the swapping information needed.  INFO is the    linker information structure.  HANDLE is returned by    bfd_ecoff_debug_init.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -7132,10 +7120,6 @@ begin_comment
 comment|/* Align the ECOFF debugging information.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -10171,7 +10155,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* no FDR, no fun... */
+comment|/* no FDR, no fun...  */
 name|fdr_ptr
 operator|=
 name|tab
@@ -10312,7 +10296,7 @@ decl_stmt|;
 name|int
 name|lineno
 decl_stmt|;
-comment|/* This file uses ECOFF debugging information.  Each FDR has a          list of procedure descriptors (PDR).  The address in the FDR          is the absolute address of the first procedure.  The address          in the first PDR gives the offset of that procedure relative          to the object file's base-address.  The addresses in          subsequent PDRs specify each procedure's address relative to          the object file's base-address.  To make things more juicy,          whenever the PROF bit in the PDR is set, the real entry point          of the procedure may be 16 bytes below what would normally be          the procedure's entry point.  Instead, DEC came up with a          wicked scheme to create profiled libraries "on the fly":          instead of shipping a regular and a profiled version of each          library, they insert 16 bytes of unused space in front of          each procedure and set the "prof" bit in the PDR to indicate          that there is a gap there (this is done automagically by "as"          when option "-pg" is specified).  Thus, normally, you link          against such a library and, except for lots of 16 byte gaps          between functions, things will behave as usual.  However,          when invoking "ld" with option "-pg", it will fill those gaps          with code that calls mcount().  It then moves the function's          entry point down by 16 bytes, and out pops a binary that has          all functions profiled.           NOTE: Neither FDRs nor PDRs are strictly sorted in memory                order.  For example, when including header-files that                define functions, the FDRs follow behind the including                file, even though their code may have been generated at                a lower address.  File coff-alpha.c from libbfd                illustrates this (use "odump -PFv" to look at a file's                FDR/PDR).  Similarly, PDRs are sometimes out of order                as well.  An example of this is OSF/1 v3.0 libc's                malloc.c.  I'm not sure why this happens, but it could                be due to optimizations that reorder a function's                position within an object-file.                   Strategy:                    On the first call to this function, we build a table of FDRs          that is sorted by the base-address of the object-file the FDR          is referring to.  Notice that each object-file may contain          code from multiple source files (e.g., due to code defined in          include files).  Thus, for any given base-address, there may          be multiple FDRs (but this case is, fortunately, uncommon).          lookup(addr) guarantees to return the first FDR that applies          to address ADDR.  Thus, after invoking lookup(), we have a          list of FDRs that may contain the PDR for ADDR.  Next, we          walk through the PDRs of these FDRs and locate the one that          is closest to ADDR (i.e., for which the difference between          ADDR and the PDR's entry point is positive and minimal).          Once, the right FDR and PDR are located, we simply walk          through the line-number table to lookup the line-number that          best matches ADDR.  Obviously, things could be sped up by          keeping a sorted list of PDRs instead of a sorted list of          FDRs.  However, this would increase space requirements          considerably, which is undesirable.  */
+comment|/* This file uses ECOFF debugging information.  Each FDR has a          list of procedure descriptors (PDR).  The address in the FDR          is the absolute address of the first procedure.  The address          in the first PDR gives the offset of that procedure relative          to the object file's base-address.  The addresses in          subsequent PDRs specify each procedure's address relative to          the object file's base-address.  To make things more juicy,          whenever the PROF bit in the PDR is set, the real entry point          of the procedure may be 16 bytes below what would normally be          the procedure's entry point.  Instead, DEC came up with a          wicked scheme to create profiled libraries "on the fly":          instead of shipping a regular and a profiled version of each          library, they insert 16 bytes of unused space in front of          each procedure and set the "prof" bit in the PDR to indicate          that there is a gap there (this is done automagically by "as"          when option "-pg" is specified).  Thus, normally, you link          against such a library and, except for lots of 16 byte gaps          between functions, things will behave as usual.  However,          when invoking "ld" with option "-pg", it will fill those gaps          with code that calls mcount().  It then moves the function's          entry point down by 16 bytes, and out pops a binary that has          all functions profiled.           NOTE: Neither FDRs nor PDRs are strictly sorted in memory                order.  For example, when including header-files that                define functions, the FDRs follow behind the including                file, even though their code may have been generated at                a lower address.  File coff-alpha.c from libbfd                illustrates this (use "odump -PFv" to look at a file's                FDR/PDR).  Similarly, PDRs are sometimes out of order                as well.  An example of this is OSF/1 v3.0 libc's                malloc.c.  I'm not sure why this happens, but it could                be due to optimizations that reorder a function's                position within an object-file.           Strategy:           On the first call to this function, we build a table of FDRs          that is sorted by the base-address of the object-file the FDR          is referring to.  Notice that each object-file may contain          code from multiple source files (e.g., due to code defined in          include files).  Thus, for any given base-address, there may          be multiple FDRs (but this case is, fortunately, uncommon).          lookup(addr) guarantees to return the first FDR that applies          to address ADDR.  Thus, after invoking lookup(), we have a          list of FDRs that may contain the PDR for ADDR.  Next, we          walk through the PDRs of these FDRs and locate the one that          is closest to ADDR (i.e., for which the difference between          ADDR and the PDR's entry point is positive and minimal).          Once, the right FDR and PDR are located, we simply walk          through the line-number table to lookup the line-number that          best matches ADDR.  Obviously, things could be sped up by          keeping a sorted list of PDRs instead of a sorted list of          FDRs.  However, this would increase space requirements          considerably, which is undesirable.  */
 name|external_pdr_size
 operator|=
 name|debug_swap
@@ -10558,7 +10542,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* shouldn't happen... */
+comment|/* shouldn't happen...  */
 comment|/* phew, finally we got something that we can hold onto: */
 name|fdr_ptr
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ld-emul.h - Linker emulation header file    Copyright 1991, 92, 93, 94, 95, 96, 97, 1998, 2000 Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
+comment|/* ld-emul.h - Linker emulation header file    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000    Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_ifndef
@@ -14,29 +14,6 @@ define|#
 directive|define
 name|LDEMUL_H
 end_define
-
-begin_if
-if|#
-directive|if
-name|ANSI_PROTOTYPES
-end_if
-
-begin_struct_decl
-struct_decl|struct
-name|lang_input_statement_struct
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|search_dirs
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -676,7 +653,7 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Run after assigning parsing with the args, but before       reading the script.  Used to initialize symbols used in the script. */
+comment|/* Run after assigning parsing with the args, but before      reading the script.  Used to initialize symbols used in the script.  */
 name|void
 argument_list|(
 argument|*set_symbols
@@ -688,7 +665,7 @@ name|void
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Run to parse args which the base linker doesn't      understand. Return non zero on sucess. */
+comment|/* Run to parse args which the base linker doesn't      understand. Return non zero on sucess.  */
 name|int
 argument_list|(
 argument|*parse_args

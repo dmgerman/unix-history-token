@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* 32-bit ELF support for ARM new abi option.    Copyright 1999 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* 32-bit ELF support for ARM new abi option.    Copyright 1999, 2000, 2001 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -134,6 +134,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Note: code such as elf32_arm_reloc_type_lookup expect to use e.g.    R_ARM_PC24 as an index into this, and find the R_ARM_PC24 HOWTO    in that slot.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -779,22 +783,22 @@ name|false
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* These next two relocs are defined, but I do not know what they do.  */
+comment|/* BLX instruction for the ARM.  */
 name|HOWTO
 argument_list|(
 name|R_ARM_XPC25
 argument_list|,
 comment|/* type */
-literal|0
+literal|2
 argument_list|,
 comment|/* rightshift */
-literal|0
+literal|2
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
+literal|25
 argument_list|,
 comment|/* bitsize */
-name|false
+name|true
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -812,31 +816,32 @@ comment|/* name */
 name|false
 argument_list|,
 comment|/* partial_inplace */
-literal|0x00000000
+literal|0x00ffffff
 argument_list|,
 comment|/* src_mask */
-literal|0x00000000
+literal|0x00ffffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
+comment|/* BLX instruction for the Thumb.  */
 name|HOWTO
 argument_list|(
 name|R_ARM_THM_XPC22
 argument_list|,
 comment|/* type */
-literal|0
+literal|2
 argument_list|,
 comment|/* rightshift */
-literal|0
+literal|2
 argument_list|,
 comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
+literal|22
 argument_list|,
 comment|/* bitsize */
-name|false
+name|true
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -854,13 +859,13 @@ comment|/* name */
 name|false
 argument_list|,
 comment|/* partial_inplace */
-literal|0x00000000
+literal|0x07ff07ff
 argument_list|,
 comment|/* src_mask */
-literal|0x00000000
+literal|0x07ff07ff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|true
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1878,6 +1883,18 @@ block|{
 name|BFD_RELOC_ARM_PCREL_BRANCH
 block|,
 name|R_ARM_PC24
+block|}
+block|,
+block|{
+name|BFD_RELOC_ARM_PCREL_BLX
+block|,
+name|R_ARM_XPC25
+block|}
+block|,
+block|{
+name|BFD_RELOC_THUMB_PCREL_BLX
+block|,
+name|R_ARM_THM_XPC22
 block|}
 block|,
 block|{

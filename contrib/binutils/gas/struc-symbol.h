@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* struct_symbol.h - Internal symbol structure    Copyright (C) 1987, 92, 93, 94, 95, 98, 1999 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* struct_symbol.h - Internal symbol structure    Copyright 1987, 1992, 1993, 1994, 1995, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,33 @@ define|#
 directive|define
 name|__struc_symbol_h__
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+end_ifdef
+
+begin_comment
+comment|/* The BFD code wants to walk the list in both directions.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SYMBOLS_NEED_BACKPOINTERS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SYMBOLS_NEED_BACKPOINTERS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The information we keep for a symbol.  Note that the symbol table    holds pointers both to this and to local_symbol structures.  See    below.  */
@@ -33,7 +60,7 @@ name|bsym
 decl_stmt|;
 else|#
 directive|else
-comment|/* The (4-origin) position of sy_name in the symbol table of the object      file.  This will be 0 for (nameless) .stabd symbols.       Not used until write_object_file() time. */
+comment|/* The (4-origin) position of sy_name in the symbol table of the object      file.  This will be 0 for (nameless) .stabd symbols.       Not used until write_object_file() time.  */
 name|unsigned
 name|long
 name|sy_name_offset
@@ -42,7 +69,7 @@ comment|/* What we write in .o file (if permitted).  */
 name|obj_symbol_type
 name|sy_symbol
 decl_stmt|;
-comment|/* The 24 bit symbol number.  Symbol numbers start at 0 and are unsigned. */
+comment|/* The 24 bit symbol number.  Symbol numbers start at 0 and are unsigned.  */
 name|long
 name|sy_number
 decl_stmt|;
@@ -102,7 +129,7 @@ name|sy_used_in_reloc
 range|:
 literal|1
 decl_stmt|;
-comment|/* Whether the symbol is used as an operand or in an expression.        NOTE:  Not all the backends keep this information accurate;      backends which use this bit are responsible for setting it when      a symbol is used in backend routines.  */
+comment|/* Whether the symbol is used as an operand or in an expression.      NOTE:  Not all the backends keep this information accurate;      backends which use this bit are responsible for setting it when      a symbol is used in backend routines.  */
 name|unsigned
 name|int
 name|sy_used
@@ -130,6 +157,12 @@ name|TC_SYMFIELD_TYPE
 name|TC_SYMFIELD_TYPE
 name|sy_tc
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|TARGET_SYMBOL_FIELDS
+name|TARGET_SYMBOL_FIELDS
 endif|#
 directive|endif
 block|}
@@ -287,10 +320,6 @@ end_endif
 
 begin_comment
 comment|/* __struc_symbol_h__ */
-end_comment
-
-begin_comment
-comment|/* end of struc-symbol.h */
 end_comment
 
 end_unit

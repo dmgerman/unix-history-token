@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD COFF object file private structure.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Written by Cygnus Support.  ** NOTE: libcoff.h is a GENERATED file.  Don't change it; instead, ** change libcoff-in.h or coffcode.h.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD COFF object file private structure.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  ** NOTE: libcoff.h is a GENERATED file.  Don't change it; instead, ** change libcoff-in.h or coffcode.h.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -166,6 +166,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|obj_coff_strings_written
+parameter_list|(
+name|bfd
+parameter_list|)
+value|(coff_data (bfd)->strings_written)
+end_define
+
+begin_define
+define|#
+directive|define
 name|obj_coff_local_toc_table
 parameter_list|(
 name|bfd
@@ -252,6 +262,10 @@ comment|/* If this is true, the strings may not be freed.  */
 name|boolean
 name|keep_strings
 decl_stmt|;
+comment|/* If this is true, the strings have been written out already.  */
+name|boolean
+name|strings_written
+decl_stmt|;
 comment|/* is this a PE format coff file */
 name|int
 name|pe
@@ -276,6 +290,10 @@ decl_stmt|;
 comment|/* Used by coff_find_nearest_line.  */
 name|PTR
 name|line_info
+decl_stmt|;
+comment|/* A place to stash dwarf2 info for this bfd. */
+name|PTR
+name|dwarf2_find_line_info
 decl_stmt|;
 comment|/* The timestamp from the COFF file header.  */
 name|long
@@ -330,6 +348,12 @@ expr_stmt|;
 name|flagword
 name|real_flags
 decl_stmt|;
+name|int
+name|target_subsystem
+decl_stmt|;
+name|boolean
+name|force_minimum_alignment
+decl_stmt|;
 block|}
 name|pe_data_type
 typedef|;
@@ -356,6 +380,10 @@ block|{
 comment|/* Basic COFF information.  */
 name|coff_data_type
 name|coff
+decl_stmt|;
+comment|/* True if this is an XCOFF64 file. */
+name|boolean
+name|xcoff64
 decl_stmt|;
 comment|/* True if a large a.out header should be generated.  */
 name|boolean
@@ -390,11 +418,11 @@ name|short
 name|cputype
 decl_stmt|;
 comment|/* maxdata from optional header.  */
-name|bfd_size_type
+name|bfd_vma
 name|maxdata
 decl_stmt|;
 comment|/* maxstack from optional header.  */
-name|bfd_size_type
+name|bfd_vma
 name|maxstack
 decl_stmt|;
 comment|/* Used by the XCOFF backend linker.  */
@@ -2540,6 +2568,13 @@ name|unsigned
 name|int
 name|_bfd_coff_default_section_alignment_power
 decl_stmt|;
+name|boolean
+name|_bfd_coff_force_symnames_in_strings
+decl_stmt|;
+name|unsigned
+name|int
+name|_bfd_coff_debug_string_prefix_length
+decl_stmt|;
 name|void
 argument_list|(
 argument|*_bfd_coff_swap_filehdr_in
@@ -3578,6 +3613,28 @@ name|sym
 parameter_list|)
 define|\
 value|((coff_backend_info (abfd)->_bfd_coff_symname_in_debug) (abfd, sym))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bfd_coff_force_symnames_in_strings
+parameter_list|(
+name|abfd
+parameter_list|)
+define|\
+value|(coff_backend_info (abfd)->_bfd_coff_force_symnames_in_strings)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bfd_coff_debug_string_prefix_length
+parameter_list|(
+name|abfd
+parameter_list|)
+define|\
+value|(coff_backend_info (abfd)->_bfd_coff_debug_string_prefix_length)
 end_define
 
 begin_define

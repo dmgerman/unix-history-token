@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-sparc.h - Macros and type defines for the sparc.    Copyright (C) 1989, 90-96, 97, 98, 1999 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-sparc.h - Macros and type defines for the sparc.    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -152,7 +152,8 @@ name|s
 parameter_list|,
 name|f
 parameter_list|)
-value|{as_fatal (_("sparc convert_frag\n"));}
+define|\
+value|as_fatal (_("sparc convert_frag\n"))
 end_define
 
 begin_define
@@ -165,7 +166,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|(as_fatal(_("estimate_size_before_relax called")),1)
+value|(as_fatal(_("estimate_size_before_relax called")), 1)
 end_define
 
 begin_define
@@ -181,25 +182,6 @@ name|int
 name|sparc_pic_code
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|md_do_align
-parameter_list|(
-name|n
-parameter_list|,
-name|fill
-parameter_list|,
-name|len
-parameter_list|,
-name|max
-parameter_list|,
-name|around
-parameter_list|)
-define|\
-value|if ((n)&& (n)<= 10&& !need_pass_2&& !(fill)				\&& subseg_text_p (now_seg))						\   {									\     char *p;								\     p = frag_var (rs_align_code, 1<< n, 1, (relax_substateT) 1024,	\                   (symbolS *) 0, (offsetT) (n), (char *) 0);		\     *p = 0x00;								\     goto around;							\   }
-end_define
 
 begin_comment
 comment|/* We require .word, et. al., to be aligned correctly.  */
@@ -252,6 +234,13 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MAX_MEM_FOR_RS_ALIGN_CODE
+value|(3 + 4 + 4)
+end_define
 
 begin_if
 if|#
@@ -575,7 +564,7 @@ parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|do						\      {						\        (X)->tc_fix_data = 0;			\      }						\   while(0)
+value|do						\      {						\        (X)->tc_fix_data = 0;			\      }						\   while (0)
 end_define
 
 begin_define
@@ -588,7 +577,14 @@ parameter_list|,
 name|FIXP
 parameter_list|)
 define|\
-value|do									\     {									\       fprintf((FILE), "addend2=%ld\n",   				\ 	      (unsigned long) (FIXP)->tc_fix_data);			\     }									\   while(0)
+value|do									\     {									\       fprintf ((FILE), "addend2=%ld\n",   				\ 	      (unsigned long) (FIXP)->tc_fix_data);			\     }									\   while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF2_LINE_MIN_INSN_LENGTH
+value|4
 end_define
 
 begin_comment

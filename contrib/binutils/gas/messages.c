@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* messages.c - error reporter -    Copyright (C) 1987, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.    This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* messages.c - error reporter -    Copyright 1987, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2001    Free Software Foundation, Inc.    This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -199,7 +199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Despite the rest of the comments in this file, (FIXME-SOON),  * here is the current scheme for error messages etc:  *  * as_fatal() is used when gas is quite confused and  * continuing the assembly is pointless.  In this case we  * exit immediately with error status.  *  * as_bad() is used to mark errors that result in what we  * presume to be a useless object file.  Say, we ignored  * something that might have been vital.  If we see any of  * these, assembly will continue to the end of the source,  * no object file will be produced, and we will terminate  * with error status.  The new option, -Z, tells us to  * produce an object file anyway but we still exit with  * error status.  The assumption here is that you don't want  * this object file but we could be wrong.  *  * as_warn() is used when we have an error from which we  * have a plausible error recovery.  eg, masking the top  * bits of a constant that is longer than will fit in the  * destination.  In this case we will continue to assemble  * the source, although we may have made a bad assumption,  * and we will produce an object file and return normal exit  * status (ie, no error).  The new option -X tells us to  * treat all as_warn() errors as as_bad() errors.  That is,  * no object file will be produced and we will exit with  * error status.  The idea here is that we don't kill an  * entire make because of an error that we knew how to  * correct.  On the other hand, sometimes you might want to  * stop the make at these points.  *  * as_tsktsk() is used when we see a minor error for which  * our error recovery action is almost certainly correct.  * In this case, we print a message and then assembly  * continues as though no error occurred.  */
+comment|/* Despite the rest of the comments in this file, (FIXME-SOON),  * here is the current scheme for error messages etc:  *  * as_fatal() is used when gas is quite confused and  * continuing the assembly is pointless.  In this case we  * exit immediately with error status.  *  * as_bad() is used to mark errors that result in what we  * presume to be a useless object file.  Say, we ignored  * something that might have been vital.  If we see any of  * these, assembly will continue to the end of the source,  * no object file will be produced, and we will terminate  * with error status.  The new option, -Z, tells us to  * produce an object file anyway but we still exit with  * error status.  The assumption here is that you don't want  * this object file but we could be wrong.  *  * as_warn() is used when we have an error from which we  * have a plausible error recovery.  eg, masking the top  * bits of a constant that is longer than will fit in the  * destination.  In this case we will continue to assemble  * the source, although we may have made a bad assumption,  * and we will produce an object file and return normal exit  * status (ie, no error).  The new option -X tells us to  * treat all as_warn() errors as as_bad() errors.  That is,  * no object file will be produced and we will exit with  * error status.  The idea here is that we don't kill an  * entire make because of an error that we knew how to  * correct.  On the other hand, sometimes you might want to  * stop the make at these points.  *  * as_tsktsk() is used when we see a minor error for which  * our error recovery action is almost certainly correct.  * In this case, we print a message and then assembly  * continues as though no error occurred.  */
 end_comment
 
 begin_function
@@ -272,16 +272,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* The number of warnings issued.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
 name|warning_count
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Count of number of warnings issued */
-end_comment
 
 begin_function
 name|int
@@ -297,7 +297,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Nonzero if we've hit a 'bad error', and should not write an obj file,    and exit with a nonzero error code */
+comment|/* Nonzero if we've hit a 'bad error', and should not write an obj file,    and exit with a nonzero error code.  */
 end_comment
 
 begin_decl_stmt
@@ -371,7 +371,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *			a s _ p e r r o r  *  * Like perror(3), but with more info.  */
+comment|/* Like perror(3), but with more info.  */
 end_comment
 
 begin_function
@@ -387,7 +387,7 @@ name|char
 modifier|*
 name|gripe
 decl_stmt|;
-comment|/* Unpunctuated error theme. */
+comment|/* Unpunctuated error theme.  */
 specifier|const
 name|char
 modifier|*
@@ -460,7 +460,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *			a s _ t s k t s k ()  *  * Send to stderr a string as a warning, and locate warning  * in input file(s).  * Please only use this for when we have some recovery action.  * Please explain in string (which may have '\n's) what recovery was done.  */
+comment|/* Send to stderr a string as a warning, and locate warning    in input file(s).    Please only use this for when we have some recovery action.    Please explain in string (which may have '\n's) what recovery was    done.  */
 end_comment
 
 begin_ifdef
@@ -521,10 +521,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* as_tsktsk() */
-end_comment
-
 begin_else
 else|#
 directive|else
@@ -582,10 +578,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* as_tsktsk() */
-end_comment
 
 begin_endif
 endif|#
@@ -703,7 +695,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *			a s _ w a r n ()  *  * Send to stderr a string as a warning, and locate warning  * in input file(s).  * Please only use this for when we have some recovery action.  * Please explain in string (which may have '\n's) what recovery was done.  */
+comment|/* Send to stderr a string as a warning, and locate warning    in input file(s).    Please only use this for when we have some recovery action.    Please explain in string (which may have '\n's) what recovery was    done.  */
 end_comment
 
 begin_ifdef
@@ -777,18 +769,10 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* as_warn() */
-end_comment
-
 begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/*VARARGS1 */
-end_comment
 
 begin_function
 name|void
@@ -855,10 +839,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* as_warn() */
-end_comment
 
 begin_endif
 endif|#
@@ -870,7 +850,7 @@ comment|/* not NO_STDARG */
 end_comment
 
 begin_comment
-comment|/* as_warn_where, like as_bad but the file name and line number are    passed in.  Unfortunately, we have to repeat the function in order    to handle the varargs correctly and portably.  */
+comment|/* Like as_bad but the file name and line number are passed in.    Unfortunately, we have to repeat the function in order to handle    the varargs correctly and portably.  */
 end_comment
 
 begin_ifdef
@@ -948,18 +928,10 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* as_warn() */
-end_comment
-
 begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/*VARARGS1 */
-end_comment
 
 begin_function
 name|void
@@ -1034,10 +1006,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* as_warn() */
-end_comment
 
 begin_endif
 endif|#
@@ -1155,7 +1123,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *			a s _ b a d ()  *  * Send to stderr a string as a warning, and locate warning in input file(s).  * Please us when there is no recovery, but we want to continue processing  * but not produce an object file.  * Please explain in string (which may have '\n's) what recovery was done.  */
+comment|/* Send to stderr a string as a warning, and locate warning in input    file(s).  Please us when there is no recovery, but we want to    continue processing but not produce an object file.    Please explain in string (which may have '\n's) what recovery was    done.  */
 end_comment
 
 begin_ifdef
@@ -1227,10 +1195,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/*VARARGS1 */
-end_comment
-
 begin_function
 name|void
 name|as_bad
@@ -1300,7 +1264,7 @@ comment|/* not NO_STDARG */
 end_comment
 
 begin_comment
-comment|/* as_bad_where, like as_bad but the file name and line number are    passed in.  Unfortunately, we have to repeat the function in order    to handle the varargs correctly and portably.  */
+comment|/* Like as_bad but the file name and line number are passed in.    Unfortunately, we have to repeat the function in order to handle    the varargs correctly and portably.  */
 end_comment
 
 begin_ifdef
@@ -1375,10 +1339,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/*VARARGS1 */
-end_comment
 
 begin_function
 name|void
@@ -1457,7 +1417,7 @@ comment|/* not NO_STDARG */
 end_comment
 
 begin_comment
-comment|/*  *			a s _ f a t a l ()  *  * Send to stderr a string as a fatal message, and print location of error in  * input file(s).  * Please only use this for when we DON'T have some recovery action.  * It xexit()s with a warning status.  */
+comment|/* Send to stderr a string as a fatal message, and print location of    error in input file(s).    Please only use this for when we DON'T have some recovery action.    It xexit()s with a warning status.  */
 end_comment
 
 begin_ifdef
@@ -1525,6 +1485,18 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
+comment|/* Delete the output file, if it exists.  This will prevent make from      thinking that a file was created and hence does not need rebuilding.  */
+if|if
+condition|(
+name|out_file_name
+operator|!=
+name|NULL
+condition|)
+name|unlink
+argument_list|(
+name|out_file_name
+argument_list|)
+expr_stmt|;
 name|xexit
 argument_list|(
 name|EXIT_FAILURE
@@ -1533,18 +1505,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* as_fatal() */
-end_comment
-
 begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/*VARARGS1*/
-end_comment
 
 begin_function
 name|void
@@ -1613,10 +1577,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* as_fatal() */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -1627,7 +1587,7 @@ comment|/* not NO_STDARG */
 end_comment
 
 begin_comment
-comment|/*  * as_assert: Indicate assertion failure.  * Arguments: Filename, line number, optional function name.  */
+comment|/* Indicate assertion failure.    Arguments: Filename, line number, optional function name.  */
 end_comment
 
 begin_function
@@ -1967,10 +1927,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of messages.c */
-end_comment
 
 end_unit
 

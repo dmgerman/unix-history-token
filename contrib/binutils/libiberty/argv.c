@@ -19,27 +19,10 @@ directive|include
 file|"libiberty.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|isspace
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|isspace
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
-name|isspace
+name|ISBLANK
 parameter_list|(
 name|ch
 parameter_list|)
@@ -567,7 +550,7 @@ block|{
 comment|/* Pick off argv[argc] */
 while|while
 condition|(
-name|isspace
+name|ISBLANK
 argument_list|(
 operator|*
 name|input
@@ -708,7 +691,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|isspace
+name|ISBLANK
 argument_list|(
 operator|*
 name|input
@@ -912,7 +895,7 @@ name|NULL
 expr_stmt|;
 while|while
 condition|(
-name|isspace
+name|ISBLANK
 argument_list|(
 operator|*
 name|input

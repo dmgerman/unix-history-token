@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for the generic parts of COFF, for BFD.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 1999, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support for the generic parts of COFF, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1017,7 +1017,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* Set the arch/mach *before* swapping in sections; section header swapping      may depend on arch/mach info. */
+comment|/* Set the arch/mach *before* swapping in sections; section header swapping      may depend on arch/mach info.  */
 if|if
 condition|(
 name|bfd_coff_set_arch_mach_hook
@@ -2357,12 +2357,13 @@ name|p
 decl_stmt|;
 if|if
 condition|(
-name|bfd_asymbol_flavour
+name|bfd_family_coff
+argument_list|(
+name|bfd_asymbol_bfd
 argument_list|(
 name|q_maybe
 argument_list|)
-operator|==
-name|bfd_target_coff_flavour
+argument_list|)
 condition|)
 block|{
 name|coff_symbol_type
@@ -2460,10 +2461,6 @@ begin_comment
 comment|/* Takes a bfd and a symbol, returns a pointer to the coff specific    area of the symbol if there is one.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|coff_symbol_type
 modifier|*
@@ -2485,12 +2482,14 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|bfd_asymbol_flavour
+operator|!
+name|bfd_family_coff
+argument_list|(
+name|bfd_asymbol_bfd
 argument_list|(
 name|symbol
 argument_list|)
-operator|!=
-name|bfd_target_coff_flavour
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2708,10 +2707,29 @@ argument_list|(
 name|abfd
 argument_list|)
 condition|)
+block|{
 name|syment
 operator|->
 name|n_value
 operator|+=
+operator|(
+name|syment
+operator|->
+name|n_sclass
+operator|==
+name|C_STATLAB
+operator|)
+condition|?
+name|coff_symbol_ptr
+operator|->
+name|symbol
+operator|.
+name|section
+operator|->
+name|output_section
+operator|->
+name|lma
+else|:
 name|coff_symbol_ptr
 operator|->
 name|symbol
@@ -2722,6 +2740,7 @@ name|output_section
 operator|->
 name|vma
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -3780,6 +3799,55 @@ name|unsigned
 name|int
 name|filnmlen
 decl_stmt|;
+if|if
+condition|(
+name|bfd_coff_force_symnames_in_strings
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+block|{
+name|native
+operator|->
+name|u
+operator|.
+name|syment
+operator|.
+name|_n
+operator|.
+name|_n_n
+operator|.
+name|_n_offset
+operator|=
+operator|(
+operator|*
+name|string_size_p
+operator|+
+name|STRING_SIZE_SIZE
+operator|)
+expr_stmt|;
+name|native
+operator|->
+name|u
+operator|.
+name|syment
+operator|.
+name|_n
+operator|.
+name|_n_n
+operator|.
+name|_n_zeroes
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|string_size_p
+operator|+=
+literal|6
+expr_stmt|;
+comment|/* strlen(".file") + 1 */
+block|}
+else|else
 name|strncpy
 argument_list|(
 name|native
@@ -3917,6 +3985,12 @@ condition|(
 name|name_length
 operator|<=
 name|SYMNMLEN
+operator|&&
+operator|!
+name|bfd_coff_force_symnames_in_strings
+argument_list|(
+name|abfd
+argument_list|)
 condition|)
 block|{
 comment|/* This name will fit into the symbol neatly */
@@ -4006,8 +4080,16 @@ decl_stmt|;
 name|bfd_byte
 name|buf
 index|[
-literal|2
+literal|4
 index|]
+decl_stmt|;
+name|int
+name|prefix_len
+init|=
+name|bfd_coff_debug_string_prefix_length
+argument_list|(
+name|abfd
+argument_list|)
 decl_stmt|;
 comment|/* This name should be written into the .debug section.  For 	     some reason each name is preceded by a two byte length 	     and also followed by a null byte.  FIXME: We assume that 	     the .debug section has already been created, and that it 	     is large enough.  */
 if|if
@@ -4038,6 +4120,24 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|prefix_len
+operator|==
+literal|4
+condition|)
+name|bfd_put_32
+argument_list|(
+name|abfd
+argument_list|,
+name|name_length
+operator|+
+literal|1
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+else|else
 name|bfd_put_16
 argument_list|(
 name|abfd
@@ -4073,7 +4173,7 @@ argument_list|,
 operator|(
 name|bfd_size_type
 operator|)
-literal|2
+name|prefix_len
 argument_list|)
 operator|||
 operator|!
@@ -4098,7 +4198,7 @@ operator|)
 operator|*
 name|debug_string_size_p
 operator|+
-literal|2
+name|prefix_len
 operator|)
 argument_list|,
 operator|(
@@ -4143,7 +4243,7 @@ operator|=
 operator|*
 name|debug_string_size_p
 operator|+
-literal|2
+name|prefix_len
 expr_stmt|;
 name|native
 operator|->
@@ -4164,7 +4264,9 @@ name|debug_string_size_p
 operator|+=
 name|name_length
 operator|+
-literal|3
+literal|1
+operator|+
+name|prefix_len
 expr_stmt|;
 block|}
 block|}
@@ -5157,7 +5259,7 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* 13 april 92. sac  	     I've been told this, but still need proof:> The second bug is also in `bfd/coffcode.h'.  This bug> causes the linker to screw up the pc-relocations for> all the line numbers in COFF code.  This bug isn't only> specific to A29K implementations, but affects all> systems using COFF format binaries.  Note that in COFF> object files, the line number core offsets output by> the assembler are relative to the start of each> procedure, not to the start of the .text section.  This> patch relocates the line numbers relative to the> `native->u.syment.n_value' instead of the section> virtual address.> modular!olson@cs.arizona.edu (Jon Olson) 	   */
+comment|/* 13 april 92. sac 	     I've been told this, but still need proof:> The second bug is also in `bfd/coffcode.h'.  This bug> causes the linker to screw up the pc-relocations for> all the line numbers in COFF code.  This bug isn't only> specific to A29K implementations, but affects all> systems using COFF format binaries.  Note that in COFF> object files, the line number core offsets output by> the assembler are relative to the start of each> procedure, not to the start of the .text section.  This> patch relocates the line numbers relative to the> `native->u.syment.n_value' instead of the section> virtual address.> modular!olson@cs.arizona.edu (Jon Olson) 	   */
 block|lineno[count].u.offset += native->u.syment.n_value;
 else|#
 directive|else
@@ -5733,6 +5835,13 @@ block|{
 comment|/* This is not a COFF symbol, so it certainly is not a 	         file name, nor does it go in the .debug section.  */
 name|maxlen
 operator|=
+name|bfd_coff_force_symnames_in_strings
+argument_list|(
+name|abfd
+argument_list|)
+condition|?
+literal|0
+else|:
 name|SYMNMLEN
 expr_stmt|;
 block|}
@@ -5787,6 +5896,25 @@ name|n_numaux
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|bfd_coff_force_symnames_in_strings
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+name|bfd_write
+argument_list|(
+literal|".file"
+argument_list|,
+literal|1
+argument_list|,
+literal|6
+argument_list|,
+name|abfd
+argument_list|)
+expr_stmt|;
 name|maxlen
 operator|=
 name|bfd_coff_filnmlen
@@ -5794,9 +5922,17 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|maxlen
 operator|=
+name|bfd_coff_force_symnames_in_strings
+argument_list|(
+name|abfd
+argument_list|)
+condition|?
+literal|0
+else|:
 name|SYMNMLEN
 expr_stmt|;
 if|if
@@ -6245,10 +6381,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*ARGSUSED */
-end_comment
-
 begin_function
 name|alent
 modifier|*
@@ -6578,7 +6710,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Allocate space for the ".debug" section, and read it.    We did not read the debug section until now, because    we didn't want to go to the trouble until someone needed it. */
+comment|/* Allocate space for the ".debug" section, and read it.    We did not read the debug section until now, because    we didn't want to go to the trouble until someone needed it.  */
 end_comment
 
 begin_function
@@ -6651,7 +6783,7 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* Seek to the beginning of the `.debug' section and read it.       Save the current position first; it is needed by our caller.      Then read debug section and reset the file pointer.  */
+comment|/* Seek to the beginning of the `.debug' section and read it.      Save the current position first; it is needed by our caller.      Then read debug section and reset the file pointer.  */
 name|position
 operator|=
 name|bfd_tell
@@ -7929,7 +8061,7 @@ break|break;
 block|}
 comment|/* if end of string */
 block|}
-comment|/* possible lengths of this string. */
+comment|/* possible lengths of this string.  */
 if|if
 condition|(
 operator|(
@@ -8517,10 +8649,6 @@ name|symbol
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSUSED */
-end_comment
 
 begin_function
 name|void
@@ -9808,10 +9936,6 @@ begin_comment
 comment|/* Provided a BFD, a section and an offset (in bytes, not octets) into the    section, calculate and return the name of the source file and the line    nearest to the wanted location.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|boolean
 name|coff_find_nearest_line
@@ -9944,6 +10068,39 @@ condition|)
 return|return
 name|true
 return|;
+comment|/* Also try examining DWARF2 debugging information.  */
+if|if
+condition|(
+name|_bfd_dwarf2_find_nearest_line
+argument_list|(
+name|abfd
+argument_list|,
+name|section
+argument_list|,
+name|symbols
+argument_list|,
+name|offset
+argument_list|,
+name|filename_ptr
+argument_list|,
+name|functionname_ptr
+argument_list|,
+name|line_ptr
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|coff_data
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|dwarf2_find_line_info
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
 operator|*
 name|filename_ptr
 operator|=
@@ -9962,13 +10119,11 @@ expr_stmt|;
 comment|/* Don't try and find line numbers in a non coff file */
 if|if
 condition|(
+operator|!
+name|bfd_family_coff
+argument_list|(
 name|abfd
-operator|->
-name|xvec
-operator|->
-name|flavour
-operator|!=
-name|bfd_target_coff_flavour
+argument_list|)
 condition|)
 return|return
 name|false

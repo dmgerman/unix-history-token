@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Routines to help build PEI-format DLLs (Win32 etc)    Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.    Written by DJ Delorie<dj@cygnus.com>     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Routines to help build PEI-format DLLs (Win32 etc)    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Written by DJ Delorie<dj@cygnus.com>     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"ldmain.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ldfile.h"
 end_include
 
 begin_include
@@ -434,6 +440,20 @@ name|target
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|pe_detail_list
+index|[
+name|i
+index|]
+operator|.
+name|object_target
+argument_list|,
+name|target
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|pe_details
@@ -617,7 +637,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* These correspond to the entries in pe_def_file->exports[].  I use    exported_symbol_sections[i] to tag whether or not the symbol was    defined, since we can't export symbols we don't have. */
+comment|/* These correspond to the entries in pe_def_file->exports[].  I use    exported_symbol_sections[i] to tag whether or not the symbol was    defined, since we can't export symbols we don't have.  */
 end_comment
 
 begin_decl_stmt
@@ -1044,7 +1064,7 @@ operator|=
 name|def_file_empty
 argument_list|()
 expr_stmt|;
-comment|/* First, run around to all the objects looking for the .drectve      sections, and push those into the def file too */
+comment|/* First, run around to all the objects looking for the .drectve      sections, and push those into the def file too.  */
 for|for
 control|(
 name|b
@@ -1122,7 +1142,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Now, maybe export everything else the default way */
+comment|/* Now, maybe export everything else the default way.  */
 if|if
 condition|(
 name|pe_dll_export_everything
@@ -1203,6 +1223,7 @@ name|j
 operator|++
 control|)
 block|{
+comment|/* We should export symbols which are either global or not 	         anything at all.  (.bss data is the latter)  */
 if|if
 condition|(
 operator|(
@@ -1213,17 +1234,18 @@ index|]
 operator|->
 name|flags
 operator|&
-operator|(
-name|BSF_FUNCTION
-operator||
 name|BSF_GLOBAL
 operator|)
-operator|)
+operator|||
+operator|(
+name|symbols
+index|[
+name|j
+index|]
+operator|->
+name|flags
 operator|==
-operator|(
-name|BSF_FUNCTION
-operator||
-name|BSF_GLOBAL
+name|BSF_NO_FLAGS
 operator|)
 condition|)
 block|{
@@ -1258,6 +1280,13 @@ argument_list|,
 name|sn
 argument_list|)
 condition|)
+block|{
+name|def_file_export
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
 name|def_file_add_export
 argument_list|(
 name|pe_def_file
@@ -1270,6 +1299,24 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Fill data flag properly, from dlltool.c */
+name|p
+operator|->
+name|flag_data
+operator|=
+operator|!
+operator|(
+name|symbols
+index|[
+name|j
+index|]
+operator|->
+name|flags
+operator|&
+name|BSF_FUNCTION
+operator|)
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -1281,7 +1328,7 @@ define|#
 directive|define
 name|NE
 value|pe_def_file->num_exports
-comment|/* Canonicalize the export list */
+comment|/* Canonicalize the export list.  */
 if|if
 condition|(
 name|pe_dll_kill_ats
@@ -1318,7 +1365,7 @@ literal|'@'
 argument_list|)
 condition|)
 block|{
-comment|/* This will preserve internal_name, which may have been pointing 	         to the same memory as name, or might not have */
+comment|/* This will preserve internal_name, which may have been 	         pointing to the same memory as name, or might not 	         have.  */
 name|char
 modifier|*
 name|tmp
@@ -1462,13 +1509,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* Convenience, but watch out for it changing.  */
 name|e
 operator|=
 name|pe_def_file
 operator|->
 name|exports
 expr_stmt|;
-comment|/* convenience, but watch out for it changing */
 name|exported_symbol_offsets
 operator|=
 operator|(
@@ -1659,7 +1706,7 @@ name|einfo
 argument_list|(
 name|_
 argument_list|(
-literal|"%XError, duplicate EXPORT with oridinals: %s (%d vs %d)\n"
+literal|"%XError, duplicate EXPORT with ordinals: %s (%d vs %d)\n"
 argument_list|)
 argument_list|,
 name|e
@@ -1722,6 +1769,9 @@ name|i
 index|]
 operator|.
 name|ordinal
+operator|!=
+operator|-
+literal|1
 condition|)
 name|e
 index|[
@@ -2401,7 +2451,7 @@ name|char
 modifier|*
 name|dlnp
 decl_stmt|;
-comment|/* First, we need to know how many exported symbols there are,      and what the range of ordinals is. */
+comment|/* First, we need to know how many exported symbols there are,      and what the range of ordinals is.  */
 if|if
 condition|(
 name|pe_def_file
@@ -2546,7 +2596,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Now we need to assign ordinals to those that don't have them */
+comment|/* Now we need to assign ordinals to those that don't have them.  */
 for|for
 control|(
 name|i
@@ -2619,7 +2669,7 @@ name|einfo
 argument_list|(
 name|_
 argument_list|(
-literal|"%XError, oridinal used twice: %d (%s vs %s)\n"
+literal|"%XError, ordinal used twice: %d (%s vs %s)\n"
 argument_list|)
 argument_list|,
 name|pe_def_file
@@ -2752,7 +2802,7 @@ operator|=
 name|next_ordinal
 expr_stmt|;
 block|}
-comment|/* OK, now we can allocate some memory */
+comment|/* OK, now we can allocate some memory.  */
 name|edata_sz
 operator|=
 operator|(
@@ -3028,7 +3078,7 @@ argument_list|(
 name|edata_sz
 argument_list|)
 expr_stmt|;
-comment|/* Note use of array pointer math here */
+comment|/* Note use of array pointer math here.  */
 name|edirectory
 operator|=
 name|edata_d
@@ -3090,7 +3140,7 @@ name|edata_d
 argument_list|,
 literal|0
 argument_list|,
-literal|40
+name|edata_sz
 argument_list|)
 expr_stmt|;
 name|bfd_put_32
@@ -3253,7 +3303,7 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-comment|/* Ok, now for the filling in part */
+comment|/* Ok, now for the filling in part.  */
 name|hint
 operator|=
 literal|0
@@ -3319,6 +3369,18 @@ operator|->
 name|output_offset
 operator|)
 decl_stmt|;
+name|int
+name|ord
+init|=
+name|pe_def_file
+operator|->
+name|exports
+index|[
+name|s
+index|]
+operator|.
+name|ordinal
+decl_stmt|;
 name|bfd_put_32
 argument_list|(
 name|abfd
@@ -3334,7 +3396,9 @@ operator|)
 operator|(
 name|eaddresses
 operator|+
-name|i
+name|ord
+operator|-
+name|min_ordinal
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3380,6 +3444,9 @@ operator|)
 name|enameptrs
 argument_list|)
 expr_stmt|;
+name|enameptrs
+operator|++
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|enamestr
@@ -3400,7 +3467,9 @@ name|bfd_put_16
 argument_list|(
 name|abfd
 argument_list|,
-name|i
+name|ord
+operator|-
+name|min_ordinal
 argument_list|,
 operator|(
 name|void
@@ -3409,7 +3478,7 @@ operator|)
 name|eordinals
 argument_list|)
 expr_stmt|;
-name|enameptrs
+name|eordinals
 operator|++
 expr_stmt|;
 name|pe_def_file
@@ -3425,9 +3494,6 @@ name|hint
 operator|++
 expr_stmt|;
 block|}
-name|eordinals
-operator|++
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -3456,7 +3522,7 @@ modifier|*
 name|info
 decl_stmt|;
 block|{
-comment|/* for .reloc stuff */
+comment|/* For .reloc stuff.  */
 name|reloc_data_type
 modifier|*
 name|reloc_data
@@ -3643,7 +3709,7 @@ name|nsyms
 decl_stmt|,
 name|symsize
 decl_stmt|;
-comment|/* if it's not loaded, we don't need to relocate it this way */
+comment|/* If it's not loaded, we don't need to relocate it this way.  */
 if|if
 condition|(
 operator|!
@@ -3658,7 +3724,7 @@ name|SEC_LOAD
 operator|)
 condition|)
 continue|continue;
-comment|/* I don't know why there would be a reloc for these, but I've 	     seen it happen - DJ */
+comment|/* I don't know why there would be a reloc for these, but I've 	     seen it happen - DJ  */
 if|if
 condition|(
 name|s
@@ -3680,7 +3746,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Huh?  Shouldn't happen, but punt if it does */
+comment|/* Huh?  Shouldn't happen, but punt if it does.  */
 name|einfo
 argument_list|(
 literal|"DJ: zero vma section reloc detected: `%s' #%d f=%d\n"
@@ -3967,7 +4033,7 @@ name|type
 operator|=
 literal|4
 expr_stmt|;
-comment|/* FIXME: we can't know the symbol's right value yet, 			 but we probably can safely assume that CE will relocate 			 us in 64k blocks, so leaving it zero is safe.  */
+comment|/* FIXME: we can't know the symbol's right value 			 yet, but we probably can safely assume that 			 CE will relocate us in 64k blocks, so leaving 			 it zero is safe.  */
 name|reloc_data
 index|[
 name|total_relocs
@@ -4030,11 +4096,16 @@ argument_list|(
 name|relocs
 argument_list|)
 expr_stmt|;
-comment|/* Warning: the allocated symbols are remembered in BFD and reused 	     later, so don't free them! */
-comment|/* free (symbols); */
+comment|/* Warning: the allocated symbols are remembered in BFD and 	     reused later, so don't free them!  */
+if|#
+directive|if
+literal|0
+block|free (symbol);
+endif|#
+directive|endif
 block|}
 block|}
-comment|/* At this point, we have total_relocs relocation addresses in      reloc_addresses, which are all suitable for the .reloc section.      We must now create the new sections. */
+comment|/* At this point, we have total_relocs relocation addresses in      reloc_addresses, which are all suitable for the .reloc section.      We must now create the new sections.  */
 name|qsort
 argument_list|(
 name|reloc_data
@@ -5557,7 +5628,7 @@ argument_list|,
 name|align
 argument_list|)
 expr_stmt|;
-comment|/* remember to undo this before trying to link internally! */
+comment|/* Remember to undo this before trying to link internally!  */
 name|sec
 operator|->
 name|output_section
@@ -6220,7 +6291,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* OK, pay attention here.  I got confused myself looking back at      it.  We create a four-byte section to mark the beginning of the      list, and we include an offset of 4 in the section, so that the      pointer to the list points to the *end* of this section, which is      the start of the list of sections from other objects. */
+comment|/* OK, pay attention here.  I got confused myself looking back at      it.  We create a four-byte section to mark the beginning of the      list, and we include an offset of 4 in the section, so that the      pointer to the list points to the *end* of this section, which is      the start of the list of sections from other objects.  */
 name|bfd_set_section_size
 argument_list|(
 name|abfd
@@ -6972,6 +7043,8 @@ name|unsigned
 name|char
 modifier|*
 name|td
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|d7
@@ -7271,7 +7344,7 @@ name|abfd
 argument_list|,
 name|U
 argument_list|(
-literal|"__imp_"
+literal|"_imp__"
 argument_list|)
 argument_list|,
 name|exp
@@ -7313,6 +7386,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|exp
+operator|->
+name|flag_data
+condition|)
+block|{
 name|bfd_set_section_size
 argument_list|(
 name|abfd
@@ -7430,6 +7511,7 @@ argument_list|(
 name|tx
 argument_list|)
 expr_stmt|;
+block|}
 name|bfd_set_section_size
 argument_list|(
 name|abfd
@@ -7615,7 +7697,7 @@ operator|->
 name|flag_noname
 condition|)
 block|{
-name|d5
+name|d4
 index|[
 literal|0
 index|]
@@ -7624,7 +7706,7 @@ name|exp
 operator|->
 name|ordinal
 expr_stmt|;
-name|d5
+name|d4
 index|[
 literal|1
 index|]
@@ -7635,7 +7717,7 @@ name|ordinal
 operator|>>
 literal|8
 expr_stmt|;
-name|d5
+name|d4
 index|[
 literal|3
 index|]
@@ -8020,7 +8102,7 @@ name|has_armap
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Work out a reasonable size of things to put onto one line. */
+comment|/* Work out a reasonable size of things to put onto one line.  */
 name|ar_head
 operator|=
 name|make_head
@@ -8044,7 +8126,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* The import library doesn't know about the internal name */
+comment|/* The import library doesn't know about the internal name.  */
 name|char
 modifier|*
 name|internal
@@ -8133,7 +8215,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* Now stick them all into the archive */
+comment|/* Now stick them all into the archive.  */
 name|ar_head
 operator|->
 name|next
@@ -8443,7 +8525,7 @@ name|bfd_link_hash_entry
 modifier|*
 name|blhe
 decl_stmt|;
-comment|/* see if we need this import */
+comment|/* See if we need this import.  */
 name|char
 modifier|*
 name|name
@@ -8467,6 +8549,8 @@ name|internal_name
 argument_list|)
 operator|+
 literal|2
+operator|+
+literal|6
 argument_list|)
 decl_stmt|;
 name|sprintf
@@ -8507,6 +8591,61 @@ argument_list|,
 name|false
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|blhe
+operator|||
+operator|(
+name|blhe
+operator|&&
+name|blhe
+operator|->
+name|type
+operator|!=
+name|bfd_link_hash_undefined
+operator|)
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|U
+argument_list|(
+literal|"_imp__"
+argument_list|)
+argument_list|,
+name|pe_def_file
+operator|->
+name|imports
+index|[
+name|i
+index|]
+operator|.
+name|internal_name
+argument_list|)
+expr_stmt|;
+name|blhe
+operator|=
+name|bfd_link_hash_lookup
+argument_list|(
+name|link_info
+operator|->
+name|hash
+argument_list|,
+name|name
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|name
@@ -8527,7 +8666,7 @@ name|bfd
 modifier|*
 name|one
 decl_stmt|;
-comment|/* we do */
+comment|/* We do.  */
 if|if
 condition|(
 operator|!
@@ -8861,7 +9000,7 @@ comment|/* This is not currently used.  */
 end_comment
 
 begin_endif
-unit|static unsigned int pe_as16 (ptr)      void *ptr; {   unsigned char *b = ptr;   return b[0] + (b[1]<<8); }
+unit|static unsigned int pe_as16 (ptr)      void *ptr; {   unsigned char *b = ptr;   return b[0] + (b[1]<< 8); }
 endif|#
 directive|endif
 end_endif
@@ -8983,7 +9122,7 @@ name|char
 modifier|*
 name|dll_name
 decl_stmt|;
-comment|/* No, I can't use bfd here.  kernel32.dll puts its export table in      the middle of the .rdata section. */
+comment|/* No, I can't use bfd here.  kernel32.dll puts its export table in      the middle of the .rdata section.  */
 name|dll
 operator|=
 name|bfd_openr
@@ -9018,7 +9157,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/* PEI dlls seem to be bfd_objects */
+comment|/* PEI dlls seem to be bfd_objects.  */
 if|if
 condition|(
 operator|!

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Assorted BFD support routines, only used internally.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Assorted BFD support routines, only used internally.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -68,10 +68,6 @@ begin_comment
 comment|/* A routine which is used in target vectors for unsupported    operations.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|boolean
 name|bfd_false
@@ -99,10 +95,6 @@ begin_comment
 comment|/* A routine which is used in target vectors for supported operations    which do not actually do anything.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|boolean
 name|bfd_true
@@ -123,10 +115,6 @@ end_function
 
 begin_comment
 comment|/* A routine which is used in target vectors for unsupported    operations which return a pointer value.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -152,10 +140,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|int
 name|bfd_0
@@ -173,10 +157,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 name|unsigned
@@ -196,10 +176,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGUSED*/
-end_comment
 
 begin_function
 name|long
@@ -221,10 +197,6 @@ end_function
 
 begin_comment
 comment|/* A routine which is used in target vectors for unsupported    operations which return -1 on error.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -251,10 +223,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|void
 name|bfd_void
@@ -268,10 +236,6 @@ name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{ }
 end_function
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 name|boolean
@@ -307,10 +271,6 @@ begin_comment
 comment|/* Routine to handle core_file_failing_command entry point for targets    without core file support.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|char
 modifier|*
@@ -343,10 +303,6 @@ begin_comment
 comment|/* Routine to handle core_file_failing_signal entry point for targets    without core file support.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|int
 name|_bfd_nocore_core_file_failing_signal
@@ -369,10 +325,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 specifier|const
@@ -582,7 +534,7 @@ comment|/* Some IO code */
 end_comment
 
 begin_comment
-comment|/* Note that archive entries don't have streams; they share their parent's.    This allows someone to play with the iostream behind BFD's back.     Also, note that the origin pointer points to the beginning of a file's    contents (0 for non-archive elements).  For archive entries this is the    first octet in the file, NOT the beginning of the archive header. */
+comment|/* Note that archive entries don't have streams; they share their parent's.    This allows someone to play with the iostream behind BFD's back.     Also, note that the origin pointer points to the beginning of a file's    contents (0 for non-archive elements).  For archive entries this is the    first octet in the file, NOT the beginning of the archive header.  */
 end_comment
 
 begin_function
@@ -921,7 +873,7 @@ name|refcount
 range|:
 literal|31
 decl_stmt|;
-comment|/* should be enough... */
+comment|/* should be enough...  */
 name|unsigned
 name|mapped
 range|:
@@ -2509,7 +2461,7 @@ decl_stmt|;
 name|file_ptr
 name|file_position
 decl_stmt|;
-comment|/* For the time being, a BFD may not seek to it's end.  The problem      is that we don't easily have a way to recognize the end of an      element in an archive. */
+comment|/* For the time being, a BFD may not seek to it's end.  The problem      is that we don't easily have a way to recognize the end of an      element in an archive.  */
 name|BFD_ASSERT
 argument_list|(
 name|direction
@@ -2596,6 +2548,112 @@ operator|->
 name|size
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|abfd
+operator|->
+name|direction
+operator|==
+name|write_direction
+operator|)
+operator|||
+operator|(
+name|abfd
+operator|->
+name|direction
+operator|==
+name|both_direction
+operator|)
+condition|)
+block|{
+name|long
+name|newsize
+decl_stmt|,
+name|oldsize
+init|=
+operator|(
+name|bim
+operator|->
+name|size
+operator|+
+literal|127
+operator|)
+operator|&
+operator|~
+literal|127
+decl_stmt|;
+name|bim
+operator|->
+name|size
+operator|=
+name|abfd
+operator|->
+name|where
+expr_stmt|;
+comment|/* Round up to cut down on memory fragmentation */
+name|newsize
+operator|=
+operator|(
+name|bim
+operator|->
+name|size
+operator|+
+literal|127
+operator|)
+operator|&
+operator|~
+literal|127
+expr_stmt|;
+if|if
+condition|(
+name|newsize
+operator|>
+name|oldsize
+condition|)
+block|{
+name|bim
+operator|->
+name|buffer
+operator|=
+name|bfd_realloc
+argument_list|(
+name|bim
+operator|->
+name|buffer
+argument_list|,
+name|newsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bim
+operator|->
+name|buffer
+operator|==
+literal|0
+condition|)
+block|{
+name|bim
+operator|->
+name|size
+operator|=
+literal|0
+expr_stmt|;
+name|bfd_set_error
+argument_list|(
+name|bfd_error_no_memory
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
+block|}
+else|else
+block|{
 name|abfd
 operator|->
 name|where
@@ -2613,6 +2671,7 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
 block|}
 return|return
 literal|0
@@ -2784,11 +2843,11 @@ comment|/* The middle letter e.g. get<b>short indicates Big or Little endian    
 end_comment
 
 begin_comment
-comment|/* FIXME: Should these take a count argument?    Answer (gnu@cygnus.com):  No, but perhaps they should be inline                              functions in swap.h #ifdef __GNUC__.                               Gprof them later and find out.  */
+comment|/* FIXME: Should these take a count argument?    Answer (gnu@cygnus.com):  No, but perhaps they should be inline                              functions in swap.h #ifdef __GNUC__.                              Gprof them later and find out.  */
 end_comment
 
 begin_comment
-comment|/* FUNCTION 	bfd_put_size FUNCTION 	bfd_get_size  DESCRIPTION 	These macros as used for reading and writing raw data in 	sections; each access (except for bytes) is vectored through 	the target format of the BFD and mangled accordingly. The 	mangling performs any necessary endian translations and 	removes alignment restrictions.  Note that types accepted and 	returned by these macros are identical so they can be swapped 	around in macros---for example, @file{libaout.h} defines<<GET_WORD>> 	to either<<bfd_get_32>> or<<bfd_get_64>>.  	In the put routines, @var{val} must be a<<bfd_vma>>.  If we are on a 	system without prototypes, the caller is responsible for making 	sure that is true, with a cast if necessary.  We don't cast 	them in the macro definitions because that would prevent<<lint>> 	or<<gcc -Wall>> from detecting sins such as passing a pointer. 	To detect calling these with less than a<<bfd_vma>>, use<<gcc -Wconversion>> on a host with 64 bit<<bfd_vma>>'s.  . .{* Byte swapping macros for user section data.  *} . .#define bfd_put_8(abfd, val, ptr) \ .                ((void) (*((unsigned char *)(ptr)) = (unsigned char)(val))) .#define bfd_put_signed_8 \ .		bfd_put_8 .#define bfd_get_8(abfd, ptr) \ .                (*(unsigned char *)(ptr)) .#define bfd_get_signed_8(abfd, ptr) \ .		((*(unsigned char *)(ptr) ^ 0x80) - 0x80) . .#define bfd_put_16(abfd, val, ptr) \ .                BFD_SEND(abfd, bfd_putx16, ((val),(ptr))) .#define bfd_put_signed_16 \ .		 bfd_put_16 .#define bfd_get_16(abfd, ptr) \ .                BFD_SEND(abfd, bfd_getx16, (ptr)) .#define bfd_get_signed_16(abfd, ptr) \ .         	 BFD_SEND (abfd, bfd_getx_signed_16, (ptr)) . .#define bfd_put_32(abfd, val, ptr) \ .                BFD_SEND(abfd, bfd_putx32, ((val),(ptr))) .#define bfd_put_signed_32 \ .		 bfd_put_32 .#define bfd_get_32(abfd, ptr) \ .                BFD_SEND(abfd, bfd_getx32, (ptr)) .#define bfd_get_signed_32(abfd, ptr) \ .		 BFD_SEND(abfd, bfd_getx_signed_32, (ptr)) . .#define bfd_put_64(abfd, val, ptr) \ .                BFD_SEND(abfd, bfd_putx64, ((val), (ptr))) .#define bfd_put_signed_64 \ .		 bfd_put_64 .#define bfd_get_64(abfd, ptr) \ .                BFD_SEND(abfd, bfd_getx64, (ptr)) .#define bfd_get_signed_64(abfd, ptr) \ .		 BFD_SEND(abfd, bfd_getx_signed_64, (ptr)) . .#define bfd_get(bits, abfd, ptr)				\ .                ((bits) == 8 ? bfd_get_8 (abfd, ptr)		\ .		 : (bits) == 16 ? bfd_get_16 (abfd, ptr)	\ .		 : (bits) == 32 ? bfd_get_32 (abfd, ptr)	\ .		 : (bits) == 64 ? bfd_get_64 (abfd, ptr)	\ .		 : (abort (), (bfd_vma) - 1)) . .#define bfd_put(bits, abfd, val, ptr)				\ .                ((bits) == 8 ? bfd_put_8 (abfd, val, ptr)	\ .		 : (bits) == 16 ? bfd_put_16 (abfd, val, ptr)	\ .		 : (bits) == 32 ? bfd_put_32 (abfd, val, ptr)	\ .		 : (bits) == 64 ? bfd_put_64 (abfd, val, ptr)	\ .		 : (abort (), (void) 0)) . */
+comment|/* FUNCTION 	bfd_put_size FUNCTION 	bfd_get_size  DESCRIPTION 	These macros as used for reading and writing raw data in 	sections; each access (except for bytes) is vectored through 	the target format of the BFD and mangled accordingly. The 	mangling performs any necessary endian translations and 	removes alignment restrictions.  Note that types accepted and 	returned by these macros are identical so they can be swapped 	around in macros---for example, @file{libaout.h} defines<<GET_WORD>> 	to either<<bfd_get_32>> or<<bfd_get_64>>.  	In the put routines, @var{val} must be a<<bfd_vma>>.  If we are on a 	system without prototypes, the caller is responsible for making 	sure that is true, with a cast if necessary.  We don't cast 	them in the macro definitions because that would prevent<<lint>> 	or<<gcc -Wall>> from detecting sins such as passing a pointer. 	To detect calling these with less than a<<bfd_vma>>, use<<gcc -Wconversion>> on a host with 64 bit<<bfd_vma>>'s.  . .{* Byte swapping macros for user section data.  *} . .#define bfd_put_8(abfd, val, ptr) \ .                ((void) (*((unsigned char *) (ptr)) = (unsigned char) (val))) .#define bfd_put_signed_8 \ .		bfd_put_8 .#define bfd_get_8(abfd, ptr) \ .                (*(unsigned char *) (ptr)) .#define bfd_get_signed_8(abfd, ptr) \ .		((*(unsigned char *) (ptr) ^ 0x80) - 0x80) . .#define bfd_put_16(abfd, val, ptr) \ .                BFD_SEND(abfd, bfd_putx16, ((val),(ptr))) .#define bfd_put_signed_16 \ .		 bfd_put_16 .#define bfd_get_16(abfd, ptr) \ .                BFD_SEND(abfd, bfd_getx16, (ptr)) .#define bfd_get_signed_16(abfd, ptr) \ .         	 BFD_SEND (abfd, bfd_getx_signed_16, (ptr)) . .#define bfd_put_32(abfd, val, ptr) \ .                BFD_SEND(abfd, bfd_putx32, ((val),(ptr))) .#define bfd_put_signed_32 \ .		 bfd_put_32 .#define bfd_get_32(abfd, ptr) \ .                BFD_SEND(abfd, bfd_getx32, (ptr)) .#define bfd_get_signed_32(abfd, ptr) \ .		 BFD_SEND(abfd, bfd_getx_signed_32, (ptr)) . .#define bfd_put_64(abfd, val, ptr) \ .                BFD_SEND(abfd, bfd_putx64, ((val), (ptr))) .#define bfd_put_signed_64 \ .		 bfd_put_64 .#define bfd_get_64(abfd, ptr) \ .                BFD_SEND(abfd, bfd_getx64, (ptr)) .#define bfd_get_signed_64(abfd, ptr) \ .		 BFD_SEND(abfd, bfd_getx_signed_64, (ptr)) . .#define bfd_get(bits, abfd, ptr)				\ .                ((bits) == 8 ? bfd_get_8 (abfd, ptr)		\ .		 : (bits) == 16 ? bfd_get_16 (abfd, ptr)	\ .		 : (bits) == 32 ? bfd_get_32 (abfd, ptr)	\ .		 : (bits) == 64 ? bfd_get_64 (abfd, ptr)	\ .		 : (abort (), (bfd_vma) - 1)) . .#define bfd_put(bits, abfd, val, ptr)				\ .                ((bits) == 8 ? bfd_put_8 (abfd, val, ptr)	\ .		 : (bits) == 16 ? bfd_put_16 (abfd, val, ptr)	\ .		 : (bits) == 32 ? bfd_put_32 (abfd, val, ptr)	\ .		 : (bits) == 64 ? bfd_put_64 (abfd, val, ptr)	\ .		 : (abort (), (void) 0)) . */
 end_comment
 
 begin_comment
@@ -4386,6 +4445,198 @@ directive|endif
 block|}
 end_function
 
+begin_function
+name|void
+name|bfd_put_bits
+parameter_list|(
+name|data
+parameter_list|,
+name|addr
+parameter_list|,
+name|bits
+parameter_list|,
+name|big_p
+parameter_list|)
+name|bfd_vma
+name|data
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|addr
+decl_stmt|;
+name|int
+name|bits
+decl_stmt|;
+name|boolean
+name|big_p
+decl_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
+name|int
+name|bytes
+decl_stmt|;
+if|if
+condition|(
+name|bits
+operator|%
+literal|8
+operator|!=
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+name|bytes
+operator|=
+name|bits
+operator|/
+literal|8
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|bytes
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|int
+name|index
+init|=
+name|big_p
+condition|?
+name|bytes
+operator|-
+name|i
+operator|-
+literal|1
+else|:
+name|i
+decl_stmt|;
+name|addr
+index|[
+name|index
+index|]
+operator|=
+operator|(
+name|bfd_byte
+operator|)
+name|data
+expr_stmt|;
+name|data
+operator|>>=
+literal|8
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|bfd_vma
+name|bfd_get_bits
+parameter_list|(
+name|addr
+parameter_list|,
+name|bits
+parameter_list|,
+name|big_p
+parameter_list|)
+name|bfd_byte
+modifier|*
+name|addr
+decl_stmt|;
+name|int
+name|bits
+decl_stmt|;
+name|boolean
+name|big_p
+decl_stmt|;
+block|{
+name|bfd_vma
+name|data
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|int
+name|bytes
+decl_stmt|;
+if|if
+condition|(
+name|bits
+operator|%
+literal|8
+operator|!=
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+name|data
+operator|=
+literal|0
+expr_stmt|;
+name|bytes
+operator|=
+name|bits
+operator|/
+literal|8
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|bytes
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|int
+name|index
+init|=
+name|big_p
+condition|?
+name|i
+else|:
+name|bytes
+operator|-
+name|i
+operator|-
+literal|1
+decl_stmt|;
+name|data
+operator|=
+operator|(
+name|data
+operator|<<
+literal|8
+operator|)
+operator||
+name|addr
+index|[
+name|index
+index|]
+expr_stmt|;
+block|}
+return|return
+name|data
+return|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
@@ -4964,6 +5215,14 @@ name|xvec
 operator|->
 name|byteorder
 operator|&&
+name|ibfd
+operator|->
+name|xvec
+operator|->
+name|byteorder
+operator|!=
+name|BFD_ENDIAN_UNKNOWN
+operator|&&
 name|obfd
 operator|->
 name|xvec
@@ -4973,35 +5232,44 @@ operator|!=
 name|BFD_ENDIAN_UNKNOWN
 condition|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|msg
+decl_stmt|;
+if|if
+condition|(
+name|bfd_big_endian
+argument_list|(
+name|ibfd
+argument_list|)
+condition|)
+name|msg
+operator|=
+name|_
+argument_list|(
+literal|"%s: compiled for a big endian system and target is little endian"
+argument_list|)
+expr_stmt|;
+else|else
+name|msg
+operator|=
+name|_
+argument_list|(
+literal|"%s: compiled for a little endian system and target is big endian"
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: compiled for a %s endian system and target is %s endian"
+name|msg
 argument_list|,
 name|bfd_get_filename
 argument_list|(
 name|ibfd
 argument_list|)
-argument_list|,
-name|bfd_big_endian
-argument_list|(
-name|ibfd
-argument_list|)
-condition|?
-literal|"big"
-else|:
-literal|"little"
-argument_list|,
-name|bfd_big_endian
-argument_list|(
-name|obfd
-argument_list|)
-condition|?
-literal|"big"
-else|:
-literal|"little"
 argument_list|)
 expr_stmt|;
 name|bfd_set_error

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* macro.c - macro support for gas and gasp    Copyright (C) 1994, 95, 96, 97, 98, 1999 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* macro.c - macro support for gas and gasp    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -795,7 +795,7 @@ condition|(
 name|more
 condition|)
 block|{
-comment|/* Try and find the first pseudo op on the line */
+comment|/* Try and find the first pseudo op on the line.  */
 name|int
 name|i
 init|=
@@ -810,8 +810,8 @@ operator|!
 name|macro_mri
 condition|)
 block|{
-comment|/* With normal syntax we can suck what we want till we get 	     to the dot.  With the alternate, labels have to start in 	     the first column, since we cant tell what's a label and 	     whats a pseudoop */
-comment|/* Skip leading whitespace */
+comment|/* With normal syntax we can suck what we want till we get 	     to the dot.  With the alternate, labels have to start in 	     the first column, since we cant tell what's a label and 	     whats a pseudoop.  */
+comment|/* Skip leading whitespace.  */
 while|while
 condition|(
 name|i
@@ -833,7 +833,7 @@ condition|)
 name|i
 operator|++
 expr_stmt|;
-comment|/* Skip over a label */
+comment|/* Skip over a label.  */
 while|while
 condition|(
 name|i
@@ -879,7 +879,7 @@ condition|)
 name|i
 operator|++
 expr_stmt|;
-comment|/* And a colon */
+comment|/* And a colon.  */
 if|if
 condition|(
 name|i
@@ -901,7 +901,7 @@ name|i
 operator|++
 expr_stmt|;
 block|}
-comment|/* Skip trailing whitespace */
+comment|/* Skip trailing whitespace.  */
 while|while
 condition|(
 name|i
@@ -1059,7 +1059,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Reset the string to not include the ending rune */
+comment|/* Reset the string to not include the ending rune.  */
 name|ptr
 operator|->
 name|len
@@ -1070,7 +1070,7 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* Add a CR to the end and keep running */
+comment|/* Add a CR to the end and keep running.  */
 name|sb_add_char
 argument_list|(
 name|ptr
@@ -1242,7 +1242,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Ignore trailing& */
+comment|/* Ignore trailing&.  */
 if|if
 condition|(
 name|macro_alternate
@@ -1509,6 +1509,11 @@ index|[
 name|idx
 index|]
 decl_stmt|;
+name|int
+name|escaped
+init|=
+literal|0
+decl_stmt|;
 name|idx
 operator|++
 expr_stmt|;
@@ -1521,6 +1526,28 @@ operator|->
 name|len
 condition|)
 block|{
+if|if
+condition|(
+name|in
+operator|->
+name|ptr
+index|[
+name|idx
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\\'
+condition|)
+name|escaped
+operator|^=
+literal|1
+expr_stmt|;
+else|else
+name|escaped
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|macro_alternate
@@ -1547,9 +1574,37 @@ operator|->
 name|ptr
 index|[
 name|idx
-operator|++
 index|]
 argument_list|)
+expr_stmt|;
+name|idx
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|escaped
+operator|&&
+name|in
+operator|->
+name|ptr
+index|[
+name|idx
+index|]
+operator|==
+name|tchar
+condition|)
+block|{
+name|sb_add_char
+argument_list|(
+name|acc
+argument_list|,
+name|tchar
+argument_list|)
+expr_stmt|;
+name|idx
+operator|++
 expr_stmt|;
 block|}
 else|else
@@ -1756,7 +1811,7 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/* Turns the next expression into a string */
+comment|/* Turns the next expression into a string.  */
 name|idx
 operator|=
 call|(
@@ -1849,7 +1904,7 @@ operator|&&
 name|expand
 condition|)
 block|{
-comment|/* Keep the quotes */
+comment|/* Keep the quotes.  */
 name|sb_add_char
 argument_list|(
 name|out
@@ -2233,7 +2288,7 @@ operator|.
 name|len
 condition|)
 block|{
-comment|/* This is a formal */
+comment|/* This is a formal.  */
 if|if
 condition|(
 name|idx
@@ -2252,7 +2307,7 @@ operator|==
 literal|'='
 condition|)
 block|{
-comment|/* Got a default */
+comment|/* Got a default.  */
 name|idx
 operator|=
 name|get_any_string
@@ -2275,7 +2330,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Add to macro's hash table */
+comment|/* Add to macro's hash table.  */
 name|hash_jam
 argument_list|(
 name|macro
@@ -2410,7 +2465,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* Add to macro's hash table */
+comment|/* Add to macro's hash table.  */
 name|hash_jam
 argument_list|(
 name|macro
@@ -2628,7 +2683,7 @@ operator|==
 literal|'('
 condition|)
 block|{
-comment|/* It's the label: MACRO (formals,...)  sort */
+comment|/* It's the label: MACRO (formals,...)  sort  */
 name|idx
 operator|=
 name|do_formals
@@ -2662,7 +2717,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* It's the label: MACRO formals,...  sort */
+comment|/* It's the label: MACRO formals,...  sort  */
 name|idx
 operator|=
 name|do_formals
@@ -2711,7 +2766,7 @@ name|in
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* and stick it in the macro hash table */
+comment|/* And stick it in the macro hash table.  */
 for|for
 control|(
 name|idx
@@ -3317,7 +3372,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* This is a comment, just drop the rest of the line */
+comment|/* This is a comment, just drop the rest of the line.  */
 while|while
 condition|(
 name|src
@@ -3352,7 +3407,7 @@ operator|==
 literal|'('
 condition|)
 block|{
-comment|/* Sub in till the next ')' literally */
+comment|/* Sub in till the next ')' literally.  */
 name|src
 operator|++
 expr_stmt|;
@@ -3423,7 +3478,7 @@ operator|==
 literal|'@'
 condition|)
 block|{
-comment|/* Sub in the macro invocation number */
+comment|/* Sub in the macro invocation number.  */
 name|char
 name|buffer
 index|[
@@ -3437,7 +3492,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%05d"
+literal|"%d"
 argument_list|,
 name|macro_number
 argument_list|)
@@ -3463,7 +3518,7 @@ operator|==
 literal|'&'
 condition|)
 block|{
-comment|/* This is a preprocessor variable name, we don't do them 		 here */
+comment|/* This is a preprocessor variable name, we don't do them 		 here.  */
 name|sb_add_char
 argument_list|(
 name|out
@@ -4467,7 +4522,7 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
-comment|/* Reset any old value the actuals may have */
+comment|/* Reset any old value the actuals may have.  */
 for|for
 control|(
 name|f
@@ -4624,7 +4679,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Peel off the actuals and store them away in the hash tables' actuals */
+comment|/* Peel off the actuals and store them away in the hash tables' actuals.  */
 name|idx
 operator|=
 name|sb_skip_white
@@ -4655,7 +4710,7 @@ block|{
 name|int
 name|scan
 decl_stmt|;
-comment|/* Look and see if it's a positional or keyword arg */
+comment|/* Look and see if it's a positional or keyword arg.  */
 name|scan
 operator|=
 name|idx
@@ -4736,7 +4791,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* It's OK to go from positional to keyword.  */
-comment|/* This is a keyword arg, fetch the formal name and 	     then the actual stuff */
+comment|/* This is a keyword arg, fetch the formal name and 	     then the actual stuff.  */
 name|sb_reset
 argument_list|(
 operator|&
@@ -4772,7 +4827,7 @@ argument_list|(
 literal|"confusion in formal parameters"
 argument_list|)
 return|;
-comment|/* Lookup the formal in the macro's list */
+comment|/* Lookup the formal in the macro's list.  */
 name|ptr
 operator|=
 operator|(
@@ -4805,7 +4860,7 @@ argument_list|)
 return|;
 else|else
 block|{
-comment|/* Insert this value into the right place */
+comment|/* Insert this value into the right place.  */
 name|sb_reset
 argument_list|(
 operator|&
@@ -4851,7 +4906,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* This is a positional arg */
+comment|/* This is a positional arg.  */
 name|is_positional
 operator|=
 literal|1
@@ -5629,7 +5684,7 @@ operator|&
 name|line_sb
 argument_list|)
 expr_stmt|;
-comment|/* export the macro information if requested */
+comment|/* Export the macro information if requested.  */
 if|if
 condition|(
 name|info

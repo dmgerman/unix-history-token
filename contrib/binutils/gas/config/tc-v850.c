@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-v850.c -- Assembler code for the NEC V850    Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-v850.c -- Assembler code for the NEC V850    Copyright 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -33,6 +33,12 @@ directive|include
 file|"opcode/v850.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"dwarf2dbg.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -55,7 +61,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* sign-extend a 16-bit number */
+comment|/* Sign-extend a 16-bit number.  */
 end_comment
 
 begin_define
@@ -65,7 +71,7 @@ name|SEXT16
 parameter_list|(
 name|x
 parameter_list|)
-value|((((x)& 0xffff) ^ (~ 0x7fff)) + 0x8000)
+value|((((x)& 0xffff) ^ (~0x7fff)) + 0x8000)
 end_define
 
 begin_comment
@@ -76,6 +82,8 @@ begin_decl_stmt
 specifier|static
 name|bfd_reloc_code_real_type
 name|hold_cons_reloc
+init|=
+name|BFD_RELOC_UNUSED
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +129,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
 name|int
 name|processor_mask
 init|=
@@ -154,11 +161,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Generic assembler global variables which must be defined by all targets. */
+comment|/* Generic assembler global variables which must be defined by all    targets.  */
 end_comment
 
 begin_comment
-comment|/* Characters which always start a comment. */
+comment|/* Characters which always start a comment.  */
 end_comment
 
 begin_decl_stmt
@@ -186,7 +193,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Characters which may be used to separate multiple commands on a     single line.  */
+comment|/* Characters which may be used to separate multiple commands on a    single line.  */
 end_comment
 
 begin_decl_stmt
@@ -200,7 +207,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Characters which are used to indicate an exponent in a floating     point number.  */
+comment|/* Characters which are used to indicate an exponent in a floating    point number.  */
 end_comment
 
 begin_decl_stmt
@@ -214,7 +221,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Characters which mean that a number is a floating point constant,     as in 0d1.0.  */
+comment|/* Characters which mean that a number is a floating point constant,    as in 0d1.0.  */
 end_comment
 
 begin_decl_stmt
@@ -404,7 +411,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* fixups */
+comment|/* Fixups.  */
 end_comment
 
 begin_define
@@ -457,6 +464,7 @@ name|v850_sdata
 parameter_list|(
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|obj_elf_section_change_hook
@@ -485,6 +493,7 @@ name|v850_tdata
 parameter_list|(
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|obj_elf_section_change_hook
@@ -513,6 +522,7 @@ name|v850_zdata
 parameter_list|(
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|obj_elf_section_change_hook
@@ -541,6 +551,7 @@ name|v850_sbss
 parameter_list|(
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|obj_elf_section_change_hook
@@ -569,6 +580,7 @@ name|v850_tbss
 parameter_list|(
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|obj_elf_section_change_hook
@@ -597,6 +609,7 @@ name|v850_zbss
 parameter_list|(
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|obj_elf_section_change_hook
@@ -625,6 +638,7 @@ name|v850_rosdata
 parameter_list|(
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|obj_elf_section_change_hook
@@ -653,6 +667,7 @@ name|v850_rozdata
 parameter_list|(
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|obj_elf_section_change_hook
@@ -681,6 +696,7 @@ name|v850_call_table_data
 parameter_list|(
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|obj_elf_section_change_hook
@@ -709,6 +725,7 @@ name|v850_call_table_text
 parameter_list|(
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|obj_elf_section_change_hook
@@ -737,6 +754,7 @@ name|v850_bss
 parameter_list|(
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 specifier|register
@@ -771,6 +789,7 @@ name|v850_offset
 parameter_list|(
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 name|int
@@ -805,7 +824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copied from obj_elf_common() in gas/config/obj-elf.c */
+comment|/* Copied from obj_elf_common() in gas/config/obj-elf.c.  */
 end_comment
 
 begin_function
@@ -833,6 +852,7 @@ decl_stmt|;
 name|int
 name|temp
 decl_stmt|;
+name|unsigned
 name|int
 name|size
 decl_stmt|;
@@ -852,7 +872,7 @@ operator|=
 name|get_symbol_end
 argument_list|()
 expr_stmt|;
-comment|/* just after name is now '\0' */
+comment|/* Just after name is now '\0'.  */
 name|p
 operator|=
 name|input_line_pointer
@@ -886,10 +906,10 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+comment|/* Skip ','.  */
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* skip ',' */
 if|if
 condition|(
 operator|(
@@ -902,7 +922,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* xgettext:c-format */
+comment|/* xgettext:c-format  */
 name|as_bad
 argument_list|(
 name|_
@@ -986,7 +1006,7 @@ operator|!=
 name|size
 condition|)
 block|{
-comment|/* xgettext:c-format */
+comment|/* xgettext:c-format  */
 name|as_warn
 argument_list|(
 name|_
@@ -1268,7 +1288,7 @@ condition|(
 name|temp
 condition|)
 block|{
-comment|/* convert to a power of 2 alignment */
+comment|/* Convert to a power of 2 alignment.  */
 for|for
 control|(
 name|align
@@ -1629,14 +1649,12 @@ condition|)
 block|{
 name|flagword
 name|applicable
-decl_stmt|;
-name|applicable
-operator|=
+init|=
 name|bfd_applicable_section_flags
 argument_list|(
 name|stdoutput
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|scommon_section
 operator|=
 name|subseg_new
@@ -1652,6 +1670,7 @@ name|stdoutput
 argument_list|,
 name|scommon_section
 argument_list|,
+operator|(
 name|applicable
 operator|&
 operator|(
@@ -1664,6 +1683,7 @@ operator||
 name|SEC_DATA
 operator||
 name|SEC_HAS_CONTENTS
+operator|)
 operator|)
 operator||
 name|SEC_IS_COMMON
@@ -1690,14 +1710,12 @@ condition|)
 block|{
 name|flagword
 name|applicable
-decl_stmt|;
-name|applicable
-operator|=
+init|=
 name|bfd_applicable_section_flags
 argument_list|(
 name|stdoutput
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|zcommon_section
 operator|=
 name|subseg_new
@@ -1713,6 +1731,7 @@ name|stdoutput
 argument_list|,
 name|zcommon_section
 argument_list|,
+operator|(
 name|applicable
 operator|&
 operator|(
@@ -1725,6 +1744,7 @@ operator||
 name|SEC_DATA
 operator||
 name|SEC_HAS_CONTENTS
+operator|)
 operator|)
 operator||
 name|SEC_IS_COMMON
@@ -1751,14 +1771,12 @@ condition|)
 block|{
 name|flagword
 name|applicable
-decl_stmt|;
-name|applicable
-operator|=
+init|=
 name|bfd_applicable_section_flags
 argument_list|(
 name|stdoutput
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|tcommon_section
 operator|=
 name|subseg_new
@@ -1774,6 +1792,8 @@ name|stdoutput
 argument_list|,
 name|tcommon_section
 argument_list|,
+operator|(
+operator|(
 name|applicable
 operator|&
 operator|(
@@ -1787,8 +1807,10 @@ name|SEC_DATA
 operator||
 name|SEC_HAS_CONTENTS
 operator|)
+operator|)
 operator||
 name|SEC_IS_COMMON
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2164,6 +2186,22 @@ name|bfd_mach_v850ea
 block|}
 block|,
 block|{
+literal|"file"
+block|,
+name|dwarf2_directive_file
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"loc"
+block|,
+name|dwarf2_directive_loc
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -2188,7 +2226,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This table is sorted. Suitable for searching by a binary search. */
+comment|/* This table is sorted.  Suitable for searching by a binary search.  */
 end_comment
 
 begin_decl_stmt
@@ -2213,21 +2251,21 @@ block|,
 literal|4
 block|}
 block|,
-comment|/* gp - global ptr */
+comment|/* gp - global ptr  */
 block|{
 literal|"hp"
 block|,
 literal|2
 block|}
 block|,
-comment|/* hp - handler stack ptr */
+comment|/* hp - handler stack ptr  */
 block|{
 literal|"lp"
 block|,
 literal|31
 block|}
 block|,
-comment|/* lp - link ptr */
+comment|/* lp - link ptr  */
 block|{
 literal|"r0"
 block|,
@@ -2426,14 +2464,14 @@ block|,
 literal|3
 block|}
 block|,
-comment|/* sp - stack ptr */
+comment|/* sp - stack ptr  */
 block|{
 literal|"tp"
 block|,
 literal|5
 block|}
 block|,
-comment|/* tp - text ptr */
+comment|/* tp - text ptr  */
 block|{
 literal|"zero"
 block|,
@@ -2447,6 +2485,7 @@ begin_define
 define|#
 directive|define
 name|REG_NAME_CNT
+define|\
 value|(sizeof (pre_defined_registers) / sizeof (struct reg_name))
 end_define
 
@@ -2532,6 +2571,7 @@ begin_define
 define|#
 directive|define
 name|SYSREG_NAME_CNT
+define|\
 value|(sizeof (system_registers) / sizeof (struct reg_name))
 end_define
 
@@ -2565,6 +2605,7 @@ begin_define
 define|#
 directive|define
 name|SYSREGLIST_NAME_CNT
+define|\
 value|(sizeof (system_list_registers) / sizeof (struct reg_name))
 end_define
 
@@ -2716,11 +2757,12 @@ begin_define
 define|#
 directive|define
 name|CC_NAME_CNT
+define|\
 value|(sizeof (cc_names) / sizeof (struct reg_name))
 end_define
 
 begin_comment
-comment|/* reg_name_search does a binary search of the given register table    to see if "name" is a valid regiter name.  Returns the register    number from the array on success, or -1 on failure. */
+comment|/* Do a binary search of the given register table to see if NAME is a    valid regiter name.  Return the register number from the array on    success, or -1 on failure.  */
 end_comment
 
 begin_function
@@ -2950,7 +2992,7 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-comment|/* Find the spelling of the operand */
+comment|/* Find the spelling of the operand.  */
 name|start
 operator|=
 name|name
@@ -2975,13 +3017,13 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* Put back the delimiting char.  */
 operator|*
 name|input_line_pointer
 operator|=
 name|c
 expr_stmt|;
-comment|/* put back the delimiting char */
-comment|/* look to see if it's in the register table */
+comment|/* Look to see if it's in the register table.  */
 if|if
 condition|(
 name|reg_number
@@ -3001,7 +3043,7 @@ name|X_add_number
 operator|=
 name|reg_number
 expr_stmt|;
-comment|/* make the rest nice */
+comment|/* Make the rest nice.  */
 name|expressionP
 operator|->
 name|X_add_symbol
@@ -3020,7 +3062,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* reset the line as if we had not done anything */
+comment|/* Reset the line as if we had not done anything.  */
 name|input_line_pointer
 operator|=
 name|start
@@ -3033,7 +3075,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Summary of system_register_name().  *  * in:  Input_line_pointer points to 1st char of operand.  *      expressionP points to an expression structure to be filled in.  *      accept_numbers is true iff numerical register names may be used.  *      accept_list_names is true iff the special names PS and SR may be   *      accepted.  *  * out: A expressionS structure in expressionP.  *	The operand may have been a register: in this case, X_op == O_register,  *	X_add_number is set to the register number, and truth is returned.  *	Input_line_pointer->(next non-blank) char after operand, or is in  *	its original state.  */
+comment|/* Summary of system_register_name().  *  * in:  INPUT_LINE_POINTER points to 1st char of operand.  *      EXPRESSIONP points to an expression structure to be filled in.  *      ACCEPT_NUMBERS is true iff numerical register names may be used.  *      ACCEPT_LIST_NAMES is true iff the special names PS and SR may be  *      accepted.  *  * out: A expressionS structure in expressionP.  *	The operand may have been a register: in this case, X_op == O_register,  *	X_add_number is set to the register number, and truth is returned.  *	Input_line_pointer->(next non-blank) char after operand, or is in  *	its original state.  */
 end_comment
 
 begin_function
@@ -3072,7 +3114,7 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-comment|/* Find the spelling of the operand */
+comment|/* Find the spelling of the operand.  */
 name|start
 operator|=
 name|name
@@ -3097,12 +3139,12 @@ argument_list|,
 name|accept_numbers
 argument_list|)
 expr_stmt|;
+comment|/* Put back the delimiting char.  */
 operator|*
 name|input_line_pointer
 operator|=
 name|c
 expr_stmt|;
-comment|/* put back the delimiting char */
 if|if
 condition|(
 name|reg_number
@@ -3112,11 +3154,11 @@ operator|&&
 name|accept_numbers
 condition|)
 block|{
+comment|/* Reset input_line pointer.  */
 name|input_line_pointer
 operator|=
 name|start
 expr_stmt|;
-comment|/* reset input_line pointer */
 if|if
 condition|(
 name|isdigit
@@ -3138,13 +3180,14 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Make sure that the register number is allowable. */
+comment|/* Make sure that the register number is allowable.  */
 if|if
 condition|(
 name|reg_number
 operator|<
 literal|0
 operator|||
+operator|(
 name|reg_number
 operator|>
 literal|5
@@ -3152,6 +3195,7 @@ operator|&&
 name|reg_number
 operator|<
 literal|16
+operator|)
 operator|||
 name|reg_number
 operator|>
@@ -3189,15 +3233,15 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* Put back the delimiting char.  */
 operator|*
 name|input_line_pointer
 operator|=
 name|c
 expr_stmt|;
-comment|/* put back the delimiting char */
 block|}
 block|}
-comment|/* look to see if it's in the register table */
+comment|/* Look to see if it's in the register table.  */
 if|if
 condition|(
 name|reg_number
@@ -3217,7 +3261,7 @@ name|X_add_number
 operator|=
 name|reg_number
 expr_stmt|;
-comment|/* make the rest nice */
+comment|/* Make the rest nice.  */
 name|expressionP
 operator|->
 name|X_add_symbol
@@ -3236,7 +3280,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* reset the line as if we had not done anything */
+comment|/* Reset the line as if we had not done anything.  */
 name|input_line_pointer
 operator|=
 name|start
@@ -3249,7 +3293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Summary of cc_name().  *  * in: Input_line_pointer points to 1st char of operand.  *  * out: A expressionS.  *	The operand may have been a register: in this case, X_op == O_register,  *	X_add_number is set to the register number, and truth is returned.  *	Input_line_pointer->(next non-blank) char after operand, or is in  *	its original state.  */
+comment|/* Summary of cc_name().  *  * in: INPUT_LINE_POINTER points to 1st char of operand.  *  * out: A expressionS.  *	The operand may have been a register: in this case, X_op == O_register,  *	X_add_number is set to the register number, and truth is returned.  *	Input_line_pointer->(next non-blank) char after operand, or is in  *	its original state.  */
 end_comment
 
 begin_function
@@ -3278,7 +3322,7 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-comment|/* Find the spelling of the operand */
+comment|/* Find the spelling of the operand.  */
 name|start
 operator|=
 name|name
@@ -3303,13 +3347,13 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* Put back the delimiting char.  */
 operator|*
 name|input_line_pointer
 operator|=
 name|c
 expr_stmt|;
-comment|/* put back the delimiting char */
-comment|/* look to see if it's in the register table */
+comment|/* Look to see if it's in the register table.  */
 if|if
 condition|(
 name|reg_number
@@ -3329,7 +3373,7 @@ name|X_add_number
 operator|=
 name|reg_number
 expr_stmt|;
-comment|/* make the rest nice */
+comment|/* Make the rest nice.  */
 name|expressionP
 operator|->
 name|X_add_symbol
@@ -3348,7 +3392,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* reset the line as if we had not done anything */
+comment|/* Reset the line as if we had not done anything.  */
 name|input_line_pointer
 operator|=
 name|start
@@ -3387,7 +3431,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Summary of parse_register_list ().  *  * in: Input_line_pointer  points to 1st char of a list of registers.  *     insn                is the partially constructed instruction.  *     operand             is the operand being inserted.  *  * out: NULL if the parse completed successfully, otherwise a  *      pointer to an error message is returned.  If the parse  *      completes the correct bit fields in the instruction  *      will be filled in.  *  * Parses register lists with the syntax:  *  *   { rX }  *   { rX, rY }  *   { rX - rY }  *   { rX - rY, rZ }  *   etc  *  * and also parses constant epxressions whoes bits indicate the  * registers in the lists.  The LSB in the expression refers to  * the lowest numbered permissable register in the register list,  * and so on upwards.  System registers are considered to be very  * high numbers.  *   */
+comment|/* Summary of parse_register_list ().  *  * in: INPUT_LINE_POINTER  points to 1st char of a list of registers.  *     INSN                is the partially constructed instruction.  *     OPERAND             is the operand being inserted.  *  * out: NULL if the parse completed successfully, otherwise a  *      pointer to an error message is returned.  If the parse  *      completes the correct bit fields in the instruction  *      will be filled in.  *  * Parses register lists with the syntax:  *  *   { rX }  *   { rX, rY }  *   { rX - rY }  *   { rX - rY, rZ }  *   etc  *  * and also parses constant epxressions whoes bits indicate the  * registers in the lists.  The LSB in the expression refers to  * the lowest numbered permissable register in the register list,  * and so on upwards.  System registers are considered to be very  * high numbers.  */
 end_comment
 
 begin_function
@@ -3396,17 +3440,21 @@ name|char
 modifier|*
 name|parse_register_list
 parameter_list|(
+name|insn
+parameter_list|,
+name|operand
+parameter_list|)
 name|unsigned
 name|long
 modifier|*
 name|insn
-parameter_list|,
+decl_stmt|;
 specifier|const
 name|struct
 name|v850_operand
 modifier|*
 name|operand
-parameter_list|)
+decl_stmt|;
 block|{
 specifier|static
 name|int
@@ -3634,7 +3682,7 @@ decl_stmt|;
 name|expressionS
 name|exp
 decl_stmt|;
-comment|/* Select a register array to parse. */
+comment|/* Select a register array to parse.  */
 switch|switch
 condition|(
 name|operand
@@ -3698,9 +3746,6 @@ operator|!=
 literal|'{'
 condition|)
 block|{
-name|int
-name|bits
-decl_stmt|;
 name|int
 name|reg
 decl_stmt|;
@@ -3939,7 +3984,7 @@ operator|)
 expr_stmt|;
 block|}
 else|else
-comment|/* regs == type3_regs */
+comment|/* regs == type3_regs  */
 block|{
 if|if
 condition|(
@@ -4235,7 +4280,7 @@ operator|==
 literal|'-'
 condition|)
 block|{
-comment|/* We have encountered a range of registers: rX - rY */
+comment|/* We have encountered a range of registers: rX - rY.  */
 name|int
 name|j
 decl_stmt|;
@@ -4396,7 +4441,9 @@ name|size_t
 name|md_longopts_size
 init|=
 sizeof|sizeof
+argument_list|(
 name|md_longopts
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -4507,7 +4554,13 @@ operator|!=
 literal|'m'
 condition|)
 block|{
-comment|/* xgettext:c-format */
+if|if
+condition|(
+name|c
+operator|!=
+literal|'a'
+condition|)
+comment|/* xgettext:c-format  */
 name|fprintf
 argument_list|(
 name|stderr
@@ -4640,20 +4693,20 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* Tell the world that this is for any v850 chip.  */
 name|machine
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Tell the world that this is for any v850 chip.  */
+comment|/* But support instructions for the extended versions.  */
 name|processor_mask
 operator|=
 name|PROCESSOR_V850EA
 expr_stmt|;
-comment|/* But support instructions for the extended versions.  */
 block|}
 else|else
 block|{
-comment|/* xgettext:c-format */
+comment|/* xgettext:c-format  */
 name|fprintf
 argument_list|(
 name|stderr
@@ -4688,6 +4741,7 @@ parameter_list|)
 name|char
 modifier|*
 name|name
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
@@ -4854,6 +4908,7 @@ parameter_list|)
 name|bfd
 modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|asection
 modifier|*
@@ -4916,12 +4971,6 @@ name|fragP
 operator|->
 name|fr_opcode
 argument_list|)
-expr_stmt|;
-name|fragP
-operator|->
-name|fr_var
-operator|=
-literal|0
 expr_stmt|;
 name|fragP
 operator|->
@@ -5040,12 +5089,6 @@ argument_list|)
 expr_stmt|;
 name|fragP
 operator|->
-name|fr_var
-operator|=
-literal|0
-expr_stmt|;
-name|fragP
-operator|->
 name|fr_fix
 operator|+=
 literal|6
@@ -5108,12 +5151,6 @@ name|fr_opcode
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
-name|fragP
-operator|->
-name|fr_var
-operator|=
-literal|0
 expr_stmt|;
 name|fragP
 operator|->
@@ -5315,7 +5352,7 @@ name|PROCESSOR_V850
 expr_stmt|;
 block|}
 else|else
-comment|/* xgettext:c-format */
+comment|/* xgettext:c-format  */
 name|as_bad
 argument_list|(
 name|_
@@ -5682,10 +5719,10 @@ literal|"zdaoff() relocation used on an instruction which does not support it"
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Used to indicate an error condition.  */
 return|return
 name|BFD_RELOC_64
 return|;
-comment|/* Used to indicate an error condition.  */
 block|}
 return|return
 name|BFD_RELOC_V850_ZDA_16_16_OFFSET
@@ -5711,10 +5748,10 @@ name|operand
 operator|==
 name|NULL
 condition|)
+comment|/* Data item, not an instruction.  */
 return|return
 name|BFD_RELOC_V850_TDA_7_7_OFFSET
 return|;
-comment|/* data item, not an instruction.  */
 if|if
 condition|(
 name|operand
@@ -5729,10 +5766,10 @@ name|shift
 operator|==
 literal|1
 condition|)
+comment|/* sld.w/sst.w, operand: D8_6  */
 return|return
 name|BFD_RELOC_V850_TDA_6_8_OFFSET
 return|;
-comment|/* sld.w/sst.w, operand: D8_6  */
 if|if
 condition|(
 name|operand
@@ -5747,10 +5784,10 @@ name|insert
 operator|!=
 name|NULL
 condition|)
+comment|/* sld.hu, operand: D5-4  */
 return|return
 name|BFD_RELOC_V850_TDA_4_5_OFFSET
 return|;
-comment|/* sld.hu, operand: D5-4 */
 if|if
 condition|(
 name|operand
@@ -5765,10 +5802,10 @@ name|insert
 operator|==
 name|NULL
 condition|)
+comment|/* sld.bu, operand: D4   */
 return|return
 name|BFD_RELOC_V850_TDA_4_4_OFFSET
 return|;
-comment|/* sld.bu, operand: D4   */
 if|if
 condition|(
 name|operand
@@ -5783,10 +5820,10 @@ name|shift
 operator|==
 literal|16
 condition|)
+comment|/* set1& chums, operands: D16  */
 return|return
 name|BFD_RELOC_V850_TDA_16_16_OFFSET
 return|;
-comment|/* set1& chums, operands: D16 */
 if|if
 condition|(
 name|operand
@@ -5804,10 +5841,10 @@ literal|"tdaoff() relocation used on an instruction which does not support it"
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Used to indicate an error condition.  */
 return|return
 name|BFD_RELOC_64
 return|;
-comment|/* Used to indicate an error condition.  */
 block|}
 return|return
 name|operand
@@ -5817,11 +5854,11 @@ operator|!=
 name|NULL
 condition|?
 name|BFD_RELOC_V850_TDA_7_8_OFFSET
-comment|/* sld.h/sst.h, operand: D8_7 */
+comment|/* sld.h/sst.h, operand: D8_7  */
 else|:
 name|BFD_RELOC_V850_TDA_7_7_OFFSET
 return|;
-comment|/* sld.b/sst.b, opreand: D7   */
+comment|/* sld.b/sst.b, opreand: D7    */
 block|}
 end_function
 
@@ -6061,7 +6098,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* skip warning... */
+comment|/* Skip warning...  */
 block|}
 elseif|else
 if|if
@@ -6089,7 +6126,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* skip warning... */
+comment|/* Skip warning...  */
 block|}
 elseif|else
 if|if
@@ -6176,9 +6213,6 @@ name|long
 name|min
 decl_stmt|,
 name|max
-decl_stmt|;
-name|offsetT
-name|test
 decl_stmt|;
 if|if
 condition|(
@@ -6300,7 +6334,7 @@ operator|)
 name|max
 condition|)
 block|{
-comment|/* xgettext:c-format */
+comment|/* xgettext:c-format  */
 specifier|const
 name|char
 modifier|*
@@ -6526,6 +6560,8 @@ name|next_opindex
 decl_stmt|;
 name|int
 name|relaxable
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|long
@@ -6552,10 +6588,14 @@ name|false
 decl_stmt|;
 name|unsigned
 name|extra_data_len
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|long
 name|extra_data
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -6611,7 +6651,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* find the first opcode with the proper name */
+comment|/* Find the first opcode with the proper name.  */
 name|opcode
 operator|=
 operator|(
@@ -6633,7 +6673,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* xgettext:c-format */
+comment|/* xgettext:c-format  */
 name|as_bad
 argument_list|(
 name|_
@@ -6847,7 +6887,7 @@ name|relaxable
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Gather the operand. */
+comment|/* Gather the operand.  */
 name|hold
 operator|=
 name|input_line_pointer
@@ -6856,7 +6896,7 @@ name|input_line_pointer
 operator|=
 name|str
 expr_stmt|;
-comment|/* lo(), hi(), hi0(), etc... */
+comment|/* lo(), hi(), hi0(), etc...  */
 if|if
 condition|(
 operator|(
@@ -7750,7 +7790,7 @@ argument_list|(
 literal|"syntax error: register not expected"
 argument_list|)
 expr_stmt|;
-comment|/* If we created a symbol in the process of this test then 			 delete it now, so that it will not be output with the real 			 symbols... */
+comment|/* If we created a symbol in the process of this 			 test then delete it now, so that it will not 			 be output with the real symbols...  */
 if|if
 condition|(
 name|exists
@@ -7917,7 +7957,12 @@ condition|)
 goto|goto
 name|error
 goto|;
-comment|/* fprintf (stderr, " insn: %x, operand %d, op: %d, add_number: %d\n",    insn, opindex_ptr - opcode->operands, ex.X_op, ex.X_add_number); */
+if|#
+directive|if
+literal|0
+block|fprintf (stderr, 		       " insn: %x, operand %d, op: %d, add_number: %d\n", 		       insn, opindex_ptr - opcode->operands, 		       ex.X_op, ex.X_add_number);
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|ex
@@ -8233,7 +8278,7 @@ name|str
 operator|!=
 literal|'\0'
 condition|)
-comment|/* xgettext:c-format */
+comment|/* xgettext:c-format  */
 name|as_bad
 argument_list|(
 name|_
@@ -8248,7 +8293,13 @@ name|input_line_pointer
 operator|=
 name|str
 expr_stmt|;
-comment|/* Write out the instruction. */
+comment|/* Tie dwarf2 debug info to the address at the start of the insn.      We can't do this after the insn has been output as the current      frag may have been closed off.  eg. by frag_var.  */
+name|dwarf2_emit_insn
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Write out the instruction.  */
 if|if
 condition|(
 name|relaxable
@@ -8430,7 +8481,7 @@ name|insn_size
 operator|=
 literal|2
 expr_stmt|;
-comment|/* Special case: 32 bit MOV */
+comment|/* Special case: 32 bit MOV.  */
 if|if
 condition|(
 operator|(
@@ -8577,7 +8628,7 @@ argument_list|(
 name|reloc_howto
 argument_list|)
 expr_stmt|;
-comment|/* XXX This will abort on an R_V850_8 reloc - 	     is this reloc actually used ? */
+comment|/* XXX This will abort on an R_V850_8 reloc - 	     is this reloc actually used?  */
 if|if
 condition|(
 name|size
@@ -8611,12 +8662,10 @@ name|reloc
 operator|==
 name|BFD_RELOC_32
 condition|)
-block|{
 name|address
 operator|+=
 literal|2
 expr_stmt|;
-block|}
 name|fixP
 operator|=
 name|fix_new_exp
@@ -8663,6 +8712,8 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 else|else
@@ -8688,7 +8739,7 @@ operator|.
 name|exp
 argument_list|,
 literal|1
-comment|/* FIXME: V850_OPERAND_RELATIVE ??? */
+comment|/* FIXME: V850_OPERAND_RELATIVE ???  */
 argument_list|,
 call|(
 name|bfd_reloc_code_real_type
@@ -8718,11 +8769,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* If while processing a fixup, a reloc really needs to be created */
-end_comment
-
-begin_comment
-comment|/* then it is done here.  */
+comment|/* If while processing a fixup, a reloc really needs to be created    then it is done here.  */
 end_comment
 
 begin_function
@@ -8737,6 +8784,7 @@ parameter_list|)
 name|asection
 modifier|*
 name|seg
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|fixS
 modifier|*
@@ -8841,7 +8889,7 @@ name|fixp
 operator|->
 name|fx_line
 argument_list|,
-comment|/* xgettext:c-format */
+comment|/* xgettext:c-format  */
 name|_
 argument_list|(
 literal|"reloc %d not supported by object file format"
@@ -8902,7 +8950,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Assume everything will fit in two bytes, then expand as necessary.  */
+comment|/* Return current size of variable part of frag.  */
 end_comment
 
 begin_function
@@ -8920,6 +8968,7 @@ decl_stmt|;
 name|asection
 modifier|*
 name|seg
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -8927,36 +8976,32 @@ condition|(
 name|fragp
 operator|->
 name|fr_subtype
-operator|==
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|md_relax_table
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|md_relax_table
+index|[
 literal|0
+index|]
+argument_list|)
 condition|)
-name|fragp
-operator|->
-name|fr_var
-operator|=
-literal|4
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|fragp
-operator|->
-name|fr_subtype
-operator|==
-literal|2
-condition|)
-name|fragp
-operator|->
-name|fr_var
-operator|=
-literal|2
-expr_stmt|;
-else|else
 name|abort
 argument_list|()
 expr_stmt|;
 return|return
-literal|2
+name|md_relax_table
+index|[
+name|fragp
+operator|->
+name|fr_subtype
+index|]
+operator|.
+name|rlx_length
 return|;
 block|}
 end_function
@@ -9055,6 +9100,7 @@ name|valuep
 decl_stmt|;
 name|segT
 name|seg
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|valueT
@@ -9310,12 +9356,12 @@ operator|->
 name|fx_done
 condition|)
 block|{
-comment|/* Nothing else to do here. */
+comment|/* Nothing else to do here.  */
 return|return
 literal|1
 return|;
 block|}
-comment|/* Determine a BFD reloc value based on the operand information.   	 We are only prepared to turn a few of the operands into relocs. */
+comment|/* Determine a BFD reloc value based on the operand information. 	 We are only prepared to turn a few of the operands into relocs.  */
 if|if
 condition|(
 name|operand
@@ -9347,7 +9393,12 @@ name|BFD_RELOC_V850_9_PCREL
 expr_stmt|;
 else|else
 block|{
-comment|/* fprintf (stderr, "bits: %d, insn: %x\n", operand->bits, insn); */
+if|#
+directive|if
+literal|0
+block|fprintf (stderr, "bits: %d, insn: %x\n", operand->bits, insn);
+endif|#
+directive|endif
 name|as_bad_where
 argument_list|(
 name|fixp
@@ -9611,6 +9662,10 @@ argument_list|,
 name|hold_cons_reloc
 argument_list|)
 expr_stmt|;
+name|hold_cons_reloc
+operator|=
+name|BFD_RELOC_UNUSED
+expr_stmt|;
 block|}
 end_function
 
@@ -9636,7 +9691,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* Prevent all adjustments to global symbols. */
+comment|/* Prevent all adjustments to global symbols.  */
 if|if
 condition|(
 name|S_IS_EXTERN
@@ -9649,6 +9704,7 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* Similarly for weak symbols.  */
 if|if
 condition|(
 name|S_IS_WEAK
@@ -9661,7 +9717,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Don't adjust function names */
+comment|/* Don't adjust function names.  */
 if|if
 condition|(
 name|S_IS_FUNCTION
@@ -9674,7 +9730,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* We need the symbol name for the VTABLE entries */
+comment|/* We need the symbol name for the VTABLE entries.  */
 if|if
 condition|(
 name|fixP

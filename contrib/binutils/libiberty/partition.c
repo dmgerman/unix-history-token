@@ -37,6 +37,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -48,6 +65,25 @@ include|#
 directive|include
 file|"partition.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|elem_compare
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Creates a partition of NUM_ELEMENTS elements.  Initially each    element is in a class by itself.  */
@@ -427,6 +463,7 @@ name|e1
 init|=
 operator|*
 operator|(
+specifier|const
 name|int
 operator|*
 operator|)
@@ -437,6 +474,7 @@ name|e2
 init|=
 operator|*
 operator|(
+specifier|const
 name|int
 operator|*
 operator|)
@@ -664,7 +702,6 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|,
-operator|&
 name|elem_compare
 argument_list|)
 expr_stmt|;

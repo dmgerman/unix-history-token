@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This is the Assembler Pre-Processor    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* This is the Assembler Pre-Processor    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -123,7 +123,7 @@ name|OBJ_ELF
 end_if
 
 begin_comment
-comment|/* The pseudo-op for which we need to special-case `@' characters.     See the comment in do_scrub_chars.  */
+comment|/* The pseudo-op for which we need to special-case `@' characters.    See the comment in do_scrub_chars.  */
 end_comment
 
 begin_decl_stmt
@@ -369,7 +369,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* FIXME-soon: The entire lexer/parser thingy should be    built statically at compile time rather than dynamically    each and every time the assembler is run.  xoxorich. */
+comment|/* FIXME-soon: The entire lexer/parser thingy should be    built statically at compile time rather than dynamically    each and every time the assembler is run.  xoxorich.  */
 end_comment
 
 begin_function
@@ -418,13 +418,6 @@ literal|'\n'
 index|]
 operator|=
 name|LEX_IS_NEWLINE
-expr_stmt|;
-name|lex
-index|[
-literal|';'
-index|]
-operator|=
-name|LEX_IS_LINE_SEPARATOR
 expr_stmt|;
 name|lex
 index|[
@@ -1066,7 +1059,7 @@ name|symver_state
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* do_scrub_begin() is not useful, just wastes time. */
+comment|/* do_scrub_begin() is not useful, just wastes time.  */
 name|state
 operator|=
 literal|0
@@ -1109,7 +1102,7 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-comment|/* There is no do_scrub_end (). */
+comment|/* There is no do_scrub_end ().  */
 name|state
 operator|=
 name|saved
@@ -2543,7 +2536,7 @@ operator|==
 name|LEX_IS_COLON
 condition|)
 block|{
-comment|/* only keep this white if there's no white *after* the colon */
+comment|/* Only keep this white if there's no white *after* the                  colon.  */
 name|ch2
 operator|=
 name|GET
@@ -2923,6 +2916,62 @@ goto|goto
 name|recycle
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|DOUBLESLASH_LINE_COMMENTS
+elseif|else
+if|if
+condition|(
+name|ch2
+operator|==
+literal|'/'
+condition|)
+block|{
+do|do
+block|{
+name|ch
+operator|=
+name|GET
+argument_list|()
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|ch
+operator|!=
+name|EOF
+operator|&&
+operator|!
+name|IS_NEWLINE
+argument_list|(
+name|ch
+argument_list|)
+condition|)
+do|;
+if|if
+condition|(
+name|ch
+operator|==
+name|EOF
+condition|)
+name|as_warn
+argument_list|(
+literal|"end of file in comment; newline inserted"
+argument_list|)
+expr_stmt|;
+name|state
+operator|=
+literal|0
+expr_stmt|;
+name|PUT
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
 else|else
 block|{
 if|if
@@ -3288,7 +3337,7 @@ name|ch
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* fall thru into... */
+comment|/* Fall through.  */
 case|case
 name|LEX_IS_LINE_SEPARATOR
 case|:
@@ -3329,7 +3378,7 @@ goto|goto
 name|de_fault
 goto|;
 block|}
-comment|/* read and skip to end of line */
+comment|/* Read and skip to end of line.  */
 do|do
 block|{
 name|ch
@@ -3589,7 +3638,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* Loks like `# 123 "filename"' from cpp.  */
+comment|/* Looks like `# 123 "filename"' from cpp.  */
 name|UNGET
 argument_list|(
 name|ch
@@ -3629,7 +3678,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|TC_D10V
-comment|/* All insns end in a char for which LEX_IS_SYMBOL_COMPONENT is true. 	     Trap is the only short insn that has a first operand that is 	     neither register nor label. 	     We must prevent exef0f ||trap #1 to degenerate to exef0f ||trap#1 . 	     We can't make '#' LEX_IS_SYMBOL_COMPONENT because it is already 	     LEX_IS_LINE_COMMENT_START.  However, it is the only character in 	     line_comment_chars for d10v, hence we can recognize it as such.  */
+comment|/* All insns end in a char for which LEX_IS_SYMBOL_COMPONENT is true. 	     Trap is the only short insn that has a first operand that is 	     neither register nor label. 	     We must prevent exef0f ||trap #1 to degenerate to exef0f ||trap#1 . 	     We can't make '#' LEX_IS_SYMBOL_COMPONENT because it is 	     already LEX_IS_LINE_COMMENT_START.  However, it is the 	     only character in line_comment_chars for d10v, hence we 	     can recognize it as such.  */
 comment|/* An alternative approach would be to reset the state to 1 when 	     we see '||', '<'- or '->', but that seems to be overkill.  */
 if|if
 condition|(
@@ -3714,7 +3763,7 @@ name|TC_ARM
 operator|&&
 name|defined
 name|OBJ_ELF
-comment|/* On the ARM, `@' is the comment character. 	     Unfortunately this is also a special character in ELF .symver 	     directives (and .type, though we deal with those another way).  So 	     we check if this line is such a directive, and treat the character 	     as default if so.  This is a hack.  */
+comment|/* On the ARM, `@' is the comment character. 	     Unfortunately this is also a special character in ELF .symver 	     directives (and .type, though we deal with those another way). 	     So we check if this line is such a directive, and treat 	     the character as default if so.  This is a hack.  */
 if|if
 condition|(
 operator|(
@@ -3733,6 +3782,25 @@ condition|)
 goto|goto
 name|de_fault
 goto|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|WARN_COMMENTS
+if|if
+condition|(
+operator|!
+name|found_comment
+condition|)
+name|as_where
+argument_list|(
+operator|&
+name|found_comment_file
+argument_list|,
+operator|&
+name|found_comment
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 do|do

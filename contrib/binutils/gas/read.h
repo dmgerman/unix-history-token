@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* read.h - of read.c    Copyright (C) 1986, 90, 92, 93, 94, 95, 96, 1997    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* read.h - of read.c    Copyright 1986, 1990, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_decl_stmt
@@ -12,7 +12,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -> char we are parsing now. */
+comment|/* -> char we are parsing now.  */
+end_comment
+
+begin_comment
+comment|/* Define to make whitespace be allowed in many syntactically    unnecessary places.  Normally undefined.  For compatibility with    ancient GNU cc.  */
+end_comment
+
+begin_comment
+comment|/* #undef PERMIT_WHITESPACE */
 end_comment
 
 begin_define
@@ -20,26 +28,6 @@ define|#
 directive|define
 name|PERMIT_WHITESPACE
 end_define
-
-begin_comment
-comment|/* Define to make whitespace be allowed in */
-end_comment
-
-begin_comment
-comment|/* many syntactically unnecessary places. */
-end_comment
-
-begin_comment
-comment|/* Normally undefined. For compatibility */
-end_comment
-
-begin_comment
-comment|/* with ancient GNU cc. */
-end_comment
-
-begin_comment
-comment|/* #undef PERMIT_WHITESPACE */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -52,7 +40,8 @@ define|#
 directive|define
 name|SKIP_WHITESPACE
 parameter_list|()
-value|{if (* input_line_pointer == ' ') ++ input_line_pointer;}
+define|\
+value|{						\     if (* input_line_pointer == ' ')		\       ++ input_line_pointer;			\   }
 end_define
 
 begin_else
@@ -166,7 +155,7 @@ name|is_a_char
 parameter_list|(
 name|c
 parameter_list|)
-value|(((unsigned)(c))<= CHAR_MASK)
+value|(((unsigned) (c))<= CHAR_MASK)
 end_define
 
 begin_endif
@@ -308,6 +297,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* True if a stabs line debug statement is currently being emitted.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|outputting_stabs_line_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Possible arguments to .linkonce.  */
 end_comment
 
@@ -329,6 +329,31 @@ name|LINKONCE_SAME_CONTENTS
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|IGNORE_OPCODE_CASE
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IGNORE_OPCODE_CASE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|original_case_string
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -362,6 +387,29 @@ specifier|const
 name|char
 operator|*
 name|stabstr_secname
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|aout_process_stab
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -818,6 +866,7 @@ operator|(
 name|int
 operator|)
 argument_list|)
+name|ATTRIBUTE_NORETURN
 decl_stmt|;
 end_decl_stmt
 
@@ -1443,10 +1492,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* end of read.h */
-end_comment
 
 end_unit
 

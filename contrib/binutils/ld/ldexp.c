@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This module handles expression trees.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support (sac@cygnus.com).  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* This module handles expression trees.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* This module is in charge of working out the contents of expressions.  It has to keep track of the relative/absness of a symbol etc. This is done by keeping all values in a struct (an etree_value_type) which contains a value, a section to which it is relative and a valid bit.  */
+comment|/* This module is in charge of working out the contents of expressions.     It has to keep track of the relative/absness of a symbol etc. This    is done by keeping all values in a struct (an etree_value_type)    which contains a value, a section to which it is relative and a    valid bit.  */
 end_comment
 
 begin_include
@@ -262,7 +262,7 @@ block|;
 name|char
 operator|*
 name|name
-block|;     }
+block|;   }
 name|table
 index|[]
 operator|=
@@ -1819,7 +1819,7 @@ argument_list|)
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* FIXME: Is this correct if this section is 			   being linked with -R?  */
+comment|/* FIXME: Is this correct if this section is 			 being linked with -R?  */
 name|result
 operator|=
 name|new_rel
@@ -2566,6 +2566,9 @@ case|:
 case|case
 name|etree_provide
 case|:
+case|case
+name|etree_provided
+case|:
 if|if
 condition|(
 name|tree
@@ -2599,8 +2602,8 @@ operator|->
 name|type
 operator|.
 name|node_class
-operator|==
-name|etree_provide
+operator|!=
+name|etree_assign
 condition|)
 name|einfo
 argument_list|(
@@ -2903,6 +2906,24 @@ operator|.
 name|section
 operator|->
 name|bfd_section
+expr_stmt|;
+if|if
+condition|(
+name|tree
+operator|->
+name|type
+operator|.
+name|node_class
+operator|==
+name|etree_provide
+condition|)
+name|tree
+operator|->
+name|type
+operator|.
+name|node_class
+operator|=
+name|etree_provided
 expr_stmt|;
 block|}
 block|}
@@ -3604,7 +3625,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (exp_fold_tree_no_dot(&value,&result)) {     return exp_intop(result);   }
+block|if (exp_fold_tree_no_dot (&value,&result))     {       return exp_intop (result);     }
 endif|#
 directive|endif
 name|new
@@ -3911,7 +3932,7 @@ case|:
 if|#
 directive|if
 literal|0
-block|if (tree->assign.dst->sdefs != (asymbol *)NULL){       fprintf(config.map_file,"%s (%x) ",tree->assign.dst->name, 	      tree->assign.dst->sdefs->value);     }     else {       fprintf(config.map_file,"%s (UNDEFINED)",tree->assign.dst->name);     }
+block|if (tree->assign.dst->sdefs != (asymbol *) NULL) 	{ 	  fprintf (config.map_file, "%s (%x) ", tree->assign.dst->name, 		   tree->assign.dst->sdefs->value); 	}       else 	{ 	  fprintf (config.map_file, "%s (UNDEFINED)", tree->assign.dst->name); 	}
 endif|#
 directive|endif
 name|fprintf
@@ -3950,6 +3971,9 @@ expr_stmt|;
 break|break;
 case|case
 name|etree_provide
+case|:
+case|case
+name|etree_provided
 case|:
 name|fprintf
 argument_list|(

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* subsegs.c - subsegments -    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* subsegs.c - subsegments -    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  * Segments& sub-segments.  */
+comment|/* Segments& sub-segments.  */
 end_comment
 
 begin_include
@@ -70,7 +70,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Commented in "subsegs.h". */
+comment|/* Commented in "subsegs.h".  */
 end_comment
 
 begin_decl_stmt
@@ -217,7 +217,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Used by error reporters, dumpers etc. */
+comment|/* Used by error reporters, dumpers etc.  */
 end_comment
 
 begin_else
@@ -431,7 +431,7 @@ name|frchain_now
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Warn new_subseg() that we are booting. */
+comment|/* Warn new_subseg() that we are booting.  */
 name|frag_now
 operator|=
 operator|&
@@ -444,7 +444,7 @@ name|now_subseg
 operator|=
 literal|42
 expr_stmt|;
-comment|/* Lie for 1st call to subseg_new. */
+comment|/* Lie for 1st call to subseg_new.  */
 ifdef|#
 directive|ifdef
 name|MANY_SEGMENTS
@@ -1003,7 +1003,7 @@ operator|>
 name|subseg
 operator|)
 condition|)
-comment|/* Kinky logic only works with 2 segments. */
+comment|/* Kinky logic only works with 2 segments.  */
 block|{
 comment|/*        * This should be the only code that creates a frchainS.        */
 name|newP

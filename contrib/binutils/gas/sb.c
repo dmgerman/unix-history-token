@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sb.c - string buffer manipulation routines    Copyright (C) 1994, 1995 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* sb.c - string buffer manipulation routines    Copyright 1994, 1995, 2000 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -14,6 +14,23 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -107,7 +124,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* initializes an sb. */
+comment|/* initializes an sb.  */
 end_comment
 
 begin_function
@@ -382,7 +399,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* make sure that the sb at ptr has room for another len characters,    and grow it if it doesn't. */
+comment|/* make sure that the sb at ptr has room for another len characters,    and grow it if it doesn't.  */
 end_comment
 
 begin_function
@@ -497,7 +514,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* add character c to the end of the sb at ptr. */
+comment|/* add character c to the end of the sb at ptr.  */
 end_comment
 
 begin_function
@@ -539,7 +556,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* add null terminated string s to the end of sb at ptr. */
+comment|/* add null terminated string s to the end of sb at ptr.  */
 end_comment
 
 begin_function
@@ -793,7 +810,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* put a null at the end of the sb at in and return the start of the    string, so that it can be used as an arg to printf %s. */
+comment|/* put a null at the end of the sb at in and return the start of the    string, so that it can be used as an arg to printf %s.  */
 end_comment
 
 begin_function
@@ -918,7 +935,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* start at the index idx into the sb at ptr. skips whitespace,    a comma and any following whitespace. returnes the index of the    next character. */
+comment|/* start at the index idx into the sb at ptr. skips whitespace,    a comma and any following whitespace. returnes the index of the    next character.  */
 end_comment
 
 begin_function

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for s-record objects.    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for s-record objects.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* SUBSECTION 	S-Record handling  DESCRIPTION 	 	Ordinary S-Records cannot hold anything but addresses and 	data, so that's all that we implement.  	The only interesting thing is that S-Records may come out of 	order and there is no header, so an initial scan is required 	to discover the minimum and maximum addresses used to create 	the vma and size of the only section we create.  We 	arbitrarily call this section ".text".  	When bfd_get_section_contents is called the file is read 	again, and this time the data is placed into a bfd_alloc'd 	area.  	Any number of sections may be created for output, we save them 	up and output them when it's time to close the bfd.  	An s record looks like: 	 EXAMPLE 	S<type><length><address><data><checksum> 	 DESCRIPTION 	Where 	o length 	is the number of bytes following upto the checksum. Note that 	this is not the number of chars following, since it takes two 	chars to represent a byte. 	o type 	is one of: 	0) header record 	1) two byte address data record 	2) three byte address data record 	3) four byte address data record 	7) four byte address termination record 	8) three byte address termination record 	9) two byte address termination record 	 	o address 	is the start address of the data following, or in the case of 	a termination record, the start address of the image 	o data 	is the data. 	o checksum 	is the sum of all the raw byte data in the record, from the length 	upwards, modulo 256 and subtracted from 255.   SUBSECTION 	Symbol S-Record handling  DESCRIPTION 	Some ICE equipment understands an addition to the standard 	S-Record format; symbols and their addresses can be sent 	before the data.  	The format of this is: 	($$<modulename> 		(<space><symbol><address>)*) 	$$  	so a short symbol table could look like:  EXAMPLE 	$$ flash.x 	$$ flash.c 	  _port6 $0 	  _delay $4 	  _start $14 	  _etext $8036 	  _edata $8036  	  _end $8036 	$$  DESCRIPTION 	We allow symbols to be anywhere in the data stream - the module names 	are always ignored. 		 */
+comment|/* SUBSECTION 	S-Record handling  DESCRIPTION  	Ordinary S-Records cannot hold anything but addresses and 	data, so that's all that we implement.  	The only interesting thing is that S-Records may come out of 	order and there is no header, so an initial scan is required 	to discover the minimum and maximum addresses used to create 	the vma and size of the only section we create.  We 	arbitrarily call this section ".text".  	When bfd_get_section_contents is called the file is read 	again, and this time the data is placed into a bfd_alloc'd 	area.  	Any number of sections may be created for output, we save them 	up and output them when it's time to close the bfd.  	An s record looks like:  EXAMPLE 	S<type><length><address><data><checksum>  DESCRIPTION 	Where 	o length 	is the number of bytes following upto the checksum. Note that 	this is not the number of chars following, since it takes two 	chars to represent a byte. 	o type 	is one of: 	0) header record 	1) two byte address data record 	2) three byte address data record 	3) four byte address data record 	7) four byte address termination record 	8) three byte address termination record 	9) two byte address termination record  	o address 	is the start address of the data following, or in the case of 	a termination record, the start address of the image 	o data 	is the data. 	o checksum 	is the sum of all the raw byte data in the record, from the length 	upwards, modulo 256 and subtracted from 255.  SUBSECTION 	Symbol S-Record handling  DESCRIPTION 	Some ICE equipment understands an addition to the standard 	S-Record format; symbols and their addresses can be sent 	before the data.  	The format of this is: 	($$<modulename> 		(<space><symbol><address>)*) 	$$  	so a short symbol table could look like:  EXAMPLE 	$$ flash.x 	$$ flash.c 	  _port6 $0 	  _delay $4 	  _start $14 	  _etext $8036 	  _edata $8036  	  _end $8036 	$$  DESCRIPTION 	We allow symbols to be anywhere in the data stream - the module names 	are always ignored.  */
 end_comment
 
 begin_include
@@ -456,7 +456,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Macros for converting between hex and binary. */
+comment|/* Macros for converting between hex and binary.  */
 end_comment
 
 begin_decl_stmt
@@ -516,7 +516,7 @@ value|hex_p(x)
 end_define
 
 begin_comment
-comment|/* Initialize by filling in the hex conversion array. */
+comment|/* Initialize by filling in the hex conversion array.  */
 end_comment
 
 begin_function
@@ -550,7 +550,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The maximum number of bytes on a line is FF */
+comment|/* The maximum number of bytes on a line is FF.  */
 end_comment
 
 begin_define
@@ -561,15 +561,40 @@ value|0xff
 end_define
 
 begin_comment
-comment|/* The number of bytes we fit onto a line on output */
+comment|/* Default size for a CHUNK.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CHUNK
+name|DEFAULT_CHUNK
 value|16
 end_define
+
+begin_comment
+comment|/* The number of bytes we actually fit onto a line on output.    This variable can be modified by objcopy's --srec-len parameter.    For a 0x75 byte record you should set --srec-len=0x70.  */
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|Chunk
+init|=
+name|DEFAULT_CHUNK
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The type of srec output (free or forced to S3).    This variable can be modified by objcopy's --srec-forceS3    parameter.  */
+end_comment
+
+begin_decl_stmt
+name|boolean
+name|S3Forced
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* When writing an S-record file, the S-records can not be output as    they are seen.  This structure is used to hold them in memory.  */
@@ -3310,7 +3335,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* we have to save up all the Srecords for a splurge before output */
+comment|/* We have to save up all the Srecords for a splurge before output.  */
 end_comment
 
 begin_function
@@ -3447,6 +3472,18 @@ operator|)
 name|bytes_to_do
 argument_list|)
 expr_stmt|;
+comment|/* Ff S3Forced is true then always select S3 records, 	 regardless of the siez of the addresses.  */
+if|if
+condition|(
+name|S3Forced
+condition|)
+name|tdata
+operator|->
+name|type
+operator|=
+literal|3
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|(
@@ -3463,7 +3500,8 @@ operator|)
 operator|<=
 literal|0xffff
 condition|)
-block|{  	}
+empty_stmt|;
+comment|/* The default, S1, is OK.  */
 elseif|else
 if|if
 condition|(
@@ -3487,23 +3525,19 @@ name|type
 operator|<=
 literal|2
 condition|)
-block|{
 name|tdata
 operator|->
 name|type
 operator|=
 literal|2
 expr_stmt|;
-block|}
 else|else
-block|{
 name|tdata
 operator|->
 name|type
 operator|=
 literal|3
 expr_stmt|;
-block|}
 name|entry
 operator|->
 name|data
@@ -3646,7 +3680,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write a record of type, of the supplied number of bytes. The    supplied bytes and length don't have a checksum. That's worked out    here */
+comment|/* Write a record of type, of the supplied number of bytes. The    supplied bytes and length don't have a checksum. That's worked out    here.  */
 end_comment
 
 begin_function
@@ -3739,7 +3773,7 @@ name|dst
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* leave room for dst*/
+comment|/* Leave room for dst.  */
 switch|switch
 condition|(
 name|type
@@ -3863,7 +3897,7 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
-comment|/* Fill in the length */
+comment|/* Fill in the length.  */
 name|TOHEX
 argument_list|(
 name|length
@@ -3975,7 +4009,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-comment|/* I'll put an arbitary 40 char limit on header size */
+comment|/* I'll put an arbitary 40 char limit on header size.  */
 for|for
 control|(
 name|i
@@ -3996,7 +4030,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 operator|*
 name|dst
 operator|++
@@ -4008,7 +4041,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-block|}
 return|return
 name|srec_write_record
 argument_list|(
@@ -4090,11 +4122,11 @@ if|if
 condition|(
 name|octets_this_chunk
 operator|>
-name|CHUNK
+name|Chunk
 condition|)
 name|octets_this_chunk
 operator|=
-name|CHUNK
+name|Chunk
 expr_stmt|;
 name|address
 operator|=
@@ -4212,7 +4244,7 @@ index|[
 name|MAXCHUNK
 index|]
 decl_stmt|;
-comment|/* Dump out the symbols of a bfd */
+comment|/* Dump out the symbols of a bfd.  */
 name|int
 name|i
 decl_stmt|;
@@ -4322,7 +4354,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Just dump out non debug symbols */
+comment|/* Just dump out non debug symbols.  */
 name|bfd_size_type
 name|l
 decl_stmt|;
@@ -4519,7 +4551,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* Now wander though all the sections provided and output them */
+comment|/* Now wander though all the sections provided and output them.  */
 name|list
 operator|=
 name|tdata
@@ -4615,10 +4647,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 specifier|static
@@ -4939,10 +4967,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -4977,10 +5001,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 specifier|static

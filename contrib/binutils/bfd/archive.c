@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for archive files (libraries).    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.    Written by Cygnus Support.  Mostly Gumby Henkel-Wallace's fault.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for archive files (libraries).    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000    Free Software Foundation, Inc.    Written by Cygnus Support.  Mostly Gumby Henkel-Wallace's fault.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -122,7 +122,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* We keep a cache of archive filepointers to archive elements to    speed up searching the archive by filepos.  We only add an entry to    the cache when we actually read one.  We also don't sort the cache;    it's generally short enough to search linearly.    Note that the pointers here point to the front of the ar_hdr, not    to the front of the contents! */
+comment|/* We keep a cache of archive filepointers to archive elements to    speed up searching the archive by filepos.  We only add an entry to    the cache when we actually read one.  We also don't sort the cache;    it's generally short enough to search linearly.    Note that the pointers here point to the front of the ar_hdr, not    to the front of the contents!  */
 end_comment
 
 begin_struct
@@ -172,7 +172,7 @@ name|arch_eltdata
 parameter_list|(
 name|bfd
 parameter_list|)
-value|((struct areltdata *)((bfd)->arelt_data))
+value|((struct areltdata *) ((bfd)->arelt_data))
 end_define
 
 begin_define
@@ -747,7 +747,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The name begins with space.  Hence the rest of the name is an index into    the string table. */
+comment|/* The name begins with space.  Hence the rest of the name is an index into    the string table.  */
 end_comment
 
 begin_function
@@ -776,12 +776,12 @@ name|index
 init|=
 literal|0
 decl_stmt|;
-comment|/* Should extract string so that I can guarantee not to overflow into      the next region, but I'm too lazy. */
+comment|/* Should extract string so that I can guarantee not to overflow into      the next region, but I'm too lazy.  */
 name|errno
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Skip first char, which is '/' in SVR4 or ' ' in some other variants. */
+comment|/* Skip first char, which is '/' in SVR4 or ' ' in some other variants.  */
 name|index
 operator|=
 name|strtol
@@ -1134,7 +1134,7 @@ name|NULL
 return|;
 block|}
 block|}
-comment|/* BSD4.4-style long filename.      Only implemented for reading, so far! */
+comment|/* BSD4.4-style long filename.      Only implemented for reading, so far!  */
 elseif|else
 if|if
 condition|(
@@ -1282,7 +1282,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* We judge the end of the name by looking for '/' or ' '. 	 Note:  The SYSV format (terminated by '/') allows embedded 	 spaces, so only look for ' ' if we don't find '/'. */
+comment|/* We judge the end of the name by looking for '/' or ' '. 	 Note:  The SYSV format (terminated by '/') allows embedded 	 spaces, so only look for ' ' if we don't find '/'.  */
 name|char
 modifier|*
 name|e
@@ -1681,7 +1681,7 @@ condition|)
 return|return
 name|n_nfd
 return|;
-comment|/* huh? */
+comment|/* Huh?  */
 name|bfd_release
 argument_list|(
 name|archive
@@ -1758,7 +1758,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_openr_next_archived_file  SYNOPSIS 	bfd *bfd_openr_next_archived_file(bfd *archive, bfd *previous);  DESCRIPTION 	Provided a BFD, @var{archive}, containing an archive and NULL, open 	an input BFD on the first contained element and returns that. 	Subsequent calls should pass 	the archive and the previous return value to return a created 	BFD to the next contained element. NULL is returned when there 	are no more.  */
+comment|/* FUNCTION 	bfd_openr_next_archived_file  SYNOPSIS 	bfd *bfd_openr_next_archived_file(bfd *archive, bfd *previous);  DESCRIPTION 	Provided a BFD, @var{archive}, containing an archive and NULL, open 	an input BFD on the first contained element and returns that. 	Subsequent calls should pass 	the archive and the previous return value to return a created 	BFD to the next contained element. NULL is returned when there 	are no more. */
 end_comment
 
 begin_function
@@ -1871,7 +1871,7 @@ argument_list|(
 name|last_file
 argument_list|)
 decl_stmt|;
-comment|/* Pad to an even boundary... 	 Note that last_file->origin can be odd in the case of 	 BSD-4.4-style element with a long odd size. */
+comment|/* Pad to an even boundary... 	 Note that last_file->origin can be odd in the case of 	 BSD-4.4-style element with a long odd size.  */
 name|filestart
 operator|=
 name|last_file
@@ -2020,7 +2020,7 @@ literal|0
 return|;
 endif|#
 directive|endif
-comment|/* We are setting bfd_ardata(abfd) here, but since bfd_ardata      involves a cast, we can't do it as the left operand of assignment. */
+comment|/* We are setting bfd_ardata(abfd) here, but since bfd_ardata      involves a cast, we can't do it as the left operand of assignment.  */
 name|abfd
 operator|->
 name|tdata
@@ -2458,7 +2458,7 @@ operator|)
 name|mapdata
 argument_list|)
 expr_stmt|;
-comment|/* Don't need it any more. */
+comment|/* Don't need it any more.  */
 name|raw_armap
 operator|=
 operator|(
@@ -2697,7 +2697,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* Pad to an even boundary if you have to */
+comment|/* Pad to an even boundary if you have to.  */
 name|ardata
 operator|->
 name|first_file_filepos
@@ -2710,7 +2710,7 @@ operator|)
 operator|%
 literal|2
 expr_stmt|;
-comment|/* FIXME, we should provide some way to free raw_ardata when      we are done using the strings from it.  For now, it seems      to be allocated on an objalloc anyway... */
+comment|/* FIXME, we should provide some way to free raw_ardata when      we are done using the strings from it.  For now, it seems      to be allocated on an objalloc anyway...  */
 name|bfd_has_map
 argument_list|(
 name|abfd
@@ -2725,7 +2725,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns false on error, true otherwise */
+comment|/* Returns false on error, true otherwise.  */
 end_comment
 
 begin_function
@@ -2782,7 +2782,7 @@ name|unsigned
 name|int
 name|nsymz
 decl_stmt|;
-comment|/* Number of symbols in armap. */
+comment|/* Number of symbols in armap.  */
 name|bfd_vma
 argument_list|(
 argument|*swap
@@ -2850,7 +2850,7 @@ operator|)
 name|mapdata
 argument_list|)
 expr_stmt|;
-comment|/* Don't need it any more. */
+comment|/* Don't need it any more.  */
 if|if
 condition|(
 name|bfd_read
@@ -2886,7 +2886,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/* It seems that all numeric information in a coff archive is always      in big endian format, nomatter the host or target. */
+comment|/* It seems that all numeric information in a coff archive is always      in big endian format, nomatter the host or target.  */
 name|swap
 operator|=
 name|bfd_getb32
@@ -2938,7 +2938,7 @@ operator|==
 name|bfd_target_coff_flavour
 condition|)
 block|{
-comment|/* This looks dangerous, let's do it the other way around */
+comment|/* This looks dangerous, let's do it the other way around.  */
 name|nsymz
 operator|=
 name|bfd_getl32
@@ -2968,7 +2968,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* The coff armap must be read sequentially.  So we construct a      bsd-style one in core all at once, for simplicity. */
+comment|/* The coff armap must be read sequentially.  So we construct a      bsd-style one in core all at once, for simplicity.  */
 name|carsym_size
 operator|=
 operator|(
@@ -3038,7 +3038,7 @@ operator|)
 operator|+
 name|carsym_size
 expr_stmt|;
-comment|/* Allocate and read in the raw offsets. */
+comment|/* Allocate and read in the raw offsets.  */
 name|raw_armap
 operator|=
 operator|(
@@ -3112,7 +3112,7 @@ goto|goto
 name|release_raw_armap
 goto|;
 block|}
-comment|/* OK, build the carsyms */
+comment|/* OK, build the carsyms.  */
 for|for
 control|(
 name|i
@@ -3184,7 +3184,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* Pad to an even boundary if you have to */
+comment|/* Pad to an even boundary if you have to.  */
 name|ardata
 operator|->
 name|first_file_filepos
@@ -3214,7 +3214,7 @@ operator|)
 name|raw_armap
 argument_list|)
 expr_stmt|;
-comment|/* Check for a second archive header (as used by PE) */
+comment|/* Check for a second archive header (as used by PE).  */
 block|{
 name|struct
 name|areltdata
@@ -3509,7 +3509,7 @@ comment|/* Returns false on error, true otherwise */
 end_comment
 
 begin_comment
-comment|/* flavor 2 of a bsd armap, similar to bfd_slurp_bsd_armap except the    header is in a slightly different order and the map name is '/'.    This flavour is used by hp300hpux. */
+comment|/* flavor 2 of a bsd armap, similar to bfd_slurp_bsd_armap except the    header is in a slightly different order and the map name is '/'.    This flavour is used by hp300hpux.  */
 end_comment
 
 begin_define
@@ -3609,7 +3609,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* The archive has at least 16 bytes in it */
+comment|/* The archive has at least 16 bytes in it.  */
 if|if
 condition|(
 name|bfd_seek
@@ -3845,7 +3845,7 @@ operator|+
 name|HPUX_SYMDEF_COUNT_SIZE
 argument_list|)
 expr_stmt|;
-comment|/* skip sym count and string sz */
+comment|/* Skip sym count and string sz.  */
 name|stringbase
 operator|=
 operator|(
@@ -3966,7 +3966,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* Pad to an even boundary if you have to */
+comment|/* Pad to an even boundary if you have to.  */
 name|ardata
 operator|->
 name|first_file_filepos
@@ -3979,7 +3979,7 @@ operator|)
 operator|%
 literal|2
 expr_stmt|;
-comment|/* FIXME, we should provide some way to free raw_ardata when      we are done using the strings from it.  For now, it seems      to be allocated on an objalloc anyway... */
+comment|/* FIXME, we should provide some way to free raw_ardata when      we are done using the strings from it.  For now, it seems      to be allocated on an objalloc anyway...  */
 name|bfd_has_map
 argument_list|(
 name|abfd
@@ -3997,11 +3997,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/** Extended name table.    Normally archives support only 14-character filenames.    Intel has extended the format: longer names are stored in a special   element (the first in the archive, or second if there is an armap);   the name in the ar_hdr is replaced by<space><index into filename   element>.  Index is the P.R. of an int (decimal).  Data General have   extended the format by using the prefix // for the special element */
+comment|/** Extended name table.    Normally archives support only 14-character filenames.    Intel has extended the format: longer names are stored in a special   element (the first in the archive, or second if there is an armap);   the name in the ar_hdr is replaced by<space><index into filename   element>.  Index is the P.R. of an int (decimal).  Data General have   extended the format by using the prefix // for the special element.  */
 end_comment
 
 begin_comment
-comment|/* Returns false on error, true otherwise */
+comment|/* Returns false on error, true otherwise.  */
 end_comment
 
 begin_function
@@ -4326,7 +4326,7 @@ literal|'/'
 expr_stmt|;
 block|}
 block|}
-comment|/* Pad to an even boundary if you have to */
+comment|/* Pad to an even boundary if you have to.  */
 name|bfd_ardata
 argument_list|(
 name|abfd
@@ -4357,8 +4357,13 @@ operator|)
 operator|%
 literal|2
 expr_stmt|;
-comment|/* FIXME, we can't release namedata here because it was allocated 	 below extended_names on the objalloc... */
-comment|/* bfd_release (abfd, namedata); */
+comment|/* FIXME, we can't release namedata here because it was allocated 	 below extended_names on the objalloc...  */
+if|#
+directive|if
+literal|0
+block|bfd_release (abfd, namedata);
+endif|#
+directive|endif
 block|}
 return|return
 name|true
@@ -4373,7 +4378,7 @@ name|VMS
 end_ifdef
 
 begin_comment
-comment|/* Return a copy of the stuff in the filename between any :]> and a    semicolon */
+comment|/* Return a copy of the stuff in the filename between any :]> and a    semicolon.  */
 end_comment
 
 begin_function
@@ -4582,9 +4587,19 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|filename
+operator|==
+name|NULL
+operator|||
+operator|(
+name|bslash
+operator|!=
+name|NULL
+operator|&&
 name|bslash
 operator|>
 name|filename
+operator|)
 condition|)
 name|filename
 operator|=
@@ -4822,7 +4837,7 @@ name|tablen
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Figure out how long the table should be */
+comment|/* Figure out how long the table should be.  */
 for|for
 control|(
 name|current
@@ -5120,7 +5135,7 @@ operator|>
 name|maxname
 condition|)
 block|{
-comment|/* Works for now; may need to be re-engineered if we 	     encounter an oddball archive format and want to 	     generalise this hack. */
+comment|/* Works for now; may need to be re-engineered if we 	     encounter an oddball archive format and want to 	     generalise this hack.  */
 name|struct
 name|ar_hdr
 modifier|*
@@ -5181,7 +5196,7 @@ argument_list|(
 name|current
 argument_list|)
 expr_stmt|;
-comment|/* We know there will always be enough room (one of the few 	     cases where you may safely use sprintf). */
+comment|/* We know there will always be enough room (one of the few 	     cases where you may safely use sprintf).  */
 name|sprintf
 argument_list|(
 operator|(
@@ -5205,7 +5220,7 @@ name|tabloc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Kinda Kludgy.  We should just use the returned value of 	     sprintf but not all implementations get this right */
+comment|/* Kinda Kludgy.  We should just use the returned value of 	     sprintf but not all implementations get this right.  */
 block|{
 name|char
 modifier|*
@@ -5272,6 +5287,98 @@ begin_comment
 comment|/** A couple of functions for creating ar_hdrs */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HPUX_LARGE_AR_IDS
+end_ifdef
+
+begin_comment
+comment|/* Function to encode large UID/GID values according to HP.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|hpux_uid_gid_encode
+parameter_list|(
+name|str
+parameter_list|,
+name|id
+parameter_list|)
+name|char
+name|str
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|long
+name|int
+name|id
+decl_stmt|;
+block|{
+name|int
+name|cnt
+decl_stmt|;
+name|str
+index|[
+literal|5
+index|]
+operator|=
+literal|'@'
+operator|+
+operator|(
+name|id
+operator|&
+literal|3
+operator|)
+expr_stmt|;
+name|id
+operator|>>=
+literal|2
+expr_stmt|;
+for|for
+control|(
+name|cnt
+operator|=
+literal|4
+init|;
+name|cnt
+operator|>=
+literal|0
+condition|;
+operator|++
+name|cnt
+operator|,
+name|id
+operator|>>=
+literal|6
+control|)
+name|str
+index|[
+name|cnt
+index|]
+operator|=
+literal|' '
+operator|+
+operator|(
+name|id
+operator|&
+literal|0x3f
+operator|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HPUX_LARGE_AR_IDS */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -5311,7 +5418,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Takes a filename, returns an arelt_data for it, or NULL if it can't    make one.  The filename must refer to a filename in the filesystem.    The filename field of the ar_hdr will NOT be initialized.  If member    is set, and it's an in-memory bfd, we fake it. */
+comment|/* Takes a filename, returns an arelt_data for it, or NULL if it can't    make one.  The filename must refer to a filename in the filesystem.    The filename field of the ar_hdr will NOT be initialized.  If member    is set, and it's an in-memory bfd, we fake it.  */
 end_comment
 
 begin_function
@@ -5377,7 +5484,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Assume we just "made" the member, and fake it */
+comment|/* Assume we just "made" the member, and fake it.  */
 name|struct
 name|bfd_in_memory
 modifier|*
@@ -5508,7 +5615,7 @@ name|areltdata
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* ar headers are space padded, not null padded! */
+comment|/* ar headers are space padded, not null padded!  */
 name|memset
 argument_list|(
 operator|(
@@ -5536,7 +5643,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* Goddamned sprintf doesn't permit MAXIMUM field lengths */
+comment|/* Goddamned sprintf doesn't permit MAXIMUM field lengths.  */
 name|sprintf
 argument_list|(
 operator|(
@@ -5555,6 +5662,35 @@ operator|.
 name|st_mtime
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HPUX_LARGE_AR_IDS
+comment|/* HP has a very "special" way to handle UID/GID's with numeric values> 99999.  */
+if|if
+condition|(
+name|status
+operator|.
+name|st_uid
+operator|>
+literal|99999
+condition|)
+name|hpux_uid_gid_encode
+argument_list|(
+name|hdr
+operator|->
+name|ar_gid
+argument_list|,
+operator|(
+name|long
+operator|)
+name|status
+operator|.
+name|st_uid
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|sprintf
 argument_list|(
 operator|(
@@ -5573,6 +5709,35 @@ operator|.
 name|st_uid
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HPUX_LARGE_AR_IDS
+comment|/* HP has a very "special" way to handle UID/GID's with numeric values> 99999.  */
+if|if
+condition|(
+name|status
+operator|.
+name|st_gid
+operator|>
+literal|99999
+condition|)
+name|hpux_uid_gid_encode
+argument_list|(
+name|hdr
+operator|->
+name|ar_uid
+argument_list|,
+operator|(
+name|long
+operator|)
+name|status
+operator|.
+name|st_gid
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|sprintf
 argument_list|(
 operator|(
@@ -5628,7 +5793,7 @@ operator|.
 name|st_size
 argument_list|)
 expr_stmt|;
-comment|/* Correct for a lossage in sprintf whereby it null-terminates.  I cannot      understand how these C losers could design such a ramshackle bunch of      IO operations */
+comment|/* Correct for a lossage in sprintf whereby it null-terminates.  I cannot      understand how these C losers could design such a ramshackle bunch of      IO operations.  */
 name|temp
 operator|=
 operator|(
@@ -5709,7 +5874,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is magic required by the "ar" program.  Since it's     undocumented, it's undocumented.  You may think that it would take     a strong stomach to write this, and it does, but it takes even a     stronger stomach to try to code around such a thing!  */
+comment|/* This is magic required by the "ar" program.  Since it's    undocumented, it's undocumented.  You may think that it would take    a strong stomach to write this, and it does, but it takes even a    stronger stomach to try to code around such a thing!  */
 end_comment
 
 begin_decl_stmt
@@ -5788,7 +5953,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Analogous to stat call */
+comment|/* Analogous to stat call.  */
 end_comment
 
 begin_function
@@ -5855,7 +6020,38 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|buf->stelt = strtol (hdr->arelt,&aloser, size); \   if (aloser == hdr->arelt) return -1;
+value|buf->stelt = strtol (hdr->arelt,&aloser, size);	\   if (aloser == hdr->arelt)	      			\     return -1;
+comment|/* Some platforms support special notations for large IDs.  */
+ifdef|#
+directive|ifdef
+name|HPUX_LARGE_AR_IDS
+define|#
+directive|define
+name|foo2
+parameter_list|(
+name|arelt
+parameter_list|,
+name|stelt
+parameter_list|,
+name|size
+parameter_list|)
+define|\
+value|if (hdr->arelt[5] == ' ')						\     {									\       foo (arelt, stelt, size);						\     }									\   else									\     {									\       int cnt;								\       for (buf->stelt = cnt = 0; cnt< 5; ++cnt)			\ 	{								\ 	  if (hdr->arelt[cnt]< ' ' || hdr->arelt[cnt]> ' ' + 0x3f)	\ 	    return -1;							\ 	  buf->stelt<<= 6;						\ 	  buf->stelt += hdr->arelt[cnt] - ' ';				\ 	}								\       if (hdr->arelt[5]< '@' || hdr->arelt[5]> '@' + 3)		\ 	return -1;							\       buf->stelt<<= 2;							\       buf->stelt += hdr->arelt[5] - '@';				\     }
+else|#
+directive|else
+define|#
+directive|define
+name|foo2
+parameter_list|(
+name|arelt
+parameter_list|,
+name|stelt
+parameter_list|,
+name|size
+parameter_list|)
+value|foo (arelt, stelt, size)
+endif|#
+directive|endif
 name|foo
 argument_list|(
 name|ar_date
@@ -5865,7 +6061,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-name|foo
+name|foo2
 argument_list|(
 name|ar_uid
 argument_list|,
@@ -5874,7 +6070,7 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-name|foo
+name|foo2
 argument_list|(
 name|ar_gid
 argument_list|,
@@ -5933,7 +6129,7 @@ modifier|*
 name|arhdr
 decl_stmt|;
 block|{
-comment|/* FIXME: This interacts unpleasantly with ar's quick-append option.      Fortunately ic960 users will never use that option.  Fixing this      is very hard; fortunately I know how to do it and will do so once      intel's release is out the door. */
+comment|/* FIXME: This interacts unpleasantly with ar's quick-append option.      Fortunately ic960 users will never use that option.  Fixing this      is very hard; fortunately I know how to do it and will do so once      intel's release is out the door.  */
 name|struct
 name|ar_hdr
 modifier|*
@@ -6146,9 +6342,19 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|filename
+operator|==
+name|NULL
+operator|||
+operator|(
+name|bslash
+operator|!=
+name|NULL
+operator|&&
 name|bslash
 operator|>
 name|filename
+operator|)
 condition|)
 name|filename
 operator|=
@@ -6268,7 +6474,7 @@ comment|/* Store name into ar header.  Truncates the name to fit.    1> strip pa
 end_comment
 
 begin_comment
-comment|/* This is what gnu ar does.  It's better but incompatible with the    bsd ar. */
+comment|/* This is what gnu ar does.  It's better but incompatible with the    bsd ar.  */
 end_comment
 
 begin_function
@@ -6348,9 +6554,19 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|filename
+operator|==
+name|NULL
+operator|||
+operator|(
+name|bslash
+operator|!=
+name|NULL
+operator|&&
 name|bslash
 operator|>
 name|filename
+operator|)
 condition|)
 name|filename
 operator|=
@@ -6517,7 +6733,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The BFD is open for write and has its format set to bfd_archive */
+comment|/* The BFD is open for write and has its format set to bfd_archive.  */
 end_comment
 
 begin_function
@@ -6566,7 +6782,7 @@ name|hasobjects
 init|=
 name|false
 decl_stmt|;
-comment|/* if no .o's, don't bother to make a map */
+comment|/* If no .o's, don't bother to make a map.  */
 name|bfd_size_type
 name|wrote
 decl_stmt|;
@@ -6595,6 +6811,7 @@ operator|->
 name|next
 control|)
 block|{
+comment|/* This check is checking the bfds for the objects we're reading 	 from (which are usually either an object file or archive on 	 disk), not the archive entries we're writing to.  We don't 	 actually create bfds for the archive members, we just copy 	 them byte-wise when we write out the archive.  */
 if|if
 condition|(
 name|bfd_write_p
@@ -6648,7 +6865,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* Put in the file name */
+comment|/* Put in the file name.  */
 name|BFD_SEND
 argument_list|(
 name|arch
@@ -6682,7 +6899,7 @@ operator|!
 name|hasobjects
 condition|)
 block|{
-comment|/* don't bother if we won't make a map! */
+comment|/* Don't bother if we won't make a map!  */
 if|if
 condition|(
 operator|(
@@ -7072,7 +7289,7 @@ argument_list|(
 name|current
 argument_list|)
 decl_stmt|;
-comment|/* write ar header */
+comment|/* Write ar header.  */
 if|if
 condition|(
 name|bfd_write
@@ -7289,7 +7506,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Note that the namidx for the first symbol is 0 */
+comment|/* Note that the namidx for the first symbol is 0.  */
 end_comment
 
 begin_function
@@ -7363,7 +7580,7 @@ decl_stmt|;
 name|boolean
 name|ret
 decl_stmt|;
-comment|/* Dunno if this is the best place for this info... */
+comment|/* Dunno if this is the best place for this info...  */
 if|if
 condition|(
 name|elength
@@ -7430,7 +7647,7 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-comment|/* Drop all the files called __.SYMDEF, we're going to make our      own */
+comment|/* Drop all the files called __.SYMDEF, we're going to make our own.  */
 while|while
 condition|(
 name|arch
@@ -7460,7 +7677,7 @@ name|archive_head
 operator|->
 name|next
 expr_stmt|;
-comment|/* Map over each element */
+comment|/* Map over each element.  */
 for|for
 control|(
 name|current
@@ -7609,7 +7826,7 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-comment|/* Now map over all the symbols, picking out the ones we want */
+comment|/* Now map over all the symbols, picking out the ones we                  want.  */
 for|for
 control|(
 name|src_count
@@ -7683,7 +7900,7 @@ name|orl
 modifier|*
 name|new_map
 decl_stmt|;
-comment|/* This symbol will go into the archive header */
+comment|/* This symbol will go into the archive header.  */
 if|if
 condition|(
 name|orl_count
@@ -7894,7 +8111,7 @@ name|error_return
 goto|;
 block|}
 block|}
-comment|/* OK, now we have collected all the data, let's write them out */
+comment|/* OK, now we have collected all the data, let's write them out.  */
 name|ret
 operator|=
 name|BFD_SEND
@@ -8055,7 +8272,7 @@ name|stridx
 operator|+
 name|padit
 decl_stmt|;
-comment|/* Include 8 bytes to store ranlibsize and stringsize in output. */
+comment|/* Include 8 bytes to store ranlibsize and stringsize in output.  */
 name|unsigned
 name|int
 name|mapsize
@@ -8522,7 +8739,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/* now write the strings themselves */
+comment|/* Now write the strings themselves.  */
 name|bfd_h_put_32
 argument_list|(
 name|arch
@@ -8611,7 +8828,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/* The spec sez this should be a newline.  But in order to be      bug-compatible for sun's ar we use a null. */
+comment|/* The spec sez this should be a newline.  But in order to be      bug-compatible for sun's ar we use a null.  */
 if|if
 condition|(
 name|padit
@@ -8697,10 +8914,10 @@ literal|"Reading archive file mod timestamp"
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Can't read mod time for some reason.  */
 return|return
 name|true
 return|;
-comment|/* Can't read mod time for some reason */
 block|}
 if|if
 condition|(
@@ -8715,10 +8932,10 @@ argument_list|)
 operator|->
 name|armap_timestamp
 condition|)
+comment|/* OK by the linker's rules.  */
 return|return
 name|true
 return|;
-comment|/* OK by the linker's rules */
 comment|/* Update the timestamp.  */
 name|bfd_ardata
 argument_list|(
@@ -8884,15 +9101,15 @@ literal|"Writing updated armap timestamp"
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Some error while writing.  */
 return|return
 name|true
 return|;
-comment|/* Some error while writing */
 block|}
+comment|/* We updated the timestamp successfully.  */
 return|return
 name|false
 return|;
-comment|/* We updated the timestamp successfully.  */
 block|}
 end_function
 
@@ -8938,7 +9155,7 @@ name|int
 name|stridx
 decl_stmt|;
 block|{
-comment|/* The size of the ranlib is the number of exported symbols in the      archive * the number of bytes in a int, + an int for the count */
+comment|/* The size of the ranlib is the number of exported symbols in the      archive * the number of bytes in a int, + an int for the count.  */
 name|unsigned
 name|int
 name|ranlibsize
@@ -9002,7 +9219,7 @@ condition|)
 name|mapsize
 operator|++
 expr_stmt|;
-comment|/* work out where the first object file will go in the archive */
+comment|/* Work out where the first object file will go in the archive.  */
 name|archive_member_file_ptr
 operator|=
 operator|(
@@ -9079,7 +9296,7 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* This, at least, is what Intel coff sets the values to.: */
+comment|/* This, at least, is what Intel coff sets the values to.  */
 name|sprintf
 argument_list|(
 operator|(
@@ -9186,7 +9403,7 @@ operator|)
 operator|=
 literal|' '
 expr_stmt|;
-comment|/* Write the ar header for this item and the number of symbols */
+comment|/* Write the ar header for this item and the number of symbols.  */
 if|if
 condition|(
 name|bfd_write
@@ -9251,9 +9468,13 @@ operator|<
 name|symbol_count
 condition|)
 block|{
-comment|/* For each symbol which is used defined in this object, write out 	 the object file's address in the archive */
+comment|/* For each symbol which is used defined in this object, write 	 out the object file's address in the archive.  */
 while|while
 condition|(
+name|count
+operator|<
+name|symbol_count
+operator|&&
 operator|(
 operator|(
 name|bfd
@@ -9283,7 +9504,7 @@ name|count
 operator|++
 expr_stmt|;
 block|}
-comment|/* Add size of this archive entry */
+comment|/* Add size of this archive entry.  */
 name|archive_member_file_ptr
 operator|+=
 operator|(
@@ -9299,7 +9520,7 @@ name|ar_hdr
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* remember aboout the even alignment */
+comment|/* Remember aboout the even alignment.  */
 name|archive_member_file_ptr
 operator|+=
 name|archive_member_file_ptr
@@ -9313,7 +9534,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* now write the strings themselves */
+comment|/* Now write the strings themselves.  */
 for|for
 control|(
 name|count
@@ -9369,7 +9590,7 @@ return|return
 name|false
 return|;
 block|}
-comment|/* The spec sez this should be a newline.  But in order to be      bug-compatible for arc960 we use a null. */
+comment|/* The spec sez this should be a newline.  But in order to be      bug-compatible for arc960 we use a null.  */
 if|if
 condition|(
 name|padit

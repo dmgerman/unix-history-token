@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-sparc.c -- Assemble for the SPARC    Copyright (C) 1989, 90-96, 97, 98, 99, 2000 Free Software Foundation, Inc.    This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA. */
+comment|/* tc-sparc.c -- Assemble for the SPARC    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001    Free Software Foundation, Inc.    This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public    License along with GAS; see the file COPYING.  If not, write    to the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"elf/sparc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dwarf2dbg.h"
 end_include
 
 begin_endif
@@ -463,6 +469,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Non-zero if we should try to relax jumps and calls.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sparc_relax
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Non-zero if we are generating PIC code.  */
 end_comment
 
@@ -535,7 +552,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* handle of the OPCODE hash table */
+comment|/* Handle of the OPCODE hash table.  */
 end_comment
 
 begin_decl_stmt
@@ -692,7 +709,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* Defaulting is invalid (0) */
+comment|/* Defaulting is invalid (0).  */
 block|{
 literal|"common"
 block|,
@@ -816,7 +833,23 @@ block|,
 ifdef|#
 directive|ifdef
 name|OBJ_ELF
-comment|/* these are specific to sparc/svr4 */
+block|{
+literal|"file"
+block|,
+name|dwarf2_directive_file
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"loc"
+block|,
+name|dwarf2_directive_loc
+block|,
+literal|0
+block|}
+block|,
+comment|/* These are specific to sparc/svr4.  */
 block|{
 literal|"2byte"
 block|,
@@ -862,6 +895,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Size of relocation record.  */
+end_comment
+
 begin_decl_stmt
 specifier|const
 name|int
@@ -872,11 +909,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Size of relocation record */
-end_comment
-
-begin_comment
-comment|/* This array holds the chars that always start a comment.  If the    pre-processor is disabled, these aren't very useful */
+comment|/* This array holds the chars that always start a comment.  If the    pre-processor is disabled, these aren't very useful.  */
 end_comment
 
 begin_decl_stmt
@@ -890,19 +923,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* JF removed '|' from comment_chars */
+comment|/* JF removed '|' from                                            comment_chars.  */
 end_comment
 
 begin_comment
-comment|/* This array holds the chars that only start a comment at the beginning of    a line.  If the line seems to have the form '# 123 filename'    .line and .file directives will appear in the pre-processed output */
+comment|/* This array holds the chars that only start a comment at the beginning of    a line.  If the line seems to have the form '# 123 filename'    .line and .file directives will appear in the pre-processed output.  */
 end_comment
 
 begin_comment
-comment|/* Note that input_file.c hand checks for '#' at the beginning of the    first line of the input file.  This is because the compiler outputs    #NO_APP at the beginning of its output. */
+comment|/* Note that input_file.c hand checks for '#' at the beginning of the    first line of the input file.  This is because the compiler outputs    #NO_APP at the beginning of its output.  */
 end_comment
 
 begin_comment
-comment|/* Also note that comments started like this one will always    work if '/' isn't otherwise defined. */
+comment|/* Also note that comments started like this one will always    work if '/' isn't otherwise defined.  */
 end_comment
 
 begin_decl_stmt
@@ -921,12 +954,12 @@ name|char
 name|line_separator_chars
 index|[]
 init|=
-literal|""
+literal|";"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Chars that can be used to separate mant from exp in floating point nums */
+comment|/* Chars that can be used to separate mant from exp in floating point    nums.  */
 end_comment
 
 begin_decl_stmt
@@ -940,15 +973,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Chars that mean this number is a floating point constant */
-end_comment
-
-begin_comment
-comment|/* As in 0f12.456 */
-end_comment
-
-begin_comment
-comment|/* or    0d1.2345e12 */
+comment|/* Chars that mean this number is a floating point constant.    As in 0f12.456    or    0d1.2345e12  */
 end_comment
 
 begin_decl_stmt
@@ -972,7 +997,7 @@ name|isoctal
 parameter_list|(
 name|c
 parameter_list|)
-value|((unsigned)((c) - '0')< '8')
+value|((unsigned) ((c) - '0')< '8')
 end_define
 
 begin_struct
@@ -1067,6 +1092,8 @@ block|,
 name|v9
 block|,
 name|v9a
+block|,
+name|v9b
 block|,
 name|v9_64
 block|}
@@ -1200,6 +1227,18 @@ literal|1
 block|}
 block|,
 block|{
+literal|"v8plusb"
+block|,
+literal|"v9b"
+block|,
+name|v9
+block|,
+literal|0
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"v9"
 block|,
 literal|"v9"
@@ -1215,6 +1254,18 @@ block|{
 literal|"v9a"
 block|,
 literal|"v9a"
+block|,
+name|v9
+block|,
+literal|0
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"v9b"
+block|,
+literal|"v9b"
 block|,
 name|v9
 block|,
@@ -1534,7 +1585,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * md_parse_option  *	Invocation line includes a switch not recognized by the base assembler.  *	See if it's a processor-specific option.  These are:  *  *	-bump  *		Warn on architecture bumps.  See also -A.  *  *	-Av6, -Av7, -Av8, -Asparclite, -Asparclet  *		Standard 32 bit architectures.  *	-Av8plus, -Av8plusa  *		Sparc64 in a 32 bit world.  *	-Av9, -Av9a  *		Sparc64 in either a 32 or 64 bit world (-32/-64 says which).  *		This used to only mean 64 bits, but properly specifying it  *		complicated gcc's ASM_SPECs, so now opcode selection is  *		specified orthogonally to word size (except when specifying  *		the default, but that is an internal implementation detail).  *	-xarch=v8plus, -xarch=v8plusa  *		Same as -Av8plus{,a}, for compatibility with Sun's assembler.  *  *		Select the architecture and possibly the file format.  *		Instructions or features not supported by the selected  *		architecture cause fatal errors.  *  *		The default is to start at v6, and bump the architecture up  *		whenever an instruction is seen at a higher level.  In 32 bit  *		environments, v9 is not bumped up to, the user must pass  * 		-Av8plus{,a}.  *  *		If -bump is specified, a warning is printing when bumping to  *		higher levels.  *  *		If an architecture is specified, all instructions must match  *		that architecture.  Any higher level instructions are flagged  *		as errors.  Note that in the 32 bit environment specifying  *		-Av8plus does not automatically create a v8plus object file, a  *		v9 insn must be seen.  *  *		If both an architecture and -bump are specified, the  *		architecture starts at the specified level, but bumps are  *		warnings.  Note that we can't set `current_architecture' to  *		the requested level in this case: in the 32 bit environment,  *		we still must avoid creating v8plus object files unless v9  * 		insns are seen.  *  * Note:  *		Bumping between incompatible architectures is always an  *		error.  For example, from sparclite to v9.  */
+comment|/* md_parse_option  *	Invocation line includes a switch not recognized by the base assembler.  *	See if it's a processor-specific option.  These are:  *  *	-bump  *		Warn on architecture bumps.  See also -A.  *  *	-Av6, -Av7, -Av8, -Asparclite, -Asparclet  *		Standard 32 bit architectures.  *	-Av9, -Av9a, -Av9b  *		Sparc64 in either a 32 or 64 bit world (-32/-64 says which).  *		This used to only mean 64 bits, but properly specifying it  *		complicated gcc's ASM_SPECs, so now opcode selection is  *		specified orthogonally to word size (except when specifying  *		the default, but that is an internal implementation detail).  *	-Av8plus, -Av8plusa, -Av8plusb  *		Same as -Av9{,a,b}.  *	-xarch=v8plus, -xarch=v8plusa, -xarch=v8plusb  *		Same as -Av8plus{,a,b} -32, for compatibility with Sun's  *		assembler.  *	-xarch=v9, -xarch=v9a, -xarch=v9b  *		Same as -Av9{,a,b} -64, for compatibility with Sun's  *		assembler.  *  *		Select the architecture and possibly the file format.  *		Instructions or features not supported by the selected  *		architecture cause fatal errors.  *  *		The default is to start at v6, and bump the architecture up  *		whenever an instruction is seen at a higher level.  In 32 bit  *		environments, v9 is not bumped up to, the user must pass  * 		-Av8plus{,a,b}.  *  *		If -bump is specified, a warning is printing when bumping to  *		higher levels.  *  *		If an architecture is specified, all instructions must match  *		that architecture.  Any higher level instructions are flagged  *		as errors.  Note that in the 32 bit environment specifying  *		-Av8plus does not automatically create a v8plus object file, a  *		v9 insn must be seen.  *  *		If both an architecture and -bump are specified, the  *		architecture starts at the specified level, but bumps are  *		warnings.  Note that we can't set `current_architecture' to  *		the requested level in this case: in the 32 bit environment,  *		we still must avoid creating v8plus object files unless v9  * 		insns are seen.  *  * Note:  *		Bumping between incompatible architectures is always an  *		error.  For example, from sparclite to v9.  */
 end_comment
 
 begin_ifdef
@@ -1817,6 +1868,34 @@ block|}
 block|,
 endif|#
 directive|endif
+define|#
+directive|define
+name|OPTION_RELAX
+value|(OPTION_MD_BASE + 14)
+block|{
+literal|"relax"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_RELAX
+block|}
+block|,
+define|#
+directive|define
+name|OPTION_NO_RELAX
+value|(OPTION_MD_BASE + 15)
+block|{
+literal|"no-relax"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NO_RELAX
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -1886,43 +1965,40 @@ break|break;
 case|case
 name|OPTION_XARCH
 case|:
-comment|/* This is for compatibility with Sun's assembler.  */
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|arg
 argument_list|,
-literal|"v8plus"
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-name|strcmp
-argument_list|(
-name|arg
+literal|"v9"
 argument_list|,
-literal|"v8plusa"
+literal|2
 argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|as_bad
+name|md_parse_option
 argument_list|(
-name|_
-argument_list|(
-literal|"invalid architecture -xarch=%s"
-argument_list|)
+name|OPTION_32
 argument_list|,
-name|arg
+name|NULL
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-comment|/* fall through */
+else|else
+name|md_parse_option
+argument_list|(
+name|OPTION_64
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Fall through.  */
 case|case
 literal|'A'
 case|:
@@ -1955,6 +2031,23 @@ operator|->
 name|user_option_p
 condition|)
 block|{
+if|if
+condition|(
+name|c
+operator|==
+name|OPTION_XARCH
+condition|)
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"invalid architecture -xarch=%s"
+argument_list|)
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+else|else
 name|as_bad
 argument_list|(
 name|_
@@ -2233,17 +2326,17 @@ break|break;
 case|case
 literal|'Q'
 case|:
-comment|/* Qy - do emit .comment 	 Qn - do not emit .comment */
+comment|/* Qy - do emit .comment 	 Qn - do not emit .comment.  */
 break|break;
 case|case
 literal|'s'
 case|:
-comment|/* use .stab instead of .stab.excl */
+comment|/* Use .stab instead of .stab.excl.  */
 break|break;
 case|case
 literal|'q'
 case|:
-comment|/* quick -- native assembler does fewer checks */
+comment|/* quick -- Native assembler does fewer checks.  */
 break|break;
 case|case
 literal|'K'
@@ -2291,6 +2384,22 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+name|OPTION_RELAX
+case|:
+name|sparc_relax
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_NO_RELAX
+case|:
+name|sparc_relax
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 default|default:
 return|return
 literal|0
@@ -2319,6 +2428,9 @@ name|sparc_arch
 modifier|*
 name|arch
 decl_stmt|;
+name|int
+name|column
+decl_stmt|;
 comment|/* We don't get a chance to initialize anything before we're called,      so handle that now.  */
 if|if
 condition|(
@@ -2337,6 +2449,10 @@ argument_list|(
 literal|"SPARC options:\n"
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|column
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -2358,6 +2474,14 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
+name|arch
+operator|->
+name|user_option_p
+condition|)
+continue|continue;
+if|if
+condition|(
 name|arch
 operator|!=
 operator|&
@@ -2375,15 +2499,132 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|column
+operator|+
+name|strlen
+argument_list|(
 name|arch
 operator|->
-name|user_option_p
+name|name
+argument_list|)
+operator|>
+literal|70
 condition|)
+block|{
+name|column
+operator|=
+literal|0
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+block|}
+name|column
+operator|+=
+literal|5
+operator|+
+literal|2
+operator|+
+name|strlen
+argument_list|(
+name|arch
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stream
 argument_list|,
 literal|"-A%s"
+argument_list|,
+name|arch
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|arch
+operator|=
+operator|&
+name|sparc_arch_table
+index|[
+literal|0
+index|]
+init|;
+name|arch
+operator|->
+name|name
+condition|;
+name|arch
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|arch
+operator|->
+name|user_option_p
+condition|)
+continue|continue;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|" | "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|column
+operator|+
+name|strlen
+argument_list|(
+name|arch
+operator|->
+name|name
+argument_list|)
+operator|>
+literal|65
+condition|)
+block|{
+name|column
+operator|=
+literal|0
+expr_stmt|;
+name|fputc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stream
+argument_list|)
+expr_stmt|;
+block|}
+name|column
+operator|+=
+literal|5
+operator|+
+literal|7
+operator|+
+name|strlen
+argument_list|(
+name|arch
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"-xarch=%s"
 argument_list|,
 name|arch
 operator|->
@@ -2397,17 +2638,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\n-xarch=v8plus | -xarch=v8plusa\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stream
-argument_list|,
-name|_
-argument_list|(
-literal|"\ 			specify variant of SPARC architecture\n\ -bump			warn when assembler switches architectures\n\ -sparc			ignored\n\ --enforce-aligned-data	force .long, etc., to be aligned correctly\n"
+literal|"\n\ 			specify variant of SPARC architecture\n\ -bump			warn when assembler switches architectures\n\ -sparc			ignored\n\ --enforce-aligned-data	force .long, etc., to be aligned correctly\n\ -relax			relax jumps and branches (default)\n\ -no-relax		avoid changing any jumps and branches\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2515,7 +2746,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* native operand size opcode translation */
+comment|/* Native operand size opcode translation.  */
 end_comment
 
 begin_struct
@@ -2633,7 +2864,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* sparc64 priviledged registers */
+comment|/* sparc64 priviledged registers.  */
 end_comment
 
 begin_struct
@@ -2767,13 +2998,13 @@ operator|-
 literal|1
 block|}
 block|,
-comment|/* end marker */
+comment|/* End marker.  */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* v9a specific asrs */
+comment|/* v9a specific asrs.  */
 end_comment
 
 begin_decl_stmt
@@ -2787,6 +3018,18 @@ block|{
 literal|"tick_cmpr"
 block|,
 literal|23
+block|}
+block|,
+block|{
+literal|"sys_tick_cmpr"
+block|,
+literal|25
+block|}
+block|,
+block|{
+literal|"sys_tick"
+block|,
+literal|24
 block|}
 block|,
 block|{
@@ -2838,7 +3081,7 @@ operator|-
 literal|1
 block|}
 block|,
-comment|/* end marker */
+comment|/* End marker.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2908,7 +3151,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This function is called once, at assembler startup time.  It should    set up all the tables, etc. that the MD part of the assembler will need. */
+comment|/* This function is called once, at assembler startup time.  It should    set up all the tables, etc. that the MD part of the assembler will    need.  */
 end_comment
 
 begin_function
@@ -3122,9 +3365,12 @@ name|char
 modifier|*
 name|name
 init|=
+operator|(
+operator|(
 name|sparc_arch_size
 operator|==
 literal|32
+operator|)
 condition|?
 name|native_op_table
 index|[
@@ -3139,6 +3385,7 @@ name|i
 index|]
 operator|.
 name|name64
+operator|)
 decl_stmt|;
 name|insn
 operator|=
@@ -3326,120 +3573,97 @@ name|void
 name|sparc_md_end
 parameter_list|()
 block|{
+name|unsigned
+name|long
+name|mach
+init|=
+name|bfd_mach_sparc
+decl_stmt|;
 if|if
 condition|(
 name|sparc_arch_size
 operator|==
 literal|64
 condition|)
-block|{
-if|if
+switch|switch
 condition|(
 name|current_architecture
-operator|==
-name|SPARC_OPCODE_ARCH_V9A
 condition|)
-name|bfd_set_arch_mach
-argument_list|(
-name|stdoutput
-argument_list|,
-name|bfd_arch_sparc
-argument_list|,
+block|{
+case|case
+name|SPARC_OPCODE_ARCH_V9A
+case|:
+name|mach
+operator|=
 name|bfd_mach_sparc_v9a
-argument_list|)
 expr_stmt|;
-else|else
-name|bfd_set_arch_mach
-argument_list|(
-name|stdoutput
-argument_list|,
-name|bfd_arch_sparc
-argument_list|,
+break|break;
+case|case
+name|SPARC_OPCODE_ARCH_V9B
+case|:
+name|mach
+operator|=
+name|bfd_mach_sparc_v9b
+expr_stmt|;
+break|break;
+default|default:
+name|mach
+operator|=
 name|bfd_mach_sparc_v9
-argument_list|)
 expr_stmt|;
+break|break;
 block|}
 else|else
+switch|switch
+condition|(
+name|current_architecture
+condition|)
 block|{
-if|if
-condition|(
-name|current_architecture
-operator|==
-name|SPARC_OPCODE_ARCH_V9
-condition|)
-name|bfd_set_arch_mach
-argument_list|(
-name|stdoutput
-argument_list|,
-name|bfd_arch_sparc
-argument_list|,
-name|bfd_mach_sparc_v8plus
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|current_architecture
-operator|==
-name|SPARC_OPCODE_ARCH_V9A
-condition|)
-name|bfd_set_arch_mach
-argument_list|(
-name|stdoutput
-argument_list|,
-name|bfd_arch_sparc
-argument_list|,
-name|bfd_mach_sparc_v8plusa
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|current_architecture
-operator|==
+case|case
 name|SPARC_OPCODE_ARCH_SPARCLET
-condition|)
-name|bfd_set_arch_mach
-argument_list|(
-name|stdoutput
-argument_list|,
-name|bfd_arch_sparc
-argument_list|,
+case|:
+name|mach
+operator|=
 name|bfd_mach_sparc_sparclet
-argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|default_arch_type
-operator|==
-name|sparc86x
-operator|&&
-name|target_little_endian_data
-condition|)
+break|break;
+case|case
+name|SPARC_OPCODE_ARCH_V9
+case|:
+name|mach
+operator|=
+name|bfd_mach_sparc_v8plus
+expr_stmt|;
+break|break;
+case|case
+name|SPARC_OPCODE_ARCH_V9A
+case|:
+name|mach
+operator|=
+name|bfd_mach_sparc_v8plusa
+expr_stmt|;
+break|break;
+case|case
+name|SPARC_OPCODE_ARCH_V9B
+case|:
+name|mach
+operator|=
+name|bfd_mach_sparc_v8plusb
+expr_stmt|;
+break|break;
+comment|/* The sparclite is treated like a normal sparc.  Perhaps it shouldn't 	 be but for now it is (since that's the way it's always been 	 treated).  */
+default|default:
+break|break;
+block|}
 name|bfd_set_arch_mach
 argument_list|(
 name|stdoutput
 argument_list|,
 name|bfd_arch_sparc
 argument_list|,
-name|bfd_mach_sparc_sparclite_le
+name|mach
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-comment|/* The sparclite is treated like a normal sparc.  Perhaps it shouldn't 	     be but for now it is (since that's the way it's always been 	     treated).  */
-name|bfd_set_arch_mach
-argument_list|(
-name|stdoutput
-argument_list|,
-name|bfd_arch_sparc
-argument_list|,
-name|bfd_mach_sparc
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -5518,7 +5742,7 @@ block|{
 case|case
 name|SPECIAL_CASE_NONE
 case|:
-comment|/* normal insn */
+comment|/* Normal insn.  */
 name|output_insn
 argument_list|(
 name|insn
@@ -5580,7 +5804,7 @@ operator|&
 name|the_insn
 argument_list|)
 expr_stmt|;
-comment|/* According to information leaked from Sun, the "fdiv" instructions 	   on early SPARC machines would produce incorrect results sometimes. 	   The workaround is to add an fmovs of the destination register to 	   itself just after the instruction.  This was true on machines 	   with Weitek 1165 float chips, such as the Sun-4/260 and /280. */
+comment|/* According to information leaked from Sun, the "fdiv" instructions 	   on early SPARC machines would produce incorrect results sometimes. 	   The workaround is to add an fmovs of the destination register to 	   itself just after the instruction.  This was true on machines 	   with Weitek 1165 float chips, such as the Sun-4/260 and /280.  */
 name|assert
 argument_list|(
 name|the_insn
@@ -5769,7 +5993,7 @@ name|comma
 operator|=
 literal|1
 expr_stmt|;
-comment|/*FALLTHROUGH */
+comment|/* Fall through.  */
 case|case
 literal|' '
 case|:
@@ -5883,7 +6107,7 @@ name|v9_arg_p
 operator|=
 literal|0
 expr_stmt|;
-comment|/*        * Build the opcode, checking as we go to make        * sure that the operands match        */
+comment|/* Build the opcode, checking as we go to make sure that the          operands match.  */
 for|for
 control|(
 name|args
@@ -5969,12 +6193,9 @@ name|s
 operator|==
 literal|' '
 condition|)
-block|{
 operator|++
 name|s
 expr_stmt|;
-continue|continue;
-block|}
 if|if
 condition|(
 operator|*
@@ -5997,12 +6218,9 @@ name|s
 operator|==
 literal|' '
 condition|)
-block|{
 operator|++
 name|s
 expr_stmt|;
-continue|continue;
-block|}
 block|}
 block|}
 else|else
@@ -6060,6 +6278,67 @@ name|MEMBAR
 argument_list|(
 name|kmask
 argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+case|case
+literal|'3'
+case|:
+block|{
+name|int
+name|smask
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|parse_const_expr_arg
+argument_list|(
+operator|&
+name|s
+argument_list|,
+operator|&
+name|smask
+argument_list|)
+condition|)
+block|{
+name|error_message
+operator|=
+name|_
+argument_list|(
+literal|": invalid siam mode expression"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
+if|if
+condition|(
+name|smask
+operator|<
+literal|0
+operator|||
+name|smask
+operator|>
+literal|7
+condition|)
+block|{
+name|error_message
+operator|=
+name|_
+argument_list|(
+literal|": invalid siam mode number"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
+name|opcode
+operator||=
+name|smask
 expr_stmt|;
 continue|continue;
 block|}
@@ -6194,7 +6473,7 @@ name|len
 init|=
 literal|9999999
 decl_stmt|;
-comment|/* init to make gcc happy */
+comment|/* Init to make gcc happy.  */
 name|s
 operator|+=
 literal|1
@@ -6339,7 +6618,7 @@ case|:
 case|case
 literal|'/'
 case|:
-comment|/* Parse a v9a ancillary state register.  */
+comment|/* Parse a v9a/v9b ancillary state register.  */
 if|if
 condition|(
 operator|*
@@ -6361,7 +6640,7 @@ name|len
 init|=
 literal|9999999
 decl_stmt|;
-comment|/* init to make gcc happy */
+comment|/* Init to make gcc happy.  */
 name|s
 operator|+=
 literal|1
@@ -6446,7 +6725,7 @@ name|error_message
 operator|=
 name|_
 argument_list|(
-literal|": unrecognizable v9a ancillary state register"
+literal|": unrecognizable v9a or v9b ancillary state register"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6480,6 +6759,38 @@ operator|=
 name|_
 argument_list|(
 literal|": rd on write only ancillary state register"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|error
+goto|;
+block|}
+if|if
+condition|(
+name|p
+operator|->
+name|regnum
+operator|>=
+literal|24
+operator|&&
+operator|(
+name|insn
+operator|->
+name|architecture
+operator|&
+name|SPARC_OPCODE_ARCH_MASK
+argument_list|(
+name|SPARC_OPCODE_ARCH_V9A
+argument_list|)
+operator|)
+condition|)
+block|{
+comment|/* %sys_tick and %sys_tick_cmpr are v9bnotv9a */
+name|error_message
+operator|=
+name|_
+argument_list|(
+literal|": unrecognizable v9a ancillary state register"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6526,7 +6837,7 @@ name|error_message
 operator|=
 name|_
 argument_list|(
-literal|": unrecognizable v9a ancillary state register"
+literal|": unrecognizable v9a or v9b ancillary state register"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6693,7 +7004,7 @@ name|error
 goto|;
 block|}
 block|}
-comment|/* if %asr */
+comment|/* if %asr  */
 break|break;
 case|case
 literal|'I'
@@ -7129,7 +7440,7 @@ break|break;
 case|case
 literal|'\0'
 case|:
-comment|/* end of args */
+comment|/* End of args.  */
 if|if
 condition|(
 operator|*
@@ -7174,7 +7485,7 @@ break|break;
 case|case
 literal|'['
 case|:
-comment|/* these must match exactly */
+comment|/* These must match exactly.  */
 case|case
 literal|']'
 case|:
@@ -7198,7 +7509,7 @@ break|break;
 case|case
 literal|'#'
 case|:
-comment|/* must be at least one digit */
+comment|/* Must be at least one digit.  */
 if|if
 condition|(
 name|isdigit
@@ -7236,7 +7547,7 @@ break|break;
 case|case
 literal|'C'
 case|:
-comment|/* coprocessor state register */
+comment|/* Coprocessor state register.  */
 if|if
 condition|(
 name|strncmp
@@ -7261,7 +7572,7 @@ break|break;
 case|case
 literal|'b'
 case|:
-comment|/* next operand is a coprocessor register */
+comment|/* Next operand is a coprocessor register.  */
 case|case
 literal|'c'
 case|:
@@ -8046,7 +8357,7 @@ else|else
 block|{
 break|break;
 block|}
-comment|/* if not an 'f' register. */
+comment|/* if not an 'f' register.  */
 switch|switch
 condition|(
 operator|*
@@ -8105,7 +8416,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* pack it in. */
+comment|/* Pack it in.  */
 name|know
 argument_list|(
 literal|0
@@ -8113,7 +8424,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* float arg */
+comment|/* float arg  */
 case|case
 literal|'F'
 case|:
@@ -8141,21 +8452,21 @@ break|break;
 case|case
 literal|'0'
 case|:
-comment|/* 64 bit immediate (set, setsw, setx insn) */
+comment|/* 64 bit immediate (set, setsw, setx insn)  */
 name|the_insn
 operator|.
 name|reloc
 operator|=
 name|BFD_RELOC_NONE
 expr_stmt|;
-comment|/* reloc handled elsewhere */
+comment|/* reloc handled elsewhere  */
 goto|goto
 name|immediate
 goto|;
 case|case
 literal|'l'
 case|:
-comment|/* 22 bit PC relative immediate */
+comment|/* 22 bit PC relative immediate  */
 name|the_insn
 operator|.
 name|reloc
@@ -8174,7 +8485,7 @@ goto|;
 case|case
 literal|'L'
 case|:
-comment|/* 30 bit immediate */
+comment|/* 30 bit immediate  */
 name|the_insn
 operator|.
 name|reloc
@@ -8196,7 +8507,7 @@ case|:
 case|case
 literal|'n'
 case|:
-comment|/* 22 bit immediate */
+comment|/* 22 bit immediate  */
 name|the_insn
 operator|.
 name|reloc
@@ -8209,7 +8520,7 @@ goto|;
 case|case
 literal|'i'
 case|:
-comment|/* 13 bit immediate */
+comment|/* 13 bit immediate  */
 name|the_insn
 operator|.
 name|reloc
@@ -8438,6 +8749,14 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
 block|}
 block|}
 struct|;
@@ -9036,7 +9355,7 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/* intentional fallthrough */
+comment|/* Fall through.  */
 case|case
 name|BFD_RELOC_SPARC_LM22
 case|:
@@ -9066,7 +9385,7 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/* intentional fallthrough */
+comment|/* Fall through.  */
 case|case
 name|BFD_RELOC_LO10
 case|:
@@ -9431,7 +9750,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* alternate space */
+comment|/* Alternate space.  */
 case|case
 literal|'p'
 case|:
@@ -9459,7 +9778,7 @@ break|break;
 case|case
 literal|'q'
 case|:
-comment|/* floating point queue */
+comment|/* Floating point queue.  */
 if|if
 condition|(
 name|strncmp
@@ -9484,7 +9803,7 @@ break|break;
 case|case
 literal|'Q'
 case|:
-comment|/* coprocessor queue */
+comment|/* Coprocessor queue.  */
 if|if
 condition|(
 name|strncmp
@@ -9889,11 +10208,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* switch on arg code */
+comment|/* switch on arg code.  */
 comment|/* Break out of for() loop.  */
 break|break;
 block|}
-comment|/* for each arg that we expect */
+comment|/* For each arg that we expect.  */
 name|error
 label|:
 if|if
@@ -9903,7 +10222,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Args don't match. */
+comment|/* Args don't match.  */
 if|if
 condition|(
 operator|&
@@ -9973,7 +10292,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* We have a match.  Now see if the architecture is ok.  */
+comment|/* We have a match.  Now see if the architecture is OK.  */
 name|int
 name|needed_arch_mask
 init|=
@@ -9990,26 +10309,25 @@ name|needed_arch_mask
 operator|&=
 operator|~
 operator|(
-operator|(
-literal|1
-operator|<<
+name|SPARC_OPCODE_ARCH_MASK
+argument_list|(
 name|SPARC_OPCODE_ARCH_V9
-operator|)
-operator||
-operator|(
+argument_list|)
+operator|-
 literal|1
-operator|<<
-name|SPARC_OPCODE_ARCH_V9A
-operator|)
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|needed_arch_mask
-operator||=
-operator|(
-literal|1
-operator|<<
+condition|)
+name|needed_arch_mask
+operator|=
+name|SPARC_OPCODE_ARCH_MASK
+argument_list|(
 name|SPARC_OPCODE_ARCH_V9
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -10021,8 +10339,8 @@ argument_list|(
 name|current_architecture
 argument_list|)
 condition|)
+comment|/* OK.  */
 empty_stmt|;
-comment|/* ok */
 comment|/* Can we bump up the architecture?  */
 elseif|else
 if|if
@@ -10234,10 +10552,10 @@ name|special_case
 return|;
 block|}
 block|}
-comment|/* if no match */
+comment|/* If no match.  */
 break|break;
 block|}
-comment|/* forever looking for a match */
+comment|/* Forever looking for a match.  */
 name|the_insn
 operator|.
 name|opcode
@@ -10632,7 +10950,7 @@ argument_list|(
 literal|4
 argument_list|)
 decl_stmt|;
-comment|/* put out the opcode */
+comment|/* Put out the opcode.  */
 if|if
 condition|(
 name|INSN_BIG_ENDIAN
@@ -10666,7 +10984,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* put out the symbol-dependent stuff */
+comment|/* Put out the symbol-dependent stuff.  */
 if|if
 condition|(
 name|the_insn
@@ -10684,7 +11002,7 @@ name|fix_new_exp
 argument_list|(
 name|frag_now
 argument_list|,
-comment|/* which frag */
+comment|/* Which frag.  */
 operator|(
 name|toP
 operator|-
@@ -10693,10 +11011,10 @@ operator|->
 name|fr_literal
 operator|)
 argument_list|,
-comment|/* where */
+comment|/* Where.  */
 literal|4
 argument_list|,
-comment|/* size */
+comment|/* Size.  */
 operator|&
 name|the_insn
 operator|->
@@ -10747,6 +11065,16 @@ name|the_insn
 operator|->
 name|opcode
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+name|dwarf2_emit_insn
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -10754,11 +11082,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*   This is identical to the md_atof in m68k.c.  I think this is right,   but I'm not sure.    Turn a string in input_line_pointer into a floating point constant of type   type, and store the appropriate bytes in *litP.  The number of LITTLENUMS   emitted is stored in *sizeP .  An error message is returned, or NULL on OK.   */
+comment|/* This is identical to the md_atof in m68k.c.  I think this is right,    but I'm not sure.     Turn a string in input_line_pointer into a floating point constant    of type TYPE, and store the appropriate bytes in *LITP.  The number    of LITTLENUMS emitted is stored in *SIZEP.  An error message is    returned, or NULL on OK.  */
 end_comment
 
 begin_comment
-comment|/* Equal to MAX_PRECISION in atof-ieee.c */
+comment|/* Equal to MAX_PRECISION in atof-ieee.c.  */
 end_comment
 
 begin_define
@@ -11068,7 +11396,7 @@ operator|&
 name|SEC_ALLOC
 operator|)
 condition|)
-comment|/* Output debug words, which are not in allocated sections, as big endian */
+comment|/* Output debug words, which are not in allocated sections, as big        endian.  */
 name|number_to_chars_bigendian
 argument_list|(
 name|buf
@@ -11102,7 +11430,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Apply a fixS to the frags, now that we know the value it ought to    hold. */
+comment|/* Apply a fixS to the frags, now that we know the value it ought to    hold.  */
 end_comment
 
 begin_function
@@ -11167,7 +11495,7 @@ name|fx_addnumber
 operator|=
 name|val
 expr_stmt|;
-comment|/* Remember value for emit_reloc */
+comment|/* Remember value for emit_reloc.  */
 ifdef|#
 directive|ifdef
 name|OBJ_ELF
@@ -11483,6 +11811,12 @@ operator|->
 name|fx_r_type
 operator|==
 name|BFD_RELOC_16
+operator|||
+name|fixP
+operator|->
+name|fx_r_type
+operator|==
+name|BFD_RELOC_SPARC_UA16
 condition|)
 block|{
 name|md_number_to_chars
@@ -11503,6 +11837,12 @@ operator|->
 name|fx_r_type
 operator|==
 name|BFD_RELOC_32
+operator|||
+name|fixP
+operator|->
+name|fx_r_type
+operator|==
+name|BFD_RELOC_SPARC_UA32
 operator|||
 name|fixP
 operator|->
@@ -11529,6 +11869,12 @@ operator|->
 name|fx_r_type
 operator|==
 name|BFD_RELOC_64
+operator|||
+name|fixP
+operator|->
+name|fx_r_type
+operator|==
+name|BFD_RELOC_SPARC_UA64
 condition|)
 block|{
 name|md_number_to_chars
@@ -11643,6 +11989,488 @@ name|val
 operator|&
 literal|0x3fffffff
 expr_stmt|;
+comment|/* See if we have a delay slot.  */
+if|if
+condition|(
+name|sparc_relax
+operator|&&
+name|fixP
+operator|->
+name|fx_where
+operator|+
+literal|8
+operator|<=
+name|fixP
+operator|->
+name|fx_frag
+operator|->
+name|fr_fix
+condition|)
+block|{
+define|#
+directive|define
+name|G0
+value|0
+define|#
+directive|define
+name|O7
+value|15
+define|#
+directive|define
+name|XCC
+value|(2<< 20)
+define|#
+directive|define
+name|COND
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)&0xf)<<25)
+define|#
+directive|define
+name|CONDA
+value|COND(0x8)
+define|#
+directive|define
+name|INSN_BPA
+value|(F2(0,1) | CONDA | BPRED | XCC)
+define|#
+directive|define
+name|INSN_BA
+value|(F2(0,2) | CONDA)
+define|#
+directive|define
+name|INSN_OR
+value|F3(2, 0x2, 0)
+define|#
+directive|define
+name|INSN_NOP
+value|F2(0,4)
+name|long
+name|delay
+decl_stmt|;
+comment|/* If the instruction is a call with either: 		 restore 		 arithmetic instruction with rd == %o7 		 where rs1 != %o7 and rs2 if it is register != %o7 		 then we can optimize if the call destination is near 		 by changing the call into a branch always.  */
+if|if
+condition|(
+name|INSN_BIG_ENDIAN
+condition|)
+name|delay
+operator|=
+name|bfd_getb32
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|buf
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+else|else
+name|delay
+operator|=
+name|bfd_getl32
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|buf
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|insn
+operator|&
+name|OP
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+operator|)
+operator|!=
+name|OP
+argument_list|(
+literal|1
+argument_list|)
+operator|||
+operator|(
+name|delay
+operator|&
+name|OP
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+operator|)
+operator|!=
+name|OP
+argument_list|(
+literal|2
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
+operator|(
+name|delay
+operator|&
+name|OP3
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+operator|)
+operator|!=
+name|OP3
+argument_list|(
+literal|0x3d
+argument_list|)
+comment|/* Restore.  */
+operator|&&
+operator|(
+operator|(
+name|delay
+operator|&
+name|OP3
+argument_list|(
+literal|0x28
+argument_list|)
+operator|)
+operator|!=
+literal|0
+comment|/* Arithmetic.  */
+operator|||
+operator|(
+operator|(
+name|delay
+operator|&
+name|RD
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+operator|)
+operator|!=
+name|RD
+argument_list|(
+name|O7
+argument_list|)
+operator|)
+operator|)
+condition|)
+break|break;
+if|if
+condition|(
+operator|(
+name|delay
+operator|&
+name|RS1
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+operator|)
+operator|==
+name|RS1
+argument_list|(
+name|O7
+argument_list|)
+operator|||
+operator|(
+operator|(
+name|delay
+operator|&
+name|F3I
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|delay
+operator|&
+name|RS2
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+operator|)
+operator|==
+name|RS2
+argument_list|(
+name|O7
+argument_list|)
+operator|)
+condition|)
+break|break;
+comment|/* Ensure the branch will fit into simm22.  */
+if|if
+condition|(
+operator|(
+name|val
+operator|&
+literal|0x3fe00000
+operator|)
+operator|&&
+operator|(
+name|val
+operator|&
+literal|0x3fe00000
+operator|)
+operator|!=
+literal|0x3fe00000
+condition|)
+break|break;
+comment|/* Check if the arch is v9 and branch will fit 		 into simm19.  */
+if|if
+condition|(
+operator|(
+operator|(
+name|val
+operator|&
+literal|0x3c0000
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|val
+operator|&
+literal|0x3c0000
+operator|)
+operator|==
+literal|0x3c0000
+operator|)
+operator|&&
+operator|(
+name|sparc_arch_size
+operator|==
+literal|64
+operator|||
+name|current_architecture
+operator|>=
+name|SPARC_OPCODE_ARCH_V9
+operator|)
+condition|)
+comment|/* ba,pt %xcc  */
+name|insn
+operator|=
+name|INSN_BPA
+operator||
+operator|(
+name|val
+operator|&
+literal|0x7ffff
+operator|)
+expr_stmt|;
+else|else
+comment|/* ba  */
+name|insn
+operator|=
+name|INSN_BA
+operator||
+operator|(
+name|val
+operator|&
+literal|0x3fffff
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fixP
+operator|->
+name|fx_where
+operator|>=
+literal|4
+operator|&&
+operator|(
+operator|(
+name|delay
+operator|&
+operator|(
+literal|0xffffffff
+operator|^
+name|RS1
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+operator|)
+operator|)
+operator|==
+operator|(
+name|INSN_OR
+operator||
+name|RD
+argument_list|(
+name|O7
+argument_list|)
+operator||
+name|RS2
+argument_list|(
+name|G0
+argument_list|)
+operator|)
+operator|)
+condition|)
+block|{
+name|long
+name|setter
+decl_stmt|;
+name|int
+name|reg
+decl_stmt|;
+if|if
+condition|(
+name|INSN_BIG_ENDIAN
+condition|)
+name|setter
+operator|=
+name|bfd_getb32
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|buf
+operator|-
+literal|4
+argument_list|)
+expr_stmt|;
+else|else
+name|setter
+operator|=
+name|bfd_getl32
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|buf
+operator|-
+literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|setter
+operator|&
+operator|(
+literal|0xffffffff
+operator|^
+name|RD
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+operator|)
+operator|)
+operator|!=
+operator|(
+name|INSN_OR
+operator||
+name|RS1
+argument_list|(
+name|O7
+argument_list|)
+operator||
+name|RS2
+argument_list|(
+name|G0
+argument_list|)
+operator|)
+condition|)
+break|break;
+comment|/* The sequence was 		     or %o7, %g0, %rN 		     call foo 		     or %rN, %g0, %o7  		     If call foo was replaced with ba, replace 		     or %rN, %g0, %o7 with nop.  */
+name|reg
+operator|=
+operator|(
+name|delay
+operator|&
+name|RS1
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+operator|)
+operator|>>
+literal|14
+expr_stmt|;
+if|if
+condition|(
+name|reg
+operator|!=
+operator|(
+operator|(
+name|setter
+operator|&
+name|RD
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+operator|)
+operator|>>
+literal|25
+operator|)
+operator|||
+name|reg
+operator|==
+name|G0
+operator|||
+name|reg
+operator|==
+name|O7
+condition|)
+break|break;
+if|if
+condition|(
+name|INSN_BIG_ENDIAN
+condition|)
+name|bfd_putb32
+argument_list|(
+name|INSN_NOP
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|buf
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+else|else
+name|bfd_putl32
+argument_list|(
+name|INSN_NOP
+argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|buf
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 break|break;
 case|case
 name|BFD_RELOC_SPARC_11
@@ -11827,7 +12655,7 @@ break|break;
 case|case
 name|BFD_RELOC_SPARC_WDISP16
 case|:
-comment|/* FIXME: simplify */
+comment|/* FIXME: simplify.  */
 if|if
 condition|(
 operator|(
@@ -11914,7 +12742,7 @@ break|break;
 case|case
 name|BFD_RELOC_SPARC_WDISP19
 case|:
-comment|/* FIXME: simplify */
+comment|/* FIXME: simplify.  */
 if|if
 condition|(
 operator|(
@@ -11998,7 +12826,7 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/* intentional fallthrough */
+comment|/* Fall through.  */
 case|case
 name|BFD_RELOC_SPARC_LM22
 case|:
@@ -12081,7 +12909,7 @@ argument_list|,
 literal|32
 argument_list|)
 expr_stmt|;
-comment|/* intentional fallthrough */
+comment|/* Fall through.  */
 case|case
 name|BFD_RELOC_LO10
 case|:
@@ -12123,7 +12951,7 @@ name|fixP
 operator|->
 name|tc_fix_data
 expr_stmt|;
-comment|/* intentional fallthrough */
+comment|/* Fall through.  */
 case|case
 name|BFD_RELOC_SPARC13
 case|:
@@ -12173,7 +13001,7 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* FALLTHROUGH */
+comment|/* Fall through.  */
 case|case
 name|BFD_RELOC_SPARC_BASE22
 case|:
@@ -12590,6 +13418,15 @@ case|case
 name|BFD_RELOC_SPARC_OLO10
 case|:
 case|case
+name|BFD_RELOC_SPARC_UA16
+case|:
+case|case
+name|BFD_RELOC_SPARC_UA32
+case|:
+case|case
+name|BFD_RELOC_SPARC_UA64
+case|:
+case|case
 name|BFD_RELOC_VTABLE_ENTRY
 case|:
 case|case
@@ -12771,7 +13608,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* defined (OBJ_ELF) || defined (OBJ_AOUT) */
+comment|/* defined (OBJ_ELF) || defined (OBJ_AOUT)  */
 if|if
 condition|(
 name|code
@@ -12952,7 +13789,7 @@ name|address
 expr_stmt|;
 else|#
 directive|else
-comment|/* elf or coff */
+comment|/* elf or coff  */
 if|if
 condition|(
 name|reloc
@@ -13128,11 +13965,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* We have no need to default values of symbols. */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
+comment|/* We have no need to default values of symbols.  */
 end_comment
 
 begin_function
@@ -13145,6 +13978,7 @@ parameter_list|)
 name|char
 modifier|*
 name|name
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
@@ -13154,11 +13988,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* md_undefined_symbol() */
-end_comment
-
-begin_comment
-comment|/* Round up a section size to the appropriate boundary. */
+comment|/* Round up a section size to the appropriate boundary.  */
 end_comment
 
 begin_function
@@ -13171,6 +14001,7 @@ name|size
 parameter_list|)
 name|segT
 name|segment
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|valueT
 name|size
@@ -13203,7 +14034,7 @@ decl_stmt|;
 name|valueT
 name|newsize
 decl_stmt|;
-comment|/* turn alignment value into a mask */
+comment|/* Turn alignment value into a mask.  */
 name|align
 operator|--
 expr_stmt|;
@@ -13232,7 +14063,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Exactly what point is a PC-relative offset relative TO?    On the sparc, they're relative to the address of the offset, plus    its size.  This gets us to the following instruction.    (??? Is this right?  FIXME-SOON) */
+comment|/* Exactly what point is a PC-relative offset relative TO?    On the sparc, they're relative to the address of the offset, plus    its size.  This gets us to the following instruction.    (??? Is this right?  FIXME-SOON)  */
 end_comment
 
 begin_function
@@ -13359,7 +14190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sort of like s_lcomm  */
+comment|/* Sort of like s_lcomm.  */
 end_comment
 
 begin_ifndef
@@ -13391,6 +14222,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -13489,7 +14321,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* bad length */
+comment|/* Bad length.  */
 operator|*
 name|p
 operator|=
@@ -13753,6 +14585,7 @@ name|current_subseg
 init|=
 name|now_subseg
 decl_stmt|;
+comment|/* Switch to bss.  */
 name|subseg_set
 argument_list|(
 name|bss_section
@@ -13760,11 +14593,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* switch to bss */
 if|if
 condition|(
 name|align
 condition|)
+comment|/* Do alignment.  */
 name|frag_align
 argument_list|(
 name|align
@@ -13774,8 +14607,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* do alignment */
-comment|/* detach from old frag */
+comment|/* Detach from old frag.  */
 if|if
 condition|(
 name|S_GET_SEGMENT
@@ -13876,7 +14708,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* if not redefining */
+comment|/* if not redefining.  */
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
@@ -13892,6 +14724,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -13923,7 +14756,7 @@ operator|=
 name|get_symbol_end
 argument_list|()
 expr_stmt|;
-comment|/* just after name is now '\0' */
+comment|/* Just after name is now '\0'.  */
 name|p
 operator|=
 name|input_line_pointer
@@ -13957,10 +14790,10 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+comment|/* Skip ','.  */
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* skip ',' */
 if|if
 condition|(
 operator|(
@@ -14393,7 +15226,7 @@ block|}
 else|else
 endif|#
 directive|endif
-comment|/* OBJ_ELF */
+comment|/* OBJ_ELF  */
 block|{
 name|allocate_common
 label|:
@@ -14597,6 +15430,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 comment|/* The easy way to implement is to just forget about the last      instruction.  */
@@ -14616,6 +15450,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 if|if
@@ -14709,7 +15544,7 @@ name|input_line_pointer
 operator|+=
 literal|5
 expr_stmt|;
-comment|/* We only support 2 segments -- text and data -- for now, so 	 things in the "bss segment" will have to go into data for now. 	 You can still allocate SEG_BSS stuff with .lcomm or .reserve. */
+comment|/* We only support 2 segments -- text and data -- for now, so 	 things in the "bss segment" will have to go into data for now. 	 You can still allocate SEG_BSS stuff with .lcomm or .reserve.  */
 name|subseg_set
 argument_list|(
 name|data_section
@@ -14717,7 +15552,7 @@ argument_list|,
 literal|255
 argument_list|)
 expr_stmt|;
-comment|/* FIXME-SOMEDAY */
+comment|/* FIXME-SOMEDAY.  */
 return|return;
 block|}
 name|as_bad
@@ -14762,6 +15597,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 while|while
@@ -14842,6 +15678,7 @@ name|bytes
 parameter_list|)
 name|int
 name|bytes
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|cons
@@ -14865,7 +15702,7 @@ name|OBJ_ELF
 end_ifdef
 
 begin_comment
-comment|/* Handle the SPARC ELF .register pseudo-op.  This sets the binding of a    global register.    The syntax is:        .register %g[2367],{#scratch|symbolname|#ignore}    */
+comment|/* Handle the SPARC ELF .register pseudo-op.  This sets the binding of a    global register.    The syntax is:     .register %g[2367],{#scratch|symbolname|#ignore} */
 end_comment
 
 begin_function
@@ -14877,6 +15714,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -15452,18 +16290,12 @@ operator|!
 name|enforce_aligned_data
 condition|)
 return|return;
+comment|/* Don't align if this is an unaligned pseudo-op.  */
 if|if
 condition|(
 name|sparc_no_align_cons
 condition|)
-block|{
-comment|/* This is an unaligned pseudo-op.  */
-name|sparc_no_align_cons
-operator|=
-literal|0
-expr_stmt|;
 return|return;
-block|}
 name|nalign
 operator|=
 name|log2
@@ -15524,7 +16356,7 @@ name|p
 operator|=
 name|frag_var
 argument_list|(
-name|rs_align_code
+name|rs_align_test
 argument_list|,
 literal|1
 argument_list|,
@@ -15564,7 +16396,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is where we do the unexpected alignment check.    This is called from HANDLE_ALIGN in tc-sparc.h.  */
+comment|/* This is called from HANDLE_ALIGN in tc-sparc.h.  */
 end_comment
 
 begin_function
@@ -15578,19 +16410,17 @@ modifier|*
 name|fragp
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|fragp
-operator|->
-name|fr_type
-operator|==
-name|rs_align_code
-operator|&&
-operator|!
-name|fragp
-operator|->
-name|fr_subtype
-operator|&&
+name|int
+name|count
+decl_stmt|,
+name|fix
+decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|count
+operator|=
 name|fragp
 operator|->
 name|fr_next
@@ -15604,6 +16434,20 @@ operator|-
 name|fragp
 operator|->
 name|fr_fix
+expr_stmt|;
+switch|switch
+condition|(
+name|fragp
+operator|->
+name|fr_type
+condition|)
+block|{
+case|case
+name|rs_align_test
+case|:
+if|if
+condition|(
+name|count
 operator|!=
 literal|0
 condition|)
@@ -15623,83 +16467,12 @@ literal|"misaligned data"
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fragp
-operator|->
-name|fr_type
-operator|==
+break|break;
+case|case
 name|rs_align_code
-operator|&&
-name|fragp
-operator|->
-name|fr_subtype
-operator|==
-literal|1024
-condition|)
-block|{
-name|int
-name|count
-init|=
-name|fragp
-operator|->
-name|fr_next
-operator|->
-name|fr_address
-operator|-
-name|fragp
-operator|->
-name|fr_address
-operator|-
-name|fragp
-operator|->
-name|fr_fix
-decl_stmt|;
-if|if
-condition|(
-name|count
-operator|>=
-literal|4
-operator|&&
-operator|!
-operator|(
-name|count
-operator|&
-literal|3
-operator|)
-operator|&&
-name|count
-operator|<=
-literal|1024
-operator|&&
-operator|!
-operator|(
-call|(
-name|long
-call|)
-argument_list|(
-name|fragp
-operator|->
-name|fr_literal
-operator|+
-name|fragp
-operator|->
-name|fr_fix
-argument_list|)
-operator|&
-literal|3
-operator|)
-condition|)
-block|{
-name|unsigned
-modifier|*
+case|:
 name|p
-init|=
-operator|(
-name|unsigned
-operator|*
-operator|)
-operator|(
+operator|=
 name|fragp
 operator|->
 name|fr_literal
@@ -15707,60 +16480,42 @@ operator|+
 name|fragp
 operator|->
 name|fr_fix
-operator|)
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
+expr_stmt|;
+name|fix
 operator|=
 literal|0
-init|;
-name|i
-operator|<
-name|count
-condition|;
-name|i
-operator|+=
-literal|4
-operator|,
-name|p
-operator|++
-control|)
+expr_stmt|;
 if|if
 condition|(
-name|INSN_BIG_ENDIAN
+name|count
+operator|&
+literal|3
 condition|)
-name|number_to_chars_bigendian
+block|{
+name|fix
+operator|=
+name|count
+operator|&
+literal|3
+expr_stmt|;
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|p
 argument_list|,
-literal|0x01000000
+literal|0
 argument_list|,
-literal|4
+name|fix
 argument_list|)
 expr_stmt|;
-comment|/* emit nops */
-else|else
-name|number_to_chars_littleendian
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|p
-argument_list|,
-literal|0x10000000
-argument_list|,
-literal|4
-argument_list|)
+operator|+=
+name|fix
 expr_stmt|;
+name|count
+operator|-=
+name|fix
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|SPARC_OPCODE_ARCH_V9_P
@@ -15773,20 +16528,6 @@ operator|>
 literal|8
 condition|)
 block|{
-name|char
-modifier|*
-name|waddr
-init|=
-operator|&
-name|fragp
-operator|->
-name|fr_literal
-index|[
-name|fragp
-operator|->
-name|fr_fix
-index|]
-decl_stmt|;
 name|unsigned
 name|wval
 init|=
@@ -15798,14 +16539,14 @@ operator|>>
 literal|2
 operator|)
 decl_stmt|;
-comment|/* ba,a,pt %xcc, 1f */
+comment|/* ba,a,pt %xcc, 1f  */
 if|if
 condition|(
 name|INSN_BIG_ENDIAN
 condition|)
 name|number_to_chars_bigendian
 argument_list|(
-name|waddr
+name|p
 argument_list|,
 name|wval
 argument_list|,
@@ -15815,21 +16556,64 @@ expr_stmt|;
 else|else
 name|number_to_chars_littleendian
 argument_list|(
-name|waddr
+name|p
 argument_list|,
 name|wval
 argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+name|p
+operator|+=
+literal|4
+expr_stmt|;
+name|count
+operator|-=
+literal|4
+expr_stmt|;
+name|fix
+operator|+=
+literal|4
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|INSN_BIG_ENDIAN
+condition|)
+name|number_to_chars_bigendian
+argument_list|(
+name|p
+argument_list|,
+literal|0x01000000
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+else|else
+name|number_to_chars_littleendian
+argument_list|(
+name|p
+argument_list|,
+literal|0x01000000
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|fragp
+operator|->
+name|fr_fix
+operator|+=
+name|fix
+expr_stmt|;
 name|fragp
 operator|->
 name|fr_var
 operator|=
-name|count
+literal|4
 expr_stmt|;
-block|}
+break|break;
+default|default:
+break|break;
 block|}
 block|}
 end_function
@@ -15923,6 +16707,24 @@ name|e_flags
 operator||=
 name|EF_SPARC_SUN_US1
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|current_architecture
+operator|==
+name|SPARC_OPCODE_ARCH_V9B
+condition|)
+name|elf_elfheader
+argument_list|(
+name|stdoutput
+argument_list|)
+operator|->
+name|e_flags
+operator||=
+name|EF_SPARC_SUN_US1
+operator||
+name|EF_SPARC_SUN_US3
+expr_stmt|;
 block|}
 end_function
 
@@ -16012,6 +16814,50 @@ name|r
 operator|=
 name|BFD_RELOC_SPARC_REV32
 expr_stmt|;
+if|if
+condition|(
+name|sparc_no_align_cons
+condition|)
+block|{
+switch|switch
+condition|(
+name|nbytes
+condition|)
+block|{
+case|case
+literal|2
+case|:
+name|r
+operator|=
+name|BFD_RELOC_SPARC_UA16
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|r
+operator|=
+name|BFD_RELOC_SPARC_UA32
+expr_stmt|;
+break|break;
+case|case
+literal|8
+case|:
+name|r
+operator|=
+name|BFD_RELOC_SPARC_UA64
+expr_stmt|;
+break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+name|sparc_no_align_cons
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|fix_new_exp
 argument_list|(
 name|frag

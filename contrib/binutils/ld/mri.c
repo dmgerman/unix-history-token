@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mri.c -- handle MRI style linker scripts    Copyright (C) 1991, 92, 93, 94, 95, 96, 1997, 1998 Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-end_comment
-
-begin_comment
-comment|/* This bit does the tree decoration when MRI style link scripts are parsed */
-end_comment
-
-begin_comment
-comment|/*   contributed by Steve Chamberlain   		 sac@cygnus.com  */
+comment|/* mri.c -- handle MRI style linker scripts    Copyright 1991, 1992, 1993, 1994, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     This bit does the tree decoration when MRI style link scripts    are parsed.     Contributed by Steve Chamberlain<sac@cygnus.com>.  */
 end_comment
 
 begin_include
@@ -278,8 +270,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* If this is a match, delete it, we only keep the last instance 	 of any name */
+comment|/* If this is a match, delete it, we only keep the last instance 	   of any name.  */
 operator|*
 name|ptr
 operator|=
@@ -290,9 +281,7 @@ operator|)
 operator|->
 name|next
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ptr
 operator|=
 operator|&
@@ -305,7 +294,6 @@ operator|->
 name|next
 operator|)
 expr_stmt|;
-block|}
 block|}
 operator|*
 name|ptr
@@ -498,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* if any ABSOLUTE<name> are in the script, only load those files marked thus */
+comment|/* If any ABSOLUTE<name> are in the script, only load those files    marked thus.  */
 end_comment
 
 begin_function
@@ -569,16 +557,16 @@ condition|(
 name|done_tree
 condition|)
 return|return;
-comment|/* We don't bother with memory regions.  */
 if|#
 directive|if
 literal|0
-comment|/* Create the regions */
-block|{    lang_memory_region_type *r;    r = lang_memory_region_lookup("long");    r->current = r->origin = exp_get_vma(base, (bfd_vma)0, "origin", 					lang_first_phase_enum);    r->length = (bfd_size_type) exp_get_vma(0, (bfd_vma) ~((bfd_size_type)0), 					   "length", lang_first_phase_enum);  }
+comment|/* We don't bother with memory regions.  */
+comment|/* Create the regions.  */
+block|{     lang_memory_region_type *r;      r = lang_memory_region_lookup("long");     r->current = r->origin = exp_get_vma (base, (bfd_vma)0, "origin", 					  lang_first_phase_enum);     r->length = (bfd_size_type) exp_get_vma (0, (bfd_vma) ~((bfd_size_type)0), 					     "length", lang_first_phase_enum);   }
 endif|#
 directive|endif
-comment|/* Now build the statements for the ldlang machine */
-comment|/* Attatch the addresses of any which have addresses, and add the      ones not mentioned */
+comment|/* Now build the statements for the ldlang machine.  */
+comment|/* Attatch the addresses of any which have addresses,      and add the ones not mentioned.  */
 if|if
 condition|(
 name|address
@@ -612,12 +600,10 @@ operator|*
 operator|)
 name|NULL
 condition|)
-block|{
 name|order
 operator|=
 name|address
 expr_stmt|;
-block|}
 for|for
 control|(
 name|alist
@@ -707,7 +693,7 @@ operator|!
 name|done
 condition|)
 block|{
-comment|/* add this onto end of order list */
+comment|/* Add this onto end of order list.  */
 name|mri_add_to_list
 argument_list|(
 operator|&
@@ -769,7 +755,7 @@ name|order
 operator|=
 name|only_load
 expr_stmt|;
-comment|/* See if this name is in the list, if it is then we can load it      */
+comment|/* See if this name is in the list, if it is then we can load it.  */
 for|for
 control|(
 name|ptr1
@@ -784,7 +770,6 @@ name|ptr1
 operator|->
 name|next
 control|)
-block|{
 for|for
 control|(
 name|ptr2
@@ -799,7 +784,6 @@ name|ptr2
 operator|->
 name|next
 control|)
-block|{
 if|if
 condition|(
 name|strcmp
@@ -815,7 +799,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|ptr2
 operator|->
 name|ok_to_load
@@ -823,12 +806,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-block|}
-block|}
-block|}
 else|else
 block|{
-comment|/* No only load list, so everything is ok to load */
+comment|/* No only load list, so everything is ok to load.  */
 name|struct
 name|section_name_struct
 modifier|*
@@ -848,7 +828,6 @@ name|ptr
 operator|->
 name|next
 control|)
-block|{
 name|ptr
 operator|->
 name|ok_to_load
@@ -856,8 +835,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-block|}
-comment|/* Create the order of sections to load */
+comment|/* Create the order of sections to load.  */
 if|if
 condition|(
 name|order
@@ -870,7 +848,7 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/* Been told to output the sections in a certain order */
+comment|/* Been told to output the sections in a certain order.  */
 name|struct
 name|section_name_struct
 modifier|*
@@ -900,7 +878,7 @@ name|subalign
 init|=
 literal|0
 decl_stmt|;
-comment|/* See if an alignment has been specified */
+comment|/* See if an alignment has been specified.  */
 for|for
 control|(
 name|aptr
@@ -915,7 +893,6 @@ name|aptr
 operator|->
 name|next
 control|)
-block|{
 if|if
 condition|(
 name|strcmp
@@ -931,15 +908,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|align
 operator|=
 name|aptr
 operator|->
 name|align
 expr_stmt|;
-block|}
-block|}
 for|for
 control|(
 name|aptr
@@ -954,7 +928,6 @@ name|aptr
 operator|->
 name|next
 control|)
-block|{
 if|if
 condition|(
 name|strcmp
@@ -970,22 +943,18 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|subalign
 operator|=
 name|aptr
 operator|->
 name|subalign
 expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 name|base
 operator|==
 literal|0
 condition|)
-block|{
 name|base
 operator|=
 name|p
@@ -1003,7 +972,6 @@ argument_list|,
 literal|"."
 argument_list|)
 expr_stmt|;
-block|}
 name|lang_enter_output_section_statement
 argument_list|(
 name|p
@@ -1058,7 +1026,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* If there is an alias for this section, add it too */
+comment|/* If there is an alias for this section, add it too.  */
 for|for
 control|(
 name|aptr
@@ -1073,7 +1041,6 @@ name|aptr
 operator|->
 name|next
 control|)
-block|{
 if|if
 condition|(
 name|strcmp
@@ -1089,7 +1056,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|lang_add_wild
 argument_list|(
 name|aptr
@@ -1111,8 +1077,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 name|lang_leave_output_section_statement
 argument_list|(
 literal|0
@@ -1173,7 +1137,12 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*  lang_leave_output_section_statement(0,"*default*");*/
+if|#
+directive|if
+literal|0
+block|lang_leave_output_section_statement (0, "*default*");
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1238,13 +1207,13 @@ operator|!
 name|is
 condition|)
 block|{
-comment|/* Some sections are digits - */
 name|char
 name|buf
 index|[
 literal|20
 index|]
 decl_stmt|;
+comment|/* Some sections are digits.  */
 name|sprintf
 argument_list|(
 name|buf
@@ -1335,7 +1304,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|lang_add_output_format
 argument_list|(
 literal|"srec"
@@ -1355,7 +1323,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -1368,7 +1335,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|lang_add_output_format
 argument_list|(
 literal|"ieee"
@@ -1388,7 +1354,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -1401,7 +1366,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|lang_add_output_format
 argument_list|(
 literal|"coff-m68k"
@@ -1421,9 +1385,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|einfo
 argument_list|(
 name|_
@@ -1434,7 +1396,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

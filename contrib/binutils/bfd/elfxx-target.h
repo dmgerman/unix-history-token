@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for NN-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for NN-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -484,6 +484,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|bfd_elfNN_bfd_make_debug_symbol
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -491,6 +497,11 @@ name|bfd_elfNN_bfd_make_debug_symbol
 define|\
 value|((asymbol *(*) PARAMS ((bfd *, void *, unsigned long))) bfd_nullvoidptr)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -1103,6 +1114,24 @@ begin_define
 define|#
 directive|define
 name|elf_backend_section_from_shdr
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|elf_backend_section_flags
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_section_flags
 value|0
 end_define
 
@@ -1740,6 +1769,12 @@ name|_bfd_elfNN_size_info
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INCLUDED_TARGET_FILE
+end_ifndef
+
 begin_expr_stmt
 specifier|static
 name|CONST
@@ -1774,6 +1809,8 @@ block|,
 name|elf_backend_section_processing
 block|,
 name|elf_backend_section_from_shdr
+block|,
+name|elf_backend_section_flags
 block|,
 name|elf_backend_section_from_phdr
 block|,
@@ -1866,6 +1903,11 @@ name|elf_backend_want_dynbss
 block|}
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Forward declaration for use when initialising alternative_target field.  */

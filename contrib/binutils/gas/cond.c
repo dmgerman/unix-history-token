@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* cond.c - conditional assembly pseudo-ops, and .include    Copyright (C) 1990, 91, 92, 93, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* cond.c - conditional assembly pseudo-ops, and .include    Copyright 1990, 1991, 1992, 1993, 1995, 1997, 1998, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ file|"obstack.h"
 end_include
 
 begin_comment
-comment|/* This is allocated to grow and shrink as .ifdef/.endif pairs are scanned. */
+comment|/* This is allocated to grow and shrink as .ifdef/.endif pairs are    scanned.  */
 end_comment
 
 begin_decl_stmt
@@ -80,7 +80,7 @@ comment|/* Whether we are currently ignoring input.  */
 name|int
 name|ignoring
 decl_stmt|;
-comment|/* Whether a conditional at a higher level is ignoring input.  */
+comment|/* Whether a conditional at a higher level is ignoring input.      Set also when a branch of an "if .. elseif .." tree has matched      to prevent further matches.  */
 name|int
 name|dead_tree
 decl_stmt|;
@@ -146,26 +146,26 @@ name|int
 name|arg
 decl_stmt|;
 block|{
+comment|/* Points to name of symbol.  */
 specifier|register
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* points to name of symbol */
+comment|/* Points to symbol.  */
 specifier|register
 name|symbolS
 modifier|*
 name|symbolP
 decl_stmt|;
-comment|/* Points to symbol */
 name|struct
 name|conditional_frame
 name|cframe
 decl_stmt|;
+comment|/* Leading whitespace is part of operand.  */
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
-comment|/* Leading whitespace is part of operand. */
 name|name
 operator|=
 name|input_line_pointer
@@ -307,10 +307,6 @@ comment|/* if a valid identifyer name */
 block|}
 end_function
 
-begin_comment
-comment|/* s_ifdef() */
-end_comment
-
 begin_function
 name|void
 name|s_if
@@ -352,10 +348,10 @@ operator|&
 name|stopc
 argument_list|)
 expr_stmt|;
+comment|/* Leading whitespace is part of operand.  */
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
-comment|/* Leading whitespace is part of operand. */
 if|if
 condition|(
 name|current_cframe
@@ -587,10 +583,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* s_if() */
-end_comment
 
 begin_comment
 comment|/* Get a string for the MRI IFC or IFNC pseudo-ops.  */
@@ -973,12 +965,6 @@ name|int
 name|arg
 decl_stmt|;
 block|{
-name|expressionS
-name|operand
-decl_stmt|;
-name|int
-name|t
-decl_stmt|;
 if|if
 condition|(
 name|current_cframe
@@ -1071,73 +1057,35 @@ operator|.
 name|line
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
 name|current_cframe
 operator|->
 name|dead_tree
-condition|)
-block|{
+operator||=
+operator|!
+name|current_cframe
+operator|->
+name|ignoring
+expr_stmt|;
 name|current_cframe
 operator|->
 name|ignoring
 operator|=
-operator|!
 name|current_cframe
 operator|->
-name|ignoring
-expr_stmt|;
-if|if
-condition|(
-name|LISTING_SKIP_COND
-argument_list|()
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|current_cframe
-operator|->
-name|ignoring
-condition|)
-name|listing_list
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-else|else
-name|listing_list
-argument_list|(
-literal|2
-argument_list|)
+name|dead_tree
 expr_stmt|;
 block|}
-block|}
-comment|/* if not a dead tree */
-block|}
-comment|/* if error else do it */
-name|SKIP_WHITESPACE
-argument_list|()
-expr_stmt|;
-comment|/* Leading whitespace is part of operand. */
 if|if
 condition|(
 name|current_cframe
-operator|!=
+operator|==
 name|NULL
-operator|&&
+operator|||
 name|current_cframe
 operator|->
 name|ignoring
 condition|)
 block|{
-name|operand
-operator|.
-name|X_add_number
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -1154,9 +1102,26 @@ condition|)
 operator|++
 name|input_line_pointer
 expr_stmt|;
+if|if
+condition|(
+name|current_cframe
+operator|==
+name|NULL
+condition|)
+return|return;
 block|}
 else|else
 block|{
+name|expressionS
+name|operand
+decl_stmt|;
+name|int
+name|t
+decl_stmt|;
+comment|/* Leading whitespace is part of operand.  */
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
 name|expression
 argument_list|(
 operator|&
@@ -1179,7 +1144,6 @@ literal|"non-constant expression in \".elseif\" statement"
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 operator|(
@@ -1277,14 +1241,11 @@ operator|||
 operator|!
 name|t
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|LISTING_SKIP_COND
 argument_list|()
-operator|&&
-name|current_cframe
-operator|->
-name|ignoring
 operator|&&
 operator|(
 name|current_cframe
@@ -1301,11 +1262,26 @@ operator|->
 name|ignoring
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|current_cframe
+operator|->
+name|ignoring
+condition|)
+name|listing_list
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
 name|listing_list
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
@@ -1423,10 +1399,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* s_endif() */
-end_comment
-
 begin_function
 name|void
 name|s_else
@@ -1530,18 +1502,14 @@ operator|.
 name|line
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|current_cframe
-operator|->
-name|dead_tree
-condition|)
-block|{
 name|current_cframe
 operator|->
 name|ignoring
 operator|=
+name|current_cframe
+operator|->
+name|dead_tree
+operator||
 operator|!
 name|current_cframe
 operator|->
@@ -1551,6 +1519,21 @@ if|if
 condition|(
 name|LISTING_SKIP_COND
 argument_list|()
+operator|&&
+operator|(
+name|current_cframe
+operator|->
+name|previous_cframe
+operator|==
+name|NULL
+operator|||
+operator|!
+name|current_cframe
+operator|->
+name|previous_cframe
+operator|->
+name|ignoring
+operator|)
 condition|)
 block|{
 if|if
@@ -1572,8 +1555,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* if not a dead tree */
 name|current_cframe
 operator|->
 name|else_seen
@@ -1581,7 +1562,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* if error else do it */
 if|if
 condition|(
 name|flag_mri
@@ -1609,10 +1589,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* s_else() */
-end_comment
 
 begin_function
 name|void
@@ -1781,10 +1757,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* s_ifeqs() */
-end_comment
 
 begin_function
 name|int
@@ -1967,10 +1939,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ignore_input() */
-end_comment
 
 begin_function
 specifier|static
@@ -2195,10 +2163,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* end of cond.c */
-end_comment
 
 end_unit
 

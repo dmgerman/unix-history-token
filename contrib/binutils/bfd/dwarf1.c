@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* DWARF 1 find nearest line (_bfd_dwarf1_find_nearest_line).    Copyright 1998, 1999 Free Software Foundation, Inc.  Written by Gavin Romig-Koch of Cygnus Solutions (gavin@cygnus.com).    This file is part of BFD.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* DWARF 1 find nearest line (_bfd_dwarf1_find_nearest_line).    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.  Written by Gavin Romig-Koch of Cygnus Solutions (gavin@cygnus.com).  This file is part of BFD.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -40,45 +40,45 @@ file|"elf/dwarf.h"
 end_include
 
 begin_comment
-comment|/* dwarf1_debug is the starting point for all dwarf1 info. */
+comment|/* dwarf1_debug is the starting point for all dwarf1 info.  */
 end_comment
 
 begin_struct
 struct|struct
 name|dwarf1_debug
 block|{
-comment|/* The bfd we are working with. */
+comment|/* The bfd we are working with.  */
 name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-comment|/* List of already parsed compilation units. */
+comment|/* List of already parsed compilation units.  */
 name|struct
 name|dwarf1_unit
 modifier|*
 name|lastUnit
 decl_stmt|;
-comment|/* The buffer for the .debug section.       Zero indicates that the .debug section failed to load. */
+comment|/* The buffer for the .debug section.      Zero indicates that the .debug section failed to load.  */
 name|char
 modifier|*
 name|debug_section
 decl_stmt|;
-comment|/* Pointer to the end of the .debug_info section memory buffer. */
+comment|/* Pointer to the end of the .debug_info section memory buffer.  */
 name|char
 modifier|*
 name|debug_section_end
 decl_stmt|;
-comment|/* The buffer for the .line section. */
+comment|/* The buffer for the .line section.  */
 name|char
 modifier|*
 name|line_section
 decl_stmt|;
-comment|/* End of that buffer. */
+comment|/* End of that buffer.  */
 name|char
 modifier|*
 name|line_section_end
 decl_stmt|;
-comment|/* The current or next unread die within the .debug section. */
+comment|/* The current or next unread die within the .debug section.  */
 name|char
 modifier|*
 name|currentDie
@@ -88,25 +88,25 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* One dwarf1_unit for each parsed compilation unit die. */
+comment|/* One dwarf1_unit for each parsed compilation unit die.  */
 end_comment
 
 begin_struct
 struct|struct
 name|dwarf1_unit
 block|{
-comment|/* Linked starting from stash->lastUnit. */
+comment|/* Linked starting from stash->lastUnit.  */
 name|struct
 name|dwarf1_unit
 modifier|*
 name|prev
 decl_stmt|;
-comment|/* Name of the compilation unit. */
+comment|/* Name of the compilation unit.  */
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* The highest and lowest address used in the compilation unit. */
+comment|/* The highest and lowest address used in the compilation unit.  */
 name|unsigned
 name|long
 name|low_pc
@@ -119,12 +119,12 @@ comment|/* Does this unit have a statement list? */
 name|int
 name|has_stmt_list
 decl_stmt|;
-comment|/* If any, the offset of the line number table in the .line section. */
+comment|/* If any, the offset of the line number table in the .line section.  */
 name|unsigned
 name|long
 name|stmt_list_offset
 decl_stmt|;
-comment|/* If non-zero, a pointer to the first child of this unit. */
+comment|/* If non-zero, a pointer to the first child of this unit.  */
 name|char
 modifier|*
 name|first_child
@@ -134,13 +134,13 @@ name|unsigned
 name|long
 name|line_count
 decl_stmt|;
-comment|/* The decoded line number table (line_count entries). */
+comment|/* The decoded line number table (line_count entries).  */
 name|struct
 name|linenumber
 modifier|*
 name|linenumber_table
 decl_stmt|;
-comment|/* The list of functions in this unit. */
+comment|/* The list of functions in this unit.  */
 name|struct
 name|dwarf1_func
 modifier|*
@@ -158,18 +158,18 @@ begin_struct
 struct|struct
 name|dwarf1_func
 block|{
-comment|/* Linked starting from aUnit->func_list. */
+comment|/* Linked starting from aUnit->func_list.  */
 name|struct
 name|dwarf1_func
 modifier|*
 name|prev
 decl_stmt|;
-comment|/* Name of function. */
+comment|/* Name of function.  */
 name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* The highest and lowest address used in the compilation unit. */
+comment|/* The highest and lowest address used in the compilation unit.  */
 name|unsigned
 name|long
 name|low_pc
@@ -183,7 +183,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Used to return info about a parsed die. */
+comment|/* Used to return info about a parsed die.  */
 end_comment
 
 begin_struct
@@ -226,19 +226,19 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Parsed line number information. */
+comment|/* Parsed line number information.  */
 end_comment
 
 begin_struct
 struct|struct
 name|linenumber
 block|{
-comment|/* First address in the line. */
+comment|/* First address in the line.  */
 name|unsigned
 name|long
 name|addr
 decl_stmt|;
-comment|/* The line number. */
+comment|/* The line number.  */
 name|unsigned
 name|long
 name|linenumber
@@ -248,7 +248,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Find the form of an attr, from the attr field. */
+comment|/* Find the form of an attr, from the attr field.  */
 end_comment
 
 begin_define
@@ -266,7 +266,7 @@ comment|/* Implicitly specified */
 end_comment
 
 begin_comment
-comment|/* Return a newly allocated dwarf1_unit.  It should be cleared and    then attached into the 'stash' at 'stash->lastUnit'. */
+comment|/* Return a newly allocated dwarf1_unit.  It should be cleared and    then attached into the 'stash' at 'stash->lastUnit'.  */
 end_comment
 
 begin_function
@@ -328,7 +328,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return a newly allocated dwarf1_func.  It must be cleared and    attached into 'aUnit' at 'aUnit->func_list'. */
+comment|/* Return a newly allocated dwarf1_func.  It must be cleared and    attached into 'aUnit' at 'aUnit->func_list'.  */
 end_comment
 
 begin_function
@@ -397,7 +397,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* parse_die - parse a Dwarf1 die.    Parse the die starting at 'aDiePtr' into 'aDieInfo'.    'abfd' must be the bfd from which the section that 'aDiePtr'    points to was pulled from.      Return false if the die is invalidly formatted; true otherwise. */
+comment|/* parse_die - parse a Dwarf1 die.    Parse the die starting at 'aDiePtr' into 'aDieInfo'.    'abfd' must be the bfd from which the section that 'aDiePtr'    points to was pulled from.     Return false if the die is invalidly formatted; true otherwise.  */
 end_comment
 
 begin_function
@@ -450,7 +450,7 @@ name|aDieInfo
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* First comes the length. */
+comment|/* First comes the length.  */
 name|aDieInfo
 operator|->
 name|length
@@ -459,6 +459,10 @@ name|bfd_get_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 expr_stmt|;
@@ -486,7 +490,7 @@ operator|<
 literal|6
 condition|)
 block|{
-comment|/* Just padding bytes. */
+comment|/* Just padding bytes.  */
 name|aDieInfo
 operator|->
 name|tag
@@ -497,7 +501,7 @@ return|return
 name|true
 return|;
 block|}
-comment|/* Then the tag. */
+comment|/* Then the tag.  */
 name|aDieInfo
 operator|->
 name|tag
@@ -506,6 +510,10 @@ name|bfd_get_16
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 expr_stmt|;
@@ -513,7 +521,7 @@ name|xptr
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* Then the attributes. */
+comment|/* Then the attributes.  */
 while|while
 condition|(
 name|xptr
@@ -531,13 +539,17 @@ name|unsigned
 name|short
 name|attr
 decl_stmt|;
-comment|/* Parse the attribute based on its form.  This section           must handle all dwarf1 forms, but need only handle the 	 actual attributes that we care about. */
+comment|/* Parse the attribute based on its form.  This section          must handle all dwarf1 forms, but need only handle the 	 actual attributes that we care about.  */
 name|attr
 operator|=
 name|bfd_get_16
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 expr_stmt|;
@@ -581,6 +593,10 @@ name|bfd_get_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 expr_stmt|;
@@ -600,6 +616,10 @@ name|bfd_get_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 expr_stmt|;
@@ -640,6 +660,10 @@ name|bfd_get_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 expr_stmt|;
@@ -658,6 +682,10 @@ name|bfd_get_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 expr_stmt|;
@@ -677,6 +705,10 @@ name|bfd_get_16
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 expr_stmt|;
@@ -692,6 +724,10 @@ name|bfd_get_32
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 expr_stmt|;
@@ -730,7 +766,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse a dwarf1 line number table for 'aUnit->stmt_list_offset'    into 'aUnit->linenumber_table'.  Return false if an error     occurs; true otherwise. */
+comment|/* Parse a dwarf1 line number table for 'aUnit->stmt_list_offset'    into 'aUnit->linenumber_table'.  Return false if an error    occurs; true otherwise.  */
 end_comment
 
 begin_function
@@ -757,7 +793,7 @@ name|char
 modifier|*
 name|xptr
 decl_stmt|;
-comment|/* Load the ".line" section from the bfd if we haven't already. */
+comment|/* Load the ".line" section from the bfd if we haven't already.  */
 if|if
 condition|(
 name|stash
@@ -806,7 +842,6 @@ operator|->
 name|line_section
 operator|=
 operator|(
-name|unsigned
 name|char
 operator|*
 operator|)
@@ -902,7 +937,7 @@ name|unsigned
 name|long
 name|base
 decl_stmt|;
-comment|/* First comes the length. */
+comment|/* First comes the length.  */
 name|tblend
 operator|=
 name|bfd_get_32
@@ -911,6 +946,10 @@ name|stash
 operator|->
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 operator|+
@@ -920,7 +959,7 @@ name|xptr
 operator|+=
 literal|4
 expr_stmt|;
-comment|/* Then the base address for each address in the table. */
+comment|/* Then the base address for each address in the table.  */
 name|base
 operator|=
 name|bfd_get_32
@@ -929,6 +968,10 @@ name|stash
 operator|->
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 expr_stmt|;
@@ -949,7 +992,7 @@ operator|)
 operator|/
 literal|10
 expr_stmt|;
-comment|/* Allocate an array for the entries. */
+comment|/* Allocate an array for the entries.  */
 name|aUnit
 operator|->
 name|linenumber_table
@@ -992,7 +1035,7 @@ name|eachLine
 operator|++
 control|)
 block|{
-comment|/* A line number. */
+comment|/* A line number.  */
 name|aUnit
 operator|->
 name|linenumber_table
@@ -1008,6 +1051,10 @@ name|stash
 operator|->
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 expr_stmt|;
@@ -1015,12 +1062,12 @@ name|xptr
 operator|+=
 literal|4
 expr_stmt|;
-comment|/* Skip the position within the line. */
+comment|/* Skip the position within the line.  */
 name|xptr
 operator|+=
 literal|2
 expr_stmt|;
-comment|/* And finally the address. */
+comment|/* And finally the address.  */
 name|aUnit
 operator|->
 name|linenumber_table
@@ -1038,6 +1085,10 @@ name|stash
 operator|->
 name|abfd
 argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
 name|xptr
 argument_list|)
 expr_stmt|;
@@ -1054,7 +1105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Parse each function die in a compilation unit 'aUnit'.    The first child die of 'aUnit' should be in 'aUnit->first_child',    the result is placed in 'aUnit->func_list'.    Return false if error; true otherwise. */
+comment|/* Parse each function die in a compilation unit 'aUnit'.    The first child die of 'aUnit' should be in 'aUnit->first_child',    the result is placed in 'aUnit->func_list'.    Return false if error; true otherwise.  */
 end_comment
 
 begin_function
@@ -1216,7 +1267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the nearest line to 'addr' in 'aUnit'.    Return whether we found the line (or a function) without error. */
+comment|/* Find the nearest line to 'addr' in 'aUnit'.    Return whether we found the line (or a function) without error.  */
 end_comment
 
 begin_function
@@ -1479,7 +1530,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The DWARF 1 version of find_nearest line.    Return true if the line is found without error. */
+comment|/* The DWARF 1 version of find_nearest line.    Return true if the line is found without error.  */
 end_comment
 
 begin_function
@@ -1553,14 +1604,21 @@ modifier|*
 name|eachUnit
 decl_stmt|;
 comment|/* What address are we looking for? */
-name|bfd_vma
+name|unsigned
+name|long
 name|addr
 init|=
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|offset
 operator|+
 name|section
 operator|->
 name|vma
+argument_list|)
 decl_stmt|;
 operator|*
 name|filename_ptr
@@ -1639,7 +1697,7 @@ operator|!
 name|msec
 condition|)
 block|{
-comment|/* No dwarf1 info.  Note that at this point the stash 	     has been allocated, but contains zeros, this lets 	     future calls to this function fail quicker. */
+comment|/* No dwarf1 info.  Note that at this point the stash 	     has been allocated, but contains zeros, this lets 	     future calls to this function fail quicker.  */
 return|return
 name|false
 return|;
@@ -1656,7 +1714,6 @@ operator|->
 name|debug_section
 operator|=
 operator|(
-name|unsigned
 name|char
 operator|*
 operator|)
@@ -1731,7 +1788,7 @@ operator|=
 name|abfd
 expr_stmt|;
 block|}
-comment|/* A null debug_section indicates that there was no dwarf1 info      or that an error occured while setting up the stash. */
+comment|/* A null debug_section indicates that there was no dwarf1 info      or that an error occured while setting up the stash.  */
 if|if
 condition|(
 operator|!
@@ -1742,7 +1799,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* Look at the previously parsed units to see if any contain      the addr. */
+comment|/* Look at the previously parsed units to see if any contain      the addr.  */
 for|for
 control|(
 name|eachUnit
@@ -1885,7 +1942,7 @@ name|aDieInfo
 operator|.
 name|stmt_list_offset
 expr_stmt|;
-comment|/* A die has a child if it's followed by a die that is 	     not it's sibling. */
+comment|/* A die has a child if it's followed by a die that is 	     not it's sibling.  */
 if|if
 condition|(
 name|aDieInfo
