@@ -53,21 +53,16 @@ directive|undef
 name|feof
 end_undef
 
-begin_macro
+begin_function
+name|int
 name|feof
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|)
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -78,7 +73,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
