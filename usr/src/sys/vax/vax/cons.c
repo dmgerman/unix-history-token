@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cons.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cons.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -695,6 +695,8 @@ name|mfpr
 argument_list|(
 name|RXDB
 argument_list|)
+operator|&
+literal|0xff
 expr_stmt|;
 if|if
 condition|(
@@ -754,6 +756,9 @@ operator|==
 name|CS7
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 name|tp
@@ -819,6 +824,8 @@ operator||=
 name|TTY_PE
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|c
 operator|&=
 operator|~
@@ -1305,6 +1312,9 @@ operator|==
 name|CS7
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 name|tp
@@ -1366,6 +1376,8 @@ operator|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 name|c
 operator|&=
 literal|0177
