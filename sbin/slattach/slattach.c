@@ -2184,6 +2184,16 @@ argument_list|,
 name|redial_cmd
 argument_list|)
 expr_stmt|;
+name|uu_unlock
+argument_list|(
+name|dvname
+argument_list|)
+expr_stmt|;
+comment|/* for redial */
+name|locked
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|system
@@ -2194,6 +2204,35 @@ condition|)
 goto|goto
 name|again
 goto|;
+if|if
+condition|(
+name|uu_lock
+argument_list|(
+name|dvname
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"can't relock %s after %s, aborting"
+argument_list|,
+name|dev
+argument_list|,
+name|redial_cmd
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|locked
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Now check again for carrier (dial command is done): */
 if|if
 condition|(
