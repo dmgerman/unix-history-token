@@ -181,6 +181,21 @@ begin_comment
 comment|/* scheduling bits for network */
 end_comment
 
+begin_extern
+extern|extern	void	(*netisrs[32]
+end_extern
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -188,7 +203,7 @@ name|schednetisr
 parameter_list|(
 name|anisr
 parameter_list|)
-value|{ netisr |= 1<< (anisr); legacy_setsoftnet(); }
+value|do {						\ 	atomic_set_rel_int(&netisr, 1<< (anisr));			\ 	legacy_setsoftnet();						\ } while (0)
 end_define
 
 begin_typedef

@@ -49,21 +49,6 @@ name|Maxmem
 decl_stmt|;
 end_decl_stmt
 
-begin_extern
-extern|extern	void	(*netisrs[32]
-end_extern
-
-begin_expr_stmt
-unit|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct_decl
 struct_decl|struct
 name|fpreg

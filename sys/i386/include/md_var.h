@@ -188,21 +188,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_extern
-extern|extern	void	(*netisrs[32]
-end_extern
-
-begin_expr_stmt
-unit|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|extern
 name|int
