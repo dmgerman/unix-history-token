@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dump.h	5.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dump.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -108,90 +108,95 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|MWORD
-parameter_list|(
-name|m
-parameter_list|,
-name|i
-parameter_list|)
-value|(m[(unsigned)(i-1)/NBBY])
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBIT
-parameter_list|(
-name|i
-parameter_list|)
-value|(1<<((unsigned)(i-1)%NBBY))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIS
-parameter_list|(
-name|i
-parameter_list|,
-name|w
-parameter_list|)
-value|(MWORD(w,i) |=  MBIT(i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIC
-parameter_list|(
-name|i
-parameter_list|,
-name|w
-parameter_list|)
-value|(MWORD(w,i)&= ~MBIT(i))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIT
-parameter_list|(
-name|i
-parameter_list|,
-name|w
-parameter_list|)
-value|(MWORD(w,i)& MBIT(i))
-end_define
+begin_comment
+comment|/*  * Dump maps used to describe what is to be dumped.  */
+end_comment
 
 begin_decl_stmt
 name|int
-name|msiz
+name|mapsize
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* size of the state maps */
+end_comment
 
 begin_decl_stmt
 name|char
 modifier|*
-name|clrmap
+name|usedinomap
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* map of allocated inodes */
+end_comment
 
 begin_decl_stmt
 name|char
 modifier|*
-name|dirmap
+name|dumpdirmap
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* map of directories to be dumped */
+end_comment
 
 begin_decl_stmt
 name|char
 modifier|*
-name|nodmap
+name|dumpinomap
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* map of files to be dumped */
+end_comment
+
+begin_comment
+comment|/*  * Map manipulation macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SETINO
+parameter_list|(
+name|ino
+parameter_list|,
+name|map
+parameter_list|)
+define|\
+value|map[(u_int)((ino) - 1) / NBBY] |=  1<< ((u_int)((ino) - 1) % NBBY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLRINO
+parameter_list|(
+name|ino
+parameter_list|,
+name|map
+parameter_list|)
+define|\
+value|map[(u_int)((ino) - 1) / NBBY]&=  ~(1<< ((u_int)((ino) - 1) % NBBY))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSTINO
+parameter_list|(
+name|ino
+parameter_list|,
+name|map
+parameter_list|)
+define|\
+value|(map[(u_int)((ino) - 1) / NBBY]&  (1<< ((u_int)((ino) - 1) % NBBY)))
+end_define
 
 begin_comment
 comment|/*  *	All calculations done in 0.1" units!  */
@@ -222,12 +227,12 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|increm
+name|dumpdates
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* name of the file containing incremental information*/
+comment|/* name of the file containing dump date information*/
 end_comment
 
 begin_decl_stmt
@@ -238,27 +243,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* name of the file for doing rewrite of increm */
+comment|/* name of the file for doing rewrite of dumpdates */
 end_comment
 
 begin_decl_stmt
 name|char
-name|lastincno
+name|lastlevel
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* increment number of previous dump */
+comment|/* dump level of previous dump */
 end_comment
 
 begin_decl_stmt
 name|char
-name|incno
+name|level
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* increment number */
+comment|/* dump level of this dump */
 end_comment
 
 begin_decl_stmt
@@ -273,7 +278,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|fi
+name|diskfd
 decl_stmt|;
 end_decl_stmt
 
@@ -283,7 +288,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|to
+name|tapefd
 decl_stmt|;
 end_decl_stmt
 
@@ -303,7 +308,7 @@ end_comment
 
 begin_decl_stmt
 name|ino_t
-name|ino
+name|curino
 decl_stmt|;
 end_decl_stmt
 
@@ -313,38 +318,12 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|nsubdir
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|newtape
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* new tape flag */
-end_comment
-
-begin_decl_stmt
-name|int
-name|nadded
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of added sub directories */
-end_comment
-
-begin_decl_stmt
-name|int
-name|dadded
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* directory added flag */
 end_comment
 
 begin_decl_stmt
@@ -359,22 +338,22 @@ end_comment
 
 begin_decl_stmt
 name|long
+name|tapesize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* estimated tape size, blocks */
+end_comment
+
+begin_decl_stmt
+name|long
 name|tsize
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* tape size in 0.1" units */
-end_comment
-
-begin_decl_stmt
-name|long
-name|esize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* estimated tape size, blocks */
 end_comment
 
 begin_decl_stmt
@@ -553,36 +532,22 @@ comment|/* mapping rouintes */
 end_comment
 
 begin_function_decl
-name|void
-name|est
+name|long
+name|blockest
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|bmapest
+name|int
+name|mapfiles
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|pass
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mark
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|add
+name|int
+name|mapdirs
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -600,13 +565,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dump
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|blksout
 parameter_list|()
 function_decl|;
@@ -614,14 +572,14 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|bitmap
+name|dumpmap
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|spclrec
+name|writeheader
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -646,21 +604,21 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|taprec
+name|writerec
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|dmpblk
+name|dumpblock
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|tflush
+name|flushtape
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -681,7 +639,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|otape
+name|startnewtape
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -710,14 +668,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|quit
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|prdate
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -849,10 +799,10 @@ end_comment
 
 begin_struct
 struct|struct
-name|idates
+name|dumpdates
 block|{
 name|char
-name|id_name
+name|dd_name
 index|[
 name|MAXNAMLEN
 operator|+
@@ -860,10 +810,10 @@ literal|3
 index|]
 decl_stmt|;
 name|char
-name|id_incno
+name|dd_level
 decl_stmt|;
 name|time_t
-name|id_ddate
+name|dd_ddate
 decl_stmt|;
 block|}
 struct|;
@@ -871,16 +821,16 @@ end_struct
 
 begin_struct
 struct|struct
-name|itime
+name|dumptime
 block|{
 name|struct
-name|idates
-name|it_value
+name|dumpdates
+name|dt_value
 decl_stmt|;
 name|struct
-name|itime
+name|dumptime
 modifier|*
-name|it_next
+name|dt_next
 decl_stmt|;
 block|}
 struct|;
@@ -888,9 +838,9 @@ end_struct
 
 begin_decl_stmt
 name|struct
-name|itime
+name|dumptime
 modifier|*
-name|ithead
+name|dthead
 decl_stmt|;
 end_decl_stmt
 
@@ -900,7 +850,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|nidates
+name|nddates
 decl_stmt|;
 end_decl_stmt
 
@@ -910,7 +860,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|idates_in
+name|ddates_in
 decl_stmt|;
 end_decl_stmt
 
@@ -920,10 +870,10 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|idates
+name|dumpdates
 modifier|*
 modifier|*
-name|idatev
+name|ddatev
 decl_stmt|;
 end_decl_stmt
 
@@ -933,21 +883,21 @@ end_comment
 
 begin_function_decl
 name|void
-name|inititimes
+name|initdumptimes
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|getitime
+name|getdumptime
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|putitime
+name|putdumptime
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -959,9 +909,10 @@ name|ITITERATE
 parameter_list|(
 name|i
 parameter_list|,
-name|ip
+name|ddp
 parameter_list|)
-value|for (ip = idatev[i = 0]; i< nidates; ip = idatev[++i])
+define|\
+value|for (ddp = ddatev[i = 0]; i< nddates; ddp = ddatev[++i])
 end_define
 
 begin_comment
