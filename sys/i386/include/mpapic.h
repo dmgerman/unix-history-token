@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.h,v 1.5 1997/05/25 02:43:42 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.h,v 1.6 1997/05/29 05:57:43 fsmp Exp $  */
 end_comment
 
 begin_ifndef
@@ -223,33 +223,10 @@ begin_comment
 comment|/*  * read 'reg' from 'apic'  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MULTIPLE_IOAPICS
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-error|MULTIPLE_IOAPICSXXX
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function
 specifier|static
 name|__inline
 name|u_int32_t
-if|#
-directive|if
-literal|1
 comment|/** XXX APIC_STRUCT */
 name|io_apic_read
 parameter_list|(
@@ -277,64 +254,17 @@ index|]
 operator|.
 name|iowin
 return|;
-else|#
-directive|else
-name|io_apic_read
-argument_list|(
-argument|int apic __attribute__ ((unused))
-argument_list|,
-argument|int reg
-argument_list|)
-block|{
-operator|(
-operator|*
-name|io_apic_base
-operator|)
-operator|=
-name|reg
-expr_stmt|;
-return|return
-operator|(
-operator|*
-operator|(
-name|io_apic_base
-operator|+
-operator|(
-name|IOAPIC_WINDOW
-operator|/
-sizeof|sizeof
-argument_list|(
-name|u_int
-argument_list|)
-operator|)
-operator|)
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/** XXX APIC_STRUCT */
 block|}
-endif|#
-directive|endif
-comment|/* MULTIPLE_IOAPICS */
+end_function
+
+begin_comment
 comment|/*  * write 'value' to 'reg' of 'apic'  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MULTIPLE_IOAPICS
-argument_list|)
-error|#
-directive|error
-error|MULTIPLE_IOAPICSXXX
-else|#
-directive|else
+end_comment
+
+begin_function
 specifier|static
 name|__inline
 name|void
-if|#
-directive|if
-literal|1
 comment|/** XXX APIC_STRUCT */
 name|io_apic_write
 parameter_list|(
@@ -366,263 +296,14 @@ name|iowin
 operator|=
 name|value
 expr_stmt|;
-else|#
-directive|else
-name|io_apic_write
-argument_list|(
-argument|int apic __attribute__ ((unused))
-argument_list|,
-argument|int reg
-argument_list|,
-argument|u_int32_t value
-argument_list|)
-block|{
-operator|(
-operator|*
-name|io_apic_base
-operator|)
-operator|=
-name|reg
-expr_stmt|;
-operator|(
-operator|*
-operator|(
-name|io_apic_base
-operator|+
-operator|(
-name|IOAPIC_WINDOW
-operator|/
-sizeof|sizeof
-argument_list|(
-name|u_int
-argument_list|)
-operator|)
-operator|)
-operator|)
-operator|=
-name|value
-expr_stmt|;
-endif|#
-directive|endif
-comment|/** XXX APIC_STRUCT */
 block|}
-endif|#
-directive|endif
-comment|/* MULTIPLE_IOAPICS */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|READY
-argument_list|)
-comment|/*  * set the IO APIC mask for INT# 'i'  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MULTIPLE_IOAPICS
-argument_list|)
-error|#
-directive|error
-error|MULTIPLE_IOAPICSXXX
-else|#
-directive|else
-specifier|static
-name|__inline
-name|void
-name|set_io_apic_mask
-parameter_list|(
-name|int
-name|apic
-parameter_list|,
-name|u_int32_t
-name|i
-parameter_list|)
-block|{
-name|int
-name|select
-decl_stmt|;
-comment|/* the select register is 8 bits */
-name|u_int32_t
-name|low_reg
-decl_stmt|;
-comment|/* the window register is 32 bits */
-name|imen
-operator||=
-operator|(
-literal|1
-operator|<<
-name|i
-operator|)
-expr_stmt|;
-comment|/* set mask variable */
-name|select
-operator|=
-name|IOAPIC_REDTBL
-operator|+
-operator|(
-name|i
-operator|*
-literal|2
-operator|)
-expr_stmt|;
-comment|/* calculate addr */
-name|low_reg
-operator|=
-name|io_apic_read
-argument_list|(
-name|select
-argument_list|)
-expr_stmt|;
-comment|/* read contents */
-name|low_reg
-operator||=
-name|IOART_INTMASK
-expr_stmt|;
-comment|/* set mask */
-name|io_apic_write
-argument_list|(
-name|select
-argument_list|,
-name|low_reg
-argument_list|)
-expr_stmt|;
-comment|/* new value */
-block|}
-endif|#
-directive|endif
-comment|/* MULTIPLE_IOAPICS */
-endif|#
-directive|endif
-comment|/* READY */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|READY
-argument_list|)
-comment|/*  * clear the IO APIC mask for INT# 'i'  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MULTIPLE_IOAPICS
-argument_list|)
-error|#
-directive|error
-error|MULTIPLE_IOAPICSXXX
-else|#
-directive|else
-specifier|static
-name|__inline
-name|void
-name|clr_io_apic_mask
-parameter_list|(
-name|int
-name|apic
-parameter_list|,
-name|u_int32_t
-name|i
-parameter_list|)
-block|{
-name|int
-name|select
-decl_stmt|;
-comment|/* the select register is 8 bits */
-name|u_int32_t
-name|low_reg
-decl_stmt|;
-comment|/* the window register is 32 bits */
-name|imen
-operator|&=
-operator|~
-operator|(
-literal|1
-operator|<<
-name|i
-operator|)
-expr_stmt|;
-comment|/* clear mask variable */
-name|select
-operator|=
-name|IOAPIC_REDTBL
-operator|+
-operator|(
-name|i
-operator|*
-literal|2
-operator|)
-expr_stmt|;
-comment|/* calculate addr */
-name|low_reg
-operator|=
-name|io_apic_read
-argument_list|(
-name|select
-argument_list|)
-expr_stmt|;
-comment|/* read contents */
-name|low_reg
-operator|&=
-operator|~
-name|IOART_INTMASK
-expr_stmt|;
-comment|/* clear mask */
-name|io_apic_write
-argument_list|(
-name|select
-argument_list|,
-name|low_reg
-argument_list|)
-expr_stmt|;
-comment|/* new value */
-block|}
-endif|#
-directive|endif
-comment|/* MULTIPLE_IOAPICS */
-endif|#
-directive|endif
-comment|/* READY */
-comment|/*  * read current IRQ0 -IRQ23 masks  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MULTIPLE_IOAPICS
-argument_list|)
-error|#
-directive|error
-error|MULTIPLE_IOAPICSXXX
-else|#
-directive|else
-specifier|static
-name|__inline
-name|u_int32_t
-name|read_io_apic_mask24
-argument_list|(
-name|int
-name|apic
-name|__attribute__
-argument_list|(
-operator|(
-name|unused
-operator|)
-argument_list|)
-argument_list|)
-block|{
-return|return
-operator|(
-name|imen
-operator|&
-literal|0x00ffffff
-operator|)
-return|;
-comment|/* return our global copy */
-block|}
-endif|#
-directive|endif
-comment|/* MULTIPLE_IOAPICS */
+end_function
+
+begin_comment
 comment|/*  * send an EndOfInterrupt to the local APIC  */
+end_comment
+
+begin_function
 specifier|static
 name|__inline
 name|void
@@ -636,7 +317,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * send an IPI INTerrupt containing 'vector' to CPUs in 'targetMap'  * 'targetMap' is a bitfiled of length 14,  *   APIC #0 == bit 0, ..., APIC #14 == bit 14  *   NOTE: these are LOGICAL APIC IDs  */
+end_comment
+
+begin_function
 specifier|static
 name|__inline
 name|int
@@ -660,7 +347,13 @@ name|APIC_DELMODE_FIXED
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * send an IPI INTerrupt containing 'vector' to all CPUs, including myself  */
+end_comment
+
+begin_function
 specifier|static
 name|__inline
 name|int
@@ -681,7 +374,13 @@ name|APIC_DELMODE_FIXED
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * send an IPI INTerrupt containing 'vector' to all CPUs EXCEPT myself  */
+end_comment
+
+begin_function
 specifier|static
 name|__inline
 name|int
@@ -702,7 +401,13 @@ name|APIC_DELMODE_FIXED
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * send an IPI INTerrupt containing 'vector' to myself  */
+end_comment
+
+begin_function
 specifier|static
 name|__inline
 name|int
