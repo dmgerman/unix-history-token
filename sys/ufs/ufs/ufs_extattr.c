@@ -1439,7 +1439,7 @@ name|FFS_EXTATTR_AUTOSTART
 end_ifdef
 
 begin_comment
-comment|/*  * Given a locked directory vnode, iterate over the names in the directory  * and use ufs_extattr_lookup() to retrieve locked vnodes of potential  * attribute files.  Then invoke ufs_extattr_enable_with_open() on each  * to attempt to start the attribute.  Leaves the directory locked on  * exit.  * XXX: Add a EA namespace argument  */
+comment|/*  * Given a locked directory vnode, iterate over the names in the directory  * and use ufs_extattr_lookup() to retrieve locked vnodes of potential  * attribute files.  Then invoke ufs_extattr_enable_with_open() on each  * to attempt to start the attribute.  Leaves the directory locked on  * exit.  */
 end_comment
 
 begin_function
@@ -1912,11 +1912,16 @@ block|{
 name|struct
 name|vnode
 modifier|*
+name|rvp
+decl_stmt|,
+modifier|*
 name|attr_dvp
 decl_stmt|,
-comment|/**attr_vp,*/
 modifier|*
-name|rvp
+name|attr_system_dvp
+decl_stmt|,
+modifier|*
+name|attr_user_dvp
 decl_stmt|;
 name|int
 name|error
@@ -2029,7 +2034,7 @@ name|UFS_EXTATTR_FSROOTSUBDIR
 argument_list|)
 expr_stmt|;
 goto|goto
-name|return_vput
+name|return_vput_attr_dvp
 goto|;
 block|}
 name|error
@@ -2054,10 +2059,32 @@ name|error
 argument_list|)
 expr_stmt|;
 goto|goto
-name|return_vput
+name|return_vput_attr_dvp
 goto|;
 block|}
-comment|/* 	 * Iterate over the directory.  Eventually we will lookup sub- 	 * directories and iterate over them independently with different 	 * EA namespaces. 	 * 	 * XXX: Right now, assert that all attributes are in the system 	 * namespace. 	 */
+comment|/* 	 * Look for two subdirectories: UFS_EXTATTR_SUBDIR_SYSTEM, 	 * UFS_EXTATTR_SUBDIR_USER.  For each, iterate over the sub-directory, 	 * and start with appropriate type.  Failures in either don't 	 * result in an over-all failure.  attr_dvp is left locked to 	 * be cleaned up on exit. 	 */
+name|error
+operator|=
+name|ufs_extattr_lookup
+argument_list|(
+name|attr_dvp
+argument_list|,
+name|UE_GETDIR_LOCKPARENT
+argument_list|,
+name|UFS_EXTATTR_SUBDIR_SYSTEM
+argument_list|,
+operator|&
+name|attr_system_dvp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+block|{
 name|error
 operator|=
 name|ufs_extattr_iterate_directory
@@ -2067,7 +2094,7 @@ argument_list|(
 name|mp
 argument_list|)
 argument_list|,
-name|attr_dvp
+name|attr_system_dvp
 argument_list|,
 name|EXTATTR_NAMESPACE_SYSTEM
 argument_list|,
@@ -2085,12 +2112,73 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* Mask startup failures. */
+name|vput
+argument_list|(
+name|attr_system_dvp
+argument_list|)
+expr_stmt|;
+block|}
+name|error
+operator|=
+name|ufs_extattr_lookup
+argument_list|(
+name|attr_dvp
+argument_list|,
+name|UE_GETDIR_LOCKPARENT
+argument_list|,
+name|UFS_EXTATTR_SUBDIR_USER
+argument_list|,
+operator|&
+name|attr_user_dvp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+block|{
+name|error
+operator|=
+name|ufs_extattr_iterate_directory
+argument_list|(
+name|VFSTOUFS
+argument_list|(
+name|mp
+argument_list|)
+argument_list|,
+name|attr_user_dvp
+argument_list|,
+name|EXTATTR_NAMESPACE_USER
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|printf
+argument_list|(
+literal|"ufs_extattr_iterate_directory returned %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|vput
+argument_list|(
+name|attr_user_dvp
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Mask startup failures in sub-directories. */
 name|error
 operator|=
 literal|0
 expr_stmt|;
-name|return_vput
+name|return_vput_attr_dvp
 label|:
 name|vput
 argument_list|(
