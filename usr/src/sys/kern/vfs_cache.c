@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cache.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cache.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -679,6 +679,24 @@ name|nchash
 modifier|*
 name|nhp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|cnp
+operator|->
+name|cn_namelen
+operator|>
+name|NCHNAMLEN
+condition|)
+name|panic
+argument_list|(
+literal|"cache_enter: name too long"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
