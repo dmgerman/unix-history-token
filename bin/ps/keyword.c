@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: keyword.c,v 1.13 1997/03/03 08:20:28 ache Exp $  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: keyword.c,v 1.14 1997/03/04 00:33:56 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -218,6 +218,8 @@ name|USER
 operator|,
 name|utime
 operator|,
+name|NULL
+operator|,
 literal|4
 block|}
 end_block
@@ -237,6 +239,8 @@ operator|,
 name|USER
 operator|,
 name|stime
+operator|,
+name|NULL
 operator|,
 literal|4
 block|}
@@ -258,6 +262,8 @@ name|USER
 operator|,
 name|ixrss
 operator|,
+name|NULL
+operator|,
 literal|4
 block|}
 end_block
@@ -278,6 +284,8 @@ name|USER
 operator|,
 name|idrss
 operator|,
+name|NULL
+operator|,
 literal|4
 block|}
 end_block
@@ -297,6 +305,8 @@ operator|,
 name|USER
 operator|,
 name|isrss
+operator|,
+name|NULL
 operator|,
 literal|4
 block|}
@@ -410,6 +420,8 @@ literal|0
 block|,
 name|pcpu
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -424,6 +436,8 @@ literal|0
 block|,
 name|pmem
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -437,6 +451,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|3
 block|,
@@ -489,6 +505,8 @@ name|USER
 block|,
 name|command
 block|,
+name|NULL
+block|,
 literal|16
 block|}
 block|,
@@ -502,6 +520,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|3
 block|,
@@ -533,6 +553,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|7
 block|,
@@ -573,6 +595,8 @@ name|USER
 block|,
 name|rvar
 block|,
+name|NULL
+block|,
 literal|4
 block|,
 name|ROFF
@@ -604,6 +628,8 @@ literal|0
 block|,
 name|evar
 block|,
+name|NULL
+block|,
 literal|4
 block|,
 name|EOFF
@@ -626,6 +652,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|8
 block|,
@@ -650,6 +678,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|8
 block|,
 name|POFF
@@ -673,6 +703,8 @@ literal|0
 block|,
 name|maxrss
 block|,
+name|NULL
+block|,
 literal|5
 block|}
 block|,
@@ -686,6 +718,8 @@ block|,
 name|LJUST
 block|,
 name|logname
+block|,
+name|NULL
 block|,
 name|MAXLOGNAME
 operator|-
@@ -713,6 +747,8 @@ name|USER
 block|,
 name|lstarted
 block|,
+name|NULL
+block|,
 literal|28
 block|}
 block|,
@@ -726,6 +762,8 @@ block|,
 name|USER
 block|,
 name|rvar
+block|,
+name|NULL
 block|,
 literal|4
 block|,
@@ -750,6 +788,8 @@ name|USER
 block|,
 name|rvar
 block|,
+name|NULL
+block|,
 literal|4
 block|,
 name|ROFF
@@ -773,6 +813,8 @@ name|USER
 block|,
 name|rvar
 block|,
+name|NULL
+block|,
 literal|4
 block|,
 name|ROFF
@@ -795,6 +837,8 @@ block|,
 name|USER
 block|,
 name|rvar
+block|,
+name|NULL
 block|,
 literal|4
 block|,
@@ -827,6 +871,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|2
 block|,
 name|POFF
@@ -849,6 +895,8 @@ block|,
 name|USER
 block|,
 name|rvar
+block|,
+name|NULL
 block|,
 literal|5
 block|,
@@ -881,6 +929,8 @@ name|USER
 block|,
 name|rvar
 block|,
+name|NULL
+block|,
 literal|4
 block|,
 name|ROFF
@@ -903,6 +953,8 @@ block|,
 name|USER
 block|,
 name|rvar
+block|,
+name|NULL
 block|,
 literal|4
 block|,
@@ -927,6 +979,8 @@ name|USER
 block|,
 name|rvar
 block|,
+name|NULL
+block|,
 literal|5
 block|,
 name|ROFF
@@ -950,6 +1004,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|6
 block|,
 name|POFF
@@ -972,6 +1028,8 @@ block|,
 name|USER
 block|,
 name|rvar
+block|,
+name|NULL
 block|,
 literal|4
 block|,
@@ -1004,6 +1062,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|6
 block|,
 name|POFF
@@ -1027,6 +1087,8 @@ literal|0
 block|,
 name|evar
 block|,
+name|NULL
+block|,
 literal|6
 block|,
 name|EOFF
@@ -1049,6 +1111,8 @@ block|,
 name|USER
 block|,
 name|pagein
+block|,
+name|NULL
 block|,
 literal|6
 block|}
@@ -1080,6 +1144,8 @@ literal|0
 block|,
 name|evar
 block|,
+name|NULL
+block|,
 name|PIDLEN
 block|,
 name|EOFF
@@ -1102,6 +1168,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 name|PIDLEN
 block|,
@@ -1134,6 +1202,8 @@ literal|0
 block|,
 name|evar
 block|,
+name|NULL
+block|,
 name|PIDLEN
 block|,
 name|EOFF
@@ -1157,6 +1227,8 @@ literal|0
 block|,
 name|pri
 block|,
+name|NULL
+block|,
 literal|3
 block|}
 block|,
@@ -1170,6 +1242,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|3
 block|,
@@ -1193,6 +1267,8 @@ block|,
 literal|0
 block|,
 name|evar
+block|,
+name|NULL
 block|,
 name|UIDLEN
 block|,
@@ -1219,6 +1295,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|8
 block|,
 name|POFF
@@ -1244,6 +1322,8 @@ literal|0
 block|,
 name|p_rssize
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -1266,6 +1346,8 @@ literal|0
 block|,
 name|rssize
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -1279,6 +1361,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|7
 block|,
@@ -1303,6 +1387,8 @@ literal|0
 block|,
 name|evar
 block|,
+name|NULL
+block|,
 name|UIDLEN
 block|,
 name|EOFF
@@ -1325,8 +1411,12 @@ block|,
 name|NULL
 block|,
 name|LJUST
+operator||
+name|DSIZ
 block|,
 name|runame
+block|,
+name|s_runame
 block|,
 name|USERLEN
 block|}
@@ -1341,6 +1431,8 @@ block|,
 literal|0
 block|,
 name|evar
+block|,
+name|NULL
 block|,
 literal|6
 block|,
@@ -1365,6 +1457,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|8
 block|,
 name|POFF
@@ -1387,6 +1481,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|8
 block|,
@@ -1411,6 +1507,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|8
 block|,
 name|POFF
@@ -1434,6 +1532,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|8
 block|,
 name|POFF
@@ -1456,6 +1556,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|3
 block|,
@@ -1482,6 +1584,8 @@ name|USER
 block|,
 name|started
 block|,
+name|NULL
+block|,
 literal|7
 block|}
 block|,
@@ -1504,6 +1608,8 @@ literal|0
 block|,
 name|state
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -1517,6 +1623,8 @@ block|,
 literal|0
 block|,
 name|evar
+block|,
+name|NULL
 block|,
 name|UIDLEN
 block|,
@@ -1543,6 +1651,8 @@ literal|0
 block|,
 name|evar
 block|,
+name|NULL
+block|,
 name|UIDLEN
 block|,
 name|EOFF
@@ -1568,6 +1678,8 @@ literal|0
 block|,
 name|tdev
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -1582,6 +1694,8 @@ name|USER
 block|,
 name|cputime
 block|,
+name|NULL
+block|,
 literal|9
 block|}
 block|,
@@ -1595,6 +1709,8 @@ block|,
 literal|0
 block|,
 name|evar
+block|,
+name|NULL
 block|,
 literal|4
 block|,
@@ -1619,6 +1735,8 @@ literal|0
 block|,
 name|evar
 block|,
+name|NULL
+block|,
 literal|6
 block|,
 name|EOFF
@@ -1642,6 +1760,8 @@ literal|0
 block|,
 name|tsize
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -1655,6 +1775,8 @@ block|,
 literal|0
 block|,
 name|tname
+block|,
+name|NULL
 block|,
 literal|4
 block|}
@@ -1670,6 +1792,8 @@ name|LJUST
 block|,
 name|longtname
 block|,
+name|NULL
+block|,
 literal|8
 block|}
 block|,
@@ -1684,6 +1808,8 @@ name|LJUST
 block|,
 name|ucomm
 block|,
+name|NULL
+block|,
 name|MAXCOMLEN
 block|}
 block|,
@@ -1697,6 +1823,8 @@ block|,
 literal|0
 block|,
 name|evar
+block|,
+name|NULL
 block|,
 name|UIDLEN
 block|,
@@ -1723,6 +1851,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|3
 block|,
 name|POFF
@@ -1743,8 +1873,12 @@ block|,
 name|NULL
 block|,
 name|LJUST
+operator||
+name|DSIZ
 block|,
 name|uname
+block|,
+name|s_uname
 block|,
 name|USERLEN
 block|}
@@ -1776,6 +1910,8 @@ literal|0
 block|,
 name|vsize
 block|,
+name|NULL
+block|,
 literal|5
 block|}
 block|,
@@ -1790,6 +1926,8 @@ name|LJUST
 block|,
 name|wchan
 block|,
+name|NULL
+block|,
 literal|6
 block|}
 block|,
@@ -1803,6 +1941,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|4
 block|,
@@ -1829,6 +1969,8 @@ literal|0
 block|,
 name|pcpu
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -1843,6 +1985,8 @@ literal|0
 block|,
 name|pmem
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -1856,6 +2000,8 @@ block|,
 name|USER
 block|,
 name|uvar
+block|,
+name|NULL
 block|,
 literal|3
 block|,
@@ -1908,6 +2054,8 @@ name|USER
 block|,
 name|command
 block|,
+name|NULL
+block|,
 literal|16
 block|}
 block|,
@@ -1921,6 +2069,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|3
 block|,
@@ -1952,6 +2102,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|7
 block|,
@@ -1992,6 +2144,8 @@ name|USER
 block|,
 name|rvar
 block|,
+name|NULL
+block|,
 literal|4
 block|,
 name|ROFF
@@ -2023,6 +2177,8 @@ literal|0
 block|,
 name|evar
 block|,
+name|NULL
+block|,
 literal|4
 block|,
 name|EOFF
@@ -2045,6 +2201,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|8
 block|,
@@ -2069,6 +2227,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|8
 block|,
 name|POFF
@@ -2092,6 +2252,8 @@ literal|0
 block|,
 name|maxrss
 block|,
+name|NULL
+block|,
 literal|5
 block|}
 block|,
@@ -2105,6 +2267,8 @@ block|,
 name|LJUST
 block|,
 name|logname
+block|,
+name|NULL
 block|,
 name|MAXLOGNAME
 operator|-
@@ -2124,6 +2288,8 @@ name|USER
 block|,
 name|lstarted
 block|,
+name|NULL
+block|,
 literal|28
 block|}
 block|,
@@ -2137,6 +2303,8 @@ block|,
 name|USER
 block|,
 name|rvar
+block|,
+name|NULL
 block|,
 literal|4
 block|,
@@ -2161,6 +2329,8 @@ name|USER
 block|,
 name|rvar
 block|,
+name|NULL
+block|,
 literal|4
 block|,
 name|ROFF
@@ -2184,6 +2354,8 @@ name|USER
 block|,
 name|rvar
 block|,
+name|NULL
+block|,
 literal|4
 block|,
 name|ROFF
@@ -2206,6 +2378,8 @@ block|,
 name|USER
 block|,
 name|rvar
+block|,
+name|NULL
 block|,
 literal|4
 block|,
@@ -2238,6 +2412,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|2
 block|,
 name|POFF
@@ -2260,6 +2436,8 @@ block|,
 name|USER
 block|,
 name|rvar
+block|,
+name|NULL
 block|,
 literal|5
 block|,
@@ -2292,6 +2470,8 @@ name|USER
 block|,
 name|rvar
 block|,
+name|NULL
+block|,
 literal|4
 block|,
 name|ROFF
@@ -2314,6 +2494,8 @@ block|,
 name|USER
 block|,
 name|rvar
+block|,
+name|NULL
 block|,
 literal|4
 block|,
@@ -2338,6 +2520,8 @@ name|USER
 block|,
 name|rvar
 block|,
+name|NULL
+block|,
 literal|5
 block|,
 name|ROFF
@@ -2361,6 +2545,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|6
 block|,
 name|POFF
@@ -2383,6 +2569,8 @@ block|,
 name|USER
 block|,
 name|rvar
+block|,
+name|NULL
 block|,
 literal|4
 block|,
@@ -2415,6 +2603,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|6
 block|,
 name|POFF
@@ -2438,6 +2628,8 @@ literal|0
 block|,
 name|evar
 block|,
+name|NULL
+block|,
 literal|6
 block|,
 name|EOFF
@@ -2460,6 +2652,8 @@ block|,
 name|USER
 block|,
 name|pagein
+block|,
+name|NULL
 block|,
 literal|6
 block|}
@@ -2491,6 +2685,8 @@ literal|0
 block|,
 name|evar
 block|,
+name|NULL
+block|,
 name|PIDLEN
 block|,
 name|EOFF
@@ -2513,6 +2709,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 name|PIDLEN
 block|,
@@ -2545,6 +2743,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|4
 block|,
 name|POFF
@@ -2567,6 +2767,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 name|PIDLEN
 block|,
@@ -2591,6 +2793,8 @@ literal|0
 block|,
 name|pri
 block|,
+name|NULL
+block|,
 literal|3
 block|}
 block|,
@@ -2604,6 +2808,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|3
 block|,
@@ -2628,6 +2834,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 name|UIDLEN
 block|,
 name|POFF
@@ -2650,6 +2858,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|8
 block|,
@@ -2674,6 +2884,8 @@ literal|0
 block|,
 name|p_rssize
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -2696,6 +2908,8 @@ literal|0
 block|,
 name|rssize
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -2709,6 +2923,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 name|UIDLEN
 block|,
@@ -2733,6 +2949,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|7
 block|,
 name|POFF
@@ -2753,8 +2971,12 @@ block|,
 name|NULL
 block|,
 name|LJUST
+operator||
+name|DSIZ
 block|,
 name|runame
+block|,
+name|s_runame
 block|,
 name|USERLEN
 block|}
@@ -2769,6 +2991,8 @@ block|,
 literal|0
 block|,
 name|evar
+block|,
+name|NULL
 block|,
 literal|6
 block|,
@@ -2793,6 +3017,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|8
 block|,
 name|POFF
@@ -2815,6 +3041,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|8
 block|,
@@ -2839,6 +3067,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|8
 block|,
 name|POFF
@@ -2862,6 +3092,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|8
 block|,
 name|POFF
@@ -2884,6 +3116,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|3
 block|,
@@ -2910,6 +3144,8 @@ name|USER
 block|,
 name|started
 block|,
+name|NULL
+block|,
 literal|7
 block|}
 block|,
@@ -2932,6 +3168,8 @@ literal|0
 block|,
 name|state
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -2945,6 +3183,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 name|UIDLEN
 block|,
@@ -2969,6 +3209,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 name|UIDLEN
 block|,
 name|POFF
@@ -2992,6 +3234,8 @@ literal|0
 block|,
 name|tdev
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -3006,6 +3250,8 @@ name|USER
 block|,
 name|cputime
 block|,
+name|NULL
+block|,
 literal|9
 block|}
 block|,
@@ -3019,6 +3265,8 @@ block|,
 literal|0
 block|,
 name|evar
+block|,
+name|NULL
 block|,
 literal|4
 block|,
@@ -3043,6 +3291,8 @@ literal|0
 block|,
 name|trss
 block|,
+name|NULL
+block|,
 literal|3
 block|}
 block|,
@@ -3056,6 +3306,8 @@ block|,
 literal|0
 block|,
 name|evar
+block|,
+name|NULL
 block|,
 literal|6
 block|,
@@ -3080,6 +3332,8 @@ literal|0
 block|,
 name|tsize
 block|,
+name|NULL
+block|,
 literal|4
 block|}
 block|,
@@ -3093,6 +3347,8 @@ block|,
 name|LJUST
 block|,
 name|tname
+block|,
+name|NULL
 block|,
 literal|4
 block|}
@@ -3108,6 +3364,8 @@ name|LJUST
 block|,
 name|longtname
 block|,
+name|NULL
+block|,
 literal|8
 block|}
 block|,
@@ -3122,6 +3380,8 @@ name|LJUST
 block|,
 name|ucomm
 block|,
+name|NULL
+block|,
 name|MAXCOMLEN
 block|}
 block|,
@@ -3135,6 +3395,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 name|UIDLEN
 block|,
@@ -3159,6 +3421,8 @@ literal|0
 block|,
 name|pvar
 block|,
+name|NULL
+block|,
 literal|3
 block|,
 name|POFF
@@ -3182,6 +3446,8 @@ name|USER
 block|,
 name|uvar
 block|,
+name|NULL
+block|,
 literal|6
 block|,
 name|UOFF
@@ -3202,8 +3468,12 @@ block|,
 name|NULL
 block|,
 name|LJUST
+operator||
+name|DSIZ
 block|,
 name|uname
+block|,
+name|s_uname
 block|,
 name|USERLEN
 block|}
@@ -3235,6 +3505,8 @@ literal|0
 block|,
 name|vsize
 block|,
+name|NULL
+block|,
 literal|5
 block|}
 block|,
@@ -3249,6 +3521,8 @@ name|LJUST
 block|,
 name|wchan
 block|,
+name|NULL
+block|,
 literal|6
 block|}
 block|,
@@ -3262,6 +3536,8 @@ block|,
 literal|0
 block|,
 name|pvar
+block|,
+name|NULL
 block|,
 literal|4
 block|,
