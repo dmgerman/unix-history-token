@@ -5304,6 +5304,10 @@ operator|=
 name|c
 operator|->
 name|setdir
+condition|?
+name|c
+operator|->
+name|setdir
 argument_list|(
 name|c
 operator|->
@@ -5313,6 +5317,8 @@ name|c
 operator|->
 name|direction
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
 if|if
 condition|(
