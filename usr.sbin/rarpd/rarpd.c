@@ -2476,10 +2476,14 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"truncated request, got %u, expected %d"
+literal|"truncated request, got %d, expected %d"
 argument_list|,
 name|len
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -2490,6 +2494,7 @@ sizeof|sizeof
 argument_list|(
 operator|*
 name|ap
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
