@@ -81,7 +81,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.30 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.31 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.30 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.31 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,7 +122,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.30 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.31 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.30 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.31 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1224,7 +1224,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"initaliases: cannot open %s"
+literal|"WARNING: initaliases: cannot open %s"
 argument_list|,
 name|buf
 argument_list|)
@@ -1239,7 +1239,7 @@ else|#
 directive|else
 name|syserr
 argument_list|(
-literal|"initaliases: cannot open %s"
+literal|"WARNING: initaliases: cannot open %s"
 argument_list|,
 name|buf
 argument_list|)
@@ -1274,7 +1274,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"initaliases: cannot open DBM database %s.{pag,dir}"
+literal|"WARNING: initaliases: cannot open DBM database %s.{pag,dir}"
 argument_list|,
 name|aliasfile
 argument_list|)
@@ -1422,7 +1422,7 @@ else|#
 directive|else
 name|syserr
 argument_list|(
-literal|"initaliases: cannot open %s"
+literal|"WARNING: initaliases: cannot open %s"
 argument_list|,
 name|buf
 argument_list|)
@@ -1460,7 +1460,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"initaliases: cannot open DBM database %s.{pag,dir}"
+literal|"WARNING: initaliases: cannot open DBM database %s.{pag,dir}"
 argument_list|,
 name|aliasfile
 argument_list|)
