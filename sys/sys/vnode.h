@@ -1090,17 +1090,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_NOWDRAIN
-value|0x0200
-end_define
-
-begin_comment
-comment|/* do not block on wdrain */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_EXT
 value|0x0400
 end_define

@@ -2321,7 +2321,7 @@ name|uio_td
 operator|=
 name|curthread
 expr_stmt|;
-comment|/* 	 * When reading set IO_DIRECT to try to avoid double-caching 	 * the data.  When writing IO_DIRECT is not optimal, but we 	 * must set IO_NOWDRAIN to avoid a wdrain deadlock. 	 */
+comment|/* 	 * When reading set IO_DIRECT to try to avoid double-caching 	 * the data.  When writing IO_DIRECT is not optimal. 	 */
 if|if
 condition|(
 name|bp
@@ -2404,7 +2404,7 @@ argument_list|,
 operator|&
 name|auio
 argument_list|,
-name|IO_NOWDRAIN
+literal|0
 argument_list|,
 name|sc
 operator|->
