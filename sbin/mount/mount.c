@@ -3749,11 +3749,32 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|ent
+operator|->
+name|f_mntonname
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|"\t1 1\n"
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\t2 2\n"
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|printf
 argument_list|(

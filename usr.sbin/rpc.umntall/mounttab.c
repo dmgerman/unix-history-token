@@ -690,6 +690,37 @@ operator|->
 name|mtab_dirp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"write entry "
+literal|"%s:%s"
+argument_list|,
+name|mtabp
+operator|->
+name|mtab_host
+argument_list|,
+name|mtabp
+operator|->
+name|mtab_dirp
+argument_list|)
+expr_stmt|;
+block|}
+name|clean_mtab
+argument_list|(
+name|mtabp
+operator|->
+name|mtab_host
+argument_list|,
+name|mtabp
+operator|->
+name|mtab_dirp
+argument_list|)
+expr_stmt|;
 name|line
 operator|++
 expr_stmt|;
@@ -826,7 +857,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"entries deleted for "
+literal|"delete entries "
 literal|"host %s"
 argument_list|,
 name|host
@@ -866,7 +897,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"entry deleted for "
+literal|"delete entry "
 literal|"%s:%s"
 argument_list|,
 name|host
@@ -966,7 +997,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"skipped bad line in mounttab with entry %s"
+literal|"skip bad line in mounttab with entry %s"
 argument_list|,
 name|bad
 argument_list|)
