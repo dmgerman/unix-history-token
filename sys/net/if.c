@@ -1923,16 +1923,6 @@ operator|->
 name|if_lastchange
 argument_list|)
 expr_stmt|;
-name|getmicrotime
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_data
-operator|.
-name|ifi_epoch
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC

@@ -258,11 +258,6 @@ name|timeval
 name|ifi_lastchange
 decl_stmt|;
 comment|/* time of last administrative change */
-name|struct
-name|timeval
-name|ifi_epoch
-decl_stmt|;
-comment|/* time of creation or stat reset */
 block|}
 struct|;
 end_struct
