@@ -671,6 +671,10 @@ begin_comment
 comment|/* Up the ante and ignore older versions */
 end_comment
 
+begin_comment
+comment|/*  * Message types.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -847,6 +851,10 @@ begin_comment
 comment|/* mcast group membership being deleted */
 end_comment
 
+begin_comment
+comment|/*  * Bitmask values for rtm_inits and rmx_locks.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -877,7 +885,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/* init or lock _hopcount */
+comment|/* init or lock _expire */
 end_comment
 
 begin_define
@@ -936,7 +944,7 @@ comment|/* init or lock _rttvar */
 end_comment
 
 begin_comment
-comment|/*  * Bitmask values for rtm_addr.  */
+comment|/*  * Bitmask values for rtm_addrs.  */
 end_comment
 
 begin_define
