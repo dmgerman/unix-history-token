@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)names.c 1.2 %G%"
+literal|"@(#)names.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|CHUNKSIZE
-value|1000
+value|200
 end_define
 
 begin_typedef
@@ -144,14 +144,6 @@ name|Integer
 name|nleft
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|private
-name|struct
-name|Namepool
-name|zeropool
 decl_stmt|;
 end_decl_stmt
 
@@ -330,10 +322,15 @@ argument_list|(
 name|Namepool
 argument_list|)
 expr_stmt|;
-operator|*
+name|bzero
+argument_list|(
 name|newpool
-operator|=
-name|zeropool
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|newpool
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|newpool
 operator|->
