@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)kdb_opset.c	7.3 (Berkeley) %G%  */
+comment|/*  *	@(#)kdb_opset.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1626,19 +1626,11 @@ end_comment
 begin_macro
 name|printins
 argument_list|(
-argument|fmt
-argument_list|,
 argument|Idsp
 argument_list|,
 argument|ins
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|char
-name|fmt
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|u_char
