@@ -13,6 +13,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|elsieid
 index|[]
@@ -824,14 +825,6 @@ begin_decl_stmt
 specifier|static
 name|size_t
 name|longest
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|progname
 decl_stmt|;
 end_decl_stmt
 

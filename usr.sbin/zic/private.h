@@ -41,6 +41,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|privatehid
 index|[]
