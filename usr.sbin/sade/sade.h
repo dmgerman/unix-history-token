@@ -1556,7 +1556,9 @@ block|,
 name|PART_FILESYSTEM
 block|,
 name|PART_FAT
-block|, }
+block|,
+name|PART_EFI
+block|}
 name|PartType
 typedef|;
 end_typedef
