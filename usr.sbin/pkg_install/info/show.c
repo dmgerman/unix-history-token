@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: show.c,v 1.11 1997/10/08 07:47:38 charnier Exp $"
+literal|"$Id: show.c,v 1.12 1997/10/18 05:42:05 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"info.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_function
