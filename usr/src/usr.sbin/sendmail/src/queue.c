@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.55 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.56 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.55 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.56 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1251,6 +1251,54 @@ name|p
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* output ESMTP-supplied "original" information */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|e
+operator|->
+name|e_envid
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"Z%s\n"
+argument_list|,
+name|e
+operator|->
+name|e_envid
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_if
+if|if
+condition|(
+name|e
+operator|->
+name|e_omts
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"O%s\n"
+argument_list|,
+name|e
+operator|->
+name|e_omts
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_comment
 comment|/* output list of error recipients */
@@ -5938,6 +5986,42 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+break|break;
+case|case
+literal|'O'
+case|:
+comment|/* original MTS from ESMTP */
+name|e
+operator|->
+name|e_omts
+operator|=
+name|newstr
+argument_list|(
+operator|&
+name|bp
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+comment|/* original envelope id from ESMTP */
+name|e
+operator|->
+name|e_envid
+operator|=
+name|newstr
+argument_list|(
+operator|&
+name|bp
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'$'
