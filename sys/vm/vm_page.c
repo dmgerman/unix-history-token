@@ -434,7 +434,7 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-comment|/* 	 * Initialize the locks. 	 */
+comment|/* 	 * Initialize the locks.  Recursive acquisition of the vm page 	 * queue free mutex begins in contigmalloc1().   	 */
 name|mtx_init
 argument_list|(
 operator|&
@@ -456,6 +456,8 @@ literal|"vm page queue free mutex"
 argument_list|,
 name|NULL
 argument_list|,
+name|MTX_RECURSE
+operator||
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
@@ -1584,7 +1586,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"vm_page_insert: already inserted"
+literal|"vm_page_insert: page already inserted"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Record the object/offset pair in this page 	 */
@@ -1689,6 +1691,20 @@ name|listq
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|pindex
+operator|==
+name|root
+operator|->
+name|pindex
+condition|)
+name|panic
+argument_list|(
+literal|"vm_page_insert: offset already allocated"
+argument_list|)
+expr_stmt|;
 else|else
 block|{
 name|m
@@ -2257,21 +2273,6 @@ argument_list|(
 name|object
 argument_list|,
 name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|!
-name|vm_page_lookup
-argument_list|(
-name|object
-argument_list|,
-name|pindex
-argument_list|)
-argument_list|,
-operator|(
-literal|"vm_page_alloc: page already allocated"
-operator|)
 argument_list|)
 expr_stmt|;
 name|color
