@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<_ctype.h>
 end_include
 
 begin_ifndef
