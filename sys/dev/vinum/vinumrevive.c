@@ -178,41 +178,13 @@ literal|1
 operator|)
 operator|)
 condition|)
-block|{
 comment|/* or invalid block size */
-if|if
-condition|(
-name|plex
-operator|->
-name|stripesize
-operator|!=
-literal|0
-condition|)
-comment|/* we're striped, don't revive more than */
-name|sd
-operator|->
-name|revive_blocksize
-operator|=
-name|min
-argument_list|(
-name|DEFAULT_REVIVE_BLOCKSIZE
-argument_list|,
-comment|/* one block at a time */
-name|plex
-operator|->
-name|stripesize
-operator|<<
-name|DEV_BSHIFT
-argument_list|)
-expr_stmt|;
-else|else
 name|sd
 operator|->
 name|revive_blocksize
 operator|=
 name|DEFAULT_REVIVE_BLOCKSIZE
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -295,32 +267,6 @@ operator|->
 name|stripesize
 expr_stmt|;
 comment|/* offset from beginning of stripe */
-if|if
-condition|(
-name|stripeoffset
-operator|+
-operator|(
-name|size
-operator|>>
-name|DEV_BSHIFT
-operator|)
-operator|>
-name|plex
-operator|->
-name|stripesize
-condition|)
-name|size
-operator|=
-operator|(
-name|plex
-operator|->
-name|stripesize
-operator|-
-name|stripeoffset
-operator|)
-operator|<<
-name|DEV_BSHIFT
-expr_stmt|;
 name|plexblkno
 operator|=
 name|sd
@@ -341,7 +287,13 @@ operator|->
 name|subdisks
 comment|/* offset to beginning of stripe */
 operator|+
-name|stripeoffset
+name|sd
+operator|->
+name|revived
+operator|%
+name|plex
+operator|->
+name|stripesize
 expr_stmt|;
 comment|/* offset from beginning of stripe */
 break|break;
@@ -624,7 +576,7 @@ operator|!=
 name|NULL
 condition|)
 comment|/* it's part of a volume, */
-comment|/* 	     * First, read the data from the volume.  We 	     * don't care which plex, that's bre's job. 	     */
+comment|/* 	       * First, read the data from the volume.  We 	       * don't care which plex, that's bre's job. 	     */
 name|bp
 operator|->
 name|b_dev
@@ -731,20 +683,6 @@ name|b_iocmd
 operator|=
 name|BIO_WRITE
 expr_stmt|;
-name|BUF_LOCKINIT
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-comment|/* get a lock for the buffer */
-name|BUF_LOCK
-argument_list|(
-name|bp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|)
-expr_stmt|;
-comment|/* and lock it */
 name|bp
 operator|->
 name|b_resid
@@ -1297,20 +1235,6 @@ name|pbp
 operator|->
 name|b_bcount
 expr_stmt|;
-name|BUF_LOCKINIT
-argument_list|(
-name|pbp
-argument_list|)
-expr_stmt|;
-comment|/* get a lock for the buffer */
-name|BUF_LOCK
-argument_list|(
-name|pbp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|)
-expr_stmt|;
-comment|/* and lock it */
 name|sdio
 argument_list|(
 name|pbp
@@ -1995,26 +1919,6 @@ name|rebuildparity
 operator|)
 condition|)
 block|{
-name|BUF_LOCKINIT
-argument_list|(
-name|bpp
-index|[
-name|sdno
-index|]
-argument_list|)
-expr_stmt|;
-comment|/* get a lock for the buffer */
-name|BUF_LOCK
-argument_list|(
-name|bpp
-index|[
-name|sdno
-index|]
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|)
-expr_stmt|;
-comment|/* and lock it */
 name|sdio
 argument_list|(
 name|bpp
@@ -2223,7 +2127,7 @@ operator|*
 name|errorloc
 operator|=
 call|(
-name|u_long
+name|off_t
 call|)
 argument_list|(
 name|pstripe
@@ -2575,20 +2479,6 @@ name|sdno
 argument_list|)
 expr_stmt|;
 comment|/* create the device number */
-name|BUF_LOCKINIT
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-comment|/* get a lock for the buffer */
-name|BUF_LOCK
-argument_list|(
-name|bp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|)
-expr_stmt|;
-comment|/* and lock it */
 name|bp
 operator|->
 name|b_iocmd
@@ -2739,20 +2629,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|BUF_LOCKINIT
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-comment|/* get a lock for the buffer */
-name|BUF_LOCK
-argument_list|(
-name|bp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|)
-expr_stmt|;
-comment|/* and lock it */
 name|sdio
 argument_list|(
 name|bp
