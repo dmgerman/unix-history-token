@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ucontext.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/user.h>
 end_include
 
@@ -1097,7 +1103,6 @@ name|pc
 operator|->
 name|pc_curpcb
 operator|=
-operator|&
 name|thread0
 operator|.
 name|td_pcb
