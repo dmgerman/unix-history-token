@@ -10021,6 +10021,10 @@ name|g
 operator|->
 name|charjump
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 name|g
 operator|->
 name|must
