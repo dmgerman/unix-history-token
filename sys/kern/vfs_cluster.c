@@ -3212,7 +3212,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* 		 * If the buffer is not delayed-write (i.e. dirty), or it 		 * is delayed-write but either locked or inval, it cannot 		 * partake in teh clustered write. 		 */
+comment|/* 		 * If the buffer is not delayed-write (i.e. dirty), or it 		 * is delayed-write but either locked or inval, it cannot 		 * partake in the clustered write. 		 */
 if|if
 condition|(
 operator|(
