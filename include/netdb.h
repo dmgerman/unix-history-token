@@ -593,11 +593,22 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* prevent name resolution */
+comment|/* prevent host name resolution */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AI_NUMERICSERV
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* prevent service name resolution */
 end_comment
 
 begin_comment
-comment|/* valid flags for addrinfo */
+comment|/* valid flags for addrinfo (not a standard def, apps should not use it) */
 end_comment
 
 begin_define
@@ -605,7 +616,7 @@ define|#
 directive|define
 name|AI_MASK
 define|\
-value|(AI_PASSIVE | AI_CANONNAME | AI_NUMERICHOST | AI_ADDRCONFIG)
+value|(AI_PASSIVE | AI_CANONNAME | AI_NUMERICHOST | AI_NUMERICSERV | \     AI_ADDRCONFIG)
 end_define
 
 begin_define
