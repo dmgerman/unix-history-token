@@ -168,11 +168,18 @@ name|tv_usec
 operator|>=
 literal|1000000
 condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+operator|-
+literal|1
 operator|)
 return|;
+block|}
 comment|/* Convert the timeval to a timespec: */
 name|TIMEVAL_TO_TIMESPEC
 argument_list|(
