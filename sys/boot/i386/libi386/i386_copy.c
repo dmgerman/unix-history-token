@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|READIN_BUF
-value|4096
+value|(16 * 1024)
 end_define
 
 begin_function
