@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	5.15 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1010,6 +1010,50 @@ begin_comment
 comment|/* AUTHENTICATION: client version of IS */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LFLOW_OFF
+value|0
+end_define
+
+begin_comment
+comment|/* Disable remote flow control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFLOW_ON
+value|1
+end_define
+
+begin_comment
+comment|/* Enable remote flow control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFLOW_RESTART_ANY
+value|2
+end_define
+
+begin_comment
+comment|/* Restart output on any char */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFLOW_RESTART_XON
+value|3
+end_define
+
+begin_comment
+comment|/* Restart output only on XON */
+end_comment
+
 begin_comment
 comment|/*  * LINEMODE suboptions  */
 end_comment
@@ -1311,7 +1355,7 @@ name|SLC_NAME_OK
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>= 0&& (x)< NSLC)
+value|((x)>= 0&& (x)<= NSLC)
 end_define
 
 begin_define
@@ -1420,6 +1464,13 @@ define|#
 directive|define
 name|ENV_ESC
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENV_USERVAR
+value|3
 end_define
 
 begin_comment
