@@ -310,7 +310,7 @@ comment|/* 	 * Tell SRM where the bootstrap is. 	 */
 name|lp
 operator|=
 operator|(
-name|u_long
+name|uint64_t
 operator|*
 operator|)
 name|buf
