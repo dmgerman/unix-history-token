@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ptrace.c	5.3 (Berkeley) %G%"
+literal|"@(#)ptrace.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -888,17 +888,9 @@ begin_comment
 comment|/*  * turn off attention to signals not being caught  */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int
-name|INTFUNC
-parameter_list|()
-function_decl|;
-end_typedef
-
 begin_decl_stmt
 name|LOCAL
-name|INTFUNC
+name|void
 modifier|*
 name|onintr
 decl_stmt|,
