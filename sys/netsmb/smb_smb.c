@@ -1498,6 +1498,7 @@ expr_stmt|;
 name|plen
 operator|--
 expr_stmt|;
+comment|/* 			 * The uniplen is zeroed because Samba cannot deal 			 * with this 2nd cleartext password.  This Samba 			 * "bug" is actually a workaround for problems in 			 * Microsoft clients. 			 */
 name|uniplen
 operator|=
 literal|0
@@ -1701,10 +1702,19 @@ name|mb_put_uint32le
 argument_list|(
 name|mbp
 argument_list|,
+name|vcp
+operator|->
+name|obj
+operator|.
+name|co_flags
+operator|&
+name|SMBV_UNICODE
+condition|?
+name|SMB_CAP_UNICODE
+else|:
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* my caps */
 name|smb_rq_wend
 argument_list|(
 name|rqp

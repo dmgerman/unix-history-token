@@ -303,6 +303,17 @@ begin_comment
 comment|/* last reconnect attempt has failed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SMBV_UNICODE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* connection is configured to use Unicode */
+end_comment
+
 begin_comment
 comment|/*  * smb_share flags  */
 end_comment
