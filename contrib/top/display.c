@@ -647,6 +647,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|*
+name|ip
+operator|++
+operator|=
+name|cpustate_total_length
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -663,12 +669,6 @@ operator|>
 literal|0
 condition|)
 block|{
-operator|*
-name|ip
-operator|++
-operator|=
-name|cpustate_total_length
-expr_stmt|;
 name|cpustate_total_length
 operator|+=
 name|i
@@ -1007,7 +1007,7 @@ specifier|static
 name|char
 name|procstates_buffer
 index|[
-literal|128
+name|MAX_COLS
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1141,7 +1141,7 @@ specifier|static
 name|char
 name|new
 index|[
-literal|128
+name|MAX_COLS
 index|]
 decl_stmt|;
 specifier|register
@@ -1652,8 +1652,7 @@ comment|/* remember it for next time */
 operator|*
 name|lp
 operator|=
-operator|*
-name|states
+name|value
 expr_stmt|;
 block|}
 block|}
