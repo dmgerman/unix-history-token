@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	stat.h	4.6	82/12/23	*/
+comment|/*	stat.h	4.7	83/05/21	*/
 end_comment
 
 begin_struct
@@ -54,9 +54,12 @@ name|long
 name|st_blksize
 decl_stmt|;
 name|long
+name|st_blocks
+decl_stmt|;
+name|long
 name|st_spare4
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 block|}
