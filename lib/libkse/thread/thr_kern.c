@@ -2937,6 +2937,9 @@ name|i
 decl_stmt|,
 name|num
 decl_stmt|;
+name|pthread_t
+name|pthread
+decl_stmt|;
 comment|/* 	 * Enter a loop to read and handle queued signals from the 	 * pthread kernel pipe:  	 */
 while|while
 condition|(
@@ -3008,6 +3011,8 @@ block|}
 else|else
 block|{
 comment|/* Handle this signal: */
+name|pthread
+operator|=
 name|_thread_sig_handle
 argument_list|(
 operator|(
@@ -3019,6 +3024,25 @@ name|i
 index|]
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pthread
+operator|!=
+name|NULL
+condition|)
+name|_thread_sig_deliver
+argument_list|(
+name|pthread
+argument_list|,
+operator|(
+name|int
+operator|)
+name|bufr
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 block|}
