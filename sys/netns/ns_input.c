@@ -238,15 +238,6 @@ name|ns_pexseq
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|int
-name|nsintrq_present
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|ns_init
 argument_list|()
@@ -318,6 +309,10 @@ literal|"ns_inq"
 argument_list|,
 name|MTX_DEF
 argument_list|)
+expr_stmt|;
+name|nsintrq_present
+operator|=
+literal|1
 expr_stmt|;
 name|ns_pexseq
 operator|=

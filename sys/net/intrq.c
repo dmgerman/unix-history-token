@@ -64,60 +64,52 @@ file|<net/intrq.h>
 end_include
 
 begin_comment
-comment|/*  * If the appropriate intrq_present variable is zero, don't use  * the queue (as it'll never get processed).  * When defined, each of the network stacks declares their own  * *intrq_present variable to be non-zero.  */
+comment|/*  * If the appropriate intrq_present variable is zero, don't use  * the queue (as it'll never get processed).  * Each of the active network stacks sets their own  * *intrq_present variable non-zero.  */
 end_comment
 
 begin_decl_stmt
-specifier|const
 name|int
 name|atintrq1_present
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|int
 name|atintrq2_present
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|int
 name|atmintrq_present
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|int
 name|ipintrq_present
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|int
 name|ip6intrq_present
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|int
 name|ipxintrq_present
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|int
 name|natmintrq_present
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|int
 name|nsintrq_present
 decl_stmt|;

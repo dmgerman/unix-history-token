@@ -781,15 +781,6 @@ name|maxnipq
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|int
-name|ipintrq_present
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1301,6 +1292,10 @@ literal|"ip_inq"
 argument_list|,
 name|MTX_DEF
 argument_list|)
+expr_stmt|;
+name|ipintrq_present
+operator|=
+literal|1
 expr_stmt|;
 name|register_netisr
 argument_list|(

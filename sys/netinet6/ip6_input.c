@@ -397,15 +397,6 @@ comment|/* XXX */
 end_comment
 
 begin_decl_stmt
-specifier|const
-name|int
-name|int6intrq_present
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|ip6_ours_check_algorithm
 decl_stmt|;
@@ -705,6 +696,10 @@ literal|"ip6_inq"
 argument_list|,
 name|MTX_DEF
 argument_list|)
+expr_stmt|;
+name|ip6intrq_present
+operator|=
+literal|1
 expr_stmt|;
 name|register_netisr
 argument_list|(

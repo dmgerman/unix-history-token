@@ -407,15 +407,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|const
-name|int
-name|natmintrq_present
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|natm_init
@@ -455,6 +446,10 @@ literal|"natm_inq"
 argument_list|,
 name|MTX_DEF
 argument_list|)
+expr_stmt|;
+name|natmintrq_present
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function

@@ -293,15 +293,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
-name|int
-name|atmintrq_present
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sp_info
 name|atm_attributes_pool
@@ -449,6 +440,10 @@ literal|"atm_inq"
 argument_list|,
 name|MTX_DEF
 argument_list|)
+expr_stmt|;
+name|atmintrq_present
+operator|=
+literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef

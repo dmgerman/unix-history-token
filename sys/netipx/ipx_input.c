@@ -320,15 +320,6 @@ name|ipx_pexseq
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|int
-name|ipxintrq_present
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -428,6 +419,10 @@ literal|"ipx_inq"
 argument_list|,
 name|MTX_DEF
 argument_list|)
+expr_stmt|;
+name|ipxintrq_present
+operator|=
+literal|1
 expr_stmt|;
 name|ipxpcb
 operator|.
