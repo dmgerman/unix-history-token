@@ -20,15 +20,7 @@ comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efifs.h  
 end_comment
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI Partition header (normaly starts in LBA 1)
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI Partition header (normaly starts in LBA 1)  */
 end_comment
 
 begin_define
@@ -97,15 +89,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// File header
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * File header  */
 end_comment
 
 begin_define
@@ -173,19 +157,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Return the file's first LBAL which is in the same
-end_comment
-
-begin_comment
-comment|// logical block as the file header
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Return the file's first LBAL which is in the same  * logical block as the file header  */
 end_comment
 
 begin_define
@@ -220,19 +192,7 @@ value|3
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Logical Block Address List - the fundemental block
-end_comment
-
-begin_comment
-comment|// description structure
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Logical Block Address List - the fundemental block  * description structure  */
 end_comment
 
 begin_define
@@ -278,7 +238,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// Array size
+comment|/* Array size */
 end_comment
 
 begin_define
@@ -297,15 +257,7 @@ value|(((blks) - (offs) - (lbal)->Hdr.HeaderSize) / sizeof(EFI_RL))
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Logical Block run-length
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Logical Block run-length  */
 end_comment
 
 begin_typedef
@@ -324,15 +276,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Return the run-length structure from an LBAL header
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Return the run-length structure from an LBAL header  */
 end_comment
 
 begin_define

@@ -15,18 +15,6 @@ name|(
 name|)
 end_pragma
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Basic int types of various widths
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -34,15 +22,7 @@ file|<sys/stdint.h>
 end_include
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Basic EFI types of various widths
-end_comment
-
-begin_comment
-comment|//
+comment|/* Basic EFI types of various widths. */
 end_comment
 
 begin_typedef
@@ -129,15 +109,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-end_comment
-
-begin_comment
-comment|// BugBug: Code to debug
-end_comment
-
-begin_comment
-comment|//
+comment|/*  *XXX BugBug: Code to debug  */
 end_comment
 
 begin_define
@@ -165,15 +137,7 @@ value|(PLATFORM_IOBASE_ADDRESS | ( ( ( (_Port)& 0xfffc)<< 10 ) | ( (_Port)& 0x0f
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Macro's with casts make this much easier to use and read.
-end_comment
-
-begin_comment
-comment|//
+comment|/* Macro's with casts make this much easier to use and read. */
 end_comment
 
 begin_define
@@ -195,18 +159,6 @@ name|_Data
 parameter_list|)
 value|(PORT_TO_MEM8D(0x80) = (_Data))
 end_define
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// BugBug: End Debug Code!!!
-end_comment
-
-begin_comment
-comment|//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-end_comment
 
 begin_define
 define|#
@@ -258,19 +210,7 @@ value|while (TRUE)
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Pointers must be aligned to these address to function
-end_comment
-
-begin_comment
-comment|//  you will get an alignment fault if this value is less than 8
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Pointers must be aligned to these address to function  *  you will get an alignment fault if this value is less than 8  */
 end_comment
 
 begin_define
@@ -294,15 +234,7 @@ value|(UINTN) Adjustment = 0; \             if((UINTN)Value % MIN_ALIGNMENT_SIZE
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Define macros to create data structure signatures.
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Define macros to create data structure signatures.  */
 end_comment
 
 begin_define
@@ -358,15 +290,7 @@ value|(EFI_SIGNATURE_32(A,B,C,D) | ((UINT64)(EFI_SIGNATURE_32(E,F,G,H))<< 32))
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// To export& import functions in the EFI emulator environment
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * To export& import functions in the EFI emulator environment  */
 end_comment
 
 begin_define
@@ -376,31 +300,7 @@ name|EXPORTAPI
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFIAPI - prototype calling convention for EFI function pointers
-end_comment
-
-begin_comment
-comment|// BOOTSERVICE - prototype for implementation of a boot service interface
-end_comment
-
-begin_comment
-comment|// RUNTIMESERVICE - prototype for implementation of a runtime service interface
-end_comment
-
-begin_comment
-comment|// RUNTIMEFUNCTION - prototype for implementation of a runtime function that is not a service
-end_comment
-
-begin_comment
-comment|// RUNTIME_CODE - pragma macro for declaring runtime code
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFIAPI - prototype calling convention for EFI function pointers  * BOOTSERVICE - prototype for implementation of a boot service interface  * RUNTIMESERVICE - prototype for implementation of a runtime service interface  * RUNTIMEFUNCTION - prototype for implementation of a runtime function that is not a service  * RUNTIME_CODE - pragma macro for declaring runtime code      */
 end_comment
 
 begin_ifndef
@@ -410,7 +310,7 @@ name|EFIAPI
 end_ifndef
 
 begin_comment
-comment|// Forces EFI calling conventions reguardless of compiler options
+comment|/* Forces EFI calling conventions reguardless of compiler options */
 end_comment
 
 begin_if
@@ -426,10 +326,6 @@ name|EFIAPI
 value|__cdecl
 end_define
 
-begin_comment
-comment|// Force C calling convention for Microsoft C compiler
-end_comment
-
 begin_else
 else|#
 directive|else
@@ -440,10 +336,6 @@ define|#
 directive|define
 name|EFIAPI
 end_define
-
-begin_comment
-comment|// Substitute expresion to force C calling convention
-end_comment
 
 begin_endif
 endif|#
@@ -507,15 +399,7 @@ value|volatile
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// BugBug: Need to find out if this is portable accross compliers.
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * XXX Need to find out if this is portable accross compliers.  */
 end_comment
 
 begin_function_decl
@@ -556,19 +440,7 @@ value|__mf()
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// When build similiar to FW, then link everything together as
-end_comment
-
-begin_comment
-comment|// one big module.
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * When build similiar to FW, then link everything together as  * one big module.  */
 end_comment
 
 begin_define
@@ -598,27 +470,7 @@ value|(_if)->LoadInternal(type, name, entry)
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Some compilers don't support the forward reference construct:
-end_comment
-
-begin_comment
-comment|//  typedef struct XXXXX
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// The following macro provide a workaround for such cases.
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Some compilers don't support the forward reference construct:  *  typedef struct XXXXX  *  * The following macro provide a workaround for such cases.  */
 end_comment
 
 begin_ifdef

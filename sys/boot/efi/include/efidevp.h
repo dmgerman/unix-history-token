@@ -20,15 +20,7 @@ comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      devpath.h
 end_comment
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Device Path structures - Section C
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Device Path structures - Section C  */
 end_comment
 
 begin_typedef
@@ -67,20 +59,12 @@ name|EFI_DP_TYPE_UNPACKED
 value|0x80
 end_define
 
-begin_comment
-comment|//#define END_DEVICE_PATH_TYPE                0xff
-end_comment
-
 begin_define
 define|#
 directive|define
 name|END_DEVICE_PATH_TYPE
 value|0x7f
 end_define
-
-begin_comment
-comment|//#define END_DEVICE_PATH_TYPE_UNPACKED       0x7f
-end_comment
 
 begin_define
 define|#
@@ -161,10 +145,6 @@ name|a
 parameter_list|)
 value|( (EFI_DEVICE_PATH *) ( ((UINT8 *) (a)) + DevicePathNodeLength(a)))
 end_define
-
-begin_comment
-comment|//#define IsDevicePathEndType(a)      ( DevicePathType(a) == END_DEVICE_PATH_TYPE_UNPACKED )
-end_comment
 
 begin_define
 define|#
@@ -425,31 +405,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EISA ID Macro
-end_comment
-
-begin_comment
-comment|// EISA ID Definition 32-bits
-end_comment
-
-begin_comment
-comment|//  bits[15:0] - three character compressed ASCII EISA ID.
-end_comment
-
-begin_comment
-comment|//  bits[31:16] - binary number
-end_comment
-
-begin_comment
-comment|//   Compressed ASCII is 5 bits per character 0b00001 = 'A' 0b11010 = 'Z'
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EISA ID Macro  * EISA ID Definition 32-bits  *  bits[15:0] - three character compressed ASCII EISA ID.  *  bits[31:16] - binary number  *   Compressed ASCII is 5 bits per character 0b00001 = 'A' 0b11010 = 'Z'  */
 end_comment
 
 begin_define

@@ -20,15 +20,7 @@ comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      eficon.h 
 end_comment
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Text output protocol
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Text output protocol  */
 end_comment
 
 begin_define
@@ -451,7 +443,7 @@ block|{
 name|INT32
 name|MaxMode
 decl_stmt|;
-comment|// current settings
+comment|/* current settings */
 name|INT32
 name|Mode
 decl_stmt|;
@@ -504,7 +496,7 @@ decl_stmt|;
 name|EFI_TEXT_ENABLE_CURSOR
 name|EnableCursor
 decl_stmt|;
-comment|// Current mode
+comment|/* Current mode */
 name|SIMPLE_TEXT_OUTPUT_MODE
 modifier|*
 name|Mode
@@ -515,15 +507,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Define's for required EFI Unicode Box Draw character
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Define's for required EFI Unicode Box Draw character  */
 end_comment
 
 begin_define
@@ -807,15 +791,7 @@ value|0x256c
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI Required Block Elements Code Chart
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI Required Block Elements Code Chart  */
 end_comment
 
 begin_define
@@ -833,15 +809,7 @@ value|0x2591
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI Required Geometric Shapes Code Chart
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI Required Geometric Shapes Code Chart  */
 end_comment
 
 begin_define
@@ -873,15 +841,7 @@ value|0x25c4
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI Required Arrow shapes
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI Required Arrow shapes  */
 end_comment
 
 begin_define
@@ -899,15 +859,7 @@ value|0x2193
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Text input protocol
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Text input protocol  */
 end_comment
 
 begin_define
@@ -942,15 +894,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Baseline unicode control chars
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Baseline unicode control chars  */
 end_comment
 
 begin_define
@@ -989,15 +933,7 @@ value|0x000D
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Scan codes for base line keys
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Scan codes for base line keys  */
 end_comment
 
 begin_define

@@ -20,15 +20,7 @@ comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efiprot.h
 end_comment
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Device Path protocol
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Device Path protocol  */
 end_comment
 
 begin_define
@@ -40,15 +32,7 @@ value|{ 0x9576e91, 0x6d3f, 0x11d2, 0x8e, 0x39, 0x0, 0xa0, 0xc9, 0x69, 0x72, 0x3b
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Block IO protocol
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Block IO protocol  */
 end_comment
 
 begin_define
@@ -250,15 +234,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Disk Block IO protocol
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Disk Block IO protocol  */
 end_comment
 
 begin_define
@@ -374,15 +350,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Simple filesystem protocol
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Simple filesystem protocol  */
 end_comment
 
 begin_define
@@ -457,18 +425,6 @@ name|EFI_FILE_IO_INTERFACE
 typedef|;
 end_typedef
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
 begin_typedef
 typedef|typedef
 name|EFI_STATUS
@@ -508,7 +464,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|// Open modes
+comment|/* Open modes */
 end_comment
 
 begin_define
@@ -533,7 +489,7 @@ value|0x8000000000000000
 end_define
 
 begin_comment
-comment|// File attributes
+comment|/* File attributes */
 end_comment
 
 begin_define
@@ -862,15 +818,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// File information types
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * File information types  */
 end_comment
 
 begin_define
@@ -918,31 +866,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// The FileName field of the EFI_FILE_INFO data structure is variable length.
-end_comment
-
-begin_comment
-comment|// Whenever code needs to know the size of the EFI_FILE_INFO data structure, it needs to
-end_comment
-
-begin_comment
-comment|// be the size of the data structure without the FileName field.  The following macro
-end_comment
-
-begin_comment
-comment|// computes this size correctly no matter how big the FileName array is declared.
-end_comment
-
-begin_comment
-comment|// This is required to make the EFI_FILE_INFO data structure ANSI compilant.
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * The FileName field of the EFI_FILE_INFO data structure is variable length.  * Whenever code needs to know the size of the EFI_FILE_INFO data structure,  * it needs to be the size of the data structure without the FileName field.  * The following macro computes this size correctly no matter how big the  * FileName array is declared. This is required to make the EFI_FILE_INFO  * data structure ANSI compliant.   */
 end_comment
 
 begin_define
@@ -991,31 +915,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// The VolumeLabel field of the EFI_FILE_SYSTEM_INFO data structure is variable length.
-end_comment
-
-begin_comment
-comment|// Whenever code needs to know the size of the EFI_FILE_SYSTEM_INFO data structure, it needs
-end_comment
-
-begin_comment
-comment|// to be the size of the data structure without the VolumeLable field.  The following macro
-end_comment
-
-begin_comment
-comment|// computes this size correctly no matter how big the VolumeLable array is declared.
-end_comment
-
-begin_comment
-comment|// This is required to make the EFI_FILE_SYSTEM_INFO data structure ANSI compilant.
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * The VolumeLabel field of the EFI_FILE_SYSTEM_INFO data structure is  * variable length. Whenever code needs to know the size of the  * EFI_FILE_SYSTEM_INFO data structure, it needs to be the size of the data  * structure without the VolumeLable field.  The following macro computes  * this size correctly no matter how big the VolumeLable array is declared.  * This is required to make the EFI_FILE_SYSTEM_INFO data structure ANSI  * compilant.   */
 end_comment
 
 begin_define
@@ -1056,15 +956,7 @@ value|EFI_FIELD_OFFSET(EFI_FILE_SYSTEM_VOLUME_LABEL_INFO,VolumeLabel)
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Load file protocol
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Load file protocol  */
 end_comment
 
 begin_define
@@ -1136,15 +1028,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Device IO protocol
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Device IO protocol  */
 end_comment
 
 begin_define
@@ -1175,9 +1059,7 @@ name|IO_UINT32
 block|,
 name|IO_UINT64
 block|,
-comment|//
-comment|// Specification Change: Copy from MMIO to MMIO vs. MMIO to buffer, buffer to MMIO
-comment|//
+comment|/*  * Specification Change: Copy from MMIO to MMIO vs. MMIO to buffer, buffer to  * MMIO  */
 name|MMIO_COPY_UINT8
 block|,
 name|MMIO_COPY_UINT16
@@ -1484,15 +1366,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Unicode Collation protocol
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Unicode Collation protocol  */
 end_comment
 
 begin_define
@@ -1691,7 +1565,7 @@ typedef|typedef
 struct|struct
 name|_EFI_UNICODE_COLLATION_INTERFACE
 block|{
-comment|// general
+comment|/* general */
 name|EFI_UNICODE_STRICOLL
 name|StriColl
 decl_stmt|;
@@ -1704,7 +1578,7 @@ decl_stmt|;
 name|EFI_UNICODE_STRUPR
 name|StrUpr
 decl_stmt|;
-comment|// for supporting fat volumes
+comment|/* for supporting fat volumes */
 name|EFI_UNICODE_FATTOSTR
 name|FatToStr
 decl_stmt|;

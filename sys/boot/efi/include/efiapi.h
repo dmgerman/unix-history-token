@@ -20,15 +20,7 @@ comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efiapi.h 
 end_comment
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI Specification Revision
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI Specification Revision  */
 end_comment
 
 begin_define
@@ -46,15 +38,7 @@ value|02
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Declare forward referenced data structures
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Declare forward referenced data structures  */
 end_comment
 
 begin_expr_stmt
@@ -66,15 +50,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI Memory
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI Memory  */
 end_comment
 
 begin_typedef
@@ -264,7 +240,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|// Pointer to internal runtime fnc
+comment|/* Pointer to internal runtime fnc */
 end_comment
 
 begin_define
@@ -275,7 +251,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|// Pointer to internal runtime data
+comment|/* Pointer to internal runtime data */
 end_comment
 
 begin_typedef
@@ -302,15 +278,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI Events
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI Events  */
 end_comment
 
 begin_define
@@ -546,15 +514,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Task priority level
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Task priority level  */
 end_comment
 
 begin_define
@@ -618,15 +578,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI platform varibles
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI platform varibles  */
 end_comment
 
 begin_define
@@ -638,7 +590,7 @@ value|{ 0x8BE4DF61, 0x93CA, 0x11d2, 0xAA, 0x0D, 0x00, 0xE0, 0x98, 0x03, 0x2B, 0x
 end_define
 
 begin_comment
-comment|// Variable attributes
+comment|/* Variable attributes */
 end_comment
 
 begin_define
@@ -663,7 +615,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|// Variable size limitation
+comment|/* Variable size limitation */
 end_comment
 
 begin_define
@@ -778,15 +730,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI Time
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI Time  */
 end_comment
 
 begin_typedef
@@ -796,15 +740,15 @@ block|{
 name|UINT32
 name|Resolution
 decl_stmt|;
-comment|// 1e-6 parts per million
+comment|/* 1e-6 parts per million */
 name|UINT32
 name|Accuracy
 decl_stmt|;
-comment|// hertz
+comment|/* hertz */
 name|BOOLEAN
 name|SetsToZero
 decl_stmt|;
-comment|// Set clears sub-second time
+comment|/* Set clears sub-second time */
 block|}
 name|EFI_TIME_CAPABILITIES
 typedef|;
@@ -900,19 +844,11 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|//
+comment|/*  * Image functions  */
 end_comment
 
 begin_comment
-comment|// Image functions
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// PE32+ Subsystem type for EFI images
+comment|/* PE32+ Subsystem type for EFI images */
 end_comment
 
 begin_if
@@ -952,7 +888,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// PE32+ Machine type for EFI images
+comment|/* PE32+ Machine type for EFI images */
 end_comment
 
 begin_if
@@ -1000,7 +936,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// Image Entry prototype
+comment|/* Image Entry prototype */
 end_comment
 
 begin_typedef
@@ -1140,7 +1076,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|// Image handle
+comment|/* Image handle */
 end_comment
 
 begin_define
@@ -1173,7 +1109,7 @@ name|_EFI_SYSTEM_TABLE
 modifier|*
 name|SystemTable
 decl_stmt|;
-comment|// Source location of image
+comment|/* Source location of image */
 name|EFI_HANDLE
 name|DeviceHandle
 decl_stmt|;
@@ -1185,7 +1121,7 @@ name|VOID
 modifier|*
 name|Reserved
 decl_stmt|;
-comment|// Images load options
+comment|/* Images load options */
 name|UINT32
 name|LoadOptionsSize
 decl_stmt|;
@@ -1193,7 +1129,7 @@ name|VOID
 modifier|*
 name|LoadOptions
 decl_stmt|;
-comment|// Location of where image was loaded
+comment|/* Location of where image was loaded */
 name|VOID
 modifier|*
 name|ImageBase
@@ -1207,7 +1143,7 @@ decl_stmt|;
 name|EFI_MEMORY_TYPE
 name|ImageDataType
 decl_stmt|;
-comment|// If the driver image supports a dynamic unload request
+comment|/* If the driver image supports a dynamic unload request */
 name|EFI_IMAGE_UNLOAD
 name|Unload
 decl_stmt|;
@@ -1237,15 +1173,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Misc
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Misc  */
 end_comment
 
 begin_typedef
@@ -1371,15 +1299,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Protocol handler functions
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Protocol handler functions  */
 end_comment
 
 begin_typedef
@@ -1656,15 +1576,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Standard EFI table header
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Standard EFI table header  */
 end_comment
 
 begin_typedef
@@ -1693,15 +1605,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI Runtime Serivces Table
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI Runtime Serivces Table  */
 end_comment
 
 begin_define
@@ -1725,9 +1629,7 @@ block|{
 name|EFI_TABLE_HEADER
 name|Hdr
 decl_stmt|;
-comment|//
-comment|// Time services
-comment|//
+comment|/* Time services */
 name|EFI_GET_TIME
 name|GetTime
 decl_stmt|;
@@ -1740,18 +1642,14 @@ decl_stmt|;
 name|EFI_SET_WAKEUP_TIME
 name|SetWakeupTime
 decl_stmt|;
-comment|//
-comment|// Virtual memory services
-comment|//
+comment|/* Virtual memory services */
 name|EFI_SET_VIRTUAL_ADDRESS_MAP
 name|SetVirtualAddressMap
 decl_stmt|;
 name|EFI_CONVERT_POINTER
 name|ConvertPointer
 decl_stmt|;
-comment|//
-comment|// Variable serviers
-comment|//
+comment|/* Variable serviers */
 name|EFI_GET_VARIABLE
 name|GetVariable
 decl_stmt|;
@@ -1761,9 +1659,7 @@ decl_stmt|;
 name|EFI_SET_VARIABLE
 name|SetVariable
 decl_stmt|;
-comment|//
-comment|// Misc
-comment|//
+comment|/* Misc */
 name|EFI_GET_NEXT_HIGH_MONO_COUNT
 name|GetNextHighMonotonicCount
 decl_stmt|;
@@ -1776,15 +1672,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI Boot Services Table
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI Boot Services Table  */
 end_comment
 
 begin_define
@@ -1809,18 +1697,14 @@ block|{
 name|EFI_TABLE_HEADER
 name|Hdr
 decl_stmt|;
-comment|//
-comment|// Task priority functions
-comment|//
+comment|/* Task priority functions */
 name|EFI_RAISE_TPL
 name|RaiseTPL
 decl_stmt|;
 name|EFI_RESTORE_TPL
 name|RestoreTPL
 decl_stmt|;
-comment|//
-comment|// Memory functions
-comment|//
+comment|/* Memory functions */
 name|EFI_ALLOCATE_PAGES
 name|AllocatePages
 decl_stmt|;
@@ -1836,9 +1720,7 @@ decl_stmt|;
 name|EFI_FREE_POOL
 name|FreePool
 decl_stmt|;
-comment|//
-comment|// Event& timer functions
-comment|//
+comment|/* Event& timer functions */
 name|EFI_CREATE_EVENT
 name|CreateEvent
 decl_stmt|;
@@ -1857,9 +1739,7 @@ decl_stmt|;
 name|EFI_CHECK_EVENT
 name|CheckEvent
 decl_stmt|;
-comment|//
-comment|// Protocol handler functions
-comment|//
+comment|/* Protocol handler functions */
 name|EFI_INSTALL_PROTOCOL_INTERFACE
 name|InstallProtocolInterface
 decl_stmt|;
@@ -1887,9 +1767,7 @@ decl_stmt|;
 name|EFI_INSTALL_CONFIGURATION_TABLE
 name|InstallConfigurationTable
 decl_stmt|;
-comment|//
-comment|// Image functions
-comment|//
+comment|/* Image functions */
 name|EFI_IMAGE_LOAD
 name|LoadImage
 decl_stmt|;
@@ -1905,9 +1783,7 @@ decl_stmt|;
 name|EFI_EXIT_BOOT_SERVICES
 name|ExitBootServices
 decl_stmt|;
-comment|//
-comment|// Misc functions
-comment|//
+comment|/* Misc functions */
 name|EFI_GET_NEXT_MONOTONIC_COUNT
 name|GetNextMonotonicCount
 decl_stmt|;
@@ -1923,15 +1799,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI Configuration Table and GUID definitions
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI Configuration Table and GUID definitions  */
 end_comment
 
 begin_define
@@ -1992,15 +1860,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI System Table
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI System Table  */
 end_comment
 
 begin_define

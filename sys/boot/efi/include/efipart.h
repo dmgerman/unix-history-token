@@ -19,18 +19,6 @@ begin_comment
 comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efipart.h      Abstract:        Info about disk partitions and Master Boot Records     Revision History  --*/
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -131,7 +119,7 @@ value|0x40000
 end_define
 
 begin_comment
-comment|// 128 MB
+comment|/* 128 MB */
 end_comment
 
 begin_define

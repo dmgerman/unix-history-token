@@ -16,15 +16,7 @@ name|_EFI_FPSWA_H
 end_define
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// EFI FP SWA Driver (Floating Point Software Assist)
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * EFI FP SWA Driver (Floating Point Software Assist)  */
 end_comment
 
 begin_define

@@ -8,27 +8,7 @@ comment|/*++  Copyright (c) 1998  Intel Corporation  Module Name:      efi.h  Ab
 end_comment
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Build flags on input
-end_comment
-
-begin_comment
-comment|//  EFI32
-end_comment
-
-begin_comment
-comment|//  EFI_DEBUG               - Enable debugging code
-end_comment
-
-begin_comment
-comment|//  EFI_NT_EMULATOR         - Building for running under NT
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Build flags on input  *  EFI32  *  EFI_DEBUG               - Enable debugging code  *  EFI_NT_EMULATOR         - Building for running under NT  */
 end_comment
 
 begin_ifndef

@@ -127,7 +127,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|// Initialization style messages
+comment|/* Initialization style messages */
 end_comment
 
 begin_define
@@ -138,7 +138,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|// Warnings
+comment|/* Warnings */
 end_comment
 
 begin_define
@@ -149,7 +149,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|// Load events
+comment|/* Load events */
 end_comment
 
 begin_define
@@ -160,7 +160,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|// EFI File system
+comment|/* EFI File system */
 end_comment
 
 begin_define
@@ -171,7 +171,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|// Alloc& Free's
+comment|/* Alloc& Free's */
 end_comment
 
 begin_define
@@ -182,7 +182,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|// Alloc& Free's
+comment|/* Alloc& Free's */
 end_comment
 
 begin_define
@@ -193,7 +193,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|// Verbose
+comment|/* Verbose */
 end_comment
 
 begin_define
@@ -204,7 +204,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|// Variable
+comment|/* Variable */
 end_comment
 
 begin_define
@@ -215,7 +215,7 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|// Command parsing
+comment|/* Command parsing */
 end_comment
 
 begin_define
@@ -226,7 +226,7 @@ value|0x00000400
 end_define
 
 begin_comment
-comment|// Boot manager
+comment|/* Boot manager */
 end_comment
 
 begin_define
@@ -237,7 +237,7 @@ value|0x00001000
 end_define
 
 begin_comment
-comment|// BlkIo Driver
+comment|/* BlkIo Driver */
 end_comment
 
 begin_define
@@ -248,7 +248,7 @@ value|0x00002000
 end_define
 
 begin_comment
-comment|// BlkIo Driver
+comment|/* BlkIo Driver */
 end_comment
 
 begin_define
@@ -259,7 +259,7 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|// SNI Driver
+comment|/* SNI Driver */
 end_comment
 
 begin_define
@@ -270,7 +270,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|// SNI Driver
+comment|/* SNI Driver */
 end_comment
 
 begin_define
@@ -281,7 +281,7 @@ value|0x00010000
 end_define
 
 begin_comment
-comment|// Simple Input Driver
+comment|/* Simple Input Driver */
 end_comment
 
 begin_define
@@ -292,7 +292,7 @@ value|0x00020000
 end_define
 
 begin_comment
-comment|// Simple Text Output Driver
+comment|/* Simple Text Output Driver */
 end_comment
 
 begin_define
@@ -303,7 +303,7 @@ value|0x00040000
 end_define
 
 begin_comment
-comment|// ATA error messages
+comment|/* ATA error messages */
 end_comment
 
 begin_define
@@ -314,7 +314,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|// Error
+comment|/* Error */
 end_comment
 
 begin_define
@@ -325,23 +325,11 @@ value|0x7fffC880
 end_define
 
 begin_comment
-comment|// Bits not reserved above
+comment|/* Bits not reserved above */
 end_comment
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Current Debug level of the system, value of EFIDebug
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//#define EFI_DBUG_MASK   (D_ERROR | D_WARN | D_LOAD | D_BLKIO | D_INIT)
+comment|/*  * Current Debug level of the system, value of EFIDebug  */
 end_comment
 
 begin_define
@@ -350,18 +338,6 @@ directive|define
 name|EFI_DBUG_MASK
 value|(D_ERROR)
 end_define
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//
-end_comment
 
 begin_if
 if|#
@@ -441,15 +417,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Prototypes
-end_comment
-
-begin_comment
-comment|//
+comment|/*  * Prototypes  */
 end_comment
 
 begin_function_decl

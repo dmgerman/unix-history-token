@@ -50,45 +50,30 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+comment|/* Revision of the network interface identifier protocol interface. */
 name|UINT64
 name|Revision
 decl_stmt|;
-comment|// Revision of the network interface identifier protocol interface.
+comment|/* 	 * Address of the first byte of the identifying structure for this 	 * network interface.  This is set to zero if there is no structure. 	 * For PXE/UNDI this is the first byte of the !PXE structure. 	 */
 name|UINT64
 name|ID
 decl_stmt|;
-comment|// Address of the first byte of the identifying structure for this
-comment|// network interface.  This is set to zero if there is no structure.
-comment|//
-comment|// For PXE/UNDI this is the first byte of the !PXE structure.
+comment|/* 	 * Address of the UNrelocated driver/ROM image.  This is set 	 * to zero if there is no driver/ROM image. 	 * For 16-bit UNDI, this is the first byte of the option ROM in 	 * upper memory. 	 * For 32/64-bit S/W UNDI, this is the first byte of the EFI ROM 	 * image. 	 * For H/W UNDI, this is set to zero. 	 */
 name|UINT64
 name|ImageAddr
 decl_stmt|;
-comment|// Address of the UNrelocated driver/ROM image.  This is set
-comment|// to zero if there is no driver/ROM image.
-comment|//
-comment|// For 16-bit UNDI, this is the first byte of the option ROM in
-comment|// upper memory.
-comment|//
-comment|// For 32/64-bit S/W UNDI, this is the first byte of the EFI ROM
-comment|// image.
-comment|//
-comment|// For H/W UNDI, this is set to zero.
+comment|/* 	 * Size of the UNrelocated driver/ROM image of this network interface. 	 * This is set to zero if there is no driver/ROM image. 	 */
 name|UINT32
 name|ImageSize
 decl_stmt|;
-comment|// Size of the UNrelocated driver/ROM image of this network interface.
-comment|// This is set to zero if there is no driver/ROM image.
+comment|/* 	 * 4 char ASCII string to go in class identifier (option 60) in DHCP 	 * and Boot Server discover packets. 	 * For EfiNetworkInterfaceUndi this field is "UNDI". 	 * For EfiNetworkInterfaceSnp this field is "SNPN". 	 */
 name|CHAR8
 name|StringId
 index|[
 literal|4
 index|]
 decl_stmt|;
-comment|// 4 char ASCII string to go in class identifier (option 60) in DHCP
-comment|// and Boot Server discover packets.
-comment|// For EfiNetworkInterfaceUndi this field is "UNDI".
-comment|// For EfiNetworkInterfaceSnp this field is "SNPN".
+comment|/* 	 * Information to be placed into the PXE DHCP and Discover packets. 	 * This is the network interface type and version number that will 	 * be placed into DHCP option 94 (client network interface identifier). 	 */
 name|UINT8
 name|Type
 decl_stmt|;
@@ -98,16 +83,13 @@ decl_stmt|;
 name|UINT8
 name|MinorVer
 decl_stmt|;
-comment|// Information to be placed into the PXE DHCP and Discover packets.
-comment|// This is the network interface type and version number that will
-comment|// be placed into DHCP option 94 (client network interface identifier).
 name|BOOLEAN
 name|Ipv6Supported
 decl_stmt|;
 name|UINT8
 name|IfNum
 decl_stmt|;
-comment|// interface number to be used with pxeid structure
+comment|/* interface number to be used with pxeid structure */
 block|}
 name|EFI_NETWORK_INTERFACE_IDENTIFIER_INTERFACE
 typedef|;
@@ -126,7 +108,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _EFI_NII_H
+comment|/* _EFI_NII_H */
 end_comment
 
 end_unit
