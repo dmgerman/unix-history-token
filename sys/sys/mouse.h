@@ -996,7 +996,7 @@ comment|/* middle button, the 4th byte */
 end_comment
 
 begin_comment
-comment|/* ALPS GlidePoint extention (variant of M+ protocol) */
+comment|/* ALPS GlidePoint extension (variant of M+ protocol) */
 end_comment
 
 begin_define
@@ -1022,7 +1022,7 @@ comment|/* `tapping' action, the 4th byte */
 end_comment
 
 begin_comment
-comment|/* Kinsington Thinking Mouse extention (variant of M+ protocol) */
+comment|/* Kinsington Thinking Mouse extension (variant of M+ protocol) */
 end_comment
 
 begin_define
