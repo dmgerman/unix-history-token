@@ -804,6 +804,10 @@ condition|(
 name|id
 operator|==
 name|IDA_DEVICEID_DEC_SMART
+operator|||
+name|id
+operator|==
+name|IDA_DEVICEID_NCR_53C1510
 condition|)
 name|board
 operator|=
