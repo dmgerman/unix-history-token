@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.234 1997/03/31 11:10:37 davidg Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.235 1997/04/07 06:45:13 peter Exp $  */
 end_comment
 
 begin_include
@@ -3399,6 +3399,20 @@ name|user
 modifier|*
 name|proc0paddr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TSS_IS_CACHED
+comment|/* cpu_switch helper */
+name|struct
+name|segment_descriptor
+modifier|*
+name|tssptr
+decl_stmt|;
+name|int
+name|gsel_tss
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* software prototypes -- in more palatable form */
 name|struct
 name|soft_segment_descriptor
@@ -3600,7 +3614,7 @@ operator|)
 operator|&
 name|common_tss
 block|,
-comment|/* segment base address  */
+comment|/* segment base address */
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -4224,9 +4238,14 @@ name|gate_descriptor
 modifier|*
 name|gdp
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|TSS_IS_CACHED
 name|int
 name|gsel_tss
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|isa_device
 modifier|*
@@ -5763,7 +5782,7 @@ name|msgbufmapped
 operator|=
 literal|1
 expr_stmt|;
-comment|/* make a initial tss so microp can get interrupt stack on syscall! */
+comment|/* make an initial tss so cpu can get interrupt stack on syscall! */
 name|common_tss
 operator|.
 name|tss_esp0
@@ -5771,7 +5790,9 @@ operator|=
 operator|(
 name|int
 operator|)
-name|kstack
+name|proc0
+operator|.
+name|p_addr
 operator|+
 name|UPAGES
 operator|*
@@ -5930,6 +5951,22 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TSS_IS_CACHED
+comment|/* cpu_switch helper */
+name|tssptr
+operator|=
+operator|&
+name|gdt
+index|[
+name|GPROC0_SEL
+index|]
+operator|.
+name|sd
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* make a call gate to reenter kernel with */
 name|gdp
 operator|=
@@ -6070,7 +6107,7 @@ name|TF_REGP
 parameter_list|(
 name|p
 parameter_list|)
-value|((struct trapframe *) \ 			 ((char *)(p)->p_addr \ 			  + ((char *)(p)->p_md.md_regs - kstack)))
+value|((struct trapframe *)(p)->p_md.md_regs)
 name|int
 name|ptrace_set_pc
 parameter_list|(
@@ -6175,7 +6212,13 @@ name|p_md
 operator|.
 name|md_regs
 operator|-
-name|kstack
+operator|(
+name|char
+operator|*
+operator|)
+name|p
+operator|->
+name|p_addr
 expr_stmt|;
 if|if
 condition|(

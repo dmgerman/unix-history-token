@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)init_main.c	8.9 (Berkeley) 1/21/94  * $Id: init_main.c,v 1.58 1997/03/01 17:49:09 wosch Exp $  */
+comment|/*  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)init_main.c	8.9 (Berkeley) 1/21/94  * $Id: init_main.c,v 1.59 1997/03/22 06:52:55 bde Exp $  */
 end_comment
 
 begin_include
@@ -439,7 +439,7 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* SI_TYPE_KTHREAD support*/
-comment|/* 	 * Save the locore.s frame pointer for start_init(). 	 */
+comment|/* 	 * Copy the locore.s frame pointer for proc0, this is forked into 	 * all other processes. 	 */
 name|init_framep
 operator|=
 name|framep
@@ -638,37 +638,31 @@ argument_list|(
 literal|"fork kernel process"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|cpu_set_fork_handler
+argument_list|(
+name|pfind
+argument_list|(
 name|rval
 index|[
-literal|1
+literal|0
 index|]
-condition|)
-block|{
-operator|(
-operator|*
-operator|(
+argument_list|)
+argument_list|,
 operator|(
 operator|*
 name|sipp
 operator|)
 operator|->
 name|func
-operator|)
-operator|)
-operator|(
+argument_list|,
 operator|(
 operator|*
 name|sipp
 operator|)
 operator|->
 name|udata
-operator|)
+argument_list|)
 expr_stmt|;
-comment|/* 				 * The call to start "init" returns 				 * here after the scheduler has been 				 * started, and returns to the caller 				 * in i386/i386/locore.s.  This is a 				 * necessary part of initialization 				 * and is rather non-obvious. 				 * 				 * No other "kernel threads" should 				 * return here.  Call panic() instead. 				 */
-return|return;
-block|}
 break|break;
 default|default:
 name|panic
@@ -1366,7 +1360,7 @@ name|INCOMPAT_LITES2
 ifdef|#
 directive|ifdef
 name|INCOMPAT_LITES2
-comment|/* 	 * proc0 needs to have a coherent frame base, too. 	 * This probably makes the identical call for the init proc 	 * that happens later unnecessary since it should inherit 	 * it during the fork. 	 */
+comment|/* 	 * proc0 needs to have a coherent frame base in it's stack. 	 */
 name|cpu_set_init_frame
 argument_list|(
 name|p
@@ -1821,6 +1815,19 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|extern
+name|void
+name|prepare_usermode
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|start_init
@@ -1831,10 +1838,6 @@ expr|struct
 name|proc
 operator|*
 name|p
-operator|,
-name|void
-operator|*
-name|framep
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1860,11 +1863,12 @@ comment|/* Create process 1 (init(8)). */
 name|start_init
 argument_list|(
 name|curproc
-argument_list|,
-name|init_framep
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This is the only kernel thread allowed to return yo the 	 * caller!!! 	 */
+name|prepare_usermode
+argument_list|()
+expr_stmt|;
+comment|/* 	 * This returns to the fork trampoline, then to user mode. 	 */
 return|return;
 block|}
 end_function
@@ -1904,17 +1908,11 @@ name|void
 name|start_init
 parameter_list|(
 name|p
-parameter_list|,
-name|framep
 parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
-name|void
-modifier|*
-name|framep
 decl_stmt|;
 block|{
 name|vm_offset_t
@@ -1960,14 +1958,6 @@ decl_stmt|;
 name|initproc
 operator|=
 name|p
-expr_stmt|;
-comment|/* 	 * We need to set the system call frame as if we were entered through 	 * a syscall() so that when we call execve() below, it will be able 	 * to set the entry point (see setregs) when it tries to exec.  The 	 * startup code in "locore.s" has allocated space for the frame and 	 * passed a pointer to that space as main's argument. 	 */
-name|cpu_set_init_frame
-argument_list|(
-name|p
-argument_list|,
-name|framep
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Need just enough stack to hold the faked-up "execve()" arguments. 	 */
 name|addr

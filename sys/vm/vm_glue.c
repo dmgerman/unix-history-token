@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_glue.c	8.6 (Berkeley) 1/5/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id$  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_glue.c	8.6 (Berkeley) 1/5/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_glue.c,v 1.61 1997/02/22 09:48:17 peter Exp $  */
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dkstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
 end_include
 
 begin_include
@@ -560,16 +566,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement fork's actions on an address space.  * Here we arrange for the address space to be copied or referenced,  * allocate a user struct (pcb and kernel stack), then call the  * machine-dependent layer to fill those in and make the new process  * ready to run.  * NOTE: the kernel stack may be at a different location in the child  * process, and thus addresses of automatic variables may be invalid  * after cpu_fork returns in the child process.  We do nothing here  * after cpu_fork returns.  */
+comment|/*  * Implement fork's actions on an address space.  * Here we arrange for the address space to be copied or referenced,  * allocate a user struct (pcb and kernel stack), then call the  * machine-dependent layer to fill those in and make the new process  * ready to run.  The new process is set up so that it returns directly  * to user mode to avoid stack copying and relocation problems.  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|vm_fork
 parameter_list|(
 name|p1
 parameter_list|,
 name|p2
+parameter_list|,
+name|flags
 parameter_list|)
 specifier|register
 name|struct
@@ -581,6 +589,12 @@ decl|*
 name|p2
 decl_stmt|;
 end_function
+
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -619,6 +633,31 @@ block|{
 name|VM_WAIT
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|RFMEM
+condition|)
+block|{
+name|p2
+operator|->
+name|p_vmspace
+operator|=
+name|p1
+operator|->
+name|p_vmspace
+expr_stmt|;
+name|p1
+operator|->
+name|p_vmspace
+operator|->
+name|vm_refcnt
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
 name|p2
 operator|->
 name|p_vmspace
@@ -645,6 +684,7 @@ argument_list|,
 name|p2
 argument_list|)
 expr_stmt|;
+block|}
 name|pmap_new_proc
 argument_list|(
 name|p2
@@ -758,17 +798,14 @@ name|pstat_startcopy
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * cpu_fork will copy and update the kernel stack and pcb, and make 	 * the child ready to run.  It marks the child so that it can return 	 * differently than the parent. It returns twice, once in the parent 	 * process and once in the child. 	 */
-return|return
-operator|(
+comment|/* 	 * cpu_fork will copy and update the pcb, set up the kernel stack, 	 * and make the child ready to run. 	 */
 name|cpu_fork
 argument_list|(
 name|p1
 argument_list|,
 name|p2
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_block
 
