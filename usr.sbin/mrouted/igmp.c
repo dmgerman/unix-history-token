@@ -490,10 +490,6 @@ name|recvlen
 decl_stmt|;
 block|{
 specifier|register
-name|vifi_t
-name|vifi
-decl_stmt|;
-specifier|register
 name|u_long
 name|src
 decl_stmt|,
@@ -581,11 +577,11 @@ if|if
 condition|(
 name|src
 operator|==
-name|NULL
+literal|0
 operator|||
 name|dst
 operator|==
-name|NULL
+literal|0
 condition|)
 name|log
 argument_list|(
@@ -1314,13 +1310,20 @@ name|LOG_WARNING
 argument_list|,
 name|errno
 argument_list|,
-literal|"sendto on %s"
+literal|"sendto to %s on %s"
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|dst
+argument_list|,
+name|s1
+argument_list|)
 argument_list|,
 name|inet_fmt
 argument_list|(
 name|src
 argument_list|,
-name|s1
+name|s2
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id: mrinfo.c,v 1.7 1994/08/24 23:54:04 thyagara Exp $"
+literal|"@(#) $Id: mrinfo.c,v 1.2 1994/09/08 02:51:20 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1099,6 +1099,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -1698,6 +1699,16 @@ operator|*
 operator|)
 name|recv_buf
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_p
+operator|==
+literal|0
+condition|)
+continue|continue;
+comment|/* Request to install cache entry */
 name|src
 operator|=
 name|ip
@@ -1854,6 +1865,61 @@ operator|!=
 name|IGMP_DVMRP
 condition|)
 continue|continue;
+switch|switch
+condition|(
+name|igmp
+operator|->
+name|igmp_code
+condition|)
+block|{
+case|case
+name|DVMRP_NEIGHBORS
+case|:
+case|case
+name|DVMRP_NEIGHBORS2
+case|:
+if|if
+condition|(
+name|src
+operator|!=
+name|target_addr
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"mrinfo: got reply from %s"
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|src
+argument_list|,
+name|s1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" instead of %s\n"
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|target_addr
+argument_list|,
+name|s1
+argument_list|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+break|break;
+default|default:
+continue|continue;
+comment|/* ignore all other DVMRP messages */
+block|}
 switch|switch
 condition|(
 name|igmp

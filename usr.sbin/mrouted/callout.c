@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: callout.c,v 1.1 1994/08/24 23:52:49 thyagara Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: callout.c,v 1.2 1994/09/08 02:51:11 wollman Exp $  */
 end_comment
 
 begin_include
@@ -87,12 +87,18 @@ block|}
 struct|;
 end_struct
 
-begin_macro
-name|callout_init
-argument_list|()
-end_macro
+begin_function_decl
+specifier|static
+name|void
+name|print_Q
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_block
+begin_function
+name|void
+name|callout_init
+parameter_list|()
 block|{
 name|Q
 operator|=
@@ -104,18 +110,16 @@ operator|)
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * signal handler for SIGALARM that is called once every second  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|age_callout_queue
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|timeout_q
@@ -219,7 +223,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*   * sets the timer  */
@@ -264,7 +268,10 @@ if|if
 condition|(
 name|in_callout
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 name|in_callout
 operator|=
 literal|1
@@ -630,21 +637,20 @@ begin_comment
 comment|/*  * debugging utility  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|print_Q
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|IGMP_DEBUG
 name|struct
 name|timeout_q
 modifier|*
 name|ptr
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IGMP_DEBUG
 for|for
 control|(
 name|ptr
@@ -680,7 +686,7 @@ endif|#
 directive|endif
 endif|IGMP_DEBUG
 block|}
-end_block
+end_function
 
 end_unit
 

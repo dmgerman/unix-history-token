@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.c,v 1.2 1994/09/08 02:51:23 wollman Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.c,v 1.3 1995/03/16 16:25:55 wollman Exp $  */
 end_comment
 
 begin_include
@@ -8,6 +8,17 @@ include|#
 directive|include
 file|"defs.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|JAN_1970
+value|2208988800
+end_define
+
+begin_comment
+comment|/* 1970 - 1900 in seconds */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -242,7 +253,7 @@ index|[
 name|vifi
 index|]
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -736,12 +747,22 @@ operator|->
 name|kt_scope
 argument_list|)
 condition|)
+block|{
 name|kt
 operator|->
 name|kt_grpmems
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
+name|kt
+operator|->
+name|kt_scope
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* make sure we don't forward */
+block|}
 else|else
 name|kt
 operator|->
@@ -781,15 +802,25 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"add entry s:%x g:%x gm:%x"
+literal|"add entry (%s %s) vif-list:%x"
 argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_origin
 argument_list|,
+name|s1
+argument_list|)
+argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_mcastgrp
+argument_list|,
+name|s2
+argument_list|)
 argument_list|,
 name|kt
 operator|->
@@ -1166,10 +1197,6 @@ name|del_flag
 decl_stmt|;
 block|{
 name|struct
-name|mfcctl
-name|mc
-decl_stmt|;
-name|struct
 name|ktable
 modifier|*
 name|kt
@@ -1235,13 +1262,16 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"delete all rtes %x grp %x"
+literal|"delete all rtes %s"
 argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_origin
 argument_list|,
-name|mcastgrp
+name|s1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|k_del_rg
@@ -1374,13 +1404,23 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"delete src %x grp %x"
+literal|"delete (%s, %s)"
 argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_origin
 argument_list|,
+name|s1
+argument_list|)
+argument_list|,
+name|inet_fmt
+argument_list|(
 name|mcastgrp
+argument_list|,
+name|s2
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|k_del_rg
@@ -1526,7 +1566,8 @@ operator|->
 name|rt_leaves
 condition|)
 name|changed
-operator|++
+operator||=
+literal|0x1
 expr_stmt|;
 if|if
 condition|(
@@ -1539,7 +1580,8 @@ operator|->
 name|rt_children
 condition|)
 name|changed
-operator|++
+operator||=
+literal|0x2
 expr_stmt|;
 if|if
 condition|(
@@ -1552,7 +1594,8 @@ operator|->
 name|rt_parent
 condition|)
 name|changed
-operator|++
+operator||=
+literal|0x4
 expr_stmt|;
 if|if
 condition|(
@@ -1566,7 +1609,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"update entry: s %-15s g %-15s"
+literal|"updating entry: (%s %s) code:%x"
 argument_list|,
 name|inet_fmt
 argument_list|(
@@ -1585,6 +1628,8 @@ name|kt_mcastgrp
 argument_list|,
 name|s2
 argument_list|)
+argument_list|,
+name|changed
 argument_list|)
 expr_stmt|;
 comment|/* free prun list entries */
@@ -1759,12 +1804,21 @@ operator|->
 name|kt_scope
 argument_list|)
 condition|)
+block|{
 name|kt
 operator|->
 name|kt_grpmems
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
+name|kt
+operator|->
+name|kt_scope
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 else|else
 name|kt
 operator|->
@@ -1876,9 +1930,14 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"group %x joined at vif %d"
+literal|"group %s joined at vif %d"
 argument_list|,
+name|inet_fmt
+argument_list|(
 name|mcastgrp
+argument_list|,
+name|s1
+argument_list|)
 argument_list|,
 name|vifi
 argument_list|)
@@ -1939,7 +1998,7 @@ name|kt
 operator|->
 name|kt_grpmems
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 name|prun_add_ttls
@@ -1986,9 +2045,14 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"group %x left at vif %d"
+literal|"group %s left at vif %d"
 argument_list|,
+name|inet_fmt
+argument_list|(
 name|mcastgrp
+argument_list|,
+name|s1
+argument_list|)
 argument_list|,
 name|vifi
 argument_list|)
@@ -2016,6 +2080,58 @@ operator|==
 name|mcastgrp
 condition|)
 block|{
+name|struct
+name|listaddr
+modifier|*
+name|vr
+decl_stmt|;
+name|int
+name|stop_sending
+init|=
+literal|1
+decl_stmt|;
+for|for
+control|(
+name|vr
+operator|=
+name|uvifs
+index|[
+name|vifi
+index|]
+operator|.
+name|uv_neighbors
+init|;
+name|vr
+condition|;
+name|vr
+operator|=
+name|vr
+operator|->
+name|al_next
+control|)
+if|if
+condition|(
+name|no_entry_exists
+argument_list|(
+name|vr
+operator|->
+name|al_addr
+argument_list|,
+name|kt
+argument_list|)
+condition|)
+block|{
+name|stop_sending
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|stop_sending
+condition|)
+block|{
 name|VIFM_CLR
 argument_list|(
 name|vifi
@@ -2035,7 +2151,7 @@ argument_list|(
 name|kt
 argument_list|)
 expr_stmt|;
-comment|/* 	     * If there are no more members of this particular group, 	     *  send prune upstream 	     */
+comment|/* 		 * If there are no more members of this particular group, 		 *  send prune upstream 		 */
 if|if
 condition|(
 name|kt
@@ -2053,6 +2169,7 @@ argument_list|(
 name|kt
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -2472,11 +2589,6 @@ modifier|*
 name|pr_recv
 decl_stmt|;
 name|struct
-name|prunlst
-modifier|*
-name|krl
-decl_stmt|;
-name|struct
 name|listaddr
 modifier|*
 name|vr
@@ -2523,14 +2635,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Check if enough data is present */
 if|if
 condition|(
 name|datalen
 operator|<
-literal|0
-operator|||
-name|datalen
-operator|>
 literal|12
 condition|)
 block|{
@@ -2540,7 +2649,7 @@ name|LOG_WARNING
 argument_list|,
 literal|0
 argument_list|,
-literal|"received non-decipherable prune report from %s"
+literal|"non-decipherable prune from %s"
 argument_list|,
 name|inet_fmt
 argument_list|(
@@ -3331,7 +3440,7 @@ name|kt
 operator|->
 name|kt_grpmems
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 comment|/* set the flag for graft retransmission */
@@ -3453,7 +3562,7 @@ name|LOG_INFO
 argument_list|,
 literal|0
 argument_list|,
-literal|"ignoring graft report from non-neighbor %s"
+literal|"ignoring graft from non-neighbor %s"
 argument_list|,
 name|inet_fmt
 argument_list|(
@@ -3469,10 +3578,6 @@ if|if
 condition|(
 name|datalen
 operator|<
-literal|0
-operator|||
-name|datalen
-operator|>
 literal|8
 condition|)
 block|{
@@ -3482,7 +3587,7 @@ name|LOG_WARNING
 argument_list|,
 literal|0
 argument_list|,
-literal|"received non-decipherable graft report from %s"
+literal|"received non-decipherable graft from %s"
 argument_list|,
 name|inet_fmt
 argument_list|(
@@ -3946,17 +4051,32 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"send graft ack for src:%x, grp:%x to %x"
+literal|"sent graft ack (%s, %s) to %s"
 argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_origin
 argument_list|,
+name|s1
+argument_list|)
+argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_mcastgrp
 argument_list|,
+name|s2
+argument_list|)
+argument_list|,
+name|inet_fmt
+argument_list|(
 name|dst
+argument_list|,
+name|s3
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4127,19 +4247,34 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"send graft for src:%x, grp:%x up to %x"
+literal|"sent graft (%s, %s) to %s"
 argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_origin
 argument_list|,
+name|s1
+argument_list|)
+argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_mcastgrp
 argument_list|,
+name|s2
+argument_list|)
+argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_gateway
+argument_list|,
+name|s3
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4230,10 +4365,6 @@ if|if
 condition|(
 name|datalen
 operator|<
-literal|0
-operator|||
-name|datalen
-operator|>
 literal|8
 condition|)
 block|{
@@ -4559,19 +4690,6 @@ name|kt_timer
 operator|-=
 name|ROUTE_MAX_REPORT_DELAY
 expr_stmt|;
-comment|/* decrement prune timer if need be */
-if|if
-condition|(
-name|kt
-operator|->
-name|kt_prsent_timer
-condition|)
-name|kt
-operator|->
-name|kt_prsent_timer
-operator|-=
-name|ROUTE_MAX_REPORT_DELAY
-expr_stmt|;
 comment|/* retransmit graft if graft sent flag is still set */
 if|if
 condition|(
@@ -4604,7 +4722,7 @@ name|kt
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* delete the entry only if there are no subordinate  	   routers 	    	   Now, if there are subordinate routers, then, what we  	   have to do is to decrement each and every router's  	   time entry too and decide if we want to forward on 	   that link basically 	   */
+comment|/* delete the entry only if there are no subordinate  	   routers 	    	   Now, if there are subordinate routers, then, what we  	   have to do is to decrement each and every router's prune 	   time entry too and decide if we want to forward on 	   that link basically 	   */
 for|for
 control|(
 name|prev_krl
@@ -4638,6 +4756,7 @@ operator|->
 name|rl_next
 control|)
 block|{
+comment|/* decrement prune timer received from downstream routers */
 if|if
 condition|(
 operator|(
@@ -4657,21 +4776,39 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"forw again s %x g %x on vif %d"
+literal|"forw again (%s, %s) on vif %d"
 argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_origin
 argument_list|,
+name|s1
+argument_list|)
+argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_mcastgrp
+argument_list|,
+name|s2
+argument_list|)
 argument_list|,
 name|krl
 operator|->
 name|rl_vifi
 argument_list|)
 expr_stmt|;
+comment|/*  		 * forwarding now, so entry is not pruned anymore 		 * reset the cache timer to a largish value also 		 */
+name|kt
+operator|->
+name|kt_prsent_timer
+operator|=
+literal|0
+expr_stmt|;
+comment|/* modify the kernel entry to forward packets */
 if|if
 condition|(
 operator|!
@@ -4709,6 +4846,7 @@ name|kt
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* remove the router's prune entry and await new one */
 name|kt
 operator|->
 name|kt_prun_count
@@ -4779,15 +4917,25 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"age route s %x g %x"
+literal|"aging entry (%s, %s)"
 argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_origin
 argument_list|,
+name|s1
+argument_list|)
+argument_list|,
+name|inet_fmt
+argument_list|(
 name|kt
 operator|->
 name|kt_mcastgrp
+argument_list|,
+name|s2
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|k_del_rg
@@ -5719,8 +5867,8 @@ operator|(
 name|tp
 operator|.
 name|tv_sec
-operator|&
-literal|0xffff
+operator|+
+name|JAN_1970
 operator|)
 operator|<<
 literal|16
@@ -5731,11 +5879,11 @@ operator|(
 name|tp
 operator|.
 name|tv_usec
-operator|>>
-literal|4
+operator|<<
+literal|10
 operator|)
-operator|&
-literal|0xffff
+operator|/
+literal|15625
 operator|)
 expr_stmt|;
 name|resp
@@ -5936,7 +6084,7 @@ name|resp
 operator|->
 name|tr_inaddr
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|resp
 operator|->
@@ -5948,7 +6096,7 @@ name|resp
 operator|->
 name|tr_rmtaddr
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -6090,6 +6238,12 @@ operator|)
 operator|||
 operator|(
 name|rt
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|rt
 operator|->
 name|rt_metric
 operator|==
@@ -6129,7 +6283,7 @@ argument_list|)
 expr_stmt|;
 name|send_igmp
 argument_list|(
-name|src
+name|INADDR_ANY
 argument_list|,
 name|dst
 argument_list|,
