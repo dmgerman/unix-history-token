@@ -1658,6 +1658,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|dumping
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* system is dumping */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

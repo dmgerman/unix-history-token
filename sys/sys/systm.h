@@ -81,17 +81,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|dumping
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* system is dumping */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|char
 name|version
 index|[]
