@@ -2138,6 +2138,15 @@ argument_list|(
 literal|"/tmp"
 argument_list|)
 expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"dhclient -r %s"
+argument_list|,
+name|devp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Scanning for DHCP servers..."
