@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** server.c			YP server routines. ** ** Copyright (c) 1993 Signum Support AB, Sweden ** ** This file is part of the NYS YP Server. ** ** The NYS YP Server is free software; you can redistribute it and/or ** modify it under the terms of the GNU General Public License as ** published by the Free Software Foundation; either version 2 of the ** License, or (at your option) any later version. ** ** The NYS YP Server is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU ** General Public License for more details. ** ** You should have received a copy of the GNU General Public ** License along with the NYS YP Server; see the file COPYING.  If ** not, write to the Free Software Foundation, Inc., 675 Mass Ave, ** Cambridge, MA 02139, USA. ** ** Author: Peter Eriksson<pen@signum.se> ** Ported to FreeBSD and hacked all to pieces ** by Bill Paul<wpaul@ctr.columbia.edu> ** **	$Id: server.c,v 1.6.4.2 1995/10/05 20:02:57 davidg Exp $ ** */
+comment|/* ** server.c			YP server routines. ** ** Copyright (c) 1993 Signum Support AB, Sweden ** ** This file is part of the NYS YP Server. ** ** The NYS YP Server is free software; you can redistribute it and/or ** modify it under the terms of the GNU General Public License as ** published by the Free Software Foundation; either version 2 of the ** License, or (at your option) any later version. ** ** The NYS YP Server is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU ** General Public License for more details. ** ** You should have received a copy of the GNU General Public ** License along with the NYS YP Server; see the file COPYING.  If ** not, write to the Free Software Foundation, Inc., 675 Mass Ave, ** Cambridge, MA 02139, USA. ** ** Author: Peter Eriksson<pen@signum.se> ** Ported to FreeBSD and hacked all to pieces ** by Bill Paul<wpaul@ctr.columbia.edu> ** **	$Id: server.c,v 1.6.4.3 1997/04/10 14:34:28 wpaul Exp $ ** */
 end_comment
 
 begin_include
@@ -2188,6 +2188,12 @@ name|cp
 init|=
 name|NULL
 decl_stmt|;
+name|char
+name|nbuf
+index|[
+name|YPMAXRECORD
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|children
@@ -2209,11 +2215,24 @@ else|else
 name|forked
 operator|++
 expr_stmt|;
+name|bcopy
+argument_list|(
 name|key
 operator|->
 name|key
 operator|.
 name|keydat_val
+argument_list|,
+name|nbuf
+argument_list|,
+name|key
+operator|->
+name|key
+operator|.
+name|keydat_len
+argument_list|)
+expr_stmt|;
+name|nbuf
 index|[
 name|key
 operator|->
@@ -2232,11 +2251,7 @@ name|Perror
 argument_list|(
 literal|"Doing DNS lookup of %s\n"
 argument_list|,
-name|key
-operator|->
-name|key
-operator|.
-name|keydat_val
+name|nbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -2256,11 +2271,7 @@ name|cp
 operator|=
 name|dnsname
 argument_list|(
-name|key
-operator|->
-name|key
-operator|.
-name|keydat_val
+name|nbuf
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2281,11 +2292,7 @@ name|cp
 operator|=
 name|dnsaddr
 argument_list|(
-name|key
-operator|->
-name|key
-operator|.
-name|keydat_val
+name|nbuf
 argument_list|)
 expr_stmt|;
 if|if
