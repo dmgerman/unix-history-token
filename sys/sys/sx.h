@@ -24,8 +24,22 @@ end_ifndef
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_include
 include|#
@@ -33,21 +47,30 @@ directive|include
 file|<sys/condvar.h>
 end_include
 
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|lock_object
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|sx
 block|{
 name|struct
+name|lock_object
+name|sx_object
+decl_stmt|;
+comment|/* Common lock properties. */
+name|struct
 name|mtx
 name|sx_lock
 decl_stmt|;
 comment|/* General protection lock. */
-specifier|const
-name|char
-modifier|*
-name|sx_descr
-decl_stmt|;
-comment|/* sx lock description. */
 name|int
 name|sx_cnt
 decl_stmt|;
@@ -117,51 +140,123 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|_sx_slock
+parameter_list|(
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_sx_xlock
+parameter_list|(
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_sx_sunlock
+parameter_list|(
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_sx_xunlock
+parameter_list|(
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
 name|sx_slock
 parameter_list|(
-name|struct
-name|sx
-modifier|*
 name|sx
 parameter_list|)
-function_decl|;
-end_function_decl
+value|_sx_slock((sx), __FILE__, __LINE__)
+end_define
 
-begin_function_decl
-name|void
+begin_define
+define|#
+directive|define
 name|sx_xlock
 parameter_list|(
-name|struct
-name|sx
-modifier|*
 name|sx
 parameter_list|)
-function_decl|;
-end_function_decl
+value|_sx_xlock((sx), __FILE__, __LINE__)
+end_define
 
-begin_function_decl
-name|void
+begin_define
+define|#
+directive|define
 name|sx_sunlock
 parameter_list|(
-name|struct
-name|sx
-modifier|*
 name|sx
 parameter_list|)
-function_decl|;
-end_function_decl
+value|_sx_sunlock((sx), __FILE__, __LINE__)
+end_define
 
-begin_function_decl
-name|void
+begin_define
+define|#
+directive|define
 name|sx_xunlock
 parameter_list|(
-name|struct
-name|sx
-modifier|*
 name|sx
 parameter_list|)
-function_decl|;
-end_function_decl
+value|_sx_xunlock((sx), __FILE__, __LINE__)
+end_define
 
 begin_ifdef
 ifdef|#
@@ -190,7 +285,7 @@ name|_SX_ASSERT_SLOCKED
 parameter_list|(
 name|sx
 parameter_list|)
-value|do {					\ 	KASSERT(((sx)->sx_cnt> 0), ("%s: lacking slock %s\n",		\ 	    __FUNCTION__, (sx)->sx_descr));				\ } while (0)
+value|do {					\ 	KASSERT(((sx)->sx_cnt> 0), ("%s: lacking slock %s\n",		\ 	    __FUNCTION__, (sx)->sx_object.lo_name));			\ } while (0)
 end_define
 
 begin_comment
@@ -214,7 +309,7 @@ name|_SX_ASSERT_XLOCKED
 parameter_list|(
 name|sx
 parameter_list|)
-value|do {					\ 	KASSERT(((sx)->sx_xholder == curproc),				\ 	    ("%s: thread %p lacking xlock %s\n", __FUNCTION__,		\ 	    curproc, (sx)->sx_descr));					\ } while (0)
+value|do {					\ 	KASSERT(((sx)->sx_xholder == curproc),				\ 	    ("%s: thread %p lacking xlock %s\n", __FUNCTION__,		\ 	    curproc, (sx)->sx_object.lo_name));				\ } while (0)
 end_define
 
 begin_else

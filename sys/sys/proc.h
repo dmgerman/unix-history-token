@@ -650,14 +650,12 @@ name|klist
 name|p_klist
 decl_stmt|;
 comment|/* (c) Knotes attached to this process. */
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|mtx
-argument_list|)
-name|p_heldmtx
-expr_stmt|;
-comment|/* (j) For debugging code. */
+name|struct
+name|lock_list_entry
+modifier|*
+name|p_sleeplocks
+decl_stmt|;
+comment|/* (k) Held sleep locks. */
 name|struct
 name|mtx
 modifier|*

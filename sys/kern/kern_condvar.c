@@ -593,7 +593,10 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_SAVE
 argument_list|(
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|,
 name|mp
 argument_list|)
@@ -690,7 +693,10 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_RESTORE
 argument_list|(
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|,
 name|mp
 argument_list|)
@@ -786,7 +792,10 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_SAVE
 argument_list|(
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|,
 name|mp
 argument_list|)
@@ -940,7 +949,10 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_RESTORE
 argument_list|(
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|,
 name|mp
 argument_list|)
@@ -1041,7 +1053,10 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_SAVE
 argument_list|(
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|,
 name|mp
 argument_list|)
@@ -1184,7 +1199,10 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_RESTORE
 argument_list|(
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|,
 name|mp
 argument_list|)
@@ -1288,7 +1306,10 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_SAVE
 argument_list|(
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|,
 name|mp
 argument_list|)
@@ -1486,7 +1507,10 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_RESTORE
 argument_list|(
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|,
 name|mp
 argument_list|)

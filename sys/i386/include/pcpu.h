@@ -120,6 +120,11 @@ expr_stmt|;
 name|int
 name|gd_witness_spin_check
 decl_stmt|;
+name|struct
+name|lock_list_entry
+modifier|*
+name|gd_spinlocks
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KTR_PERCPU

@@ -102,8 +102,10 @@ argument|globaldata
 argument_list|)
 name|gd_allcpu
 expr_stmt|;
-name|int
-name|gd_witness_spin_check
+name|struct
+name|lock_list_entry
+modifier|*
+name|gd_spinlocks
 decl_stmt|;
 ifdef|#
 directive|ifdef

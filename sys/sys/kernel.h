@@ -297,11 +297,11 @@ init|=
 literal|0x1A00000
 block|,
 comment|/* kvm operational limits*/
-name|SI_SUB_MUTEX
+name|SI_SUB_WITNESS
 init|=
 literal|0x1A80000
 block|,
-comment|/* mutex (witness) fixup */
+comment|/* witness initialization */
 name|SI_SUB_LOCK
 init|=
 literal|0x1B00000

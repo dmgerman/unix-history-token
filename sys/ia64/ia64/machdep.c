@@ -2546,12 +2546,11 @@ operator|&
 name|proc0
 argument_list|)
 expr_stmt|;
-name|LIST_INIT
+name|PCPU_SET
 argument_list|(
-operator|&
-name|proc0
-operator|.
-name|p_heldmtx
+name|spinlocks
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|LIST_INIT

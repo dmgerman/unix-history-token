@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -94,7 +88,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Mutex types and options stored in mutex->mtx_flags   */
+comment|/*  * Mutex types and options passed to mtx_init().  MTX_QUIET can also be  * passed in.  */
 end_comment
 
 begin_define
@@ -123,22 +117,44 @@ begin_define
 define|#
 directive|define
 name|MTX_RECURSE
-value|0x00000002
+value|0x00000004
 end_define
 
 begin_comment
 comment|/* Option: lock allowed to recurse */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MTX_NOWITNESS
+value|0x00000008
+end_define
+
 begin_comment
-comment|/*  * Option flags passed to certain lock/unlock routines, through the use  * of corresponding mtx_{lock,unlock}_flags() interface macros.  *  * XXX: The only reason we make these bits not interfere with the above "types  *	and options" bits is because we have to pass both to the witness  *	routines right now; if/when we clean up the witness interface to  *	not check for mutex type from the passed in flag, but rather from  *	the mutex lock's mtx_flags field, then we can change these values to  *	0x1, 0x2, ...   */
+comment|/* Don't do any witness checking. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTX_SLEEPABLE
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* We can sleep with this lock. */
+end_comment
+
+begin_comment
+comment|/*  * Option flags passed to certain lock/unlock routines, through the use  * of corresponding mtx_{lock,unlock}_flags() interface macros.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MTX_NOSWITCH
-value|0x00000004
+value|LOP_NOSWITCH
 end_define
 
 begin_comment
@@ -149,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|MTX_QUIET
-value|0x00000008
+value|LOP_QUIET
 end_define
 
 begin_comment
@@ -215,20 +231,25 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
-begin_struct_decl
-struct_decl|struct
-name|mtx_debug
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/*  * Sleep/spin mutex  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|lock_object
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
 name|mtx
 block|{
+name|struct
+name|lock_object
+name|mtx_object
+decl_stmt|;
+comment|/* Common lock properties. */
 specifier|volatile
 name|uintptr_t
 name|mtx_lock
@@ -239,19 +260,10 @@ name|u_int
 name|mtx_recurse
 decl_stmt|;
 comment|/* number of recursive holds */
-name|u_int
+name|critical_t
 name|mtx_savecrit
 decl_stmt|;
 comment|/* saved flags (for spin locks) */
-name|int
-name|mtx_flags
-decl_stmt|;
-comment|/* flags passed to mtx_init() */
-specifier|const
-name|char
-modifier|*
-name|mtx_description
-decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -267,24 +279,6 @@ argument_list|)
 name|mtx_contested
 expr_stmt|;
 comment|/* list of all contested locks */
-name|struct
-name|mtx
-modifier|*
-name|mtx_next
-decl_stmt|;
-comment|/* all existing locks 	*/
-name|struct
-name|mtx
-modifier|*
-name|mtx_prev
-decl_stmt|;
-comment|/*  in system...	*/
-name|struct
-name|mtx_debug
-modifier|*
-name|mtx_debug
-decl_stmt|;
-comment|/* debugging information... */
 block|}
 struct|;
 end_struct
@@ -309,43 +303,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Strings for KTR_LOCK tracing.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_mtx_lock_slp
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_mtx_lock_spn
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_mtx_unlock_slp
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_mtx_unlock_spn
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Prototypes  *  * NOTE: Functions prepended with `_' (underscore) are exported to other parts  *	 of the kernel via macros, thus allowing us to use the cpp __FILE__  *	 and __LINE__. These functions should not be called directly by any  *	 code using the IPI. Their macros cover their functionality.  *  * [See below for descriptions]  *  */
+comment|/*  * Prototypes  *  * NOTE: Functions prepended with `_' (underscore) are exported to other parts  *	 of the kernel via macros, thus allowing us to use the cpp __FILE__  *	 and __LINE__. These functions should not be called directly by any  *	 code using the API. Their macros cover their functionality.  *  * [See below for descriptions]  *  */
 end_comment
 
 begin_function_decl
@@ -624,6 +582,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITNESS
+end_ifdef
+
+begin_function_decl
+name|void
+name|_mtx_update_flags
+parameter_list|(
+name|struct
+name|mtx
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|locking
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * We define our machine-independent (unoptimized) mutex micro-operations  * here, if they are not already defined in the machine-dependent mutex.h   */
 end_comment
@@ -835,7 +819,50 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Exported lock manipulation interface.  *  * mtx_lock(m) locks MTX_DEF mutex `m'  *  * mtx_lock_spin(m) locks MTX_SPIN mutex `m'  *  * mtx_unlock(m) unlocks MTX_DEF mutex `m'  *  * mtx_unlock_spin(m) unlocks MTX_SPIN mutex `m'  *  * mtx_lock_spin_flags(m, opts) and mtx_lock_flags(m, opts) locks mutex `m'  *     and passes option flags `opts' to the "hard" function, if required.  *     With these routines, it is possible to pass flags such as MTX_QUIET  *     and/or MTX_NOSWITCH to the appropriate lock manipulation routines.  *  * mtx_trylock(m) attempts to acquire MTX_DEF mutex `m' but doesn't sleep if  *     it cannot. Rather, it returns 0 on failure and non-zero on success.  *     It does NOT handle recursion as we assume that if a caller is properly  *     using this part of the interface, he will know that the lock in question  *     is _not_ recursed.  *  * mtx_trylock_flags(m, opts) is used the same way as mtx_trylock() but accepts  *     relevant option flags `opts.'  *  * mtx_owned(m) returns non-zero if the current thread owns the lock `m'  *  * mtx_recursed(m) returns non-zero if the lock `m' is presently recursed.  */
+comment|/*  * Update the lock object flags based on the current mutex state.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITNESS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|mtx_update_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|locking
+parameter_list|)
+value|_mtx_update_flags((m), (locking))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|mtx_update_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|locking
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Exported lock manipulation interface.  *  * mtx_lock(m) locks MTX_DEF mutex `m'  *  * mtx_lock_spin(m) locks MTX_SPIN mutex `m'  *  * mtx_unlock(m) unlocks MTX_DEF mutex `m'  *  * mtx_unlock_spin(m) unlocks MTX_SPIN mutex `m'  *  * mtx_lock_spin_flags(m, opts) and mtx_lock_flags(m, opts) locks mutex `m'  *     and passes option flags `opts' to the "hard" function, if required.  *     With these routines, it is possible to pass flags such as MTX_QUIET  *     and/or MTX_NOSWITCH to the appropriate lock manipulation routines.  *  * mtx_trylock(m) attempts to acquire MTX_DEF mutex `m' but doesn't sleep if  *     it cannot. Rather, it returns 0 on failure and non-zero on success.  *     It does NOT handle recursion as we assume that if a caller is properly  *     using this part of the interface, he will know that the lock in question  *     is _not_ recursed.  *  * mtx_trylock_flags(m, opts) is used the same way as mtx_trylock() but accepts  *     relevant option flags `opts.'  *  * mtx_initialized(m) returns non-zero if the lock `m' has been initialized.  *  * mtx_owned(m) returns non-zero if the current thread owns the lock `m'  *  * mtx_recursed(m) returns non-zero if the lock `m' is presently recursed.  */
 end_comment
 
 begin_define
@@ -1021,7 +1048,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	MPASS(curproc != NULL);						\ 	KASSERT(((opts)& MTX_NOSWITCH) == 0,				\ 	    ("MTX_NOSWITCH used at %s:%d", (file), (line)));		\ 	_get_sleep_lock((m), curproc, (opts), (file), (line));		\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_lock_slp,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    (file), (line));					\ 	WITNESS_ENTER((m), ((m)->mtx_flags | (opts)), (file), (line));	\ } while (0)
+value|do {			\ 	MPASS(curproc != NULL);						\ 	KASSERT(((opts)& MTX_NOSWITCH) == 0,				\ 	    ("MTX_NOSWITCH used at %s:%d", (file), (line)));		\ 	_get_sleep_lock((m), curproc, (opts), (file), (line));		\ 	LOCK_LOG_LOCK("LOCK",&(m)->mtx_object, opts, m->mtx_recurse,	\ 	    (file), (line));						\ 	mtx_update_flags((m), 1);					\ 	WITNESS_LOCK(&(m)->mtx_object, (opts), (file), (line));		\ } while (0)
 end_define
 
 begin_define
@@ -1037,7 +1064,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	MPASS(curproc != NULL);						\ 	_get_spin_lock((m), curproc, (opts), (file), (line));		\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_lock_spn,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    (file), (line));					\ 	WITNESS_ENTER((m), ((m)->mtx_flags | (opts)), (file), (line));	\ } while (0)
+value|do {			\ 	MPASS(curproc != NULL);						\ 	_get_spin_lock((m), curproc, (opts), (file), (line));		\ 	LOCK_LOG_LOCK("LOCK",&(m)->mtx_object, opts, m->mtx_recurse,	\ 	    (file), (line));						\ 	mtx_update_flags((m), 1);					\ 	WITNESS_LOCK(&(m)->mtx_object, (opts), (file), (line));		\ } while (0)
 end_define
 
 begin_define
@@ -1053,7 +1080,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {			\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), (file), (line));	\ 	_rel_sleep_lock((m), curproc, (opts), (file), (line));		\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_unlock_slp,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    (file), (line));					\ } while (0)
+value|do {			\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	mtx_update_flags((m), 0);					\ 	WITNESS_UNLOCK(&(m)->mtx_object, (opts), (file), (line));	\ 	_rel_sleep_lock((m), curproc, (opts), (file), (line));		\ 	LOCK_LOG_LOCK("UNLOCK",&(m)->mtx_object, (opts),		\ 	    (m)->mtx_recurse, (file), (line));				\ } while (0)
 end_define
 
 begin_define
@@ -1069,7 +1096,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {		\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), (file), (line));	\ 	_rel_spin_lock((m));						\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_unlock_spn,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    (file), (line));					\ } while (0)
+value|do {		\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	mtx_update_flags((m), 0);					\ 	WITNESS_UNLOCK(&(m)->mtx_object, (opts), (file), (line));	\ 	_rel_spin_lock((m));						\ 	LOCK_LOG_LOCK("UNLOCK",&(m)->mtx_object, (opts),		\ 	    (m)->mtx_recurse, (file), (line));				\ } while (0)
 end_define
 
 begin_define
@@ -1083,6 +1110,16 @@ name|opts
 parameter_list|)
 define|\
 value|_mtx_trylock((m), (opts), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_initialized
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->mtx_object.lo_flags& LO_INITIALIZED)
 end_define
 
 begin_define
@@ -1135,7 +1172,7 @@ directive|define
 name|DROP_GIANT_NOSWITCH
 parameter_list|()
 define|\
-value|do {									\ 	int _giantcnt;							\ 	WITNESS_SAVE_DECL(Giant);					\ 									\ 	if (mtx_owned(&Giant))						\ 		WITNESS_SAVE(&Giant, Giant);				\ 	for (_giantcnt = 0; mtx_owned(&Giant); _giantcnt++)		\ 		mtx_unlock_flags(&Giant, MTX_NOSWITCH)
+value|do {									\ 	int _giantcnt;							\ 	WITNESS_SAVE_DECL(Giant);					\ 									\ 	if (mtx_owned(&Giant))						\ 		WITNESS_SAVE(&Giant.mtx_object, Giant);			\ 	for (_giantcnt = 0; mtx_owned(&Giant); _giantcnt++)		\ 		mtx_unlock_flags(&Giant, MTX_NOSWITCH)
 end_define
 
 begin_define
@@ -1144,7 +1181,7 @@ directive|define
 name|DROP_GIANT
 parameter_list|()
 define|\
-value|do {									\ 	int _giantcnt;							\ 	WITNESS_SAVE_DECL(Giant);					\ 									\ 	if (mtx_owned(&Giant))						\ 		WITNESS_SAVE(&Giant, Giant);				\ 	for (_giantcnt = 0; mtx_owned(&Giant); _giantcnt++)		\ 		mtx_unlock(&Giant)
+value|do {									\ 	int _giantcnt;							\ 	WITNESS_SAVE_DECL(Giant);					\ 									\ 	if (mtx_owned(&Giant))						\ 		WITNESS_SAVE(&Giant.mtx_object, Giant);			\ 	for (_giantcnt = 0; mtx_owned(&Giant); _giantcnt++)		\ 		mtx_unlock(&Giant)
 end_define
 
 begin_define
@@ -1153,7 +1190,7 @@ directive|define
 name|PICKUP_GIANT
 parameter_list|()
 define|\
-value|mtx_assert(&Giant, MA_NOTOWNED);				\ 	while (_giantcnt--)						\ 		mtx_lock(&Giant);					\ 	if (mtx_owned(&Giant))						\ 		WITNESS_RESTORE(&Giant, Giant);				\ } while (0)
+value|mtx_assert(&Giant, MA_NOTOWNED);				\ 	while (_giantcnt--)						\ 		mtx_lock(&Giant);					\ 	if (mtx_owned(&Giant))						\ 		WITNESS_RESTORE(&Giant.mtx_object, Giant);		\ } while (0)
 end_define
 
 begin_define
@@ -1162,7 +1199,7 @@ directive|define
 name|PARTIAL_PICKUP_GIANT
 parameter_list|()
 define|\
-value|mtx_assert(&Giant, MA_NOTOWNED);				\ 	while (_giantcnt--)						\ 		mtx_lock(&Giant);					\ 	if (mtx_owned(&Giant))						\ 		WITNESS_RESTORE(&Giant, Giant)
+value|mtx_assert(&Giant, MA_NOTOWNED);				\ 	while (_giantcnt--)						\ 		mtx_lock(&Giant);					\ 	if (mtx_owned(&Giant))						\ 		WITNESS_RESTORE(&Giant.mtx_object, Giant)
 end_define
 
 begin_comment
@@ -1258,435 +1295,6 @@ end_endif
 
 begin_comment
 comment|/* INVARIANTS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MPASS
-parameter_list|(
-name|ex
-parameter_list|)
-value|MPASS4(ex, #ex, __FILE__, __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPASS2
-parameter_list|(
-name|ex
-parameter_list|,
-name|what
-parameter_list|)
-value|MPASS4(ex, what, __FILE__, __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPASS3
-parameter_list|(
-name|ex
-parameter_list|,
-name|file
-parameter_list|,
-name|line
-parameter_list|)
-value|MPASS4(ex, #ex, file, line)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPASS4
-parameter_list|(
-name|ex
-parameter_list|,
-name|what
-parameter_list|,
-name|file
-parameter_list|,
-name|line
-parameter_list|)
-define|\
-value|KASSERT((ex), ("Assertion %s failed at %s:%d", what, file, line))
-end_define
-
-begin_comment
-comment|/*  * Exported WITNESS-enabled functions and corresponding wrapper macros.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITNESS
-end_ifdef
-
-begin_function_decl
-name|void
-name|witness_save
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|witness_restore
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|witness_enter
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|witness_try_enter
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|witness_exit
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|witness_list
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|witness_sleep
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|mtx
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|WITNESS_ENTER
-parameter_list|(
-name|m
-parameter_list|,
-name|t
-parameter_list|,
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|witness_enter((m), (t), (f), (l))
-end_define
-
-begin_define
-define|#
-directive|define
-name|WITNESS_EXIT
-parameter_list|(
-name|m
-parameter_list|,
-name|t
-parameter_list|,
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-define|\
-value|witness_exit((m), (t), (f), (l))
-end_define
-
-begin_define
-define|#
-directive|define
-name|WITNESS_SLEEP
-parameter_list|(
-name|check
-parameter_list|,
-name|m
-parameter_list|)
-define|\
-value|witness_sleep(check, (m), __FILE__, __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WITNESS_SAVE_DECL
-parameter_list|(
-name|n
-parameter_list|)
-define|\
-value|const char * __CONCAT(n, __wf);					\ 	int __CONCAT(n, __wl)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WITNESS_SAVE
-parameter_list|(
-name|m
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|witness_save(m,&__CONCAT(n, __wf),&__CONCAT(n, __wl))
-end_define
-
-begin_define
-define|#
-directive|define
-name|WITNESS_RESTORE
-parameter_list|(
-name|m
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|witness_restore(m, __CONCAT(n, __wf), __CONCAT(n, __wl))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* WITNESS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|witness_enter
-parameter_list|(
-name|m
-parameter_list|,
-name|t
-parameter_list|,
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|witness_tryenter
-parameter_list|(
-name|m
-parameter_list|,
-name|t
-parameter_list|,
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|witness_exit
-parameter_list|(
-name|m
-parameter_list|,
-name|t
-parameter_list|,
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|witness_list
-parameter_list|(
-name|p
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|witness_sleep
-parameter_list|(
-name|c
-parameter_list|,
-name|m
-parameter_list|,
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WITNESS_ENTER
-parameter_list|(
-name|m
-parameter_list|,
-name|t
-parameter_list|,
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WITNESS_EXIT
-parameter_list|(
-name|m
-parameter_list|,
-name|t
-parameter_list|,
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WITNESS_SLEEP
-parameter_list|(
-name|check
-parameter_list|,
-name|m
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WITNESS_SAVE_DECL
-parameter_list|(
-name|n
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WITNESS_SAVE
-parameter_list|(
-name|m
-parameter_list|,
-name|n
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|WITNESS_RESTORE
-parameter_list|(
-name|m
-parameter_list|,
-name|n
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* WITNESS */
 end_comment
 
 begin_endif

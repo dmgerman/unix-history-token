@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -127,12 +133,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
 end_include
 
 begin_include
@@ -2140,14 +2140,6 @@ operator|&
 name|p2
 operator|->
 name|p_children
-argument_list|)
-expr_stmt|;
-name|LIST_INIT
-argument_list|(
-operator|&
-name|p2
-operator|->
-name|p_heldmtx
 argument_list|)
 expr_stmt|;
 name|LIST_INIT

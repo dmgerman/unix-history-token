@@ -1257,7 +1257,10 @@ name|WITNESS_SLEEP
 argument_list|(
 literal|0
 argument_list|,
+operator|&
 name|mtx
+operator|->
+name|mtx_object
 argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
@@ -1324,7 +1327,10 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_SAVE
 argument_list|(
+operator|&
 name|mtx
+operator|->
+name|mtx_object
 argument_list|,
 name|mtx
 argument_list|)
@@ -1846,7 +1852,10 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_RESTORE
 argument_list|(
+operator|&
 name|mtx
+operator|->
+name|mtx_object
 argument_list|,
 name|mtx
 argument_list|)
@@ -2038,7 +2047,10 @@ name|WITNESS_SLEEP
 argument_list|(
 literal|0
 argument_list|,
+operator|&
 name|mtx
+operator|->
+name|mtx_object
 argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
@@ -2068,7 +2080,10 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_SAVE
 argument_list|(
+operator|&
 name|mtx
+operator|->
+name|mtx_object
 argument_list|,
 name|mtx
 argument_list|)
@@ -2537,7 +2552,10 @@ argument_list|)
 expr_stmt|;
 name|WITNESS_RESTORE
 argument_list|(
+operator|&
 name|mtx
+operator|->
+name|mtx_object
 argument_list|,
 name|mtx
 argument_list|)
