@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.59 (Berkeley) %G%"
+literal|"@(#)main.c	8.60 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3450,6 +3450,27 @@ operator|=
 name|jbuf
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|jbuf
+argument_list|,
+literal|'.'
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|message
+argument_list|(
+literal|"WARNING: local host name (%s) is not qualified; fix $j in config file"
+argument_list|,
+name|jbuf
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_comment
 comment|/* make certain that this name is part of the $=w class */
