@@ -336,6 +336,22 @@ comment|/* #undef HAVE_BSDSETJMP_H */
 end_comment
 
 begin_comment
+comment|/* Define if you have the `bswap16' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BSWAP16 */
+end_comment
+
+begin_comment
+comment|/* Define if you have the `bswap32' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_BSWAP32 */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<capability.h> header file. */
 end_comment
 
@@ -347,9 +363,12 @@ begin_comment
 comment|/* Define if you have the `cap_set_proc' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_CAP_SET_PROC */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_CAP_SET_PROC
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the `cgetent' function. */
@@ -910,6 +929,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the `getprogname' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPROGNAME
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the `getpwnam_r' function. */
 end_comment
 
@@ -989,7 +1019,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* define if you have a glob() that groks GLOB_BRACE, GLOB_NOCHECK,    GLOB_QUOTE, and GLOB_TILDE */
+comment|/* define if you have a glob() that groks GLOB_BRACE, GLOB_NOCHECK,    GLOB_QUOTE, GLOB_TILDE, and GLOB_LIMIT */
 end_comment
 
 begin_define
@@ -1141,6 +1171,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_INITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the `initstate' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INITSTATE
 value|1
 end_define
 
@@ -1311,17 +1352,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_MEMMOVE
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the<memory.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MEMORY_H
 value|1
 end_define
 
@@ -1933,6 +1963,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the `setprogname' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETPROGNAME
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the `setregid' function. */
 end_comment
 
@@ -1995,6 +2036,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SETSOCKOPT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the `setstate' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETSTATE
 value|1
 end_define
 
@@ -2116,17 +2168,6 @@ comment|/* #undef HAVE_STANDARDS_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the<stdlib.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STDLIB_H
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the `strcasecmp' function. */
 end_comment
 
@@ -2167,28 +2208,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRFTIME
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the<strings.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRINGS_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the<string.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRING_H
 value|1
 end_define
 
@@ -2587,6 +2606,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_SYS_BITYPES_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<sys/bswap.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SYS_BSWAP_H */
 end_comment
 
 begin_comment
@@ -3755,7 +3782,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.3e"
+value|"0.3f"
 end_define
 
 begin_comment
