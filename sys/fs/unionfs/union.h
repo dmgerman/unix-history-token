@@ -28,7 +28,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* Target appears below mount point */
+comment|/* Target appears above mount point */
 end_comment
 
 begin_define
