@@ -1751,7 +1751,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s:%s:%d:%d:%s:%d:%d:%s:%s:%s\n"
+literal|"%s:%s:%d:%d:%s:%ld:%ld:%s:%s:%s\n"
 argument_list|,
 name|pw
 operator|->
@@ -1773,10 +1773,16 @@ name|pw
 operator|->
 name|pw_class
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pw
 operator|->
 name|pw_change
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pw
 operator|->
 name|pw_expire
