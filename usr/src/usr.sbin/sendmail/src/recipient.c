@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.32 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.32.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -933,6 +933,19 @@ name|a
 argument_list|)
 condition|)
 block|{
+comment|/* if this is a reinsertion, just go ahead */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QVERIFIED
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+break|break;
 if|if
 condition|(
 name|tTd
@@ -1026,6 +1039,14 @@ return|;
 block|}
 block|}
 comment|/* add address on list */
+if|if
+condition|(
+operator|*
+name|pq
+operator|!=
+name|a
+condition|)
+block|{
 operator|*
 name|pq
 operator|=
@@ -1036,6 +1057,14 @@ operator|->
 name|q_next
 operator|=
 name|NULL
+expr_stmt|;
+block|}
+name|a
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|QVERIFIED
 expr_stmt|;
 comment|/* 	**  Alias the name and handle special mailer types. 	*/
 name|trylocaluser
