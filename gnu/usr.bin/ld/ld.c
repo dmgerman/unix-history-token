@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.31 1995/10/24 06:47:57 ache Exp $  */
+comment|/*  *	$Id: ld.c,v 1.32 1996/04/24 23:31:08 jdp Exp $  */
 end_comment
 
 begin_comment
@@ -484,6 +484,17 @@ begin_decl_stmt
 name|char
 modifier|*
 name|output_filename
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Output file name. */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|real_output_filename
 decl_stmt|;
 end_decl_stmt
 
@@ -1767,6 +1778,9 @@ case|case
 literal|'l'
 case|:
 case|case
+literal|'O'
+case|:
+case|case
 literal|'o'
 case|:
 case|case
@@ -3029,6 +3043,40 @@ case|:
 name|magic
 operator|=
 name|NMAGIC
+expr_stmt|;
+return|return;
+case|case
+literal|'O'
+case|:
+name|output_filename
+operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|arg
+argument_list|)
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|output_filename
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|output_filename
+argument_list|,
+literal|".tmp"
+argument_list|)
+expr_stmt|;
+name|real_output_filename
+operator|=
+name|arg
 expr_stmt|;
 return|return;
 case|case
@@ -10115,6 +10163,30 @@ expr_stmt|;
 name|outstream
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|real_output_filename
+condition|)
+if|if
+condition|(
+name|rename
+argument_list|(
+name|output_filename
+argument_list|,
+name|real_output_filename
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"rename output: %s to %s"
+argument_list|,
+name|output_filename
+argument_list|,
+name|real_output_filename
+argument_list|)
 expr_stmt|;
 block|}
 end_function
