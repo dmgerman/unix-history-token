@@ -309,13 +309,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pci/sym_conf.h>
+file|<dev/sym/sym_conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/sym_defs.h>
+file|<dev/sym/sym_defs.h>
 end_include
 
 begin_comment
