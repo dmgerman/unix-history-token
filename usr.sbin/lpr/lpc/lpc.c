@@ -471,6 +471,10 @@ name|c
 operator|->
 name|c_generic
 argument_list|,
+name|c
+operator|->
+name|c_handler
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -900,6 +904,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * Two different commands might have the same generic rtn 		 * (eg: "clean" and "tclean"), and just use different 		 * handler routines for distinct command-setup.  The handler 		 * routine might also be set on a generic routine for 		 * initial parameter processing. 		 */
 if|if
 condition|(
 name|c
@@ -913,6 +918,10 @@ argument_list|(
 name|c
 operator|->
 name|c_generic
+argument_list|,
+name|c
+operator|->
+name|c_handler
 argument_list|,
 name|margc
 argument_list|,

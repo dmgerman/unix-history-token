@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  * Line printer control program.  */
+comment|/*  * Line Printer Control (lpc) program.  */
 end_comment
 
 begin_struct_decl
@@ -29,7 +29,12 @@ modifier|*
 name|c_help
 decl_stmt|;
 comment|/* help message */
-comment|/* routine to do the work */
+specifier|const
+name|int
+name|c_priv
+decl_stmt|;
+comment|/* privileged command */
+comment|/* routine to do all the work for plain cmds, or 		 * initialization work for generic-printer cmds: */
 name|void
 function_decl|(
 modifier|*
@@ -43,10 +48,7 @@ modifier|*
 index|[]
 parameter_list|)
 function_decl|;
-name|int
-name|c_priv
-decl_stmt|;
-comment|/* privileged command */
+comment|/* routine to do the work for generic-printer cmds: */
 name|void
 function_decl|(
 modifier|*
@@ -58,7 +60,6 @@ name|printer
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* generic command */
 block|}
 struct|;
 end_struct
