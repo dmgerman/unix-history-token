@@ -5678,7 +5678,20 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 comment|/* Don't set SE_SHUTDOWN here */
+name|sp
+operator|->
+name|se_nspace
+operator|=
+literal|0
+expr_stmt|;
+name|sp
+operator|->
+name|se_started
+operator|=
+literal|0
+expr_stmt|;
 name|kill
 argument_list|(
 name|sp
@@ -5688,6 +5701,7 @@ argument_list|,
 name|SIGHUP
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|old_getty
