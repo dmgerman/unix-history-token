@@ -1414,18 +1414,18 @@ block|{
 comment|/* Should not happen */
 return|return;
 block|}
-name|setuid
-argument_list|(
-name|pw
-operator|->
-name|pw_uid
-argument_list|)
-expr_stmt|;
 name|setgid
 argument_list|(
 name|pw
 operator|->
 name|pw_gid
+argument_list|)
+expr_stmt|;
+name|setuid
+argument_list|(
+name|pw
+operator|->
+name|pw_uid
 argument_list|)
 expr_stmt|;
 if|if
