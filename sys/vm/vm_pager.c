@@ -787,8 +787,6 @@ name|pagerops
 modifier|*
 name|ops
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|ops
 operator|=
 name|pagertab
@@ -841,8 +839,6 @@ name|vm_object_t
 name|object
 decl_stmt|;
 block|{
-name|GIANT_REQUIRED
-expr_stmt|;
 operator|(
 operator|*
 name|pagertab
