@@ -4,6 +4,10 @@ comment|/* Process declarations and variables for C compiler.    Copyright (C) 1
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* Process declarations and symbol lookup for C front end.    Also constructs types; the standard scalar types at initialization,    and structure, union, array and enum types when they are declared.  */
 end_comment
 
@@ -1628,6 +1632,12 @@ name|warn_format
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|warn_format_extra_args
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Warn about a subscript that has type char.  */
 end_comment
@@ -2952,13 +2962,44 @@ name|strcmp
 argument_list|(
 name|p
 argument_list|,
-literal|"-Wformat"
+literal|"-Wnon-const-format"
 argument_list|)
 condition|)
 name|warn_format
 operator|=
+name|MAX
+argument_list|(
+name|warn_format
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"-Wformat"
+argument_list|)
+condition|)
+block|{
+name|warn_format_extra_args
+operator|=
 literal|1
 expr_stmt|;
+name|warn_format
+operator|=
+name|MAX
+argument_list|(
+name|warn_format
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2971,6 +3012,21 @@ literal|"-Wno-format"
 argument_list|)
 condition|)
 name|warn_format
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"-Wno-format-extra-args"
+argument_list|)
+condition|)
+name|warn_format_extra_args
 operator|=
 literal|0
 expr_stmt|;
@@ -3421,7 +3477,12 @@ literal|1
 expr_stmt|;
 name|warn_format
 operator|=
+name|MAX
+argument_list|(
+name|warn_format
+argument_list|,
 literal|1
+argument_list|)
 expr_stmt|;
 name|warn_char_subscripts
 operator|=
@@ -24619,6 +24680,19 @@ argument_list|)
 operator|!=
 literal|0
 operator|)
+operator|&&
+name|strcmp
+argument_list|(
+literal|"main"
+argument_list|,
+name|IDENTIFIER_POINTER
+argument_list|(
+name|DECL_NAME
+argument_list|(
+name|decl1
+argument_list|)
+argument_list|)
+argument_list|)
 condition|)
 name|warning
 argument_list|(
