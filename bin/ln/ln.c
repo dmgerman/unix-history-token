@@ -533,6 +533,7 @@ condition|(
 name|isdir
 operator|||
 operator|(
+operator|(
 name|exists
 operator|=
 operator|!
@@ -551,6 +552,7 @@ name|sb
 operator|.
 name|st_mode
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -630,6 +632,7 @@ name|fflag
 operator|&&
 name|exists
 operator|&&
+operator|(
 name|unlink
 argument_list|(
 name|source
@@ -644,6 +647,7 @@ name|target
 argument_list|,
 name|source
 argument_list|)
+operator|)
 condition|)
 block|{
 name|warn
