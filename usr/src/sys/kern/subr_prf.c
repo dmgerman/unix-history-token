@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.33 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -319,8 +319,6 @@ name|tp
 operator|,
 name|va_list
 name|ap
-operator|,
-operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -407,7 +405,17 @@ begin_comment
 comment|/*  * Panic is called on unresolvable fatal errors.  It prints "panic: mesg",  * and then reboots.  If we are called twice, then we avoid trying to sync  * the disks as this often leads to recursive panics.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
 begin_function
+specifier|volatile
+comment|/* panic() does not return */
+endif|#
+directive|endif
 name|void
 ifdef|#
 directive|ifdef
@@ -437,8 +445,6 @@ directive|endif
 block|{
 name|int
 name|bootopt
-decl_stmt|,
-name|savintr
 decl_stmt|;
 name|va_list
 name|ap
@@ -462,15 +468,6 @@ name|panicstr
 operator|=
 name|fmt
 expr_stmt|;
-name|savintr
-operator|=
-name|consintr
-expr_stmt|;
-comment|/* disable interrupts */
-name|consintr
-operator|=
-literal|0
-expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -478,28 +475,11 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|kprintf
+name|printf
 argument_list|(
-literal|"panic: "
+literal|"panic: %r\n"
 argument_list|,
-name|TOCONS
-operator||
-name|TOLOG
-argument_list|,
-name|NULL
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|kprintf
-argument_list|(
 name|fmt
-argument_list|,
-name|TOCONS
-operator||
-name|TOLOG
-argument_list|,
-name|NULL
 argument_list|,
 name|ap
 argument_list|)
@@ -509,11 +489,6 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-name|consintr
-operator|=
-name|savintr
-expr_stmt|;
-comment|/* reenable interrupts */
 ifdef|#
 directive|ifdef
 name|KGDB
@@ -1360,43 +1335,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Scaled down version of printf(3).  *  * Two additional formats:  *  * The format %b is supported to decode error registers.  * Its usage is:  *  *	kprintf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	kprintf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  *  * The format %r passes an additional format string and argument list  * recursively.  Its usage is:  *  * fn(char *fmt, ...)  * {  *	va_list ap;  *	va_start(ap, fmt);  *	kprintf("prefix: %r: suffix\n", flags, tp, fmt, ap);  *	va_end(ap);  * }  *  * Space or zero padding and a field width are supported for the numeric  * formats only.  */
+comment|/*  * Scaled down version of printf(3).  *  * Two additional formats:  *  * The format %b is supported to decode error registers.  * Its usage is:  *  *	printf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	kprintf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  *  * The format %r passes an additional format string and argument list  * recursively.  Its usage is:  *  * fn(char *fmt, ...)  * {  *	va_list ap;  *	va_start(ap, fmt);  *	printf("prefix: %r: suffix\n", fmt, ap);  *	va_end(ap);  * }  *  * Space or zero padding and a field width are supported for the numeric  * formats only.  */
 end_comment
 
 begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|kprintf
 parameter_list|(
-specifier|const
-name|char
-modifier|*
 name|fmt
 parameter_list|,
-name|int
 name|flags
 parameter_list|,
-name|struct
-name|tty
-modifier|*
 name|tp
 parameter_list|,
-name|va_list
 name|ap
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|kprintf
-parameter_list|(
-name|fmt
-parameter_list|,
-name|flags
-parameter_list|,
-name|tp
 parameter_list|)
 specifier|register
 specifier|const
@@ -1415,8 +1367,6 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|char
