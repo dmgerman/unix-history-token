@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.3 1994/10/10 07:57:33 phk Exp $ */
+comment|/*	$Id: msdosfs_fat.c,v 1.4 1994/12/12 12:35:45 bde Exp $ */
 end_comment
 
 begin_comment
@@ -2876,7 +2876,7 @@ name|pmp
 argument_list|,
 name|bp
 argument_list|,
-name|bn
+name|lbn
 argument_list|)
 expr_stmt|;
 name|error
