@@ -154,7 +154,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/acpica_osd.h>
+file|<machine/acpi_machdep.h>
 end_include
 
 begin_comment

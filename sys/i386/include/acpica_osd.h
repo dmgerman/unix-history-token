@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acpi_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -56,13 +62,6 @@ include|#
 directive|include
 file|"pcib_if.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|ACPI_BUS_SPACE_IO
-value|I386_BUS_SPACE_IO
-end_define
 
 begin_comment
 comment|/*  * ACPICA compatibility  */

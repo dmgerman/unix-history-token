@@ -9,6 +9,12 @@ directive|include
 file|"opt_acpi.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/acpi_machdep.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
