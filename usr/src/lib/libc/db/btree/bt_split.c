@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	5.8 (Berkeley) %G%"
+literal|"@(#)bt_split.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,58 @@ end_include
 begin_decl_stmt
 specifier|static
 name|int
+name|bt_broot
+name|__P
+argument_list|(
+operator|(
+name|BTREE
+operator|*
+operator|,
+name|PAGE
+operator|*
+operator|,
+name|PAGE
+operator|*
+operator|,
+name|PAGE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|PAGE
+modifier|*
+name|bt_page
+name|__P
+argument_list|(
+operator|(
+name|BTREE
+operator|*
+operator|,
+name|PAGE
+operator|*
+operator|,
+name|PAGE
+operator|*
+operator|*
+operator|,
+name|PAGE
+operator|*
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|bt_preserve
 name|__P
 argument_list|(
@@ -119,35 +171,6 @@ name|PAGE
 operator|*
 operator|,
 name|PAGE
-operator|*
-operator|,
-name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|PAGE
-modifier|*
-name|bt_page
-name|__P
-argument_list|(
-operator|(
-name|BTREE
-operator|*
-operator|,
-name|PAGE
-operator|*
-operator|,
-name|PAGE
-operator|*
-operator|*
-operator|,
-name|PAGE
-operator|*
 operator|*
 operator|,
 name|int
@@ -211,29 +234,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|bt_broot
-name|__P
-argument_list|(
-operator|(
-name|BTREE
-operator|*
-operator|,
-name|PAGE
-operator|*
-operator|,
-name|PAGE
-operator|*
-operator|,
-name|PAGE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|recno_t
 name|rec_total
 name|__P
@@ -270,7 +270,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * __BT_SPLIT -- Split the tree.  *  * Parameters:  *	t:	tree  *	h:	page to split  *	key:	key to insert  *	data:	data to insert  *	flags:	BIGKEY/BIGDATA flags  *	nbytes:	length of insertion  *	skip:	index to leave open  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
+comment|/*  * __BT_SPLIT -- Split the tree.  *  * Parameters:  *	t:	tree  *	sp:	page to split  *	key:	key to insert  *	data:	data to insert  *	flags:	BIGKEY/BIGDATA flags  *	nbytes:	length of insertion  *	skip:	index to leave open  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
 end_comment
 
 begin_function
@@ -279,7 +279,7 @@ name|__bt_split
 parameter_list|(
 name|t
 parameter_list|,
-name|h
+name|sp
 parameter_list|,
 name|key
 parameter_list|,
@@ -297,7 +297,7 @@ name|t
 decl_stmt|;
 name|PAGE
 modifier|*
-name|h
+name|sp
 decl_stmt|;
 specifier|const
 name|DBT
@@ -348,6 +348,9 @@ name|parent
 decl_stmt|;
 name|PAGE
 modifier|*
+name|h
+decl_stmt|,
+modifier|*
 name|l
 decl_stmt|,
 modifier|*
@@ -372,10 +375,10 @@ name|char
 modifier|*
 name|dest
 decl_stmt|;
-comment|/* 	 * Split the page into two pages, l and r.  The split routines return 	 * a pointer to the page into which the key should be inserted and skip 	 * set to the offset which should be used.  Additionally, l and r are 	 * pinned. 	 */
+comment|/* 	 * Split the page into two pages, l and r.  The split routines return 	 * a pointer to the page into which the key should be inserted and with 	 * skip set to the offset which should be used.  Additionally, l and r 	 * are pinned. 	 */
 name|h
 operator|=
-name|h
+name|sp
 operator|->
 name|pgno
 operator|==
@@ -385,7 +388,7 @@ name|bt_root
 argument_list|(
 name|t
 argument_list|,
-name|h
+name|sp
 argument_list|,
 operator|&
 name|l
@@ -401,7 +404,7 @@ name|bt_page
 argument_list|(
 name|t
 argument_list|,
-name|h
+name|sp
 argument_list|,
 operator|&
 name|l
@@ -424,7 +427,7 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-comment|/* 	 * Grab the space and insert the [rb]leaf structure.  Always a [rb]leaf 	 * structure since key inserts always cause a leaf page to split first. 	 */
+comment|/* 	 * Insert the new key/data pair into the leaf page.  (Key inserts 	 * always cause a leaf page to split first.) 	 */
 name|h
 operator|->
 name|linp
@@ -478,6 +481,51 @@ argument|data
 argument_list|,
 argument|flags
 argument_list|)
+comment|/* If the root page was split, make it look right. */
+if|if
+condition|(
+name|sp
+operator|->
+name|pgno
+operator|==
+name|P_ROOT
+operator|&&
+operator|(
+name|ISSET
+argument_list|(
+name|t
+argument_list|,
+name|BTF_RECNO
+argument_list|)
+condition|?
+name|bt_rroot
+argument_list|(
+name|t
+argument_list|,
+name|sp
+argument_list|,
+name|l
+argument_list|,
+name|r
+argument_list|)
+else|:
+name|bt_broot
+argument_list|(
+name|t
+argument_list|,
+name|sp
+argument_list|,
+name|l
+argument_list|,
+name|r
+argument_list|)
+operator|)
+operator|==
+name|RET_ERROR
+condition|)
+goto|goto
+name|err2
+goto|;
 comment|/* 	 * Now we walk the parent page stack -- a LIFO stack of the pages that 	 * were traversed when we searched for the page that split.  Each stack 	 * entry is a page number and a page index offset.  The offset is for 	 * the page traversed on the search.  We've just split a page, so we 	 * have to insert a new key into the parent page. 	 * 	 * If the insert into the parent page causes it to split, may have to 	 * continue splitting all the way up the tree.  We stop if the root 	 * splits or the page inserted into didn't have to split to hold the 	 * new key.  Some algorithms replace the key for the old page as well 	 * as the new page.  We don't, as there's no reason to believe that the 	 * first key on the old page is any better than the key we have, and, 	 * in the case of a key being placed at index 0 causing the split, the 	 * key is unavailable. 	 * 	 * There are a maximum of 5 pages pinned at any time.  We keep the left 	 * and right pages pinned while working on the parent.   The 5 are the 	 * two children, left parent and right parent (when the parent splits) 	 * and the root page or the overflow key page when calling bt_preserve. 	 * This code must make sure that all pins are released other than the 	 * root page or overflow page which is unlocked elsewhere. 	 */
 for|for
 control|(
@@ -853,6 +901,10 @@ name|index_t
 argument_list|)
 condition|)
 block|{
+name|sp
+operator|=
+name|h
+expr_stmt|;
 name|h
 operator|=
 name|h
@@ -1380,6 +1432,51 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* If the root page was split, make it look right. */
+if|if
+condition|(
+name|sp
+operator|->
+name|pgno
+operator|==
+name|P_ROOT
+operator|&&
+operator|(
+name|ISSET
+argument_list|(
+name|t
+argument_list|,
+name|BTF_RECNO
+argument_list|)
+condition|?
+name|bt_rroot
+argument_list|(
+name|t
+argument_list|,
+name|sp
+argument_list|,
+name|l
+argument_list|,
+name|r
+argument_list|)
+else|:
+name|bt_broot
+argument_list|(
+name|t
+argument_list|,
+name|sp
+argument_list|,
+name|l
+argument_list|,
+name|r
+argument_list|)
+operator|)
+operator|==
+name|RET_ERROR
+condition|)
+goto|goto
+name|err1
+goto|;
 name|mpool_put
 argument_list|(
 name|t
@@ -1866,11 +1963,11 @@ name|skip
 argument_list|)
 expr_stmt|;
 comment|/* Move the new left page onto the old left page. */
-name|bcopy
+name|memmove
 argument_list|(
-name|l
-argument_list|,
 name|h
+argument_list|,
+name|l
 argument_list|,
 name|t
 operator|->
@@ -2109,47 +2206,6 @@ argument_list|,
 name|skip
 argument_list|)
 expr_stmt|;
-comment|/* Make the root page look right. */
-if|if
-condition|(
-operator|(
-name|ISSET
-argument_list|(
-name|t
-argument_list|,
-name|BTF_RECNO
-argument_list|)
-condition|?
-name|bt_rroot
-argument_list|(
-name|t
-argument_list|,
-name|h
-argument_list|,
-name|l
-argument_list|,
-name|r
-argument_list|)
-else|:
-name|bt_broot
-argument_list|(
-name|t
-argument_list|,
-name|h
-argument_list|,
-name|l
-argument_list|,
-name|r
-argument_list|)
-operator|)
-operator|==
-name|RET_ERROR
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 operator|*
 name|lp
 operator|=
@@ -2169,7 +2225,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * BT_RROOT -- Fix up the recno root page after the split.  *  * Parameters:  *	t:	tree  *	h:	root page  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
+comment|/*  * BT_RROOT -- Fix up the recno root page after it has been split.  *  * Parameters:  *	t:	tree  *	h:	root page  *	l:	left page  *	r:	right page  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
 end_comment
 
 begin_function
@@ -2359,7 +2415,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * BT_BROOT -- Fix up the btree root page after the split.  *  * Parameters:  *	t:	tree  *	h:	root page  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
+comment|/*  * BT_BROOT -- Fix up the btree root page after it has been split.  *  * Parameters:  *	t:	tree  *	h:	root page  *	l:	left page  *	r:	right page  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
 end_comment
 
 begin_function
@@ -2408,7 +2464,7 @@ name|char
 modifier|*
 name|dest
 decl_stmt|;
-comment|/* 	 * If the root page was a leaf page, change it into an internal page. 	 * We copy the key we split on (but not the key's data, in the case of 	 * a leaf page) to the new root page. 	 * 	 * The btree comparison code guarantees that the left-most key on any 	 * level of the tree is never used, so it doesn't need to be filled 	 * in.  (This is not just convenience -- if the insert index is 0, we 	 * don't *have* a key to fill in.)  The right key is available because 	 * the split code guarantees not to split on the skipped index. 	 */
+comment|/* 	 * If the root page was a leaf page, change it into an internal page. 	 * We copy the key we split on (but not the key's data, in the case of 	 * a leaf page) to the new root page. 	 * 	 * The btree comparison code guarantees that the left-most key on any 	 * level of the tree is never used, so it doesn't need to be filled in. 	 */
 name|nbytes
 operator|=
 name|NBINTERNAL
@@ -2647,6 +2703,7 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* There are two keys on the page. */
 name|h
 operator|->
 name|lower
@@ -2694,7 +2751,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * BT_PSPLIT -- Do the real work of splitting the page.  *  * Parameters:  *	t:	tree  *	h:	page to be split  *	l:	page to put lower half of data  *	r:	page to put upper half of data  *	skip:	pointer to index to leave open  *  * Returns:  *	Pointer to page in which to insert.  */
+comment|/*  * BT_PSPLIT -- Do the real work of splitting the page.  *  * Parameters:  *	t:	tree  *	h:	page to be split  *	l:	page to put lower half of data  *	r:	page to put upper half of data  *	pskip:	pointer to index to leave open  *  * Returns:  *	Pointer to page in which to insert.  */
 end_comment
 
 begin_function
@@ -2781,7 +2838,7 @@ name|off
 decl_stmt|,
 name|top
 decl_stmt|;
-comment|/* 	 * Split the data to the left and right pages. Leave the skip index 	 * open and guarantee that the split doesn't happen on that index (the 	 * right key must be available for the parent page).  Additionally, 	 * make some effort not to split on an overflow key.  This makes it 	 * faster to process internal pages and can save space since overflow 	 * keys used by internal pages are never deleted. 	 */
+comment|/* 	 * Split the data to the left and right pages. Leave the skip index 	 * open.  Additionally, 	 * make some effort not to split on an overflow key.  This makes it 	 * faster to process internal pages and can save space since overflow 	 * keys used by internal pages are never deleted. 	 */
 name|bigkeycnt
 operator|=
 literal|0
@@ -2997,14 +3054,6 @@ operator|<
 name|nbytes
 condition|)
 block|{
-if|if
-condition|(
-name|skip
-operator|!=
-name|off
-operator|+
-literal|1
-condition|)
 if|if
 condition|(
 operator|!
