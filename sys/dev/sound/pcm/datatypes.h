@@ -407,7 +407,9 @@ index|[
 name|SND_STATUSLEN
 index|]
 decl_stmt|;
-comment|/* sysctl stuff is only used in 5.x */
+ifdef|#
+directive|ifdef
+name|SND_DYNSYSCTL
 name|struct
 name|sysctl_ctx_list
 name|sysctl_tree
@@ -417,6 +419,8 @@ name|sysctl_oid
 modifier|*
 name|sysctl_tree_top
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

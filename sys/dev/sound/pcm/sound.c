@@ -235,19 +235,29 @@ name|pcm_devclass
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|500000
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SND_DYNSYSCTL
+end_ifdef
 
-begin_define
-define|#
-directive|define
-name|USING_DEVFS
-end_define
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|snd
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"Sound driver"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -515,24 +525,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_hw
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|snd
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-literal|"Sound driver"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -1716,7 +1708,7 @@ name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USING_DEVFS
+name|SND_DYNSYSCTL
 name|sysctl_ctx_init
 argument_list|(
 operator|&
@@ -1942,6 +1934,9 @@ decl_stmt|;
 name|dev_t
 name|pdev
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SND_DYNSYSCTL
 name|sysctl_remove_oid
 argument_list|(
 name|d
@@ -1967,6 +1962,8 @@ operator|->
 name|sysctl_tree
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|r
 operator|=
 literal|0
