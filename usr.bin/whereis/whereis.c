@@ -262,11 +262,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|errx
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: whereis [-abmqsux] [-BMS dir ... -f] program ...\n"
+argument_list|)
+expr_stmt|;
+name|exit
 argument_list|(
 name|EX_USAGE
-argument_list|,
-literal|"usage: whereis [-abmqsux] [-BMS dir... -f] name ..."
 argument_list|)
 expr_stmt|;
 block|}
