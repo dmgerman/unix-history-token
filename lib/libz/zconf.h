@@ -1346,13 +1346,6 @@ begin_comment
 comment|/* for SEEK_* and off_t */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|z_off_t
-value|off_t
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -1402,11 +1395,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|z_off_t
-end_ifndef
+begin_comment
+comment|/*  * This is hard-configured for FreeBSD, since zlib doesn't actually support  * using the system off_t for offsets unless off_t is no longer than long.  */
+end_comment
 
 begin_define
 define|#
@@ -1414,11 +1405,6 @@ directive|define
 name|z_off_t
 value|long
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* MVS linker does not support external names larger than 8 bytes */
