@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.9 (Berkeley) %G%"
+literal|"@(#)inet.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -487,6 +487,19 @@ name|interface
 modifier|*
 name|ifp
 decl_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+name|mask
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|IN_CLASSA
