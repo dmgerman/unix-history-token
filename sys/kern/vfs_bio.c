@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.172 1998/08/25 14:41:42 phk Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.173 1998/08/28 20:07:13 luoqi Exp $  */
 end_comment
 
 begin_comment
@@ -2821,7 +2821,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|PAGE_CLEAR_FLAG
+name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
@@ -3710,7 +3710,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|PAGE_CLEAR_FLAG
+name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
@@ -3728,11 +3728,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|PAGE_SET_FLAG
+name|vm_page_busy
 argument_list|(
 name|m
-argument_list|,
-name|PG_BUSY
 argument_list|)
 expr_stmt|;
 name|vm_page_protect
@@ -3758,7 +3756,7 @@ name|act_count
 operator|=
 literal|0
 expr_stmt|;
-name|PAGE_CLEAR_FLAG
+name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
@@ -6045,7 +6043,7 @@ name|i
 operator|++
 control|)
 block|{
-name|PAGE_CLEAR_FLAG
+name|vm_page_flag_clear
 argument_list|(
 name|bp
 operator|->
@@ -8035,7 +8033,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|PAGE_CLEAR_FLAG
+name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
@@ -8074,7 +8072,7 @@ operator|&
 name|PG_BUSY
 condition|)
 block|{
-name|PAGE_SET_FLAG
+name|vm_page_flag_set
 argument_list|(
 name|m
 argument_list|,
@@ -8194,7 +8192,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|PAGE_CLEAR_FLAG
+name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
@@ -9102,7 +9100,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|PAGE_CLEAR_FLAG
+name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
@@ -9253,7 +9251,7 @@ literal|"biodone: page busy< 0\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|PAGE_BWAKEUP
+name|vm_page_io_finish
 argument_list|(
 name|m
 argument_list|)
@@ -9594,14 +9592,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|PAGE_CLEAR_FLAG
+name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
 name|PG_ZERO
 argument_list|)
 expr_stmt|;
-name|PAGE_BWAKEUP
+name|vm_page_io_finish
 argument_list|(
 name|m
 argument_list|)
@@ -10174,7 +10172,7 @@ index|[
 name|i
 index|]
 decl_stmt|;
-name|PAGE_CLEAR_FLAG
+name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
@@ -10201,7 +10199,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|PAGE_BUSY
+name|vm_page_io_start
 argument_list|(
 name|m
 argument_list|)
@@ -10716,7 +10714,7 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-name|PAGE_CLEAR_FLAG
+name|vm_page_flag_clear
 argument_list|(
 name|bp
 operator|->
@@ -10877,7 +10875,7 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
-name|PAGE_CLEAR_FLAG
+name|vm_page_flag_clear
 argument_list|(
 name|p
 argument_list|,
@@ -10903,7 +10901,7 @@ index|]
 operator|=
 name|p
 expr_stmt|;
-name|PAGE_WAKEUP
+name|vm_page_wakeup
 argument_list|(
 name|p
 argument_list|)
@@ -11060,11 +11058,9 @@ argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
-name|PAGE_SET_FLAG
+name|vm_page_busy
 argument_list|(
 name|p
-argument_list|,
-name|PG_BUSY
 argument_list|)
 expr_stmt|;
 name|vm_page_unwire
