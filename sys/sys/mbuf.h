@@ -172,6 +172,15 @@ name|caddr_t
 name|header
 decl_stmt|;
 comment|/* pointer to packet header */
+comment|/* variables for hardware checksum */
+name|int
+name|csum_flags
+decl_stmt|;
+comment|/* flags regarding checksum */
+name|int
+name|csum_data
+decl_stmt|;
+comment|/* data field used by csum routines */
 block|}
 struct|;
 end_struct
@@ -480,6 +489,28 @@ begin_comment
 comment|/* packet is a fragment of a larger packet */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_FIRSTFRAG
+value|0x0800
+end_define
+
+begin_comment
+comment|/* packet is first fragment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LASTFRAG
+value|0x1000
+end_define
+
+begin_comment
+comment|/* packet is last fragment */
+end_comment
+
 begin_comment
 comment|/* flags copied when copying m_pkthdr */
 end_comment
@@ -490,6 +521,127 @@ directive|define
 name|M_COPYFLAGS
 value|(M_PKTHDR|M_EOR|M_PROTO1|M_PROTO1|M_PROTO2|M_PROTO3 | \ 			    M_PROTO4|M_PROTO5|M_BCAST|M_MCAST|M_FRAG)
 end_define
+
+begin_comment
+comment|/* flags indicating hw checksum support and sw checksum requirements */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_IP
+value|0x0001
+end_define
+
+begin_comment
+comment|/* will csum IP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_TCP
+value|0x0002
+end_define
+
+begin_comment
+comment|/* will csum TCP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_UDP
+value|0x0004
+end_define
+
+begin_comment
+comment|/* will csum UDP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_IP_FRAGS
+value|0x0008
+end_define
+
+begin_comment
+comment|/* will csum IP fragments */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_FRAGMENT
+value|0x0010
+end_define
+
+begin_comment
+comment|/* will do IP fragmentation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_IP_CHECKED
+value|0x0100
+end_define
+
+begin_comment
+comment|/* did csum IP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_IP_VALID
+value|0x0200
+end_define
+
+begin_comment
+comment|/*   ... the csum is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_DATA_VALID
+value|0x0400
+end_define
+
+begin_comment
+comment|/* csum_data field is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_PSEUDO_HDR
+value|0x0800
+end_define
+
+begin_comment
+comment|/* csum_data has pseudo hdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSUM_DELAY_DATA
+value|(CSUM_TCP | CSUM_UDP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSUM_DELAY_IP
+value|(CSUM_IP)
+end_define
+
+begin_comment
+comment|/* XXX add ipv6 here too? */
+end_comment
 
 begin_comment
 comment|/* mbuf types */
@@ -894,7 +1046,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 	int _ms = splimp();						\ 									\ 	if (mmbfree == NULL)						\ 		(void)m_mballoc(1, _mhow);				\ 	_mm = mmbfree;							\ 	if (_mm != NULL) {						\ 		mmbfree = _mm->m_next;					\ 		mbstat.m_mtypes[MT_FREE]--;				\ 		_mm->m_type = _mtype;					\ 		mbstat.m_mtypes[_mtype]++;				\ 		_mm->m_next = NULL;					\ 		_mm->m_nextpkt = NULL;					\ 		_mm->m_data = _mm->m_pktdat;				\ 		_mm->m_flags = M_PKTHDR;				\ 		_mm->m_pkthdr.rcvif = NULL;				\ 		(m) = _mm;						\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		_mm = m_retryhdr(_mhow, _mtype);			\ 		if (_mm == NULL&& _mhow == M_WAIT)			\ 			(m) = m_mballoc_wait(MGETHDR_C, _mtype);	\ 		else							\ 			(m) = _mm;					\ 	}								\ } while (0)
+value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 	int _ms = splimp();						\ 									\ 	if (mmbfree == NULL)						\ 		(void)m_mballoc(1, _mhow);				\ 	_mm = mmbfree;							\ 	if (_mm != NULL) {						\ 		mmbfree = _mm->m_next;					\ 		mbstat.m_mtypes[MT_FREE]--;				\ 		_mm->m_type = _mtype;					\ 		mbstat.m_mtypes[_mtype]++;				\ 		_mm->m_next = NULL;					\ 		_mm->m_nextpkt = NULL;					\ 		_mm->m_data = _mm->m_pktdat;				\ 		_mm->m_flags = M_PKTHDR;				\ 		_mm->m_pkthdr.rcvif = NULL;				\ 		_mm->m_pkthdr.csum_flags = 0;				\ 		(m) = _mm;						\ 		splx(_ms);						\ 	} else {							\ 		splx(_ms);						\ 		_mm = m_retryhdr(_mhow, _mtype);			\ 		if (_mm == NULL&& _mhow == M_WAIT)			\ 			(m) = m_mballoc_wait(MGETHDR_C, _mtype);	\ 		else							\ 			(m) = _mm;					\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -1076,7 +1228,7 @@ name|plen
 parameter_list|,
 name|how
 parameter_list|)
-value|do {					\ 	struct mbuf **_mmp =&(m);					\ 	struct mbuf *_mm = *_mmp;					\ 	int _mplen = (plen);						\ 	int __mhow = (how);						\ 									\ 	if (_mm == NULL) {						\ 		MGET(_mm, __mhow, MT_DATA);				\ 		if (_mm == NULL)					\ 			break;						\ 	}								\ 	if (M_LEADINGSPACE(_mm)>= _mplen) {				\ 		_mm->m_data -= _mplen;					\ 		_mm->m_len += _mplen;					\ 	} else								\ 		_mm = m_prepend(_mm, _mplen, __mhow);			\ 	if (_mm != NULL&& _mm->m_flags& M_PKTHDR)			\ 		_mm->m_pkthdr.len += _mplen;				\ 	*_mmp = _mm;							\ } while (0)
+value|do {					\ 	struct mbuf **_mmp =&(m);					\ 	struct mbuf *_mm = *_mmp;					\ 	int _mplen = (plen);						\ 	int __mhow = (how);						\ 									\ 	if (M_LEADINGSPACE(_mm)>= _mplen) {				\ 		_mm->m_data -= _mplen;					\ 		_mm->m_len += _mplen;					\ 	} else								\ 		_mm = m_prepend(_mm, _mplen, __mhow);			\ 	if (_mm != NULL&& _mm->m_flags& M_PKTHDR)			\ 		_mm->m_pkthdr.len += _mplen;				\ 	*_mmp = _mm;							\ } while (0)
 end_define
 
 begin_comment

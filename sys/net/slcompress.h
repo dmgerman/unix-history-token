@@ -30,12 +30,8 @@ begin_define
 define|#
 directive|define
 name|MAX_HDR
-value|MLEN
+value|128
 end_define
-
-begin_comment
-comment|/* XXX 4bsd-ism: should really be 128 */
-end_comment
 
 begin_comment
 comment|/*  * Compressed packet format:  *  * The first octet contains the packet type (top 3 bits), TCP  * 'push' bit, and flags that indicate which of the 4 TCP sequence  * numbers have changed (bottom 5 bits).  The next octet is a  * conversation number that associates a saved IP/TCP header with  * the compressed packet.  The next two octets are the TCP checksum  * from the original datagram.  The next 0 to 15 octets are  * sequence number changes, one change per bit set in the header  * (there may be no changes and there are two special cases where  * the receiver implicitly knows what changed -- see below).  *  * There are 5 numbers which can change (they are always inserted  * in the following order): TCP urgent pointer, window,  * acknowledgement, sequence number and IP ID.  (The urgent pointer  * is different from the others in that its value is sent, not the  * change in value.)  Since typical use of SLIP links is biased  * toward small packets (see comments on MTU/MSS below), changes  * use a variable length coding with one octet for numbers in the  * range 1 - 255 and 3 octets (0, MSB, LSB) for numbers in the  * range 256 - 65535 or 0.  (If the change in sequence number or  * ack is more than 65535, an uncompressed packet is sent.)  */
