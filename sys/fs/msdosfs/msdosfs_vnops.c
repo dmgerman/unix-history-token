@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.62 1998/02/26 06:45:46 msmith Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.63 1998/03/01 21:26:09 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -2716,8 +2716,6 @@ name|lbn
 decl_stmt|;
 name|daddr_t
 name|rablock
-decl_stmt|,
-name|rablock1
 decl_stmt|;
 name|int
 name|rasize
@@ -2981,15 +2979,6 @@ operator|->
 name|de_FileSize
 condition|)
 block|{
-name|rablock1
-operator|=
-name|de_cn2bn
-argument_list|(
-name|pmp
-argument_list|,
-name|rablock
-argument_list|)
-expr_stmt|;
 name|rasize
 operator|=
 name|pmp
@@ -3002,19 +2991,14 @@ name|breadn
 argument_list|(
 name|vp
 argument_list|,
-name|de_cn2bn
-argument_list|(
-name|pmp
-argument_list|,
 name|lbn
-argument_list|)
 argument_list|,
 name|pmp
 operator|->
 name|pm_bpcluster
 argument_list|,
 operator|&
-name|rablock1
+name|rablock
 argument_list|,
 operator|&
 name|rasize
@@ -3035,12 +3019,7 @@ name|bread
 argument_list|(
 name|vp
 argument_list|,
-name|de_cn2bn
-argument_list|(
-name|pmp
-argument_list|,
 name|lbn
-argument_list|)
 argument_list|,
 name|pmp
 operator|->
@@ -3649,7 +3628,7 @@ expr_stmt|;
 block|}
 name|bn
 operator|=
-name|de_blk
+name|de_cluster
 argument_list|(
 name|pmp
 argument_list|,
@@ -3673,7 +3652,7 @@ operator|==
 literal|0
 operator|&&
 operator|(
-name|de_blk
+name|de_cluster
 argument_list|(
 name|pmp
 argument_list|,
@@ -3686,7 +3665,7 @@ operator|->
 name|uio_resid
 argument_list|)
 operator|>
-name|de_blk
+name|de_cluster
 argument_list|(
 name|pmp
 argument_list|,
@@ -3750,14 +3729,9 @@ name|pcbmap
 argument_list|(
 name|dep
 argument_list|,
-name|de_bn2cn
-argument_list|(
-name|pmp
-argument_list|,
 name|bp
 operator|->
 name|b_lblkno
-argument_list|)
 argument_list|,
 operator|&
 name|bp
