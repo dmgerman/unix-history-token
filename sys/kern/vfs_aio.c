@@ -6655,6 +6655,8 @@ operator|(
 name|uintptr_t
 operator|)
 name|aiocbe
+operator|->
+name|uuaiocb
 expr_stmt|;
 name|kev
 operator|.
@@ -6671,6 +6673,15 @@ operator||
 name|EV_ENABLE
 operator||
 name|EV_FLAG1
+expr_stmt|;
+name|kev
+operator|.
+name|data
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|aiocbe
 expr_stmt|;
 name|error
 operator|=
@@ -11053,7 +11064,7 @@ operator|*
 operator|)
 name|kn
 operator|->
-name|kn_id
+name|kn_sdata
 decl_stmt|;
 comment|/* 	 * The aiocbe pointer must be validated before using it, so 	 * registration is restricted to the kernel; the user cannot 	 * set EV_FLAG1. 	 */
 if|if
@@ -11127,7 +11138,7 @@ operator|*
 operator|)
 name|kn
 operator|->
-name|kn_id
+name|kn_sdata
 decl_stmt|;
 name|SLIST_REMOVE
 argument_list|(
@@ -11180,7 +11191,7 @@ operator|*
 operator|)
 name|kn
 operator|->
-name|kn_id
+name|kn_sdata
 decl_stmt|;
 name|kn
 operator|->
