@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999, M. Warner Losh.  * All rights reserved.  *  * 
 end_comment
 
 begin_comment
-comment|/*  * This file contains various kludges to allow the legacy pccard system to  * work in the newbus system until the pccard system can be converted   * wholesale to newbus.  As that is a while off, I'm providing this glue to  * allow newbus drivers to have pccard attachments.  *  * We do *NOT* implement ISA ivars at all.  We are not an isa bus, and drivers  * that abuse isa_{set,get}_* must be fixed in order to work with pccard.  * We use ivars for something else anyway, so it becomes fairly awkward  * to do so.  *  * Here's a summary of the glue that we do to make things work.  *  * First, we have pccard node in the device and driver trees.  The pccard  * device lives in the instance tree attached to the nexus.  The pccard  * attachments will be attached to that node.  This allows one to pass things  * up the tree that terminates at the nexus, like other buses.  The pccard  * code will create a device instance for each of the drivers that are to  * be attached.  *  * These compatibility nodes are called pccnbk.  PCCard New Bus Kludge.  */
+comment|/*  * This file contains various kludges to allow the legacy pccard system to  * work in the newbus system until the pccard system can be converted  * wholesale to newbus.  As that is a while off, I'm providing this glue to  * allow newbus drivers to have pccard attachments.  *  * We do *NOT* implement ISA ivars at all.  We are not an isa bus, and drivers  * that abuse isa_{set,get}_* must be fixed in order to work with pccard.  * We use ivars for something else anyway, so it becomes fairly awkward  * to do so.  *  * Here's a summary of the glue that we do to make things work.  *  * First, we have pccard node in the device and driver trees.  The pccard  * device lives in the instance tree attached to the nexus.  The pccard  * attachments will be attached to that node.  This allows one to pass things  * up the tree that terminates at the nexus, like other buses.  The pccard  * code will create a device instance for each of the drivers that are to  * be attached.  *  * These compatibility nodes are called pccnbk.  PCCard New Bus Kludge.  */
 end_comment
 
 begin_include
@@ -830,17 +830,6 @@ operator|)
 decl_stmt|;
 name|int
 name|isdefault
-init|=
-operator|(
-name|start
-operator|==
-literal|0UL
-operator|&&
-name|end
-operator|==
-operator|~
-literal|0UL
-operator|)
 decl_stmt|;
 name|struct
 name|pccard_devinfo
@@ -872,7 +861,48 @@ name|resource
 modifier|*
 name|res
 decl_stmt|;
-comment|/* XXX Do I need to add a special case here for the cis memory? XXX */
+if|if
+condition|(
+name|start
+operator|==
+literal|0
+operator|&&
+name|end
+operator|==
+operator|~
+literal|0
+operator|&&
+name|type
+operator|==
+name|SYS_RES_MEMORY
+operator|&&
+name|count
+operator|!=
+literal|1
+condition|)
+block|{
+name|start
+operator|=
+literal|0xd0000
+expr_stmt|;
+name|end
+operator|=
+literal|0xdffff
+expr_stmt|;
+block|}
+name|isdefault
+operator|=
+operator|(
+name|start
+operator|==
+literal|0UL
+operator|&&
+name|end
+operator|==
+operator|~
+literal|0UL
+operator|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1018,7 +1048,9 @@ name|flags
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|res
+operator|)
 return|;
 block|}
 end_function
