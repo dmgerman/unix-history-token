@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)field.c	8.1 (Berkeley) %G%"
+literal|"@(#)field.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -379,8 +385,12 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+name|uid_t
 name|id
+decl_stmt|;
+name|char
+modifier|*
+name|np
 decl_stmt|;
 if|if
 condition|(
@@ -431,21 +441,36 @@ literal|1
 operator|)
 return|;
 block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|id
 operator|=
-name|atoi
+name|strtoul
 argument_list|(
 name|p
+argument_list|,
+operator|&
+name|np
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|np
+operator|||
 operator|(
-name|u_int
-operator|)
 name|id
-operator|>
-name|USHRT_MAX
+operator|==
+name|ULONG_MAX
+operator|&&
+name|errno
+operator|==
+name|ERANGE
+operator|)
 condition|)
 block|{
 operator|(
@@ -455,11 +480,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: %d> max uid value (%d).\n"
-argument_list|,
-name|id
-argument_list|,
-name|USHRT_MAX
+literal|"chpass: illegal uid.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -524,8 +545,12 @@ name|group
 modifier|*
 name|gr
 decl_stmt|;
-name|int
+name|gid_t
 name|id
+decl_stmt|;
+name|char
+modifier|*
+name|np
 decl_stmt|;
 if|if
 condition|(
@@ -605,21 +630,36 @@ literal|0
 operator|)
 return|;
 block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|id
 operator|=
-name|atoi
+name|strtoul
 argument_list|(
 name|p
+argument_list|,
+operator|&
+name|np
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|np
+operator|||
 operator|(
-name|u_int
-operator|)
 name|id
-operator|>
-name|USHRT_MAX
+operator|==
+name|ULONG_MAX
+operator|&&
+name|errno
+operator|==
+name|ERANGE
+operator|)
 condition|)
 block|{
 operator|(
@@ -629,11 +669,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: %d> max gid value (%d).\n"
-argument_list|,
-name|id
-argument_list|,
-name|USHRT_MAX
+literal|"chpass: illegal gid.\n"
 argument_list|)
 expr_stmt|;
 return|return
