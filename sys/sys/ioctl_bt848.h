@@ -840,6 +840,59 @@ begin_comment
 comment|/* i2c read-write */
 end_comment
 
+begin_struct
+struct|struct
+name|bktr_msp_control
+block|{
+name|unsigned
+name|char
+name|function
+decl_stmt|;
+name|unsigned
+name|int
+name|address
+decl_stmt|;
+name|unsigned
+name|int
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|BT848_MSP_RESET
+value|_IO('x', 76)
+end_define
+
+begin_comment
+comment|/* MSP chip reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_MSP_READ
+value|_IOWR('x', 77, struct bktr_msp_control)
+end_define
+
+begin_comment
+comment|/* MSP chip reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_MSP_WRITE
+value|_IOWR('x', 78, struct bktr_msp_control)
+end_define
+
+begin_comment
+comment|/* MSP chip reset */
+end_comment
+
 begin_comment
 comment|/* Support for radio tuner */
 end_comment
