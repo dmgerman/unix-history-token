@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.27 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -737,6 +737,11 @@ init|=
 name|FALSE
 decl_stmt|;
 comment|/* set if the addr has a quote bit */
+name|int
+name|findusercount
+init|=
+literal|0
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -1247,6 +1252,8 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	**  Alias the name and handle :include: specs. 	*/
+name|trylocaluser
+label|:
 if|if
 condition|(
 name|m
@@ -1750,6 +1757,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* name was a fuzzy match */
 name|a
 operator|->
 name|q_user
@@ -1761,6 +1769,30 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|findusercount
+operator|++
+operator|>
+literal|3
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"aliasing/forwarding loop for %s broken"
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|a
+operator|)
+return|;
+block|}
+comment|/* see if it aliases */
 operator|(
 name|void
 operator|)
@@ -1773,6 +1805,9 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
+goto|goto
+name|trylocaluser
+goto|;
 block|}
 name|a
 operator|->
@@ -1969,6 +2004,18 @@ operator|(
 name|pw
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|MATCHGECOS
+comment|/* see if fuzzy matching allowed */
+if|if
+condition|(
+operator|!
+name|MatchGecos
+condition|)
+return|return
+name|NULL
+return|;
 comment|/* search for a matching full name instead */
 for|for
 control|(
@@ -2078,6 +2125,8 @@ operator|)
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.37 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3066,6 +3066,18 @@ literal|'f'
 case|:
 comment|/* save Unix-style From lines on front */
 name|SaveFrom
+operator|=
+name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'G'
+case|:
+comment|/* match recipients against GECOS field */
+name|MatchGecos
 operator|=
 name|atobool
 argument_list|(
