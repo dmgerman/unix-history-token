@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.14 %G%"
+literal|"@(#)p2put.c 1.15 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*      *	functions to help pi put out      *	polish postfix binary portable c compiler intermediate code      *	thereby becoming the portable pascal compiler      */
@@ -408,6 +419,10 @@ name|alignedframesize
 operator|=
 name|roundup
 argument_list|(
+call|(
+name|int
+call|)
+argument_list|(
 name|BITSPERBYTE
 operator|*
 operator|-
@@ -416,10 +431,16 @@ operator|->
 name|curtmps
 operator|.
 name|om_off
+argument_list|)
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|BITSPERBYTE
 operator|*
 name|A_STACK
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p2word
@@ -976,9 +997,6 @@ name|char
 modifier|*
 name|printname
 decl_stmt|;
-name|int
-name|regnumber
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1023,6 +1041,10 @@ name|offset
 argument_list|,
 name|type
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1032,8 +1054,6 @@ if|if
 condition|(
 name|whereis
 argument_list|(
-name|level
-argument_list|,
 name|offset
 argument_list|,
 name|other_flags
@@ -1212,8 +1232,6 @@ switch|switch
 condition|(
 name|whereis
 argument_list|(
-name|level
-argument_list|,
 name|offset
 argument_list|,
 name|other_flags
@@ -1316,6 +1334,10 @@ argument_list|,
 name|P2PTR
 argument_list|)
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1365,6 +1387,10 @@ literal|0
 argument_list|,
 name|P2INT
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1403,6 +1429,10 @@ argument_list|,
 name|P2PTR
 argument_list|)
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1453,6 +1483,10 @@ literal|0
 argument_list|,
 name|P2INT
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1491,6 +1525,10 @@ argument_list|,
 name|P2PTR
 argument_list|)
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1577,7 +1615,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+name|char
+modifier|*
 name|label
 decl_stmt|;
 name|char
@@ -1609,6 +1648,9 @@ argument_list|(
 name|A_DOUBLE
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putlab
 argument_list|(
 name|label
@@ -1720,7 +1762,8 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|int
+name|char
+modifier|*
 name|label
 decl_stmt|;
 name|char
@@ -1756,6 +1799,9 @@ operator|=
 name|getlab
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putlab
 argument_list|(
 name|label
@@ -1974,6 +2020,11 @@ name|p2type
 parameter_list|(
 name|np
 parameter_list|)
+name|struct
+name|nl
+modifier|*
+name|np
+decl_stmt|;
 block|{
 return|return
 name|typerecur
@@ -2100,6 +2151,7 @@ argument_list|(
 literal|"p2type int"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 case|case
 name|STR
@@ -2305,56 +2357,10 @@ argument_list|(
 literal|"p2type"
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 block|}
 end_block
-
-begin_comment
-comment|/*      *	add a most significant type modifier to a type      */
-end_comment
-
-begin_function
-name|long
-name|addtype
-parameter_list|(
-name|underlying
-parameter_list|,
-name|mtype
-parameter_list|)
-name|long
-name|underlying
-decl_stmt|;
-name|long
-name|mtype
-decl_stmt|;
-block|{
-return|return
-operator|(
-operator|(
-operator|(
-name|underlying
-operator|&
-operator|~
-name|P2BASETYPE
-operator|)
-operator|<<
-name|P2TYPESHIFT
-operator|)
-operator||
-name|mtype
-operator||
-operator|(
-name|underlying
-operator|&
-name|P2BASETYPE
-operator|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*      *	put a typed operator to the pcstream      */
@@ -2903,7 +2909,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|long
+name|int
 name|word
 decl_stmt|;
 end_decl_stmt
@@ -3315,13 +3321,13 @@ begin_comment
 comment|/*      *	another version of put to catch calls to put      */
 end_comment
 
+begin_comment
+comment|/* VARARGS */
+end_comment
+
 begin_macro
 name|put
-argument_list|(
-argument|arg1
-argument_list|,
-argument|arg2
-argument_list|)
+argument_list|()
 end_macro
 
 begin_block
