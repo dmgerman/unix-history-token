@@ -30,18 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -636,6 +624,8 @@ block|{
 name|int
 name|result
 decl_stmt|;
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|ACPI_LOCK
 expr_stmt|;
 comment|/* no FUNCTION_TRACE - too noisy */
@@ -719,6 +709,8 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -3119,6 +3111,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|ACPI_LOCK
 expr_stmt|;
 name|sc
@@ -3427,6 +3421,8 @@ decl_stmt|;
 name|int
 name|state
 decl_stmt|;
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|state
 operator|=
 name|power_profile_get_state
@@ -3604,6 +3600,8 @@ name|devcount
 decl_stmt|,
 name|i
 decl_stmt|;
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -3644,12 +3642,19 @@ operator|*
 name|acpi_tz_polling_rate
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|devcount
@@ -3695,12 +3700,19 @@ argument_list|)
 expr_stmt|;
 name|ACPI_UNLOCK
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function

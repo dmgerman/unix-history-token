@@ -1023,6 +1023,8 @@ block|{
 name|int
 name|cpu_temp_speed
 decl_stmt|;
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|ACPI_LOCK
 expr_stmt|;
 comment|/* get set of CPU devices */
@@ -1339,6 +1341,8 @@ decl_stmt|;
 name|u_int32_t
 name|new
 decl_stmt|;
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|state
 operator|=
 name|power_profile_get_state

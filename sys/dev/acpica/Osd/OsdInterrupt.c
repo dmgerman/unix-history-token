@@ -520,6 +520,8 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|ACPI_LOCK
 expr_stmt|;
 name|InterruptHandler

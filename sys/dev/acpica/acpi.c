@@ -30,19 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -272,12 +260,25 @@ name|ACPI_STATE_S5
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
+
 begin_decl_stmt
 name|struct
 name|mtx
 name|acpi_mutex
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1144,6 +1145,11 @@ name|NULL
 condition|)
 name|return_VOID
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 comment|/* initialise the ACPI mutex */
 name|mtx_init
 argument_list|(
@@ -1157,6 +1163,8 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/*      * Start up the ACPI CA subsystem.      */
 ifdef|#
 directive|ifdef
@@ -1340,6 +1348,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -1486,6 +1496,8 @@ name|debugpoint
 decl_stmt|;
 endif|#
 directive|endif
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -3265,6 +3277,8 @@ decl_stmt|;
 name|u_int32_t
 name|pnpid
 decl_stmt|;
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -6192,6 +6206,8 @@ name|int
 name|state
 parameter_list|)
 block|{
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
 operator|(
@@ -6250,6 +6266,8 @@ name|int
 name|state
 parameter_list|)
 block|{
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
 operator|(
@@ -7593,6 +7611,8 @@ name|xerror
 decl_stmt|,
 name|state
 decl_stmt|;
+name|ACPI_LOCK_DECL
+expr_stmt|;
 name|ACPI_LOCK
 expr_stmt|;
 name|error

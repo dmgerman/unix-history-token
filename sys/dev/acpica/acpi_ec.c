@@ -1979,15 +1979,10 @@ name|Event
 argument_list|)
 expr_stmt|;
 comment|/* XXX this should test whether interrupts are available some other way */
-ifdef|#
-directive|ifdef
-name|ACPI_EC_EVENT_DRIVEN
 if|if
 condition|(
 name|cold
 condition|)
-endif|#
-directive|endif
 name|return_ACPI_STATUS
 argument_list|(
 name|EcWaitEvent
