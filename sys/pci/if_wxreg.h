@@ -35,6 +35,13 @@ begin_comment
 comment|/* Memory Write Invalidate */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WX_CACHELINE_SIZE
+value|0x20
+end_define
+
 begin_comment
 comment|/*  * Information about this chipset gathered from a released Intel Linux driver,  * which was clearly a port of an NT driver.   */
 end_comment
