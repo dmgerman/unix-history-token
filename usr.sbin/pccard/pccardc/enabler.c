@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: enabler.c,v 1.5.2.1 1997/10/08 07:33:23 charnier Exp $"
+literal|"$Id: enabler.c,v 1.5.2.2 1997/10/26 04:13:38 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,7 +115,7 @@ index|[]
 decl_stmt|;
 block|{
 name|struct
-name|drv_desc
+name|dev_desc
 name|drv
 decl_stmt|;
 name|struct
