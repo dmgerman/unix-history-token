@@ -1410,6 +1410,12 @@ name|minsize
 operator|=
 name|readmin
 expr_stmt|;
+name|minvert
+operator|=
+name|device_info
+operator|.
+name|vert
+expr_stmt|;
 name|close
 argument_list|(
 name|fin

@@ -145,6 +145,18 @@ comment|/* min size it can handle; no default */
 end_comment
 
 begin_decl_stmt
+name|int
+name|minvert
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* min size it can move vertically; no default */
+end_comment
+
+begin_decl_stmt
 name|FILE
 modifier|*
 name|curfile
