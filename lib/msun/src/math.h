@@ -188,7 +188,7 @@ name|isfinite
 parameter_list|(
 name|x
 parameter_list|)
-value|(fpclassify(x)& (FP_INFINITE|FP_NAN) == 0)
+value|((fpclassify(x)& (FP_INFINITE|FP_NAN)) == 0)
 end_define
 
 begin_define
