@@ -529,6 +529,13 @@ name|F_TTL
 value|0x8000
 end_define
 
+begin_define
+define|#
+directive|define
+name|F_MISSED
+value|0x10000
+end_define
+
 begin_comment
 comment|/*  * MAX_DUP_CHK is the number of bits in received table, i.e. the maximum  * number of received sequence numbers we can keep track of.  Change 128  * to 8192 for complete accuracy...  */
 end_comment
@@ -607,6 +614,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* characters written for flood */
+end_comment
+
+begin_decl_stmt
+name|char
+name|BBELL
+init|=
+literal|'\a'
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* characters written for MISSED and AUDIBLE */
 end_comment
 
 begin_decl_stmt
@@ -693,6 +712,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* sequence # for outbound packets = #sent */
+end_comment
+
+begin_decl_stmt
+name|long
+name|nmissedmax
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max value of ntransmitted - nreceived - 1 */
 end_comment
 
 begin_decl_stmt
@@ -1194,7 +1223,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"I:LQRS:T:c:adfi:l:m:np:qrs:t:v"
+literal|"AI:LQRS:T:c:adfi:l:m:np:qrs:t:v"
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -1220,6 +1249,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'A'
+case|:
+name|options
+operator||=
+name|F_MISSED
+expr_stmt|;
+break|break;
 case|case
 literal|'a'
 case|:
@@ -3778,6 +3815,45 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ntransmitted
+operator|-
+name|nreceived
+operator|-
+literal|1
+operator|>
+name|nmissedmax
+condition|)
+block|{
+name|nmissedmax
+operator|=
+name|ntransmitted
+operator|-
+name|nreceived
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|&
+name|F_MISSED
+condition|)
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|STDOUT_FILENO
+argument_list|,
+operator|&
+name|BBELL
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 name|finish
@@ -4499,9 +4575,14 @@ condition|)
 operator|(
 name|void
 operator|)
-name|printf
+name|write
 argument_list|(
-literal|"\a"
+name|STDOUT_FILENO
+argument_list|,
+operator|&
+name|BBELL
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* check the data */
