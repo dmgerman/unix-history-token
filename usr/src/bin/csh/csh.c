@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c 4.18 %G%"
+literal|"@(#)csh.c 4.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,6 +130,12 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|fast
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|batch
 decl_stmt|;
 end_decl_stmt
 
@@ -603,7 +609,7 @@ argument_list|)
 expr_stmt|;
 comment|/* ...and on XFSZ */
 block|}
-comment|/* 	 * Process the arguments. 	 * 	 * Note that processing of -v/-x is actually delayed till after 	 * script processing. 	 * 	 * We set the first character of our name to be '-' if we are 	 * a shell running interruptible commands.  Many programs which 	 * examine ps'es use this to filter such shells out. 	 */
+comment|/* 	 * Process the arguments. 	 * 	 * Note that processing of -v/-x is actually delayed till after 	 * script processing. 	 */
 name|c
 operator|--
 operator|,
@@ -629,11 +635,17 @@ literal|0
 index|]
 operator|==
 literal|'-'
+operator|&&
+operator|*
+operator|++
+name|cp
+operator|!=
+literal|'\0'
+operator|&&
+operator|!
+name|batch
 condition|)
 block|{
-name|cp
-operator|++
-expr_stmt|;
 do|do
 switch|switch
 condition|(
@@ -642,6 +654,14 @@ name|cp
 operator|++
 condition|)
 block|{
+case|case
+literal|'b'
+case|:
+comment|/* -b	Next arg is input file */
+name|batch
+operator|++
+expr_stmt|;
+break|break;
 case|case
 literal|'c'
 case|:
@@ -802,6 +822,8 @@ name|c
 operator|--
 expr_stmt|;
 block|}
+name|argsdone
+label|:
 if|if
 condition|(
 name|quitit
@@ -814,7 +836,7 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unless prevented by -, -c, -i, -s, or -t, if there 	 * are remaining arguments the first of them is the name 	 * of a shell file from which to read commands. 	 */
+comment|/* 	 * Unless prevented by -c, -i, -s, or -t, if there 	 * are remaining arguments the first of them is the name 	 * of a shell file from which to read commands. 	 */
 if|if
 condition|(
 name|nofile
@@ -886,6 +908,32 @@ operator|,
 name|v
 operator|++
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|uid
+operator|!=
+name|geteuid
+argument_list|()
+operator|&&
+operator|!
+name|batch
+condition|)
+block|{
+name|errno
+operator|=
+name|EACCES
+expr_stmt|;
+name|child
+operator|++
+expr_stmt|;
+comment|/* So this ... */
+name|Perror
+argument_list|(
+literal|"csh"
+argument_list|)
+expr_stmt|;
+comment|/* ... doesn't return */
 block|}
 comment|/* 	 * Consider input a tty if it really is or we are interactive. 	 */
 name|intty
