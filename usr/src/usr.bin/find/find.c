@@ -5,13 +5,9 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.8 (Berkeley) %G%"
+literal|"@(#)find.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*	find	COMPILE:	cc -o find -s -O -i find.c -lS	*/
-end_comment
 
 begin_include
 include|#
@@ -260,7 +256,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * SEE ALSO:	find.squeeze, find.bigram.c, find.code.c  *		Usenix ;login:, February/March, 1983, p. 8.  *  * REVISIONS: 	James A. Woods, Informatics General Corporation,  *		NASA Ames Research Center, 6/81.  *  *		The second form searches a pre-computed filelist  *		(constructed nightly by /usr/lib/crontab) which is  *		compressed by find.squeeze (v.i.z.)  The effect of  *			find<name>  *		is similar to  *			find / +0 -name "*<name>*" -print  *		but much faster.  *  *		8/82 faster yet + incorporation of bigram coding -- jaw  *  *		1/83 incorporate glob-style matching -- jaw  */
+comment|/*  * SEE ALSO:	updatedb, bigram.c, code.c  *		Usenix ;login:, February/March, 1983, p. 8.  *  * REVISIONS: 	James A. Woods, Informatics General Corporation,  *		NASA Ames Research Center, 6/81.  *  *		The second form searches a pre-computed filelist  *		(constructed nightly by /usr/lib/crontab) which is  *		compressed by updatedb (v.i.z.)  The effect of  *			find<name>  *		is similar to  *			find / +0 -name "*<name>*" -print  *		but much faster.  *  *		8/82 faster yet + incorporation of bigram coding -- jaw  *  *		1/83 incorporate glob-style matching -- jaw  */
 end_comment
 
 begin_define
@@ -4875,14 +4871,14 @@ name|AMES
 end_ifdef
 
 begin_comment
-comment|/*  * 'fastfind' scans a file list for the full pathname of a file  * given only a piece of the name.  The list has been processed with  * with "front-compression" and bigram coding.  Front compression reduces  * space by a factor of 4-5, bigram coding by a further 20-25%.  * The codes are:  *  *	0-28	likeliest differential counts + offset to make nonnegative   *	30	escape code for out-of-range count to follow in next word  *	128-255 bigram codes, (128 most common, as determined by 'find.squeeze')  *	32-127  single character (printable) ascii residue  *  * A novel two-tiered string search technique is employed:   *  * First, a metacharacter-free subpattern and partial pathname is  * matched BACKWARDS to avoid full expansion of the pathname list.  * The time savings is 40-50% over forward matching, which cannot efficiently  * handle overlapped search patterns and compressed path residue.  *  * Then, the actual shell glob-style regular expression (if in this form)  * is matched against the candidate pathnames using the slower routines  * provided in the standard 'find'.  */
+comment|/*  * 'fastfind' scans a file list for the full pathname of a file  * given only a piece of the name.  The list has been processed with  * with "front-compression" and bigram coding.  Front compression reduces  * space by a factor of 4-5, bigram coding by a further 20-25%.  * The codes are:  *  *	0-28	likeliest differential counts + offset to make nonnegative   *	30	escape code for out-of-range count to follow in next word  *	128-255 bigram codes, (128 most common, as determined by 'updatedb')  *	32-127  single character (printable) ascii residue  *  * A novel two-tiered string search technique is employed:   *  * First, a metacharacter-free subpattern and partial pathname is  * matched BACKWARDS to avoid full expansion of the pathname list.  * The time savings is 40-50% over forward matching, which cannot efficiently  * handle overlapped search patterns and compressed path residue.  *  * Then, the actual shell glob-style regular expression (if in this form)  * is matched against the candidate pathnames using the slower routines  * provided in the standard 'find'.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FCODES
-value|"/etc/find.codes"
+value|"/usr/lib/find/find.codes"
 end_define
 
 begin_define
