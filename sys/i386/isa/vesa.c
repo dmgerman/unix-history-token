@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA and Michael Smith  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: vesa.c,v 1.2 1998/09/23 09:59:00 yokota Exp $  */
+comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA and Michael Smith  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: vesa.c,v 1.3 1998/09/25 11:55:46 yokota Exp $  */
 end_comment
 
 begin_include
@@ -1888,12 +1888,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+define|#
+directive|define
+name|VESA_INFO_SIZE
+value|512
 specifier|static
 name|u_char
-name|buf
+name|buffer
 index|[
-literal|512
+name|VESA_INFO_SIZE
+operator|*
+literal|2
 index|]
+decl_stmt|;
+specifier|static
+name|u_char
+modifier|*
+name|buf
+init|=
+name|buffer
 decl_stmt|;
 name|struct
 name|vm86frame
@@ -1905,6 +1918,9 @@ name|vmode
 decl_stmt|;
 name|u_int32_t
 name|p
+decl_stmt|;
+name|u_short
+name|offset
 decl_stmt|;
 name|int
 name|modes
@@ -1953,13 +1969,45 @@ expr_stmt|;
 comment|/* paranoia */
 name|bzero
 argument_list|(
-name|buf
+name|buffer
 argument_list|,
 sizeof|sizeof
 argument_list|(
+name|buffer
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|vmf
+operator|.
+name|vmf_eax
+operator|=
+literal|0x4f00
+expr_stmt|;
+comment|/* workaround - see vm86.c:vm86_datacall */
+name|offset
+operator|=
+operator|(
+name|u_int
+operator|)
 name|buf
-argument_list|)
-argument_list|)
+operator|&
+name|PAGE_MASK
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|offset
+operator|+
+name|VESA_INFO_SIZE
+operator|)
+operator|&
+name|PG_FRAME
+condition|)
+name|buf
+operator|+=
+name|PAGE_SIZE
+operator|-
+name|offset
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -1971,12 +2019,6 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|/* try for VBE2 data */
-name|vmf
-operator|.
-name|vmf_eax
-operator|=
-literal|0x4f00
-expr_stmt|;
 name|err
 operator|=
 name|vm86_datacall
@@ -1992,10 +2034,7 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|VESA_INFO_SIZE
 argument_list|,
 operator|&
 name|vmf
