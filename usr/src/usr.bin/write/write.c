@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)write.c	4.18 (Berkeley) %G%"
+literal|"@(#)write.c	4.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1236,6 +1236,38 @@ name|void
 name|done
 parameter_list|()
 function_decl|;
+comment|/* Determine our login name before the we reopen() stdout */
+if|if
+condition|(
+operator|(
+name|login
+operator|=
+name|getlogin
+argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+if|if
+condition|(
+name|pwd
+operator|=
+name|getpwuid
+argument_list|(
+name|myuid
+argument_list|)
+condition|)
+name|login
+operator|=
+name|pwd
+operator|->
+name|pw_name
+expr_stmt|;
+else|else
+name|login
+operator|=
+literal|"???"
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1308,37 +1340,6 @@ name|done
 argument_list|)
 expr_stmt|;
 comment|/* print greeting */
-if|if
-condition|(
-operator|(
-name|login
-operator|=
-name|getlogin
-argument_list|()
-operator|)
-operator|==
-name|NULL
-condition|)
-if|if
-condition|(
-name|pwd
-operator|=
-name|getpwuid
-argument_list|(
-name|myuid
-argument_list|)
-condition|)
-name|login
-operator|=
-name|pwd
-operator|->
-name|pw_name
-expr_stmt|;
-else|else
-name|login
-operator|=
-literal|"???"
-expr_stmt|;
 if|if
 condition|(
 name|gethostname
