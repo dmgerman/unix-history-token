@@ -352,33 +352,33 @@ begin_comment
 comment|/* Place an element at the front of a lst. */
 end_comment
 
-begin_function_decl
-name|ReturnStatus
+begin_define
+define|#
+directive|define
 name|Lst_AtFront
 parameter_list|(
-name|Lst
+name|LST
 parameter_list|,
-name|void
-modifier|*
+name|D
 parameter_list|)
-function_decl|;
-end_function_decl
+value|(Lst_Insert((LST), Lst_First(LST), (D)))
+end_define
 
 begin_comment
 comment|/* Place an element at the end of a lst. */
 end_comment
 
-begin_function_decl
-name|ReturnStatus
+begin_define
+define|#
+directive|define
 name|Lst_AtEnd
 parameter_list|(
-name|Lst
+name|LST
 parameter_list|,
-name|void
-modifier|*
+name|D
 parameter_list|)
-function_decl|;
-end_function_decl
+value|(Lst_Append((LST), Lst_Last(LST), (D)))
+end_define
 
 begin_comment
 comment|/* Remove an element */
@@ -399,17 +399,17 @@ begin_comment
 comment|/* Replace a node with a new value */
 end_comment
 
-begin_function_decl
-name|ReturnStatus
+begin_define
+define|#
+directive|define
 name|Lst_Replace
 parameter_list|(
-name|LstNode
+name|NODE
 parameter_list|,
-name|void
-modifier|*
+name|D
 parameter_list|)
-function_decl|;
-end_function_decl
+value|(((NODE) == NULL) ? FAILURE : \ 				    (((NODE)->datum = (D)), SUCCESS))
+end_define
 
 begin_comment
 comment|/* Concatenate two lists */
@@ -436,54 +436,57 @@ begin_comment
 comment|/* Return first element in list */
 end_comment
 
-begin_function_decl
-name|LstNode
+begin_define
+define|#
+directive|define
 name|Lst_First
 parameter_list|(
-name|Lst
+name|LST
 parameter_list|)
-function_decl|;
-end_function_decl
+value|((Lst_Valid(LST)&& !Lst_IsEmpty(LST)) \ 			    ? (LST)->firstPtr : NULL)
+end_define
 
 begin_comment
 comment|/* Return last element in list */
 end_comment
 
-begin_function_decl
-name|LstNode
+begin_define
+define|#
+directive|define
 name|Lst_Last
 parameter_list|(
-name|Lst
+name|LST
 parameter_list|)
-function_decl|;
-end_function_decl
+value|((Lst_Valid(LST)&& !Lst_IsEmpty(LST)) \ 			    ? (LST)->lastPtr : NULL)
+end_define
 
 begin_comment
 comment|/* Return successor to given element */
 end_comment
 
-begin_function_decl
-name|LstNode
+begin_define
+define|#
+directive|define
 name|Lst_Succ
 parameter_list|(
-name|LstNode
+name|NODE
 parameter_list|)
-function_decl|;
-end_function_decl
+value|(((NODE) == NULL) ? NULL : (NODE)->nextPtr)
+end_define
 
 begin_comment
 comment|/* Get datum from LstNode */
 end_comment
 
-begin_function_decl
-name|void
-modifier|*
+begin_define
+define|#
+directive|define
 name|Lst_Datum
 parameter_list|(
-name|LstNode
+name|NODE
 parameter_list|)
-function_decl|;
-end_function_decl
+value|((NODE)->datum)
+end_define
 
 begin_comment
 comment|/*  * Functions for entire lists  */
@@ -493,20 +496,19 @@ begin_comment
 comment|/* Find an element in a list */
 end_comment
 
-begin_function_decl
-name|LstNode
+begin_define
+define|#
+directive|define
 name|Lst_Find
 parameter_list|(
-name|Lst
+name|LST
 parameter_list|,
-name|void
-modifier|*
+name|D
 parameter_list|,
-name|CompareProc
-modifier|*
+name|FN
 parameter_list|)
-function_decl|;
-end_function_decl
+value|(Lst_FindFrom((LST), Lst_First(LST), (D), (FN)))
+end_define
 
 begin_comment
 comment|/* Find an element starting from somewhere */
@@ -563,6 +565,20 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|Lst_ForEach
+parameter_list|(
+name|LST
+parameter_list|,
+name|FN
+parameter_list|,
+name|D
+parameter_list|)
+value|(Lst_ForEachFrom((LST), Lst_First(LST), \ 				    (FN), (D)))
+end_define
 
 begin_comment
 comment|/*  * Apply a function to all elements of a lst starting from a certain point.  * If the list is circular, the application will wrap around to the  * beginning of the list again.  */
@@ -649,17 +665,17 @@ begin_comment
 comment|/* Place an element at tail of queue */
 end_comment
 
-begin_function_decl
-name|ReturnStatus
+begin_define
+define|#
+directive|define
 name|Lst_EnQueue
 parameter_list|(
-name|Lst
+name|LST
 parameter_list|,
-name|void
-modifier|*
+name|D
 parameter_list|)
-function_decl|;
-end_function_decl
+value|(Lst_Valid(LST) \ 				    ? Lst_Append((LST), Lst_Last(LST), (D)) \ 				    : FAILURE)
+end_define
 
 begin_comment
 comment|/* Remove an element from head of queue */

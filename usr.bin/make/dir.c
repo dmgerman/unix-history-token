@@ -279,6 +279,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|LstNode
+name|ln
+decl_stmt|;
 name|Dir_AddDir
 argument_list|(
 name|openDirectories
@@ -286,28 +289,17 @@ argument_list|,
 literal|"."
 argument_list|)
 expr_stmt|;
-name|dot
-operator|=
+if|if
+condition|(
 operator|(
-name|Path
-operator|*
-operator|)
-name|Lst_Datum
-argument_list|(
+name|ln
+operator|=
 name|Lst_Last
 argument_list|(
 name|openDirectories
 argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dot
-operator|==
-operator|(
-name|Path
-operator|*
 operator|)
+operator|==
 name|NULL
 condition|)
 name|err
@@ -315,6 +307,13 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"cannot open current directory"
+argument_list|)
+expr_stmt|;
+name|dot
+operator|=
+name|Lst_Datum
+argument_list|(
+name|ln
 argument_list|)
 expr_stmt|;
 comment|/*      * We always need to have dot around, so we increment its reference count      * to make sure it's not destroyed.      */
