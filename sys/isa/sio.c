@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/sio.c,v 1.5 1993/07/20 02:06:49 jkh Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/sio.c,v 1.6 1993/08/28 03:02:49 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2254,11 +2254,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|COM_MULTIPORT
@@ -2334,6 +2329,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* COM_MULTIPORT */
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KGDB
