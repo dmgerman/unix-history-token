@@ -172,6 +172,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -1991,8 +1997,11 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
+comment|/* 	 * Desiredvnodes is a function of the physical memory size and 	 * the kernel's heap size.  Specifically, desiredvnodes scales 	 * in proportion to the physical memory size until two fifths 	 * of the kernel's heap size is consumed by vnodes and vm 	 * objects.   	 */
 name|desiredvnodes
 operator|=
+name|min
+argument_list|(
 name|maxproc
 operator|+
 name|cnt
@@ -2000,6 +2009,29 @@ operator|.
 name|v_page_count
 operator|/
 literal|4
+argument_list|,
+literal|2
+operator|*
+name|vm_kmem_size
+operator|/
+operator|(
+literal|5
+operator|*
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vm_object
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vnode
+argument_list|)
+operator|)
+operator|)
+argument_list|)
 expr_stmt|;
 name|minvnodes
 operator|=
