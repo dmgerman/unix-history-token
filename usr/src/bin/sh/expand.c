@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expand.c	5.5 (Berkeley) %G%"
+literal|"@(#)expand.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1337,9 +1337,6 @@ name|p
 decl_stmt|,
 modifier|*
 name|start
-init|=
-name|stackblock
-argument_list|()
 decl_stmt|;
 name|int
 name|result
@@ -1358,6 +1355,11 @@ literal|'\0'
 argument_list|,
 name|expdest
 argument_list|)
+expr_stmt|;
+name|start
+operator|=
+name|stackblock
+argument_list|()
 expr_stmt|;
 name|p
 operator|=
@@ -2718,10 +2720,9 @@ name|i
 operator|=
 literal|0
 init|;
-name|optchar
-index|[
 name|i
-index|]
+operator|<
+name|NOPTS
 condition|;
 name|i
 operator|++
@@ -2729,17 +2730,21 @@ control|)
 block|{
 if|if
 condition|(
-name|optval
+name|optlist
 index|[
 name|i
 index|]
+operator|.
+name|val
 condition|)
 name|STPUTC
 argument_list|(
-name|optchar
+name|optlist
 index|[
 name|i
 index|]
+operator|.
+name|letter
 argument_list|,
 name|expdest
 argument_list|)
@@ -3431,10 +3436,15 @@ name|expdir
 operator|=
 name|ckmalloc
 argument_list|(
-literal|1024
+name|strlen
+argument_list|(
+name|str
+operator|->
+name|text
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* I hope this is big enough */
+comment|/* XXX - */
 name|expmeta
 argument_list|(
 name|expdir
@@ -3465,20 +3475,8 @@ name|savelastp
 condition|)
 block|{
 comment|/*  			 * no matches  			 */
-ifdef|#
-directive|ifdef
-name|PUTBACK_ZFLAG
-if|if
-condition|(
-operator|!
-name|zflag
-condition|)
-block|{
-operator|...
-endif|#
-directive|endif
 name|nometa
-operator|:
+label|:
 operator|*
 name|exparg
 operator|.
@@ -3555,7 +3553,13 @@ name|next
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Do metacharacter (i.e. *, ?, [...]) expansion.  */
+end_comment
+
+begin_function
 name|STATIC
 name|void
 name|expmeta
@@ -4174,7 +4178,13 @@ operator|=
 literal|'/'
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Add a file name to the list.  */
+end_comment
+
+begin_function
 name|STATIC
 name|void
 name|addfname
@@ -4251,7 +4261,13 @@ operator|->
 name|next
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Sort the results of file name expansion.  It calculates the number of  * strings to sort and then calls msort (short for merge sort) to do the  * work.  */
+end_comment
+
+begin_function
 name|STATIC
 name|struct
 name|strlist
@@ -4304,6 +4320,9 @@ name|len
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 name|STATIC
 name|struct
 name|strlist
@@ -4510,7 +4529,13 @@ return|return
 name|list
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Returns true if the pattern matches the string.  */
+end_comment
+
+begin_function
 name|int
 name|patmatch
 parameter_list|(
@@ -4565,6 +4590,9 @@ name|string
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 name|STATIC
 name|int
 name|pmatch
@@ -4966,7 +4994,13 @@ return|return
 literal|1
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Remove any CTLESC characters from a string.  */
+end_comment
+
+begin_function
 name|void
 name|rmescapes
 parameter_list|(
@@ -5042,7 +5076,13 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * See if a pattern matches in a case statement.  */
+end_comment
+
+begin_function
 name|int
 name|casematch
 parameter_list|(
