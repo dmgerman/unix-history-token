@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.13 (Berkeley) 86/07/24"
+literal|"@(#)files.c	4.14 (Berkeley) 86/10/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,11 @@ operator|||
 name|defined
 argument_list|(
 name|sun
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
 argument_list|)
 literal|"AS=as"
 block|,
