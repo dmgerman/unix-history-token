@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/filio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -1021,9 +1027,26 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+switch|switch
+condition|(
+name|cmd
+condition|)
+block|{
+comment|/* Really handled in upper layer */
+case|case
+name|FIOASYNC
+case|:
+case|case
+name|FIONBIO
+case|:
+return|return
+literal|0
+return|;
+default|default:
 return|return
 name|ENOTTY
 return|;
+block|}
 block|}
 end_function
 
