@@ -288,23 +288,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|boolean
-name|elf_link_find_version_dependencies
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|elf_link_hash_entry
-operator|*
-operator|,
-name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|boolean
 name|elf_link_assign_sym_version
 name|PARAMS
 argument_list|(
@@ -2382,7 +2365,7 @@ name|asection
 modifier|*
 name|hsec
 decl_stmt|;
-comment|/* This code handles the special SHN_MIPS_{TEXT,DATA} section          indices used by MIPS ELF.  */
+comment|/* This code handles the special SHN_MIPS_{TEXT,DATA} section 	 indices used by MIPS ELF.  */
 switch|switch
 condition|(
 name|h
@@ -2723,7 +2706,7 @@ operator|->
 name|size
 condition|)
 block|{
-comment|/* Since we think we have two common symbols, issue a multiple          common warning if desired.  Note that we only warn if the          size is different.  If the size is the same, we simply let          the old symbol override the new one as normally happens with          symbols defined in dynamic objects.  */
+comment|/* Since we think we have two common symbols, issue a multiple 	 common warning if desired.  Note that we only warn if the 	 size is different.  If the size is the same, we simply let 	 the old symbol override the new one as normally happens with 	 symbols defined in dynamic objects.  */
 if|if
 condition|(
 operator|!
@@ -2870,7 +2853,7 @@ name|size_change_ok
 operator|=
 name|true
 expr_stmt|;
-comment|/* If we get here when the old symbol is a common symbol, then          we are explicitly letting it override a weak symbol or          function in a dynamic object, and we don't want to warn about          a type change.  If the old symbol is a defined symbol, a type          change warning may still be appropriate.  */
+comment|/* If we get here when the old symbol is a common symbol, then 	 we are explicitly letting it override a weak symbol or 	 function in a dynamic object, and we don't want to warn about 	 a type change.  If the old symbol is a defined symbol, a type 	 change warning may still be appropriate.  */
 if|if
 condition|(
 name|h
@@ -3040,7 +3023,7 @@ name|olddyncommon
 operator|=
 name|false
 expr_stmt|;
-comment|/* We again permit a type change when a common symbol may be          overriding a function.  */
+comment|/* We again permit a type change when a common symbol may be 	 overriding a function.  */
 if|if
 condition|(
 name|bfd_is_com_section
@@ -3062,7 +3045,7 @@ name|vertree
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* In this special case, if H is the target of an indirection,          we want the caller to frob with H rather than with the          indirect symbol.  That will permit the caller to redefine the          target of the indirection, rather than the indirect symbol          itself.  FIXME: This will break the -y option if we store a          symbol with a different name.  */
+comment|/* In this special case, if H is the target of an indirection, 	 we want the caller to frob with H rather than with the 	 indirect symbol.  That will permit the caller to redefine the 	 target of the indirection, rather than the indirect symbol 	 itself.  FIXME: This will break the -y option if we store a 	 symbol with a different name.  */
 operator|*
 name|sym_hash
 operator|=
@@ -3128,7 +3111,7 @@ condition|)
 return|return
 name|false
 return|;
-comment|/* If the predumed common symbol in the dynamic object is          larger, pretend that the new symbol has its size.  */
+comment|/* If the predumed common symbol in the dynamic object is 	 larger, pretend that the new symbol has its size.  */
 if|if
 condition|(
 name|h
@@ -3228,7 +3211,7 @@ operator|!=
 name|STB_WEAK
 condition|)
 block|{
-comment|/* To make this work we have to frob the flags so that the rest          of the code does not think we are using the regular          definition.  */
+comment|/* To make this work we have to frob the flags so that the rest 	 of the code does not think we are using the regular 	 definition.  */
 if|if
 condition|(
 operator|(
@@ -3277,7 +3260,7 @@ operator||
 name|ELF_LINK_HASH_DEF_DYNAMIC
 operator|)
 expr_stmt|;
-comment|/* If H is the target of an indirection, we want the caller to          use H rather than the indirect symbol.  Otherwise if we are          defining a new indirect symbol we will wind up attaching it          to the entry we are overriding.  */
+comment|/* If H is the target of an indirection, we want the caller to 	 use H rather than the indirect symbol.  Otherwise if we are 	 defining a new indirect symbol we will wind up attaching it 	 to the entry we are overriding.  */
 operator|*
 name|sym_hash
 operator|=
@@ -3821,7 +3804,7 @@ name|false
 return|;
 block|}
 block|}
-comment|/* Now set HI to H, so that the following code will set the          other fields correctly.  */
+comment|/* Now set HI to H, so that the following code will set the 	 other fields correctly.  */
 name|hi
 operator|=
 name|h
@@ -4619,7 +4602,7 @@ name|bfd_link_hash_defweak
 operator|)
 condition|)
 block|{
-comment|/* We don't want to issue this warning.  Clobber                          the section size so that the warning does not                          get copied into the output file.  */
+comment|/* We don't want to issue this warning.  Clobber 			 the section size so that the warning does not 			 get copied into the output file.  */
 name|s
 operator|->
 name|_raw_size
@@ -4739,7 +4722,7 @@ operator|->
 name|relocateable
 condition|)
 block|{
-comment|/* Clobber the section size so that the warning does                      not get copied into the output file.  */
+comment|/* Clobber the section size so that the warning does 		     not get copied into the output file.  */
 name|s
 operator|->
 name|_raw_size
@@ -4819,7 +4802,7 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-comment|/* Read in the symbol versions, but don't bother to convert them          to internal format.  */
+comment|/* Read in the symbol versions, but don't bother to convert them 	 to internal format.  */
 if|if
 condition|(
 name|elf_dynversym
@@ -5085,7 +5068,7 @@ operator|!
 name|dynamic
 condition|)
 block|{
-comment|/* If we are creating a shared library, create all the dynamic          sections immediately.  We need to attach them to something,          so we attach them to this BFD, provided it is the right          format.  FIXME: If there are no input BFD's of the same          format as the output, we can't make a shared library.  */
+comment|/* If we are creating a shared library, create all the dynamic 	 sections immediately.  We need to attach them to something, 	 so we attach them to this BFD, provided it is the right 	 format.  FIXME: If there are no input BFD's of the same 	 format as the output, we can't make a shared library.  */
 if|if
 condition|(
 name|info
@@ -6256,7 +6239,7 @@ goto|goto
 name|error_return
 goto|;
 block|}
-comment|/* Save the SONAME, if there is one, because sometimes the          linker emulation code will need to know it.  */
+comment|/* Save the SONAME, if there is one, because sometimes the 	 linker emulation code will need to know it.  */
 if|if
 condition|(
 operator|*
@@ -6908,7 +6891,7 @@ name|vs_vers
 operator|&
 name|VERSYM_VERSION
 expr_stmt|;
-comment|/* If this is a hidden symbol, or if it is not version                  1, we append the version name to the symbol name.                  However, we do not modify a non-hidden absolute                  symbol, because it might be the version symbol                  itself.  FIXME: What if it isn't?  */
+comment|/* If this is a hidden symbol, or if it is not version 		 1, we append the version name to the symbol name. 		 However, we do not modify a non-hidden absolute 		 symbol, because it might be the version symbol 		 itself.  FIXME: What if it isn't?  */
 if|if
 condition|(
 operator|(
@@ -7359,7 +7342,7 @@ name|i
 operator|.
 name|link
 expr_stmt|;
-comment|/* Remember the old alignment if this is a common symbol, so              that we don't reduce the alignment later on.  We can't              check later, because _bfd_generic_link_add_one_symbol              will set a default for the alignment which we want to              override.  */
+comment|/* Remember the old alignment if this is a common symbol, so 	     that we don't reduce the alignment later on.  We can't 	     check later, because _bfd_generic_link_add_one_symbol 	     will set a default for the alignment which we want to 	     override.  */
 if|if
 condition|(
 name|h
@@ -7740,7 +7723,7 @@ operator|.
 name|st_size
 expr_stmt|;
 block|}
-comment|/* If this is a common symbol, then we always want H->SIZE              to be the size of the common symbol.  The code just above              won't fix the size if a common symbol becomes larger.  We              don't warn about a size change here, because that is              covered by --warn-common.  */
+comment|/* If this is a common symbol, then we always want H->SIZE 	     to be the size of the common symbol.  The code just above 	     won't fix the size if a common symbol becomes larger.  We 	     don't warn about a size change here, because that is 	     covered by --warn-common.  */
 if|if
 condition|(
 name|h
@@ -7905,7 +7888,7 @@ name|sym
 operator|.
 name|st_other
 expr_stmt|;
-comment|/* If neither has visibility, use the st_other of the 	         definition.  This is an arbitrary choice, since the 	         other bits have no general meaning.  */
+comment|/* If neither has visibility, use the st_other of the 		 definition.  This is an arbitrary choice, since the 		 other bits have no general meaning.  */
 if|if
 condition|(
 operator|!
@@ -8248,7 +8231,7 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-comment|/* The symbol from a DT_NEEDED object is referenced from 	         the regular object to create a dynamic executable. We 		 have to make sure there is a DT_NEEDED entry for it.  */
+comment|/* The symbol from a DT_NEEDED object is referenced from 		 the regular object to create a dynamic executable. We 		 have to make sure there is a DT_NEEDED entry for it.  */
 name|dt_needed
 operator|=
 name|false
@@ -8646,7 +8629,7 @@ goto|goto
 name|error_return
 goto|;
 block|}
-comment|/* If the real definition is in the list of dynamic                  symbols, make sure the weak definition is put there                  as well.  If we don't do this, then the dynamic                  loader might not merge the entries for the real                  definition and the weak definition.  */
+comment|/* If the real definition is in the list of dynamic 		 symbols, make sure the weak definition is put there 		 as well.  If we don't do this, then the dynamic 		 loader might not merge the entries for the real 		 definition and the weak definition.  */
 if|if
 condition|(
 name|h
@@ -11436,21 +11419,6 @@ name|elf_link_hash_flags
 operator||=
 name|ELF_LINK_HASH_DEF_REGULAR
 expr_stmt|;
-comment|/* When possible, keep the original type of the symbol.  */
-if|if
-condition|(
-name|h
-operator|->
-name|type
-operator|==
-name|STT_NOTYPE
-condition|)
-name|h
-operator|->
-name|type
-operator|=
-name|STT_OBJECT
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -12747,7 +12715,7 @@ name|failed
 operator|=
 name|false
 expr_stmt|;
-comment|/* If we are supposed to export all symbols into the dynamic symbol          table (this is not the normal case), then do so.  */
+comment|/* If we are supposed to export all symbols into the dynamic symbol 	 table (this is not the normal case), then do so.  */
 if|if
 condition|(
 name|info
@@ -13001,6 +12969,249 @@ return|return
 name|false
 return|;
 block|}
+if|if
+condition|(
+name|bfd_get_section_by_name
+argument_list|(
+name|output_bfd
+argument_list|,
+literal|".preinit_array"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* DT_PREINIT_ARRAY is not allowed in shared library.  */
+if|if
+condition|(
+name|info
+operator|->
+name|shared
+condition|)
+block|{
+name|bfd
+modifier|*
+name|sub
+decl_stmt|;
+name|asection
+modifier|*
+name|o
+decl_stmt|;
+for|for
+control|(
+name|sub
+operator|=
+name|info
+operator|->
+name|input_bfds
+init|;
+name|sub
+operator|!=
+name|NULL
+condition|;
+name|sub
+operator|=
+name|sub
+operator|->
+name|link_next
+control|)
+for|for
+control|(
+name|o
+operator|=
+name|sub
+operator|->
+name|sections
+init|;
+name|o
+operator|!=
+name|NULL
+condition|;
+name|o
+operator|=
+name|o
+operator|->
+name|next
+control|)
+if|if
+condition|(
+name|elf_section_data
+argument_list|(
+name|o
+argument_list|)
+operator|->
+name|this_hdr
+operator|.
+name|sh_type
+operator|==
+name|SHT_PREINIT_ARRAY
+condition|)
+block|{
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
+argument_list|(
+name|_
+argument_list|(
+literal|"%s: .preinit_array section is not allowed in DSO"
+argument_list|)
+argument_list|,
+name|bfd_archive_filename
+argument_list|(
+name|sub
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|bfd_set_error
+argument_list|(
+name|bfd_error_nonrepresentable_section
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|elf_add_dynamic_entry
+argument_list|(
+name|info
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+name|DT_PREINIT_ARRAY
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+argument_list|)
+operator|||
+operator|!
+name|elf_add_dynamic_entry
+argument_list|(
+name|info
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+name|DT_PREINIT_ARRAYSZ
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+block|}
+if|if
+condition|(
+name|bfd_get_section_by_name
+argument_list|(
+name|output_bfd
+argument_list|,
+literal|".init_array"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|elf_add_dynamic_entry
+argument_list|(
+name|info
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+name|DT_INIT_ARRAY
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+argument_list|)
+operator|||
+operator|!
+name|elf_add_dynamic_entry
+argument_list|(
+name|info
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+name|DT_INIT_ARRAYSZ
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+block|}
+if|if
+condition|(
+name|bfd_get_section_by_name
+argument_list|(
+name|output_bfd
+argument_list|,
+literal|".fini_array"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|elf_add_dynamic_entry
+argument_list|(
+name|info
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+name|DT_FINI_ARRAY
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+argument_list|)
+operator|||
+operator|!
+name|elf_add_dynamic_entry
+argument_list|(
+name|info
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+name|DT_FINI_ARRAYSZ
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+block|}
 name|dynstr
 operator|=
 name|bfd_get_section_by_name
@@ -13195,7 +13406,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* We may have created additional version definitions if we are          just linking a regular application.  */
+comment|/* We may have created additional version definitions if we are 	 just linking a regular application.  */
 name|verdefs
 operator|=
 name|asvinfo
@@ -15314,6 +15525,33 @@ if|if
 condition|(
 name|h
 operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
 name|dynindx
 operator|!=
 operator|-
@@ -16139,7 +16377,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Unfortunately, ELF_LINK_NON_ELF is only correct if the symbol          was first seen in a non-ELF file.  Fortunately, if the symbol          was first seen in an ELF file, we're probably OK unless the          symbol was defined in a non-ELF file.  Catch that case here.          FIXME: We're still in trouble if the symbol was first seen in          a dynamic object, and then later in a non-ELF regular object.  */
+comment|/* Unfortunately, ELF_LINK_NON_ELF is only correct if the symbol 	 was first seen in a non-ELF file.  Fortunately, if the symbol 	 was first seen in an ELF file, we're probably OK unless the 	 symbol was defined in a non-ELF file.  Catch that case here. 	 FIXME: We're still in trouble if the symbol was first seen in 	 a dynamic object, and then later in a non-ELF regular object.  */
 if|if
 condition|(
 operator|(
@@ -16599,6 +16837,60 @@ name|elf_backend_data
 modifier|*
 name|bed
 decl_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+block|{
+name|h
+operator|->
+name|plt
+operator|.
+name|offset
+operator|=
+operator|(
+name|bfd_vma
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|h
+operator|->
+name|got
+operator|.
+name|offset
+operator|=
+operator|(
+name|bfd_vma
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+comment|/* When warning symbols are created, they **replace** the "real" 	 entry in the hash table, thus we never get to see the real 	 symbol in a hash traversal.  So look at it now.  */
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+block|}
 comment|/* Ignore indirect symbols.  These are added by the versioning code.  */
 if|if
 condition|(
@@ -16933,6 +17225,33 @@ if|if
 condition|(
 name|h
 operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
 name|dynindx
 operator|==
 operator|-
@@ -17178,6 +17497,33 @@ decl_stmt|;
 name|bfd_size_type
 name|amt
 decl_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
 comment|/* We only care about symbols defined in shared objects with version      information.  */
 if|if
 condition|(
@@ -17539,6 +17885,33 @@ name|sinfo
 operator|->
 name|info
 expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
 comment|/* Fix the symbol flags.  */
 name|eif
 operator|.
@@ -17647,7 +18020,7 @@ name|hidden
 operator|=
 name|true
 expr_stmt|;
-comment|/* There are two consecutive ELF_VER_CHR characters if this is          not a hidden symbol.  */
+comment|/* There are two consecutive ELF_VER_CHR characters if this is 	 not a hidden symbol.  */
 operator|++
 name|p
 expr_stmt|;
@@ -17874,7 +18247,7 @@ argument_list|)
 condition|)
 break|break;
 block|}
-comment|/* See if there is anything to force this symbol to                  local scope.  */
+comment|/* See if there is anything to force this symbol to 		 local scope.  */
 if|if
 condition|(
 name|d
@@ -17968,7 +18341,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* If we are building an application, we need to create a          version node for this version.  */
+comment|/* If we are building an application, we need to create a 	 version node for this version.  */
 if|if
 condition|(
 name|t
@@ -17990,7 +18363,7 @@ decl_stmt|;
 name|int
 name|version_index
 decl_stmt|;
-comment|/* If we aren't going to export this symbol, we don't need              to worry about it.  */
+comment|/* If we aren't going to export this symbol, we don't need 	     to worry about it.  */
 if|if
 condition|(
 name|h
@@ -18171,7 +18544,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* We could not find the version for a symbol when              generating a shared archive.  Return an error.  */
+comment|/* We could not find the version for a symbol when 	     generating a shared archive.  Return an error.  */
 call|(
 modifier|*
 name|_bfd_error_handler
@@ -18257,7 +18630,7 @@ name|bfd_elf_version_expr
 modifier|*
 name|d
 decl_stmt|;
-comment|/* See if can find what version this symbol is in.  If the          symbol is supposed to be local, then don't actually register          it.  */
+comment|/* See if can find what version this symbol is in.  If the 	 symbol is supposed to be local, then don't actually register 	 it.  */
 name|deflt
 operator|=
 name|NULL
@@ -21891,14 +22264,81 @@ name|int
 modifier|*
 name|rel_count2
 decl_stmt|;
-comment|/* We must be careful to add the relocation froms the 		 input section to the right output count.  */
-if|if
-condition|(
+name|bfd_size_type
+name|entsize
+decl_stmt|;
+name|bfd_size_type
+name|entsize2
+decl_stmt|;
+comment|/* We must be careful to add the relocations from the 		 input section to the right output count.  */
+name|entsize
+operator|=
 name|esdi
 operator|->
 name|rel_hdr
 operator|.
 name|sh_entsize
+expr_stmt|;
+name|entsize2
+operator|=
+name|esdi
+operator|->
+name|rel_hdr2
+condition|?
+name|esdi
+operator|->
+name|rel_hdr2
+operator|->
+name|sh_entsize
+else|:
+literal|0
+expr_stmt|;
+name|BFD_ASSERT
+argument_list|(
+operator|(
+name|entsize
+operator|==
+sizeof|sizeof
+argument_list|(
+name|Elf_External_Rel
+argument_list|)
+operator|||
+name|entsize
+operator|==
+sizeof|sizeof
+argument_list|(
+name|Elf_External_Rela
+argument_list|)
+operator|)
+operator|&&
+name|entsize2
+operator|!=
+name|entsize
+operator|&&
+operator|(
+name|entsize2
+operator|==
+literal|0
+operator|||
+name|entsize2
+operator|==
+sizeof|sizeof
+argument_list|(
+name|Elf_External_Rel
+argument_list|)
+operator|||
+name|entsize2
+operator|==
+sizeof|sizeof
+argument_list|(
+name|Elf_External_Rela
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|entsize
 operator|==
 name|esdo
 operator|->
@@ -22858,6 +23298,10 @@ operator|->
 name|next
 control|)
 block|{
+name|Elf_Internal_Shdr
+modifier|*
+name|rhdr
+decl_stmt|;
 if|if
 condition|(
 name|p
@@ -22881,6 +23325,91 @@ name|owner
 argument_list|)
 operator|==
 name|bfd_target_elf_flavour
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|(
+name|rhdr
+operator|=
+operator|&
+name|elf_section_data
+argument_list|(
+name|p
+operator|->
+name|u
+operator|.
+name|indirect
+operator|.
+name|section
+argument_list|)
+operator|->
+name|rel_hdr
+operator|)
+operator|->
+name|sh_entsize
+operator|==
+literal|0
+operator|)
+operator|||
+name|rhdr
+operator|->
+name|sh_entsize
+operator|==
+sizeof|sizeof
+argument_list|(
+name|Elf_External_Rel
+argument_list|)
+operator|||
+name|rhdr
+operator|->
+name|sh_entsize
+operator|==
+sizeof|sizeof
+argument_list|(
+name|Elf_External_Rela
+argument_list|)
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|(
+name|rhdr
+operator|=
+name|elf_section_data
+argument_list|(
+name|p
+operator|->
+name|u
+operator|.
+name|indirect
+operator|.
+name|section
+argument_list|)
+operator|->
+name|rel_hdr2
+operator|)
+operator|==
+name|NULL
+operator|)
+operator|||
+name|rhdr
+operator|->
+name|sh_entsize
+operator|==
+sizeof|sizeof
+argument_list|(
+name|Elf_External_Rel
+argument_list|)
+operator|||
+name|rhdr
+operator|->
+name|sh_entsize
+operator|==
+sizeof|sizeof
+argument_list|(
+name|Elf_External_Rela
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -22982,15 +23511,7 @@ goto|;
 block|}
 block|}
 block|}
-comment|/* That wrote out all the local symbols.  Finish up the symbol table      with the global symbols. Even if we want to strip everything we      can, we still need to deal with those global symbols that got      converted to local in a version script.  */
-if|if
-condition|(
-name|info
-operator|->
-name|shared
-condition|)
-block|{
-comment|/* Output any global symbols that got converted to local in a          version script.  We do this in a separate step since ELF          requires all local symbols to appear prior to any global          symbols.  FIXME: We should only do this if some global          symbols were, in fact, converted to become local.  FIXME:          Will this work correctly with the Irix 5 linker?  */
+comment|/* Output any global symbols that got converted to local in a      version script or due to symbol visibility.  We do this in a      separate step since ELF requires all local symbols to appear      prior to any global symbols.  FIXME: We should only do this if      some global symbols were, in fact, converted to become local.      FIXME: Will this work correctly with the Irix 5 linker?  */
 name|eoinfo
 operator|.
 name|failed
@@ -23035,7 +23556,7 @@ condition|)
 return|return
 name|false
 return|;
-block|}
+comment|/* That wrote out all the local symbols.  Finish up the symbol table      with the global symbols. Even if we want to strip everything we      can, we still need to deal with those global symbols that got      converted to local in a version script.  */
 comment|/* The sh_info field records the index of the first non local symbol.  */
 name|symtab_hdr
 operator|->
@@ -23280,7 +23801,7 @@ name|isym
 operator|.
 name|st_other
 expr_stmt|;
-comment|/* Copy the internal symbol as is. 		 Note that we saved a word of storage and overwrote                  the original st_name with the dynstr_index.  */
+comment|/* Copy the internal symbol as is. 		 Note that we saved a word of storage and overwrote 		 the original st_name with the dynstr_index.  */
 name|sym
 operator|=
 name|e
@@ -24152,6 +24673,123 @@ block|}
 block|}
 break|break;
 case|case
+name|DT_PREINIT_ARRAYSZ
+case|:
+name|name
+operator|=
+literal|".preinit_array"
+expr_stmt|;
+goto|goto
+name|get_size
+goto|;
+case|case
+name|DT_INIT_ARRAYSZ
+case|:
+name|name
+operator|=
+literal|".init_array"
+expr_stmt|;
+goto|goto
+name|get_size
+goto|;
+case|case
+name|DT_FINI_ARRAYSZ
+case|:
+name|name
+operator|=
+literal|".fini_array"
+expr_stmt|;
+name|get_size
+label|:
+name|o
+operator|=
+name|bfd_get_section_by_name
+argument_list|(
+name|abfd
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|BFD_ASSERT
+argument_list|(
+name|o
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|o
+operator|->
+name|_raw_size
+operator|==
+literal|0
+condition|)
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
+argument_list|(
+name|_
+argument_list|(
+literal|"warning: %s section has zero size"
+argument_list|)
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|dyn
+operator|.
+name|d_un
+operator|.
+name|d_val
+operator|=
+name|o
+operator|->
+name|_raw_size
+expr_stmt|;
+name|elf_swap_dyn_out
+argument_list|(
+name|dynobj
+argument_list|,
+operator|&
+name|dyn
+argument_list|,
+name|dyncon
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DT_PREINIT_ARRAY
+case|:
+name|name
+operator|=
+literal|".preinit_array"
+expr_stmt|;
+goto|goto
+name|get_vma
+goto|;
+case|case
+name|DT_INIT_ARRAY
+case|:
+name|name
+operator|=
+literal|".init_array"
+expr_stmt|;
+goto|goto
+name|get_vma
+goto|;
+case|case
+name|DT_FINI_ARRAY
+case|:
+name|name
+operator|=
+literal|".fini_array"
+expr_stmt|;
+goto|goto
+name|get_vma
+goto|;
+case|case
 name|DT_HASH
 case|:
 name|name
@@ -24496,7 +25134,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* At this point, we are only interested in sections                  created by elf_link_create_dynamic_sections.  */
+comment|/* At this point, we are only interested in sections 		 created by elf_link_create_dynamic_sections.  */
 continue|continue;
 block|}
 if|if
@@ -24564,7 +25202,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* The contents of the .dynstr section are actually in a                  stringtab.  */
+comment|/* The contents of the .dynstr section are actually in a 		 stringtab.  */
 name|off
 operator|=
 name|elf_section_data
@@ -25677,6 +26315,33 @@ name|sec
 decl_stmt|;
 if|if
 condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|h
 operator|->
@@ -25843,6 +26508,48 @@ name|asection
 modifier|*
 name|input_sec
 decl_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+block|{
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_new
+condition|)
+return|return
+name|true
+return|;
+block|}
 comment|/* Decide whether to output this symbol in this pass.  */
 if|if
 condition|(
@@ -26249,6 +26956,9 @@ default|default:
 case|case
 name|bfd_link_hash_new
 case|:
+case|case
+name|bfd_link_hash_warning
+case|:
 name|abort
 argument_list|()
 expr_stmt|;
@@ -26258,17 +26968,6 @@ return|;
 case|case
 name|bfd_link_hash_undefined
 case|:
-name|input_sec
-operator|=
-name|bfd_und_section_ptr
-expr_stmt|;
-name|sym
-operator|.
-name|st_shndx
-operator|=
-name|SHN_UNDEF
-expr_stmt|;
-break|break;
 case|case
 name|bfd_link_hash_undefweak
 case|:
@@ -26493,58 +27192,12 @@ break|break;
 case|case
 name|bfd_link_hash_indirect
 case|:
-comment|/* These symbols are created by symbol versioning.  They point          to the decorated version of the name.  For example, if the          symbol foo@@GNU_1.2 is the default, which should be used when          foo is used with no version, then we add an indirect symbol          foo which points to foo@@GNU_1.2.  We ignore these symbols,          since the indirected symbol is already in the hash table.  */
+comment|/* These symbols are created by symbol versioning.  They point 	 to the decorated version of the name.  For example, if the 	 symbol foo@@GNU_1.2 is the default, which should be used when 	 foo is used with no version, then we add an indirect symbol 	 foo which points to foo@@GNU_1.2.  We ignore these symbols, 	 since the indirected symbol is already in the hash table.  */
 return|return
 name|true
-return|;
-case|case
-name|bfd_link_hash_warning
-case|:
-comment|/* We can't represent these symbols in ELF, although a warning          symbol may have come from a .gnu.warning.SYMBOL section.  We          just put the target symbol in the hash table.  If the target          symbol does not really exist, don't do anything.  */
-if|if
-condition|(
-name|h
-operator|->
-name|root
-operator|.
-name|u
-operator|.
-name|i
-operator|.
-name|link
-operator|->
-name|type
-operator|==
-name|bfd_link_hash_new
-condition|)
-return|return
-name|true
-return|;
-return|return
-operator|(
-name|elf_link_output_extsym
-argument_list|(
-operator|(
-expr|struct
-name|elf_link_hash_entry
-operator|*
-operator|)
-name|h
-operator|->
-name|root
-operator|.
-name|u
-operator|.
-name|i
-operator|.
-name|link
-argument_list|,
-name|data
-argument_list|)
-operator|)
 return|;
 block|}
-comment|/* Give the processor backend a chance to tweak the symbol value,      and also to finish up anything that needs to be done for this      symbol.  */
+comment|/* Give the processor backend a chance to tweak the symbol value,      and also to finish up anything that needs to be done for this      symbol.  FIXME: Not calling elf_backend_finish_dynamic_symbol for      forced local syms when non-shared is due to a historical quirk.  */
 if|if
 condition|(
 operator|(
@@ -26563,6 +27216,24 @@ operator|&
 name|ELF_LINK_FORCED_LOCAL
 operator|)
 operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|finfo
+operator|->
+name|info
+operator|->
+name|shared
+operator|||
+operator|(
+name|h
+operator|->
+name|elf_link_hash_flags
+operator|&
+name|ELF_LINK_FORCED_LOCAL
+operator|)
+operator|==
 literal|0
 operator|)
 operator|&&
@@ -28340,7 +29011,7 @@ operator|==
 name|discard_all
 condition|)
 continue|continue;
-comment|/* If this symbol is defined in a section which we are          discarding, we don't need to keep it, but note that          linker_mark is only reliable for sections that have contents.          For the benefit of the MIPS ELF linker, we check SEC_EXCLUDE          as well as linker_mark.  */
+comment|/* If this symbol is defined in a section which we are 	 discarding, we don't need to keep it, but note that 	 linker_mark is only reliable for sections that have contents. 	 For the benefit of the MIPS ELF linker, we check SEC_EXCLUDE 	 as well as linker_mark.  */
 if|if
 condition|(
 operator|(
@@ -28677,7 +29348,7 @@ block|{
 comment|/* Section was created by elf_link_create_dynamic_sections 	     or somesuch.  */
 continue|continue;
 block|}
-comment|/* Get the contents of the section.  They have been cached by a          relaxation routine.  Note that o is a section in an input          file, so the contents field will not have been set by any of          the routines which work on output files.  */
+comment|/* Get the contents of the section.  They have been cached by a 	 relaxation routine.  Note that o is a section in an input 	 file, so the contents field will not have been set by any of 	 the routines which work on output files.  */
 if|if
 condition|(
 name|elf_section_data
@@ -30469,7 +31140,7 @@ name|elf_link_hash_entry
 modifier|*
 name|h
 decl_stmt|;
-comment|/* Treat a reloc against a defined symbol as though it were          actually against the section.  */
+comment|/* Treat a reloc against a defined symbol as though it were 	 actually against the section.  */
 name|h
 operator|=
 operator|(
@@ -30558,7 +31229,7 @@ name|rel_hash_ptr
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* It seems that we ought to add the symbol value to the              addend here, but in practice it has already been added              because it was passed to constructor_callback.  */
+comment|/* It seems that we ought to add the symbol value to the 	     addend here, but in practice it has already been added 	     because it was passed to constructor_callback.  */
 name|addend
 operator|+=
 name|section
@@ -33229,6 +33900,25 @@ name|rsec
 operator|->
 name|gc_mark
 condition|)
+block|{
+if|if
+condition|(
+name|bfd_get_flavour
+argument_list|(
+name|rsec
+operator|->
+name|owner
+argument_list|)
+operator|!=
+name|bfd_target_elf_flavour
+condition|)
+name|rsec
+operator|->
+name|gc_mark
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|!
@@ -33249,6 +33939,7 @@ expr_stmt|;
 goto|goto
 name|out2
 goto|;
+block|}
 block|}
 block|}
 name|out2
@@ -33618,6 +34309,33 @@ if|if
 condition|(
 name|h
 operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
 name|dynindx
 operator|!=
 operator|-
@@ -33693,6 +34411,33 @@ name|PTR
 name|okp
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
 comment|/* Those that are not vtables.  */
 if|if
 condition|(
@@ -33945,6 +34690,33 @@ decl_stmt|;
 name|int
 name|file_align
 decl_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
 comment|/* Take care of both those symbols that do not describe vtables as      well as those that are not loaded.  */
 if|if
 condition|(
@@ -35179,6 +35951,33 @@ if|if
 condition|(
 name|h
 operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
 name|got
 operator|.
 name|refcount
@@ -35328,6 +36127,33 @@ name|alc
 init|=
 name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
 comment|/* Ignore indirect symbols.  These are added by the versioning code.  */
 if|if
 condition|(
@@ -36716,6 +37542,11 @@ modifier|*
 name|sec
 decl_stmt|;
 block|{
+name|struct
+name|elf_backend_data
+modifier|*
+name|bed
+decl_stmt|;
 switch|switch
 condition|(
 name|elf_section_data
@@ -36738,35 +37569,32 @@ return|;
 default|default:
 break|break;
 block|}
-if|if
-condition|(
-operator|(
+name|bed
+operator|=
 name|get_elf_backend_data
 argument_list|(
 name|sec
 operator|->
 name|owner
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bed
 operator|->
 name|elf_backend_ignore_discarded_relocs
 operator|!=
 name|NULL
-operator|)
 operator|&&
-operator|(
-operator|*
-name|get_elf_backend_data
-argument_list|(
-name|sec
-operator|->
-name|owner
-argument_list|)
+call|(
+modifier|*
+name|bed
 operator|->
 name|elf_backend_ignore_discarded_relocs
-operator|)
-operator|(
+call|)
+argument_list|(
 name|sec
-operator|)
+argument_list|)
 condition|)
 return|return
 name|true
