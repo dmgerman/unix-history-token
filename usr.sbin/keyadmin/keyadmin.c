@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -214,6 +220,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
 
 begin_decl_stmt
 name|int
@@ -994,21 +1006,16 @@ begin_comment
 comment|/*----------------------------------------------------------------------   help:   Print appropriate help message on stdout.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|help
-argument_list|(
-argument|cmdname
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmdname
+parameter_list|)
 name|char
 modifier|*
 name|cmdname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -1061,11 +1068,9 @@ operator|.
 name|name
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unknown command: %s\n"
+literal|"unknown command: %s"
 argument_list|,
 name|cmdname
 argument_list|)
@@ -1195,52 +1200,27 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------   usage:  print suitable usage message on stdout.  ----------------------------------------------------------------------*/
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|(
-argument|myname
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|myname
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|()
 block|{
-name|int
-name|i
-decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s<command><args>\n"
-argument_list|,
-name|myname
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"where<command> is one of:\n"
-argument_list|)
-expr_stmt|;
-name|help
-argument_list|(
-name|NULL
+literal|"usage: keyadmin<command><args>\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*----------------------------------------------------------------------   parsekey:  parse argument into a binary key and also record              the length of the resulting key. ----------------------------------------------------------------------*/
@@ -1630,6 +1610,7 @@ directive|endif
 comment|/* INET6 */
 if|if
 condition|(
+operator|(
 name|hostent
 operator|=
 name|hostname2addr
@@ -1640,6 +1621,7 @@ name|AF_INET
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 if|if
 condition|(
@@ -1808,11 +1790,9 @@ block|}
 endif|#
 directive|endif
 comment|/* INET6 */
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unknown host \"%s\"\n"
+literal|"unknown host \"%s\""
 argument_list|,
 name|arg
 argument_list|)
@@ -1926,7 +1906,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
-name|int
+name|void
 name|dummyfromaddr
 parameter_list|(
 name|sa
@@ -3007,6 +2987,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|c
 operator|=
 name|strchr
@@ -3015,6 +2996,7 @@ name|buffer
 argument_list|,
 literal|'\\'
 argument_list|)
+operator|)
 condition|)
 block|{
 name|left
@@ -3089,6 +3071,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|docmd
@@ -3098,6 +3081,7 @@ name|largc
 argument_list|,
 name|largv
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -3107,11 +3091,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Parse error on line %d of %s.\n"
+literal|"parse error on line %d of %s"
 argument_list|,
 name|line
 argument_list|,
@@ -3234,7 +3216,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ x += ROUNDUP(n); if (cp>= cpmax) { fprintf(stderr, "key: kernel returned a truncated message!\n"); return(-1); } }
+value|{ x += ROUNDUP(n); if (cp>= cpmax) { \     warnx("kernel returned a truncated message!"); return(-1); } }
 comment|/* Grab src addr */
 name|kip
 operator|->
@@ -3816,13 +3798,6 @@ modifier|*
 name|kdp
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"type=%d(%s) "
@@ -4284,6 +4259,7 @@ name|parse
 condition|)
 if|if
 condition|(
+operator|(
 name|j
 operator|=
 name|keycmds
@@ -4305,6 +4281,7 @@ literal|1
 index|]
 operator|)
 argument_list|)
+operator|)
 condition|)
 return|return
 name|j
@@ -4403,11 +4380,9 @@ literal|256
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"add: spi must be greater than 255\n"
+literal|"add: spi must be greater than 255"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4453,11 +4428,9 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"add: key must be 8 bytes\n"
+literal|"add: key must be 8 bytes"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4481,11 +4454,9 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"add: iv must be 4 or 8 bytes\n"
+literal|"add: iv must be 4 or 8 bytes"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4516,11 +4487,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"add: no key specified\n"
+literal|"add: no key specified"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4583,15 +4552,13 @@ name|errno
 operator|==
 name|EEXIST
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"add: security association already exists\n"
+literal|"add: security association already exists"
 argument_list|)
 expr_stmt|;
 else|else
-name|perror
+name|warn
 argument_list|(
 literal|"add"
 argument_list|)
@@ -4673,11 +4640,9 @@ operator|==
 name|ESRCH
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"delete: Security association not found\n"
+literal|"delete: security association not found"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4686,7 +4651,7 @@ return|;
 block|}
 else|else
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"delete"
 argument_list|)
@@ -4785,11 +4750,9 @@ operator|==
 name|ESRCH
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"get: Security association not found\n"
+literal|"get: security association not found"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4798,7 +4761,7 @@ return|;
 block|}
 else|else
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"get"
 argument_list|)
@@ -4853,7 +4816,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"read"
 argument_list|)
@@ -5068,7 +5031,7 @@ operator|->
 name|key_msglen
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"write"
 argument_list|)
@@ -5350,7 +5313,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"open"
 argument_list|)
@@ -5375,7 +5338,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"fdopen"
 argument_list|)
@@ -5432,7 +5395,7 @@ operator|->
 name|key_msglen
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"write"
 argument_list|)
@@ -5466,7 +5429,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"read"
 argument_list|)
@@ -5860,20 +5823,13 @@ condition|(
 name|getuid
 argument_list|()
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"This program is intended for the superuser only.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"this program is intended for the superuser only"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -5891,7 +5847,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"socket"
 argument_list|)
@@ -5949,7 +5905,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"getpid"
 argument_list|)
@@ -5981,22 +5937,16 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot add keys from the command line.  RTFM for why.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"cannot add keys from the command line. RTFM for why"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|docmd
@@ -6013,6 +5963,7 @@ literal|1
 index|]
 operator|)
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -6116,12 +6067,7 @@ expr_stmt|;
 block|}
 block|}
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 return|return
@@ -6141,9 +6087,6 @@ name|iargv
 index|[
 name|KEYCMD_ARG_MAX
 index|]
-decl_stmt|,
-modifier|*
-name|head
 decl_stmt|;
 name|int
 name|iargc
@@ -6229,6 +6172,7 @@ expr_stmt|;
 comment|/*        * given argc/argv, process argument as if it came from the command        * line.        */
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|docmd
@@ -6237,6 +6181,7 @@ name|iargc
 argument_list|,
 name|iargv
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -6351,24 +6296,20 @@ if|if
 condition|(
 name|errno
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"System error"
+literal|"system error"
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unrecognized command; "
+literal|"unrecognized command"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Type 'help' if you need help\n"
+literal|"type 'help' if you need help"
 argument_list|)
 expr_stmt|;
 block|}
