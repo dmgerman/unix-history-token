@@ -2805,7 +2805,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set variable var to val.  Returns -1 on failure, 0 on success.  */
+comment|/*  * Set variable var to val.  Both var and val may be destroyed by the  * caller after setvar().  *  * Returns -1 on failure, 0 on success.  */
 end_comment
 
 begin_function
@@ -3008,10 +3008,17 @@ argument_list|,
 name|val_n
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|var_n
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -3032,10 +3039,22 @@ argument_list|,
 name|vble_l
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|var_n
+argument_list|)
+operator|,
+name|free
+argument_list|(
+name|val_n
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|i
 operator|=
 name|vble_l
@@ -3059,10 +3078,22 @@ operator|->
 name|next
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|var_n
+argument_list|)
+operator|,
+name|free
+argument_list|(
+name|val_n
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|i
 operator|=
 name|last
