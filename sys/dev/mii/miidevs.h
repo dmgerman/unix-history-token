@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.12 2001/05/11 19:56:36 wpaul Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.13 2001/05/11 20:34:38 jlemon Exp   */
 end_comment
 
 begin_comment
@@ -482,20 +482,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MII_MODEL_INTEL_I82553C
-value|0x0035
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_STR_INTEL_I82553C
-value|"i82553 10/100 media interface"
-end_define
-
-begin_define
-define|#
-directive|define
 name|MII_MODEL_INTEL_I82555
 value|0x0015
 end_define
@@ -505,6 +491,48 @@ define|#
 directive|define
 name|MII_STR_INTEL_I82555
 value|"i82555 10/100 media interface"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_INTEL_I82562EM
+value|0x0032
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_INTEL_I82562EM
+value|"i82562EM 10/100 media interface"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_INTEL_I82562ET
+value|0x0033
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_INTEL_I82562ET
+value|"i82562ET 10/100 media interface"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_INTEL_I82553C
+value|0x0035
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_INTEL_I82553C
+value|"i82553 10/100 media interface"
 end_define
 
 begin_comment
