@@ -1420,6 +1420,9 @@ case|case
 name|fat
 case|:
 case|case
+name|gpt
+case|:
+case|case
 name|mbr
 case|:
 case|case
