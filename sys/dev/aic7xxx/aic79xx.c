@@ -24347,7 +24347,13 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|MAXBSIZE
+operator|(
+name|AHD_NSEG
+operator|-
+literal|1
+operator|)
+operator|*
+name|PAGE_SIZE
 argument_list|,
 comment|/*nsegments*/
 name|AHD_NSEG
