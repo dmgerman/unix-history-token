@@ -468,6 +468,54 @@ value|0x1d
 end_define
 
 begin_comment
+comment|/* command status values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TWE_STATUS_RESET
+value|0xff
+end_define
+
+begin_comment
+comment|/* controller requests reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TWE_STATUS_FATAL
+value|0xc0
+end_define
+
+begin_comment
+comment|/* fatal errors not requiring reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TWE_STATUS_WARNING
+value|0x80
+end_define
+
+begin_comment
+comment|/* warnings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TWE_STAUS_INFO
+value|0x40
+end_define
+
+begin_comment
+comment|/* informative status */
+end_comment
+
+begin_comment
 comment|/* misc defines */
 end_comment
 

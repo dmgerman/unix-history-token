@@ -776,8 +776,7 @@ name|twe_softc
 modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|bio
+name|twe_bio
 modifier|*
 name|bp
 parameter_list|)
@@ -814,29 +813,31 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
 name|__inline
-expr|struct
-name|bio
-operator|*
+name|twe_bio
+modifier|*
 name|twe_dequeue_bio
-argument_list|(
-argument|struct twe_softc *sc
-argument_list|)
+parameter_list|(
+name|struct
+name|twe_softc
+modifier|*
+name|sc
+parameter_list|)
 block|{
 name|int
 name|s
-block|;     struct
-name|bio
-operator|*
+decl_stmt|;
+name|twe_bio
+modifier|*
 name|bp
-block|;
+decl_stmt|;
 name|s
 operator|=
 name|splbio
 argument_list|()
-block|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -875,16 +876,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|bp
 operator|)
 return|;
-end_return
+block|}
+end_function
 
-unit|}
 end_unit
 
