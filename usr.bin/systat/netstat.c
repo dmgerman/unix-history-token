@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: netstat.c,v 1.8 1997/02/22 19:57:16 peter Exp $"
+literal|"$Id: netstat.c,v 1.9 1998/06/09 04:17:23 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include

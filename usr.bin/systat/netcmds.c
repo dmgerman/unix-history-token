@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: netcmds.c,v 1.6 1997/02/22 19:57:16 peter Exp $"
+literal|"$Id: netcmds.c,v 1.7 1997/12/04 03:44:44 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
