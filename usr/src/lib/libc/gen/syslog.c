@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.17 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
 end_include
 
 begin_include
@@ -191,6 +197,51 @@ begin_decl_stmt
 name|char
 modifier|*
 name|fmt
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|vsyslog
+argument_list|(
+name|pri
+argument_list|,
+name|fmt
+argument_list|,
+operator|&
+name|args
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|vsyslog
+argument_list|(
+argument|pri
+argument_list|,
+argument|fmt
+argument_list|,
+argument|ap
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|pri
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|va_list
+name|ap
 decl_stmt|;
 end_decl_stmt
 
@@ -420,8 +471,7 @@ name|p
 argument_list|,
 name|fmt
 argument_list|,
-operator|&
-name|args
+name|ap
 argument_list|)
 expr_stmt|;
 comment|/* output the message to the local logger */
