@@ -1557,7 +1557,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"ct: illegal chip clk rate\n"
+literal|"ct: illegal chip clk rate"
 argument_list|)
 expr_stmt|;
 break|break;

@@ -9099,7 +9099,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"no lun info mem\n"
+literal|"no lun info mem"
 argument_list|)
 expr_stmt|;
 name|SCSI_LOW_BZERO
@@ -9299,7 +9299,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"%s short of memory\n"
+literal|"%s short of memory"
 argument_list|,
 name|slp
 operator|->
@@ -9799,7 +9799,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"%s: ccb not finished\n"
+literal|"%s: ccb not finished"
 argument_list|,
 name|slp
 operator|->
@@ -10375,7 +10375,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"%s: revoked ccb done\n"
+literal|"%s: revoked ccb done"
 argument_list|,
 name|slp
 operator|->
@@ -10431,7 +10431,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"%s: revoked ccb retried\n"
+literal|"%s: revoked ccb retried"
 argument_list|,
 name|slp
 operator|->
@@ -10537,7 +10537,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"scsi_low: interface not spcified\n"
+literal|"scsi_low: interface not spcified"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11921,7 +11921,7 @@ return|;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: no setup phase\n"
+literal|"%s: no setup phase"
 argument_list|,
 name|slp
 operator|->
@@ -12152,7 +12152,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"%s: inconsistent\n"
+literal|"%s: inconsistent"
 argument_list|,
 name|slp
 operator|->
@@ -18246,7 +18246,7 @@ name|SCSI_LOW_DONE_RETRY
 condition|)
 name|panic
 argument_list|(
-literal|"%s: linked ccb retried\n"
+literal|"%s: linked ccb retried"
 argument_list|,
 name|slp
 operator|->
@@ -21174,7 +21174,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"%s: ccb in both queue\n"
+literal|"%s: ccb in both queue"
 argument_list|,
 name|slp
 operator|->
@@ -21323,7 +21323,7 @@ name|SCSI_LOW_DONE_COMPLETE
 condition|)
 name|panic
 argument_list|(
-literal|"%s: done ccb retried\n"
+literal|"%s: done ccb retried"
 argument_list|,
 name|slp
 operator|->
